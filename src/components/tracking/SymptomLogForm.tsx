@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
 const formSchema = z.object({
@@ -17,10 +18,18 @@ const formSchema = z.object({
   date: z.string().min(1, "Please enter a date"),
   time: z.string().min(1, "Please enter a time"),
   notes: z.string().optional(),
+  // Add blood pressure and steps fields
+  trackBloodPressure: z.boolean().default(false),
+  systolic: z.string().optional(),
+  diastolic: z.string().optional(),
+  trackSteps: z.boolean().default(false),
+  steps: z.string().optional(),
 });
 
 export function SymptomLogForm() {
   const [severity, setSeverity] = useState(3);
+  const [trackBloodPressure, setTrackBloodPressure] = useState(false);
+  const [trackSteps, setTrackSteps] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -30,6 +39,11 @@ export function SymptomLogForm() {
       date: new Date().toISOString().split('T')[0],
       time: new Date().toTimeString().split(' ')[0].substring(0, 5),
       notes: "",
+      trackBloodPressure: false,
+      systolic: "",
+      diastolic: "",
+      trackSteps: false,
+      steps: "",
     },
   });
 
@@ -42,8 +56,15 @@ export function SymptomLogForm() {
       date: new Date().toISOString().split('T')[0],
       time: new Date().toTimeString().split(' ')[0].substring(0, 5),
       notes: "",
+      trackBloodPressure: false,
+      systolic: "",
+      diastolic: "",
+      trackSteps: false,
+      steps: "",
     });
     setSeverity(3);
+    setTrackBloodPressure(false);
+    setTrackSteps(false);
   }
 
   return (
@@ -142,6 +163,109 @@ export function SymptomLogForm() {
             )}
           />
         </div>
+
+        {/* Blood Pressure Tracking */}
+        <FormField
+          control={form.control}
+          name="trackBloodPressure"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Blood Pressure</FormLabel>
+                <FormDescription>
+                  Track your blood pressure readings
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    setTrackBloodPressure(checked);
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        {trackBloodPressure && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border-l-4 border-primary pl-4">
+            <FormField
+              control={form.control}
+              name="systolic"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Systolic (mmHg)</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="120" {...field} />
+                  </FormControl>
+                  <FormDescription>Top number</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="diastolic"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Diastolic (mmHg)</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="80" {...field} />
+                  </FormControl>
+                  <FormDescription>Bottom number</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
+
+        {/* Step Tracking */}
+        <FormField
+          control={form.control}
+          name="trackSteps"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Steps</FormLabel>
+                <FormDescription>
+                  Track your daily step count
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={(checked) => {
+                    field.onChange(checked);
+                    setTrackSteps(checked);
+                  }}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        {trackSteps && (
+          <div className="border-l-4 border-primary pl-4">
+            <FormField
+              control={form.control}
+              name="steps"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Step Count</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="5000" {...field} />
+                  </FormControl>
+                  <FormDescription>Number of steps taken today</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        )}
 
         <FormField
           control={form.control}

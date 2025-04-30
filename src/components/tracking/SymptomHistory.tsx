@@ -7,16 +7,61 @@ import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarIcon, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar as CalendarIcon, X, ChevronLeft, ChevronRight, HeartPulse, Activity } from "lucide-react";
 import { toast } from "sonner";
 
-// Sample data to demonstrate UI
+// Sample data to demonstrate UI (now including blood pressure and steps)
 const sampleData = [
-  { id: 1, date: "2023-05-15", time: "08:30 AM", symptom: "Headache", severity: 4, notes: "Woke up with throbbing pain on right side of head." },
-  { id: 2, date: "2023-05-15", time: "03:15 PM", symptom: "Fatigue", severity: 3, notes: "Feeling very tired after lunch meeting." },
-  { id: 3, date: "2023-05-16", time: "11:00 AM", symptom: "Dizziness", severity: 2, notes: "Brief episode while standing up quickly." },
-  { id: 4, date: "2023-05-17", time: "09:45 AM", symptom: "Memory Issue", severity: 3, notes: "Difficulty recalling names during conversation." },
-  { id: 5, date: "2023-05-18", time: "07:00 PM", symptom: "Anxiety", severity: 4, notes: "Feeling anxious about upcoming appointment." },
+  { 
+    id: 1, 
+    date: "2023-05-15", 
+    time: "08:30 AM", 
+    symptom: "Headache", 
+    severity: 4, 
+    notes: "Woke up with throbbing pain on right side of head.",
+    bloodPressure: { systolic: 128, diastolic: 82 },
+    steps: null 
+  },
+  { 
+    id: 2, 
+    date: "2023-05-15", 
+    time: "03:15 PM", 
+    symptom: "Fatigue", 
+    severity: 3, 
+    notes: "Feeling very tired after lunch meeting.",
+    bloodPressure: null,
+    steps: 4500 
+  },
+  { 
+    id: 3, 
+    date: "2023-05-16", 
+    time: "11:00 AM", 
+    symptom: "Dizziness", 
+    severity: 2, 
+    notes: "Brief episode while standing up quickly.",
+    bloodPressure: { systolic: 118, diastolic: 76 },
+    steps: 2300
+  },
+  { 
+    id: 4, 
+    date: "2023-05-17", 
+    time: "09:45 AM", 
+    symptom: "Memory Issue", 
+    severity: 3, 
+    notes: "Difficulty recalling names during conversation.",
+    bloodPressure: { systolic: 122, diastolic: 80 },
+    steps: null
+  },
+  { 
+    id: 5, 
+    date: "2023-05-18", 
+    time: "07:00 PM", 
+    symptom: "Anxiety", 
+    severity: 4, 
+    notes: "Feeling anxious about upcoming appointment.",
+    bloodPressure: null,
+    steps: 7800
+  },
 ];
 
 export function SymptomHistory() {
@@ -113,6 +158,23 @@ export function SymptomHistory() {
                     Severity: {log.severity}/5
                   </div>
                 </div>
+                
+                <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {log.bloodPressure && (
+                    <div className="flex items-center space-x-2 text-sm bg-secondary/20 rounded-md p-2">
+                      <HeartPulse className="h-4 w-4 text-primary" />
+                      <span>Blood Pressure: {log.bloodPressure.systolic}/{log.bloodPressure.diastolic} mmHg</span>
+                    </div>
+                  )}
+                  
+                  {log.steps && (
+                    <div className="flex items-center space-x-2 text-sm bg-secondary/20 rounded-md p-2">
+                      <Activity className="h-4 w-4 text-primary" />
+                      <span>Steps: {log.steps.toLocaleString()}</span>
+                    </div>
+                  )}
+                </div>
+                
                 {log.notes && (
                   <div className="mt-2 text-sm border-t pt-2">
                     {log.notes}

@@ -8,7 +8,8 @@ import { SymptomTracker } from "@/components/dashboard/SymptomTracker";
 import { SymptomLogForm } from "@/components/tracking/SymptomLogForm";
 import { SymptomHistory } from "@/components/tracking/SymptomHistory";
 import { SymptomInsights } from "@/components/tracking/SymptomInsights";
-import { Plus, List, LineChart } from "lucide-react";
+import { InspirationSection } from "@/components/tracking/InspirationSection";
+import { Plus, List, LineChart, Smile } from "lucide-react";
 
 const SymptomTracking = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -31,6 +32,7 @@ const SymptomTracking = () => {
           <TabsTrigger value="log">Log Symptoms</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
           <TabsTrigger value="insights">Insights</TabsTrigger>
+          <TabsTrigger value="inspiration">Inspiration</TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="space-y-6">
@@ -59,6 +61,10 @@ const SymptomTracking = () => {
               <SymptomInsights />
             </CardContent>
           </Card>
+        </TabsContent>
+        
+        <TabsContent value="inspiration">
+          <InspirationSection />
         </TabsContent>
       </Tabs>
     </div>
