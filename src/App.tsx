@@ -10,6 +10,10 @@ import Resources from "./pages/Resources";
 import LocalServices from "./pages/LocalServices";
 import Onboarding from "./pages/Onboarding";
 import MainLayout from "./components/layout/MainLayout";
+import Profile from "./pages/Profile";
+import SymptomTracking from "./pages/SymptomTracking";
+import Calendar from "./pages/Calendar";
+import Community from "./pages/Community";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +36,26 @@ const App = () => (
           <Route path="/local-services" element={
             <MainLayout>
               <LocalServices />
+            </MainLayout>
+          } />
+          <Route path="/profile" element={
+            <MainLayout>
+              <Profile />
+            </MainLayout>
+          } />
+          <Route path="/tracking" element={
+            <MainLayout>
+              <SymptomTracking />
+            </MainLayout>
+          } />
+          <Route path="/calendar" element={
+            <MainLayout>
+              <Calendar />
+            </MainLayout>
+          } />
+          <Route path="/community" element={
+            <MainLayout>
+              <Community />
             </MainLayout>
           } />
           
