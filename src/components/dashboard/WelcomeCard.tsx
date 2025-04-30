@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain } from "lucide-react";
+import { Brain, Calendar, Book } from "lucide-react";
 
 interface WelcomeCardProps {
   name?: string;
@@ -78,5 +77,3 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
     </Card>
   );
 }
-
-import { Calendar } from "lucide-react";
