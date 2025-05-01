@@ -1,47 +1,21 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { 
-  Brain, 
-  Home, 
-  Book, 
-  Calendar, 
-  User, 
-  Users, 
-  HeartPulse, 
-  HelpCircle,
-  MapPin,
-  Settings,
-  Menu,
-  X
-} from "lucide-react";
-
+import { Brain, Home, Book, Calendar, User, Users, HeartPulse, HelpCircle, MapPin, Settings, Menu, X } from "lucide-react";
 export const Sidebar = () => {
-  const { isOpen, toggle } = useSidebar();
-
-  return (
-    <>
-      <div
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r bg-sidebar transition-transform duration-300 ease-in-out md:relative",
-          isOpen ? "translate-x-0" : "-translate-x-full md:w-20"
-        )}
-      >
+  const {
+    isOpen,
+    toggle
+  } = useSidebar();
+  return <>
+      <div className={cn("fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r bg-sidebar transition-transform duration-300 ease-in-out md:relative", isOpen ? "translate-x-0" : "-translate-x-full md:w-20")}>
         <div className="flex h-16 items-center justify-between border-b px-4">
           <div className="flex items-center gap-2">
             <Brain className="h-7 w-7 text-beacon-600" />
-            {isOpen && (
-              <span className="text-lg font-semibold text-sidebar-foreground">
-                Brain Beacon
-              </span>
-            )}
+            {isOpen && <span className="text-lg font-semibold text-sidebar-foreground">MyRhythm</span>}
           </div>
-          <button
-            onClick={toggle}
-            className="rounded-md p-1 text-sidebar-foreground hover:bg-sidebar-accent"
-          >
+          <button onClick={toggle} className="rounded-md p-1 text-sidebar-foreground hover:bg-sidebar-accent">
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </div>
@@ -65,45 +39,30 @@ export const Sidebar = () => {
       </div>
       
       {/* Mobile overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
-          onClick={toggle}
-        />
-      )}
+      {isOpen && <div className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden" onClick={toggle} />}
 
       {/* Toggle button for mobile */}
-      <button
-        onClick={toggle}
-        className="fixed bottom-4 right-4 z-50 rounded-full bg-primary p-3 text-primary-foreground shadow-lg md:hidden"
-      >
+      <button onClick={toggle} className="fixed bottom-4 right-4 z-50 rounded-full bg-primary p-3 text-primary-foreground shadow-lg md:hidden">
         {isOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
-    </>
-  );
+    </>;
 };
-
 interface NavItemProps {
   to: string;
   icon: React.ReactNode;
   label: string;
   isOpen: boolean;
 }
-
-const NavItem = ({ to, icon, label, isOpen }: NavItemProps) => {
-  return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        cn(
-          "nav-item",
-          isActive && "nav-item-active"
-        )
-      }
-      title={!isOpen ? label : undefined}
-    >
+const NavItem = ({
+  to,
+  icon,
+  label,
+  isOpen
+}: NavItemProps) => {
+  return <NavLink to={to} className={({
+    isActive
+  }) => cn("nav-item", isActive && "nav-item-active")} title={!isOpen ? label : undefined}>
       <span className="flex-shrink-0">{icon}</span>
       {isOpen && <span>{label}</span>}
-    </NavLink>
-  );
+    </NavLink>;
 };
