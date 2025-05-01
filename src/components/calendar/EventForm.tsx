@@ -13,7 +13,7 @@ import { DialogClose } from "@/components/ui/dialog";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  eventType: z.string().min(1, "Event type is required"),
+  actionType: z.string().min(1, "Action type is required"),
   startDate: z.string().min(1, "Start date is required"),
   startTime: z.string().min(1, "Start time is required"),
   endDate: z.string().optional(),
@@ -21,6 +21,7 @@ const formSchema = z.object({
   location: z.string().optional(),
   notes: z.string().optional(),
   reminders: z.string(),
+  watchers: z.array(z.string()).optional(),
 });
 
 export function EventForm() {
@@ -28,7 +29,7 @@ export function EventForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      eventType: "",
+      actionType: "",
       startDate: new Date().toISOString().split('T')[0],
       startTime: "",
       endDate: "",
@@ -36,11 +37,12 @@ export function EventForm() {
       location: "",
       notes: "",
       reminders: "30min",
+      watchers: [],
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success("Event added successfully!");
+    toast.success("Action added successfully!");
     console.log(values);
   }
 
@@ -52,9 +54,9 @@ export function EventForm() {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Event Title</FormLabel>
+              <FormLabel>Action Title</FormLabel>
               <FormControl>
-                <Input placeholder="Enter event title" {...field} />
+                <Input placeholder="Enter action title" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -63,14 +65,14 @@ export function EventForm() {
 
         <FormField
           control={form.control}
-          name="eventType"
+          name="actionType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Event Type</FormLabel>
+              <FormLabel>Action Type</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select event type" />
+                    <SelectValue placeholder="Select action type" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -78,7 +80,7 @@ export function EventForm() {
                   <SelectItem value="therapy">Therapy Session</SelectItem>
                   <SelectItem value="medication">Medication Reminder</SelectItem>
                   <SelectItem value="activity">Daily Activity</SelectItem>
-                  <SelectItem value="personal">Personal Event</SelectItem>
+                  <SelectItem value="personal">Personal Action</SelectItem>
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
@@ -202,11 +204,35 @@ export function EventForm() {
           )}
         />
 
+        <FormField
+          control={form.control}
+          name="watchers"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Accountability Watchers (Optional)</FormLabel>
+              <FormDescription>
+                Add community members who will be notified about this action
+              </FormDescription>
+              <div className="mt-2">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => console.log("Open watcher selector")}
+                >
+                  Add Watchers
+                </Button>
+              </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="flex justify-end gap-2">
           <DialogClose asChild>
             <Button type="button" variant="outline">Cancel</Button>
           </DialogClose>
-          <Button type="submit">Add Event</Button>
+          <Button type="submit">Add Action</Button>
         </div>
       </form>
     </Form>

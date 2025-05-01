@@ -2,15 +2,17 @@
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin } from "lucide-react";
+import { Calendar, Clock, MapPin, User } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
-interface Event {
+interface Action {
   id: string;
   title: string;
   date: string;
   time: string;
   location?: string;
   type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other";
+  watchers?: string[];
 }
 
 interface UpcomingEventsProps {
@@ -18,14 +20,15 @@ interface UpcomingEventsProps {
 }
 
 // Sample data
-const events: Event[] = [
+const actions: Action[] = [
   {
     id: "1",
     title: "Neurology Appointment",
     date: "2023-05-20",
     time: "10:00 AM",
     location: "Dallas Neuro Center",
-    type: "appointment"
+    type: "appointment",
+    watchers: ["Dr. Smith"]
   },
   {
     id: "2",
@@ -41,7 +44,8 @@ const events: Event[] = [
     date: "2023-05-25",
     time: "6:00 PM",
     location: "Community Center",
-    type: "activity"
+    type: "activity",
+    watchers: ["Sarah", "Michael"]
   },
   {
     id: "4",
@@ -54,10 +58,10 @@ const events: Event[] = [
 ];
 
 export function UpcomingEvents({ date }: UpcomingEventsProps) {
-  // In a real app, we would filter events based on the selected date
-  // For this demo, we'll just show all events
+  // In a real app, we would filter actions based on the selected date
+  // For this demo, we'll just show all actions
   
-  const getEventTypeStyles = (type: Event["type"]) => {
+  const getActionTypeStyles = (type: Action["type"]) => {
     switch (type) {
       case "appointment":
         return "bg-blue-100 text-blue-800";
@@ -77,30 +81,43 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
   return (
     <ScrollArea className="h-[300px] pr-4">
       <div className="space-y-4">
-        {events.map((event) => (
-          <div key={event.id} className="border rounded-md p-3">
+        {actions.map((action) => (
+          <div key={action.id} className="border rounded-md p-3">
             <div className="flex justify-between items-start">
-              <h4 className="font-medium">{event.title}</h4>
-              <span className={`text-xs px-2 py-0.5 rounded-full ${getEventTypeStyles(event.type)}`}>
-                {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+              <h4 className="font-medium">{action.title}</h4>
+              <span className={`text-xs px-2 py-0.5 rounded-full ${getActionTypeStyles(action.type)}`}>
+                {action.type.charAt(0).toUpperCase() + action.type.slice(1)}
               </span>
             </div>
             
             <div className="mt-2 space-y-1 text-sm">
               <div className="flex items-center text-muted-foreground">
                 <Calendar className="h-3.5 w-3.5 mr-1" />
-                <span>{event.date}</span>
+                <span>{action.date}</span>
               </div>
               
               <div className="flex items-center text-muted-foreground">
                 <Clock className="h-3.5 w-3.5 mr-1" />
-                <span>{event.time}</span>
+                <span>{action.time}</span>
               </div>
               
-              {event.location && (
+              {action.location && (
                 <div className="flex items-center text-muted-foreground">
                   <MapPin className="h-3.5 w-3.5 mr-1" />
-                  <span>{event.location}</span>
+                  <span>{action.location}</span>
+                </div>
+              )}
+
+              {action.watchers && action.watchers.length > 0 && (
+                <div className="flex items-center text-muted-foreground">
+                  <User className="h-3.5 w-3.5 mr-1" />
+                  <div className="flex gap-1 flex-wrap">
+                    {action.watchers.map((watcher, index) => (
+                      <Badge key={index} variant="outline" className="text-xs">
+                        {watcher}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

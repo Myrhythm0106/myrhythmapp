@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
 import Calendar from "./pages/Calendar";
 import Community from "./pages/Community";
+import PersonalCommunity from "./pages/PersonalCommunity";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,11 @@ const App = () => (
           <Route path="/community" element={
             <MainLayout>
               <Community />
+            </MainLayout>
+          } />
+          <Route path="/personal-community" element={
+            <MainLayout>
+              <PersonalCommunity />
             </MainLayout>
           } />
           

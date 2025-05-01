@@ -21,18 +21,18 @@ const Calendar = () => {
       <div className="space-y-6 p-4">
         <PageHeader 
           title="Calendar" 
-          subtitle="Manage appointments, medications, and daily routines"
+          subtitle="Manage your actions, medications, and daily routines"
         >
           <Dialog>
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-1 h-4 w-4" />
-                Add Event
+                Add Action
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px]">
               <DialogHeader>
-                <DialogTitle>Add New Event</DialogTitle>
+                <DialogTitle>Add New Action</DialogTitle>
               </DialogHeader>
               <EventForm />
             </DialogContent>
@@ -67,7 +67,7 @@ const Calendar = () => {
               <CardContent className="pt-6">
                 <h3 className="text-lg font-semibold flex items-center mb-4">
                   <Clock className="mr-2 h-5 w-5" />
-                  Upcoming Events
+                  Upcoming Actions
                 </h3>
                 <UpcomingEvents date={date} />
               </CardContent>
