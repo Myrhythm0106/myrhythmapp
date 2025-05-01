@@ -88,6 +88,27 @@ export function MedicationReminders() {
   };
 
   return <>
+      {/* Add a button at the top for adding medication */}
+      <div className="flex justify-end mb-4">
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              <Plus className="h-3.5 w-3.5 mr-1" />
+              Add Medication
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[450px]">
+            <DialogHeader>
+              <DialogTitle>Add Medication Reminder</DialogTitle>
+            </DialogHeader>
+            <MedicationForm 
+              onSubmit={handleAddMedication}
+              onCancel={() => setOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      </div>
+
       <ScrollArea className="h-[300px] pr-4">
         <div className="space-y-4">
           {medications.map(med => <Card key={med.id} className="p-4">
