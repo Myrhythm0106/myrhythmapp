@@ -7,13 +7,16 @@ import { SymptomTracker } from "@/components/dashboard/SymptomTracker";
 import { CommunityCard } from "@/components/dashboard/CommunityCard";
 import { EmergencyResourcesCard } from "@/components/dashboard/EmergencyResourcesCard";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Info } from "lucide-react";
 import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useState } from "react";
+import { TutorialModal } from "@/components/tutorial/TutorialModal";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [showTutorial, setShowTutorial] = useState(false);
   
   // In a real app, we would fetch the user data from a database or API
   const userData = {
@@ -35,16 +38,28 @@ const Dashboard = () => {
           title="Dashboard"
           subtitle="Your personalized brain health hub"
         />
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2"
-          aria-label="Go back to previous page"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setShowTutorial(true)}
+            className="flex items-center gap-2"
+            aria-label="View tutorial"
+          >
+            <Info className="h-4 w-4" />
+            Help
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-2"
+            aria-label="Go back to previous page"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+        </div>
       </div>
       
       <WelcomeCard name={userData.name} userType={userData.userType} />
@@ -60,6 +75,8 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      <TutorialModal isOpen={showTutorial} onComplete={() => setShowTutorial(false)} />
     </div>
   );
 };
