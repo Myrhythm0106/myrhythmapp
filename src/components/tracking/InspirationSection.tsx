@@ -1,12 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { heart, activity, smile } from "lucide-react";
-import { HeartPulse, Activity, Smile, MessageSquare, MessageSquareHeart } from "lucide-react";
+import { Heart, Activity, Smile, MessageSquare, MessageSquareHeart } from "lucide-react";
 
 // Sample inspiration quotes focused on growth mindset
 const inspirationQuotes = [
