@@ -3,7 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Brain, Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart } from "lucide-react";
+import { Brain, Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info } from "lucide-react";
 
 export const Sidebar = () => {
   const {
@@ -30,6 +30,7 @@ export const Sidebar = () => {
             <NavItem to="/calendar" icon={<Calendar />} label="Calendar" isOpen={isOpen} />
             <NavItem to="/community" icon={<Users />} label="Community" isOpen={isOpen} />
             <NavItem to="/personal-community" icon={<Heart />} label="My Support Circle" isOpen={isOpen} />
+            <NavItem to="/useful-info" icon={<Info />} label="Useful Info" isOpen={isOpen} />
           </nav>
         </div>
 

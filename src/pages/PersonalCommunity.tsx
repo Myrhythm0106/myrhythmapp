@@ -10,10 +10,26 @@ import { CommunityMembers } from "@/components/community/CommunityMembers";
 import { MessageBoard } from "@/components/community/MessageBoard";
 import { CommunityInvite } from "@/components/community/CommunityInvite";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Users, MessageSquare, Heart } from "lucide-react";
+import { Plus, Users, MessageSquare, Heart, ChevronRight } from "lucide-react";
+import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PersonalCommunity = () => {
   const [activeTab, setActiveTab] = useState("members");
+  const isMobile = useIsMobile();
+
+  const encouragementItems = ["Sarah", "Michael", "Dr. Smith", "Mom"].map((member) => (
+    <Card key={member} className="p-4 h-full">
+      <h4 className="font-medium">{member}</h4>
+      <div className="mt-2 space-y-2">
+        <Input placeholder="Write a note..." />
+        <Button className="w-full">
+          <Heart className="mr-1 h-4 w-4" />
+          Send Encouragement
+        </Button>
+      </div>
+    </Card>
+  ));
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
@@ -39,7 +55,7 @@ const PersonalCommunity = () => {
         </PageHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-          <TabsList>
+          <TabsList className="flex w-full overflow-x-auto">
             <TabsTrigger value="members" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
               Members
@@ -61,6 +77,7 @@ const PersonalCommunity = () => {
                   <Input 
                     placeholder="Search members..." 
                     className="max-w-sm" 
+                    aria-label="Search community members"
                   />
                 </div>
                 <CommunityMembers />
@@ -86,21 +103,13 @@ const PersonalCommunity = () => {
                   </p>
                 </div>
                 
-                {/* This would be expanded in a real implementation */}
-                <div className="grid gap-4 md:grid-cols-2">
-                  {["Sarah", "Michael", "Dr. Smith", "Mom"].map((member) => (
-                    <Card key={member} className="p-4">
-                      <h4 className="font-medium">{member}</h4>
-                      <div className="mt-2 space-y-2">
-                        <Input placeholder="Write a note..." />
-                        <Button className="w-full">
-                          <Heart className="mr-1 h-4 w-4" />
-                          Send Encouragement
-                        </Button>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
+                {isMobile ? (
+                  <SwipeableCarousel items={encouragementItems} />
+                ) : (
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {encouragementItems}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
