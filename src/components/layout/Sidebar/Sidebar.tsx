@@ -3,7 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Brain, Home, Book, Calendar, User, Users, HeartPulse, HelpCircle, MapPin, Settings, Menu, X } from "lucide-react";
+import { Brain, Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X } from "lucide-react";
 
 export const Sidebar = () => {
   const {
@@ -26,11 +26,9 @@ export const Sidebar = () => {
           <nav className="grid gap-1 px-2">
             <NavItem to="/dashboard" icon={<Home />} label="Dashboard" isOpen={isOpen} />
             <NavItem to="/profile" icon={<User />} label="My Profile" isOpen={isOpen} />
-            <NavItem to="/resources" icon={<Book />} label="Resources" isOpen={isOpen} />
             <NavItem to="/tracking" icon={<HeartPulse />} label="Symptom Tracking" isOpen={isOpen} />
             <NavItem to="/calendar" icon={<Calendar />} label="Calendar" isOpen={isOpen} />
             <NavItem to="/community" icon={<Users />} label="Community" isOpen={isOpen} />
-            <NavItem to="/local-services" icon={<MapPin />} label="Local Services" isOpen={isOpen} />
           </nav>
         </div>
 

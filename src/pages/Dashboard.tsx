@@ -2,9 +2,7 @@
 import React from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
-import { ResourcesCard } from "@/components/dashboard/ResourcesCard";
 import { SymptomTracker } from "@/components/dashboard/SymptomTracker";
-import { LocalServicesCard } from "@/components/dashboard/LocalServicesCard";
 import { CommunityCard } from "@/components/dashboard/CommunityCard";
 import { EmergencyResourcesCard } from "@/components/dashboard/EmergencyResourcesCard";
 
@@ -26,8 +24,6 @@ const Dashboard = () => {
       
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         <SymptomTracker />
-        <ResourcesCard />
-        <LocalServicesCard />
         <CommunityCard />
         <div className="md:col-span-2 lg:col-span-1">
           <EmergencyResourcesCard />
