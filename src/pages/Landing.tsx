@@ -10,10 +10,8 @@ const Landing = () => {
   const navigate = useNavigate();
 
   const handleSelectPlan = (plan: string) => {
-    // In a real implementation, this would initiate the payment process
-    console.log(`Selected plan: ${plan}`);
-    // Navigate to the onboarding page with the selected plan as a query parameter
-    navigate(`/onboarding?plan=${plan}`);
+    // Navigate directly to payment step with the selected plan
+    navigate(`/onboarding?plan=${plan}&step=3`);
   };
 
   return (
@@ -156,7 +154,7 @@ const Landing = () => {
             <Button 
               size="lg" 
               className="text-lg px-8" 
-              onClick={() => navigate("/onboarding?plan=basic")}
+              onClick={() => navigate("/onboarding?plan=basic&step=3")}
             >
               Start Your Free Trial
             </Button>

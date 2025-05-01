@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserTypeSelector, UserType } from "@/components/onboarding/UserTypeSelector";
 import { toast } from "sonner";
-import { Brain, CreditCard, ArrowRight } from "lucide-react";
+import { Brain, CreditCard, ArrowRight, ArrowLeft } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,9 @@ const Onboarding = () => {
   const queryParams = new URLSearchParams(location.search);
   const selectedPlan = queryParams.get("plan") || "basic";
   
-  const [step, setStep] = useState(1);
+  // Get the step from URL or default to 1 if not present
+  const initialStep = parseInt(queryParams.get("step") || "1");
+  const [step, setStep] = useState(initialStep);
   const [userType, setUserType] = useState<UserType | null>(null);
   
   const personalInfoSchema = z.object({
@@ -54,6 +56,13 @@ const Onboarding = () => {
     },
   });
 
+  // Update URL when step changes
+  useEffect(() => {
+    const newParams = new URLSearchParams(location.search);
+    newParams.set("step", step.toString());
+    navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+  }, [step, location.pathname, location.search, navigate]);
+
   const handleContinue = () => {
     if (step === 1) {
       if (!userType) {
@@ -66,35 +75,39 @@ const Onboarding = () => {
   
   const handlePersonalInfoSubmit = (values: z.infer<typeof personalInfoSchema>) => {
     console.log("Personal info:", values);
-    // After collecting personal info, proceed to payment step
-    if (selectedPlan === "basic" || selectedPlan === "premium" || selectedPlan === "family") {
-      setStep(3);
-    } else {
-      // In case there's a free plan with no payment needed
-      completeOnboarding();
-    }
+    completeOnboarding();
   };
   
   const handlePaymentInfoSubmit = (values: z.infer<typeof paymentInfoSchema>) => {
     console.log("Payment info:", values);
     
     // In a real implementation, you would send this info to a payment processor
-    // Here we're just simulating a successful payment setup
+    // Here we're just simulating a successful payment
     
     // For the basic plan, show that it's a 7-day free trial
     if (selectedPlan === "basic") {
       toast.success("Your 7-day free trial has started. Your card will be charged $7.99 after the trial period.");
     } else {
-      toast.success("Payment details saved successfully!");
+      toast.success("Payment processed successfully!");
     }
     
-    completeOnboarding();
+    // After successful payment, go to user type selection
+    setStep(1);
   };
   
   const completeOnboarding = () => {
     // In a real app, we would save all this information to a database
     toast.success("Account created successfully!");
     navigate("/dashboard");
+  };
+
+  const handleBack = () => {
+    if (step === 1) {
+      // Go back to landing page
+      navigate("/");
+    } else {
+      setStep(step - 1);
+    }
   };
 
   return (
@@ -123,7 +136,7 @@ const Onboarding = () => {
                 </CardDescription>
               </div>
               <div className="text-sm font-medium">
-                Step {step} of {selectedPlan === "basic" || selectedPlan === "premium" || selectedPlan === "family" ? "3" : "2"}
+                Step {step} of 3
               </div>
             </div>
           </CardHeader>
@@ -183,11 +196,12 @@ const Onboarding = () => {
                   />
                   
                   <div className="pt-4 flex justify-between">
-                    <Button type="button" variant="outline" onClick={() => setStep(1)}>
+                    <Button type="button" variant="outline" onClick={handleBack}>
+                      <ArrowLeft className="h-4 w-4 mr-2" />
                       Back
                     </Button>
                     <Button type="submit" className="gap-2">
-                      Next <ArrowRight className="h-4 w-4" />
+                      Complete Setup <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
                 </form>
@@ -316,11 +330,12 @@ const Onboarding = () => {
                   </div>
                   
                   <div className="pt-4 flex justify-between">
-                    <Button type="button" variant="outline" onClick={() => setStep(2)}>
+                    <Button type="button" variant="outline" onClick={handleBack}>
+                      <ArrowLeft className="h-4 w-4 mr-2" />
                       Back
                     </Button>
                     <Button type="submit">
-                      {selectedPlan === "basic" ? "Start Free Trial" : "Complete Setup"}
+                      {selectedPlan === "basic" ? "Start Free Trial" : "Complete Payment"}
                     </Button>
                   </div>
                 </form>
@@ -334,4 +349,3 @@ const Onboarding = () => {
 };
 
 export default Onboarding;
-
