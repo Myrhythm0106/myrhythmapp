@@ -1,8 +1,10 @@
+
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
 import { Brain, Home, Book, Calendar, User, Users, HeartPulse, HelpCircle, MapPin, Settings, Menu, X } from "lucide-react";
+
 export const Sidebar = () => {
   const {
     isOpen,
@@ -22,7 +24,7 @@ export const Sidebar = () => {
 
         <div className="flex-1 overflow-auto py-4">
           <nav className="grid gap-1 px-2">
-            <NavItem to="/" icon={<Home />} label="Dashboard" isOpen={isOpen} />
+            <NavItem to="/dashboard" icon={<Home />} label="Dashboard" isOpen={isOpen} />
             <NavItem to="/profile" icon={<User />} label="My Profile" isOpen={isOpen} />
             <NavItem to="/resources" icon={<Book />} label="Resources" isOpen={isOpen} />
             <NavItem to="/tracking" icon={<HeartPulse />} label="Symptom Tracking" isOpen={isOpen} />
@@ -47,12 +49,14 @@ export const Sidebar = () => {
       </button>
     </>;
 };
+
 interface NavItemProps {
   to: string;
   icon: React.ReactNode;
   label: string;
   isOpen: boolean;
 }
+
 const NavItem = ({
   to,
   icon,

@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Resources from "./pages/Resources";
 import LocalServices from "./pages/LocalServices";
 import Onboarding from "./pages/Onboarding";
+import Landing from "./pages/Landing";
 import MainLayout from "./components/layout/MainLayout";
 import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
@@ -24,7 +25,9 @@ const App = () => (
       <Sonner richColors />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          {/* New landing page as the root */}
+          <Route path="/" element={<Landing />} />
+          <Route path="/dashboard" element={<Index />} />
           <Route path="/onboarding" element={<Onboarding />} />
           
           {/* Routes with MainLayout */}
