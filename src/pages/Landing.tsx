@@ -1,21 +1,16 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Check, ArrowRight } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
 const Landing = () => {
   const navigate = useNavigate();
-
   const handleSelectPlan = (plan: string) => {
     // Navigate directly to payment step with the selected plan
     navigate(`/onboarding?plan=${plan}&step=3`);
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
+  return <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
       <ScrollArea className="h-screen">
         <div className="container mx-auto px-4 py-12 max-w-6xl">
           <div className="flex justify-center mb-8">
@@ -27,9 +22,7 @@ const Landing = () => {
           
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">Personalized Support for Your Brain Health Journey</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Track symptoms, access resources, and connect with a supportive community designed specifically for individuals with brain injuries and mental health conditions.
-            </p>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">Track your health, manage your actions, access resources, and connect with your supportive community.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -44,24 +37,14 @@ const Landing = () => {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {[
-                    "Basic symptom tracking",
-                    "Limited calendar features",
-                    "Access to public resources",
-                    "Community forum access"
-                  ].map((feature) => (
-                    <li key={feature} className="flex items-center gap-2">
+                  {["Basic symptom tracking", "Limited calendar features", "Access to public resources", "Community forum access"].map(feature => <li key={feature} className="flex items-center gap-2">
                       <Check className="h-5 w-5 text-green-500" />
                       <span>{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button 
-                  className="w-full" 
-                  onClick={() => handleSelectPlan("basic")}
-                >
+                <Button className="w-full" onClick={() => handleSelectPlan("basic")}>
                   Start Free Trial
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -79,27 +62,14 @@ const Landing = () => {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {[
-                    "Advanced symptom tracking",
-                    "Full calendar management",
-                    "Complete resource library",
-                    "Community forum participation",
-                    "Personalized insights",
-                    "Priority support"
-                  ].map((feature) => (
-                    <li key={feature} className="flex items-center gap-2">
+                  {["Advanced symptom tracking", "Full calendar management", "Complete resource library", "Community forum participation", "Personalized insights", "Priority support"].map(feature => <li key={feature} className="flex items-center gap-2">
                       <Check className="h-5 w-5 text-green-500" />
                       <span>{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button 
-                  className="w-full" 
-                  variant="default"
-                  onClick={() => handleSelectPlan("premium")}
-                >
+                <Button className="w-full" variant="default" onClick={() => handleSelectPlan("premium")}>
                   Choose Premium
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -114,28 +84,14 @@ const Landing = () => {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
-                  {[
-                    "All Premium features",
-                    "Multiple user accounts",
-                    "Shared calendars",
-                    "Caregiver resources",
-                    "Family support group",
-                    "Dedicated case manager",
-                    "24/7 emergency support"
-                  ].map((feature) => (
-                    <li key={feature} className="flex items-center gap-2">
+                  {["All Premium features", "Multiple user accounts", "Shared calendars", "Caregiver resources", "Family support group", "Dedicated case manager", "24/7 emergency support"].map(feature => <li key={feature} className="flex items-center gap-2">
                       <Check className="h-5 w-5 text-green-500" />
                       <span>{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button 
-                  className="w-full" 
-                  variant="outline"
-                  onClick={() => handleSelectPlan("family")}
-                >
+                <Button className="w-full" variant="outline" onClick={() => handleSelectPlan("family")}>
                   Choose Family Plan
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
@@ -151,18 +107,12 @@ const Landing = () => {
           </div>
 
           <div className="flex justify-center">
-            <Button 
-              size="lg" 
-              className="text-lg px-8" 
-              onClick={() => navigate("/onboarding?plan=basic&step=3")}
-            >
+            <Button size="lg" className="text-lg px-8" onClick={() => navigate("/onboarding?plan=basic&step=3")}>
               Start Your Free Trial
             </Button>
           </div>
         </div>
       </ScrollArea>
-    </div>
-  );
+    </div>;
 };
-
 export default Landing;
