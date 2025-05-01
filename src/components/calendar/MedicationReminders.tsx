@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Bell, Check, Clock, Plus, X } from "lucide-react";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { MedicationForm } from "./forms/MedicationForm";
+import { v4 as uuidv4 } from "uuid";
+
 interface Medication {
   id: string;
   name: string;
@@ -12,6 +16,7 @@ interface Medication {
   time: string;
   taken: boolean;
 }
+
 export function MedicationReminders() {
   const [medications, setMedications] = React.useState<Medication[]>([{
     id: "1",
@@ -44,6 +49,9 @@ export function MedicationReminders() {
     time: "10:00 PM",
     taken: false
   }]);
+  
+  const [open, setOpen] = React.useState(false);
+
   const handleTaken = (id: string) => {
     setMedications(meds => meds.map(med => med.id === id ? {
       ...med,
@@ -51,13 +59,34 @@ export function MedicationReminders() {
     } : med));
     toast.success("Medication marked as taken");
   };
+
   const handleSkip = (id: string) => {
     setMedications(meds => meds.filter(med => med.id !== id));
     toast.info("Medication reminder skipped");
   };
-  const handleAddMedication = () => {
-    toast.info("Add medication feature will be implemented soon");
+
+  const handleAddMedication = (data: { name: string; dosage: string; time: string }) => {
+    // Convert time format from 24h to AM/PM format
+    const timeObj = new Date(`2000-01-01T${data.time}`);
+    const formattedTime = timeObj.toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: 'numeric',
+      hour12: true 
+    });
+    
+    const newMedication: Medication = {
+      id: uuidv4(),
+      name: data.name,
+      dosage: data.dosage,
+      time: formattedTime,
+      taken: false
+    };
+    
+    setMedications(prev => [...prev, newMedication]);
+    setOpen(false);
+    toast.success("Medication reminder added");
   };
+
   return <>
       <ScrollArea className="h-[300px] pr-4">
         <div className="space-y-4">
@@ -93,7 +122,7 @@ export function MedicationReminders() {
       </ScrollArea>
 
       <div className="mt-4">
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button variant="outline" className="w-full font-medium text-xs">
               <Plus className="h-4 w-4 mr-1" />
@@ -104,9 +133,10 @@ export function MedicationReminders() {
             <DialogHeader>
               <DialogTitle>Add Medication Reminder</DialogTitle>
             </DialogHeader>
-            <div className="p-4">
-              <p className="text-muted-foreground">Medication form would go here.</p>
-            </div>
+            <MedicationForm 
+              onSubmit={handleAddMedication}
+              onCancel={() => setOpen(false)}
+            />
           </DialogContent>
         </Dialog>
       </div>
