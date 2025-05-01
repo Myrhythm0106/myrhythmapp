@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { UserTypeSelector, UserType } from "@/components/onboarding/UserTypeSelector";
 import { toast } from "sonner";
-import { Brain, CreditCard } from "lucide-react";
+import { Brain, CreditCard, ArrowRight } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -66,7 +66,7 @@ const Onboarding = () => {
   
   const handlePersonalInfoSubmit = (values: z.infer<typeof personalInfoSchema>) => {
     console.log("Personal info:", values);
-    // When plan requires payment, proceed to payment step
+    // After collecting personal info, proceed to payment step
     if (selectedPlan === "basic" || selectedPlan === "premium" || selectedPlan === "family") {
       setStep(3);
     } else {
@@ -112,7 +112,7 @@ const Onboarding = () => {
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>
-                  {step === 1 && "Welcome! Tell us about yourself"}
+                  {step === 1 && "Personalize Support for Your Brain Health Journey"}
                   {step === 2 && "Complete your profile"}
                   {step === 3 && "Set up your payment details"}
                 </CardTitle>
@@ -129,7 +129,14 @@ const Onboarding = () => {
           </CardHeader>
           <CardContent>
             {step === 1 ? (
-              <UserTypeSelector selectedType={userType} onChange={setUserType} />
+              <div className="space-y-6">
+                <UserTypeSelector selectedType={userType} onChange={setUserType} />
+                <div className="flex justify-end">
+                  <Button onClick={handleContinue} className="gap-2">
+                    Next <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
             ) : step === 2 ? (
               <Form {...personalInfoForm}>
                 <form onSubmit={personalInfoForm.handleSubmit(handlePersonalInfoSubmit)} className="space-y-4">
@@ -179,7 +186,9 @@ const Onboarding = () => {
                     <Button type="button" variant="outline" onClick={() => setStep(1)}>
                       Back
                     </Button>
-                    <Button type="submit">Continue</Button>
+                    <Button type="submit" className="gap-2">
+                      Next <ArrowRight className="h-4 w-4" />
+                    </Button>
                   </div>
                 </form>
               </Form>
@@ -318,14 +327,6 @@ const Onboarding = () => {
               </Form>
             )}
           </CardContent>
-          {step === 1 && (
-            <CardFooter className="flex justify-between">
-              <div></div>
-              <Button onClick={handleContinue}>
-                Continue
-              </Button>
-            </CardFooter>
-          )}
         </Card>
       </div>
     </div>
@@ -333,3 +334,4 @@ const Onboarding = () => {
 };
 
 export default Onboarding;
+
