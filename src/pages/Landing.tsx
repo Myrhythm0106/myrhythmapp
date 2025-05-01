@@ -23,7 +23,7 @@ const Landing = () => {
           <div className="flex justify-center mb-8">
             <div className="flex items-center gap-2">
               <Brain className="h-12 w-12 text-beacon-600" />
-              <h1 className="text-4xl font-bold">Dallas Brain Beacon</h1>
+              <h1 className="text-4xl font-bold">MyRhythm</h1>
             </div>
           </div>
           
