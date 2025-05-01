@@ -25,7 +25,7 @@ const App = () => (
       <Sonner richColors />
       <BrowserRouter>
         <Routes>
-          {/* New landing page as the root */}
+          {/* Landing page as the root */}
           <Route path="/" element={<Landing />} />
           <Route path="/dashboard" element={<Index />} />
           <Route path="/onboarding" element={<Onboarding />} />

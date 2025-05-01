@@ -12,8 +12,8 @@ const Landing = () => {
   const handleSelectPlan = (plan: string) => {
     // In a real implementation, this would initiate the payment process
     console.log(`Selected plan: ${plan}`);
-    // For now, we'll just navigate to the onboarding page
-    navigate("/onboarding");
+    // Navigate to the onboarding page with the selected plan as a query parameter
+    navigate(`/onboarding?plan=${plan}`);
   };
 
   return (
@@ -39,7 +39,10 @@ const Landing = () => {
               <CardHeader>
                 <CardTitle className="text-2xl">Basic Plan</CardTitle>
                 <CardDescription>Essential features for individual support</CardDescription>
-                <div className="mt-4 text-3xl font-bold">Free</div>
+                <div className="mt-4">
+                  <div className="text-3xl font-bold">Free for 7 days</div>
+                  <div className="text-sm text-muted-foreground">Then $7.99/month</div>
+                </div>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-2">
@@ -61,7 +64,7 @@ const Landing = () => {
                   className="w-full" 
                   onClick={() => handleSelectPlan("basic")}
                 >
-                  Get Started
+                  Start Free Trial
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </CardFooter>
@@ -153,7 +156,7 @@ const Landing = () => {
             <Button 
               size="lg" 
               className="text-lg px-8" 
-              onClick={() => navigate("/onboarding")}
+              onClick={() => navigate("/onboarding?plan=basic")}
             >
               Start Your Free Trial
             </Button>
