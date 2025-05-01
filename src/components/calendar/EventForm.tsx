@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { ActionTitleField } from "./forms/ActionTitleField";
 import { ActionTypeSelect } from "./forms/ActionTypeSelect";
 import { DateTimeFields } from "./forms/DateTimeFields";
@@ -28,14 +29,18 @@ export function EventForm() {
   return (
     <FormProvider {...form}>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <ActionTitleField />
-          <ActionTypeSelect />
-          <DateTimeFields />
-          <LocationField />
-          <NotesField />
-          <ReminderSelect />
-          <WatchersField />
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col h-[60vh]">
+          <ScrollArea className="flex-grow pr-4">
+            <div className="space-y-6 pb-2">
+              <ActionTitleField />
+              <ActionTypeSelect />
+              <DateTimeFields />
+              <LocationField />
+              <NotesField />
+              <ReminderSelect />
+              <WatchersField />
+            </div>
+          </ScrollArea>
           <FormActions isSubmitting={form.formState.isSubmitting} />
         </form>
       </Form>

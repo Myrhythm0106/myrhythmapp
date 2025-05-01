@@ -4,6 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, MapPin, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { format, isToday, isPast, isFuture, addDays } from "date-fns";
 
 interface Action {
   id: string;
@@ -77,12 +78,30 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
         return "bg-gray-100 text-gray-800";
     }
   };
+  
+  const getActionStatusStyles = (actionDate: string) => {
+    const today = new Date();
+    const actionDateObj = new Date(actionDate);
+    
+    if (isPast(actionDateObj) && !isToday(actionDateObj)) {
+      return "border-l-4 border-destructive"; // Late
+    } else if (isToday(actionDateObj)) {
+      return "border-l-4 border-secondary"; // Today
+    } else if (isFuture(actionDateObj) && actionDateObj <= addDays(today, 3)) {
+      return "border-l-4 border-beacon-500"; // Upcoming (within 3 days)
+    }
+    
+    return ""; // Default - no special styling
+  };
 
   return (
     <ScrollArea className="h-[300px] pr-4">
       <div className="space-y-4">
         {actions.map((action) => (
-          <div key={action.id} className="border rounded-md p-3">
+          <div 
+            key={action.id} 
+            className={`border rounded-md p-3 transition-all ${getActionStatusStyles(action.date)}`}
+          >
             <div className="flex justify-between items-start">
               <h4 className="font-medium">{action.title}</h4>
               <span className={`text-xs px-2 py-0.5 rounded-full ${getActionTypeStyles(action.type)}`}>
