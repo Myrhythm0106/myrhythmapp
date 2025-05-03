@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -125,7 +124,7 @@ const Onboarding = () => {
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>
-                  {step === 1 && "Personalised Support to O.R.D.E.R your life"}
+                  {step === 1 && "Personalised Support to O.R.D.E.R your life daily"}
                   {step === 2 && "Complete your profile"}
                   {step === 3 && "Set up your payment details"}
                 </CardTitle>
