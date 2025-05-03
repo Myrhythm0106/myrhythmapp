@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -18,7 +17,6 @@ import { Sparkles } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
-  // In a real app, we would check if a user is authenticated and has completed onboarding
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
   const [isNewRegistration, setIsNewRegistration] = useState(false);
