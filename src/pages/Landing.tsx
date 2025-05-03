@@ -22,7 +22,9 @@ const Landing = () => {
           
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold mb-4">Personalized Support for Your Brain Health Journey</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">Track your health, manage your actions, access resources, and connect with your supportive community.</p>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">Track your health, manage your actions, access resources, and connect with your supportive community.
+MyRythmn empowers you to live by O.R.D.E.R. Organise your priorities, build a Routine, strengthen your Discipline, Execute with focus, and Review with intention. 
+It's more than productivity, it's your rhythm for life!</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
