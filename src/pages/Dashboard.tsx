@@ -32,7 +32,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <PageHeader
           title="Dashboard"
@@ -43,7 +43,7 @@ const Dashboard = () => {
             variant="outline" 
             size="sm"
             onClick={() => setShowTutorial(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 premium-button"
             aria-label="View tutorial"
           >
             <Info className="h-4 w-4" />

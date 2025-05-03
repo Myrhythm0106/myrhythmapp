@@ -91,7 +91,18 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+  
+  /* Premium button styles inspired by Apple/Nike */
+  button, .button {
+    @apply font-medium transition-all duration-200;
+  }
+  
+  /* Make form controls and buttons more polished */
+  input, select, textarea {
+    @apply transition-all duration-200;
   }
 }
 
@@ -109,6 +120,23 @@
   }
   
   .nav-item-active {
-    @apply bg-accent text-foreground;
+    @apply bg-accent text-foreground font-medium;
+  }
+  
+  /* Premium UI elements inspired by Apple/Nike */
+  .premium-card {
+    @apply rounded-xl border border-border/40 bg-white shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
+  }
+  
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-sm;
+  }
+  
+  .premium-button {
+    @apply bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow transition-all;
+  }
+  
+  .premium-input {
+    @apply border-0 bg-muted/50 focus:ring-2 focus:ring-primary/30 shadow-inner;
   }
 }

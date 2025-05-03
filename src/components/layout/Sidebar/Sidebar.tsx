@@ -24,8 +24,8 @@ export const Sidebar = () => {
 
         <div className="flex-1 overflow-auto py-4">
           <nav className="grid gap-1 px-2">
-            <NavItem to="/dashboard" icon={<Home />} label="Dashboard" isOpen={isOpen} />
             <NavItem to="/profile" icon={<User />} label="My Profile" isOpen={isOpen} />
+            <NavItem to="/dashboard" icon={<Home />} label="Dashboard" isOpen={isOpen} />
             <NavItem to="/tracking" icon={<HeartPulse />} label="Symptom Tracking" isOpen={isOpen} />
             <NavItem to="/calendar" icon={<Calendar />} label="Calendar" isOpen={isOpen} />
             <NavItem to="/community" icon={<Users />} label="Community" isOpen={isOpen} />
