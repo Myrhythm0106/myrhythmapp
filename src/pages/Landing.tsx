@@ -4,11 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Check, ArrowRight, Star, Clock, Heart, Compass } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+
 const Landing = () => {
   const navigate = useNavigate();
+  
   const handleSelectPlan = (plan: string) => {
     navigate(`/onboarding?plan=${plan}&step=3`);
   };
+  
   const features = [{
     icon: <Brain className="h-10 w-10 text-primary" />,
     title: "Unlock Your Cognitive Edge",
@@ -19,13 +22,14 @@ const Landing = () => {
     description: "Our revolutionary Visual Flow Builder transforms your day into an intuitive, drag-and-drop map of success. See the path, own the process."
   }, {
     icon: <Heart className="h-10 w-10 text-primary" />,
-    title: "The Emotional Insight You've Been Missing",
-    description: "MyRhythm's gentle emotional check-ins reveal the powerful connection between your mood and productivity, offering personalised insights."
+    title: "Transform Emotional Insight to Productivity",
+    description: "MyRhythm's gentle emotional check-ins reveal powerful connections between mood and achievement, converting self-awareness into actionable productivity strategies."
   }, {
     icon: <Clock className="h-10 w-10 text-primary" />,
     title: "Never Lose What Matters",
     description: "With our intuitive location tagging and quick-find features, MyRhythm brings instant peace of mind, allowing you to effortlessly locate your essentials."
   }];
+
   return <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
       <ScrollArea className="h-screen">
         {/* Hero Section */}
@@ -64,7 +68,7 @@ const Landing = () => {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-3">Transform Your Daily Experience </h2>
+              <h2 className="text-3xl font-bold mb-3">Align Your Emotions for Peak Performance</h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 MyRhythm combines cutting-edge technology with human-centered design to help you achieve more with less stress.
               </p>
@@ -211,4 +215,5 @@ const Landing = () => {
       </ScrollArea>
     </div>;
 };
+
 export default Landing;
