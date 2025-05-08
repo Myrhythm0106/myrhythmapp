@@ -13,6 +13,7 @@ import { NotesField } from "./forms/NotesField";
 import { ReminderSelect } from "./forms/ReminderSelect";
 import { WatchersField } from "./forms/WatchersField";
 import { FormActions } from "./forms/FormActions";
+import { MediaAttachment } from "./forms/MediaAttachment";
 import { actionFormSchema, ActionFormValues, defaultActionValues } from "./forms/actionFormSchema";
 
 export function EventForm() {
@@ -37,6 +38,7 @@ export function EventForm() {
               <DateTimeFields />
               <LocationField />
               <NotesField />
+              <MediaAttachment />
               <ReminderSelect />
               <WatchersField />
             </div>
