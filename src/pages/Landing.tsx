@@ -1,43 +1,32 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Check, ArrowRight, Star, Clock, Heart, Compass } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
 const Landing = () => {
   const navigate = useNavigate();
-  
   const handleSelectPlan = (plan: string) => {
     navigate(`/onboarding?plan=${plan}&step=3`);
   };
-  
-  const features = [
-    {
-      icon: <Brain className="h-10 w-10 text-primary" />,
-      title: "Unlock Your Cognitive Edge",
-      description: "MyRhythm doesn't just remind, it anticipates. By understanding your rhythm, it proactively suggests optimal schedules and breaks down complex tasks."
-    },
-    {
-      icon: <Compass className="h-10 w-10 text-primary" />,
-      title: "Visualise Your Victories",
-      description: "Our revolutionary Visual Flow Builder transforms your day into an intuitive, drag-and-drop map of success. See the path, own the process."
-    },
-    {
-      icon: <Heart className="h-10 w-10 text-primary" />,
-      title: "The Emotional Insight You've Been Missing",
-      description: "MyRhythm's gentle emotional check-ins reveal the powerful connection between your mood and productivity, offering personalised insights."
-    },
-    {
-      icon: <Clock className="h-10 w-10 text-primary" />,
-      title: "Never Lose What Matters",
-      description: "With our intuitive location tagging and quick-find features, MyRhythm brings instant peace of mind, allowing you to effortlessly locate your essentials."
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
+  const features = [{
+    icon: <Brain className="h-10 w-10 text-primary" />,
+    title: "Unlock Your Cognitive Edge",
+    description: "MyRhythm doesn't just remind, it anticipates. By understanding your rhythm, it proactively suggests optimal schedules and breaks down complex tasks."
+  }, {
+    icon: <Compass className="h-10 w-10 text-primary" />,
+    title: "Visualise Your Victories",
+    description: "Our revolutionary Visual Flow Builder transforms your day into an intuitive, drag-and-drop map of success. See the path, own the process."
+  }, {
+    icon: <Heart className="h-10 w-10 text-primary" />,
+    title: "The Emotional Insight You've Been Missing",
+    description: "MyRhythm's gentle emotional check-ins reveal the powerful connection between your mood and productivity, offering personalised insights."
+  }, {
+    icon: <Clock className="h-10 w-10 text-primary" />,
+    title: "Never Lose What Matters",
+    description: "With our intuitive location tagging and quick-find features, MyRhythm brings instant peace of mind, allowing you to effortlessly locate your essentials."
+  }];
+  return <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
       <ScrollArea className="h-screen">
         {/* Hero Section */}
         <section className="relative overflow-hidden">
@@ -75,15 +64,14 @@ const Landing = () => {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-3">Align Your Emotions for Peak Performance</h2>
+              <h2 className="text-3xl font-bold mb-3">Transform Your Daily Experience </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
                 MyRhythm combines cutting-edge technology with human-centered design to help you achieve more with less stress.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-              {features.map((feature, index) => (
-                <Card key={index} className="border shadow-sm hover:shadow-md transition-all overflow-hidden">
+              {features.map((feature, index) => <Card key={index} className="border shadow-sm hover:shadow-md transition-all overflow-hidden">
                   <CardHeader className="pb-2">
                     <div className="mb-3">{feature.icon}</div>
                     <CardTitle className="text-2xl">{feature.title}</CardTitle>
@@ -91,8 +79,7 @@ const Landing = () => {
                   <CardContent>
                     <p className="text-muted-foreground">{feature.description}</p>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
           </div>
         </section>
@@ -119,12 +106,10 @@ const Landing = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {["Basic symptom tracking", "Limited calendar features", "Access to public resources", "Community forum access"].map(feature => (
-                      <li key={feature} className="flex items-center gap-2">
+                    {["Basic symptom tracking", "Limited calendar features", "Access to public resources", "Community forum access"].map(feature => <li key={feature} className="flex items-center gap-2">
                         <Check className="h-5 w-5 text-green-500" />
                         <span>{feature}</span>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                 </CardContent>
                 <CardFooter>
@@ -146,12 +131,10 @@ const Landing = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {["Advanced symptom tracking", "Full calendar management", "Complete resource library", "Community forum participation", "Personalized insights", "Priority support"].map(feature => (
-                      <li key={feature} className="flex items-center gap-2">
+                    {["Advanced symptom tracking", "Full calendar management", "Complete resource library", "Community forum participation", "Personalized insights", "Priority support"].map(feature => <li key={feature} className="flex items-center gap-2">
                         <Check className="h-5 w-5 text-green-500" />
                         <span>{feature}</span>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                 </CardContent>
                 <CardFooter>
@@ -170,12 +153,10 @@ const Landing = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {["All Premium features", "Multiple user accounts", "Shared calendars", "Caregiver resources", "Family support group", "Dedicated case manager", "24/7 emergency support"].map(feature => (
-                      <li key={feature} className="flex items-center gap-2">
+                    {["All Premium features", "Multiple user accounts", "Shared calendars", "Caregiver resources", "Family support group", "Dedicated case manager", "24/7 emergency support"].map(feature => <li key={feature} className="flex items-center gap-2">
                         <Check className="h-5 w-5 text-green-500" />
                         <span>{feature}</span>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                 </CardContent>
                 <CardFooter>
@@ -200,32 +181,24 @@ const Landing = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-              {[
-                {
-                  quote: "MyRhythm has completely transformed how I manage my day. I feel in control for the first time in years.",
-                  author: "Alex D."
-                },
-                {
-                  quote: "The emotional insights feature helped me understand my patterns and make meaningful changes to my routine.",
-                  author: "Morgan T."
-                },
-                {
-                  quote: "As a caregiver, the family plan features have made coordinating care so much easier and less stressful.",
-                  author: "Jamie L."
-                }
-              ].map((testimonial, index) => (
-                <Card key={index} className="bg-muted/30">
+              {[{
+              quote: "MyRhythm has completely transformed how I manage my day. I feel in control for the first time in years.",
+              author: "Alex D."
+            }, {
+              quote: "The emotional insights feature helped me understand my patterns and make meaningful changes to my routine.",
+              author: "Morgan T."
+            }, {
+              quote: "As a caregiver, the family plan features have made coordinating care so much easier and less stressful.",
+              author: "Jamie L."
+            }].map((testimonial, index) => <Card key={index} className="bg-muted/30">
                   <CardContent className="pt-6">
                     <div className="mb-4">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="inline-block h-4 w-4 text-primary fill-primary" />
-                      ))}
+                      {[...Array(5)].map((_, i) => <Star key={i} className="inline-block h-4 w-4 text-primary fill-primary" />)}
                     </div>
                     <p className="italic mb-4">"{testimonial.quote}"</p>
                     <p className="font-semibold">— {testimonial.author}</p>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
 
             <div className="flex justify-center">
@@ -236,8 +209,6 @@ const Landing = () => {
           </div>
         </section>
       </ScrollArea>
-    </div>
-  );
+    </div>;
 };
-
 export default Landing;
