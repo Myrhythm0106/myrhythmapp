@@ -12,12 +12,13 @@ import { MedicationReminders } from "@/components/calendar/MedicationReminders";
 import { DayView } from "@/components/calendar/views/DayView";
 import { WeekView } from "@/components/calendar/views/WeekView";
 import { StoryboardView } from "@/components/calendar/views/StoryboardView";
-import { Plus, CalendarIcon, Clock, HeartPulse, Layout } from "lucide-react";
+import { GoalsView } from "@/components/calendar/views/GoalsView";
+import { Plus, CalendarIcon, Clock, HeartPulse, Layout, Target } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [view, setView] = useState<"day" | "week" | "month" | "storyboard">("month");
+  const [view, setView] = useState<"day" | "week" | "month" | "storyboard" | "goals">("month");
 
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
@@ -47,11 +48,15 @@ const Calendar = () => {
             <Card>
               <CardContent className="pt-6">
                 <div className="mb-4 flex justify-between items-center">
-                  <Tabs value={view} onValueChange={(v) => setView(v as "day" | "week" | "month" | "storyboard")}>
+                  <Tabs value={view} onValueChange={(v) => setView(v as "day" | "week" | "month" | "storyboard" | "goals")}>
                     <TabsList>
                       <TabsTrigger value="day">Day</TabsTrigger>
                       <TabsTrigger value="week">Week</TabsTrigger>
                       <TabsTrigger value="month">Month</TabsTrigger>
+                      <TabsTrigger value="goals">
+                        <Target className="h-4 w-4 mr-1" />
+                        Goals
+                      </TabsTrigger>
                       <TabsTrigger value="storyboard">
                         <Layout className="h-4 w-4 mr-1" />
                         Storyboard
@@ -75,6 +80,10 @@ const Calendar = () => {
                 
                 {view === "week" && date && (
                   <WeekView date={date} events={[]} />
+                )}
+
+                {view === "goals" && (
+                  <GoalsView />
                 )}
 
                 {view === "storyboard" && date && (

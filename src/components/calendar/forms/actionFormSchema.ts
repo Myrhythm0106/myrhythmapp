@@ -22,6 +22,8 @@ export const actionFormSchema = z.object({
   description: z.string().optional(),
   isGoal: z.boolean().optional().default(false),
   goalId: z.string().optional(),
+  progress: z.number().optional().default(0),
+  status: z.enum(["completed", "pending", "in-progress", "canceled"]).optional().default("pending"),
 });
 
 export type ActionFormValues = z.infer<typeof actionFormSchema>;
@@ -41,4 +43,6 @@ export const defaultActionValues: ActionFormValues = {
   description: "",
   isGoal: false,
   goalId: undefined,
+  progress: 0,
+  status: "pending"
 };

@@ -12,27 +12,32 @@ import { LocationField } from "./forms/LocationField";
 import { NotesField } from "./forms/NotesField";
 import { ReminderSelect } from "./forms/ReminderSelect";
 import { WatchersField } from "./forms/WatchersField";
+import { GoalLinkField } from "./forms/GoalLinkField";
 import { FormActions } from "./forms/FormActions";
 import { MediaAttachment } from "./forms/MediaAttachment";
 import { actionFormSchema, ActionFormValues, defaultActionValues } from "./forms/actionFormSchema";
 
 interface EventFormProps {
   defaultTime?: string;
+  goalId?: string;
 }
 
-export function EventForm({ defaultTime }: EventFormProps = {}) {
+export function EventForm({ defaultTime, goalId }: EventFormProps = {}) {
   const form = useForm<ActionFormValues>({
     resolver: zodResolver(actionFormSchema),
     defaultValues: {
       ...defaultActionValues,
       startTime: defaultTime || defaultActionValues.startTime,
+      goalId: goalId || defaultActionValues.goalId,
     },
   });
 
   function onSubmit(values: ActionFormValues) {
-    toast.success("Action added successfully!");
+    toast.success(values.isGoal ? "Goal added successfully!" : "Action added successfully!");
     console.log(values);
   }
+
+  const isGoal = form.watch("isGoal");
 
   return (
     <FormProvider {...form}>
@@ -46,11 +51,12 @@ export function EventForm({ defaultTime }: EventFormProps = {}) {
               <LocationField />
               <NotesField />
               <MediaAttachment />
+              {!isGoal && <GoalLinkField preselectedGoalId={goalId} />}
               <ReminderSelect />
               <WatchersField />
             </div>
           </ScrollArea>
-          <FormActions isSubmitting={form.formState.isSubmitting} />
+          <FormActions isSubmitting={form.formState.isSubmitting} mode={goalId ? "edit" : "add"} />
         </form>
       </Form>
     </FormProvider>
