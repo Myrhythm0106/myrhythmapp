@@ -11,7 +11,7 @@ import { SearchResults } from "@/components/community/SearchResults";
 import { ExpertQA } from "@/components/community/ExpertQA";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { NewPostForm } from "@/components/community/NewPostForm";
-import { Users, MessageSquare, Search, Plus, User } from "lucide-react";
+import { Users, MessageSquare, Search, Plus, User, Heart } from "lucide-react";
 
 const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -56,21 +56,79 @@ const Community = () => {
         </Button>
       </form>
 
-      <Tabs defaultValue="discussions" className="space-y-4">
+      <Tabs defaultValue="support-circle" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="discussions" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Discussions
-          </TabsTrigger>
-          <TabsTrigger value="groups" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Groups
+          <TabsTrigger value="support-circle" className="flex items-center gap-2">
+            <Heart className="h-4 w-4" />
+            My Support Circle
           </TabsTrigger>
           <TabsTrigger value="expert-qa" className="flex items-center gap-2">
             <User className="h-4 w-4" />
             Expert Q&A
           </TabsTrigger>
+          <TabsTrigger value="groups" className="flex items-center gap-2">
+            <Users className="h-4 w-4" />
+            Groups
+          </TabsTrigger>
+          <TabsTrigger value="discussions" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Discussions
+          </TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="support-circle" className="space-y-4">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center mb-6">
+                <h3 className="text-xl font-semibold">My Support Circle</h3>
+                <p className="text-muted-foreground">
+                  Connect with your personal support network of family, friends, and caregivers
+                </p>
+              </div>
+              <div className="flex justify-center mb-4">
+                <Button asChild variant="outline">
+                  <a href="/personal-community" className="flex items-center gap-2">
+                    <Heart className="h-4 w-4" />
+                    Go to My Support Circle
+                  </a>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="expert-qa">
+          <Card>
+            <CardContent className="pt-6">
+              <ExpertQA />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="groups" className="space-y-4">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <CommunityGroup 
+              name="TBI Survivors"
+              description="A supportive community for individuals recovering from traumatic brain injuries."
+              memberCount={126}
+              image="/placeholder.svg"
+            />
+            
+            <CommunityGroup 
+              name="Caregivers Support"
+              description="Connect with others caring for loved ones with brain injuries or mental health conditions."
+              memberCount={94}
+              image="/placeholder.svg"
+            />
+            
+            <CommunityGroup 
+              name="Young Adults with Brain Injuries"
+              description="A group for people under 40 navigating life after brain injury."
+              memberCount={58}
+              image="/placeholder.svg"
+            />
+          </div>
+        </TabsContent>
         
         <TabsContent value="discussions" className="space-y-6">
           {searchQuery ? (
@@ -106,39 +164,6 @@ const Community = () => {
               />
             </>
           )}
-        </TabsContent>
-        
-        <TabsContent value="groups" className="space-y-4">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <CommunityGroup 
-              name="TBI Survivors"
-              description="A supportive community for individuals recovering from traumatic brain injuries."
-              memberCount={126}
-              image="/placeholder.svg"
-            />
-            
-            <CommunityGroup 
-              name="Caregivers Support"
-              description="Connect with others caring for loved ones with brain injuries or mental health conditions."
-              memberCount={94}
-              image="/placeholder.svg"
-            />
-            
-            <CommunityGroup 
-              name="Young Adults with Brain Injuries"
-              description="A group for people under 40 navigating life after brain injury."
-              memberCount={58}
-              image="/placeholder.svg"
-            />
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="expert-qa">
-          <Card>
-            <CardContent className="pt-6">
-              <ExpertQA />
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
