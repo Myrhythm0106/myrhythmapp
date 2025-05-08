@@ -1,8 +1,9 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Check, ArrowRight, Star, Clock, Heart, Compass } from "lucide-react";
+import { Brain, Check, ArrowRight, Star, Heart, Compass, Network } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Landing = () => {
@@ -25,9 +26,9 @@ const Landing = () => {
     title: "Transform Emotional Insight to Productivity",
     description: "MyRhythm's gentle emotional check-ins reveal powerful connections between mood and achievement, converting self-awareness into actionable productivity strategies."
   }, {
-    icon: <Clock className="h-10 w-10 text-primary" />,
-    title: "Never Lose What Matters",
-    description: "With our intuitive location tagging and quick-find features, MyRhythm brings instant peace of mind, allowing you to effortlessly locate your essentials."
+    icon: <Network className="h-10 w-10 text-primary" />,
+    title: "Community Connection",
+    description: "The network and support that understand and motivate and encourage you every step of your journey."
   }];
 
   return <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
