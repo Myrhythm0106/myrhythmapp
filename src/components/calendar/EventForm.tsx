@@ -16,10 +16,17 @@ import { FormActions } from "./forms/FormActions";
 import { MediaAttachment } from "./forms/MediaAttachment";
 import { actionFormSchema, ActionFormValues, defaultActionValues } from "./forms/actionFormSchema";
 
-export function EventForm() {
+interface EventFormProps {
+  defaultTime?: string;
+}
+
+export function EventForm({ defaultTime }: EventFormProps = {}) {
   const form = useForm<ActionFormValues>({
     resolver: zodResolver(actionFormSchema),
-    defaultValues: defaultActionValues,
+    defaultValues: {
+      ...defaultActionValues,
+      startTime: defaultTime || defaultActionValues.startTime,
+    },
   });
 
   function onSubmit(values: ActionFormValues) {

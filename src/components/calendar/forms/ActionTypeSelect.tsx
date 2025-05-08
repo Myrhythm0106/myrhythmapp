@@ -1,37 +1,91 @@
 
-import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useFormContext } from "react-hook-form";
+import React from 'react';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useFormContext } from 'react-hook-form';
+import { Switch } from '@/components/ui/switch';
+import { Calendar, CalendarCheck, CalendarPlus, Check, Flag, FlagCheck, ListCheck, Target } from 'lucide-react';
 
 export function ActionTypeSelect() {
-  const form = useFormContext();
+  const { control, watch, setValue } = useFormContext();
+  const isGoal = watch('isGoal');
+
+  const actionTypes = [
+    { value: 'appointment', label: 'Appointment', icon: <Calendar className="h-4 w-4" /> },
+    { value: 'meeting', label: 'Meeting', icon: <CalendarCheck className="h-4 w-4" /> },
+    { value: 'task', label: 'Task', icon: <Check className="h-4 w-4" /> },
+    { value: 'reminder', label: 'Reminder', icon: <CalendarPlus className="h-4 w-4" /> },
+    { value: 'goal', label: 'Goal', icon: <Target className="h-4 w-4" /> },
+  ];
+  
+  const goalTypes = [
+    { value: 'daily', label: 'Daily Goal', icon: <Flag className="h-4 w-4" /> },
+    { value: 'weekly', label: 'Weekly Goal', icon: <FlagCheck className="h-4 w-4" /> },
+    { value: 'monthly', label: 'Monthly Goal', icon: <Target className="h-4 w-4" /> },
+    { value: 'long-term', label: 'Long-term Goal', icon: <ListCheck className="h-4 w-4" /> },
+  ];
+
+  const handleGoalToggleChange = (checked: boolean) => {
+    setValue('isGoal', checked);
+    if (checked) {
+      setValue('actionType', 'goal');
+    } else {
+      setValue('actionType', '');
+    }
+  };
   
   return (
-    <FormField
-      control={form.control}
-      name="actionType"
-      render={({ field }) => (
-        <FormItem>
-          <FormLabel>Action Type</FormLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
+    <>
+      <div className="flex items-center justify-between mb-2">
+        <FormLabel>Action Type</FormLabel>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Is Goal</span>
+          <Switch 
+            checked={isGoal} 
+            onCheckedChange={handleGoalToggleChange}
+          />
+        </div>
+      </div>
+      
+      <FormField
+        control={control}
+        name="actionType"
+        render={({ field }) => (
+          <FormItem>
             <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="Select action type" />
-              </SelectTrigger>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                value={field.value}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Action Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {isGoal ? (
+                    goalTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value} className="flex items-center gap-2">
+                        <span className="flex items-center gap-2">
+                          {type.icon} {type.label}
+                        </span>
+                      </SelectItem>
+                    ))
+                  ) : (
+                    actionTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value} className="flex items-center gap-2">
+                        <span className="flex items-center gap-2">
+                          {type.icon} {type.label}
+                        </span>
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
             </FormControl>
-            <SelectContent>
-              <SelectItem value="appointment">Medical Appointment</SelectItem>
-              <SelectItem value="therapy">Therapy Session</SelectItem>
-              <SelectItem value="medication">Medication Reminder</SelectItem>
-              <SelectItem value="activity">Daily Activity</SelectItem>
-              <SelectItem value="personal">Personal Action</SelectItem>
-              <SelectItem value="other">Other</SelectItem>
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </>
   );
 }

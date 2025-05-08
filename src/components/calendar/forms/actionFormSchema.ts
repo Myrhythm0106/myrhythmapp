@@ -20,6 +20,8 @@ export const actionFormSchema = z.object({
   watchers: z.array(z.string()).optional(),
   mediaAttachments: z.array(mediaItemSchema).optional(),
   description: z.string().optional(),
+  isGoal: z.boolean().optional().default(false),
+  goalId: z.string().optional(),
 });
 
 export type ActionFormValues = z.infer<typeof actionFormSchema>;
@@ -37,4 +39,6 @@ export const defaultActionValues: ActionFormValues = {
   watchers: [],
   mediaAttachments: [],
   description: "",
+  isGoal: false,
+  goalId: undefined,
 };

@@ -3,6 +3,8 @@ import React from "react";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { EventForm } from "@/components/calendar/EventForm";
 
 interface TimeSlot {
   time: string;
@@ -27,20 +29,31 @@ export function DayView({ date, events = [] }: DayViewProps) {
       </div>
       <div className="h-[500px] overflow-y-auto">
         {timeSlots.map((slot, i) => (
-          <div 
-            key={slot.hour} 
-            className={cn(
-              "flex border-b py-2 relative h-16",
-              i % 2 === 0 ? "bg-background" : "bg-muted/10"
-            )}
-          >
-            <div className="px-4 w-20 text-sm text-muted-foreground flex-shrink-0">
-              {slot.time}
-            </div>
-            <div className="flex-1 px-2 relative">
-              {/* Here we'd render events that match this timeslot */}
-            </div>
-          </div>
+          <Dialog key={slot.hour}>
+            <DialogTrigger asChild>
+              <div 
+                className={cn(
+                  "flex border-b py-2 relative h-16 cursor-pointer hover:bg-muted/20 transition-colors",
+                  i % 2 === 0 ? "bg-background" : "bg-muted/10"
+                )}
+              >
+                <div className="px-4 w-20 text-sm text-muted-foreground flex-shrink-0">
+                  {slot.time}
+                </div>
+                <div className="flex-1 px-2 relative">
+                  {/* Here we'd render events that match this timeslot */}
+                </div>
+              </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[550px]">
+              <DialogHeader>
+                <DialogTitle>Add New Action at {slot.time}</DialogTitle>
+              </DialogHeader>
+              <EventForm 
+                defaultTime={`${String(slot.hour).padStart(2, '0')}:00`} 
+              />
+            </DialogContent>
+          </Dialog>
         ))}
       </div>
     </div>

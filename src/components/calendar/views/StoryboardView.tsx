@@ -1,6 +1,6 @@
 
 import React from "react";
-import { format, formatTime } from "date-fns";
+import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -20,10 +20,12 @@ export interface CalendarEvent {
   startTime: string;
   endTime?: string;
   location?: string;
-  type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other";
+  type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other" | "goal";
   watchers?: string[];
   media?: RichMedia[];
   description?: string;
+  isGoal?: boolean;
+  goalId?: string;
 }
 
 interface StoryboardViewProps {
@@ -90,6 +92,15 @@ const sampleEvents: CalendarEvent[] = [
       }
     ],
     description: "Monthly support group for TBI survivors"
+  },
+  {
+    id: "4",
+    title: "Improve Memory Skills",
+    date: "2023-05-20",
+    startTime: "All Day",
+    type: "goal",
+    description: "Practice memory exercises for 30 minutes daily",
+    isGoal: true
   }
 ];
 
@@ -97,7 +108,11 @@ export function StoryboardView({ date, events = [] }: StoryboardViewProps) {
   // For demo purposes, using sample data
   const displayEvents = events.length > 0 ? events : sampleEvents;
   
-  const getEventTypeStyles = (type: CalendarEvent["type"]) => {
+  const getEventTypeStyles = (type: CalendarEvent["type"], isGoal?: boolean) => {
+    if (isGoal || type === "goal") {
+      return "bg-amber-100 text-amber-800 border-l-4 border-amber-500";
+    }
+    
     switch (type) {
       case "appointment":
         return "bg-blue-100 text-blue-800 border-l-4 border-blue-500";
@@ -144,7 +159,7 @@ export function StoryboardView({ date, events = [] }: StoryboardViewProps) {
                 
                 <Card className={cn(
                   "flex-1 overflow-hidden hover-scale transition-all ml-8",
-                  getEventTypeStyles(event.type)
+                  getEventTypeStyles(event.type, event.isGoal)
                 )}>
                   <div className="flex md:flex-row flex-col">
                     {/* Media section */}
@@ -166,7 +181,7 @@ export function StoryboardView({ date, events = [] }: StoryboardViewProps) {
                       <div className="flex justify-between items-start">
                         <h4 className="font-medium text-lg">{event.title}</h4>
                         <span className="text-xs px-2 py-0.5 rounded-full bg-muted/80">
-                          {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                          {event.isGoal || event.type === "goal" ? "Goal" : event.type.charAt(0).toUpperCase() + event.type.slice(1)}
                         </span>
                       </div>
                       
