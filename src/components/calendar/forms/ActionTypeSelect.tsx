@@ -1,10 +1,9 @@
-
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useFormContext } from 'react-hook-form';
 import { Switch } from '@/components/ui/switch';
-import { Calendar, CalendarCheck, CalendarPlus, Check, Flag, FlagCheck, ListCheck, Target } from 'lucide-react';
+import { Calendar, CalendarCheck, CalendarPlus, Check, Flag, ListCheck, Target } from 'lucide-react';
 
 export function ActionTypeSelect() {
   const { control, watch, setValue } = useFormContext();
@@ -20,7 +19,7 @@ export function ActionTypeSelect() {
   
   const goalTypes = [
     { value: 'daily', label: 'Daily Goal', icon: <Flag className="h-4 w-4" /> },
-    { value: 'weekly', label: 'Weekly Goal', icon: <FlagCheck className="h-4 w-4" /> },
+    { value: 'weekly', label: 'Weekly Goal', icon: <Flag className="h-4 w-4" /> },
     { value: 'monthly', label: 'Monthly Goal', icon: <Target className="h-4 w-4" /> },
     { value: 'long-term', label: 'Long-term Goal', icon: <ListCheck className="h-4 w-4" /> },
   ];
