@@ -14,7 +14,7 @@ const FeaturesSection = () => {
     description: "Our revolutionary Visual Flow Builder transforms your day into an intuitive, drag-and-drop map of success. See the path, own the process."
   }, {
     icon: <Heart className="h-10 w-10 text-primary" />,
-    title: "Understand Emotions to Achieve More",
+    title: "Understand Emotions. Achieve More.",
     description: "MyRhythm's gentle emotional check-ins reveal powerful connections between mood and achievement, converting self-awareness into actionable productivity strategies."
   }, {
     icon: <Network className="h-10 w-10 text-primary" />,
