@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Brain, Heart, Compass, List, Settings } from "lucide-react";
+import { ShieldCheck, Heart, Compass, List, Settings } from "lucide-react";
 
 export type UserType = 
   | "brain-health" 
@@ -37,11 +37,11 @@ export const UserTypeSelector = ({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card 
-          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "brain-health" ? "border-2 border-primary" : ""}`}
+          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "brain-health" ? "border-2 border-annabel-500" : ""}`}
           onClick={() => handleSelectType("brain-health")}
         >
           <div className="flex items-start gap-4">
-            <Brain className="h-8 w-8 text-primary shrink-0" />
+            <ShieldCheck className="h-8 w-8 text-annabel-600 shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Brain Health Recovery</h3>
               <p className="text-muted-foreground text-sm">For those recovering from brain injury or conditions, focusing on mental rehabilitation and tracking progress.</p>
@@ -50,11 +50,11 @@ export const UserTypeSelector = ({
         </Card>
 
         <Card 
-          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "emotional-wellness" ? "border-2 border-primary" : ""}`}
+          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "emotional-wellness" ? "border-2 border-annabel-500" : ""}`}
           onClick={() => handleSelectType("emotional-wellness")}
         >
           <div className="flex items-start gap-4">
-            <Heart className="h-8 w-8 text-primary shrink-0" />
+            <Heart className="h-8 w-8 text-annabel-600 shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Emotional Wellness</h3>
               <p className="text-muted-foreground text-sm">For those seeking balance in mood and emotions, with tools for mindfulness and emotional regulation.</p>
@@ -63,11 +63,11 @@ export const UserTypeSelector = ({
         </Card>
 
         <Card 
-          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "clarity-focus" ? "border-2 border-primary" : ""}`}
+          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "clarity-focus" ? "border-2 border-annabel-500" : ""}`}
           onClick={() => handleSelectType("clarity-focus")}
         >
           <div className="flex items-start gap-4">
-            <Compass className="h-8 w-8 text-primary shrink-0" />
+            <Compass className="h-8 w-8 text-annabel-600 shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Clarity & Focus</h3>
               <p className="text-muted-foreground text-sm">For those wanting to improve cognitive function, memory, and focus in daily activities.</p>
@@ -76,11 +76,11 @@ export const UserTypeSelector = ({
         </Card>
 
         <Card 
-          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "productivity" ? "border-2 border-primary" : ""}`}
+          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "productivity" ? "border-2 border-annabel-500" : ""}`}
           onClick={() => handleSelectType("productivity")}
         >
           <div className="flex items-start gap-4">
-            <List className="h-8 w-8 text-primary shrink-0" />
+            <List className="h-8 w-8 text-annabel-600 shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Productivity Champion</h3>
               <p className="text-muted-foreground text-sm">For those seeking to maximize efficiency, complete tasks promptly, and achieve more in less time.</p>
@@ -89,11 +89,11 @@ export const UserTypeSelector = ({
         </Card>
 
         <Card 
-          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "organization" ? "border-2 border-primary" : ""}`}
+          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "organization" ? "border-2 border-annabel-500" : ""}`}
           onClick={() => handleSelectType("organization")}
         >
           <div className="flex items-start gap-4">
-            <Settings className="h-8 w-8 text-primary shrink-0" />
+            <Settings className="h-8 w-8 text-annabel-600 shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Organization Expert</h3>
               <p className="text-muted-foreground text-sm">For those wanting structured routines, methodical planning, and a comprehensive approach to life management.</p>
@@ -102,11 +102,11 @@ export const UserTypeSelector = ({
         </Card>
 
         <Card 
-          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "custom" ? "border-2 border-primary" : ""}`}
+          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "custom" ? "border-2 border-annabel-500" : ""}`}
           onClick={() => handleSelectType("custom")}
         >
           <div className="flex items-start gap-4">
-            <Settings className="h-8 w-8 text-primary shrink-0" />
+            <Settings className="h-8 w-8 text-annabel-600 shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Something Else</h3>
               <p className="text-muted-foreground text-sm">Tell us about your specific needs and goals so we can personalize your experience.</p>
@@ -123,7 +123,7 @@ export const UserTypeSelector = ({
             value={customType}
             onChange={(e) => onCustomTypeChange(e.target.value)}
             placeholder="Describe your specific needs..."
-            className="w-full"
+            className="w-full focus:ring-annabel-500 focus:border-annabel-500"
           />
         </div>
       )}

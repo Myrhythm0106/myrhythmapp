@@ -9,7 +9,7 @@ const TestimonialsSection = () => {
   
   const testimonials = [
     {
-      quote: "MyRhythm has completely transformed how I manage my day. I feel in control for the first time in years.",
+      quote: "Annabel Aaron has completely transformed how I manage my day. I feel in control for the first time in years.",
       author: "Alex D."
     }, 
     {
@@ -28,7 +28,7 @@ const TestimonialsSection = () => {
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-3">What Our Users Say</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Join thousands who have improved their brain health journey with MyRhythm.
+            Join thousands who have improved their wellbeing journey with Annabel Aaron.
           </p>
         </div>
 
@@ -43,7 +43,7 @@ const TestimonialsSection = () => {
         </div>
 
         <div className="flex justify-center">
-          <Button size="lg" className="text-lg px-8" onClick={() => navigate("/onboarding?plan=basic&step=3")}>
+          <Button size="lg" className="text-lg px-8 bg-annabel-600 hover:bg-annabel-700" onClick={() => navigate("/onboarding?plan=basic&step=3")}>
             Start Your Free Trial
           </Button>
         </div>

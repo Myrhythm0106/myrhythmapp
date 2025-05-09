@@ -14,7 +14,7 @@ const TestimonialCard = ({ quote, author }: TestimonialCardProps) => {
       <CardContent className="pt-6">
         <div className="mb-4">
           {[...Array(5)].map((_, i) => (
-            <Star key={i} className="inline-block h-4 w-4 text-primary fill-primary" />
+            <Star key={i} className="inline-block h-4 w-4 text-annabel-600 fill-annabel-500" />
           ))}
         </div>
         <p className="italic mb-4">"{quote}"</p>

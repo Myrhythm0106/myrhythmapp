@@ -2,11 +2,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Brain, ArrowRight, LogIn } from "lucide-react";
+import { ShieldCheck, ArrowRight, LogIn } from "lucide-react";
+
 const HeroSection = () => {
   const navigate = useNavigate();
   return <section className="relative overflow-hidden">
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 py-28 md:py-36">
+      <div className="bg-gradient-to-r from-annabel-100 to-aaron-100 py-28 md:py-36">
         {/* Login button at very top right */}
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
@@ -23,8 +24,8 @@ const HeroSection = () => {
           
           <div className="flex justify-center mb-12">
             <div className="flex items-center gap-2">
-              <Brain className="h-14 w-14 text-primary" />
-              <h1 className="text-5xl font-bold">MyRhythm</h1>
+              <ShieldCheck className="h-14 w-14 text-annabel-600" />
+              <h1 className="text-5xl font-bold">Annabel Aaron</h1>
             </div>
           </div>
           
@@ -37,11 +38,11 @@ const HeroSection = () => {
               It's your rhythm for life.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" className="text-lg" onClick={() => navigate("/onboarding?step=2")}>
+              <Button size="lg" className="text-lg bg-annabel-600 hover:bg-annabel-700" onClick={() => navigate("/onboarding?step=2")}>
                 Start Your Journey
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/onboarding?step=1")}>
+              <Button size="lg" variant="outline" className="text-lg border-annabel-600 text-annabel-600 hover:bg-annabel-50" onClick={() => navigate("/onboarding?step=1")}>
                 Learn More
               </Button>
             </div>
