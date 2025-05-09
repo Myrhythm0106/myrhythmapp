@@ -1,13 +1,10 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Brain, ArrowRight, LogIn } from "lucide-react";
-
 const HeroSection = () => {
   const navigate = useNavigate();
-  return (
-    <section className="relative overflow-hidden">
+  return <section className="relative overflow-hidden">
       <div className="bg-gradient-to-r from-primary/10 to-secondary/10 py-28 md:py-36">
         {/* Login button at very top right */}
         <div className="container mx-auto px-4 max-w-6xl">
@@ -31,7 +28,7 @@ const HeroSection = () => {
           </div>
           
           <div className="text-center mb-16 max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Organise Your World. Support Your Recall.</h2>
+            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Organise Your World. Support Your Recall.</h2>
             <p className="text-xl text-muted-foreground">
               Empowering you to live O.R.D.E.R.ly. Organize priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. 
               <br /><br />
@@ -50,8 +47,6 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HeroSection;
