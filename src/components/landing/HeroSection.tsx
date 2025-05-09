@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ const HeroSection = () => {
           </div>
           
           <div className="text-center mb-16 max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Organise Your World. Support Your Recall.</h2>
+            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Organise Your World. Support Your Recall.</h2>
             <p className="text-xl text-muted-foreground">
               Empowering you to live O.R.D.E.R.ly. Organize priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. 
               <br /><br />
@@ -36,11 +37,11 @@ const HeroSection = () => {
               It's your rhythm for life.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" className="text-lg" onClick={() => navigate("/profile")}>
+              <Button size="lg" className="text-lg" onClick={() => navigate("/onboarding?step=2")}>
                 Start Your Journey
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/onboarding")}>
+              <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/onboarding?step=1")}>
                 Learn More
               </Button>
             </div>

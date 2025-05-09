@@ -1,73 +1,132 @@
 
-import React from "react";
-import { Brain, User, HeartPulse, Users } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React, { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Brain, Heart, Compass, List, Category } from "lucide-react";
 
-export type UserType = "tbi" | "abi" | "mental-health" | "caregiver";
-
-interface UserTypeOption {
-  id: UserType;
-  label: string;
-  description: string;
-  icon: React.ReactNode;
-}
+export type UserType = 
+  | "brain-health" 
+  | "emotional-wellness" 
+  | "clarity-focus" 
+  | "productivity" 
+  | "organization"
+  | "custom";
 
 interface UserTypeSelectorProps {
   selectedType: UserType | null;
   onChange: (type: UserType) => void;
+  customType?: string;
+  onCustomTypeChange?: (value: string) => void;
 }
 
-export function UserTypeSelector({ selectedType, onChange }: UserTypeSelectorProps) {
-  const userTypes: UserTypeOption[] = [
-    {
-      id: "tbi",
-      label: "Traumatic Brain Injury",
-      description: "I have experienced a TBI and am looking for support",
-      icon: <Brain className="h-6 w-6" />,
-    },
-    {
-      id: "abi",
-      label: "Acquired Brain Injury",
-      description: "I have an ABI (stroke, aneurysm, etc.) and need resources",
-      icon: <Brain className="h-6 w-6" />,
-    },
-    {
-      id: "mental-health",
-      label: "Mental Health",
-      description: "I'm seeking support for brain-related mental health conditions",
-      icon: <HeartPulse className="h-6 w-6" />,
-    },
-    {
-      id: "caregiver",
-      label: "Caregiver",
-      description: "I care for someone with a brain injury or mental health condition",
-      icon: <Users className="h-6 w-6" />,
-    },
-  ];
+export const UserTypeSelector = ({ 
+  selectedType, 
+  onChange,
+  customType = "",
+  onCustomTypeChange = () => {}
+}: UserTypeSelectorProps) => {
+  const [showCustomField, setShowCustomField] = useState(selectedType === "custom");
+
+  const handleSelectType = (type: UserType) => {
+    onChange(type);
+    setShowCustomField(type === "custom");
+  };
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {userTypes.map((type) => (
-        <button
-          key={type.id}
-          className={cn(
-            "flex cursor-pointer items-start gap-4 rounded-lg border p-4 text-left transition-all hover:border-primary",
-            selectedType === type.id && "border-primary bg-primary/5"
-          )}
-          onClick={() => onChange(type.id)}
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card 
+          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "brain-health" ? "border-2 border-primary" : ""}`}
+          onClick={() => handleSelectType("brain-health")}
         >
-          <div className={cn(
-            "rounded-full p-2 text-primary",
-            selectedType === type.id ? "bg-primary/10" : "bg-muted"
-          )}>
-            {type.icon}
+          <div className="flex items-start gap-4">
+            <Brain className="h-8 w-8 text-primary shrink-0" />
+            <div>
+              <h3 className="font-medium text-lg mb-2">Brain Health Recovery</h3>
+              <p className="text-muted-foreground text-sm">For those recovering from brain injury or conditions, focusing on mental rehabilitation and tracking progress.</p>
+            </div>
           </div>
-          <div>
-            <h3 className="font-medium">{type.label}</h3>
-            <p className="text-sm text-muted-foreground">{type.description}</p>
+        </Card>
+
+        <Card 
+          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "emotional-wellness" ? "border-2 border-primary" : ""}`}
+          onClick={() => handleSelectType("emotional-wellness")}
+        >
+          <div className="flex items-start gap-4">
+            <Heart className="h-8 w-8 text-primary shrink-0" />
+            <div>
+              <h3 className="font-medium text-lg mb-2">Emotional Wellness</h3>
+              <p className="text-muted-foreground text-sm">For those seeking balance in mood and emotions, with tools for mindfulness and emotional regulation.</p>
+            </div>
           </div>
-        </button>
-      ))}
+        </Card>
+
+        <Card 
+          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "clarity-focus" ? "border-2 border-primary" : ""}`}
+          onClick={() => handleSelectType("clarity-focus")}
+        >
+          <div className="flex items-start gap-4">
+            <Compass className="h-8 w-8 text-primary shrink-0" />
+            <div>
+              <h3 className="font-medium text-lg mb-2">Clarity & Focus</h3>
+              <p className="text-muted-foreground text-sm">For those wanting to improve cognitive function, memory, and focus in daily activities.</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card 
+          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "productivity" ? "border-2 border-primary" : ""}`}
+          onClick={() => handleSelectType("productivity")}
+        >
+          <div className="flex items-start gap-4">
+            <List className="h-8 w-8 text-primary shrink-0" />
+            <div>
+              <h3 className="font-medium text-lg mb-2">Productivity Champion</h3>
+              <p className="text-muted-foreground text-sm">For those seeking to maximize efficiency, complete tasks promptly, and achieve more in less time.</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card 
+          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "organization" ? "border-2 border-primary" : ""}`}
+          onClick={() => handleSelectType("organization")}
+        >
+          <div className="flex items-start gap-4">
+            <Category className="h-8 w-8 text-primary shrink-0" />
+            <div>
+              <h3 className="font-medium text-lg mb-2">Organization Expert</h3>
+              <p className="text-muted-foreground text-sm">For those wanting structured routines, methodical planning, and a comprehensive approach to life management.</p>
+            </div>
+          </div>
+        </Card>
+
+        <Card 
+          className={`p-6 cursor-pointer hover:border-primary transition-all ${selectedType === "custom" ? "border-2 border-primary" : ""}`}
+          onClick={() => handleSelectType("custom")}
+        >
+          <div className="flex items-start gap-4">
+            <Category className="h-8 w-8 text-primary shrink-0" />
+            <div>
+              <h3 className="font-medium text-lg mb-2">Something Else</h3>
+              <p className="text-muted-foreground text-sm">Tell us about your specific needs and goals so we can personalize your experience.</p>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {showCustomField && (
+        <div className="mt-6 p-4 border rounded-md">
+          <Label htmlFor="customType" className="mb-2 block">What best describes your needs?</Label>
+          <Input 
+            id="customType"
+            value={customType}
+            onChange={(e) => onCustomTypeChange(e.target.value)}
+            placeholder="Describe your specific needs..."
+            className="w-full"
+          />
+        </div>
+      )}
     </div>
   );
-}
+};

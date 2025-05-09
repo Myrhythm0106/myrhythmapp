@@ -22,6 +22,7 @@ const Onboarding = () => {
   const initialStep = parseInt(queryParams.get("step") || "1");
   const [step, setStep] = useState(initialStep);
   const [userType, setUserType] = useState<UserType | null>(null);
+  const [customTypeValue, setCustomTypeValue] = useState("");
   
   const personalInfoSchema = z.object({
     name: z.string().min(2, "Name must be at least 2 characters"),
@@ -68,12 +69,22 @@ const Onboarding = () => {
         toast.error("Please select a user type to continue");
         return;
       }
+      
+      if (userType === "custom" && !customTypeValue.trim()) {
+        toast.error("Please describe your specific needs");
+        return;
+      }
+      
       setStep(2);
     }
   };
   
   const handlePersonalInfoSubmit = (values: z.infer<typeof personalInfoSchema>) => {
     console.log("Personal info:", values);
+    console.log("User type:", userType);
+    if (userType === "custom") {
+      console.log("Custom type:", customTypeValue);
+    }
     completeOnboarding();
   };
   
@@ -142,7 +153,12 @@ const Onboarding = () => {
           <CardContent>
             {step === 1 ? (
               <div className="space-y-6">
-                <UserTypeSelector selectedType={userType} onChange={setUserType} />
+                <UserTypeSelector 
+                  selectedType={userType} 
+                  onChange={setUserType} 
+                  customType={customTypeValue}
+                  onCustomTypeChange={setCustomTypeValue}
+                />
                 <div className="flex justify-end">
                   <Button onClick={handleContinue} className="gap-2">
                     Next <ArrowRight className="h-4 w-4" />
