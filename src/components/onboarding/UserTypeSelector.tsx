@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Brain, Heart, Compass, List, Category } from "lucide-react";
+import { Brain, Heart, Compass, List, Settings } from "lucide-react";
 
 export type UserType = 
   | "brain-health" 
@@ -93,7 +93,7 @@ export const UserTypeSelector = ({
           onClick={() => handleSelectType("organization")}
         >
           <div className="flex items-start gap-4">
-            <Category className="h-8 w-8 text-primary shrink-0" />
+            <Settings className="h-8 w-8 text-primary shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Organization Expert</h3>
               <p className="text-muted-foreground text-sm">For those wanting structured routines, methodical planning, and a comprehensive approach to life management.</p>
@@ -106,7 +106,7 @@ export const UserTypeSelector = ({
           onClick={() => handleSelectType("custom")}
         >
           <div className="flex items-start gap-4">
-            <Category className="h-8 w-8 text-primary shrink-0" />
+            <Settings className="h-8 w-8 text-primary shrink-0" />
             <div>
               <h3 className="font-medium text-lg mb-2">Something Else</h3>
               <p className="text-muted-foreground text-sm">Tell us about your specific needs and goals so we can personalize your experience.</p>
