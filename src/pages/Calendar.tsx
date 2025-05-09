@@ -29,7 +29,7 @@ const Calendar = () => {
         >
           <Dialog>
             <DialogTrigger asChild>
-              <Button>
+              <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
                 <Plus className="mr-1 h-4 w-4" />
                 Add Action
               </Button>
@@ -113,7 +113,7 @@ const Calendar = () => {
                   </h3>
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button size="sm">
+                      <Button size="sm" className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all rounded-full">
                         <Plus className="mr-1 h-3 w-3" />
                         Add Medication
                       </Button>

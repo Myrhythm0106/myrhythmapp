@@ -26,8 +26,8 @@ export const Sidebar = () => {
           <nav className="grid gap-1 px-2">
             <NavItem to="/profile" icon={<User />} label="My Profile" isOpen={isOpen} />
             <NavItem to="/dashboard" icon={<Home />} label="Dashboard" isOpen={isOpen} />
-            <NavItem to="/tracking" icon={<HeartPulse />} label="Symptom Tracking" isOpen={isOpen} />
             <NavItem to="/calendar" icon={<Calendar />} label="Calendar" isOpen={isOpen} />
+            <NavItem to="/tracking" icon={<HeartPulse />} label="Health and Fitness Tracking" isOpen={isOpen} />
             <NavItem to="/community" icon={<Users />} label="Community" isOpen={isOpen} />
             <NavItem to="/personal-community" icon={<Heart />} label="My Support Circle" isOpen={isOpen} />
             <NavItem to="/useful-info" icon={<Info />} label="Useful Info" isOpen={isOpen} />

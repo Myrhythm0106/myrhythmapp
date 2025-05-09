@@ -17,19 +17,22 @@ const SymptomTracking = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Symptom Tracking" 
-        subtitle="Monitor symptoms and identify patterns over time"
+        title="Health and Fitness Tracking" 
+        subtitle="Monitor health metrics and identify patterns over time"
       >
-        <Button onClick={() => setActiveTab("log")}>
+        <Button 
+          onClick={() => setActiveTab("log")}
+          className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all"
+        >
           <Plus className="mr-1 h-4 w-4" />
-          Log Symptoms
+          Log Health Data
         </Button>
       </PageHeader>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="log">Log Symptoms</TabsTrigger>
+          <TabsTrigger value="log">Log Data</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
           <TabsTrigger value="insights">Insights</TabsTrigger>
           <TabsTrigger value="inspiration">Inspiration</TabsTrigger>

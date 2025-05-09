@@ -92,7 +92,7 @@ export function MedicationReminders() {
       <div className="flex justify-end mb-4">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="bg-gradient-to-r from-secondary/80 to-secondary text-white font-medium border-none shadow-sm hover:shadow-md transition-all">
               <Plus className="h-3.5 w-3.5 mr-1" />
               Add Medication
             </Button>
@@ -132,7 +132,7 @@ export function MedicationReminders() {
                       <X className="h-3.5 w-3.5 mr-1" />
                       Skip
                     </Button>
-                    <Button size="sm" onClick={() => handleTaken(med.id)}>
+                    <Button size="sm" className="bg-gradient-to-r from-secondary/90 to-secondary text-white" onClick={() => handleTaken(med.id)}>
                       <Check className="h-3.5 w-3.5 mr-1" />
                       Taken
                     </Button>
@@ -145,7 +145,7 @@ export function MedicationReminders() {
       <div className="mt-4">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
-            <Button variant="outline" className="w-full font-medium text-xs">
+            <Button variant="outline" className="w-full font-medium text-xs bg-gradient-to-r from-primary/80 to-primary text-white border-none shadow-sm hover:shadow-md transition-all">
               <Plus className="h-4 w-4 mr-1" />
               Add Medication Reminder
             </Button>

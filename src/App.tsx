@@ -36,14 +36,14 @@ const App = () => (
               <Profile />
             </MainLayout>
           } />
-          <Route path="/tracking" element={
-            <MainLayout>
-              <SymptomTracking />
-            </MainLayout>
-          } />
           <Route path="/calendar" element={
             <MainLayout>
               <Calendar />
+            </MainLayout>
+          } />
+          <Route path="/tracking" element={
+            <MainLayout>
+              <SymptomTracking />
             </MainLayout>
           } />
           <Route path="/community" element={

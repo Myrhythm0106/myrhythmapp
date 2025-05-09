@@ -21,11 +21,15 @@ export function SymptomTracker() {
   return (
     <Card className="h-full">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-xl font-semibold">Symptom Tracking</CardTitle>
-        <Button size="sm" asChild>
+        <CardTitle className="text-xl font-semibold">Health & Fitness Tracking</CardTitle>
+        <Button 
+          size="sm" 
+          asChild 
+          className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all"
+        >
           <Link to="/tracking/add">
             <Plus className="mr-1 h-4 w-4" />
-            Log Symptoms
+            Log Data
           </Link>
         </Button>
       </CardHeader>
@@ -57,7 +61,11 @@ export function SymptomTracker() {
             Tracking headache intensity on a scale from 0-5
           </p>
         </div>
-        <Button variant="outline" className="w-full" asChild>
+        <Button 
+          variant="outline" 
+          className="w-full bg-gradient-to-r from-primary/10 to-primary/5 hover:bg-primary/20 transition-all" 
+          asChild
+        >
           <Link to="/tracking">View All Tracking Data</Link>
         </Button>
       </CardContent>
