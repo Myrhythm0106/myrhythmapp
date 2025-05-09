@@ -43,7 +43,7 @@ const SplashScreen = () => {
           }`}
         >
           <h2 className="text-2xl md:text-3xl font-bold leading-tight">
-            Organize Your World.<br />Support Your Recall.
+            Organize Your World. Support Your Recall.
           </h2>
           
           <div className="space-y-4 max-w-sm mx-auto">
