@@ -1,21 +1,13 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { PageHeader } from "@/components/ui/PageHeader";
+
+import React, { useState } from "react";
 import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
-import { SymptomTracker } from "@/components/dashboard/SymptomTracker";
-import { CommunityCard } from "@/components/dashboard/CommunityCard";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, Info } from "lucide-react";
-import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
-import { DailyCheckin } from "@/components/dashboard/DailyCheckin";
-import { UpcomingEvents } from "@/components/calendar/UpcomingEvents";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardContent } from "@/components/dashboard/DashboardContent";
+import { MobileCarousel } from "@/components/dashboard/MobileCarousel";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [showTutorial, setShowTutorial] = useState(false);
   
@@ -25,77 +17,16 @@ const Dashboard = () => {
     userType: "tbi" as const,
   };
 
-  // Cards for the swipeable carousel
-  const dashboardCards = [
-    <DailyCheckin key="checkin" />,
-    <SymptomTracker key="symptom" />,
-    <CommunityCard key="community" />,
-    <UpcomingEvents key="upcoming" date={new Date()} />
-  ];
-
-  const handleCardClick = (path: string) => {
-    navigate(path);
-  };
-
   return (
     <div className="space-y-8 animate-fade-in">
-      <div className="flex items-center justify-between">
-        <PageHeader
-          title="Dashboard"
-          subtitle="Your personalized brain health hub"
-        />
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm"
-            onClick={() => setShowTutorial(true)}
-            className="flex items-center gap-2 premium-button"
-            aria-label="View tutorial"
-          >
-            <Info className="h-4 w-4" />
-            Help
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2"
-            aria-label="Go back to previous page"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back
-          </Button>
-        </div>
-      </div>
+      <DashboardHeader onShowTutorial={() => setShowTutorial(true)} />
       
       <WelcomeCard name={userData.name} userType={userData.userType} />
       
       {isMobile ? (
-        <SwipeableCarousel items={dashboardCards} title="Your Health Overview" />
+        <MobileCarousel />
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <div className="md:col-span-2 lg:col-span-1">
-            <DailyCheckin />
-          </div>
-          <div onClick={() => handleCardClick("/tracking")} className="cursor-pointer">
-            <SymptomTracker />
-          </div>
-          <div onClick={() => handleCardClick("/community")} className="cursor-pointer">
-            <CommunityCard />
-          </div>
-          <div onClick={() => handleCardClick("/calendar")} className="cursor-pointer md:col-span-2 lg:col-span-1">
-            <div className="h-full">
-              <Card className="h-full">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl font-semibold">Upcoming Events</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <UpcomingEvents date={new Date()} />
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
+        <DashboardContent isMobile={isMobile} />
       )}
 
       <TutorialModal isOpen={showTutorial} onComplete={() => setShowTutorial(false)} />
