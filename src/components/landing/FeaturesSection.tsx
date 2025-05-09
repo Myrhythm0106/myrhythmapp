@@ -23,16 +23,16 @@ const FeaturesSection = () => {
   }];
 
   return (
-    <section className="py-16 bg-background">
+    <section className="py-24 bg-background">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-3">Align Your Emotions for Peak Performance</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold mb-6">Align Your Emotions for Peak Performance</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
             MyRhythm combines cutting-edge technology with human-centered design to help you achieve more with less stress.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
           {features.map((feature, index) => (
             <Feature 
               key={index}
