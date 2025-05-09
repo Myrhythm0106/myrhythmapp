@@ -15,8 +15,59 @@ import Calendar from "./pages/Calendar";
 import Community from "./pages/Community";
 import PersonalCommunity from "./pages/PersonalCommunity";
 import UsefulInfo from "./pages/UsefulInfo";
+import SplashScreen from "./components/mobile/SplashScreen";
+import { useIsMobile } from "./hooks/use-mobile";
 
 const queryClient = new QueryClient();
+
+const AppRoutes = () => {
+  const isMobile = useIsMobile();
+
+  // If on mobile device, show the mobile splash screen as home
+  return (
+    <Routes>
+      {/* Use the SplashScreen for mobile, Landing for desktop */}
+      <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
+      <Route path="/dashboard" element={<Index />} />
+      <Route path="/onboarding" element={<Onboarding />} />
+      
+      {/* Routes with MainLayout */}
+      <Route path="/profile" element={
+        <MainLayout>
+          <Profile />
+        </MainLayout>
+      } />
+      <Route path="/calendar" element={
+        <MainLayout>
+          <Calendar />
+        </MainLayout>
+      } />
+      <Route path="/tracking" element={
+        <MainLayout>
+          <SymptomTracking />
+        </MainLayout>
+      } />
+      <Route path="/community" element={
+        <MainLayout>
+          <Community />
+        </MainLayout>
+      } />
+      <Route path="/personal-community" element={
+        <MainLayout>
+          <PersonalCommunity />
+        </MainLayout>
+      } />
+      <Route path="/useful-info" element={
+        <MainLayout>
+          <UsefulInfo />
+        </MainLayout>
+      } />
+      
+      {/* 404 Page */}
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  );
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -24,47 +75,7 @@ const App = () => (
       <Toaster />
       <Sonner richColors />
       <BrowserRouter>
-        <Routes>
-          {/* Landing page as the root */}
-          <Route path="/" element={<Landing />} />
-          <Route path="/dashboard" element={<Index />} />
-          <Route path="/onboarding" element={<Onboarding />} />
-          
-          {/* Routes with MainLayout */}
-          <Route path="/profile" element={
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          } />
-          <Route path="/calendar" element={
-            <MainLayout>
-              <Calendar />
-            </MainLayout>
-          } />
-          <Route path="/tracking" element={
-            <MainLayout>
-              <SymptomTracking />
-            </MainLayout>
-          } />
-          <Route path="/community" element={
-            <MainLayout>
-              <Community />
-            </MainLayout>
-          } />
-          <Route path="/personal-community" element={
-            <MainLayout>
-              <PersonalCommunity />
-            </MainLayout>
-          } />
-          <Route path="/useful-info" element={
-            <MainLayout>
-              <UsefulInfo />
-            </MainLayout>
-          } />
-          
-          {/* 404 Page */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AppRoutes />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
