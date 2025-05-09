@@ -45,7 +45,7 @@ export function GoalLinkField({ preselectedGoalId }: GoalLinkFieldProps) {
                 <SelectValue placeholder="Select a goal to link this action to (optional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">
+                <SelectItem value="none">
                   <span className="text-muted-foreground">Not linked to any goal</span>
                 </SelectItem>
                 {sampleGoals.map((goal) => (

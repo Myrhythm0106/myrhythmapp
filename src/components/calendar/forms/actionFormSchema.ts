@@ -42,7 +42,7 @@ export const defaultActionValues: ActionFormValues = {
   mediaAttachments: [],
   description: "",
   isGoal: false,
-  goalId: undefined,
+  goalId: "none", // Changed from undefined to "none"
   progress: 0,
   status: "pending"
 };

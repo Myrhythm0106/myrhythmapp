@@ -28,13 +28,19 @@ export function EventForm({ defaultTime, goalId }: EventFormProps = {}) {
     defaultValues: {
       ...defaultActionValues,
       startTime: defaultTime || defaultActionValues.startTime,
-      goalId: goalId || defaultActionValues.goalId,
+      goalId: goalId || "none", // Changed from empty string to "none"
     },
   });
 
   function onSubmit(values: ActionFormValues) {
+    // Convert "none" back to undefined or empty string for the API if needed
+    const submissionValues = {
+      ...values,
+      goalId: values.goalId === "none" ? undefined : values.goalId
+    };
+    
     toast.success(values.isGoal ? "Goal added successfully!" : "Action added successfully!");
-    console.log(values);
+    console.log(submissionValues);
   }
 
   const isGoal = form.watch("isGoal");
