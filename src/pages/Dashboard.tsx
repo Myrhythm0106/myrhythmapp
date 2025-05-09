@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -11,6 +12,7 @@ import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
+import { DailyCheckin } from "@/components/dashboard/DailyCheckin";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -25,10 +27,15 @@ const Dashboard = () => {
 
   // Cards for the swipeable carousel
   const dashboardCards = [
+    <DailyCheckin key="checkin" />,
     <SymptomTracker key="symptom" />,
     <CommunityCard key="community" />,
     <EmergencyResourcesCard key="emergency" />
   ];
+
+  const handleCardClick = (path: string) => {
+    navigate(path);
+  };
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -67,9 +74,16 @@ const Dashboard = () => {
         <SwipeableCarousel items={dashboardCards} title="Your Health Overview" />
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <SymptomTracker />
-          <CommunityCard />
           <div className="md:col-span-2 lg:col-span-1">
+            <DailyCheckin />
+          </div>
+          <div onClick={() => handleCardClick("/tracking")} className="cursor-pointer">
+            <SymptomTracker />
+          </div>
+          <div onClick={() => handleCardClick("/community")} className="cursor-pointer">
+            <CommunityCard />
+          </div>
+          <div onClick={() => handleCardClick("/useful-info")} className="cursor-pointer md:col-span-2 lg:col-span-1">
             <EmergencyResourcesCard />
           </div>
         </div>

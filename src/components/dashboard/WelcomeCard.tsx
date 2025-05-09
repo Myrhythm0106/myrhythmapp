@@ -1,6 +1,8 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Calendar, Book } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface WelcomeCardProps {
   name?: string;
@@ -8,6 +10,8 @@ interface WelcomeCardProps {
 }
 
 export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardProps) {
+  const navigate = useNavigate();
+  
   const greetingTime = () => {
     const hour = new Date().getHours();
     if (hour < 12) return "Good morning";
@@ -26,7 +30,7 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
       case "caregiver":
         return "Find support for yourself while caring for your loved one, and access resources to help both of you.";
       default:
-        return "Welcome to Dallas Brain Beacon. Get started by customizing your profile and exploring resources.";
+        return "Welcome to MyRhythm. Get started by customizing your profile and exploring resources.";
     }
   };
 
@@ -45,7 +49,12 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
       </div>
       <CardContent className="p-6">
         <div className="grid gap-4 md:grid-cols-3">
-          <div className="flex items-center gap-3 rounded-lg border p-4">
+          <div 
+            className="flex items-center gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={() => navigate("/tracking")}
+            role="button"
+            aria-label="Go to daily check-in"
+          >
             <div className="rounded-full bg-beacon-100 p-2 text-beacon-700">
               <Brain size={20} />
             </div>
@@ -54,7 +63,12 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
               <p className="text-xs text-muted-foreground">Record how you're feeling today</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border p-4">
+          <div 
+            className="flex items-center gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={() => navigate("/calendar")}
+            role="button"
+            aria-label="Go to appointments"
+          >
             <div className="rounded-full bg-healing-100 p-2 text-healing-700">
               <Calendar size={20} />
             </div>
@@ -63,7 +77,12 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
               <p className="text-xs text-muted-foreground">May 10, 2:00 PM</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 rounded-lg border p-4">
+          <div 
+            className="flex items-center gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={() => navigate("/useful-info")}
+            role="button"
+            aria-label="Go to resources"
+          >
             <div className="rounded-full bg-comfort-100 p-2 text-comfort-700">
               <Book size={20} />
             </div>

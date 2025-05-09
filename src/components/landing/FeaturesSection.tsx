@@ -7,7 +7,7 @@ const FeaturesSection = () => {
   const features = [{
     icon: <ShieldCheck className="h-10 w-10 text-annabel-600" />,
     title: "Enhance Mind. Organize Forward.",
-    description: "Annabel Aaron doesn't just remind, it anticipates. By understanding your rhythm, it proactively suggests optimal schedules and breaks down complex tasks."
+    description: "MyRhythm doesn't just remind, it anticipates. By understanding your rhythm, it proactively suggests optimal schedules and breaks down complex tasks."
   }, {
     icon: <Compass className="h-10 w-10 text-annabel-600" />,
     title: "Visualise Progress. Routine Wins.",
@@ -15,7 +15,7 @@ const FeaturesSection = () => {
   }, {
     icon: <Heart className="h-10 w-10 text-annabel-600" />,
     title: "Understand Emotions. Achieve More.",
-    description: "Annabel Aaron's gentle emotional check-ins reveal powerful connections between mood and achievement, converting self-awareness into actionable productivity strategies."
+    description: "MyRhythm's gentle emotional check-ins reveal powerful connections between mood and achievement, converting self-awareness into actionable productivity strategies."
   }, {
     icon: <Network className="h-10 w-10 text-annabel-600" />,
     title: "Connect Within. Fuel Momentum.",
@@ -28,7 +28,7 @@ const FeaturesSection = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold mb-6">Align Your Emotions for Peak Performance</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Annabel Aaron combines cutting-edge technology with human-centered design to help you achieve more with less stress.
+            MyRhythm combines cutting-edge technology with human-centered design to help you achieve more with less stress.
           </p>
         </div>
         
