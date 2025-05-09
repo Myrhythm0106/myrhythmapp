@@ -13,7 +13,7 @@ const Feature = ({ icon, title, description }: FeatureProps) => {
     <Card className="border shadow-sm hover:shadow-md transition-all overflow-hidden">
       <CardHeader className="pb-2">
         <div className="mb-3">{icon}</div>
-        <CardTitle className="text-2xl font-medium">Understand emotions and achieve more</CardTitle>
+        <CardTitle className="text-2xl font-medium">{title}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground">{description}</p>
