@@ -15,8 +15,7 @@ const HeroSection = () => {
           </div>
           
           <div className="text-center mb-12 max-w-3xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">Organise Your World.
-Support Your Recall</h2>
+            <h2 className="text-4xl font-bold mb-6 leading-tight md:text-4xl">Organise Your World. Support Your Recall.</h2>
             <p className="text-xl text-muted-foreground mb-8">
               Empowering you to live O.R.D.E.R.ly. Organize priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. It's not just productivity—it's your rhythm for life.
             </p>
