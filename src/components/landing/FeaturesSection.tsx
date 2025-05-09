@@ -10,7 +10,7 @@ const FeaturesSection = () => {
     description: "MyRhythm doesn't just remind, it anticipates. By understanding your rhythm, it proactively suggests optimal schedules and breaks down complex tasks."
   }, {
     icon: <Compass className="h-10 w-10 text-primary" />,
-    title: "Visualise Progress. Routine Wins.",
+    title: "Visualise Your Progress. Routine Wins.",
     description: "Our revolutionary Visual Flow Builder transforms your day into an intuitive, drag-and-drop map of success. See the path, own the process."
   }, {
     icon: <Heart className="h-10 w-10 text-primary" />,
