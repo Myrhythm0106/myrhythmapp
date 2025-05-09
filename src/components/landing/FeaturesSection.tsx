@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Brain, Heart, Compass, Network } from "lucide-react";
 import Feature from "./Feature";
@@ -18,7 +17,7 @@ const FeaturesSection = () => {
     description: "MyRhythm's gentle emotional check-ins reveal powerful connections between mood and achievement, converting self-awareness into actionable productivity strategies."
   }, {
     icon: <Network className="h-10 w-10 text-primary" />,
-    title: "Never Alone. Strength Shared.",
+    title: "Daily Routine. Daily Triumph.",
     description: "The network and support that understand and motivate and encourage you every step of your journey."
   }];
 
