@@ -6,16 +6,12 @@ import { TutorialModal } from "@/components/tutorial/TutorialModal";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { MobileCarousel } from "@/components/dashboard/MobileCarousel";
+import { useUserData } from "@/hooks/use-user-data";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
   const [showTutorial, setShowTutorial] = useState(false);
-  
-  // In a real app, we would fetch the user data from a database or API
-  const userData = {
-    name: "Alex",
-    userType: "tbi" as const,
-  };
+  const userData = useUserData();
 
   return (
     <div className="space-y-8 animate-fade-in">
