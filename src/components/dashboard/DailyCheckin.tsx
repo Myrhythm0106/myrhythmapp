@@ -5,15 +5,61 @@ import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Smile, Meh, Frown, Lightbulb, Brain } from "lucide-react";
+import { Smile, Meh, Frown, Lightbulb, Brain, Calendar, CheckSquare } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { format, subDays } from "date-fns";
 
 interface MoodOption {
   value: string;
   label: string;
   icon: React.ReactNode;
   color: string;
+  numericValue: number;
 }
+
+// Sample mood history data - in a real app, this would come from a database
+const moodHistoryData = [
+  { day: format(subDays(new Date(), 6), "EEE"), value: 2, mood: "okay" },
+  { day: format(subDays(new Date(), 5), "EEE"), value: 3, mood: "great" },
+  { day: format(subDays(new Date(), 4), "EEE"), value: 2, mood: "okay" },
+  { day: format(subDays(new Date(), 3), "EEE"), value: 1, mood: "struggling" },
+  { day: format(subDays(new Date(), 2), "EEE"), value: 2, mood: "okay" },
+  { day: format(subDays(new Date(), 1), "EEE"), value: 3, mood: "great" },
+  { day: format(new Date(), "EEE"), value: 0, mood: "" }, // Today's value will be set based on check-in
+];
+
+// Sample upcoming events - in a real app, this would come from a database
+const upcomingEvents = [
+  {
+    id: "1",
+    title: "Neurology Appointment",
+    date: format(new Date(), "yyyy-MM-dd"), // Today
+    time: "10:00 AM",
+    type: "appointment"
+  },
+  {
+    id: "2", 
+    title: "Medication: Aspirin",
+    date: format(new Date(), "yyyy-MM-dd"), // Today
+    time: "12:00 PM",
+    type: "medication"
+  },
+  {
+    id: "3",
+    title: "Physical Therapy",
+    date: format(subDays(new Date(), -1), "yyyy-MM-dd"), // Tomorrow
+    time: "2:30 PM",
+    type: "therapy"
+  },
+  {
+    id: "4",
+    title: "Support Group Meeting",
+    date: format(subDays(new Date(), -2), "yyyy-MM-dd"), // Day after tomorrow
+    time: "6:00 PM",
+    type: "activity"
+  }
+];
 
 // Expanded inspirational messages array with mood categories
 const inspirationalMessages = [
@@ -375,25 +421,29 @@ export function DailyCheckin() {
   const [submitted, setSubmitted] = useState(false);
   const [inspiration, setInspiration] = useState(inspirationalMessages[0]);
   const [moodSpecificMessages, setMoodSpecificMessages] = useState(inspirationalMessages);
+  const [moodHistory, setMoodHistory] = useState(moodHistoryData);
 
   const moodOptions: MoodOption[] = [
     {
       value: "great",
       label: "Great",
       icon: <Smile className="h-6 w-6" />,
-      color: "text-green-500"
+      color: "text-green-500",
+      numericValue: 3
     },
     {
       value: "okay",
       label: "Okay",
       icon: <Meh className="h-6 w-6" />,
-      color: "text-amber-500"
+      color: "text-amber-500",
+      numericValue: 2
     },
     {
       value: "struggling",
       label: "Struggling",
       icon: <Frown className="h-6 w-6" />,
-      color: "text-red-500"
+      color: "text-red-500",
+      numericValue: 1
     }
   ];
 
@@ -422,6 +472,20 @@ export function DailyCheckin() {
       return;
     }
 
+    // Get numeric value for the selected mood
+    const moodValue = moodOptions.find(option => option.value === selectedMood)?.numericValue || 0;
+
+    // Update today's mood in the history
+    setMoodHistory(prev => {
+      const updatedHistory = [...prev];
+      updatedHistory[updatedHistory.length - 1] = {
+        ...updatedHistory[updatedHistory.length - 1],
+        value: moodValue,
+        mood: selectedMood
+      };
+      return updatedHistory;
+    });
+
     // In a real app, we would send this to an API
     console.log("Mood submitted:", selectedMood);
     toast.success("Your check-in has been recorded!");
@@ -448,71 +512,224 @@ export function DailyCheckin() {
     toast.success("New inspiration loaded!");
   };
 
+  // Helper function to get color based on mood value
+  const getMoodColor = (value: number) => {
+    switch (value) {
+      case 3: return "#22c55e"; // green-500
+      case 2: return "#f59e0b"; // amber-500
+      case 1: return "#ef4444"; // red-500
+      default: return "#d1d5db"; // gray-300
+    }
+  };
+
+  // Helper function to get the mood icon
+  const getMoodIcon = (mood: string) => {
+    const option = moodOptions.find(opt => opt.value === mood);
+    if (!option) return null;
+    return React.cloneElement(option.icon as React.ReactElement, { 
+      className: `h-4 w-4 ${option.color}`
+    });
+  };
+
+  // Helper function to get the event type styles
+  const getEventTypeStyles = (type: string) => {
+    switch (type) {
+      case "appointment":
+        return "bg-blue-100 text-blue-800";
+      case "therapy":
+        return "bg-purple-100 text-purple-800";
+      case "medication":
+        return "bg-red-100 text-red-800";
+      case "activity":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <Card className="bg-card shadow-sm hover:shadow transition-all">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-semibold">Daily Check-in</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-4">
-            {!submitted ? (
-              <>
-                <p className="mb-4 text-sm">How are you feeling today?</p>
-                <RadioGroup className="gap-3" value={selectedMood || ""} onValueChange={setSelectedMood}>
-                  {moodOptions.map((option) => (
-                    <div key={option.value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={option.value} id={option.value} />
-                      <Label
-                        htmlFor={option.value}
-                        className="flex items-center gap-2 cursor-pointer"
-                      >
-                        <span className={option.color}>{option.icon}</span>
-                        {option.label}
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-                <Button 
-                  onClick={handleSubmit} 
-                  className="w-full mt-4 bg-primary hover:bg-primary/90"
-                >
-                  Submit Check-in
-                </Button>
-              </>
-            ) : (
-              <div className="text-center py-2">
-                <p className="font-medium text-green-600 mb-1">Check-in Recorded!</p>
-                <p className="text-sm text-muted-foreground">
-                  Thank you for sharing how you're feeling today.
+        <div className="grid grid-cols-1 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              {!submitted ? (
+                <>
+                  <p className="mb-4 text-sm">How are you feeling today?</p>
+                  <RadioGroup className="gap-3" value={selectedMood || ""} onValueChange={setSelectedMood}>
+                    {moodOptions.map((option) => (
+                      <div key={option.value} className="flex items-center space-x-2">
+                        <RadioGroupItem value={option.value} id={option.value} />
+                        <Label
+                          htmlFor={option.value}
+                          className="flex items-center gap-2 cursor-pointer"
+                        >
+                          <span className={option.color}>{option.icon}</span>
+                          {option.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                  <Button 
+                    onClick={handleSubmit} 
+                    className="w-full mt-4 bg-primary hover:bg-primary/90"
+                  >
+                    Submit Check-in
+                  </Button>
+                </>
+              ) : (
+                <div className="text-center py-2">
+                  <p className="font-medium text-green-600 mb-1">Check-in Recorded!</p>
+                  <p className="text-sm text-muted-foreground">
+                    Thank you for sharing how you're feeling today.
+                  </p>
+                </div>
+              )}
+              
+              {/* Mood history chart */}
+              <div className="mt-6">
+                <h3 className="text-sm font-medium mb-2">Your Mood - Last 7 Days</h3>
+                <div className="h-[120px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={moodHistory}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                      <XAxis 
+                        dataKey="day" 
+                        axisLine={false}
+                        tickLine={false}
+                        fontSize={12}
+                      />
+                      <YAxis 
+                        domain={[0, 3]} 
+                        ticks={[1, 2, 3]} 
+                        axisLine={false}
+                        tickLine={false}
+                        width={30}
+                        tickFormatter={(value) => {
+                          switch (value) {
+                            case 3: return "😊";
+                            case 2: return "😐";
+                            case 1: return "😔";
+                            default: return "";
+                          }
+                        }}
+                      />
+                      <Tooltip 
+                        formatter={(value, name) => {
+                          const moodValue = Number(value);
+                          switch (moodValue) {
+                            case 3: return ["Great", "Mood"];
+                            case 2: return ["Okay", "Mood"];
+                            case 1: return ["Struggling", "Mood"];
+                            default: return ["Not recorded", "Mood"];
+                          }
+                        }}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="value" 
+                        stroke="#8884d8" 
+                        strokeWidth={2}
+                        dot={{ r: 4, strokeWidth: 2, fill: "white" }}
+                        activeDot={{ r: 6 }}
+                        isAnimationActive={true}
+                        animationDuration={1000}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4 border-l-0 md:border-l pl-0 md:pl-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Lightbulb className="h-5 w-5 text-amber-500" />
+                <h3 className="font-medium text-sm">
+                  {selectedMood ? `Daily Inspiration for ${selectedMood.charAt(0).toUpperCase() + selectedMood.slice(1)} Days` : "Daily Inspiration"}
+                </h3>
+              </div>
+              <div className="bg-primary/10 p-3 rounded-md">
+                <p className="text-sm italic">{inspiration.text}</p>
+                <p className="text-xs mt-2 text-muted-foreground">
+                  {inspiration.type && `Focus: ${inspiration.type.charAt(0).toUpperCase() + inspiration.type.slice(1)}`}
                 </p>
               </div>
-            )}
-          </div>
-
-          <div className="border-l-0 md:border-l pl-0 md:pl-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Lightbulb className="h-5 w-5 text-amber-500" />
-              <h3 className="font-medium text-sm">
-                {selectedMood ? `Daily Inspiration for ${selectedMood.charAt(0).toUpperCase() + selectedMood.slice(1)} Days` : "Daily Inspiration"}
-              </h3>
-            </div>
-            <div className="bg-primary/10 p-3 rounded-md">
-              <p className="text-sm italic">{inspiration.text}</p>
-              <p className="text-xs mt-2 text-muted-foreground">
-                {inspiration.type && `Focus: ${inspiration.type.charAt(0).toUpperCase() + inspiration.type.slice(1)}`}
-              </p>
-            </div>
-            <div className="flex justify-end mt-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={getNewInspiration}
-                className="text-xs flex items-center gap-1"
-              >
-                <Brain className="h-3 w-3" />
-                New Tip
-              </Button>
+              <div className="flex justify-end mt-3">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={getNewInspiration}
+                  className="text-xs flex items-center gap-1"
+                >
+                  <Brain className="h-3 w-3" />
+                  New Tip
+                </Button>
+              </div>
+              
+              {/* Today's appointments section */}
+              <div className="mt-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <Calendar className="h-5 w-5 text-blue-500" />
+                  <h3 className="font-medium text-sm">Today's Schedule</h3>
+                </div>
+                <div className="space-y-2">
+                  {upcomingEvents
+                    .filter(event => event.date === format(new Date(), "yyyy-MM-dd"))
+                    .map(event => (
+                      <div key={event.id} className="bg-card border rounded-md p-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="font-medium">{event.title}</span>
+                          <span className={`text-xs px-1.5 py-0.5 rounded-full ${getEventTypeStyles(event.type)}`}>
+                            {event.time}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  {upcomingEvents.filter(event => event.date === format(new Date(), "yyyy-MM-dd")).length === 0 && (
+                    <div className="text-sm text-muted-foreground italic text-center py-2">
+                      No scheduled events for today
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* Upcoming tasks section */}
+              <div className="mt-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <CheckSquare className="h-5 w-5 text-green-500" />
+                  <h3 className="font-medium text-sm">Upcoming Tasks</h3>
+                </div>
+                <div className="space-y-2 max-h-[150px] overflow-y-auto">
+                  {upcomingEvents
+                    .filter(event => event.date !== format(new Date(), "yyyy-MM-dd"))
+                    .slice(0, 3) // Limit to first 3 upcoming events
+                    .map(event => (
+                      <div key={event.id} className="bg-card border rounded-md p-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="font-medium">{event.title}</span>
+                          <span className="text-xs text-muted-foreground">
+                            {event.date.split('-').slice(1).join('/')} • {event.time}
+                          </span>
+                        </div>
+                        <div className="mt-1">
+                          <span className={`text-xs px-1.5 py-0.5 rounded-full ${getEventTypeStyles(event.type)}`}>
+                            {event.type.charAt(0).toUpperCase() + event.type.slice(1)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full mt-2 text-xs"
+                >
+                  View Full Calendar
+                </Button>
+              </div>
             </div>
           </div>
         </div>

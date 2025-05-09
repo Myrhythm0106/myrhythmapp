@@ -1,11 +1,9 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
 import { SymptomTracker } from "@/components/dashboard/SymptomTracker";
 import { CommunityCard } from "@/components/dashboard/CommunityCard";
-import { EmergencyResourcesCard } from "@/components/dashboard/EmergencyResourcesCard";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Info } from "lucide-react";
 import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
@@ -13,6 +11,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useState } from "react";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
 import { DailyCheckin } from "@/components/dashboard/DailyCheckin";
+import { UpcomingEvents } from "@/components/calendar/UpcomingEvents";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Dashboard = () => {
     <DailyCheckin key="checkin" />,
     <SymptomTracker key="symptom" />,
     <CommunityCard key="community" />,
-    <EmergencyResourcesCard key="emergency" />
+    <UpcomingEvents key="upcoming" date={new Date()} />
   ];
 
   const handleCardClick = (path: string) => {
@@ -83,8 +83,17 @@ const Dashboard = () => {
           <div onClick={() => handleCardClick("/community")} className="cursor-pointer">
             <CommunityCard />
           </div>
-          <div onClick={() => handleCardClick("/useful-info")} className="cursor-pointer md:col-span-2 lg:col-span-1">
-            <EmergencyResourcesCard />
+          <div onClick={() => handleCardClick("/calendar")} className="cursor-pointer md:col-span-2 lg:col-span-1">
+            <div className="h-full">
+              <Card className="h-full">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl font-semibold">Upcoming Events</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <UpcomingEvents date={new Date()} />
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       )}
