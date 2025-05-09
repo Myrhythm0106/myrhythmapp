@@ -82,7 +82,7 @@ const SplashScreen = () => {
           }`}
         >
           <Button 
-            onClick={() => navigate("/profile")} 
+            onClick={() => navigate("/customization")} 
             className="w-full py-6 text-lg font-medium rounded-xl bg-gradient-to-r from-primary to-secondary/90 shadow-lg hover:shadow-xl transition-all"
           >
             <span>Start Your Journey</span>

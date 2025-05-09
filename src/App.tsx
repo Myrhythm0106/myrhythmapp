@@ -16,6 +16,7 @@ import Community from "./pages/Community";
 import PersonalCommunity from "./pages/PersonalCommunity";
 import UsefulInfo from "./pages/UsefulInfo";
 import SplashScreen from "./components/mobile/SplashScreen";
+import Customization from "./pages/Customization";
 import { useIsMobile } from "./hooks/use-mobile";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const AppRoutes = () => {
       <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
       <Route path="/dashboard" element={<Index />} />
       <Route path="/onboarding" element={<Onboarding />} />
+      <Route path="/customization" element={<Customization />} />
       
       {/* Routes with MainLayout */}
       <Route path="/profile" element={
