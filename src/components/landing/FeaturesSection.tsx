@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Brain, Heart, Compass, Network } from "lucide-react";
 import Feature from "./Feature";
@@ -9,15 +10,15 @@ const FeaturesSection = () => {
     description: "MyRhythm doesn't just remind, it anticipates. By understanding your rhythm, it proactively suggests optimal schedules and breaks down complex tasks."
   }, {
     icon: <Compass className="h-10 w-10 text-primary" />,
-    title: "Visualise Your Progress. Routine Wins.",
+    title: "Visualise Progress. Routine Wins.",
     description: "Our revolutionary Visual Flow Builder transforms your day into an intuitive, drag-and-drop map of success. See the path, own the process."
   }, {
     icon: <Heart className="h-10 w-10 text-primary" />,
-    title: "Connect Within. Fuel Momentum.",
+    title: "Understand Emotions. Achieve More.",
     description: "MyRhythm's gentle emotional check-ins reveal powerful connections between mood and achievement, converting self-awareness into actionable productivity strategies."
   }, {
     icon: <Network className="h-10 w-10 text-primary" />,
-    title: "Daily Routine. Daily Triumph.",
+    title: "Connect Within. Fuel Momentum.",
     description: "The network and support that understand and motivate and encourage you every step of your journey."
   }];
 
