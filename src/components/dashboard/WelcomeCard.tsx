@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain } from "lucide-react";
+import { Brain, Sparkles, Lightbulb } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
@@ -111,59 +111,68 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
           <p className="mt-2 max-w-xl">{getMessage()}</p>
         </div>
       </div>
-      <CardContent className="p-6">
-        <div className="space-y-6">
-          <div className="text-center">
-            <h3 className="text-xl font-medium text-gray-900 mb-3">#IChoose this week to be...</h3>
+      <CardContent className="p-4">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex-1 bg-gradient-to-r from-amber-100 to-rose-100 rounded-xl p-4 shadow-sm transition-transform hover:shadow-md hover:-translate-y-0.5">
+            <div className="flex items-center gap-2 mb-1">
+              <Lightbulb className="h-5 w-5 text-amber-500" />
+              <h3 className="text-sm font-medium text-gray-700">#IChoose this week to be</h3>
+            </div>
+            
             {!isEditing ? (
-              <div className="space-y-4">
-                <p className="text-3xl font-bold tracking-tight bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
+              <div className="space-y-2">
+                <p className="text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-amber-500 to-rose-500 bg-clip-text text-transparent">
                   {weeklyWord}
                 </p>
-                <div className="flex flex-wrap gap-3 justify-center">
+                <div className="flex flex-wrap gap-2">
                   <Button 
                     variant="outline" 
                     onClick={() => setIsEditing(true)}
+                    size="sm"
+                    className="text-xs py-0 h-7"
                   >
                     Customize
                   </Button>
                   <Button 
                     onClick={handleNewWordGenerate}
+                    size="sm"
+                    className="text-xs py-0 h-7 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600"
                   >
-                    Generate New Word
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    New Word
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 <Input
                   type="text"
                   placeholder="Enter your own word..."
                   value={customWord}
                   onChange={(e) => setCustomWord(e.target.value)}
-                  className="max-w-xs mx-auto text-center text-lg"
+                  className="text-center text-lg border-amber-200 focus-visible:ring-amber-400"
                 />
-                <div className="flex flex-wrap gap-3 justify-center">
+                <div className="flex flex-wrap gap-2">
                   <Button 
                     variant="outline" 
                     onClick={() => setIsEditing(false)}
+                    size="sm"
+                    className="text-xs py-0 h-7"
                   >
                     Cancel
                   </Button>
                   <Button 
                     onClick={handleCustomWordSave}
+                    size="sm"
+                    className="text-xs py-0 h-7 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600"
                   >
                     Save My Word
                   </Button>
                 </div>
               </div>
             )}
-          </div>
-          
-          <div className="bg-muted/50 rounded-lg p-4">
-            <p className="text-center text-sm text-muted-foreground">
-              Your weekly word is chosen to inspire and motivate you based on your recent mood trends.
-              You can customize it or generate a new suggestion any time.
+            <p className="text-xs text-gray-500 mt-2">
+              Your weekly word is chosen based on your mood trends to inspire and motivate you.
             </p>
           </div>
         </div>
