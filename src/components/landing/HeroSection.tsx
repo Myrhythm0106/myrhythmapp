@@ -38,14 +38,36 @@ const HeroSection = () => {
               It's your rhythm for life.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button size="lg" className="text-lg bg-beacon-600 hover:bg-beacon-700" onClick={() => navigate("/onboarding?step=2")}>
+              <Button 
+                size="lg" 
+                className="text-lg bg-beacon-600 hover:bg-beacon-700 relative z-20" 
+                onClick={() => navigate("/onboarding?step=2")}
+              >
                 Start Your Journey
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg border-beacon-600 text-beacon-600 hover:bg-beacon-50" onClick={() => navigate("/onboarding?step=1")}>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg border-beacon-600 text-beacon-600 hover:bg-beacon-50 relative z-20" 
+                onClick={() => navigate("/onboarding?step=1")}
+              >
                 Learn More
               </Button>
             </div>
+          </div>
+          
+          {/* Start Here button/indicator with enhanced visibility */}
+          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
+            <Button 
+              variant="secondary" 
+              size="lg" 
+              className="rounded-full px-8 py-6 font-semibold shadow-lg bg-beacon-500 text-white hover:bg-beacon-600"
+              onClick={() => navigate("/onboarding")}
+            >
+              Start Here
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
           </div>
         </div>
       </div>
