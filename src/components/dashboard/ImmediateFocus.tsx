@@ -2,10 +2,12 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, Check } from "lucide-react";
+import { Calendar, Clock, MapPin, Check, Target } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface NextEvent {
   id: string;
@@ -16,6 +18,12 @@ interface NextEvent {
   isCompleted: boolean;
   description?: string;
   image?: string;
+  linkedGoal?: {
+    id: string;
+    title: string;
+    category: "mobility" | "cognitive" | "health" | "other";
+    icon: "Walking" | "Book" | "Target";
+  }
 }
 
 export function ImmediateFocus() {
@@ -30,7 +38,13 @@ export function ImmediateFocus() {
     location: "Memorial Hospital, Room 302",
     isCompleted: false,
     description: "Neurology follow-up with Dr. Johnson",
-    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=900"
+    image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=900",
+    linkedGoal: {
+      id: "goal1",
+      title: "Follow medical plan",
+      category: "health",
+      icon: "Target"
+    }
   };
   
   const handleViewDetails = () => {
@@ -40,6 +54,15 @@ export function ImmediateFocus() {
   const handleMarkComplete = () => {
     toast.success("Event marked as complete!");
     // In a real app, update state or make API call
+  };
+
+  const getGoalBadgeColor = (category: string) => {
+    switch(category) {
+      case "mobility": return "bg-blue-100 text-blue-800 border-blue-300";
+      case "cognitive": return "bg-purple-100 text-purple-800 border-purple-300";
+      case "health": return "bg-green-100 text-green-800 border-green-300";
+      default: return "bg-gray-100 text-gray-800 border-gray-300";
+    }
   };
   
   return (
@@ -70,6 +93,22 @@ export function ImmediateFocus() {
               <div className="flex items-center">
                 <MapPin className="h-4 w-4 mr-2 text-primary" />
                 <span>{nextEvent.location}</span>
+              </div>
+            )}
+            
+            {/* Goal connection indicator */}
+            {nextEvent.linkedGoal && (
+              <div className="flex items-center mt-1">
+                <Target className="h-4 w-4 mr-2 text-primary" />
+                <Badge 
+                  variant="outline" 
+                  className={cn(
+                    "text-xs font-normal", 
+                    getGoalBadgeColor(nextEvent.linkedGoal.category)
+                  )}
+                >
+                  Goal: {nextEvent.linkedGoal.title}
+                </Badge>
               </div>
             )}
           </div>

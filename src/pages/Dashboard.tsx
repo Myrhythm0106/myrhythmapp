@@ -6,6 +6,7 @@ import { EnergyLevelIndicator } from "@/components/dashboard/EnergyLevelIndicato
 import { QuickCheckIn } from "@/components/dashboard/QuickCheckIn";
 import { TopReminders } from "@/components/dashboard/TopReminders";
 import { TopPriorities } from "@/components/dashboard/TopPriorities";
+import { FocusGoals } from "@/components/dashboard/FocusGoals";
 import { format } from "date-fns";
 import { useUserData } from "@/hooks/use-user-data";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
@@ -54,7 +55,10 @@ const Dashboard = () => {
           {/* Left column - 2/3 width on desktop */}
           <div className="md:col-span-2 space-y-6">
             <ImmediateFocus />
-            <TopPriorities />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FocusGoals />
+              <TopPriorities />
+            </div>
           </div>
           
           {/* Right column - 1/3 width on desktop */}

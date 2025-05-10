@@ -2,9 +2,10 @@
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, User } from "lucide-react";
+import { Calendar, Clock, MapPin, User, Target } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format, isToday, isPast, isFuture, addDays } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface Action {
   id: string;
@@ -14,6 +15,11 @@ interface Action {
   location?: string;
   type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other";
   watchers?: string[];
+  linkedGoal?: {
+    id: string;
+    title: string;
+    type: "mobility" | "cognitive" | "health" | "other";
+  };
 }
 
 interface UpcomingEventsProps {
@@ -29,7 +35,12 @@ const actions: Action[] = [
     time: "10:00 AM",
     location: "Dallas Neuro Center",
     type: "appointment",
-    watchers: ["Dr. Smith"]
+    watchers: ["Dr. Smith"],
+    linkedGoal: {
+      id: "g1",
+      title: "Follow medical plan",
+      type: "health"
+    }
   },
   {
     id: "2",
@@ -37,7 +48,12 @@ const actions: Action[] = [
     date: "2023-05-22",
     time: "2:30 PM",
     location: "Healing Minds Clinic",
-    type: "therapy"
+    type: "therapy",
+    linkedGoal: {
+      id: "g2",
+      title: "Improve memory skills",
+      type: "cognitive"
+    }
   },
   {
     id: "3",
@@ -54,7 +70,12 @@ const actions: Action[] = [
     date: "2023-05-27",
     time: "11:15 AM",
     location: "RehabWorks",
-    type: "therapy"
+    type: "therapy",
+    linkedGoal: {
+      id: "g3",
+      title: "Walk for 15 mins daily",
+      type: "mobility"
+    }
   },
 ];
 
@@ -76,6 +97,19 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
         return "bg-orange-100 text-orange-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+  
+  const getGoalTypeStyles = (type: string) => {
+    switch (type) {
+      case "mobility":
+        return "bg-blue-50 text-blue-700 border-blue-200";
+      case "cognitive":
+        return "bg-purple-50 text-purple-700 border-purple-200";
+      case "health":
+        return "bg-green-50 text-green-700 border-green-200";
+      default:
+        return "bg-gray-50 text-gray-700 border-gray-200";
     }
   };
   
@@ -137,6 +171,22 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
                       </Badge>
                     ))}
                   </div>
+                </div>
+              )}
+              
+              {/* Display linked goal if exists */}
+              {action.linkedGoal && (
+                <div className="flex items-center text-muted-foreground mt-1.5">
+                  <Target className="h-3.5 w-3.5 mr-1" />
+                  <Badge 
+                    variant="outline" 
+                    className={cn(
+                      "text-xs",
+                      getGoalTypeStyles(action.linkedGoal.type)
+                    )}
+                  >
+                    Goal: {action.linkedGoal.title}
+                  </Badge>
                 </div>
               )}
             </div>
