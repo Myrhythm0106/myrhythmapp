@@ -7,6 +7,8 @@ import { UserTypeSelector, UserType } from "@/components/onboarding/UserTypeSele
 import { toast } from "sonner";
 import { Brain, ArrowRight, ArrowLeft } from "lucide-react";
 import PersonalInfoForm, { PersonalInfoFormValues } from "@/components/onboarding/PersonalInfoForm";
+import PaymentInfoForm from "@/components/onboarding/PaymentInfoForm";
+import PlanSelection from "@/components/onboarding/PlanSelection";
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ const Onboarding = () => {
   const [step, setStep] = useState(initialStep);
   const [userType, setUserType] = useState<UserType | null>(null);
   const [customTypeValue, setCustomTypeValue] = useState("");
+  const [selectedPlan, setSelectedPlan] = useState("basic");
   
   // Update URL when step changes
   useEffect(() => {
@@ -28,7 +31,7 @@ const Onboarding = () => {
 
   useEffect(() => {
     // Auto-advance when user type is selected (with small delay for UX)
-    if (userType && step === 2 && userType !== "custom") {
+    if (userType && step === 3 && userType !== "custom") {
       const timer = setTimeout(() => {
         handleFinishOnboarding();
       }, 800);
@@ -43,8 +46,24 @@ const Onboarding = () => {
     localStorage.setItem("myrhythm_email", values.email);
     localStorage.setItem("myrhythm_password", values.password);
     
-    // Move to user type selection
+    // Move to payment step
     setStep(2);
+  };
+  
+  const handlePlanSelect = (plan: string) => {
+    setSelectedPlan(plan);
+  };
+  
+  const handlePlanContinue = () => {
+    // Move to payment details step
+    setStep(3);
+  };
+
+  const handlePaymentSubmit = (values: any) => {
+    console.log("Payment info:", values);
+    
+    // Move to user type selection
+    setStep(4);
   };
   
   const handleFinishOnboarding = () => {
@@ -97,15 +116,19 @@ const Onboarding = () => {
               <div>
                 <CardTitle>
                   {step === 1 && "Complete your profile"}
-                  {step === 2 && "Personalised Support to O.R.D.E.R your life daily"}
+                  {step === 2 && "Select your plan"}
+                  {step === 3 && "Complete your payment"}
+                  {step === 4 && "Personalised Support to O.R.D.E.R your life daily"}
                 </CardTitle>
                 <CardDescription>
                   {step === 1 && "Just a few more details to personalize your experience"}
-                  {step === 2 && "Select the option that best describes your situation"}
+                  {step === 2 && "Choose a plan that works for you"}
+                  {step === 3 && "Secure payment information"}
+                  {step === 4 && "Select the option that best describes your situation"}
                 </CardDescription>
               </div>
               <div className="text-sm font-medium">
-                Step {step} of 2
+                Step {step} of 4
               </div>
             </div>
           </CardHeader>
@@ -114,6 +137,18 @@ const Onboarding = () => {
               <PersonalInfoForm 
                 onSubmit={handlePersonalInfoSubmit}
                 onBack={handleBack}
+              />
+            ) : step === 2 ? (
+              <PlanSelection
+                selectedPlan={selectedPlan}
+                onSelectPlan={handlePlanSelect}
+                onContinue={handlePlanContinue}
+              />
+            ) : step === 3 ? (
+              <PaymentInfoForm 
+                onSubmit={handlePaymentSubmit}
+                onBack={handleBack}
+                selectedPlan={selectedPlan}
               />
             ) : (
               <div className="space-y-6">
