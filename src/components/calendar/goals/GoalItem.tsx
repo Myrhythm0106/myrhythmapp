@@ -2,10 +2,11 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Goal, Action } from "../types/goalTypes";
-import { ChevronDown, ChevronRight, CalendarClock, Flag, Target, ListCheck } from "lucide-react";
+import { ChevronDown, ChevronRight, CalendarClock, Flag, Target, ListCheck, Book, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ActionTable } from "./ActionTable";
 import { getGoalActions } from "../utils/goalUtils";
+import { Progress } from "@/components/ui/progress";
 
 interface GoalItemProps {
   goal: Goal;
@@ -25,20 +26,25 @@ export const GoalItem: React.FC<GoalItemProps> = ({
   const getGoalTypeIcon = () => {
     switch(goal.type) {
       case "daily":
-        return <Flag className="h-4 w-4 mr-1" />;
+        return <ArrowRight className="h-4 w-4 mr-1 text-blue-500" />;
       case "weekly":
-        return <Flag className="h-4 w-4 mr-1" />;
+        return <Flag className="h-4 w-4 mr-1 text-amber-500" />;
       case "monthly":
-        return <Target className="h-4 w-4 mr-1" />;
+        return <Target className="h-4 w-4 mr-1 text-green-500" />;
       case "long-term":
-        return <ListCheck className="h-4 w-4 mr-1" />;
+        return <ListCheck className="h-4 w-4 mr-1 text-purple-500" />;
       default:
-        return <Target className="h-4 w-4 mr-1" />;
+        return <Target className="h-4 w-4 mr-1 text-primary" />;
     }
   };
 
   return (
-    <Card className="border-l-4 border-l-primary">
+    <Card className={cn(
+      "border-l-4",
+      goal.progress >= 70 ? "border-l-green-500" : 
+      goal.progress >= 40 ? "border-l-amber-500" : 
+      "border-l-red-500"
+    )}>
       <CardContent className="p-0">
         <div 
           className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/30"
@@ -62,17 +68,15 @@ export const GoalItem: React.FC<GoalItemProps> = ({
             </div>
             
             <div className="w-24">
-              <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
-                <div 
-                  className={cn(
-                    "h-full rounded-full",
-                    goal.progress >= 70 ? "bg-green-500" : 
-                    goal.progress >= 40 ? "bg-amber-500" : 
-                    "bg-red-500"
-                  )} 
-                  style={{ width: `${goal.progress}%` }}
-                ></div>
-              </div>
+              <Progress 
+                value={goal.progress}
+                className="h-2"
+                indicatorClassName={cn(
+                  goal.progress >= 70 ? "bg-green-500" : 
+                  goal.progress >= 40 ? "bg-amber-500" : 
+                  "bg-red-500"
+                )}
+              />
             </div>
           </div>
         </div>
@@ -89,4 +93,4 @@ export const GoalItem: React.FC<GoalItemProps> = ({
       </CardContent>
     </Card>
   );
-};
+}

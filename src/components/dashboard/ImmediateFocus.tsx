@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -96,7 +95,7 @@ export function ImmediateFocus() {
               </div>
             )}
             
-            {/* Goal connection indicator */}
+            {/* Enhanced goal connection indicator */}
             {nextEvent.linkedGoal && (
               <div className="flex items-center mt-1">
                 <Target className="h-4 w-4 mr-2 text-primary" />
@@ -107,7 +106,10 @@ export function ImmediateFocus() {
                     getGoalBadgeColor(nextEvent.linkedGoal.category)
                   )}
                 >
-                  Goal: {nextEvent.linkedGoal.title}
+                  <span className="flex items-center gap-1">
+                    Goal: {nextEvent.linkedGoal.title}
+                    <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary/70"></span>
+                  </span>
                 </Badge>
               </div>
             )}

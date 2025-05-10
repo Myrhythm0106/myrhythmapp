@@ -2,9 +2,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, Walking, Book } from "lucide-react";
+import { Target, Book, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 interface FocusGoal {
   id: string;
@@ -35,7 +36,7 @@ export function FocusGoals() {
   const getGoalIcon = (category: FocusGoal["category"]) => {
     switch(category) {
       case "mobility":
-        return <Walking className="h-4 w-4 text-blue-500" />;
+        return <ArrowRight className="h-4 w-4 text-blue-500" />;
       case "cognitive":
         return <Book className="h-4 w-4 text-purple-500" />;
       default:
@@ -64,17 +65,15 @@ export function FocusGoals() {
               </div>
               <div className="flex-1">
                 <p className="text-sm font-medium">{goal.title}</p>
-                <div className="mt-1.5 w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                  <div 
-                    className={cn(
-                      "h-full rounded-full",
-                      goal.progress >= 70 ? "bg-green-500" : 
-                      goal.progress >= 40 ? "bg-amber-500" : 
-                      "bg-red-500"
-                    )}
-                    style={{ width: `${goal.progress}%` }}
-                  ></div>
-                </div>
+                <Progress 
+                  value={goal.progress} 
+                  className="h-1.5 mt-1.5"
+                  indicatorClassName={cn(
+                    goal.progress >= 70 ? "bg-green-500" : 
+                    goal.progress >= 40 ? "bg-amber-500" : 
+                    "bg-red-500"
+                  )}
+                />
               </div>
             </li>
           ))}

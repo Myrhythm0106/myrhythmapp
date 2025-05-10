@@ -174,14 +174,14 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
                 </div>
               )}
               
-              {/* Display linked goal if exists */}
+              {/* Display linked goal with enhanced visual styling */}
               {action.linkedGoal && (
-                <div className="flex items-center text-muted-foreground mt-1.5">
-                  <Target className="h-3.5 w-3.5 mr-1" />
+                <div className="flex items-center mt-2 bg-primary/5 px-2 py-1 rounded-md border-l-2 border-primary/30">
+                  <Target className="h-3.5 w-3.5 mr-1 text-primary" />
                   <Badge 
                     variant="outline" 
                     className={cn(
-                      "text-xs",
+                      "text-xs font-medium",
                       getGoalTypeStyles(action.linkedGoal.type)
                     )}
                   >
