@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -59,6 +58,7 @@ export function DailyCheckin() {
   const [inspiration, setInspiration] = useState<InspirationalMessage>(inspirationalMessages[0]);
   const [moodSpecificMessages, setMoodSpecificMessages] = useState<InspirationalMessage[]>(inspirationalMessages);
   const [moodHistory, setMoodHistory] = useState<MoodHistoryEntry[]>(initialMoodHistoryData);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Update inspiration messages when mood changes
   useEffect(() => {
@@ -85,6 +85,8 @@ export function DailyCheckin() {
       return;
     }
 
+    setIsLoading(true);
+
     // Get numeric value for the selected mood
     const moodValue = moodOptions.find(option => option.value === selectedMood)?.numericValue || 0;
 
@@ -99,15 +101,25 @@ export function DailyCheckin() {
       return updatedHistory;
     });
 
-    // In a real app, we would send this to an API
-    console.log("Mood submitted:", selectedMood);
-    toast.success("Your check-in has been recorded!");
-    setSubmitted(true);
-    
-    // Reset after a while to allow for another check-in later
+    // Simulate API call delay
     setTimeout(() => {
-      setSubmitted(false);
-    }, 3600000); // Reset after 1 hour
+      // In a real app, we would send this to an API
+      console.log("Mood submitted:", selectedMood);
+      toast.success("Your check-in has been recorded!");
+      setSubmitted(true);
+      setIsLoading(false);
+      
+      // Reset after a while to allow for another check-in later
+      setTimeout(() => {
+        setSubmitted(false);
+      }, 3600000); // Reset after 1 hour
+    }, 1000);
+  };
+
+  const onMoodSubmit = (mood: string, comment: string) => {
+    console.log("Mood submitted:", mood, "Comment:", comment);
+    // This function is passed to MoodSelectionForm but actually
+    // we're using the external handleSubmit in this case
   };
 
   const getNewInspiration = () => {
@@ -139,6 +151,8 @@ export function DailyCheckin() {
                   selectedMood={selectedMood}
                   setSelectedMood={setSelectedMood}
                   handleSubmit={handleSubmit}
+                  onSubmit={onMoodSubmit}
+                  isLoading={isLoading}
                 />
               ) : (
                 <div className="text-center py-2">
