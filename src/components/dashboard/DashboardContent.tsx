@@ -4,6 +4,7 @@ import { DailyCheckin } from "@/components/dashboard/DailyCheckin";
 import { SymptomTracker } from "@/components/dashboard/SymptomTracker";
 import { CommunityCard } from "@/components/dashboard/CommunityCard";
 import { UpcomingEvents } from "@/components/calendar/UpcomingEvents";
+import { FocusGoals } from "@/components/dashboard/FocusGoals";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +33,9 @@ export function DashboardContent({ isMobile }: DashboardContentProps) {
       </div>
       <div onClick={() => handleCardClick("/community")} className="cursor-pointer">
         <CommunityCard />
+      </div>
+      <div onClick={() => handleCardClick("/calendar?view=goals")} className="cursor-pointer md:col-span-2 lg:col-span-1">
+        <FocusGoals />
       </div>
       <div onClick={() => handleCardClick("/calendar")} className="cursor-pointer md:col-span-2 lg:col-span-1">
         <div className="h-full">
