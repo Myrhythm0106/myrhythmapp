@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,17 +9,27 @@ import { Smile, Meh, Frown } from "lucide-react";
 interface MoodSelectionFormProps {
   onSubmit: (mood: string, comment: string) => void;
   isLoading: boolean;
+  // Add these missing props that are being passed from DailyCheckin
+  selectedMood: string | null;
+  setSelectedMood: React.Dispatch<React.SetStateAction<string | null>>;
+  handleSubmit?: () => void;  // Make it optional since we may use internal or external handler
 }
 
-export function MoodSelectionForm({ onSubmit, isLoading }: MoodSelectionFormProps) {
-  const [selectedMood, setSelectedMood] = useState<string | null>(null);
-  const [comment, setComment] = useState("");
+export function MoodSelectionForm({ 
+  onSubmit, 
+  isLoading, 
+  selectedMood, 
+  setSelectedMood,
+  handleSubmit: externalHandleSubmit 
+}: MoodSelectionFormProps) {
+  const [comment, setComment] = React.useState("");
 
-  const handleSubmit = () => {
+  // Use the external handler if provided, or create our own
+  const handleSubmit = externalHandleSubmit || (() => {
     if (selectedMood) {
       onSubmit(selectedMood, comment);
     }
-  };
+  });
 
   // Map mood values to icons
   const getMoodIcon = (value: string) => {
