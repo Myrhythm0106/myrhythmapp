@@ -1,16 +1,60 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Calendar, Book } from "lucide-react";
+import { Brain } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { MoodOption, moodOptions } from "@/components/dashboard/daily-checkin/MoodTypes";
 
 interface WelcomeCardProps {
   name?: string;
   userType?: "tbi" | "abi" | "mental-health" | "caregiver" | "new";
 }
 
+// Weekly inspiration based on mood and user type
+const weeklyInspirations = {
+  great: [
+    "Resilient",
+    "Thriving",
+    "Unstoppable",
+    "Powerful",
+    "Vibrant",
+    "Flourishing",
+    "Radiant"
+  ],
+  okay: [
+    "Steady",
+    "Balanced",
+    "Present",
+    "Mindful",
+    "Growing",
+    "Learning",
+    "Adapting"
+  ],
+  struggling: [
+    "Brave",
+    "Enduring",
+    "Persistent",
+    "Genuine",
+    "Healing",
+    "Worthy",
+    "Strong"
+  ]
+};
+
 export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardProps) {
   const navigate = useNavigate();
+  const [customWord, setCustomWord] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [weeklyWord, setWeeklyWord] = useState(() => {
+    // Get a random word for the current mood trend
+    // In a real app, we would determine the user's mood trend from their data
+    const moodTrend: "great" | "okay" | "struggling" = "okay"; // Default to okay
+    const words = weeklyInspirations[moodTrend];
+    return words[Math.floor(Math.random() * words.length)];
+  });
   
   const greetingTime = () => {
     const hour = new Date().getHours();
@@ -34,6 +78,26 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
     }
   };
 
+  const handleCustomWordSave = () => {
+    if (customWord.trim()) {
+      setWeeklyWord(customWord.trim());
+      setIsEditing(false);
+      setCustomWord("");
+      toast.success("Your weekly word has been saved!");
+    } else {
+      toast.error("Please enter a word first");
+    }
+  };
+
+  const handleNewWordGenerate = () => {
+    // In a real app, we would determine the user's mood trend from their data
+    const moodTrend: "great" | "okay" | "struggling" = "okay";
+    const words = weeklyInspirations[moodTrend];
+    const newWord = words[Math.floor(Math.random() * words.length)];
+    setWeeklyWord(newWord);
+    toast.success("New weekly word generated!");
+  };
+
   return (
     <Card className="overflow-hidden">
       <div className="relative overflow-hidden rounded-t-lg bg-gradient-to-r from-beacon-600 to-beacon-800 p-6 text-white">
@@ -48,48 +112,59 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
         </div>
       </div>
       <CardContent className="p-6">
-        <div className="grid gap-4 md:grid-cols-3">
-          <div 
-            className="flex items-center gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => navigate("/tracking")}
-            role="button"
-            aria-label="Go to daily check-in"
-          >
-            <div className="rounded-full bg-beacon-100 p-2 text-beacon-700">
-              <Brain size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-medium">Daily Check-in</p>
-              <p className="text-xs text-muted-foreground">Record how you're feeling today</p>
-            </div>
+        <div className="space-y-6">
+          <div className="text-center">
+            <h3 className="text-xl font-medium text-gray-900 mb-3">#IChoose this week to be...</h3>
+            {!isEditing ? (
+              <div className="space-y-4">
+                <p className="text-3xl font-bold tracking-tight bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
+                  {weeklyWord}
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setIsEditing(true)}
+                  >
+                    Customize
+                  </Button>
+                  <Button 
+                    onClick={handleNewWordGenerate}
+                  >
+                    Generate New Word
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <Input
+                  type="text"
+                  placeholder="Enter your own word..."
+                  value={customWord}
+                  onChange={(e) => setCustomWord(e.target.value)}
+                  className="max-w-xs mx-auto text-center text-lg"
+                />
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setIsEditing(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={handleCustomWordSave}
+                  >
+                    Save My Word
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
-          <div 
-            className="flex items-center gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => navigate("/calendar")}
-            role="button"
-            aria-label="Go to appointments"
-          >
-            <div className="rounded-full bg-healing-100 p-2 text-healing-700">
-              <Calendar size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-medium">Next Appointment</p>
-              <p className="text-xs text-muted-foreground">May 10, 2:00 PM</p>
-            </div>
-          </div>
-          <div 
-            className="flex items-center gap-3 rounded-lg border p-4 cursor-pointer hover:bg-muted/50 transition-colors"
-            onClick={() => navigate("/useful-info")}
-            role="button"
-            aria-label="Go to resources"
-          >
-            <div className="rounded-full bg-comfort-100 p-2 text-comfort-700">
-              <Book size={20} />
-            </div>
-            <div>
-              <p className="text-sm font-medium">New Resources</p>
-              <p className="text-xs text-muted-foreground">3 new articles added</p>
-            </div>
+          
+          <div className="bg-muted/50 rounded-lg p-4">
+            <p className="text-center text-sm text-muted-foreground">
+              Your weekly word is chosen to inspire and motivate you based on your recent mood trends.
+              You can customize it or generate a new suggestion any time.
+            </p>
           </div>
         </div>
       </CardContent>
