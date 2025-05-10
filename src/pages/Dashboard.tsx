@@ -1,50 +1,43 @@
 
-import React, { useState, useEffect } from "react";
-import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { TutorialModal } from "@/components/tutorial/TutorialModal";
+import React, { useState } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { DashboardContent } from "@/components/dashboard/DashboardContent";
-import { MobileCarousel } from "@/components/dashboard/MobileCarousel";
-import { useUserData } from "@/hooks/use-user-data";
-import { WeekNaming } from "@/components/dashboard/WeekNaming";
-import { UpcomingEvent } from "@/components/dashboard/UpcomingEvent";
+import { ImmediateFocus } from "@/components/dashboard/ImmediateFocus";
+import { EnergyLevelIndicator } from "@/components/dashboard/EnergyLevelIndicator";
+import { QuickCheckIn } from "@/components/dashboard/QuickCheckIn";
+import { TopReminders } from "@/components/dashboard/TopReminders";
 import { TopPriorities } from "@/components/dashboard/TopPriorities";
-import { RoutineProgress } from "@/components/dashboard/RoutineProgress";
-import { RecentWins } from "@/components/dashboard/RecentWins";
 import { format } from "date-fns";
+import { useUserData } from "@/hooks/use-user-data";
+import { TutorialModal } from "@/components/tutorial/TutorialModal";
 
 const Dashboard = () => {
-  const isMobile = useIsMobile();
   const [showTutorial, setShowTutorial] = useState(false);
   const userData = useUserData();
   const currentDate = format(new Date(), "EEEE, MMMM do, yyyy");
   
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
       <DashboardHeader 
         onShowTutorial={() => setShowTutorial(true)} 
         currentDate={currentDate}
+        userName={userData.name}
       />
       
-      <WeekNaming />
-      
-      <WelcomeCard name={userData.name} userType={userData.userType} />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <UpcomingEvent />
-        <div className="flex flex-col gap-6">
+      {/* Main dashboard sections */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Left column - 2/3 width on desktop */}
+        <div className="md:col-span-2 space-y-6">
+          <ImmediateFocus />
           <TopPriorities />
-          <RoutineProgress />
-          <RecentWins />
+        </div>
+        
+        {/* Right column - 1/3 width on desktop */}
+        <div className="space-y-6">
+          <EnergyLevelIndicator />
+          <QuickCheckIn />
+          <TopReminders />
         </div>
       </div>
-      
-      {isMobile ? (
-        <MobileCarousel />
-      ) : (
-        <DashboardContent isMobile={isMobile} />
-      )}
 
       <TutorialModal isOpen={showTutorial} onComplete={() => setShowTutorial(false)} />
     </div>

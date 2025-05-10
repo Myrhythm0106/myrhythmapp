@@ -8,10 +8,10 @@ const Index = () => {
   
   useEffect(() => {
     // Redirect to the dashboard page directly
-    navigate('/dashboard');
+    navigate('/dashboard', { replace: true });
     
     // Show a toast notification
-    toast.info("Redirecting to dashboard...");
+    toast.info("Welcome to MyRhythm");
   }, [navigate]);
 
   // Provide a fallback redirect
