@@ -40,11 +40,11 @@ const HeroSection = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Button 
                 size="lg" 
-                className="text-lg bg-beacon-600 hover:bg-beacon-700 relative z-20" 
+                className="text-lg bg-aaron-400 hover:bg-aaron-500 text-black font-bold border-2 border-white relative z-20" 
                 onClick={() => navigate("/onboarding?step=2")}
               >
-                Start Your Journey
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <span>Start Your Journey</span>
+                <ArrowRight className="ml-2 h-5 w-5 text-black" />
               </Button>
               <Button 
                 size="lg" 
@@ -62,7 +62,7 @@ const HeroSection = () => {
             <Button 
               variant="secondary" 
               size="lg" 
-              className="rounded-full px-8 py-6 font-semibold shadow-lg bg-blue-600 hover:bg-blue-700 text-black border-2 border-white"
+              className="rounded-full px-8 py-6 font-semibold shadow-lg bg-aaron-300 hover:bg-aaron-400 text-black border-2 border-white"
               onClick={() => navigate("/onboarding")}
             >
               <span className="font-bold text-black">Start Here</span>
