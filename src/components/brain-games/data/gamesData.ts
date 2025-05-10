@@ -10,7 +10,7 @@ export const gameTypes: GameType[] = [
     name: "Pattern Recall",
     description: "Remember and reproduce visual patterns that briefly appear on screen.",
     cognitiveDomain: "Visual Memory/Recall",
-    icon: <Eye className="h-5 w-5 text-blue-500" />,
+    icon: React.createElement(Eye, { className: "h-5 w-5 text-blue-500" }),
     difficultyLevels: [
       {
         level: "Low",
@@ -35,7 +35,7 @@ export const gameTypes: GameType[] = [
     name: "Sound Sequence",
     description: "Listen to and reproduce sequences of sounds in the correct order.",
     cognitiveDomain: "Auditory Memory/Sequence",
-    icon: <Book className="h-5 w-5 text-purple-500" />,
+    icon: React.createElement(Book, { className: "h-5 w-5 text-purple-500" }),
     difficultyLevels: [
       {
         level: "Low",
@@ -60,7 +60,7 @@ export const gameTypes: GameType[] = [
     name: "Focus Challenge",
     description: "Maintain attention on a specific target while ignoring distractions.",
     cognitiveDomain: "Sustained Attention/Focus",
-    icon: <Lightbulb className="h-5 w-5 text-amber-500" />,
+    icon: React.createElement(Lightbulb, { className: "h-5 w-5 text-amber-500" }),
     difficultyLevels: [
       {
         level: "Low",
@@ -84,7 +84,7 @@ export const gameTypes: GameType[] = [
     name: "Task Switcher",
     description: "Switch between different tasks based on changing rules or cues.",
     cognitiveDomain: "Task Switching/Divided Attention",
-    icon: <Puzzle className="h-5 w-5 text-green-500" />,
+    icon: React.createElement(Puzzle, { className: "h-5 w-5 text-green-500" }),
     difficultyLevels: [
       {
         level: "Low",
