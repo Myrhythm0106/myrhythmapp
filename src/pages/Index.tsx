@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -46,9 +47,9 @@ const Index = () => {
       }, 5000);
       setWelcomeTimer(timer);
     }
-    else if (!hasVisited) {
+    else if (!hasVisited && loggedIn) {
+      // Set flag for tutorial only if logged in
       setIsFirstVisit(true);
-      // Set flag for tutorial
       setShowTutorial(true);
       // Set the flag in localStorage for future visits
       localStorage.setItem('hasVisitedBefore', 'true');
