@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserTypeSelector, UserType } from "@/components/onboarding/UserTypeSelector";
 import { toast } from "sonner";
-import { Brain, ArrowRight } from "lucide-react";
+import { Brain, ArrowRight, ArrowLeft } from "lucide-react";
 import PersonalInfoForm, { PersonalInfoFormValues } from "@/components/onboarding/PersonalInfoForm";
 import PaymentInfoForm, { PaymentInfoFormValues } from "@/components/onboarding/PaymentInfoForm";
 
@@ -27,6 +27,16 @@ const Onboarding = () => {
     newParams.set("step", step.toString());
     navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
   }, [step, location.pathname, location.search, navigate]);
+
+  useEffect(() => {
+    // Auto-advance when user type is selected (with small delay for UX)
+    if (userType && step === 1 && userType !== "custom") {
+      const timer = setTimeout(() => {
+        setStep(2);
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [userType, step]);
 
   const handleContinue = () => {
     if (step === 1) {
@@ -72,6 +82,8 @@ const Onboarding = () => {
   
   const completeOnboarding = () => {
     // In a real app, we would save all this information to a database
+    localStorage.setItem('myrhythm_logged_in', 'true');
+    sessionStorage.setItem('justRegistered', 'true');
     toast.success("Account created successfully!");
     navigate("/dashboard");
   };
@@ -88,11 +100,22 @@ const Onboarding = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <div className="w-full max-w-2xl animate-fade-in">
-        <div className="flex justify-center mb-6">
+        <div className="flex justify-between items-center mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={handleBack} 
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+          
           <div className="flex items-center gap-2">
             <Brain className="h-10 w-10 text-beacon-600" />
             <h1 className="text-3xl font-bold">MyRhythm</h1>
           </div>
+          
+          <div className="w-[76px]"></div> {/* Empty div for balance */}
         </div>
         
         <Card className="border-2">
@@ -125,7 +148,11 @@ const Onboarding = () => {
                   onCustomTypeChange={setCustomTypeValue}
                 />
                 <div className="flex justify-end">
-                  <Button onClick={handleContinue} className="gap-2">
+                  <Button 
+                    onClick={handleContinue} 
+                    className="gap-2"
+                    disabled={!userType || (userType === "custom" && !customTypeValue.trim())}
+                  >
                     Next <ArrowRight className="h-4 w-4" />
                   </Button>
                 </div>

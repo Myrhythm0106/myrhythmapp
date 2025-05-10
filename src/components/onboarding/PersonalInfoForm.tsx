@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -31,7 +31,29 @@ const PersonalInfoForm = ({ onSubmit, onBack }: PersonalInfoFormProps) => {
       password: "",
       location: "",
     },
+    mode: "onChange", // Enable validation on change for auto-submission
   });
+
+  // Add effect to auto-submit when all fields are valid
+  useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      // Only check for auto-submission when fields change, not on initial load
+      if (type === "change" && form.formState.isValid && Object.keys(form.formState.dirtyFields).length >= 3) {
+        // Check if the required fields are filled
+        const { name, email, password } = form.getValues();
+        if (name && email && password) {
+          // Small delay to allow the user to see the field is valid before auto-submitting
+          const timer = setTimeout(() => {
+            handleSubmit(form.getValues());
+          }, 500);
+          
+          return () => clearTimeout(timer);
+        }
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form.formState.isValid]);
 
   const handleSubmit = (values: PersonalInfoFormValues) => {
     // Store user credentials in localStorage for the login functionality

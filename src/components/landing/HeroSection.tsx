@@ -1,13 +1,23 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ShieldCheck, ArrowRight, LogIn } from "lucide-react";
+import { ShieldCheck, ArrowRight, LogIn, ArrowLeft } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showLoginModal, setShowLoginModal] = useState(false);
+
+  // Function to handle back navigation if coming from onboarding
+  const handleBackNavigation = () => {
+    if (location.state?.from === "onboarding") {
+      navigate(-1); // Go back to the previous page
+    } else {
+      navigate("/"); // Go to home if not coming from onboarding
+    }
+  };
 
   return <section className="relative overflow-hidden">
       <div className="bg-gradient-to-r from-beacon-100 to-beacon-200 py-28 md:py-36">
@@ -43,7 +53,7 @@ const HeroSection = () => {
               <Button 
                 size="lg" 
                 className="text-lg bg-aaron-400 hover:bg-aaron-500 text-black font-bold border-2 border-white relative z-20" 
-                onClick={() => navigate("/onboarding?step=2")}
+                onClick={() => navigate("/onboarding?step=2", { state: { from: "landing" } })}
               >
                 <span>Start Your Journey</span>
                 <ArrowRight className="ml-2 h-5 w-5 text-black" />
@@ -52,7 +62,7 @@ const HeroSection = () => {
                 size="lg" 
                 variant="outline" 
                 className="text-lg border-beacon-600 text-beacon-600 hover:bg-beacon-50 relative z-20" 
-                onClick={() => navigate("/onboarding?step=1")}
+                onClick={() => navigate("/onboarding?step=1", { state: { from: "landing" } })}
               >
                 Learn More
               </Button>
@@ -65,7 +75,7 @@ const HeroSection = () => {
               variant="secondary" 
               size="lg" 
               className="rounded-full px-8 py-6 font-semibold shadow-lg bg-aaron-300 hover:bg-aaron-400 text-black border-2 border-white"
-              onClick={() => navigate("/onboarding")}
+              onClick={() => navigate("/onboarding", { state: { from: "landing" } })}
             >
               <span className="font-bold text-black">Start Here</span>
               <ArrowRight className="ml-2 h-5 w-5 text-black" />
