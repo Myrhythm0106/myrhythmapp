@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Heart, Compass, List, Settings } from "lucide-react";
+import { ShieldCheck, Heart, Users, List, Settings } from "lucide-react";
 
 export type UserType = 
   | "brain-health" 
   | "emotional-wellness" 
-  | "clarity-focus" 
+  | "family-professional" 
   | "productivity" 
   | "organization"
   | "custom";
@@ -63,14 +63,14 @@ export const UserTypeSelector = ({
         </Card>
 
         <Card 
-          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "clarity-focus" ? "border-2 border-annabel-500" : ""}`}
-          onClick={() => handleSelectType("clarity-focus")}
+          className={`p-6 cursor-pointer hover:border-annabel-500 transition-all ${selectedType === "family-professional" ? "border-2 border-annabel-500" : ""}`}
+          onClick={() => handleSelectType("family-professional")}
         >
           <div className="flex items-start gap-4">
-            <Compass className="h-8 w-8 text-annabel-600 shrink-0" />
+            <Users className="h-8 w-8 text-annabel-600 shrink-0" />
             <div>
-              <h3 className="font-medium text-lg mb-2">Clarity & Focus</h3>
-              <p className="text-muted-foreground text-sm">For those wanting to improve cognitive function, memory, and focus in daily activities.</p>
+              <h3 className="font-medium text-lg mb-2">Family/Professional Support</h3>
+              <p className="text-muted-foreground text-sm">For family members or healthcare professionals seeking to support a loved one or client with their brain health journey.</p>
             </div>
           </div>
         </Card>

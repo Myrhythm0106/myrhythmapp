@@ -1,25 +1,27 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ArrowRight, LogIn } from "lucide-react";
+import { LoginModal } from "@/components/auth/LoginModal";
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
   return <section className="relative overflow-hidden">
       <div className="bg-gradient-to-r from-beacon-100 to-beacon-200 py-28 md:py-36">
         {/* Login button at very top right */}
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
-            <Button variant="ghost" className="flex items-center gap-2 hover:bg-primary/10" onClick={() => navigate("/onboarding")}>
+            <Button 
+              variant="ghost" 
+              className="flex items-center gap-2 hover:bg-primary/10" 
+              onClick={() => setShowLoginModal(true)}
+            >
               <LogIn className="h-4 w-4" />
               Login
             </Button>
-            <div className="text-center">
-              <Button variant="link" className="text-sm text-muted-foreground hover:text-primary" onClick={() => navigate("/onboarding")}>
-                Forgotten password?
-              </Button>
-            </div>
           </div>
           
           <div className="flex justify-center mb-12">
@@ -71,6 +73,12 @@ const HeroSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Login Modal */}
+      <LoginModal 
+        isOpen={showLoginModal} 
+        onClose={() => setShowLoginModal(false)} 
+      />
     </section>;
 };
 export default HeroSection;

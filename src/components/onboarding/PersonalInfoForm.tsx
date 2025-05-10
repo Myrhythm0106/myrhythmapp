@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 const personalInfoSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
   location: z.string().optional(),
 });
 
@@ -27,13 +28,24 @@ const PersonalInfoForm = ({ onSubmit, onBack }: PersonalInfoFormProps) => {
     defaultValues: {
       name: "",
       email: "",
+      password: "",
       location: "",
     },
   });
 
+  const handleSubmit = (values: PersonalInfoFormValues) => {
+    // Store user credentials in localStorage for the login functionality
+    localStorage.setItem("myrhythm_name", values.name);
+    localStorage.setItem("myrhythm_email", values.email);
+    localStorage.setItem("myrhythm_password", values.password);
+    
+    // Call the parent component's onSubmit
+    onSubmit(values);
+  };
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -56,6 +68,20 @@ const PersonalInfoForm = ({ onSubmit, onBack }: PersonalInfoFormProps) => {
               <FormLabel>Email Address</FormLabel>
               <FormControl>
                 <Input type="email" placeholder="you@example.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" placeholder="Create a password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

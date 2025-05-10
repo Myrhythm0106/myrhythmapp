@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -21,8 +22,13 @@ const Index = () => {
   const [showTutorial, setShowTutorial] = useState(false);
   const [isNewRegistration, setIsNewRegistration] = useState(false);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // Check if the user is logged in
+    const loggedIn = localStorage.getItem('myrhythm_logged_in') === 'true';
+    setIsLoggedIn(loggedIn);
+
     // Check if this is the first visit
     const hasVisited = localStorage.getItem('hasVisitedBefore');
     const justRegistered = sessionStorage.getItem('justRegistered');
@@ -55,6 +61,11 @@ const Index = () => {
       }, 2000);
     }
   };
+
+  // If not logged in, redirect to landing page
+  if (!isLoggedIn && !isNewRegistration) {
+    return <Navigate to="/" replace />;
+  }
 
   // If it's the first visit, redirect to landing page 
   if (isFirstVisit && !showTutorial && !isNewRegistration && !showWelcomeMessage) {
