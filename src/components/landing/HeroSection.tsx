@@ -62,11 +62,11 @@ const HeroSection = () => {
             <Button 
               variant="secondary" 
               size="lg" 
-              className="rounded-full px-8 py-6 font-semibold shadow-lg bg-beacon-500 text-white hover:bg-beacon-600"
+              className="rounded-full px-8 py-6 font-semibold shadow-lg bg-blue-600 hover:bg-blue-700 text-black border-2 border-white"
               onClick={() => navigate("/onboarding")}
             >
-              Start Here
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <span className="font-bold text-black">Start Here</span>
+              <ArrowRight className="ml-2 h-5 w-5 text-black" />
             </Button>
           </div>
         </div>
