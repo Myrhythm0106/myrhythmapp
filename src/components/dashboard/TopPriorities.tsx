@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Star, CircleDot, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
 
 interface Priority {
   id: string;
@@ -15,14 +16,35 @@ interface Priority {
   completed: boolean;
   priority: number; // 1-3, with 1 being highest
   status: "todo" | "doing" | "done";
+  watchers?: string[];
 }
 
 export function TopPriorities() {
   const navigate = useNavigate();
   const [priorities, setPriorities] = useState<Priority[]>([
-    { id: "1", title: "Finish presentation for work meeting", completed: false, priority: 1, status: "doing" },
-    { id: "2", title: "Schedule doctor's appointment", completed: false, priority: 2, status: "todo" },
-    { id: "3", title: "Buy groceries for dinner", completed: true, priority: 3, status: "done" },
+    { 
+      id: "1", 
+      title: "Finish presentation for work meeting", 
+      completed: false, 
+      priority: 1, 
+      status: "doing",
+      watchers: ["Manager", "Team Lead"] 
+    },
+    { 
+      id: "2", 
+      title: "Schedule doctor's appointment", 
+      completed: false, 
+      priority: 2, 
+      status: "todo",
+      watchers: ["Dr. Smith", "Care Coordinator"] 
+    },
+    { 
+      id: "3", 
+      title: "Buy groceries for dinner", 
+      completed: true, 
+      priority: 3, 
+      status: "done" 
+    },
   ]);
 
   const handleToggle = (id: string) => {
@@ -95,44 +117,57 @@ export function TopPriorities() {
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-md transition-shadow overflow-hidden">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2">
           <Star className="h-5 w-5 text-amber-500" />
           Today's Top Priorities
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="overflow-hidden">
         <ul className="space-y-3">
           {priorities.map((item) => (
-            <li key={item.id} className="flex items-center gap-3 border rounded-md p-3 hover:bg-muted/20 transition-colors">
-              <Checkbox
-                id={`priority-${item.id}`}
-                checked={item.completed}
-                onCheckedChange={() => handleToggle(item.id)}
-              />
-              <div className="flex items-center gap-2 flex-1">
-                <CircleDot className={`h-4 w-4 ${getPriorityColor(item.priority)}`} />
-                <Label
-                  htmlFor={`priority-${item.id}`}
-                  className={`flex-1 text-sm ${
-                    item.completed ? "line-through text-muted-foreground" : ""
-                  }`}
-                >
-                  {item.title}
-                </Label>
+            <li key={item.id} className="flex flex-col border rounded-md p-3 hover:bg-muted/20 transition-colors overflow-hidden">
+              <div className="flex items-center gap-3">
+                <Checkbox
+                  id={`priority-${item.id}`}
+                  checked={item.completed}
+                  onCheckedChange={() => handleToggle(item.id)}
+                  className="flex-shrink-0"
+                />
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <CircleDot className={`h-4 w-4 flex-shrink-0 ${getPriorityColor(item.priority)}`} />
+                  <Label
+                    htmlFor={`priority-${item.id}`}
+                    className={`flex-1 text-sm truncate ${
+                      item.completed ? "line-through text-muted-foreground" : ""
+                    }`}
+                  >
+                    {item.title}
+                  </Label>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {getStatusBadge(item.status)}
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => handleViewDetails(item.id)}
+                    className="h-8 w-8 flex-shrink-0"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                {getStatusBadge(item.status)}
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => handleViewDetails(item.id)}
-                  className="h-8 w-8"
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
+              
+              {item.watchers && item.watchers.length > 0 && (
+                <div className="pl-9 mt-1">
+                  <WatchersDisplay 
+                    watchers={item.watchers}
+                    compact
+                    maxVisible={1}
+                  />
+                </div>
+              )}
             </li>
           ))}
         </ul>

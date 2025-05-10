@@ -1,11 +1,11 @@
-
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, User, Target } from "lucide-react";
+import { Calendar, Clock, MapPin, Target } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format, isToday, isPast, isFuture, addDays } from "date-fns";
 import { cn } from "@/lib/utils";
+import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
 
 interface Action {
   id: string;
@@ -137,7 +137,7 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
             className={`border rounded-md p-3 transition-all ${getActionStatusStyles(action.date)}`}
           >
             <div className="flex justify-between items-start">
-              <h4 className="font-medium">{action.title}</h4>
+              <h4 className="font-medium truncate">{action.title}</h4>
               <span className={`text-xs px-2 py-0.5 rounded-full ${getActionTypeStyles(action.type)}`}>
                 {action.type.charAt(0).toUpperCase() + action.type.slice(1)}
               </span>
@@ -145,43 +145,36 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
             
             <div className="mt-2 space-y-1 text-sm">
               <div className="flex items-center text-muted-foreground">
-                <Calendar className="h-3.5 w-3.5 mr-1" />
-                <span>{action.date}</span>
+                <Calendar className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+                <span className="truncate">{action.date}</span>
               </div>
               
               <div className="flex items-center text-muted-foreground">
-                <Clock className="h-3.5 w-3.5 mr-1" />
-                <span>{action.time}</span>
+                <Clock className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+                <span className="truncate">{action.time}</span>
               </div>
               
               {action.location && (
                 <div className="flex items-center text-muted-foreground">
-                  <MapPin className="h-3.5 w-3.5 mr-1" />
-                  <span>{action.location}</span>
+                  <MapPin className="h-3.5 w-3.5 mr-1 flex-shrink-0" />
+                  <span className="truncate">{action.location}</span>
                 </div>
               )}
 
               {action.watchers && action.watchers.length > 0 && (
-                <div className="flex items-center text-muted-foreground">
-                  <User className="h-3.5 w-3.5 mr-1" />
-                  <div className="flex gap-1 flex-wrap">
-                    {action.watchers.map((watcher, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {watcher}
-                      </Badge>
-                    ))}
-                  </div>
+                <div className="flex items-center text-muted-foreground mt-1">
+                  <WatchersDisplay watchers={action.watchers} compact />
                 </div>
               )}
               
               {/* Display linked goal with enhanced visual styling */}
               {action.linkedGoal && (
-                <div className="flex items-center mt-2 bg-primary/5 px-2 py-1 rounded-md border-l-2 border-primary/30">
-                  <Target className="h-3.5 w-3.5 mr-1 text-primary" />
+                <div className="flex items-center mt-2 bg-primary/5 px-2 py-1 rounded-md border-l-2 border-primary/30 overflow-hidden">
+                  <Target className="h-3.5 w-3.5 mr-1 text-primary flex-shrink-0" />
                   <Badge 
                     variant="outline" 
                     className={cn(
-                      "text-xs font-medium",
+                      "text-xs font-medium truncate max-w-full",
                       getGoalTypeStyles(action.linkedGoal.type)
                     )}
                   >

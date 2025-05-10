@@ -24,7 +24,7 @@ export function DashboardContent({ isMobile }: DashboardContentProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 overflow-hidden">
       <div className="md:col-span-2 lg:col-span-1">
         <DailyCheckin />
       </div>
@@ -39,11 +39,11 @@ export function DashboardContent({ isMobile }: DashboardContentProps) {
       </div>
       <div onClick={() => handleCardClick("/calendar")} className="cursor-pointer md:col-span-2 lg:col-span-1">
         <div className="h-full">
-          <Card className="h-full">
+          <Card className="h-full overflow-hidden">
             <CardHeader className="pb-2">
               <CardTitle className="text-xl font-semibold">Upcoming Events</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-hidden">
               <UpcomingEvents date={new Date()} />
             </CardContent>
           </Card>

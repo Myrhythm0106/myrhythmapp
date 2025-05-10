@@ -4,7 +4,7 @@ import { FormField, FormItem, FormLabel, FormDescription, FormMessage } from "@/
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useFormContext } from "react-hook-form";
-import { Check, Plus, X } from "lucide-react";
+import { Check, Plus, X, Eye } from "lucide-react";
 import { 
   Popover,
   PopoverContent,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/popover";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
 
 // Sample community members - in a real app, these would come from an API or context
 const communityMembers = [
@@ -47,31 +48,32 @@ export function WatchersField() {
     form.setValue("watchers", currentWatchers, { shouldValidate: true });
   };
   
-  const getSelectedMembers = () => {
-    return communityMembers.filter(member => watcherIds.includes(member.id));
-  };
+  const selectedMembers = communityMembers.filter(member => watcherIds.includes(member.id));
   
   return (
     <FormField
       control={form.control}
       name="watchers"
-      render={({ field }) => (
+      render={() => (
         <FormItem>
-          <FormLabel>Accountability Watchers (Optional)</FormLabel>
+          <FormLabel className="flex items-center gap-1">
+            <Eye className="h-4 w-4" />
+            Accountability Watchers
+          </FormLabel>
           <FormDescription>
             Add community members who will be notified about this action
           </FormDescription>
           
           <div className="flex flex-wrap gap-2 mt-2">
-            {getSelectedMembers().map((member) => (
-              <Badge key={member.id} variant="secondary" className="gap-1">
-                {member.name}
-                <X 
-                  className="h-3 w-3 cursor-pointer" 
-                  onClick={() => handleRemoveWatcher(member.id)} 
-                />
-              </Badge>
-            ))}
+            {selectedMembers.length > 0 ? (
+              <WatchersDisplay 
+                watchers={selectedMembers.map(m => m.name)}
+                showIcon={false}
+                maxVisible={3}
+              />
+            ) : (
+              <p className="text-xs text-muted-foreground">No watchers selected</p>
+            )}
             
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
@@ -81,15 +83,18 @@ export function WatchersField() {
                   size="sm"
                 >
                   <Plus className="h-3.5 w-3.5 mr-1" />
-                  Add Watchers
+                  {selectedMembers.length > 0 ? "Edit" : "Add"} Watchers
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-80" align="start">
-                <h4 className="font-medium mb-2">Select Watchers</h4>
-                <p className="text-sm text-muted-foreground mb-4">
-                  They will be notified when this action is added or updated
-                </p>
-                <ScrollArea className="h-60">
+              <PopoverContent className="w-80 p-0" align="start">
+                <div className="p-4 border-b">
+                  <h4 className="font-medium">Select Watchers</h4>
+                  <p className="text-sm text-muted-foreground">
+                    They will be notified when this item is updated
+                  </p>
+                </div>
+                
+                <ScrollArea className="h-60 px-4 py-2">
                   <div className="space-y-2">
                     {communityMembers.map((member) => (
                       <div 
@@ -114,7 +119,8 @@ export function WatchersField() {
                     ))}
                   </div>
                 </ScrollArea>
-                <div className="mt-4 flex justify-end">
+                
+                <div className="p-2 bg-muted/20 flex justify-end border-t">
                   <Button 
                     type="button" 
                     size="sm"
