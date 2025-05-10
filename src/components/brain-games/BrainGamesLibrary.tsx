@@ -8,6 +8,8 @@ import { Progress } from "@/components/ui/progress";
 import { Brain, Star, Clock, Trophy, Eye, Puzzle, Book, Lightbulb } from "lucide-react";
 import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
 import { cn } from "@/lib/utils";
+import { GameSession } from "./GameSession";
+import { toast } from "@/hooks/use-toast";
 
 // Types for our brain games
 interface GameType {
@@ -29,6 +31,12 @@ interface GameDifficultyLevel {
 export function BrainGamesLibrary() {
   const [selectedGameType, setSelectedGameType] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("featured");
+  const [activeGame, setActiveGame] = useState<{
+    id: string;
+    name: string;
+    icon: React.ReactNode;
+    difficulty: "Low" | "Medium" | "High";
+  } | null>(null);
   
   // Sample game types data - in a real app, this would be more extensive
   const gameTypes: GameType[] = [
@@ -140,6 +148,23 @@ export function BrainGamesLibrary() {
     { id: "focus-challenge", name: "Focus Challenge", lastPlayed: "3 days ago", progressPercent: 78 }
   ];
   
+  const handlePlayGame = (gameId: string, difficultyLevel: "Low" | "Medium" | "High" = "Low") => {
+    const gameToPlay = gameTypes.find(game => game.id === gameId);
+    if (gameToPlay) {
+      setActiveGame({
+        id: gameId,
+        name: gameToPlay.name,
+        icon: gameToPlay.icon,
+        difficulty: difficultyLevel
+      });
+      
+      toast({
+        title: "Starting Game",
+        description: `Loading ${gameToPlay.name} (${difficultyLevel} difficulty)`,
+      });
+    }
+  };
+  
   const renderGameCard = (game: GameType) => {
     return (
       <Card 
@@ -170,11 +195,15 @@ export function BrainGamesLibrary() {
                 key={level.level} 
                 variant="secondary"
                 className={cn(
-                  "bg-muted/50",
+                  "bg-muted/50 cursor-pointer",
                   level.level === "Low" && "border-green-400", 
                   level.level === "Medium" && "border-amber-400",
                   level.level === "High" && "border-red-400"
                 )}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handlePlayGame(game.id, level.level);
+                }}
               >
                 {level.level}
               </Badge>
@@ -191,13 +220,47 @@ export function BrainGamesLibrary() {
           )}
         </CardContent>
         <CardFooter>
-          <Button variant="default" className="w-full">
+          <Button 
+            variant="default" 
+            className="w-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              handlePlayGame(game.id, "Low");
+            }}
+          >
             Play Game
           </Button>
         </CardFooter>
       </Card>
     );
   };
+  
+  // If a game is active, show the game session instead of the library
+  if (activeGame) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-semibold flex items-center gap-2">
+              <Brain className="h-6 w-6 text-primary" />
+              Playing: {activeGame.name}
+            </h2>
+            <p className="text-muted-foreground mt-1">
+              {activeGame.difficulty} Difficulty Level
+            </p>
+          </div>
+        </div>
+        
+        <GameSession
+          gameId={activeGame.id}
+          gameName={activeGame.name}
+          gameIcon={activeGame.icon}
+          difficultyLevel={activeGame.difficulty}
+          onClose={() => setActiveGame(null)}
+        />
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6">
@@ -266,7 +329,13 @@ export function BrainGamesLibrary() {
                   </CardContent>
                   <CardFooter className="bg-muted/20 py-2 flex justify-between">
                     <Button variant="ghost" size="sm">View Stats</Button>
-                    <Button variant="default" size="sm">Continue</Button>
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      onClick={() => handlePlayGame(game.id)}
+                    >
+                      Continue
+                    </Button>
                   </CardFooter>
                 </Card>
               );
@@ -306,7 +375,13 @@ export function BrainGamesLibrary() {
         </p>
         <div className="mt-3 flex items-center gap-2">
           <Button variant="outline" size="sm">Set Reminder</Button>
-          <Button variant="default" size="sm">Start Today's Session</Button>
+          <Button 
+            variant="default" 
+            size="sm"
+            onClick={() => handlePlayGame("visual-memory")}
+          >
+            Start Today's Session
+          </Button>
         </div>
       </div>
     </div>
