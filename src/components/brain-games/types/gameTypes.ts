@@ -11,6 +11,7 @@ export interface GameType {
   id: string;
   name: string;
   description: string;
+  purpose?: string; // Added purpose field to explain the game's cognitive benefits
   cognitiveDomain: string;
   icon: React.ReactNode;
   difficultyLevels: GameDifficultyLevel[];

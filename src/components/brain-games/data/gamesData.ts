@@ -9,6 +9,7 @@ export const gameTypes: GameType[] = [
     id: "visual-memory",
     name: "Pattern Recall",
     description: "Remember and reproduce visual patterns that briefly appear on screen.",
+    purpose: "This game helps improve visual memory and pattern recognition, which are crucial skills for daily tasks like remembering where objects are placed or recognizing familiar faces and environments.",
     cognitiveDomain: "Visual Memory",
     icon: React.createElement(Eye, { className: "h-5 w-5 text-blue-500" }),
     difficultyLevels: [
@@ -35,6 +36,7 @@ export const gameTypes: GameType[] = [
     id: "auditory-memory",
     name: "Sound Sequence",
     description: "Listen to and reproduce sequences of sounds in the correct order.",
+    purpose: "This game strengthens auditory memory and sequential processing, which help with following verbal instructions, participating in conversations, and remembering spoken information.",
     cognitiveDomain: "Auditory Memory",
     icon: React.createElement(Book, { className: "h-5 w-5 text-purple-500" }),
     difficultyLevels: [
@@ -61,6 +63,7 @@ export const gameTypes: GameType[] = [
     id: "focus-challenge",
     name: "Focus Challenge",
     description: "Maintain attention on a specific target while ignoring distractions.",
+    purpose: "This game enhances sustained attention and filtering abilities, helping you maintain focus on important tasks while ignoring distractions in everyday environments.",
     cognitiveDomain: "Sustained Attention",
     icon: React.createElement(Lightbulb, { className: "h-5 w-5 text-amber-500" }),
     difficultyLevels: [
@@ -86,6 +89,7 @@ export const gameTypes: GameType[] = [
     id: "task-switcher",
     name: "Task Switcher",
     description: "Switch between different tasks based on changing rules or cues.",
+    purpose: "This game improves cognitive flexibility and task switching, essential skills for multitasking, adapting to new situations, and smoothly transitioning between different activities throughout your day.",
     cognitiveDomain: "Task Switching",
     icon: React.createElement(Puzzle, { className: "h-5 w-5 text-green-500" }),
     difficultyLevels: [
@@ -111,6 +115,7 @@ export const gameTypes: GameType[] = [
     id: "speed-processing",
     name: "Speed Processor",
     description: "Quickly identify and respond to specific visual or auditory stimuli.",
+    purpose: "This game targets processing speed and rapid decision making, helping you respond more quickly to information and make faster decisions in time-sensitive situations.",
     cognitiveDomain: "Processing Speed",
     icon: React.createElement(Zap, { className: "h-5 w-5 text-orange-500" }),
     difficultyLevels: [
@@ -136,6 +141,7 @@ export const gameTypes: GameType[] = [
     id: "word-finder",
     name: "Word Finder",
     description: "Find specific words hidden within a grid of letters.",
+    purpose: "This game enhances visual scanning, verbal processing, and pattern recognition skills, which are important for reading comprehension, vocabulary development, and efficient visual search.",
     cognitiveDomain: "Verbal Processing",
     icon: React.createElement(Grid3X3, { className: "h-5 w-5 text-teal-500" }),
     difficultyLevels: [
