@@ -20,7 +20,7 @@ const SplashScreen = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-annabel-100 to-aaron-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-beacon-100 to-beacon-200">
       <div className="flex-1 flex flex-col justify-center items-center px-6 py-12 space-y-10 max-w-md mx-auto">
         {/* Logo and App Name */}
         <div 
@@ -29,10 +29,10 @@ const SplashScreen = () => {
           }`}
         >
           <div className="bg-white rounded-full p-4 shadow-md mb-4">
-            <ShieldCheck className="h-16 w-16 text-annabel-600" />
+            <ShieldCheck className="h-16 w-16 text-beacon-600" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-annabel-600 to-aaron-600 bg-clip-text text-transparent">
-            Annabel Aaron
+          <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
+            MyRhythm
           </h1>
         </div>
 
@@ -52,23 +52,23 @@ const SplashScreen = () => {
             </p>
             <ul className="space-y-2 text-sm md:text-base">
               <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-annabel-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-beacon-600"></span>
                 <span>Organize priorities</span>
               </li>
               <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-annabel-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-beacon-600"></span>
                 <span>build Routines</span>
               </li>
               <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-aaron-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-beacon-700"></span>
                 <span>strengthen Discipline</span>
               </li>
               <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-aaron-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-beacon-700"></span>
                 <span>Execute with focus</span>
               </li>
               <li className="flex items-center justify-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-annabel-600"></span>
+                <span className="h-1.5 w-1.5 rounded-full bg-beacon-600"></span>
                 <span>Review with intention</span>
               </li>
             </ul>
@@ -83,7 +83,7 @@ const SplashScreen = () => {
         >
           <Button 
             onClick={() => navigate("/customization")} 
-            className="w-full py-6 text-lg font-medium rounded-xl bg-gradient-to-r from-annabel-600 to-aaron-600 shadow-lg hover:shadow-xl transition-all"
+            className="w-full py-6 text-lg font-medium rounded-xl bg-gradient-to-r from-beacon-600 to-beacon-800 shadow-lg hover:shadow-xl transition-all"
           >
             <span>Start Your Journey</span>
             <ArrowRight className="ml-2 h-5 w-5" />
@@ -92,7 +92,7 @@ const SplashScreen = () => {
           <div className="mt-6 text-center">
             <Button 
               variant="link" 
-              className="text-muted-foreground hover:text-annabel-600" 
+              className="text-muted-foreground hover:text-beacon-600" 
               onClick={() => navigate("/onboarding")}
             >
               Already have an account? Log in
