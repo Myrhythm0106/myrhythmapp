@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Brain, Clock, Star, Trophy } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { GameSession } from "./GameSession";
+import { GameSession } from "./components/GameSession";
 
 // Import the refactored components
 import { FeaturedTab } from "./components/FeaturedTab";

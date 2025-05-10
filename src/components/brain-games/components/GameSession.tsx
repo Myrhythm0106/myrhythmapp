@@ -2,13 +2,13 @@
 import React from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 
-// Import our new components
-import { GameHeader } from "./components/game-session/GameHeader";
-import { GameIntro } from "./components/game-session/GameIntro";
-import { GameComplete } from "./components/game-session/GameComplete";
-import { GamePlayArea } from "./components/game-session/GamePlayArea";
-import { GameControls } from "./components/game-session/GameControls";
-import { useGameLogic } from "./hooks/useGameLogic";
+// Import our components
+import { GameHeader } from "./game-session/GameHeader";
+import { GameIntro } from "./game-session/GameIntro";
+import { GameComplete } from "./game-session/GameComplete";
+import { GamePlayArea } from "./game-session/GamePlayArea";
+import { GameControls } from "./game-session/GameControls";
+import { useGameLogic } from "../hooks/useGameLogic";
 
 interface GameSessionProps {
   gameId: string;
