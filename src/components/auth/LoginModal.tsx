@@ -43,6 +43,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
       if (usernameMatches && passwordMatches) {
         toast.success("Login successful!");
         localStorage.setItem("myrhythm_logged_in", "true");
+        // Direct navigation to dashboard (change #1)
         navigate("/dashboard");
       } else {
         toast.error("Invalid username or password");

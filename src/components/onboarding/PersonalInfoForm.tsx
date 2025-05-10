@@ -130,7 +130,7 @@ const PersonalInfoForm = ({ onSubmit, onBack }: PersonalInfoFormProps) => {
             Back
           </Button>
           <Button type="submit" className="gap-2">
-            Complete Setup <ArrowRight className="h-4 w-4" />
+            Next <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       </form>

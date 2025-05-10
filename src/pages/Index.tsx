@@ -36,7 +36,7 @@ const Index = () => {
     
     if (justRegistered === 'true') {
       setIsNewRegistration(true);
-      // Show welcome message first for 5 seconds
+      // Show welcome message first for 5 seconds (change #4)
       setShowWelcomeMessage(true);
       sessionStorage.removeItem('justRegistered');
       

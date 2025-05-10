@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,7 @@ const Onboarding = () => {
 
   useEffect(() => {
     // Auto-advance when user type is selected (with small delay for UX)
-    if (userType && step === 3 && userType !== "custom") {
+    if (userType && step === 4 && userType !== "custom") {
       const timer = setTimeout(() => {
         handleFinishOnboarding();
       }, 800);
@@ -46,12 +45,18 @@ const Onboarding = () => {
     localStorage.setItem("myrhythm_email", values.email);
     localStorage.setItem("myrhythm_password", values.password);
     
-    // Move to payment step
+    // Move to plan selection step
     setStep(2);
   };
   
   const handlePlanSelect = (plan: string) => {
     setSelectedPlan(plan);
+    
+    // Auto-advance to payment step after selecting plan (change #3)
+    const timer = setTimeout(() => {
+      handlePlanContinue();
+    }, 500);
+    return () => clearTimeout(timer);
   };
   
   const handlePlanContinue = () => {
