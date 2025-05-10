@@ -71,7 +71,7 @@ export function GameSession({ gameId, gameName, gameIcon, difficultyLevel, onClo
     toast({
       title: "Game Complete!",
       description: `You scored ${score} points! Great job!`,
-      variant: "success"
+      variant: "default"
     });
   };
   
