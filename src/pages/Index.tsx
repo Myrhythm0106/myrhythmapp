@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -23,6 +22,7 @@ const Index = () => {
   const [isNewRegistration, setIsNewRegistration] = useState(false);
   const [showWelcomeMessage, setShowWelcomeMessage] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [welcomeTimer, setWelcomeTimer] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     // Check if the user is logged in
@@ -35,11 +35,16 @@ const Index = () => {
     
     if (justRegistered === 'true') {
       setIsNewRegistration(true);
-      setShowTutorial(true);
-      toast.success("Registration successful! Welcome to MyRhythm.", {
-        duration: 4000,
-      });
+      // Show welcome message first for 5 seconds
+      setShowWelcomeMessage(true);
       sessionStorage.removeItem('justRegistered');
+      
+      // Set a timer to automatically show the tutorial after 5 seconds
+      const timer = setTimeout(() => {
+        setShowWelcomeMessage(false);
+        setShowTutorial(true);
+      }, 5000);
+      setWelcomeTimer(timer);
     }
     else if (!hasVisited) {
       setIsFirstVisit(true);
@@ -48,18 +53,20 @@ const Index = () => {
       // Set the flag in localStorage for future visits
       localStorage.setItem('hasVisitedBefore', 'true');
     }
+
+    // Cleanup timer on unmount
+    return () => {
+      if (welcomeTimer) {
+        clearTimeout(welcomeTimer);
+      }
+    };
   }, []);
 
   const handleTutorialComplete = () => {
     setShowTutorial(false);
-    setShowWelcomeMessage(true);
     
-    // Navigate to Useful Info tab if it's a new registration
-    if (isNewRegistration) {
-      setTimeout(() => {
-        navigate('/useful-info');
-      }, 2000);
-    }
+    // Navigate to Useful Info tab
+    navigate('/useful-info');
   };
 
   // If not logged in, redirect to landing page
@@ -79,7 +86,12 @@ const Index = () => {
       <TutorialModal isOpen={showTutorial} onComplete={handleTutorialComplete} />
       
       {/* Welcome message dialog */}
-      <Dialog open={showWelcomeMessage} onOpenChange={setShowWelcomeMessage}>
+      <Dialog open={showWelcomeMessage} onOpenChange={(open) => {
+        setShowWelcomeMessage(open);
+        if (!open && isNewRegistration) {
+          setShowTutorial(true);
+        }
+      }}>
         <DialogContent className="sm:max-w-md" onEscapeKeyDown={(e) => e.preventDefault()}>
           <DialogHeader>
             <DialogTitle className="flex items-center justify-center text-xl">
@@ -95,7 +107,12 @@ const Index = () => {
             <p className="font-semibold text-primary">Let's build your rhythm together!</p>
           </div>
           <DialogFooter className="flex sm:justify-center">
-            <Button onClick={() => setShowWelcomeMessage(false)} className="w-full sm:w-auto">
+            <Button onClick={() => {
+              setShowWelcomeMessage(false);
+              if (isNewRegistration) {
+                setShowTutorial(true);
+              }
+            }} className="w-full sm:w-auto">
               Get Started
             </Button>
           </DialogFooter>

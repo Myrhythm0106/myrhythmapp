@@ -30,16 +30,16 @@ const Onboarding = () => {
 
   useEffect(() => {
     // Auto-advance when user type is selected (with small delay for UX)
-    if (userType && step === 1 && userType !== "custom") {
+    if (userType && step === 2 && userType !== "custom") {
       const timer = setTimeout(() => {
-        setStep(2);
+        setStep(3);
       }, 800);
       return () => clearTimeout(timer);
     }
   }, [userType, step]);
 
   const handleContinue = () => {
-    if (step === 1) {
+    if (step === 2) {
       if (!userType) {
         toast.error("Please select a user type to continue");
         return;
@@ -50,7 +50,7 @@ const Onboarding = () => {
         return;
       }
       
-      setStep(2);
+      setStep(3);
     }
   };
   
@@ -77,7 +77,7 @@ const Onboarding = () => {
     }
     
     // After successful payment, go to user type selection
-    setStep(1);
+    setStep(2);
   };
   
   const completeOnboarding = () => {
@@ -123,13 +123,13 @@ const Onboarding = () => {
             <div className="flex justify-between items-center">
               <div>
                 <CardTitle>
-                  {step === 1 && "Personalised Support to O.R.D.E.R your life daily"}
-                  {step === 2 && "Complete your profile"}
+                  {step === 1 && "Complete your profile"}
+                  {step === 2 && "Personalised Support to O.R.D.E.R your life daily"}
                   {step === 3 && "Set up your payment details"}
                 </CardTitle>
                 <CardDescription>
-                  {step === 1 && "Select the option that best describes your situation"}
-                  {step === 2 && "Just a few more details to personalize your experience"}
+                  {step === 1 && "Just a few more details to personalize your experience"}
+                  {step === 2 && "Select the option that best describes your situation"}
                   {step === 3 && `Set up payment for your ${selectedPlan} plan`}
                 </CardDescription>
               </div>
@@ -140,6 +140,14 @@ const Onboarding = () => {
           </CardHeader>
           <CardContent>
             {step === 1 ? (
+              <PersonalInfoForm 
+                onSubmit={(values) => {
+                  console.log("Personal info:", values);
+                  setStep(2); // Move to next step after profile completion
+                }}
+                onBack={handleBack}
+              />
+            ) : step === 2 ? (
               <div className="space-y-6">
                 <UserTypeSelector 
                   selectedType={userType} 
@@ -153,15 +161,10 @@ const Onboarding = () => {
                     className="gap-2"
                     disabled={!userType || (userType === "custom" && !customTypeValue.trim())}
                   >
-                    Next <ArrowRight className="h-4 w-4" />
+                    Finish <ArrowRight className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
-            ) : step === 2 ? (
-              <PersonalInfoForm 
-                onSubmit={handlePersonalInfoSubmit}
-                onBack={handleBack}
-              />
             ) : (
               <PaymentInfoForm 
                 onSubmit={handlePaymentInfoSubmit}
