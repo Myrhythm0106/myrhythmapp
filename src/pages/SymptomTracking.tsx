@@ -9,7 +9,8 @@ import { SymptomLogForm } from "@/components/tracking/SymptomLogForm";
 import { SymptomHistory } from "@/components/tracking/SymptomHistory";
 import { SymptomInsights } from "@/components/tracking/SymptomInsights";
 import { InspirationSection } from "@/components/tracking/InspirationSection";
-import { Plus, List, LineChart, Smile } from "lucide-react";
+import { BrainGamesLibrary } from "@/components/brain-games/BrainGamesLibrary";
+import { Plus, List, LineChart, Smile, Brain } from "lucide-react";
 
 const SymptomTracking = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -30,9 +31,10 @@ const SymptomTracking = () => {
       </PageHeader>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList>
+        <TabsList className="overflow-x-auto flex w-full">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="log">Log Data</TabsTrigger>
+          <TabsTrigger value="brainGames">Brain Games Library</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
           <TabsTrigger value="insights">Insights</TabsTrigger>
           <TabsTrigger value="inspiration">Inspiration</TabsTrigger>
@@ -46,6 +48,14 @@ const SymptomTracking = () => {
           <Card>
             <CardContent className="pt-6">
               <SymptomLogForm />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="brainGames">
+          <Card className="overflow-hidden">
+            <CardContent className="pt-6 pb-6">
+              <BrainGamesLibrary />
             </CardContent>
           </Card>
         </TabsContent>
