@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Brain, Clock, Star, Trophy } from "lucide-react";
+import { Brain, Clock, Star, Trophy, Search } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { GameSession } from "./components/GameSession";
 
@@ -19,6 +19,7 @@ export function BrainGamesLibrary() {
   const [selectedGameType, setSelectedGameType] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("featured");
   const [activeGame, setActiveGame] = useState<ActiveGameProps | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const handlePlayGame = (gameId: string, difficultyLevel: "Low" | "Medium" | "High" = "Low") => {
     const gameToPlay = gameTypes.find(game => game.id === gameId);
@@ -74,7 +75,7 @@ export function BrainGamesLibrary() {
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-semibold flex items-center gap-2">
             <Brain className="h-6 w-6 text-primary" />
@@ -85,7 +86,17 @@ export function BrainGamesLibrary() {
           </p>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <input 
+              type="text" 
+              placeholder="Search games..." 
+              className="pl-9 h-9 w-full md:w-[180px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
           <Button size="sm" variant="outline" className="flex items-center gap-1">
             <Star className="h-4 w-4" />
             Favorites
@@ -101,8 +112,10 @@ export function BrainGamesLibrary() {
         </div>
       </div>
       
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="mb-4">
+      <DailyRecommendation onStartSession={handlePlayGame} />
+      
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-8">
+        <TabsList className="mb-4 w-full md:w-auto">
           <TabsTrigger value="featured">Featured Games</TabsTrigger>
           <TabsTrigger value="recent">Recent Activity</TabsTrigger>
           <TabsTrigger value="all">All Games</TabsTrigger>
@@ -114,6 +127,7 @@ export function BrainGamesLibrary() {
             selectedGameType={selectedGameType}
             setSelectedGameType={setSelectedGameType}
             handlePlayGame={handlePlayGame}
+            searchQuery={searchQuery}
           />
         </TabsContent>
         
@@ -121,6 +135,7 @@ export function BrainGamesLibrary() {
           <RecentTab 
             handleViewStats={handleViewStats}
             handlePlayGame={handlePlayGame}
+            searchQuery={searchQuery}
           />
         </TabsContent>
         
@@ -129,6 +144,7 @@ export function BrainGamesLibrary() {
             selectedGameType={selectedGameType}
             setSelectedGameType={setSelectedGameType}
             handlePlayGame={handlePlayGame}
+            searchQuery={searchQuery}
           />
         </TabsContent>
         
@@ -136,8 +152,6 @@ export function BrainGamesLibrary() {
           <RecommendedTab />
         </TabsContent>
       </Tabs>
-      
-      <DailyRecommendation onStartSession={handlePlayGame} />
     </div>
   );
 }

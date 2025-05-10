@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Play, ChartBar } from "lucide-react";
 import { RecentGame } from "../types/gameTypes";
 
 interface RecentGameCardProps {
@@ -15,36 +16,54 @@ interface RecentGameCardProps {
 
 export function RecentGameCard({ game, icon, onViewStats, onContinue }: RecentGameCardProps) {
   return (
-    <Card key={game.id} className="overflow-hidden">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {icon}
-            <CardTitle className="text-base font-medium">{game.name}</CardTitle>
+    <Card key={game.id} className="overflow-hidden hover:shadow-md transition-all border-muted/80">
+      <CardHeader className="pb-2 flex flex-row items-center gap-3">
+        <div className="p-2 rounded-md bg-primary/10 text-primary">
+          {icon}
+        </div>
+        <div className="flex-grow">
+          <CardTitle className="text-base font-medium">{game.name}</CardTitle>
+          <div className="flex items-center gap-2 mt-1">
+            <Badge variant="outline" className="bg-muted/40 text-xs">
+              {game.lastPlayed}
+            </Badge>
+            {game.streakDays > 0 && (
+              <Badge className="bg-green-500/20 text-green-700 border-green-500/30 text-xs">
+                {game.streakDays} day streak
+              </Badge>
+            )}
           </div>
-          <Badge variant="outline">{game.lastPlayed}</Badge>
         </div>
       </CardHeader>
       <CardContent className="pb-4">
-        <div className="flex items-center justify-between text-sm mb-1">
-          <span>Progress</span>
+        <div className="flex items-center justify-between text-sm mb-1.5 mt-2">
+          <span className="text-muted-foreground">Progress</span>
           <span className="font-medium">{game.progressPercent}%</span>
         </div>
-        <Progress value={game.progressPercent} className="h-2" />
+        <Progress value={game.progressPercent} className="h-2" 
+          indicatorClassName={
+            game.progressPercent < 30 ? "bg-muted" : 
+            game.progressPercent < 70 ? "bg-amber-500" : "bg-green-500"
+          }
+        />
       </CardContent>
-      <CardFooter className="bg-muted/20 py-2 flex justify-between">
+      <CardFooter className="bg-muted/10 py-2.5 flex justify-between">
         <Button 
-          variant="ghost" 
+          variant="outline" 
           size="sm"
+          className="flex items-center gap-1.5"
           onClick={() => onViewStats(game.id)}
         >
+          <ChartBar className="h-3.5 w-3.5" />
           View Stats
         </Button>
         <Button 
           variant="default" 
           size="sm"
+          className="flex items-center gap-1.5 bg-primary hover:bg-primary/90"
           onClick={() => onContinue(game.id)}
         >
+          <Play className="h-3.5 w-3.5" />
           Continue
         </Button>
       </CardFooter>

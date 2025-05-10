@@ -15,6 +15,7 @@ export interface GameType {
   icon: React.ReactNode;
   difficultyLevels: GameDifficultyLevel[];
   watchers?: string[];
+  progressLevel?: number;
 }
 
 export interface RecentGame {
@@ -22,6 +23,7 @@ export interface RecentGame {
   name: string;
   lastPlayed: string;
   progressPercent: number;
+  streakDays: number;
 }
 
 export interface ActiveGameProps {

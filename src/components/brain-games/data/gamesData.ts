@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Eye, Book, Lightbulb, Puzzle } from "lucide-react";
+import { Eye, Book, Lightbulb, Puzzle, Zap, Target, Brain, Grid3X3 } from "lucide-react";
 import { GameType, RecentGame } from "../types/gameTypes";
 
 // Sample game types data - in a real app, this would be more extensive
@@ -9,7 +9,7 @@ export const gameTypes: GameType[] = [
     id: "visual-memory",
     name: "Pattern Recall",
     description: "Remember and reproduce visual patterns that briefly appear on screen.",
-    cognitiveDomain: "Visual Memory/Recall",
+    cognitiveDomain: "Visual Memory",
     icon: React.createElement(Eye, { className: "h-5 w-5 text-blue-500" }),
     difficultyLevels: [
       {
@@ -28,13 +28,14 @@ export const gameTypes: GameType[] = [
         parameters: { elements: 7, displayTimeMs: 1000, recallTimeMs: 7000 }
       }
     ],
-    watchers: ["Dr. Wilson", "Support Group"]
+    watchers: ["Dr. Wilson", "Support Group"],
+    progressLevel: 4
   },
   {
     id: "auditory-memory",
     name: "Sound Sequence",
     description: "Listen to and reproduce sequences of sounds in the correct order.",
-    cognitiveDomain: "Auditory Memory/Sequence",
+    cognitiveDomain: "Auditory Memory",
     icon: React.createElement(Book, { className: "h-5 w-5 text-purple-500" }),
     difficultyLevels: [
       {
@@ -53,13 +54,14 @@ export const gameTypes: GameType[] = [
         parameters: { sequenceLength: 6, pauseMs: 400, replayAvailable: false }
       }
     ],
-    watchers: ["Therapist Jane"]
+    watchers: ["Therapist Jane"],
+    progressLevel: 2
   },
   {
     id: "focus-challenge",
     name: "Focus Challenge",
     description: "Maintain attention on a specific target while ignoring distractions.",
-    cognitiveDomain: "Sustained Attention/Focus",
+    cognitiveDomain: "Sustained Attention",
     icon: React.createElement(Lightbulb, { className: "h-5 w-5 text-amber-500" }),
     difficultyLevels: [
       {
@@ -77,13 +79,14 @@ export const gameTypes: GameType[] = [
         description: "Many distractors, faster pace, subtle targets",
         parameters: { distractorCount: 10, targetFrequency: 0.2, sessionLengthMin: 7 }
       }
-    ]
+    ],
+    progressLevel: 3
   },
   {
     id: "task-switcher",
     name: "Task Switcher",
     description: "Switch between different tasks based on changing rules or cues.",
-    cognitiveDomain: "Task Switching/Divided Attention",
+    cognitiveDomain: "Task Switching",
     icon: React.createElement(Puzzle, { className: "h-5 w-5 text-green-500" }),
     difficultyLevels: [
       {
@@ -103,12 +106,79 @@ export const gameTypes: GameType[] = [
       }
     ],
     watchers: ["Mom", "Cognitive Specialist"]
+  },
+  {
+    id: "speed-processing",
+    name: "Speed Processor",
+    description: "Quickly identify and respond to specific visual or auditory stimuli.",
+    cognitiveDomain: "Processing Speed",
+    icon: React.createElement(Zap, { className: "h-5 w-5 text-orange-500" }),
+    difficultyLevels: [
+      {
+        level: "Low",
+        description: "Simple stimuli with generous response times",
+        parameters: { stimuliComplexity: "low", responseTimeMs: 3000 }
+      },
+      {
+        level: "Medium",
+        description: "Moderate stimuli complexity with standard response times",
+        parameters: { stimuliComplexity: "medium", responseTimeMs: 2000 }
+      },
+      {
+        level: "High",
+        description: "Complex stimuli requiring quick responses",
+        parameters: { stimuliComplexity: "high", responseTimeMs: 1000 }
+      }
+    ],
+    progressLevel: 1
+  },
+  {
+    id: "word-finder",
+    name: "Word Finder",
+    description: "Find specific words hidden within a grid of letters.",
+    cognitiveDomain: "Verbal Processing",
+    icon: React.createElement(Grid3X3, { className: "h-5 w-5 text-teal-500" }),
+    difficultyLevels: [
+      {
+        level: "Low",
+        description: "Small grid with fewer, more common words",
+        parameters: { gridSize: "5x5", wordCount: 5, wordDifficulty: "common" }
+      },
+      {
+        level: "Medium",
+        description: "Medium grid with standard word selection",
+        parameters: { gridSize: "8x8", wordCount: 8, wordDifficulty: "moderate" }
+      },
+      {
+        level: "High",
+        description: "Larger grid with more and less common words",
+        parameters: { gridSize: "10x10", wordCount: 12, wordDifficulty: "advanced" }
+      }
+    ]
   }
 ];
 
 // User's recent games and progress
 export const recentGames: RecentGame[] = [
-  { id: "visual-memory", name: "Pattern Recall", lastPlayed: "Today", progressPercent: 65 },
-  { id: "auditory-memory", name: "Sound Sequence", lastPlayed: "Yesterday", progressPercent: 42 },
-  { id: "focus-challenge", name: "Focus Challenge", lastPlayed: "3 days ago", progressPercent: 78 }
+  { 
+    id: "visual-memory", 
+    name: "Pattern Recall", 
+    lastPlayed: "Today", 
+    progressPercent: 65,
+    streakDays: 3
+  },
+  { 
+    id: "auditory-memory", 
+    name: "Sound Sequence", 
+    lastPlayed: "Yesterday", 
+    progressPercent: 42,
+    streakDays: 0
+  },
+  { 
+    id: "focus-challenge", 
+    name: "Focus Challenge", 
+    lastPlayed: "3 days ago", 
+    progressPercent: 78,
+    streakDays: 0
+  }
 ];
