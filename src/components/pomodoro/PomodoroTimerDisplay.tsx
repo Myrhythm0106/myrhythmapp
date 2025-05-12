@@ -1,9 +1,10 @@
 
 import React from "react";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { Play, Pause, RotateCcw, TimerReset } from "lucide-react";
+import { TimerBadge } from "./timer-components/TimerBadge";
+import { TimeDisplay } from "./timer-components/TimeDisplay";
+import { ProgressIndicator } from "./timer-components/ProgressIndicator";
+import { SessionCounter } from "./timer-components/SessionCounter";
+import { TimerControls } from "./timer-components/TimerControls";
 import { PomodoroSettings } from "./types";
 
 interface PomodoroTimerDisplayProps {
@@ -33,55 +34,24 @@ export function PomodoroTimerDisplay({
 }: PomodoroTimerDisplayProps) {
   return (
     <div className="space-y-6 py-4 flex flex-col items-center">
-      <Badge variant={mode === "work" ? "default" : "secondary"} className="px-3 py-1">
-        {mode === "work" ? "Work Session" : mode === "shortBreak" ? "Short Break" : "Long Break"}
-      </Badge>
+      <TimerBadge mode={mode} />
       
-      <div className="text-4xl font-bold text-center">
-        {formatTime(secondsLeft)}
-      </div>
+      <TimeDisplay formattedTime={formatTime(secondsLeft)} />
       
-      <Progress value={progress} className="h-2 w-full" />
+      <ProgressIndicator progress={progress} />
       
-      <div className="flex items-center justify-center gap-2">
-        <span className="text-sm text-muted-foreground">
-          Pomodoros: {pomodoroCount}
-        </span>
-        {mode === "longBreak" && (
-          <Badge variant="outline" className="text-xs">
-            Long Break #{Math.floor(pomodoroCount / settings.longBreakInterval)}
-          </Badge>
-        )}
-      </div>
+      <SessionCounter 
+        pomodoroCount={pomodoroCount} 
+        mode={mode} 
+        settings={settings} 
+      />
       
-      <div className="flex gap-2 justify-center">
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={toggleTimer}
-          className="h-10 w-10"
-        >
-          {isRunning ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
-        </Button>
-        
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={resetTimer}
-          className="h-10 w-10"
-        >
-          <RotateCcw className="h-4 w-4" />
-        </Button>
-        
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={skipToNext}
-          className="h-10 w-10"
-        >
-          <TimerReset className="h-4 w-4" />
-        </Button>
-      </div>
+      <TimerControls
+        isRunning={isRunning}
+        toggleTimer={toggleTimer}
+        resetTimer={resetTimer}
+        skipToNext={skipToNext}
+      />
     </div>
   );
 }
