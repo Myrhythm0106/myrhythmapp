@@ -6,7 +6,7 @@ import Feature from "./Feature";
 const FeaturesSection = () => {
   const features = [{
     icon: <ShieldCheck className="h-10 w-10 text-annabel-600" />,
-    title: "Enhance Mind. Organize Forward.",
+    title: "Enhanced Mind. Organise Forward.",
     description: "MyRhythm doesn't just remind, it anticipates. By understanding your rhythm, it proactively suggests optimal schedules and breaks down complex tasks."
   }, {
     icon: <Compass className="h-10 w-10 text-annabel-600" />,
