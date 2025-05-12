@@ -4,7 +4,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Timer } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { PomodoroTimer, PomodoroSettings } from "./PomodoroTimer";
+import { PomodoroTimer } from "./PomodoroTimer";
+import { PomodoroSettings } from "./types";
 
 interface PomodoroDialogProps {
   title: string;

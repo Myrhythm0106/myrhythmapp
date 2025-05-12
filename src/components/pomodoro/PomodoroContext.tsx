@@ -1,40 +1,11 @@
 
 import React, { createContext, useState, useContext, useEffect, useCallback } from "react";
-import { toast } from "sonner";
-import { PomodoroSettings } from "./PomodoroTimer";
+import { PomodoroSettings, PomodoroState, PomodoroContextType, DEFAULT_SETTINGS } from "./types";
 import { FloatingPomodoroTimer } from "./FloatingPomodoroTimer";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { PomodoroTimer } from "./PomodoroTimer";
-
-export interface PomodoroState {
-  isActive: boolean;
-  isRunning: boolean;
-  mode: "work" | "shortBreak" | "longBreak";
-  secondsLeft: number;
-  totalSeconds: number;
-  taskTitle: string;
-  pomodoroCount: number;
-  settings: PomodoroSettings;
-}
-
-interface PomodoroContextType {
-  state: PomodoroState;
-  startTimer: (taskTitle: string, customSettings?: Partial<PomodoroSettings>) => void;
-  stopTimer: () => void;
-  pauseTimer: () => void;
-  resumeTimer: () => void;
-  resetTimer: () => void;
-  updateSettings: (newSettings: Partial<PomodoroSettings>) => void;
-}
-
-const DEFAULT_SETTINGS: PomodoroSettings = {
-  workMinutes: 25,
-  shortBreakMinutes: 5,
-  longBreakMinutes: 15,
-  longBreakInterval: 4,
-  notificationSound: true,
-  notificationVisual: true,
-};
+import { usePomodoroTimer } from "./usePomodoroTimer";
+import { getTimeForMode, playNotificationSound, showWorkCompleteNotification, showBreakCompleteNotification } from "./utils";
 
 const defaultState: PomodoroState = {
   isActive: false,
@@ -61,23 +32,8 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [state, setState] = useState<PomodoroState>(defaultState);
   const [showFullTimer, setShowFullTimer] = useState(false);
   
-  // Calculate time based on current mode
-  const getTimeForMode = useCallback((mode: "work" | "shortBreak" | "longBreak", settings: PomodoroSettings) => {
-    if (mode === "work") return settings.workMinutes * 60;
-    if (mode === "shortBreak") return settings.shortBreakMinutes * 60;
-    return settings.longBreakMinutes * 60;
-  }, []);
-  
-  // Reset timer with new mode
-  const switchMode = useCallback((newMode: "work" | "shortBreak" | "longBreak", settings: PomodoroSettings) => {
-    const newTotalSeconds = getTimeForMode(newMode, settings);
-    setState(prev => ({
-      ...prev,
-      mode: newMode,
-      secondsLeft: newTotalSeconds,
-      totalSeconds: newTotalSeconds,
-    }));
-  }, [getTimeForMode]);
+  const { startTimer, stopTimer, pauseTimer, resumeTimer, resetTimer, updateSettings } = 
+    usePomodoroTimer(setState, defaultState);
   
   // Timer logic
   useEffect(() => {
@@ -98,22 +54,12 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             
             // Show notification
             if (prev.settings.notificationSound) {
-              const audio = new Audio("/notification-sound.mp3");
-              audio.play().catch(err => console.error("Error playing sound:", err));
+              playNotificationSound();
             }
             
-            if (prev.settings.notificationVisual) {
-              toast.success("Work session completed! Time for a break.", {
-                description: isLongBreakDue 
-                  ? `Take a longer break (${prev.settings.longBreakMinutes} min)` 
-                  : `Take a short break (${prev.settings.shortBreakMinutes} min)`,
-              });
-            }
+            showWorkCompleteNotification(prev.settings, isLongBreakDue);
             
-            const newTotalSeconds = getTimeForMode(
-              nextMode, 
-              prev.settings
-            );
+            const newTotalSeconds = getTimeForMode(nextMode, prev.settings);
             
             return {
               ...prev,
@@ -124,11 +70,7 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             };
           } else {
             // Break is over, back to work
-            if (prev.settings.notificationVisual) {
-              toast.info("Break time over! Ready to focus again?", {
-                description: `Starting a ${prev.settings.workMinutes} minute work session`,
-              });
-            }
+            showBreakCompleteNotification(prev.settings);
             
             const newTotalSeconds = getTimeForMode("work", prev.settings);
             
@@ -149,59 +91,7 @@ export const PomodoroProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }, 1000);
     
     return () => clearInterval(interval);
-  }, [state.isActive, state.isRunning, getTimeForMode]);
-  
-  const startTimer = useCallback((taskTitle: string, customSettings?: Partial<PomodoroSettings>) => {
-    const newSettings = { ...DEFAULT_SETTINGS, ...customSettings };
-    const totalSeconds = newSettings.workMinutes * 60;
-    
-    setState({
-      isActive: true,
-      isRunning: true,
-      mode: "work",
-      secondsLeft: totalSeconds,
-      totalSeconds,
-      taskTitle,
-      pomodoroCount: 0,
-      settings: newSettings,
-    });
-    
-    toast.success(`Pomodoro timer started for: ${taskTitle}`, {
-      description: `Focus for ${newSettings.workMinutes} minutes`,
-    });
-  }, []);
-  
-  const stopTimer = useCallback(() => {
-    setState(defaultState);
-    toast.info("Pomodoro timer stopped");
-  }, []);
-  
-  const pauseTimer = useCallback(() => {
-    setState(prev => ({ ...prev, isRunning: false }));
-  }, []);
-  
-  const resumeTimer = useCallback(() => {
-    setState(prev => ({ ...prev, isRunning: true }));
-  }, []);
-  
-  const resetTimer = useCallback(() => {
-    setState(prev => {
-      const totalSeconds = getTimeForMode(prev.mode, prev.settings);
-      return {
-        ...prev,
-        secondsLeft: totalSeconds,
-        totalSeconds,
-        isRunning: false,
-      };
-    });
-  }, [getTimeForMode]);
-  
-  const updateSettings = useCallback((newSettings: Partial<PomodoroSettings>) => {
-    setState(prev => ({
-      ...prev,
-      settings: { ...prev.settings, ...newSettings },
-    }));
-  }, []);
+  }, [state.isActive, state.isRunning]);
   
   const togglePlay = useCallback(() => {
     setState(prev => ({ ...prev, isRunning: !prev.isRunning }));
