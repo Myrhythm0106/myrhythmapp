@@ -5,8 +5,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { EventForm } from "@/components/calendar/EventForm";
-import { Target } from "lucide-react";
+import { Target, Timer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { PomodoroDialog } from "@/components/pomodoro/PomodoroDialog";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface TimeSlot {
   time: string;
@@ -129,18 +131,33 @@ export function DayView({ date, events = sampleEvents }: DayViewProps) {
                         )}
                       >
                         <span className="text-sm font-medium">{event.title}</span>
-                        {event.linkedGoal && (
-                          <Badge 
-                            variant="outline" 
-                            className={cn(
-                              "text-xs flex items-center gap-1",
-                              getGoalTypeStyles(event.linkedGoal.type)
-                            )}
-                          >
-                            <Target className="h-3 w-3" />
-                            {event.linkedGoal.title}
-                          </Badge>
-                        )}
+                        <div className="flex items-center gap-2">
+                          {event.linkedGoal && (
+                            <Badge 
+                              variant="outline" 
+                              className={cn(
+                                "text-xs flex items-center gap-1",
+                                getGoalTypeStyles(event.linkedGoal.type)
+                              )}
+                            >
+                              <Target className="h-3 w-3" />
+                              {event.linkedGoal.title}
+                            </Badge>
+                          )}
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <PomodoroDialog 
+                                  title={event.title}
+                                  compact={true}
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Focus on this task with Pomodoro</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
                       </div>
                     ))}
                   </div>

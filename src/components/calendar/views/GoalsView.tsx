@@ -5,9 +5,22 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Target } from "lucide-react";
 import { ListView } from "../goals/ListView";
 import { sampleGoals, sampleActions } from "../data/sampleGoalsData";
+import { PomodoroDialog } from "@/components/pomodoro/PomodoroDialog";
 
 export function GoalsView() {
   const [viewMode, setViewMode] = useState<"kanban" | "list">("list");
+
+  // Add Pomodoro button to goal view
+  const renderPomodoroForGoal = (goalTitle: string) => {
+    return (
+      <div className="absolute top-2 right-2">
+        <PomodoroDialog 
+          title={goalTitle}
+          compact={true}
+        />
+      </div>
+    );
+  };
 
   return (
     <div className="border rounded-md overflow-hidden">
@@ -17,18 +30,24 @@ export function GoalsView() {
           Goals & Actions
         </h3>
         
-        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "kanban" | "list")}>
-          <TabsList className="h-8">
-            <TabsTrigger value="list" className="text-xs px-2 py-1 h-6">List View</TabsTrigger>
-            <TabsTrigger value="kanban" className="text-xs px-2 py-1 h-6">Kanban View</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex items-center gap-2">
+          <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "kanban" | "list")}>
+            <TabsList className="h-8">
+              <TabsTrigger value="list" className="text-xs px-2 py-1 h-6">List View</TabsTrigger>
+              <TabsTrigger value="kanban" className="text-xs px-2 py-1 h-6">Kanban View</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </div>
       
       <ScrollArea className="h-[500px]">
         <div className="p-4">
           {viewMode === "list" ? (
-            <ListView goals={sampleGoals} actions={sampleActions} />
+            <ListView 
+              goals={sampleGoals} 
+              actions={sampleActions} 
+              renderPomodoroForGoal={renderPomodoroForGoal}
+            />
           ) : (
             <div className="text-center text-muted-foreground p-4">
               Kanban view will be implemented soon

@@ -1,11 +1,13 @@
+
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, Target } from "lucide-react";
+import { Calendar, Clock, MapPin, Target, Timer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format, isToday, isPast, isFuture, addDays } from "date-fns";
 import { cn } from "@/lib/utils";
 import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
+import { PomodoroDialog } from "@/components/pomodoro/PomodoroDialog";
 
 interface Action {
   id: string;
@@ -184,7 +186,10 @@ export function UpcomingEvents({ date }: UpcomingEventsProps) {
               )}
             </div>
             
-            <div className="mt-3 flex justify-end gap-2">
+            <div className="mt-3 flex justify-between gap-2">
+              <div className="flex-1">
+                <PomodoroDialog title={action.title} />
+              </div>
               <Button variant="outline" size="sm">Edit</Button>
               <Button variant="ghost" size="sm">Cancel</Button>
             </div>
