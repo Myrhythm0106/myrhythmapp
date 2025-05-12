@@ -18,9 +18,17 @@ const PersonalCommunity = () => {
   const [activeTab, setActiveTab] = useState("members");
   const isMobile = useIsMobile();
 
-  const encouragementItems = ["Sarah", "Michael", "Dr. Smith", "Mom"].map((member) => (
-    <Card key={member} className="p-4 h-full">
-      <h4 className="font-medium">{member}</h4>
+  // These members should come from your MembersList component
+  const communityMembers = [
+    { name: "Sarah Johnson", id: "1" },
+    { name: "Michael Smith", id: "2" },
+    { name: "Dr. Smith", id: "3" },
+    { name: "Mom", id: "4" }
+  ];
+
+  const encouragementItems = communityMembers.map((member) => (
+    <Card key={member.id} className="p-4 h-full">
+      <h4 className="font-medium">{member.name}</h4>
       <div className="mt-2 space-y-2">
         <Input placeholder="Write a note..." />
         <Button className="w-full">

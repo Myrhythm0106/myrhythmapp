@@ -24,6 +24,9 @@ interface MessageItemProps {
 }
 
 export function MessageItem({ message, onLike, onDelete }: MessageItemProps) {
+  // Check if the message content contains an audio element
+  const isVoiceNote = message.content.includes('<audio');
+
   return (
     <Card>
       <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
@@ -60,9 +63,16 @@ export function MessageItem({ message, onLike, onDelete }: MessageItemProps) {
         )}
       </CardHeader>
       <CardContent className="py-2 px-4">
-        <p className={message.type === 'encouragement' ? 'italic text-primary' : ''}>
-          {message.content}
-        </p>
+        {isVoiceNote ? (
+          <div className="flex flex-col">
+            <span className="text-sm mb-2">Voice Note:</span>
+            <div dangerouslySetInnerHTML={{ __html: message.content }} />
+          </div>
+        ) : (
+          <p className={message.type === 'encouragement' ? 'italic text-primary' : ''}>
+            {message.content}
+          </p>
+        )}
       </CardContent>
       <CardFooter className="py-2 px-4 flex justify-between">
         <Button 

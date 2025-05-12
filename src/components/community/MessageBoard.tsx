@@ -1,36 +1,12 @@
 
 import React, { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { 
-  Card, 
-  CardContent, 
-  CardFooter, 
-  CardHeader 
-} from "@/components/ui/card";
-import { Heart, Send, MoreVertical } from "lucide-react";
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
+import { MessageComposer } from "./MessageComposer";
+import { MessageItem } from "./MessageItem";
+import { Message } from "./types/messageTypes";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-
-interface Message {
-  id: string;
-  user: {
-    name: string;
-    avatar?: string;
-    initials: string;
-  };
-  content: string;
-  time: string;
-  likes: number;
-  type: 'message' | 'encouragement';
-}
+import { Mic, MicOff } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function MessageBoard() {
   const [messages, setMessages] = useState<Message[]>([
@@ -69,24 +45,25 @@ export function MessageBoard() {
     },
   ]);
 
-  const [newMessage, setNewMessage] = useState("");
   const [filter, setFilter] = useState<'all' | 'messages' | 'encouragement'>('all');
+  const [isRecording, setIsRecording] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
 
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
+  const handleSendMessage = (content: string) => {
+    if (content.trim()) {
       const message: Message = {
         id: Date.now().toString(),
         user: {
           name: "You",
           initials: "Y",
         },
-        content: newMessage,
+        content: content,
         time: "Just now",
         likes: 0,
         type: 'message',
       };
       setMessages([message, ...messages]);
-      setNewMessage("");
       toast.success("Message sent!");
     }
   };
@@ -102,6 +79,60 @@ export function MessageBoard() {
     ));
   };
 
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      setMediaRecorder(recorder);
+      
+      const chunks: Blob[] = [];
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+          setAudioChunks([...chunks]);
+        }
+      };
+      
+      recorder.onstop = () => {
+        const audioBlob = new Blob(chunks, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Create voice note message
+        const message: Message = {
+          id: Date.now().toString(),
+          user: {
+            name: "You",
+            initials: "Y",
+          },
+          content: `<audio controls src="${audioUrl}"></audio>`,
+          time: "Just now",
+          likes: 0,
+          type: 'message',
+        };
+        
+        setMessages([message, ...messages]);
+        toast.success("Voice note sent!");
+        
+        // Clear recording state
+        setAudioChunks([]);
+      };
+      
+      recorder.start();
+      setIsRecording(true);
+    } catch (error) {
+      console.error("Error accessing microphone:", error);
+      toast.error("Could not access microphone");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+      mediaRecorder.stream.getTracks().forEach(track => track.stop());
+      setIsRecording(false);
+    }
+  };
+
   const filteredMessages = filter === 'all' 
     ? messages 
     : messages.filter(message => message.type === filter);
@@ -109,19 +140,31 @@ export function MessageBoard() {
   return (
     <div className="space-y-6">
       <div className="bg-muted p-4 rounded-lg">
-        <Textarea 
-          placeholder="Share an update or send encouragement..." 
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className="mb-3 bg-background"
-          rows={3}
-        />
-        <div className="flex justify-end">
-          <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
-            <Send className="mr-2 h-4 w-4" />
-            Send Message
-          </Button>
+        <div className="flex gap-2 mb-2">
+          <MessageComposer onSendMessage={handleSendMessage} />
+          {isRecording ? (
+            <Button 
+              onClick={stopRecording} 
+              className="flex-shrink-0 bg-red-500 hover:bg-red-600 animate-pulse"
+            >
+              <MicOff className="mr-1 h-4 w-4" />
+              Stop Recording
+            </Button>
+          ) : (
+            <Button 
+              onClick={startRecording} 
+              className="flex-shrink-0"
+            >
+              <Mic className="mr-1 h-4 w-4" />
+              Voice Note
+            </Button>
+          )}
         </div>
+        {isRecording && (
+          <div className="text-center text-sm text-red-500 animate-pulse mt-1">
+            Recording voice note... Click Stop when finished.
+          </div>
+        )}
       </div>
 
       <div>
@@ -135,57 +178,12 @@ export function MessageBoard() {
 
         <div className="space-y-4">
           {filteredMessages.map((message) => (
-            <Card key={message.id}>
-              <CardHeader className="py-3 px-4 flex flex-row items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={message.user.avatar} />
-                    <AvatarFallback>{message.user.initials}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <span className="font-medium text-sm">{message.user.name}</span>
-                    <span className="text-xs text-muted-foreground ml-2">{message.time}</span>
-                  </div>
-                </div>
-
-                {message.user.name === "You" && (
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => console.log("Edit")}>
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => deleteMessage(message.id)}
-                        className="text-destructive"
-                      >
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                )}
-              </CardHeader>
-              <CardContent className="py-2 px-4">
-                <p className={message.type === 'encouragement' ? 'italic text-primary' : ''}>
-                  {message.content}
-                </p>
-              </CardContent>
-              <CardFooter className="py-2 px-4 flex justify-between">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-muted-foreground hover:text-primary"
-                  onClick={() => likeMessage(message.id)}
-                >
-                  <Heart className="h-4 w-4 mr-1" />
-                  {message.likes > 0 && message.likes}
-                </Button>
-              </CardFooter>
-            </Card>
+            <MessageItem 
+              key={message.id} 
+              message={message} 
+              onLike={likeMessage} 
+              onDelete={deleteMessage} 
+            />
           ))}
         </div>
       </div>

@@ -1,8 +1,7 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FormField, FormItem, FormLabel, FormDescription, FormMessage } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useFormContext } from "react-hook-form";
 import { Check, Plus, X, Eye } from "lucide-react";
 import { 
@@ -13,20 +12,27 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
+import { Member } from "@/components/community/types/memberTypes";
 
-// Sample community members - in a real app, these would come from an API or context
-const communityMembers = [
-  { id: "1", name: "Sarah Johnson", role: "family" },
-  { id: "2", name: "Dr. Michael Smith", role: "healthcare" },
-  { id: "3", name: "Mom", role: "family" },
-  { id: "4", name: "Jane Roberts", role: "caregiver" },
-  { id: "5", name: "Robert Wilson", role: "friend" },
-  { id: "6", name: "Lisa Chen", role: "colleague" },
+// This would typically come from a context or API in a real app
+const getCommunityMembers = (): Member[] => [
+  { id: "1", name: "Sarah Johnson", email: "sarah@example.com", role: "family", status: "active", isAdmin: true },
+  { id: "2", name: "Dr. Michael Smith", email: "dr.smith@example.com", role: "healthcare", status: "active" },
+  { id: "3", name: "Mom", email: "mom@example.com", role: "family", status: "active" },
+  { id: "4", name: "Jane Roberts", email: "jane@example.com", role: "caregiver", status: "active" },
+  { id: "5", name: "Robert Wilson", email: "robert@example.com", role: "friend", status: "active" },
+  { id: "6", name: "Lisa Chen", email: "lisa@example.com", role: "colleague", status: "active" },
 ];
 
 export function WatchersField() {
   const form = useFormContext();
   const [open, setOpen] = useState(false);
+  const [communityMembers, setCommunityMembers] = useState<Member[]>([]);
+  
+  // Fetch community members
+  useEffect(() => {
+    setCommunityMembers(getCommunityMembers());
+  }, []);
   
   const watcherIds = form.watch("watchers") || [];
   
@@ -40,11 +46,6 @@ export function WatchersField() {
       currentWatchers.push(memberId);
     }
     
-    form.setValue("watchers", currentWatchers, { shouldValidate: true });
-  };
-  
-  const handleRemoveWatcher = (memberId: string) => {
-    const currentWatchers = watcherIds.filter(id => id !== memberId);
     form.setValue("watchers", currentWatchers, { shouldValidate: true });
   };
   

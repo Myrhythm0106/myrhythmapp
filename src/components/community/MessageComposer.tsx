@@ -18,16 +18,24 @@ export function MessageComposer({ onSendMessage }: MessageComposerProps) {
     }
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
   return (
-    <div className="bg-muted p-4 rounded-lg">
+    <div className="bg-muted rounded-lg flex-grow">
       <Textarea 
         placeholder="Share an update or send encouragement..." 
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
-        className="mb-3 bg-background"
+        onKeyDown={handleKeyPress}
+        className="bg-background resize-none"
         rows={3}
       />
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-2">
         <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
           <Send className="mr-2 h-4 w-4" />
           Send Message
