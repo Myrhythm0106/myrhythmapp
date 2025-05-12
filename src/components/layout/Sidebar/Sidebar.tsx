@@ -3,7 +3,8 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Brain, Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info } from "lucide-react";
+import { Brain, Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search } from "lucide-react";
+import { GlobalSearch } from "@/components/search/GlobalSearch";
 
 export const Sidebar = () => {
   const {
@@ -20,6 +21,16 @@ export const Sidebar = () => {
           <button onClick={toggle} className="rounded-md p-1 text-sidebar-foreground hover:bg-sidebar-accent">
             {isOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
+        </div>
+
+        {/* Search button - more prominent at the top for easy access */}
+        <div className="px-2 pt-3 pb-1">
+          <div className={cn("flex", isOpen ? "justify-between" : "justify-center")}>
+            {isOpen && <span className="text-sm font-medium text-sidebar-foreground">Quick Search</span>}
+            <div className={cn(!isOpen && "w-full flex justify-center")}>
+              <GlobalSearch />
+            </div>
+          </div>
         </div>
 
         <div className="flex-1 overflow-auto py-4">
