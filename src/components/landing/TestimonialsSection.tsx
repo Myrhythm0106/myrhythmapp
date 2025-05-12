@@ -43,7 +43,15 @@ const TestimonialsSection = () => {
         </div>
 
         <div className="flex justify-center">
-          <Button size="lg" className="text-lg px-8 bg-annabel-600 hover:bg-annabel-700" onClick={() => navigate("/onboarding?plan=basic&step=3")}>
+          <Button 
+            size="lg" 
+            className="text-lg px-8 bg-annabel-600 hover:bg-annabel-700" 
+            onClick={() => navigate("/onboarding?step=1", {
+              state: {
+                from: "landing"
+              }
+            })}
+          >
             Start Your Free Trial
           </Button>
         </div>
