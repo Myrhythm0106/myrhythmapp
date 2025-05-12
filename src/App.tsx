@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Landing from "./pages/Landing";
+import Welcome from "./pages/Welcome";
 import MainLayout from "./components/layout/MainLayout";
 import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
@@ -36,6 +37,9 @@ const AppRoutes = () => {
           <Dashboard />
         </MainLayout>
       } />
+      
+      {/* Welcome page after onboarding */}
+      <Route path="/welcome" element={<Welcome />} />
       
       {/* Redirect /index to /dashboard */}
       <Route path="/index" element={<Navigate to="/dashboard" replace />} />

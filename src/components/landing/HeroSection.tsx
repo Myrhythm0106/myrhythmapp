@@ -1,8 +1,10 @@
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ArrowRight, LogIn, ArrowLeft } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
+
 const HeroSection = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,6 +18,15 @@ const HeroSection = () => {
       navigate("/"); // Go to home if not coming from onboarding
     }
   };
+
+  const scrollToFeatures = () => {
+    // Find the features section and scroll to it
+    const featuresSection = document.getElementById('features-section');
+    if (featuresSection) {
+      featuresSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return <section className="relative overflow-hidden">
       <div className="bg-gradient-to-r from-beacon-100 to-beacon-200 py-28 md:py-36">
         {/* Login button at very top right */}
@@ -51,11 +62,7 @@ const HeroSection = () => {
                 <span>Start Your Journey</span>
                 <ArrowRight className="ml-2 h-5 w-5 text-black" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg border-beacon-600 text-beacon-600 hover:bg-beacon-50 relative z-20" onClick={() => navigate("/onboarding?step=1", {
-              state: {
-                from: "landing"
-              }
-            })}>
+              <Button size="lg" variant="outline" className="text-lg border-beacon-600 text-beacon-600 hover:bg-beacon-50 relative z-20" onClick={scrollToFeatures}>
                 Learn More
               </Button>
             </div>
@@ -79,4 +86,5 @@ const HeroSection = () => {
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </section>;
 };
+
 export default HeroSection;

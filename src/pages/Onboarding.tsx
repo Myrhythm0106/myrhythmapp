@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -82,7 +83,8 @@ const Onboarding = () => {
     sessionStorage.setItem('justRegistered', 'true');
     
     toast.success("Account created successfully!");
-    navigate("/dashboard");
+    // Redirect to welcome page instead of dashboard
+    navigate("/welcome");
   };
 
   const handleBack = () => {
