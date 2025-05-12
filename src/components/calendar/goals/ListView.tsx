@@ -11,9 +11,14 @@ import { getActionsWithoutGoals } from "../utils/goalUtils";
 interface ListViewProps {
   goals: Goal[];
   actions: Action[];
+  renderPomodoroForGoal?: (goalTitle: string) => React.ReactNode;
 }
 
-export const ListView: React.FC<ListViewProps> = ({ goals, actions }) => {
+export const ListView: React.FC<ListViewProps> = ({ 
+  goals, 
+  actions,
+  renderPomodoroForGoal 
+}) => {
   const [expandedGoals, setExpandedGoals] = useState<Record<string, boolean>>({});
   
   const toggleGoalExpanded = (goalId: string) => {
