@@ -13,9 +13,10 @@ import { DayView } from "@/components/calendar/views/DayView";
 import { WeekView } from "@/components/calendar/views/WeekView";
 import { StoryboardView } from "@/components/calendar/views/StoryboardView";
 import { GoalsView } from "@/components/calendar/views/GoalsView";
-import { Plus, CalendarIcon, Clock, HeartPulse, Layout, Target } from "lucide-react";
+import { Plus, CalendarIcon, Clock, HeartPulse, Layout, Target, Timer } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
+import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -29,20 +30,23 @@ const Calendar = () => {
             title="Calendar" 
             subtitle="Manage your actions, medications, and daily routines"
           >
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
-                  <Plus className="mr-1 h-4 w-4" />
-                  Add Action
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[550px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Action</DialogTitle>
-                </DialogHeader>
-                <EventForm />
-              </DialogContent>
-            </Dialog>
+            <div className="flex gap-2">
+              <PomodoroButton title="Focus Time" variant="secondary" />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
+                    <Plus className="mr-1 h-4 w-4" />
+                    Add Action
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[550px]">
+                  <DialogHeader>
+                    <DialogTitle>Add New Action</DialogTitle>
+                  </DialogHeader>
+                  <EventForm />
+                </DialogContent>
+              </Dialog>
+            </div>
           </PageHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -65,6 +69,10 @@ const Calendar = () => {
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
+                    
+                    <div className="hidden md:block">
+                      <PomodoroButton title="Calendar Focus" variant="outline" size="sm" />
+                    </div>
                   </div>
                   
                   {view === "month" && (
@@ -98,10 +106,13 @@ const Calendar = () => {
             <div className="space-y-6">
               <Card>
                 <CardContent className="pt-6">
-                  <h3 className="text-lg font-semibold flex items-center mb-4">
-                    <Clock className="mr-2 h-5 w-5" />
-                    Upcoming Actions
-                  </h3>
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold flex items-center">
+                      <Clock className="mr-2 h-5 w-5" />
+                      Upcoming Actions
+                    </h3>
+                    <PomodoroButton title="Next Action" variant="outline" size="sm" />
+                  </div>
                   <UpcomingEvents date={date} />
                 </CardContent>
               </Card>

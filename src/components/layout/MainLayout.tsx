@@ -4,6 +4,8 @@ import { SidebarProvider } from "./Sidebar/SidebarContext";
 import { Toaster } from "sonner";
 import { Sidebar } from "./Sidebar/Sidebar";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
+import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
+import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -11,18 +13,23 @@ interface MainLayoutProps {
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full">
-        <Sidebar />
-        <main className="flex-1 overflow-auto">
-          <div className="flex justify-end items-center px-4 py-2 border-b">
-            <GlobalSearch />
-          </div>
-          <div className="container py-6 md:py-8 px-4 md:px-6">{children}</div>
-        </main>
-      </div>
-      <Toaster position="top-right" richColors />
-    </SidebarProvider>
+    <PomodoroProvider>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full">
+          <Sidebar />
+          <main className="flex-1 overflow-auto">
+            <div className="flex justify-end items-center px-4 py-2 border-b">
+              <div className="flex items-center gap-2">
+                <PomodoroButton variant="outline" size="sm" />
+                <GlobalSearch />
+              </div>
+            </div>
+            <div className="container py-6 md:py-8 px-4 md:px-6">{children}</div>
+          </main>
+        </div>
+        <Toaster position="top-right" richColors />
+      </SidebarProvider>
+    </PomodoroProvider>
   );
 };
 
