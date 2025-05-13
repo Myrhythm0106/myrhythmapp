@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import { GratitudeEntry } from "../GratitudePrompt";
 import { useGratitude } from "@/hooks/use-gratitude";
-import { toast } from "@/components/ui/toast";
+import { toast } from "@/hooks/use-toast";
 
 export function useGratitudeJournal() {
   const [searchQuery, setSearchQuery] = useState("");
