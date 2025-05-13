@@ -2,46 +2,71 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Smile, Meh, Frown, TrendingUp, TrendingDown } from "lucide-react";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
-import { useNavigate } from "react-router-dom";
+import { SmilePlus, ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
+import { useMoodTracker } from "@/hooks/use-mood-tracker";
+import { format } from "date-fns";
 
-// Sample data - in a real app, this would come from an API or context
-const moodData = [
-  { day: "Mon", value: 4 },
-  { day: "Tue", value: 3 },
-  { day: "Wed", value: 5 },
-  { day: "Thu", value: 3 },
-  { day: "Fri", value: 4 },
-  { day: "Sat", value: 4 },
-  { day: "Sun", value: 5 },
-];
+type MoodType = "great" | "good" | "okay" | "not-great" | "struggling";
+type MoodTrend = "up" | "neutral" | "down";
 
 export function MoodSnapshotCard() {
-  const navigate = useNavigate();
-  // Sample mood - in a real app, this would be the most recent mood
-  const currentMood = "great"; // "great", "okay", or "struggling"
+  // Get mood data from your mood tracker hook
+  const { entries } = useMoodTracker();
+
+  const latestMood = entries.length > 0 ? entries[0].mood as MoodType : null;
+  const previousMood = entries.length > 1 ? entries[1].mood as MoodType : null;
   
-  // Determine if the mood trend is improving or declining
-  const trendDirection = "up"; // "up", "down", or "flat"
+  // Calculate mood trend
+  const getMoodTrend = (): MoodTrend => {
+    if (!latestMood || !previousMood) return "neutral";
+    
+    const moodLevels: Record<MoodType, number> = {
+      "great": 5,
+      "good": 4,
+      "okay": 3,
+      "not-great": 2,
+      "struggling": 1
+    };
+    
+    const latestLevel = moodLevels[latestMood];
+    const previousLevel = moodLevels[previousMood];
+    
+    if (latestLevel > previousLevel) return "up";
+    if (latestLevel < previousLevel) return "down";
+    return "neutral";
+  };
   
-  const getMoodIcon = () => {
-    switch(currentMood) {
-      case "great":
-        return <Smile className="h-8 w-8 text-green-500" />;
-      case "okay":
-        return <Meh className="h-8 w-8 text-yellow-500" />;
-      case "struggling":
-        return <Frown className="h-8 w-8 text-red-500" />;
-      default:
-        return <Meh className="h-8 w-8 text-yellow-500" />;
+  const moodTrend = getMoodTrend();
+  
+  // Get color based on mood
+  const getMoodColor = (mood: MoodType | null) => {
+    switch (mood) {
+      case "great": return "text-emerald-500";
+      case "good": return "text-blue-500";
+      case "okay": return "text-amber-500";
+      case "not-great": return "text-orange-500";
+      case "struggling": return "text-red-500";
+      default: return "text-gray-400";
     }
   };
   
-  const getTrendIcon = () => {
-    switch(trendDirection) {
+  // Get emoji based on mood
+  const getMoodEmoji = (mood: MoodType | null) => {
+    switch (mood) {
+      case "great": return "😄";
+      case "good": return "🙂";
+      case "okay": return "😐";
+      case "not-great": return "😕";
+      case "struggling": return "😔";
+      default: return "❓";
+    }
+  };
+
+  // Get trend component
+  const getTrendComponent = () => {
+    switch (moodTrend) {
       case "up":
-        return <TrendingUp className="h-4 w-4 text-green-500" />;
+        return <TrendingUp className="h-4 w-4 text-emerald-500" />;
       case "down":
         return <TrendingDown className="h-4 w-4 text-red-500" />;
       default:
@@ -49,58 +74,53 @@ export function MoodSnapshotCard() {
     }
   };
   
-  const handleLogMood = () => {
-    navigate("/tracking?type=mood");
-  };
-  
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg">Your Mood Today</CardTitle>
+        <CardTitle className="text-base">Mood Tracker</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {getMoodIcon()}
-            <div>
-              <p className="font-medium capitalize">{currentMood}</p>
-              <div className="flex items-center text-xs text-muted-foreground">
-                {getTrendIcon()}
-                <span className="ml-1">Trending {trendDirection}</span>
+      <CardContent>
+        {latestMood ? (
+          <>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="text-4xl">{getMoodEmoji(latestMood)}</span>
+                <div>
+                  <p className={`text-lg font-medium ${getMoodColor(latestMood)}`}>
+                    {latestMood.charAt(0).toUpperCase() + latestMood.slice(1).replace("-", " ")}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {entries[0]?.date ? format(new Date(entries[0].date), "EEEE h:mm a") : "Today"}
+                  </p>
+                </div>
               </div>
+              {getTrendComponent()}
             </div>
+            
+            {entries[0]?.notes && (
+              <p className="mt-2 text-sm text-muted-foreground border-l-2 border-primary/20 pl-2">
+                "{entries[0].notes}"
+              </p>
+            )}
+          </>
+        ) : (
+          <div className="py-6 text-center">
+            <p className="mb-4 text-muted-foreground">How are you feeling today?</p>
+            <Button className="bg-gradient-to-r from-blue-500 to-indigo-500">
+              <SmilePlus className="mr-1 h-4 w-4" />
+              Log Your Mood
+            </Button>
           </div>
-          <Button onClick={handleLogMood} variant="outline" size="sm">
-            Update
-          </Button>
-        </div>
-        
-        <div className="h-[60px]">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={moodData}>
-              <Line 
-                type="monotone" 
-                dataKey="value" 
-                stroke="#8884d8" 
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-          <p className="text-xs text-center text-muted-foreground mt-1">
-            7-day mood trend
-          </p>
-        </div>
+        )}
       </CardContent>
-      <CardFooter className="pt-0">
-        <Button 
-          variant="ghost" 
-          className="w-full text-primary"
-          onClick={() => navigate("/tracking?tab=mood")}
-        >
-          View Detailed History
-        </Button>
-      </CardFooter>
+      {latestMood && (
+        <CardFooter className="pt-0">
+          <Button variant="ghost" size="sm" className="ml-auto flex items-center gap-1 text-muted-foreground">
+            View History
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 }

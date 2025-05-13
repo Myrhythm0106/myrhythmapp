@@ -42,19 +42,19 @@ export function GratitudeSnapshotCard() {
         {latestEntry ? (
           <div>
             <div className="flex items-center justify-between">
-              <p className="text-lg font-medium">{latestEntry.content}</p>
+              <p className="text-lg font-medium">{latestEntry.text}</p>
               <span className="text-xs text-muted-foreground">
                 {format(new Date(latestEntry.date), "MMM d")}
               </span>
             </div>
-            {latestEntry.why && (
+            {latestEntry.reflection && (
               <div className="mt-2 text-sm text-muted-foreground bg-blue-50 p-2 rounded-md">
                 <span className="font-medium text-blue-800">Reflection: </span>
-                <span>{latestEntry.why}</span>
+                <span>{latestEntry.reflection}</span>
               </div>
             )}
             <div className="mt-2 flex flex-wrap gap-1">
-              {latestEntry.tags.map((tag, index) => (
+              {latestEntry.tags && latestEntry.tags.map((tag, index) => (
                 <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
                   #{tag}
                 </span>
