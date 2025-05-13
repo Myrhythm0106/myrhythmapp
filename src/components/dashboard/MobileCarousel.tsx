@@ -8,12 +8,18 @@ import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HeartHandshake } from "lucide-react";
 import { GratitudeActivityPrompt } from "@/components/gratitude/GratitudeActivityPrompt";
+import { GratitudeSnapshotCard } from "@/components/dashboard/GratitudeSnapshotCard";
+import { MoodSnapshotCard } from "@/components/dashboard/MoodSnapshotCard";
+import { RecentWins } from "@/components/dashboard/RecentWins";
+import { WeekNaming } from "@/components/dashboard/WeekNaming";
 
 export function MobileCarousel() {
   const dashboardCards = [
-    <DailyCheckin key="checkin" />,
-    <SymptomTracker key="symptom" />,
-    <Card key="gratitude" className="h-full">
+    <GratitudeSnapshotCard key="gratitude" />,
+    <MoodSnapshotCard key="mood" />,
+    <RecentWins key="wins" />,
+    <WeekNaming key="week" />,
+    <Card key="gratitude-prompt" className="h-full">
       <CardHeader className="pb-2">
         <CardTitle className="text-xl font-semibold flex items-center gap-2">
           <HeartHandshake className="h-5 w-5 text-primary" />
@@ -27,11 +33,12 @@ export function MobileCarousel() {
         />
       </CardContent>
     </Card>,
+    <SymptomTracker key="symptom" />,
     <CommunityCard key="community" />,
     <UpcomingEvents key="upcoming" date={new Date()} />
   ];
 
   return (
-    <SwipeableCarousel items={dashboardCards} title="Your Health Overview" />
+    <SwipeableCarousel items={dashboardCards} title="Your Wellness Dashboard" />
   );
 }

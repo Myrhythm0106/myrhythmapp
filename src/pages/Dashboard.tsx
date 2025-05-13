@@ -1,35 +1,30 @@
 
 import React, { useState } from "react";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { ImmediateFocus } from "@/components/dashboard/ImmediateFocus";
-import { EnergyLevelIndicator } from "@/components/dashboard/EnergyLevelIndicator";
-import { QuickCheckIn } from "@/components/dashboard/QuickCheckIn";
-import { TopReminders } from "@/components/dashboard/TopReminders";
-import { TopPriorities } from "@/components/dashboard/TopPriorities";
-import { FocusGoals } from "@/components/dashboard/FocusGoals";
 import { format } from "date-fns";
-import { useUserData } from "@/hooks/use-user-data";
-import { TutorialModal } from "@/components/tutorial/TutorialModal";
-import { MobileCarousel } from "@/components/dashboard/MobileCarousel";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useUserData } from "@/hooks/use-user-data";
+import { TutorialModal } from "@/components/tutorial/TutorialModal";
+import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
+import { GratitudeSnapshotCard } from "@/components/dashboard/GratitudeSnapshotCard";
+import { MoodSnapshotCard } from "@/components/dashboard/MoodSnapshotCard";
+import { RoutineProgress } from "@/components/dashboard/RoutineProgress";
+import { WeekNaming } from "@/components/dashboard/WeekNaming";
+import { DashboardCarousel } from "@/components/dashboard/DashboardCarousel";
+import { RecentWins } from "@/components/dashboard/RecentWins";
 
 const Dashboard = () => {
   const [showTutorial, setShowTutorial] = useState(false);
   const userData = useUserData();
-  const currentDate = format(new Date(), "EEEE, MMMM do, yyyy");
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   
   return (
     <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
-      <DashboardHeader 
-        onShowTutorial={() => setShowTutorial(true)} 
-        currentDate={currentDate}
-        userName={userData.name}
-      />
+      {/* Welcome Section */}
+      <WelcomeCard name={userData.name} userType="mental-health" />
       
       {/* Customization Button */}
       <div className="flex justify-end">
@@ -44,31 +39,36 @@ const Dashboard = () => {
         </Button>
       </div>
       
-      {/* Mobile: Use carousel for swipeable experience */}
-      {isMobile && (
-        <MobileCarousel />
-      )}
-      
-      {/* Desktop layout */}
-      {!isMobile && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Left column - 2/3 width on desktop */}
-          <div className="md:col-span-2 space-y-6">
-            <ImmediateFocus />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FocusGoals />
-              <TopPriorities />
-            </div>
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Left Column - 2/3 width on desktop */}
+        <div className="md:col-span-2 space-y-6">
+          <GratitudeSnapshotCard />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <RoutineProgress />
+            <MoodSnapshotCard />
           </div>
           
-          {/* Right column - 1/3 width on desktop */}
-          <div className="space-y-6">
-            <EnergyLevelIndicator />
-            <QuickCheckIn />
-            <TopReminders />
+          <RecentWins />
+        </div>
+        
+        {/* Right Column - 1/3 width on desktop */}
+        <div className="space-y-6">
+          <WeekNaming />
+          
+          {/* Weekly Theme Card */}
+          <div className="grid grid-cols-1 gap-6">
+            {isMobile ? (
+              <DashboardCarousel />
+            ) : (
+              <>
+                {/* Any additional sidebar cards */}
+              </>
+            )}
           </div>
         </div>
-      )}
+      </div>
 
       <TutorialModal isOpen={showTutorial} onComplete={() => setShowTutorial(false)} />
     </div>
