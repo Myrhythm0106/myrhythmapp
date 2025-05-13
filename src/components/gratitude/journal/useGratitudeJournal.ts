@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import { GratitudeEntry } from "../GratitudePrompt";
 import { useGratitude } from "@/hooks/use-gratitude";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/toast";
 
 export function useGratitudeJournal() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,15 +23,19 @@ export function useGratitudeJournal() {
   
   const handleShare = (entry: GratitudeEntry) => {
     updateEntry(entry.id, { isShared: !entry.isShared });
-    toast.success(entry.isShared ? 
-      "Entry is now private" : 
-      "Entry shared with your trusted contacts");
+    toast({
+      title: entry.isShared ? "Entry is now private" : "Entry shared with your trusted contacts",
+      variant: "default",
+    });
   };
   
   const handleDelete = (id: string) => {
     deleteEntry(id);
     setSelectedEntry(null);
-    toast.success("Entry deleted successfully");
+    toast({
+      title: "Entry deleted successfully",
+      variant: "default",
+    });
   };
   
   const hasSearchFilters = !!searchQuery || !!filterType;

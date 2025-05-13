@@ -1,6 +1,6 @@
 
-import React, { createContext, useState, useContext, ReactNode } from "react";
-import { format, subDays, parseISO } from "date-fns";
+import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
+import { format } from "date-fns";
 import { GratitudeEntry } from "@/components/gratitude/GratitudePrompt";
 
 interface GratitudeContextType {
@@ -35,10 +35,35 @@ const sampleEntries: GratitudeEntry[] = [
   }
 ];
 
+// Local storage key for gratitude entries
+const STORAGE_KEY = 'gratitude-entries';
+
 const GratitudeContext = createContext<GratitudeContextType | undefined>(undefined);
 
 export const GratitudeProvider = ({ children }: { children: ReactNode }) => {
-  const [entries, setEntries] = useState<GratitudeEntry[]>(sampleEntries);
+  // Initialize state from localStorage or use sample data if none exists
+  const [entries, setEntries] = useState<GratitudeEntry[]>(() => {
+    const storedEntries = localStorage.getItem(STORAGE_KEY);
+    if (storedEntries) {
+      try {
+        // Parse the stored JSON and convert date strings back to Date objects
+        const parsedEntries = JSON.parse(storedEntries);
+        return parsedEntries.map((entry: any) => ({
+          ...entry,
+          date: new Date(entry.date)
+        }));
+      } catch (error) {
+        console.error('Error parsing stored gratitude entries:', error);
+        return sampleEntries;
+      }
+    }
+    return sampleEntries;
+  });
+  
+  // Save entries to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+  }, [entries]);
   
   const addEntry = (entry: Omit<GratitudeEntry, "id" | "date">) => {
     const newEntry = {
