@@ -50,6 +50,39 @@ export function GratitudeDashboard() {
   })).filter(item => item.value > 0);
   
   const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042"];
+  
+  // Calculate average mood score
+  const averageMoodScore = entries.length > 0 
+    ? entries.reduce((total, entry) => total + entry.moodScore, 0) / entries.length
+    : 0;
+  
+  // Find most frequent time for gratitude
+  const mostFrequentTime = entries.length > 0 
+    ? (() => {
+        const times = {
+          Morning: 0,
+          Afternoon: 0,
+          Evening: 0
+        };
+        
+        entries.forEach(entry => {
+          const entryDate = entry.date instanceof Date ? entry.date : new Date(entry.date);
+          const hour = entryDate.getHours();
+          if (hour >= 5 && hour < 12) {
+            times.Morning++;
+          } else if (hour >= 12 && hour < 18) {
+            times.Afternoon++;
+          } else {
+            times.Evening++;
+          }
+        });
+        
+        return Object.entries(times).reduce((max, [time, count]) => 
+          count > max.count ? { time, count } : max, 
+          { time: "N/A", count: 0 }
+        ).time;
+      })()
+    : "N/A";
 
   return (
     <div className="space-y-6">
@@ -78,9 +111,7 @@ export function GratitudeDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold">
-              {entries.length > 0 
-                ? (entries.reduce((acc, entry) => acc + entry.moodScore, 0) / entries.length).toFixed(1) 
-                : "N/A"}
+              {averageMoodScore > 0 ? averageMoodScore.toFixed(1) : "N/A"}
             </div>
             <div className="text-sm text-muted-foreground mt-1">
               On a scale of 1-5
@@ -96,17 +127,7 @@ export function GratitudeDashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
-              {entries.length > 0 
-                ? entries.reduce((acc, curr) => {
-                    const entryDate = curr.date instanceof Date ? curr.date : new Date(curr.date);
-                    const hour = entryDate.getHours();
-                    return hour >= 5 && hour < 12 ? 'Morning' 
-                      : hour >= 12 && hour < 18 ? 'Afternoon'
-                      : 'Evening';
-                  }, '')
-                : "N/A"}
-            </div>
+            <div className="text-3xl font-bold">{mostFrequentTime}</div>
             <div className="text-sm text-muted-foreground mt-1">
               Most frequent time for gratitude
             </div>

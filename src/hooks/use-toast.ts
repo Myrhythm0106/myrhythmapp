@@ -1,11 +1,12 @@
+
 import * as React from "react";
 import type {
-  ToastActionElement,
-  ToastProps,
+  ToastActionElement as ToastActionElementType,
+  ToastProps as ToastPropsType,
 } from "@/components/ui/toast";
 
-type ToastProps = React.ComponentPropsWithoutRef<typeof Sonner>;
-type ToastActionElement = React.ReactElement;
+type ToastProps = ToastPropsType;
+type ToastActionElement = ToastActionElementType;
 
 export const TOAST_LIMIT = 5;
 export const TOAST_REMOVE_DELAY = 1000000;
