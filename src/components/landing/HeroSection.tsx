@@ -48,7 +48,7 @@ const HeroSection = () => {
           <div className="text-center mb-16 max-w-3xl mx-auto space-y-8">
             <h2 className="text-4xl font-bold leading-tight md:text-5xl">Empowering Your Day Starts Here</h2>
             <p className="text-xl text-muted-foreground">
-              Empowering you to live O.R.D.E.R.ly. Organize priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. 
+              Take charge and live. Organise your priorities, build a Routine, strengthen your Discipline, Execute with focus and Review with intention.
               <br /><br />
               It's not just productivity.
               It's your rhythm for life.
