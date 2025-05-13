@@ -5,11 +5,28 @@ import { SymptomTracker } from "@/components/dashboard/SymptomTracker";
 import { CommunityCard } from "@/components/dashboard/CommunityCard";
 import { UpcomingEvents } from "@/components/calendar/UpcomingEvents";
 import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { HeartHandshake } from "lucide-react";
+import { GratitudeActivityPrompt } from "@/components/gratitude/GratitudeActivityPrompt";
 
 export function MobileCarousel() {
   const dashboardCards = [
     <DailyCheckin key="checkin" />,
     <SymptomTracker key="symptom" />,
+    <Card key="gratitude" className="h-full">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-xl font-semibold flex items-center gap-2">
+          <HeartHandshake className="h-5 w-5 text-primary" />
+          Contextual Gratitude
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <GratitudeActivityPrompt 
+          activityType="general"
+          activityName="daily reflection"
+        />
+      </CardContent>
+    </Card>,
     <CommunityCard key="community" />,
     <UpcomingEvents key="upcoming" date={new Date()} />
   ];

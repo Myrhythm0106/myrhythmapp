@@ -7,6 +7,8 @@ import { UpcomingEvents } from "@/components/calendar/UpcomingEvents";
 import { FocusGoals } from "@/components/dashboard/FocusGoals";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { GratitudeActivityPrompt } from "@/components/gratitude/GratitudeActivityPrompt";
+import { HeartHandshake } from "lucide-react";
 
 interface DashboardContentProps {
   isMobile: boolean;
@@ -33,6 +35,22 @@ export function DashboardContent({ isMobile }: DashboardContentProps) {
       </div>
       <div onClick={() => handleCardClick("/community")} className="cursor-pointer">
         <CommunityCard />
+      </div>
+      <div onClick={() => handleCardClick("/gratitude")} className="cursor-pointer">
+        <Card className="h-full">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-xl font-semibold flex items-center gap-2">
+              <HeartHandshake className="h-5 w-5 text-primary" />
+              Contextual Gratitude
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <GratitudeActivityPrompt 
+              activityType="general"
+              activityName="daily reflection"
+            />
+          </CardContent>
+        </Card>
       </div>
       <div onClick={() => handleCardClick("/calendar?view=goals")} className="cursor-pointer md:col-span-2 lg:col-span-1">
         <FocusGoals />

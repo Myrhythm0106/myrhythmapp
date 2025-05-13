@@ -18,6 +18,7 @@ import PersonalCommunity from "./pages/PersonalCommunity";
 import UsefulInfo from "./pages/UsefulInfo";
 import SplashScreen from "./components/mobile/SplashScreen";
 import Customization from "./pages/Customization";
+import Gratitude from "./pages/Gratitude";
 import { useIsMobile } from "./hooks/use-mobile";
 
 const queryClient = new QueryClient();
@@ -61,6 +62,11 @@ const AppRoutes = () => {
       <Route path="/tracking" element={
         <MainLayout>
           <SymptomTracking />
+        </MainLayout>
+      } />
+      <Route path="/gratitude" element={
+        <MainLayout>
+          <Gratitude />
         </MainLayout>
       } />
       <Route path="/community" element={
