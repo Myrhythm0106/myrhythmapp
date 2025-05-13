@@ -1,10 +1,8 @@
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, ArrowRight, LogIn, ArrowLeft } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
-
 const HeroSection = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -18,15 +16,15 @@ const HeroSection = () => {
       navigate("/"); // Go to home if not coming from onboarding
     }
   };
-
   const scrollToFeatures = () => {
     // Find the features section and scroll to it
     const featuresSection = document.getElementById('features-section');
     if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: 'smooth' });
+      featuresSection.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-
   return <section className="relative overflow-hidden">
       <div className="bg-gradient-to-r from-beacon-100 to-beacon-200 py-28 md:py-36">
         {/* Login button at very top right */}
@@ -46,9 +44,9 @@ const HeroSection = () => {
           </div>
           
           <div className="text-center mb-16 max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Empowering Your Day Starts Here</h2>
+            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Be Empowered. Your Day Starts Here</h2>
             <p className="text-xl text-muted-foreground">
-              Take charge and live. Organise your priorities, build a Routine, strengthen your Discipline, Execute with focus and Review with intention.
+              Empowering you to live O.R.D.E.R.ly. Organize priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. 
               <br /><br />
               It's not just productivity.
               It's your rhythm for life.
@@ -86,5 +84,4 @@ const HeroSection = () => {
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </section>;
 };
-
 export default HeroSection;
