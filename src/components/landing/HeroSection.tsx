@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -47,7 +48,7 @@ const HeroSection = () => {
           <div className="text-center mb-16 max-w-3xl mx-auto space-y-8">
             <h2 className="text-4xl font-bold leading-tight md:text-5xl">Be Empowered. Your Day Starts Here</h2>
             <p className="text-xl text-muted-foreground">
-              Take charge and live. Organise your priorities, build a Routine, strengthen your Discipline, Execute with focus and Review with intention.
+              Your rhythm is your key to following through! Organise your priorities, build a Routine, strengthen your Discipline, Execute with focus and Review with intention.
               <br /><br />
               It's not just productivity.
               It's your rhythm for life.
