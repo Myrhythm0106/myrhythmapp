@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -164,8 +163,7 @@ export function GlobalSearch() {
     navigate(result.route);
     toast({
       title: `Navigating to ${result.title}`,
-      description: result.description,
-      duration: 2000,
+      description: result.description
     });
   };
 

@@ -22,7 +22,11 @@ export function GratitudeActivityPrompt({
   const { addEntry } = useGratitude();
   
   const handleSaveGratitude = (entry: GratitudeEntry) => {
-    addEntry(entry);
+    // Converting entry to match the expected format for addEntry
+    // addEntry expects Omit<GratitudeEntry, "id" | "date">
+    const { id, date, ...entryForSave } = entry;
+    
+    addEntry(entryForSave);
     setIsOpen(false);
     if (onComplete) {
       onComplete();

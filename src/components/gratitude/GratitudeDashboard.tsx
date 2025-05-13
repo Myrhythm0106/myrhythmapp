@@ -29,7 +29,10 @@ export function GratitudeDashboard() {
   // Calculate insights and statistics
   const totalEntries = entries.length;
   const lastWeekEntries = entries.filter(
-    entry => entry.date >= subDays(new Date(), 7)
+    entry => {
+      const entryDate = entry.date instanceof Date ? entry.date : new Date(entry.date);
+      return entryDate >= subDays(new Date(), 7);
+    }
   ).length;
   
   // Format data for mood correlation chart
@@ -96,7 +99,8 @@ export function GratitudeDashboard() {
             <div className="text-3xl font-bold">
               {entries.length > 0 
                 ? entries.reduce((acc, curr) => {
-                    const hour = new Date(curr.date).getHours();
+                    const entryDate = curr.date instanceof Date ? curr.date : new Date(curr.date);
+                    const hour = entryDate.getHours();
                     return hour >= 5 && hour < 12 ? 'Morning' 
                       : hour >= 12 && hour < 18 ? 'Afternoon'
                       : 'Evening';

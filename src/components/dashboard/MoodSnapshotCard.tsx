@@ -97,9 +97,9 @@ export function MoodSnapshotCard() {
               {getTrendComponent()}
             </div>
             
-            {entries[0]?.notes && (
+            {entries[0]?.note && (
               <p className="mt-2 text-sm text-muted-foreground border-l-2 border-primary/20 pl-2">
-                "{entries[0].notes}"
+                "{entries[0].note}"
               </p>
             )}
           </>

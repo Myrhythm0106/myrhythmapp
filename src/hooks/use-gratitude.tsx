@@ -1,16 +1,7 @@
 
 import React, { createContext, useState, useContext, ReactNode } from "react";
-
-export type GratitudeEntry = {
-  id: string;
-  text: string;
-  reflection?: string;
-  tags?: string[];
-  date: string;
-  source?: string;
-  mood?: string;
-  isShared: boolean;
-};
+import { format, subDays, parseISO } from "date-fns";
+import { GratitudeEntry } from "@/components/gratitude/GratitudePrompt";
 
 interface GratitudeContextType {
   entries: GratitudeEntry[];
@@ -18,27 +9,29 @@ interface GratitudeContextType {
   deleteEntry: (id: string) => void;
   updateEntry: (id: string, entry: Partial<GratitudeEntry>) => void;
   toggleShared: (id: string) => void;
+  getMostCommonTags: (limit?: number) => Array<{text: string, value: number}>;
+  getAverageMoodByDay: () => Array<{date: string, averageMood: number}>;
 }
 
-// Sample data
+// Sample data with updated GratitudeEntry format
 const sampleEntries: GratitudeEntry[] = [
   {
     id: "1",
-    text: "I'm grateful for my morning walk in the sunshine",
-    reflection: "It helped me clear my mind and start the day with positive energy",
-    tags: ["nature", "exercise", "morning"],
-    date: new Date().toISOString(),
-    mood: "great",
-    isShared: false
+    date: new Date(),
+    promptType: "fitness",
+    gratitudeText: "I'm grateful for my morning walk in the sunshine",
+    moodScore: 4,
+    isShared: false,
+    tags: ["nature", "exercise", "morning"]
   },
   {
     id: "2",
-    text: "Thankful for the support of friends",
-    reflection: "They've been there through tough times and continue to inspire me",
-    tags: ["friends", "support"],
-    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-    mood: "good",
-    isShared: true
+    date: new Date(Date.now() - 86400000), // Yesterday
+    promptType: "social",
+    gratitudeText: "Thankful for the support of friends",
+    moodScore: 5,
+    isShared: true,
+    tags: ["friends", "support"]
   }
 ];
 
@@ -50,8 +43,8 @@ export const GratitudeProvider = ({ children }: { children: ReactNode }) => {
   const addEntry = (entry: Omit<GratitudeEntry, "id" | "date">) => {
     const newEntry = {
       ...entry,
-      id: Date.now().toString(),
-      date: new Date().toISOString(),
+      id: crypto.randomUUID(),
+      date: new Date(),
     };
     
     setEntries([newEntry, ...entries]);
@@ -76,6 +69,46 @@ export const GratitudeProvider = ({ children }: { children: ReactNode }) => {
       )
     );
   };
+
+  // Get most common tags across all entries
+  const getMostCommonTags = (limit: number = 20) => {
+    const tagCounts: Record<string, number> = {};
+    
+    entries.forEach(entry => {
+      entry.tags.forEach(tag => {
+        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+      });
+    });
+    
+    return Object.keys(tagCounts)
+      .map(tag => ({ text: tag, value: tagCounts[tag] }))
+      .sort((a, b) => b.value - a.value)
+      .slice(0, limit);
+  };
+  
+  // Get average mood by day
+  const getAverageMoodByDay = () => {
+    const moodsByDate: Record<string, {total: number, count: number}> = {};
+    
+    entries.forEach(entry => {
+      const dateString = format(
+        entry.date instanceof Date ? entry.date : new Date(entry.date),
+        'yyyy-MM-dd'
+      );
+      
+      if (!moodsByDate[dateString]) {
+        moodsByDate[dateString] = { total: 0, count: 0 };
+      }
+      
+      moodsByDate[dateString].total += entry.moodScore;
+      moodsByDate[dateString].count += 1;
+    });
+    
+    return Object.keys(moodsByDate).map(date => ({
+      date,
+      averageMood: moodsByDate[date].total / moodsByDate[date].count
+    }));
+  };
   
   return (
     <GratitudeContext.Provider value={{ 
@@ -83,7 +116,9 @@ export const GratitudeProvider = ({ children }: { children: ReactNode }) => {
       addEntry, 
       deleteEntry, 
       updateEntry,
-      toggleShared
+      toggleShared,
+      getMostCommonTags,
+      getAverageMoodByDay
     }}>
       {children}
     </GratitudeContext.Provider>
@@ -94,13 +129,15 @@ export const useGratitude = () => {
   const context = useContext(GratitudeContext);
   
   if (context === undefined) {
-    // If not wrapped in provider, return a default empty state that won't crash the app
+    // If not wrapped in provider, return a default empty state
     return {
       entries: [],
       addEntry: () => {},
       deleteEntry: () => {},
       updateEntry: () => {},
-      toggleShared: () => {}
+      toggleShared: () => {},
+      getMostCommonTags: (limit?: number) => [],
+      getAverageMoodByDay: () => []
     };
   }
   
