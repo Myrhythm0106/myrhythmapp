@@ -38,6 +38,9 @@ export function GratitudeEntryCard({
     }
   };
 
+  // Format the date to show date and time
+  const formattedDate = format(new Date(entry.date), "MMM d, yyyy 'at' h:mm a");
+
   return (
     <Card className="shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
@@ -54,13 +57,21 @@ export function GratitudeEntryCard({
               {getMoodEmoji(entry.moodScore)}
             </span>
             <span className="text-sm text-muted-foreground">
-              {format(new Date(entry.date), "MMM d, yyyy")}
+              {formattedDate}
             </span>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-base">{entry.gratitudeText}</p>
+        <p className="text-base font-semibold mb-2">{entry.gratitudeText}</p>
+        
+        {/* Display the WHY field if available */}
+        {entry.whyGrateful && (
+          <div className="mt-2 mb-3">
+            <p className="text-sm text-muted-foreground">Why I'm grateful:</p>
+            <p className="text-sm bg-muted/20 p-2 rounded-md">{entry.whyGrateful}</p>
+          </div>
+        )}
         
         <div className="flex flex-wrap gap-1 mt-2">
           {entry.tags.map(tag => (

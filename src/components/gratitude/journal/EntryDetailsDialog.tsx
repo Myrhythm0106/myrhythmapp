@@ -1,11 +1,11 @@
 
 import React from "react";
 import { format } from "date-fns";
-import { Share2, Trash2 } from "lucide-react";
-import { GratitudeEntry } from "../GratitudePrompt";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { GratitudeEntry } from "../GratitudePrompt";
+import { Calendar, Heart, Share2, Trash } from "lucide-react";
 
 interface EntryDetailsDialogProps {
   selectedEntry: GratitudeEntry | null;
@@ -22,85 +22,96 @@ export function EntryDetailsDialog({
 }: EntryDetailsDialogProps) {
   if (!selectedEntry) return null;
   
-  const getPromptTypeLabel = (type: string) => {
-    switch (type) {
-      case "fitness": return "Fitness";
-      case "mindfulness": return "Mindfulness";
-      case "social": return "Social";
-      default: return "General";
-    }
-  };
+  const formattedDate = format(new Date(selectedEntry.date), "MMMM d, yyyy 'at' h:mm a");
   
-  const getMoodEmoji = (score: number) => {
+  const getMoodLabel = (score: number) => {
     switch (score) {
-      case 1: return "😔";
-      case 2: return "😐";
-      case 3: return "🙂";
-      case 4: return "😊";
-      case 5: return "😄";
-      default: return "🙂";
+      case 1: return "Not so good 😔";
+      case 2: return "Okay 😐";
+      case 3: return "Good 🙂";
+      case 4: return "Great 😊";
+      case 5: return "Amazing 😄";
+      default: return "Good 🙂";
     }
   };
 
   return (
-    <DialogContent className="max-w-md">
+    <DialogContent className="sm:max-w-md">
       <DialogHeader>
-        <DialogTitle>Gratitude Reflection</DialogTitle>
+        <DialogTitle className="text-xl">Gratitude Reflection</DialogTitle>
       </DialogHeader>
+      
       <div className="space-y-4">
-        <div>
-          <h4 className="font-medium">Date</h4>
-          <p className="text-muted-foreground">
-            {format(new Date(selectedEntry.date), "MMMM d, yyyy 'at' h:mm a")}
-          </p>
-        </div>
-        <div>
-          <h4 className="font-medium">Activity Type</h4>
-          <p className="text-muted-foreground">{getPromptTypeLabel(selectedEntry.promptType)}</p>
-        </div>
-        <div>
-          <h4 className="font-medium">What I'm grateful for</h4>
-          <p>{selectedEntry.gratitudeText}</p>
-        </div>
-        <div>
-          <h4 className="font-medium">How it made me feel</h4>
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xl">{getMoodEmoji(selectedEntry.moodScore)}</span>
-            <span>Mood score: {selectedEntry.moodScore}/5</span>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">{formattedDate}</span>
+          </div>
+          <Badge variant="outline">{selectedEntry.promptType}</Badge>
+        </div>
+        
+        <div>
+          <h3 className="font-medium mb-1">What I'm grateful for:</h3>
+          <p className="text-base bg-muted/20 p-2 rounded-md">{selectedEntry.gratitudeText}</p>
+        </div>
+        
+        {/* Display the WHY field if available */}
+        {selectedEntry.whyGrateful && (
+          <div>
+            <h3 className="font-medium mb-1">Why I'm grateful:</h3>
+            <p className="text-base bg-muted/20 p-2 rounded-md">{selectedEntry.whyGrateful}</p>
+          </div>
+        )}
+        
+        <div>
+          <h3 className="font-medium mb-1">How it made me feel:</h3>
+          <div className="flex items-center gap-2">
+            <Heart className={`h-5 w-5 ${selectedEntry.moodScore >= 4 ? "text-red-500" : "text-muted-foreground"}`} />
+            <span>{getMoodLabel(selectedEntry.moodScore)}</span>
           </div>
         </div>
-        {selectedEntry.tags.length > 0 && (
+        
+        {selectedEntry.tags?.length > 0 && (
           <div>
-            <h4 className="font-medium">Themes</h4>
-            <div className="flex flex-wrap gap-1 mt-1">
+            <h3 className="font-medium mb-1">Tags:</h3>
+            <div className="flex flex-wrap gap-1">
               {selectedEntry.tags.map(tag => (
-                <Badge key={tag} variant="outline" className="bg-primary/5">
-                  {tag}
-                </Badge>
+                <Badge key={tag} variant="outline">{tag}</Badge>
               ))}
             </div>
           </div>
         )}
       </div>
-      <DialogFooter>
+      
+      <div className="flex justify-between mt-4">
         <Button
           variant="ghost"
-          onClick={() => onShareEntry(selectedEntry)}
-        >
-          <Share2 className={`h-4 w-4 mr-1 ${selectedEntry.isShared ? "text-primary" : ""}`} />
-          {selectedEntry.isShared ? "Make Private" : "Share"}
-        </Button>
-        <Button
-          variant="destructive"
+          size="sm"
+          className="text-destructive"
           onClick={() => {
             onDeleteEntry(selectedEntry.id);
             onClose();
           }}
         >
-          <Trash2 className="h-4 w-4 mr-1" />
+          <Trash className="h-4 w-4 mr-1" />
           Delete
         </Button>
-      </DialogFooter>
+        
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onShareEntry(selectedEntry)}
+          >
+            <Share2 className="h-4 w-4 mr-1" />
+            {selectedEntry.isShared ? "Unshare" : "Share"}
+          </Button>
+          
+          <Button variant="outline" size="sm" onClick={onClose}>
+            Close
+          </Button>
+        </div>
+      </div>
     </DialogContent>
   );
 }

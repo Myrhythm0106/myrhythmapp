@@ -20,6 +20,7 @@ export interface GratitudeEntry {
   promptType: string;
   activity?: string;
   gratitudeText: string;
+  whyGrateful: string; // Added field for why user is grateful
   moodScore: number;
   isShared: boolean;
   tags: string[];
@@ -27,6 +28,7 @@ export interface GratitudeEntry {
 
 export function GratitudePrompt({ promptType, activity, onSave, onClose }: GratitudePromptProps) {
   const [gratitudeText, setGratitudeText] = useState("");
+  const [whyGrateful, setWhyGrateful] = useState(""); // Added state for why field
   const [moodScore, setMoodScore] = useState(3);
   const [isSharing, setIsSharing] = useState(false);
   const userData = useUserData();
@@ -69,6 +71,7 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
       promptType,
       activity,
       gratitudeText,
+      whyGrateful, // Include the why field in the saved entry
       moodScore,
       isShared: isSharing,
       tags: extractTags(gratitudeText),
@@ -109,8 +112,19 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
           placeholder={getPlaceholderText()}
           value={gratitudeText}
           onChange={e => setGratitudeText(e.target.value)}
-          className="min-h-[120px] text-base"
+          className="min-h-[100px] text-base"
         />
+        
+        {/* Add the WHY field */}
+        <div>
+          <p className="font-medium text-lg mb-2">Why are you grateful for this?</p>
+          <Textarea
+            placeholder="Explain why this matters to you..."
+            value={whyGrateful}
+            onChange={e => setWhyGrateful(e.target.value)}
+            className="min-h-[100px] text-base"
+          />
+        </div>
 
         <div className="space-y-2">
           <p className="font-medium">How does this make you feel?</p>

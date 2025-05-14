@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { format } from "date-fns";
 import { GratitudeEntry } from "@/components/gratitude/GratitudePrompt";
@@ -13,13 +12,14 @@ interface GratitudeContextType {
   getAverageMoodByDay: () => Array<{date: string, averageMood: number}>;
 }
 
-// Sample data with updated GratitudeEntry format
+// Sample data with updated GratitudeEntry format including the whyGrateful field
 const sampleEntries: GratitudeEntry[] = [
   {
     id: "1",
     date: new Date(),
     promptType: "fitness",
     gratitudeText: "I'm grateful for my morning walk in the sunshine",
+    whyGrateful: "It energizes me for the day and helps clear my mind",
     moodScore: 4,
     isShared: false,
     tags: ["nature", "exercise", "morning"]
@@ -29,6 +29,7 @@ const sampleEntries: GratitudeEntry[] = [
     date: new Date(Date.now() - 86400000), // Yesterday
     promptType: "social",
     gratitudeText: "Thankful for the support of friends",
+    whyGrateful: "They listened when I needed someone to talk to",
     moodScore: 5,
     isShared: true,
     tags: ["friends", "support"]
@@ -50,7 +51,8 @@ export const GratitudeProvider = ({ children }: { children: ReactNode }) => {
         const parsedEntries = JSON.parse(storedEntries);
         return parsedEntries.map((entry: any) => ({
           ...entry,
-          date: new Date(entry.date)
+          date: new Date(entry.date),
+          whyGrateful: entry.whyGrateful || "" // Ensure backward compatibility
         }));
       } catch (error) {
         console.error('Error parsing stored gratitude entries:', error);
@@ -70,6 +72,7 @@ export const GratitudeProvider = ({ children }: { children: ReactNode }) => {
       ...entry,
       id: crypto.randomUUID(),
       date: new Date(),
+      whyGrateful: entry.whyGrateful || "" // Ensure the field exists
     };
     
     setEntries([newEntry, ...entries]);

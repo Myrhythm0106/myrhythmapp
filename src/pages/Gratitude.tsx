@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,12 +10,22 @@ import { GratitudePrompt } from "@/components/gratitude/GratitudePrompt";
 import { GratitudeJournal } from "@/components/gratitude/GratitudeJournal";
 import { useGratitude } from "@/hooks/use-gratitude";
 import { Card, CardContent } from "@/components/ui/card";
+import { GratitudeEntryCard } from "@/components/gratitude/journal/GratitudeEntryCard";
 
 const Gratitude = () => {
   const [activeTab, setActiveTab] = useState("journal");
   const [isPromptOpen, setIsPromptOpen] = useState(false);
   const [promptType, setPromptType] = useState<"fitness" | "mindfulness" | "social" | "general">("general");
-  const { addEntry } = useGratitude();
+  const { entries, addEntry } = useGratitude();
+  const [latestEntry, setLatestEntry] = useState<any>(null);
+  const [showLatestEntry, setShowLatestEntry] = useState(false);
+  
+  // When the component mounts or entries change, check if we have entries
+  useEffect(() => {
+    if (entries.length > 0) {
+      setLatestEntry(entries[0]);
+    }
+  }, [entries]);
   
   const handleOpenPrompt = (type: "fitness" | "mindfulness" | "social" | "general") => {
     setPromptType(type);
@@ -25,6 +35,21 @@ const Gratitude = () => {
   const handleSaveGratitude = (entry: any) => {
     addEntry(entry);
     setIsPromptOpen(false);
+    setLatestEntry(entry);
+    setShowLatestEntry(true);
+    // Auto-switch to journal tab when entry is saved
+    setActiveTab("journal");
+  };
+  
+  // Handle actions on the latest entry
+  const handleSelectLatestEntry = () => {
+    // This would be implemented in the journal component
+    setShowLatestEntry(false);
+  };
+  
+  const handleShareLatestEntry = () => {
+    // This would be implemented in the journal component
+    setShowLatestEntry(false);
   };
 
   return (
@@ -69,6 +94,26 @@ const Gratitude = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Show the latest entry immediately after saving */}
+      {showLatestEntry && latestEntry && (
+        <div className="animate-fade-in">
+          <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
+            <HeartHandshake className="h-5 w-5 text-primary" />
+            Your Latest Gratitude Entry
+          </h3>
+          <GratitudeEntryCard 
+            entry={latestEntry} 
+            onSelectEntry={handleSelectLatestEntry}
+            onShareEntry={handleShareLatestEntry}
+          />
+          <div className="mt-4 flex justify-end">
+            <Button variant="outline" size="sm" onClick={() => setShowLatestEntry(false)}>
+              Dismiss
+            </Button>
+          </div>
+        </div>
+      )}
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="w-full">
