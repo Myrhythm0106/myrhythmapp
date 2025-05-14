@@ -2,7 +2,7 @@
 import { useState, useMemo } from "react";
 import { GratitudeEntry } from "../GratitudePrompt";
 import { useGratitude } from "@/hooks/use-gratitude";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/use-toast";
 
 export function useGratitudeJournal() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,13 +13,21 @@ export function useGratitudeJournal() {
   const filteredEntries = useMemo(() => {
     return entries.filter(entry => {
       const matchesSearch = !searchQuery || 
-        entry.gratitudeText.toLowerCase().includes(searchQuery.toLowerCase());
+        entry.gratitudeText.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        entry.whyGrateful.toLowerCase().includes(searchQuery.toLowerCase());
       
       const matchesFilter = !filterType || entry.promptType === filterType;
       
       return matchesSearch && matchesFilter;
     });
   }, [entries, searchQuery, filterType]);
+  
+  // Get 3 most recent entries
+  const recentEntries = useMemo(() => {
+    return [...entries]
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, 3);
+  }, [entries]);
   
   const handleShare = (entry: GratitudeEntry) => {
     updateEntry(entry.id, { isShared: !entry.isShared });
@@ -50,6 +58,7 @@ export function useGratitudeJournal() {
     filteredEntries,
     handleShare,
     handleDelete,
-    hasSearchFilters
+    hasSearchFilters,
+    recentEntries
   };
 }

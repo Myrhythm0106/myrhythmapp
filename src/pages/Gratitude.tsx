@@ -11,6 +11,7 @@ import { GratitudeJournal } from "@/components/gratitude/GratitudeJournal";
 import { useGratitude } from "@/hooks/use-gratitude";
 import { Card, CardContent } from "@/components/ui/card";
 import { GratitudeEntryCard } from "@/components/gratitude/journal/GratitudeEntryCard";
+import { EntryDetailsDialog } from "@/components/gratitude/journal/EntryDetailsDialog";
 
 const Gratitude = () => {
   const [activeTab, setActiveTab] = useState("journal");
@@ -19,6 +20,9 @@ const Gratitude = () => {
   const { entries, addEntry } = useGratitude();
   const [latestEntry, setLatestEntry] = useState<any>(null);
   const [showLatestEntry, setShowLatestEntry] = useState(false);
+  
+  // New state for quick add dialog
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   
   // When the component mounts or entries change, check if we have entries
   useEffect(() => {
@@ -58,7 +62,7 @@ const Gratitude = () => {
         title="Contextual Gratitude" 
         subtitle="Track, reflect, and grow through intentional gratitude"
       >
-        <Button onClick={() => handleOpenPrompt("general")}>
+        <Button onClick={() => setIsQuickAddOpen(true)}>
           <Plus className="mr-1 h-4 w-4" />
           Add Gratitude
         </Button>
@@ -66,6 +70,13 @@ const Gratitude = () => {
       
       <Card className="bg-muted/20">
         <CardContent className="py-4">
+          <div className="text-center mb-4">
+            <h3 className="text-lg font-semibold mb-1">Express Gratitude For...</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Choose a context for your gratitude reflection
+            </p>
+          </div>
+          
           <div className="flex flex-wrap gap-3 justify-center">
             <Button 
               variant="outline" 
@@ -90,6 +101,14 @@ const Gratitude = () => {
             >
               <HeartHandshake className="mr-2 h-5 w-5 text-purple-500" />
               Social Gratitude
+            </Button>
+            <Button 
+              variant="outline" 
+              className="flex-1 min-w-[120px] bg-background"
+              onClick={() => handleOpenPrompt("general")}
+            >
+              <HeartHandshake className="mr-2 h-5 w-5 text-amber-500" />
+              General Gratitude
             </Button>
           </div>
         </CardContent>
@@ -136,7 +155,7 @@ const Gratitude = () => {
         </TabsContent>
       </Tabs>
       
-      {/* Gratitude Prompt Dialog */}
+      {/* Traditional Gratitude Prompt Dialog */}
       <Dialog open={isPromptOpen} onOpenChange={setIsPromptOpen}>
         <DialogContent className="max-w-lg">
           <GratitudePrompt 
@@ -145,6 +164,14 @@ const Gratitude = () => {
             onClose={() => setIsPromptOpen(false)}
           />
         </DialogContent>
+      </Dialog>
+      
+      {/* Simple Quick Add Dialog */}
+      <Dialog open={isQuickAddOpen} onOpenChange={setIsQuickAddOpen}>
+        <EntryDetailsDialog
+          isNewEntry={true}
+          onClose={() => setIsQuickAddOpen(false)}
+        />
       </Dialog>
     </div>
   );
