@@ -39,11 +39,17 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   onFinish,
   onBack
 }) => {
+  // Handler to ensure form submission is properly passed
+  const handlePersonalInfoSubmit = (values: PersonalInfoFormValues) => {
+    console.log("OnboardingSteps received form submission:", values);
+    onPersonalInfoSubmit(values);
+  };
+
   return (
     <CardContent>
       {step === 1 ? (
         <PersonalInfoForm 
-          onSubmit={onPersonalInfoSubmit}
+          onSubmit={handlePersonalInfoSubmit}
           onBack={onBack}
           initialValues={personalInfo || undefined}
         />

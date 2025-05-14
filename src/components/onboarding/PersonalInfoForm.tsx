@@ -32,10 +32,11 @@ const PersonalInfoForm = ({ onSubmit, onBack, initialValues }: PersonalInfoFormP
       password: "",
       location: "",
     },
-    mode: "onSubmit", // Prevent auto-validation
+    mode: "onChange", // Changed from onSubmit to ensure validation happens while typing
   });
 
   const handleSubmit = (values: PersonalInfoFormValues) => {
+    console.log("Form submitted with values:", values);
     // Call the parent component's onSubmit
     onSubmit(values);
   };

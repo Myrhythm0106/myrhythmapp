@@ -27,8 +27,11 @@ const Onboarding = () => {
   
   // Update URL when step changes
   useEffect(() => {
-    navigate(`/onboarding?step=${step}`, { replace: true });
-  }, [step, navigate]);
+    const newParams = new URLSearchParams(location.search);
+    newParams.set("step", step.toString());
+    // Replace to avoid adding to history stack
+    navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+  }, [step, navigate, location]);
 
   // Auto-advance when user type is selected (with small delay for UX)
   useEffect(() => {
@@ -51,8 +54,11 @@ const Onboarding = () => {
     // Store the form values in state to prevent losing them
     setPersonalInfo(values);
     
-    // Immediately move to next step
-    setStep(2);
+    // Force immediate step change
+    setStep(prev => {
+      console.log("Changing step from", prev, "to", prev + 1);
+      return prev + 1;
+    });
   };
   
   const handlePlanSelect = (plan: string) => {
@@ -61,19 +67,19 @@ const Onboarding = () => {
     // Auto-advance with a short delay for better UX
     setTimeout(() => {
       handlePlanContinue();
-    }, 800);
+    }, 500);
   };
   
   const handlePlanContinue = () => {
     // Move to payment details step
-    setStep(3);
+    setStep(prev => prev + 1);
   };
 
   const handlePaymentSubmit = (values: any) => {
     console.log("Payment info:", values);
     
     // Move directly to user type selection
-    setStep(4);
+    setStep(prev => prev + 1);
   };
   
   const handleFinishOnboarding = () => {
@@ -102,7 +108,7 @@ const Onboarding = () => {
       navigate("/");
     } else {
       // Update step state
-      setStep(step - 1);
+      setStep(prev => prev - 1);
     }
   };
 
