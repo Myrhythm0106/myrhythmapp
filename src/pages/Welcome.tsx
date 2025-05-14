@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,14 +6,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
 import GettingStartedGuide from "@/components/welcome/GettingStartedGuide";
-
 const Welcome = () => {
   const navigate = useNavigate();
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("journey");
-  
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background p-4 md:p-8">
+  return <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
         <div className="flex items-center justify-center gap-3 mb-8">
           <ShieldCheck className="h-12 w-12 text-beacon-600" />
@@ -30,11 +26,8 @@ const Welcome = () => {
           <TabsContent value="journey" className="mt-6">
             <Card className="border-2">
               <CardHeader>
-                <CardTitle className="text-2xl">Your Journey Begins Now</CardTitle>
-                <CardDescription>
-                  MyRhythm is designed to help you build better habits and routines, track your progress,
-                  and achieve your goals. Here's what you can expect:
-                </CardDescription>
+                <CardTitle className="text-2xl">Looking Forward</CardTitle>
+                <CardDescription>MyRhythm is designed to help you reclaim control of your day, rebuild consistency after disruption and restore confidence in your memory and routines.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <Tabs defaultValue="one-month" className="w-full">
@@ -82,18 +75,11 @@ const Welcome = () => {
                   <h3 className="text-xl font-medium">Ready to explore MyRhythm?</h3>
                   
                   <div className="flex flex-wrap gap-4">
-                    <Button 
-                      onClick={() => setActiveTab("get-started")}
-                      className="gap-2"
-                    >
+                    <Button onClick={() => setActiveTab("get-started")} className="gap-2">
                       Get Started Now <ArrowRight className="h-4 w-4" />
                     </Button>
                     
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setShowTutorial(true)}
-                      className="gap-2"
-                    >
+                    <Button variant="outline" onClick={() => setShowTutorial(true)} className="gap-2">
                       Take a Tour <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
@@ -109,11 +95,9 @@ const Welcome = () => {
       </div>
       
       <TutorialModal isOpen={showTutorial} onComplete={() => {
-        setShowTutorial(false);
-        navigate("/dashboard");
-      }} />
-    </div>
-  );
+      setShowTutorial(false);
+      navigate("/dashboard");
+    }} />
+    </div>;
 };
-
 export default Welcome;
