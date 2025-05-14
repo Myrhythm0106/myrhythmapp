@@ -59,8 +59,16 @@ const Onboarding = () => {
     // Store the form values in state to prevent losing them
     setPersonalInfo(values);
     
-    // Move to plan selection step
+    // Move to plan selection step - ensure this happens synchronously
     setStep(2);
+    
+    // Add a small timeout to ensure the step change is processed
+    setTimeout(() => {
+      const currentStep = parseInt(queryParams.get("step") || "1");
+      if (currentStep !== 2) {
+        navigate(`/onboarding?step=2`, { replace: true });
+      }
+    }, 50);
   };
   
   const handlePlanSelect = (plan: string) => {
@@ -76,6 +84,9 @@ const Onboarding = () => {
   const handlePlanContinue = () => {
     // Move to payment details step
     setStep(3);
+    
+    // Ensure URL matches the current step
+    navigate(`/onboarding?step=3`, { replace: true });
   };
 
   const handlePaymentSubmit = (values: any) => {
@@ -83,6 +94,9 @@ const Onboarding = () => {
     
     // Move to user type selection
     setStep(4);
+    
+    // Ensure URL matches the current step
+    navigate(`/onboarding?step=4`, { replace: true });
   };
   
   const handleFinishOnboarding = () => {
@@ -110,7 +124,12 @@ const Onboarding = () => {
       // Go back to landing page
       navigate("/");
     } else {
-      setStep(step - 1);
+      // Update step state
+      const newStep = step - 1;
+      setStep(newStep);
+      
+      // Also update URL to ensure consistency
+      navigate(`/onboarding?step=${newStep}`, { replace: true });
     }
   };
 
