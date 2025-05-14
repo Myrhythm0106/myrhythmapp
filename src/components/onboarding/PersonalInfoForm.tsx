@@ -32,18 +32,18 @@ const PersonalInfoForm = ({ onSubmit, onBack, initialValues }: PersonalInfoFormP
       password: "",
       location: "",
     },
-    mode: "onChange", // Changed from onSubmit to ensure validation happens while typing
+    mode: "all", // Validate on all interactions for better UX
   });
 
-  const handleSubmit = (values: PersonalInfoFormValues) => {
+  const handleFormSubmit = (values: PersonalInfoFormValues) => {
     console.log("Form submitted with values:", values);
-    // Call the parent component's onSubmit
+    // Call the parent component's onSubmit immediately
     onSubmit(values);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"

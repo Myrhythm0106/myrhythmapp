@@ -39,10 +39,18 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
   onFinish,
   onBack
 }) => {
-  // Handler to ensure form submission is properly passed
+  // Direct handler for personal info form submission
   const handlePersonalInfoSubmit = (values: PersonalInfoFormValues) => {
     console.log("OnboardingSteps received form submission:", values);
+    // Immediately call the parent handler to advance to next step
     onPersonalInfoSubmit(values);
+  };
+
+  // Direct handler for payment form submission
+  const handlePaymentSubmit = (values: any) => {
+    console.log("Payment form submitted:", values);
+    // Immediately call the parent handler to advance to next step
+    onPaymentSubmit(values);
   };
 
   return (
@@ -61,8 +69,8 @@ export const OnboardingSteps: React.FC<OnboardingStepsProps> = ({
         />
       ) : step === 3 ? (
         <PaymentInfoForm 
-          onSubmit={onPaymentSubmit}
-          onBack={() => onBack()}
+          onSubmit={handlePaymentSubmit}
+          onBack={onBack}
           selectedPlan={selectedPlan}
         />
       ) : (

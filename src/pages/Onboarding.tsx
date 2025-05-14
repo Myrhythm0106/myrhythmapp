@@ -25,7 +25,7 @@ const Onboarding = () => {
   // Store form values to prevent losing them between steps
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   
-  // Update URL when step changes
+  // Update URL when step changes - this is important for browser navigation
   useEffect(() => {
     const newParams = new URLSearchParams(location.search);
     newParams.set("step", step.toString());
@@ -33,13 +33,10 @@ const Onboarding = () => {
     navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
   }, [step, navigate, location]);
 
-  // Auto-advance when user type is selected (with small delay for UX)
+  // Auto-advance when user type is selected (without delay for faster experience)
   useEffect(() => {
     if (userType && step === 4 && userType !== "custom") {
-      const timer = setTimeout(() => {
-        handleFinishOnboarding();
-      }, 800);
-      return () => clearTimeout(timer);
+      handleFinishOnboarding();
     }
   }, [userType, step]);
 
@@ -54,32 +51,27 @@ const Onboarding = () => {
     // Store the form values in state to prevent losing them
     setPersonalInfo(values);
     
-    // Force immediate step change
-    setStep(prev => {
-      console.log("Changing step from", prev, "to", prev + 1);
-      return prev + 1;
-    });
+    // Force immediate step change - using functional update to ensure we're working with the latest state
+    setStep(2); // Direct assignment for clarity
   };
   
   const handlePlanSelect = (plan: string) => {
     setSelectedPlan(plan);
     
-    // Auto-advance with a short delay for better UX
-    setTimeout(() => {
-      handlePlanContinue();
-    }, 500);
+    // Immediate advancement - no delay
+    handlePlanContinue();
   };
   
   const handlePlanContinue = () => {
-    // Move to payment details step
-    setStep(prev => prev + 1);
+    // Immediate advancement to payment step
+    setStep(3); // Direct assignment for clarity
   };
 
   const handlePaymentSubmit = (values: any) => {
     console.log("Payment info:", values);
     
-    // Move directly to user type selection
-    setStep(prev => prev + 1);
+    // Immediate advancement to user type selection
+    setStep(4); // Direct assignment for clarity
   };
   
   const handleFinishOnboarding = () => {
@@ -107,8 +99,8 @@ const Onboarding = () => {
       // Go back to landing page
       navigate("/");
     } else {
-      // Update step state
-      setStep(prev => prev - 1);
+      // Direct step change
+      setStep(step - 1);
     }
   };
 
