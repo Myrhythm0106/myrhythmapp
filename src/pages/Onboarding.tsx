@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@/components/ui/card";
@@ -24,19 +25,10 @@ const Onboarding = () => {
   // Store form values to prevent losing them between steps
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   
-  // Update URL when step changes BUT prevent the update from triggering a state change
+  // Update URL when step changes
   useEffect(() => {
-    // Compare if the current URL step matches our state
-    const currentUrlStep = parseInt(queryParams.get("step") || "1");
-    
-    // Only update URL if step has actually changed to prevent loops
-    if (currentUrlStep !== step) {
-      const newParams = new URLSearchParams(location.search);
-      newParams.set("step", step.toString());
-      // Use replace to avoid adding to history stack
-      navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
-    }
-  }, [step, navigate, location.pathname, queryParams]);
+    navigate(`/onboarding?step=${step}`, { replace: true });
+  }, [step, navigate]);
 
   // Auto-advance when user type is selected (with small delay for UX)
   useEffect(() => {
@@ -50,6 +42,7 @@ const Onboarding = () => {
 
   const handlePersonalInfoSubmit = (values: PersonalInfoFormValues) => {
     console.log("Personal info:", values);
+    
     // Store in localStorage for login functionality
     localStorage.setItem("myrhythm_name", values.name);
     localStorage.setItem("myrhythm_email", values.email);
@@ -58,44 +51,29 @@ const Onboarding = () => {
     // Store the form values in state to prevent losing them
     setPersonalInfo(values);
     
-    // Move to plan selection step - ensure this happens synchronously
+    // Immediately move to next step
     setStep(2);
-    
-    // Add a small timeout to ensure the step change is processed
-    setTimeout(() => {
-      const currentStep = parseInt(queryParams.get("step") || "1");
-      if (currentStep !== 2) {
-        navigate(`/onboarding?step=2`, { replace: true });
-      }
-    }, 50);
   };
   
   const handlePlanSelect = (plan: string) => {
     setSelectedPlan(plan);
     
-    // We'll keep this auto-advance but with a longer delay to make it more visible
-    const timer = setTimeout(() => {
+    // Auto-advance with a short delay for better UX
+    setTimeout(() => {
       handlePlanContinue();
-    }, 1000); // Increased delay for better UX
-    return () => clearTimeout(timer);
+    }, 800);
   };
   
   const handlePlanContinue = () => {
     // Move to payment details step
     setStep(3);
-    
-    // Ensure URL matches the current step
-    navigate(`/onboarding?step=3`, { replace: true });
   };
 
   const handlePaymentSubmit = (values: any) => {
     console.log("Payment info:", values);
     
-    // Move to user type selection
+    // Move directly to user type selection
     setStep(4);
-    
-    // Ensure URL matches the current step
-    navigate(`/onboarding?step=4`, { replace: true });
   };
   
   const handleFinishOnboarding = () => {
@@ -114,7 +92,7 @@ const Onboarding = () => {
       variant: "default",
     });
     
-    // Redirect to welcome page instead of dashboard
+    // Redirect to welcome page
     navigate("/welcome");
   };
 
@@ -124,11 +102,7 @@ const Onboarding = () => {
       navigate("/");
     } else {
       // Update step state
-      const newStep = step - 1;
-      setStep(newStep);
-      
-      // Also update URL to ensure consistency
-      navigate(`/onboarding?step=${newStep}`, { replace: true });
+      setStep(step - 1);
     }
   };
 
