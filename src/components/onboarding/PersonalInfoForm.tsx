@@ -20,26 +20,22 @@ export type PersonalInfoFormValues = z.infer<typeof personalInfoSchema>;
 interface PersonalInfoFormProps {
   onSubmit: (values: PersonalInfoFormValues) => void;
   onBack: () => void;
+  initialValues?: PersonalInfoFormValues;
 }
 
-const PersonalInfoForm = ({ onSubmit, onBack }: PersonalInfoFormProps) => {
+const PersonalInfoForm = ({ onSubmit, onBack, initialValues }: PersonalInfoFormProps) => {
   const form = useForm<PersonalInfoFormValues>({
     resolver: zodResolver(personalInfoSchema),
-    defaultValues: {
+    defaultValues: initialValues || {
       name: "",
       email: "",
       password: "",
       location: "",
     },
-    mode: "onSubmit", // Changed from onChange to onSubmit to prevent auto-validation
+    mode: "onSubmit", // Prevent auto-validation
   });
 
   const handleSubmit = (values: PersonalInfoFormValues) => {
-    // Store user credentials in localStorage for the login functionality
-    localStorage.setItem("myrhythm_name", values.name);
-    localStorage.setItem("myrhythm_email", values.email);
-    localStorage.setItem("myrhythm_password", values.password);
-    
     // Call the parent component's onSubmit
     onSubmit(values);
   };

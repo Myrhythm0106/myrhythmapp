@@ -22,6 +22,9 @@ const Onboarding = () => {
   const [customTypeValue, setCustomTypeValue] = useState("");
   const [selectedPlan, setSelectedPlan] = useState("basic");
   
+  // Store form values to prevent losing them between steps
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
+  
   // Update URL when step changes
   useEffect(() => {
     const newParams = new URLSearchParams(location.search);
@@ -45,6 +48,9 @@ const Onboarding = () => {
     localStorage.setItem("myrhythm_name", values.name);
     localStorage.setItem("myrhythm_email", values.email);
     localStorage.setItem("myrhythm_password", values.password);
+    
+    // Store the form values in state to prevent losing them
+    setPersonalInfo(values);
     
     // Move to plan selection step
     setStep(2);
@@ -144,6 +150,7 @@ const Onboarding = () => {
               <PersonalInfoForm 
                 onSubmit={handlePersonalInfoSubmit}
                 onBack={handleBack}
+                initialValues={personalInfo || undefined}
               />
             ) : step === 2 ? (
               <PlanSelection
