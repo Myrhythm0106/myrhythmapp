@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShieldCheck, Heart, Users, List, Settings } from "lucide-react";
+import { ShieldCheck, Heart, Users, List, Settings, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export type UserType = 
@@ -75,14 +75,6 @@ export const UserTypeStep = ({ onComplete }: UserTypeStepProps) => {
 
   const handleSelectType = (type: UserType) => {
     setSelectedType(type);
-    
-    // If it's not custom type, auto-submit after a brief moment
-    if (type !== "custom") {
-      // Small delay to show selection before proceeding
-      setTimeout(() => {
-        onComplete({ type });
-      }, 300);
-    }
   };
 
   const handleSubmit = () => {
@@ -93,6 +85,8 @@ export const UserTypeStep = ({ onComplete }: UserTypeStepProps) => {
       customValue: selectedType === "custom" ? customValue : undefined
     });
   };
+
+  const isNextButtonDisabled = !selectedType || (selectedType === "custom" && !customValue.trim());
 
   return (
     <div className="space-y-6">
@@ -130,17 +124,15 @@ export const UserTypeStep = ({ onComplete }: UserTypeStepProps) => {
         </div>
       )}
 
-      {selectedType === "custom" && (
-        <div className="flex justify-end">
-          <Button 
-            onClick={handleSubmit}
-            disabled={!customValue.trim()}
-            className="gap-2"
-          >
-            Complete Setup
-          </Button>
-        </div>
-      )}
+      <div className="flex justify-end">
+        <Button 
+          onClick={handleSubmit}
+          disabled={isNextButtonDisabled}
+          className="gap-2"
+        >
+          Complete Setup <ArrowRight className="h-4 w-4" />
+        </Button>
+      </div>
     </div>
   );
 };
