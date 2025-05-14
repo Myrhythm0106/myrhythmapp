@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -53,10 +52,10 @@ const Onboarding = () => {
   const handlePlanSelect = (plan: string) => {
     setSelectedPlan(plan);
     
-    // Auto-advance to payment step after selecting plan (change #3)
+    // We'll keep this auto-advance but with a longer delay to make it more visible
     const timer = setTimeout(() => {
       handlePlanContinue();
-    }, 500);
+    }, 800);
     return () => clearTimeout(timer);
   };
   

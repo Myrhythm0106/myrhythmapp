@@ -34,26 +34,7 @@ const PersonalInfoForm = ({ onSubmit, onBack }: PersonalInfoFormProps) => {
     mode: "onChange", // Enable validation on change for auto-submission
   });
 
-  // Add effect to auto-submit when all fields are valid
-  useEffect(() => {
-    const subscription = form.watch((value, { name, type }) => {
-      // Only check for auto-submission when fields change, not on initial load
-      if (type === "change" && form.formState.isValid && Object.keys(form.formState.dirtyFields).length >= 3) {
-        // Check if the required fields are filled
-        const { name, email, password } = form.getValues();
-        if (name && email && password) {
-          // Small delay to allow the user to see the field is valid before auto-submitting
-          const timer = setTimeout(() => {
-            handleSubmit(form.getValues());
-          }, 500);
-          
-          return () => clearTimeout(timer);
-        }
-      }
-    });
-    
-    return () => subscription.unsubscribe();
-  }, [form.formState.isValid]);
+  // Removed auto-submission effect to prevent automatic navigation when all fields are valid
 
   const handleSubmit = (values: PersonalInfoFormValues) => {
     // Store user credentials in localStorage for the login functionality
