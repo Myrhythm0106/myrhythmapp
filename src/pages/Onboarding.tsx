@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserTypeSelector, UserType } from "@/components/onboarding/UserTypeSelector";
-import { toast } from "sonner";
+import { toast } from "@/components/ui/use-toast";
 import { Brain, ArrowRight, ArrowLeft } from "lucide-react";
 import PersonalInfoForm, { PersonalInfoFormValues } from "@/components/onboarding/PersonalInfoForm";
 import PaymentInfoForm from "@/components/onboarding/PaymentInfoForm";
@@ -25,15 +25,22 @@ const Onboarding = () => {
   // Store form values to prevent losing them between steps
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   
-  // Update URL when step changes
+  // Update URL when step changes BUT prevent the update from triggering a state change
   useEffect(() => {
-    const newParams = new URLSearchParams(location.search);
-    newParams.set("step", step.toString());
-    navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
-  }, [step, location.pathname, location.search, navigate]);
+    // Compare if the current URL step matches our state
+    const currentUrlStep = parseInt(queryParams.get("step") || "1");
+    
+    // Only update URL if step has actually changed to prevent loops
+    if (currentUrlStep !== step) {
+      const newParams = new URLSearchParams(location.search);
+      newParams.set("step", step.toString());
+      // Use replace to avoid adding to history stack
+      navigate(`${location.pathname}?${newParams.toString()}`, { replace: true });
+    }
+  }, [step, navigate, location.pathname, queryParams]);
 
+  // Auto-advance when user type is selected (with small delay for UX)
   useEffect(() => {
-    // Auto-advance when user type is selected (with small delay for UX)
     if (userType && step === 4 && userType !== "custom") {
       const timer = setTimeout(() => {
         handleFinishOnboarding();
@@ -88,7 +95,12 @@ const Onboarding = () => {
     localStorage.setItem('myrhythm_logged_in', 'true');
     sessionStorage.setItem('justRegistered', 'true');
     
-    toast.success("Account created successfully!");
+    toast({
+      title: "Success!",
+      description: "Account created successfully!",
+      variant: "default",
+    });
+    
     // Redirect to welcome page instead of dashboard
     navigate("/welcome");
   };
@@ -161,8 +173,7 @@ const Onboarding = () => {
             ) : step === 3 ? (
               <PaymentInfoForm 
                 onSubmit={handlePaymentSubmit}
-                onBack={handleBack}
-                selectedPlan={selectedPlan}
+                onBack={() => setStep(2)}
               />
             ) : (
               <div className="space-y-6">
