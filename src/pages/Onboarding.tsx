@@ -1,14 +1,13 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserTypeSelector, UserType } from "@/components/onboarding/UserTypeSelector";
+import { Card } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
-import { Brain, ArrowRight, ArrowLeft } from "lucide-react";
-import PersonalInfoForm, { PersonalInfoFormValues } from "@/components/onboarding/PersonalInfoForm";
-import PaymentInfoForm from "@/components/onboarding/PaymentInfoForm";
-import PlanSelection from "@/components/onboarding/PlanSelection";
+import { Brain, ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { OnboardingHeader } from "@/components/onboarding/OnboardingHeader";
+import { OnboardingSteps } from "@/components/onboarding/OnboardingSteps";
+import { PersonalInfoFormValues } from "@/components/onboarding/PersonalInfoForm";
+import { UserType } from "@/components/onboarding/UserTypeSelector";
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -155,66 +154,22 @@ const Onboarding = () => {
         </div>
         
         <Card className="border-2">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle>
-                  {step === 1 && "Complete your profile"}
-                  {step === 2 && "Select your plan"}
-                  {step === 3 && "Complete your payment"}
-                  {step === 4 && "Personalised Support to O.R.D.E.R your life daily"}
-                </CardTitle>
-                <CardDescription>
-                  {step === 1 && "Just a few more details to personalize your experience"}
-                  {step === 2 && "Choose a plan that works for you"}
-                  {step === 3 && "Secure payment information"}
-                  {step === 4 && "Select the option that best describes your situation"}
-                </CardDescription>
-              </div>
-              <div className="text-sm font-medium">
-                Step {step} of 4
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            {step === 1 ? (
-              <PersonalInfoForm 
-                onSubmit={handlePersonalInfoSubmit}
-                onBack={handleBack}
-                initialValues={personalInfo || undefined}
-              />
-            ) : step === 2 ? (
-              <PlanSelection
-                selectedPlan={selectedPlan}
-                onSelectPlan={handlePlanSelect}
-                onContinue={handlePlanContinue}
-              />
-            ) : step === 3 ? (
-              <PaymentInfoForm 
-                onSubmit={handlePaymentSubmit}
-                onBack={() => setStep(2)}
-                selectedPlan={selectedPlan}
-              />
-            ) : (
-              <div className="space-y-6">
-                <UserTypeSelector 
-                  selectedType={userType} 
-                  onChange={setUserType} 
-                  customType={customTypeValue}
-                  onCustomTypeChange={setCustomTypeValue}
-                />
-                <div className="flex justify-end">
-                  <Button 
-                    onClick={handleFinishOnboarding} 
-                    className="gap-2"
-                    disabled={!userType || (userType === "custom" && !customTypeValue.trim())}
-                  >
-                    Finish <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardContent>
+          <OnboardingHeader step={step} />
+          <OnboardingSteps 
+            step={step}
+            personalInfo={personalInfo}
+            selectedPlan={selectedPlan}
+            userType={userType}
+            customTypeValue={customTypeValue}
+            onPersonalInfoSubmit={handlePersonalInfoSubmit}
+            onPlanSelect={handlePlanSelect}
+            onPlanContinue={handlePlanContinue}
+            onPaymentSubmit={handlePaymentSubmit}
+            onUserTypeChange={setUserType}
+            onCustomTypeChange={setCustomTypeValue}
+            onFinish={handleFinishOnboarding}
+            onBack={handleBack}
+          />
         </Card>
       </div>
     </div>
