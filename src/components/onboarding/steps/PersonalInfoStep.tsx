@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
@@ -17,13 +17,12 @@ const personalInfoSchema = z.object({
 
 export type PersonalInfoFormValues = z.infer<typeof personalInfoSchema>;
 
-interface PersonalInfoFormProps {
-  onSubmit: (values: PersonalInfoFormValues) => void;
-  onBack: () => void;
+interface PersonalInfoStepProps {
+  onComplete: (values: PersonalInfoFormValues) => void;
   initialValues?: PersonalInfoFormValues;
 }
 
-const PersonalInfoForm = ({ onSubmit, onBack, initialValues }: PersonalInfoFormProps) => {
+export const PersonalInfoStep = ({ onComplete, initialValues }: PersonalInfoStepProps) => {
   const form = useForm<PersonalInfoFormValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: initialValues || {
@@ -32,18 +31,12 @@ const PersonalInfoForm = ({ onSubmit, onBack, initialValues }: PersonalInfoFormP
       password: "",
       location: "",
     },
-    mode: "all", // Validate on all interactions for better UX
+    mode: "onChange", 
   });
-
-  const handleFormSubmit = (values: PersonalInfoFormValues) => {
-    console.log("Form submitted with values:", values);
-    // Call the parent component's onSubmit immediately
-    onSubmit(values);
-  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onComplete)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
@@ -100,18 +93,16 @@ const PersonalInfoForm = ({ onSubmit, onBack, initialValues }: PersonalInfoFormP
           )}
         />
         
-        <div className="pt-4 flex justify-between">
-          <Button type="button" variant="outline" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <Button type="submit" className="gap-2">
-            Next <ArrowRight className="h-4 w-4" />
+        <div className="pt-4 flex justify-end">
+          <Button 
+            type="submit" 
+            className="gap-2"
+            disabled={!form.formState.isValid}
+          >
+            Continue <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       </form>
     </Form>
   );
 };
-
-export default PersonalInfoForm;

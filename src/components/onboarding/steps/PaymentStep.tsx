@@ -4,65 +4,55 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CreditCard } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PlanType } from "./PlanStep";
 
-const paymentInfoSchema = z.object({
+const paymentSchema = z.object({
   cardName: z.string().min(2, "Name on card is required"),
   cardNumber: z.string().regex(/^[0-9]{16}$/, "Card number must be 16 digits"),
   expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/[0-9]{2}$/, "Please use MM/YY format"),
   cvv: z.string().regex(/^[0-9]{3,4}$/, "CVV must be 3 or 4 digits"),
 });
 
-export type PaymentInfoFormValues = z.infer<typeof paymentInfoSchema>;
+export type PaymentFormValues = z.infer<typeof paymentSchema>;
 
-interface PaymentInfoFormProps {
-  onSubmit: (values: PaymentInfoFormValues) => void;
-  onBack: () => void;
-  selectedPlan: string;
+interface PaymentStepProps {
+  onComplete: (values: PaymentFormValues) => void;
+  selectedPlan: PlanType;
 }
 
-const PaymentInfoForm = ({ onSubmit, onBack, selectedPlan }: PaymentInfoFormProps) => {
-  const form = useForm<PaymentInfoFormValues>({
-    resolver: zodResolver(paymentInfoSchema),
+export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
+  const form = useForm<PaymentFormValues>({
+    resolver: zodResolver(paymentSchema),
     defaultValues: {
       cardName: "",
       cardNumber: "",
       expiryDate: "",
       cvv: "",
     },
+    mode: "onChange",
   });
+
+  const planInfo = {
+    basic: { name: "Basic Plan", price: "$7.99/month", trial: "7 Day Free Trial" },
+    premium: { name: "Premium Plan", price: "$9.99/month" },
+    family: { name: "Family Plan", price: "$19.99/month" }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        {selectedPlan === "basic" && (
-          <div className="bg-muted p-4 rounded-md mb-4">
-            <h3 className="font-medium">Basic Plan - 7 Day Free Trial</h3>
-            <p className="text-sm text-muted-foreground">
-              Your card will be charged $7.99/month after your free trial ends. Cancel anytime.
-            </p>
-          </div>
-        )}
-        
-        {selectedPlan === "premium" && (
-          <div className="bg-muted p-4 rounded-md mb-4">
-            <h3 className="font-medium">Premium Plan</h3>
-            <p className="text-sm text-muted-foreground">
-              You will be charged $9.99/month. Cancel anytime.
-            </p>
-          </div>
-        )}
-        
-        {selectedPlan === "family" && (
-          <div className="bg-muted p-4 rounded-md mb-4">
-            <h3 className="font-medium">Family Plan</h3>
-            <p className="text-sm text-muted-foreground">
-              You will be charged $19.99/month. Cancel anytime.
-            </p>
-          </div>
-        )}
+      <form onSubmit={form.handleSubmit(onComplete)} className="space-y-4">
+        <div className="bg-muted p-4 rounded-md mb-4">
+          <h3 className="font-medium">{planInfo[selectedPlan].name}</h3>
+          <p className="text-sm text-muted-foreground">
+            {selectedPlan === "basic" 
+              ? `${planInfo.basic.trial} - Your card will be charged ${planInfo.basic.price} after trial ends.` 
+              : `You will be charged ${planInfo[selectedPlan].price}.`} 
+            Cancel anytime.
+          </p>
+        </div>
         
         <FormField
           control={form.control}
@@ -157,12 +147,11 @@ const PaymentInfoForm = ({ onSubmit, onBack, selectedPlan }: PaymentInfoFormProp
           <p>By subscribing, you agree to our Terms of Service and Privacy Policy.</p>
         </div>
         
-        <div className="pt-4 flex justify-between">
-          <Button type="button" variant="outline" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-          <Button type="submit">
+        <div className="pt-4 flex justify-end">
+          <Button 
+            type="submit"
+            disabled={!form.formState.isValid}
+          >
             {selectedPlan === "basic" ? "Start Free Trial" : "Complete Payment"}
           </Button>
         </div>
@@ -170,5 +159,3 @@ const PaymentInfoForm = ({ onSubmit, onBack, selectedPlan }: PaymentInfoFormProp
     </Form>
   );
 };
-
-export default PaymentInfoForm;
