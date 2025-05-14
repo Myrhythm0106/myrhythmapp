@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -31,10 +31,8 @@ const PersonalInfoForm = ({ onSubmit, onBack }: PersonalInfoFormProps) => {
       password: "",
       location: "",
     },
-    mode: "onChange", // Enable validation on change for auto-submission
+    mode: "onSubmit", // Changed from onChange to onSubmit to prevent auto-validation
   });
-
-  // Removed auto-submission effect to prevent automatic navigation when all fields are valid
 
   const handleSubmit = (values: PersonalInfoFormValues) => {
     // Store user credentials in localStorage for the login functionality

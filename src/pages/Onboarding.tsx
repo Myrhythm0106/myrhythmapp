@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ const Onboarding = () => {
     // We'll keep this auto-advance but with a longer delay to make it more visible
     const timer = setTimeout(() => {
       handlePlanContinue();
-    }, 800);
+    }, 1000); // Increased delay for better UX
     return () => clearTimeout(timer);
   };
   
@@ -97,7 +98,7 @@ const Onboarding = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
-      <div className="w-full max-w-2xl animate-fade-in">
+      <div className="w-full max-w-2xl">
         <div className="flex justify-between items-center mb-6">
           <Button 
             variant="ghost" 
