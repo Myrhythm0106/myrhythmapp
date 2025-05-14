@@ -44,8 +44,7 @@ const HeroSection = () => {
           </div>
           
           <div className="text-center mb-16 max-w-3xl mx-auto space-y-8">
-            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Be Empowered. Be Inspired.  
-Start Your Day Here.</h2>
+            <h2 className="text-4xl font-bold leading-tight md:text-5xl">Be Empowered. Be Inspired.   Your Day Starts Here.</h2>
             <p className="text-xl text-muted-foreground">
               Take charge and live. Organise your priorities, build a Routine, strengthen your Discipline, Execute with focus and Review with intention.
               <br /><br />
