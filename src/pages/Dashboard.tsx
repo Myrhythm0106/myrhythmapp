@@ -1,76 +1,46 @@
 
-import React, { useState } from "react";
-import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Settings } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import React from "react";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { Card } from "@/components/ui/card";
+import { TodayFocus } from "@/components/dashboard/TodayFocus";
+import { UpcomingToday } from "@/components/dashboard/UpcomingToday";
+import { RoutineCheckIn } from "@/components/dashboard/RoutineCheckIn";
+import { BrainGameQuickStart } from "@/components/dashboard/BrainGameQuickStart";
+import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
+import { GratitudePromptCard } from "@/components/dashboard/GratitudePromptCard";
+import { RecentWinsCard } from "@/components/dashboard/RecentWinsCard";
 import { useUserData } from "@/hooks/use-user-data";
-import { TutorialModal } from "@/components/tutorial/TutorialModal";
-import { WelcomeCard } from "@/components/dashboard/WelcomeCard";
-import { GratitudeSnapshotCard } from "@/components/dashboard/GratitudeSnapshotCard";
-import { MoodSnapshotCard } from "@/components/dashboard/MoodSnapshotCard";
-import { RoutineProgress } from "@/components/dashboard/RoutineProgress";
-import { WeekNaming } from "@/components/dashboard/WeekNaming";
-import { DashboardCarousel } from "@/components/dashboard/DashboardCarousel";
-import { RecentWins } from "@/components/dashboard/RecentWins";
 
 const Dashboard = () => {
-  const [showTutorial, setShowTutorial] = useState(false);
   const userData = useUserData();
-  const navigate = useNavigate();
-  const isMobile = useIsMobile();
   
   return (
-    <div className="space-y-6 animate-fade-in max-w-4xl mx-auto">
-      {/* Welcome Section */}
-      <WelcomeCard name={userData.name} userType="mental-health" />
+    <div className="space-y-6 animate-fade-in">
+      <PageHeader 
+        title={`Welcome back, ${userData.name}`}
+        subtitle="Here's what's important for you today"
+      />
       
-      {/* Customization Button */}
-      <div className="flex justify-end">
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-2"
-          onClick={() => navigate("/customization")}
-        >
-          <Settings className="h-4 w-4" />
-          Customize Dashboard
-        </Button>
-      </div>
-      
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Left Column - 2/3 width on desktop */}
-        <div className="md:col-span-2 space-y-6">
-          <GratitudeSnapshotCard />
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <RoutineProgress />
-            <MoodSnapshotCard />
-          </div>
-          
-          <RecentWins />
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Primary Focus Column */}
+        <div className="space-y-6 lg:col-span-1">
+          <TodayFocus />
+          <UpcomingToday />
+          <RoutineCheckIn />
         </div>
         
-        {/* Right Column - 1/3 width on desktop */}
-        <div className="space-y-6">
-          <WeekNaming />
-          
-          {/* Weekly Theme Card */}
-          <div className="grid grid-cols-1 gap-6">
-            {isMobile ? (
-              <DashboardCarousel />
-            ) : (
-              <>
-                {/* Any additional sidebar cards */}
-              </>
-            )}
-          </div>
+        {/* Center Column - Brain & Mood */}
+        <div className="space-y-6 lg:col-span-1">
+          <BrainGameQuickStart />
+          <MoodEnergySnapshot />
+        </div>
+        
+        {/* Right Column - Gratitude & Wins */}
+        <div className="space-y-6 lg:col-span-1">
+          <GratitudePromptCard />
+          <RecentWinsCard />
         </div>
       </div>
-
-      <TutorialModal isOpen={showTutorial} onComplete={() => setShowTutorial(false)} />
     </div>
   );
 };
