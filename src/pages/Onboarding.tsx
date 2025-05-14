@@ -174,6 +174,7 @@ const Onboarding = () => {
               <PaymentInfoForm 
                 onSubmit={handlePaymentSubmit}
                 onBack={() => setStep(2)}
+                selectedPlan={selectedPlan}
               />
             ) : (
               <div className="space-y-6">
