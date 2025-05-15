@@ -112,7 +112,7 @@ export function BrainRecoveryHome() {
                     <Lightbulb className="h-6 w-6 text-amber-600" />
                   </div>
                   <div>
-                    <p className="font-medium">{recommendedGame.title}</p>
+                    <p className="font-medium">{recommendedGame.name}</p>
                     <p className="text-sm text-muted-foreground">5-minute session</p>
                   </div>
                 </div>
