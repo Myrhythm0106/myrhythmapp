@@ -1,19 +1,15 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Brain } from "lucide-react";
-
 export function HeroSection() {
   const navigate = useNavigate();
-  
-  return (
-    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-beacon-700 to-beacon-900 text-white p-6 md:p-10">
+  return <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-beacon-700 to-beacon-900 text-white p-6 md:p-10">
       <div className="absolute right-0 bottom-0 opacity-10">
         <Brain size={280} />
       </div>
       
-      <div className="relative z-10 max-w-2xl space-y-4">
+      <div className="relative z-10 max-w-2xl space-y-4 bg-transparent rounded-lg">
         <h1 className="text-3xl md:text-4xl font-bold leading-tight text-white">
           🧠 MyRhythm: Reclaim Structure. Reignite Confidence.
         </h1>
@@ -32,15 +28,10 @@ export function HeroSection() {
         </div>
         
         <div className="pt-4">
-          <Button 
-            size="lg"
-            className="bg-white text-beacon-800 hover:bg-white/90"
-            onClick={() => navigate("/onboarding")}
-          >
+          <Button size="lg" className="bg-white text-beacon-800 hover:bg-white/90" onClick={() => navigate("/onboarding")}>
             👉 Get Started Now
           </Button>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 }
