@@ -11,16 +11,15 @@ import { UpcomingEvents } from "@/components/calendar/UpcomingEvents";
 import { MedicationReminders } from "@/components/calendar/MedicationReminders";
 import { DayView } from "@/components/calendar/views/DayView";
 import { WeekView } from "@/components/calendar/views/WeekView";
-import { StoryboardView } from "@/components/calendar/views/StoryboardView";
 import { GoalsView } from "@/components/calendar/views/GoalsView";
-import { Plus, CalendarIcon, Clock, HeartPulse, Layout, Target, Timer } from "lucide-react";
+import { Plus, CalendarIcon, Clock, HeartPulse, Target, Timer } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [view, setView] = useState<"day" | "week" | "month" | "storyboard" | "goals">("month");
+  const [view, setView] = useState<"day" | "week" | "month" | "goals">("month");
 
   return (
     <PomodoroProvider>
@@ -31,7 +30,7 @@ const Calendar = () => {
             subtitle="Manage your actions, medications, and daily routines"
           >
             <div className="flex gap-2">
-              <PomodoroButton title="Focus Time" variant="secondary" />
+              <PomodoroButton title="Focus Timer" variant="secondary" />
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
@@ -54,7 +53,7 @@ const Calendar = () => {
               <Card>
                 <CardContent className="pt-6">
                   <div className="mb-4 flex justify-between items-center">
-                    <Tabs value={view} onValueChange={(v) => setView(v as "day" | "week" | "month" | "storyboard" | "goals")}>
+                    <Tabs value={view} onValueChange={(v) => setView(v as "day" | "week" | "month" | "goals")}>
                       <TabsList>
                         <TabsTrigger value="day">Day</TabsTrigger>
                         <TabsTrigger value="week">Week</TabsTrigger>
@@ -63,15 +62,11 @@ const Calendar = () => {
                           <Target className="h-4 w-4 mr-1" />
                           Goals
                         </TabsTrigger>
-                        <TabsTrigger value="storyboard">
-                          <Layout className="h-4 w-4 mr-1" />
-                          Storyboard
-                        </TabsTrigger>
                       </TabsList>
                     </Tabs>
                     
                     <div className="hidden md:block">
-                      <PomodoroButton title="Calendar Focus" variant="outline" size="sm" />
+                      <PomodoroButton title="Focus Timer" variant="outline" size="sm" />
                     </div>
                   </div>
                   
@@ -94,10 +89,6 @@ const Calendar = () => {
 
                   {view === "goals" && (
                     <GoalsView />
-                  )}
-
-                  {view === "storyboard" && date && (
-                    <StoryboardView date={date} events={[]} />
                   )}
                 </CardContent>
               </Card>

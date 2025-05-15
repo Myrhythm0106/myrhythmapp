@@ -6,6 +6,7 @@ import { Calendar, Clock, MapPin, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { CalendarEvent } from "@/components/calendar/types/calendarTypes";
 import { format, isToday } from "date-fns";
+import { toast } from "sonner";
 
 export function UpcomingEvent() {
   const [upcomingEvent, setUpcomingEvent] = useState<CalendarEvent | null>(null);
@@ -19,12 +20,15 @@ export function UpcomingEvent() {
       if (sampleEvents && sampleEvents.length > 0) {
         setUpcomingEvent(sampleEvents[0]);
       }
+    }).catch(error => {
+      console.error("Failed to load upcoming events:", error);
     });
   }, []);
 
   const handleViewDetails = () => {
     // Navigate to calendar with the specific event
     navigate("/calendar");
+    toast.success("Navigated to your calendar");
   };
 
   if (!upcomingEvent) {

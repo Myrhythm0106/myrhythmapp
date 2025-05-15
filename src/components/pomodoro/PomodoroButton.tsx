@@ -1,50 +1,31 @@
-
-import React from "react";
-import { Button } from "@/components/ui/button";
+import React, { useContext } from "react";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { Timer } from "lucide-react";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger 
-} from "@/components/ui/tooltip";
-import { usePomodoroContext } from "./PomodoroContext";
+import { PomodoroContext } from "./PomodoroContext";
 
-interface PomodoroButtonProps {
+interface PomodoroButtonProps extends ButtonProps {
   title?: string;
-  variant?: "default" | "secondary" | "outline" | "ghost";
-  size?: "default" | "sm" | "lg" | "icon";
 }
 
 export function PomodoroButton({ 
-  title = "Focus Session", 
+  title = "Focus Timer",
   variant = "default", 
-  size = "default" 
+  size = "default",
+  className 
 }: PomodoroButtonProps) {
-  const { startTimer } = usePomodoroContext();
+  const { isRunning, currentPhase, openPomodoro } = useContext(PomodoroContext);
   
-  const handleStartPomodoro = () => {
-    startTimer(title);
-  };
-  
+  const buttonText = isRunning ? `Pause ${currentPhase}` : title;
+
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button 
-            variant={variant} 
-            size={size} 
-            onClick={handleStartPomodoro}
-            className="flex items-center gap-1"
-          >
-            <Timer className="h-4 w-4" />
-            <span>Pomodoro</span>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Start a Pomodoro focus session</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button 
+      variant={variant} 
+      size={size} 
+      className={className}
+      onClick={openPomodoro}
+    >
+      <Timer className="mr-2 h-4 w-4" />
+      {buttonText}
+    </Button>
   );
 }
