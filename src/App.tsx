@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +22,7 @@ import SplashScreen from "./components/mobile/SplashScreen";
 import Customization from "./pages/Customization";
 import Gratitude from "./pages/Gratitude";
 import { useIsMobile } from "./hooks/use-mobile";
+import UserGuideView from "./pages/UserGuideView";
 
 const queryClient = new QueryClient();
 
@@ -50,6 +52,9 @@ const AppRoutes = () => {
       
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/customization" element={<Customization />} />
+      
+      {/* User Guide Documentation */}
+      <Route path="/guide" element={<UserGuideView />} />
       
       {/* Routes with MainLayout */}
       <Route path="/profile" element={

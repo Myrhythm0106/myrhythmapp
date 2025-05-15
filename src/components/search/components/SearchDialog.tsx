@@ -1,67 +1,74 @@
 
 import React from "react";
-import { 
-  CommandDialog, 
-  CommandEmpty, 
-  CommandInput, 
-  CommandList 
-} from "@/components/ui/command";
+import { Command, CommandInput, CommandList, CommandEmpty } from "@/components/ui/command";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { SearchResult } from "../types/searchTypes";
 import { SearchResultGroup } from "./SearchResultGroup";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 
 interface SearchDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   searchQuery: string;
   onSearch: (value: string) => void;
-  searchResults: SearchResult[];
+  searchResults: Record<string, SearchResult[]>;
   onSelect: (result: SearchResult) => void;
 }
 
-export const SearchDialog: React.FC<SearchDialogProps> = ({ 
-  open, 
-  onOpenChange, 
-  searchQuery, 
-  onSearch, 
-  searchResults, 
-  onSelect 
+export const SearchDialog: React.FC<SearchDialogProps> = ({
+  open,
+  onOpenChange,
+  searchQuery,
+  onSearch,
+  searchResults,
+  onSelect
 }) => {
-  // Group results by category
-  const navigationResults = searchResults.filter(item => item.category === "Navigation");
-  const featuresResults = searchResults.filter(item => item.category === "Features");
-  const resourcesResults = searchResults.filter(item => item.category === "Resources");
+  const isMobile = useIsMobile();
   
-  return (
-    <CommandDialog open={open} onOpenChange={onOpenChange}>
-      <CommandInput 
-        placeholder="Search anything..." 
+  const renderSearchContent = () => (
+    <Command className="rounded-lg border-none shadow-md">
+      <CommandInput
+        placeholder="Type to search..."
         value={searchQuery}
         onValueChange={onSearch}
+        className="h-9 md:h-11"
       />
-      <CommandList>
+      <CommandList className="max-h-[300px] md:max-h-[400px] overflow-y-auto">
         <CommandEmpty>No results found.</CommandEmpty>
-        
-        {/* Navigation Group */}
-        <SearchResultGroup 
-          heading="Navigation" 
-          results={navigationResults} 
-          onSelect={onSelect} 
-        />
-        
-        {/* Features Group */}
-        <SearchResultGroup 
-          heading="Features" 
-          results={featuresResults} 
-          onSelect={onSelect} 
-        />
-
-        {/* Resources Group */}
-        <SearchResultGroup 
-          heading="Resources" 
-          results={resourcesResults} 
-          onSelect={onSelect} 
-        />
+        {Object.entries(searchResults).map(([category, results]) => (
+          <SearchResultGroup
+            key={category}
+            heading={category}
+            results={results}
+            onSelect={onSelect}
+          />
+        ))}
       </CommandList>
-    </CommandDialog>
+    </Command>
+  );
+
+  // Use Drawer for mobile and Dialog for desktop
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent className="max-h-[85vh]">
+          <DrawerHeader className="px-4 pt-4 pb-2">
+            <DrawerTitle>Search</DrawerTitle>
+          </DrawerHeader>
+          <div className="px-4 pb-4">
+            {renderSearchContent()}
+          </div>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[500px] p-0">
+        {renderSearchContent()}
+      </DialogContent>
+    </Dialog>
   );
 };

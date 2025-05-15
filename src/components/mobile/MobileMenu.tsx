@@ -1,4 +1,3 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { 
@@ -8,7 +7,7 @@ import {
   DrawerClose
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle } from "lucide-react";
+import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function MobileMenu() {
@@ -34,6 +33,7 @@ export function MobileMenu() {
   const helperNavItems = [
     { to: "/settings", icon: <Settings className="h-5 w-5" />, label: "Settings", badge: null },
     { to: "/help", icon: <HelpCircle className="h-5 w-5" />, label: "Help & Support", badge: null },
+    { to: "/guide", icon: <FileText className="h-5 w-5" />, label: "User Guide", badge: "New" },
   ];
 
   return (
