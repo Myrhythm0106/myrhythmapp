@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +29,7 @@ export function UserGuide() {
   });
 
   return (
-    <div className="max-w-5xl mx-auto py-8">
+    <div className="max-w-5xl mx-auto py-8 text-foreground">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">MyRhythm User Guide</h1>
         <Button onClick={handlePrint} className="flex items-center gap-2">
@@ -40,7 +41,7 @@ export function UserGuide() {
       <div ref={componentRef} className="space-y-8 p-4">
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold">Introduction</h2>
-          <p>
+          <p className="text-foreground">
             Welcome to MyRhythm, your personal wellness and productivity companion. 
             This guide will walk you through all the features and tools available in 
             the application to help you organize your life, track your health, and
@@ -51,7 +52,7 @@ export function UserGuide() {
             <CardHeader>
               <CardTitle>Quick Start</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-2 text-foreground">
               <p><strong>1.</strong> Access your Dashboard to see your daily overview</p>
               <p><strong>2.</strong> Use the Calendar to manage your events and appointments</p>
               <p><strong>3.</strong> Track your health metrics in the Health Tracking section</p>
@@ -87,7 +88,7 @@ export function UserGuide() {
           
           <TabsContent value="dashboard" className="space-y-4 mt-4">
             <h3 className="text-xl font-medium">Dashboard Features</h3>
-            <p>
+            <p className="text-foreground">
               The Dashboard is your central hub that provides an overview of your day.
               Here you can find important information at a glance and quickly access
               key features.
@@ -98,7 +99,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Daily Check-in</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Record your daily mood, energy level, and thoughts. Tracking these metrics helps you understand patterns in your wellbeing over time.</p>
                 </CardContent>
               </Card>
@@ -107,7 +108,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Symptom Tracker</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Monitor health symptoms and see how they correlate with your activities, sleep, and other factors.</p>
                 </CardContent>
               </Card>
@@ -116,7 +117,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Community Updates</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Stay connected with your support network and see the latest posts and activities.</p>
                 </CardContent>
               </Card>
@@ -125,7 +126,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Gratitude Practice</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Take a moment for daily reflection with guided gratitude prompts that help improve mental wellbeing.</p>
                 </CardContent>
               </Card>
@@ -134,7 +135,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Focus Goals</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>View your current goals and track your progress toward achieving them.</p>
                 </CardContent>
               </Card>
@@ -143,21 +144,21 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Upcoming Events</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>See what's coming up on your calendar so you're always prepared for the day ahead.</p>
                 </CardContent>
               </Card>
             </div>
             
             <div className="border p-4 rounded-lg bg-muted/30">
-              <h4 className="font-medium mb-2">Mobile Tips</h4>
-              <p>On mobile devices, your dashboard features are available in a swipeable carousel. Simply swipe left or right to navigate through the different cards.</p>
+              <h4 className="font-medium mb-2 text-foreground">Mobile Tips</h4>
+              <p className="text-foreground">On mobile devices, your dashboard features are available in a swipeable carousel. Simply swipe left or right to navigate through the different cards.</p>
             </div>
           </TabsContent>
           
           <TabsContent value="calendar" className="space-y-4 mt-4">
             <h3 className="text-xl font-medium">Calendar Features</h3>
-            <p>
+            <p className="text-foreground">
               The Calendar helps you organize your schedule, set reminders, and manage your time effectively.
             </p>
             
@@ -166,7 +167,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Week View</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>See your whole week at a glance with color-coded events and appointments.</p>
                 </CardContent>
               </Card>
@@ -175,7 +176,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Day View</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Detailed hourly breakdown of your day's schedule and commitments.</p>
                 </CardContent>
               </Card>
@@ -184,7 +185,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Goals View</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Track your progress on short and long-term goals with visual indicators.</p>
                 </CardContent>
               </Card>
@@ -193,21 +194,21 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Storyboard</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Visualize your journey with a timeline of key events and milestones.</p>
                 </CardContent>
               </Card>
             </div>
             
             <div className="border p-4 rounded-lg bg-muted/30">
-              <h4 className="font-medium mb-2">Gesture Controls</h4>
-              <p>On touchscreen devices, swipe left and right to navigate between days or weeks. Pinch to zoom in and out of different calendar views.</p>
+              <h4 className="font-medium mb-2 text-foreground">Gesture Controls</h4>
+              <p className="text-foreground">On touchscreen devices, swipe left and right to navigate between days or weeks. Pinch to zoom in and out of different calendar views.</p>
             </div>
           </TabsContent>
           
           <TabsContent value="health" className="space-y-4 mt-4">
             <h3 className="text-xl font-medium">Health Tracking Features</h3>
-            <p>
+            <p className="text-foreground">
               Monitor your symptoms, medications, and health metrics to better understand your body and mind.
             </p>
             
@@ -216,7 +217,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Symptom Log</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Record symptoms as they occur, noting intensity, duration, and possible triggers.</p>
                 </CardContent>
               </Card>
@@ -225,7 +226,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Symptom History</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Review your symptom history with visualizations to identify patterns over time.</p>
                 </CardContent>
               </Card>
@@ -234,7 +235,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Symptom Insights</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Receive personalized insights about potential correlations between symptoms and lifestyle factors.</p>
                 </CardContent>
               </Card>
@@ -243,7 +244,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Medication Reminders</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Set up reminders for medications and track adherence to prescribed schedules.</p>
                 </CardContent>
               </Card>
@@ -252,7 +253,7 @@ export function UserGuide() {
           
           <TabsContent value="brain" className="space-y-4 mt-4">
             <h3 className="text-xl font-medium">Brain Recovery Features</h3>
-            <p>
+            <p className="text-foreground">
               Tools and activities designed to support cognitive health and recovery.
             </p>
             
@@ -261,7 +262,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Brain Games</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Engage with cognitive exercises designed to strengthen various aspects of brain function.</p>
                 </CardContent>
               </Card>
@@ -270,7 +271,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Memory Match</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>A classic memory game to improve recall and concentration with adjustable difficulty levels.</p>
                 </CardContent>
               </Card>
@@ -279,7 +280,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Daily Recommendations</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Personalized cognitive activities suggested based on your recovery progress and needs.</p>
                 </CardContent>
               </Card>
@@ -288,7 +289,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Progress Tracking</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Monitor improvements in cognitive performance over time with detailed metrics.</p>
                 </CardContent>
               </Card>
@@ -297,7 +298,7 @@ export function UserGuide() {
           
           <TabsContent value="community" className="space-y-4 mt-4">
             <h3 className="text-xl font-medium">Community Features</h3>
-            <p>
+            <p className="text-foreground">
               Connect with others, share experiences, and build a support network.
             </p>
             
@@ -306,7 +307,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Message Board</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Share thoughts, questions, and insights with your community in a safe, supportive environment.</p>
                 </CardContent>
               </Card>
@@ -315,7 +316,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Expert Q&A</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Access to healthcare professionals who can answer questions and provide guidance.</p>
                 </CardContent>
               </Card>
@@ -324,7 +325,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Community Groups</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Join specialized groups based on shared experiences, conditions, or interests.</p>
                 </CardContent>
               </Card>
@@ -333,7 +334,7 @@ export function UserGuide() {
                 <CardHeader>
                   <CardTitle>Personal Community</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="text-foreground">
                   <p>Connect with your personal support network including family, friends, and caregivers.</p>
                 </CardContent>
               </Card>
@@ -350,7 +351,7 @@ export function UserGuide() {
                 <Search className="w-5 h-5 text-primary" />
                 <CardTitle>Global Search</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-foreground">
                 <p>Quickly find anything in the app using the search function. Access it by clicking the search icon or pressing Ctrl+K (Cmd+K on Mac).</p>
               </CardContent>
             </Card>
@@ -360,7 +361,7 @@ export function UserGuide() {
                 <Clock className="w-5 h-5 text-primary" />
                 <CardTitle>Pomodoro Timer</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-foreground">
                 <p>Enhance productivity with the built-in Pomodoro technique timer. Set focused work sessions and breaks to maintain concentration.</p>
               </CardContent>
             </Card>
@@ -370,7 +371,7 @@ export function UserGuide() {
                 <Heart className="w-5 h-5 text-primary" />
                 <CardTitle>Gratitude Journal</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-foreground">
                 <p>Record daily moments of gratitude to improve mental wellbeing and build a positive mindset over time.</p>
               </CardContent>
             </Card>
@@ -380,7 +381,7 @@ export function UserGuide() {
                 <FileText className="w-5 h-5 text-primary" />
                 <CardTitle>Resources</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-foreground">
                 <p>Access helpful guides, FAQs, tutorials, and official documents to get the most out of the application.</p>
               </CardContent>
             </Card>
@@ -389,44 +390,44 @@ export function UserGuide() {
         
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold">Mobile Experience</h2>
-          <p>
+          <p className="text-foreground">
             MyRhythm is fully optimized for mobile devices, with special features to enhance the experience on phones and tablets:
           </p>
           
           <div className="space-y-2">
             <div className="flex items-start gap-2">
               <div className="bg-primary rounded-full p-1 mt-1">
-                <span className="text-xs text-white font-bold">1</span>
+                <span className="text-xs text-primary-foreground font-bold">1</span>
               </div>
-              <p><strong>Swipeable interfaces</strong> - Navigate through cards, calendar views, and content with intuitive swipe gestures.</p>
+              <p className="text-foreground"><strong>Swipeable interfaces</strong> - Navigate through cards, calendar views, and content with intuitive swipe gestures.</p>
             </div>
             
             <div className="flex items-start gap-2">
               <div className="bg-primary rounded-full p-1 mt-1">
-                <span className="text-xs text-white font-bold">2</span>
+                <span className="text-xs text-primary-foreground font-bold">2</span>
               </div>
-              <p><strong>Mobile navigation</strong> - Easy access menu available from any screen for quick navigation.</p>
+              <p className="text-foreground"><strong>Mobile navigation</strong> - Easy access menu available from any screen for quick navigation.</p>
             </div>
             
             <div className="flex items-start gap-2">
               <div className="bg-primary rounded-full p-1 mt-1">
-                <span className="text-xs text-white font-bold">3</span>
+                <span className="text-xs text-primary-foreground font-bold">3</span>
               </div>
-              <p><strong>Responsive layouts</strong> - All screens automatically adjust to your device size for optimal viewing.</p>
+              <p className="text-foreground"><strong>Responsive layouts</strong> - All screens automatically adjust to your device size for optimal viewing.</p>
             </div>
             
             <div className="flex items-start gap-2">
               <div className="bg-primary rounded-full p-1 mt-1">
-                <span className="text-xs text-white font-bold">4</span>
+                <span className="text-xs text-primary-foreground font-bold">4</span>
               </div>
-              <p><strong>Touch-friendly controls</strong> - Larger touch targets and intuitive interactions designed for touch screens.</p>
+              <p className="text-foreground"><strong>Touch-friendly controls</strong> - Larger touch targets and intuitive interactions designed for touch screens.</p>
             </div>
           </div>
         </section>
         
         <section className="space-y-4">
           <h2 className="text-2xl font-semibold">Getting Support</h2>
-          <p>
+          <p className="text-foreground">
             If you need assistance with MyRhythm, there are several ways to get help:
           </p>
           
@@ -435,7 +436,7 @@ export function UserGuide() {
               <CardHeader>
                 <CardTitle>In-App Resources</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-foreground">
                 <p>Visit the Resources section for user guides, FAQs, and tutorial videos.</p>
               </CardContent>
             </Card>
@@ -444,7 +445,7 @@ export function UserGuide() {
               <CardHeader>
                 <CardTitle>Contact Support</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="text-foreground">
                 <p>Reach out to our support team through the Help & Support section in the app.</p>
               </CardContent>
             </Card>
