@@ -16,6 +16,10 @@ export function CommunityCTASection() {
       <Card className="bg-gradient-to-br from-blue-50 to-blue-100">
         <CardContent className="pt-6">
           <div className="space-y-6">
+            <p className="text-lg font-medium text-center italic">
+              "Your Journey Shared: In Community, No One Walks Alone."
+            </p>
+            
             <p className="text-lg font-medium">Join our waitlist and be the first to try MyRhythm as a:</p>
             
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -31,7 +35,7 @@ export function CommunityCTASection() {
                 className="border-2 border-blue-300 bg-white hover:bg-blue-50"
                 onClick={() => navigate("/onboarding?type=family")}
               >
-                ✅ Family Member/Carer
+                ✅ My Support
               </Button>
               <Button 
                 variant="outline" 

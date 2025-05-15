@@ -31,7 +31,7 @@ export function BrainRecoveryHome() {
   }
   
   return (
-    <div className="space-y-8 max-w-5xl mx-auto px-4 pt-4 pb-12">
+    <div className="space-y-8 max-w-5xl mx-auto pb-12">
       {/* Show mobile menu only on mobile devices */}
       {isMobile && <MobileMenu />}
       
