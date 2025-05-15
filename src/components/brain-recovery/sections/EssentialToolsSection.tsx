@@ -18,7 +18,7 @@ export function EssentialToolsSection({ recommendedGame }: EssentialToolsSection
     <section className="space-y-4">
       <h2 className="text-2xl font-bold flex items-center gap-2">
         <Target className="h-5 w-5 text-primary" />
-        Your Essential Tools
+        Your Essential Tools for an Intuitive Weekly View
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

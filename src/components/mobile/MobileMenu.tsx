@@ -26,7 +26,7 @@ export function MobileMenu() {
   const secondaryNavItems = [
     { to: "/profile", icon: <User className="h-5 w-5" />, label: "My Profile", badge: null },
     { to: "/community", icon: <Users className="h-5 w-5" />, label: "Community", badge: null },
-    { to: "/personal-community", icon: <Heart className="h-5 w-5" />, label: "Family Support", badge: null },
+    { to: "/personal-community", icon: <Heart className="h-5 w-5" />, label: "My Support", badge: null },
     { to: "/useful-info", icon: <Info className="h-5 w-5" />, label: "Resources", badge: null },
   ];
 

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -22,7 +21,7 @@ export const Sidebar = () => {
   const secondaryNavItems = [
     { to: "/profile", icon: <User />, label: "My Profile", badge: null },
     { to: "/community", icon: <Users />, label: "Community", badge: null },
-    { to: "/personal-community", icon: <Heart />, label: "Family Support", badge: null },
+    { to: "/personal-community", icon: <Heart />, label: "My Support", badge: null },
     { to: "/useful-info", icon: <Info />, label: "Resources", badge: null },
   ];
 

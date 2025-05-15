@@ -43,7 +43,7 @@ const PersonalCommunity = () => {
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="space-y-6 p-4">
         <PageHeader 
-          title="My Personal Community" 
+          title="My Support" 
           subtitle="Connect with your support network of family, friends, and caregivers"
         >
           <Dialog>
@@ -55,7 +55,7 @@ const PersonalCommunity = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px]">
               <DialogHeader>
-                <DialogTitle>Invite to Your Community</DialogTitle>
+                <DialogTitle>Invite to Your Support Network</DialogTitle>
               </DialogHeader>
               <CommunityInvite />
             </DialogContent>
