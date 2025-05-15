@@ -58,13 +58,13 @@ export function SearchFilters({
         </div>
 
         <div className="flex gap-2">
-          <Select value={filterType || ""} onValueChange={(v) => setFilterType(v || null)}>
+          <Select value={filterType || "all"} onValueChange={(v) => setFilterType(v === "all" ? null : v)}>
             <SelectTrigger className="w-[180px] sm:w-[140px] flex gap-1 items-center">
               <Filter className="h-4 w-4" />
               <SelectValue placeholder="Filter by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Types</SelectItem>
+              <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="fitness">Fitness</SelectItem>
               <SelectItem value="mindfulness">Mindfulness</SelectItem>
               <SelectItem value="social">Social</SelectItem>
