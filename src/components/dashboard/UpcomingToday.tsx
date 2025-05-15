@@ -2,65 +2,79 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, ArrowRight, Pill, Stethoscope } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Calendar, Clock, MapPin, Info, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface Event {
   id: string;
   title: string;
   time: string;
   location?: string;
-  type: "appointment" | "medication" | "activity";
-  date: Date;
+  type: "appointment" | "medication" | "task" | "exercise";
+  notes?: string;
+  completed?: boolean;
 }
 
 export function UpcomingToday() {
   const navigate = useNavigate();
-  const today = new Date();
-  
-  // Sample events - in a real app, these would be fetched from an API or context
-  const events: Event[] = [
-    {
-      id: "1",
-      title: "Neurology Appointment",
-      time: "2:30 PM",
-      location: "Dallas Medical Center, Room 302",
+  const [events, setEvents] = React.useState<Event[]>([
+    { 
+      id: "1", 
+      title: "Doctor Appointment", 
+      time: "2:30 PM", 
+      location: "Memorial Hospital",
       type: "appointment",
-      date: today
+      notes: "Bring medication list and recent test results"
     },
-    {
-      id: "2",
-      title: "Take Medication",
-      time: "12:00 PM",
+    { 
+      id: "2", 
+      title: "Evening Medication", 
+      time: "8:00 PM",
       type: "medication",
-      date: today
+      notes: "Take with food and water"
+    },
+    { 
+      id: "3", 
+      title: "Physical Therapy Exercises", 
+      time: "5:00 PM",
+      type: "exercise",
+      completed: false,
+      notes: "Focus on balance exercises today"
     }
-  ];
+  ]);
   
-  // Sort events by time
-  const sortedEvents = [...events].sort((a, b) => {
-    return new Date(`1970/01/01 ${a.time}`).getTime() - new Date(`1970/01/01 ${b.time}`).getTime();
-  });
-
-  const getEventIcon = (type: string) => {
-    switch(type) {
-      case "appointment":
-        return <Stethoscope className="h-4 w-4 text-blue-500" />;
-      case "medication":
-        return <Pill className="h-4 w-4 text-amber-500" />;
-      case "activity":
-        return <Calendar className="h-4 w-4 text-green-500" />;
-      default:
-        return <Calendar className="h-4 w-4" />;
+  const handleViewDetails = (event: Event) => {
+    // For now, just show a toast with the notes
+    if (event.notes) {
+      toast.info(`Notes for ${event.title}`, {
+        description: event.notes
+      });
     }
   };
   
-  const handleViewSchedule = () => {
-    navigate("/calendar");
+  const markEventCompleted = (id: string) => {
+    setEvents(events.map(event => 
+      event.id === id ? { ...event, completed: !event.completed } : event
+    ));
+    
+    const event = events.find(e => e.id === id);
+    if (event) {
+      toast.success(`${event.completed ? 'Unmarked' : 'Marked'} "${event.title}" as ${event.completed ? 'incomplete' : 'complete'}`);
+    }
   };
 
+  const getEventTypeColor = (type: Event["type"]) => {
+    switch (type) {
+      case "appointment": return "bg-blue-100 text-blue-800";
+      case "medication": return "bg-purple-100 text-purple-800";
+      case "task": return "bg-amber-100 text-amber-800";
+      case "exercise": return "bg-green-100 text-green-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+  
   return (
     <Card className="border-l-4 border-l-blue-400 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
@@ -71,46 +85,73 @@ export function UpcomingToday() {
       </CardHeader>
       
       <CardContent className="pt-1">
-        {sortedEvents.length === 0 ? (
-          <div className="text-center py-6">
-            <p className="text-muted-foreground">No upcoming events for today</p>
-          </div>
-        ) : (
-          <ul className="space-y-3">
-            {sortedEvents.map(event => (
-              <li key={event.id} className="border-b pb-2 last:border-0">
-                <div className="flex items-start gap-2">
-                  <div className="mt-1.5">
-                    {getEventIcon(event.type)}
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex justify-between items-start">
-                      <h4 className="text-sm font-medium">{event.title}</h4>
-                      <Badge variant="outline">{event.time}</Badge>
+        <ul className="space-y-3">
+          {events.map(event => (
+            <li 
+              key={event.id}
+              className={`p-3 border rounded-md ${event.completed ? 'bg-muted/30 border-dashed' : 'bg-white'} hover:bg-muted/10 transition-colors`}
+            >
+              <div className="flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  checked={!!event.completed} 
+                  onChange={() => markEventCompleted(event.id)}
+                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <div className={`flex-1 ${event.completed ? 'text-muted-foreground line-through' : ''}`}>
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                    <span className="font-medium">{event.title}</span>
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock className="h-3 w-3" />
+                      <span>{event.time}</span>
                     </div>
-                    
-                    {event.location && (
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <MapPin className="h-3 w-3" />
-                        <span>{event.location}</span>
-                      </div>
-                    )}
                   </div>
+                  
+                  {event.location && (
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                      <MapPin className="h-3 w-3" />
+                      <span>{event.location}</span>
+                    </div>
+                  )}
                 </div>
-              </li>
-            ))}
-          </ul>
-        )}
+                
+                <Badge className={`text-xs ${getEventTypeColor(event.type)}`} variant="outline">
+                  {event.type}
+                </Badge>
+                
+                {event.notes && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-7 w-7 p-0 text-muted-foreground"
+                    onClick={() => handleViewDetails(event)}
+                  >
+                    <Info className="h-4 w-4" />
+                    <span className="sr-only">View notes</span>
+                  </Button>
+                )}
+              </div>
+              
+              {/* Show notes preview if available */}
+              {event.notes && (
+                <div className="mt-2 ml-6 text-xs text-muted-foreground bg-muted/20 p-1.5 rounded">
+                  <p className="line-clamp-1">{event.notes}</p>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
       </CardContent>
       
       <CardFooter className="pt-0">
         <Button 
           variant="ghost" 
-          className="w-full justify-between" 
-          onClick={handleViewSchedule}
+          size="sm" 
+          className="w-full"
+          onClick={() => navigate("/calendar")}
         >
-          <span>View Full Schedule</span>
-          <ArrowRight className="h-4 w-4" />
+          <Plus className="h-4 w-4 mr-1" />
+          Add Event
         </Button>
       </CardFooter>
     </Card>

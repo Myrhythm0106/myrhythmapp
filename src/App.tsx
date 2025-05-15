@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -28,13 +27,12 @@ const queryClient = new QueryClient();
 const AppRoutes = () => {
   const isMobile = useIsMobile();
 
-  // If on mobile device, show the mobile splash screen as home
   return (
     <Routes>
       {/* Use the SplashScreen for mobile, Landing for desktop */}
       <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
       
-      {/* New dedicated Home page for brain injury recovery */}
+      {/* Brain recovery Home page - more accessible version */}
       <Route path="/home" element={<Home />} />
       
       {/* Direct to Dashboard */}
