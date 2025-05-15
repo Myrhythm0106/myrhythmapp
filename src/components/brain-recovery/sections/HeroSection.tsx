@@ -10,25 +10,25 @@ export function HeroSection() {
       </div>
       
       <div className="relative z-10 max-w-2xl space-y-4 bg-transparent rounded-lg">
-        <h1 className="text-3xl md:text-4xl font-bold leading-tight text-white">
+        <h1 className="text-3xl md:text-4xl font-bold leading-tight text-zinc-950">
           🧠 MyRhythm: Reclaim Structure. Reignite Confidence.
         </h1>
         
-        <p className="text-xl text-white opacity-90">
+        <p className="text-xl opacity-90 text-zinc-950">
           Your personalised path to rebuilding your rhythm and reclaiming your day.
         </p>
         
         <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 italic mt-6">
-          <p className="text-sm md:text-base text-white">
+          <p className="text-sm md:text-base text-zinc-950">
             💬 "After my brain aneurysm, remembering simple things felt impossible. With my husband's support, we rebuilt a rhythm that gave us back our peace. That rhythm became MyRhythm. Now, it's here for you, your loved ones, and your care team."
           </p>
-          <p className="text-sm font-medium mt-2 text-white">
+          <p className="text-sm font-medium mt-2 text-zinc-600">
             — Bella A., Brain Health Coach & Brain Aneurysm Survivor
           </p>
         </div>
         
         <div className="pt-4">
-          <Button size="lg" className="bg-white text-beacon-800 hover:bg-white/90" onClick={() => navigate("/onboarding")}>
+          <Button size="lg" onClick={() => navigate("/onboarding")} className="text-beacon-800 text-zinc-950 bg-annabel-600 hover:bg-annabel-500">
             👉 Get Started Now
           </Button>
         </div>
