@@ -7,9 +7,12 @@ import { WhyMyRhythmSection } from "./sections/WhyMyRhythmSection";
 import { OurStorySection } from "./sections/OurStorySection";
 import { CommunityCTASection } from "./sections/CommunityCTASection";
 import { BrainRecoveryHomeSkeleton } from "./BrainRecoveryHomeSkeleton";
+import { MobileMenu } from "@/components/mobile/MobileMenu";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function BrainRecoveryHome() {
   const [isLoading, setIsLoading] = useState(true);
+  const isMobile = useIsMobile();
   
   // Simulate loading of data
   useEffect(() => {
@@ -29,6 +32,9 @@ export function BrainRecoveryHome() {
   
   return (
     <div className="space-y-8 max-w-5xl mx-auto px-4">
+      {/* Show mobile menu only on mobile devices */}
+      {isMobile && <MobileMenu />}
+      
       <HeroSection />
       <EssentialToolsSection recommendedGame={recommendedGame} />
       <WhyMyRhythmSection />
