@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -16,7 +17,14 @@ import {
   Brain, 
   HeartPulse, 
   Info, 
-  Search as SearchIcon
+  Search as SearchIcon,
+  User,
+  MapPin,
+  FileText,
+  CheckSquare,
+  Sparkles,
+  GamepadIcon,
+  BookOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -87,6 +95,38 @@ const navigationItems: SearchResult[] = [
     route: "/useful-info",
     icon: <Info className="h-4 w-4 mr-2" />
   },
+  {
+    id: "profile",
+    title: "My Profile",
+    category: "Navigation",
+    description: "View and edit your profile information",
+    route: "/profile",
+    icon: <User className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "local-services",
+    title: "Local Services",
+    category: "Navigation",
+    description: "Find support services in your area",
+    route: "/local-services",
+    icon: <MapPin className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "resources",
+    title: "Resources",
+    category: "Navigation",
+    description: "Access helpful resources and information",
+    route: "/resources",
+    icon: <FileText className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "gratitude",
+    title: "Gratitude Journal",
+    category: "Navigation", 
+    description: "Record and track gratitude entries",
+    route: "/gratitude",
+    icon: <Sparkles className="h-4 w-4 mr-2" />
+  },
 ];
 
 // Features and functionalities
@@ -105,7 +145,7 @@ const featuresItems: SearchResult[] = [
     category: "Features",
     description: "Manage your goals and tasks",
     route: "/calendar?view=goals",
-    icon: <Calendar className="h-4 w-4 mr-2" />
+    icon: <CheckSquare className="h-4 w-4 mr-2" />
   },
   {
     id: "symptom-tracking",
@@ -123,12 +163,105 @@ const featuresItems: SearchResult[] = [
     route: "/community?tab=discussions",
     icon: <Users className="h-4 w-4 mr-2" />
   },
+  {
+    id: "gratitude-journal",
+    title: "Gratitude Journal",
+    category: "Features",
+    description: "Record daily gratitude entries",
+    route: "/gratitude",
+    icon: <Sparkles className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "memory-match-game",
+    title: "Memory Match Game",
+    category: "Features",
+    description: "Play the memory matching card game",
+    route: "/brain-games",
+    icon: <GamepadIcon className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "storyboard-view",
+    title: "Calendar Storyboard",
+    category: "Features",
+    description: "View your calendar as a visual storyboard",
+    route: "/calendar?view=storyboard",
+    icon: <Calendar className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "medication-reminders",
+    title: "Medication Reminders",
+    category: "Features",
+    description: "Set and manage medication reminders",
+    route: "/calendar",
+    icon: <HeartPulse className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "support-circle",
+    title: "My Support Circle",
+    category: "Features",
+    description: "Connect with your personal support network",
+    route: "/personal-community",
+    icon: <Heart className="h-4 w-4 mr-2" />
+  },
+];
+
+// Resources and information
+const resourcesItems: SearchResult[] = [
+  {
+    id: "user-guides",
+    title: "User Guides",
+    category: "Resources",
+    description: "Helpful guides for using MyRhythm",
+    route: "/useful-info?tab=guides",
+    icon: <BookOpen className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "faq",
+    title: "Frequently Asked Questions",
+    category: "Resources",
+    description: "Answers to common questions",
+    route: "/useful-info?tab=faq",
+    icon: <Info className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "tutorial-videos",
+    title: "Tutorial Videos",
+    category: "Resources",
+    description: "Watch tutorial videos for MyRhythm features",
+    route: "/useful-info?tab=videos",
+    icon: <BookOpen className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "terms-policies",
+    title: "Terms & Privacy",
+    category: "Resources",
+    description: "View terms of service and privacy policies",
+    route: "/useful-info?tab=terms",
+    icon: <FileText className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "local-support-services",
+    title: "Local Support Services",
+    category: "Resources",
+    description: "Find local support services in the Dallas area",
+    route: "/local-services",
+    icon: <MapPin className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "emergency-resources",
+    title: "Emergency Resources",
+    category: "Resources",
+    description: "Access emergency contact information and resources",
+    route: "/dashboard",
+    icon: <HeartPulse className="h-4 w-4 mr-2" />
+  },
 ];
 
 // Sample search data - in a real app, this would be dynamic
 const allSearchResults: SearchResult[] = [
   ...navigationItems,
   ...featuresItems,
+  ...resourcesItems,
 ];
 
 export function GlobalSearch() {
@@ -241,6 +374,26 @@ export function GlobalSearch() {
           <CommandGroup heading="Features">
             {searchResults
               .filter(item => item.category === "Features")
+              .map(item => (
+                <CommandItem 
+                  key={item.id} 
+                  onSelect={() => handleSelect(item)}
+                  className="flex items-center cursor-pointer"
+                >
+                  {item.icon}
+                  <div>
+                    <div>{item.title}</div>
+                    <p className="text-xs text-muted-foreground">{item.description}</p>
+                  </div>
+                </CommandItem>
+              ))
+            }
+          </CommandGroup>
+
+          {/* Resources Group */}
+          <CommandGroup heading="Resources">
+            {searchResults
+              .filter(item => item.category === "Resources")
               .map(item => (
                 <CommandItem 
                   key={item.id} 
