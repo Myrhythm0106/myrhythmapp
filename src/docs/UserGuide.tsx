@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +14,8 @@ import {
   Search,
   Clock,
   FileText,
-  Download
+  Download,
+  Home
 } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 

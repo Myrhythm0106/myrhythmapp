@@ -8,7 +8,7 @@ import { allSearchResults } from "../data/searchData";
 export function useSearch() {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>(allSearchResults);
+  const [searchResults, setSearchResults] = useState<Record<string, SearchResult[]>>({});
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -17,7 +17,16 @@ export function useSearch() {
     setSearchQuery(value);
     
     if (!value) {
-      setSearchResults(allSearchResults);
+      // Group all results by category
+      const groupedResults = allSearchResults.reduce<Record<string, SearchResult[]>>((acc, item) => {
+        if (!acc[item.category]) {
+          acc[item.category] = [];
+        }
+        acc[item.category].push(item);
+        return acc;
+      }, {});
+      
+      setSearchResults(groupedResults);
       return;
     }
     
@@ -28,7 +37,29 @@ export function useSearch() {
       item.category.toLowerCase().includes(value.toLowerCase())
     );
     
-    setSearchResults(filtered);
+    // Group filtered results by category
+    const groupedResults = filtered.reduce<Record<string, SearchResult[]>>((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = [];
+      }
+      acc[item.category].push(item);
+      return acc;
+    }, {});
+    
+    setSearchResults(groupedResults);
+  }, []);
+
+  // Initialize search results on mount
+  useEffect(() => {
+    const groupedResults = allSearchResults.reduce<Record<string, SearchResult[]>>((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = [];
+      }
+      acc[item.category].push(item);
+      return acc;
+    }, {});
+    
+    setSearchResults(groupedResults);
   }, []);
 
   // Navigate to selected item
@@ -45,7 +76,17 @@ export function useSearch() {
   const toggleSearch = useCallback(() => {
     setOpen(prev => !prev);
     setSearchQuery("");
-    setSearchResults(allSearchResults);
+    
+    // Reset search results to grouped initial state
+    const groupedResults = allSearchResults.reduce<Record<string, SearchResult[]>>((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = [];
+      }
+      acc[item.category].push(item);
+      return acc;
+    }, {});
+    
+    setSearchResults(groupedResults);
   }, []);
 
   // Keyboard shortcut: CTRL + K or Command + K to open search
