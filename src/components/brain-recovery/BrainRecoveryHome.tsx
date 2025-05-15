@@ -1,11 +1,10 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Calendar, CheckCircle2, Heart, HeartHandshake, Lightbulb, SquareDashedBottomCode, Star, Target, Sparkles } from "lucide-react";
 import { GameCard } from "@/components/brain-games/components/GameCard";
-import { gamesData } from "@/components/brain-games/data/gamesData";
+import { gameTypes } from "@/components/brain-games/data/gamesData";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +13,7 @@ export function BrainRecoveryHome() {
   const navigate = useNavigate();
   
   // Get a recommended game for quick start
-  const recommendedGame = gamesData[1]; // Memory Match game is ideal for new users
+  const recommendedGame = gameTypes[1]; // Memory Match game is ideal for new users
   
   return (
     <div className="space-y-8 max-w-5xl mx-auto px-4">
