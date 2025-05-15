@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Landing from "./pages/Landing";
 import Welcome from "./pages/Welcome";
+import Home from "./pages/Home";
 import MainLayout from "./components/layout/MainLayout";
 import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
@@ -32,6 +33,9 @@ const AppRoutes = () => {
     <Routes>
       {/* Use the SplashScreen for mobile, Landing for desktop */}
       <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
+      
+      {/* New dedicated Home page for brain injury recovery */}
+      <Route path="/home" element={<Home />} />
       
       {/* Direct to Dashboard */}
       <Route path="/dashboard" element={

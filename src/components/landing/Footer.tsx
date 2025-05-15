@@ -60,6 +60,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/home" className="text-muted-foreground hover:text-beacon-600 transition-colors">
+                  Brain Recovery Home
+                </Link>
+              </li>
+              <li>
                 <Link to="/dashboard" className="text-muted-foreground hover:text-beacon-600 transition-colors">
                   Dashboard
                 </Link>
