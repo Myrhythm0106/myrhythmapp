@@ -8,10 +8,13 @@ import { TimelineView } from "./week-view/TimelineView";
 import { WeekHeader } from "./week-view/WeekHeader";
 import { 
   getEventsForDay, 
-  getEnergyLevel, 
+  getEnergyLevel,
+  getEnergyLevelColor,
+  getEnergyLevelEmoji,
   getRoutineStatus, 
   generateTimeSlots 
 } from "./week-view/weekViewUtils";
+import { Action } from "../ActionItem";
 
 interface WeekViewProps {
   date: Date;
@@ -31,9 +34,15 @@ export function WeekView({ date, events = [] }: WeekViewProps) {
   const timeSlots = generateTimeSlots();
   
   // Handle event click for details
-  const handleEventClick = (event: any) => {
-    navigate(`/calendar?eventId=${event.id}`);
-    toast.info(`Opening details for: ${event.title}`);
+  const handleEventClick = (event: Action) => {
+    navigate(`/calendar?actionId=${event.id}`);
+    toast.info(`Opening details for: ${event.title}`, {
+      description: `${event.date} at ${event.time}`,
+      action: {
+        label: "View",
+        onClick: () => navigate(`/calendar?actionId=${event.id}`),
+      },
+    });
   };
 
   return (
