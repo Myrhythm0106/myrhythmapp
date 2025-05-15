@@ -98,8 +98,8 @@ export const Sidebar = () => {
       <button onClick={toggle} className="fixed bottom-4 right-4 z-50 rounded-full bg-primary p-3 text-primary-foreground shadow-lg md:hidden" aria-label="Toggle sidebar">
         {isOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
-    </>;
-  }
+    </>
+  );
 };
 
 interface NavItemProps {
