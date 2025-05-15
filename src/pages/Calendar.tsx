@@ -12,14 +12,17 @@ import { MedicationReminders } from "@/components/calendar/MedicationReminders";
 import { DayView } from "@/components/calendar/views/DayView";
 import { WeekView } from "@/components/calendar/views/WeekView";
 import { GoalsView } from "@/components/calendar/views/GoalsView";
-import { Plus, CalendarIcon, Clock, HeartPulse, Target, Timer } from "lucide-react";
+import { Plus, CalendarIcon, Clock, HeartPulse, Target } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [view, setView] = useState<"day" | "week" | "month" | "goals">("month");
+  const navigate = useNavigate();
 
   return (
     <PomodoroProvider>
@@ -64,10 +67,6 @@ const Calendar = () => {
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
-                    
-                    <div className="hidden md:block">
-                      <PomodoroButton title="Focus Timer" variant="outline" size="sm" />
-                    </div>
                   </div>
                   
                   {view === "month" && (
@@ -102,7 +101,7 @@ const Calendar = () => {
                       <Clock className="mr-2 h-5 w-5" />
                       Upcoming Actions
                     </h3>
-                    <PomodoroButton title="Next Action" variant="outline" size="sm" />
+                    <PomodoroButton title="Focus Timer" variant="outline" size="sm" />
                   </div>
                   <UpcomingEvents date={date} />
                 </CardContent>
@@ -115,23 +114,6 @@ const Calendar = () => {
                       <HeartPulse className="mr-2 h-5 w-5" />
                       Medication Reminders
                     </h3>
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button size="sm" className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all rounded-full">
-                          <Plus className="mr-1 h-3 w-3" />
-                          Add Medication
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[450px]">
-                        <DialogHeader>
-                          <DialogTitle>Add Medication Reminder</DialogTitle>
-                        </DialogHeader>
-                        {/* Add a medication form component here */}
-                        <div className="p-4">
-                          <p className="text-muted-foreground">Medication form would go here.</p>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
                   </div>
                   <MedicationReminders />
                 </CardContent>

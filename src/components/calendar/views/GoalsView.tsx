@@ -5,22 +5,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Target } from "lucide-react";
 import { ListView } from "../goals/ListView";
 import { sampleGoals, sampleActions } from "../data/sampleGoalsData";
-import { PomodoroDialog } from "@/components/pomodoro/PomodoroDialog";
 
 export function GoalsView() {
   const [viewMode, setViewMode] = useState<"kanban" | "list">("list");
-
-  // Add Pomodoro button to goal view
-  const renderPomodoroForGoal = (goalTitle: string) => {
-    return (
-      <div className="absolute top-2 right-2">
-        <PomodoroDialog 
-          title={goalTitle}
-          compact={true}
-        />
-      </div>
-    );
-  };
 
   return (
     <div className="border rounded-md overflow-hidden">
@@ -45,8 +32,7 @@ export function GoalsView() {
           {viewMode === "list" ? (
             <ListView 
               goals={sampleGoals} 
-              actions={sampleActions} 
-              renderPomodoroForGoal={renderPomodoroForGoal}
+              actions={sampleActions}
             />
           ) : (
             <div className="text-center text-muted-foreground p-4">

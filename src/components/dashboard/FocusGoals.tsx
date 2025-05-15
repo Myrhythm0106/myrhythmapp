@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
+import { toast } from "sonner";
 
 interface FocusGoal {
   id: string;
@@ -51,6 +52,11 @@ export function FocusGoals() {
   const handleViewAllGoals = () => {
     navigate("/calendar?view=goals");
   };
+  
+  const handleGoalClick = (goalId: string, goalTitle: string) => {
+    navigate(`/calendar?view=goals&goalId=${goalId}`);
+    toast.info(`Opening goal details: ${goalTitle}`);
+  };
 
   return (
     <Card className="hover:shadow-md transition-shadow overflow-hidden">
@@ -63,7 +69,11 @@ export function FocusGoals() {
       <CardContent className="pt-2 pb-1 overflow-hidden">
         <ul className="space-y-3">
           {focusGoals.map((goal) => (
-            <li key={goal.id} className="flex flex-col gap-2 border rounded-md p-3 hover:bg-muted/20 transition-colors overflow-hidden">
+            <li 
+              key={goal.id} 
+              className="flex flex-col gap-2 border rounded-md p-3 hover:bg-muted/20 transition-colors overflow-hidden cursor-pointer"
+              onClick={() => handleGoalClick(goal.id, goal.title)}
+            >
               <div className="flex items-center gap-3">
                 <div className="flex-shrink-0">
                   {getGoalIcon(goal.category)}

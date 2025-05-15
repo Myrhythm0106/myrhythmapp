@@ -87,31 +87,34 @@ export function MedicationReminders() {
     toast.success("Medication reminder added");
   };
 
-  return <>
-      {/* Add a button at the top for adding medication */}
-      <div className="flex justify-end mb-4">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="bg-gradient-to-r from-secondary/80 to-secondary text-white font-medium border-none shadow-sm hover:shadow-md transition-all">
-              <Plus className="h-3.5 w-3.5 mr-1" />
-              Add Medication
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[450px]">
-            <DialogHeader>
-              <DialogTitle>Add Medication Reminder</DialogTitle>
-            </DialogHeader>
-            <MedicationForm 
-              onSubmit={handleAddMedication}
-              onCancel={() => setOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
-      </div>
+  return (
+    <div className="space-y-4">
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="w-full mb-4 flex justify-center items-center gap-2 bg-gradient-to-r from-secondary/80 to-secondary text-white font-medium border-none shadow-sm hover:shadow-md transition-all"
+          >
+            <Plus className="h-4 w-4" />
+            Add Medication Reminder
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[450px]">
+          <DialogHeader>
+            <DialogTitle>Add Medication Reminder</DialogTitle>
+          </DialogHeader>
+          <MedicationForm 
+            onSubmit={handleAddMedication}
+            onCancel={() => setOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
 
       <ScrollArea className="h-[300px] pr-4">
         <div className="space-y-4">
-          {medications.map(med => <Card key={med.id} className="p-4">
+          {medications.map(med => (
+            <Card key={med.id} className="p-4">
               <div className="flex justify-between items-start">
                 <div>
                   <div className="font-medium">{med.name}</div>
@@ -124,10 +127,13 @@ export function MedicationReminders() {
               </div>
               
               <div className="mt-3 flex justify-end gap-2">
-                {med.taken ? <div className="text-sm flex items-center text-green-600">
+                {med.taken ? (
+                  <div className="text-sm flex items-center text-green-600">
                     <Check className="h-4 w-4 mr-1" />
                     Taken
-                  </div> : <>
+                  </div>
+                ) : (
+                  <>
                     <Button variant="outline" size="sm" onClick={() => handleSkip(med.id)}>
                       <X className="h-3.5 w-3.5 mr-1" />
                       Skip
@@ -136,30 +142,13 @@ export function MedicationReminders() {
                       <Check className="h-3.5 w-3.5 mr-1" />
                       Taken
                     </Button>
-                  </>}
+                  </>
+                )}
               </div>
-            </Card>)}
+            </Card>
+          ))}
         </div>
       </ScrollArea>
-
-      <div className="mt-4">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button variant="outline" className="w-full font-medium text-xs bg-gradient-to-r from-primary/80 to-primary text-white border-none shadow-sm hover:shadow-md transition-all">
-              <Plus className="h-4 w-4 mr-1" />
-              Add Medication Reminder
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[450px]">
-            <DialogHeader>
-              <DialogTitle>Add Medication Reminder</DialogTitle>
-            </DialogHeader>
-            <MedicationForm 
-              onSubmit={handleAddMedication}
-              onCancel={() => setOpen(false)}
-            />
-          </DialogContent>
-        </Dialog>
-      </div>
-    </>;
+    </div>
+  );
 }

@@ -36,12 +36,12 @@ export function PomodoroDialog({ title, initialSettings, compact = false }: Pomo
                 className={compact ? "h-8 px-2" : ""}
               >
                 <Timer className="h-4 w-4 mr-1" />
-                {compact ? "" : "Start Pomodoro"}
+                {compact ? "" : "Focus Timer"}
               </Button>
             </DialogTrigger>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p>Focus with Pomodoro technique</p>
+            <p>Click to start your Focus Timer</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

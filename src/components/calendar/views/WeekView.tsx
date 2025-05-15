@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { format, startOfWeek, addDays, isSameDay, subWeeks, addWeeks, parseISO } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +8,8 @@ import { ChevronLeft, ChevronRight, CheckCircle, Clock, Target, Calendar as Cale
 import { Action } from "@/components/calendar/ActionItem";
 import { getActionTypeStyles } from "@/components/calendar/utils/actionStyles";
 import { actions } from "@/components/calendar/data/actionsData";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface WeekViewProps {
   date: Date;
@@ -21,6 +22,7 @@ export function WeekView({ date, events = [] }: WeekViewProps) {
   const [currentDate, setCurrentDate] = useState(date);
   const [viewType, setViewType] = useState<ViewType>("grid");
   const [showEnergyOverlay, setShowEnergyOverlay] = useState(false);
+  const navigate = useNavigate();
   
   const startDate = startOfWeek(currentDate, { weekStartsOn: 0 }); // 0 = Sunday
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(startDate, i));
@@ -55,6 +57,12 @@ export function WeekView({ date, events = [] }: WeekViewProps) {
       exercise: Math.random() > 0.5, // 50% chance of completion
       brainGames: Math.random() > 0.4, // 60% chance of completion
     };
+  };
+  
+  // Handle event click for details
+  const handleEventClick = (event: any) => {
+    navigate(`/calendar?eventId=${event.id}`);
+    toast.info(`Opening details for: ${event.title}`);
   };
 
   return (
@@ -168,9 +176,10 @@ export function WeekView({ date, events = [] }: WeekViewProps) {
                         <div 
                           key={event.id}
                           className={cn(
-                            "text-xs p-1 mb-1 rounded truncate",
+                            "text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 hover:shadow-sm transition-all",
                             getActionTypeStyles(event.type).replace("text-", "").replace("bg-", "bg-")
                           )}
+                          onClick={() => handleEventClick(event)}
                         >
                           <span className="font-medium">{event.title}</span>
                           <div className="text-[10px]">{event.time}</div>
@@ -251,6 +260,7 @@ export function WeekView({ date, events = [] }: WeekViewProps) {
                             getActionTypeStyles(event.type).replace("text-", "text-").replace("bg-", "bg-"),
                             "hover:shadow-md transition-shadow cursor-pointer"
                           )}
+                          onClick={() => handleEventClick(event)}
                         >
                           <div className="flex items-center justify-between">
                             <span className="font-medium text-sm">{event.title}</span>

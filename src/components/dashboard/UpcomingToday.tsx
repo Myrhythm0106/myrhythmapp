@@ -46,12 +46,8 @@ export function UpcomingToday() {
   ]);
   
   const handleViewDetails = (event: Event) => {
-    // For now, just show a toast with the notes
-    if (event.notes) {
-      toast.info(`Notes for ${event.title}`, {
-        description: event.notes
-      });
-    }
+    navigate(`/calendar?eventId=${event.id}`);
+    toast.info(`Opening details for ${event.title}`);
   };
   
   const markEventCompleted = (id: string) => {
@@ -89,14 +85,19 @@ export function UpcomingToday() {
           {events.map(event => (
             <li 
               key={event.id}
-              className={`p-3 border rounded-md ${event.completed ? 'bg-muted/30 border-dashed' : 'bg-white'} hover:bg-muted/10 transition-colors`}
+              className={`p-3 border rounded-md ${event.completed ? 'bg-muted/30 border-dashed' : 'bg-white'} hover:bg-muted/10 transition-colors cursor-pointer`}
+              onClick={() => handleViewDetails(event)}
             >
               <div className="flex items-center gap-2">
                 <input 
                   type="checkbox" 
                   checked={!!event.completed} 
-                  onChange={() => markEventCompleted(event.id)}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    markEventCompleted(event.id);
+                  }}
                   className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                  onClick={(e) => e.stopPropagation()}
                 />
                 <div className={`flex-1 ${event.completed ? 'text-muted-foreground line-through' : ''}`}>
                   <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
@@ -124,7 +125,10 @@ export function UpcomingToday() {
                     variant="ghost" 
                     size="sm" 
                     className="h-7 w-7 p-0 text-muted-foreground"
-                    onClick={() => handleViewDetails(event)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toast.info(`Notes: ${event.notes}`);
+                    }}
                   >
                     <Info className="h-4 w-4" />
                     <span className="sr-only">View notes</span>

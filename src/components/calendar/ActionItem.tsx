@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
 import { PomodoroDialog } from "@/components/pomodoro/PomodoroDialog";
+import { useNavigate } from "react-router-dom";
 
 export interface Action {
   id: string;
@@ -35,10 +36,17 @@ export function ActionItem({
   getActionTypeStyles, 
   getGoalTypeStyles 
 }: ActionItemProps) {
+  const navigate = useNavigate();
+  
+  const handleActionClick = () => {
+    navigate(`/calendar?actionId=${action.id}`);
+  };
+  
   return (
     <div 
       key={action.id} 
-      className={`border rounded-md p-3 transition-all ${getActionStatusStyles(action.date)}`}
+      className={`border rounded-md p-3 transition-all hover:shadow-md cursor-pointer ${getActionStatusStyles(action.date)}`}
+      onClick={handleActionClick}
     >
       <div className="flex justify-between items-start">
         <h4 className="font-medium truncate">{action.title}</h4>
@@ -88,7 +96,7 @@ export function ActionItem({
         )}
       </div>
       
-      <div className="mt-3 flex justify-between gap-2">
+      <div className="mt-3 flex justify-between gap-2" onClick={(e) => e.stopPropagation()}>
         <div className="flex-1">
           <PomodoroDialog title={action.title} />
         </div>

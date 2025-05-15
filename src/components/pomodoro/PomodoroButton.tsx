@@ -3,6 +3,7 @@ import React from "react";
 import { Button, ButtonProps } from "@/components/ui/button";
 import { Timer } from "lucide-react";
 import { usePomodoroContext } from "./PomodoroContext";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PomodoroButtonProps extends ButtonProps {
   title?: string;
@@ -29,14 +30,23 @@ export function PomodoroButton({
   };
 
   return (
-    <Button 
-      variant={variant} 
-      size={size} 
-      className={className}
-      onClick={handleClick}
-    >
-      <Timer className="mr-2 h-4 w-4" />
-      {buttonText}
-    </Button>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button 
+            variant={variant} 
+            size={size} 
+            className={className}
+            onClick={handleClick}
+          >
+            <Timer className="mr-2 h-4 w-4" />
+            {buttonText}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Click to start your Focus Timer</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }
