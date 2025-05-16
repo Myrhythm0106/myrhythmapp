@@ -66,7 +66,7 @@ export default function FoundersStory() {
                 An EMBA graduate.<br />
                 An ambitious Change and Project Management leader.<br />
                 A global speaker.<br />
-                And the founder of MyRhythm—the very tool that helped me reclaim my life.
+                And the founder of MyRhythm, the privilege of sharing my 'how' into this very tool that helped me reclaim my life.
               </p>
               <p className="text-foreground">This isn't theory. This app is built on what actually worked when everything seemed impossible.</p>
               <p className="text-foreground">
