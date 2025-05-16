@@ -52,27 +52,29 @@ export function GameCard({ game, isSelected, onSelect, onPlay }: GameCardProps) 
             </div>
             <div className="flex items-start">
               <div className="flex-grow">
-                <CardTitle className="text-lg font-medium">{game.name}</CardTitle>
+                <CardTitle className="text-lg font-medium flex items-center">
+                  {game.name}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="ml-2 cursor-help" onClick={(e) => e.stopPropagation()}>
+                        <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary transition-colors" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-xs">
+                      <div className="space-y-2">
+                        <p className="font-medium">{game.name}</p>
+                        <p>{game.purpose || game.description}</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Cognitive domain: <span className="font-medium">{game.cognitiveDomain}</span>
+                        </p>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </CardTitle>
                 <CardDescription className="mt-1 line-clamp-2">
                   {game.description}
                 </CardDescription>
               </div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="ml-2 flex-shrink-0 cursor-help" onClick={(e) => e.stopPropagation()}>
-                    <HelpCircle className="h-4 w-4 text-muted-foreground hover:text-primary transition-colors" />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="top" className="max-w-xs">
-                  <div className="space-y-2">
-                    <p className="font-medium">{game.name}</p>
-                    <p>{game.purpose || game.description}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Cognitive domain: <span className="font-medium">{game.cognitiveDomain}</span>
-                    </p>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
             </div>
           </div>
         </CardHeader>

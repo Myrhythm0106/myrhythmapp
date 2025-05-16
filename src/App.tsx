@@ -10,7 +10,6 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Landing from "./pages/Landing";
 import Welcome from "./pages/Welcome";
-import Home from "./pages/Home";
 import MainLayout from "./components/layout/MainLayout";
 import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
@@ -23,6 +22,7 @@ import Customization from "./pages/Customization";
 import Gratitude from "./pages/Gratitude";
 import { useIsMobile } from "./hooks/use-mobile";
 import UserGuideView from "./pages/UserGuideView";
+import FoundersStory from "./pages/FoundersStory";
 
 const queryClient = new QueryClient();
 
@@ -34,8 +34,8 @@ const AppRoutes = () => {
       {/* Use the SplashScreen for mobile, Landing for desktop */}
       <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
       
-      {/* Brain recovery Home page - more accessible version */}
-      <Route path="/home" element={<Home />} />
+      {/* Founder's Story page */}
+      <Route path="/founders-story" element={<FoundersStory />} />
       
       {/* Direct to Dashboard */}
       <Route path="/dashboard" element={
