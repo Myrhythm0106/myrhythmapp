@@ -59,10 +59,10 @@ export default function FoundersStory() {
             <div className="space-y-4 mt-3 text-foreground">
               <p>Fifteen years ago, a brain aneurysm nearly ended my life.</p>
               <p className="text-foreground">
-                Doctors said I might not walk again.<br />
+                Doctors said I will die imminently.<br />
                 That I'd never return to work.<br />
                 That my memory wouldn't come back.<br />
-                That motherhood was out of the question.
+                Motherhood would have to be delayed for at least 5 years.
               </p>
               <p className="font-medium text-foreground">But I refused to live by those limits.</p>
               <p className="text-foreground">
@@ -218,7 +218,9 @@ export default function FoundersStory() {
               <div className="mt-8 pt-4 border-t border-muted">
                 <p className="text-right font-medium italic text-foreground">
                   – Bella A.<br />
-                  <span className="text-sm">Brain Health Coach | Survivor | Founder of MyRhythm</span>
+                  <span className="text-sm">Brain Health Coach | Survivor | Founder of MyRhythm</span><br/>
+                  <a href="https://www.annabelaaron.com" className="text-sm text-beacon-600 hover:underline">www.annabelaaron.com</a><br/>
+                  <span className="text-sm">Blogger | Speaker</span>
                 </p>
               </div>
             </div>
