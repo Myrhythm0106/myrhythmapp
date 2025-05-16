@@ -127,7 +127,7 @@ export default function FoundersStory() {
               <ul className="list-disc pl-5 my-4 space-y-2 text-foreground">
                 <li>Pass my Executive MBA</li>
                 <li>Manage complex international projects</li>
-                <li>Show up fully as a mother and partner</li>
+                <li>Show up fully as a mother and wife</li>
                 <li>Restore my joy, my focus, and my rhythm</li>
               </ul>
               <p className="font-medium text-foreground">And that same framework is now inside MyRhythm—designed to serve you.</p>
