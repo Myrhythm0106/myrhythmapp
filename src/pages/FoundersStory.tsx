@@ -55,10 +55,10 @@ export default function FoundersStory() {
             <div className="space-y-4 mt-3 text-foreground">
               <p>Fifteen years ago, a brain aneurysm nearly ended my life.</p>
               <p className="text-foreground">
-                Doctors said I will die imminently.<br />
-                That I'd never return to work.<br />
-                That my memory wouldn't come back.<br />
-                Motherhood would have to be delayed for at least 5 years.
+                Doctors said I will die imminently!<br />
+                That I'd never return to work...<br />
+                That my memory wouldn't come back. To almost bring tears to my eyes...they said that,<br />
+                Motherhood would have to be delayed for at least 5 years...
               </p>
               <p className="font-medium text-foreground">But I refused to live by those limits and the stigma of being incapable of working, learning, contributing meaningfully or being 'broken'.</p>
               <p className="text-foreground">
