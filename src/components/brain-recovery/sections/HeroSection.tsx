@@ -22,9 +22,7 @@ export function HeroSection() {
           <p className="text-sm md:text-base text-zinc-950">
             💬 "After my brain aneurysm, remembering simple things felt impossible. With my husband's support, we rebuilt a rhythm that gave us back our peace. That rhythm became MyRhythm. Now, it's here for you, your loved ones, and your care team."
           </p>
-          <p className="text-sm font-medium mt-2 text-zinc-600">
-            — Bella A., Brain Health Coach & Brain Aneurysm Survivor
-          </p>
+          <p className="text-sm font-medium mt-2 text-zinc-600">— Bella A., Brain Health Coach, Brain Aneurysm Survivor, Brain Aneurysm Ambassador, Bee Foundation Ambassador</p>
         </div>
         
         <div className="pt-4">
