@@ -1,3 +1,4 @@
+
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,14 +25,20 @@ export function UserGuide() {
   
   const handlePrint = useReactToPrint({
     documentTitle: "MyRhythm User Guide",
-    content: () => componentRef.current,
+    documentTitle: "MyRhythm User Guide",
+    onBeforeGetContent: () => console.log("Preparing content..."),
+    onAfterPrint: () => console.log("Printed successfully!"),
   });
 
   return (
     <div className="max-w-5xl mx-auto py-8 text-foreground">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-foreground">MyRhythm User Guide</h1>
-        <Button onClick={handlePrint} className="flex items-center gap-2">
+        <Button onClick={() => {
+          if (componentRef.current) {
+            handlePrint();
+          }
+        }} className="flex items-center gap-2">
           <Download className="w-4 h-4" />
           <span>Export as PDF</span>
         </Button>
