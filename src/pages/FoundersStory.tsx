@@ -1,14 +1,10 @@
-
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-
 export default function FoundersStory() {
   const navigate = useNavigate();
-
-  return (
-    <ScrollArea className="h-[calc(100vh-64px)]">
+  return <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="max-w-3xl mx-auto py-8 px-4 md:px-6 text-foreground">
         <header className="mb-10">
           <h1 className="text-3xl md:text-4xl font-bold mb-4">The Founder's Story</h1>
@@ -23,7 +19,7 @@ export default function FoundersStory() {
                 You're not broken.<br />
                 You're not "just forgetful."
               </p>
-              <p>But that's not what the world tells you.</p>
+              <p>This is what I say to myself regularly.  But that's not what the world tells you.  They say...</p>
               <div className="bg-muted/30 p-4 rounded-lg my-6 italic space-y-1 text-foreground">
                 <p>"We've already talked about this."</p>
                 <p>"How can you forget again?"</p>
@@ -187,10 +183,7 @@ export default function FoundersStory() {
               <p className="text-foreground">🎉 Join thousands of others taking back their time, clarity, and confidence with MyRhythm.</p>
               <p className="text-foreground">👇 Tap below to begin. Because waiting for "normal" isn't the answer—taking control is.</p>
               <div className="flex justify-center my-8">
-                <Button 
-                  onClick={() => navigate("/onboarding")}
-                  className="text-xl px-8 py-6 h-auto"
-                >
+                <Button onClick={() => navigate("/onboarding")} className="text-xl px-8 py-6 h-auto">
                   Get MyRhythm Now 🔒
                 </Button>
               </div>
@@ -218,8 +211,8 @@ export default function FoundersStory() {
               <div className="mt-8 pt-4 border-t border-muted">
                 <p className="text-right font-medium italic text-foreground">
                   – Bella A.<br />
-                  <span className="text-sm">Brain Health Coach | Survivor | Founder of MyRhythm</span><br/>
-                  <a href="https://www.annabelaaron.com" className="text-sm text-beacon-600 hover:underline">www.annabelaaron.com</a><br/>
+                  <span className="text-sm">Brain Health Coach | Survivor | Founder of MyRhythm</span><br />
+                  <a href="https://www.annabelaaron.com" className="text-sm text-beacon-600 hover:underline">www.annabelaaron.com</a><br />
                   <span className="text-sm">Blogger | Speaker</span>
                 </p>
               </div>
@@ -227,6 +220,5 @@ export default function FoundersStory() {
           </section>
         </div>
       </div>
-    </ScrollArea>
-  );
+    </ScrollArea>;
 }
