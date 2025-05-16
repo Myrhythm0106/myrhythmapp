@@ -25,8 +25,8 @@ export function UserGuide() {
   
   const handlePrint = useReactToPrint({
     documentTitle: "MyRhythm User Guide",
-    // According to the react-to-print library, the correct property is 'documentRef' in newer versions
-    documentRef: componentRef,
+    // The correct property for react-to-print is 'content'
+    content: () => componentRef.current,
   });
 
   return (
