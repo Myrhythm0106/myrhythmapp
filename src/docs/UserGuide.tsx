@@ -24,8 +24,9 @@ export function UserGuide() {
   const componentRef = useRef<HTMLDivElement>(null);
   
   const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
     documentTitle: "MyRhythm User Guide",
+    // Fix: Replace 'content' with 'contentRef' which is the correct property name
+    contentRef: () => componentRef.current,
   });
 
   return (
