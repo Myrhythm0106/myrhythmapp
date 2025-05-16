@@ -46,7 +46,7 @@ export default function FoundersStory() {
                 But here's the truth:<br />
                 You don't need to "go back to normal." You need a rhythm that works for who you are now.
               </p>
-              <p className="font-bold text-foreground">That's exactly what MyRhythm is built for.</p>
+              <p className="font-bold text-foreground">Knowing and working with your own rhythm will make the difference!  </p>
             </div>
           </section>
 
@@ -60,7 +60,7 @@ export default function FoundersStory() {
                 That my memory wouldn't come back.<br />
                 Motherhood would have to be delayed for at least 5 years.
               </p>
-              <p className="font-medium text-foreground">But I refused to live by those limits.</p>
+              <p className="font-medium text-foreground">But I refused to live by those limits and the stigma of being incapable of working, learning, contributing meaningfully or being 'broken'.</p>
               <p className="text-foreground">
                 Today, I'm a proud mother of two.<br />
                 An EMBA graduate.<br />
