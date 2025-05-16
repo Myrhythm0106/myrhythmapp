@@ -213,7 +213,7 @@ export default function FoundersStory() {
                   – Bella A.<br />
                   <span className="text-sm">Brain Health Coach | Survivor | Founder of MyRhythm</span><br />
                   <a href="https://www.annabelaaron.com" className="text-sm text-beacon-600 hover:underline">www.annabelaaron.com</a><br />
-                  <span className="text-sm">Blogger | Speaker</span>
+                  <span className="text-sm">Coach | Speaker | Blogger</span>
                 </p>
               </div>
             </div>
