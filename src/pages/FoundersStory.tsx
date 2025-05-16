@@ -66,9 +66,9 @@ export default function FoundersStory() {
                 An EMBA graduate.<br />
                 An ambitious Change and Project Management leader.<br />
                 A global speaker.<br />
-                And the founder of MyRhythm, the privilege of sharing my 'how' into this very tool that helped me reclaim my life.
+                And the founder of MyRhythm—the very tool that helped me reclaim my life.
               </p>
-              <p className="text-foreground">This isn't theory. This app is built on what actually worked when everything seemed impossible.</p>
+              <p className="text-foreground">This is my truth.  This app is built on what actually worked when everything seemed impossible.</p>
               <p className="text-foreground">
                 When I couldn't rely on memory or focus, I created structure.<br />
                 When I lost confidence, I built momentum with small wins.<br />
@@ -82,7 +82,7 @@ export default function FoundersStory() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-foreground">💡 The Solution – Meet MyRhythm</h2>
+            <h2 className="text-2xl font-semibold text-foreground">💡 Meet MyRhythm</h2>
             <div className="space-y-4 mt-3 text-foreground">
               <p>
                 MyRhythm isn't just another productivity app.<br />
