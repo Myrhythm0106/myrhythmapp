@@ -1,4 +1,3 @@
-
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,8 +24,7 @@ export function UserGuide() {
   
   const handlePrint = useReactToPrint({
     documentTitle: "MyRhythm User Guide",
-    // The react-to-print library expects this property
-    printRef: componentRef,
+    content: () => componentRef.current,
   });
 
   return (
