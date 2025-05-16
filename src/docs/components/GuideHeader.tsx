@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Download, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 
 export interface GuideHeaderProps {
@@ -11,8 +11,8 @@ export interface GuideHeaderProps {
 export function GuideHeader({ printRef }: GuideHeaderProps) {
   const handlePrint = useReactToPrint({
     documentTitle: "MyRhythm User Guide",
-    // The correct property is just passing a function that returns the ref's current value
-    content: () => printRef.current,
+    // According to the react-to-print library, we should use the 'printRef' property
+    contentRef: printRef,
   });
 
   return (
