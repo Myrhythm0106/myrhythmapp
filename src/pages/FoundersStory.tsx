@@ -2,6 +2,10 @@ import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Brain, XCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+
 export default function FoundersStory() {
   const navigate = useNavigate();
   return <ScrollArea className="h-[calc(100vh-64px)]">
@@ -19,23 +23,34 @@ export default function FoundersStory() {
                 You're not broken.<br />
                 You're not "just forgetful."
               </p>
-              <p>This is what I say to myself regularly.  But that's not what the world tells you.  They say...</p>
-              <div className="bg-muted/30 p-4 rounded-lg my-6 italic space-y-1 text-foreground">
-                <p>"We've already talked about this."</p>
-                <p>"How can you forget again?"</p>
-                <p>"It's not that hard—just focus."</p>
-                <p>"You were fine yesterday."</p>
-                <p>"You need to pay more attention."</p>
-                <p>"You're not even trying."</p>
-                <p>"Why can't you be more organized?"</p>
-                <p>"I shouldn't have to keep reminding you."</p>
-                <p>"Seriously? You don't remember?"</p>
-                <p>"You used to be so sharp."</p>
-                <p>"Maybe you're just being lazy."</p>
-                <p>"You don't look like anything's wrong."</p>
-                <p>"Don't use your injury as an excuse."</p>
-                <p>"When are you going to get back to normal?"</p>
+              <p>This is what I say to myself regularly.  But that's not what the world tells you.  They say...</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-6">
+                {[
+                  "We've already talked about this.",
+                  "How can you forget again?",
+                  "It's not that hard—just focus.",
+                  "You were fine yesterday.",
+                  "You need to pay more attention.",
+                  "You're not even trying.",
+                  "Why can't you be more organized?",
+                  "I shouldn't have to keep reminding you.",
+                  "Seriously? You don't remember?",
+                  "You used to be so sharp.",
+                  "Maybe you're just being lazy.",
+                  "You don't look like anything's wrong.",
+                  "Don't use your injury as an excuse.",
+                  "When are you going to get back to normal?"
+                ].map((statement, index) => (
+                  <Alert key={index} className="bg-gradient-to-r from-purple-50 to-purple-100 border-l-4 border-purple-500 shadow-sm hover:shadow-md transition-all">
+                    <XCircle className="h-5 w-5 text-purple-600 mr-2 inline-block" />
+                    <AlertDescription className="text-gray-700">
+                      <span className="italic">{statement}</span>
+                    </AlertDescription>
+                  </Alert>
+                ))}
               </div>
+
               <p className="text-foreground">
                 These statements don't help.<br />
                 They hurt.<br />
@@ -46,7 +61,7 @@ export default function FoundersStory() {
                 But here's the truth:<br />
                 You don't need to "go back to normal." You need a rhythm that works for who you are now.
               </p>
-              <p className="font-bold text-foreground">Knowing and working with your own rhythm will make the difference!  </p>
+              <p className="font-bold text-foreground">Knowing and working with your own rhythm will make the difference!  </p>
             </div>
           </section>
 
@@ -66,9 +81,9 @@ export default function FoundersStory() {
                 An EMBA graduate.<br />
                 An ambitious Change and Project Management leader.<br />
                 A global speaker.<br />
-                And the founder of MyRhythm—the very tool that helped me reclaim my life.
+                And the founder of MyRhythm, the privilege of sharing my 'how' into this very tool that helped me reclaim my life.
               </p>
-              <p className="text-foreground">This is my truth.  This app is built on what actually worked when everything seemed impossible.</p>
+              <p className="text-foreground">This is my truth.  This app is built on what actually worked when everything seemed impossible.</p>
               <p className="text-foreground">
                 When I couldn't rely on memory or focus, I created structure.<br />
                 When I lost confidence, I built momentum with small wins.<br />
