@@ -16,8 +16,8 @@ export function HeroSection() {
       </div>
 
       <div className="container mx-auto px-4 max-w-5xl text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">MyRhythm. 
-Your Rhythm. Your Life. 
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 text-foreground">MyRhythm.  
+Your Rhythm. Your Life.  
 Be Empowered. Be Inspired </h1>
         
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">Navigating life after a brain injury or any condition impacting your memory is a unique journey, where finding your own way forward at your own pace is essential. We believe in empowering you with simple, actionable steps. These help you build confidence and create a life that truly feels right for you..</p>
