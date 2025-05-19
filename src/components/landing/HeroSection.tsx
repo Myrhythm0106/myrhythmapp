@@ -1,12 +1,16 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { LogIn } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
+
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
-  return <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
+  
+  return (
+    <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
       {/* Login button at top right */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
         <Button variant="ghost" className="flex items-center gap-2 hover:bg-primary/10" onClick={() => setShowLoginModal(true)}>
@@ -15,16 +19,26 @@ export function HeroSection() {
         </Button>
       </div>
 
-      <div className="container mx-auto px-4 max-w-5xl text-center">
-        <h1 className="text-4xl font-bold mb-6 text-foreground md:text-7xl">MyRhythm   
-      </h1>
+      <div className="container mx-auto px-4 max-w-4xl text-center">
+        <h1 className="text-4xl font-bold mb-6 text-foreground md:text-7xl">
+          MyRhythm
+        </h1>
         
-        <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">Your Rhythm. Your Life.  Be Empowered. Be Inspired 
-
-
-Navigating life after a brain injury or any condition impacting your memory is a unique journey, where finding your own way forward at your own pace is essential. We believe in empowering you with simple, actionable steps. These help you build confidence and create a life that truly feels right for you..</p>
+        <div className="space-y-6 mb-10">
+          <h2 className="text-xl md:text-2xl font-medium text-primary">
+            Your Rhythm. Your Life.
+          </h2>
+          
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            Navigating life after a brain injury is a unique journey. Find your own way forward, at your own pace.
+          </p>
+          
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            We believe in empowering you with simple, actionable steps that help build confidence and create a life that truly feels right for you.
+          </p>
+        </div>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
           <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => navigate("/onboarding")}>
             Start Your Journey
           </Button>
@@ -36,5 +50,6 @@ Navigating life after a brain injury or any condition impacting your memory is a
 
       {/* Login Modal */}
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
-    </section>;
+    </section>
+  );
 }
