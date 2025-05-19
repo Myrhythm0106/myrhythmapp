@@ -108,6 +108,9 @@ export function MyRhythmBreakdown() {
   return (
     <section className="py-16 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4 max-w-6xl">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-bold text-primary mb-4">MyRhythm - What It Means To You</h2>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {rhythmItems.map((item) => (
             <RhythmItem 

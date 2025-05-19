@@ -11,12 +11,11 @@ export interface GuideHeaderProps {
 export function GuideHeader({ printRef }: GuideHeaderProps) {
   const handlePrint = useReactToPrint({
     documentTitle: "MyRhythm User Guide",
-    // According to the react-to-print library, we should use the 'printRef' property
     contentRef: printRef,
   });
 
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex items-center gap-4">
       <h1 className="text-3xl font-bold text-foreground">MyRhythm User Guide</h1>
       <Button onClick={handlePrint} className="flex items-center gap-2">
         <FileText className="w-4 h-4" />

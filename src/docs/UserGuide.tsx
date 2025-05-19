@@ -6,8 +6,11 @@ import {
   HeartPulse, 
   Brain, 
   Users, 
-  Home
+  Home,
+  ArrowLeft
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 // Import all components
 import { GuideHeader } from "./components/GuideHeader";
@@ -24,10 +27,25 @@ import { GuideFooter } from "./components/GuideFooter";
 
 export function UserGuide() {
   const componentRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  
+  const handleGoBack = () => {
+    navigate(-1); // This will go back to the previous page in the history
+  };
   
   return (
     <div className="max-w-5xl mx-auto py-8 text-foreground">
-      <GuideHeader printRef={componentRef} />
+      <div className="flex justify-between items-center mb-6">
+        <Button 
+          variant="outline" 
+          className="flex items-center gap-2" 
+          onClick={handleGoBack}
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </Button>
+        <GuideHeader printRef={componentRef} />
+      </div>
       
       <div ref={componentRef} className="space-y-8 p-4">
         <IntroSection />

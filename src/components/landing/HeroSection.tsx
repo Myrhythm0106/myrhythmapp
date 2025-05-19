@@ -48,6 +48,13 @@ export function HeroSection() {
           <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/founders-story")}>
             Learn Our Story
           </Button>
+          <Button size="lg" variant="outline" className="text-lg" onClick={() => {
+            // Scroll to the MyRhythmIntro section
+            const element = document.getElementById("discover-myrhythm");
+            element?.scrollIntoView({ behavior: "smooth" });
+          }}>
+            Learn More
+          </Button>
         </div>
       </div>
 
