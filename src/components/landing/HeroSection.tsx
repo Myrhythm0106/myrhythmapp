@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +40,7 @@ export function HeroSection() {
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
           <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => navigate("/onboarding")}>
-            Start Your Journey
+            Register Now
           </Button>
           <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/founders-story")}>Our Story</Button>
           <Button size="lg" variant="outline" className="text-lg" onClick={() => {
