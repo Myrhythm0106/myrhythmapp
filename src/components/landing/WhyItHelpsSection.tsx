@@ -1,5 +1,7 @@
 
 import React from "react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { Shield, Award, Layout, UserPlus, Heart } from "lucide-react";
 
 type BenefitProps = {
@@ -23,6 +25,7 @@ function Benefit({ icon, title, description }: BenefitProps) {
 }
 
 export function WhyItHelpsSection() {
+  const navigate = useNavigate();
   const benefits: BenefitProps[] = [
     {
       icon: <Shield className="h-6 w-6 text-primary" />,
@@ -67,6 +70,13 @@ export function WhyItHelpsSection() {
               description={benefit.description}
             />
           ))}
+        </div>
+        
+        {/* Register Now button */}
+        <div className="mt-12 text-center">
+          <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => navigate("/onboarding")}>
+            Register Now
+          </Button>
         </div>
       </div>
     </section>

@@ -1,6 +1,8 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import { 
   Lightbulb, 
   Calendar, 
@@ -46,6 +48,7 @@ function RhythmItem({ letter, title, meaning, helps, icon }: RhythmItemProps) {
 }
 
 export function MyRhythmBreakdown() {
+  const navigate = useNavigate();
   const rhythmItems: RhythmItemProps[] = [
     {
       letter: "M",
@@ -122,6 +125,13 @@ export function MyRhythmBreakdown() {
               icon={item.icon}
             />
           ))}
+        </div>
+        
+        {/* Register Now button */}
+        <div className="mt-12 text-center">
+          <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => navigate("/onboarding")}>
+            Register Now
+          </Button>
         </div>
       </div>
     </section>

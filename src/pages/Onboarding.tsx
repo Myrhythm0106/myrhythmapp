@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
@@ -9,17 +8,17 @@ import { PaymentStep, PaymentFormValues } from "@/components/onboarding/steps/Pa
 import { UserTypeStep, UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { LocationStep } from "@/components/onboarding/steps/LocationStep";
 
-// Onboarding step definitions
+// Onboarding step definitions with reordered steps 1 and 2
 const STEPS = [
   {
     id: 1,
-    title: "Where are you located?",
-    description: "Tell us where you're from so we can personalize your experience"
+    title: "Complete your profile",
+    description: "Just a few more details to personalize your experience"
   },
   {
     id: 2,
-    title: "Complete your profile",
-    description: "Just a few more details to personalize your experience"
+    title: "Where are you located?",
+    description: "Tell us where you're from so we can personalize your experience"
   },
   {
     id: 3,
@@ -147,13 +146,13 @@ const Onboarding = () => {
     navigate("/welcome");
   };
   
-  // Render current step content
+  // Render current step content - reordered to match the new step order
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <LocationStep onComplete={handleLocationComplete} initialValues={location || undefined} />;
-      case 2:
         return <PersonalInfoStep onComplete={handlePersonalInfoComplete} initialValues={personalInfo || undefined} />;
+      case 2:
+        return <LocationStep onComplete={handleLocationComplete} initialValues={location || undefined} />;
       case 3:
         return <PlanStep onComplete={handlePlanSelected} selectedPlan={selectedPlan} />;
       case 4:
