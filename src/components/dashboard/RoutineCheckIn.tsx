@@ -113,13 +113,13 @@ export function RoutineCheckIn() {
         </ul>
       </CardContent>
       
-      <CardFooter className="pt-0 justify-between">
-        <Button variant="ghost" size="sm" className="text-xs gap-1">
+      <CardFooter className="pt-2 flex justify-between">
+        <Button variant="ghost" size="sm" className="text-xs flex items-center gap-1">
           <Plus className="h-3 w-3" />
           Add Routine
         </Button>
         
-        <Button variant="ghost" size="sm" className="text-xs gap-1">
+        <Button variant="ghost" size="sm" className="text-xs flex items-center gap-1">
           <Info className="h-3 w-3" />
           View All
         </Button>

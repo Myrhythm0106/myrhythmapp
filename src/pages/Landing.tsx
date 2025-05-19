@@ -1,7 +1,6 @@
 
 import React from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { MyRhythmIntro } from "@/components/landing/MyRhythmIntro";
 import { MyRhythmBreakdown } from "@/components/landing/MyRhythmBreakdown";
@@ -20,7 +19,7 @@ const Landing = () => {
         <MyRhythmIntro />
         <MyRhythmBreakdown />
         <WhyItHelpsSection />
-        <CallToAction onGetStarted={() => navigate("/onboarding")} />
+        <CallToAction onGetStarted={() => {}} />
         <LandingFooter />
       </ScrollArea>
     </div>

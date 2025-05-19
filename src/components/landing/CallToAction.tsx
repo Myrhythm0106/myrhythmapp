@@ -1,13 +1,16 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { FileText } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CallToActionProps {
   onGetStarted: () => void;
 }
 
 export function CallToAction({ onGetStarted }: CallToActionProps) {
+  const navigate = useNavigate();
+  
   return (
     <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
       <div className="container mx-auto px-4 max-w-5xl text-center">
@@ -18,10 +21,10 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
         <Button 
           size="lg" 
           className="text-lg gap-2 px-8 py-6 h-auto shadow-md hover:shadow-lg transition-all"
-          onClick={onGetStarted}
+          onClick={() => navigate("/guide")}
         >
-          <Download className="h-5 w-5" />
-          Download Your Free MYRHYTHM Guide
+          <FileText className="h-5 w-5" />
+          View the MYRHYTHM Guide
         </Button>
       </div>
     </section>

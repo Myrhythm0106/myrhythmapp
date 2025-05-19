@@ -5,8 +5,10 @@ import { FoundersStoryContent } from "@/components/founders-story/FoundersStoryC
 
 export default function FoundersStory() {
   return (
-    <ScrollArea className="h-[calc(100vh-64px)]">
-      <FoundersStoryContent />
-    </ScrollArea>
+    <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
+      <ScrollArea className="h-[calc(100vh)]">
+        <FoundersStoryContent />
+      </ScrollArea>
+    </div>
   );
 }
