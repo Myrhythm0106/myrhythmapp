@@ -7,36 +7,49 @@ import { PersonalInfoStep, PersonalInfoFormValues } from "@/components/onboardin
 import { PlanStep, PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentStep, PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 import { UserTypeStep, UserType } from "@/components/onboarding/steps/UserTypeStep";
+import { LocationStep } from "@/components/onboarding/steps/LocationStep";
 
 // Onboarding step definitions
 const STEPS = [
   {
     id: 1,
+    title: "Where are you located?",
+    description: "Tell us where you're from so we can personalize your experience"
+  },
+  {
+    id: 2,
     title: "Complete your profile",
     description: "Just a few more details to personalize your experience"
   },
   {
-    id: 2,
+    id: 3,
     title: "Select your plan",
     description: "Choose a plan that works for you"
   },
   {
-    id: 3,
+    id: 4,
     title: "Complete your payment",
     description: "Secure payment information"
   },
   {
-    id: 4,
+    id: 5,
     title: "How will you use MyRhythm?",
     description: "Select the option that best describes your situation"
   }
 ];
+
+type LocationFormValues = {
+  country: string;
+  city: string;
+  state: string;
+};
 
 const Onboarding = () => {
   const navigate = useNavigate();
   
   // Core state
   const [currentStep, setCurrentStep] = useState(1);
+  const [location, setLocation] = useState<LocationFormValues | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("basic");
   
@@ -77,6 +90,12 @@ const Onboarding = () => {
   };
   
   // Step handlers
+  const handleLocationComplete = (values: LocationFormValues) => {
+    // Store location information
+    setLocation(values);
+    goToNextStep();
+  };
+  
   const handlePersonalInfoComplete = (values: PersonalInfoFormValues) => {
     // Store user information
     localStorage.setItem("myrhythm_name", values.name);
@@ -100,6 +119,19 @@ const Onboarding = () => {
   const handleUserTypeSelected = (data: { type: UserType; customValue?: string }) => {
     console.log("User type:", data);
     
+    // Store location data
+    if (location) {
+      localStorage.setItem("myrhythm_country", location.country);
+      localStorage.setItem("myrhythm_city", location.city);
+      localStorage.setItem("myrhythm_state", location.state);
+    }
+    
+    // Store user type
+    localStorage.setItem("myrhythm_user_type", data.type);
+    if (data.customValue) {
+      localStorage.setItem("myrhythm_custom_type", data.customValue);
+    }
+    
     // Set login and registration status
     localStorage.setItem('myrhythm_logged_in', 'true');
     sessionStorage.setItem('justRegistered', 'true');
@@ -119,12 +151,14 @@ const Onboarding = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <PersonalInfoStep onComplete={handlePersonalInfoComplete} initialValues={personalInfo || undefined} />;
+        return <LocationStep onComplete={handleLocationComplete} initialValues={location || undefined} />;
       case 2:
-        return <PlanStep onComplete={handlePlanSelected} selectedPlan={selectedPlan} />;
+        return <PersonalInfoStep onComplete={handlePersonalInfoComplete} initialValues={personalInfo || undefined} />;
       case 3:
-        return <PaymentStep onComplete={handlePaymentComplete} selectedPlan={selectedPlan} />;
+        return <PlanStep onComplete={handlePlanSelected} selectedPlan={selectedPlan} />;
       case 4:
+        return <PaymentStep onComplete={handlePaymentComplete} selectedPlan={selectedPlan} />;
+      case 5:
         return <UserTypeStep onComplete={handleUserTypeSelected} />;
       default:
         return null;

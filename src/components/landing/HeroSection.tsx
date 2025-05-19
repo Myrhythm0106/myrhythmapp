@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { LogIn } from "lucide-react";
+import { LogIn, Brain } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 
 export function HeroSection() {
@@ -20,9 +20,12 @@ export function HeroSection() {
       </div>
 
       <div className="container mx-auto px-4 max-w-4xl text-center">
-        <h1 className="text-4xl font-bold mb-6 text-foreground md:text-7xl">
-          MyRhythm
-        </h1>
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Brain className="h-12 w-12 md:h-16 md:w-16 text-primary" />
+          <h1 className="text-4xl font-bold text-foreground md:text-7xl">
+            MyRhythm
+          </h1>
+        </div>
         
         <div className="space-y-6 mb-10">
           <h2 className="text-xl md:text-2xl font-medium text-primary">

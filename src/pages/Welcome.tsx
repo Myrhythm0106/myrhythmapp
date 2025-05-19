@@ -1,20 +1,36 @@
+
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, ShieldCheck, Brain, BookOpen } from "lucide-react";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
 import GettingStartedGuide from "@/components/welcome/GettingStartedGuide";
+
 const Welcome = () => {
   const navigate = useNavigate();
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("journey");
-  return <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background p-4 md:p-8">
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <ShieldCheck className="h-12 w-12 text-beacon-600" />
+          <Brain className="h-12 w-12 text-beacon-600" />
           <h1 className="text-4xl font-bold">Welcome to MyRhythm</h1>
+        </div>
+        
+        {/* User Guide Button - Prominently Displayed */}
+        <div className="flex justify-center mb-6">
+          <Button 
+            onClick={() => navigate("/guide")} 
+            className="bg-primary/90 hover:bg-primary text-white px-8 py-2 text-lg flex items-center gap-2"
+            size="lg"
+          >
+            <BookOpen className="h-5 w-5" />
+            User Guide
+          </Button>
         </div>
         
         <Tabs defaultValue="journey" value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -94,10 +110,15 @@ const Welcome = () => {
         </Tabs>
       </div>
       
-      <TutorialModal isOpen={showTutorial} onComplete={() => {
-      setShowTutorial(false);
-      navigate("/dashboard");
-    }} />
-    </div>;
+      <TutorialModal 
+        isOpen={showTutorial} 
+        onComplete={() => {
+          setShowTutorial(false);
+          navigate("/dashboard");
+        }} 
+      />
+    </div>
+  );
 };
+
 export default Welcome;

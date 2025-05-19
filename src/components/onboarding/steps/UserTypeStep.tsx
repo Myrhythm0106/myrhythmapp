@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 
 export type UserType = 
   | "brain-health" 
-  | "emotional-wellness" 
   | "family-professional" 
+  | "emotional-wellness" 
   | "productivity" 
   | "organization"
   | "custom";
@@ -42,16 +42,16 @@ export const UserTypeStep = ({ onComplete }: UserTypeStepProps) => {
       icon: <ShieldCheck className="h-8 w-8 text-primary" />
     },
     {
-      id: "emotional-wellness",
-      name: "Emotional Wellness",
-      description: "For those seeking balance in mood and emotions, with tools for mindfulness and emotional regulation.",
-      icon: <Heart className="h-8 w-8 text-primary" />
-    },
-    {
       id: "family-professional",
       name: "Family/Professional Support",
       description: "For family members or healthcare professionals seeking to support a loved one or client with their brain health journey.",
       icon: <Users className="h-8 w-8 text-primary" />
+    },
+    {
+      id: "emotional-wellness",
+      name: "Emotional Wellness",
+      description: "For those seeking balance in mood and emotions, with tools for mindfulness and emotional regulation.",
+      icon: <Heart className="h-8 w-8 text-primary" />
     },
     {
       id: "productivity",
@@ -61,7 +61,7 @@ export const UserTypeStep = ({ onComplete }: UserTypeStepProps) => {
     },
     {
       id: "organization",
-      name: "Organization Expert",
+      name: "Organisation Expert",
       description: "For those wanting structured routines, methodical planning, and a comprehensive approach to life management.",
       icon: <Settings className="h-8 w-8 text-primary" />
     },
