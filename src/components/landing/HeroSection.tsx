@@ -26,7 +26,7 @@ export function HeroSection() {
         
         <div className="space-y-6 mb-10">
           <h2 className="text-xl md:text-2xl font-medium text-primary">
-            Your Rhythm. Your Life.
+            Believe. Begin. Build. Become.
           </h2>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
