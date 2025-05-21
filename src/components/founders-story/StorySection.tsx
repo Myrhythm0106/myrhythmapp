@@ -1,9 +1,6 @@
-
 import React from "react";
-
 export function StorySection() {
-  return (
-    <section>
+  return <section>
       <h2 className="text-2xl font-semibold text-foreground">💬 My Story – From Survivor to System Creator</h2>
       <div className="space-y-4 mt-3 text-foreground">
         <p>
@@ -17,7 +14,7 @@ export function StorySection() {
           No tips on how to live when your brain feels like a stranger.
         </p>
         
-        <p className="font-medium text-foreground">But God showed up — and so did I.</p>
+        <p className="font-medium text-foreground">But God showed up and so did I.</p>
         
         <p className="text-foreground">I began building from scratch:</p>
         
@@ -49,6 +46,5 @@ export function StorySection() {
         
         <p className="font-medium text-foreground">Let's rewrite the story. One rhythm at a time.</p>
       </div>
-    </section>
-  );
+    </section>;
 }
