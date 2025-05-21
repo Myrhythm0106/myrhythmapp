@@ -7,26 +7,48 @@ export function TruthSection() {
     <section>
       <h2 className="text-2xl font-semibold text-foreground">🧠 The Truth – Let's Say It Out Loud</h2>
       <div className="space-y-4 mt-3 text-foreground">
+        <p>
+          April 1st, 2010 – the world calls it April Fools' Day.<br />
+          For me, it was the day my brain ruptured — and nothing about it was a joke.
+        </p>
+        
+        <p>
+          A brain aneurysm tried to silence my future. Doctors told me I'd die.<br />
+          That I'd never return to work.<br />
+          That my memory wouldn't come back.<br />
+          That motherhood would have to wait… at least five years.
+        </p>
+        
+        <p className="font-medium">
+          But here's the punchline:<br />
+          I'm still here. And I rewrote the script.
+        </p>
+        
         <p className="font-medium">
           You're not lazy.<br />
           You're not broken.<br />
           You're not "just forgetful."
         </p>
-        <p>This is what I say to myself regularly. But that's not what the world tells you. They say...</p>
+        
+        <p>That's what I had to start telling myself. Because the world tells you this instead:</p>
         
         <NegativeStatementsGrid />
 
         <p className="text-foreground">
-          These statements don't help.<br />
+          These words?<br />
+          They don't help.<br />
           They hurt.<br />
           They isolate.<br />
-          They make you doubt your ability to ever thrive again.
+          They strip away your confidence.
         </p>
+        
+        <p className="text-foreground">But let me tell you the truth:</p>
+        
         <p className="font-medium text-foreground">
-          But here's the truth:<br />
-          You don't need to "go back to normal." You need a rhythm that works for who you are now.
+          🔁 You don't need to "go back to normal."<br />
+          You need a rhythm that works for who you are now.<br />
+          Because when you find your rhythm, everything changes.
         </p>
-        <p className="font-bold text-foreground">Knowing and working with your own rhythm will make the difference!</p>
       </div>
     </section>
   );
