@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -29,9 +28,9 @@ export function HeroSection() {
             Believe. Begin. Build. Become.
           </h2>
           
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Navigating life after a brain injury is a unique journey. Find your own way forward, at your own pace.
-          </p>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Navigating life (particularly after a brain injury) is a unique journey.
+
+Find your rhythm your way and at your pace.</p>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             We believe in empowering you with simple, actionable steps that help build confidence and create a life that truly feels right for you.
