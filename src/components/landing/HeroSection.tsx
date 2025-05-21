@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -33,10 +32,7 @@ export function HeroSection() {
             Navigating life after a brain injury is a unique journey. Find your rhythm, your way and at your pace.
           </p>
           
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Be empowered to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. Create a life of ORDER, that truly feels right for you.
-            You're building a masterpiece of your own resilience, one intentional step at a time!
-          </p>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Be empowered to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. Create a life of ORDER, that truly feels right for you. </p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
