@@ -24,15 +24,16 @@ export function HeroSection() {
         </div>
         
         <div className="space-y-6 mb-10">
-          <h2 className="text-xl md:text-2xl font-medium text-primary">
-            Believe. Begin. Build. Become.
-          </h2>
+          <h2 className="text-xl font-medium text-primary md:text-base">ORDER = Organise. Routine. Discipline. Execute. Review.</h2>
           
           <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
             Navigating life after a brain injury is a unique journey. Find your rhythm, your way and at your pace.
           </p>
           
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Be empowered to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. Create a life of ORDER, that truly feels right for you. </p>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Be empowered to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. 
+
+
+Create a life of ORDER, that truly feels right for you with MyRhythm.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
