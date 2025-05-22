@@ -47,7 +47,7 @@ Create a life of ORDER, that truly feels right for you with MyRhythm.</p>
           element?.scrollIntoView({
             behavior: "smooth"
           });
-        }}>More About MyRhythm</Button>
+        }}>My Story</Button>
         </div>
       </div>
 
