@@ -26,11 +26,11 @@ export function HeroSection() {
         <div className="space-y-6 mb-10 text-sm">
           <h2 className="text-xl font-medium text-primary md:text-base">Empower ORDER = Organise. Routine. Discipline. Execute. Review.</h2>
           
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-base">
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">
             Your unique journey demands your rhythm, your way, your pace. MyRhythm empowers you to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention.
           </p>
           
-          <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-annabel-600">Create a life of ORDER that truly feels right.</p>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-annabel-600">Create a life of ORDER that truly feels right for you.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
