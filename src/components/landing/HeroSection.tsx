@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +31,7 @@ export function HeroSection() {
             Navigating life after a brain injury is a unique journey. Find your rhythm, your way and at your pace.
           </p>
           
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Be empowered to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. 
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">Be empowered to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention. 
 
 
 Create a life of ORDER, that truly feels right for you with MyRhythm.</p>
@@ -41,13 +42,9 @@ Create a life of ORDER, that truly feels right for you with MyRhythm.</p>
             Register Now
           </Button>
           <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/founders-story")}>Our Story</Button>
-          <Button size="lg" variant="outline" className="text-lg" onClick={() => {
-          // Scroll to the MyRhythmIntro section
-          const element = document.getElementById("discover-myrhythm");
-          element?.scrollIntoView({
-            behavior: "smooth"
-          });
-        }}>My Story</Button>
+          <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/guide")}>
+            How to Use MyRhythm
+          </Button>
         </div>
       </div>
 
