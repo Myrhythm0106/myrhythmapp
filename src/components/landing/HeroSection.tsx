@@ -24,7 +24,8 @@ export function HeroSection() {
         </div>
         
         <div className="space-y-6 mb-10 text-sm">
-          <h2 className="text-xl font-medium text-primary md:text-base">Empower ORDER = Organise. Routine. Discipline. Execute. Review.</h2>
+          <h2 className="text-xl font-medium text-primary md:text-base">
+        </h2>
           
           <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">
             Your unique journey demands your rhythm, your way, your pace. MyRhythm empowers you to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention.
