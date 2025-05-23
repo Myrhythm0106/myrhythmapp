@@ -38,9 +38,7 @@ export function HeroSection() {
             Register Now
           </Button>
           <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/founders-story")}>Our Story</Button>
-          <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/guide")}>
-            How to Use MyRhythm
-          </Button>
+          <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/guide")}>More About MyRhythm</Button>
         </div>
       </div>
 
