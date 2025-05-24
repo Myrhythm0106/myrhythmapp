@@ -27,9 +27,8 @@ export function HeroSection() {
           <h2 className="text-xl font-medium text-primary md:text-base">
         </h2>
           
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">
-            Your unique journey demands your rhythm, your way, your pace. MyRhythm empowers you to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention.
-          </p>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">Your unique journey demands your rhythm, your way and at your pace. 
+MyRhythm empowers you to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention.  Particularly after a traumatic/acquired brain injury.</p>
           
           <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-annabel-600">Create a life of ORDER that truly feels right for you.</p>
         </div>
