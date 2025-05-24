@@ -1,16 +1,21 @@
 
 import React from "react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
-import { MoodHistoryEntry } from "./MoodTypes";
 
-interface MoodHistoryChartProps {
+export interface MoodHistoryEntry {
+  day: string;
+  value: number;
+  mood?: string;
+}
+
+export interface MoodHistoryChartProps {
   moodHistory: MoodHistoryEntry[];
 }
 
 export function MoodHistoryChart({ moodHistory }: MoodHistoryChartProps) {
   return (
     <div className="mt-6">
-      <h3 className="text-sm font-medium mb-2">Your Mood - Last 7 Days</h3>
+      <h3 className="text-sm font-medium mb-2">Your Mood History</h3>
       <div className="h-[120px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={moodHistory}>

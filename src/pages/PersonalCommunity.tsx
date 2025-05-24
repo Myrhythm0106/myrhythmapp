@@ -10,9 +10,11 @@ import { CommunityMembers } from "@/components/community/CommunityMembers";
 import { MessageBoard } from "@/components/community/MessageBoard";
 import { CommunityInvite } from "@/components/community/CommunityInvite";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Users, MessageSquare, Heart, ChevronRight } from "lucide-react";
+import { Plus, Users, MessageSquare, Heart, ChevronRight, Eye, Settings } from "lucide-react";
 import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SupportCirclePermissions } from "@/components/personal-community/SupportCirclePermissions";
+import { SupportCircleMessages } from "@/components/personal-community/SupportCircleMessages";
 
 const PersonalCommunity = () => {
   const [activeTab, setActiveTab] = useState("members");
@@ -72,6 +74,10 @@ const PersonalCommunity = () => {
               <MessageSquare className="h-4 w-4" />
               Message Board
             </TabsTrigger>
+            <TabsTrigger value="permissions" className="flex items-center gap-2">
+              <Eye className="h-4 w-4" />
+              Data Access
+            </TabsTrigger>
             <TabsTrigger value="encouragement" className="flex items-center gap-2">
               <Heart className="h-4 w-4" />
               Encouragement
@@ -96,9 +102,13 @@ const PersonalCommunity = () => {
           <TabsContent value="messages" className="space-y-4">
             <Card>
               <CardContent className="pt-6">
-                <MessageBoard />
+                <SupportCircleMessages />
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="permissions" className="space-y-4">
+            <SupportCirclePermissions />
           </TabsContent>
           
           <TabsContent value="encouragement" className="space-y-4">
