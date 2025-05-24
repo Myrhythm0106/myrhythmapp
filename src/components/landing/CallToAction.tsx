@@ -21,10 +21,9 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
         <Button 
           size="lg" 
           className="text-lg gap-2 px-8 py-6 h-auto shadow-md hover:shadow-lg transition-all"
-          onClick={() => navigate("/guide")}
+          onClick={() => navigate("/onboarding")}
         >
-          <FileText className="h-5 w-5" />
-          View the MYRHYTHM Guide
+          Register Now
         </Button>
       </div>
     </section>

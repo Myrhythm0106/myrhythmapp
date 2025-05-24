@@ -1,8 +1,9 @@
+
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Brain, Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search } from "lucide-react";
+import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile } from "lucide-react";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { Badge } from "@/components/ui/badge";
 
@@ -14,7 +15,7 @@ export const Sidebar = () => {
     { to: "/dashboard", icon: <Home />, label: "Dashboard", badge: null },
     { to: "/calendar", icon: <Calendar />, label: "Calendar", badge: null },
     { to: "/tracking", icon: <HeartPulse />, label: "Health Tracking", badge: null },
-    { to: "/home", icon: <Brain />, label: "Brain Recovery", badge: "New" },
+    { to: "/mood", icon: <Smile />, label: "Mood Tracking", badge: "New" },
   ];
   
   // Secondary navigation items
@@ -30,7 +31,7 @@ export const Sidebar = () => {
       <div className={cn("fixed inset-y-0 left-0 z-50 flex w-72 flex-col border-r bg-sidebar transition-transform duration-300 ease-in-out md:relative", isOpen ? "translate-x-0" : "-translate-x-full md:w-20")}>
         <div className="flex h-16 items-center justify-between border-b px-4">
           <div className="flex items-center gap-2">
-            <Brain className="h-7 w-7 text-beacon-600" />
+            <Heart className="h-7 w-7 text-beacon-600" />
             {isOpen && <span className="text-lg font-semibold text-sidebar-foreground">MyRhythm</span>}
           </div>
           <button onClick={toggle} className="rounded-md p-1 text-sidebar-foreground hover:bg-sidebar-accent" aria-label={isOpen ? "Collapse sidebar" : "Expand sidebar"}>

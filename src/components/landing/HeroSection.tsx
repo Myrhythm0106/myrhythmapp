@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,15 @@ import { LoginModal } from "@/components/auth/LoginModal";
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
+  
+  // Function to scroll to the Discover MyRhythm section
+  const scrollToDiscover = () => {
+    const discoverSection = document.getElementById('discover-myrhythm');
+    if (discoverSection) {
+      discoverSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
   return <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
       {/* Login button at top right */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
@@ -38,7 +48,7 @@ MyRhythm empowers you to Organise priorities, build Routines, strengthen Discipl
             Register Now
           </Button>
           <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/founders-story")}>Our Story</Button>
-          <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/guide")}>More About MyRhythm</Button>
+          <Button size="lg" variant="outline" className="text-lg" onClick={scrollToDiscover}>More About MyRhythm</Button>
         </div>
       </div>
 

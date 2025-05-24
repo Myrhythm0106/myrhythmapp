@@ -23,6 +23,7 @@ import Gratitude from "./pages/Gratitude";
 import { useIsMobile } from "./hooks/use-mobile";
 import UserGuideView from "./pages/UserGuideView";
 import FoundersStory from "./pages/FoundersStory";
+import MoodTracking from "./pages/MoodTracking";
 
 const queryClient = new QueryClient();
 
@@ -70,6 +71,11 @@ const AppRoutes = () => {
       <Route path="/tracking" element={
         <MainLayout>
           <SymptomTracking />
+        </MainLayout>
+      } />
+      <Route path="/mood" element={
+        <MainLayout>
+          <MoodTracking />
         </MainLayout>
       } />
       <Route path="/gratitude" element={
