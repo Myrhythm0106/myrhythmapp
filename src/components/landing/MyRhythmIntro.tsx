@@ -58,7 +58,7 @@ export function MyRhythmIntro() {
   return <section id="discover-myrhythm" className="py-20 bg-background">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">Discover MYRHYTHM</h2>
+          <h2 className="text-3xl mb-6 text-foreground font-bold md:text-4xl">Discover MyRhythm</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             We've broken down key strategies into a simple, memorable guide: MYRHYTHM. 
             These aren't rigid rules, but suggestions to help you build structure, focus, 
