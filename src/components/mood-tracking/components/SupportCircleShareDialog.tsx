@@ -3,7 +3,7 @@ import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChevronRight, Users } from "lucide-react";
+import { ChevronRight, Users, Share2 } from "lucide-react";
 import { SupportMember } from "@/hooks/use-support-circle";
 
 interface SupportCircleShareDialogProps {
