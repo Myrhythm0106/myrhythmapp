@@ -27,7 +27,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 type UserType = "productivity" | "cognitive" | "comprehensive";
 type ThemeMode = "light" | "dark" | "system";
-type LayoutPreference = "standard" | "simplified" | "focused";
+type LayoutPreference = "standard" | "simplified" | "focused" | "customizable";
 
 const Customization = () => {
   const navigate = useNavigate();
@@ -41,7 +41,16 @@ const Customization = () => {
   const [layoutPreference, setLayoutPreference] = useState<LayoutPreference>("standard");
 
   const handleSave = () => {
-    // In a real app, we'd save these preferences to the user's profile
+    // Save layout preference to localStorage
+    localStorage.setItem('dashboardLayout', layoutPreference);
+    localStorage.setItem('userType', selectedType || '');
+    localStorage.setItem('fontSize', fontSize.toString());
+    localStorage.setItem('theme', theme);
+    localStorage.setItem('reduceMotion', reduceMotion.toString());
+    localStorage.setItem('highContrast', highContrast.toString());
+    localStorage.setItem('enableSwipe', enableSwipe.toString());
+    localStorage.setItem('enableSoundEffects', enableSoundEffects.toString());
+    
     toast.success("Preferences saved successfully!");
     navigate("/dashboard");
   };
@@ -82,6 +91,11 @@ const Customization = () => {
       id: "focused",
       title: "Focus Mode",
       description: "Only show immediate tasks and priorities"
+    },
+    {
+      id: "customizable",
+      title: "Customizable Dashboard",
+      description: "Drag-and-drop widgets with full customization control"
     }
   ];
 

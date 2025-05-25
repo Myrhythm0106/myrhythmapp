@@ -9,6 +9,7 @@ import { BrainGameQuickStart } from "@/components/dashboard/BrainGameQuickStart"
 import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
 import { GratitudePromptCard } from "@/components/dashboard/GratitudePromptCard";
 import { RecentWinsCard } from "@/components/dashboard/RecentWinsCard";
+import { CustomizableDashboard } from "@/components/dashboard/CustomizableDashboard";
 import { useUserData } from "@/hooks/use-user-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,9 @@ import { toast } from "sonner";
 
 const Dashboard = () => {
   const userData = useUserData();
+  
+  // Get layout preference from localStorage
+  const layoutPreference = localStorage.getItem('dashboardLayout') || 'standard';
   
   // Function to handle the dashboard customization
   const handleCustomizeDashboard = () => {
@@ -31,6 +35,15 @@ const Dashboard = () => {
       description: "Focus on completing your routine items and daily focus tasks first."
     });
   };
+
+  // Render customizable dashboard if selected
+  if (layoutPreference === 'customizable') {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <CustomizableDashboard />
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6 animate-fade-in">
