@@ -1,10 +1,9 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { format, subDays, startOfMonth, endOfMonth } from "date-fns";
 import { useMoodTracker } from "@/hooks/use-mood-tracker";
-import { Clock, Calendar, Eye, Today } from "lucide-react";
+import { Clock, Calendar, Eye, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 import { useSupportCircle } from "@/hooks/use-support-circle";
 
@@ -132,7 +131,7 @@ export function MoodTrackerView() {
       <Tabs value={selectedView} onValueChange={setSelectedView}>
         <TabsList className="mb-4">
           <TabsTrigger value="today" className="flex items-center gap-2">
-            <Today className="h-4 w-4" />
+            <CalendarDays className="h-4 w-4" />
             Today
           </TabsTrigger>
           <TabsTrigger value="week" className="flex items-center gap-2">
