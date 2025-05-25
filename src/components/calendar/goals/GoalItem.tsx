@@ -1,11 +1,10 @@
+
 import React from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Goal, Action } from "../types/goalTypes";
-import { ActionTable } from "./ActionTable";
 import { ActionItemDetailed } from "../ActionItemDetailed";
-import { getActionStatusStyles, getActionTypeStyles, getGoalTypeStyles } from "../utils/actionStyles";
+import { StatusBadge } from "./StatusBadge";
+import { Target, Clock } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface GoalItemProps {
   goal: Goal;
@@ -14,68 +13,61 @@ interface GoalItemProps {
 }
 
 export function GoalItem({ goal, actions, detailedActions = false }: GoalItemProps) {
-  
-  const completedActions = actions.filter(action => action.status === "completed").length;
-  const progress = actions.length > 0 ? (completedActions / actions.length) * 100 : 0;
-
-  const getStatusColor = (status: Goal["status"]) => {
-    switch (status) {
-      case "completed": return "bg-green-100 text-green-800";
-      case "in-progress": return "bg-blue-100 text-blue-800";
-      case "not-started": return "bg-gray-100 text-gray-800";
-      case "on-hold": return "bg-yellow-100 text-yellow-800";
-      default: return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  const getTypeColor = (type: Goal["type"]) => {
+  const getGoalTypeColor = (type: string) => {
     switch (type) {
-      case "mobility": return "bg-purple-100 text-purple-800";
-      case "cognitive": return "bg-blue-100 text-blue-800";
-      case "health": return "bg-green-100 text-green-800";
-      case "other": return "bg-gray-100 text-gray-800";
-      default: return "bg-gray-100 text-gray-800";
+      case "daily":
+        return "border-l-blue-500 bg-blue-50";
+      case "weekly":
+        return "border-l-green-500 bg-green-50";
+      case "monthly":
+        return "border-l-purple-500 bg-purple-50";
+      case "long-term":
+        return "border-l-orange-500 bg-orange-50";
+      default:
+        return "border-l-gray-500 bg-gray-50";
     }
   };
+
+  const completedActions = actions.filter(action => action.completed).length;
+  const totalActions = actions.length;
+  const completionPercentage = totalActions > 0 ? (completedActions / totalActions) * 100 : 0;
 
   return (
-    <Card>
+    <Card className={`border-l-4 ${getGoalTypeColor(goal.type)}`}>
       <CardHeader className="pb-3">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <h3 className="text-lg font-semibold">{goal.title}</h3>
-          <div className="flex gap-2">
-            <Badge className={getTypeColor(goal.type)}>{goal.type}</Badge>
-            <Badge className={getStatusColor(goal.status)}>{goal.status}</Badge>
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-2">
+            <Target className="h-4 w-4 text-primary" />
+            <CardTitle className="text-lg">{goal.title}</CardTitle>
+          </div>
+          <div className="flex items-center gap-2">
+            <StatusBadge status={completedActions === totalActions && totalActions > 0 ? "completed" : "in-progress"} />
+            <span className="text-sm text-muted-foreground">
+              {completedActions}/{totalActions}
+            </span>
           </div>
         </div>
         {goal.description && (
-          <p className="text-sm text-muted-foreground mt-2">{goal.description}</p>
+          <p className="text-sm text-muted-foreground mt-1">{goal.description}</p>
         )}
-        <div className="flex items-center gap-4 mt-3">
-          <div className="flex-1">
-            <div className="flex justify-between text-sm mb-1">
-              <span>Progress</span>
-              <span>{completedActions}/{actions.length} actions completed</span>
-            </div>
-            <Progress value={progress} className="h-2" />
-          </div>
-        </div>
       </CardHeader>
-      <CardContent>
-        {detailedActions ? (
-          <div className="space-y-3">
-            {actions.map(action => (
+      
+      <CardContent className="pt-0">
+        {actions.length > 0 ? (
+          <div className="space-y-2">
+            {actions.map((action) => (
               <ActionItemDetailed
                 key={action.id}
-                action={action}
-                getActionStatusStyles={getActionStatusStyles}
-                getActionTypeStyles={getActionTypeStyles}
-                getGoalTypeStyles={getGoalTypeStyles}
+                action={{
+                  ...action,
+                  time: action.scheduledTime || "No time set"
+                }}
+                showDetails={detailedActions}
               />
             ))}
           </div>
         ) : (
-          <ActionTable actions={actions} goalId={goal.id} />
+          <p className="text-sm text-muted-foreground italic">No actions assigned to this goal yet.</p>
         )}
       </CardContent>
     </Card>

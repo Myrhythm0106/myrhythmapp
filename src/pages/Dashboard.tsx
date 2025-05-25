@@ -7,7 +7,6 @@ import { UpcomingToday } from "@/components/dashboard/UpcomingToday";
 import { RoutineCheckIn } from "@/components/dashboard/RoutineCheckIn";
 import { BrainGameQuickStart } from "@/components/dashboard/BrainGameQuickStart";
 import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
-import { GratitudePromptCard } from "@/components/dashboard/GratitudePromptCard";
 import { RecentWinsCard } from "@/components/dashboard/RecentWinsCard";
 import { CustomizableDashboard } from "@/components/dashboard/CustomizableDashboard";
 import { StickyActionBar } from "@/components/dashboard/StickyActionBar";
@@ -96,16 +95,15 @@ const Dashboard = () => {
           <MoodEnergySnapshot />
         </div>
         
-        {/* Right Column - Gratitude & Wins */}
+        {/* Right Column - Recent Wins */}
         <div className="space-y-6 lg:col-span-1">
-          <GratitudePromptCard />
           <RecentWinsCard />
           
           {/* Integration hint card */}
           <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
             <p className="text-sm">
-              <span className="font-medium">Did you know?</span> Recording gratitude moments 
-              can improve your mood over time. Try adding at least one gratitude note daily.
+              <span className="font-medium">Did you know?</span> Tracking your mood regularly 
+              can help identify patterns and improve your emotional wellbeing over time.
             </p>
           </Card>
         </div>

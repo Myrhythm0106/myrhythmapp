@@ -1,46 +1,44 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Action } from "../types/goalTypes";
-import { ChevronDown, ChevronRight, Calendar } from "lucide-react";
-import { ActionTable } from "./ActionTable";
+import { ActionItemDetailed } from "../ActionItemDetailed";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Unlink } from "lucide-react";
 
 interface UnlinkedActionsProps {
   actions: Action[];
-  isExpanded: boolean;
-  onToggle: () => void;
+  detailedActions?: boolean;
 }
 
-export const UnlinkedActions: React.FC<UnlinkedActionsProps> = ({ 
-  actions, 
-  isExpanded, 
-  onToggle 
-}) => {
+export function UnlinkedActions({ actions, detailedActions = false }: UnlinkedActionsProps) {
+  if (actions.length === 0) return null;
+
   return (
-    <Card className="border-l-4 border-l-gray-300">
-      <CardContent className="p-0">
-        <div 
-          className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/30"
-          onClick={onToggle}
-        >
-          <div className="flex items-center space-x-2">
-            {isExpanded ? 
-              <ChevronDown className="h-4 w-4 text-muted-foreground" /> : 
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            }
-            <div className="flex items-center">
-              <Calendar className="h-4 w-4 mr-1" />
-              <span className="font-medium">Actions Without Goals</span>
-            </div>
-          </div>
+    <Card className="border-l-4 border-l-gray-400 bg-gray-50">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Unlink className="h-4 w-4 text-gray-600" />
+          Unlinked Actions
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          Actions not assigned to any specific goal
+        </p>
+      </CardHeader>
+      
+      <CardContent className="pt-0">
+        <div className="space-y-2">
+          {actions.map((action) => (
+            <ActionItemDetailed
+              key={action.id}
+              action={{
+                ...action,
+                time: action.scheduledTime || "No time set"
+              }}
+              showDetails={detailedActions}
+            />
+          ))}
         </div>
-        
-        {isExpanded && (
-          <div className="px-4 pb-4 pt-0">
-            <ActionTable actions={actions} />
-          </div>
-        )}
       </CardContent>
     </Card>
   );
-};
+}

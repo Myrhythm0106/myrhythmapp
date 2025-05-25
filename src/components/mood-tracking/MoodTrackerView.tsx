@@ -1,9 +1,10 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { format, subDays, startOfMonth, endOfMonth } from "date-fns";
 import { useMoodTracker } from "@/hooks/use-mood-tracker";
-import { Clock, Calendar, Eye, CalendarDays } from "lucide-react";
+import { Clock, Calendar, Eye, CalendarDays, HeartHandshake } from "lucide-react";
 import { toast } from "sonner";
 import { useSupportCircle } from "@/hooks/use-support-circle";
 
@@ -14,6 +15,8 @@ import { MoodSuggestionCard } from "./components/MoodSuggestionCard";
 import { WeeklyMoodView } from "./components/WeeklyMoodView";
 import { MonthlyMoodView } from "./components/MonthlyMoodView";
 import { SupportCircleShareDialog } from "./components/SupportCircleShareDialog";
+import { GratitudePrompt } from "@/components/gratitude/GratitudePrompt";
+import { useGratitude } from "@/hooks/use-gratitude";
 import { 
   getChartData, 
   getMoodTrendInsight, 
@@ -33,8 +36,10 @@ const moodValueMap: Record<string, { mood: "great" | "okay" | "struggling"; scor
 
 export function MoodTrackerView() {
   const [selectedView, setSelectedView] = useState("today");
+  const [showGratitude, setShowGratitude] = useState(false);
   const { addEntry, entries, isLoading } = useMoodTracker();
   const { members } = useSupportCircle();
+  const { addEntry: addGratitudeEntry } = useGratitude();
   
   const handleMoodSubmit = (moodValue: string, note: string) => {
     const moodData = moodValueMap[moodValue];
@@ -50,7 +55,15 @@ export function MoodTrackerView() {
       
       addEntry(newEntry);
       toast.success("Your mood has been recorded");
+      
+      // Show gratitude prompt after mood entry
+      setShowGratitude(true);
     }
+  };
+
+  const handleGratitudeSave = (entry: any) => {
+    addGratitudeEntry(entry);
+    setShowGratitude(false);
   };
 
   // Filter entries based on selected view
@@ -120,6 +133,25 @@ export function MoodTrackerView() {
           <SupportCircleShareDialog members={members} />
         </div>
       </div>
+
+      {/* Gratitude Prompt Modal */}
+      {showGratitude && (
+        <div className="mb-6 p-4 border-2 border-dashed border-purple-300 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50">
+          <div className="flex items-center gap-2 mb-4">
+            <HeartHandshake className="h-5 w-5 text-purple-600" />
+            <h3 className="text-lg font-medium text-purple-800">Complete Your Reflection</h3>
+          </div>
+          <p className="text-sm text-purple-700 mb-4">
+            Since you've shared your mood, take a moment to reflect on something you're grateful for today. 
+            This practice can help reinforce positive feelings and build emotional resilience.
+          </p>
+          <GratitudePrompt
+            promptType="mindfulness"
+            onSave={handleGratitudeSave}
+            onClose={() => setShowGratitude(false)}
+          />
+        </div>
+      )}
 
       {/* Mood Selection Interface */}
       <MoodSelectionInterface 
