@@ -38,7 +38,7 @@ export const sampleActions: Action[] = [
   {
     id: "a1",
     title: "Memory card game exercise",
-    type: "task",
+    type: "activity",
     date: "2023-05-20",
     startTime: "10:00 AM",
     status: "completed",
@@ -47,7 +47,7 @@ export const sampleActions: Action[] = [
   {
     id: "a2",
     title: "Cognitive therapy session",
-    type: "appointment",
+    type: "therapy",
     date: "2023-05-22",
     startTime: "2:30 PM",
     endTime: "3:30 PM",
@@ -57,7 +57,7 @@ export const sampleActions: Action[] = [
   {
     id: "a3",
     title: "Brain training app exercises",
-    type: "task",
+    type: "activity",
     date: "2023-05-25",
     startTime: "6:00 PM",
     status: "pending",
@@ -66,7 +66,7 @@ export const sampleActions: Action[] = [
   {
     id: "a4",
     title: "Group therapy session",
-    type: "meeting",
+    type: "therapy",
     date: "2023-05-27",
     startTime: "11:15 AM",
     endTime: "12:30 PM",
@@ -76,7 +76,7 @@ export const sampleActions: Action[] = [
   {
     id: "a5",
     title: "Review memory flashcards",
-    type: "reminder",
+    type: "personal",
     date: "2023-05-28",
     startTime: "09:00 AM",
     status: "pending",
@@ -85,7 +85,7 @@ export const sampleActions: Action[] = [
   {
     id: "a6",
     title: "Mindfulness meditation",
-    type: "task",
+    type: "activity",
     date: "2023-05-26",
     startTime: "07:30 AM",
     status: "completed",
