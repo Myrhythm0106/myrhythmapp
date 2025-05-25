@@ -10,6 +10,8 @@ import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
 import { GratitudePromptCard } from "@/components/dashboard/GratitudePromptCard";
 import { RecentWinsCard } from "@/components/dashboard/RecentWinsCard";
 import { CustomizableDashboard } from "@/components/dashboard/CustomizableDashboard";
+import { StickyActionBar } from "@/components/dashboard/StickyActionBar";
+import { MotivationalStatement } from "@/components/dashboard/MotivationalStatement";
 import { useUserData } from "@/hooks/use-user-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,14 +41,15 @@ const Dashboard = () => {
   // Render customizable dashboard if selected
   if (layoutPreference === 'customizable') {
     return (
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-6 animate-fade-in relative">
         <CustomizableDashboard />
+        <StickyActionBar />
       </div>
     );
   }
   
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in relative">
       <PageHeader 
         title={`Welcome back, ${userData.name}`}
         subtitle="Here's what's important for you today"
@@ -81,6 +84,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Primary Focus Column - The most essential tools */}
         <div className="space-y-6 lg:col-span-1">
+          <MotivationalStatement />
           <TodayFocus />
           <UpcomingToday />
           <RoutineCheckIn />
@@ -106,6 +110,8 @@ const Dashboard = () => {
           </Card>
         </div>
       </div>
+
+      <StickyActionBar />
     </div>
   );
 };

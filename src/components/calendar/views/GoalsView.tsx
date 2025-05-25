@@ -33,6 +33,7 @@ export function GoalsView() {
             <ListView 
               goals={sampleGoals} 
               actions={sampleActions}
+              detailedActions={true}
             />
           ) : (
             <div className="text-center text-muted-foreground p-4">

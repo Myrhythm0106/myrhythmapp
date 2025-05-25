@@ -1,94 +1,81 @@
-
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Goal, Action } from "../types/goalTypes";
-import { ChevronDown, ChevronRight, CalendarClock, Flag, Target, ListCheck, Book, ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ActionTable } from "./ActionTable";
-import { getGoalActions } from "../utils/goalUtils";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Goal, Action } from "../types/goalTypes";
+import { ActionTable } from "./ActionTable";
+import { ActionItemDetailed } from "../ActionItemDetailed";
+import { getActionStatusStyles, getActionTypeStyles, getGoalTypeStyles } from "../utils/actionStyles";
 
 interface GoalItemProps {
   goal: Goal;
-  isExpanded: boolean;
-  onToggle: () => void;
   actions: Action[];
+  detailedActions?: boolean;
 }
 
-export const GoalItem: React.FC<GoalItemProps> = ({ 
-  goal, 
-  isExpanded, 
-  onToggle,
-  actions 
-}) => {
-  const goalActions = getGoalActions(goal.id, actions);
+export function GoalItem({ goal, actions, detailedActions = false }: GoalItemProps) {
   
-  const getGoalTypeIcon = () => {
-    switch(goal.type) {
-      case "daily":
-        return <ArrowRight className="h-4 w-4 mr-1 text-blue-500" />;
-      case "weekly":
-        return <Flag className="h-4 w-4 mr-1 text-amber-500" />;
-      case "monthly":
-        return <Target className="h-4 w-4 mr-1 text-green-500" />;
-      case "long-term":
-        return <ListCheck className="h-4 w-4 mr-1 text-purple-500" />;
-      default:
-        return <Target className="h-4 w-4 mr-1 text-primary" />;
+  const completedActions = actions.filter(action => action.status === "completed").length;
+  const progress = actions.length > 0 ? (completedActions / actions.length) * 100 : 0;
+
+  const getStatusColor = (status: Goal["status"]) => {
+    switch (status) {
+      case "completed": return "bg-green-100 text-green-800";
+      case "in-progress": return "bg-blue-100 text-blue-800";
+      case "not-started": return "bg-gray-100 text-gray-800";
+      case "on-hold": return "bg-yellow-100 text-yellow-800";
+      default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getTypeColor = (type: Goal["type"]) => {
+    switch (type) {
+      case "mobility": return "bg-purple-100 text-purple-800";
+      case "cognitive": return "bg-blue-100 text-blue-800";
+      case "health": return "bg-green-100 text-green-800";
+      case "other": return "bg-gray-100 text-gray-800";
+      default: return "bg-gray-100 text-gray-800";
     }
   };
 
   return (
-    <Card className={cn(
-      "border-l-4",
-      goal.progress >= 70 ? "border-l-green-500" : 
-      goal.progress >= 40 ? "border-l-amber-500" : 
-      "border-l-red-500"
-    )}>
-      <CardContent className="p-0">
-        <div 
-          className="p-4 flex items-center justify-between cursor-pointer hover:bg-muted/30"
-          onClick={onToggle}
-        >
-          <div className="flex items-center space-x-2">
-            {isExpanded ? 
-              <ChevronDown className="h-4 w-4 text-muted-foreground" /> : 
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            }
-            <div className="flex items-center">
-              {getGoalTypeIcon()}
-              <span className="font-medium">{goal.title}</span>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-3">
-            <div className="text-sm text-muted-foreground flex items-center">
-              <CalendarClock className="h-3.5 w-3.5 mr-1" />
-              {goal.dueDate || "No due date"}
-            </div>
-            
-            <div className="w-24">
-              <Progress 
-                value={goal.progress}
-                className="h-2"
-                indicatorClassName={cn(
-                  goal.progress >= 70 ? "bg-green-500" : 
-                  goal.progress >= 40 ? "bg-amber-500" : 
-                  "bg-red-500"
-                )}
-              />
-            </div>
+    <Card>
+      <CardHeader className="pb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <h3 className="text-lg font-semibold">{goal.title}</h3>
+          <div className="flex gap-2">
+            <Badge className={getTypeColor(goal.type)}>{goal.type}</Badge>
+            <Badge className={getStatusColor(goal.status)}>{goal.status}</Badge>
           </div>
         </div>
-        
-        {isExpanded && (
-          <div className="px-4 pb-4 pt-0">
-            {goal.description && (
-              <p className="text-sm text-muted-foreground mb-3">{goal.description}</p>
-            )}
-            
-            <ActionTable actions={goalActions} goalId={goal.id} />
+        {goal.description && (
+          <p className="text-sm text-muted-foreground mt-2">{goal.description}</p>
+        )}
+        <div className="flex items-center gap-4 mt-3">
+          <div className="flex-1">
+            <div className="flex justify-between text-sm mb-1">
+              <span>Progress</span>
+              <span>{completedActions}/{actions.length} actions completed</span>
+            </div>
+            <Progress value={progress} className="h-2" />
           </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {detailedActions ? (
+          <div className="space-y-3">
+            {actions.map(action => (
+              <ActionItemDetailed
+                key={action.id}
+                action={action}
+                getActionStatusStyles={getActionStatusStyles}
+                getActionTypeStyles={getActionTypeStyles}
+                getGoalTypeStyles={getGoalTypeStyles}
+              />
+            ))}
+          </div>
+        ) : (
+          <ActionTable actions={actions} goalId={goal.id} />
         )}
       </CardContent>
     </Card>
