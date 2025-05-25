@@ -1,9 +1,8 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Clock, Target, Zap } from "lucide-react";
+import { Brain, Clock, Target, Zap, Calendar } from "lucide-react";
 
 interface DailyMemoryWorkoutProps {
   onStartGame: (gameType: 'sequence' | 'matching' | 'spatial', level?: number) => void;
