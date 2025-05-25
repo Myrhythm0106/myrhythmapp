@@ -32,7 +32,7 @@ export function UnlinkedActions({ actions, detailedActions = false }: UnlinkedAc
               key={action.id}
               action={{
                 ...action,
-                time: action.scheduledTime || "No time set"
+                time: action.startTime || "No time set"
               }}
               showDetails={detailedActions}
             />

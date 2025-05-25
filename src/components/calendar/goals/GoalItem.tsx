@@ -28,7 +28,7 @@ export function GoalItem({ goal, actions, detailedActions = false }: GoalItemPro
     }
   };
 
-  const completedActions = actions.filter(action => action.completed).length;
+  const completedActions = actions.filter(action => action.status === "completed").length;
   const totalActions = actions.length;
   const completionPercentage = totalActions > 0 ? (completedActions / totalActions) * 100 : 0;
 
@@ -60,7 +60,7 @@ export function GoalItem({ goal, actions, detailedActions = false }: GoalItemPro
                 key={action.id}
                 action={{
                   ...action,
-                  time: action.scheduledTime || "No time set"
+                  time: action.startTime || "No time set"
                 }}
                 showDetails={detailedActions}
               />

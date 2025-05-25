@@ -13,10 +13,17 @@ export interface Goal {
 export interface Action {
   id: string;
   title: string;
-  type: "appointment" | "meeting" | "task" | "reminder";
+  type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other";
   date: string;
   startTime: string;
   endTime?: string;
   status: "completed" | "pending" | "in-progress" | "canceled";
   goalId?: string;
+  location?: string;
+  watchers?: string[];
+  linkedGoal?: {
+    id: string;
+    title: string;
+    type: "mobility" | "cognitive" | "health" | "other";
+  };
 }

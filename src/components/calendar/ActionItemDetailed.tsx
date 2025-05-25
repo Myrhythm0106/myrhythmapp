@@ -7,22 +7,74 @@ import { cn } from "@/lib/utils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { EventForm } from "@/components/calendar/EventForm";
 import { toast } from "sonner";
-import { Action } from "@/components/calendar/ActionItem";
 
 interface ActionItemDetailedProps {
-  action: Action;
-  getActionStatusStyles: (actionDate: string) => string;
-  getActionTypeStyles: (type: Action["type"]) => string;
-  getGoalTypeStyles: (type: string) => string;
+  action: {
+    id: string;
+    title: string;
+    date: string;
+    time: string;
+    location?: string;
+    type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other";
+    watchers?: string[];
+    linkedGoal?: {
+      id: string;
+      title: string;
+      type: "mobility" | "cognitive" | "health" | "other";
+    };
+    status?: "completed" | "pending" | "in-progress" | "canceled";
+  };
+  showDetails?: boolean;
 }
 
 export function ActionItemDetailed({ 
   action, 
-  getActionStatusStyles, 
-  getActionTypeStyles, 
-  getGoalTypeStyles 
+  showDetails = false 
 }: ActionItemDetailedProps) {
   const [showActions, setShowActions] = useState(false);
+
+  const getActionStatusStyles = (status?: string) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-50 border-green-200";
+      case "in-progress":
+        return "bg-blue-50 border-blue-200";
+      case "canceled":
+        return "bg-red-50 border-red-200";
+      default:
+        return "bg-white border-gray-200";
+    }
+  };
+
+  const getActionTypeStyles = (type: string) => {
+    switch (type) {
+      case "appointment":
+        return "bg-blue-100 text-blue-800";
+      case "therapy":
+        return "bg-purple-100 text-purple-800";
+      case "medication":
+        return "bg-red-100 text-red-800";
+      case "activity":
+        return "bg-green-100 text-green-800";
+      case "personal":
+        return "bg-orange-100 text-orange-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getGoalTypeStyles = (type: string) => {
+    switch (type) {
+      case "mobility":
+        return "border-blue-200 bg-blue-50 text-blue-700";
+      case "cognitive":
+        return "border-purple-200 bg-purple-50 text-purple-700";
+      case "health":
+        return "border-green-200 bg-green-50 text-green-700";
+      default:
+        return "border-gray-200 bg-gray-50 text-gray-700";
+    }
+  };
 
   const handleDelete = () => {
     toast.success("Action deleted successfully");
@@ -31,7 +83,7 @@ export function ActionItemDetailed({
 
   return (
     <div 
-      className={`border rounded-md p-3 transition-all hover:shadow-md cursor-pointer relative ${getActionStatusStyles(action.date)}`}
+      className={`border rounded-md p-3 transition-all hover:shadow-md cursor-pointer relative ${getActionStatusStyles(action.status)}`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
     >
