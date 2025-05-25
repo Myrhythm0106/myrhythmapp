@@ -9,7 +9,7 @@ import { SymptomLogForm } from "@/components/tracking/SymptomLogForm";
 import { SymptomHistory } from "@/components/tracking/SymptomHistory";
 import { SymptomInsights } from "@/components/tracking/SymptomInsights";
 import { InspirationSection } from "@/components/tracking/InspirationSection";
-import { BrainGamesLibrary } from "@/components/brain-games/BrainGamesLibrary";
+import { BrainGamesHub } from "@/components/brain-games/BrainGamesHub";
 import { Plus, List, LineChart, Smile, Brain, Eye, Users } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useSupportCircle } from "@/hooks/use-support-circle";
@@ -123,7 +123,7 @@ const SymptomTracking = () => {
         <TabsList className="overflow-x-auto flex w-full">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="log">Log Data</TabsTrigger>
-          <TabsTrigger value="brainGames">Brain Games Library</TabsTrigger>
+          <TabsTrigger value="brainGames">Brain Games</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
           <TabsTrigger value="insights">Insights</TabsTrigger>
           <TabsTrigger value="inspiration">Inspiration</TabsTrigger>
@@ -144,7 +144,7 @@ const SymptomTracking = () => {
         <TabsContent value="brainGames">
           <Card className="overflow-hidden">
             <CardContent className="pt-6 pb-6">
-              <BrainGamesLibrary />
+              <BrainGamesHub />
             </CardContent>
           </Card>
         </TabsContent>
