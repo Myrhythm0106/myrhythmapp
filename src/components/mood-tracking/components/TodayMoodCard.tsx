@@ -9,17 +9,54 @@ interface TodayMoodCardProps {
   moodEntry: any;
 }
 
+const getMoodDisplayInfo = (mood: string) => {
+  switch (mood) {
+    case "great":
+      return {
+        color: "text-green-500",
+        bgColor: "bg-green-100",
+        label: "Feeling Great"
+      };
+    case "okay":
+      return {
+        color: "text-blue-500",
+        bgColor: "bg-blue-100",
+        label: "Feeling Okay"
+      };
+    case "struggling":
+      return {
+        color: "text-red-500",
+        bgColor: "bg-red-100",
+        label: "Having Difficulties"
+      };
+    default:
+      return {
+        color: "text-gray-500",
+        bgColor: "bg-gray-100",
+        label: "Mood Recorded"
+      };
+  }
+};
+
 export function TodayMoodCard({ latestMood, moodEntry }: TodayMoodCardProps) {
   if (!latestMood || !moodEntry) {
     return (
       <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">Today's Mood</CardTitle>
+        </CardHeader>
         <CardContent className="py-8 text-center">
-          <p className="text-muted-foreground">No mood data recorded for today yet.</p>
-          <p className="mt-2">Log your first mood to get started!</p>
+          <div className="space-y-2">
+            <Smile className="h-12 w-12 mx-auto text-muted-foreground" />
+            <p className="text-muted-foreground">No mood data recorded for today yet.</p>
+            <p className="text-sm">Log your first mood to get started!</p>
+          </div>
         </CardContent>
       </Card>
     );
   }
+
+  const moodInfo = getMoodDisplayInfo(latestMood);
 
   return (
     <Card>
@@ -27,23 +64,20 @@ export function TodayMoodCard({ latestMood, moodEntry }: TodayMoodCardProps) {
         <CardTitle className="text-lg">Today's Mood</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center gap-4">
-          <div className={`rounded-full p-4 ${
-            latestMood === "great" ? "bg-green-100" : 
-            latestMood === "okay" ? "bg-blue-100" : "bg-red-100"
-          }`}>
-            <Smile className={`h-8 w-8 ${
-              latestMood === "great" ? "text-green-500" : 
-              latestMood === "okay" ? "text-blue-500" : "text-red-500"
-            }`} />
+        <div className="flex items-start gap-4">
+          <div className={`rounded-full p-4 ${moodInfo.bgColor}`}>
+            <Smile className={`h-8 w-8 ${moodInfo.color}`} />
           </div>
-          <div>
-            <h3 className="text-xl font-medium capitalize">{latestMood}</h3>
+          <div className="flex-1">
+            <h3 className="text-xl font-medium">{moodInfo.label}</h3>
             <p className="text-muted-foreground">
               Recorded at {format(moodEntry.date, "h:mm a")}
             </p>
             {moodEntry.note && (
-              <p className="mt-2 italic">{moodEntry.note}</p>
+              <div className="mt-3 p-3 bg-muted/50 rounded-md">
+                <p className="text-sm font-medium text-muted-foreground mb-1">Your note:</p>
+                <p className="italic">{moodEntry.note}</p>
+              </div>
             )}
           </div>
         </div>
