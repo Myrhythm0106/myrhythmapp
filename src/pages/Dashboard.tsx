@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { CustomizableDashboard } from "@/components/dashboard/CustomizableDashboard";
@@ -11,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Settings, Info } from "lucide-react";
 import { toast } from "sonner";
+
 const Dashboard = () => {
   const userData = useUserData();
   const [dashboardView, setDashboardView] = useState<"now" | "week">("now");
@@ -43,24 +45,31 @@ const Dashboard = () => {
         <StickyActionBar />
       </div>;
   }
+
   return <div className="space-y-6 animate-fade-in relative">
-      <PageHeader title={`Welcome back, ${userData.name}`} subtitle="Stay focused on what matters most">
-        <div className="flex flex-col gap-4 mt-3">
-          <div className="flex items-center gap-2">
-            
-            
-            <Button variant="ghost" size="sm" onClick={handleShowTips} className="text-xs h-8">
-              <Info className="h-3.5 w-3.5 mr-1" />
-              Tips
-            </Button>
-            
-            <Button variant="ghost" size="sm" onClick={handleCustomizeDashboard} className="text-xs h-8">
-              <Settings className="h-3.5 w-3.5 mr-1" />
-              Customize
+      <PageHeader 
+        title={`Welcome back, ${userData.name}`} 
+        subtitle={
+          <div className="flex items-center gap-1">
+            <span>Stay focused on what matters most</span>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleShowTips} 
+              className="h-6 w-6 p-0 hover:bg-muted/50"
+            >
+              <Info className="h-3.5 w-3.5" />
             </Button>
           </div>
-          
+        }
+      >
+        <div className="flex flex-col gap-4 mt-3">
           <DashboardViewSelector currentView={dashboardView} onViewChange={setDashboardView} />
+          
+          <Button variant="ghost" size="sm" onClick={handleCustomizeDashboard} className="text-xs h-8 w-fit">
+            <Settings className="h-3.5 w-3.5 mr-1" />
+            Customize
+          </Button>
         </div>
       </PageHeader>
       
@@ -71,4 +80,5 @@ const Dashboard = () => {
       <StickyActionBar />
     </div>;
 };
+
 export default Dashboard;

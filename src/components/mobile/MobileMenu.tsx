@@ -7,7 +7,7 @@ import {
   DrawerClose
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle, FileText } from "lucide-react";
+import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle, FileText, Sliders, Palette, Type, Volume2, Shield, Smile, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function MobileMenu() {
@@ -17,21 +17,32 @@ export function MobileMenu() {
   const primaryNavItems = [
     { to: "/dashboard", icon: <Home className="h-5 w-5" />, label: "Dashboard", badge: null },
     { to: "/calendar", icon: <Calendar className="h-5 w-5" />, label: "Calendar", badge: null },
+    { to: "/mood", icon: <Smile className="h-5 w-5" />, label: "Mood Tracking", badge: null },
     { to: "/tracking", icon: <HeartPulse className="h-5 w-5" />, label: "Health Tracking", badge: null },
-    { to: "/home", icon: <Brain className="h-5 w-5" />, label: "Brain Recovery", badge: "New" },
   ];
   
   // Secondary navigation items
   const secondaryNavItems = [
+    { to: "/gratitude", icon: <Heart className="h-5 w-5" />, label: "Gratitude", badge: null },
+    { to: "/", icon: <Brain className="h-5 w-5" />, label: "Brain Recovery", badge: null },
     { to: "/profile", icon: <User className="h-5 w-5" />, label: "My Profile", badge: null },
     { to: "/community", icon: <Users className="h-5 w-5" />, label: "Community", badge: null },
-    { to: "/personal-community", icon: <Heart className="h-5 w-5" />, label: "My Support", badge: null },
+    { to: "/personal-community", icon: <Target className="h-5 w-5" />, label: "My Support", badge: null },
     { to: "/useful-info", icon: <Info className="h-5 w-5" />, label: "Resources", badge: null },
+  ];
+
+  // Customization navigation items
+  const customizationNavItems = [
+    { to: "/customization", icon: <Sliders className="h-5 w-5" />, label: "App Preferences", badge: null },
+    { to: "/customization?tab=appearance", icon: <Palette className="h-5 w-5" />, label: "Themes & Colors", badge: null },
+    { to: "/customization?tab=accessibility", icon: <Type className="h-5 w-5" />, label: "Accessibility", badge: null },
+    { to: "/settings", icon: <Settings className="h-5 w-5" />, label: "General Settings", badge: null },
+    { to: "/profile?section=notifications", icon: <Volume2 className="h-5 w-5" />, label: "Notifications", badge: null },
+    { to: "/profile?section=privacy", icon: <Shield className="h-5 w-5" />, label: "Privacy & Security", badge: null },
   ];
 
   // Helper navigation items
   const helperNavItems = [
-    { to: "/settings", icon: <Settings className="h-5 w-5" />, label: "Settings", badge: null },
     { to: "/help", icon: <HelpCircle className="h-5 w-5" />, label: "Help & Support", badge: null },
     { to: "/guide", icon: <FileText className="h-5 w-5" />, label: "User Guide", badge: "New" },
   ];
@@ -84,6 +95,23 @@ export function MobileMenu() {
                   <h3 className="text-xs text-muted-foreground font-medium uppercase px-2">Additional</h3>
                   <nav className="grid gap-2">
                     {secondaryNavItems.map((item) => (
+                      <MobileNavItem 
+                        key={item.to}
+                        to={item.to} 
+                        icon={item.icon} 
+                        label={item.label} 
+                        badge={item.badge}
+                        closeMenu={() => setOpen(false)}
+                      />
+                    ))}
+                  </nav>
+                </div>
+
+                {/* Customization Navigation */}
+                <div className="space-y-2">
+                  <h3 className="text-xs text-muted-foreground font-medium uppercase px-2">Customization</h3>
+                  <nav className="grid gap-2">
+                    {customizationNavItems.map((item) => (
                       <MobileNavItem 
                         key={item.to}
                         to={item.to} 

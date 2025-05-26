@@ -3,7 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target } from "lucide-react";
+import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target, Palette, Layout, Type, Volume2, Shield, Sliders } from "lucide-react";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { Badge } from "@/components/ui/badge";
 
@@ -26,6 +26,16 @@ export const Sidebar = () => {
     { to: "/community", icon: <Users />, label: "Community", badge: null },
     { to: "/personal-community", icon: <Target />, label: "My Support", badge: null },
     { to: "/useful-info", icon: <Info />, label: "Resources", badge: null },
+  ];
+
+  // Customization navigation items
+  const customizationNavItems = [
+    { to: "/customization", icon: <Sliders />, label: "App Preferences", badge: null },
+    { to: "/customization?tab=appearance", icon: <Palette />, label: "Themes & Colors", badge: null },
+    { to: "/customization?tab=accessibility", icon: <Type />, label: "Accessibility", badge: null },
+    { to: "/settings", icon: <Settings />, label: "General Settings", badge: null },
+    { to: "/profile?section=notifications", icon: <Volume2 />, label: "Notifications", badge: null },
+    { to: "/profile?section=privacy", icon: <Shield />, label: "Privacy & Security", badge: null },
   ];
 
   return (
@@ -70,7 +80,7 @@ export const Sidebar = () => {
           </div>
           
           {/* Additional Navigation - Supporting features */}
-          <div className="px-2">
+          <div className="px-2 mb-6">
             {isOpen && <div className="text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider">Additional</div>}
             <nav className="grid gap-1">
               {additionalNavItems.map((item) => (
@@ -85,10 +95,26 @@ export const Sidebar = () => {
               ))}
             </nav>
           </div>
+
+          {/* Customization Navigation */}
+          <div className="px-2">
+            {isOpen && <div className="text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider">Customization</div>}
+            <nav className="grid gap-1">
+              {customizationNavItems.map((item) => (
+                <NavItem 
+                  key={item.to}
+                  to={item.to} 
+                  icon={item.icon} 
+                  label={item.label} 
+                  isOpen={isOpen}
+                  badge={item.badge}
+                />
+              ))}
+            </nav>
+          </div>
         </div>
 
         <div className="border-t py-4 px-2">
-          <NavItem to="/settings" icon={<Settings />} label="Settings" isOpen={isOpen} />
           <NavItem to="/help" icon={<HelpCircle />} label="Help & Support" isOpen={isOpen} />
         </div>
       </div>
