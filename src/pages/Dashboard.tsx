@@ -49,9 +49,11 @@ const Dashboard = () => {
   return <div className="space-y-6 animate-fade-in relative">
       <PageHeader 
         title={`Welcome back, ${userData.name}`} 
-        subtitle={
-          <div className="flex items-center gap-1">
-            <span>Stay focused on what matters most</span>
+        subtitle="Stay focused on what matters most"
+      >
+        <div className="flex flex-col gap-4 mt-3">
+          <div className="flex items-center gap-2">
+            <DashboardViewSelector currentView={dashboardView} onViewChange={setDashboardView} />
             <Button 
               variant="ghost" 
               size="sm" 
@@ -61,10 +63,6 @@ const Dashboard = () => {
               <Info className="h-3.5 w-3.5" />
             </Button>
           </div>
-        }
-      >
-        <div className="flex flex-col gap-4 mt-3">
-          <DashboardViewSelector currentView={dashboardView} onViewChange={setDashboardView} />
           
           <Button variant="ghost" size="sm" onClick={handleCustomizeDashboard} className="text-xs h-8 w-fit">
             <Settings className="h-3.5 w-3.5 mr-1" />
