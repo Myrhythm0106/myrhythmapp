@@ -3,26 +3,28 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile } from "lucide-react";
+import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target } from "lucide-react";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { Badge } from "@/components/ui/badge";
 
 export const Sidebar = () => {
   const { isOpen, toggle } = useSidebar();
   
-  // Essential navigation items first
-  const primaryNavItems = [
+  // Essential navigation items - what users need daily
+  const essentialNavItems = [
     { to: "/dashboard", icon: <Home />, label: "Dashboard", badge: null },
     { to: "/calendar", icon: <Calendar />, label: "Calendar", badge: null },
+    { to: "/mood", icon: <Smile />, label: "Mood Tracking", badge: null },
     { to: "/tracking", icon: <HeartPulse />, label: "Health Tracking", badge: null },
-    { to: "/mood", icon: <Smile />, label: "Mood Tracking", badge: "New" },
   ];
   
-  // Secondary navigation items
-  const secondaryNavItems = [
+  // Additional navigation items - supporting features
+  const additionalNavItems = [
+    { to: "/gratitude", icon: <Heart />, label: "Gratitude", badge: null },
+    { to: "/", icon: <Brain />, label: "Brain Recovery", badge: null },
     { to: "/profile", icon: <User />, label: "My Profile", badge: null },
     { to: "/community", icon: <Users />, label: "Community", badge: null },
-    { to: "/personal-community", icon: <Heart />, label: "My Support", badge: null },
+    { to: "/personal-community", icon: <Target />, label: "My Support", badge: null },
     { to: "/useful-info", icon: <Info />, label: "Resources", badge: null },
   ];
 
@@ -39,7 +41,7 @@ export const Sidebar = () => {
           </button>
         </div>
 
-        {/* Search button - more prominent at the top for easy access */}
+        {/* Search button - prominent at the top */}
         <div className="px-2 pt-3 pb-1">
           <div className={cn("flex", isOpen ? "justify-between" : "justify-center")}>
             {isOpen && <span className="text-sm font-medium text-sidebar-foreground">Quick Search</span>}
@@ -50,11 +52,11 @@ export const Sidebar = () => {
         </div>
 
         <div className="flex-1 overflow-auto py-4">
-          {/* Primary Navigation - Essential Items */}
-          <div className="px-2 mb-4">
-            {isOpen && <div className="text-xs font-medium text-sidebar-foreground/70 px-3 mb-1">ESSENTIAL</div>}
+          {/* Essential Navigation - Daily essentials */}
+          <div className="px-2 mb-6">
+            {isOpen && <div className="text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider">Essential</div>}
             <nav className="grid gap-1">
-              {primaryNavItems.map((item) => (
+              {essentialNavItems.map((item) => (
                 <NavItem 
                   key={item.to}
                   to={item.to} 
@@ -67,11 +69,11 @@ export const Sidebar = () => {
             </nav>
           </div>
           
-          {/* Secondary Navigation */}
+          {/* Additional Navigation - Supporting features */}
           <div className="px-2">
-            {isOpen && <div className="text-xs font-medium text-sidebar-foreground/70 px-3 mb-1 mt-2">ADDITIONAL</div>}
+            {isOpen && <div className="text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider">Additional</div>}
             <nav className="grid gap-1">
-              {secondaryNavItems.map((item) => (
+              {additionalNavItems.map((item) => (
                 <NavItem 
                   key={item.to}
                   to={item.to} 

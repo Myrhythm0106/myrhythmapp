@@ -1,16 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { Card } from "@/components/ui/card";
-import { TodayFocus } from "@/components/dashboard/TodayFocus";
-import { UpcomingToday } from "@/components/dashboard/UpcomingToday";
-import { RoutineCheckIn } from "@/components/dashboard/RoutineCheckIn";
-import { BrainGameQuickStart } from "@/components/dashboard/BrainGameQuickStart";
-import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
-import { RecentWinsCard } from "@/components/dashboard/RecentWinsCard";
 import { CustomizableDashboard } from "@/components/dashboard/CustomizableDashboard";
 import { StickyActionBar } from "@/components/dashboard/StickyActionBar";
 import { MotivationalStatement } from "@/components/dashboard/MotivationalStatement";
+import { DashboardViewSelector } from "@/components/dashboard/DashboardViewSelector";
+import { NeedToKnowNowView } from "@/components/dashboard/views/NeedToKnowNowView";
+import { KeepInMindView } from "@/components/dashboard/views/KeepInMindView";
 import { useUserData } from "@/hooks/use-user-data";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +15,7 @@ import { toast } from "sonner";
 
 const Dashboard = () => {
   const userData = useUserData();
+  const [dashboardView, setDashboardView] = useState<"now" | "week">("now");
   
   // Get layout preference from localStorage
   const layoutPreference = localStorage.getItem('dashboardLayout') || 'standard';
@@ -32,8 +29,13 @@ const Dashboard = () => {
   
   // Function to show helpful tips
   const handleShowTips = () => {
+    const tips = {
+      now: "Focus on urgent tasks and immediate actions that need your attention today.",
+      week: "Review your weekly patterns and plan ahead for better consistency."
+    };
+    
     toast.success("Dashboard Tips", {
-      description: "Focus on completing your routine items and daily focus tasks first."
+      description: tips[dashboardView]
     });
   };
 
@@ -51,63 +53,49 @@ const Dashboard = () => {
     <div className="space-y-6 animate-fade-in relative">
       <PageHeader 
         title={`Welcome back, ${userData.name}`}
-        subtitle="Here's what's important for you today"
+        subtitle="Stay focused on what matters most"
       >
-        <div className="flex items-center gap-2 mt-2">
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-100">
-            Brain Health Focus
-          </Badge>
+        <div className="flex flex-col gap-4 mt-3">
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-100">
+              Brain Health Focus
+            </Badge>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleShowTips}
+              className="text-xs h-8"
+            >
+              <Info className="h-3.5 w-3.5 mr-1" />
+              Tips
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCustomizeDashboard}
+              className="text-xs h-8"
+            >
+              <Settings className="h-3.5 w-3.5 mr-1" />
+              Customize
+            </Button>
+          </div>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleShowTips}
-            className="text-xs h-8"
-          >
-            <Info className="h-3.5 w-3.5 mr-1" />
-            Tips
-          </Button>
-          
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCustomizeDashboard}
-            className="text-xs h-8"
-          >
-            <Settings className="h-3.5 w-3.5 mr-1" />
-            Customize
-          </Button>
+          <DashboardViewSelector 
+            currentView={dashboardView}
+            onViewChange={setDashboardView}
+          />
         </div>
       </PageHeader>
       
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Primary Focus Column - The most essential tools */}
-        <div className="space-y-6 lg:col-span-1">
-          <MotivationalStatement />
-          <TodayFocus />
-          <UpcomingToday />
-          <RoutineCheckIn />
-        </div>
-        
-        {/* Center Column - Brain & Mood */}
-        <div className="space-y-6 lg:col-span-1">
-          <BrainGameQuickStart />
-          <MoodEnergySnapshot />
-        </div>
-        
-        {/* Right Column - Recent Wins */}
-        <div className="space-y-6 lg:col-span-1">
-          <RecentWinsCard />
-          
-          {/* Integration hint card */}
-          <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-            <p className="text-sm">
-              <span className="font-medium">Did you know?</span> Tracking your mood regularly 
-              can help identify patterns and improve your emotional wellbeing over time.
-            </p>
-          </Card>
-        </div>
-      </div>
+      <MotivationalStatement />
+      
+      {dashboardView === "now" ? (
+        <NeedToKnowNowView />
+      ) : (
+        <KeepInMindView />
+      )}
 
       <StickyActionBar />
     </div>
