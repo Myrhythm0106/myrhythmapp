@@ -85,10 +85,11 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
     }
   };
 
-  // Simple tag extraction from text
+  // Simple tag extraction from text - Fixed TypeScript error
   const extractTags = (text: string): string[] => {
     const commonWords = ["for", "the", "and", "that", "with", "this", "from", "have", "was", "feel", "felt"];
-    const words = text.toLowerCase().match(/\b(\w+)\b/g) || [];
+    const matches = text.toLowerCase().match(/\b(\w+)\b/g);
+    const words = matches || []; // Handle null case properly
     const potentialTags = words.filter(word => 
       word.length > 3 && !commonWords.includes(word)
     );
