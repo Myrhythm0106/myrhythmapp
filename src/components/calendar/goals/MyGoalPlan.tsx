@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -76,6 +75,14 @@ export function MyGoalPlan() {
     navigate("/calendar?view=goals");
   };
 
+  const handleFinish = () => {
+    toast.success("Goal plan completed! 🎉", {
+      description: "Your goal has been saved and you're ready to start working on it!",
+      duration: 3000
+    });
+    navigate("/calendar?view=goals");
+  };
+
   const handleCompleteAction = (stepId: string, actionId: string) => {
     setGoal(prev => ({
       ...prev,
@@ -113,7 +120,6 @@ export function MyGoalPlan() {
 
   const handleAddSuggestion = (suggestion: any) => {
     if (suggestion.type === "smaller-part") {
-      // Add new smaller part
       const newStep = {
         id: `step-${Date.now()}`,
         title: suggestion.title,
@@ -126,7 +132,6 @@ export function MyGoalPlan() {
         smallSteps: [...prev.smallSteps, newStep]
       }));
     } else if (suggestion.type === "daily-do" && suggestion.targetStepId) {
-      // Add daily do to specific step
       const newAction = {
         id: `action-${Date.now()}`,
         title: suggestion.title,
@@ -149,7 +154,11 @@ export function MyGoalPlan() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
-      <GoalPlanHeader goal={goal} onBack={handleBack} />
+      <GoalPlanHeader 
+        goal={goal} 
+        onBack={handleBack} 
+        onFinish={handleFinish}
+      />
 
       {/* Smart Suggestions */}
       {showSuggestions && (

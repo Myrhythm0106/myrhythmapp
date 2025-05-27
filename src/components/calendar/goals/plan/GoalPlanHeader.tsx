@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, Target, Book, Footprints, Heart, Utensils, Home } from "lucide-react";
+import { ArrowLeft, Target, Book, Footprints, Heart, Utensils, Home, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Icon mapping for goal icons
@@ -22,6 +22,7 @@ interface GoalPlanHeaderProps {
     progress: number;
   };
   onBack: () => void;
+  onFinish: () => void;
 }
 
 const getProgressColor = (progress: number) => {
@@ -30,7 +31,7 @@ const getProgressColor = (progress: number) => {
   return "bg-blue-500";
 };
 
-export function GoalPlanHeader({ goal, onBack }: GoalPlanHeaderProps) {
+export function GoalPlanHeader({ goal, onBack, onFinish }: GoalPlanHeaderProps) {
   const IconComponent = iconMap[goal.icon as keyof typeof iconMap] || Target;
 
   return (
@@ -63,6 +64,14 @@ export function GoalPlanHeader({ goal, onBack }: GoalPlanHeaderProps) {
           />
         </div>
       </div>
+
+      <Button 
+        onClick={onFinish}
+        className="bg-green-500 hover:bg-green-600 text-white"
+      >
+        <CheckCircle className="h-4 w-4 mr-2" />
+        Finish
+      </Button>
     </div>
   );
 }
