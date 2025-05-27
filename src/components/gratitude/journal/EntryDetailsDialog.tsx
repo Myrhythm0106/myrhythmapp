@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { format } from "date-fns";
 import { 
@@ -95,8 +96,12 @@ export function EntryDetailsDialog({
   const extractTags = (text: string): string[] => {
     const commonWords = ["for", "the", "and", "that", "with", "this", "from", "have", "was", "feel", "felt"];
     const matches = text.toLowerCase().match(/\b(\w+)\b/g);
-    const words = matches || []; // Handle null case properly
-    const potentialTags = words.filter(word => 
+    
+    if (!matches) {
+      return [];
+    }
+    
+    const potentialTags = matches.filter(word => 
       word.length > 3 && !commonWords.includes(word)
     );
     
