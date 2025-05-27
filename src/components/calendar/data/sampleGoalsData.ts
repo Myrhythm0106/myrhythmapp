@@ -11,7 +11,7 @@ export const sampleGoals: Goal[] = [
     progress: 60,
     dueDate: "2023-06-15",
     createdAt: "2023-05-01",
-    linkedActions: ["a1", "a3", "a5"]
+    smallSteps: []
   },
   {
     id: "g2",
@@ -21,7 +21,7 @@ export const sampleGoals: Goal[] = [
     progress: 75,
     dueDate: "2023-07-01",
     createdAt: "2023-05-05",
-    linkedActions: ["a2", "a4"]
+    smallSteps: []
   },
   {
     id: "g3",
@@ -30,7 +30,7 @@ export const sampleGoals: Goal[] = [
     description: "Use mindfulness techniques to manage stress and anxiety",
     progress: 40,
     createdAt: "2023-04-15",
-    linkedActions: ["a6"]
+    smallSteps: []
   }
 ];
 
