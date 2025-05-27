@@ -3,11 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Plus, CheckCircle2, Circle, Edit3, Target, Book, Footprints } from "lucide-react";
+import { ArrowLeft, Plus, CheckCircle2, Circle, Edit3, Target, Book, Footprints, Heart, Utensils, Home } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { GoalSufficiencyAnalyzer } from "./GoalSufficiencyAnalyzer";
+
+// Icon mapping for goal icons
+const iconMap = {
+  "walking": Footprints,
+  "book": Book,
+  "heart": Heart,
+  "target": Target,
+  "cooking": Utensils,
+  "home": Home
+};
 
 // Sample goal data - in real app this would come from props or API
 const sampleGoal = {
