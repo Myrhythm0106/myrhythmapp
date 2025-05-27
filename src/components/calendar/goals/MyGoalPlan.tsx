@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,12 +7,7 @@ import { ArrowLeft, Plus, CheckCircle2, Circle, Edit3, Target, Book, Footprints 
 import { useNavigate, useParams } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-
-const iconMap = {
-  "walking": Footprints,
-  "book": Book,
-  "target": Target
-};
+import { GoalSufficiencyAnalyzer } from "./GoalSufficiencyAnalyzer";
 
 // Sample goal data - in real app this would come from props or API
 const sampleGoal = {
@@ -77,6 +71,7 @@ export function MyGoalPlan() {
   const navigate = useNavigate();
   const { goalId } = useParams();
   const [goal, setGoal] = useState(sampleGoal);
+  const [showSuggestions, setShowSuggestions] = useState(true);
   
   const IconComponent = iconMap[goal.icon as keyof typeof iconMap] || Target;
 
@@ -117,6 +112,41 @@ export function MyGoalPlan() {
 
   const handleAddSmallerPart = () => {
     toast.info("Adding new Smaller Part - Feature coming soon!");
+  };
+
+  const handleAddSuggestion = (suggestion: any) => {
+    if (suggestion.type === "smaller-part") {
+      // Add new smaller part
+      const newStep = {
+        id: `step-${Date.now()}`,
+        title: suggestion.title,
+        progress: 0,
+        status: "pending" as const,
+        actions: []
+      };
+      setGoal(prev => ({
+        ...prev,
+        smallSteps: [...prev.smallSteps, newStep]
+      }));
+    } else if (suggestion.type === "daily-do" && suggestion.targetStepId) {
+      // Add daily do to specific step
+      const newAction = {
+        id: `action-${Date.now()}`,
+        title: suggestion.title,
+        measurement: suggestion.description,
+        timing: "morning",
+        completed: false,
+        dueDate: "today"
+      };
+      setGoal(prev => ({
+        ...prev,
+        smallSteps: prev.smallSteps.map(step =>
+          step.id === suggestion.targetStepId
+            ? { ...step, actions: [...step.actions, newAction] }
+            : step
+        )
+      }));
+    }
   };
 
   const getStepStatusIcon = (status: string, progress: number) => {
@@ -164,6 +194,16 @@ export function MyGoalPlan() {
           </div>
         </div>
       </div>
+
+      {/* Smart Suggestions */}
+      {showSuggestions && (
+        <GoalSufficiencyAnalyzer
+          goalTitle={goal.title}
+          smallSteps={goal.smallSteps}
+          onAddSuggestion={handleAddSuggestion}
+          onDismiss={() => setShowSuggestions(false)}
+        />
+      )}
 
       {/* Smaller Parts */}
       <div className="space-y-6">

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Calendar, Trash2 } from "lucide-react";
+import { Plus, Calendar, Trash2, Check } from "lucide-react";
 import { DreamPlan } from "../PlanMyDreams";
 
 interface StepThreeProps {
@@ -16,17 +16,20 @@ interface StepThreeProps {
 export function StepThree({ bigDream, smallerParts, onComplete, initialDailyDos = [] }: StepThreeProps) {
   const [currentPartIndex, setCurrentPartIndex] = useState(0);
   const [dailyDos, setDailyDos] = useState<DreamPlan['dailyDos']>(initialDailyDos);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const currentPart = smallerParts[currentPartIndex];
   const currentPartDailyDos = dailyDos.filter(dd => dd.smallerPartIndex === currentPartIndex);
 
   const addDailyDo = () => {
-    setDailyDos([...dailyDos, {
+    const newDailyDo = {
       smallerPartIndex: currentPartIndex,
       action: "",
       measurement: "",
       timing: ""
-    }]);
+    };
+    setDailyDos([...dailyDos, newDailyDo]);
+    setEditingIndex(currentPartDailyDos.length);
   };
 
   const updateDailyDo = (index: number, field: keyof DreamPlan['dailyDos'][0], value: string) => {
@@ -46,6 +49,13 @@ export function StepThree({ bigDream, smallerParts, onComplete, initialDailyDos 
     
     if (dailyDoIndex !== -1) {
       setDailyDos(dailyDos.filter((_, i) => i !== dailyDoIndex));
+    }
+  };
+
+  const saveAndFinishDailyDo = (index: number) => {
+    const dailyDo = currentPartDailyDos[index];
+    if (dailyDo.action.trim() && dailyDo.measurement.trim()) {
+      setEditingIndex(null);
     }
   };
 
@@ -86,56 +96,77 @@ export function StepThree({ bigDream, smallerParts, onComplete, initialDailyDos 
           <div key={index} className="bg-orange-50 p-4 rounded-lg border-2 border-orange-200 space-y-4">
             <div className="flex justify-between items-center">
               <h4 className="font-semibold text-orange-800">Daily Do #{index + 1}</h4>
-              {currentPartDailyDos.length > 1 && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => removeDailyDo(index)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              )}
+              <div className="flex gap-2">
+                {editingIndex === index && (
+                  <Button
+                    onClick={() => saveAndFinishDailyDo(index)}
+                    size="sm"
+                    className="bg-green-500 hover:bg-green-600 text-white"
+                    disabled={!dailyDo.action.trim() || !dailyDo.measurement.trim()}
+                  >
+                    <Check className="h-4 w-4 mr-1" />
+                    Save & Finish
+                  </Button>
+                )}
+                {currentPartDailyDos.length > 1 && editingIndex !== index && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeDailyDo(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
             </div>
             
-            <div className="space-y-3">
-              <div>
-                <label className="text-sm font-medium text-orange-700">What I'll do:</label>
-                <Input
-                  value={dailyDo.action}
-                  onChange={(e) => updateDailyDo(index, 'action', e.target.value)}
-                  placeholder="walk 5 steps, read for 10 minutes, cut one carrot"
-                  className="mt-1 border-orange-300 focus:border-orange-400"
-                />
+            {editingIndex === index ? (
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-orange-700">What I'll do:</label>
+                  <Input
+                    value={dailyDo.action}
+                    onChange={(e) => updateDailyDo(index, 'action', e.target.value)}
+                    placeholder="walk 5 steps, read for 10 minutes, cut one carrot"
+                    className="mt-1 border-orange-300 focus:border-orange-400"
+                  />
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium text-orange-700">How I'll know I did it:</label>
+                  <Input
+                    value={dailyDo.measurement}
+                    onChange={(e) => updateDailyDo(index, 'measurement', e.target.value)}
+                    placeholder="I walked 5 steps, I read for 10 minutes, The carrot is chopped"
+                    className="mt-1 border-orange-300 focus:border-orange-400"
+                  />
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium text-orange-700">When:</label>
+                  <Select value={dailyDo.timing} onValueChange={(value) => updateDailyDo(index, 'timing', value)}>
+                    <SelectTrigger className="mt-1 border-orange-300 focus:border-orange-400">
+                      <SelectValue placeholder="Choose when you'll do this" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="today">Today</SelectItem>
+                      <SelectItem value="tomorrow">Tomorrow</SelectItem>
+                      <SelectItem value="this-week">This week</SelectItem>
+                      <SelectItem value="morning">Morning</SelectItem>
+                      <SelectItem value="afternoon">Afternoon</SelectItem>
+                      <SelectItem value="evening">Evening</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-              
-              <div>
-                <label className="text-sm font-medium text-orange-700">How I'll know I did it:</label>
-                <Input
-                  value={dailyDo.measurement}
-                  onChange={(e) => updateDailyDo(index, 'measurement', e.target.value)}
-                  placeholder="I walked 5 steps, I read for 10 minutes, The carrot is chopped"
-                  className="mt-1 border-orange-300 focus:border-orange-400"
-                />
+            ) : (
+              <div className="space-y-2 cursor-pointer" onClick={() => setEditingIndex(index)}>
+                <p className="text-orange-900"><strong>What I'll do:</strong> {dailyDo.action || "Click to edit"}</p>
+                <p className="text-orange-900"><strong>How I'll know:</strong> {dailyDo.measurement || "Click to edit"}</p>
+                <p className="text-orange-700"><strong>When:</strong> {dailyDo.timing || "Click to edit"}</p>
               </div>
-              
-              <div>
-                <label className="text-sm font-medium text-orange-700">When:</label>
-                <Select value={dailyDo.timing} onValueChange={(value) => updateDailyDo(index, 'timing', value)}>
-                  <SelectTrigger className="mt-1 border-orange-300 focus:border-orange-400">
-                    <SelectValue placeholder="Choose when you'll do this" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="today">Today</SelectItem>
-                    <SelectItem value="tomorrow">Tomorrow</SelectItem>
-                    <SelectItem value="this-week">This week</SelectItem>
-                    <SelectItem value="morning">Morning</SelectItem>
-                    <SelectItem value="afternoon">Afternoon</SelectItem>
-                    <SelectItem value="evening">Evening</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            )}
           </div>
         ))}
         
