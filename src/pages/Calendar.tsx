@@ -12,7 +12,8 @@ import { MedicationReminders } from "@/components/calendar/MedicationReminders";
 import { DayView } from "@/components/calendar/views/DayView";
 import { WeekView } from "@/components/calendar/views/WeekView";
 import { GoalsView } from "@/components/calendar/views/GoalsView";
-import { Plus, CalendarIcon, Clock, HeartPulse, Target } from "lucide-react";
+import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
+import { Plus, CalendarIcon, Clock, HeartPulse, Target, Heart } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
@@ -22,7 +23,23 @@ import { toast } from "sonner";
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [view, setView] = useState<"day" | "week" | "month" | "goals">("month");
+  const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const navigate = useNavigate();
+
+  const handleSaveDreamPlan = (dreamPlan: any) => {
+    console.log("Dream plan saved:", dreamPlan);
+    // Here you would typically save to your backend or state management
+    setShowPlanMyDreams(false);
+  };
+
+  if (showPlanMyDreams) {
+    return (
+      <PlanMyDreams 
+        onClose={() => setShowPlanMyDreams(false)}
+        onSave={handleSaveDreamPlan}
+      />
+    );
+  }
 
   return (
     <PomodoroProvider>
@@ -34,6 +51,15 @@ const Calendar = () => {
           >
             <div className="flex gap-2">
               <PomodoroButton title="Focus Timer" variant="secondary" />
+              
+              <Button 
+                onClick={() => setShowPlanMyDreams(true)}
+                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-medium shadow-sm hover:shadow-md transition-all"
+              >
+                <Heart className="mr-1 h-4 w-4" />
+                Plan My Dreams
+              </Button>
+              
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
