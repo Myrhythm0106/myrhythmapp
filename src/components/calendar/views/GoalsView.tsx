@@ -1,7 +1,7 @@
 
 import React from "react";
-import { EnhancedGoalsView } from "./EnhancedGoalsView";
+import { MyGoalBoard } from "../goals/MyGoalBoard";
 
 export function GoalsView() {
-  return <EnhancedGoalsView />;
+  return <MyGoalBoard />;
 }

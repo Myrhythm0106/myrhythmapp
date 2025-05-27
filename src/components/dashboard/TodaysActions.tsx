@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { TinyAction } from "@/components/calendar/types/goalTypes";
 import { format } from "date-fns";
 
-// Sample today's actions data
+// Sample today's actions data with explicit goal linkage
 const todaysActions: TinyAction[] = [
   {
     id: "action1",
@@ -38,7 +38,7 @@ const todaysActions: TinyAction[] = [
   }
 ];
 
-// Goal context for actions
+// Goal context for actions with explicit titles
 const goalContext: Record<string, string> = {
   "goal1": "Walk to the mailbox by myself",
   "goal2": "Read a whole book"
@@ -58,14 +58,18 @@ export function TodaysActions() {
     const action = actions.find(a => a.id === actionId);
     const goalTitle = action ? goalContext[action.goalId] : "";
     
-    toast.success("Action Complete! 🎉", {
+    toast.success("Daily Do Complete! 🎉", {
       description: `You're one step closer to "${goalTitle}"! Keep going!`,
       duration: 4000
     });
   };
 
   const handleActionClick = (action: TinyAction) => {
-    navigate(`/calendar?actionId=${action.id}`);
+    navigate(`/calendar/goal/${action.goalId}`);
+  };
+
+  const handleCardClick = () => {
+    navigate("/calendar?view=goals");
   };
 
   const getActionTypeStyles = (type: string) => {
@@ -83,18 +87,21 @@ export function TodaysActions() {
   const completedActions = actions.filter(action => action.status === "completed");
 
   return (
-    <Card className="hover:shadow-md transition-shadow border-l-4 border-l-primary">
+    <Card 
+      className="hover:shadow-md transition-shadow border-l-4 border-l-primary cursor-pointer"
+      onClick={handleCardClick}
+    >
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-xl">
           <Calendar className="h-5 w-5 text-primary" />
-          Today's Actions
+          Today's Do
         </CardTitle>
         <p className="text-sm text-muted-foreground">
           Your daily steps toward your goals
         </p>
       </CardHeader>
       
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4" onClick={(e) => e.stopPropagation()}>
         {pendingActions.length > 0 && (
           <div className="space-y-3">
             <h4 className="text-sm font-medium text-orange-700">To Complete Today:</h4>
@@ -126,6 +133,7 @@ export function TodaysActions() {
                       </div>
                     </div>
                     
+                    {/* Explicit Goal Linkage */}
                     <div className="flex items-center gap-1 mt-2 bg-primary/10 px-2 py-1 rounded text-xs">
                       <Target className="h-3 w-3 text-primary" />
                       <span className="text-primary font-medium">

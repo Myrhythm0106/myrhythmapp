@@ -20,6 +20,7 @@ import UsefulInfo from "./pages/UsefulInfo";
 import SplashScreen from "./components/mobile/SplashScreen";
 import Customization from "./pages/Customization";
 import Gratitude from "./pages/Gratitude";
+import { MyGoalPlan } from "./components/calendar/goals/MyGoalPlan";
 import { useIsMobile } from "./hooks/use-mobile";
 import UserGuideView from "./pages/UserGuideView";
 import FoundersStory from "./pages/FoundersStory";
@@ -66,6 +67,12 @@ const AppRoutes = () => {
       <Route path="/calendar" element={
         <MainLayout>
           <Calendar />
+        </MainLayout>
+      } />
+      {/* Goal Plan Route */}
+      <Route path="/calendar/goal/:goalId" element={
+        <MainLayout>
+          <MyGoalPlan />
         </MainLayout>
       } />
       <Route path="/tracking" element={

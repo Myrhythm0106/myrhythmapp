@@ -12,12 +12,13 @@ import { MedicationReminders } from "@/components/calendar/MedicationReminders";
 import { DayView } from "@/components/calendar/views/DayView";
 import { WeekView } from "@/components/calendar/views/WeekView";
 import { GoalsView } from "@/components/calendar/views/GoalsView";
+import { MyGoalPlan } from "@/components/calendar/goals/MyGoalPlan";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
 import { Plus, CalendarIcon, Clock, HeartPulse, Target, Heart } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 
 const Calendar = () => {
@@ -25,20 +26,39 @@ const Calendar = () => {
   const [view, setView] = useState<"day" | "week" | "month" | "goals">("month");
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const params = useParams();
+
+  // Check if we're in goal plan view
+  const isGoalPlanView = window.location.pathname.includes('/calendar/goal/');
+  
+  // Check if Plan My Dreams should be shown
+  React.useEffect(() => {
+    if (searchParams.get('planMyDreams') === 'true') {
+      setShowPlanMyDreams(true);
+    }
+  }, [searchParams]);
 
   const handleSaveDreamPlan = (dreamPlan: any) => {
     console.log("Dream plan saved:", dreamPlan);
-    // Here you would typically save to your backend or state management
     setShowPlanMyDreams(false);
+    navigate("/calendar?view=goals");
   };
 
   if (showPlanMyDreams) {
     return (
       <PlanMyDreams 
-        onClose={() => setShowPlanMyDreams(false)}
+        onClose={() => {
+          setShowPlanMyDreams(false);
+          navigate("/calendar");
+        }}
         onSave={handleSaveDreamPlan}
       />
     );
+  }
+
+  if (isGoalPlanView) {
+    return <MyGoalPlan />;
   }
 
   return (
@@ -89,7 +109,7 @@ const Calendar = () => {
                         <TabsTrigger value="month">Month</TabsTrigger>
                         <TabsTrigger value="goals">
                           <Target className="h-4 w-4 mr-1" />
-                          Goals
+                          My Goal Board
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
