@@ -1,15 +1,33 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target, Palette, Layout, Type, Volume2, Shield, Sliders } from "lucide-react";
+import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target, Palette, Layout, Type, Volume2, Shield, Sliders, ChevronDown, ChevronRight } from "lucide-react";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 export const Sidebar = () => {
   const { isOpen, toggle } = useSidebar();
+  const [additionalOpen, setAdditionalOpen] = useState(() => {
+    return localStorage.getItem('sidebarAdditionalOpen') !== 'false';
+  });
+  const [customizationOpen, setCustomizationOpen] = useState(() => {
+    return localStorage.getItem('sidebarCustomizationOpen') !== 'false';
+  });
   
+  // Save preferences to localStorage
+  const handleAdditionalToggle = (open: boolean) => {
+    setAdditionalOpen(open);
+    localStorage.setItem('sidebarAdditionalOpen', open.toString());
+  };
+
+  const handleCustomizationToggle = (open: boolean) => {
+    setCustomizationOpen(open);
+    localStorage.setItem('sidebarCustomizationOpen', open.toString());
+  };
+
   // Essential navigation items - what users need daily
   const essentialNavItems = [
     { to: "/dashboard", icon: <Home />, label: "Dashboard", badge: null },
@@ -81,36 +99,58 @@ export const Sidebar = () => {
           
           {/* Additional Navigation - Supporting features */}
           <div className="px-2 mb-6">
-            {isOpen && <div className="text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider">Additional</div>}
-            <nav className="grid gap-1">
-              {additionalNavItems.map((item) => (
-                <NavItem 
-                  key={item.to}
-                  to={item.to} 
-                  icon={item.icon} 
-                  label={item.label} 
-                  isOpen={isOpen}
-                  badge={item.badge}
-                />
-              ))}
-            </nav>
+            <Collapsible open={additionalOpen} onOpenChange={handleAdditionalToggle}>
+              <CollapsibleTrigger className="w-full">
+                {isOpen && (
+                  <div className="flex items-center justify-between text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider hover:text-sidebar-foreground cursor-pointer">
+                    <span>Additional</span>
+                    {additionalOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                  </div>
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <nav className="grid gap-1">
+                  {additionalNavItems.map((item) => (
+                    <NavItem 
+                      key={item.to}
+                      to={item.to} 
+                      icon={item.icon} 
+                      label={item.label} 
+                      isOpen={isOpen}
+                      badge={item.badge}
+                    />
+                  ))}
+                </nav>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
 
           {/* Customization Navigation */}
           <div className="px-2">
-            {isOpen && <div className="text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider">Customization</div>}
-            <nav className="grid gap-1">
-              {customizationNavItems.map((item) => (
-                <NavItem 
-                  key={item.to}
-                  to={item.to} 
-                  icon={item.icon} 
-                  label={item.label} 
-                  isOpen={isOpen}
-                  badge={item.badge}
-                />
-              ))}
-            </nav>
+            <Collapsible open={customizationOpen} onOpenChange={handleCustomizationToggle}>
+              <CollapsibleTrigger className="w-full">
+                {isOpen && (
+                  <div className="flex items-center justify-between text-xs font-semibold text-sidebar-foreground/90 px-3 mb-2 uppercase tracking-wider hover:text-sidebar-foreground cursor-pointer">
+                    <span>Customization</span>
+                    {customizationOpen ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
+                  </div>
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <nav className="grid gap-1">
+                  {customizationNavItems.map((item) => (
+                    <NavItem 
+                      key={item.to}
+                      to={item.to} 
+                      icon={item.icon} 
+                      label={item.label} 
+                      isOpen={isOpen}
+                      badge={item.badge}
+                    />
+                  ))}
+                </nav>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </div>
 

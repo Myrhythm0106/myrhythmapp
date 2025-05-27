@@ -7,7 +7,32 @@ export interface Goal {
   progress: number; // 0-100
   dueDate?: string;
   createdAt: string;
-  linkedActions: string[]; // Array of action IDs
+  smallSteps: SmallStep[];
+}
+
+export interface SmallStep {
+  id: string;
+  goalId: string;
+  title: string;
+  description?: string;
+  actions: TinyAction[];
+  progress: number; // 0-100
+}
+
+export interface TinyAction {
+  id: string;
+  goalId: string;
+  smallStepId: string;
+  title: string;
+  type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other";
+  date: string;
+  startTime: string;
+  endTime?: string;
+  status: "completed" | "pending" | "in-progress" | "canceled";
+  location?: string;
+  watchers?: string[];
+  duration?: number; // in minutes
+  isToday?: boolean;
 }
 
 export interface Action {

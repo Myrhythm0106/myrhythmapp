@@ -49,19 +49,23 @@ const Dashboard = () => {
   return <div className="space-y-6 animate-fade-in relative">
       <PageHeader 
         title={`Welcome back, ${userData.name}`} 
-        subtitle="Stay focused on what matters most"
-      >
-        <div className="flex flex-col gap-4 mt-3">
-          <div className="flex items-center gap-2">
-            <DashboardViewSelector currentView={dashboardView} onViewChange={setDashboardView} />
+        subtitle={
+          <span className="flex items-center gap-1">
+            Stay focused on what matters
             <Button 
               variant="ghost" 
               size="sm" 
               onClick={handleShowTips} 
-              className="h-6 w-6 p-0 hover:bg-muted/50"
+              className="h-4 w-4 p-0 hover:bg-muted/50 ml-1"
             >
-              <Info className="h-3.5 w-3.5" />
+              <Info className="h-3 w-3" />
             </Button>
+          </span>
+        }
+      >
+        <div className="flex flex-col gap-4 mt-3">
+          <div className="flex items-center gap-2">
+            <DashboardViewSelector currentView={dashboardView} onViewChange={setDashboardView} />
           </div>
           
           <Button variant="ghost" size="sm" onClick={handleCustomizeDashboard} className="text-xs h-8 w-fit">

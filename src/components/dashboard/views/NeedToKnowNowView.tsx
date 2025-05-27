@@ -1,6 +1,6 @@
 
 import React from "react";
-import { TodayFocus } from "@/components/dashboard/TodayFocus";
+import { TodaysActions } from "@/components/dashboard/TodaysActions";
 import { UpcomingToday } from "@/components/dashboard/UpcomingToday";
 import { RoutineCheckIn } from "@/components/dashboard/RoutineCheckIn";
 import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
@@ -60,12 +60,8 @@ export function NeedToKnowNowView() {
       {/* Urgent/Time-sensitive items */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-4">
-          <ViewOnlyWrapper 
-            redirectPath="/calendar" 
-            actionDescription="update your focus items"
-          >
-            <TodayFocus />
-          </ViewOnlyWrapper>
+          {/* Today's Actions - Direct interaction for completing actions */}
+          <TodaysActions />
           <ViewOnlyWrapper 
             redirectPath="/calendar" 
             actionDescription="view or modify upcoming events"
@@ -107,14 +103,14 @@ export function NeedToKnowNowView() {
             <div>
               <h3 className="font-medium text-amber-900 mb-1">Quick Reminder</h3>
               <p className="text-sm text-amber-800">
-                Remember to take your evening medication and complete your gratitude practice before bed.
+                Complete your daily actions to make progress toward your goals. Every small step matters!
               </p>
               <div className="flex items-center gap-1 mt-2 text-xs text-amber-700">
                 <Clock className="h-3 w-3" />
-                <span>Due in 4 hours</span>
+                <span>Check your Today's Actions above</span>
               </div>
               <p className="text-xs text-amber-700 mt-2 italic">
-                💡 Click on dashboard items to go to the relevant page for editing
+                💡 Click ✓ to mark actions complete and celebrate your progress!
               </p>
             </div>
           </div>
