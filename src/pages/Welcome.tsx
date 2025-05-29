@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, ShieldCheck, Brain, BookOpen } from "lucide-react";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
 import GettingStartedGuide from "@/components/welcome/GettingStartedGuide";
+import { FloatingStartButton } from "@/components/welcome/FloatingStartButton";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -109,6 +110,9 @@ const Welcome = () => {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* Floating Start Button */}
+      <FloatingStartButton />
       
       <TutorialModal 
         isOpen={showTutorial} 

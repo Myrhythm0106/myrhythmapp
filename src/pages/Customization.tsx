@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -24,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Progress } from "@/components/ui/progress";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 type UserType = "productivity" | "cognitive" | "comprehensive";
 type ThemeMode = "light" | "dark" | "system";
@@ -39,6 +39,8 @@ const Customization = () => {
   const [enableSwipe, setEnableSwipe] = useState(true);
   const [enableSoundEffects, setEnableSoundEffects] = useState(true);
   const [layoutPreference, setLayoutPreference] = useState<LayoutPreference>("standard");
+  const [activeTab, setActiveTab] = useState("preferences");
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
 
   const handleSave = () => {
     // Save layout preference to localStorage
@@ -52,7 +54,24 @@ const Customization = () => {
     localStorage.setItem('enableSoundEffects', enableSoundEffects.toString());
     
     toast.success("Preferences saved successfully!");
-    navigate("/dashboard");
+  };
+
+  const handleProfileTypeNext = () => {
+    setActiveTab("appearance");
+  };
+
+  const handleAppearanceNext = () => {
+    setActiveTab("accessibility");
+  };
+
+  const handleAccessibilityComplete = () => {
+    handleSave();
+    setShowCompletionDialog(true);
+  };
+
+  const handleDialogComplete = () => {
+    setShowCompletionDialog(false);
+    navigate("/calendar");
   };
 
   const userTypes = [
@@ -107,7 +126,7 @@ const Customization = () => {
           subtitle="Adjust settings to make MyRhythm work best for you"
         />
 
-        <Tabs defaultValue="preferences" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="preferences">Profile Type</TabsTrigger>
             <TabsTrigger value="appearance">Appearance</TabsTrigger>
@@ -148,6 +167,12 @@ const Customization = () => {
                   ))}
                 </div>
               </CardContent>
+              <CardFooter>
+                <Button onClick={handleProfileTypeNext} className="ml-auto">
+                  Next: Appearance
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardFooter>
             </Card>
           </TabsContent>
 
@@ -236,6 +261,12 @@ const Customization = () => {
                   </p>
                 </div>
               </CardContent>
+              <CardFooter>
+                <Button onClick={handleAppearanceNext} className="ml-auto">
+                  Next: Accessibility
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardFooter>
             </Card>
           </TabsContent>
           
@@ -311,19 +342,35 @@ const Customization = () => {
                   </p>
                 </div>
               </CardContent>
+              <CardFooter>
+                <Button onClick={handleAccessibilityComplete} className="ml-auto">
+                  Complete Setup
+                  <Check className="ml-2 h-4 w-4" />
+                </Button>
+              </CardFooter>
             </Card>
           </TabsContent>
         </Tabs>
-        
-        <div className="flex justify-end space-x-4">
-          <Button variant="outline" onClick={() => navigate("/dashboard")}>
-            Cancel
-          </Button>
-          <Button onClick={handleSave} className="px-8">
-            Save Changes
-          </Button>
-        </div>
       </div>
+
+      {/* Completion Dialog */}
+      <Dialog open={showCompletionDialog} onOpenChange={() => {}}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center">Setup Complete!</DialogTitle>
+            <DialogDescription className="text-center">
+              Congratulations! You've successfully completed your MyRhythm setup. 
+              You'll now be taken to the Calendar screen where you can start planning your goals and managing your daily rhythm.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-center pt-4">
+            <Button onClick={handleDialogComplete} className="px-8">
+              Go to Calendar
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

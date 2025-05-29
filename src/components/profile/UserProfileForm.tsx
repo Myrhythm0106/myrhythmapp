@@ -16,21 +16,28 @@ const formSchema = z.object({
   dateOfBirth: z.string().optional(),
 });
 
-export function UserProfileForm() {
+interface UserProfileFormProps {
+  onSave?: () => void;
+}
+
+export function UserProfileForm({ onSave }: UserProfileFormProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "Alex",
-      lastName: "Johnson",
-      email: "alex.johnson@example.com",
-      phone: "214-555-0123",
-      dateOfBirth: "1985-06-15",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      dateOfBirth: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     toast.success("Profile updated successfully");
     console.log(values);
+    if (onSave) {
+      onSave();
+    }
   }
 
   return (

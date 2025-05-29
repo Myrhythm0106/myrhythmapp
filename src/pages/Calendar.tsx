@@ -70,21 +70,12 @@ const Calendar = () => {
             subtitle="Manage your actions, medications, and daily routines"
           >
             <div className="flex gap-2">
-              <PomodoroButton title="Focus Timer" variant="secondary" />
-              
-              <Button 
-                onClick={() => setShowPlanMyDreams(true)}
-                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-medium shadow-sm hover:shadow-md transition-all"
-              >
-                <Heart className="mr-1 h-4 w-4" />
-                Plan My Dreams
-              </Button>
-              
+              {/* Reordered buttons as specified */}
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
                     <Plus className="mr-1 h-4 w-4" />
-                    Add Action
+                    Action
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[550px]">
@@ -94,6 +85,16 @@ const Calendar = () => {
                   <EventForm />
                 </DialogContent>
               </Dialog>
+              
+              <Button 
+                onClick={() => setShowPlanMyDreams(true)}
+                className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-medium shadow-sm hover:shadow-md transition-all"
+              >
+                <Heart className="mr-1 h-4 w-4" />
+                Plan my Goals
+              </Button>
+              
+              <PomodoroButton title="Focus Timer" variant="secondary" />
             </div>
           </PageHeader>
 

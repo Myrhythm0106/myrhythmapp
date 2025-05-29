@@ -5,7 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-export function NotificationSettings() {
+interface NotificationSettingsProps {
+  onSave?: () => void;
+}
+
+export function NotificationSettings({ onSave }: NotificationSettingsProps) {
   const [appointmentReminders, setAppointmentReminders] = React.useState(true);
   const [medicationReminders, setMedicationReminders] = React.useState(true);
   const [symptomTracking, setSymptomTracking] = React.useState(true);
@@ -14,7 +18,6 @@ export function NotificationSettings() {
 
   const handleSave = () => {
     toast.success("Notification settings saved");
-    // In a real app, this would save to the user's profile
     console.log({
       appointmentReminders,
       medicationReminders,
@@ -22,6 +25,9 @@ export function NotificationSettings() {
       communityActivity,
       appUpdates,
     });
+    if (onSave) {
+      onSave();
+    }
   };
 
   return (

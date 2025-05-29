@@ -1,5 +1,6 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UserProfileForm } from "@/components/profile/UserProfileForm";
@@ -10,9 +11,41 @@ import { PrivacySettings } from "@/components/profile/PrivacySettings";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Shield, User, Bell, HeartPulse, Settings } from "lucide-react";
+import { FloatingStartButton } from "@/components/welcome/FloatingStartButton";
 
 const Profile = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState("personal");
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
+
+  // Check if we're coming from onboarding flow
+  useEffect(() => {
+    const fromOnboarding = searchParams.get('from') === 'onboarding';
+    if (fromOnboarding) {
+      setShowFloatingButton(true);
+    }
+  }, [searchParams]);
+
+  const handlePersonalSave = () => {
+    setActiveTab("medical");
+  };
+
+  const handleMedicalSave = () => {
+    setActiveTab("emergency");
+  };
+
+  const handleEmergencySave = () => {
+    setActiveTab("notifications");
+  };
+
+  const handleNotificationsSave = () => {
+    setActiveTab("privacy");
+  };
+
+  const handlePrivacySave = () => {
+    navigate("/customization");
+  };
 
   return (
     <div className="space-y-6">
@@ -48,27 +81,30 @@ const Profile = () => {
             </TabsList>
             
             <TabsContent value="personal" className="space-y-4">
-              <UserProfileForm />
+              <UserProfileForm onSave={handlePersonalSave} />
             </TabsContent>
             
             <TabsContent value="medical" className="space-y-4">
-              <MedicalInfoForm />
+              <MedicalInfoForm onSave={handleMedicalSave} />
             </TabsContent>
             
             <TabsContent value="emergency" className="space-y-4">
-              <EmergencyContactsForm />
+              <EmergencyContactsForm onSave={handleEmergencySave} />
             </TabsContent>
             
             <TabsContent value="notifications" className="space-y-4">
-              <NotificationSettings />
+              <NotificationSettings onSave={handleNotificationsSave} />
             </TabsContent>
             
             <TabsContent value="privacy" className="space-y-4">
-              <PrivacySettings />
+              <PrivacySettings onSave={handlePrivacySave} />
             </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
+
+      {/* Show floating button if coming from onboarding */}
+      {showFloatingButton && <FloatingStartButton />}
     </div>
   );
 };

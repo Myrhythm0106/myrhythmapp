@@ -3,137 +3,113 @@ import React from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Form } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 
-const formSchema = z.object({
-  profileVisibility: z.string(),
-  dataSharing: z.string(),
-  communityParticipation: z.boolean(),
-  anonymousMode: z.boolean(),
-});
+interface PrivacySettingsProps {
+  onSave?: () => void;
+}
 
-export function PrivacySettings() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      profileVisibility: "private",
-      dataSharing: "none",
-      communityParticipation: true,
-      anonymousMode: false,
-    },
-  });
+export function PrivacySettings({ onSave }: PrivacySettingsProps) {
+  const [shareProgressWithContacts, setShareProgressWithContacts] = React.useState(false);
+  const [allowCommunityInteraction, setAllowCommunityInteraction] = React.useState(true);
+  const [shareAnonymousData, setShareAnonymousData] = React.useState(true);
+  const [enableLocationServices, setEnableLocationServices] = React.useState(false);
+  const [allowDataAnalytics, setAllowDataAnalytics] = React.useState(true);
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success("Privacy settings saved");
-    console.log(values);
-  }
+  const handleSave = () => {
+    toast.success("Privacy settings saved successfully");
+    console.log({
+      shareProgressWithContacts,
+      allowCommunityInteraction,
+      shareAnonymousData,
+      enableLocationServices,
+      allowDataAnalytics,
+    });
+    if (onSave) {
+      onSave();
+    }
+  };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="profileVisibility"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Profile Visibility</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select visibility level" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="public">Public - Visible to all app users</SelectItem>
-                  <SelectItem value="connections">Connections Only - Visible to your connections</SelectItem>
-                  <SelectItem value="private">Private - Only visible to you</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Control who can see your profile information within the app
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="dataSharing"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Health Data Sharing</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select sharing preference" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="none">No Sharing - Keep my data private</SelectItem>
-                  <SelectItem value="healthcare">Healthcare Providers Only</SelectItem>
-                  <SelectItem value="caregivers">Caregivers & Healthcare Providers</SelectItem>
-                  <SelectItem value="research">Anonymized Research - Allow anonymous use for research</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>
-                Choose how your health data can be shared or used
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="communityParticipation"
-          render={({ field }) => (
-            <FormItem className="flex items-center justify-between space-y-0 rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="font-medium">Community Participation</FormLabel>
-                <FormDescription>
-                  Allow your profile to be visible in the community section
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch 
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="anonymousMode"
-          render={({ field }) => (
-            <FormItem className="flex items-center justify-between space-y-0 rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="font-medium">Anonymous Mode</FormLabel>
-                <FormDescription>
-                  Participate in community discussions with an anonymous username
-                </FormDescription>
-              </div>
-              <FormControl>
-                <Switch 
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        
-        <Button type="submit">Save Privacy Settings</Button>
-      </form>
-    </Form>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Data Sharing</CardTitle>
+          <CardDescription>Control how your information is shared</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="share-progress" className="font-medium">Share Progress with Emergency Contacts</Label>
+              <p className="text-sm text-muted-foreground">Allow emergency contacts to view your daily progress</p>
+            </div>
+            <Switch 
+              id="share-progress" 
+              checked={shareProgressWithContacts} 
+              onCheckedChange={setShareProgressWithContacts} 
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="community-interaction" className="font-medium">Community Interaction</Label>
+              <p className="text-sm text-muted-foreground">Participate in community features and discussions</p>
+            </div>
+            <Switch 
+              id="community-interaction" 
+              checked={allowCommunityInteraction} 
+              onCheckedChange={setAllowCommunityInteraction} 
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="anonymous-data" className="font-medium">Anonymous Data Sharing</Label>
+              <p className="text-sm text-muted-foreground">Help improve MyRhythm by sharing anonymous usage data</p>
+            </div>
+            <Switch 
+              id="anonymous-data" 
+              checked={shareAnonymousData} 
+              onCheckedChange={setShareAnonymousData} 
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>App Permissions</CardTitle>
+          <CardDescription>Manage app permissions and data collection</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="location-services" className="font-medium">Location Services</Label>
+              <p className="text-sm text-muted-foreground">Allow location access for location-based reminders</p>
+            </div>
+            <Switch 
+              id="location-services" 
+              checked={enableLocationServices} 
+              onCheckedChange={setEnableLocationServices} 
+            />
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="data-analytics" className="font-medium">Data Analytics</Label>
+              <p className="text-sm text-muted-foreground">Allow collection of app usage analytics</p>
+            </div>
+            <Switch 
+              id="data-analytics" 
+              checked={allowDataAnalytics} 
+              onCheckedChange={setAllowDataAnalytics} 
+            />
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Button onClick={handleSave}>Save Privacy Settings</Button>
+    </div>
   );
 }
