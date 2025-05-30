@@ -1,6 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayViewTBI } from './views/DayViewTBI';
+import { WeekViewTBI } from './views/WeekViewTBI';
+import { MonthViewTBI } from './views/MonthViewTBI';
 import { TBIEvent, EnergyLevel, DayData, CalendarSettings } from './types/calendarTypes';
 import { toast } from 'sonner';
 
@@ -57,6 +60,7 @@ export function TBICalendarApp() {
     energyLevel: undefined
   });
 
+  const [activeTab, setActiveTab] = useState('day');
   const [userRole] = useState<'individual' | 'caregiver'>('individual');
 
   const handleEventComplete = (eventId: string) => {
@@ -93,14 +97,62 @@ export function TBICalendarApp() {
     toast.info('Caregiver support would open here');
   };
 
+  const handleDayClick = (date: Date) => {
+    setDayData(prev => ({
+      ...prev,
+      date: date
+    }));
+    setActiveTab('day');
+  };
+
   return (
-    <DayViewTBI
-      dayData={dayData}
-      userRole={userRole}
-      onEventComplete={handleEventComplete}
-      onEnergyLevelChange={handleEnergyLevelChange}
-      onOpenSettings={handleOpenSettings}
-      onOpenCaregiver={handleOpenCaregiver}
-    />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <div className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10">
+          <div className="px-4 py-3">
+            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto">
+              <TabsTrigger value="day" className="text-sm font-medium">
+                Day
+              </TabsTrigger>
+              <TabsTrigger value="week" className="text-sm font-medium">
+                Week
+              </TabsTrigger>
+              <TabsTrigger value="month" className="text-sm font-medium">
+                Month
+              </TabsTrigger>
+            </TabsList>
+          </div>
+        </div>
+
+        <div className="p-4">
+          <TabsContent value="day" className="mt-0">
+            <DayViewTBI
+              dayData={dayData}
+              userRole={userRole}
+              onEventComplete={handleEventComplete}
+              onEnergyLevelChange={handleEnergyLevelChange}
+              onOpenSettings={handleOpenSettings}
+              onOpenCaregiver={handleOpenCaregiver}
+            />
+          </TabsContent>
+
+          <TabsContent value="week" className="mt-0">
+            <WeekViewTBI
+              currentDate={dayData.date}
+              events={dayData.events}
+              onDayClick={handleDayClick}
+            />
+          </TabsContent>
+
+          <TabsContent value="month" className="mt-0">
+            <MonthViewTBI
+              currentDate={dayData.date}
+              events={dayData.events}
+              onDayClick={handleDayClick}
+            />
+          </TabsContent>
+        </div>
+      </Tabs>
+    </div>
   );
 }
