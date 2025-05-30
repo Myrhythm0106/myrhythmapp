@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RhythmAssessmentView } from "./rhythm/RhythmAssessmentView";
+import { AssessmentResponses, sections } from "./rhythm/rhythmAssessmentData";
 
 interface RhythmAssessmentStepProps {
   onComplete: (responses: any) => void;
@@ -10,6 +11,36 @@ interface RhythmAssessmentStepProps {
 
 export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) {
   const [hasStarted, setHasStarted] = useState(false);
+  const [currentSection, setCurrentSection] = useState(0);
+  const [responses, setResponses] = useState<AssessmentResponses>({});
+
+  const handleResponse = (questionId: string, value: string) => {
+    const sectionId = sections[currentSection].id.toString();
+    setResponses(prev => ({
+      ...prev,
+      [sectionId]: {
+        ...prev[sectionId],
+        [questionId]: value
+      }
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentSection < sections.length - 1) {
+      setCurrentSection(prev => prev + 1);
+    } else {
+      // Assessment complete
+      onComplete(responses);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentSection > 0) {
+      setCurrentSection(prev => prev - 1);
+    } else {
+      setHasStarted(false);
+    }
+  };
 
   if (!hasStarted) {
     return (
@@ -49,5 +80,13 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     );
   }
 
-  return <RhythmAssessmentView onComplete={onComplete} />;
+  return (
+    <RhythmAssessmentView
+      currentSection={currentSection}
+      responses={responses}
+      onResponse={handleResponse}
+      onNext={handleNext}
+      onBack={handleBack}
+    />
+  );
 }
