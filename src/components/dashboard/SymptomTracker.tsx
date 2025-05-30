@@ -61,13 +61,6 @@ export function SymptomTracker() {
             Tracking headache intensity on a scale from 0-5
           </p>
         </div>
-        <Button 
-          variant="outline" 
-          className="w-full bg-gradient-to-r from-primary/10 to-primary/5 hover:bg-primary/20 transition-all" 
-          asChild
-        >
-          <Link to="/tracking">View All Tracking Data</Link>
-        </Button>
       </CardContent>
     </Card>
   );

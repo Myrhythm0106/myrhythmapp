@@ -32,19 +32,9 @@ export function GratitudeJournal() {
       {/* Quick access to recent entries */}
       <Card className="bg-muted/20">
         <CardHeader className="pb-2">
-          <CardTitle className="text-lg flex items-center justify-between">
-            <span className="flex items-center">
-              <BookOpen className="h-5 w-5 text-primary mr-2" />
-              Your Recent Gratitude Entries
-            </span>
-            <Button 
-              size="sm" 
-              onClick={() => setIsQuickAddOpen(true)}
-              className="flex items-center gap-1"
-            >
-              <Plus className="h-4 w-4" />
-              Add New Entry
-            </Button>
+          <CardTitle className="text-lg flex items-center">
+            <BookOpen className="h-5 w-5 text-primary mr-2" />
+            Your Recent Gratitude Entries
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -66,13 +56,6 @@ export function GratitudeJournal() {
             ) : (
               <div className="col-span-full text-center p-6">
                 <p className="text-muted-foreground">No entries yet. Let's add your first gratitude!</p>
-                <Button 
-                  onClick={() => setIsQuickAddOpen(true)} 
-                  className="mt-2"
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Add Gratitude
-                </Button>
               </div>
             )}
           </div>
