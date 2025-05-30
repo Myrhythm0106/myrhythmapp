@@ -3,7 +3,9 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { RhythmAssessmentView } from "./rhythm/RhythmAssessmentView";
+import { RhythmSummaryView } from "./rhythm/RhythmSummaryView";
 import { AssessmentResponses, sections } from "./rhythm/rhythmAssessmentData";
+import { analyzeRhythmAssessment, storeFocusArea } from "@/utils/rhythmAnalysis";
 
 interface RhythmAssessmentStepProps {
   onComplete: (responses: any) => void;
@@ -13,6 +15,7 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
   const [hasStarted, setHasStarted] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
   const [responses, setResponses] = useState<AssessmentResponses>({});
+  const [showSummary, setShowSummary] = useState(false);
 
   const handleResponse = (questionId: string, value: string) => {
     const sectionId = sections[currentSection].id.toString();
@@ -29,17 +32,37 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     if (currentSection < sections.length - 1) {
       setCurrentSection(prev => prev + 1);
     } else {
-      // Assessment complete
-      onComplete(responses);
+      // Assessment complete - analyze and show summary
+      const focusArea = analyzeRhythmAssessment(responses);
+      const assessmentData = {
+        responses,
+        focusArea,
+        completedAt: new Date().toISOString(),
+        assessmentVersion: "1.0"
+      };
+      
+      // Store the focus area determination
+      storeFocusArea(focusArea, assessmentData);
+      
+      setShowSummary(true);
     }
   };
 
   const handleBack = () => {
+    if (showSummary) {
+      setShowSummary(false);
+      return;
+    }
+    
     if (currentSection > 0) {
       setCurrentSection(prev => prev - 1);
     } else {
       setHasStarted(false);
     }
+  };
+
+  const handleSummaryComplete = () => {
+    onComplete(responses);
   };
 
   if (!hasStarted) {
@@ -77,6 +100,15 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
           </Button>
         </div>
       </div>
+    );
+  }
+
+  if (showSummary) {
+    return (
+      <RhythmSummaryView 
+        onComplete={handleSummaryComplete}
+        onBack={handleBack}
+      />
     );
   }
 

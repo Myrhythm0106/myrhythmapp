@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -23,6 +23,9 @@ export function RhythmAssessmentView({
   onNext,
   onBack
 }: RhythmAssessmentViewProps) {
+  const [autoProgressTimer, setAutoProgressTimer] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  
   const section = sections[currentSection];
   const sectionId = section.id.toString();
   const sectionResponses = responses[sectionId] || {};
@@ -39,11 +42,31 @@ export function RhythmAssessmentView({
   // Auto-advance when all questions in section are answered
   useEffect(() => {
     if (canProceed()) {
+      setCountdown(3);
+      
       const timer = setTimeout(() => {
         onNext();
-      }, 800); // Small delay to show the selection was made
+        setCountdown(null);
+      }, 3000);
       
-      return () => clearTimeout(timer);
+      const countdownInterval = setInterval(() => {
+        setCountdown(prev => prev ? prev - 1 : null);
+      }, 1000);
+      
+      setAutoProgressTimer(timer);
+      
+      return () => {
+        clearTimeout(timer);
+        clearInterval(countdownInterval);
+        setAutoProgressTimer(null);
+        setCountdown(null);
+      };
+    } else {
+      if (autoProgressTimer) {
+        clearTimeout(autoProgressTimer);
+        setAutoProgressTimer(null);
+      }
+      setCountdown(null);
     }
   }, [sectionResponses, canProceed, onNext]);
 
@@ -51,6 +74,14 @@ export function RhythmAssessmentView({
 
   const handleResponse = (questionId: string, value: string) => {
     onResponse(questionId, value);
+  };
+
+  const cancelAutoProgress = () => {
+    if (autoProgressTimer) {
+      clearTimeout(autoProgressTimer);
+      setAutoProgressTimer(null);
+    }
+    setCountdown(null);
   };
 
   return (
@@ -63,6 +94,23 @@ export function RhythmAssessmentView({
         </div>
         <Progress value={progressPercentage} className="h-2" />
       </div>
+
+      {/* Auto-progress notification */}
+      {countdown && (
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+          <p className="text-green-700 font-medium">
+            Automatically moving to next section in {countdown} seconds...
+          </p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={cancelAutoProgress}
+            className="mt-2"
+          >
+            Stay on this section
+          </Button>
+        </div>
+      )}
 
       {/* Section Content */}
       <Card className="overflow-hidden">
@@ -101,7 +149,7 @@ export function RhythmAssessmentView({
         <Button
           onClick={onNext}
           disabled={!canProceed()}
-          className="flex items-center gap-2 bg-gradient-to-r from-beacon-600 to-beacon-800 hover:from-beacon-700 hover:to-beacon-900"
+          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800"
         >
           {currentSection === sections.length - 1 ? "Complete Assessment" : "Next Section"}
           <ArrowRight className="h-4 w-4" />

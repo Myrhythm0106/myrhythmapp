@@ -1,15 +1,16 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Sparkles } from "lucide-react";
+import { ArrowRight, Heart, Sparkles, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentFocusArea, focusAreas } from "@/utils/rhythmAnalysis";
 
 interface RhythmSummaryViewProps {
   onComplete: () => void;
+  onBack?: () => void;
 }
 
-export function RhythmSummaryView({ onComplete }: RhythmSummaryViewProps) {
+export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps) {
   const currentFocusArea = getCurrentFocusArea();
   const focusInfo = currentFocusArea ? focusAreas[currentFocusArea] : null;
 
@@ -68,13 +69,26 @@ export function RhythmSummaryView({ onComplete }: RhythmSummaryViewProps) {
         </p>
       </div>
 
-      <Button 
-        onClick={onComplete}
-        className="w-full max-w-md mx-auto py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105"
-      >
-        Personalise MyRhythm
-        <ArrowRight className="ml-2 h-5 w-5" />
-      </Button>
+      <div className="flex justify-between items-center pt-4">
+        {onBack && (
+          <Button
+            variant="outline"
+            onClick={onBack}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Assessment
+          </Button>
+        )}
+        
+        <Button 
+          onClick={onComplete}
+          className={`py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 ${!onBack ? 'w-full max-w-md mx-auto' : ''}`}
+        >
+          Personalise MyRhythm
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 }
