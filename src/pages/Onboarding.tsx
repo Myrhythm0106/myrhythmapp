@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
@@ -7,6 +8,8 @@ import { PlanStep, PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentStep, PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 import { LocationStep } from "@/components/onboarding/steps/LocationStep";
 import { RhythmAssessmentStep } from "@/components/onboarding/steps/RhythmAssessmentStep";
+import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
+import { useAutoProgression } from "@/hooks/useAutoProgression";
 
 // Onboarding step definitions with new step 5
 const STEPS = [
@@ -39,8 +42,8 @@ const STEPS = [
 
 type LocationFormValues = {
   country: string;
-  city: string;
   state: string;
+  town: string;
 };
 
 const Onboarding = () => {
@@ -51,7 +54,33 @@ const Onboarding = () => {
   const [location, setLocation] = useState<LocationFormValues | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("basic");
+  const [paymentData, setPaymentData] = useState<PaymentFormValues | null>(null);
+  const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   
+  // Form validation states for auto-progression
+  const [isPersonalInfoValid, setIsPersonalInfoValid] = useState(false);
+  const [isLocationValid, setIsLocationValid] = useState(false);
+  const [isPlanSelected, setIsPlanSelected] = useState(false);
+  
+  // Auto-progression for steps 1-3
+  const { countdown: personalInfoCountdown } = useAutoProgression({
+    isFormValid: isPersonalInfoValid,
+    onProgress: () => handlePersonalInfoComplete(personalInfo!),
+    enabled: currentStep === 1 && personalInfo !== null
+  });
+  
+  const { countdown: locationCountdown } = useAutoProgression({
+    isFormValid: isLocationValid,
+    onProgress: () => handleLocationComplete(location!),
+    enabled: currentStep === 2 && location !== null
+  });
+  
+  const { countdown: planCountdown } = useAutoProgression({
+    isFormValid: isPlanSelected,
+    onProgress: () => handlePlanSelected(selectedPlan),
+    enabled: currentStep === 3 && isPlanSelected
+  });
+
   // Handle step navigation with browser back button
   useEffect(() => {
     const handlePopState = () => {
@@ -115,29 +144,38 @@ const Onboarding = () => {
   };
   
   // Step handlers
-  const handleLocationComplete = (values: LocationFormValues) => {
-    // Store location information
-    setLocation(values);
-    goToNextStep();
-  };
-  
   const handlePersonalInfoComplete = (values: PersonalInfoFormValues) => {
     // Store user information
     localStorage.setItem("myrhythm_name", values.name);
     localStorage.setItem("myrhythm_email", values.email);
     localStorage.setItem("myrhythm_password", values.password);
     setPersonalInfo(values);
+    setIsPersonalInfoValid(true);
+    goToNextStep();
+  };
+  
+  const handleLocationComplete = (values: LocationFormValues) => {
+    // Store location information
+    setLocation(values);
+    setIsLocationValid(true);
     goToNextStep();
   };
   
   const handlePlanSelected = (plan: PlanType) => {
     setSelectedPlan(plan);
+    setIsPlanSelected(true);
     goToNextStep();
   };
   
   const handlePaymentComplete = (values: PaymentFormValues) => {
+    setPaymentData(values);
+    setShowPaymentConfirmation(true);
+  };
+  
+  const handlePaymentConfirm = () => {
     // In a real app, process payment here
-    console.log("Payment info:", values);
+    console.log("Payment info:", paymentData);
+    setShowPaymentConfirmation(false);
     goToNextStep();
   };
   
@@ -154,8 +192,8 @@ const Onboarding = () => {
     // Store location data
     if (location) {
       localStorage.setItem("myrhythm_country", location.country);
-      localStorage.setItem("myrhythm_city", location.city);
       localStorage.setItem("myrhythm_state", location.state);
+      localStorage.setItem("myrhythm_town", location.town);
     }
     
     // Store rhythm assessment responses with metadata
@@ -187,11 +225,47 @@ const Onboarding = () => {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <PersonalInfoStep onComplete={handlePersonalInfoComplete} initialValues={personalInfo || undefined} />;
+        return (
+          <div>
+            <PersonalInfoStep 
+              onComplete={handlePersonalInfoComplete} 
+              initialValues={personalInfo || undefined} 
+            />
+            {personalInfoCountdown && (
+              <div className="mt-4 text-center text-sm text-muted-foreground">
+                Automatically proceeding in {personalInfoCountdown} seconds...
+              </div>
+            )}
+          </div>
+        );
       case 2:
-        return <LocationStep onComplete={handleLocationComplete} initialValues={location || undefined} />;
+        return (
+          <div>
+            <LocationStep 
+              onComplete={handleLocationComplete} 
+              initialValues={location || undefined} 
+            />
+            {locationCountdown && (
+              <div className="mt-4 text-center text-sm text-muted-foreground">
+                Automatically proceeding in {locationCountdown} seconds...
+              </div>
+            )}
+          </div>
+        );
       case 3:
-        return <PlanStep onComplete={handlePlanSelected} selectedPlan={selectedPlan} />;
+        return (
+          <div>
+            <PlanStep 
+              onComplete={handlePlanSelected} 
+              selectedPlan={selectedPlan} 
+            />
+            {planCountdown && (
+              <div className="mt-4 text-center text-sm text-muted-foreground">
+                Automatically proceeding in {planCountdown} seconds...
+              </div>
+            )}
+          </div>
+        );
       case 4:
         return <PaymentStep onComplete={handlePaymentComplete} selectedPlan={selectedPlan} />;
       case 5:
@@ -205,15 +279,24 @@ const Onboarding = () => {
   const currentStepInfo = STEPS.find(step => step.id === currentStep) || STEPS[0];
 
   return (
-    <OnboardingLayout 
-      currentStep={currentStep} 
-      totalSteps={STEPS.length}
-      onBack={goToPreviousStep}
-      title={currentStepInfo.title}
-      description={currentStepInfo.description}
-    >
-      {renderStepContent()}
-    </OnboardingLayout>
+    <>
+      <OnboardingLayout 
+        currentStep={currentStep} 
+        totalSteps={STEPS.length}
+        onBack={goToPreviousStep}
+        title={currentStepInfo.title}
+        description={currentStepInfo.description}
+      >
+        {renderStepContent()}
+      </OnboardingLayout>
+      
+      <PaymentConfirmationDialog
+        open={showPaymentConfirmation}
+        onConfirm={handlePaymentConfirm}
+        onCancel={() => setShowPaymentConfirmation(false)}
+        selectedPlan={selectedPlan}
+      />
+    </>
   );
 };
 

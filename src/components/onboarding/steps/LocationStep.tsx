@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const locationSchema = z.object({
   country: z.string().min(1, "Country is required"),
-  city: z.string().min(1, "City is required"),
-  state: z.string().min(1, "State/Town is required"),
+  state: z.string().min(1, "State is required"),
+  town: z.string().min(1, "Town is required"),
 });
 
 type LocationFormValues = z.infer<typeof locationSchema>;
@@ -26,8 +26,8 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
     resolver: zodResolver(locationSchema),
     defaultValues: initialValues || {
       country: "",
-      city: "",
       state: "",
+      town: "",
     }
   });
   
@@ -54,12 +54,12 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
         
         <FormField
           control={form.control}
-          name="city"
+          name="state"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>City <span className="text-destructive">*</span></FormLabel>
+              <FormLabel>State <span className="text-destructive">*</span></FormLabel>
               <FormControl>
-                <Input placeholder="Enter your city" {...field} />
+                <Input placeholder="Enter your state" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -68,12 +68,12 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
         
         <FormField
           control={form.control}
-          name="state"
+          name="town"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>State/Town <span className="text-destructive">*</span></FormLabel>
+              <FormLabel>Town <span className="text-destructive">*</span></FormLabel>
               <FormControl>
-                <Input placeholder="Enter your state or town" {...field} />
+                <Input placeholder="Enter your town" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
