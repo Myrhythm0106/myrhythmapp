@@ -316,22 +316,30 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
                   onValueChange={(value) => handleResponse(question.id, value)}
                   className="grid grid-cols-2 md:grid-cols-4 gap-4"
                 >
-                  {scaleLabels.map((label, value) => (
-                    <div key={value + 1} className="flex items-center space-x-2">
-                      <RadioGroupItem 
-                        value={(value + 1).toString()} 
-                        id={`${question.id}-${value + 1}`}
-                        className="peer sr-only"
-                      />
-                      <Label
-                        htmlFor={`${question.id}-${value + 1}`}
-                        className="flex-1 p-3 text-center border-2 border-gray-200 rounded-lg cursor-pointer transition-all hover:border-beacon-300 peer-checked:border-beacon-500 peer-checked:bg-beacon-50 peer-checked:text-beacon-700"
-                      >
-                        <div className="font-medium text-sm">{value + 1}</div>
-                        <div className="text-xs text-gray-600 mt-1">{label}</div>
-                      </Label>
-                    </div>
-                  ))}
+                  {scaleLabels.map((label, value) => {
+                    const isSelected = sectionResponses[question.id] === (value + 1);
+                    return (
+                      <div key={value + 1} className="flex items-center space-x-2">
+                        <RadioGroupItem 
+                          value={(value + 1).toString()} 
+                          id={`${question.id}-${value + 1}`}
+                          className="hidden"
+                        />
+                        <Label
+                          htmlFor={`${question.id}-${value + 1}`}
+                          className={cn(
+                            "flex-1 p-3 text-center border-2 rounded-lg cursor-pointer transition-all hover:border-beacon-300",
+                            isSelected 
+                              ? "border-beacon-500 bg-beacon-50 text-beacon-700" 
+                              : "border-gray-200"
+                          )}
+                        >
+                          <div className="font-medium text-sm">{value + 1}</div>
+                          <div className="text-xs text-gray-600 mt-1">{label}</div>
+                        </Label>
+                      </div>
+                    );
+                  })}
                 </RadioGroup>
               </div>
             ))}
