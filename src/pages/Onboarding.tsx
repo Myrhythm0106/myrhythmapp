@@ -5,10 +5,10 @@ import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PersonalInfoStep, PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
 import { PlanStep, PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentStep, PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
-import { UserTypeStep, UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { LocationStep } from "@/components/onboarding/steps/LocationStep";
+import { RhythmAssessmentStep } from "@/components/onboarding/steps/RhythmAssessmentStep";
 
-// Onboarding step definitions with reordered steps 1 and 2
+// Onboarding step definitions with new step 5
 const STEPS = [
   {
     id: 1,
@@ -32,8 +32,8 @@ const STEPS = [
   },
   {
     id: 5,
-    title: "How will you use MyRhythm?",
-    description: "Select the option that best describes your situation"
+    title: "Find Your Rhythm",
+    description: "Help us understand your journey to personalize your experience"
   }
 ];
 
@@ -115,8 +115,8 @@ const Onboarding = () => {
     goToNextStep();
   };
   
-  const handleUserTypeSelected = (data: { type: UserType; customValue?: string }) => {
-    console.log("User type:", data);
+  const handleRhythmAssessmentComplete = (responses: any) => {
+    console.log("Rhythm assessment responses:", responses);
     
     // Store location data
     if (location) {
@@ -125,11 +125,8 @@ const Onboarding = () => {
       localStorage.setItem("myrhythm_state", location.state);
     }
     
-    // Store user type
-    localStorage.setItem("myrhythm_user_type", data.type);
-    if (data.customValue) {
-      localStorage.setItem("myrhythm_custom_type", data.customValue);
-    }
+    // Store rhythm assessment responses
+    localStorage.setItem("myrhythm_rhythm_assessment", JSON.stringify(responses));
     
     // Set login and registration status
     localStorage.setItem('myrhythm_logged_in', 'true');
@@ -137,8 +134,8 @@ const Onboarding = () => {
     
     // Show success toast
     toast({
-      title: "Account created!",
-      description: "Welcome to MyRhythm. Your account has been set up successfully.",
+      title: "Your rhythm has been found!",
+      description: "Welcome to MyRhythm. Your personalized experience is ready.",
       variant: "default",
     });
     
@@ -146,7 +143,7 @@ const Onboarding = () => {
     navigate("/welcome");
   };
   
-  // Render current step content - reordered to match the new step order
+  // Render current step content
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
@@ -158,7 +155,7 @@ const Onboarding = () => {
       case 4:
         return <PaymentStep onComplete={handlePaymentComplete} selectedPlan={selectedPlan} />;
       case 5:
-        return <UserTypeStep onComplete={handleUserTypeSelected} />;
+        return <RhythmAssessmentStep onComplete={handleRhythmAssessmentComplete} />;
       default:
         return null;
     }
