@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import Landing from "./pages/Landing";
 import Welcome from "./pages/Welcome";
+import Auth from "./pages/Auth";
 import MainLayout from "./components/layout/MainLayout";
 import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
@@ -24,6 +25,8 @@ import { useIsMobile } from "./hooks/use-mobile";
 import UserGuideView from "./pages/UserGuideView";
 import FoundersStory from "./pages/FoundersStory";
 import MoodTracking from "./pages/MoodTracking";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -32,68 +35,93 @@ const AppRoutes = () => {
 
   return (
     <Routes>
-      {/* Use the SplashScreen for mobile, Landing for desktop */}
+      {/* Public routes */}
       <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
-      
-      {/* Founder's Story page */}
+      <Route path="/auth" element={<Auth />} />
       <Route path="/founders-story" element={<FoundersStory />} />
-      
-      {/* Direct to Dashboard */}
-      <Route path="/dashboard" element={
-        <MainLayout>
-          <Dashboard />
-        </MainLayout>
-      } />
-      
-      {/* Welcome page after onboarding */}
-      <Route path="/welcome" element={<Welcome />} />
-      
-      {/* Redirect /index to /dashboard */}
-      <Route path="/index" element={<Navigate to="/dashboard" replace />} />
-      
       <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/customization" element={<Customization />} />
-      
-      {/* User Guide Documentation */}
+      <Route path="/welcome" element={<Welcome />} />
       <Route path="/guide" element={<UserGuideView />} />
       
-      {/* Routes with MainLayout */}
+      {/* Protected routes */}
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <MainLayout>
+            <Dashboard />
+          </MainLayout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/customization" element={
+        <ProtectedRoute>
+          <Customization />
+        </ProtectedRoute>
+      } />
+      
       <Route path="/profile" element={
-        <MainLayout>
-          <Profile />
-        </MainLayout>
+        <ProtectedRoute>
+          <MainLayout>
+            <Profile />
+          </MainLayout>
+        </ProtectedRoute>
       } />
-      <Route path="/calendar" element={<TBICalendar />} />
+      
+      <Route path="/calendar" element={
+        <ProtectedRoute>
+          <TBICalendar />
+        </ProtectedRoute>
+      } />
+      
       <Route path="/tracking" element={
-        <MainLayout>
-          <SymptomTracking />
-        </MainLayout>
+        <ProtectedRoute>
+          <MainLayout>
+            <SymptomTracking />
+          </MainLayout>
+        </ProtectedRoute>
       } />
+      
       <Route path="/mood" element={
-        <MainLayout>
-          <MoodTracking />
-        </MainLayout>
+        <ProtectedRoute>
+          <MainLayout>
+            <MoodTracking />
+          </MainLayout>
+        </ProtectedRoute>
       } />
+      
       <Route path="/gratitude" element={
-        <MainLayout>
-          <Gratitude />
-        </MainLayout>
+        <ProtectedRoute>
+          <MainLayout>
+            <Gratitude />
+          </MainLayout>
+        </ProtectedRoute>
       } />
+      
       <Route path="/community" element={
-        <MainLayout>
-          <Community />
-        </MainLayout>
+        <ProtectedRoute>
+          <MainLayout>
+            <Community />
+          </MainLayout>
+        </ProtectedRoute>
       } />
+      
       <Route path="/personal-community" element={
-        <MainLayout>
-          <PersonalCommunity />
-        </MainLayout>
+        <ProtectedRoute>
+          <MainLayout>
+            <PersonalCommunity />
+          </MainLayout>
+        </ProtectedRoute>
       } />
+      
       <Route path="/useful-info" element={
-        <MainLayout>
-          <UsefulInfo />
-        </MainLayout>
+        <ProtectedRoute>
+          <MainLayout>
+            <UsefulInfo />
+          </MainLayout>
+        </ProtectedRoute>
       } />
+      
+      {/* Legacy redirects */}
+      <Route path="/index" element={<Navigate to="/dashboard" replace />} />
       
       {/* 404 Page */}
       <Route path="*" element={<NotFound />} />
@@ -108,7 +136,9 @@ const App = () => (
         <Toaster />
         <Sonner richColors />
         <BrowserRouter>
-          <AppRoutes />
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
         </BrowserRouter>
       </ToastProvider>
     </TooltipProvider>

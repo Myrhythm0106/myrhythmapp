@@ -9,7 +9,177 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      calendar_events: {
+        Row: {
+          category: string | null
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          is_system_generated: boolean
+          requires_acceptance: boolean
+          time: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          date: string
+          description?: string | null
+          id?: string
+          is_system_generated?: boolean
+          requires_acceptance?: boolean
+          time: string
+          title: string
+          type?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          is_system_generated?: boolean
+          requires_acceptance?: boolean
+          time?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      gratitude_entries: {
+        Row: {
+          created_at: string
+          date: string
+          gratitude_text: string
+          id: string
+          prompt_type: string
+          updated_at: string
+          user_id: string
+          why_grateful: string | null
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          gratitude_text: string
+          id?: string
+          prompt_type?: string
+          updated_at?: string
+          user_id: string
+          why_grateful?: string | null
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          gratitude_text?: string
+          id?: string
+          prompt_type?: string
+          updated_at?: string
+          user_id?: string
+          why_grateful?: string | null
+        }
+        Relationships: []
+      }
+      mood_entries: {
+        Row: {
+          created_at: string
+          date: string
+          energy_level: number
+          id: string
+          mood: string
+          notes: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          energy_level: number
+          id?: string
+          mood: string
+          notes?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          energy_level?: number
+          id?: string
+          mood?: string
+          notes?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      symptom_logs: {
+        Row: {
+          created_at: string
+          date: string
+          diastolic: number | null
+          id: string
+          notes: string | null
+          severity: number
+          steps: number | null
+          symptom_type: string
+          systolic: number | null
+          time: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          diastolic?: number | null
+          id?: string
+          notes?: string | null
+          severity: number
+          steps?: number | null
+          symptom_type: string
+          systolic?: number | null
+          time: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          diastolic?: number | null
+          id?: string
+          notes?: string | null
+          severity?: number
+          steps?: number | null
+          symptom_type?: string
+          systolic?: number | null
+          time?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -6,12 +6,16 @@ import { Input } from "@/components/ui/input";
 import { HeartHandshake, ArrowRight, Flame, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function GratitudePracticeWidget() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [gratitudeNote, setGratitudeNote] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Mock data
+  // Mock data for display
   const currentStreak = 5;
   const todayPrompts = [
     "What small moment brought you joy today?",
@@ -23,14 +27,39 @@ export function GratitudePracticeWidget() {
   
   const todayPrompt = todayPrompts[Math.floor(Math.random() * todayPrompts.length)];
 
-  const handleQuickEntry = () => {
-    if (gratitudeNote.trim()) {
+  const handleQuickEntry = async () => {
+    if (!user) {
+      toast.error("Please log in to save gratitude entries");
+      return;
+    }
+    
+    if (!gratitudeNote.trim()) {
+      toast.error("Share what's sparking gratitude in your heart");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('gratitude_entries')
+        .insert({
+          user_id: user.id,
+          gratitude_text: gratitudeNote.trim(),
+          prompt_type: 'daily_widget'
+        });
+
+      if (error) throw error;
+
       toast.success("Your gratitude lights up the world! ✨", {
         description: "Every moment of gratitude grows your resilience."
       });
       setGratitudeNote("");
-    } else {
-      toast.error("Share what's sparking gratitude in your heart");
+    } catch (error) {
+      console.error('Error saving gratitude:', error);
+      toast.error("Failed to save gratitude entry. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -61,6 +90,7 @@ export function GratitudePracticeWidget() {
               value={gratitudeNote}
               onChange={(e) => setGratitudeNote(e.target.value)}
               className="text-sm border-rose-200 focus:border-rose-400"
+              disabled={isSubmitting}
             />
           </div>
           
@@ -68,10 +98,10 @@ export function GratitudePracticeWidget() {
             size="sm" 
             onClick={handleQuickEntry}
             className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
-            disabled={!gratitudeNote.trim()}
+            disabled={!gratitudeNote.trim() || isSubmitting}
           >
             <HeartHandshake className="h-4 w-4 mr-1" />
-            Capture This Moment
+            {isSubmitting ? "Saving..." : "Capture This Moment"}
           </Button>
         </div>
 

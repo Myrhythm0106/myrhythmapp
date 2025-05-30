@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 const formSchema = z.object({
   symptomType: z.string().min(1, "Please select a symptom type"),
@@ -18,7 +20,6 @@ const formSchema = z.object({
   date: z.string().min(1, "Please enter a date"),
   time: z.string().min(1, "Please enter a time"),
   notes: z.string().optional(),
-  // Add blood pressure and steps fields
   trackBloodPressure: z.boolean().default(false),
   systolic: z.string().optional(),
   diastolic: z.string().optional(),
@@ -27,9 +28,11 @@ const formSchema = z.object({
 });
 
 export function SymptomLogForm() {
+  const { user } = useAuth();
   const [severity, setSeverity] = useState(3);
   const [trackBloodPressure, setTrackBloodPressure] = useState(false);
   const [trackSteps, setTrackSteps] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -47,24 +50,55 @@ export function SymptomLogForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    toast.success("Symptom logged successfully!");
-    console.log(values);
-    form.reset({
-      symptomType: "",
-      severity: 3,
-      date: new Date().toISOString().split('T')[0],
-      time: new Date().toTimeString().split(' ')[0].substring(0, 5),
-      notes: "",
-      trackBloodPressure: false,
-      systolic: "",
-      diastolic: "",
-      trackSteps: false,
-      steps: "",
-    });
-    setSeverity(3);
-    setTrackBloodPressure(false);
-    setTrackSteps(false);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!user) {
+      toast.error("You must be logged in to log symptoms");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase
+        .from('symptom_logs')
+        .insert({
+          user_id: user.id,
+          symptom_type: values.symptomType,
+          severity: values.severity,
+          date: values.date,
+          time: values.time,
+          notes: values.notes || null,
+          systolic: values.trackBloodPressure && values.systolic ? parseInt(values.systolic) : null,
+          diastolic: values.trackBloodPressure && values.diastolic ? parseInt(values.diastolic) : null,
+          steps: values.trackSteps && values.steps ? parseInt(values.steps) : null,
+        });
+
+      if (error) throw error;
+
+      toast.success("Symptom logged successfully!");
+      
+      // Reset form
+      form.reset({
+        symptomType: "",
+        severity: 3,
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toTimeString().split(' ')[0].substring(0, 5),
+        notes: "",
+        trackBloodPressure: false,
+        systolic: "",
+        diastolic: "",
+        trackSteps: false,
+        steps: "",
+      });
+      setSeverity(3);
+      setTrackBloodPressure(false);
+      setTrackSteps(false);
+    } catch (error) {
+      console.error('Error logging symptom:', error);
+      toast.error("Failed to log symptom. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -76,7 +110,7 @@ export function SymptomLogForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Symptom Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a symptom" />
@@ -285,7 +319,9 @@ export function SymptomLogForm() {
           )}
         />
 
-        <Button type="submit">Log Symptom</Button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Logging..." : "Log Symptom"}
+        </Button>
       </form>
     </Form>
   );

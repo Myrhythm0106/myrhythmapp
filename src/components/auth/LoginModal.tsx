@@ -11,7 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { Shield } from "lucide-react";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -20,69 +21,54 @@ interface LoginModalProps {
 
 export function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const { signIn } = useAuth();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // In a real app, we would check against a database
-    // For now, we'll check against localStorage to simulate a registration match
-    const registeredEmail = localStorage.getItem("myrhythm_email");
-    const registeredName = localStorage.getItem("myrhythm_name");
+    const { error } = await signIn(email, password);
     
-    // Check if either email or name matches the username
-    const usernameMatches = registeredEmail === username || registeredName === username;
-    // Check if we have a stored password and if it matches
-    const storedPassword = localStorage.getItem("myrhythm_password");
-    const passwordMatches = storedPassword === password;
+    if (!error) {
+      onClose();
+      navigate("/dashboard");
+    }
+    
+    setIsLoading(false);
+  };
 
-    setTimeout(() => {
-      if (usernameMatches && passwordMatches) {
-        toast.success("Login successful!");
-        localStorage.setItem("myrhythm_logged_in", "true");
-        // Direct navigation to dashboard (change #1)
-        navigate("/dashboard");
-      } else {
-        toast.error("Invalid username or password");
-      }
-      setIsLoading(false);
-    }, 1000);
+  const handleClose = () => {
+    setEmail("");
+    setPassword("");
+    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl">Login to MyRhythm</DialogTitle>
+          <DialogTitle className="text-xl flex items-center gap-2">
+            <Shield className="h-5 w-5 text-primary" />
+            Login to MyRhythm
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="username">Username or Email</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
-              id="username"
-              placeholder="Enter your username or email"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
           </div>
           <div className="space-y-2">
-            <div className="flex justify-between">
-              <Label htmlFor="password">Password</Label>
-              <Button
-                variant="link"
-                className="px-0 text-sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  toast.info("Password reset functionality will be available soon");
-                }}
-              >
-                Forgot password?
-              </Button>
-            </div>
+            <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               type="password"
@@ -104,8 +90,8 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             variant="link"
             className="p-0"
             onClick={() => {
-              onClose();
-              navigate("/onboarding");
+              handleClose();
+              navigate("/auth");
             }}
           >
             Sign up
