@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,6 +24,7 @@ import { useIsMobile } from "./hooks/use-mobile";
 import UserGuideView from "./pages/UserGuideView";
 import FoundersStory from "./pages/FoundersStory";
 import MoodTracking from "./pages/MoodTracking";
+import Documentation from "./pages/Documentation";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +57,13 @@ const AppRoutes = () => {
       
       {/* User Guide Documentation */}
       <Route path="/guide" element={<UserGuideView />} />
+      
+      {/* App Documentation */}
+      <Route path="/documentation" element={
+        <MainLayout>
+          <Documentation />
+        </MainLayout>
+      } />
       
       {/* Routes with MainLayout */}
       <Route path="/profile" element={

@@ -7,7 +7,7 @@ import {
   DrawerClose
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle, FileText, Sliders, Palette, Type, Volume2, Shield, Smile, Target } from "lucide-react";
+import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle, FileText, Sliders, Palette, Type, Volume2, Shield, Smile, Target, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function MobileMenu() {
@@ -45,6 +45,7 @@ export function MobileMenu() {
   const helperNavItems = [
     { to: "/help", icon: <HelpCircle className="h-5 w-5" />, label: "Help & Support", badge: null },
     { to: "/guide", icon: <FileText className="h-5 w-5" />, label: "User Guide", badge: "New" },
+    { to: "/documentation", icon: <BookOpen className="h-5 w-5" />, label: "App Documentation", badge: "New" },
   ];
 
   return (
