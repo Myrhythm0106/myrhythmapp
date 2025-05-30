@@ -2,24 +2,24 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, RefreshCw } from "lucide-react";
+import { Sparkles, RefreshCw, TrendingUp } from "lucide-react";
 
-const motivationalStatements = [
-  "I am stronger than my challenges and capable of amazing things.",
-  "Every small step I take today moves me closer to my goals.",
-  "I have the power to create positive change in my life.",
-  "My brain is healing and growing stronger every day.",
-  "I choose to focus on progress, not perfection.",
-  "I am resilient, and I can handle whatever comes my way.",
-  "Today is a new opportunity to be the best version of myself.",
-  "I trust in my ability to overcome obstacles and thrive.",
-  "My journey is unique, and I celebrate every victory along the way.",
-  "I am worthy of love, success, and happiness.",
-  "I have the courage to face challenges with confidence.",
-  "Each day brings new possibilities for growth and healing.",
-  "I am building a life filled with purpose and joy.",
-  "My strength comes from within, and it grows every day.",
-  "I choose to see opportunities where others see obstacles."
+const growthMindsetStatements = [
+  "Every challenge is an opportunity to grow stronger and wiser.",
+  "My brain has the amazing ability to form new connections every day.",
+  "Mistakes are proof that I'm learning and pushing my boundaries.",
+  "I can improve my abilities through dedication and hard work.",
+  "Challenges help me discover strengths I never knew I had.",
+  "My potential for growth is limitless - I'm constantly evolving.",
+  "Each small step forward builds my resilience and confidence.",
+  "I embrace difficulties as chances to develop new skills.",
+  "My effort and persistence are more important than natural talent.",
+  "When I face setbacks, I'm building the foundation for comebacks.",
+  "I choose to see obstacles as opportunities in disguise.",
+  "My brain is like a muscle - the more I use it, the stronger it gets.",
+  "Today's struggles are tomorrow's strengths in the making.",
+  "I am not defined by my past - I am shaped by my growth.",
+  "Every 'not yet' is a step closer to 'I can do this'."
 ];
 
 export function MotivationalStatement() {
@@ -29,8 +29,8 @@ export function MotivationalStatement() {
   const generateNewStatement = () => {
     setIsGenerating(true);
     setTimeout(() => {
-      const randomIndex = Math.floor(Math.random() * motivationalStatements.length);
-      setCurrentStatement(motivationalStatements[randomIndex]);
+      const randomIndex = Math.floor(Math.random() * growthMindsetStatements.length);
+      setCurrentStatement(growthMindsetStatements[randomIndex]);
       setIsGenerating(false);
     }, 500);
   };
@@ -41,15 +41,15 @@ export function MotivationalStatement() {
   }, []);
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
+    <Card className="overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50 border-emerald-200">
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
-          <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-full">
-            <Sparkles className="h-4 w-4 text-white" />
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-2 rounded-full">
+            <TrendingUp className="h-4 w-4 text-white" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-blue-900 mb-2">Your Daily Affirmation</h3>
-            <p className={`text-sm text-blue-800 leading-relaxed transition-opacity duration-300 ${
+            <h3 className="font-medium text-emerald-900 mb-2">Growth Mindset Moment</h3>
+            <p className={`text-sm text-emerald-800 leading-relaxed transition-opacity duration-300 ${
               isGenerating ? 'opacity-50' : 'opacity-100'
             }`}>
               "{currentStatement}"
@@ -59,10 +59,10 @@ export function MotivationalStatement() {
               size="sm"
               onClick={generateNewStatement}
               disabled={isGenerating}
-              className="mt-2 h-7 text-xs text-blue-700 hover:text-blue-900 hover:bg-blue-100"
+              className="mt-2 h-7 text-xs text-emerald-700 hover:text-emerald-900 hover:bg-emerald-100"
             >
               <RefreshCw className={`h-3 w-3 mr-1 ${isGenerating ? 'animate-spin' : ''}`} />
-              New Affirmation
+              New Growth Moment
             </Button>
           </div>
         </div>
