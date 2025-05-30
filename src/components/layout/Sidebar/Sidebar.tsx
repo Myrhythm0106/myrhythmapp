@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target, Palette, Layout, Type, Volume2, Shield, Sliders, ChevronDown, ChevronRight, FileText } from "lucide-react";
+import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Target, Palette, Layout, Type, Volume2, Shield, Sliders, ChevronDown, ChevronRight, FileText } from "lucide-react";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -36,10 +35,9 @@ export const Sidebar = () => {
     { to: "/tracking", icon: <HeartPulse />, label: "Health Tracking", badge: null },
   ];
   
-  // Additional navigation items - supporting features
+  // Additional navigation items - supporting features (removed Brain Recovery)
   const additionalNavItems = [
     { to: "/gratitude", icon: <Heart />, label: "Gratitude", badge: null },
-    { to: "/", icon: <Brain />, label: "Brain Recovery", badge: null },
     { to: "/profile", icon: <User />, label: "My Profile", badge: null },
     { to: "/community", icon: <Users />, label: "Community", badge: null },
     { to: "/personal-community", icon: <Target />, label: "My Support", badge: null },

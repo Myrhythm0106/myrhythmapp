@@ -7,14 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { CommunityMembers } from "@/components/community/CommunityMembers";
-import { MessageBoard } from "@/components/community/MessageBoard";
 import { CommunityInvite } from "@/components/community/CommunityInvite";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Plus, Users, MessageSquare, Heart, ChevronRight, Eye, Settings } from "lucide-react";
 import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SupportCirclePermissions } from "@/components/personal-community/SupportCirclePermissions";
-import { SupportCircleMessages } from "@/components/personal-community/SupportCircleMessages";
+import { EnhancedSupportCirclePermissions } from "@/components/personal-community/EnhancedSupportCirclePermissions";
+import { SupportCircleMessaging } from "@/components/personal-community/SupportCircleMessaging";
 
 const PersonalCommunity = () => {
   const [activeTab, setActiveTab] = useState("members");
@@ -45,8 +44,8 @@ const PersonalCommunity = () => {
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="space-y-6 p-4">
         <PageHeader 
-          title="My Support" 
-          subtitle="Connect with your support network of family, friends, and caregivers"
+          title="My Support Circle" 
+          subtitle="Connect, communicate, and share your journey with your trusted support network"
         >
           <Dialog>
             <DialogTrigger asChild>
@@ -57,7 +56,7 @@ const PersonalCommunity = () => {
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px]">
               <DialogHeader>
-                <DialogTitle>Invite to Your Support Network</DialogTitle>
+                <DialogTitle>Invite to Your Support Circle</DialogTitle>
               </DialogHeader>
               <CommunityInvite />
             </DialogContent>
@@ -70,13 +69,13 @@ const PersonalCommunity = () => {
               <Users className="h-4 w-4" />
               Members
             </TabsTrigger>
-            <TabsTrigger value="messages" className="flex items-center gap-2">
+            <TabsTrigger value="messaging" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              Message Board
+              Messages
             </TabsTrigger>
             <TabsTrigger value="permissions" className="flex items-center gap-2">
               <Eye className="h-4 w-4" />
-              Data Access
+              Access Control
             </TabsTrigger>
             <TabsTrigger value="encouragement" className="flex items-center gap-2">
               <Heart className="h-4 w-4" />
@@ -99,16 +98,12 @@ const PersonalCommunity = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="messages" className="space-y-4">
-            <Card>
-              <CardContent className="pt-6">
-                <SupportCircleMessages />
-              </CardContent>
-            </Card>
+          <TabsContent value="messaging" className="space-y-4">
+            <SupportCircleMessaging />
           </TabsContent>
           
           <TabsContent value="permissions" className="space-y-4">
-            <SupportCirclePermissions />
+            <EnhancedSupportCirclePermissions />
           </TabsContent>
           
           <TabsContent value="encouragement" className="space-y-4">
@@ -117,7 +112,7 @@ const PersonalCommunity = () => {
                 <div className="text-center mb-6">
                   <h3 className="text-xl font-semibold mb-2">Send Encouragement</h3>
                   <p className="text-muted-foreground">
-                    Send notes of encouragement to your community members
+                    Send notes of encouragement to your support circle members
                   </p>
                 </div>
                 

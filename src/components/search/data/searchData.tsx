@@ -1,4 +1,3 @@
-
 import React from "react";
 import { SearchResult } from "../types/searchTypes";
 import { 
@@ -6,7 +5,6 @@ import {
   Home, 
   Users, 
   Heart, 
-  Brain, 
   HeartPulse, 
   Info, 
   User,
@@ -102,16 +100,8 @@ export const navigationItems: SearchResult[] = [
   },
 ];
 
-// Features and functionalities
+// Features and functionalities (removed brain games references)
 export const featuresItems: SearchResult[] = [
-  {
-    id: "brain-games",
-    title: "Brain Games",
-    category: "Features",
-    description: "Cognitive exercises and games",
-    route: "/brain-games",
-    icon: <Brain className="h-4 w-4 mr-2" />
-  },
   {
     id: "goals-view",
     title: "Goals & Tasks",
@@ -143,14 +133,6 @@ export const featuresItems: SearchResult[] = [
     description: "Record daily gratitude entries",
     route: "/gratitude",
     icon: <Sparkles className="h-4 w-4 mr-2" />
-  },
-  {
-    id: "memory-match-game",
-    title: "Memory Match Game",
-    category: "Features",
-    description: "Play the memory matching card game",
-    route: "/brain-games",
-    icon: <GamepadIcon className="h-4 w-4 mr-2" />
   },
   {
     id: "storyboard-view",
