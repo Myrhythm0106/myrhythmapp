@@ -88,6 +88,32 @@ const Onboarding = () => {
     }
   };
   
+  // Function to add 6-month reminder to calendar
+  const addSixMonthReminder = () => {
+    const sixMonthsFromNow = new Date();
+    sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
+    
+    const reminderEvent = {
+      id: `rhythm-assessment-${Date.now()}`,
+      title: "MyRhythm 6-Month Check-In",
+      description: "Time for your rhythm assessment review! We'll check in to see how your rhythm has evolved and update your experience accordingly.",
+      date: sixMonthsFromNow.toISOString().split('T')[0],
+      time: "10:00",
+      type: "reminder",
+      category: "wellness",
+      requiresAcceptance: true,
+      isSystemGenerated: true
+    };
+    
+    // Store the reminder in localStorage for the calendar
+    const existingEvents = JSON.parse(localStorage.getItem("myrhythm_calendar_events") || "[]");
+    existingEvents.push(reminderEvent);
+    localStorage.setItem("myrhythm_calendar_events", JSON.stringify(existingEvents));
+    
+    // Store the specific 6-month reminder date for tracking
+    localStorage.setItem("myrhythm_next_assessment_date", sixMonthsFromNow.toISOString());
+  };
+  
   // Step handlers
   const handleLocationComplete = (values: LocationFormValues) => {
     // Store location information
@@ -139,6 +165,9 @@ const Onboarding = () => {
     const assessmentHistory = [assessmentData];
     localStorage.setItem("myrhythm_assessment_history", JSON.stringify(assessmentHistory));
     
+    // Add 6-month reminder to calendar
+    addSixMonthReminder();
+    
     // Set login and registration status
     localStorage.setItem('myrhythm_logged_in', 'true');
     sessionStorage.setItem('justRegistered', 'true');
@@ -146,7 +175,7 @@ const Onboarding = () => {
     // Show success toast
     toast({
       title: "Your rhythm has been found!",
-      description: "Welcome to MyRhythm. Your personalized experience is ready.",
+      description: "Welcome to MyRhythm. Your personalized experience is ready. A 6-month check-in has been added to your calendar.",
       variant: "default",
     });
     

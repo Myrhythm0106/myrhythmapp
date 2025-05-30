@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, ShieldCheck, Brain, BookOpen } from "lucide-react";
+import { ArrowRight, ShieldCheck, Brain, BookOpen, User } from "lucide-react";
 import { TutorialModal } from "@/components/tutorial/TutorialModal";
 import GettingStartedGuide from "@/components/welcome/GettingStartedGuide";
 import { FloatingStartButton } from "@/components/welcome/FloatingStartButton";
@@ -14,6 +14,10 @@ const Welcome = () => {
   const [showTutorial, setShowTutorial] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("journey");
 
+  const handleCompleteProfile = () => {
+    navigate("/profile?from=onboarding");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
@@ -22,11 +26,38 @@ const Welcome = () => {
           <h1 className="text-4xl font-bold">Welcome to MyRhythm</h1>
         </div>
         
-        {/* User Guide Button - Prominently Displayed */}
+        {/* Profile Completion Call-to-Action */}
+        <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl flex items-center justify-center gap-2">
+              <User className="h-6 w-6" />
+              Complete Your Profile
+            </CardTitle>
+            <CardDescription className="text-lg">
+              Let's personalise your MyRhythm experience by completing your profile information
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-center">
+            <Button 
+              onClick={handleCompleteProfile}
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-white px-8 py-4 text-lg"
+            >
+              Complete My Profile
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <p className="text-sm text-muted-foreground mt-4">
+              You'll complete personal, medical, emergency, notifications, and privacy settings
+            </p>
+          </CardContent>
+        </Card>
+        
+        {/* User Guide Button */}
         <div className="flex justify-center mb-6">
           <Button 
             onClick={() => navigate("/guide")} 
-            className="bg-primary/90 hover:bg-primary text-white px-8 py-2 text-lg flex items-center gap-2"
+            variant="outline"
+            className="px-8 py-2 text-lg flex items-center gap-2"
             size="lg"
           >
             <BookOpen className="h-5 w-5" />
@@ -111,14 +142,14 @@ const Welcome = () => {
         </Tabs>
       </div>
       
-      {/* Floating Start Button */}
+      {/* Floating Start Button - Updated for Profile First */}
       <FloatingStartButton />
       
       <TutorialModal 
         isOpen={showTutorial} 
         onComplete={() => {
           setShowTutorial(false);
-          navigate("/dashboard");
+          navigate("/profile?from=onboarding");
         }} 
       />
     </div>
