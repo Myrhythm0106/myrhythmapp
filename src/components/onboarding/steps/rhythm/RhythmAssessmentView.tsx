@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -27,11 +27,31 @@ export function RhythmAssessmentView({
   const sectionId = section.id.toString();
   const sectionResponses = responses[sectionId] || {};
   
+  // Scroll to top when section changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentSection]);
+  
   const canProceed = () => {
     return section.questions.every(q => sectionResponses[q.id] !== undefined);
   };
 
+  // Auto-advance when all questions in section are answered
+  useEffect(() => {
+    if (canProceed()) {
+      const timer = setTimeout(() => {
+        onNext();
+      }, 800); // Small delay to show the selection was made
+      
+      return () => clearTimeout(timer);
+    }
+  }, [sectionResponses, canProceed, onNext]);
+
   const progressPercentage = ((currentSection + 1) / sections.length) * 100;
+
+  const handleResponse = (questionId: string, value: string) => {
+    onResponse(questionId, value);
+  };
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
@@ -60,7 +80,7 @@ export function RhythmAssessmentView({
                 key={question.id}
                 question={question}
                 value={sectionResponses[question.id]}
-                onValueChange={(value) => onResponse(question.id, value)}
+                onValueChange={(value) => handleResponse(question.id, value)}
               />
             ))}
           </div>
