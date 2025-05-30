@@ -118,6 +118,13 @@ const Onboarding = () => {
   const handleRhythmAssessmentComplete = (responses: any) => {
     console.log("Rhythm assessment responses:", responses);
     
+    // Store rhythm assessment with timestamp for comparison tracking
+    const assessmentData = {
+      responses,
+      completedAt: new Date().toISOString(),
+      assessmentVersion: "1.0"
+    };
+    
     // Store location data
     if (location) {
       localStorage.setItem("myrhythm_country", location.country);
@@ -125,8 +132,12 @@ const Onboarding = () => {
       localStorage.setItem("myrhythm_state", location.state);
     }
     
-    // Store rhythm assessment responses
-    localStorage.setItem("myrhythm_rhythm_assessment", JSON.stringify(responses));
+    // Store rhythm assessment responses with metadata
+    localStorage.setItem("myrhythm_rhythm_assessment", JSON.stringify(assessmentData));
+    
+    // Initialize assessment history for 6-month comparisons
+    const assessmentHistory = [assessmentData];
+    localStorage.setItem("myrhythm_assessment_history", JSON.stringify(assessmentHistory));
     
     // Set login and registration status
     localStorage.setItem('myrhythm_logged_in', 'true');

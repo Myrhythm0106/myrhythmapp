@@ -24,25 +24,36 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
         className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
         {scaleLabels.map((label, index) => {
+          const optionValue = (index + 1).toString();
           const isSelected = value === (index + 1);
           return (
-            <div key={index + 1} className="flex items-center space-x-2">
+            <div key={optionValue} className="flex items-center space-x-2">
               <RadioGroupItem 
-                value={(index + 1).toString()} 
-                id={`${question.id}-${index + 1}`}
-                className="hidden"
+                value={optionValue}
+                id={`${question.id}-${optionValue}`}
+                className="sr-only"
               />
               <Label
-                htmlFor={`${question.id}-${index + 1}`}
+                htmlFor={`${question.id}-${optionValue}`}
                 className={cn(
-                  "flex-1 p-3 text-center border-2 rounded-lg cursor-pointer transition-all hover:border-beacon-300",
+                  "flex-1 p-4 text-center border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-beacon-400 hover:bg-beacon-50",
                   isSelected 
-                    ? "border-beacon-500 bg-beacon-50 text-beacon-700" 
-                    : "border-gray-200"
+                    ? "border-beacon-500 bg-beacon-100 text-beacon-800 shadow-md ring-2 ring-beacon-200" 
+                    : "border-gray-200 bg-white hover:shadow-sm"
                 )}
               >
-                <div className="font-medium text-sm">{index + 1}</div>
-                <div className="text-xs text-gray-600 mt-1">{label}</div>
+                <div className={cn(
+                  "font-semibold text-lg mb-1",
+                  isSelected ? "text-beacon-700" : "text-gray-700"
+                )}>
+                  {index + 1}
+                </div>
+                <div className={cn(
+                  "text-xs leading-tight",
+                  isSelected ? "text-beacon-600" : "text-gray-600"
+                )}>
+                  {label}
+                </div>
               </Label>
             </div>
           );
