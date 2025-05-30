@@ -13,14 +13,13 @@ import Welcome from "./pages/Welcome";
 import MainLayout from "./components/layout/MainLayout";
 import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
-import Calendar from "./pages/Calendar";
+import TBICalendar from "./pages/TBICalendar";
 import Community from "./pages/Community";
 import PersonalCommunity from "./pages/PersonalCommunity";
 import UsefulInfo from "./pages/UsefulInfo";
 import SplashScreen from "./components/mobile/SplashScreen";
 import Customization from "./pages/Customization";
 import Gratitude from "./pages/Gratitude";
-import { MyGoalPlan } from "./components/calendar/goals/MyGoalPlan";
 import { useIsMobile } from "./hooks/use-mobile";
 import UserGuideView from "./pages/UserGuideView";
 import FoundersStory from "./pages/FoundersStory";
@@ -64,17 +63,7 @@ const AppRoutes = () => {
           <Profile />
         </MainLayout>
       } />
-      <Route path="/calendar" element={
-        <MainLayout>
-          <Calendar />
-        </MainLayout>
-      } />
-      {/* Goal Plan Route */}
-      <Route path="/calendar/goal/:goalId" element={
-        <MainLayout>
-          <MyGoalPlan />
-        </MainLayout>
-      } />
+      <Route path="/calendar" element={<TBICalendar />} />
       <Route path="/tracking" element={
         <MainLayout>
           <SymptomTracking />
