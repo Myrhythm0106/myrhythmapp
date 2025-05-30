@@ -23,7 +23,7 @@ export function RhythmAssessmentView({
   onNext,
   onBack
 }: RhythmAssessmentViewProps) {
-  const [autoProgressTimer, setAutoProgressTimer] = useState<number | null>(null);
+  const [autoProgressTimer, setAutoProgressTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   
   const section = sections[currentSection];
