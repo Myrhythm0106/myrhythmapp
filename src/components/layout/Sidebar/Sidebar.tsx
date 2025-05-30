@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useSidebar } from "./SidebarContext";
-import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target, Palette, Layout, Type, Volume2, Shield, Sliders, ChevronDown, ChevronRight, BookOpen } from "lucide-react";
+import { Home, Calendar, User, Users, HeartPulse, HelpCircle, Settings, Menu, X, Heart, Info, Search, Smile, Brain, Target, Palette, Layout, Type, Volume2, Shield, Sliders, ChevronDown, ChevronRight, FileText } from "lucide-react";
 import { GlobalSearch } from "@/components/search/GlobalSearch";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -156,7 +157,6 @@ export const Sidebar = () => {
         <div className="border-t py-4 px-2">
           <NavItem to="/help" icon={<HelpCircle />} label="Help & Support" isOpen={isOpen} />
           <NavItem to="/guide" icon={<FileText />} label="User Guide" isOpen={isOpen} badge="New" />
-          <NavItem to="/documentation" icon={<BookOpen />} label="App Documentation" isOpen={isOpen} badge="New" />
         </div>
       </div>
       
