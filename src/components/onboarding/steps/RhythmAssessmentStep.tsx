@@ -4,6 +4,7 @@ import { RhythmWelcomeView } from "./rhythm/RhythmWelcomeView";
 import { RhythmSummaryView } from "./rhythm/RhythmSummaryView";
 import { RhythmAssessmentView } from "./rhythm/RhythmAssessmentView";
 import { AssessmentResponses, sections } from "./rhythm/rhythmAssessmentData";
+import { analyzeRhythmAssessment, storeFocusArea } from "@/utils/rhythmAnalysis";
 
 interface RhythmAssessmentStepProps {
   onComplete: (responses: AssessmentResponses) => void;
@@ -33,6 +34,20 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     if (currentSection < sections.length - 1) {
       setCurrentSection(prev => prev + 1);
     } else {
+      // Assessment complete - analyze and determine focus area
+      const focusArea = analyzeRhythmAssessment(responses);
+      
+      // Store the assessment data with focus area
+      const assessmentData = {
+        responses,
+        completedAt: new Date().toISOString(),
+        assessmentVersion: "1.0",
+        focusArea
+      };
+      
+      // Store focus area information
+      storeFocusArea(focusArea, assessmentData);
+      
       setCurrentView("summary");
     }
   };

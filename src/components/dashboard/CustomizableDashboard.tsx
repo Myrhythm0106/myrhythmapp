@@ -11,7 +11,7 @@ import { useUserData } from "@/hooks/use-user-data";
 import { Badge } from "@/components/ui/badge";
 
 // Import widget components
-import { PersonalizedWelcomeWidget } from "./widgets/PersonalizedWelcomeWidget";
+import { DynamicFocusAreaWidget } from "./widgets/DynamicFocusAreaWidget";
 import { TodayFocusWidget } from "./widgets/TodayFocusWidget";
 import { BrainGamesWidget } from "./widgets/BrainGamesWidget";
 import { MoodEnergyWidget } from "./widgets/MoodEnergyWidget";
@@ -21,10 +21,10 @@ import { MotivationalStatement } from "./MotivationalStatement";
 // Define available widgets
 const availableWidgets = [
   {
-    id: "welcome",
-    name: "Personalized Welcome",
-    component: PersonalizedWelcomeWidget,
-    description: "Dynamic greeting and quick actions"
+    id: "focusArea",
+    name: "Your Rhythm Focus",
+    component: DynamicFocusAreaWidget,
+    description: "Personalized focus area based on your rhythm assessment"
   },
   {
     id: "motivational",
@@ -69,10 +69,12 @@ export function CustomizableDashboard() {
   
   const [widgetVisibility, setWidgetVisibility] = useState<Record<string, boolean>>(() => {
     const saved = localStorage.getItem('dashboardWidgetVisibility');
-    return saved ? JSON.parse(saved) : availableWidgets.reduce((acc, widget) => {
-      acc[widget.id] = true;
+    const defaultVisibility = availableWidgets.reduce((acc, widget) => {
+      // Focus area widget should be visible by default
+      acc[widget.id] = widget.id === 'focusArea' ? true : true;
       return acc;
     }, {} as Record<string, boolean>);
+    return saved ? JSON.parse(saved) : defaultVisibility;
   });
   
   // Save to localStorage whenever state changes
@@ -111,7 +113,7 @@ export function CustomizableDashboard() {
       >
         <div className="flex items-center gap-2 mt-2">
           <Badge variant="outline" className="bg-blue-50 text-blue-700 hover:bg-blue-100">
-            Customizable Layout
+            Rhythm-Based Layout
           </Badge>
           
           <Dialog>
@@ -127,12 +129,17 @@ export function CustomizableDashboard() {
               </DialogHeader>
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Toggle widgets on/off to customize your dashboard view.
+                  Toggle widgets on/off to customize your dashboard view. Your Rhythm Focus widget adapts based on your assessment results.
                 </p>
                 {availableWidgets.map((widget) => (
                   <div key={widget.id} className="flex items-center justify-between space-x-2">
                     <div className="space-y-0.5">
-                      <Label className="text-sm font-medium">{widget.name}</Label>
+                      <Label className="text-sm font-medium">
+                        {widget.name}
+                        {widget.id === 'focusArea' && (
+                          <Badge variant="outline" className="ml-2 text-xs">Personalized</Badge>
+                        )}
+                      </Label>
                       <p className="text-xs text-muted-foreground">{widget.description}</p>
                     </div>
                     <Switch

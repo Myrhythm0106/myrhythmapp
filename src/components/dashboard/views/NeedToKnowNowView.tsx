@@ -5,8 +5,10 @@ import { UpcomingToday } from "@/components/dashboard/UpcomingToday";
 import { RoutineCheckIn } from "@/components/dashboard/RoutineCheckIn";
 import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
 import { BrainGameQuickStart } from "@/components/dashboard/BrainGameQuickStart";
+import { DynamicFocusAreaWidget } from "@/components/dashboard/widgets/DynamicFocusAreaWidget";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle, Clock } from "lucide-react";
+import { getCurrentFocusArea } from "@/utils/rhythmAnalysis";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 
 export function NeedToKnowNowView() {
   const navigate = useNavigate();
+  const currentFocusArea = getCurrentFocusArea();
 
   const handleRedirect = (path: string, action: string) => {
     navigate(path);
@@ -55,63 +58,79 @@ export function NeedToKnowNowView() {
     </AlertDialog>
   );
 
+  // Prioritize widgets based on focus area
+  const getFocusAreaWidgets = () => {
+    const baseWidgets = [
+      <TodaysActions key="actions" />,
+      <ViewOnlyWrapper key="upcoming" redirectPath="/calendar" actionDescription="view or modify upcoming events">
+        <UpcomingToday />
+      </ViewOnlyWrapper>,
+      <ViewOnlyWrapper key="routine" redirectPath="/tracking" actionDescription="check in and update your routine">
+        <RoutineCheckIn />
+      </ViewOnlyWrapper>,
+      <ViewOnlyWrapper key="mood" redirectPath="/mood" actionDescription="track your mood and energy">
+        <MoodEnergySnapshot />
+      </ViewOnlyWrapper>,
+      <ViewOnlyWrapper key="brain" redirectPath="/brain-games" actionDescription="start brain games">
+        <BrainGameQuickStart />
+      </ViewOnlyWrapper>
+    ];
+
+    // Reorder based on focus area
+    if (currentFocusArea === "emotional") {
+      return [baseWidgets[0], baseWidgets[3], baseWidgets[2], baseWidgets[1], baseWidgets[4]];
+    } else if (currentFocusArea === "structure") {
+      return [baseWidgets[0], baseWidgets[1], baseWidgets[2], baseWidgets[3], baseWidgets[4]];
+    } else if (currentFocusArea === "growth") {
+      return [baseWidgets[0], baseWidgets[4], baseWidgets[3], baseWidgets[2], baseWidgets[1]];
+    }
+    
+    return baseWidgets;
+  };
+
+  const prioritizedWidgets = getFocusAreaWidgets();
+
   return (
     <div className="space-y-6">
-      {/* Urgent/Time-sensitive items */}
+      {/* Dynamic Focus Area Widget - Always at the top */}
+      <DynamicFocusAreaWidget />
+
+      {/* Prioritized widgets based on focus area */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="space-y-4">
-          {/* Today's Actions - Direct interaction for completing actions */}
-          <TodaysActions />
-          <ViewOnlyWrapper 
-            redirectPath="/calendar" 
-            actionDescription="view or modify upcoming events"
-          >
-            <UpcomingToday />
-          </ViewOnlyWrapper>
+          {prioritizedWidgets[0]}
+          {prioritizedWidgets[1]}
         </div>
         <div className="space-y-4">
-          <ViewOnlyWrapper 
-            redirectPath="/tracking" 
-            actionDescription="check in and update your routine"
-          >
-            <RoutineCheckIn />
-          </ViewOnlyWrapper>
-          <ViewOnlyWrapper 
-            redirectPath="/mood" 
-            actionDescription="track your mood and energy"
-          >
-            <MoodEnergySnapshot />
-          </ViewOnlyWrapper>
+          {prioritizedWidgets[2]}
+          {prioritizedWidgets[3]}
         </div>
       </div>
 
-      {/* Quick actions */}
+      {/* Additional content */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <ViewOnlyWrapper 
-          redirectPath="/brain-games" 
-          actionDescription="start brain games"
-        >
-          <BrainGameQuickStart />
-        </ViewOnlyWrapper>
+        {prioritizedWidgets[4]}
         
-        {/* Quick reminder card - view only */}
+        {/* Focus-area specific reminder card */}
         <Card className="p-4 bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
           <div className="flex items-start gap-3">
             <div className="bg-amber-500/20 p-2 rounded-md mt-1">
               <AlertTriangle className="h-5 w-5 text-amber-600" />
             </div>
             <div>
-              <h3 className="font-medium text-amber-900 mb-1">Quick Reminder</h3>
+              <h3 className="font-medium text-amber-900 mb-1">Your Rhythm Reminder</h3>
               <p className="text-sm text-amber-800">
-                Complete your daily actions to make progress toward your goals. Every small step matters!
+                {currentFocusArea === "emotional" && "Take time for emotional self-care today. Your wellbeing matters."}
+                {currentFocusArea === "structure" && "Stick to your routines today. Structure helps your brain heal."}
+                {currentFocusArea === "achievement" && "Focus on your goals today. Every step forward counts."}
+                {currentFocusArea === "community" && "Connect with your support network today. You're not alone."}
+                {currentFocusArea === "growth" && "Challenge yourself to grow today. Your brain is capable of amazing things."}
+                {!currentFocusArea && "Complete your daily actions to make progress toward your goals. Every small step matters!"}
               </p>
               <div className="flex items-center gap-1 mt-2 text-xs text-amber-700">
                 <Clock className="h-3 w-3" />
-                <span>Check your Today's Actions above</span>
+                <span>Personalized for your current rhythm phase</span>
               </div>
-              <p className="text-xs text-amber-700 mt-2 italic">
-                💡 Click ✓ to mark actions complete and celebrate your progress!
-              </p>
             </div>
           </div>
         </Card>
