@@ -76,7 +76,7 @@ export function DynamicFocusAreaWidget() {
     <Card className="overflow-hidden">
       <div className={`relative overflow-hidden rounded-t-lg bg-gradient-to-r ${focusInfo.gradient} p-4 text-white`}>
         <div className="absolute -right-4 -top-4 opacity-20">
-          <FocusIcon size={80} />
+          <FocusIcon className="h-20 w-20" />
         </div>
         <div className="relative z-10">
           <div className="flex items-center gap-2 mb-2">
