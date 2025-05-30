@@ -20,7 +20,7 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
       ...prev,
       [sectionId]: {
         ...prev[sectionId],
-        [questionId]: value
+        [questionId]: parseInt(value, 10)
       }
     }));
   };
