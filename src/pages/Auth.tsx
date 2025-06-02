@@ -6,14 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { Shield, UserPlus, LogIn, Heart } from 'lucide-react';
+import { PasswordInput } from '@/components/auth/PasswordInput';
+import { toast } from 'sonner';
 
 const Auth = () => {
   const navigate = useNavigate();
   const { user, signUp, signIn, loading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
   
   // Redirect if already authenticated
   useEffect(() => {
@@ -34,14 +36,18 @@ const Auth = () => {
     password: ''
   });
 
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (signUpData.password !== signUpData.confirmPassword) {
+      toast.error('Passwords do not match');
       return;
     }
     
     if (signUpData.password.length < 6) {
+      toast.error('Password must be at least 6 characters');
       return;
     }
     
@@ -69,10 +75,93 @@ const Auth = () => {
     setIsSubmitting(false);
   };
 
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!forgotPasswordEmail) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
+        redirectTo: `${window.location.origin}/auth?reset=true`,
+      });
+      
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success('Password reset email sent! Check your inbox.');
+        setShowForgotPassword(false);
+        setForgotPasswordEmail('');
+      }
+    } catch (error) {
+      toast.error('Failed to send reset email. Please try again.');
+    }
+    
+    setIsSubmitting(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (showForgotPassword) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Heart className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold text-gray-900">MyRhythm</h1>
+            </div>
+            <p className="text-gray-600">Reset your password</p>
+          </div>
+
+          <Card className="shadow-lg">
+            <CardHeader className="text-center pb-4">
+              <CardTitle className="text-xl">Forgot Password</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleForgotPassword} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="reset-email">Email Address</Label>
+                  <Input
+                    id="reset-email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={forgotPasswordEmail}
+                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <Button 
+                    type="submit" 
+                    className="flex-1"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Sending...' : 'Send Reset Email'}
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={() => setShowForgotPassword(false)}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -123,9 +212,8 @@ const Auth = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signin-password">Password</Label>
-                    <Input
+                    <PasswordInput
                       id="signin-password"
-                      type="password"
                       placeholder="Enter your password"
                       value={signInData.password}
                       onChange={(e) => setSignInData(prev => ({ ...prev, password: e.target.value }))}
@@ -139,6 +227,16 @@ const Auth = () => {
                   >
                     {isSubmitting ? 'Signing In...' : 'Sign In'}
                   </Button>
+                  <div className="text-center">
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="text-sm"
+                      onClick={() => setShowForgotPassword(true)}
+                    >
+                      Forgot your password?
+                    </Button>
+                  </div>
                 </form>
               </TabsContent>
 
@@ -168,9 +266,8 @@ const Auth = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-password">Password</Label>
-                    <Input
+                    <PasswordInput
                       id="signup-password"
-                      type="password"
                       placeholder="Create a password (min. 6 characters)"
                       value={signUpData.password}
                       onChange={(e) => setSignUpData(prev => ({ ...prev, password: e.target.value }))}
@@ -180,9 +277,8 @@ const Auth = () => {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="signup-confirm">Confirm Password</Label>
-                    <Input
+                    <PasswordInput
                       id="signup-confirm"
-                      type="password"
                       placeholder="Confirm your password"
                       value={signUpData.confirmPassword}
                       onChange={(e) => setSignUpData(prev => ({ ...prev, confirmPassword: e.target.value }))}

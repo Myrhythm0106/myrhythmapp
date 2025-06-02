@@ -1,10 +1,10 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { CreditCard } from "lucide-react";
+import { CreditCard, CheckCircle } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PlanType } from "./PlanStep";
@@ -24,6 +24,7 @@ interface PaymentStepProps {
 }
 
 export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
+  const [showThankYou, setShowThankYou] = useState(false);
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
@@ -41,9 +42,37 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
     family: { name: "Family Plan", price: "$19.99/month" }
   };
 
+  const handlePaymentSubmit = (values: PaymentFormValues) => {
+    setShowThankYou(true);
+    
+    // Show thank you message for 3 seconds, then proceed
+    setTimeout(() => {
+      onComplete(values);
+    }, 3000);
+  };
+
+  if (showThankYou) {
+    return (
+      <div className="text-center space-y-6 py-12">
+        <div className="w-20 h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center">
+          <CheckCircle className="h-12 w-12 text-green-600" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-green-800">Thank You!</h2>
+          <p className="text-green-700">
+            Your payment has been processed successfully.
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Preparing your personalized experience...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onComplete)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(handlePaymentSubmit)} className="space-y-4">
         <div className="bg-muted p-4 rounded-md mb-4">
           <h3 className="font-medium">{planInfo[selectedPlan].name}</h3>
           <p className="text-sm text-muted-foreground">

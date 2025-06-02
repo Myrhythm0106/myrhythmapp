@@ -1,9 +1,10 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Sparkles, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentFocusArea, focusAreas } from "@/utils/rhythmAnalysis";
+import { useNavigate } from "react-router-dom";
 
 interface RhythmSummaryViewProps {
   onComplete: () => void;
@@ -11,8 +12,48 @@ interface RhythmSummaryViewProps {
 }
 
 export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps) {
+  const navigate = useNavigate();
+  const [showMotivationalMessage, setShowMotivationalMessage] = useState(false);
   const currentFocusArea = getCurrentFocusArea();
   const focusInfo = currentFocusArea ? focusAreas[currentFocusArea] : null;
+
+  const handlePersonalizeClick = () => {
+    setShowMotivationalMessage(true);
+    
+    // Show motivational message for 4 seconds, then navigate to user guide
+    setTimeout(() => {
+      navigate("/guide");
+    }, 4000);
+  };
+
+  if (showMotivationalMessage) {
+    return (
+      <div className="text-center space-y-8 py-12 max-w-2xl mx-auto">
+        <div className="w-24 h-24 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center animate-pulse">
+          <Heart className="h-12 w-12 text-white" />
+        </div>
+        <div className="space-y-4">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent">
+            Welcome to Your Journey!
+          </h1>
+          <div className="space-y-3 text-lg leading-relaxed text-gray-700">
+            <p className="font-semibold">
+              🌟 You've taken the most important step – starting.
+            </p>
+            <p>
+              Your brain is already beginning to heal, and MyRhythm is here to guide you every step of the way.
+            </p>
+            <p className="text-emerald-700 font-medium">
+              Get ready to discover your strength, celebrate small wins, and build the rhythm that works for YOU.
+            </p>
+          </div>
+        </div>
+        <div className="text-sm text-muted-foreground">
+          Preparing your personalized guide...
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 text-center max-w-2xl mx-auto">
@@ -82,7 +123,7 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
         )}
         
         <Button 
-          onClick={onComplete}
+          onClick={handlePersonalizeClick}
           className={`py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 ${!onBack ? 'w-full max-w-md mx-auto' : ''}`}
         >
           Personalise MyRhythm
