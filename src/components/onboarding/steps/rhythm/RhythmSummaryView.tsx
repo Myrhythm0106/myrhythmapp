@@ -30,6 +30,20 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
     navigate("/guide");
   };
 
+  // Map focus areas to MYRHYTHM steps (0-based index)
+  const getFocusAreaStepIndex = (focusArea: string) => {
+    switch (focusArea) {
+      case 'structure': return 2; // R - Routine
+      case 'emotional': return 1; // Y - Yearning 
+      case 'achievement': return 0; // M - Mindful
+      case 'community': return 3; // H - Health
+      case 'growth': return 4; // T - Thrive
+      default: return 0;
+    }
+  };
+
+  const currentStepIndex = currentFocusArea ? getFocusAreaStepIndex(currentFocusArea) : -1;
+
   if (showMotivationalMessage) {
     return (
       <div className="text-center space-y-8 py-12 max-w-2xl mx-auto">
@@ -77,24 +91,14 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
           {['Mindful', 'Yearning', 'Routine', 'Health', 'Thrive'].map((step, index) => (
             <div key={step} className="flex flex-col items-center">
               <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-lg mb-2 ${
-                currentFocusArea && 
-                ((currentFocusArea === 'structured-healing' && index === 2) ||
-                 (currentFocusArea === 'gentle-progress' && index === 1) ||
-                 (currentFocusArea === 'rebuilding-confidence' && index === 0) ||
-                 (currentFocusArea === 'building-momentum' && index === 3) ||
-                 (currentFocusArea === 'maintaining-stability' && index === 4))
+                currentStepIndex === index
                   ? 'bg-green-600 ring-4 ring-green-300' 
                   : 'bg-gray-400'
               }`}>
                 {step.charAt(0)}
               </div>
               <span className="text-sm font-medium text-gray-700">{step}</span>
-              {currentFocusArea && 
-                ((currentFocusArea === 'structured-healing' && index === 2) ||
-                 (currentFocusArea === 'gentle-progress' && index === 1) ||
-                 (currentFocusArea === 'rebuilding-confidence' && index === 0) ||
-                 (currentFocusArea === 'building-momentum' && index === 3) ||
-                 (currentFocusArea === 'maintaining-stability' && index === 4)) && (
+              {currentStepIndex === index && (
                 <div className="mt-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                   You are here
                 </div>
