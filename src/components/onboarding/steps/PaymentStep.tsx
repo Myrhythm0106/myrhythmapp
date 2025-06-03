@@ -4,9 +4,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { CreditCard, CheckCircle } from "lucide-react";
+import { CreditCard, CheckCircle, Loader2 } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 import { PlanType } from "./PlanStep";
 
 const paymentSchema = z.object({
@@ -25,6 +26,8 @@ interface PaymentStepProps {
 
 export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
   const [showThankYou, setShowThankYou] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
@@ -43,12 +46,18 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
   };
 
   const handlePaymentSubmit = (values: PaymentFormValues) => {
-    setShowThankYou(true);
+    setIsProcessing(true);
     
-    // Show thank you message for 3 seconds, then proceed
+    // Simulate payment processing
     setTimeout(() => {
-      onComplete(values);
-    }, 3000);
+      setIsProcessing(false);
+      setShowThankYou(true);
+      
+      // Show thank you message for 2 seconds, then proceed
+      setTimeout(() => {
+        onComplete(values);
+      }, 2000);
+    }, 1500);
   };
 
   if (showThankYou) {
@@ -58,13 +67,33 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
           <CheckCircle className="h-12 w-12 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-green-800">Thank You!</h2>
+          <h2 className="text-2xl font-bold text-green-800">Payment Successful!</h2>
           <p className="text-green-700">
             Your payment has been processed successfully.
           </p>
           <p className="text-sm text-muted-foreground">
-            Preparing your personalized experience...
+            Preparing your subscription confirmation...
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isProcessing) {
+    return (
+      <div className="text-center space-y-6 py-12">
+        <div className="w-20 h-20 mx-auto bg-blue-100 rounded-full flex items-center justify-center">
+          <Loader2 className="h-12 w-12 text-blue-600 animate-spin" />
+        </div>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-blue-800">Processing Payment...</h2>
+          <p className="text-blue-700">
+            Please wait while we process your payment.
+          </p>
+          <Button disabled className="mt-4">
+            <Loader2 className="h-4 w-4 animate-spin mr-2" />
+            Details Confirmed
+          </Button>
         </div>
       </div>
     );
@@ -156,10 +185,10 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
               <FormItem>
                 <FormLabel>CVV</FormLabel>
                 <FormControl>
-                  <Input 
+                  <PasswordInput
                     placeholder="123" 
-                    {...field} 
-                    onChange={e => {
+                    value={field.value}
+                    onChange={(e) => {
                       const value = e.target.value.replace(/\s/g, '');
                       if (!/^\d*$/.test(value) || value.length > 4) return;
                       field.onChange(value);
@@ -180,6 +209,7 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
           <Button 
             type="submit"
             disabled={!form.formState.isValid}
+            className="bg-primary hover:bg-primary/90"
           >
             {selectedPlan === "basic" ? "Start Free Trial" : "Complete Payment"}
           </Button>

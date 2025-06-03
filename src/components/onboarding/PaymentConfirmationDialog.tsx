@@ -47,7 +47,7 @@ export function PaymentConfirmationDialog({
 
         <DialogFooter className="sm:justify-start">
           <Button onClick={onConfirm} className="w-full">
-            {selectedPlan === "basic" ? "Start Free Trial" : "Confirm Subscription"}
+            Details Confirmed
           </Button>
           <Button variant="outline" onClick={onCancel} className="w-full">
             Cancel
