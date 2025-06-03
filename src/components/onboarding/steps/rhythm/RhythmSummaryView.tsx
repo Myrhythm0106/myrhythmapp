@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Sparkles, ArrowLeft } from "lucide-react";
+import { ArrowRight, Heart, Sparkles, ArrowLeft, BookOpen, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { getCurrentFocusArea, focusAreas } from "@/utils/rhythmAnalysis";
 import { useNavigate } from "react-router-dom";
@@ -24,6 +24,10 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
     setTimeout(() => {
       navigate("/guide");
     }, 4000);
+  };
+
+  const handleUserGuideClick = () => {
+    navigate("/guide");
   };
 
   if (showMotivationalMessage) {
@@ -56,7 +60,7 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
   }
 
   return (
-    <div className="space-y-8 text-center max-w-2xl mx-auto">
+    <div className="space-y-8 text-center max-w-4xl mx-auto">
       <div className="space-y-4">
         <div className="w-20 h-20 mx-auto bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center">
           <Heart className="h-10 w-10 text-white" />
@@ -64,6 +68,46 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
         <h1 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-700 bg-clip-text text-transparent">
           We Found Your Rhythm
         </h1>
+      </div>
+      
+      {/* MyRhythm Framework Visualization */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-2xl">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">The MyRhythm Framework</h2>
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
+          {['Mindful', 'Yearning', 'Routine', 'Health', 'Thrive'].map((step, index) => (
+            <div key={step} className="flex flex-col items-center">
+              <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-lg mb-2 ${
+                currentFocusArea && 
+                ((currentFocusArea === 'structured-healing' && index === 2) ||
+                 (currentFocusArea === 'gentle-progress' && index === 1) ||
+                 (currentFocusArea === 'rebuilding-confidence' && index === 0) ||
+                 (currentFocusArea === 'building-momentum' && index === 3) ||
+                 (currentFocusArea === 'maintaining-stability' && index === 4))
+                  ? 'bg-green-600 ring-4 ring-green-300' 
+                  : 'bg-gray-400'
+              }`}>
+                {step.charAt(0)}
+              </div>
+              <span className="text-sm font-medium text-gray-700">{step}</span>
+              {currentFocusArea && 
+                ((currentFocusArea === 'structured-healing' && index === 2) ||
+                 (currentFocusArea === 'gentle-progress' && index === 1) ||
+                 (currentFocusArea === 'rebuilding-confidence' && index === 0) ||
+                 (currentFocusArea === 'building-momentum' && index === 3) ||
+                 (currentFocusArea === 'maintaining-stability' && index === 4)) && (
+                <div className="mt-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                  You are here
+                </div>
+              )}
+              {index < 4 && (
+                <div className="hidden md:block absolute transform translate-x-12 w-8 h-0.5 bg-gray-300 mt-8"></div>
+              )}
+            </div>
+          ))}
+        </div>
+        <p className="mt-6 text-gray-600 text-sm">
+          Your personalized journey follows the MyRhythm framework, designed to support your unique path to recovery and growth.
+        </p>
       </div>
       
       {focusInfo && (
@@ -110,21 +154,32 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
         </p>
       </div>
 
-      <div className="flex justify-between items-center pt-4">
-        {onBack && (
-          <Button
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-4">
+        <div className="flex gap-3">
+          {onBack && (
+            <Button
+              variant="outline"
+              onClick={onBack}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Assessment
+            </Button>
+          )}
+          
+          <Button 
+            onClick={handleUserGuideClick}
             variant="outline"
-            onClick={onBack}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 border-blue-300 text-blue-700 hover:bg-blue-50"
           >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Assessment
+            <BookOpen className="h-4 w-4" />
+            Access User Guide
           </Button>
-        )}
+        </div>
         
         <Button 
           onClick={handlePersonalizeClick}
-          className={`py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105 ${!onBack ? 'w-full max-w-md mx-auto' : ''}`}
+          className="py-6 text-lg bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-105"
         >
           Personalise MyRhythm
           <ArrowRight className="ml-2 h-5 w-5" />

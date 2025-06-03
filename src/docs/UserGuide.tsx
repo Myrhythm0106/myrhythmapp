@@ -32,6 +32,10 @@ export function UserGuide() {
   const handleGoBack = () => {
     navigate(-1); // This will go back to the previous page in the history
   };
+
+  const handleGoToCalendar = () => {
+    navigate("/calendar");
+  };
   
   return (
     <div className="max-w-5xl mx-auto py-8 text-foreground">
@@ -44,7 +48,16 @@ export function UserGuide() {
           <ArrowLeft className="w-4 h-4" />
           Back
         </Button>
-        <GuideHeader printRef={componentRef} />
+        <div className="flex items-center gap-4">
+          <Button 
+            onClick={handleGoToCalendar}
+            className="flex items-center gap-2 bg-primary hover:bg-primary/90"
+          >
+            <Calendar className="w-4 h-4" />
+            Go to Calendar
+          </Button>
+          <GuideHeader printRef={componentRef} />
+        </div>
       </div>
       
       <div ref={componentRef} className="space-y-8 p-4">
