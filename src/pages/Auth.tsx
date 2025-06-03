@@ -1,21 +1,26 @@
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
-import { Shield, UserPlus, LogIn, Heart } from 'lucide-react';
+import { Shield, UserPlus, LogIn, Heart, Mail } from 'lucide-react';
 import { PasswordInput } from '@/components/auth/PasswordInput';
 import { toast } from 'sonner';
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { user, signUp, signIn, loading } = useAuth();
+  const [searchParams] = useSearchParams();
+  const { user, signUp, signIn, resetPassword, resendVerification, loading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showResendVerification, setShowResendVerification] = useState(false);
+  
+  // Check if this is a password reset
+  const isPasswordReset = searchParams.get('reset') === 'true';
   
   // Redirect if already authenticated
   useEffect(() => {
@@ -37,6 +42,14 @@ const Auth = () => {
   });
 
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
+  const [resendVerificationEmail, setResendVerificationEmail] = useState('');
+
+  // Show password reset message if coming from reset link
+  useEffect(() => {
+    if (isPasswordReset) {
+      toast.info('You can now update your password');
+    }
+  }, [isPasswordReset]);
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +70,9 @@ const Auth = () => {
     
     if (!error) {
       setSignUpData({ name: '', email: '', password: '', confirmPassword: '' });
+      // Show option to resend verification if needed
+      setShowResendVerification(true);
+      setResendVerificationEmail(signUpData.email);
     }
     
     setIsSubmitting(false);
@@ -70,6 +86,12 @@ const Auth = () => {
     
     if (!error) {
       navigate('/dashboard');
+    } else {
+      // If error is about email not confirmed, show resend verification option
+      if (error.message?.includes('Email not confirmed')) {
+        setShowResendVerification(true);
+        setResendVerificationEmail(signInData.email);
+      }
     }
     
     setIsSubmitting(false);
@@ -85,21 +107,31 @@ const Auth = () => {
 
     setIsSubmitting(true);
     
-    try {
-      const { supabase } = await import('@/integrations/supabase/client');
-      const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: `${window.location.origin}/auth?reset=true`,
-      });
-      
-      if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Password reset email sent! Check your inbox.');
-        setShowForgotPassword(false);
-        setForgotPasswordEmail('');
-      }
-    } catch (error) {
-      toast.error('Failed to send reset email. Please try again.');
+    const { error } = await resetPassword(forgotPasswordEmail);
+    
+    if (!error) {
+      setShowForgotPassword(false);
+      setForgotPasswordEmail('');
+    }
+    
+    setIsSubmitting(false);
+  };
+
+  const handleResendVerification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!resendVerificationEmail) {
+      toast.error('Please enter your email address');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    const { error } = await resendVerification(resendVerificationEmail);
+    
+    if (!error) {
+      setShowResendVerification(false);
+      setResendVerificationEmail('');
     }
     
     setIsSubmitting(false);
@@ -109,6 +141,65 @@ const Auth = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (showResendVerification) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Heart className="h-8 w-8 text-primary" />
+              <h1 className="text-3xl font-bold text-gray-900">MyRhythm</h1>
+            </div>
+            <p className="text-gray-600">Resend verification email</p>
+          </div>
+
+          <Card className="shadow-lg">
+            <CardHeader className="text-center pb-4">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Mail className="h-5 w-5 text-primary" />
+                <CardTitle className="text-xl">Email Verification</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleResendVerification} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="resend-email">Email Address</Label>
+                  <Input
+                    id="resend-email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={resendVerificationEmail}
+                    onChange={(e) => setResendVerificationEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <p className="text-sm text-gray-600">
+                  Please verify your email address before signing in. If you didn't receive the verification email, you can request a new one.
+                </p>
+                <div className="flex gap-2">
+                  <Button 
+                    type="submit" 
+                    className="flex-1"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? 'Sending...' : 'Resend Verification Email'}
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={() => setShowResendVerification(false)}
+                  >
+                    Back
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
@@ -227,7 +318,7 @@ const Auth = () => {
                   >
                     {isSubmitting ? 'Signing In...' : 'Sign In'}
                   </Button>
-                  <div className="text-center">
+                  <div className="text-center space-y-2">
                     <Button
                       type="button"
                       variant="link"
@@ -235,6 +326,15 @@ const Auth = () => {
                       onClick={() => setShowForgotPassword(true)}
                     >
                       Forgot your password?
+                    </Button>
+                    <br />
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="text-sm"
+                      onClick={() => setShowResendVerification(true)}
+                    >
+                      Resend verification email
                     </Button>
                   </div>
                 </form>

@@ -12,6 +12,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
+  resendVerification: (email: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -29,9 +30,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Handle password reset
+        // Handle different auth events
+        if (event === 'SIGNED_IN') {
+          toast.success('Successfully signed in!');
+          // Clear any pending verification email from localStorage
+          localStorage.removeItem('pendingVerificationEmail');
+        }
+        
         if (event === 'PASSWORD_RECOVERY') {
           toast.success('You can now update your password');
+        }
+
+        if (event === 'SIGNED_OUT') {
+          toast.success('Successfully signed out!');
         }
       }
     );
@@ -47,7 +58,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string, name: string) => {
-    const redirectUrl = `${window.location.origin}/dashboard`;
+    // Use the current origin for redirect, but point to our verification page
+    const redirectUrl = `${window.location.origin}/email-verification`;
     
     const { error } = await supabase.auth.signUp({
       email,
@@ -63,7 +75,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Check your email for verification link!');
+      // Store email for potential resend verification
+      localStorage.setItem('pendingVerificationEmail', email);
+      toast.success('Account created! Please check your email to verify your account before signing in.');
     }
     
     return { error };
@@ -76,9 +90,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     
     if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Successfully signed in!');
+      // Provide more helpful error messages
+      if (error.message.includes('Email not confirmed')) {
+        toast.error('Please verify your email address before signing in. Check your inbox for a verification link.');
+      } else if (error.message.includes('Invalid login credentials')) {
+        toast.error('Invalid email or password. Please check your credentials and try again.');
+      } else {
+        toast.error(error.message);
+      }
     }
     
     return { error };
@@ -88,8 +107,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast.error(error.message);
-    } else {
-      toast.success('Successfully signed out!');
     }
   };
 
@@ -101,7 +118,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Password reset email sent!');
+      toast.success('Password reset email sent! Check your inbox.');
+    }
+    
+    return { error };
+  };
+
+  const resendVerification = async (email: string) => {
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email
+    });
+    
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success('Verification email sent! Please check your inbox.');
     }
     
     return { error };
@@ -116,6 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signIn,
       signOut,
       resetPassword,
+      resendVerification,
     }}>
       {children}
     </AuthContext.Provider>

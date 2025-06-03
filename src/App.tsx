@@ -11,6 +11,7 @@ import Onboarding from "./pages/Onboarding";
 import Landing from "./pages/Landing";
 import Welcome from "./pages/Welcome";
 import Auth from "./pages/Auth";
+import EmailVerification from "./pages/EmailVerification";
 import MainLayout from "./components/layout/MainLayout";
 import Profile from "./pages/Profile";
 import SymptomTracking from "./pages/SymptomTracking";
@@ -38,6 +39,7 @@ const AppRoutes = () => {
       {/* Public routes */}
       <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
       <Route path="/auth" element={<Auth />} />
+      <Route path="/email-verification" element={<EmailVerification />} />
       <Route path="/founders-story" element={<FoundersStory />} />
       <Route path="/onboarding" element={<Onboarding />} />
       <Route path="/welcome" element={<Welcome />} />
