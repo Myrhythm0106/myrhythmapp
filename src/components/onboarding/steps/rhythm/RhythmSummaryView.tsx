@@ -37,12 +37,24 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
       case 'emotional': return 1; // Y - Yearning 
       case 'achievement': return 0; // M - Mindful
       case 'community': return 3; // H - Health
-      case 'growth': return 4; // T - Thrive
+      case 'growth': return 7; // M - Multiply (final step)
       default: return 0;
     }
   };
 
   const currentStepIndex = currentFocusArea ? getFocusAreaStepIndex(currentFocusArea) : -1;
+
+  // All 8 steps of MYRHYTHM
+  const rhythmSteps = [
+    { letter: 'M', word: 'Mindful', description: 'Moment of Impact' },
+    { letter: 'Y', word: 'Yearning', description: 'Yield to the Fog' },
+    { letter: 'R', word: 'Routine', description: 'Reckon with Reality' },
+    { letter: 'H', word: 'Health', description: 'Harness Support' },
+    { letter: 'Y', word: 'Yield', description: 'Yield to Progress' },
+    { letter: 'T', word: 'Thrive', description: 'Take Back Control' },
+    { letter: 'H', word: 'Heal', description: 'Heal Forward' },
+    { letter: 'M', word: 'Multiply', description: 'Multiply the Mission' }
+  ];
 
   if (showMotivationalMessage) {
     return (
@@ -84,27 +96,25 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
         </h1>
       </div>
       
-      {/* MyRhythm Framework Visualization */}
+      {/* MyRhythm Framework Visualization - All 8 Letters */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-2xl">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">The MyRhythm Framework</h2>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 items-center">
-          {['Mindful', 'Yearning', 'Routine', 'Health', 'Thrive'].map((step, index) => (
-            <div key={step} className="flex flex-col items-center">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 items-center">
+          {rhythmSteps.map((step, index) => (
+            <div key={`${step.letter}-${index}`} className="flex flex-col items-center">
               <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-lg mb-2 ${
                 currentStepIndex === index
                   ? 'bg-green-600 ring-4 ring-green-300' 
                   : 'bg-gray-400'
               }`}>
-                {step.charAt(0)}
+                {step.letter}
               </div>
-              <span className="text-sm font-medium text-gray-700">{step}</span>
+              <span className="text-sm font-medium text-gray-700 text-center">{step.word}</span>
+              <span className="text-xs text-gray-500 text-center mt-1">{step.description}</span>
               {currentStepIndex === index && (
                 <div className="mt-2 text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
                   You are here
                 </div>
-              )}
-              {index < 4 && (
-                <div className="hidden md:block absolute transform translate-x-12 w-8 h-0.5 bg-gray-300 mt-8"></div>
               )}
             </div>
           ))}
