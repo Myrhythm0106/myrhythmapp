@@ -74,6 +74,11 @@ export const useOnboardingLogic = (totalSteps: number) => {
     return () => window.removeEventListener("popstate", handlePopState);
   }, [navigate, totalSteps]);
 
+  // Clear any potentially insecure data from localStorage on component mount
+  useEffect(() => {
+    localStorage.removeItem('myrhythm_security_answers');
+  }, []);
+
   return {
     currentStep,
     setCurrentStep,

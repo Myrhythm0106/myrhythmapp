@@ -33,6 +33,9 @@ export function UserProfileForm({ onSave }: UserProfileFormProps) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    // Clear any potentially insecure data from localStorage
+    localStorage.removeItem('myrhythm_security_answers');
+    
     toast.success("Profile updated successfully");
     console.log(values);
     if (onSave) {
@@ -81,6 +84,9 @@ export function UserProfileForm({ onSave }: UserProfileFormProps) {
                 <FormControl>
                   <Input type="email" {...field} />
                 </FormControl>
+                <FormDescription>
+                  Email changes require verification for security
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -113,6 +119,14 @@ export function UserProfileForm({ onSave }: UserProfileFormProps) {
               </FormItem>
             )}
           />
+        </div>
+
+        <div className="bg-green-50 p-4 rounded-lg">
+          <h3 className="text-sm font-medium text-green-900 mb-2">Account Security</h3>
+          <p className="text-sm text-green-700">
+            Password changes and account recovery are handled securely through email verification. 
+            Use the "Forgot Password" option on the sign-in page if you need to reset your password.
+          </p>
         </div>
 
         <Button type="submit">Save Changes</Button>

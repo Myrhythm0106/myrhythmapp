@@ -33,8 +33,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Handle different auth events
         if (event === 'SIGNED_IN') {
           toast.success('Successfully signed in!');
-          // Clear any pending verification email from localStorage
+          // Clear any potentially insecure data from localStorage
           localStorage.removeItem('pendingVerificationEmail');
+          localStorage.removeItem('myrhythm_security_answers'); // Remove any old insecure data
         }
         
         if (event === 'PASSWORD_RECOVERY') {
@@ -43,6 +44,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         if (event === 'SIGNED_OUT') {
           toast.success('Successfully signed out!');
+          // Clear all potentially sensitive data from localStorage
+          localStorage.removeItem('pendingVerificationEmail');
+          localStorage.removeItem('myrhythm_security_answers');
         }
       }
     );
@@ -75,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       toast.error(error.message);
     } else {
-      // Store email for potential resend verification
+      // Store email for potential resend verification (this is safe as it's not sensitive data)
       localStorage.setItem('pendingVerificationEmail', email);
       toast.success('Account created! Please check your email to verify your account before signing in.');
     }
@@ -107,10 +111,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast.error(error.message);
+    } else {
+      // Clear all potentially sensitive data from localStorage on signout
+      localStorage.removeItem('pendingVerificationEmail');
+      localStorage.removeItem('myrhythm_security_answers');
     }
   };
 
   const resetPassword = async (email: string) => {
+    // Use Supabase's secure password reset functionality
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/auth?reset=true`,
     });
@@ -118,7 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Password reset email sent! Check your inbox.');
+      toast.success('Password reset email sent! Check your inbox for instructions.');
     }
     
     return { error };
