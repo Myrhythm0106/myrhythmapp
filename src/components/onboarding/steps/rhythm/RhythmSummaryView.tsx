@@ -1,19 +1,21 @@
 
 import React, { useState } from "react";
 import { Heart } from "lucide-react";
-import { getCurrentFocusArea } from "@/utils/rhythmAnalysis";
+import { getCurrentFocusArea, AssessmentResult } from "@/utils/rhythmAnalysis";
 import { useNavigate } from "react-router-dom";
 import { MotivationalMessageView } from "./MotivationalMessageView";
 import { MyRhythmFrameworkDisplay } from "./MyRhythmFrameworkDisplay";
 import { PersonalizedFocusCard } from "./PersonalizedFocusCard";
 import { RhythmSummaryActions } from "./RhythmSummaryActions";
+import { AssessmentResultsDisplay } from "./AssessmentResultsDisplay";
 
 interface RhythmSummaryViewProps {
   onComplete: () => void;
   onBack?: () => void;
+  assessmentResult: AssessmentResult | null;
 }
 
-export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps) {
+export function RhythmSummaryView({ onComplete, onBack, assessmentResult }: RhythmSummaryViewProps) {
   const navigate = useNavigate();
   const [showMotivationalMessage, setShowMotivationalMessage] = useState(false);
   const currentFocusArea = getCurrentFocusArea();
@@ -56,6 +58,10 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
           We Found Your Rhythm
         </h1>
       </div>
+      
+      {assessmentResult && (
+        <AssessmentResultsDisplay assessmentResult={assessmentResult} />
+      )}
       
       <MyRhythmFrameworkDisplay currentStepIndex={currentStepIndex} />
       

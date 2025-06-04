@@ -5,7 +5,12 @@ import { Card } from "@/components/ui/card";
 import { RhythmAssessmentView } from "./rhythm/RhythmAssessmentView";
 import { RhythmSummaryView } from "./rhythm/RhythmSummaryView";
 import { AssessmentResponses, sections } from "./rhythm/rhythmAssessmentData";
-import { analyzeRhythmAssessment, storeFocusArea } from "@/utils/rhythmAnalysis";
+import { 
+  analyzeRhythmAssessment, 
+  storeFocusArea,
+  storeAssessmentResult,
+  AssessmentResult
+} from "@/utils/rhythmAnalysis";
 
 interface RhythmAssessmentStepProps {
   onComplete: (responses: any) => void;
@@ -16,6 +21,7 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
   const [currentSection, setCurrentSection] = useState(0);
   const [responses, setResponses] = useState<AssessmentResponses>({});
   const [showSummary, setShowSummary] = useState(false);
+  const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
 
   const handleResponse = (questionId: string, value: string) => {
     const sectionId = sections[currentSection].id.toString();
@@ -33,17 +39,28 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
       setCurrentSection(prev => prev + 1);
     } else {
       // Assessment complete - analyze and show summary
-      const focusArea = analyzeRhythmAssessment(responses);
-      const assessmentData = {
-        responses,
-        focusArea,
-        completedAt: new Date().toISOString(),
-        assessmentVersion: "1.0"
+      const analysisResult = analyzeRhythmAssessment(responses);
+      const completedAt = new Date().toISOString();
+      const nextReviewDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString();
+      
+      const result: AssessmentResult = {
+        id: `assessment-${Date.now()}`,
+        completedAt,
+        focusArea: analysisResult.focusArea,
+        sectionScores: analysisResult.sectionScores,
+        overallScore: analysisResult.overallScore,
+        determinationReason: analysisResult.determinationReason,
+        version: "1.0",
+        nextReviewDate
       };
       
-      // Store the focus area determination
-      storeFocusArea(focusArea, assessmentData);
+      // Store the assessment result
+      storeAssessmentResult(result);
       
+      // Store the focus area determination
+      storeFocusArea(analysisResult.focusArea, result);
+      
+      setAssessmentResult(result);
       setShowSummary(true);
     }
   };
@@ -108,6 +125,7 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
       <RhythmSummaryView 
         onComplete={handleSummaryComplete}
         onBack={handleBack}
+        assessmentResult={assessmentResult}
       />
     );
   }

@@ -1,4 +1,3 @@
-
 import { AssessmentResponses, sections } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 
 export type FocusArea = "structure" | "emotional" | "achievement" | "community" | "growth";
@@ -12,6 +11,25 @@ export interface FocusAreaInfo {
   primaryActions: string[];
   color: string;
   gradient: string;
+}
+
+export interface SectionScore {
+  id: number;
+  title: string;
+  average: number;
+  responses: Record<string, number>;
+  phase: string;
+}
+
+export interface AssessmentResult {
+  id: string;
+  completedAt: string;
+  focusArea: FocusArea;
+  sectionScores: SectionScore[];
+  overallScore: number;
+  determinationReason: string;
+  version: string;
+  nextReviewDate: string;
 }
 
 export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
@@ -67,28 +85,56 @@ export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
   }
 };
 
-export function analyzeRhythmAssessment(responses: AssessmentResponses): FocusArea {
-  // Calculate average scores for each section
-  const sectionAverages: Record<string, number> = {};
+export function analyzeRhythmAssessment(responses: AssessmentResponses): {
+  focusArea: FocusArea;
+  sectionScores: SectionScore[];
+  overallScore: number;
+  determinationReason: string;
+} {
+  // Calculate scores for each section
+  const sectionScores: SectionScore[] = [];
+  let totalScore = 0;
+  let responsesCount = 0;
   
   Object.keys(responses).forEach(sectionId => {
-    const sectionResponses = responses[sectionId];
-    const scores = Object.values(sectionResponses);
-    const average = scores.reduce((sum, score) => sum + score, 0) / scores.length;
-    sectionAverages[sectionId] = average;
+    const sectionIndex = parseInt(sectionId) - 1;
+    if (sectionIndex >= 0 && sectionIndex < sections.length) {
+      const section = sections[sectionIndex];
+      const sectionResponses = responses[sectionId];
+      const scores = Object.values(sectionResponses);
+      const average = scores.length > 0 
+        ? scores.reduce((sum, score) => sum + score, 0) / scores.length
+        : 0;
+      
+      sectionScores.push({
+        id: section.id,
+        title: section.title,
+        average: Number(average.toFixed(2)),
+        responses: { ...sectionResponses },
+        phase: section.phase
+      });
+      
+      totalScore += scores.reduce((sum, score) => sum + score, 0);
+      responsesCount += scores.length;
+    }
   });
-
-  // Find the section with the highest average score (most resonant phase)
+  
+  // Calculate overall score
+  const overallScore = responsesCount > 0 
+    ? Number((totalScore / responsesCount).toFixed(2))
+    : 0;
+  
+  // Find section with the highest score
   let highestScore = 0;
   let dominantSectionId = "1";
   
-  Object.entries(sectionAverages).forEach(([sectionId, average]) => {
-    if (average > highestScore) {
-      highestScore = average;
-      dominantSectionId = sectionId;
+  sectionScores.forEach(section => {
+    if (section.average > highestScore) {
+      highestScore = section.average;
+      dominantSectionId = section.id.toString();
     }
   });
-
+  
   // Map section to MYRHYTHM phase and focus area
   const sectionToFocusArea: Record<string, FocusArea> = {
     "1": "structure", // M - Moment of Impact
@@ -101,15 +147,29 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses): FocusAr
     "8": "community" // M - Multiply the Mission
   };
 
-  return sectionToFocusArea[dominantSectionId] || "structure";
+  const focusArea = sectionToFocusArea[dominantSectionId] || "structure";
+  
+  // Generate determination reason
+  const dominantSectionTitle = sectionScores.find(s => s.id.toString() === dominantSectionId)?.title || '';
+  const determinationReason = `Based on your assessment, "${dominantSectionTitle}" emerged as your most resonant phase with a score of ${highestScore.toFixed(2)} out of 3. This corresponds to the ${focusAreas[focusArea].phase} phase of the MyRhythm framework, which is why we're recommending a ${focusAreas[focusArea].title} to support your journey right now.`;
+
+  return { 
+    focusArea, 
+    sectionScores,
+    overallScore,
+    determinationReason
+  };
 }
 
-export function storeFocusArea(focusArea: FocusArea, assessmentData: any) {
+export function storeFocusArea(
+  focusArea: FocusArea, 
+  assessmentResult: AssessmentResult
+) {
   const focusAreaData = {
     currentFocus: focusArea,
-    determinedAt: new Date().toISOString(),
-    assessmentId: assessmentData.completedAt,
-    nextReviewDate: new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString() // 6 months
+    determinedAt: assessmentResult.completedAt,
+    assessmentId: assessmentResult.id,
+    nextReviewDate: assessmentResult.nextReviewDate
   };
   
   localStorage.setItem("myrhythm_focus_area", JSON.stringify(focusAreaData));
@@ -118,6 +178,44 @@ export function storeFocusArea(focusArea: FocusArea, assessmentData: any) {
   const focusHistory = JSON.parse(localStorage.getItem("myrhythm_focus_history") || "[]");
   focusHistory.push(focusAreaData);
   localStorage.setItem("myrhythm_focus_history", JSON.stringify(focusHistory));
+}
+
+export function storeAssessmentResult(assessmentResult: AssessmentResult) {
+  // Store the full current assessment result
+  localStorage.setItem("myrhythm_current_assessment", JSON.stringify(assessmentResult));
+  
+  // Update assessment history, keeping only the last 4 assessments
+  const assessmentHistory = JSON.parse(localStorage.getItem("myrhythm_assessment_history") || "[]");
+  
+  // Add new assessment at the beginning
+  assessmentHistory.unshift(assessmentResult);
+  
+  // Keep only the most recent 4 assessments
+  const limitedHistory = assessmentHistory.slice(0, 4);
+  
+  localStorage.setItem("myrhythm_assessment_history", JSON.stringify(limitedHistory));
+}
+
+export function getCurrentAssessmentResult(): AssessmentResult | null {
+  const assessmentData = localStorage.getItem("myrhythm_current_assessment");
+  if (!assessmentData) return null;
+  
+  try {
+    return JSON.parse(assessmentData);
+  } catch {
+    return null;
+  }
+}
+
+export function getAssessmentHistory(): AssessmentResult[] {
+  const assessmentHistory = localStorage.getItem("myrhythm_assessment_history");
+  if (!assessmentHistory) return [];
+  
+  try {
+    return JSON.parse(assessmentHistory);
+  } catch {
+    return [];
+  }
 }
 
 export function getCurrentFocusArea(): FocusArea | null {

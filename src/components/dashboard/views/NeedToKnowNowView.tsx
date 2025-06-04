@@ -6,6 +6,7 @@ import { RoutineCheckIn } from "@/components/dashboard/RoutineCheckIn";
 import { MoodEnergySnapshot } from "@/components/dashboard/MoodEnergySnapshot";
 import { BrainGameQuickStart } from "@/components/dashboard/BrainGameQuickStart";
 import { DynamicFocusAreaWidget } from "@/components/dashboard/widgets/DynamicFocusAreaWidget";
+import { AssessmentHistoryWidget } from "@/components/dashboard/widgets/AssessmentHistoryWidget";
 import { Card } from "@/components/ui/card";
 import { AlertTriangle, Clock } from "lucide-react";
 import { getCurrentFocusArea } from "@/utils/rhythmAnalysis";
@@ -94,6 +95,9 @@ export function NeedToKnowNowView() {
     <div className="space-y-6">
       {/* Dynamic Focus Area Widget - Always at the top */}
       <DynamicFocusAreaWidget />
+
+      {/* Assessment History Widget - New widget added below the focus area */}
+      <AssessmentHistoryWidget />
 
       {/* Prioritized widgets based on focus area */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
