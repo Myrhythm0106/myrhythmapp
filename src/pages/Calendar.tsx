@@ -22,7 +22,7 @@ import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { SetNewGoalDialog } from "@/components/calendar/goals/SetNewGoalDialog";
+import { SetNewGoalDialog } from "@/components/goals/SetNewGoalDialog";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
