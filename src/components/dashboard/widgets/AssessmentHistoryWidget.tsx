@@ -45,12 +45,22 @@ export function AssessmentHistoryWidget() {
   const currentAssessment = assessmentHistory[0];
   const historicalAssessments = assessmentHistory.slice(1);
 
-  // Prepare data for line chart
-  const chartData = assessmentHistory.map(assessment => ({
-    date: new Date(assessment.completedAt).toLocaleDateString(),
-    score: assessment.overallScore,
-    focus: assessment.focusArea
-  })).reverse();
+  // Prepare data for line chart - filter out assessments with invalid scores
+  const chartData = assessmentHistory
+    .filter(assessment => assessment.overallScore !== undefined && assessment.overallScore !== null)
+    .map(assessment => ({
+      date: new Date(assessment.completedAt).toLocaleDateString(),
+      score: assessment.overallScore,
+      focus: assessment.focusArea
+    })).reverse();
+
+  // Helper function to safely format score
+  const formatScore = (score: number | undefined | null): string => {
+    if (score === undefined || score === null || isNaN(score)) {
+      return "N/A";
+    }
+    return score.toFixed(1);
+  };
 
   return (
     <>
@@ -92,7 +102,7 @@ export function AssessmentHistoryWidget() {
                   <Badge variant="outline" className="capitalize">
                     {currentAssessment.focusArea}
                   </Badge>
-                  <span className="text-xs text-gray-500">Score: {currentAssessment.overallScore.toFixed(1)}/3.0</span>
+                  <span className="text-xs text-gray-500">Score: {formatScore(currentAssessment.overallScore)}/3.0</span>
                 </div>
               </div>
               <FileText className="h-5 w-5 text-gray-400" />
@@ -116,7 +126,7 @@ export function AssessmentHistoryWidget() {
                         <Badge variant="outline" className="capitalize text-xs">
                           {assessment.focusArea}
                         </Badge>
-                        <span className="text-xs text-gray-500">Score: {assessment.overallScore.toFixed(1)}/3.0</span>
+                        <span className="text-xs text-gray-500">Score: {formatScore(assessment.overallScore)}/3.0</span>
                       </div>
                     </div>
                     <FileText className="h-4 w-4 text-gray-400" />
@@ -125,7 +135,7 @@ export function AssessmentHistoryWidget() {
               </div>
             )}
             
-            {assessmentHistory.length > 1 && (
+            {assessmentHistory.length > 1 && chartData.length > 0 && (
               <div className="pt-4 border-t">
                 <Tabs defaultValue="progress">
                   <TabsList className="grid grid-cols-2 h-8">
