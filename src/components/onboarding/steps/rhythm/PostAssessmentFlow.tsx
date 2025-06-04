@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowRight, Target, Calendar, Settings, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AssessmentResult, focusAreas } from "@/utils/rhythmAnalysis";
-import { AssessmentResultsDisplay } from "./AssessmentResultsDisplay";
+import { EncouragingResultsDisplay } from "./EncouragingResultsDisplay";
 import { FocusAreaGoalTemplates } from "./FocusAreaGoalTemplates";
 import { QuickDashboardSetup } from "./QuickDashboardSetup";
 import { toast } from "sonner";
@@ -68,26 +68,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
   const renderStepContent = () => {
     switch (currentStep) {
       case "results":
-        return (
-          <div className="space-y-6">
-            <div className="text-center space-y-4">
-              <div className={`w-16 h-16 mx-auto rounded-full bg-gradient-to-r ${focusInfo.gradient} flex items-center justify-center`}>
-                <Target className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Your Rhythm Assessment Results</h2>
-                <Badge className={`${focusInfo.color === 'red' ? 'bg-red-100 text-red-800' : 
-                  focusInfo.color === 'blue' ? 'bg-blue-100 text-blue-800' : 
-                  focusInfo.color === 'purple' ? 'bg-purple-100 text-purple-800' : 
-                  focusInfo.color === 'green' ? 'bg-green-100 text-green-800' : 
-                  'bg-amber-100 text-amber-800'} text-lg py-2 px-4`}>
-                  {focusInfo.title}
-                </Badge>
-              </div>
-            </div>
-            <AssessmentResultsDisplay assessmentResult={assessmentResult} />
-          </div>
-        );
+        return <EncouragingResultsDisplay assessmentResult={assessmentResult} />;
         
       case "understand":
         return (
