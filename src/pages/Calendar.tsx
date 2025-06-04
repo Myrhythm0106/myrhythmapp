@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,6 +22,7 @@ import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { SetNewGoalDialog } from "@/components/calendar/goals/SetNewGoalDialog";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -30,6 +30,7 @@ const Calendar = () => {
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const [showGoalGuide, setShowGoalGuide] = useState(false);
   const [showQuickAction, setShowQuickAction] = useState(false);
+  const [showNewGoal, setShowNewGoal] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = useParams();
@@ -37,10 +38,16 @@ const Calendar = () => {
   // Check if we're in goal plan view
   const isGoalPlanView = window.location.pathname.includes('/calendar/goal/');
   
-  // Check if Plan My Dreams should be shown
+  // Check URL parameters for different actions
   React.useEffect(() => {
     if (searchParams.get('planMyDreams') === 'true') {
       setShowPlanMyDreams(true);
+    }
+    if (searchParams.get('addAction') === 'true') {
+      setShowQuickAction(true);
+    }
+    if (searchParams.get('newGoal') === 'true') {
+      setShowNewGoal(true);
     }
   }, [searchParams]);
 
@@ -53,10 +60,25 @@ const Calendar = () => {
   const handleQuickActionSave = (actionData: any) => {
     console.log("Quick action saved:", actionData);
     setShowQuickAction(false);
-    toast.success("Action added successfully! 🎯", {
-      description: "Your action has been added to your calendar and reminders set!",
-      duration: 3000
-    });
+    
+    // Enhanced feedback with goal linking
+    if (actionData.goalId) {
+      toast.success("Action Added to Goal! 🎯", {
+        description: `"${actionData.title}" linked to your goal and scheduled! Great planning!`,
+        duration: 4000
+      });
+    } else {
+      toast.success("Action Added Successfully! 📅", {
+        description: "Your action has been added to your calendar with motivational reminders!",
+        duration: 3000
+      });
+    }
+  };
+
+  const handleNewGoalSave = (goalData: any) => {
+    console.log("New goal created:", goalData);
+    setShowNewGoal(false);
+    navigate("/calendar?view=goals");
   };
 
   if (showPlanMyDreams) {
@@ -80,10 +102,11 @@ const Calendar = () => {
       <ScrollArea className="h-[calc(100vh-64px)]">
         <div className="space-y-6 p-4">
           <PageHeader 
-            title="Calendar" 
-            subtitle="Manage your actions, medications, and daily routines"
+            title="Calendar & Goals" 
+            subtitle="Manage your goals, actions, and daily routines with motivational support"
           >
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
+              {/* Enhanced Quick Action Button */}
               <Dialog open={showQuickAction} onOpenChange={setShowQuickAction}>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
@@ -99,6 +122,16 @@ const Calendar = () => {
                 </DialogContent>
               </Dialog>
 
+              {/* New Goal Button */}
+              <Button 
+                onClick={() => setShowNewGoal(true)}
+                className="bg-gradient-to-r from-green-500 to-emerald-500 text-white font-medium shadow-sm hover:shadow-md transition-all"
+              >
+                <Target className="mr-1 h-4 w-4" />
+                New Goal
+              </Button>
+
+              {/* Full Action Button */}
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
@@ -108,20 +141,22 @@ const Calendar = () => {
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[550px]">
                   <DialogHeader>
-                    <DialogTitle>Add New Action</DialogTitle>
+                    <DialogTitle>Add Detailed Action</DialogTitle>
                   </DialogHeader>
                   <EventForm />
                 </DialogContent>
               </Dialog>
               
+              {/* Plan My Dreams Button */}
               <Button 
                 onClick={() => setShowPlanMyDreams(true)}
                 className="bg-gradient-to-r from-pink-500 to-purple-500 text-white font-medium shadow-sm hover:shadow-md transition-all"
               >
                 <Heart className="mr-1 h-4 w-4" />
-                Plan my Goals
+                Plan Dreams
               </Button>
 
+              {/* Goal Guide Button */}
               <Dialog open={showGoalGuide} onOpenChange={setShowGoalGuide}>
                 <DialogTrigger asChild>
                   <Button 
@@ -156,10 +191,21 @@ const Calendar = () => {
                         <TabsTrigger value="month">Month</TabsTrigger>
                         <TabsTrigger value="goals">
                           <Target className="h-4 w-4 mr-1" />
-                          My Goal Board
+                          Goal Board
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
+                    
+                    {view === "goals" && (
+                      <Button 
+                        size="sm"
+                        onClick={() => setShowNewGoal(true)}
+                        className="bg-gradient-to-r from-primary to-primary/80"
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Add Goal
+                      </Button>
+                    )}
                   </div>
                   
                   {view === "month" && (
@@ -187,12 +233,13 @@ const Calendar = () => {
             </div>
             
             <div className="space-y-6">
+              {/* Enhanced Smart Reminders */}
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-lg font-semibold flex items-center">
                       <Zap className="mr-2 h-5 w-5 text-orange-500" />
-                      Smart Reminders
+                      Smart Motivational Reminders
                     </h3>
                   </div>
                   <MotivationalReminders date={date} />
@@ -226,6 +273,13 @@ const Calendar = () => {
             </div>
           </div>
         </div>
+
+        {/* Dialogs */}
+        <SetNewGoalDialog
+          open={showNewGoal}
+          onOpenChange={setShowNewGoal}
+          onGoalCreated={handleNewGoalSave}
+        />
       </ScrollArea>
     </PomodoroProvider>
   );
