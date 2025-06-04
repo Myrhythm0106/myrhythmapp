@@ -25,6 +25,7 @@ const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [view, setView] = useState<"day" | "week" | "month" | "goals">("month");
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
+  const [showGoalGuide, setShowGoalGuide] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = useParams();
@@ -70,7 +71,6 @@ const Calendar = () => {
             subtitle="Manage your actions, medications, and daily routines"
           >
             <div className="flex gap-2">
-              {/* Reordered buttons as specified */}
               <Dialog>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
@@ -93,6 +93,24 @@ const Calendar = () => {
                 <Heart className="mr-1 h-4 w-4" />
                 Plan my Goals
               </Button>
+
+              <Dialog open={showGoalGuide} onOpenChange={setShowGoalGuide}>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline"
+                    className="border-primary text-primary hover:bg-primary/5"
+                  >
+                    <Target className="mr-1 h-4 w-4" />
+                    Goal Guide
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Goal & Action Guide</DialogTitle>
+                  </DialogHeader>
+                  <GoalDefinitionGuide />
+                </DialogContent>
+              </Dialog>
               
               <PomodoroButton title="Focus Timer" variant="secondary" />
             </div>
