@@ -53,7 +53,7 @@ export function useDailyActions() {
         .order('created_at');
 
       if (error) throw error;
-      setActions(data || []);
+      setActions((data || []) as DailyAction[]);
     } catch (error) {
       console.error('Error fetching actions:', error);
       toast.error('Failed to load actions');
@@ -72,7 +72,7 @@ export function useDailyActions() {
         .order('created_at');
 
       if (error) throw error;
-      setGoals(data || []);
+      setGoals((data || []) as Goal[]);
     } catch (error) {
       console.error('Error fetching goals:', error);
       toast.error('Failed to load goals');
@@ -82,18 +82,22 @@ export function useDailyActions() {
   // Create a new daily action
   const createAction = async (actionData: Partial<DailyAction>) => {
     try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) throw new Error('User not authenticated');
+
       const { data, error } = await supabase
         .from('daily_actions')
         .insert([{
           ...actionData,
-          user_id: (await supabase.auth.getUser()).data.user?.id
+          title: actionData.title!,
+          user_id: user.user.id
         }])
         .select()
         .single();
 
       if (error) throw error;
       
-      setActions(prev => [...prev, data]);
+      setActions(prev => [...prev, data as DailyAction]);
       toast.success(actionData.is_daily_win ? "Daily Win created! 🎉" : "Action created!");
       return data;
     } catch (error) {
@@ -119,11 +123,11 @@ export function useDailyActions() {
       if (error) throw error;
 
       setActions(prev => prev.map(action => 
-        action.id === actionId ? data : action
+        action.id === actionId ? data as DailyAction : action
       ));
 
       // Show special celebration for daily wins
-      if (data.is_daily_win) {
+      if ((data as DailyAction).is_daily_win) {
         await createCelebration(actionId, 'daily_win');
         toast.success("Daily Win Complete! You're amazing! 🌟", {
           description: "Every victory matters on your journey!",
@@ -144,10 +148,13 @@ export function useDailyActions() {
   // Create a celebration record
   const createCelebration = async (actionId: string, type: string, milestoneValue?: number) => {
     try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) return;
+
       const { error } = await supabase
         .from('victory_celebrations')
         .insert([{
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: user.user.id,
           action_id: actionId,
           celebration_type: type,
           milestone_value: milestoneValue
@@ -190,18 +197,22 @@ export function useDailyActions() {
   // Create a new goal
   const createGoal = async (goalData: Partial<Goal>) => {
     try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) throw new Error('User not authenticated');
+
       const { data, error } = await supabase
         .from('goals')
         .insert([{
           ...goalData,
-          user_id: (await supabase.auth.getUser()).data.user?.id
+          title: goalData.title!,
+          user_id: user.user.id
         }])
         .select()
         .single();
 
       if (error) throw error;
       
-      setGoals(prev => [...prev, data]);
+      setGoals(prev => [...prev, data as Goal]);
       toast.success("Goal created!");
       return data;
     } catch (error) {

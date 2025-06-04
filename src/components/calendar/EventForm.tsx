@@ -40,16 +40,21 @@ export function EventForm({ defaultTime, goalId, onSuccess }: EventFormProps = {
   async function onSubmit(values: ActionFormValues) {
     try {
       if (values.isGoal) {
-        // Create a new goal
+        // Create a new goal with proper category mapping
+        const goalCategory = values.type === 'therapy' ? 'health' : 
+                           values.type === 'activity' ? 'personal' : 
+                           values.type === 'cognitive' ? 'cognitive' :
+                           values.type === 'social' ? 'social' :
+                           values.type === 'mobility' ? 'mobility' : 'health';
+                           
         await createGoal({
           title: values.title,
           description: values.notes || undefined,
-          category: values.type === 'therapy' ? 'health' : 
-                   values.type === 'activity' ? 'personal' : 'other',
+          category: goalCategory,
           target_date: values.date ? new Date(values.date).toISOString().split('T')[0] : undefined
         });
       } else {
-        // Create a new action
+        // Create a new action with proper type mapping
         const actionData = {
           title: values.title,
           description: values.notes || undefined,

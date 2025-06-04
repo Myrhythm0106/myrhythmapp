@@ -4,18 +4,18 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/comp
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useFormContext } from 'react-hook-form';
 import { Switch } from '@/components/ui/switch';
-import { Calendar, CalendarCheck, CalendarPlus, Check, Flag, ListCheck, Target } from 'lucide-react';
+import { Calendar, CalendarCheck, CalendarPlus, Check, Flag, ListCheck, Target, Star } from 'lucide-react';
 
 export function ActionTypeSelect() {
   const { control, watch, setValue } = useFormContext();
   const isGoal = watch('isGoal');
 
   const actionTypes = [
+    { value: 'daily_win', label: 'Daily Victory', icon: <Star className="h-4 w-4" /> },
     { value: 'appointment', label: 'Appointment', icon: <Calendar className="h-4 w-4" /> },
     { value: 'meeting', label: 'Meeting', icon: <CalendarCheck className="h-4 w-4" /> },
     { value: 'task', label: 'Task', icon: <Check className="h-4 w-4" /> },
     { value: 'reminder', label: 'Reminder', icon: <CalendarPlus className="h-4 w-4" /> },
-    { value: 'goal', label: 'Goal', icon: <Target className="h-4 w-4" /> },
   ];
   
   const goalTypes = [
@@ -28,9 +28,9 @@ export function ActionTypeSelect() {
   const handleGoalToggleChange = (checked: boolean) => {
     setValue('isGoal', checked);
     if (checked) {
-      setValue('actionType', 'goal');
+      setValue('type', 'daily');
     } else {
-      setValue('actionType', '');
+      setValue('type', 'daily_win');
     }
   };
   
@@ -49,7 +49,7 @@ export function ActionTypeSelect() {
       
       <FormField
         control={control}
-        name="actionType"
+        name="type"
         render={({ field }) => (
           <FormItem>
             <FormControl>

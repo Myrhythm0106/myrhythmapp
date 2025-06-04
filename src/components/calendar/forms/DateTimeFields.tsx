@@ -11,7 +11,7 @@ export function DateTimeFields() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <FormField
         control={form.control}
-        name="startDate"
+        name="date"
         render={({ field }) => (
           <FormItem>
             <FormLabel>Start Date</FormLabel>
