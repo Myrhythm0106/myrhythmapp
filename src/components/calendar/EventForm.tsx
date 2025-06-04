@@ -16,31 +16,70 @@ import { GoalLinkField } from "./forms/GoalLinkField";
 import { FormActions } from "./forms/FormActions";
 import { MediaAttachment } from "./forms/MediaAttachment";
 import { actionFormSchema, ActionFormValues, defaultActionValues } from "./forms/actionFormSchema";
+import { useDailyActions } from "@/hooks/use-daily-actions";
+import { format } from "date-fns";
 
 interface EventFormProps {
   defaultTime?: string;
   goalId?: string;
+  onSuccess?: () => void;
 }
 
-export function EventForm({ defaultTime, goalId }: EventFormProps = {}) {
+export function EventForm({ defaultTime, goalId, onSuccess }: EventFormProps = {}) {
+  const { createAction, createGoal } = useDailyActions();
+  
   const form = useForm<ActionFormValues>({
     resolver: zodResolver(actionFormSchema),
     defaultValues: {
       ...defaultActionValues,
       startTime: defaultTime || defaultActionValues.startTime,
-      goalId: goalId || "none", // Changed from empty string to "none"
+      goalId: goalId || "none",
     },
   });
 
-  function onSubmit(values: ActionFormValues) {
-    // Convert "none" back to undefined or empty string for the API if needed
-    const submissionValues = {
-      ...values,
-      goalId: values.goalId === "none" ? undefined : values.goalId
-    };
-    
-    toast.success(values.isGoal ? "Goal added successfully!" : "Action added successfully!");
-    console.log(submissionValues);
+  async function onSubmit(values: ActionFormValues) {
+    try {
+      if (values.isGoal) {
+        // Create a new goal
+        await createGoal({
+          title: values.title,
+          description: values.notes || undefined,
+          category: values.type === 'therapy' ? 'health' : 
+                   values.type === 'activity' ? 'personal' : 'other',
+          target_date: values.date ? new Date(values.date).toISOString().split('T')[0] : undefined
+        });
+      } else {
+        // Create a new action
+        const actionData = {
+          title: values.title,
+          description: values.notes || undefined,
+          action_type: values.type === 'daily_win' ? 'daily_win' as const : 
+                      values.goalId && values.goalId !== "none" ? 'goal_linked' as const : 
+                      'regular' as const,
+          date: values.date ? format(new Date(values.date), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'),
+          start_time: values.startTime || undefined,
+          duration_minutes: values.duration || undefined,
+          is_daily_win: values.type === 'daily_win',
+          goal_id: values.goalId && values.goalId !== "none" ? values.goalId : undefined,
+          difficulty_level: values.type === 'daily_win' ? 1 : 2,
+          focus_area: values.type === 'daily_win' ? 'emotional' as const : undefined
+        };
+
+        await createAction(actionData);
+      }
+
+      // Reset form
+      form.reset();
+      
+      // Call success callback
+      if (onSuccess) {
+        onSuccess();
+      }
+      
+    } catch (error) {
+      console.error('Error creating action/goal:', error);
+      toast.error('Failed to create action/goal');
+    }
   }
 
   const isGoal = form.watch("isGoal");

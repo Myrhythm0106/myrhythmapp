@@ -51,6 +51,146 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_actions: {
+        Row: {
+          action_type: string
+          celebration_shown: boolean | null
+          completed_at: string | null
+          created_at: string
+          date: string
+          description: string | null
+          difficulty_level: number | null
+          duration_minutes: number | null
+          focus_area: string | null
+          goal_id: string | null
+          id: string
+          is_daily_win: boolean
+          start_time: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_type?: string
+          celebration_shown?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          date?: string
+          description?: string | null
+          difficulty_level?: number | null
+          duration_minutes?: number | null
+          focus_area?: string | null
+          goal_id?: string | null
+          id?: string
+          is_daily_win?: boolean
+          start_time?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_type?: string
+          celebration_shown?: boolean | null
+          completed_at?: string | null
+          created_at?: string
+          date?: string
+          description?: string | null
+          difficulty_level?: number | null
+          duration_minutes?: number | null
+          focus_area?: string | null
+          goal_id?: string | null
+          id?: string
+          is_daily_win?: boolean
+          start_time?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_daily_actions_goal"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_win_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number | null
+          id: string
+          last_win_date: string | null
+          longest_streak: number | null
+          total_wins: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number | null
+          id?: string
+          last_win_date?: string | null
+          longest_streak?: number | null
+          total_wins?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number | null
+          id?: string
+          last_win_date?: string | null
+          longest_streak?: number | null
+          total_wins?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      goals: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          progress_percentage: number | null
+          status: string
+          target_date: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          progress_percentage?: number | null
+          status?: string
+          target_date?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          progress_percentage?: number | null
+          status?: string
+          target_date?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       gratitude_entries: {
         Row: {
           created_at: string
@@ -179,6 +319,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      victory_celebrations: {
+        Row: {
+          action_id: string | null
+          celebration_type: string
+          created_at: string
+          id: string
+          milestone_value: number | null
+          shown_at: string | null
+          user_id: string
+        }
+        Insert: {
+          action_id?: string | null
+          celebration_type: string
+          created_at?: string
+          id?: string
+          milestone_value?: number | null
+          shown_at?: string | null
+          user_id: string
+        }
+        Update: {
+          action_id?: string | null
+          celebration_type?: string
+          created_at?: string
+          id?: string
+          milestone_value?: number | null
+          shown_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "victory_celebrations_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "daily_actions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
