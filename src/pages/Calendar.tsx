@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,6 +13,7 @@ import { WeekView } from "@/components/calendar/views/WeekView";
 import { GoalsView } from "@/components/calendar/views/GoalsView";
 import { MyGoalPlan } from "@/components/calendar/goals/MyGoalPlan";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
+import { GoalDefinitionGuide } from "@/components/goals/GoalDefinitionGuide";
 import { Plus, CalendarIcon, Clock, HeartPulse, Target, Heart } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
