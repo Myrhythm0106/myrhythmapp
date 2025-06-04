@@ -35,7 +35,7 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
     switch (focusArea) {
       case 'structure': return 2; // R - Routine
       case 'emotional': return 1; // Y - Yearning 
-      case 'achievement': return 0; // M - Mindful
+      case 'achievement': return 0; // M - Mindset
       case 'community': return 3; // H - Health
       case 'growth': return 7; // M - Multiply (final step)
       default: return 0;
@@ -46,7 +46,7 @@ export function RhythmSummaryView({ onComplete, onBack }: RhythmSummaryViewProps
 
   // All 8 steps of MYRHYTHM
   const rhythmSteps = [
-    { letter: 'M', word: 'Mindful', description: 'Moment of Impact' },
+    { letter: 'M', word: 'Mindset', description: 'Moment of Impact' },
     { letter: 'Y', word: 'Yearning', description: 'Yield to the Fog' },
     { letter: 'R', word: 'Routine', description: 'Reckon with Reality' },
     { letter: 'H', word: 'Health', description: 'Harness Support' },
