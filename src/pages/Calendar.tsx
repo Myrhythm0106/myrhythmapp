@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,7 +15,9 @@ import { GoalsView } from "@/components/calendar/views/GoalsView";
 import { MyGoalPlan } from "@/components/calendar/goals/MyGoalPlan";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
 import { GoalDefinitionGuide } from "@/components/goals/GoalDefinitionGuide";
-import { Plus, CalendarIcon, Clock, HeartPulse, Target, Heart } from "lucide-react";
+import { MotivationalReminders } from "@/components/calendar/MotivationalReminders";
+import { QuickActionCreator } from "@/components/calendar/QuickActionCreator";
+import { Plus, CalendarIcon, Clock, HeartPulse, Target, Heart, Zap } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
@@ -26,6 +29,7 @@ const Calendar = () => {
   const [view, setView] = useState<"day" | "week" | "month" | "goals">("month");
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const [showGoalGuide, setShowGoalGuide] = useState(false);
+  const [showQuickAction, setShowQuickAction] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const params = useParams();
@@ -44,6 +48,15 @@ const Calendar = () => {
     console.log("Dream plan saved:", dreamPlan);
     setShowPlanMyDreams(false);
     navigate("/calendar?view=goals");
+  };
+
+  const handleQuickActionSave = (actionData: any) => {
+    console.log("Quick action saved:", actionData);
+    setShowQuickAction(false);
+    toast.success("Action added successfully! 🎯", {
+      description: "Your action has been added to your calendar and reminders set!",
+      duration: 3000
+    });
   };
 
   if (showPlanMyDreams) {
@@ -71,11 +84,26 @@ const Calendar = () => {
             subtitle="Manage your actions, medications, and daily routines"
           >
             <div className="flex gap-2">
-              <Dialog>
+              <Dialog open={showQuickAction} onOpenChange={setShowQuickAction}>
                 <DialogTrigger asChild>
                   <Button className="bg-gradient-to-r from-primary to-primary/80 text-white font-medium shadow-sm hover:shadow-md transition-all">
                     <Plus className="mr-1 h-4 w-4" />
-                    Action
+                    Quick Action
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[550px]">
+                  <DialogHeader>
+                    <DialogTitle>Quick Add Action</DialogTitle>
+                  </DialogHeader>
+                  <QuickActionCreator onSave={handleQuickActionSave} />
+                </DialogContent>
+              </Dialog>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">
+                    <CalendarIcon className="mr-1 h-4 w-4" />
+                    Full Action
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[550px]">
@@ -159,6 +187,18 @@ const Calendar = () => {
             </div>
             
             <div className="space-y-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold flex items-center">
+                      <Zap className="mr-2 h-5 w-5 text-orange-500" />
+                      Smart Reminders
+                    </h3>
+                  </div>
+                  <MotivationalReminders date={date} />
+                </CardContent>
+              </Card>
+
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex justify-between items-center mb-4">
