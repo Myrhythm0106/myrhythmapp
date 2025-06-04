@@ -110,7 +110,10 @@ export function AssessmentResultsDisplay({ assessmentResult }: AssessmentResults
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => [`${value.toFixed(1)} / 3.0`, 'Score']} />
+                    <Tooltip formatter={(value) => [
+                      `${typeof value === 'number' ? value.toFixed(1) : value} / 3.0`, 
+                      'Score'
+                    ]} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>
