@@ -2,6 +2,7 @@
 export interface PasswordValidationResult {
   isValid: boolean;
   errors: string[];
+  isLeaked?: boolean;
 }
 
 export const validatePasswordStrength = (password: string): PasswordValidationResult => {
@@ -37,4 +38,18 @@ export const validatePasswordStrength = (password: string): PasswordValidationRe
   }
 
   return { isValid: errors.length === 0, errors };
+};
+
+export const isLeakedPasswordError = (error: any): boolean => {
+  if (!error || !error.message) return false;
+  
+  const message = error.message.toLowerCase();
+  return message.includes('password found in breach') || 
+         message.includes('password has been found in data breaches') ||
+         message.includes('compromised password') ||
+         message.includes('leaked password');
+};
+
+export const getLeakedPasswordMessage = (): string => {
+  return "This password has been found in data breaches and cannot be used. Please choose a different password for your security.";
 };

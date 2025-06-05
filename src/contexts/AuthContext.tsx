@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { isLeakedPasswordError, getLeakedPasswordMessage } from '@/utils/auth/passwordValidation';
 
 interface AuthContextType {
   user: User | null;
@@ -77,7 +78,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
     
     if (error) {
-      toast.error(error.message);
+      // Check if this is a leaked password error
+      if (isLeakedPasswordError(error)) {
+        toast.error(getLeakedPasswordMessage());
+      } else {
+        toast.error(error.message);
+      }
     } else {
       // Store email for potential resend verification (this is safe as it's not sensitive data)
       localStorage.setItem('pendingVerificationEmail', email);

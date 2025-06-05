@@ -57,6 +57,12 @@ export function PasswordStrength({ password, showErrors = true }: PasswordStreng
           <p className="text-xs text-green-600">✓ Password meets all security requirements</p>
         </div>
       )}
+
+      <div className="bg-blue-50 border border-blue-200 rounded p-2">
+        <p className="text-xs text-blue-600">
+          🛡️ Passwords are automatically checked against known data breaches for your security
+        </p>
+      </div>
     </div>
   );
 }

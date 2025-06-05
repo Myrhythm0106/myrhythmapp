@@ -1,7 +1,7 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { validatePasswordStrength } from "@/utils/auth/passwordValidation";
+import { validatePasswordStrength, isLeakedPasswordError, getLeakedPasswordMessage } from "@/utils/auth/passwordValidation";
 import { sanitizeEmail, sanitizeName, validateEmail, validateNameLength } from "@/utils/auth/inputValidation";
 import { SessionManager } from "@/utils/auth/sessionManager";
 import { useLoginAttempts } from "./useLoginAttempts";
@@ -92,6 +92,11 @@ export function useAuthOperations() {
       });
 
       if (error) {
+        // Check if this is a leaked password error
+        if (isLeakedPasswordError(error)) {
+          toast.error(getLeakedPasswordMessage());
+          return { error: { message: "Leaked password detected" } };
+        }
         return { error };
       }
 
