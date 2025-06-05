@@ -42,7 +42,7 @@ export function MFASetup() {
   const [verificationCode, setVerificationCode] = useState('');
   const [factorName, setFactorName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [backupCodes, setBackupCodes] = useState<any[]>([]);
+  const [backupCodes, setBackupCodes] = useState<Array<{ code: string }>>([]);
 
   const totpFactor = factors.find(f => f.factor_type === 'totp');
   const smsFactor = factors.find(f => f.factor_type === 'sms');
@@ -86,7 +86,9 @@ export function MFASetup() {
   const handleGenerateBackupCodes = async () => {
     const codes = await generateBackupCodes();
     if (codes) {
-      setBackupCodes(codes);
+      // Ensure codes is properly typed as array
+      const typedCodes = Array.isArray(codes) ? codes : [];
+      setBackupCodes(typedCodes);
     }
   };
 

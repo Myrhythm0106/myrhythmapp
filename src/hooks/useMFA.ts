@@ -32,7 +32,20 @@ export function useMFA() {
         .eq('user_id', user.id);
 
       if (error) throw error;
-      setFactors(data || []);
+      
+      // Type assertion to ensure compatibility
+      const typedFactors: MFAFactor[] = (data || []).map(factor => ({
+        id: factor.id,
+        factor_type: factor.factor_type as 'totp' | 'sms' | 'backup_codes',
+        factor_name: factor.factor_name || undefined,
+        is_verified: factor.is_verified,
+        is_enabled: factor.is_enabled,
+        phone_number: factor.phone_number || undefined,
+        backup_codes: factor.backup_codes as any[] || undefined,
+        created_at: factor.created_at
+      }));
+      
+      setFactors(typedFactors);
 
       // Check if MFA is enabled
       const { data: profile } = await supabase
