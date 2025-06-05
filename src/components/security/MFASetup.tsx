@@ -20,6 +20,10 @@ import {
 import { useMFA } from '@/hooks/useMFA';
 import { toast } from 'sonner';
 
+interface BackupCode {
+  code: string;
+}
+
 export function MFASetup() {
   const { 
     factors, 
@@ -42,7 +46,7 @@ export function MFASetup() {
   const [verificationCode, setVerificationCode] = useState('');
   const [factorName, setFactorName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [backupCodes, setBackupCodes] = useState<Array<{ code: string }>>([]);
+  const [backupCodes, setBackupCodes] = useState<BackupCode[]>([]);
 
   const totpFactor = factors.find(f => f.factor_type === 'totp');
   const smsFactor = factors.find(f => f.factor_type === 'sms');
@@ -86,9 +90,24 @@ export function MFASetup() {
   const handleGenerateBackupCodes = async () => {
     const codes = await generateBackupCodes();
     if (codes) {
-      // Ensure codes is properly typed as array
-      const typedCodes = Array.isArray(codes) ? codes : [];
-      setBackupCodes(typedCodes);
+      // Properly handle the type conversion from Json to BackupCode[]
+      try {
+        if (Array.isArray(codes)) {
+          const typedCodes: BackupCode[] = codes.map(item => {
+            if (typeof item === 'object' && item !== null && 'code' in item) {
+              return { code: String(item.code) };
+            }
+            return { code: String(item) };
+          });
+          setBackupCodes(typedCodes);
+        } else {
+          console.error('Unexpected backup codes format:', codes);
+          toast.error('Failed to process backup codes');
+        }
+      } catch (error) {
+        console.error('Error processing backup codes:', error);
+        toast.error('Failed to process backup codes');
+      }
     }
   };
 
