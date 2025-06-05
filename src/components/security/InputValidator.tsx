@@ -1,4 +1,3 @@
-
 import React from "react";
 import { toast } from "sonner";
 
@@ -16,7 +15,7 @@ export class InputValidator {
     return div.innerHTML
       .replace(/javascript:/gi, '')
       .replace(/vbscript:/gi, '')
-      .replace/on\w+\s*=/gi, '')
+      .replace(/on\w+\s*=/gi, '')
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
   }
