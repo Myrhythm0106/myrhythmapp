@@ -224,6 +224,78 @@ export type Database = {
         }
         Relationships: []
       }
+      mfa_factors: {
+        Row: {
+          backup_codes: Json | null
+          created_at: string
+          factor_name: string | null
+          factor_type: string
+          id: string
+          is_enabled: boolean
+          is_verified: boolean
+          phone_number: string | null
+          secret: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          backup_codes?: Json | null
+          created_at?: string
+          factor_name?: string | null
+          factor_type: string
+          id?: string
+          is_enabled?: boolean
+          is_verified?: boolean
+          phone_number?: string | null
+          secret?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          backup_codes?: Json | null
+          created_at?: string
+          factor_name?: string | null
+          factor_type?: string
+          id?: string
+          is_enabled?: boolean
+          is_verified?: boolean
+          phone_number?: string | null
+          secret?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      mfa_verification_attempts: {
+        Row: {
+          created_at: string
+          factor_type: string
+          id: string
+          ip_address: unknown | null
+          success: boolean
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          factor_type: string
+          id?: string
+          ip_address?: unknown | null
+          success: boolean
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          factor_type?: string
+          id?: string
+          ip_address?: unknown | null
+          success?: boolean
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       mood_entries: {
         Row: {
           created_at: string
@@ -259,21 +331,33 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          mfa_enabled: boolean | null
           name: string
+          phone_number: string | null
+          phone_verified: boolean | null
+          require_mfa_for_sensitive_actions: boolean | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           email: string
           id: string
+          mfa_enabled?: boolean | null
           name: string
+          phone_number?: string | null
+          phone_verified?: boolean | null
+          require_mfa_for_sensitive_actions?: boolean | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          mfa_enabled?: boolean | null
           name?: string
+          phone_number?: string | null
+          phone_verified?: boolean | null
+          require_mfa_for_sensitive_actions?: boolean | null
           updated_at?: string
         }
         Relationships: []
@@ -316,6 +400,36 @@ export type Database = {
           symptom_type?: string
           systolic?: number | null
           time?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      trusted_devices: {
+        Row: {
+          created_at: string
+          device_fingerprint: string
+          device_name: string | null
+          expires_at: string
+          id: string
+          last_used_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_fingerprint: string
+          device_name?: string | null
+          expires_at?: string
+          id?: string
+          last_used_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_fingerprint?: string
+          device_name?: string | null
+          expires_at?: string
+          id?: string
+          last_used_at?: string
           user_id?: string
         }
         Relationships: []
@@ -363,7 +477,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_backup_codes: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      verify_backup_code: {
+        Args: { p_user_id: string; p_code: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
