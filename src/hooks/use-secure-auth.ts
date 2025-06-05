@@ -15,9 +15,45 @@ export function useSecureAuth() {
   const [loginAttempts, setLoginAttempts] = useState<Map<string, AuthAttempt>>(new Map());
   const [isLocked, setIsLocked] = useState(false);
 
-  const MAX_ATTEMPTS = 5;
-  const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes
+  const MAX_ATTEMPTS = 3; // Reduced from 5 for better security
+  const LOCKOUT_DURATION = 30 * 60 * 1000; // Increased to 30 minutes
   const ATTEMPT_WINDOW = 60 * 60 * 1000; // 1 hour
+
+  // Enhanced password validation
+  const validatePasswordStrength = (password: string): { isValid: boolean; errors: string[] } => {
+    const errors: string[] = [];
+    
+    if (password.length < 8) {
+      errors.push("Must be at least 8 characters long");
+    }
+    
+    if (!/[a-z]/.test(password)) {
+      errors.push("Must contain at least one lowercase letter");
+    }
+    
+    if (!/[A-Z]/.test(password)) {
+      errors.push("Must contain at least one uppercase letter");
+    }
+    
+    if (!/\d/.test(password)) {
+      errors.push("Must contain at least one number");
+    }
+    
+    if (!/[@$!%*?&]/.test(password)) {
+      errors.push("Must contain at least one special character (@$!%*?&)");
+    }
+
+    // Check for common patterns
+    if (/(.)\1{2,}/.test(password)) {
+      errors.push("Cannot contain repeated characters");
+    }
+
+    if (/123|abc|password|qwerty/i.test(password)) {
+      errors.push("Cannot contain common patterns");
+    }
+
+    return { isValid: errors.length === 0, errors };
+  };
 
   // Check if email is locked out
   const isEmailLocked = useCallback((email: string): boolean => {
@@ -50,7 +86,7 @@ export function useSecureAuth() {
     return false;
   }, [loginAttempts]);
 
-  // Record failed login attempt
+  // Record failed login attempt with enhanced security
   const recordFailedAttempt = useCallback((email: string) => {
     const now = Date.now();
     const currentAttempt = loginAttempts.get(email) || {
@@ -67,10 +103,15 @@ export function useSecureAuth() {
     currentAttempt.attempts += 1;
     currentAttempt.lastAttempt = now;
 
-    // Lock account if max attempts reached
+    // Progressive lockout times
     if (currentAttempt.attempts >= MAX_ATTEMPTS) {
-      currentAttempt.lockedUntil = now + LOCKOUT_DURATION;
-      toast.error(`Too many failed attempts. Account locked for 15 minutes.`);
+      const lockoutMultiplier = Math.min(currentAttempt.attempts - MAX_ATTEMPTS + 1, 5);
+      currentAttempt.lockedUntil = now + (LOCKOUT_DURATION * lockoutMultiplier);
+      
+      toast.error(`Too many failed attempts. Account locked for ${Math.ceil((LOCKOUT_DURATION * lockoutMultiplier) / 60000)} minutes.`);
+      
+      // Log security event
+      console.warn(`Security: Account lockout for email: ${email.substring(0, 3)}***`);
     } else {
       const remaining = MAX_ATTEMPTS - currentAttempt.attempts;
       toast.error(`Invalid credentials. ${remaining} attempts remaining.`);
@@ -86,17 +127,26 @@ export function useSecureAuth() {
     setLoginAttempts(new Map(loginAttempts));
   }, [loginAttempts]);
 
-  // Secure login function
+  // Enhanced secure login function
   const secureSignIn = async (email: string, password: string) => {
+    // Input sanitization
+    email = email.toLowerCase().trim();
+    
+    if (!email || !password) {
+      toast.error("Email and password are required");
+      return { error: { message: "Invalid input" } };
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return { error: { message: "Invalid email format" } };
+    }
+
     // Check if account is locked
     if (isEmailLocked(email)) {
       return { error: { message: "Account temporarily locked" } };
-    }
-
-    // Validate password strength
-    if (password.length < 8) {
-      toast.error("Password must be at least 8 characters long");
-      return { error: { message: "Password too weak" } };
     }
 
     try {
@@ -107,7 +157,9 @@ export function useSecureAuth() {
 
       if (error) {
         recordFailedAttempt(email);
-        return { error };
+        // Don't reveal whether email exists
+        toast.error("Invalid email or password");
+        return { error: { message: "Authentication failed" } };
       }
 
       // Success - clear attempts and start session
@@ -122,15 +174,35 @@ export function useSecureAuth() {
     }
   };
 
-  // Enhanced sign up with validation
+  // Enhanced sign up with stronger validation
   const secureSignUp = async (email: string, password: string, name: string) => {
-    // Validate password strength
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    // Input sanitization
+    email = email.toLowerCase().trim();
+    name = name.trim();
     
-    if (!passwordRegex.test(password)) {
-      toast.error("Password must contain at least 8 characters, including uppercase, lowercase, number, and special character");
+    if (!email || !password || !name) {
+      toast.error("All fields are required");
+      return { error: { message: "Invalid input" } };
+    }
+
+    // Enhanced password validation
+    const passwordValidation = validatePasswordStrength(password);
+    if (!passwordValidation.isValid) {
+      toast.error("Password requirements not met:");
+      passwordValidation.errors.forEach(error => {
+        toast.error(`• ${error}`);
+      });
       return { error: { message: "Password does not meet requirements" } };
     }
+
+    // Name validation
+    if (name.length < 2 || name.length > 50) {
+      toast.error("Name must be between 2 and 50 characters");
+      return { error: { message: "Invalid name" } };
+    }
+
+    // Sanitize name input
+    const sanitizedName = name.replace(/[<>\"'&]/g, '');
 
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -138,7 +210,7 @@ export function useSecureAuth() {
         password,
         options: {
           data: {
-            name: name
+            name: sanitizedName
           }
         }
       });
@@ -154,21 +226,26 @@ export function useSecureAuth() {
     }
   };
 
-  // Secure logout
+  // Enhanced secure logout with complete cleanup
   const secureSignOut = async () => {
     try {
       await supabase.auth.signOut();
       SecureStorage.clearSensitiveData();
       SessionManager.endSession();
+      
+      // Clear any cached data
+      setLoginAttempts(new Map());
+      
       toast.success("Successfully signed out");
     } catch (error) {
       console.error("Logout error:", error);
       // Force cleanup even if logout fails
       SecureStorage.clearSensitiveData();
+      SessionManager.endSession();
     }
   };
 
-  // Monitor user activity for session extension
+  // Enhanced activity monitoring with privacy protection
   useEffect(() => {
     const activityEvents = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
     
@@ -192,6 +269,7 @@ export function useSecureAuth() {
     secureSignUp,
     secureSignOut,
     isEmailLocked,
+    validatePasswordStrength,
     loginAttempts: Array.from(loginAttempts.values())
   };
 }
