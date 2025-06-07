@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -7,15 +6,16 @@ import { LoginModal } from "@/components/auth/LoginModal";
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
-  
+
   // Function to scroll to the Discover MyRhythm section
   const scrollToDiscover = () => {
     const discoverSection = document.getElementById('discover-myrhythm');
     if (discoverSection) {
-      discoverSection.scrollIntoView({ behavior: 'smooth' });
+      discoverSection.scrollIntoView({
+        behavior: 'smooth'
+      });
     }
   };
-  
   return <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
       {/* Login button at top right */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
@@ -37,8 +37,7 @@ export function HeroSection() {
           <h2 className="text-xl font-medium text-primary md:text-base">
         </h2>
           
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">Your unique journey demands your rhythm, your way and at your pace. 
-MyRhythm empowers you to Organise priorities, build Routines, strengthen Discipline, Execute with focus, and Review with intention.  Particularly after a traumatic/acquired brain injury.</p>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">From overwhelm and mental chaos to daily wins and peace of mind. Be empowered as your confidence grows, momentum builds, and structure becomes your strength. You never walk alone, with MyRhythm by your side.</p>
           
           <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-annabel-600">Create a life of ORDER that truly feels right for you.</p>
         </div>
