@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -32,12 +31,11 @@ import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 const queryClient = new QueryClient();
 
 const AppRoutes = () => {
-  const isMobile = useIsMobile();
-
   return (
     <Routes>
-      {/* Public routes */}
-      <Route path="/" element={isMobile ? <SplashScreen /> : <Landing />} />
+      {/* Public routes - Always show Landing page on home route */}
+      <Route path="/" element={<Landing />} />
+      <Route path="/splash" element={<SplashScreen />} />
       <Route path="/auth" element={<Auth />} />
       <Route path="/email-verification" element={<EmailVerification />} />
       <Route path="/founders-story" element={<FoundersStory />} />
