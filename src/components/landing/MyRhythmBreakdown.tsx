@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -137,7 +136,7 @@ export function MyRhythmBreakdown() {
     <section id="myrhythm-breakdown" className="py-16 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-primary mb-4">What MyRhythm Means To You</h2>
+          <h2 className="text-3xl font-bold text-primary mb-4 whitespace-nowrap">What MyRhythm Means To You</h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
             Here's how each element of MyRhythm translates into practical, daily actions that can 
             transform your experience and help you build a life that feels more manageable and meaningful.
