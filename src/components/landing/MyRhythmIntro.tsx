@@ -21,10 +21,10 @@ export function MyRhythmIntro() {
         
         {/* Visual MYRHYTHM Display */}
         <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-4 md:p-8 mb-12 overflow-x-auto">
-          <div className="flex justify-center items-center gap-2 md:gap-4 mb-8 min-w-max mx-auto">
+          <div className="flex justify-center items-center gap-2 md:gap-4 mb-8 min-w-max mx-auto flex-nowrap">
             {['M', 'Y', 'R', 'H', 'Y', 'T', 'H', 'M'].map((letter, index) => (
               <div key={index} className="flex flex-col items-center">
-                <div className="w-12 h-12 md:w-16 md:h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-lg md:text-2xl font-bold mb-2">
+                <div className="w-10 h-10 md:w-16 md:h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-base md:text-2xl font-bold mb-2">
                   {letter}
                 </div>
               </div>
@@ -32,8 +32,8 @@ export function MyRhythmIntro() {
           </div>
           
           <div className="text-center">
-            <h3 className="text-xl md:text-2xl font-bold text-primary mb-4 whitespace-nowrap">M-Y-R-H-Y-T-H-M</h3>
-            <p className="text-base md:text-lg text-muted-foreground">
+            <h3 className="text-lg md:text-2xl font-bold text-primary mb-4 whitespace-nowrap">M-Y-R-H-Y-T-H-M</h3>
+            <p className="text-sm md:text-lg text-muted-foreground">
               A memorable framework for organizing your thoughts, actions, and daily rhythms
             </p>
           </div>
@@ -134,8 +134,8 @@ export function MyRhythmIntro() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-2 text-primary">🧠 Cognitive Science-Based</h4>
-              <p className="text-muted-foreground">Built on principles that support executive function and reduce cognitive load.</p>
+              <h4 className="font-semibold mb-2 text-primary">🧠 Cognitive Science in Practice</h4>
+              <p className="text-muted-foreground">Built on evidence-based principles that support executive function, then refined through real-world application and lived experience to ensure it actually works in daily life.</p>
             </div>
             
             <div>
@@ -144,8 +144,18 @@ export function MyRhythmIntro() {
             </div>
             
             <div>
+              <h4 className="font-semibold mb-2 text-primary">✨ Lived Experience Validated</h4>
+              <p className="text-muted-foreground">Tested and refined by real people facing real challenges—because what works in theory must also work in practice to truly make a difference.</p>
+            </div>
+            
+            <div>
               <h4 className="font-semibold mb-2 text-primary">🔄 Holistic Integration</h4>
-              <p className="text-muted-foreground">Each element reinforces the others, creating a comprehensive life management system.</p>
+              <p className="text-muted-foreground">Each element reinforces the others, creating a comprehensive life management system that evolves with your needs.</p>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-2 text-primary">🌱 Real-World Resilience</h4>
+              <p className="text-muted-foreground">Designed to work even on difficult days, with flexibility built in for the ups and downs of actual human experience.</p>
             </div>
           </div>
         </div>
