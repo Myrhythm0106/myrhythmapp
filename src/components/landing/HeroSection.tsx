@@ -39,7 +39,8 @@ export function HeroSection() {
           
           <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">From overwhelm and mental chaos to daily wins and peace of mind. Be empowered as your confidence grows, momentum builds, and structure becomes your strength. You never walk alone, with MyRhythm by your side.</p>
           
-          <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-annabel-600">Create a life of ORDER that truly feels right for you.</p>
+          <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-annabel-600">
+        </p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
