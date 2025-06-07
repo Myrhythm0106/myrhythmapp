@@ -3,7 +3,8 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { RhythmSectionHeader } from "./RhythmSectionHeader";
 import { RhythmQuestionCard } from "./RhythmQuestionCard";
 import { Section, AssessmentResponses, sections } from "./rhythmAssessmentData";
@@ -39,19 +40,19 @@ export function RhythmAssessmentView({
     return section.questions.every(q => sectionResponses[q.id] !== undefined);
   };
 
-  // Auto-advance when all questions in section are answered
+  // Auto-advance when all questions in section are answered - reduced to 1.5 seconds
   useEffect(() => {
     if (canProceed()) {
-      setCountdown(3);
+      setCountdown(2);
       
       const timer = setTimeout(() => {
         onNext();
         setCountdown(null);
-      }, 3000);
+      }, 1500); // Reduced from 3000 to 1500ms
       
       const countdownInterval = setInterval(() => {
         setCountdown(prev => prev ? prev - 1 : null);
-      }, 1000);
+      }, 750); // Adjusted for faster countdown
       
       setAutoProgressTimer(timer);
       
@@ -86,6 +87,24 @@ export function RhythmAssessmentView({
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
+      {/* Info header */}
+      <div className="flex items-center gap-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Info className="h-5 w-5 text-blue-600" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="max-w-xs">This assessment helps us understand your unique rhythm and personalize your MyRhythm experience. Answer honestly - there are no right or wrong answers.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <div>
+          <h3 className="font-medium text-blue-900">Rhythm Assessment</h3>
+          <p className="text-sm text-blue-700">Help us understand your unique journey and rhythm.</p>
+        </div>
+      </div>
+
       {/* Progress Bar */}
       <div className="space-y-2">
         <div className="flex justify-between items-center text-sm text-gray-600">
@@ -97,9 +116,9 @@ export function RhythmAssessmentView({
 
       {/* Auto-progress notification */}
       {countdown && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center">
+        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center animate-pulse">
           <p className="text-green-700 font-medium">
-            Automatically moving to next section in {countdown} seconds...
+            Moving to next section in {countdown}...
           </p>
           <Button 
             variant="outline" 

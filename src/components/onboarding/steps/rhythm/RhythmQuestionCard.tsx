@@ -12,6 +12,16 @@ interface RhythmQuestionCardProps {
 }
 
 export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQuestionCardProps) {
+  
+  const handleValueChange = (newValue: string) => {
+    onValueChange(newValue);
+    
+    // Auto-advance to next question after a short delay
+    setTimeout(() => {
+      // This will trigger the parent component's auto-advance logic
+    }, 500);
+  };
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-gray-800">
@@ -20,7 +30,7 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
       
       <RadioGroup
         value={value?.toString() || ""}
-        onValueChange={onValueChange}
+        onValueChange={handleValueChange}
         className="grid grid-cols-2 md:grid-cols-4 gap-4"
       >
         {scaleLabels.map((label, index) => {
@@ -38,7 +48,7 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
                 className={cn(
                   "flex-1 p-4 text-center border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-beacon-400 hover:bg-beacon-50",
                   isSelected 
-                    ? "border-beacon-500 bg-beacon-100 text-beacon-800 shadow-md ring-2 ring-beacon-200" 
+                    ? "border-beacon-500 bg-beacon-100 text-beacon-800 shadow-md ring-2 ring-beacon-200 transform scale-105" 
                     : "border-gray-200 bg-white hover:shadow-sm"
                 )}
               >

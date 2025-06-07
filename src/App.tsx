@@ -124,6 +124,7 @@ const AppRoutes = () => {
       
       {/* Legacy redirects */}
       <Route path="/index" element={<Navigate to="/dashboard" replace />} />
+      <Route path="/home" element={<Navigate to="/" replace />} />
       
       {/* 404 Page */}
       <Route path="*" element={<NotFound />} />

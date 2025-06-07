@@ -1,8 +1,9 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Check, Star } from "lucide-react";
+import { Check, Star, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export type PlanType = "basic" | "premium" | "family";
 
@@ -70,66 +71,84 @@ export const PlanStep = ({ onComplete, selectedPlan = "basic" }: PlanStepProps) 
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Info section */}
+      <div className="flex items-center gap-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <Info className="h-5 w-5 text-blue-600" />
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="max-w-xs">Choose the plan that best fits your needs. You can change your plan at any time after signing up.</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <div>
+          <h3 className="font-medium text-blue-900">Choose Your Plan</h3>
+          <p className="text-sm text-blue-700">Select the subscription plan that best supports your recovery journey.</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {plans.map((plan) => (
           <div
             key={plan.id}
             className={cn(
-              "relative border-2 rounded-lg p-5 cursor-pointer transition-all hover:border-primary/50 hover:shadow-md",
+              "relative border-2 rounded-xl p-6 cursor-pointer transition-all duration-300 hover:shadow-lg",
               selected === plan.id 
-                ? "border-primary bg-primary/5 shadow-lg ring-2 ring-primary/20 transform scale-105" 
-                : "border-border"
+                ? "border-primary bg-primary/5 shadow-xl ring-2 ring-primary/20 transform scale-105" 
+                : "border-gray-200 hover:border-primary/30"
             )}
             onClick={() => handleSelectPlan(plan.id)}
           >
             {plan.popular && (
-              <span className="absolute -top-3 right-4 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1">
+              <span className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground text-xs px-3 py-1 rounded-full font-medium flex items-center gap-1">
                 <Star className="h-3 w-3" />
                 POPULAR
               </span>
             )}
             
             {selected === plan.id && (
-              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full p-1">
+              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground rounded-full p-2 shadow-lg">
                 <Check className="h-4 w-4" />
               </div>
             )}
             
-            <h3 className={cn(
-              "font-semibold text-lg",
-              selected === plan.id && "text-primary"
-            )}>
-              {plan.name}
-            </h3>
-            <p className="text-muted-foreground text-sm">{plan.description}</p>
-            
-            <div className="mt-4">
+            <div className="text-center mb-4">
+              <h3 className={cn(
+                "font-bold text-xl mb-2",
+                selected === plan.id && "text-primary"
+              )}>
+                {plan.name}
+              </h3>
+              <p className="text-muted-foreground text-sm mb-4">{plan.description}</p>
+              
               <div className={cn(
-                "text-2xl font-bold",
+                "text-3xl font-bold mb-1",
                 selected === plan.id && "text-primary"
               )}>
                 {plan.price}
                 <span className="text-base font-normal text-muted-foreground">/month</span>
               </div>
               {plan.trialDays && (
-                <div className="text-sm text-muted-foreground">Free for {plan.trialDays} days</div>
+                <div className="text-sm text-green-600 font-medium">Free for {plan.trialDays} days</div>
               )}
             </div>
             
-            <ul className="mt-4 space-y-2">
+            <ul className="space-y-3 mb-6">
               {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-center gap-2">
+                <li key={index} className="flex items-start gap-2">
                   <Check className={cn(
-                    "h-4 w-4 flex-shrink-0",
+                    "h-4 w-4 flex-shrink-0 mt-0.5",
                     selected === plan.id ? "text-primary" : "text-green-500"
                   )} />
-                  <span className="text-sm">{feature}</span>
+                  <span className="text-sm leading-relaxed">{feature}</span>
                 </li>
               ))}
             </ul>
             
             {selected === plan.id && (
-              <div className="mt-4 bg-primary text-primary-foreground px-3 py-2 rounded-md text-center font-medium text-sm">
+              <div className="bg-primary text-primary-foreground px-4 py-3 rounded-lg text-center font-medium text-sm">
                 ✓ Selected Plan
               </div>
             )}
@@ -137,8 +156,12 @@ export const PlanStep = ({ onComplete, selectedPlan = "basic" }: PlanStepProps) 
         ))}
       </div>
       
-      <div className="flex justify-end">
-        <Button onClick={() => onComplete(selected)} className="gap-2 bg-primary hover:bg-primary/90">
+      <div className="flex justify-center pt-4">
+        <Button 
+          onClick={() => onComplete(selected)} 
+          size="lg"
+          className="px-8 py-3 bg-primary hover:bg-primary/90"
+        >
           Continue with {selected === 'basic' ? 'Basic' : selected === 'premium' ? 'Premium' : 'Family'} Plan
         </Button>
       </div>

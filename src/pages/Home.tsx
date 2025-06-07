@@ -3,8 +3,8 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const Home = () => {
-  // Redirect to dashboard since Brain Recovery is removed
-  return <Navigate to="/dashboard" replace />;
+  // Redirect to landing page to show the original content
+  return <Navigate to="/" replace />;
 };
 
 export default Home;
