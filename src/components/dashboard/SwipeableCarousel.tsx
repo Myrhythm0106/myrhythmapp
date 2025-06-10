@@ -7,31 +7,65 @@ import { useGesture } from "@use-gesture/react";
 interface SwipeableCarouselProps {
   items: React.ReactNode[];
   title?: string;
+  enableAutoScroll?: boolean;
+  scrollInterval?: number;
 }
 
-export function SwipeableCarousel({ items, title }: SwipeableCarouselProps) {
+export function SwipeableCarousel({ 
+  items, 
+  title, 
+  enableAutoScroll = false, 
+  scrollInterval = 5000 
+}: SwipeableCarouselProps) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const isMobile = useIsMobile();
   const [carouselApi, setCarouselApi] = React.useState<any>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
-  // Enhanced gesture support
+  // Auto-scroll functionality
+  React.useEffect(() => {
+    if (!enableAutoScroll || !carouselApi || isDragging) return;
+
+    const interval = setInterval(() => {
+      if (currentSlide >= items.length - 1) {
+        carouselApi.scrollTo(0);
+      } else {
+        carouselApi.scrollNext();
+      }
+    }, scrollInterval);
+
+    return () => clearInterval(interval);
+  }, [enableAutoScroll, carouselApi, currentSlide, items.length, scrollInterval, isDragging]);
+
+  // Enhanced gesture support with momentum and snap
   const bind = useGesture({
-    onDrag: ({ direction: [dx], dragging, cancel }) => {
+    onDrag: ({ direction: [dx], velocity: [vx], dragging, cancel }) => {
       if (!dragging || !carouselApi) return;
       
-      if (dx > 0) {
-        carouselApi.prev();
-      } else if (dx < 0) {
-        carouselApi.next();
-      }
+      setIsDragging(dragging);
       
-      cancel();
+      // Enhanced swipe detection with velocity consideration
+      const threshold = isMobile ? 50 : 100;
+      const velocityThreshold = 0.5;
+      
+      if (Math.abs(vx) > velocityThreshold || Math.abs(dx) > threshold) {
+        if (dx > 0 || vx > velocityThreshold) {
+          carouselApi.scrollPrev();
+        } else if (dx < 0 || vx < -velocityThreshold) {
+          carouselApi.scrollNext();
+        }
+        cancel();
+      }
     },
+    onDragEnd: () => {
+      setIsDragging(false);
+    }
   }, {
     drag: {
       axis: "x",
       filterTaps: true,
       threshold: 10,
+      rubberband: true,
     }
   });
   
@@ -41,39 +75,58 @@ export function SwipeableCarousel({ items, title }: SwipeableCarouselProps) {
     <div className="space-y-3">
       {title && <h2 className="text-lg font-semibold">{title}</h2>}
 
-      <div {...gestureProps} className="touch-pan-y">
-        <Carousel setApi={setCarouselApi} className="w-full" 
+      <div 
+        {...gestureProps} 
+        className="touch-pan-y select-none"
+        style={{ touchAction: 'pan-y' }}
+      >
+        <Carousel 
+          setApi={setCarouselApi} 
+          className="w-full" 
           onSelect={() => {
             if (carouselApi) {
               setCurrentSlide(carouselApi.selectedScrollSnap());
             }
           }}
+          opts={{
+            align: "start",
+            loop: true,
+            skipSnaps: false,
+            dragFree: false,
+          }}
         >
-          <CarouselContent>
+          <CarouselContent className="-ml-2 md:-ml-4">
             {items.map((item, index) => (
-              <CarouselItem key={index} className={isMobile ? "w-full" : "lg:basis-1/3 md:basis-1/2"}>
-                {item}
+              <CarouselItem 
+                key={index} 
+                className={`pl-2 md:pl-4 ${isMobile ? "w-full" : "lg:basis-1/3 md:basis-1/2"}`}
+              >
+                <div className="transition-transform duration-200 hover:scale-[1.02]">
+                  {item}
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
           
           {!isMobile && (
             <>
-              <CarouselPrevious className="-left-4" />
-              <CarouselNext className="-right-4" />
+              <CarouselPrevious className="-left-4 hover:scale-110 transition-transform" />
+              <CarouselNext className="-right-4 hover:scale-110 transition-transform" />
             </>
           )}
           
-          {/* Pagination dots for mobile */}
+          {/* Enhanced pagination dots for mobile */}
           {isMobile && items.length > 1 && (
-            <div className="flex justify-center mt-4 space-x-1">
+            <div className="flex justify-center mt-4 space-x-2">
               {items.map((_, index) => (
                 <button
                   key={index}
                   aria-label={`Go to slide ${index + 1}`}
                   onClick={() => carouselApi?.scrollTo(index)}
-                  className={`h-2 w-2 rounded-full transition-colors ${
-                    currentSlide === index ? "bg-primary" : "bg-muted"
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    currentSlide === index 
+                      ? "w-6 bg-primary" 
+                      : "w-2 bg-muted hover:bg-muted-foreground/50"
                   }`}
                 />
               ))}
@@ -83,9 +136,10 @@ export function SwipeableCarousel({ items, title }: SwipeableCarouselProps) {
       </div>
       
       {isMobile && items.length > 1 && (
-        <p className="text-xs text-center text-muted-foreground mt-2">
-          Swipe left or right to view more
-        </p>
+        <div className="flex items-center justify-between text-xs text-muted-foreground mt-2">
+          <p>Swipe left or right to view more</p>
+          <p className="font-medium">{currentSlide + 1} of {items.length}</p>
+        </div>
       )}
     </div>
   );

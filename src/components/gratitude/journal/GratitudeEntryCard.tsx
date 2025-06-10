@@ -1,108 +1,209 @@
 
 import React from "react";
-import { format } from "date-fns";
-import { HeartHandshake, MessageCircle, Share2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { SwipeableContainer } from "@/components/ui/SwipeableContainer";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { GratitudeEntry } from "../GratitudePrompt";
+import { 
+  Share2, 
+  Eye, 
+  Calendar, 
+  Heart, 
+  Trash2, 
+  Edit,
+  MessageSquare 
+} from "lucide-react";
+import { toast } from "sonner";
 
 interface GratitudeEntryCardProps {
   entry: GratitudeEntry;
   onSelectEntry: (entry: GratitudeEntry) => void;
   onShareEntry: (entry: GratitudeEntry) => void;
+  onDeleteEntry?: (entry: GratitudeEntry) => void;
+  onEditEntry?: (entry: GratitudeEntry) => void;
 }
 
 export function GratitudeEntryCard({ 
   entry, 
   onSelectEntry, 
-  onShareEntry 
+  onShareEntry,
+  onDeleteEntry,
+  onEditEntry
 }: GratitudeEntryCardProps) {
-  const getPromptTypeLabel = (type: string) => {
+  const isMobile = useIsMobile();
+
+  const getPromptTypeColor = (type: string) => {
     switch (type) {
-      case "fitness": return "Fitness";
-      case "mindfulness": return "Mindfulness";
-      case "social": return "Social";
-      default: return "General";
-    }
-  };
-  
-  const getMoodEmoji = (score: number) => {
-    switch (score) {
-      case 1: return "😔";
-      case 2: return "😐";
-      case 3: return "🙂";
-      case 4: return "😊";
-      case 5: return "😄";
-      default: return "🙂";
+      case "fitness": return "bg-blue-100 text-blue-800";
+      case "mindfulness": return "bg-green-100 text-green-800";
+      case "social": return "bg-purple-100 text-purple-800";
+      case "general": return "bg-amber-100 text-amber-800";
+      default: return "bg-gray-100 text-gray-800";
     }
   };
 
-  // Format the date to show date and time
-  const formattedDate = format(new Date(entry.date), "MMM d, yyyy 'at' h:mm a");
+  const getPromptTypeIcon = (type: string) => {
+    switch (type) {
+      case "fitness": return "💪";
+      case "mindfulness": return "🧘";
+      case "social": return "👥";
+      case "general": return "✨";
+      default: return "📝";
+    }
+  };
+
+  const handleDelete = () => {
+    if (onDeleteEntry) {
+      onDeleteEntry(entry);
+      toast.success("Gratitude entry deleted", { duration: 2000 });
+    }
+  };
+
+  const handleEdit = () => {
+    if (onEditEntry) {
+      onEditEntry(entry);
+    } else {
+      onSelectEntry(entry);
+    }
+  };
+
+  const handleShare = () => {
+    onShareEntry(entry);
+    toast.success("Sharing options opened", { duration: 2000 });
+  };
 
   return (
-    <Card className="shadow-sm hover:shadow-md transition-shadow">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-center">
-          <div className="flex gap-2 items-center">
-            <HeartHandshake className="h-5 w-5 text-primary" />
-            <Badge variant="outline">{getPromptTypeLabel(entry.promptType)}</Badge>
-            {entry.activity && (
-              <Badge variant="secondary">{entry.activity}</Badge>
+    <SwipeableContainer
+      enableHorizontalSwipe={isMobile}
+      onSwipeLeft={{
+        label: "Delete",
+        icon: <Trash2 className="h-4 w-4" />,
+        color: "#ef4444",
+        action: handleDelete
+      }}
+      onSwipeRight={{
+        label: "Share",
+        icon: <Share2 className="h-4 w-4" />,
+        color: "#22c55e", 
+        action: handleShare
+      }}
+      className="w-full"
+    >
+      <Card className="cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+        <CardContent className="p-4">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{getPromptTypeIcon(entry.promptType)}</span>
+              <Badge 
+                variant="secondary" 
+                className={getPromptTypeColor(entry.promptType)}
+              >
+                {entry.promptType}
+              </Badge>
+            </div>
+            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Calendar className="h-3 w-3" />
+              {new Date(entry.date).toLocaleDateString()}
+            </div>
+          </div>
+          
+          <div className="space-y-3">
+            {entry.prompt && (
+              <div className="text-sm text-muted-foreground italic border-l-2 border-muted pl-3">
+                "{entry.prompt}"
+              </div>
+            )}
+            
+            <p 
+              className="text-sm font-medium leading-relaxed cursor-pointer"
+              onClick={() => onSelectEntry(entry)}
+            >
+              {entry.gratitudeText}
+            </p>
+            
+            {entry.tags && entry.tags.length > 0 && (
+              <div className="flex flex-wrap gap-1">
+                {entry.tags.slice(0, 3).map((tag, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    #{tag}
+                  </Badge>
+                ))}
+                {entry.tags.length > 3 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{entry.tags.length - 3} more
+                  </Badge>
+                )}
+              </div>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            <span title={`Mood: ${entry.moodScore}/5`} className="text-xl">
-              {getMoodEmoji(entry.moodScore)}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {formattedDate}
-            </span>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-base font-semibold mb-2">{entry.gratitudeText}</p>
-        
-        {/* Display the WHY field if available */}
-        {entry.whyGrateful && (
-          <div className="mt-2 mb-3">
-            <p className="text-sm text-muted-foreground">Why I'm grateful:</p>
-            <p className="text-sm bg-muted/20 p-2 rounded-md">{entry.whyGrateful}</p>
-          </div>
-        )}
-        
-        <div className="flex flex-wrap gap-1 mt-2">
-          {entry.tags.map(tag => (
-            <Badge key={tag} variant="outline" className="bg-primary/5">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        
-        <div className="flex justify-between items-center mt-4">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="text-muted-foreground"
-            onClick={() => onSelectEntry(entry)}
-          >
-            <MessageCircle className="h-4 w-4 mr-1" />
-            View details
-          </Button>
           
-          <Button
-            variant="ghost"
-            size="sm"
-            className={entry.isShared ? "text-primary" : "text-muted-foreground"}
-            onClick={() => onShareEntry(entry)}
-          >
-            <Share2 className="h-4 w-4 mr-1" />
-            {entry.isShared ? "Shared" : "Private"}
-          </Button>
+          <div className="flex items-center justify-between mt-4 pt-3 border-t">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+              {entry.mood && (
+                <div className="flex items-center gap-1">
+                  <Heart className="h-3 w-3" />
+                  <span className="capitalize">{entry.mood}</span>
+                </div>
+              )}
+              {entry.linkedActivity && (
+                <div className="flex items-center gap-1">
+                  <MessageSquare className="h-3 w-3" />
+                  <span>{entry.linkedActivity}</span>
+                </div>
+              )}
+            </div>
+            
+            {!isMobile && (
+              <div className="flex gap-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectEntry(entry);
+                  }}
+                  className="h-7 w-7 p-0"
+                >
+                  <Eye className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleEdit();
+                  }}
+                  className="h-7 w-7 p-0"
+                >
+                  <Edit className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleShare();
+                  }}
+                  className="h-7 w-7 p-0"
+                >
+                  <Share2 className="h-3 w-3" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Mobile swipe hint */}
+      {isMobile && (
+        <div className="text-center mt-1">
+          <p className="text-xs text-muted-foreground">
+            💡 Swipe right to share • Swipe left to delete
+          </p>
         </div>
-      </CardContent>
-    </Card>
+      )}
+    </SwipeableContainer>
   );
 }
