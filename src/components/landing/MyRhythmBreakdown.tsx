@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -157,8 +158,19 @@ export function MyRhythmBreakdown() {
           ))}
         </div>
         
+        {/* Register Now button after What MyRhythm Means To You */}
+        <div className="mt-12 text-center">
+          <Button 
+            size="lg" 
+            className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground mb-8" 
+            onClick={() => navigate("/onboarding")}
+          >
+            Register Now
+          </Button>
+        </div>
+        
         {/* Call to Action */}
-        <div className="mt-16 text-center bg-primary/5 rounded-2xl p-8">
+        <div className="mt-8 text-center bg-primary/5 rounded-2xl p-8">
           <h3 className="text-2xl font-bold mb-4">Ready to Create Your Rhythm?</h3>
           <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
             Start your personalized journey today. Our assessment will help you understand which 

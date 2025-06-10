@@ -71,13 +71,6 @@ export function WhyItHelpsSection() {
             />
           ))}
         </div>
-        
-        {/* Register Now button */}
-        <div className="mt-12 text-center">
-          <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => navigate("/onboarding")}>
-            Register Now
-          </Button>
-        </div>
       </div>
     </section>
   );

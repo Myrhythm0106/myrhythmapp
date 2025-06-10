@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -118,6 +117,17 @@ export function MyRhythmIntro() {
             <h4 className="font-semibold mb-2">Self-Compassion</h4>
             <p className="text-sm text-muted-foreground">Progress over perfection, always at your own pace</p>
           </div>
+        </div>
+
+        {/* Register Now button before Why It Works */}
+        <div className="text-center mb-12">
+          <Button 
+            size="lg" 
+            className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground"
+            onClick={() => navigate("/onboarding")}
+          >
+            Register Now
+          </Button>
         </div>
 
         {/* Why It Works */}
