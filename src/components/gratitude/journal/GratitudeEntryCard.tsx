@@ -110,18 +110,18 @@ export function GratitudeEntryCard({
           </div>
           
           <div className="space-y-3">
-            {entry.prompt && (
-              <div className="text-sm text-muted-foreground italic border-l-2 border-muted pl-3">
-                "{entry.prompt}"
-              </div>
-            )}
-            
             <p 
               className="text-sm font-medium leading-relaxed cursor-pointer"
               onClick={() => onSelectEntry(entry)}
             >
               {entry.gratitudeText}
             </p>
+            
+            {entry.whyGrateful && (
+              <div className="text-sm text-muted-foreground italic border-l-2 border-muted pl-3">
+                Why: {entry.whyGrateful}
+              </div>
+            )}
             
             {entry.tags && entry.tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
@@ -141,16 +141,16 @@ export function GratitudeEntryCard({
           
           <div className="flex items-center justify-between mt-4 pt-3 border-t">
             <div className="flex items-center gap-4 text-xs text-muted-foreground">
-              {entry.mood && (
+              {entry.moodScore && (
                 <div className="flex items-center gap-1">
                   <Heart className="h-3 w-3" />
-                  <span className="capitalize">{entry.mood}</span>
+                  <span>Mood: {entry.moodScore}/5</span>
                 </div>
               )}
-              {entry.linkedActivity && (
+              {entry.activity && (
                 <div className="flex items-center gap-1">
                   <MessageSquare className="h-3 w-3" />
-                  <span>{entry.linkedActivity}</span>
+                  <span>{entry.activity}</span>
                 </div>
               )}
             </div>

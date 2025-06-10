@@ -35,6 +35,7 @@ export function SwipeableContainer({
   const [isRefreshing, setIsRefreshing] = React.useState(false);
   const [swipeProgress, setSwipeProgress] = React.useState(0);
   const [pullProgress, setPullProgress] = React.useState(0);
+  const [isDragging, setIsDragging] = React.useState(false);
 
   const handleRefresh = useCallback(async () => {
     if (onPullToRefresh && !isRefreshing) {
@@ -51,6 +52,8 @@ export function SwipeableContainer({
   const bind = useGesture({
     onDrag: ({ direction: [dx, dy], distance: [distanceX, distanceY], dragging, cancel }) => {
       if (!isMobile) return;
+
+      setIsDragging(dragging);
 
       // Handle horizontal swipe actions
       if (enableHorizontalSwipe && Math.abs(dx) > Math.abs(dy)) {
@@ -94,7 +97,7 @@ export function SwipeableContainer({
       className={`relative overflow-hidden ${className}`}
       style={{
         transform: enablePullToRefresh ? `translateY(${pullProgress * 20}px)` : undefined,
-        transition: !gestureProps.dragging ? 'transform 0.3s ease-out' : undefined
+        transition: !isDragging ? 'transform 0.3s ease-out' : undefined
       }}
     >
       {/* Pull to refresh indicator */}
