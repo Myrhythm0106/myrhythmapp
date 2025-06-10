@@ -37,7 +37,7 @@ export function HeroSection() {
           <h2 className="text-xl font-medium text-primary md:text-base">
         </h2>
           
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">From overwhelm and mental chaos to daily wins and peace of mind. Be empowered as your confidence grows, momentum builds, and structure becomes your strength. You never walk alone, with MyRhythm by your side.</p>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">From overwhelm and memory challenges to daily wins and peace of mind. Be empowered as your confidence grows, momentum builds, and structure becomes your strength. You never walk alone, with MyRhythm by your side.</p>
           
           <p className="text-lg md:text-xl max-w-2xl mx-auto leading-relaxed text-annabel-600">
         </p>
