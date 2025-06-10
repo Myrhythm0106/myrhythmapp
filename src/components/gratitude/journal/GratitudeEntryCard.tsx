@@ -48,6 +48,9 @@ export function GratitudeEntryCard({
     toast.success("Sharing options opened", { duration: 2000 });
   };
 
+  // Convert date to string format for EntryMetadata
+  const dateString = entry.date instanceof Date ? entry.date.toISOString() : entry.date;
+
   return (
     <SwipeableContainer
       enableHorizontalSwipe={isMobile}
@@ -69,7 +72,7 @@ export function GratitudeEntryCard({
         <CardContent className="p-4">
           <EntryMetadata 
             promptType={entry.promptType}
-            date={entry.date}
+            date={dateString}
           />
           
           <EntryContent 

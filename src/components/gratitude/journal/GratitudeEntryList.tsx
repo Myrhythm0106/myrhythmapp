@@ -1,7 +1,7 @@
 
 import React from "react";
 import { GratitudeEntry } from "../GratitudePrompt";
-import { GratitudeEntryCard } from "./GratitudeEntryCard";
+import { EntryListContainer } from "./components/EntryListContainer";
 import { EmptyJournalMessage } from "./EmptyJournalMessage";
 
 interface GratitudeEntryListProps {
@@ -22,15 +22,10 @@ export function GratitudeEntryList({
   }
 
   return (
-    <div className="space-y-4">
-      {entries.map(entry => (
-        <GratitudeEntryCard 
-          key={entry.id} 
-          entry={entry} 
-          onSelectEntry={onSelectEntry}
-          onShareEntry={onShareEntry}
-        />
-      ))}
-    </div>
+    <EntryListContainer
+      entries={entries}
+      onSelectEntry={onSelectEntry}
+      onShareEntry={onShareEntry}
+    />
   );
 }
