@@ -11,6 +11,7 @@ import { EncouragingResultsDisplay } from "./EncouragingResultsDisplay";
 import { FocusAreaGoalTemplates } from "./FocusAreaGoalTemplates";
 import { QuickDashboardSetup } from "./QuickDashboardSetup";
 import { PostAssessmentChoiceScreen } from "./PostAssessmentChoiceScreen";
+import { LifeManagementSetupWizard } from "./LifeManagementSetupWizard";
 import { EnhancedGoalCreationWizard } from "../../../goals/EnhancedGoalCreationWizard";
 import { toast } from "sonner";
 
@@ -19,7 +20,7 @@ interface PostAssessmentFlowProps {
   onComplete: () => void;
 }
 
-type FlowStep = "results" | "choice" | "user-guide" | "goal-creation" | "complete";
+type FlowStep = "results" | "choice" | "user-guide" | "goal-creation" | "life-management-setup" | "complete";
 
 export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessmentFlowProps) {
   const navigate = useNavigate();
@@ -43,6 +44,14 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
     setCurrentStep("goal-creation");
   };
 
+  const handleLifeManagementSetup = () => {
+    setCurrentStep("life-management-setup");
+  };
+
+  const handleBackToChoice = () => {
+    setCurrentStep("choice");
+  };
+
   const handleGoalCreationComplete = () => {
     // Store completion data
     localStorage.setItem("myrhythm_initial_setup_complete", "true");
@@ -50,6 +59,21 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
     
     toast.success("Welcome to Your Personalized MyRhythm! 🎉", {
       description: "Your first goal has been created and your journey begins now.",
+      duration: 5000
+    });
+    
+    // Navigate directly to dashboard
+    navigate("/dashboard");
+    onComplete();
+  };
+
+  const handleLifeManagementComplete = () => {
+    // Store completion data for life management setup
+    localStorage.setItem("myrhythm_life_management_setup_complete", "true");
+    localStorage.setItem("myrhythm_foundation_established", "true");
+    
+    toast.success("Your Life Management Foundation is Complete! 🌟", {
+      description: "Your personalized MyRhythm system is ready and configured for success.",
       duration: 5000
     });
     
@@ -68,6 +92,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
           <PostAssessmentChoiceScreen
             onExploreGuide={handleExploreGuide}
             onStartGoals={handleStartGoals}
+            onLifeManagementSetup={handleLifeManagementSetup}
             assessmentResult={assessmentResult}
           />
         );
@@ -77,6 +102,15 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
           <EnhancedGoalCreationWizard
             onComplete={handleGoalCreationComplete}
             focusArea={assessmentResult.focusArea}
+          />
+        );
+
+      case "life-management-setup":
+        return (
+          <LifeManagementSetupWizard
+            onComplete={handleLifeManagementComplete}
+            onBack={handleBackToChoice}
+            assessmentResult={assessmentResult}
           />
         );
         
