@@ -7,7 +7,9 @@ import {
   Brain, 
   Users, 
   Home,
-  ArrowLeft
+  ArrowLeft,
+  Repeat,
+  Target
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +19,8 @@ import { GuideHeader } from "./components/GuideHeader";
 import { IntroSection } from "./components/IntroSection";
 import { DashboardGuide } from "./components/DashboardGuide";
 import { CalendarGuide } from "./components/CalendarGuide";
+import { RecurringEventsGuide } from "./components/RecurringEventsGuide";
+import { BrainGamesGuide } from "./components/BrainGamesGuide";
 import { HealthTrackingGuide } from "./components/HealthTrackingGuide";
 import { BrainRecoveryGuide } from "./components/BrainRecoveryGuide";
 import { CommunityGuide } from "./components/CommunityGuide";
@@ -30,7 +34,7 @@ export function UserGuide() {
   const navigate = useNavigate();
   
   const handleGoBack = () => {
-    navigate(-1); // This will go back to the previous page in the history
+    navigate(-1);
   };
 
   const handleGoToCalendar = () => {
@@ -73,13 +77,17 @@ export function UserGuide() {
               <Calendar className="w-4 h-4" />
               <span>Calendar</span>
             </TabsTrigger>
+            <TabsTrigger value="recurring" className="flex items-center gap-1">
+              <Repeat className="w-4 h-4" />
+              <span>Recurring</span>
+            </TabsTrigger>
+            <TabsTrigger value="brain-games" className="flex items-center gap-1">
+              <Brain className="w-4 h-4" />
+              <span>Brain Games</span>
+            </TabsTrigger>
             <TabsTrigger value="health" className="flex items-center gap-1">
               <HeartPulse className="w-4 h-4" />
               <span>Health</span>
-            </TabsTrigger>
-            <TabsTrigger value="brain" className="flex items-center gap-1">
-              <Brain className="w-4 h-4" />
-              <span>Brain</span>
             </TabsTrigger>
             <TabsTrigger value="community" className="flex items-center gap-1">
               <Users className="w-4 h-4" />
@@ -95,12 +103,16 @@ export function UserGuide() {
             <CalendarGuide />
           </TabsContent>
           
-          <TabsContent value="health" className="space-y-4 mt-4">
-            <HealthTrackingGuide />
+          <TabsContent value="recurring" className="space-y-4 mt-4">
+            <RecurringEventsGuide />
           </TabsContent>
           
-          <TabsContent value="brain" className="space-y-4 mt-4">
-            <BrainRecoveryGuide />
+          <TabsContent value="brain-games" className="space-y-4 mt-4">
+            <BrainGamesGuide />
+          </TabsContent>
+          
+          <TabsContent value="health" className="space-y-4 mt-4">
+            <HealthTrackingGuide />
           </TabsContent>
           
           <TabsContent value="community" className="space-y-4 mt-4">

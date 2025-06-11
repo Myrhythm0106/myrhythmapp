@@ -6,7 +6,10 @@ import {
   Users,
   Home,
   Info,
-  Calendar
+  Calendar,
+  Brain,
+  Target,
+  Repeat
 } from "lucide-react";
 
 export interface TutorialStep {
@@ -19,43 +22,49 @@ export interface TutorialStep {
 export const tutorialSteps: TutorialStep[] = [
   {
     title: "Welcome to MyRhythm",
-    description: "Your personal brain health companion. Let's explore how MyRhythm can help support your journey.",
+    description: "Your personal brain health companion. Let's explore how MyRhythm can help support your journey to recovery and well-being.",
     icon: <Heart className="h-12 w-12 text-primary" />,
     video: "welcome-intro.mp4"
   },
   {
-    title: "Dashboard",
-    description: "Your personalized hub shows your key health metrics, upcoming events, and quick access to resources when you need them most.",
+    title: "Dashboard Overview",
+    description: "Your personalized hub shows key health metrics, upcoming events, mood tracking, and quick access to all features when you need them most.",
     icon: <Home className="h-12 w-12 text-primary" />,
     video: "dashboard-overview.mp4"
   },
   {
-    title: "Symptom Tracking",
-    description: "Record symptoms daily to identify patterns. Get insights into triggers and share reports with your healthcare team.",
+    title: "Health & Symptom Tracking",
+    description: "Record symptoms daily, track your mood, and practice gratitude. Get insights into patterns and share reports with your healthcare team.",
     icon: <HeartPulse className="h-12 w-12 text-primary" />,
     video: "symptom-tracking.mp4"
   },
   {
-    title: "Calendar",
-    description: "Never miss an appointment or medication. Set reminders, manage your schedule, and keep your support team informed.",
+    title: "Smart Calendar & Recurring Events",
+    description: "Never miss appointments or medications. Set up recurring therapy sessions, create reminders, and link events to your recovery goals.",
     icon: <Calendar className="h-12 w-12 text-primary" />,
     video: "calendar-usage.mp4"
   },
   {
-    title: "Community",
-    description: "Connect with others on similar journeys. Share experiences, ask questions, and learn from both peers and experts.",
+    title: "Goal Setting & Progress Tracking",
+    description: "Set meaningful recovery goals, break them into manageable steps, and track your progress with visual indicators and celebrations.",
+    icon: <Target className="h-12 w-12 text-primary" />,
+    video: "goals-tracking.mp4"
+  },
+  {
+    title: "Brain Games & Cognitive Training",
+    description: "Strengthen your cognitive abilities with specially designed brain games. Track your progress and adapt difficulty levels to your needs.",
+    icon: <Brain className="h-12 w-12 text-primary" />,
+    video: "brain-games.mp4"
+  },
+  {
+    title: "Community & Support Circle",
+    description: "Connect with others on similar journeys. Add family, friends, and caregivers to coordinate care and receive meaningful support.",
     icon: <Users className="h-12 w-12 text-primary" />,
     video: "community-connections.mp4"
   },
   {
-    title: "My Support Circle",
-    description: "Add family members, friends, or caregivers to your personal network. Share updates and coordinate care seamlessly.",
-    icon: <Heart className="h-12 w-12 text-primary" />,
-    video: "support-circle.mp4"
-  },
-  {
-    title: "Ready to Begin?",
-    description: "You can revisit these tutorials anytime in the 'Useful Info' section. We're excited to be part of your health journey!",
+    title: "Ready to Begin Your Journey?",
+    description: "You can revisit these tutorials anytime in the 'Useful Info' section. We're excited to be part of your health journey and recovery!",
     icon: <Info className="h-12 w-12 text-primary" />,
     video: "getting-started.mp4"
   }
