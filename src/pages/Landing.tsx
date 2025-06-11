@@ -12,6 +12,10 @@ import LandingFooter from "@/components/landing/LandingFooter";
 const Landing = () => {
   const navigate = useNavigate();
   
+  const handleGetStarted = () => {
+    navigate("/onboarding");
+  };
+  
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
       <ScrollArea className="h-screen">
@@ -19,7 +23,7 @@ const Landing = () => {
         <MyRhythmIntro />
         <MyRhythmBreakdown />
         <WhyItHelpsSection />
-        <CallToAction onGetStarted={() => {}} />
+        <CallToAction onGetStarted={handleGetStarted} />
         <LandingFooter />
       </ScrollArea>
     </div>

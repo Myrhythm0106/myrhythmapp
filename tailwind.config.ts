@@ -62,6 +62,18 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
+				beacon: {
+					50: '#f0f7ff',
+					100: '#e0effe',
+					200: '#b9dffb',
+					300: '#7cc2f7',
+					400: '#36a5f0',
+					500: '#1186d9',
+					600: '#0a6bb8',
+					700: '#0d5695',
+					800: '#12487b',
+					900: '#143d67',
+				},
 				annabel: {
 					50: '#fcf9f7',
 					100: '#f7efe9',
