@@ -61,9 +61,7 @@ export function SecurityEnhancedSignUpForm() {
         return;
       }
 
-      await signUp(data.email, data.password, {
-        name: data.name.trim()
-      });
+      await signUp(data.email, data.password, data.name.trim());
       
       toast.success("Account created successfully! Please check your email to verify your account.");
     } catch (error: any) {

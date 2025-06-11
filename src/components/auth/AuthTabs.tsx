@@ -3,8 +3,8 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, UserPlus, LogIn } from 'lucide-react';
-import { SignInForm } from './SignInForm';
-import { SignUpForm } from './SignUpForm';
+import SignInForm from './SignInForm';
+import SignUpForm from './SignUpForm';
 
 interface AuthTabsProps {
   onForgotPassword: () => void;
@@ -42,17 +42,11 @@ export const AuthTabs = ({
             </TabsList>
 
             <TabsContent value="signin">
-              <SignInForm
-                onForgotPassword={onForgotPassword}
-                onResendVerification={onResendVerification}
-                onSuccess={onSignInSuccess}
-              />
+              <SignInForm />
             </TabsContent>
 
             <TabsContent value="signup">
-              <SignUpForm
-                onSuccess={onSignUpSuccess}
-              />
+              <SignUpForm />
             </TabsContent>
           </Tabs>
         </CardContent>

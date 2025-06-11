@@ -16,7 +16,7 @@ export const sanitizeHtml = (input: string): string => {
 export const sanitizeUserInput = (input: string): string => {
   return input
     .replace(/['"\\]/g, '') // Remove quotes and backslashes
-    .replace(/[;--]/g, '') // Remove SQL injection characters
+    .replace(/[;\-]{2,}/g, '') // Remove SQL injection patterns
     .trim()
     .substring(0, 1000); // Limit length
 };
@@ -24,7 +24,7 @@ export const sanitizeUserInput = (input: string): string => {
 // Sanitize file names
 export const sanitizeFileName = (fileName: string): string => {
   return fileName
-    .replace(/[^a-zA-Z0-9.-]/g, '_') // Replace special chars with underscore
+    .replace(/[^a-zA-Z0-9.\-]/g, '_') // Replace special chars with underscore
     .replace(/\.{2,}/g, '.') // Replace multiple dots with single dot
     .substring(0, 255); // Limit length
 };
