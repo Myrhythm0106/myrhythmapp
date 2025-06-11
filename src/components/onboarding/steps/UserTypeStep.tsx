@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Target, Users, Heart, ArrowRight, CheckCircle2, ChevronDown, ChevronUp } from "lucide-react";
+import { Brain, Target, Users, Heart, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export type UserType = 
   | "brain-injury-recovery" 
@@ -32,25 +33,23 @@ interface UserTypeStepProps {
 export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) => {
   // Pre-select brain injury recovery as the default
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || "brain-injury-recovery");
-  const [showOtherPaths, setShowOtherPaths] = useState(false);
 
-  const primaryUserType: UserTypeOption = {
-    id: "brain-injury-recovery",
-    title: "Brain Injury Recovery",
-    subtitle: "TBI, ABI, Stroke, Concussion",
-    description: "Comprehensive support for your recovery journey with specialized tools for rehabilitation and progress tracking.",
-    icon: <Brain className="h-8 w-8 text-primary" />,
-    badge: "Our Primary Mission",
-    features: [
-      "MYRHYTHM framework assessment",
-      "Recovery-focused goal setting", 
-      "Symptom and progress tracking",
-      "Specialized brain training games",
-      "Recovery community support"
-    ]
-  };
-
-  const otherUserTypes: UserTypeOption[] = [
+  const userTypes: UserTypeOption[] = [
+    {
+      id: "brain-injury-recovery",
+      title: "Brain Injury Recovery",
+      subtitle: "TBI, ABI, Stroke, Concussion",
+      description: "Comprehensive support for your recovery journey with specialized tools for rehabilitation and progress tracking.",
+      icon: <Brain className="h-8 w-8 text-primary" />,
+      badge: "Our Primary Mission",
+      features: [
+        "MYRHYTHM framework assessment",
+        "Recovery-focused goal setting", 
+        "Symptom and progress tracking",
+        "Specialized brain training games",
+        "Recovery community support"
+      ]
+    },
     {
       id: "cognitive-optimization",
       title: "Cognitive Optimization",
@@ -116,137 +115,63 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
         </p>
       </div>
 
-      {/* Primary Mission - Brain Injury Recovery */}
-      <div className="space-y-3">
-        <h3 className="text-lg font-semibold text-center">Our Primary Mission</h3>
-        <Card
-          onClick={() => handleSelectType(primaryUserType.id)}
-          className={`cursor-pointer transition-all hover:shadow-md border-2 ${
-            selectedType === primaryUserType.id
-              ? "border-primary shadow-lg bg-primary/5"
-              : "border-primary/30 hover:border-primary/50"
-          }`}
-        >
-          <CardHeader className="pb-3">
-            <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3">
-                <div className="rounded-full bg-primary/10 p-2">
-                  {primaryUserType.icon}
-                </div>
-                <div>
-                  <CardTitle className="text-lg">{primaryUserType.title}</CardTitle>
-                  <CardDescription className="text-sm font-medium">
-                    {primaryUserType.subtitle}
-                  </CardDescription>
-                </div>
-              </div>
-              {selectedType === primaryUserType.id && (
-                <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
-              )}
-            </div>
-            {primaryUserType.badge && (
-              <Badge variant="secondary" className="w-fit bg-primary/10 text-primary">
-                {primaryUserType.badge}
-              </Badge>
-            )}
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">
-              {primaryUserType.description}
-            </p>
-            <div className="space-y-1">
-              {primaryUserType.features.slice(0, 3).map((feature, index) => (
-                <div key={index} className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <CheckCircle2 className="h-3 w-3 text-primary" />
-                  {feature}
-                </div>
-              ))}
-              {primaryUserType.features.length > 3 && (
-                <div className="text-xs text-muted-foreground">
-                  +{primaryUserType.features.length - 3} more features
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Other Paths - Expandable Section */}
-      <div className="space-y-3">
-        <div className="text-center">
-          <Button
-            variant="ghost"
-            onClick={() => setShowOtherPaths(!showOtherPaths)}
-            className="text-sm text-muted-foreground hover:text-foreground"
+      {/* All User Type Options in Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {userTypes.map((type) => (
+          <Card
+            key={type.id}
+            onClick={() => handleSelectType(type.id)}
+            className={`cursor-pointer transition-all hover:shadow-md border-2 ${
+              selectedType === type.id
+                ? "border-primary shadow-lg bg-primary/5"
+                : type.id === "brain-injury-recovery"
+                ? "border-primary/30 hover:border-primary/50"
+                : "border-border hover:border-primary/50"
+            }`}
           >
-            Using MyRhythm for other purposes?
-            {showOtherPaths ? (
-              <ChevronUp className="ml-2 h-4 w-4" />
-            ) : (
-              <ChevronDown className="ml-2 h-4 w-4" />
-            )}
-          </Button>
-        </div>
-
-        {showOtherPaths && (
-          <div className="space-y-3">
-            <div className="text-center">
+            <CardHeader className="pb-3">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-full bg-primary/10 p-2">
+                    {type.icon}
+                  </div>
+                  <div>
+                    <CardTitle className="text-lg">{type.title}</CardTitle>
+                    <CardDescription className="text-sm font-medium">
+                      {type.subtitle}
+                    </CardDescription>
+                  </div>
+                </div>
+                {selectedType === type.id && (
+                  <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                )}
+              </div>
+              {type.badge && (
+                <Badge variant="secondary" className="w-fit bg-primary/10 text-primary">
+                  {type.badge}
+                </Badge>
+              )}
+            </CardHeader>
+            <CardContent className="space-y-3">
               <p className="text-sm text-muted-foreground">
-                The framework that helps with recovery also supports other journeys
+                {type.description}
               </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 lg:grid-cols-3">
-              {otherUserTypes.map((type) => (
-                <Card
-                  key={type.id}
-                  onClick={() => handleSelectType(type.id)}
-                  className={`cursor-pointer transition-all hover:shadow-md ${
-                    selectedType === type.id
-                      ? "border-2 border-primary shadow-lg"
-                      : "border border-border hover:border-primary/50"
-                  }`}
-                >
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="rounded-full bg-primary/10 p-1.5">
-                          {React.cloneElement(type.icon as React.ReactElement, { className: "h-5 w-5 text-primary" })}
-                        </div>
-                        <div>
-                          <CardTitle className="text-base">{type.title}</CardTitle>
-                          <CardDescription className="text-xs font-medium">
-                            {type.subtitle}
-                          </CardDescription>
-                        </div>
-                      </div>
-                      {selectedType === type.id && (
-                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
-                      )}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <p className="text-xs text-muted-foreground">
-                      {type.description}
-                    </p>
-                    <div className="space-y-1">
-                      {type.features.slice(0, 2).map((feature, index) => (
-                        <div key={index} className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <CheckCircle2 className="h-2.5 w-2.5 text-primary" />
-                          {feature}
-                        </div>
-                      ))}
-                      {type.features.length > 2 && (
-                        <div className="text-xs text-muted-foreground">
-                          +{type.features.length - 2} more features
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        )}
+              <div className="space-y-1">
+                {type.features.slice(0, 3).map((feature, index) => (
+                  <div key={index} className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <CheckCircle2 className="h-3 w-3 text-primary" />
+                    {feature}
+                  </div>
+                ))}
+                {type.features.length > 3 && (
+                  <div className="text-xs text-muted-foreground">
+                    +{type.features.length - 3} more features
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
       </div>
 
       <div className="flex justify-end">
