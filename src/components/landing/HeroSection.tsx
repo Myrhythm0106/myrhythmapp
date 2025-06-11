@@ -1,10 +1,8 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { LogIn, Brain } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
-
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
@@ -18,9 +16,7 @@ export function HeroSection() {
       });
     }
   };
-
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
+  return <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
       {/* Login button at top right */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
         <Button variant="ghost" className="flex items-center gap-2 hover:bg-primary/10" onClick={() => setShowLoginModal(true)}>
@@ -38,9 +34,8 @@ export function HeroSection() {
         </div>
         
         <div className="space-y-6 mb-10">
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">
-            From overwhelm or memory challenges to daily wins and peace of mind. Be empowered as your confidence grows, momentum builds, and structure becomes your strength. You never walk alone, with MyRhythm by your side.
-          </p>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">From overwhelm or memory challenges to daily wins and peace of mind. 
+Be empowered as your confidence grows, momentum builds, and structure becomes your strength. You never walk alone, with MyRhythm by your side.</p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
@@ -58,6 +53,5 @@ export function HeroSection() {
 
       {/* Login Modal */}
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
-    </section>
-  );
+    </section>;
 }
