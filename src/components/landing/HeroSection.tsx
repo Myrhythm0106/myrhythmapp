@@ -1,8 +1,10 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { LogIn, Brain } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
+
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
@@ -16,7 +18,9 @@ export function HeroSection() {
       });
     }
   };
-  return <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
+
+  return (
+    <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-24 md:py-32">
       {/* Login button at top right */}
       <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
         <Button variant="ghost" className="flex items-center gap-2 hover:bg-primary/10" onClick={() => setShowLoginModal(true)}>
@@ -34,13 +38,23 @@ export function HeroSection() {
         </div>
         
         <div className="space-y-6 mb-10">
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">From overwhelm or memory challenges to daily wins and peace of mind. 
-Be empowered as your confidence grows, momentum builds, and structure becomes your strength. You never walk alone, with MyRhythm by your side.</p>
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">
+            From overwhelm or memory challenges to daily wins and peace of mind. 
+            Be empowered as your confidence grows, momentum builds, and structure becomes your strength. 
+            You never walk alone, with MyRhythm by your side.
+          </p>
+          
+          {/* Subtle expansion mention */}
+          <div className="bg-white/50 backdrop-blur-sm p-3 rounded-lg border border-primary/10 max-w-xl mx-auto">
+            <p className="text-sm text-muted-foreground">
+              <span className="font-medium text-primary">Built for brain injury recovery</span> — the same framework that helps rebuild rhythm also supports cognitive optimization, caregiving, and wellness journeys.
+            </p>
+          </div>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
           <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground" onClick={() => navigate("/onboarding")}>
-            Register Now
+            Start Your Recovery Journey
           </Button>
           <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/founders-story")}>
             Our Story
@@ -53,5 +67,6 @@ Be empowered as your confidence grows, momentum builds, and structure becomes yo
 
       {/* Login Modal */}
       <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
-    </section>;
+    </section>
+  );
 }

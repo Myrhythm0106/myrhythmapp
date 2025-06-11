@@ -33,7 +33,7 @@ export function HeroSection() {
         
         <div className="pt-4">
           <Button size="lg" onClick={() => navigate("/onboarding")} className="bg-white text-primary hover:bg-white/90">
-            👉 Get Started Now
+            👉 Start Your Recovery Journey
           </Button>
         </div>
       </div>

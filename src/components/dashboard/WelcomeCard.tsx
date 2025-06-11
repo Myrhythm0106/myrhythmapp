@@ -10,14 +10,14 @@ import { MoodOption, moodOptions } from "@/components/dashboard/daily-checkin/Mo
 
 interface WelcomeCardProps {
   name?: string;
-  userType?: "tbi" | "abi" | "mental-health" | "caregiver" | "new";
+  userType?: "brain-injury-recovery" | "cognitive-optimization" | "caregiver-support" | "wellness-productivity" | "new";
 }
 
-// Weekly inspiration based on mood and user type
+// Weekly inspiration based on mood and user type - recovery-focused by default
 const weeklyInspirations = {
   great: [
     "Resilient",
-    "Thriving",
+    "Thriving", 
     "Unstoppable",
     "Powerful",
     "Vibrant",
@@ -44,7 +44,7 @@ const weeklyInspirations = {
   ]
 };
 
-export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardProps) {
+export function WelcomeCard({ name = "there", userType = "brain-injury-recovery" }: WelcomeCardProps) {
   const navigate = useNavigate();
   const [customWord, setCustomWord] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -65,14 +65,14 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
 
   const getMessage = () => {
     switch (userType) {
-      case "tbi":
-        return "Track your recovery progress and find resources to help with your journey.";
-      case "abi":
-        return "Monitor your healing journey and discover specialized support for your needs.";
-      case "mental-health":
-        return "Check in with your wellness today and explore tools to support your mental health.";
-      case "caregiver":
+      case "brain-injury-recovery":
+        return "Track your recovery progress and find resources to help with your healing journey.";
+      case "cognitive-optimization":
+        return "Optimize your cognitive performance and unlock your peak mental potential.";
+      case "caregiver-support":
         return "Find support for yourself while caring for your loved one, and access resources to help both of you.";
+      case "wellness-productivity":
+        return "Build better habits and create structure to support your wellness and productivity goals.";
       default:
         return "Welcome to MyRhythm. Get started by customizing your profile and exploring resources.";
     }
@@ -172,7 +172,10 @@ export function WelcomeCard({ name = "there", userType = "new" }: WelcomeCardPro
               </div>
             )}
             <p className="text-xs text-gray-500 mt-2">
-              Your weekly word is chosen based on your mood trends to inspire and motivate you.
+              {userType === "brain-injury-recovery" 
+                ? "Your weekly word is chosen to support your recovery journey and inspire resilience."
+                : "Your weekly word is chosen based on your mood trends to inspire and motivate you."
+              }
             </p>
           </div>
         </div>
