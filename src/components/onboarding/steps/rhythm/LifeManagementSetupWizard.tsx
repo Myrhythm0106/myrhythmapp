@@ -20,36 +20,36 @@ interface LifeManagementSetupWizardProps {
 const setupSteps = [
   {
     id: 1,
-    title: "Personal Profile",
-    description: "Set up your preferences and accessibility needs",
+    title: "Personal Operating Style",
+    description: "Configure your preferences and operational approach",
     icon: User,
     estimatedTime: "3-4 min"
   },
   {
     id: 2,
-    title: "Calendar & Routine",
-    description: "Configure your essential appointments and routines",
+    title: "Calendar & Operations",
+    description: "Set up your essential appointments and routine framework",
     icon: Calendar,
     estimatedTime: "4-5 min"
   },
   {
     id: 3,
-    title: "Goal Framework",
-    description: "Set up your goal and action framework",
+    title: "Goal Operations",
+    description: "Establish your goal and action tracking system",
     icon: Target,
     estimatedTime: "3-4 min"
   },
   {
     id: 4,
-    title: "Support Integration",
-    description: "Connect your support circle and set preferences",
+    title: "Support Network",
+    description: "Connect your support circle and operational preferences",
     icon: Users,
     estimatedTime: "2-3 min"
   },
   {
     id: 5,
-    title: "Dashboard Layout",
-    description: "Personalize your dashboard for optimal usability",
+    title: "Dashboard Operations",
+    description: "Optimize your dashboard for peak usability",
     icon: LayoutDashboard,
     estimatedTime: "1-2 min"
   }
@@ -123,9 +123,9 @@ export function LifeManagementSetupWizard({ onComplete, onBack, assessmentResult
         <>
           {/* Header */}
           <div className="text-center space-y-4">
-            <h1 className="text-2xl font-bold text-primary">Build Your Life Management Foundation</h1>
+            <h1 className="text-2xl font-bold text-primary">Build Your Life Operating Model</h1>
             <p className="text-muted-foreground">
-              Let's set up your personalized MyRhythm system in just a few minutes
+              Let's create your personalized operating system for running your life effectively
             </p>
           </div>
 

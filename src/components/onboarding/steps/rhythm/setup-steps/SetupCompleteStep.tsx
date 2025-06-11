@@ -19,15 +19,15 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
     }
     
     if (setupData.goalFramework?.primaryGoal) {
-      summary.push("Primary goal defined");
+      summary.push("Primary goal operations defined");
     }
     
     if (setupData.supportIntegration?.supportCircle?.length > 0) {
-      summary.push(`${setupData.supportIntegration.supportCircle.length} support circle members`);
+      summary.push(`${setupData.supportIntegration.supportCircle.length} support network members`);
     }
     
     if (setupData.dashboardLayout?.priorityWidgets?.length > 0) {
-      summary.push(`${setupData.dashboardLayout.priorityWidgets.length} priority widgets selected`);
+      summary.push(`${setupData.dashboardLayout.priorityWidgets.length} priority widgets optimized`);
     }
     
     return summary;
@@ -41,10 +41,10 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
         <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
           <CheckCircle2 className="h-10 w-10 text-green-600" />
         </div>
-        <h1 className="text-3xl font-bold text-primary">Your Life Management Foundation is Ready! 🎉</h1>
+        <h1 className="text-3xl font-bold text-primary">Your Life Operating Model is Ready! 🎉</h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Congratulations! You've successfully set up your personalized MyRhythm system. 
-          Everything is now configured and ready to support your journey.
+          Congratulations! You've successfully built your personalized life operating system. 
+          Your MyRhythm platform is now configured and ready to power your daily operations.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-green-800">
             <Sparkles className="h-5 w-5" />
-            What You've Accomplished
+            Your Operating Model Components
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -60,9 +60,9 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
             <div className="flex items-start gap-3">
               <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-green-800">Personal Preferences Set</h4>
+                <h4 className="font-medium text-green-800">Operating Style Configured</h4>
                 <p className="text-sm text-green-700">
-                  Rhythm type, notifications, and accessibility needs configured
+                  Personal preferences, rhythm patterns, and operational approach established
                 </p>
               </div>
             </div>
@@ -70,11 +70,11 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
             <div className="flex items-start gap-3">
               <Calendar className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-green-800">Calendar Foundation Ready</h4>
+                <h4 className="font-medium text-green-800">Operational Calendar Ready</h4>
                 <p className="text-sm text-green-700">
                   {setupData.calendarRoutine?.recurringAppointments?.length > 0 
-                    ? `${setupData.calendarRoutine.recurringAppointments.length} recurring appointments scheduled`
-                    : "Basic routine framework established"
+                    ? `${setupData.calendarRoutine.recurringAppointments.length} recurring operations scheduled`
+                    : "Basic operational framework established"
                   }
                 </p>
               </div>
@@ -83,11 +83,11 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
             <div className="flex items-start gap-3">
               <Target className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-green-800">Goal Framework Established</h4>
+                <h4 className="font-medium text-green-800">Goal Operations System</h4>
                 <p className="text-sm text-green-700">
                   {setupData.goalFramework?.primaryGoal 
-                    ? "Primary goal defined with progress tracking"
-                    : "Goal structure ready for your journey"
+                    ? "Primary objective defined with operational tracking"
+                    : "Goal operations framework ready for implementation"
                   }
                 </p>
               </div>
@@ -96,11 +96,11 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
             <div className="flex items-start gap-3">
               <Users className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-green-800">Support Circle Connected</h4>
+                <h4 className="font-medium text-green-800">Support Network Integrated</h4>
                 <p className="text-sm text-green-700">
                   {setupData.supportIntegration?.supportCircle?.length > 0
-                    ? `${setupData.supportIntegration.supportCircle.length} support members added`
-                    : "Privacy preferences and emergency contacts set"
+                    ? `${setupData.supportIntegration.supportCircle.length} network members connected`
+                    : "Privacy preferences and support protocols established"
                   }
                 </p>
               </div>
@@ -109,9 +109,9 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
             <div className="flex items-start gap-3 md:col-span-2">
               <LayoutDashboard className="h-5 w-5 text-green-600 mt-0.5" />
               <div>
-                <h4 className="font-medium text-green-800">Dashboard Personalized</h4>
+                <h4 className="font-medium text-green-800">Dashboard Operations Optimized</h4>
                 <p className="text-sm text-green-700">
-                  Layout optimized for your preferences with {setupData.dashboardLayout?.priorityWidgets?.length || 0} priority widgets
+                  Interface configured for maximum operational efficiency with {setupData.dashboardLayout?.priorityWidgets?.length || 0} priority widgets
                 </p>
               </div>
             </div>
@@ -121,16 +121,16 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
 
       <Card>
         <CardHeader>
-          <CardTitle>What Happens Next?</CardTitle>
+          <CardTitle>Your Operating Model is Now Live</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-3">
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center mt-0.5">1</div>
               <div>
-                <h4 className="font-medium">Immediate Access</h4>
+                <h4 className="font-medium">Immediate Operation</h4>
                 <p className="text-sm text-muted-foreground">
-                  Your dashboard is now configured with your preferences and ready to use immediately.
+                  Your operating model is now live and ready to run your daily operations smoothly.
                 </p>
               </div>
             </div>
@@ -138,9 +138,9 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center mt-0.5">2</div>
               <div>
-                <h4 className="font-medium">Start Using Your System</h4>
+                <h4 className="font-medium">Execute Your Operations</h4>
                 <p className="text-sm text-muted-foreground">
-                  Begin with your daily check-in, review your calendar, and start working toward your goals.
+                  Begin with your daily operational check-in, review your calendar, and execute toward your objectives.
                 </p>
               </div>
             </div>
@@ -148,9 +148,9 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
             <div className="flex items-start gap-3">
               <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center mt-0.5">3</div>
               <div>
-                <h4 className="font-medium">Refine as You Go</h4>
+                <h4 className="font-medium">Optimize Continuously</h4>
                 <p className="text-sm text-muted-foreground">
-                  You can always adjust your settings, add more goals, or modify your support circle as your needs evolve.
+                  You can always refine your operating model, add new objectives, or adjust your support network as your operations evolve.
                 </p>
               </div>
             </div>
@@ -161,10 +161,10 @@ export function SetupCompleteStep({ onComplete, setupData, assessmentResult }: S
       <div className="text-center space-y-4">
         <Button onClick={onComplete} size="lg" className="px-8 py-4 text-lg bg-gradient-to-r from-primary to-primary/80">
           <Sparkles className="mr-2 h-5 w-5" />
-          Launch My MyRhythm Dashboard
+          Launch My Operating Model
         </Button>
         <p className="text-sm text-muted-foreground">
-          Welcome to your personalized life management system! You're all set to begin your journey.
+          Welcome to your personalized life operating system! You're all set to run your life with precision and purpose.
         </p>
       </div>
     </div>

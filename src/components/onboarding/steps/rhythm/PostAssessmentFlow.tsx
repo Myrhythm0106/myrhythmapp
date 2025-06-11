@@ -20,7 +20,7 @@ interface PostAssessmentFlowProps {
   onComplete: () => void;
 }
 
-type FlowStep = "results" | "choice" | "user-guide" | "goal-creation" | "life-management-setup" | "complete";
+type FlowStep = "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessmentFlowProps) {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
   };
 
   const handleLifeManagementSetup = () => {
-    setCurrentStep("life-management-setup");
+    setCurrentStep("life-operating-model-setup");
   };
 
   const handleBackToChoice = () => {
@@ -68,12 +68,12 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
   };
 
   const handleLifeManagementComplete = () => {
-    // Store completion data for life management setup
-    localStorage.setItem("myrhythm_life_management_setup_complete", "true");
-    localStorage.setItem("myrhythm_foundation_established", "true");
+    // Store completion data for life operating model setup
+    localStorage.setItem("myrhythm_life_operating_model_setup_complete", "true");
+    localStorage.setItem("myrhythm_operating_foundation_established", "true");
     
-    toast.success("Your Life Management Foundation is Complete! 🌟", {
-      description: "Your personalized MyRhythm system is ready and configured for success.",
+    toast.success("Your Life Operating Model is Live! 🌟", {
+      description: "Your personalized operating system is ready and configured for optimal performance.",
       duration: 5000
     });
     
@@ -105,7 +105,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
           />
         );
 
-      case "life-management-setup":
+      case "life-operating-model-setup":
         return (
           <LifeManagementSetupWizard
             onComplete={handleLifeManagementComplete}

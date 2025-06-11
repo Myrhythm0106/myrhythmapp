@@ -65,7 +65,7 @@ export function PostAssessmentChoiceScreen({
           </CardContent>
         </Card>
 
-        {/* Option 4: Life Management Foundation - NEW */}
+        {/* Option 4: Life Operating Model - UPDATED */}
         <Card className="border-2 border-primary bg-primary/5 hover:border-primary/80 transition-all duration-300 cursor-pointer group relative overflow-hidden" onClick={onLifeManagementSetup}>
           <div className="absolute top-2 right-2">
             <span className="bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-medium">
@@ -76,11 +76,11 @@ export function PostAssessmentChoiceScreen({
             <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
               <Settings className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-lg">Build My Life Management Foundation</CardTitle>
+            <CardTitle className="text-lg">Build My Life Operating Model</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <p className="text-muted-foreground text-center text-sm">
-              Complete guided 15-minute setup to get your personalized life management system ready.
+              Complete guided 15-minute setup to create your personalized life operating system.
             </p>
             
             <div className="space-y-2">
@@ -88,26 +88,26 @@ export function PostAssessmentChoiceScreen({
               <ul className="text-xs space-y-1 text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <div className="w-1 h-1 bg-primary rounded-full"></div>
-                  Personal preferences & routine
+                  Personal preferences & operational style
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1 h-1 bg-primary rounded-full"></div>
-                  Essential calendar & appointments
+                  Essential calendar & routine framework
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1 h-1 bg-primary rounded-full"></div>
-                  Goal framework & actions
+                  Goal operations & tracking system
                 </li>
                 <li className="flex items-center gap-2">
                   <div className="w-1 h-1 bg-primary rounded-full"></div>
-                  Support circle & dashboard
+                  Support network & dashboard optimization
                 </li>
               </ul>
             </div>
             
             <Button className="w-full mt-4 bg-primary hover:bg-primary/90" size="sm">
               <Settings className="h-3 w-3 mr-2" />
-              Start Foundation Setup
+              Build Operating Model
               <ArrowRight className="h-3 w-3 ml-2" />
             </Button>
           </CardContent>
