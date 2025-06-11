@@ -14,6 +14,7 @@ import {
   storeAssessmentResult,
   AssessmentResult
 } from "@/utils/rhythmAnalysis";
+import { UserType } from "./UserTypeStep";
 
 interface RhythmAssessmentStepProps {
   onComplete: (responses: any) => void;
@@ -48,8 +49,11 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
   };
 
   const handleCompilationComplete = () => {
+    // Get user type from localStorage
+    const userType = localStorage.getItem("myrhythm_user_type") as UserType | null;
+    
     // Assessment complete - analyze and show summary
-    const analysisResult = analyzeRhythmAssessment(responses);
+    const analysisResult = analyzeRhythmAssessment(responses, userType || undefined);
     const completedAt = new Date().toISOString();
     const nextReviewDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString();
     
@@ -61,7 +65,8 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
       overallScore: analysisResult.overallScore,
       determinationReason: analysisResult.determinationReason,
       version: "1.0",
-      nextReviewDate
+      nextReviewDate,
+      userType: userType || undefined
     };
     
     // Store the assessment result
@@ -97,6 +102,10 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     onComplete(responses);
   };
 
+  // Get user type for personalized messaging
+  const userType = localStorage.getItem("myrhythm_user_type") as UserType | null;
+  const isRecoveryUser = userType === "brain-injury-recovery";
+
   if (!hasStarted) {
     return (
       <div className="space-y-6">
@@ -113,28 +122,47 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
             </Tooltip>
           </TooltipProvider>
           <div>
-            <h3 className="font-medium text-blue-900">Rhythm Assessment</h3>
-            <p className="text-sm text-blue-700">Discover your unique rhythm to personalize your MyRhythm experience.</p>
+            <h3 className="font-medium text-blue-900">
+              {isRecoveryUser ? "Rhythm Assessment" : "Personal Rhythm Discovery"}
+            </h3>
+            <p className="text-sm text-blue-700">
+              {isRecoveryUser 
+                ? "Discover your unique rhythm to personalize your MyRhythm experience." 
+                : "Understand your natural patterns to optimize your personal operating system."
+              }
+            </p>
           </div>
         </div>
 
         <Card className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
           <div className="text-center space-y-4">
             <h3 className="text-xl font-semibold text-gray-800">
-              Your journey is unique, and so is your rhythm.
+              {isRecoveryUser 
+                ? "Your journey is unique, and so is your rhythm." 
+                : "Every high performer has their own rhythm."
+              }
             </h3>
             <div className="space-y-3 text-gray-700">
               <p>
-                We believe in the power of your story, not to dwell on what was, but to illuminate the path forward.
+                {isRecoveryUser 
+                  ? "We believe in the power of your story, not to dwell on what was, but to illuminate the path forward."
+                  : "We believe in understanding your patterns to unlock your highest potential."
+                }
               </p>
               <p>
-                You're about to take a small, yet powerful step towards a more personalized experience. We'll ask a few gentle questions that will help us understand your unique beat.
+                {isRecoveryUser 
+                  ? "You're about to take a small, yet powerful step towards a more personalized experience. We'll ask a few gentle questions that will help us understand your unique beat."
+                  : "You're about to discover your optimal operating rhythm. We'll ask questions that reveal your natural patterns and peak performance zones."
+                }
               </p>
               <p className="font-medium">
                 There are no right or wrong answers, only your truth.
               </p>
               <p className="text-lg font-semibold text-blue-700">
-                Let's begin to build your future, together.
+                {isRecoveryUser 
+                  ? "Let's begin to build your future, together."
+                  : "Let's unlock your optimal rhythm."
+                }
               </p>
             </div>
           </div>

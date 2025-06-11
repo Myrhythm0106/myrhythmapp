@@ -1,5 +1,6 @@
 
 import React from "react";
+import { UserTypeStep, UserType } from "./steps/UserTypeStep";
 import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
@@ -17,12 +18,15 @@ type LocationFormValues = {
 
 interface OnboardingStepRendererProps {
   currentStep: number;
+  userType: UserType | null;
   personalInfo: PersonalInfoFormValues | null;
   location: LocationFormValues | null;
   selectedPlan: PlanType;
+  userTypeCountdown: number | null;
   personalInfoCountdown: number | null;
   locationCountdown: number | null;
   planCountdown: number | null;
+  onUserTypeComplete: (data: { type: UserType }) => void;
   onPersonalInfoComplete: (values: PersonalInfoFormValues) => void;
   onLocationComplete: (values: LocationFormValues) => void;
   onPlanSelected: (plan: PlanType) => void;
@@ -32,12 +36,15 @@ interface OnboardingStepRendererProps {
 
 export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
   currentStep,
+  userType,
   personalInfo,
   location,
   selectedPlan,
+  userTypeCountdown,
   personalInfoCountdown,
   locationCountdown,
   planCountdown,
+  onUserTypeComplete,
   onPersonalInfoComplete,
   onLocationComplete,
   onPlanSelected,
@@ -48,6 +55,20 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
     try {
       switch (currentStep) {
         case 1:
+          return (
+            <div>
+              <UserTypeStep 
+                onComplete={onUserTypeComplete} 
+                initialValue={userType || undefined} 
+              />
+              {userTypeCountdown && (
+                <div className="mt-4 text-center text-sm text-muted-foreground">
+                  Automatically proceeding in {userTypeCountdown} seconds...
+                </div>
+              )}
+            </div>
+          );
+        case 2:
           return (
             <div>
               <PersonalInfoStep 
@@ -61,7 +82,7 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
               )}
             </div>
           );
-        case 2:
+        case 3:
           return (
             <div>
               <LocationStep 
@@ -75,7 +96,7 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
               )}
             </div>
           );
-        case 3:
+        case 4:
           return (
             <div>
               <PlanStep 
@@ -89,9 +110,9 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
               )}
             </div>
           );
-        case 4:
-          return <PaymentStep onComplete={onPaymentComplete} selectedPlan={selectedPlan} />;
         case 5:
+          return <PaymentStep onComplete={onPaymentComplete} selectedPlan={selectedPlan} />;
+        case 6:
           return <RhythmAssessmentStep onComplete={onRhythmAssessmentComplete} />;
         default:
           console.error("Invalid step:", currentStep);

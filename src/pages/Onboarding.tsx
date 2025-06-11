@@ -13,11 +13,13 @@ const Onboarding = () => {
   
   const {
     currentStep,
+    userType,
     location,
     personalInfo,
     selectedPlan,
     paymentData,
     showPaymentConfirmation,
+    isUserTypeSelected,
     isPersonalInfoValid,
     isLocationValid,
     isPlanSelected,
@@ -29,25 +31,32 @@ const Onboarding = () => {
     totalSteps: STEPS.length,
     paymentData,
     selectedPlan,
+    userType,
   });
 
-  // Auto-progression for steps 1-3 (disabled for direct navigation)
+  // Auto-progression for steps 1-4 (disabled for direct navigation)
+  const { countdown: userTypeCountdown } = useAutoProgression({
+    isFormValid: isUserTypeSelected,
+    onProgress: () => handlers.handleUserTypeComplete({ type: userType! }),
+    enabled: currentStep === 1 && userType !== null && !isDirectNavigation
+  });
+
   const { countdown: personalInfoCountdown } = useAutoProgression({
     isFormValid: isPersonalInfoValid,
     onProgress: () => handlers.handlePersonalInfoComplete(personalInfo!),
-    enabled: currentStep === 1 && personalInfo !== null && !isDirectNavigation
+    enabled: currentStep === 2 && personalInfo !== null && !isDirectNavigation
   });
   
   const { countdown: locationCountdown } = useAutoProgression({
     isFormValid: isLocationValid,
     onProgress: () => handlers.handleLocationComplete(location!),
-    enabled: currentStep === 2 && location !== null && !isDirectNavigation
+    enabled: currentStep === 3 && location !== null && !isDirectNavigation
   });
   
   const { countdown: planCountdown } = useAutoProgression({
     isFormValid: isPlanSelected,
     onProgress: () => handlers.handlePlanSelected(selectedPlan),
-    enabled: currentStep === 3 && isPlanSelected && !isDirectNavigation
+    enabled: currentStep === 4 && isPlanSelected && !isDirectNavigation
   });
 
   // Get current step information
@@ -64,12 +73,15 @@ const Onboarding = () => {
       >
         <OnboardingStepRenderer
           currentStep={currentStep}
+          userType={userType}
           personalInfo={personalInfo}
           location={location}
           selectedPlan={selectedPlan}
+          userTypeCountdown={userTypeCountdown}
           personalInfoCountdown={personalInfoCountdown}
           locationCountdown={locationCountdown}
           planCountdown={planCountdown}
+          onUserTypeComplete={handlers.handleUserTypeComplete}
           onPersonalInfoComplete={handlers.handlePersonalInfoComplete}
           onLocationComplete={handlers.handleLocationComplete}
           onPlanSelected={handlers.handlePlanSelected}

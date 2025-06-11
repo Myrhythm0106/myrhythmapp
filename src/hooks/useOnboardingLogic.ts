@@ -5,6 +5,7 @@ import { toast } from "@/components/ui/use-toast";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
 import { PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
+import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 
 type LocationFormValues = {
   country: string;
@@ -29,6 +30,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
   });
   
   // Core state
+  const [userType, setUserType] = useState<UserType | null>(null);
   const [location, setLocation] = useState<LocationFormValues | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("basic");
@@ -36,6 +38,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   
   // Form validation states for auto-progression
+  const [isUserTypeSelected, setIsUserTypeSelected] = useState(false);
   const [isPersonalInfoValid, setIsPersonalInfoValid] = useState(false);
   const [isLocationValid, setIsLocationValid] = useState(false);
   const [isPlanSelected, setIsPlanSelected] = useState(false);
@@ -82,6 +85,8 @@ export const useOnboardingLogic = (totalSteps: number) => {
   return {
     currentStep,
     setCurrentStep,
+    userType,
+    setUserType,
     location,
     setLocation,
     personalInfo,
@@ -92,6 +97,8 @@ export const useOnboardingLogic = (totalSteps: number) => {
     setPaymentData,
     showPaymentConfirmation,
     setShowPaymentConfirmation,
+    isUserTypeSelected,
+    setIsUserTypeSelected,
     isPersonalInfoValid,
     setIsPersonalInfoValid,
     isLocationValid,

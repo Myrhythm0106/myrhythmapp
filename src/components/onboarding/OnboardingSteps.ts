@@ -2,26 +2,31 @@
 export const STEPS = [
   {
     id: 1,
+    title: "Choose your path",
+    description: "Tell us about your journey so we can personalize your experience"
+  },
+  {
+    id: 2,
     title: "Complete your profile",
     description: "Just a few more details to personalize your experience"
   },
   {
-    id: 2,
+    id: 3,
     title: "Where are you located?",
     description: "Tell us where you're from so we can personalize your experience"
   },
   {
-    id: 3,
+    id: 4,
     title: "Select your plan",
     description: "Choose a plan that works for you"
   },
   {
-    id: 4,
+    id: 5,
     title: "Complete your payment",
     description: "Secure payment information"
   },
   {
-    id: 5,
+    id: 6,
     title: "Find Your Rhythm",
     description: "Help us understand your journey to personalize your experience"
   }

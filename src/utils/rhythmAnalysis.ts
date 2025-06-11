@@ -1,4 +1,5 @@
 import { AssessmentResponses, sections } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
+import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 
 export type FocusArea = "structure" | "emotional" | "achievement" | "community" | "growth";
 
@@ -30,16 +31,18 @@ export interface AssessmentResult {
   determinationReason: string;
   version: string;
   nextReviewDate: string;
+  userType?: UserType; // Track which user type took the assessment
 }
 
+// Focus areas adapted for different user types
 export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
   structure: {
     id: "structure",
     title: "Structure & Routine Focus",
     phase: "M - Moment of Impact / Multiply",
-    description: "Building consistent routines and structures to support your recovery journey.",
-    keyFeatures: ["Daily routine tracking", "Calendar management", "Medication reminders", "Habit building"],
-    primaryActions: ["Set up daily routine", "Schedule important appointments", "Track medication adherence"],
+    description: "Building consistent routines and structures to support your journey.",
+    keyFeatures: ["Daily routine tracking", "Calendar management", "Habit building", "Structure optimization"],
+    primaryActions: ["Set up daily routine", "Schedule important tasks", "Track habit formation"],
     color: "red",
     gradient: "from-red-500 to-orange-500"
   },
@@ -47,9 +50,9 @@ export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
     id: "emotional",
     title: "Emotional Wellbeing Focus",
     phase: "Y - Yield to the Fog",
-    description: "Focusing on emotional healing and mental wellness during recovery.",
-    keyFeatures: ["Mood tracking", "Gratitude practice", "Mindfulness exercises", "Mental health resources"],
-    primaryActions: ["Track daily mood", "Practice gratitude", "Access support resources"],
+    description: "Focusing on emotional wellness and mental clarity.",
+    keyFeatures: ["Mood tracking", "Gratitude practice", "Mindfulness exercises", "Stress management"],
+    primaryActions: ["Track daily mood", "Practice gratitude", "Access wellness resources"],
     color: "blue",
     gradient: "from-blue-500 to-indigo-500"
   },
@@ -57,7 +60,7 @@ export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
     id: "achievement",
     title: "Goal Achievement Focus",
     phase: "R - Reckon with Reality / T - Take Back Control",
-    description: "Setting and achieving meaningful goals while rebuilding confidence.",
+    description: "Setting and achieving meaningful goals while building momentum.",
     keyFeatures: ["Goal setting", "Progress tracking", "Action planning", "Achievement celebration"],
     primaryActions: ["Create meaningful goals", "Break down into steps", "Track progress"],
     color: "purple",
@@ -77,15 +80,15 @@ export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
     id: "growth",
     title: "Personal Growth Focus",
     phase: "H - Heal Forward",
-    description: "Embracing personal development and cognitive enhancement.",
-    keyFeatures: ["Brain training", "Skill development", "Self-reflection", "Continuous learning"],
-    primaryActions: ["Practice brain games", "Learn new skills", "Reflect on progress"],
+    description: "Embracing personal development and continuous improvement.",
+    keyFeatures: ["Skill development", "Self-reflection", "Continuous learning", "Performance optimization"],
+    primaryActions: ["Practice new skills", "Learn continuously", "Reflect on progress"],
     color: "amber",
     gradient: "from-amber-500 to-yellow-500"
   }
 };
 
-export function analyzeRhythmAssessment(responses: AssessmentResponses): {
+export function analyzeRhythmAssessment(responses: AssessmentResponses, userType?: UserType): {
   focusArea: FocusArea;
   sectionScores: SectionScore[];
   overallScore: number;
@@ -147,11 +150,23 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses): {
     "8": "community" // M - Multiply the Mission
   };
 
-  const focusArea = sectionToFocusArea[dominantSectionId] || "structure";
+  // Adjust focus area based on user type if needed
+  let focusArea = sectionToFocusArea[dominantSectionId] || "structure";
+  
+  // For cognitive optimization users, lean towards achievement and growth
+  if (userType === "cognitive-optimization" && (focusArea === "emotional" || focusArea === "structure")) {
+    focusArea = highestScore > 2.5 ? "achievement" : "growth";
+  }
+  
+  // For wellness-productivity users, lean towards structure and achievement
+  if (userType === "wellness-productivity" && focusArea === "emotional") {
+    focusArea = "structure";
+  }
   
   // Generate determination reason
   const dominantSectionTitle = sectionScores.find(s => s.id.toString() === dominantSectionId)?.title || '';
-  const determinationReason = `Based on your assessment, "${dominantSectionTitle}" emerged as your most resonant phase with a score of ${highestScore.toFixed(2)} out of 3. This corresponds to the ${focusAreas[focusArea].phase} phase of the MyRhythm framework, which is why we're recommending a ${focusAreas[focusArea].title} to support your journey right now.`;
+  const userTypeContext = userType ? ` for ${userType.replace(/-/g, ' ')} users` : '';
+  const determinationReason = `Based on your assessment${userTypeContext}, "${dominantSectionTitle}" emerged as your most resonant phase with a score of ${highestScore.toFixed(2)} out of 3. This corresponds to the ${focusAreas[focusArea].phase} phase of the MyRhythm framework, which is why we're recommending a ${focusAreas[focusArea].title} to support your journey right now.`;
 
   return { 
     focusArea, 
@@ -169,7 +184,8 @@ export function storeFocusArea(
     currentFocus: focusArea,
     determinedAt: assessmentResult.completedAt,
     assessmentId: assessmentResult.id,
-    nextReviewDate: assessmentResult.nextReviewDate
+    nextReviewDate: assessmentResult.nextReviewDate,
+    userType: assessmentResult.userType
   };
   
   localStorage.setItem("myrhythm_focus_area", JSON.stringify(focusAreaData));
