@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
@@ -20,9 +21,9 @@ interface UseOnboardingHandlersProps {
   paymentData: PaymentFormValues | null;
   selectedPlan: PlanType;
   userType: UserType | null;
-  setAssessmentResult: (result: any) => void;
-  setIsCompiling: (compiling: boolean) => void;
-  setShowSummary: (show: boolean) => void;
+  setAssessmentResult?: (result: any) => void;
+  setIsCompiling?: (compiling: boolean) => void;
+  setShowSummary?: (show: boolean) => void;
 }
 
 export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
