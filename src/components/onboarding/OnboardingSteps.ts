@@ -27,6 +27,11 @@ export const STEPS = [
   },
   {
     id: 6,
+    title: "Preparing Your Assessment",
+    description: "Personalizing your rhythm discovery experience"
+  },
+  {
+    id: 7,
     title: "Find Your Rhythm",
     description: "Help us understand your journey to personalize your experience"
   }

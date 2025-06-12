@@ -57,7 +57,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     props.setSelectedPlan(plan);
     
     if (plan === "basic") {
-      // Skip payment for basic plan trial and go directly to assessment
+      // Skip payment for basic plan trial and go directly to pre-assessment compilation
       props.setCurrentStep(6);
     } else {
       props.setCurrentStep(5);
@@ -71,8 +71,12 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
 
   const handlePaymentConfirm = () => {
     props.setShowPaymentConfirmation(false);
-    props.setCurrentStep(6);
+    props.setCurrentStep(6); // Go to pre-assessment compilation
     toast.success("Payment processed successfully!");
+  };
+
+  const handlePreAssessmentComplete = () => {
+    props.setCurrentStep(7); // Go to actual assessment
   };
 
   const handleRhythmAssessmentComplete = (responses: any) => {
@@ -95,6 +99,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     handlePlanSelected,
     handlePaymentComplete,
     handlePaymentConfirm,
+    handlePreAssessmentComplete,
     handleRhythmAssessmentComplete,
   };
 };

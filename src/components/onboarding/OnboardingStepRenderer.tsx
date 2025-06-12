@@ -5,6 +5,7 @@ import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
 import { PaymentStep } from "./steps/PaymentStep";
+import { PreAssessmentCompiling } from "./steps/rhythm/PreAssessmentCompiling";
 import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
 import { PlanType } from "./steps/PlanStep";
@@ -31,6 +32,7 @@ interface OnboardingStepRendererProps {
   onLocationComplete: (values: LocationFormValues) => void;
   onPlanSelected: (plan: PlanType) => void;
   onPaymentComplete: (values: PaymentFormValues) => void;
+  onPreAssessmentComplete: () => void;
   onRhythmAssessmentComplete: (responses: any) => void;
 }
 
@@ -49,6 +51,7 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
   onLocationComplete,
   onPlanSelected,
   onPaymentComplete,
+  onPreAssessmentComplete,
   onRhythmAssessmentComplete,
 }) => {
   const renderStepContent = () => {
@@ -113,6 +116,8 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
         case 5:
           return <PaymentStep onComplete={onPaymentComplete} selectedPlan={selectedPlan} />;
         case 6:
+          return <PreAssessmentCompiling onComplete={onPreAssessmentComplete} userType={userType} />;
+        case 7:
           return <RhythmAssessmentStep onComplete={onRhythmAssessmentComplete} />;
         default:
           console.error("Invalid step:", currentStep);

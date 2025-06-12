@@ -86,6 +86,7 @@ const Onboarding = () => {
           onLocationComplete={handlers.handleLocationComplete}
           onPlanSelected={handlers.handlePlanSelected}
           onPaymentComplete={handlers.handlePaymentComplete}
+          onPreAssessmentComplete={handlers.handlePreAssessmentComplete}
           onRhythmAssessmentComplete={handlers.handleRhythmAssessmentComplete}
         />
       </OnboardingLayout>
