@@ -1,10 +1,10 @@
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
 import { PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
+import { analyzeRhythmAssessment } from "@/utils/rhythmAnalysis";
 
 interface UseOnboardingHandlersProps {
   currentStep: number;
@@ -20,6 +20,9 @@ interface UseOnboardingHandlersProps {
   paymentData: PaymentFormValues | null;
   selectedPlan: PlanType;
   userType: UserType | null;
+  setAssessmentResult: (result: any) => void;
+  setIsCompiling: (compiling: boolean) => void;
+  setShowSummary: (show: boolean) => void;
 }
 
 export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
@@ -80,6 +83,32 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   };
 
   const handleRhythmAssessmentComplete = (responses: any) => {
+    // Get user type from localStorage
+    const userType = localStorage.getItem("myrhythm_user_type") as UserType | null;
+    
+    // Assessment complete - analyze and show summary with personalized insights
+    const analysisResult = analyzeRhythmAssessment(responses, userType || undefined);
+    const completedAt = new Date().toISOString();
+    const nextReviewDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString();
+    
+    const result: any = {
+      id: `assessment-${Date.now()}`,
+      completedAt,
+      focusArea: analysisResult.focusArea,
+      sectionScores: analysisResult.sectionScores,
+      overallScore: analysisResult.overallScore,
+      determinationReason: analysisResult.determinationReason,
+      version: "1.0",
+      nextReviewDate,
+      userType: userType || undefined,
+      personalizedData: analysisResult.personalizedData // Include personalized insights
+    };
+    
+    // Store the assessment result
+    localStorage.setItem("myrhythm_onboarding_complete", "true");
+    localStorage.setItem("myrhythm_assessment_complete", "true");
+    localStorage.setItem("myrhythm_current_assessment", JSON.stringify(result));
+    
     // Store completion status
     localStorage.setItem("myrhythm_onboarding_complete", "true");
     localStorage.setItem("myrhythm_assessment_complete", "true");

@@ -90,10 +90,20 @@ export function AssessmentHistoryWidget() {
         </div>
       );
     }
+    
+    // Show personalized insight if available
+    const personalizedBadge = assessment.personalizedData?.personalProfile?.rhythmSignature;
     return (
-      <span className="text-xs text-gray-500">
-        Score: {formatScore(assessment.overallScore)}/3.0
-      </span>
+      <div className="flex flex-col gap-1">
+        <span className="text-xs text-gray-500">
+          Score: {formatScore(assessment.overallScore)}/3.0
+        </span>
+        {personalizedBadge && (
+          <Badge variant="outline" className="text-xs bg-blue-50 text-blue-700">
+            {personalizedBadge}
+          </Badge>
+        )}
+      </div>
     );
   };
 
@@ -139,16 +149,25 @@ export function AssessmentHistoryWidget() {
               onClick={() => setOpenAssessmentId(currentAssessment.id)}
             >
               <div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 mb-2">
                   <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Latest</Badge>
                   <span className="text-sm font-medium">{new Date(currentAssessment.completedAt).toLocaleDateString()}</span>
                 </div>
-                <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center gap-2 mb-1">
                   <Badge variant="outline" className="capitalize">
                     {currentAssessment.focusArea}
                   </Badge>
-                  {formatScoreDisplay(currentAssessment)}
                 </div>
+                {formatScoreDisplay(currentAssessment)}
+                
+                {/* Show personalized insight preview */}
+                {currentAssessment.personalizedData?.insights && currentAssessment.personalizedData.insights.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-xs text-gray-600 line-clamp-2">
+                      💡 {currentAssessment.personalizedData.insights[0].title}
+                    </p>
+                  </div>
+                )}
               </div>
               <FileText className="h-5 w-5 text-gray-400" />
             </div>

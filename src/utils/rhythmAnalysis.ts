@@ -1,5 +1,6 @@
 import { AssessmentResponses, sections } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
+import { generatePersonalizedInsights, PersonalizedAssessmentData } from "./personalizedInsights";
 
 export type FocusArea = "structure" | "emotional" | "achievement" | "community" | "growth";
 
@@ -31,7 +32,8 @@ export interface AssessmentResult {
   determinationReason: string;
   version: string;
   nextReviewDate: string;
-  userType?: UserType; // Track which user type took the assessment
+  userType?: UserType;
+  personalizedData?: PersonalizedAssessmentData; // New field for personalized insights
 }
 
 // Focus areas adapted for different user types
@@ -93,6 +95,7 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses, userType
   sectionScores: SectionScore[];
   overallScore: number;
   determinationReason: string;
+  personalizedData: PersonalizedAssessmentData;
 } {
   // Calculate scores for each section
   const sectionScores: SectionScore[] = [];
@@ -163,6 +166,15 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses, userType
     focusArea = "structure";
   }
   
+  // Generate personalized insights
+  const personalizedData = generatePersonalizedInsights(
+    responses,
+    sectionScores,
+    focusArea,
+    overallScore,
+    userType
+  );
+
   // Generate determination reason
   const dominantSectionTitle = sectionScores.find(s => s.id.toString() === dominantSectionId)?.title || '';
   const userTypeContext = userType ? ` for ${userType.replace(/-/g, ' ')} users` : '';
@@ -172,7 +184,8 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses, userType
     focusArea, 
     sectionScores,
     overallScore,
-    determinationReason
+    determinationReason: personalizedData.customDeterminationReason, // Use personalized reason
+    personalizedData
   };
 }
 
