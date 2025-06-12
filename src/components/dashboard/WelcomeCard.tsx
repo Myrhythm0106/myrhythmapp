@@ -68,7 +68,7 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
       case "brain-injury-recovery":
         return "Track your recovery progress and find resources to help with your healing journey.";
       case "cognitive-optimization":
-        return "Optimize your cognitive performance and unlock your peak mental potential.";
+        return "Discover your cognitive growth opportunities and unlock your unique potential.";
       case "caregiver-support":
         return "Find support for yourself while caring for your loved one, and access resources to help both of you.";
       case "wellness-productivity":

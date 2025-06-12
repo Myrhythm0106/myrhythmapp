@@ -55,7 +55,7 @@ export function BrainGamesGuide() {
               <ul className="text-sm space-y-1">
                 <li>• <strong>Low:</strong> Gentle introduction, builds confidence</li>
                 <li>• <strong>Medium:</strong> Moderate challenge, skill building</li>
-                <li>• <strong>High:</strong> Advanced training, peak performance</li>
+                <li>• <strong>High:</strong> Advanced skill building, personal best</li>
               </ul>
             </div>
             <div className="text-xs bg-green-100 p-2 rounded border-green-300 border mt-2">
@@ -108,7 +108,7 @@ export function BrainGamesGuide() {
               <h5 className="font-medium text-foreground">Track Progress</h5>
               <p className="text-sm text-muted-foreground">
                 Review your performance trends, celebrate improvements, and share progress with your healthcare team. 
-                The games provide detailed analytics and insights.
+                The games provide detailed insights and progress tracking.
               </p>
             </div>
           </div>

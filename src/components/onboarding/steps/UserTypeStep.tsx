@@ -52,16 +52,16 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
     },
     {
       id: "cognitive-optimization",
-      title: "Cognitive Optimization",
-      subtitle: "Peak Mental Performance",
-      description: "Enhance your cognitive abilities, focus, and mental clarity for professional and personal excellence.",
+      title: "Cognitive Development",
+      subtitle: "Growth & Mental Clarity",
+      description: "Enhance your cognitive abilities, focus, and mental clarity for professional and personal growth.",
       icon: <Target className="h-8 w-8 text-primary" />,
       features: [
-        "Performance-focused assessments",
-        "Cognitive enhancement protocols",
+        "Growth-focused assessments",
+        "Cognitive development programs",
         "Advanced brain training",
-        "Productivity optimization",
-        "Performance analytics"
+        "Productivity improvement",
+        "Progress insights"
       ]
     },
     {
@@ -81,7 +81,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
     {
       id: "wellness-productivity",
       title: "Wellness & Productivity", 
-      subtitle: "Life Optimization",
+      subtitle: "Life Improvement",
       description: "Build better habits, enhance productivity, and create a structured approach to personal wellness.",
       icon: <Heart className="h-8 w-8 text-primary" />,
       features: [

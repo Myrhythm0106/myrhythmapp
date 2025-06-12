@@ -43,7 +43,7 @@ export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
     title: "Structure & Routine Focus",
     phase: "M - Moment of Impact / Multiply",
     description: "Building consistent routines and structures to support your journey.",
-    keyFeatures: ["Daily routine tracking", "Calendar management", "Habit building", "Structure optimization"],
+    keyFeatures: ["Daily routine tracking", "Calendar management", "Habit building", "Structure development"],
     primaryActions: ["Set up daily routine", "Schedule important tasks", "Track habit formation"],
     color: "red",
     gradient: "from-red-500 to-orange-500"
@@ -83,7 +83,7 @@ export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
     title: "Personal Growth Focus",
     phase: "H - Heal Forward",
     description: "Embracing personal development and continuous improvement.",
-    keyFeatures: ["Skill development", "Self-reflection", "Continuous learning", "Performance optimization"],
+    keyFeatures: ["Skill development", "Self-reflection", "Continuous learning", "Skill building"],
     primaryActions: ["Practice new skills", "Learn continuously", "Reflect on progress"],
     color: "amber",
     gradient: "from-amber-500 to-yellow-500"

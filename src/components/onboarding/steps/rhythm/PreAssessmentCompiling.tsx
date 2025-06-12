@@ -38,7 +38,7 @@ export function PreAssessmentCompiling({ onComplete, userType }: PreAssessmentCo
       case "brain-injury-recovery":
         return "Personalizing your recovery-focused assessment based on your unique journey...";
       case "cognitive-optimization":
-        return "Calibrating cognitive performance metrics for your optimization goals...";
+        return "Calibrating cognitive development patterns for your growth goals...";
       case "caregiver-support":
         return "Preparing caregiver-specific insights and support resources...";
       case "wellness-productivity":
@@ -53,7 +53,7 @@ export function PreAssessmentCompiling({ onComplete, userType }: PreAssessmentCo
       case "brain-injury-recovery":
         return "Creating a safe space for your assessment";
       case "cognitive-optimization":
-        return "Analyzing your performance patterns";
+        return "Analyzing your development patterns";
       case "caregiver-support":
         return "Understanding your support role";
       case "wellness-productivity":
