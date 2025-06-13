@@ -7,6 +7,7 @@ import { MyRhythmBreakdown } from "@/components/landing/MyRhythmBreakdown";
 import { WhyItHelpsSection } from "@/components/landing/WhyItHelpsSection";
 import { CallToAction } from "@/components/landing/CallToAction";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
 import LandingFooter from "@/components/landing/LandingFooter";
 
 const Landing = () => {
@@ -26,6 +27,9 @@ const Landing = () => {
         <CallToAction onGetStarted={handleGetStarted} />
         <LandingFooter />
       </ScrollArea>
+      
+      {/* Floating registration button for mobile */}
+      <FloatingRegisterButton />
     </div>
   );
 };
