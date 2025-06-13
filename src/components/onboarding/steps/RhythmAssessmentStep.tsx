@@ -69,7 +69,8 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
       determinationReason: analysisResult.determinationReason,
       version: "1.0",
       nextReviewDate,
-      userType: userType || undefined
+      userType: userType || undefined,
+      personalizedData: analysisResult.personalizedData
     };
     
     // Store the assessment result
