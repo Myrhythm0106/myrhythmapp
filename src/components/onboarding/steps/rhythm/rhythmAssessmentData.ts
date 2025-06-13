@@ -489,16 +489,34 @@ const userTypeQuestions: Record<UserType, Section[]> = {
   ]
 };
 
-// Function to get sections based on user type
+// Function to get sections based on user type with proper fallback
 export function getSectionsForUserType(userType?: UserType): Section[] {
-  if (!userType) return baseSections;
-  return userTypeQuestions[userType] || baseSections;
+  console.log("getSectionsForUserType called with:", userType);
+  
+  if (!userType) {
+    console.log("No user type provided, defaulting to brain injury recovery");
+    return baseSections;
+  }
+  
+  const sections = userTypeQuestions[userType];
+  if (!sections) {
+    console.log("No sections found for user type:", userType, "defaulting to brain injury recovery");
+    return baseSections;
+  }
+  
+  console.log("Found sections for user type:", userType, "section count:", sections.length);
+  return sections;
 }
 
-// Export the current sections based on user type (dynamic)
+// Export the current sections based on user type (dynamic) with improved logic
 export function getCurrentSections(): Section[] {
   const userType = localStorage.getItem("myrhythm_user_type") as UserType | null;
-  return getSectionsForUserType(userType || undefined);
+  console.log("getCurrentSections - user type from storage:", userType);
+  
+  const sections = getSectionsForUserType(userType || undefined);
+  console.log("getCurrentSections - returning sections count:", sections.length);
+  
+  return sections;
 }
 
 // Keep the default export as sections for backward compatibility

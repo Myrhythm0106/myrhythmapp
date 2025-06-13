@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { getCurrentSections, AssessmentResponses } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
+import { getCurrentSections, AssessmentResponses, getSectionsForUserType } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 import { 
   analyzeRhythmAssessment, 
   storeFocusArea,
@@ -17,7 +17,20 @@ export function useRhythmAssessment() {
   const [showSummary, setShowSummary] = useState(false);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
 
-  const sections = getCurrentSections();
+  // Get user type with proper debugging
+  const getUserType = (): UserType | null => {
+    const stored = localStorage.getItem("myrhythm_user_type") as UserType | null;
+    console.log("Retrieved user type from localStorage:", stored);
+    return stored;
+  };
+
+  const userType = getUserType();
+  const sections = getSectionsForUserType(userType || undefined);
+
+  // Debug logging
+  console.log("Current user type:", userType);
+  console.log("Number of sections loaded:", sections.length);
+  console.log("First section title:", sections[0]?.title);
 
   const handleResponse = (questionId: string, value: string) => {
     const sectionId = sections[currentSection].id.toString();
@@ -39,8 +52,6 @@ export function useRhythmAssessment() {
   };
 
   const handleCompilationComplete = () => {
-    const userType = localStorage.getItem("myrhythm_user_type") as UserType | null;
-    
     const analysisResult = analyzeRhythmAssessment(responses, userType || undefined);
     const completedAt = new Date().toISOString();
     const nextReviewDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -95,6 +106,7 @@ export function useRhythmAssessment() {
     showSummary,
     assessmentResult,
     sections,
+    userType,
     handleResponse,
     handleNext,
     handleCompilationComplete,

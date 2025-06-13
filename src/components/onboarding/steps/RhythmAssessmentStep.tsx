@@ -19,6 +19,8 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     isCompiling,
     showSummary,
     assessmentResult,
+    sections,
+    userType,
     handleResponse,
     handleNext,
     handleCompilationComplete,
@@ -29,9 +31,6 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
   const handleSummaryComplete = () => {
     onComplete(responses);
   };
-
-  // Get user type for personalized messaging
-  const userType = localStorage.getItem("myrhythm_user_type") as UserType | null;
 
   if (!hasStarted) {
     return (
@@ -63,6 +62,8 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
       onResponse={handleResponse}
       onNext={handleNext}
       onBack={handleBack}
+      sections={sections}
+      userType={userType}
     />
   );
 }

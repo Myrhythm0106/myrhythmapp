@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowRight, ArrowLeft, Info } from "lucide-react";
+import { ArrowRight, ArrowLeft, Info, User } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { RhythmSectionHeader } from "./RhythmSectionHeader";
 import { RhythmQuestionCard } from "./RhythmQuestionCard";
-import { AssessmentResponses, getCurrentSections } from "./rhythmAssessmentData";
+import { AssessmentResponses } from "./rhythmAssessmentData";
+import { UserType } from "../UserTypeStep";
 
 interface RhythmAssessmentViewProps {
   currentSection: number;
@@ -15,6 +16,8 @@ interface RhythmAssessmentViewProps {
   onResponse: (questionId: string, value: string) => void;
   onNext: () => void;
   onBack: () => void;
+  sections: any[];
+  userType: UserType | null;
 }
 
 export function RhythmAssessmentView({
@@ -22,13 +25,13 @@ export function RhythmAssessmentView({
   responses,
   onResponse,
   onNext,
-  onBack
+  onBack,
+  sections,
+  userType
 }: RhythmAssessmentViewProps) {
   const [autoProgressTimer, setAutoProgressTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   
-  // Get user-type-specific sections
-  const sections = getCurrentSections();
   const section = sections[currentSection];
   const sectionId = section.id.toString();
   const sectionResponses = responses[sectionId] || {};
@@ -87,8 +90,28 @@ export function RhythmAssessmentView({
     setCountdown(null);
   };
 
+  const getUserTypeName = (type: UserType | null) => {
+    switch (type) {
+      case "brain-injury-recovery": return "Brain Injury Recovery";
+      case "cognitive-optimization": return "Cognitive Development";
+      case "caregiver-support": return "Caregiver & Family Support";
+      case "wellness-productivity": return "Wellness & Productivity";
+      default: return "Unknown";
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
+      {/* User Type Indicator */}
+      {userType && (
+        <div className="flex items-center gap-2 p-3 bg-primary/10 rounded-lg border border-primary/20">
+          <User className="h-4 w-4 text-primary" />
+          <span className="text-sm font-medium text-primary">
+            Assessment for: {getUserTypeName(userType)}
+          </span>
+        </div>
+      )}
+
       {/* Info header */}
       <div className="flex items-center gap-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
         <TooltipProvider>
