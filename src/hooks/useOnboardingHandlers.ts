@@ -105,20 +105,12 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       personalizedData: analysisResult.personalizedData // Include personalized insights
     };
     
-    // Store the assessment result
-    localStorage.setItem("myrhythm_onboarding_complete", "true");
-    localStorage.setItem("myrhythm_assessment_complete", "true");
+    // Store the assessment result but don't mark onboarding as complete yet
     localStorage.setItem("myrhythm_current_assessment", JSON.stringify(result));
     
-    // Store completion status
-    localStorage.setItem("myrhythm_onboarding_complete", "true");
-    localStorage.setItem("myrhythm_assessment_complete", "true");
-    
-    // Show success message and redirect to dashboard
-    toast.success("Welcome to MyRhythm! Your personalized experience is ready.");
-    
-    // Navigate directly to dashboard
-    navigate("/dashboard", { replace: true });
+    // DON'T navigate to dashboard yet - stay in onboarding flow
+    // The PostAssessmentFlow will handle the final completion and navigation
+    console.log("Assessment completed, staying in onboarding flow");
   };
 
   return {

@@ -35,6 +35,10 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
   };
 
   const handleExploreGuide = () => {
+    // Mark onboarding as complete first
+    localStorage.setItem("myrhythm_onboarding_complete", "true");
+    localStorage.setItem("myrhythm_assessment_complete", "true");
+    
     // Navigate to user guide
     navigate("/user-guide");
     onComplete();
@@ -54,6 +58,8 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
 
   const handleGoalCreationComplete = () => {
     // Store completion data
+    localStorage.setItem("myrhythm_onboarding_complete", "true");
+    localStorage.setItem("myrhythm_assessment_complete", "true");
     localStorage.setItem("myrhythm_initial_setup_complete", "true");
     localStorage.setItem("myrhythm_goals_created", "true");
     
@@ -69,6 +75,8 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
 
   const handleLifeManagementComplete = () => {
     // Store completion data for life operating model setup
+    localStorage.setItem("myrhythm_onboarding_complete", "true");
+    localStorage.setItem("myrhythm_assessment_complete", "true");
     localStorage.setItem("myrhythm_life_operating_model_setup_complete", "true");
     localStorage.setItem("myrhythm_operating_foundation_established", "true");
     

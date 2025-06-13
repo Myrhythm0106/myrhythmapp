@@ -1,4 +1,4 @@
-import { AssessmentResponses, sections } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
+import { AssessmentResponses, getSectionsForUserType } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { generatePersonalizedInsights, PersonalizedAssessmentData } from "./personalizedInsights";
 
@@ -97,6 +97,9 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses, userType
   determinationReason: string;
   personalizedData: PersonalizedAssessmentData;
 } {
+  // Get user-type-specific sections
+  const sections = getSectionsForUserType(userType);
+  
   // Calculate scores for each section
   const sectionScores: SectionScore[] = [];
   let totalScore = 0;

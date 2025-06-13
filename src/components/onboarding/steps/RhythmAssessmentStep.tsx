@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { RhythmAssessmentView } from "./rhythm/RhythmAssessmentView";
 import { RhythmSummaryView } from "./rhythm/RhythmSummaryView";
 import { AssessmentCompiling } from "./rhythm/AssessmentCompiling";
-import { AssessmentResponses, sections } from "./rhythm/rhythmAssessmentData";
+import { AssessmentResponses, getCurrentSections } from "./rhythm/rhythmAssessmentData";
 import { 
   analyzeRhythmAssessment, 
   storeFocusArea,
@@ -27,6 +27,9 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
   const [isCompiling, setIsCompiling] = useState(false);
   const [showSummary, setShowSummary] = useState(false);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
+
+  // Get user-type-specific sections
+  const sections = getCurrentSections();
 
   const handleResponse = (questionId: string, value: string) => {
     const sectionId = sections[currentSection].id.toString();

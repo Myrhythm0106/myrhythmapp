@@ -7,7 +7,7 @@ import { ArrowRight, ArrowLeft, Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { RhythmSectionHeader } from "./RhythmSectionHeader";
 import { RhythmQuestionCard } from "./RhythmQuestionCard";
-import { Section, AssessmentResponses, sections } from "./rhythmAssessmentData";
+import { AssessmentResponses, getCurrentSections } from "./rhythmAssessmentData";
 
 interface RhythmAssessmentViewProps {
   currentSection: number;
@@ -27,6 +27,8 @@ export function RhythmAssessmentView({
   const [autoProgressTimer, setAutoProgressTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
   
+  // Get user-type-specific sections
+  const sections = getCurrentSections();
   const section = sections[currentSection];
   const sectionId = section.id.toString();
   const sectionResponses = responses[sectionId] || {};
