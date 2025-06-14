@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -35,7 +34,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
   const { triggerEncouragement, EncouragementComponent } = useEncouragement();
   const focusInfo = focusAreas[assessmentResult.focusArea];
 
-  const handleUnlockResults = () => {
+  const handlePaymentSelect = (option: 'trial' | 'monthly' | 'annual' | 'skip') => {
     setCurrentStep("payment");
   };
 
@@ -147,7 +146,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
         return (
           <AssessmentResultsPreview 
             assessmentResult={assessmentResult}
-            onUnlockResults={handleUnlockResults}
+            onPaymentSelect={handlePaymentSelect}
           />
         );
         

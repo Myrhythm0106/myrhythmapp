@@ -5,15 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, Target, TrendingUp, Lock, Crown, Zap } from "lucide-react";
+import { AssessmentResult } from "@/utils/rhythmAnalysis";
 
 interface AssessmentResultsPreviewProps {
-  assessmentResult: {
-    focusArea: string;
-    overallScore: number;
-    sectionScores: Record<string, number>;
-    determinationReason: string;
-    personalizedData?: any;
-  };
+  assessmentResult: AssessmentResult;
   onPaymentSelect: (option: 'trial' | 'monthly' | 'annual' | 'skip') => void;
 }
 
@@ -202,7 +197,7 @@ function getFocusAreaInfo(focusArea: string) {
 }
 
 // Helper function to generate teaser insights
-function getTeaserInsights(assessmentResult: any) {
+function getTeaserInsights(assessmentResult: AssessmentResult) {
   const insights = [
     {
       title: "Your Optimal Energy Patterns",
