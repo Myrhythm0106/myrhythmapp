@@ -1,9 +1,11 @@
 
 import { toast } from "sonner";
 
+type FlowStep = "preview" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+
 export const usePaymentHandlers = (
   setPaymentCompleted: (completed: boolean) => void,
-  setCurrentStep: (step: string) => void,
+  setCurrentStep: (step: FlowStep) => void,
   triggerEncouragement: (type: string, data: any) => void,
   assessmentResult: any
 ) => {

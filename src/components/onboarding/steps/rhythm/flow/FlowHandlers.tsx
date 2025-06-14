@@ -2,8 +2,10 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+type FlowStep = "preview" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+
 export const useFlowHandlers = (
-  setCurrentStep: (step: string) => void,
+  setCurrentStep: (step: FlowStep) => void,
   onComplete: () => void,
   triggerEncouragement: (type: string, data: any) => void,
   assessmentResult: any
