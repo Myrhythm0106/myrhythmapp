@@ -4,7 +4,7 @@ import { UserTypeStep, UserType } from "./steps/UserTypeStep";
 import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
-import { PaymentStep } from "./steps/PaymentStep";
+// Payment step removed from onboarding flow
 import { PreAssessmentCompiling } from "./steps/rhythm/PreAssessmentCompiling";
 import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
@@ -113,11 +113,10 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
               )}
             </div>
           );
+        // Payment step (5) removed - now goes directly to pre-assessment
         case 5:
-          return <PaymentStep onComplete={onPaymentComplete} selectedPlan={selectedPlan} />;
-        case 6:
           return <PreAssessmentCompiling onComplete={onPreAssessmentComplete} userType={userType} />;
-        case 7:
+        case 6:
           return <RhythmAssessmentStep onComplete={onRhythmAssessmentComplete} />;
         default:
           console.error("Invalid step:", currentStep);

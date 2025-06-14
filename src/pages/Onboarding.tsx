@@ -8,8 +8,12 @@ import { useAutoProgression } from "@/hooks/useAutoProgression";
 import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
 
+// Updated steps for new flow (removed payment step from onboarding)
+const UPDATED_STEPS = STEPS.filter(step => step.id !== 5); // Remove payment step
+const TOTAL_STEPS = UPDATED_STEPS.length; // Now 6 steps
+
 const Onboarding = () => {
-  const onboardingState = useOnboardingLogic(STEPS.length);
+  const onboardingState = useOnboardingLogic(TOTAL_STEPS);
   
   const {
     currentStep,
@@ -28,7 +32,7 @@ const Onboarding = () => {
 
   const handlers = useOnboardingHandlers({
     ...onboardingState,
-    totalSteps: STEPS.length,
+    totalSteps: TOTAL_STEPS,
     paymentData,
     selectedPlan,
     userType,
@@ -59,14 +63,27 @@ const Onboarding = () => {
     enabled: currentStep === 4 && isPlanSelected && !isDirectNavigation
   });
 
-  // Get current step information
-  const currentStepInfo = STEPS.find(step => step.id === currentStep) || STEPS[0];
+  // Get current step information (adjust for removed payment step)
+  const getCurrentStepInfo = () => {
+    if (currentStep <= 4) {
+      return UPDATED_STEPS.find(step => step.id === currentStep) || UPDATED_STEPS[0];
+    } else {
+      // For steps 5 and 6 (pre-assessment and assessment), adjust the step mapping
+      const adjustedSteps = [
+        { id: 5, title: "Pre-Assessment", description: "Preparing your personalized assessment" },
+        { id: 6, title: "Rhythm Assessment", description: "Discover your unique rhythm and patterns" }
+      ];
+      return adjustedSteps.find(step => step.id === currentStep) || adjustedSteps[0];
+    }
+  };
+
+  const currentStepInfo = getCurrentStepInfo();
 
   return (
     <>
       <OnboardingLayout 
         currentStep={currentStep} 
-        totalSteps={STEPS.length}
+        totalSteps={TOTAL_STEPS}
         onBack={handlers.goToPreviousStep}
         title={currentStepInfo.title}
         description={currentStepInfo.description}

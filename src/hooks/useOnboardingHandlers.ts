@@ -60,27 +60,25 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   const handlePlanSelected = (plan: PlanType) => {
     props.setSelectedPlan(plan);
     
-    if (plan === "basic") {
-      // Skip payment for basic plan trial and go directly to pre-assessment compilation
-      props.setCurrentStep(6);
-    } else {
-      props.setCurrentStep(5);
-    }
+    // Skip payment step in onboarding - go directly to pre-assessment compilation
+    // Payment will be handled in the post-assessment flow
+    props.setCurrentStep(5); // Pre-assessment compilation
   };
 
   const handlePaymentComplete = (paymentData: PaymentFormValues) => {
+    // This is now handled in the post-assessment flow
     props.setPaymentData(paymentData);
     props.setShowPaymentConfirmation(true);
   };
 
   const handlePaymentConfirm = () => {
     props.setShowPaymentConfirmation(false);
-    props.setCurrentStep(6); // Go to pre-assessment compilation
+    props.setCurrentStep(5); // Go to pre-assessment compilation
     toast.success("Payment processed successfully!");
   };
 
   const handlePreAssessmentComplete = () => {
-    props.setCurrentStep(7); // Go to actual assessment
+    props.setCurrentStep(6); // Go to actual assessment
   };
 
   const handleRhythmAssessmentComplete = (responses: any) => {
@@ -109,8 +107,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     localStorage.setItem("myrhythm_current_assessment", JSON.stringify(result));
     
     // DON'T navigate to dashboard yet - stay in onboarding flow
-    // The PostAssessmentFlow will handle the final completion and navigation
-    console.log("Assessment completed, staying in onboarding flow");
+    // The PostAssessmentFlow will handle the preview -> payment -> results flow
+    console.log("Assessment completed, moving to preview flow");
   };
 
   return {

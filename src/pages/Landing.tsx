@@ -28,7 +28,7 @@ const Landing = () => {
         <LandingFooter />
       </ScrollArea>
       
-      {/* Floating registration button for mobile */}
+      {/* Enhanced floating registration button for all devices */}
       <FloatingRegisterButton />
     </div>
   );

@@ -13,6 +13,9 @@ import { QuickDashboardSetup } from "./QuickDashboardSetup";
 import { PostAssessmentChoiceScreen } from "./PostAssessmentChoiceScreen";
 import { LifeManagementSetupWizard } from "./LifeManagementSetupWizard";
 import { EnhancedGoalCreationWizard } from "../../../goals/EnhancedGoalCreationWizard";
+import { AssessmentResultsPreview } from "./AssessmentResultsPreview";
+import { PostAssessmentPayment } from "./PostAssessmentPayment";
+import { useEncouragement } from "../../../encouragement/EncouragementEngine";
 import { toast } from "sonner";
 
 interface PostAssessmentFlowProps {
@@ -20,15 +23,58 @@ interface PostAssessmentFlowProps {
   onComplete: () => void;
 }
 
-type FlowStep = "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+type FlowStep = "preview" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessmentFlowProps) {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState<FlowStep>("results");
+  const [currentStep, setCurrentStep] = useState<FlowStep>("preview");
   const [selectedGoals, setSelectedGoals] = useState<any[]>([]);
   const [dashboardConfig, setDashboardConfig] = useState<any>(null);
+  const [paymentCompleted, setPaymentCompleted] = useState(false);
   
+  const { triggerEncouragement, EncouragementComponent } = useEncouragement();
   const focusInfo = focusAreas[assessmentResult.focusArea];
+
+  const handleUnlockResults = () => {
+    setCurrentStep("payment");
+  };
+
+  const handlePaymentOption = async (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => {
+    // Simulate payment processing
+    console.log("Processing payment option:", option);
+    
+    // Show payment processing
+    toast.info("Processing your selection...", {
+      duration: 2000
+    });
+
+    // Simulate API call delay
+    setTimeout(() => {
+      // Mark payment as completed
+      setPaymentCompleted(true);
+      localStorage.setItem("myrhythm_payment_completed", "true");
+      localStorage.setItem("myrhythm_subscription_active", "true");
+      
+      // Trigger encouragement for payment success
+      triggerEncouragement('payment_success', {
+        userType: assessmentResult.userType,
+        customMessage: "🎉 Welcome to your personalized MyRhythm experience! Your support circle will now be notified of your progress!"
+      });
+      
+      // Show success toast
+      toast.success("Payment successful! 🎉", {
+        description: "Your support circle will now be notified of your progress!",
+        duration: 5000
+      });
+      
+      // Move to full results
+      setCurrentStep("results");
+    }, 2000);
+  };
+
+  const handleBackToPreview = () => {
+    setCurrentStep("preview");
+  };
 
   const handleResultsNext = () => {
     setCurrentStep("choice");
@@ -63,6 +109,11 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
     localStorage.setItem("myrhythm_initial_setup_complete", "true");
     localStorage.setItem("myrhythm_goals_created", "true");
     
+    // Trigger goal creation encouragement
+    triggerEncouragement('goal_created', {
+      userType: assessmentResult.userType
+    });
+    
     toast.success("Welcome to Your Personalized MyRhythm! 🎉", {
       description: "Your first goal has been created and your journey begins now.",
       duration: 5000
@@ -92,6 +143,22 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
 
   const renderStepContent = () => {
     switch (currentStep) {
+      case "preview":
+        return (
+          <AssessmentResultsPreview 
+            assessmentResult={assessmentResult}
+            onUnlockResults={handleUnlockResults}
+          />
+        );
+        
+      case "payment":
+        return (
+          <PostAssessmentPayment
+            onSelectPaymentOption={handlePaymentOption}
+            onBack={handleBackToPreview}
+          />
+        );
+        
       case "results":
         return <EncouragingResultsDisplay assessmentResult={assessmentResult} />;
         
@@ -129,6 +196,9 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
+      {/* Encouragement Component */}
+      {EncouragementComponent}
+      
       {/* Step Content */}
       <div className="min-h-[400px]">
         {renderStepContent()}

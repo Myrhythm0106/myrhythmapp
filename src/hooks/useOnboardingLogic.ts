@@ -18,6 +18,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Initialize currentStep from URL parameter with proper validation
+  // Adjusted for new 6-step flow (removed payment step from onboarding)
   const [currentStep, setCurrentStep] = useState(() => {
     const stepParam = searchParams.get('step');
     if (stepParam) {
