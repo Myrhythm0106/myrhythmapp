@@ -88,16 +88,6 @@ const SplashScreen = () => {
             <span>Start Your Journey</span>
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          
-          <div className="mt-6 text-center">
-            <Button 
-              variant="link" 
-              className="text-muted-foreground hover:text-beacon-600" 
-              onClick={() => navigate("/onboarding")}
-            >
-              Already have an account? Log in
-            </Button>
-          </div>
         </div>
       </div>
     </div>
