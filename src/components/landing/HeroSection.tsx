@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -56,12 +57,6 @@ export function HeroSection() {
           <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 px-8 py-4 flex items-center gap-2" onClick={() => setShowRegisterModal(true)}>
             <UserPlus className="h-5 w-5" />
             Register Free
-          </Button>
-          
-          {/* Secondary Login CTA */}
-          <Button size="lg" variant="outline" onClick={() => setShowLoginModal(true)} className="border-primary text-primary hover:bg-primary hover:text-white transition-all duration-200 text-lg">
-            <LogIn className="h-4 w-4 mr-2" />
-            Already have an account?
           </Button>
           
           {/* Tertiary actions */}
