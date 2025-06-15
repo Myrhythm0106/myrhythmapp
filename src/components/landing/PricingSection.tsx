@@ -47,7 +47,11 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "Complete resource library",
               "Community forum participation",
               "Personalized insights",
-              "Priority support"
+              "Priority support",
+              "Smart Intervention Alerts",
+              "Enhanced safety reminders",
+              "Object location tracker",
+              "Medication photo verification"
             ]}
             buttonText="Choose Premium"
             isPopular={true}
@@ -64,7 +68,8 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "Shared calendars",
               "Caregiver resources",
               "Family support group",
-              "Dedicated case manager",
+              "Advanced pattern recognition",
+              "Process recording system",
               "24/7 emergency support"
             ]}
             buttonText="Choose Family Plan"

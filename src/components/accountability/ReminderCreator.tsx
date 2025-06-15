@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -97,6 +96,7 @@ export function ReminderCreator() {
       case 'medication': return 'bg-red-100 text-red-800';
       case 'appointment': return 'bg-blue-100 text-blue-800';
       case 'activity': return 'bg-green-100 text-green-800';
+      case 'safety': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -148,6 +148,7 @@ export function ReminderCreator() {
                       <SelectItem value="medication">Medication</SelectItem>
                       <SelectItem value="appointment">Appointment</SelectItem>
                       <SelectItem value="activity">Activity</SelectItem>
+                      <SelectItem value="safety">Safety Check</SelectItem>
                       <SelectItem value="custom">Custom</SelectItem>
                     </SelectContent>
                   </Select>
