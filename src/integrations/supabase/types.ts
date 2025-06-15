@@ -9,6 +9,108 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      accountability_alerts: {
+        Row: {
+          acknowledged_by: string[] | null
+          alert_type: string
+          created_at: string
+          id: string
+          message: string
+          related_id: string | null
+          sent_at: string | null
+          severity: string
+          target_members: string[]
+          title: string
+          user_id: string
+        }
+        Insert: {
+          acknowledged_by?: string[] | null
+          alert_type: string
+          created_at?: string
+          id?: string
+          message: string
+          related_id?: string | null
+          sent_at?: string | null
+          severity?: string
+          target_members?: string[]
+          title: string
+          user_id: string
+        }
+        Update: {
+          acknowledged_by?: string[] | null
+          alert_type?: string
+          created_at?: string
+          id?: string
+          message?: string
+          related_id?: string | null
+          sent_at?: string | null
+          severity?: string
+          target_members?: string[]
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      accountability_reminders: {
+        Row: {
+          created_at: string
+          created_by_member_id: string
+          description: string | null
+          end_date: string | null
+          escalation_delay_minutes: number | null
+          escalation_enabled: boolean
+          escalation_members: string[] | null
+          frequency: string
+          id: string
+          is_active: boolean
+          reminder_days: number[] | null
+          reminder_time: string
+          reminder_type: string
+          start_date: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by_member_id: string
+          description?: string | null
+          end_date?: string | null
+          escalation_delay_minutes?: number | null
+          escalation_enabled?: boolean
+          escalation_members?: string[] | null
+          frequency?: string
+          id?: string
+          is_active?: boolean
+          reminder_days?: number[] | null
+          reminder_time: string
+          reminder_type?: string
+          start_date?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by_member_id?: string
+          description?: string | null
+          end_date?: string | null
+          escalation_delay_minutes?: number | null
+          escalation_enabled?: boolean
+          escalation_members?: string[] | null
+          frequency?: string
+          id?: string
+          is_active?: boolean
+          reminder_days?: number[] | null
+          reminder_time?: string
+          reminder_type?: string
+          start_date?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       calendar_events: {
         Row: {
           category: string | null
@@ -362,6 +464,107 @@ export type Database = {
         }
         Relationships: []
       }
+      reminder_responses: {
+        Row: {
+          created_at: string
+          id: string
+          reminder_id: string
+          responded_at: string | null
+          response_note: string | null
+          response_type: string | null
+          sent_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          reminder_id: string
+          responded_at?: string | null
+          response_note?: string | null
+          response_type?: string | null
+          sent_at: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          reminder_id?: string
+          responded_at?: string | null
+          response_note?: string | null
+          response_type?: string | null
+          sent_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_responses_reminder_id_fkey"
+            columns: ["reminder_id"]
+            isOneToOne: false
+            referencedRelation: "accountability_reminders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_circle_members: {
+        Row: {
+          can_receive_alerts: boolean
+          can_send_reminders: boolean
+          created_at: string
+          id: string
+          invitation_token: string | null
+          invited_at: string | null
+          joined_at: string | null
+          member_email: string | null
+          member_name: string
+          member_phone: string | null
+          notification_preferences: Json
+          permissions: Json
+          relationship: string
+          role: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          can_receive_alerts?: boolean
+          can_send_reminders?: boolean
+          created_at?: string
+          id?: string
+          invitation_token?: string | null
+          invited_at?: string | null
+          joined_at?: string | null
+          member_email?: string | null
+          member_name: string
+          member_phone?: string | null
+          notification_preferences?: Json
+          permissions?: Json
+          relationship: string
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          can_receive_alerts?: boolean
+          can_send_reminders?: boolean
+          created_at?: string
+          id?: string
+          invitation_token?: string | null
+          invited_at?: string | null
+          joined_at?: string | null
+          member_email?: string | null
+          member_name?: string
+          member_phone?: string | null
+          notification_preferences?: Json
+          permissions?: Json
+          relationship?: string
+          role?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       symptom_logs: {
         Row: {
           created_at: string
@@ -477,6 +680,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      generate_accountability_alert: {
+        Args: {
+          p_user_id: string
+          p_alert_type: string
+          p_related_id?: string
+          p_title?: string
+          p_message?: string
+          p_severity?: string
+        }
+        Returns: string
+      }
       generate_backup_codes: {
         Args: Record<PropertyKey, never>
         Returns: Json

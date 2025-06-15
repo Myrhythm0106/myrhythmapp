@@ -1,149 +1,194 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ToastProvider } from "@/hooks/use-toast";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import NotFound from "./pages/NotFound";
-import Onboarding from "./pages/Onboarding";
-import Landing from "./pages/Landing";
-import Welcome from "./pages/Welcome";
-import Auth from "./pages/Auth";
-import EmailVerification from "./pages/EmailVerification";
-import MainLayout from "./components/layout/MainLayout";
-import Profile from "./pages/Profile";
-import SymptomTracking from "./pages/SymptomTracking";
-import TBICalendar from "./pages/TBICalendar";
-import Community from "./pages/Community";
-import PersonalCommunity from "./pages/PersonalCommunity";
-import UsefulInfo from "./pages/UsefulInfo";
-import SplashScreen from "./components/mobile/SplashScreen";
-import Customization from "./pages/Customization";
-import Gratitude from "./pages/Gratitude";
-import { useIsMobile } from "./hooks/use-mobile";
-import UserGuideView from "./pages/UserGuideView";
-import FoundersStory from "./pages/FoundersStory";
-import MoodTracking from "./pages/MoodTracking";
-import { AuthProvider } from "./contexts/AuthContext";
-import { ProtectedRoute } from "./components/auth/ProtectedRoute";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Toaster } from 'sonner';
+
+import { AuthProvider } from './contexts/AuthContext';
+import { SidebarProvider } from './components/layout/Sidebar/SidebarContext';
+import { PomodoroProvider } from './contexts/PomodoroContext';
+import { ProtectedRoute } from './components/auth/ProtectedRoute';
+import { MainLayout } from './components/layout/MainLayout';
+
+// Public Pages
+import Index from './pages/Index';
+import Landing from './pages/Landing';
+import FoundersStory from './pages/FoundersStory';
+import BrainRecoveryHome from './pages/BrainRecoveryHome';
+import Auth from './pages/Auth';
+import EmailVerification from './pages/EmailVerification';
+import Welcome from './pages/Welcome';
+import Onboarding from './pages/Onboarding';
+import FAQ from './pages/FAQ';
+import NotFound from './pages/NotFound';
+
+// Protected Pages
+import Dashboard from './pages/Dashboard';
+import Calendar from './pages/Calendar';
+import MoodTracking from './pages/MoodTracking';
+import Gratitude from './pages/Gratitude';
+import SymptomTracking from './pages/SymptomTracking';
+import TBICalendar from './pages/TBICalendar';
+import Community from './pages/Community';
+import PersonalCommunity from './pages/PersonalCommunity';
+import Profile from './pages/Profile';
+import SecuritySettings from './pages/SecuritySettings';
+import Customization from './pages/Customization';
+import UserGuideView from './pages/UserGuideView';
+import MyRhythmAppDocumentation from './pages/MyRhythmAppDocumentation';
+import UsefulInfo from './pages/UsefulInfo';
+import Accountability from './pages/Accountability';
 
 const queryClient = new QueryClient();
 
-const AppRoutes = () => {
+function App() {
   return (
-    <Routes>
-      {/* Public routes - Always show Landing page on home route */}
-      <Route path="/" element={<Landing />} />
-      <Route path="/splash" element={<SplashScreen />} />
-      <Route path="/auth" element={<Auth />} />
-      <Route path="/email-verification" element={<EmailVerification />} />
-      <Route path="/founders-story" element={<FoundersStory />} />
-      <Route path="/onboarding" element={<Onboarding />} />
-      <Route path="/welcome" element={<Welcome />} />
-      <Route path="/guide" element={<UserGuideView />} />
-      
-      {/* Protected routes */}
-      <Route path="/dashboard" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <Dashboard />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/customization" element={
-        <ProtectedRoute>
-          <Customization />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/profile" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <Profile />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/calendar" element={
-        <ProtectedRoute>
-          <TBICalendar />
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/tracking" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <SymptomTracking />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/mood" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <MoodTracking />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/gratitude" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <Gratitude />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/community" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <Community />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/personal-community" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <PersonalCommunity />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      <Route path="/useful-info" element={
-        <ProtectedRoute>
-          <MainLayout>
-            <UsefulInfo />
-          </MainLayout>
-        </ProtectedRoute>
-      } />
-      
-      {/* Legacy redirects */}
-      <Route path="/index" element={<Navigate to="/dashboard" replace />} />
-      <Route path="/home" element={<Navigate to="/" replace />} />
-      
-      {/* 404 Page */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
-};
+    <Router>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <SidebarProvider>
+            <PomodoroProvider>
+              <Toaster />
+              <Routes>
+                {/* Public routes */}
+                <Route path="/" element={<Index />} />
+                <Route path="/landing" element={<Landing />} />
+                <Route path="/founders-story" element={<FoundersStory />} />
+                <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/email-verification" element={<EmailVerification />} />
+                <Route path="/welcome" element={<Welcome />} />
+                <Route path="/onboarding" element={<Onboarding />} />
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <ToastProvider>
-        <Toaster />
-        <Sonner richColors />
-        <BrowserRouter>
-          <AuthProvider>
-            <AppRoutes />
-          </AuthProvider>
-        </BrowserRouter>
-      </ToastProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+                {/* Protected routes */}
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Dashboard />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/calendar" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Calendar />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/accountability" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Accountability />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/mood-tracking" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <MoodTracking />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/gratitude" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Gratitude />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/symptom-tracking" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <SymptomTracking />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/tbi-calendar" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <TBICalendar />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/community" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Community />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/personal-community" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <PersonalCommunity />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Profile />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/security" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <SecuritySettings />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/customization" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Customization />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/user-guide" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <UserGuideView />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/docs" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <MyRhythmAppDocumentation />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/useful-info" element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <UsefulInfo />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </PomodoroProvider>
+          </SidebarProvider>
+        </QueryClientProvider>
+      </AuthProvider>
+    </Router>
+  );
+}
 
 export default App;

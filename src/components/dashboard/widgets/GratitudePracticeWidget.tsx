@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useAccountabilityIntegration } from "@/hooks/use-accountability-integration";
 
 export function GratitudePracticeWidget() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { notifyTaskCompleted } = useAccountabilityIntegration();
   const [gratitudeNote, setGratitudeNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -41,15 +43,20 @@ export function GratitudePracticeWidget() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('gratitude_entries')
         .insert({
           user_id: user.id,
           gratitude_text: gratitudeNote.trim(),
           prompt_type: 'daily_widget'
-        });
+        })
+        .select()
+        .single();
 
       if (error) throw error;
+
+      // Notify support circle of gratitude practice completion
+      await notifyTaskCompleted('Daily Gratitude Practice', data.id);
 
       toast.success("Your gratitude has been saved! ✨", {
         description: "Every grateful moment builds your resilience."
