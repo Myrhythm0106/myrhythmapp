@@ -23,7 +23,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
     title: '',
     description: '',
     reminder_type: 'custom' as const,
-    frequency: 'daily' as const,
+    frequency: 'daily' as 'daily' | 'weekly' | 'monthly' | 'once',
     reminder_time: '09:00',
     reminder_days: [] as number[],
     start_date: new Date().toISOString().split('T')[0],
