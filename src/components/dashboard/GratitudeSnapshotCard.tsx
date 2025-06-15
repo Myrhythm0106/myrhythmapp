@@ -29,7 +29,7 @@ export function GratitudeSnapshotCard() {
           <div className="flex items-center gap-2">
             <HeartHandshake className="h-5 w-5 text-amber-600" />
             <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-              Your Gratitude Garden
+              Your Daily Gratitude
             </span>
             <Sparkles className="h-4 w-4 text-amber-400" />
           </div>
@@ -72,14 +72,14 @@ export function GratitudeSnapshotCard() {
           <div className="py-8 text-center bg-white/40 rounded-lg border border-amber-100">
             <div className="mb-4">
               <HeartHandshake className="h-12 w-12 text-amber-400 mx-auto mb-3" />
-              <h3 className="text-lg font-medium text-amber-800 mb-2">Start Your Gratitude Journey</h3>
+              <h3 className="text-lg font-medium text-amber-800 mb-2">Start Your Daily Practice</h3>
               <p className="text-amber-700 text-sm">
-                Every moment of gratitude plants a seed of growth in your heart
+                Share what you're grateful for and watch your perspective grow
               </p>
             </div>
             <Button onClick={handleAddGratitude} className="bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
               <Plus className="mr-1 h-4 w-4" />
-              Begin Growing
+              Add Gratitude
             </Button>
           </div>
         )}
@@ -89,10 +89,10 @@ export function GratitudeSnapshotCard() {
           <div className="flex gap-2 w-full">
             <Button variant="outline" onClick={handleAddGratitude} className="flex-1 border-amber-200 text-amber-700 hover:bg-amber-50">
               <Plus className="mr-1 h-4 w-4" />
-              New Growth
+              Add More
             </Button>
             <Button onClick={handleViewGratitude} className="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600">
-              View Garden
+              View All
             </Button>
           </div>
         </CardFooter>

@@ -59,8 +59,8 @@ const Gratitude = () => {
   return (
     <div className="space-y-6">
       <PageHeader 
-        title="Contextual Gratitude" 
-        subtitle="Track, reflect, and grow through intentional gratitude"
+        title="Your Daily Gratitude" 
+        subtitle="Build resilience through appreciation and reflection"
       >
         <Button onClick={() => setIsQuickAddOpen(true)}>
           <Plus className="mr-1 h-4 w-4" />
@@ -71,9 +71,9 @@ const Gratitude = () => {
       <Card className="bg-muted/20">
         <CardContent className="py-4">
           <div className="text-center mb-4">
-            <h3 className="text-lg font-semibold mb-1">Express Gratitude For...</h3>
+            <h3 className="text-lg font-semibold mb-1">What are you grateful for today?</h3>
             <p className="text-sm text-muted-foreground mb-3">
-              Choose a context for your gratitude reflection
+              Choose what feels right for your reflection
             </p>
           </div>
           
@@ -84,7 +84,7 @@ const Gratitude = () => {
               onClick={() => handleOpenPrompt("fitness")}
             >
               <HeartHandshake className="mr-2 h-5 w-5 text-blue-500" />
-              Fitness Gratitude
+              After Exercise
             </Button>
             <Button 
               variant="outline" 
@@ -92,7 +92,7 @@ const Gratitude = () => {
               onClick={() => handleOpenPrompt("mindfulness")}
             >
               <HeartHandshake className="mr-2 h-5 w-5 text-green-500" />
-              Mindfulness Gratitude
+              Quiet Moments
             </Button>
             <Button 
               variant="outline" 
@@ -100,7 +100,7 @@ const Gratitude = () => {
               onClick={() => handleOpenPrompt("social")}
             >
               <HeartHandshake className="mr-2 h-5 w-5 text-purple-500" />
-              Social Gratitude
+              With Others
             </Button>
             <Button 
               variant="outline" 
@@ -119,7 +119,7 @@ const Gratitude = () => {
         <div className="animate-fade-in">
           <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
             <HeartHandshake className="h-5 w-5 text-primary" />
-            Your Latest Gratitude Entry
+            Your Latest Gratitude
           </h3>
           <GratitudeEntryCard 
             entry={latestEntry} 
@@ -138,11 +138,11 @@ const Gratitude = () => {
         <TabsList className="w-full">
           <TabsTrigger value="journal" className="flex-1">
             <Book className="h-4 w-4 mr-2" />
-            Gratitude Journal
+            Your Journal
           </TabsTrigger>
           <TabsTrigger value="insights" className="flex-1">
             <BarChart2 className="h-4 w-4 mr-2" />
-            Insights Dashboard
+            Your Patterns
           </TabsTrigger>
         </TabsList>
         

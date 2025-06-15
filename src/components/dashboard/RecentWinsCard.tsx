@@ -18,26 +18,26 @@ export function RecentWinsCard() {
   const achievements: Achievement[] = [
     {
       id: "1",
-      title: "Completed 5-day gratitude streak",
+      title: "Kept up gratitude practice for 5 days",
       date: new Date(),
       type: "streak",
       highlight: true
     },
     {
       id: "2",
-      title: "New high score in Memory Match game",
+      title: "New personal best in Memory Match",
       date: subDays(new Date(), 1),
       type: "game"
     },
     {
       id: "3",
-      title: "Completed weekly walking goal",
+      title: "Completed your walking goal this week",
       date: subDays(new Date(), 2),
       type: "goal"
     },
     {
       id: "4",
-      title: "Tracked symptoms for 7 consecutive days",
+      title: "Tracked your mood for 7 days straight",
       date: subDays(new Date(), 3),
       type: "tracking"
     }
@@ -59,7 +59,7 @@ export function RecentWinsCard() {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
           <Award className="h-5 w-5 text-pink-500" />
-          Recent Wins
+          Your Recent Wins
         </CardTitle>
       </CardHeader>
       
@@ -99,7 +99,7 @@ export function RecentWinsCard() {
           {achievements.length === 0 && (
             <div className="text-center py-6">
               <p className="text-muted-foreground">
-                Your achievements will appear here
+                Your wins will show up here as you make progress
               </p>
             </div>
           )}

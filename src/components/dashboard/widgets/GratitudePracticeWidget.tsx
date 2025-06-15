@@ -18,23 +18,23 @@ export function GratitudePracticeWidget() {
   // Mock data for display
   const currentStreak = 5;
   const todayPrompts = [
-    "What small moment brought you joy today?",
+    "What made you smile today?",
     "Who showed you kindness recently?", 
-    "What progress did you make today, no matter how small?",
-    "What are you proud of yourself for today?",
-    "What challenge taught you something valuable?"
+    "What progress are you proud of?",
+    "What challenge helped you grow?",
+    "What small joy brightened your day?"
   ];
   
   const todayPrompt = todayPrompts[Math.floor(Math.random() * todayPrompts.length)];
 
   const handleQuickEntry = async () => {
     if (!user) {
-      toast.error("Please log in to save gratitude entries");
+      toast.error("Please log in to save your gratitude");
       return;
     }
     
     if (!gratitudeNote.trim()) {
-      toast.error("Share what's sparking gratitude in your heart");
+      toast.error("Share what you're grateful for");
       return;
     }
 
@@ -51,13 +51,13 @@ export function GratitudePracticeWidget() {
 
       if (error) throw error;
 
-      toast.success("Your gratitude lights up the world! ✨", {
-        description: "Every moment of gratitude grows your resilience."
+      toast.success("Your gratitude has been saved! ✨", {
+        description: "Every grateful moment builds your resilience."
       });
       setGratitudeNote("");
     } catch (error) {
       console.error('Error saving gratitude:', error);
-      toast.error("Failed to save gratitude entry. Please try again.");
+      toast.error("Couldn't save right now. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -68,13 +68,13 @@ export function GratitudePracticeWidget() {
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <HeartHandshake className="h-5 w-5 text-rose-500" />
-          Daily Gratitude Practice
+          Your Daily Gratitude
           <Sparkles className="h-4 w-4 text-amber-400" />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="bg-gradient-to-r from-rose-100 to-pink-100 p-4 rounded-lg border border-rose-200">
-          <p className="text-sm font-medium mb-2 text-rose-800">Today's Growth Question</p>
+          <p className="text-sm font-medium mb-2 text-rose-800">Today's question</p>
           <p className="text-sm text-rose-700 italic">
             {todayPrompt}
           </p>
@@ -101,14 +101,14 @@ export function GratitudePracticeWidget() {
             disabled={!gratitudeNote.trim() || isSubmitting}
           >
             <HeartHandshake className="h-4 w-4 mr-1" />
-            {isSubmitting ? "Saving..." : "Capture This Moment"}
+            {isSubmitting ? "Saving..." : "Save This Moment"}
           </Button>
         </div>
 
         <div className="flex items-center justify-between pt-2">
           <div className="flex items-center gap-2">
             <Flame className="h-4 w-4 text-orange-500" />
-            <span className="text-sm font-medium text-rose-700">{currentStreak} days growing</span>
+            <span className="text-sm font-medium text-rose-700">{currentStreak} day streak</span>
           </div>
           <Button 
             variant="ghost" 
@@ -116,7 +116,7 @@ export function GratitudePracticeWidget() {
             onClick={() => navigate("/gratitude")}
             className="text-rose-600 hover:text-rose-800 hover:bg-rose-100"
           >
-            Explore More
+            View All
             <ArrowRight className="h-4 w-4 ml-1" />
           </Button>
         </div>

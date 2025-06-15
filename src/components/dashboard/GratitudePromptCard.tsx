@@ -8,18 +8,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { useGratitude } from "@/hooks/use-gratitude";
 import { toast } from "sonner";
 
-// Growth-focused gratitude prompts
-const growthGratitudePrompts = [
-  "What challenge today helped you grow stronger?",
-  "What small progress are you proud of right now?",
-  "Who supported your growth journey recently?",
-  "What mistake taught you something valuable?",
-  "What ability did you strengthen today?",
-  "What 'not yet' became an 'I can' moment?",
-  "What effort are you grateful you made?",
-  "What resilience did you discover in yourself?",
-  "What growth mindset moment lifted your spirit?",
-  "What opportunity disguised as difficulty appeared today?"
+// Simple, encouraging gratitude prompts
+const dailyGratitudePrompts = [
+  "What made you smile today?",
+  "Who showed you kindness recently?",
+  "What progress are you proud of?",
+  "What small joy brightened your day?",
+  "What challenge helped you grow?",
+  "What ability are you grateful for?",
+  "What made today a little better?",
+  "What moment of peace did you find?",
+  "What support did you receive?",
+  "What opportunity appeared today?"
 ];
 
 export function GratitudePromptCard() {
@@ -29,7 +29,7 @@ export function GratitudePromptCard() {
   const [whyResponse, setWhyResponse] = useState("");
   const [isWriting, setIsWriting] = useState(false);
   const [currentPrompt] = useState(
-    growthGratitudePrompts[Math.floor(Math.random() * growthGratitudePrompts.length)]
+    dailyGratitudePrompts[Math.floor(Math.random() * dailyGratitudePrompts.length)]
   );
   
   const handleViewAll = () => {
@@ -42,7 +42,7 @@ export function GratitudePromptCard() {
   
   const handleSave = () => {
     if (!response.trim()) {
-      toast.error("Share what's sparking gratitude in your heart");
+      toast.error("Share what you're grateful for");
       return;
     }
     
@@ -52,12 +52,12 @@ export function GratitudePromptCard() {
       whyGrateful: whyResponse,
       moodScore: 4,
       isShared: false,
-      tags: ["growth", "reflection"]
+      tags: ["daily", "gratitude"]
     };
 
     addEntry(newEntry);
-    toast.success("Your gratitude is growing! 🌱", {
-      description: "Every grateful moment strengthens your resilience."
+    toast.success("Your gratitude has been saved! 🌱", {
+      description: "Every grateful moment builds your resilience."
     });
     
     setResponse("");
@@ -70,7 +70,7 @@ export function GratitudePromptCard() {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
           <HeartHandshake className="h-5 w-5 text-rose-500" />
-          Growth Through Gratitude
+          Your Daily Gratitude
           <Sparkles className="h-4 w-4 text-amber-400" />
         </CardTitle>
       </CardHeader>
@@ -79,7 +79,7 @@ export function GratitudePromptCard() {
         <div className="rounded-lg bg-gradient-to-r from-rose-100 to-pink-100 p-4 border border-rose-200">
           <div className="flex items-center gap-2 mb-2">
             <Heart className="h-4 w-4 text-rose-500" />
-            <span className="text-sm font-medium text-rose-700">Today's Growth Question</span>
+            <span className="text-sm font-medium text-rose-700">Today's question</span>
           </div>
           <p className="text-rose-800 italic font-medium">"{currentPrompt}"</p>
         </div>
@@ -116,7 +116,7 @@ export function GratitudePromptCard() {
                 className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
               >
                 <Heart className="h-4 w-4 mr-1" />
-                Save Growth
+                Save Gratitude
               </Button>
               <Button 
                 variant="outline" 
@@ -137,7 +137,7 @@ export function GratitudePromptCard() {
             className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
           >
             <Pencil className="h-4 w-4 mr-1" />
-            Start Growing
+            Start Writing
           </Button>
         )}
       </CardContent>
@@ -148,7 +148,7 @@ export function GratitudePromptCard() {
           className="w-full justify-between text-rose-600 hover:text-rose-800 hover:bg-rose-100"
           onClick={handleViewAll}
         >
-          <span>Explore Your Growth Garden</span>
+          <span>View All Your Gratitude</span>
           <ArrowRight className="h-4 w-4" />
         </Button>
       </CardFooter>
