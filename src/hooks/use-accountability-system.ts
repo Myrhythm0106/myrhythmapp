@@ -88,7 +88,15 @@ export function useAccountabilitySystem() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setSupportCircle(data || []);
+      
+      // Type assertion to handle database string types vs TypeScript union types
+      const typedData = (data || []).map(member => ({
+        ...member,
+        role: member.role as SupportCircleMember['role'],
+        status: member.status as SupportCircleMember['status']
+      }));
+      
+      setSupportCircle(typedData);
     } catch (error) {
       console.error('Error loading support circle:', error);
       toast.error('Failed to load support circle');
@@ -107,7 +115,15 @@ export function useAccountabilitySystem() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setReminders(data || []);
+      
+      // Type assertion to handle database string types vs TypeScript union types
+      const typedData = (data || []).map(reminder => ({
+        ...reminder,
+        reminder_type: reminder.reminder_type as AccountabilityReminder['reminder_type'],
+        frequency: reminder.frequency as AccountabilityReminder['frequency']
+      }));
+      
+      setReminders(typedData);
     } catch (error) {
       console.error('Error loading reminders:', error);
       toast.error('Failed to load reminders');
@@ -126,7 +142,15 @@ export function useAccountabilitySystem() {
         .limit(20);
 
       if (error) throw error;
-      setAlerts(data || []);
+      
+      // Type assertion to handle database string types vs TypeScript union types
+      const typedData = (data || []).map(alert => ({
+        ...alert,
+        alert_type: alert.alert_type as AccountabilityAlert['alert_type'],
+        severity: alert.severity as AccountabilityAlert['severity']
+      }));
+      
+      setAlerts(typedData);
     } catch (error) {
       console.error('Error loading alerts:', error);
       toast.error('Failed to load alerts');
@@ -151,9 +175,16 @@ export function useAccountabilitySystem() {
 
       if (error) throw error;
       
-      setSupportCircle(prev => [data, ...prev]);
+      // Type assertion for the returned data
+      const typedData = {
+        ...data,
+        role: data.role as SupportCircleMember['role'],
+        status: data.status as SupportCircleMember['status']
+      };
+      
+      setSupportCircle(prev => [typedData, ...prev]);
       toast.success(`${memberData.member_name} added to your support circle`);
-      return data;
+      return typedData;
     } catch (error) {
       console.error('Error adding support member:', error);
       toast.error('Failed to add support member');
@@ -199,9 +230,16 @@ export function useAccountabilitySystem() {
 
       if (error) throw error;
       
-      setReminders(prev => [data, ...prev]);
+      // Type assertion for the returned data
+      const typedData = {
+        ...data,
+        reminder_type: data.reminder_type as AccountabilityReminder['reminder_type'],
+        frequency: data.frequency as AccountabilityReminder['frequency']
+      };
+      
+      setReminders(prev => [typedData, ...prev]);
       toast.success('Reminder created');
-      return data;
+      return typedData;
     } catch (error) {
       console.error('Error creating reminder:', error);
       toast.error('Failed to create reminder');
