@@ -89,12 +89,14 @@ export function useAccountabilitySystem() {
 
       if (error) throw error;
       
-      // Type assertion to handle database string types vs TypeScript union types
+      // Properly cast database types to our interfaces
       const typedData = (data || []).map(member => ({
         ...member,
         role: member.role as SupportCircleMember['role'],
-        status: member.status as SupportCircleMember['status']
-      }));
+        status: member.status as SupportCircleMember['status'],
+        permissions: (member.permissions as any) || {},
+        notification_preferences: (member.notification_preferences as any) || { email: true, sms: false }
+      })) as SupportCircleMember[];
       
       setSupportCircle(typedData);
     } catch (error) {
@@ -116,12 +118,12 @@ export function useAccountabilitySystem() {
 
       if (error) throw error;
       
-      // Type assertion to handle database string types vs TypeScript union types
+      // Properly cast database types to our interfaces
       const typedData = (data || []).map(reminder => ({
         ...reminder,
         reminder_type: reminder.reminder_type as AccountabilityReminder['reminder_type'],
         frequency: reminder.frequency as AccountabilityReminder['frequency']
-      }));
+      })) as AccountabilityReminder[];
       
       setReminders(typedData);
     } catch (error) {
@@ -143,12 +145,12 @@ export function useAccountabilitySystem() {
 
       if (error) throw error;
       
-      // Type assertion to handle database string types vs TypeScript union types
+      // Properly cast database types to our interfaces
       const typedData = (data || []).map(alert => ({
         ...alert,
         alert_type: alert.alert_type as AccountabilityAlert['alert_type'],
         severity: alert.severity as AccountabilityAlert['severity']
-      }));
+      })) as AccountabilityAlert[];
       
       setAlerts(typedData);
     } catch (error) {
@@ -175,12 +177,14 @@ export function useAccountabilitySystem() {
 
       if (error) throw error;
       
-      // Type assertion for the returned data
+      // Properly cast the returned data
       const typedData = {
         ...data,
         role: data.role as SupportCircleMember['role'],
-        status: data.status as SupportCircleMember['status']
-      };
+        status: data.status as SupportCircleMember['status'],
+        permissions: (data.permissions as any) || {},
+        notification_preferences: (data.notification_preferences as any) || { email: true, sms: false }
+      } as SupportCircleMember;
       
       setSupportCircle(prev => [typedData, ...prev]);
       toast.success(`${memberData.member_name} added to your support circle`);
@@ -230,12 +234,12 @@ export function useAccountabilitySystem() {
 
       if (error) throw error;
       
-      // Type assertion for the returned data
+      // Properly cast the returned data
       const typedData = {
         ...data,
         reminder_type: data.reminder_type as AccountabilityReminder['reminder_type'],
         frequency: data.frequency as AccountabilityReminder['frequency']
-      };
+      } as AccountabilityReminder;
       
       setReminders(prev => [typedData, ...prev]);
       toast.success('Reminder created');
