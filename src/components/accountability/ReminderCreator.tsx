@@ -78,11 +78,15 @@ export function ReminderCreator() {
       case 'daily':
         return 'Daily';
       case 'weekly':
-        return `Weekly (${reminder.reminder_days?.map((d: number) => 
-          ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d]
-        ).join(', ')})`;
+        return `Weekly${reminder.reminder_days && reminder.reminder_days.length > 0 
+          ? ` (${reminder.reminder_days.map((d: number) => 
+              ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d]
+            ).join(', ')})` 
+          : ''}`;
       case 'monthly':
         return 'Monthly';
+      case 'once':
+        return 'Once';
       default:
         return reminder.frequency;
     }
