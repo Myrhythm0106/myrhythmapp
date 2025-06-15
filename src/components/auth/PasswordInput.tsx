@@ -12,6 +12,7 @@ interface PasswordInputProps {
   required?: boolean;
   minLength?: number;
   className?: string;
+  disabled?: boolean;
 }
 
 export function PasswordInput({ 
@@ -21,7 +22,8 @@ export function PasswordInput({
   onChange, 
   required = false,
   minLength,
-  className
+  className,
+  disabled = false
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -36,6 +38,7 @@ export function PasswordInput({
         required={required}
         minLength={minLength}
         className={className}
+        disabled={disabled}
       />
       <Button
         type="button"
@@ -43,6 +46,8 @@ export function PasswordInput({
         size="sm"
         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
         onClick={() => setShowPassword(!showPassword)}
+        disabled={disabled}
+        tabIndex={-1}
       >
         {showPassword ? (
           <EyeOff className="h-4 w-4 text-muted-foreground" />

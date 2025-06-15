@@ -9,6 +9,7 @@ import { UserPlus, ArrowRight, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { PasswordInput } from "@/components/auth/PasswordInput";
 
 interface QuickRegisterModalProps {
   isOpen: boolean;
@@ -84,12 +85,11 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
+              <PasswordInput
                 id="password"
-                type="password"
+                placeholder="Create a password"
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                placeholder="Create a password"
                 required
                 minLength={6}
               />
