@@ -18,7 +18,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
     created_by_member_id: 'self',
     title: '',
     description: '',
-    reminder_type: 'custom' as const,
+    reminder_type: 'custom' as 'medication' | 'appointment' | 'activity' | 'safety' | 'custom',
     frequency: 'daily' as 'daily' | 'weekly' | 'monthly' | 'once',
     reminder_time: '09:00',
     reminder_days: [] as number[],
@@ -108,7 +108,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
       <ReminderFormActions
         onClose={onClose}
         onSubmit={handleCreateReminder}
-        isValid={isFormValid}
+        isValid={!!isFormValid}
       />
     </div>
   );
