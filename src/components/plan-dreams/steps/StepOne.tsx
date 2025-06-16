@@ -25,9 +25,9 @@ export function StepOne({ onComplete, initialValue = "" }: StepOneProps) {
           <Sparkles className="h-8 w-8 text-white" />
         </div>
         
-        <h2 className="text-2xl font-bold text-gray-800">My Big Dream</h2>
+        <h2 className="text-2xl font-bold text-gray-800">What Are You Working Toward?</h2>
         <p className="text-gray-600 text-lg">
-          Think about ONE main thing you want to achieve
+          Think about ONE main thing you'd like to achieve - something that matters to you
         </p>
       </div>
       
@@ -41,7 +41,7 @@ export function StepOne({ onComplete, initialValue = "" }: StepOneProps) {
         />
         
         <div className="text-sm text-gray-500 space-y-1">
-          <p>Examples:</p>
+          <p>Ideas to get you started:</p>
           <p>"walk to the mailbox by myself"</p>
           <p>"read a whole book"</p>
           <p>"cook a meal for my family"</p>
@@ -54,7 +54,7 @@ export function StepOne({ onComplete, initialValue = "" }: StepOneProps) {
         size="lg"
         className="text-lg px-8 py-6 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
       >
-        Next: Break It Down
+        Let's Break This Down Together
       </Button>
     </div>
   );

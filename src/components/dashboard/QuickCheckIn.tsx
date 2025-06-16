@@ -20,11 +20,11 @@ export function QuickCheckIn() {
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">Quick Check-in</CardTitle>
+        <CardTitle className="text-xl">How Are You Feeling Right Now?</CardTitle>
       </CardHeader>
       
       <CardContent className="space-y-4">
-        <p className="text-sm text-muted-foreground">How are you feeling right now?</p>
+        <p className="text-sm text-muted-foreground">Just checking in with you - every feeling is valid</p>
         
         <div className="flex justify-between gap-2">
           <Button
@@ -33,7 +33,7 @@ export function QuickCheckIn() {
             onClick={() => handleMoodSelection("struggling")}
           >
             <Frown className="h-6 w-6 text-red-500" />
-            <span className="text-xs">Struggling</span>
+            <span className="text-xs">Having a tough time</span>
           </Button>
           
           <Button
@@ -42,7 +42,7 @@ export function QuickCheckIn() {
             onClick={() => handleMoodSelection("okay")}
           >
             <Meh className="h-6 w-6 text-yellow-500" />
-            <span className="text-xs">Okay</span>
+            <span className="text-xs">Getting by</span>
           </Button>
           
           <Button
@@ -51,7 +51,7 @@ export function QuickCheckIn() {
             onClick={() => handleMoodSelection("great")}
           >
             <Smile className="h-6 w-6 text-green-500" />
-            <span className="text-xs">Great</span>
+            <span className="text-xs">Feeling good!</span>
           </Button>
         </div>
       </CardContent>
@@ -62,7 +62,7 @@ export function QuickCheckIn() {
           className="w-full text-primary"
           onClick={handleLogSymptom}
         >
-          Log Detailed Symptoms →
+          Want to share more details? →
         </Button>
       </CardFooter>
     </Card>

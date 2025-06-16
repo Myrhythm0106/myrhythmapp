@@ -17,38 +17,38 @@ const GettingStartedGuide = () => {
   const steps: StepItem[] = [
     {
       number: "1",
-      title: "Complete Your Daily Check-in",
-      description: "Start each day with a mood check-in to track patterns and improve self-awareness."
+      title: "Check In With Yourself",
+      description: "Start each day by letting us know how you're feeling - it helps us support you better."
     },
     {
       number: "2",
-      title: "Set Your Top Priorities",
-      description: "Identify 1-3 key tasks that align with your goals to maintain focus throughout the day."
+      title: "Pick Your Top Priorities",
+      description: "Choose 1-3 things that matter most today to keep your focus clear and manageable."
     },
     {
       number: "3",
-      title: "Schedule Focus Sessions",
-      description: "Use the Pomodoro timer for dedicated work periods followed by short breaks."
+      title: "Use Focus Time",
+      description: "Try our timer for dedicated work periods - even 15 minutes counts as a win!"
     },
     {
       number: "4",
-      title: "Track Your Symptoms",
-      description: "Log how you feel to identify patterns and improve your wellbeing over time."
+      title: "Notice How You Feel",
+      description: "Track your energy and mood to discover patterns that help you thrive."
     },
     {
       number: "5",
-      title: "Review Your Calendar",
-      description: "Plan your week ahead with the calendar view to maintain balance and avoid overwhelm."
+      title: "Plan Your Week",
+      description: "Use the calendar to organize your time without feeling overwhelmed."
     },
     {
       number: "6",
-      title: "Connect with Community",
-      description: "Share experiences and find support from others on similar journeys."
+      title: "Connect with Others",
+      description: "Share your journey and find encouragement from people who understand."
     },
     {
       number: "7",
-      title: "Celebrate Your Wins",
-      description: "Document and acknowledge your daily achievements, no matter how small."
+      title: "Celebrate Every Win",
+      description: "Acknowledge your daily progress - every small step forward matters!"
     }
   ];
 
@@ -56,11 +56,11 @@ const GettingStartedGuide = () => {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">7-Step Cheat Sheet: Getting Started with MyRhythm</CardTitle>
+          <CardTitle className="text-2xl">Your 7-Step Guide to Getting Started</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <p className="text-muted-foreground">
-            Follow these seven simple steps to establish your daily rhythm and start seeing benefits right away.
+            Here's how to make MyRhythm work for you - take it at your own pace, there's no rush.
           </p>
           
           <div className="grid gap-4">
@@ -82,7 +82,7 @@ const GettingStartedGuide = () => {
               className="w-full mt-4 gap-2"
               onClick={() => navigate("/dashboard")}
             >
-              Start Using MyRhythm <ArrowRight className="h-4 w-4" />
+              I'm Ready to Start <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
         </CardContent>

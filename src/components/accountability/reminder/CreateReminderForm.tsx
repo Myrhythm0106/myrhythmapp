@@ -36,7 +36,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
 
   const handleCreateReminder = async () => {
     if (!newReminder.title || !newReminder.reminder_time) {
-      toast.error('Please fill in required fields');
+      toast.error('Let\'s make sure we have everything we need to set you up for success');
       return;
     }
 
@@ -58,6 +58,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
         escalation_delay_minutes: 30,
         escalation_members: []
       });
+      toast.success('Perfect! Your reminder is all set up to help you succeed! 🎉');
     } catch (error) {
       // Error handled in hook
     }
@@ -76,16 +77,16 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
     <div className="grid gap-4 py-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="title">Title *</Label>
+          <Label htmlFor="title">What would you like to be reminded about? *</Label>
           <Input
             id="title"
             value={newReminder.title}
             onChange={(e) => setNewReminder(prev => ({ ...prev, title: e.target.value }))}
-            placeholder="Take medication, Exercise, etc."
+            placeholder="Take my medication, Go for a walk, Call mom..."
           />
         </div>
         <div>
-          <Label htmlFor="type">Type</Label>
+          <Label htmlFor="type">What kind of reminder is this?</Label>
           <Select 
             value={newReminder.reminder_type} 
             onValueChange={(value: any) => setNewReminder(prev => ({ ...prev, reminder_type: value }))}
@@ -98,26 +99,26 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
               <SelectItem value="appointment">Appointment</SelectItem>
               <SelectItem value="activity">Activity</SelectItem>
               <SelectItem value="safety">Safety Check</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
+              <SelectItem value="custom">Something Else</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
       <div>
-        <Label htmlFor="description">Description</Label>
+        <Label htmlFor="description">Want to add more details?</Label>
         <Textarea
           id="description"
           value={newReminder.description}
           onChange={(e) => setNewReminder(prev => ({ ...prev, description: e.target.value }))}
-          placeholder="Additional details about this reminder..."
+          placeholder="Any extra details that might help you..."
           rows={3}
         />
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <Label htmlFor="frequency">Frequency</Label>
+          <Label htmlFor="frequency">How often?</Label>
           <Select 
             value={newReminder.frequency} 
             onValueChange={(value: any) => setNewReminder(prev => ({ ...prev, frequency: value }))}
@@ -126,15 +127,15 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="once">Once</SelectItem>
-              <SelectItem value="daily">Daily</SelectItem>
+              <SelectItem value="once">Just Once</SelectItem>
+              <SelectItem value="daily">Every Day</SelectItem>
               <SelectItem value="weekly">Weekly</SelectItem>
               <SelectItem value="monthly">Monthly</SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div>
-          <Label htmlFor="time">Time *</Label>
+          <Label htmlFor="time">What time works best? *</Label>
           <Input
             id="time"
             type="time"
@@ -143,7 +144,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
           />
         </div>
         <div>
-          <Label htmlFor="start-date">Start Date</Label>
+          <Label htmlFor="start-date">When should we start?</Label>
           <Input
             id="start-date"
             type="date"
@@ -162,7 +163,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label htmlFor="escalation">Enable Escalation</Label>
+          <Label htmlFor="escalation">Get extra support if needed?</Label>
           <Switch
             id="escalation"
             checked={newReminder.escalation_enabled}
@@ -172,7 +173,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
 
         {newReminder.escalation_enabled && (
           <div>
-            <Label htmlFor="escalation-delay">Escalation Delay (minutes)</Label>
+            <Label htmlFor="escalation-delay">How long should we wait before reaching out to your support team? (minutes)</Label>
             <Input
               id="escalation-delay"
               type="number"
@@ -184,14 +185,14 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
               placeholder="30"
             />
             <p className="text-xs text-muted-foreground mt-1">
-              If you don't respond, support circle members will be notified after this delay
+              If you don't respond, we'll gently let your support circle know you might need a check-in
             </p>
           </div>
         )}
       </div>
 
       <div>
-        <Label htmlFor="end-date">End Date (Optional)</Label>
+        <Label htmlFor="end-date">End date (if you want one)</Label>
         <Input
           id="end-date"
           type="date"
@@ -202,10 +203,10 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
 
       <div className="flex justify-end gap-2">
         <Button variant="outline" onClick={onClose}>
-          Cancel
+          Maybe Later
         </Button>
         <Button onClick={handleCreateReminder}>
-          Create Reminder
+          Set Me Up for Success!
         </Button>
       </div>
     </div>
