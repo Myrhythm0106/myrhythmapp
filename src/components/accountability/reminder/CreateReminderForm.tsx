@@ -79,7 +79,10 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
         reminderType={newReminder.reminder_type}
         onTitleChange={(title) => setNewReminder(prev => ({ ...prev, title }))}
         onDescriptionChange={(description) => setNewReminder(prev => ({ ...prev, description }))}
-        onTypeChange={(reminder_type) => setNewReminder(prev => ({ ...prev, reminder_type }))}
+        onTypeChange={(reminder_type) => setNewReminder(prev => ({ 
+          ...prev, 
+          reminder_type: reminder_type as 'medication' | 'appointment' | 'activity' | 'safety' | 'custom'
+        }))}
       />
 
       <ReminderScheduling
