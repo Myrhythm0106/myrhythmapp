@@ -35,7 +35,7 @@ export interface AccountabilityReminder {
   created_by_member_id: string;
   title: string;
   description?: string;
-  reminder_type: 'medication' | 'appointment' | 'activity' | 'custom';
+  reminder_type: 'medication' | 'appointment' | 'activity' | 'safety' | 'custom';
   frequency: 'once' | 'daily' | 'weekly' | 'monthly';
   reminder_time: string;
   reminder_days?: number[];
