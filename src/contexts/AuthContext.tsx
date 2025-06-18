@@ -24,10 +24,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('AuthProvider: Setting up auth state listener');
+    
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
-        console.log('Auth state change:', event, session?.user?.id);
+        console.log('Auth state change:', event, 'user:', !!session?.user, 'session:', !!session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -55,7 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session check:', session?.user?.id);
+      console.log('Initial session check:', !!session?.user, 'session:', !!session);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -96,12 +98,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signIn = async (email: string, password: string) => {
+    console.log('AuthContext: Attempting sign in');
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     
     if (error) {
+      console.log('AuthContext: Sign in error:', error.message);
       // Provide more helpful error messages
       if (error.message.includes('Email not confirmed')) {
         toast.error('Please verify your email address before signing in. Check your inbox for a verification link.');
@@ -111,8 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error(error.message);
       }
     } else {
-      // Success message will be handled by the auth state change listener
-      console.log('Sign in successful, waiting for auth state change');
+      console.log('AuthContext: Sign in successful, waiting for auth state change');
     }
     
     return { error };
