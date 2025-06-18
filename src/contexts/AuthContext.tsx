@@ -27,13 +27,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state change:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
         
         // Handle different auth events
         if (event === 'SIGNED_IN') {
-          toast.success('Successfully signed in!');
+          console.log('User signed in successfully');
           // Clear any potentially insecure data from localStorage
           localStorage.removeItem('pendingVerificationEmail');
           localStorage.removeItem('myrhythm_security_answers'); // Remove any old insecure data
@@ -54,6 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session?.user?.id);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -108,6 +110,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         toast.error(error.message);
       }
+    } else {
+      // Success message will be handled by the auth state change listener
+      console.log('Sign in successful, waiting for auth state change');
     }
     
     return { error };
