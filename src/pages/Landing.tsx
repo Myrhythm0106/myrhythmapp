@@ -36,15 +36,8 @@ const Landing = () => {
     );
   }
 
-  // Don't render landing page if user is authenticated (will redirect)
-  if (user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-  
+  // Render landing page content for unauthenticated users
+  // Don't hide the content if user is authenticated - let the useEffect handle redirect
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
       <ScrollArea className="h-screen">
@@ -57,7 +50,7 @@ const Landing = () => {
       </ScrollArea>
       
       {/* Enhanced floating registration button for all devices */}
-      <FloatingRegisterButton />
+      {!user && <FloatingRegisterButton />}
     </div>
   );
 };

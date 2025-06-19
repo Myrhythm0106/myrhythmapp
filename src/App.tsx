@@ -47,13 +47,14 @@ function App() {
             <SidebarProvider>
               <Toaster />
               <Routes>
-                {/* Public routes - Landing page as root */}
+                {/* Public routes */}
                 <Route path="/" element={<Landing />} />
                 <Route path="/founders-story" element={<FoundersStory />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/email-verification" element={<EmailVerification />} />
                 <Route path="/welcome" element={<Welcome />} />
                 <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/faq" element={<FAQ />} />
 
                 {/* Protected routes */}
                 <Route path="/dashboard" element={
@@ -168,7 +169,6 @@ function App() {
                   </ProtectedRoute>
                 } />
 
-                <Route path="/faq" element={<FAQ />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </SidebarProvider>
