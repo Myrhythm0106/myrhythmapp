@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,7 +11,6 @@ import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { MainLayout } from './components/layout/MainLayout';
 
 // Public Pages
-import Index from './pages/Index';
 import Landing from './pages/Landing';
 import FoundersStory from './pages/FoundersStory';
 import Auth from './pages/Auth';
@@ -47,9 +47,8 @@ function App() {
             <SidebarProvider>
               <Toaster />
               <Routes>
-                {/* Public routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/landing" element={<Landing />} />
+                {/* Public routes - Landing page as root */}
+                <Route path="/" element={<Landing />} />
                 <Route path="/founders-story" element={<FoundersStory />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/email-verification" element={<EmailVerification />} />

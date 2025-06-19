@@ -25,7 +25,7 @@ const Auth = () => {
     if (user && !loading) {
       // Get the intended destination from location state, or default to dashboard
       const from = location.state?.from?.pathname || '/dashboard';
-      console.log('Redirecting authenticated user to:', from);
+      console.log('Auth: Redirecting authenticated user to:', from);
       navigate(from, { replace: true });
       toast.success('Welcome back to MyRhythm!');
     }
@@ -40,7 +40,7 @@ const Auth = () => {
 
   const handleSignInSuccess = () => {
     // Navigation will be handled by the useEffect above
-    console.log('Sign in successful, navigation will be handled by useEffect');
+    console.log('Auth: Sign in successful, navigation will be handled by useEffect');
   };
 
   const handleSignUpSuccess = (email: string) => {
