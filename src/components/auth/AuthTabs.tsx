@@ -46,7 +46,7 @@ export const AuthTabs = ({
             </TabsContent>
 
             <TabsContent value="signup">
-              <SignUpForm />
+              <SignUpForm onSignUpSuccess={onSignUpSuccess} />
             </TabsContent>
           </Tabs>
         </CardContent>

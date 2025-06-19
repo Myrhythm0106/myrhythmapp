@@ -31,7 +31,11 @@ const signUpSchema = z.object({
 
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
-export function SecurityEnhancedSignUpForm() {
+interface SecurityEnhancedSignUpFormProps {
+  onSignUpSuccess?: (email: string) => void;
+}
+
+export function SecurityEnhancedSignUpForm({ onSignUpSuccess }: SecurityEnhancedSignUpFormProps) {
   const { signUp } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [password, setPassword] = useState("");
@@ -61,9 +65,19 @@ export function SecurityEnhancedSignUpForm() {
         return;
       }
 
-      await signUp(data.email, data.password, data.name.trim());
+      const { error } = await signUp(data.email, data.password, data.name.trim());
       
-      toast.success("Account created successfully! Please check your email to verify your account.");
+      if (error) {
+        console.error("Sign up error:", error);
+        // Error handling is already done in AuthContext with toast
+        return;
+      }
+
+      // Call the success callback if provided
+      if (onSignUpSuccess) {
+        onSignUpSuccess(data.email);
+      }
+      
     } catch (error: any) {
       console.error("Sign up error:", error);
       toast.error(error.message || "Failed to create account. Please try again.");
