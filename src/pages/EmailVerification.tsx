@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle, Loader2, Heart } from 'lucide-react';
+import { CheckCircle, XCircle, Loader2, Heart, Brain } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -22,7 +22,7 @@ const EmailVerification = () => {
         
         if (!token_hash || type !== 'signup') {
           setStatus('error');
-          setErrorMessage('Invalid verification link');
+          setErrorMessage('Invalid verification link. Please check your email for the correct link.');
           return;
         }
 
@@ -33,22 +33,26 @@ const EmailVerification = () => {
         });
 
         if (error) {
+          console.error('Email verification error:', error);
           setStatus('error');
-          setErrorMessage(error.message);
+          setErrorMessage(error.message || 'Failed to verify email address');
           toast.error(error.message);
         } else if (data.user) {
           setStatus('success');
-          toast.success('Email verified successfully! You can now sign in.');
+          toast.success('Email verified successfully! Welcome to MyRhythm.');
           
-          // Auto-redirect to dashboard after 3 seconds
+          // Clear any pending verification email from localStorage
+          localStorage.removeItem('pendingVerificationEmail');
+          
+          // Auto-redirect to onboarding after 3 seconds
           setTimeout(() => {
-            navigate('/dashboard');
+            navigate('/onboarding', { replace: true });
           }, 3000);
         }
       } catch (error) {
+        console.error('Unexpected verification error:', error);
         setStatus('error');
-        setErrorMessage('An unexpected error occurred');
-        console.error('Email verification error:', error);
+        setErrorMessage('An unexpected error occurred during verification');
       }
     };
 
@@ -58,20 +62,33 @@ const EmailVerification = () => {
   const handleResendEmail = async () => {
     const email = localStorage.getItem('pendingVerificationEmail');
     if (!email) {
-      toast.error('No email found for resending verification');
+      toast.error('No email found for resending verification. Please sign up again.');
+      navigate('/auth');
       return;
     }
 
-    const { error } = await supabase.auth.resend({
-      type: 'signup',
-      email: email
-    });
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email
+      });
 
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Verification email sent! Please check your inbox.');
+      if (error) {
+        toast.error(error.message);
+      } else {
+        toast.success('Verification email sent! Please check your inbox.');
+      }
+    } catch (error) {
+      toast.error('Failed to resend verification email');
     }
+  };
+
+  const handleBackToAuth = () => {
+    navigate('/auth');
+  };
+
+  const handleGoToOnboarding = () => {
+    navigate('/onboarding');
   };
 
   return (
@@ -79,9 +96,10 @@ const EmailVerification = () => {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Heart className="h-8 w-8 text-primary" />
+            <Brain className="h-8 w-8 text-primary" />
             <h1 className="text-3xl font-bold text-gray-900">MyRhythm</h1>
           </div>
+          <p className="text-sm text-gray-600">Professional Brain Recovery Platform</p>
         </div>
 
         <Card className="shadow-lg">
@@ -93,6 +111,7 @@ const EmailVerification = () => {
               <>
                 <Loader2 className="h-12 w-12 animate-spin mx-auto text-primary" />
                 <p className="text-gray-600">Verifying your email address...</p>
+                <p className="text-sm text-gray-500">This should only take a moment</p>
               </>
             )}
 
@@ -100,16 +119,19 @@ const EmailVerification = () => {
               <>
                 <CheckCircle className="h-12 w-12 mx-auto text-green-600" />
                 <div className="space-y-2">
-                  <h3 className="text-lg font-semibold text-green-800">Email Verified!</h3>
+                  <h3 className="text-lg font-semibold text-green-800">Email Verified Successfully!</h3>
                   <p className="text-green-700">
-                    Your email has been successfully verified. You will be redirected to your dashboard shortly.
+                    Welcome to MyRhythm! Your account is now active and ready to use.
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    You will be redirected to complete your setup in a few seconds...
                   </p>
                 </div>
                 <Button 
-                  onClick={() => navigate('/dashboard')}
+                  onClick={handleGoToOnboarding}
                   className="w-full"
                 >
-                  Go to Dashboard
+                  Continue to Setup
                 </Button>
               </>
             )}
@@ -120,7 +142,7 @@ const EmailVerification = () => {
                 <div className="space-y-2">
                   <h3 className="text-lg font-semibold text-red-800">Verification Failed</h3>
                   <p className="text-red-700 text-sm">
-                    {errorMessage || 'The verification link is invalid or has expired.'}
+                    {errorMessage}
                   </p>
                 </div>
                 <div className="space-y-2">
@@ -132,7 +154,7 @@ const EmailVerification = () => {
                     Resend Verification Email
                   </Button>
                   <Button 
-                    onClick={() => navigate('/auth')}
+                    onClick={handleBackToAuth}
                     className="w-full"
                   >
                     Back to Sign In
@@ -142,6 +164,10 @@ const EmailVerification = () => {
             )}
           </CardContent>
         </Card>
+
+        <div className="text-center mt-6 text-xs text-gray-500">
+          <p>Having trouble? Contact support for assistance.</p>
+        </div>
       </div>
     </div>
   );

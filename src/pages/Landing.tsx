@@ -27,17 +27,19 @@ const Landing = () => {
     navigate("/onboarding");
   };
 
-  // Show loading while checking auth state
+  // Show loading while checking auth state - but only briefly
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-muted/60 to-background">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Loading MyRhythm...</p>
+        </div>
       </div>
     );
   }
 
-  // Render landing page content for unauthenticated users
-  // Don't hide the content if user is authenticated - let the useEffect handle redirect
+  // Always render landing page content - useEffect will handle redirect if needed
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
       <ScrollArea className="h-screen">
@@ -49,7 +51,7 @@ const Landing = () => {
         <LandingFooter />
       </ScrollArea>
       
-      {/* Enhanced floating registration button for all devices */}
+      {/* Show floating button only for unauthenticated users */}
       {!user && <FloatingRegisterButton />}
     </div>
   );

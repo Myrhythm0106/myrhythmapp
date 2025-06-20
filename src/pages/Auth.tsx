@@ -41,11 +41,14 @@ const Auth = () => {
   const handleSignInSuccess = () => {
     // Navigation will be handled by the useEffect above
     console.log('Auth: Sign in successful, navigation will be handled by useEffect');
+    toast.success('Welcome to MyRhythm!');
   };
 
   const handleSignUpSuccess = (email: string) => {
+    console.log('Auth: Sign up successful for:', email);
     setShowResendVerification(true);
     setResendVerificationEmail(email);
+    toast.success('Account created! Please check your email to verify your account.');
   };
 
   const handleResendVerificationRequest = (email: string) => {
@@ -59,26 +62,33 @@ const Auth = () => {
     setResendVerificationEmail('');
   };
 
+  // Show loading while checking auth state
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Checking authentication...</p>
+        </div>
       </div>
     );
   }
 
-  // Don't render auth forms if user is already authenticated
+  // Don't render auth forms if user is already authenticated (redirect will happen via useEffect)
   if (user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Redirecting to dashboard...</p>
+        </div>
       </div>
     );
   }
 
   if (showResendVerification) {
     return (
-      <AuthLayout title="Resend verification email">
+      <AuthLayout title="Verify your email address">
         <ResendVerificationForm
           onBack={handleBackToAuth}
           initialEmail={resendVerificationEmail}
