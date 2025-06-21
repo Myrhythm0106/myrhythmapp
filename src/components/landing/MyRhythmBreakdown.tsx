@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,33 +26,33 @@ type RhythmItemProps = {
 function RhythmItem({ letter, title, practicalMeaning, dailyExample, actionStep, icon }: RhythmItemProps) {
   return (
     <Card className="overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-      <CardContent className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="bg-primary/10 p-3 rounded-full flex-shrink-0">
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex items-start gap-3 sm:gap-4">
+          <div className="bg-primary/10 p-2 sm:p-3 rounded-full flex-shrink-0">
             {icon}
           </div>
-          <div className="flex-1">
-            <h3 className="text-xl font-bold mb-3">
-              <span className="text-primary text-2xl">{letter}</span> – {title}
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 break-words">
+              <span className="text-primary text-xl sm:text-2xl">{letter}</span> – {title}
             </h3>
             
-            <div className="space-y-3">
+            <div className="space-y-2 sm:space-y-3">
               <div>
-                <h4 className="font-semibold text-sm text-primary mb-1">What this means for you:</h4>
-                <p className="text-muted-foreground text-sm">{practicalMeaning}</p>
+                <h4 className="font-semibold text-xs sm:text-sm text-primary mb-1">What this means for you:</h4>
+                <p className="text-muted-foreground text-xs sm:text-sm break-words">{practicalMeaning}</p>
               </div>
               
-              <div className="bg-muted/50 p-3 rounded-lg">
-                <h4 className="font-semibold text-sm mb-1 flex items-center gap-1">
-                  <CheckCircle className="h-3 w-3 text-green-600" />
+              <div className="bg-muted/50 p-2 sm:p-3 rounded-lg">
+                <h4 className="font-semibold text-xs sm:text-sm mb-1 flex items-center gap-1">
+                  <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
                   Daily example:
                 </h4>
-                <p className="text-sm italic text-muted-foreground">{dailyExample}</p>
+                <p className="text-xs sm:text-sm italic text-muted-foreground break-words">{dailyExample}</p>
               </div>
               
               <div>
-                <h4 className="font-semibold text-sm text-primary mb-1">Try this:</h4>
-                <p className="text-sm font-medium">{actionStep}</p>
+                <h4 className="font-semibold text-xs sm:text-sm text-primary mb-1">Try this:</h4>
+                <p className="text-xs sm:text-sm font-medium break-words">{actionStep}</p>
               </div>
             </div>
           </div>
@@ -134,17 +133,19 @@ export function MyRhythmBreakdown() {
   ];
 
   return (
-    <section id="myrhythm-breakdown" className="py-16 bg-gradient-to-b from-background to-muted/30">
+    <section id="myrhythm-breakdown" className="py-12 sm:py-16 bg-gradient-to-b from-background to-muted/30">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-primary mb-4 whitespace-nowrap">What MyRhythm Means To You</h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+        <div className="text-center mb-8 sm:mb-12">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-3 sm:mb-4 break-words">
+            What MyRhythm Means To You
+          </h2>
+          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto break-words">
             Here's how each element of MyRhythm translates into practical, daily actions that can 
             transform your experience and help you build a life that feels more manageable and meaningful.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {rhythmItems.map((item, index) => (
             <RhythmItem 
               key={`${item.letter}-${item.title}-${index}`}
@@ -159,10 +160,10 @@ export function MyRhythmBreakdown() {
         </div>
         
         {/* Register Now button after What MyRhythm Means To You */}
-        <div className="mt-12 text-center">
+        <div className="mt-8 sm:mt-12 text-center px-4">
           <Button 
             size="lg" 
-            className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground mb-8" 
+            className="text-base sm:text-lg bg-primary hover:bg-primary/90 text-primary-foreground mb-6 sm:mb-8 w-full sm:w-auto" 
             onClick={() => navigate("/onboarding")}
           >
             Register Now
@@ -170,15 +171,15 @@ export function MyRhythmBreakdown() {
         </div>
         
         {/* Call to Action */}
-        <div className="mt-8 text-center bg-primary/5 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold mb-4">Ready to Create Your Rhythm?</h3>
-          <p className="text-lg text-muted-foreground mb-6 max-w-2xl mx-auto">
+        <div className="mt-6 sm:mt-8 text-center bg-primary/5 rounded-2xl p-6 sm:p-8 mx-2 sm:mx-0">
+          <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 break-words">Ready to Create Your Rhythm?</h3>
+          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-4 sm:mb-6 max-w-2xl mx-auto break-words">
             Start your personalized journey today. Our assessment will help you understand which 
             areas to focus on first and create a rhythm that truly works for you.
           </p>
           <Button 
             size="lg" 
-            className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground" 
+            className="text-base sm:text-lg bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto" 
             onClick={() => navigate("/onboarding")}
           >
             Begin Your MyRhythm Journey
