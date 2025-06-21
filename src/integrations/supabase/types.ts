@@ -675,11 +675,75 @@ export type Database = {
           },
         ]
       }
+      voice_recordings: {
+        Row: {
+          access_level: string
+          category: string
+          created_at: string
+          description: string | null
+          duration_seconds: number | null
+          expires_at: string | null
+          file_path: string
+          file_size_bytes: number
+          id: string
+          legal_retention_required: boolean | null
+          metadata: Json | null
+          retention_period_days: number | null
+          title: string
+          transcription: string | null
+          transcription_confidence: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_level?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          expires_at?: string | null
+          file_path: string
+          file_size_bytes: number
+          id?: string
+          legal_retention_required?: boolean | null
+          metadata?: Json | null
+          retention_period_days?: number | null
+          title: string
+          transcription?: string | null
+          transcription_confidence?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_level?: string
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration_seconds?: number | null
+          expires_at?: string | null
+          file_path?: string
+          file_size_bytes?: number
+          id?: string
+          legal_retention_required?: boolean | null
+          metadata?: Json | null
+          retention_period_days?: number | null
+          title?: string
+          transcription?: string | null
+          transcription_confidence?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_voice_recordings: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       generate_accountability_alert: {
         Args: {
           p_user_id: string

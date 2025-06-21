@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -30,6 +31,7 @@ import SymptomTracking from './pages/SymptomTracking';
 import TBICalendar from './pages/TBICalendar';
 import Community from './pages/Community';
 import PersonalCommunity from './pages/PersonalCommunity';
+import VoiceNotes from './pages/VoiceNotes';
 import Profile from './pages/Profile';
 import SecuritySettings from './pages/SecuritySettings';
 import Customization from './pages/Customization';
