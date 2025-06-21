@@ -14,6 +14,8 @@ export interface Action {
   date: string;
   time: string;
   location?: string;
+  description?: string;
+  status?: "completed" | "pending" | "in-progress" | "canceled";
   type: "appointment" | "therapy" | "medication" | "activity" | "personal" | "other";
   watchers?: string[];
   linkedGoal?: {
