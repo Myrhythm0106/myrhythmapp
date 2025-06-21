@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -38,7 +37,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
     {
       id: "brain-injury-recovery",
       title: "Brain Injury Recovery",
-      subtitle: "TBI, ABI, Stroke, Concussion",
+      subtitle: "I am on my recovery journey",
       description: "Comprehensive support for your recovery journey with specialized tools for rehabilitation and progress tracking.",
       icon: <Brain className="h-8 w-8 text-primary" />,
       badge: "Our Primary Mission",
@@ -53,7 +52,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
     {
       id: "cognitive-optimization",
       title: "Cognitive Development",
-      subtitle: "Growth & Mental Clarity",
+      subtitle: "I am seeking mental clarity and growth",
       description: "Enhance your cognitive abilities, focus, and mental clarity for professional and personal growth.",
       icon: <Target className="h-8 w-8 text-primary" />,
       features: [
@@ -67,7 +66,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
     {
       id: "caregiver-support",
       title: "Caregiver & Family Support",
-      subtitle: "Supporting Your Loved One",
+      subtitle: "I am supporting a loved one",
       description: "Tools and resources for family members and caregivers supporting someone on their recovery journey.",
       icon: <Users className="h-8 w-8 text-primary" />,
       features: [
@@ -81,7 +80,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
     {
       id: "wellness-productivity",
       title: "Wellness & Productivity", 
-      subtitle: "Life Improvement",
+      subtitle: "I am seeking life improvement",
       description: "Build better habits, enhance productivity, and create a structured approach to personal wellness.",
       icon: <Heart className="h-8 w-8 text-primary" />,
       features: [
