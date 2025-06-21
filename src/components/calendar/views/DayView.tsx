@@ -1,180 +1,199 @@
 
-import React from "react";
-import { format } from "date-fns";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { EventForm } from "@/components/calendar/EventForm";
-import { Target, Timer } from "lucide-react";
+import React, { useState } from "react";
+import { format, addDays, subDays, isToday, isSameDay } from "date-fns";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PomodoroDialog } from "@/components/pomodoro/PomodoroDialog";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
-interface TimeSlot {
-  time: string;
-  hour: number;
-}
-
-interface DayEvent {
-  id: string;
-  title: string;
-  startHour: number;
-  duration: number; // in hours
-  type: string;
-  linkedGoal?: {
-    id: string;
-    title: string;
-    type: "mobility" | "cognitive" | "health" | "other";
-  };
-}
+import { SwipeableContainer } from "@/components/ui/SwipeableContainer";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ChevronLeft, ChevronRight, RotateCcw, Clock, MapPin } from "lucide-react";
+import { toast } from "sonner";
+import { Action } from "../ActionItem";
 
 interface DayViewProps {
   date: Date;
-  events: DayEvent[];
+  events?: Action[];
+  onEventClick?: (event: Action) => void;
 }
 
-const timeSlots: TimeSlot[] = Array.from({ length: 24 }, (_, i) => ({
-  time: `${i === 0 ? '12' : i > 12 ? i - 12 : i}:00 ${i >= 12 ? 'PM' : 'AM'}`,
-  hour: i,
-}));
+export function DayView({ date, events = [], onEventClick }: DayViewProps) {
+  const [currentDate, setCurrentDate] = useState(date);
+  const isMobile = useIsMobile();
 
-// Sample events
-const sampleEvents: DayEvent[] = [
-  {
-    id: "1",
-    title: "Neurology Appointment",
-    startHour: 10,
-    duration: 1,
-    type: "appointment",
-    linkedGoal: {
-      id: "g1",
-      title: "Follow medical plan",
-      type: "health"
-    }
-  },
-  {
-    id: "2",
-    title: "Physical Therapy",
-    startHour: 14,
-    duration: 1.5,
-    type: "therapy",
-    linkedGoal: {
-      id: "g3",
-      title: "Walk for 15 mins daily",
-      type: "mobility"
-    }
-  }
-];
-
-export function DayView({ date, events = sampleEvents }: DayViewProps) {
-  const getEventForHour = (hour: number) => {
-    return events.filter(event => 
-      event.startHour <= hour && 
-      event.startHour + event.duration > hour
-    );
-  };
-
-  const getEventTypeStyles = (type: string) => {
-    switch (type) {
-      case "appointment":
-        return "bg-blue-100 text-blue-800 border border-blue-200";
-      case "therapy":
-        return "bg-purple-100 text-purple-800 border border-purple-200";
-      case "medication":
-        return "bg-red-100 text-red-800 border border-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 border border-gray-200";
+  const handlePreviousDay = () => {
+    setCurrentDate(subDays(currentDate, 1));
+    if (isMobile) {
+      toast.success("Previous day", { duration: 1000 });
     }
   };
 
-  const getGoalTypeStyles = (type: string) => {
-    switch (type) {
-      case "mobility":
-        return "bg-blue-50 text-blue-700 border-blue-200";
-      case "cognitive":
-        return "bg-purple-50 text-purple-700 border-purple-200";
-      case "health":
-        return "bg-green-50 text-green-700 border-green-200";
-      default:
-        return "bg-gray-50 text-gray-700 border-gray-200";
+  const handleNextDay = () => {
+    setCurrentDate(addDays(currentDate, 1));
+    if (isMobile) {
+      toast.success("Next day", { duration: 1000 });
     }
   };
+
+  const handleRefresh = async () => {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    toast.success("Day view refreshed", { duration: 2000 });
+  };
+
+  // Get events for the current date
+  const dayEvents = events.filter(event => 
+    isSameDay(new Date(event.date), currentDate)
+  );
+
+  // Group events by time
+  const groupedEvents = dayEvents.reduce((acc, event) => {
+    const timeKey = event.time || "All day";
+    if (!acc[timeKey]) {
+      acc[timeKey] = [];
+    }
+    acc[timeKey].push(event);
+    return acc;
+  }, {} as Record<string, Action[]>);
 
   return (
-    <div className="border rounded-md overflow-hidden">
-      <div className="bg-muted/20 py-2 px-4 border-b">
-        <h3 className="font-medium">{format(date, "EEEE, MMMM d, yyyy")}</h3>
+    <div className="space-y-4">
+      {/* Day header with navigation */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-semibold">
+            {format(currentDate, "EEEE, MMMM d")}
+          </h2>
+          {isToday(currentDate) && (
+            <Badge variant="default" className="mt-1">Today</Badge>
+          )}
+        </div>
+        {!isMobile && (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handlePreviousDay}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleNextDay}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+            >
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </div>
-      <div className="h-[500px] overflow-y-auto">
-        {timeSlots.map((slot, i) => {
-          const hourEvents = getEventForHour(slot.hour);
-          
-          return (
-            <Dialog key={slot.hour}>
-              <DialogTrigger asChild>
-                <div 
-                  className={cn(
-                    "flex border-b py-2 relative h-16 cursor-pointer hover:bg-muted/20 transition-colors",
-                    i % 2 === 0 ? "bg-background" : "bg-muted/10"
-                  )}
-                >
-                  <div className="px-4 w-20 text-sm text-muted-foreground flex-shrink-0">
-                    {slot.time}
-                  </div>
-                  <div className="flex-1 px-2 relative">
-                    {hourEvents.map(event => (
-                      <div 
+
+      {/* Enhanced swipeable day content */}
+      <SwipeableContainer
+        enableHorizontalSwipe={isMobile}
+        enablePullToRefresh={isMobile}
+        onSwipeLeft={{
+          label: "Next Day",
+          icon: <ChevronRight className="h-4 w-4" />,
+          color: "#22c55e",
+          action: handleNextDay
+        }}
+        onSwipeRight={{
+          label: "Previous Day",
+          icon: <ChevronLeft className="h-4 w-4" />,
+          color: "#3b82f6",
+          action: handlePreviousDay
+        }}
+        onPullToRefresh={handleRefresh}
+        className="min-h-[400px]"
+      >
+        <div className="space-y-4">
+          {Object.keys(groupedEvents).length > 0 ? (
+            Object.entries(groupedEvents).map(([time, timeEvents]) => (
+              <Card key={time}>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    {time}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {timeEvents.map(event => (
+                      <SwipeableContainer
                         key={event.id}
-                        className={cn(
-                          "rounded p-1 mb-1 flex items-center justify-between",
-                          getEventTypeStyles(event.type)
-                        )}
+                        enableHorizontalSwipe={isMobile}
+                        onSwipeLeft={{
+                          label: "Complete",
+                          icon: <ChevronRight className="h-4 w-4" />,
+                          color: "#22c55e",
+                          action: () => toast.success(`Completed: ${event.title}`)
+                        }}
+                        onSwipeRight={{
+                          label: "Edit",
+                          icon: <ChevronLeft className="h-4 w-4" />,
+                          color: "#3b82f6",
+                          action: () => toast.info(`Edit: ${event.title}`)
+                        }}
                       >
-                        <span className="text-sm font-medium">{event.title}</span>
-                        <div className="flex items-center gap-2">
-                          {event.linkedGoal && (
-                            <Badge 
-                              variant="outline" 
-                              className={cn(
-                                "text-xs flex items-center gap-1",
-                                getGoalTypeStyles(event.linkedGoal.type)
+                        <div
+                          className="p-3 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted transition-colors"
+                          onClick={() => onEventClick?.(event)}
+                        >
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <h4 className="font-medium">{event.title}</h4>
+                              {event.description && (
+                                <p className="text-sm text-muted-foreground mt-1">
+                                  {event.description}
+                                </p>
                               )}
-                            >
-                              <Target className="h-3 w-3" />
-                              {event.linkedGoal.title}
+                              {event.location && (
+                                <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                                  <MapPin className="h-3 w-3" />
+                                  {event.location}
+                                </div>
+                              )}
+                            </div>
+                            <Badge variant={event.status === 'completed' ? 'default' : 'secondary'}>
+                              {event.status || 'pending'}
                             </Badge>
-                          )}
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger>
-                                <PomodoroDialog 
-                                  title={event.title}
-                                  compact={true}
-                                />
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Focus on this task with Pomodoro</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
+                          </div>
                         </div>
-                      </div>
+                      </SwipeableContainer>
                     ))}
                   </div>
-                </div>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[550px]">
-                <DialogHeader>
-                  <DialogTitle>Add New Action at {slot.time}</DialogTitle>
-                </DialogHeader>
-                <EventForm 
-                  defaultTime={`${String(slot.hour).padStart(2, '0')}:00`} 
-                />
-              </DialogContent>
-            </Dialog>
-          );
-        })}
-      </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <Card>
+              <CardContent className="py-8 text-center">
+                <p className="text-muted-foreground">No events scheduled for this day</p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </SwipeableContainer>
+
+      {/* Mobile swipe hints */}
+      {isMobile && (
+        <div className="text-center space-y-1">
+          <p className="text-xs text-muted-foreground">
+            💡 Swipe left/right to navigate days • Pull down to refresh
+          </p>
+          {dayEvents.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+            📱 Swipe events left to complete, right to edit
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
