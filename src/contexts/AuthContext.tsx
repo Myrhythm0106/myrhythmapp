@@ -4,6 +4,9 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { isLeakedPasswordError, getLeakedPasswordMessage } from '@/utils/auth/passwordValidation';
+import { SessionSecurity } from '@/utils/security/sessionSecurity';
+import { DataProtection } from '@/utils/security/dataProtection';
+import { errorHandler } from '@/utils/errorHandler';
 
 interface AuthContextType {
   user: User | null;
@@ -34,12 +37,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Handle different auth events
+        // Handle different auth events with enhanced security
         if (event === 'SIGNED_IN') {
           console.log('User signed in successfully');
+          SessionSecurity.startSession();
+          DataProtection.logSecurityEvent('USER_SIGNED_IN', {
+            userId: session?.user?.id,
+            email: session?.user?.email
+          });
+          
           // Clear any potentially insecure data from localStorage
           localStorage.removeItem('pendingVerificationEmail');
-          localStorage.removeItem('myrhythm_security_answers'); // Remove any old insecure data
+          localStorage.removeItem('myrhythm_security_answers');
         }
         
         if (event === 'PASSWORD_RECOVERY') {
@@ -47,119 +56,224 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (event === 'SIGNED_OUT') {
+          SessionSecurity.endSession('USER_SIGNOUT');
+          DataProtection.logSecurityEvent('USER_SIGNED_OUT', {});
           toast.success('Successfully signed out!');
-          // Clear all potentially sensitive data from localStorage
-          localStorage.removeItem('pendingVerificationEmail');
-          localStorage.removeItem('myrhythm_security_answers');
         }
       }
     );
 
     // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        errorHandler.handleError(
+          errorHandler.createError(
+            'Failed to retrieve session',
+            'error',
+            'SESSION_RETRIEVAL_ERROR',
+            { error }
+          )
+        );
+      }
+      
       console.log('Initial session check:', !!session?.user, 'session:', !!session);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      if (session) {
+        SessionSecurity.startSession();
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signUp = async (email: string, password: string, name: string) => {
-    // Use the current origin for redirect, but point to our verification page
-    const redirectUrl = `${window.location.origin}/email-verification`;
-    
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          name: name
+    try {
+      const redirectUrl = `${window.location.origin}/email-verification`;
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            name: DataProtection.sanitizeInput(name)
+          }
         }
-      }
-    });
-    
-    if (error) {
-      // Check if this is a leaked password error
-      if (isLeakedPasswordError(error)) {
-        toast.error(getLeakedPasswordMessage());
+      });
+      
+      if (error) {
+        if (isLeakedPasswordError(error)) {
+          toast.error(getLeakedPasswordMessage());
+        } else {
+          errorHandler.handleError(
+            errorHandler.createError(
+              error.message,
+              'error',
+              'SIGNUP_ERROR',
+              { email }
+            )
+          );
+        }
       } else {
-        toast.error(error.message);
+        localStorage.setItem('pendingVerificationEmail', email);
+        toast.success('Account created! Please check your email to verify your account before signing in.');
+        
+        DataProtection.logSecurityEvent('USER_SIGNUP_ATTEMPT', {
+          email,
+          success: true
+        });
       }
-    } else {
-      // Store email for potential resend verification (this is safe as it's not sensitive data)
-      localStorage.setItem('pendingVerificationEmail', email);
-      toast.success('Account created! Please check your email to verify your account before signing in.');
+      
+      return { error };
+    } catch (error) {
+      const appError = errorHandler.createError(
+        'Sign up failed',
+        'error',
+        'SIGNUP_EXCEPTION',
+        { error, email }
+      );
+      errorHandler.handleError(appError);
+      return { error: appError };
     }
-    
-    return { error };
   };
 
   const signIn = async (email: string, password: string) => {
-    console.log('AuthContext: Attempting sign in');
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    
-    if (error) {
-      console.log('AuthContext: Sign in error:', error.message);
-      // Provide more helpful error messages
-      if (error.message.includes('Email not confirmed')) {
-        toast.error('Please verify your email address before signing in. Check your inbox for a verification link.');
-      } else if (error.message.includes('Invalid login credentials')) {
-        toast.error('Invalid email or password. Please check your credentials and try again.');
+    try {
+      console.log('AuthContext: Attempting sign in');
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      
+      if (error) {
+        console.log('AuthContext: Sign in error:', error.message);
+        
+        DataProtection.logSecurityEvent('SIGNIN_FAILED', {
+          email,
+          error: error.message
+        });
+        
+        if (error.message.includes('Email not confirmed')) {
+          toast.error('Please verify your email address before signing in. Check your inbox for a verification link.');
+        } else if (error.message.includes('Invalid login credentials')) {
+          toast.error('Invalid email or password. Please check your credentials and try again.');
+        } else {
+          errorHandler.handleError(
+            errorHandler.createError(
+              error.message,
+              'error',
+              'SIGNIN_ERROR',
+              { email }
+            )
+          );
+        }
       } else {
-        toast.error(error.message);
+        console.log('AuthContext: Sign in successful, waiting for auth state change');
       }
-    } else {
-      console.log('AuthContext: Sign in successful, waiting for auth state change');
+      
+      return { error };
+    } catch (error) {
+      const appError = errorHandler.createError(
+        'Sign in failed',
+        'error',
+        'SIGNIN_EXCEPTION',
+        { error, email }
+      );
+      errorHandler.handleError(appError);
+      return { error: appError };
     }
-    
-    return { error };
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast.error(error.message);
-    } else {
-      // Clear all potentially sensitive data from localStorage on signout
-      localStorage.removeItem('pendingVerificationEmail');
-      localStorage.removeItem('myrhythm_security_answers');
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        errorHandler.handleError(
+          errorHandler.createError(
+            error.message,
+            'error',
+            'SIGNOUT_ERROR'
+          )
+        );
+      }
+    } catch (error) {
+      const appError = errorHandler.createError(
+        'Sign out failed',
+        'error',
+        'SIGNOUT_EXCEPTION',
+        { error }
+      );
+      errorHandler.handleError(appError);
     }
   };
 
   const resetPassword = async (email: string) => {
-    // Use Supabase's secure password reset functionality
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth?reset=true`,
-    });
-    
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Password reset email sent! Check your inbox for instructions.');
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth?reset=true`,
+      });
+      
+      if (error) {
+        errorHandler.handleError(
+          errorHandler.createError(
+            error.message,
+            'error',
+            'PASSWORD_RESET_ERROR',
+            { email }
+          )
+        );
+      } else {
+        toast.success('Password reset email sent! Check your inbox for instructions.');
+        DataProtection.logSecurityEvent('PASSWORD_RESET_REQUESTED', { email });
+      }
+      
+      return { error };
+    } catch (error) {
+      const appError = errorHandler.createError(
+        'Password reset failed',
+        'error',
+        'PASSWORD_RESET_EXCEPTION',
+        { error, email }
+      );
+      errorHandler.handleError(appError);
+      return { error: appError };
     }
-    
-    return { error };
   };
 
   const resendVerification = async (email: string) => {
-    const { error } = await supabase.auth.resend({
-      type: 'signup',
-      email: email
-    });
-    
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Verification email sent! Please check your inbox.');
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email
+      });
+      
+      if (error) {
+        errorHandler.handleError(
+          errorHandler.createError(
+            error.message,
+            'error',
+            'VERIFICATION_RESEND_ERROR',
+            { email }
+          )
+        );
+      } else {
+        toast.success('Verification email sent! Please check your inbox.');
+      }
+      
+      return { error };
+    } catch (error) {
+      const appError = errorHandler.createError(
+        'Verification resend failed',
+        'error',
+        'VERIFICATION_RESEND_EXCEPTION',
+        { error, email }
+      );
+      errorHandler.handleError(appError);
+      return { error: appError };
     }
-    
-    return { error };
   };
 
   return (
