@@ -1,5 +1,5 @@
 
-import { Shield, Zap } from "lucide-react";
+import { Shield, Zap, Users } from "lucide-react";
 import { Plan } from "./types";
 
 export const plans: Plan[] = [
@@ -31,6 +31,24 @@ export const plans: Plan[] = [
       "Full growth resource library",
       "Personalized insights & guidance",
       "Priority coaching & support"
+    ]
+  },
+  {
+    id: "care-team",
+    name: "MyRhythm Care Team",
+    description: "Comprehensive support for you and your care providers",
+    price: "$15.99",
+    icon: Users,
+    highlight: "Clinical Grade",
+    features: [
+      "All MyRhythm Pro features included",
+      "Secure provider data sharing",
+      "Clinical progress reporting",
+      "Care team collaboration tools",
+      "Healthcare provider dashboard",
+      "Medical appointment integration",
+      "Insurance documentation support",
+      "24/7 clinical support access"
     ]
   }
 ];
