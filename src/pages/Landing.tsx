@@ -15,7 +15,7 @@ const Landing = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   
-  // Redirect authenticated users to dashboard
+  // Only redirect authenticated users to dashboard
   useEffect(() => {
     if (user && !loading) {
       console.log('Landing: Redirecting authenticated user to dashboard');
@@ -27,8 +27,9 @@ const Landing = () => {
     navigate("/onboarding");
   };
 
-  // Show loading while checking auth state - but only briefly
-  if (loading) {
+  // Don't show loading for unauthenticated users - just show the landing page
+  // Only show brief loading if we're still checking auth state AND user might be authenticated
+  if (loading && user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-muted/60 to-background">
         <div className="text-center space-y-4">
@@ -39,7 +40,7 @@ const Landing = () => {
     );
   }
 
-  // Always render landing page content - useEffect will handle redirect if needed
+  // For unauthenticated users or when loading is complete, show the landing page
   return (
     <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
       <ScrollArea className="h-screen">
