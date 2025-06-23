@@ -1,21 +1,14 @@
+
 import { useState, useRef, useCallback } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { v4 as uuidv4 } from 'uuid';
-
-export interface VoiceRecording {
-  id: string;
-  title: string;
-  description?: string;
-  category: string;
-  file_path: string;
-  duration_seconds?: number;
-  transcription?: string;
-  created_at: string;
-  access_level: 'private' | 'healthcare';
-  legal_retention_required: boolean;
-}
+import { VoiceRecording } from '@/types/voiceRecording';
+import {
+  uploadVoiceRecording,
+  fetchUserRecordings,
+  deleteVoiceRecording,
+  getRecordingSignedUrl
+} from '@/utils/voiceRecording';
 
 export function useVoiceRecorder() {
   const { user } = useAuth();
@@ -80,34 +73,14 @@ export function useVoiceRecorder() {
 
     setIsProcessing(true);
     try {
-      const recordingId = uuidv4();
-      const fileName = `${user.id}/${recordingId}.wav`;
-      
-      // Upload to Supabase Storage
-      const { error: uploadError } = await supabase.storage
-        .from('voice-recordings')
-        .upload(fileName, audioBlob);
-
-      if (uploadError) throw uploadError;
-
-      // Save metadata to database
-      const { data, error: dbError } = await supabase
-        .from('voice_recordings')
-        .insert({
-          id: recordingId,
-          user_id: user.id,
-          title,
-          description,
-          category,
-          file_path: fileName,
-          file_size_bytes: audioBlob.size,
-          access_level: shareWithHealthcare ? 'healthcare' : 'private',
-          legal_retention_required: category === 'medical'
-        })
-        .select()
-        .single();
-
-      if (dbError) throw dbError;
+      const data = await uploadVoiceRecording(
+        audioBlob,
+        title,
+        category,
+        user.id,
+        description,
+        shareWithHealthcare
+      );
 
       toast.success('Recording saved successfully');
       await fetchRecordings(); // Refresh the list
@@ -124,21 +97,8 @@ export function useVoiceRecorder() {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
-        .from('voice_recordings')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      
-      // Type cast the database response to match our interface
-      const typedRecordings: VoiceRecording[] = (data || []).map(record => ({
-        ...record,
-        access_level: record.access_level as 'private' | 'healthcare'
-      }));
-      
-      setRecordings(typedRecordings);
+      const data = await fetchUserRecordings(user.id);
+      setRecordings(data);
     } catch (error) {
       console.error('Error fetching recordings:', error);
       toast.error('Failed to load recordings');
@@ -149,53 +109,22 @@ export function useVoiceRecorder() {
     if (!user) return;
 
     try {
-      // Get the recording to find the file path
-      const { data: recording, error: fetchError } = await supabase
-        .from('voice_recordings')
-        .select('file_path, legal_retention_required')
-        .eq('id', recordingId)
-        .eq('user_id', user.id)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      if (recording.legal_retention_required) {
-        toast.error('This recording cannot be deleted due to legal retention requirements');
-        return;
-      }
-
-      // Delete from storage
-      const { error: storageError } = await supabase.storage
-        .from('voice-recordings')
-        .remove([recording.file_path]);
-
-      if (storageError) throw storageError;
-
-      // Delete from database
-      const { error: dbError } = await supabase
-        .from('voice_recordings')
-        .delete()
-        .eq('id', recordingId)
-        .eq('user_id', user.id);
-
-      if (dbError) throw dbError;
-
+      await deleteVoiceRecording(recordingId, user.id);
       toast.success('Recording deleted');
       await fetchRecordings(); // Refresh the list
     } catch (error) {
       console.error('Error deleting recording:', error);
-      toast.error('Failed to delete recording');
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error('Failed to delete recording');
+      }
     }
   }, [user, fetchRecordings]);
 
   const getRecordingUrl = useCallback(async (filePath: string) => {
     try {
-      const { data, error } = await supabase.storage
-        .from('voice-recordings')
-        .createSignedUrl(filePath, 3600); // 1 hour expiry
-
-      if (error) throw error;
-      return data.signedUrl;
+      return await getRecordingSignedUrl(filePath);
     } catch (error) {
       console.error('Error getting recording URL:', error);
       toast.error('Failed to load recording');

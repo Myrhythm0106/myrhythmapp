@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Play, Trash2, Search, Calendar, FileText, Heart, Stethoscope, User } from 'lucide-react';
-import { useVoiceRecorder, VoiceRecording } from '@/hooks/useVoiceRecorder';
+import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
+import { VoiceRecording } from '@/types/voiceRecording';
 import { formatDistanceToNow } from 'date-fns';
 
 export function VoiceRecordingsList() {

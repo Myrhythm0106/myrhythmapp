@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Mic, Square, Save, Loader2 } from 'lucide-react';
-import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
+import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { cn } from '@/lib/utils';
 
 interface VoiceRecorderProps {
