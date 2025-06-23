@@ -11,7 +11,7 @@ export function VoiceNotesPage() {
     <div className="container mx-auto p-4 space-y-6">
       <PageHeader
         title="Voice Notes"
-        description="Record, organize, and manage your voice notes with healthcare professional access"
+        subtitle="Record, organize, and manage your voice notes with healthcare professional access"
       />
       
       <Tabs defaultValue="record" className="w-full">

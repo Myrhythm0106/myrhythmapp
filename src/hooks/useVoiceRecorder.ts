@@ -9,7 +9,8 @@ export interface VoiceRecording {
   id: string;
   title: string;
   description?: string;
-  category: 'symptoms' | 'mood' | 'general' | 'medical' | 'calendar';
+  category: string; // Changed from union type to string to match database
+  file_path: string; // Added missing property
   duration_seconds?: number;
   transcription?: string;
   created_at: string;
@@ -69,7 +70,7 @@ export function useVoiceRecorder() {
   const saveRecording = useCallback(async (
     audioBlob: Blob,
     title: string,
-    category: VoiceRecording['category'],
+    category: string, // Changed from union type to string
     description?: string,
     shareWithHealthcare: boolean = false
   ) => {

@@ -8,12 +8,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Mic, Square, Save, Loader2 } from 'lucide-react';
-import { useVoiceRecorder, VoiceRecording } from '@/hooks/useVoiceRecorder';
+import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { cn } from '@/lib/utils';
 
 interface VoiceRecorderProps {
-  defaultCategory?: VoiceRecording['category'];
-  onSaved?: (recording: VoiceRecording) => void;
+  defaultCategory?: string;
+  onSaved?: (recording: any) => void;
 }
 
 export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRecorderProps) {
@@ -28,7 +28,7 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<VoiceRecording['category']>(defaultCategory);
+  const [category, setCategory] = useState<string>(defaultCategory);
   const [shareWithHealthcare, setShareWithHealthcare] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
 
@@ -158,7 +158,7 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
 
             <div>
               <Label htmlFor="category">Category</Label>
-              <Select value={category} onValueChange={(value: VoiceRecording['category']) => setCategory(value)}>
+              <Select value={category} onValueChange={(value: string) => setCategory(value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

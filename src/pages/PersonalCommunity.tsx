@@ -21,11 +21,60 @@ const PersonalCommunity = () => {
 
   // These members should come from your MembersList component
   const communityMembers = [
-    { name: "Sarah Johnson", id: "1" },
-    { name: "Michael Smith", id: "2" },
-    { name: "Dr. Smith", id: "3" },
-    { name: "Mom", id: "4" }
+    { 
+      id: "1", 
+      name: "Sarah Johnson", 
+      permissions: { 
+        calendar: false, 
+        mood: false, 
+        symptoms: false, 
+        goals: false, 
+        gratitude: false, 
+        voice_recordings: false 
+      } 
+    },
+    { 
+      id: "2", 
+      name: "Michael Smith", 
+      permissions: { 
+        calendar: true, 
+        mood: false, 
+        symptoms: false, 
+        goals: false, 
+        gratitude: false, 
+        voice_recordings: false 
+      } 
+    },
+    { 
+      id: "3", 
+      name: "Dr. Smith", 
+      permissions: { 
+        calendar: true, 
+        mood: true, 
+        symptoms: true, 
+        goals: true, 
+        gratitude: false, 
+        voice_recordings: true 
+      } 
+    },
+    { 
+      id: "4", 
+      name: "Mom", 
+      permissions: { 
+        calendar: false, 
+        mood: false, 
+        symptoms: false, 
+        goals: false, 
+        gratitude: true, 
+        voice_recordings: false 
+      } 
+    }
   ];
+
+  const handleUpdateMemberPermissions = (memberId: string, permissions: any) => {
+    console.log('Updating permissions for member:', memberId, permissions);
+    // In a real app, this would update the database
+  };
 
   const encouragementItems = communityMembers.map((member) => (
     <Card key={member.id} className="p-4 h-full">
@@ -103,7 +152,15 @@ const PersonalCommunity = () => {
           </TabsContent>
           
           <TabsContent value="permissions" className="space-y-4">
-            <EnhancedSupportCirclePermissions />
+            <div className="space-y-4">
+              {communityMembers.map((member) => (
+                <EnhancedSupportCirclePermissions
+                  key={member.id}
+                  member={member}
+                  onUpdate={handleUpdateMemberPermissions}
+                />
+              ))}
+            </div>
           </TabsContent>
           
           <TabsContent value="encouragement" className="space-y-4">

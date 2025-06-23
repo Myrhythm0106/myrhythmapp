@@ -151,6 +151,14 @@ function App() {
                     </ProtectedRoute>
                   } />
 
+                  <Route path="/voice-notes" element={
+                    <ProtectedRoute>
+                      <MainLayout>
+                        <VoiceNotes />
+                      </MainLayout>
+                    </ProtectedRoute>
+                  } />
+
                   <Route path="/profile" element={
                     <ProtectedRoute>
                       <MainLayout>
