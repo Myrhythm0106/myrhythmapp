@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Sparkles, Lightbulb } from "lucide-react";
+import { Brain, Sparkles, Lightbulb, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
@@ -13,34 +13,34 @@ interface WelcomeCardProps {
   userType?: "brain-injury-recovery" | "cognitive-optimization" | "caregiver-support" | "wellness-productivity" | "new";
 }
 
-// Weekly inspiration based on mood and user type - recovery-focused by default
+// Weekly inspiration based on mood and user type - empowering by default
 const weeklyInspirations = {
   great: [
-    "Resilient",
-    "Thriving", 
     "Unstoppable",
-    "Powerful",
-    "Vibrant",
+    "Thriving", 
+    "Empowered",
+    "Radiant",
     "Flourishing",
-    "Radiant"
+    "Magnificent",
+    "Victorious"
   ],
   okay: [
-    "Steady",
-    "Balanced",
-    "Present",
-    "Mindful",
     "Growing",
-    "Learning",
-    "Adapting"
+    "Capable",
+    "Resilient",
+    "Determined",
+    "Progressing",
+    "Strengthening",
+    "Evolving"
   ],
   struggling: [
     "Brave",
-    "Enduring",
-    "Persistent",
-    "Genuine",
-    "Healing",
+    "Powerful",
+    "Courageous",
     "Worthy",
-    "Strong"
+    "Strong",
+    "Enduring",
+    "Unbreakable"
   ]
 };
 
@@ -49,7 +49,7 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
   const [customWord, setCustomWord] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [weeklyWord, setWeeklyWord] = useState(() => {
-    // Get a random word for the current mood trend
+    // Get a random empowering word for the current mood trend
     // In a real app, we would determine the user's mood trend from their data
     const moodTrend: "great" | "okay" | "struggling" = "okay"; // Default to okay
     const words = weeklyInspirations[moodTrend];
@@ -66,15 +66,15 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
   const getMessage = () => {
     switch (userType) {
       case "brain-injury-recovery":
-        return "Track your recovery progress and find resources to help with your healing journey.";
+        return "Track your empowering progress and discover resources to fuel your thriving journey.";
       case "cognitive-optimization":
-        return "Discover your cognitive growth opportunities and unlock your unique potential.";
+        return "Unlock your cognitive potential and discover the amazing capabilities within you.";
       case "caregiver-support":
-        return "Find support for yourself while caring for your loved one, and access resources to help both of you.";
+        return "Find strength for yourself while empowering your loved one, with resources to help you both flourish.";
       case "wellness-productivity":
-        return "Build better habits and create structure to support your wellness and productivity goals.";
+        return "Build empowering habits and create the structure that supports your wellness and achievement goals.";
       default:
-        return "Welcome to MyRhythm. Get started by customizing your profile and exploring resources.";
+        return "Welcome to MyRhythm. Get started by customizing your profile and exploring your potential.";
     }
   };
 
@@ -83,7 +83,7 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
       setWeeklyWord(customWord.trim());
       setIsEditing(false);
       setCustomWord("");
-      toast.success("Your weekly word has been saved!");
+      toast.success("Your empowering word has been saved!");
     } else {
       toast.error("Please enter a word first");
     }
@@ -95,7 +95,7 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
     const words = weeklyInspirations[moodTrend];
     const newWord = words[Math.floor(Math.random() * words.length)];
     setWeeklyWord(newWord);
-    toast.success("New weekly word generated!");
+    toast.success("New empowering word generated!");
   };
 
   return (
@@ -105,8 +105,9 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
           <Brain size={180} />
         </div>
         <div className="relative z-10">
-          <h2 className="text-2xl font-semibold">
+          <h2 className="text-2xl font-semibold flex items-center gap-2">
             {greetingTime()}, {name}
+            <Star className="h-5 w-5 text-yellow-300" />
           </h2>
           <p className="mt-2 max-w-xl">{getMessage()}</p>
         </div>
@@ -139,7 +140,7 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
                     className="text-xs py-0 h-7 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600"
                   >
                     <Sparkles className="h-3 w-3 mr-1" />
-                    New Word
+                    New Empowering Word
                   </Button>
                 </div>
               </div>
@@ -147,7 +148,7 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
               <div className="space-y-2">
                 <Input
                   type="text"
-                  placeholder="Enter your own word..."
+                  placeholder="Enter your empowering word..."
                   value={customWord}
                   onChange={(e) => setCustomWord(e.target.value)}
                   className="text-center text-lg border-amber-200 focus-visible:ring-amber-400"
@@ -166,15 +167,15 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
                     size="sm"
                     className="text-xs py-0 h-7 bg-gradient-to-r from-amber-500 to-rose-500 hover:from-amber-600 hover:to-rose-600"
                   >
-                    Save My Word
+                    Save My Empowering Word
                   </Button>
                 </div>
               </div>
             )}
             <p className="text-xs text-gray-500 mt-2">
               {userType === "brain-injury-recovery" 
-                ? "Your weekly word is chosen to support your recovery journey and inspire resilience."
-                : "Your weekly word is chosen based on your mood trends to inspire and motivate you."
+                ? "Your weekly word is chosen to empower your wellness journey and celebrate your incredible strength."
+                : "Your weekly word is chosen based on your patterns to inspire and empower your growth."
               }
             </p>
           </div>

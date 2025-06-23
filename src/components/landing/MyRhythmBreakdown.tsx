@@ -1,189 +1,83 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { 
-  Lightbulb, 
-  Calendar, 
-  RotateCw,
-  Search, 
-  Heart, 
-  BrainCircuit, 
-  HelpingHand,
-  Waves,
-  CheckCircle
-} from "lucide-react";
+import { Brain, Calendar, Users, Target, BookOpen, Mic, Star, Zap } from "lucide-react";
 
-type RhythmItemProps = {
-  letter: string;
-  title: string;
-  practicalMeaning: string;
-  dailyExample: string;
-  actionStep: string;
-  icon: React.ReactNode;
-}
-
-function RhythmItem({ letter, title, practicalMeaning, dailyExample, actionStep, icon }: RhythmItemProps) {
-  return (
-    <Card className="overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300">
-      <CardContent className="p-4 sm:p-6">
-        <div className="flex items-start gap-3 sm:gap-4">
-          <div className="bg-primary/10 p-2 sm:p-3 rounded-full flex-shrink-0">
-            {icon}
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 break-words">
-              <span className="text-primary text-xl sm:text-2xl">{letter}</span> – {title}
-            </h3>
-            
-            <div className="space-y-2 sm:space-y-3">
-              <div>
-                <h4 className="font-semibold text-xs sm:text-sm text-primary mb-1">What this means for you:</h4>
-                <p className="text-muted-foreground text-xs sm:text-sm break-words">{practicalMeaning}</p>
-              </div>
-              
-              <div className="bg-muted/50 p-2 sm:p-3 rounded-lg">
-                <h4 className="font-semibold text-xs sm:text-sm mb-1 flex items-center gap-1">
-                  <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
-                  Daily example:
-                </h4>
-                <p className="text-xs sm:text-sm italic text-muted-foreground break-words">{dailyExample}</p>
-              </div>
-              
-              <div>
-                <h4 className="font-semibold text-xs sm:text-sm text-primary mb-1">Try this:</h4>
-                <p className="text-xs sm:text-sm font-medium break-words">{actionStep}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+const features = [
+  {
+    icon: <Brain className="h-6 w-6 text-primary" />,
+    title: "Cognitive Strengthening",
+    description: "Empowering brain exercises and activities designed to enhance your cognitive abilities and build confidence in your mental capabilities."
+  },
+  {
+    icon: <Calendar className="h-6 w-6 text-primary" />,
+    title: "Life Organization Mastery",
+    description: "Smart scheduling and reminder systems that help you create structure, reduce overwhelm, and build momentum in your daily life."
+  },
+  {
+    icon: <Users className="h-6 w-6 text-primary" />,
+    title: "Empowering Support Network",
+    description: "Connect with a thriving community and invite your personal support circle to celebrate your progress and share in your journey."
+  },
+  {
+    icon: <Target className="h-6 w-6 text-primary" />,
+    title: "Achievement Goal System",
+    description: "Set, track, and celebrate meaningful goals that align with your values and help you build the life you want to live."
+  },
+  {
+    icon: <BookOpen className="h-6 w-6 text-primary" />,
+    title: "Growth Resource Library",
+    description: "Access evidence-based tools, inspiring content, and educational resources designed to support your cognitive wellness and personal growth."
+  },
+  {
+    icon: <Mic className="h-6 w-6 text-primary" />,
+    title: "Voice Reflection & Sharing",
+    description: "Capture your thoughts, track your progress, and share important insights with your healthcare team or support network as you choose."
+  }
+];
 
 export function MyRhythmBreakdown() {
-  const navigate = useNavigate();
-  
-  const rhythmItems: RhythmItemProps[] = [
-    {
-      letter: "M",
-      title: "Most Important",
-      practicalMeaning: "Instead of trying to do everything, you'll learn to identify the 1-3 things that truly matter each day.",
-      dailyExample: "Rather than a 15-item to-do list, you might choose: 'Take medication, call mom, and do 10 minutes of gentle exercise.'",
-      actionStep: "Each morning, ask yourself: 'If I only accomplished 3 things today, what would make the biggest positive difference?'",
-      icon: <Lightbulb className="h-6 w-6 text-primary" />
-    },
-    {
-      letter: "Y",
-      title: "Your Plan",
-      practicalMeaning: "You'll create simple, personal schedules that work with your energy levels and cognitive patterns—not against them.",
-      dailyExample: "Planning your medication reminder for when you make coffee, or scheduling important calls during your 'best thinking' hours.",
-      actionStep: "Notice when you feel most alert and schedule one important task during that time each day.",
-      icon: <Calendar className="h-6 w-6 text-primary" />
-    },
-    {
-      letter: "R",
-      title: "Repeat",
-      practicalMeaning: "Small, consistent actions become powerful habits. You'll build routines that support your brain and reduce decision fatigue.",
-      dailyExample: "Setting out tomorrow's clothes each evening, or doing a 5-minute evening reflection at the same time each day.",
-      actionStep: "Pick one small helpful action and do it at the same time each day for one week.",
-      icon: <RotateCw className="h-6 w-6 text-primary" />
-    },
-    {
-      letter: "H",
-      title: "Hold Focus",
-      practicalMeaning: "You'll develop practical strategies to minimize distractions and give your full attention to one thing at a time.",
-      dailyExample: "Putting your phone in another room during meals, or using a simple timer to focus on one task for 15 minutes.",
-      actionStep: "Choose one daily activity and practice doing it without multitasking. Notice how it feels different.",
-      icon: <Search className="h-6 w-6 text-primary" />
-    },
-    {
-      letter: "Y",
-      title: "Your Effort",
-      practicalMeaning: "Progress matters more than perfection. You'll learn to celebrate small wins and treat yourself with kindness.",
-      dailyExample: "Acknowledging that you remembered to take your medicine, even if you forgot to make your bed.",
-      actionStep: "Each evening, write down one thing you did well that day, no matter how small it seems.",
-      icon: <Heart className="h-6 w-6 text-primary" />
-    },
-    {
-      letter: "T",
-      title: "Think Back",
-      practicalMeaning: "Regular, gentle reflection helps you learn what works for your unique brain and adjust your approach accordingly.",
-      dailyExample: "Noticing that you feel calmer when you prep meals the night before, or that afternoon walks help your mood.",
-      actionStep: "Spend 2 minutes each evening asking: 'What felt good today?' and 'What would I do differently?'",
-      icon: <BrainCircuit className="h-6 w-6 text-primary" />
-    },
-    {
-      letter: "H",
-      title: "Help Your Life",
-      practicalMeaning: "These strategies work together to create more ease, confidence, and control in your daily experience.",
-      dailyExample: "Finding that your morning routine helps you feel prepared, your focus practice helps you complete tasks, and reflection helps you improve.",
-      actionStep: "Notice connections between different MyRhythm practices and how they support each other.",
-      icon: <HelpingHand className="h-6 w-6 text-primary" />
-    },
-    {
-      letter: "M",
-      title: "My Rhythm",
-      practicalMeaning: "You'll develop a personalized way of living that honors your needs, abilities, and goals—creating your unique rhythm for thriving.",
-      dailyExample: "Having a flow to your days that feels sustainable, whether that's structured routines or flexible frameworks.",
-      actionStep: "Trust yourself to adapt these principles in ways that feel right for your life and circumstances.",
-      icon: <Waves className="h-6 w-6 text-primary" />
-    }
-  ];
-
   return (
-    <section id="myrhythm-breakdown" className="py-12 sm:py-16 bg-gradient-to-b from-background to-muted/30">
+    <section className="py-16 bg-muted/30">
       <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-3 sm:mb-4 break-words">
-            What MyRhythm Means To You
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4 text-primary flex items-center justify-center gap-2">
+            <Zap className="h-8 w-8" />
+            Your Empowerment Toolkit
           </h2>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto break-words">
-            Here's how each element of MyRhythm translates into practical, daily actions that can 
-            transform your experience and help you build a life that feels more manageable and meaningful.
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Discover the comprehensive suite of tools designed to empower your cognitive wellness journey and help you thrive.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-          {rhythmItems.map((item, index) => (
-            <RhythmItem 
-              key={`${item.letter}-${item.title}-${index}`}
-              letter={item.letter}
-              title={item.title}
-              practicalMeaning={item.practicalMeaning}
-              dailyExample={item.dailyExample}
-              actionStep={item.actionStep}
-              icon={item.icon}
-            />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((feature, index) => (
+            <Card key={index} className="border-primary/10 hover:border-primary/30 transition-all hover:shadow-lg group">
+              <CardContent className="p-6 text-center">
+                <div className="bg-primary/10 group-hover:bg-primary/20 transition-colors p-3 rounded-full w-fit mx-auto mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-3 group-hover:text-primary transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {feature.description}
+                </p>
+              </CardContent>
+            </Card>
           ))}
         </div>
         
-        {/* Register Now button after What MyRhythm Means To You */}
-        <div className="mt-8 sm:mt-12 text-center px-4">
-          <Button 
-            size="lg" 
-            className="text-base sm:text-lg bg-primary hover:bg-primary/90 text-primary-foreground mb-6 sm:mb-8 w-full sm:w-auto" 
-            onClick={() => navigate("/onboarding")}
-          >
-            Register Now
-          </Button>
-        </div>
-        
-        {/* Call to Action */}
-        <div className="mt-6 sm:mt-8 text-center bg-primary/5 rounded-2xl p-6 sm:p-8 mx-2 sm:mx-0">
-          <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 break-words">Ready to Create Your Rhythm?</h3>
-          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground mb-4 sm:mb-6 max-w-2xl mx-auto break-words">
-            Start your personalized journey today. Our assessment will help you understand which 
-            areas to focus on first and create a rhythm that truly works for you.
+        <div className="mt-12 text-center bg-gradient-to-r from-primary/5 to-purple/5 rounded-xl p-8">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Star className="h-6 w-6 text-primary" />
+            <h3 className="text-xl font-bold">Built by Champions, For Champions</h3>
+          </div>
+          <p className="text-muted-foreground max-w-3xl mx-auto">
+            Every feature in MyRhythm was created by people who understand the journey firsthand. 
+            We've transformed our own challenges into strengths, and now we're here to empower you to do the same. 
+            You have everything you need within you—MyRhythm simply helps you unlock it.
           </p>
-          <Button 
-            size="lg" 
-            className="text-base sm:text-lg bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto" 
-            onClick={() => navigate("/onboarding")}
-          >
-            Begin Your MyRhythm Journey
-          </Button>
         </div>
       </div>
     </section>

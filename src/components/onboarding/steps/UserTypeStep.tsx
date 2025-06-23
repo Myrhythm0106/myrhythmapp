@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Target, Users, Heart, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Brain, Target, Users, Heart, ArrowRight, CheckCircle2, Star } from "lucide-react";
 
 export type UserType = 
   | "brain-injury-recovery" 
@@ -18,6 +19,7 @@ interface UserTypeOption {
   icon: React.ReactNode;
   badge?: string;
   features: string[];
+  isPrimary?: boolean;
 }
 
 interface UserTypeData {
@@ -36,59 +38,60 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
   const userTypes: UserTypeOption[] = [
     {
       id: "brain-injury-recovery",
-      title: "Brain Injury Recovery",
-      subtitle: "I am on my recovery journey",
-      description: "Comprehensive support for your recovery journey with specialized tools for rehabilitation and progress tracking.",
+      title: "Cognitive Wellness & Recovery Journey",
+      subtitle: "I am on my empowering growth path",
+      description: "Comprehensive support for your thriving journey with specialized tools for cognitive wellness and personal empowerment.",
       icon: <Brain className="h-8 w-8 text-primary" />,
-      badge: "Our Primary Mission",
+      badge: "Our Flagship Experience",
+      isPrimary: true,
       features: [
         "MYRHYTHM framework assessment",
-        "Recovery-focused goal setting", 
-        "Symptom and progress tracking",
-        "Specialized brain training games",
-        "Recovery community support"
+        "Empowering goal achievement system", 
+        "Wellness monitoring & celebrations",
+        "Cognitive strengthening activities",
+        "Thriving community support"
       ]
     },
     {
       id: "cognitive-optimization",
-      title: "Cognitive Development",
-      subtitle: "I am seeking mental clarity and growth",
-      description: "Enhance your cognitive abilities, focus, and mental clarity for professional and personal growth.",
+      title: "Mental Performance & Growth",
+      subtitle: "I am seeking mental clarity and peak performance",
+      description: "Enhance your cognitive abilities, focus, and mental clarity for professional and personal excellence.",
       icon: <Target className="h-8 w-8 text-primary" />,
       features: [
-        "Growth-focused assessments",
-        "Cognitive development programs",
-        "Advanced brain training",
-        "Productivity improvement",
-        "Progress insights"
+        "Performance-focused assessments",
+        "Cognitive enhancement programs",
+        "Advanced brain strengthening",
+        "Productivity optimization",
+        "Achievement insights"
       ]
     },
     {
       id: "caregiver-support",
-      title: "Caregiver & Family Support",
-      subtitle: "I am supporting a loved one",
-      description: "Tools and resources for family members and caregivers supporting someone on their recovery journey.",
+      title: "Family & Support Network",
+      subtitle: "I am empowering a loved one's journey",
+      description: "Tools and resources for family members and supporters helping someone achieve their wellness goals.",
       icon: <Users className="h-8 w-8 text-primary" />,
       features: [
-        "Caregiver guidance resources",
-        "Family communication tools",
-        "Progress monitoring dashboard",
-        "Support network features",
-        "Educational materials"
+        "Supportive guidance resources",
+        "Family empowerment tools",
+        "Progress celebration dashboard",
+        "Community connection features",
+        "Empowering educational materials"
       ]
     },
     {
       id: "wellness-productivity",
-      title: "Wellness & Productivity", 
-      subtitle: "I am seeking life improvement",
-      description: "Build better habits, enhance productivity, and create a structured approach to personal wellness.",
+      title: "Life Organization & Wellness", 
+      subtitle: "I am seeking life optimization",
+      description: "Build empowering habits, enhance productivity, and create a structured approach to personal thriving.",
       icon: <Heart className="h-8 w-8 text-primary" />,
       features: [
-        "Habit formation tools",
+        "Habit mastery tools",
         "Productivity frameworks",
-        "Wellness tracking",
+        "Wellness optimization",
         "Goal achievement system",
-        "Life organization tools"
+        "Life organization mastery"
       ]
     }
   ];
@@ -110,7 +113,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
       <div className="text-center space-y-2">
         <h2 className="text-2xl font-bold">Welcome to MyRhythm</h2>
         <p className="text-muted-foreground">
-          Our primary mission is supporting brain injury recovery. Choose the path that best describes your journey.
+          Our flagship experience supports cognitive wellness & recovery. Choose the path that best describes your empowering journey.
         </p>
       </div>
 
@@ -123,19 +126,22 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
             className={`cursor-pointer transition-all hover:shadow-md border-2 ${
               selectedType === type.id
                 ? "border-primary shadow-lg bg-primary/5"
-                : type.id === "brain-injury-recovery"
-                ? "border-primary/30 hover:border-primary/50"
+                : type.isPrimary
+                ? "border-primary/30 hover:border-primary/50 bg-gradient-to-br from-primary/5 to-primary/10"
                 : "border-border hover:border-primary/50"
             }`}
           >
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="rounded-full bg-primary/10 p-2">
+                  <div className={`rounded-full p-2 ${type.isPrimary ? 'bg-primary/20' : 'bg-primary/10'}`}>
                     {type.icon}
                   </div>
                   <div>
-                    <CardTitle className="text-lg">{type.title}</CardTitle>
+                    <CardTitle className="text-lg flex items-center gap-2">
+                      {type.title}
+                      {type.isPrimary && <Star className="h-4 w-4 text-primary" />}
+                    </CardTitle>
                     <CardDescription className="text-sm font-medium">
                       {type.subtitle}
                     </CardDescription>
@@ -146,8 +152,8 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
                 )}
               </div>
               {type.badge && (
-                <Badge variant="secondary" className="w-fit bg-primary/10 text-primary">
-                  {type.badge}
+                <Badge variant="secondary" className="w-fit bg-primary/10 text-primary border-primary/20">
+                  ✨ {type.badge}
                 </Badge>
               )}
             </CardHeader>
@@ -164,7 +170,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
                 ))}
                 {type.features.length > 3 && (
                   <div className="text-xs text-muted-foreground">
-                    +{type.features.length - 3} more features
+                    +{type.features.length - 3} more empowering features
                   </div>
                 )}
               </div>

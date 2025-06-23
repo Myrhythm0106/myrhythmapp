@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Shield, Award, Layout, UserPlus, Heart } from "lucide-react";
+import { Shield, Award, Layout, UserPlus, Heart, Star } from "lucide-react";
 
 type BenefitProps = {
   icon: React.ReactNode;
@@ -29,28 +29,28 @@ export function WhyItHelpsSection() {
   const benefits: BenefitProps[] = [
     {
       icon: <Shield className="h-6 w-6 text-primary" />,
-      title: "Reduces Overwhelm",
-      description: "By breaking down big goals into manageable steps."
+      title: "Transforms Overwhelm into Clarity",
+      description: "By breaking down big dreams into achievable, empowering steps."
     },
     {
       icon: <Award className="h-6 w-6 text-primary" />,
-      title: "Builds Confidence",
-      description: "Every small success reinforces your ability to take charge."
+      title: "Builds Unshakeable Confidence",
+      description: "Every success reinforces your incredible ability to thrive and grow."
     },
     {
       icon: <Layout className="h-6 w-6 text-primary" />,
-      title: "Creates Structure",
-      description: "A predictable routine can bring peace and clarity."
+      title: "Creates Empowering Structure",
+      description: "A personalized rhythm that brings peace, clarity, and momentum to your day."
     },
     {
       icon: <UserPlus className="h-6 w-6 text-primary" />,
-      title: "Empowers You",
-      description: "It's about your choices, your pace, your progress."
+      title: "Amplifies Your Power",
+      description: "It's about your choices, your pace, your amazing progress and potential."
     },
     {
       icon: <Heart className="h-6 w-6 text-primary" />,
-      title: "Enhances Well-being",
-      description: "Finding your rhythm fosters a sense of purpose and calm."
+      title: "Enhances Life Satisfaction",
+      description: "Finding your rhythm creates deep purpose, joy, and inner strength."
     }
   ];
 
@@ -58,7 +58,13 @@ export function WhyItHelpsSection() {
     <section className="py-16 bg-muted/30">
       <div className="container mx-auto px-4 max-w-5xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4 text-primary">Why MYRHYTHM Can Help You Thrive</h2>
+          <h2 className="text-3xl font-bold mb-4 text-primary flex items-center justify-center gap-2">
+            <Star className="h-8 w-8" />
+            Why MYRHYTHM Empowers You to Thrive
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Discover how our empowering approach transforms challenges into strengths and helps you flourish
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

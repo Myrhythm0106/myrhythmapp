@@ -5,32 +5,32 @@ import { Plan } from "./types";
 export const plans: Plan[] = [
   {
     id: "basic",
-    name: "Essential Support",
-    description: "Perfect for getting started",
+    name: "MyRhythm Starter",
+    description: "Perfect for beginning your growth journey",
     price: "$7.99",
     trialDays: 7,
     icon: Shield,
     features: [
-      "Track how you feel daily",
-      "Simple calendar features", 
-      "Connect with community",
-      "Basic progress insights"
+      "Daily wellness check-ins",
+      "Personal rhythm calendar", 
+      "Connect with empowering community",
+      "Progress insights & celebrations"
     ]
   },
   {
     id: "premium",
-    name: "Complete Care", 
-    description: "Everything you need to thrive",
+    name: "MyRhythm Pro", 
+    description: "Everything you need to thrive & flourish",
     price: "$9.99",
     popular: true,
     icon: Zap,
-    highlight: "Most Popular",
+    highlight: "Most Empowering",
     features: [
-      "Complete wellness tracking",
-      "Organize your life easily",
-      "Full resource library",
+      "Complete wellness monitoring",
+      "Life organization mastery",
+      "Full growth resource library",
       "Personalized insights & guidance",
-      "Priority support & coaching"
+      "Priority coaching & support"
     ]
   }
 ];

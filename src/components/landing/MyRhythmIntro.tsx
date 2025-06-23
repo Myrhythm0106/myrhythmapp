@@ -1,191 +1,63 @@
+
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
-import { Brain, Target, RefreshCw, Eye, Heart, ArrowRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Brain, Heart, Star, Zap } from "lucide-react";
 
 export function MyRhythmIntro() {
-  const navigate = useNavigate();
-
   return (
-    <section id="discover-myrhythm" className="py-20 bg-background">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl mb-6 text-foreground font-bold md:text-4xl">Discover MyRhythm</h2>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
-            MyRhythm is a simple yet powerful framework that transforms how you approach daily life. 
-            Each letter represents a core principle that, when combined, creates a sustainable rhythm 
-            for growth and recovery.
-          </p>
-        </div>
-        
-        {/* Visual MYRHYTHM Display */}
-        <div className="bg-gradient-to-r from-primary/5 to-secondary/5 rounded-2xl p-4 md:p-8 mb-12 overflow-x-auto">
-          <div className="flex justify-center items-center gap-2 md:gap-4 mb-8 min-w-max mx-auto flex-nowrap">
-            {['M', 'Y', 'R', 'H', 'Y', 'T', 'H', 'M'].map((letter, index) => (
-              <div key={index} className="flex flex-col items-center">
-                <div className="w-10 h-10 md:w-16 md:h-16 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-base md:text-2xl font-bold mb-2">
-                  {letter}
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="text-center">
-            <h3 className="text-lg md:text-2xl font-bold text-primary mb-4 whitespace-nowrap">M-Y-R-H-Y-T-H-M</h3>
-            <p className="text-sm md:text-lg text-muted-foreground">
-              A memorable framework for organizing your thoughts, actions, and daily rhythms
-            </p>
-          </div>
-        </div>
-
-        {/* Framework Overview */}
-        <div className="mb-12">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold mb-4">The Framework at a Glance</h3>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Each letter in MYRHYTHM represents a fundamental principle that builds upon the others, 
-              creating a comprehensive approach to personal growth and daily management.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">M</div>
-              <div className="text-sm font-semibold mb-1">Most Important</div>
-              <div className="text-xs text-muted-foreground">Focus on what matters</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">Y</div>
-              <div className="text-sm font-semibold mb-1">Your Plan</div>
-              <div className="text-xs text-muted-foreground">Create your structure</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">R</div>
-              <div className="text-sm font-semibold mb-1">Repeat</div>
-              <div className="text-xs text-muted-foreground">Build consistency</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">H</div>
-              <div className="text-sm font-semibold mb-1">Hold Focus</div>
-              <div className="text-xs text-muted-foreground">Maintain attention</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">Y</div>
-              <div className="text-sm font-semibold mb-1">Your Effort</div>
-              <div className="text-xs text-muted-foreground">Celebrate progress</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">T</div>
-              <div className="text-sm font-semibold mb-1">Think Back</div>
-              <div className="text-xs text-muted-foreground">Reflect and learn</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">H</div>
-              <div className="text-sm font-semibold mb-1">Help Your Life</div>
-              <div className="text-xs text-muted-foreground">Create positive change</div>
-            </div>
-            <div className="text-center p-4 border rounded-lg">
-              <div className="text-2xl font-bold text-primary mb-2">M</div>
-              <div className="text-sm font-semibold mb-1">My Rhythm</div>
-              <div className="text-xs text-muted-foreground">Find your flow</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Core Benefits Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="text-center p-6 border rounded-lg hover:shadow-md transition-all">
-            <Brain className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h4 className="font-semibold mb-2">Brain-Friendly</h4>
-            <p className="text-sm text-muted-foreground">Designed to work with cognitive challenges, not against them</p>
-          </div>
-          
-          <div className="text-center p-6 border rounded-lg hover:shadow-md transition-all">
-            <Target className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h4 className="font-semibold mb-2">Clear Direction</h4>
-            <p className="text-sm text-muted-foreground">Simple framework to identify and pursue meaningful goals</p>
-          </div>
-          
-          <div className="text-center p-6 border rounded-lg hover:shadow-md transition-all">
-            <RefreshCw className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h4 className="font-semibold mb-2">Sustainable Growth</h4>
-            <p className="text-sm text-muted-foreground">Build lasting habits without overwhelming yourself</p>
-          </div>
-          
-          <div className="text-center p-6 border rounded-lg hover:shadow-md transition-all">
-            <Heart className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h4 className="font-semibold mb-2">Self-Compassion</h4>
-            <p className="text-sm text-muted-foreground">Progress over perfection, always at your own pace</p>
-          </div>
-        </div>
-
-        {/* Register Now button before Why It Works */}
+    <section id="discover-myrhythm" className="py-16 bg-white">
+      <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
-          <Button 
-            size="lg" 
-            className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground"
-            onClick={() => navigate("/onboarding")}
-          >
-            Register Now
-          </Button>
-        </div>
-
-        {/* Why It Works */}
-        <div className="bg-muted/30 rounded-xl p-8 mb-12">
-          <div className="flex items-center gap-4 mb-6">
-            <Eye className="h-8 w-8 text-primary" />
-            <h3 className="text-2xl font-bold">Why This Framework Works</h3>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="font-semibold mb-2 text-primary">🎯 Structured Yet Flexible</h4>
-              <p className="text-muted-foreground">Provides clear guidance while adapting to your unique needs and circumstances.</p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2 text-primary">🧠 Cognitive Science in Practice</h4>
-              <p className="text-muted-foreground">Built on evidence-based principles that support executive function, then refined through real-world application and lived experience to ensure it actually works in daily life.</p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2 text-primary">📊 Measurable Progress</h4>
-              <p className="text-muted-foreground">Track improvements in small, manageable steps that build confidence over time.</p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2 text-primary">✨ Lived Experience Validated</h4>
-              <p className="text-muted-foreground">Tested and refined by real people facing real challenges—because what works in theory must also work in practice to truly make a difference.</p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2 text-primary">🔄 Holistic Integration</h4>
-              <p className="text-muted-foreground">Each element reinforces the others, creating a comprehensive life management system that evolves with your needs.</p>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold mb-2 text-primary">🌱 Real-World Resilience</h4>
-              <p className="text-muted-foreground">Designed to work even on difficult days, with flexibility built in for the ups and downs of actual human experience.</p>
-            </div>
-          </div>
+          <h2 className="text-3xl font-bold mb-4 text-primary flex items-center justify-center gap-2">
+            <Star className="h-8 w-8" />
+            Discover Your Empowering MyRhythm
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            More than an app—it's your personal empowerment companion, designed to help you thrive and flourish in every aspect of life.
+          </p>
         </div>
         
-        <div className="text-center">
-          <p className="text-lg text-muted-foreground mb-6">
-            Ready to see how each element works in practice?
+        <div className="grid gap-8 md:grid-cols-2">
+          <Card className="border-primary/20 bg-gradient-to-br from-blue-50 to-primary/5">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-primary/20 p-2 rounded-full">
+                  <Brain className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold">Cognitive Wellness Champion</h3>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                Born from the lived experience of cognitive wellness transformation, MyRhythm empowers you to turn challenges into strengths. 
+                Whether you're navigating brain injury recovery, optimizing mental performance, or supporting a loved one—you're capable of amazing things.
+              </p>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-primary/20 bg-gradient-to-br from-purple-50 to-primary/5">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="bg-primary/20 p-2 rounded-full">
+                  <Heart className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold">Your Personal Growth Partner</h3>
+              </div>
+              <p className="text-muted-foreground leading-relaxed">
+                MyRhythm believes in your potential. Through personalized tools, empowering insights, and a supportive community, 
+                we help you build confidence, create structure, and celebrate every step of your thriving journey.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+        
+        <div className="mt-12 bg-gradient-to-r from-primary/10 to-purple/10 rounded-xl p-8 text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Zap className="h-6 w-6 text-primary" />
+            <h3 className="text-xl font-bold">Your Rhythm, Your Power</h3>
+          </div>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Every person has a unique rhythm—a way of thinking, feeling, and moving through the world that, when honored and supported, 
+            becomes their greatest strength. MyRhythm helps you discover, embrace, and thrive within your personal rhythm.
           </p>
-          <Button 
-            size="lg" 
-            className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground inline-flex items-center gap-2"
-            onClick={() => {
-              const breakdownSection = document.getElementById('myrhythm-breakdown');
-              if (breakdownSection) {
-                breakdownSection.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-          >
-            See Practical Applications <ArrowRight className="h-5 w-5" />
-          </Button>
         </div>
       </div>
     </section>
