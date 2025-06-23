@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { MyRhythmIntro } from "@/components/landing/MyRhythmIntro";
 import { WhyItHelpsSection } from "@/components/landing/WhyItHelpsSection";
+import { PersonalJourneySection } from "@/components/landing/PersonalJourneySection";
 import { CallToAction } from "@/components/landing/CallToAction";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
@@ -46,6 +47,7 @@ const Landing = () => {
         <HeroSection />
         <MyRhythmIntro />
         <WhyItHelpsSection />
+        <PersonalJourneySection />
         <CallToAction onGetStarted={handleGetStarted} />
         <LandingFooter />
       </ScrollArea>
