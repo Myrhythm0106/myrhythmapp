@@ -45,15 +45,7 @@ From surviving to thriving.</p>
           </p>
           
           {/* Framework highlight */}
-          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-primary/20 max-w-2xl mx-auto">
-            <p className="text-base text-primary font-semibold flex items-center gap-2 justify-center mb-2">
-              <Star className="h-5 w-5" />
-              Built on the MyRhythm Framework
-            </p>
-            <p className="text-sm text-muted-foreground">
-              A proven 8-step system designed by cognitive wellness champions to transform challenges into strengths and help you flourish.
-            </p>
-          </div>
+          
         </div>
         
         {/* Simplified CTA buttons */}
