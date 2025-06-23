@@ -1,14 +1,17 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Zap, Lock } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Sparkles, Zap, Lock, ChevronDown } from "lucide-react";
 
 interface PaymentCallToActionProps {
   onPaymentSelect: (option: 'trial' | 'monthly' | 'annual' | 'skip') => void;
 }
 
 export function PaymentCallToAction({ onPaymentSelect }: PaymentCallToActionProps) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Card className="border-2 border-primary/30 bg-gradient-to-br from-blue-50 to-indigo-50">
       <CardContent className="text-center space-y-6 py-8">
@@ -24,18 +27,32 @@ export function PaymentCallToAction({ onPaymentSelect }: PaymentCallToActionProp
             and ongoing support to achieve your rhythm and recovery goals.
           </p>
           
-          <div className="bg-white/80 p-4 rounded-lg border border-primary/20 max-w-lg mx-auto">
-            <p className="text-sm text-gray-700 font-medium">
-              🔒 What you'll unlock with Premium:
-            </p>
-            <ul className="text-xs text-gray-600 mt-2 space-y-1 text-left">
-              <li>• Complete assessment analysis & insights</li>
-              <li>• Personalized action plans & strategies</li>
-              <li>• Goal templates tailored to your focus area</li>
-              <li>• Progress tracking & celebration system</li>
-              <li>• Ongoing support & guidance</li>
-            </ul>
-          </div>
+          <Collapsible open={isOpen} onOpenChange={setIsOpen}>
+            <CollapsibleTrigger asChild>
+              <div className="bg-white/80 p-4 rounded-lg border border-primary/20 max-w-lg mx-auto cursor-pointer hover:bg-white/90 transition-colors">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-gray-700 font-medium">
+                    🔒 What you'll unlock with Premium
+                  </p>
+                  <ChevronDown 
+                    className={`h-4 w-4 text-gray-600 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                  />
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            
+            <CollapsibleContent className="max-w-lg mx-auto mt-2">
+              <div className="bg-white/80 px-4 pb-4 rounded-lg border border-primary/20">
+                <ul className="text-xs text-gray-600 space-y-1 text-left">
+                  <li>• Complete assessment analysis & insights</li>
+                  <li>• Personalized action plans & strategies</li>
+                  <li>• Goal templates tailored to your focus area</li>
+                  <li>• Progress tracking & celebration system</li>
+                  <li>• Ongoing support & guidance</li>
+                </ul>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
         
         <div className="grid gap-3 max-w-md mx-auto">

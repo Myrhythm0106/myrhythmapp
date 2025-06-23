@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { CheckCircle, Star, Zap, Shield, ArrowRight, Sparkles, Lock } from "lucide-react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { CheckCircle, Star, Zap, Shield, ArrowRight, Sparkles, Lock, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PostAssessmentPaymentProps {
@@ -15,6 +16,7 @@ interface PostAssessmentPaymentProps {
 export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAssessmentPaymentProps) {
   const [isAnnual, setIsAnnual] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isPremiumBenefitsOpen, setIsPremiumBenefitsOpen] = useState(false);
 
   const monthlyPrice = 9.99;
   const annualPrice = 8.33; // $99.99 / 12
@@ -54,44 +56,60 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
         </div>
       </div>
 
-      {/* Premium Benefits Highlight */}
-      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
-        <CardContent className="p-6">
-          <h3 className="font-semibold text-blue-900 mb-3 text-center">
-            🚀 What Premium Access Unlocks:
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Complete assessment analysis & insights</span>
+      {/* Premium Benefits Highlight - Now Collapsible */}
+      <Collapsible open={isPremiumBenefitsOpen} onOpenChange={setIsPremiumBenefitsOpen}>
+        <CollapsibleTrigger asChild>
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 cursor-pointer hover:shadow-md transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-blue-900">
+                  🚀 What Premium Access Unlocks
+                </h3>
+                <ChevronDown 
+                  className={`h-5 w-5 text-blue-700 transition-transform ${isPremiumBenefitsOpen ? 'rotate-180' : ''}`}
+                />
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Personalized action plans & strategies</span>
+            </CardContent>
+          </Card>
+        </CollapsibleTrigger>
+        
+        <CollapsibleContent>
+          <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 mt-2">
+            <CardContent className="p-6 pt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Complete assessment analysis & insights</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Personalized action plans & strategies</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Goal templates tailored to your focus area</span>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Progress tracking & celebration system</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Support circle activation & alerts</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <span>Ongoing guidance & premium support</span>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Goal templates tailored to your focus area</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Progress tracking & celebration system</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Support circle activation & alerts</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                <span>Ongoing guidance & premium support</span>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </CollapsibleContent>
+      </Collapsible>
 
       {/* Billing Toggle */}
       <div className="flex items-center justify-center gap-4 p-4 bg-gray-50 rounded-lg">
