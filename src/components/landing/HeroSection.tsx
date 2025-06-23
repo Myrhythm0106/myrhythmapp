@@ -11,11 +11,11 @@ export function HeroSection() {
   const [showRegisterModal, setShowRegisterModal] = React.useState(false);
   const navigate = useNavigate();
 
-  // Function to scroll to the Discover MyRhythm section
-  const scrollToDiscover = () => {
-    const discoverSection = document.getElementById('discover-myrhythm');
-    if (discoverSection) {
-      discoverSection.scrollIntoView({
+  // Function to scroll to the MyRhythm Framework section
+  const scrollToFramework = () => {
+    const frameworkSection = document.getElementById('myrhythm-framework');
+    if (frameworkSection) {
+      frameworkSection.scrollIntoView({
         behavior: 'smooth'
       });
     }
@@ -32,7 +32,7 @@ export function HeroSection() {
       </div>
 
       <div className="container mx-auto px-4 max-w-4xl text-center">
-        <div className="flex items-center justify-center gap-2 mb-4">
+        <div className="flex items-center justify-center gap-2 mb-6">
           <Brain className="h-12 w-12 md:h-16 md:w-16 text-primary" />
           <h1 className="text-4xl font-bold text-foreground md:text-7xl">
             MyRhythm
@@ -40,49 +40,41 @@ export function HeroSection() {
         </div>
         
         <div className="space-y-6 mb-10">
-          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-annabel-600 md:text-lg">
-            From overwhelm to clarity. From uncertainty to confidence. From surviving to thriving. 
-            Discover your personal rhythm as your strength grows, momentum builds, and structure becomes your superpower. 
-            You are capable of amazing things, with MyRhythm empowering your journey.
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed text-annabel-600 md:text-2xl font-medium">
+            From overwhelm to clarity. From uncertainty to confidence. From surviving to thriving.
           </p>
           
-          {/* Empowering expansion mention */}
-          <div className="bg-white/70 backdrop-blur-sm p-4 rounded-lg border border-primary/20 max-w-xl mx-auto">
-            <p className="text-sm text-muted-foreground flex items-center gap-2 justify-center">
-              <Star className="h-4 w-4 text-primary" />
-              <span className="font-medium text-primary">Designed by cognitive wellness champions</span> — the same empowering framework that transforms cognitive challenges also optimizes mental performance, supports caregiving journeys, and enhances overall life wellness.
+          <p className="text-lg max-w-2xl mx-auto leading-relaxed text-muted-foreground">
+            Discover your personal rhythm as your strength grows, momentum builds, and structure becomes your superpower. 
+            You are capable of amazing things.
+          </p>
+          
+          {/* Framework highlight */}
+          <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-primary/20 max-w-2xl mx-auto">
+            <p className="text-base text-primary font-semibold flex items-center gap-2 justify-center mb-2">
+              <Star className="h-5 w-5" />
+              Built on the MyRhythm Framework
+            </p>
+            <p className="text-sm text-muted-foreground">
+              A proven 8-step system designed by cognitive wellness champions to transform challenges into strengths and help you flourish.
             </p>
           </div>
         </div>
         
-        {/* Enhanced CTA buttons with empowering messaging */}
+        {/* Simplified CTA buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
-          {/* Primary Registration CTA */}
           <Button 
             size="lg" 
             className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 px-8 py-4 flex items-center gap-2" 
             onClick={() => setShowRegisterModal(true)}
           >
             <UserPlus className="h-5 w-5" />
-            Start Your Empowering Journey
+            Start Your Journey
           </Button>
           
-          {/* Tertiary actions */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-            <Button size="lg" variant="outline" className="text-lg" onClick={() => navigate("/founders-story")}>
-              Our Inspiring Story
-            </Button>
-            <Button size="lg" variant="outline" className="text-lg" onClick={scrollToDiscover}>
-              Discover Your Potential
-            </Button>
-          </div>
-        </div>
-
-        {/* Mobile-optimized empowering hint */}
-        <div className="mt-8 sm:hidden">
-          <p className="text-sm text-muted-foreground">
-            ✨ Tap "Start Your Empowering Journey" to begin thriving in 30 seconds
-          </p>
+          <Button size="lg" variant="outline" className="text-lg" onClick={scrollToFramework}>
+            Learn About MyRhythm
+          </Button>
         </div>
       </div>
 

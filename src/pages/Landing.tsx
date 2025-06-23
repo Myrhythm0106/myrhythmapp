@@ -4,7 +4,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { MyRhythmIntro } from "@/components/landing/MyRhythmIntro";
-import { MyRhythmBreakdown } from "@/components/landing/MyRhythmBreakdown";
 import { WhyItHelpsSection } from "@/components/landing/WhyItHelpsSection";
 import { CallToAction } from "@/components/landing/CallToAction";
 import { HeroSection } from "@/components/landing/HeroSection";
@@ -46,7 +45,6 @@ const Landing = () => {
       <ScrollArea className="h-screen">
         <HeroSection />
         <MyRhythmIntro />
-        <MyRhythmBreakdown />
         <WhyItHelpsSection />
         <CallToAction onGetStarted={handleGetStarted} />
         <LandingFooter />
