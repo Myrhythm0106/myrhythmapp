@@ -1,4 +1,3 @@
-
 import { useState, useRef, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -9,8 +8,8 @@ export interface VoiceRecording {
   id: string;
   title: string;
   description?: string;
-  category: string; // Changed from union type to string to match database
-  file_path: string; // Added missing property
+  category: string;
+  file_path: string;
   duration_seconds?: number;
   transcription?: string;
   created_at: string;
@@ -70,7 +69,7 @@ export function useVoiceRecorder() {
   const saveRecording = useCallback(async (
     audioBlob: Blob,
     title: string,
-    category: string, // Changed from union type to string
+    category: string,
     description?: string,
     shareWithHealthcare: boolean = false
   ) => {
@@ -132,7 +131,14 @@ export function useVoiceRecorder() {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setRecordings(data || []);
+      
+      // Type cast the database response to match our interface
+      const typedRecordings: VoiceRecording[] = (data || []).map(record => ({
+        ...record,
+        access_level: record.access_level as 'private' | 'healthcare'
+      }));
+      
+      setRecordings(typedRecordings);
     } catch (error) {
       console.error('Error fetching recordings:', error);
       toast.error('Failed to load recordings');
