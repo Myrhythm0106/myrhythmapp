@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { CheckCircle, Star, Zap, Shield, ArrowRight, Sparkles } from "lucide-react";
+import { CheckCircle, Star, Zap, Shield, ArrowRight, Sparkles, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PostAssessmentPaymentProps {
@@ -38,13 +38,60 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
         </div>
         
         <h1 className="text-3xl font-bold text-gray-900">
-          Choose Your MyRhythm Experience
+          Unlock Your Complete Personalized Plan
         </h1>
         
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Unlock your complete personalized plan and start building your optimal rhythm today.
-        </p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-center gap-2 text-amber-600">
+            <Lock className="h-5 w-5" />
+            <span className="text-sm font-medium">Premium Access Required</span>
+          </div>
+          
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Your assessment is complete! Premium access unlocks your full personalized results, 
+            action plans, and all the tools you need to build your optimal rhythm.
+          </p>
+        </div>
       </div>
+
+      {/* Premium Benefits Highlight */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
+        <CardContent className="p-6">
+          <h3 className="font-semibold text-blue-900 mb-3 text-center">
+            🚀 What Premium Access Unlocks:
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Complete assessment analysis & insights</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Personalized action plans & strategies</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Goal templates tailored to your focus area</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Progress tracking & celebration system</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Support circle activation & alerts</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span>Ongoing guidance & premium support</span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Billing Toggle */}
       <div className="flex items-center justify-center gap-4 p-4 bg-gray-50 rounded-lg">
@@ -78,7 +125,7 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
             <div className="w-12 h-12 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-2">
               <Shield className="h-6 w-6 text-blue-600" />
             </div>
-            <CardTitle className="text-xl text-blue-900">Start Free Trial</CardTitle>
+            <CardTitle className="text-xl text-blue-900">Start Premium Trial</CardTitle>
             <div className="space-y-1">
               <div className="text-3xl font-bold text-blue-600">Free</div>
               <div className="text-sm text-gray-600">7 days, then ${isAnnual ? annualPrice.toFixed(2) : monthlyPrice.toFixed(2)}/{isAnnual ? 'month' : 'month'}</div>
@@ -90,30 +137,20 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Complete assessment results
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Personalized action plan
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Goal templates & tracking
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Full app access for 7 days
-              </li>
-            </ul>
+            <div className="bg-blue-50 p-3 rounded-lg">
+              <p className="text-xs text-blue-800 font-medium mb-1">✨ Trial includes full premium access:</p>
+              <ul className="space-y-1 text-xs text-blue-700">
+                <li>• Your complete personalized results</li>
+                <li>• All action plans & goal templates</li>
+                <li>• Full app access for 7 days</li>
+              </ul>
+            </div>
             <Button 
               className="w-full bg-blue-600 hover:bg-blue-700"
               onClick={() => handleOptionSelect('trial')}
               disabled={selectedOption === 'trial'}
             >
-              {selectedOption === 'trial' ? 'Processing...' : 'Start Free Trial'}
+              {selectedOption === 'trial' ? 'Processing...' : 'Start Premium Trial'}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
             <p className="text-xs text-gray-500 text-center">
@@ -140,7 +177,7 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
               <Zap className="h-6 w-6 text-primary" />
             </div>
             <CardTitle className="text-xl text-primary">
-              {isAnnual ? 'Pay Annually & Save' : 'Skip Trial, Start Now'}
+              {isAnnual ? 'Premium Annual' : 'Premium Monthly'}
             </CardTitle>
             <div className="space-y-1">
               <div className="text-3xl font-bold text-primary">
@@ -157,41 +194,27 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <ul className="space-y-2 text-sm">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Immediate access to everything
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Complete assessment results
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Personalized action plan
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Goal templates & tracking
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-500" />
-                Support circle activation
-              </li>
-              {isAnnual && (
-                <li className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-yellow-500" />
-                  <span className="font-medium text-green-700">2 months free!</span>
-                </li>
-              )}
-            </ul>
+            <div className="bg-primary/5 p-3 rounded-lg">
+              <p className="text-xs text-primary font-medium mb-1">🚀 Immediate premium access includes:</p>
+              <ul className="space-y-1 text-xs text-gray-600">
+                <li>• Complete personalized assessment results</li>
+                <li>• Tailored action plans & goal templates</li>
+                <li>• Support circle activation</li>
+                {isAnnual && (
+                  <li className="flex items-center gap-1">
+                    <Sparkles className="h-3 w-3 text-yellow-500" />
+                    <span className="font-medium text-green-700">2 months free!</span>
+                  </li>
+                )}
+              </ul>
+            </div>
             <Button 
               className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
               onClick={() => handleOptionSelect(isAnnual ? 'annual' : 'skip-trial-monthly')}
               disabled={selectedOption === (isAnnual ? 'annual' : 'skip-trial-monthly')}
             >
               {selectedOption === (isAnnual ? 'annual' : 'skip-trial-monthly') ? 'Processing...' : 
-               isAnnual ? 'Pay Annually' : 'Start Immediately'}
+               `Get Premium ${isAnnual ? 'Annual' : 'Monthly'}`}
               <ArrowRight className="h-4 w-4 ml-2" />
             </Button>
             <p className="text-xs text-gray-500 text-center">
@@ -205,12 +228,11 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
       <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
         <CardContent className="p-6 text-center">
           <h3 className="font-semibold text-amber-900 mb-2">
-            🎯 What happens after you choose?
+            🎯 What happens after you subscribe?
           </h3>
           <p className="text-sm text-amber-800">
-            You'll immediately unlock your complete personalized results, get your action plan, 
-            and your support circle will be notified to start cheering you on! 
-            Plus, you'll have access to all goal templates and tracking tools.
+            You'll immediately unlock your complete personalized results, get your tailored action plan, 
+            and your support circle will be notified to start supporting your journey! 
           </p>
         </CardContent>
       </Card>
