@@ -9,27 +9,27 @@ export function PersonalJourneySection() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <section className="py-16 bg-gradient-to-r from-purple-50 to-pink-50">
+    <section className="py-16 bg-gradient-to-r from-cyan-50 to-teal-50">
       <div className="container mx-auto px-4 max-w-4xl">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
-            <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-purple-200 hover:border-purple-300">
+            <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-cyan-200 hover:border-cyan-300">
               <CardContent className="p-8 text-center">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="bg-purple-100 p-3 rounded-full">
-                    <Heart className="h-8 w-8 text-purple-600" />
+                  <div className="bg-cyan-100 p-3 rounded-full">
+                    <Heart className="h-8 w-8 text-cyan-600" />
                   </div>
-                  <h2 className="text-3xl font-bold text-purple-900">
+                  <h2 className="text-3xl font-bold text-cyan-900">
                     How MyRhythm Changed My Life
                   </h2>
                   <ChevronDown 
-                    className={`h-6 w-6 text-purple-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                    className={`h-6 w-6 text-cyan-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                   />
                 </div>
-                <p className="text-lg text-purple-700 font-medium">
+                <p className="text-lg text-cyan-700 font-medium">
                   A personal story of transformation, resilience, and finding rhythm after brain aneurysm
                 </p>
-                <p className="text-sm text-purple-600 mt-2">
+                <p className="text-sm text-cyan-600 mt-2">
                   Click to read the full inspiring journey →
                 </p>
               </CardContent>
@@ -37,11 +37,11 @@ export function PersonalJourneySection() {
           </CollapsibleTrigger>
           
           <CollapsibleContent>
-            <Card className="mt-4 border-purple-200">
+            <Card className="mt-4 border-cyan-200">
               <CardContent className="p-8 space-y-6">
                 <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6">
-                  <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-lg border-l-4 border-purple-400">
-                    <p className="text-lg font-medium text-purple-900 mb-3">
+                  <div className="bg-gradient-to-r from-cyan-100 to-teal-100 p-6 rounded-lg border-l-4 border-cyan-400">
+                    <p className="text-lg font-medium text-cyan-900 mb-3">
                       🌟 "When everything I knew about my life changed in an instant, MyRhythm became the bridge between who I was and who I was becoming."
                     </p>
                   </div>
