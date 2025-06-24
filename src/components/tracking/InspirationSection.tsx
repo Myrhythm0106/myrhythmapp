@@ -3,8 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Heart, Activity, Smile, MessageSquare, MessageSquareHeart } from "lucide-react";
+import { Heart, Smile, MessageSquare, MessageSquareHeart, Crown, Sparkles, Lock } from "lucide-react";
+import { EnhancedAffirmationSystem } from "@/components/affirmations/EnhancedAffirmationSystem";
+import { useUserData } from "@/hooks/use-user-data";
 
 // Sample inspiration quotes focused on growth mindset
 const inspirationQuotes = [
@@ -31,10 +34,16 @@ const inspirationQuotes = [
 ];
 
 export function InspirationSection() {
+  const userData = useUserData();
   const [quote, setQuote] = useState(inspirationQuotes[0]);
   const [customMessage, setCustomMessage] = useState("");
   const [enableNotifications, setEnableNotifications] = useState(false);
   const [notificationFrequency, setNotificationFrequency] = useState("medium");
+  const [showEnhancedSystem, setShowEnhancedSystem] = useState(true);
+
+  // Simulate premium status and user type
+  const isPremium = false; // This would be: userData.isPremium || false
+  const userType = userData.userType || "brain-injury-recovery";
 
   // Change quote randomly
   const getRandomQuote = () => {
@@ -63,6 +72,12 @@ export function InspirationSection() {
     }
   };
 
+  const handleUpgradeClick = () => {
+    toast.success("Ready to unlock your full potential! 🚀", {
+      description: "Premium affirmations will transform your daily inspiration"
+    });
+  };
+
   // Simulate a notification (in a real app, this would be handled by a proper notification system)
   useEffect(() => {
     if (!enableNotifications) return;
@@ -89,11 +104,36 @@ export function InspirationSection() {
 
   return (
     <div className="space-y-6">
+      {/* Enhanced Affirmation System */}
+      {showEnhancedSystem && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-bold flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-primary" />
+              Personalized Daily Affirmations
+            </h2>
+            {!isPremium && (
+              <Badge variant="outline" className="flex items-center gap-1">
+                <Lock className="h-3 w-3" />
+                Premium Feature
+              </Badge>
+            )}
+          </div>
+          
+          <EnhancedAffirmationSystem
+            userType={userType}
+            isPremium={isPremium}
+            onUpgradeClick={handleUpgradeClick}
+          />
+        </div>
+      )}
+
+      {/* Original Daily Inspiration - now as fallback/additional */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Smile className="h-5 w-5 text-primary" /> 
-            Daily Inspiration
+            General Daily Inspiration
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -108,19 +148,31 @@ export function InspirationSection() {
         </CardContent>
       </Card>
 
+      {/* Enhanced notification system */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageSquareHeart className="h-5 w-5 text-primary" /> 
-            Growth Mindset Notifications
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <MessageSquareHeart className="h-5 w-5 text-primary" /> 
+              Smart Affirmation Notifications
+            </div>
+            {isPremium && (
+              <Badge className="bg-gradient-to-r from-yellow-400 to-amber-500 text-white">
+                <Crown className="h-3 w-3 mr-1" />
+                Premium
+              </Badge>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium">Enable Inspirational Notifications</p>
+              <p className="font-medium">Enable Smart Notifications</p>
               <p className="text-sm text-muted-foreground">
-                Receive random growth mindset reminders throughout your day
+                {isPremium 
+                  ? "Receive personalized affirmations based on your mood and journey"
+                  : "Receive random growth mindset reminders throughout your day"
+                }
               </p>
             </div>
             <Switch 
@@ -157,16 +209,33 @@ export function InspirationSection() {
                   </Button>
                 </div>
               </div>
+
+              {!isPremium && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <p className="text-sm text-amber-700 mb-2">
+                    <Crown className="h-4 w-4 inline mr-1" />
+                    Upgrade to Premium for mood-responsive notifications!
+                  </p>
+                  <Button
+                    size="sm"
+                    onClick={handleUpgradeClick}
+                    className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600"
+                  >
+                    Learn More
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>
       </Card>
 
+      {/* Personal Affirmation Creator */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-primary" /> 
-            Personal Affirmation
+            Personal Affirmation Creator
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
