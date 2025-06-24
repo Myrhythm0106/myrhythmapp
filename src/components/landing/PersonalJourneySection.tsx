@@ -80,10 +80,6 @@ export function PersonalJourneySection() {
                   </div>
                   
                   <p>
-                    Through every challenge, every small victory, and every moment of doubt, <strong>God has been my unwavering rock and foundation</strong>. His strength carried me when mine failed, His wisdom guided my steps when the path seemed unclear, and His love reminded me daily that I am fearfully and wonderfully made—exactly as I am, including with my brain injury.
-                  </p>
-                  
-                  <p>
                     The <strong>#IChoose Statements</strong> became my daily declarations of empowerment: <em>"I choose progress over perfection. I choose hope over fear. I choose to see my journey as beautiful, not broken."</em> These weren't just words—they became the foundation of a completely transformed life.
                   </p>
                   
