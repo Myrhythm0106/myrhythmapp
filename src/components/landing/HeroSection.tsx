@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -36,8 +37,7 @@ export function HeroSection() {
         </div>
         
         <div className="space-y-6 mb-10">
-          <p className="text-xl max-w-3xl mx-auto leading-relaxed text-annabel-600 md:text-2xl font-medium">From overwhelm to clarity. From uncertainty to confidence. 
-From surviving to thriving.</p>
+          <p className="text-xl max-w-3xl mx-auto leading-relaxed text-annabel-600 md:text-2xl font-medium">LEAP beyond limits! This is your Life Empowering And Productivity Framework. Its time for you to LEAP.</p>
           
           <p className="text-lg max-w-2xl mx-auto leading-relaxed text-muted-foreground">
             Discover your personal rhythm as your strength grows, momentum builds, and structure becomes your superpower. 
