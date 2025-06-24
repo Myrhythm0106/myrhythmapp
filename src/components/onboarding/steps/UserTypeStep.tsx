@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -39,7 +38,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
     {
       id: "brain-injury-recovery",
       title: "Cognitive Wellness & Recovery Journey",
-      subtitle: "I am on my empowering growth path",
+      subtitle: "I am on my empowering growth path after a brain injury",
       description: "Comprehensive support for your thriving journey with specialized tools for cognitive wellness and personal empowerment.",
       icon: <Brain className="h-8 w-8 text-primary" />,
       badge: "Our Flagship Experience",
