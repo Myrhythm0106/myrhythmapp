@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,7 +34,7 @@ export function MotivationalStatement() {
 
   // Simulate premium status (in real app, this would come from user data)
   const isPremium = false; // This would be: userData.isPremium || false
-  const userType = userData.userType || "brain-injury-recovery";
+  const userType = userData.userType; // Now properly typed as UserType
 
   const generateNewStatement = () => {
     setIsGenerating(true);
@@ -68,7 +67,7 @@ export function MotivationalStatement() {
   }, []);
 
   // Show enhanced system if user has a specific type and hasn't seen too many
-  if (userType && userType !== "brain-injury-recovery" || showEnhancedSystem) {
+  if (userType && userType !== "wellness-productivity" || showEnhancedSystem) {
     return (
       <EnhancedAffirmationSystem
         userType={userType}

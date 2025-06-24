@@ -43,7 +43,7 @@ export function InspirationSection() {
 
   // Simulate premium status and user type
   const isPremium = false; // This would be: userData.isPremium || false
-  const userType = userData.userType || "brain-injury-recovery";
+  const userType = userData.userType; // Now properly typed as UserType
 
   // Change quote randomly
   const getRandomQuote = () => {
