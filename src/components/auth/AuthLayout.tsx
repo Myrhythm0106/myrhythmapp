@@ -10,6 +10,22 @@ interface AuthLayoutProps {
 }
 
 export const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
+  const handleForgotPassword = () => {
+    console.log('Forgot password clicked');
+  };
+
+  const handleResendVerification = (email: string) => {
+    console.log('Resend verification for:', email);
+  };
+
+  const handleSignInSuccess = () => {
+    console.log('Sign in successful');
+  };
+
+  const handleSignUpSuccess = (email: string) => {
+    console.log('Sign up successful for:', email);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -21,7 +37,14 @@ export const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
           <p className="text-gray-600">{title}</p>
           {subtitle && <p className="text-gray-500 text-sm mt-1">{subtitle}</p>}
         </div>
-        {children || <AuthTabs />}
+        {children || (
+          <AuthTabs 
+            onForgotPassword={handleForgotPassword}
+            onResendVerification={handleResendVerification}
+            onSignInSuccess={handleSignInSuccess}
+            onSignUpSuccess={handleSignUpSuccess}
+          />
+        )}
       </div>
     </div>
   );

@@ -3,10 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AuthProvider } from './contexts/AuthContext';
-import { LandingPage } from './pages/Landing';
+import Landing from './pages/Landing';
 import { AuthLayout } from './components/auth/AuthLayout';
 import { BrainRecoveryHome } from './pages/BrainRecoveryHome';
-import { OnboardingPage } from './pages/Onboarding';
+import Onboarding from './pages/Onboarding';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { MainLayout } from './components/layout/MainLayout';
 import Dashboard from './pages/Dashboard';
@@ -30,10 +30,10 @@ function App() {
           <div className="min-h-screen bg-background">
             <Routes>
               {/* Public routes */}
-              <Route path="/" element={<LandingPage />} />
+              <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<AuthLayout title="Welcome Back" />} />
               <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
-              <Route path="/onboarding" element={<OnboardingPage />} />
+              <Route path="/onboarding" element={<Onboarding />} />
               
               {/* Protected routes */}
               <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
