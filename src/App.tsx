@@ -1,212 +1,61 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'sonner';
-
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { AuthProvider } from './contexts/AuthContext';
-import { SubscriptionProvider } from './contexts/SubscriptionContext';
-import { SidebarProvider } from './components/layout/Sidebar/SidebarContext';
+import { LandingPage } from './pages/LandingPage';
+import { AuthLayout } from './components/auth/AuthLayout';
+import { BrainRecoveryHome } from './pages/BrainRecoveryHome';
+import { OnboardingPage } from './pages/OnboardingPage';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
-import { MainLayout } from './components/layout/MainLayout';
-import { ErrorBoundary } from './components/error/ErrorBoundary';
-import { SecurityMonitor } from './components/security/SecurityMonitor';
-
-// Public Pages
-import Landing from './pages/Landing';
-import FoundersStory from './pages/FoundersStory';
-import Auth from './pages/Auth';
-import EmailVerification from './pages/EmailVerification';
-import Welcome from './pages/Welcome';
-import Onboarding from './pages/Onboarding';
-import FAQ from './pages/FAQ';
-import NotFound from './pages/NotFound';
-
-// Protected Pages
+import MainLayout from './components/layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import Calendar from './pages/Calendar';
 import MoodTracking from './pages/MoodTracking';
-import Gratitude from './pages/Gratitude';
+import BrainGamesPage from './pages/BrainGamesPage';
 import SymptomTracking from './pages/SymptomTracking';
-import TBICalendar from './pages/TBICalendar';
-import Community from './pages/Community';
+import Goals from './pages/Goals';
+import AccountabilityPage from './pages/AccountabilityPage';
 import PersonalCommunity from './pages/PersonalCommunity';
-import VoiceNotes from './pages/VoiceNotes';
+import NotesPage from './pages/NotesPage';
 import Profile from './pages/Profile';
-import SecuritySettings from './pages/SecuritySettings';
-import Customization from './pages/Customization';
-import UserGuideView from './pages/UserGuideView';
-import UsefulInfo from './pages/UsefulInfo';
-import Accountability from './pages/Accountability';
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: (failureCount, error) => {
-        // Don't retry on auth errors
-        if (error?.message?.includes('auth') || error?.message?.includes('unauthorized')) {
-          return false;
-        }
-        return failureCount < 3;
-      },
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      refetchOnWindowFocus: false,
-    },
-    mutations: {
-      retry: 1,
-    },
-  },
-});
+import UsefulInfoPage from './pages/UsefulInfoPage';
+import { MemoryEnhancementCenter } from "@/components/memory/MemoryEnhancementCenter";
 
 function App() {
   return (
-    <ErrorBoundary>
-      <Router>
-        <AuthProvider>
-          <SubscriptionProvider>
-            <QueryClientProvider client={queryClient}>
-              <SidebarProvider>
-                <Toaster />
-                <SecurityMonitor />
-                <Routes>
-                  {/* Public routes */}
-                  <Route path="/" element={<Landing />} />
-                  <Route path="/founders-story" element={<FoundersStory />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/email-verification" element={<EmailVerification />} />
-                  <Route path="/welcome" element={<Welcome />} />
-                  <Route path="/onboarding" element={<Onboarding />} />
-                  <Route path="/faq" element={<FAQ />} />
-
-                  {/* Protected routes */}
-                  <Route path="/dashboard" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <Dashboard />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/calendar" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <Calendar />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/accountability" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <Accountability />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/mood-tracking" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <MoodTracking />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/gratitude" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <Gratitude />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/symptom-tracking" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <SymptomTracking />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/tbi-calendar" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <TBICalendar />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/community" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <Community />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/personal-community" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <PersonalCommunity />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/voice-notes" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <VoiceNotes />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/profile" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <Profile />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/security" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <SecuritySettings />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/customization" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <Customization />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/user-guide" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <UserGuideView />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="/useful-info" element={
-                    <ProtectedRoute>
-                      <MainLayout>
-                        <UsefulInfo />
-                      </MainLayout>
-                    </ProtectedRoute>
-                  } />
-
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </SidebarProvider>
-            </QueryClientProvider>
-          </SubscriptionProvider>
-        </AuthProvider>
-      </Router>
-    </ErrorBoundary>
+    <QueryClientProvider client={new QueryClient()}>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-background">
+            <Routes>
+              {/* Public routes */}
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/auth" element={<AuthLayout />} />
+              <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
+              <Route path="/onboarding" element={<OnboardingPage />} />
+              
+              {/* Protected routes */}
+              <Route element={<ProtectedRoute />}>
+                <Route element={<MainLayout />}>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/memory" element={<MemoryEnhancementCenter />} />
+                  <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/mood" element={<MoodTracking />} />
+                  <Route path="/brain-games" element={<BrainGamesPage />} />
+                  <Route path="/health-fitness" element={<SymptomTracking />} />
+                  <Route path="/goals" element={<Goals />} />
+                  <Route path="/accountability" element={<AccountabilityPage />} />
+                  <Route path="/personal-community" element={<PersonalCommunity />} />
+                  <Route path="/notes" element={<NotesPage />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/useful-info" element={<UsefulInfoPage />} />
+                </Route>
+              </Route>
+            </Routes>
+          </div>
+        </Router>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }
 
