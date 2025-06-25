@@ -11,10 +11,10 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
     <section className="py-16 bg-muted/40">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-3">Your Memory Partner Plans</h2>
+          <h2 className="text-3xl font-bold mb-3">Choose Your Memory Partner Plan</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Every plan includes a 7-day trial to experience how MyRhythm becomes your trusted memory partner.
-            Choose the level of support that fits your memory journey.
+            Choose the level of memory support that fits your journey.
           </p>
         </div>
 
@@ -29,11 +29,12 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               </>
             }
             features={[
-              "Daily memory check-ins & tracking",
-              "Voice-to-text note capture",
-              "Smart reminder system",
+              "Daily memory logging & tracking",
+              "Important moments capture",
+              "Smart reminder system", 
               "Memory pattern insights",
-              "Basic progress celebrations"
+              "Progress celebrations",
+              "15-minute daily reflections"
             ]}
             buttonText="Start Memory Trial"
             onSelectPlan={onSelectPlan}
@@ -52,8 +53,9 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "All Starter features included",
               "Advanced memory analytics",
               "AI-powered memory insights", 
-              "Conversation logging & playback",
+              "Voice-to-text logging",
               "Memory trigger alerts",
+              "Walking & step integration",
               "Personalized memory exercises",
               "Priority memory coaching support"
             ]}
@@ -92,9 +94,9 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
             🧠 Your 7-Day Memory Partner Experience
           </h3>
           <p className="text-sm text-blue-800 max-w-3xl mx-auto">
-            Every trial includes: Memory assessment • Voice note capture • Smart reminders • 
-            Progress tracking • Success celebrations • Personal memory insights. 
-            <strong>See real improvement in just 7 days!</strong>
+            Every trial includes: Memory assessment • Important moments logging • Smart reminders • 
+            Walking integration • 15-minute reflections • Progress tracking • Success celebrations • Personal memory insights. 
+            <strong>See real memory improvement in just 7 days!</strong>
           </p>
         </div>
       </div>

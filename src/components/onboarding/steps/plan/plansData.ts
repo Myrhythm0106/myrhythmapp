@@ -11,11 +11,12 @@ export const plans: Plan[] = [
     trialDays: 7,
     icon: Shield,
     features: [
-      "Daily memory check-ins & tracking",
-      "Voice-to-text note capture", 
+      "Daily memory logging & tracking",
+      "Important moments capture", 
       "Smart reminder system",
       "Memory pattern insights",
-      "Basic progress celebrations"
+      "Progress celebrations",
+      "15-minute daily reflections"
     ]
   },
   {
@@ -31,8 +32,9 @@ export const plans: Plan[] = [
       "All Starter features included",
       "Advanced memory analytics",
       "AI-powered memory insights",
-      "Conversation logging & playback",
+      "Voice-to-text logging",
       "Memory trigger alerts",
+      "Walking & step integration",
       "Personalized memory exercises",
       "Priority memory coaching support"
     ]

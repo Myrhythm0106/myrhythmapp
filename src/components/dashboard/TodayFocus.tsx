@@ -16,9 +16,9 @@ interface FocusItem {
 export function TodayFocus() {
   const navigate = useNavigate();
   const [focusItems, setFocusItems] = useState<FocusItem[]>([
-    { id: "1", text: "Complete cognitive exercises", completed: false },
-    { id: "2", text: "Review notes from therapy", completed: true },
-    { id: "3", text: "Walk for 15 minutes", completed: false },
+    { id: "1", text: "Log important moments from morning meeting", completed: false },
+    { id: "2", text: "Take 15-minute reflection walk", completed: true },
+    { id: "3", text: "Record key decisions made today", completed: false },
   ]);
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [newItemText, setNewItemText] = useState("");
@@ -29,7 +29,7 @@ export function TodayFocus() {
         item.id === id ? { ...item, completed: !item.completed } : item
       )
     );
-    toast.success("Focus item updated");
+    toast.success("Memory task updated");
   };
 
   const handleAddItem = () => {
@@ -44,12 +44,12 @@ export function TodayFocus() {
     setFocusItems(prev => [...prev, newItem]);
     setNewItemText("");
     setIsAddingItem(false);
-    toast.success("Focus item added");
+    toast.success("Memory task added");
   };
 
   const handleRemoveItem = (id: string) => {
     setFocusItems(prev => prev.filter(item => item.id !== id));
-    toast.success("Focus item removed");
+    toast.success("Memory task removed");
   };
 
   const handleCancel = () => {
@@ -62,7 +62,7 @@ export function TodayFocus() {
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
           <Target className="h-5 w-5 text-primary" />
-          My Focus for Today
+          My Memory Focus for Today
         </CardTitle>
       </CardHeader>
       
@@ -97,7 +97,7 @@ export function TodayFocus() {
                 type="text"
                 value={newItemText}
                 onChange={(e) => setNewItemText(e.target.value)}
-                placeholder="What do you want to focus on today?"
+                placeholder="What important moment or action do you want to log today?"
                 className="w-full p-2 text-sm rounded-md border focus:outline-none focus:ring-2 focus:ring-primary"
                 autoFocus
               />
@@ -107,7 +107,7 @@ export function TodayFocus() {
                   onClick={handleAddItem}
                   className="text-xs py-0 h-8"
                 >
-                  Add Item
+                  Add Memory Task
                 </Button>
                 <Button 
                   variant="outline" 
@@ -128,7 +128,7 @@ export function TodayFocus() {
                 onClick={() => setIsAddingItem(true)}
               >
                 <Plus className="mr-1 h-4 w-4" />
-                Add focus item
+                Add memory focus item
               </Button>
             </li>
           )}
@@ -140,7 +140,7 @@ export function TodayFocus() {
           <div className="text-sm text-muted-foreground flex items-center gap-1">
             <CheckCircle className="h-4 w-4 text-primary" />
             <span>
-              {focusItems.filter(i => i.completed).length} of {focusItems.length} completed
+              {focusItems.filter(i => i.completed).length} of {focusItems.length} memory tasks completed
             </span>
           </div>
         </CardFooter>

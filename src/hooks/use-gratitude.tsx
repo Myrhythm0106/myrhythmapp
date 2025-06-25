@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, ReactNode, useEffect } from "react";
 import { format } from "date-fns";
 import { GratitudeEntry } from "@/components/gratitude/GratitudePrompt";
@@ -18,21 +19,21 @@ const sampleEntries: GratitudeEntry[] = [
     id: "1",
     date: new Date(),
     promptType: "fitness",
-    gratitudeText: "I'm grateful for my morning walk in the sunshine",
-    whyGrateful: "It energizes me for the day and helps clear my mind",
+    gratitudeText: "I'm grateful for logging my morning walk and the important decision to start earlier",
+    whyGrateful: "It helped me capture an important moment and gave me energy for the day",
     moodScore: 4,
     isShared: false,
-    tags: ["nature", "exercise", "morning"]
+    tags: ["nature", "exercise", "morning", "decisions"]
   },
   {
     id: "2",
     date: new Date(Date.now() - 86400000), // Yesterday
     promptType: "social",
-    gratitudeText: "Thankful for the support of friends",
-    whyGrateful: "They listened when I needed someone to talk to",
+    gratitudeText: "Thankful for logging the important conversation with my friend",
+    whyGrateful: "I captured their advice and the key actions I need to take, which I can now track",
     moodScore: 5,
     isShared: true,
-    tags: ["friends", "support"]
+    tags: ["friends", "support", "actions", "memory"]
   }
 ];
 
