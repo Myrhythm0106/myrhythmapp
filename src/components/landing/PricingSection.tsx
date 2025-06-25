@@ -11,71 +11,91 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
     <section className="py-16 bg-muted/40">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-3">Choose Your Plan</h2>
+          <h2 className="text-3xl font-bold mb-3">Your Memory Partner Plans</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Select the plan that best fits your needs and start your journey to better brain health and productivity.
+            Every plan includes a 7-day trial to experience how MyRhythm becomes your trusted memory partner.
+            Choose the level of support that fits your memory journey.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <PlanCard
-            title="Basic Plan"
-            description="Essential features for individual support"
+            title="Memory Partner Starter"
+            description="Essential memory support for daily life"
             price={
               <>
-                <div className="text-3xl font-bold">Free for 7 days</div>
-                <div className="text-sm text-muted-foreground">Then $7.99/month</div>
+                <div className="text-3xl font-bold">7 Days Free</div>
+                <div className="text-sm text-muted-foreground">Then £5.99/month</div>
               </>
             }
             features={[
-              "Basic symptom tracking",
-              "Limited calendar features",
-              "Access to public resources",
-              "Community forum access"
+              "Daily memory check-ins & tracking",
+              "Voice-to-text note capture",
+              "Smart reminder system",
+              "Memory pattern insights",
+              "Basic progress celebrations"
             ]}
-            buttonText="Start Free Trial"
+            buttonText="Start Memory Trial"
             onSelectPlan={onSelectPlan}
           />
 
           <PlanCard
-            title="Premium Plan"
-            description="Enhanced features for your recovery journey"
-            price={<div className="text-3xl font-bold">$9.99<span className="text-base font-normal text-muted-foreground">/month</span></div>}
+            title="Memory Partner Pro"
+            description="Complete memory empowerment toolkit"
+            price={
+              <>
+                <div className="text-3xl font-bold">7 Days Free</div>
+                <div className="text-sm text-muted-foreground">Then £9.99/month</div>
+              </>
+            }
             features={[
-              "Advanced symptom tracking",
-              "Full calendar management",
-              "Complete resource library",
-              "Community forum participation",
-              "Personalized insights",
-              "Priority support",
-              "Smart Intervention Alerts",
-              "Enhanced safety reminders",
-              "Object location tracker",
-              "Medication photo verification"
+              "All Starter features included",
+              "Advanced memory analytics",
+              "AI-powered memory insights", 
+              "Conversation logging & playback",
+              "Memory trigger alerts",
+              "Personalized memory exercises",
+              "Priority memory coaching support"
             ]}
-            buttonText="Choose Premium"
+            buttonText="Start Pro Trial"
             isPopular={true}
             onSelectPlan={onSelectPlan}
           />
 
           <PlanCard
-            title="Family Plan"
-            description="Support for caregivers and families"
-            price={<div className="text-3xl font-bold">$19.99<span className="text-base font-normal text-muted-foreground">/month</span></div>}
+            title="Memory Partner Care Team"
+            description="Professional memory support with care coordination"
+            price={
+              <>
+                <div className="text-3xl font-bold">7 Days Free</div>
+                <div className="text-sm text-muted-foreground">Then £15.99/month</div>
+              </>
+            }
             features={[
-              "All Premium features",
-              "Multiple user accounts",
-              "Shared calendars",
-              "Caregiver resources",
-              "Family support group",
-              "Advanced pattern recognition",
-              "Process recording system",
-              "24/7 emergency support"
+              "All Memory Partner Pro features",
+              "Care team dashboard & alerts",
+              "Professional progress reports",
+              "Medical appointment integration", 
+              "Family/caregiver collaboration tools",
+              "Emergency memory support access",
+              "HIPAA-compliant data sharing",
+              "Dedicated memory care specialist"
             ]}
-            buttonText="Choose Family Plan"
+            buttonText="Start Care Team Trial"
             buttonVariant="outline"
             onSelectPlan={onSelectPlan}
           />
+        </div>
+
+        <div className="text-center bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+          <h3 className="font-semibold text-blue-900 mb-2">
+            🧠 Your 7-Day Memory Partner Experience
+          </h3>
+          <p className="text-sm text-blue-800 max-w-3xl mx-auto">
+            Every trial includes: Memory assessment • Voice note capture • Smart reminders • 
+            Progress tracking • Success celebrations • Personal memory insights. 
+            <strong>See real improvement in just 7 days!</strong>
+          </p>
         </div>
       </div>
     </section>

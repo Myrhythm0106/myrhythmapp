@@ -5,50 +5,55 @@ import { Plan } from "./types";
 export const plans: Plan[] = [
   {
     id: "basic",
-    name: "MyRhythm Starter",
-    description: "Perfect for beginning your growth journey",
-    price: "$7.99",
+    name: "Memory Partner Starter",
+    description: "Your essential memory support companion",
+    price: "£5.99",
     trialDays: 7,
     icon: Shield,
     features: [
-      "Daily wellness check-ins",
-      "Personal rhythm calendar", 
-      "Connect with empowering community",
-      "Progress insights & celebrations"
+      "Daily memory check-ins & tracking",
+      "Voice-to-text note capture", 
+      "Smart reminder system",
+      "Memory pattern insights",
+      "Basic progress celebrations"
     ]
   },
   {
     id: "premium",
-    name: "MyRhythm Pro", 
-    description: "Everything you need to thrive & flourish",
-    price: "$9.99",
+    name: "Memory Partner Pro", 
+    description: "Complete memory empowerment toolkit",
+    price: "£9.99",
     popular: true,
+    trialDays: 7,
     icon: Zap,
     highlight: "Most Empowering",
     features: [
-      "Complete wellness monitoring",
-      "Life organization mastery",
-      "Full growth resource library",
-      "Personalized insights & guidance",
-      "Priority coaching & support"
+      "All Starter features included",
+      "Advanced memory analytics",
+      "AI-powered memory insights",
+      "Conversation logging & playback",
+      "Memory trigger alerts",
+      "Personalized memory exercises",
+      "Priority memory coaching support"
     ]
   },
   {
     id: "care-team",
-    name: "MyRhythm Care Team",
-    description: "Comprehensive support for you and your care providers",
-    price: "$15.99",
+    name: "Memory Partner Care Team",
+    description: "Professional memory support with care coordination",
+    price: "£15.99",
+    trialDays: 7,
     icon: Users,
     highlight: "Clinical Grade",
     features: [
-      "All MyRhythm Pro features included",
-      "Secure provider data sharing",
-      "Clinical progress reporting",
-      "Care team collaboration tools",
-      "Healthcare provider dashboard",
+      "All Memory Partner Pro features",
+      "Care team dashboard & alerts",
+      "Professional progress reports",
       "Medical appointment integration",
-      "Insurance documentation support",
-      "24/7 clinical support access"
+      "Family/caregiver collaboration tools",
+      "Emergency memory support access",
+      "HIPAA-compliant data sharing",
+      "Dedicated memory care specialist"
     ]
   }
 ];
