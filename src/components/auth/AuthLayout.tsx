@@ -1,9 +1,10 @@
 
 import React from 'react';
 import { Heart } from 'lucide-react';
+import { AuthTabs } from './AuthTabs';
 
 interface AuthLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   title: string;
   subtitle?: string;
 }
@@ -20,7 +21,7 @@ export const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
           <p className="text-gray-600">{title}</p>
           {subtitle && <p className="text-gray-500 text-sm mt-1">{subtitle}</p>}
         </div>
-        {children}
+        {children || <AuthTabs />}
       </div>
     </div>
   );
