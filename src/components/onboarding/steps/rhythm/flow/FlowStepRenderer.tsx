@@ -90,14 +90,17 @@ export function FlowStepRenderer({
 
     case "user-guide":
       return (
-        <MyRhythmFrameworkDisplay />
+        <MyRhythmFrameworkDisplay
+          currentStepIndex={0}
+        />
       );
 
     case "goal-creation":
       return (
         <FocusAreaGoalTemplates
           focusArea={assessmentResult.focusArea}
-          onBack={onBackToChoice || (() => {})}
+          onGoalsSelected={() => {}}
+          selectedGoals={[]}
         />
       );
 
