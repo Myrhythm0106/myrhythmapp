@@ -1,11 +1,10 @@
 
 import React from "react";
 import { RhythmAssessmentView } from "./rhythm/RhythmAssessmentView";
-import { RhythmSummaryView } from "./rhythm/RhythmSummaryView";
 import { AssessmentCompiling } from "./rhythm/AssessmentCompiling";
 import { RhythmAssessmentIntro } from "./rhythm/RhythmAssessmentIntro";
+import { PostAssessmentFlow } from "./rhythm/PostAssessmentFlow";
 import { useRhythmAssessment } from "@/hooks/useRhythmAssessment";
-import { UserType } from "./UserTypeStep";
 
 interface RhythmAssessmentStepProps {
   onComplete: (responses: any) => void;
@@ -28,7 +27,7 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     handleBeginAssessment
   } = useRhythmAssessment();
 
-  const handleSummaryComplete = () => {
+  const handlePostAssessmentComplete = () => {
     onComplete(responses);
   };
 
@@ -45,12 +44,11 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     return <AssessmentCompiling onComplete={handleCompilationComplete} />;
   }
 
-  if (showSummary) {
+  if (showSummary && assessmentResult) {
     return (
-      <RhythmSummaryView 
-        onComplete={handleSummaryComplete}
-        onBack={handleBack}
+      <PostAssessmentFlow
         assessmentResult={assessmentResult}
+        onComplete={handlePostAssessmentComplete}
       />
     );
   }

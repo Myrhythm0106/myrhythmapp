@@ -12,10 +12,10 @@ interface PostAssessmentFlowProps {
   onComplete: () => void;
 }
 
-type FlowStep = "preview" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+type FlowStep = "teaser-preview" | "registration-prompt" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessmentFlowProps) {
-  const [currentStep, setCurrentStep] = useState<FlowStep>("preview");
+  const [currentStep, setCurrentStep] = useState<FlowStep>("teaser-preview");
   const [paymentCompleted, setPaymentCompleted] = useState(false);
   
   const { triggerEncouragement, EncouragementComponent } = useEncouragement();
@@ -34,8 +34,21 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
     assessmentResult
   );
 
+  const handleRegistrationPrompt = (action: 'register' | 'continue-guest') => {
+    if (action === 'register') {
+      // Navigate to registration
+      window.location.href = '/auth';
+    } else {
+      setCurrentStep('payment');
+    }
+  };
+
+  const handleTeaserComplete = () => {
+    setCurrentStep('registration-prompt');
+  };
+
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Encouragement Component */}
       {EncouragementComponent}
       
@@ -53,6 +66,8 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
           onBackToChoice={flowHandlers.handleBackToChoice}
           onGoalCreationComplete={flowHandlers.handleGoalCreationComplete}
           onLifeManagementComplete={flowHandlers.handleLifeManagementComplete}
+          onTeaserComplete={handleTeaserComplete}
+          onRegistrationPrompt={handleRegistrationPrompt}
         />
       </div>
 

@@ -1,27 +1,33 @@
 
 import React from "react";
+import { AssessmentResult } from "@/utils/rhythmAnalysis";
 import { AssessmentResultsPreview } from "../AssessmentResultsPreview";
 import { PostAssessmentPayment } from "../PostAssessmentPayment";
-import { EncouragingResultsDisplay } from "../EncouragingResultsDisplay";
+import { PersonalizedResultsDisplay } from "../PersonalizedResultsDisplay";
 import { PostAssessmentChoiceScreen } from "../PostAssessmentChoiceScreen";
-import { EnhancedGoalCreationWizard } from "../../../../goals/EnhancedGoalCreationWizard";
+import { MyRhythmFrameworkDisplay } from "../MyRhythmFrameworkDisplay";
+import { FocusAreaGoalTemplates } from "../FocusAreaGoalTemplates";
 import { LifeManagementSetupWizard } from "../LifeManagementSetupWizard";
-import { AssessmentResult } from "@/utils/rhythmAnalysis";
+import { SetupCompleteStep } from "../setup-steps/SetupCompleteStep";
+import { AssessmentTeaserPreview } from "../AssessmentTeaserPreview";
+import { RegistrationPrompt } from "../RegistrationPrompt";
 
-type FlowStep = "preview" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+type FlowStep = "teaser-preview" | "registration-prompt" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 interface FlowStepRendererProps {
   currentStep: FlowStep;
   assessmentResult: AssessmentResult;
-  onPaymentSelect: (option: 'trial' | 'monthly' | 'annual' | 'skip') => void;
-  onPaymentOption: (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => void;
-  onBackToPreview: () => void;
-  onExploreGuide: () => void;
-  onStartGoals: () => void;
-  onLifeManagementSetup: () => void;
-  onBackToChoice: () => void;
-  onGoalCreationComplete: () => void;
-  onLifeManagementComplete: () => void;
+  onPaymentSelect?: (option: 'trial' | 'monthly' | 'annual' | 'skip') => void;
+  onPaymentOption?: (option: 'trial' | 'monthly' | 'annual') => void;
+  onBackToPreview?: () => void;
+  onExploreGuide?: () => void;
+  onStartGoals?: () => void;
+  onLifeManagementSetup?: () => void;
+  onBackToChoice?: () => void;
+  onGoalCreationComplete?: (goalData: any) => void;
+  onLifeManagementComplete?: (setupData: any) => void;
+  onTeaserComplete?: () => void;
+  onRegistrationPrompt?: (action: 'register' | 'continue-guest') => void;
 }
 
 export function FlowStepRenderer({
@@ -35,56 +41,101 @@ export function FlowStepRenderer({
   onLifeManagementSetup,
   onBackToChoice,
   onGoalCreationComplete,
-  onLifeManagementComplete
+  onLifeManagementComplete,
+  onTeaserComplete,
+  onRegistrationPrompt,
 }: FlowStepRendererProps) {
+  
   switch (currentStep) {
-    case "preview":
+    case "teaser-preview":
       return (
-        <AssessmentResultsPreview 
+        <AssessmentTeaserPreview
           assessmentResult={assessmentResult}
-          onPaymentSelect={onPaymentSelect}
+          onContinue={onTeaserComplete || (() => {})}
         />
       );
-      
+
+    case "registration-prompt":
+      return (
+        <RegistrationPrompt
+          onRegistrationChoice={onRegistrationPrompt || (() => {})}
+        />
+      );
+
+    case "preview":
+      return (
+        <AssessmentResultsPreview
+          assessmentResult={assessmentResult}
+          onPaymentSelect={onPaymentSelect || (() => {})}
+        />
+      );
+
     case "payment":
       return (
         <PostAssessmentPayment
-          onSelectPaymentOption={onPaymentOption}
-          onBack={onBackToPreview}
+          onPaymentOption={onPaymentOption || (() => {})}
+          onBack={onBackToPreview || (() => {})}
         />
       );
-      
+
     case "results":
-      return <EncouragingResultsDisplay assessmentResult={assessmentResult} />;
-      
+      return (
+        <PersonalizedResultsDisplay
+          assessmentResult={assessmentResult}
+          onContinue={() => {}}
+        />
+      );
+
     case "choice":
       return (
         <PostAssessmentChoiceScreen
-          onExploreGuide={onExploreGuide}
-          onStartGoals={onStartGoals}
-          onLifeManagementSetup={onLifeManagementSetup}
-          assessmentResult={assessmentResult}
+          onExploreGuide={onExploreGuide || (() => {})}
+          onStartGoals={onStartGoals || (() => {})}
+          onLifeManagementSetup={onLifeManagementSetup || (() => {})}
         />
       );
-      
+
+    case "user-guide":
+      return (
+        <MyRhythmFrameworkDisplay
+          onBack={onBackToChoice || (() => {})}
+          onComplete={onBackToChoice || (() => {})}
+        />
+      );
+
     case "goal-creation":
       return (
-        <EnhancedGoalCreationWizard
-          onComplete={onGoalCreationComplete}
+        <FocusAreaGoalTemplates
           focusArea={assessmentResult.focusArea}
+          onComplete={onGoalCreationComplete || (() => {})}
+          onBack={onBackToChoice || (() => {})}
         />
       );
 
     case "life-operating-model-setup":
       return (
         <LifeManagementSetupWizard
-          onComplete={onLifeManagementComplete}
-          onBack={onBackToChoice}
+          assessmentResult={assessmentResult}
+          onComplete={onLifeManagementComplete || (() => {})}
+          onBack={onBackToChoice || (() => {})}
+        />
+      );
+
+    case "complete":
+      return (
+        <SetupCompleteStep
+          onComplete={() => {}}
+          setupData={{}}
           assessmentResult={assessmentResult}
         />
       );
-      
+
     default:
-      return null;
+      return (
+        <AssessmentTeaserPreview
+          assessmentResult={assessmentResult}
+          onContinue={onTeaserComplete || (() => {})}
+        />
+      );
   }
 }
