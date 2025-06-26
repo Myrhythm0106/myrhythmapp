@@ -84,17 +84,21 @@ export function HeroSection() {
             <div className="flex flex-col sm:flex-row gap-8 justify-center">
               <Button 
                 size="lg" 
-                className="text-2xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-12 py-8 flex items-center gap-4 rounded-full" 
+                className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" 
                 onClick={handleStartJourney}
               >
-                <UserPlus className="h-7 w-7" />
-                Start Your Memory-First Journey
+                <UserPlus className="h-5 w-5 flex-shrink-0" />
+                <span className="text-center leading-tight">
+                  Register Here - Get Card Details
+                  <br />
+                  <span className="text-sm opacity-90">7 Days Free, Then Auto-Payment</span>
+                </span>
               </Button>
               
               <Button 
                 size="lg" 
                 variant="outline" 
-                className="text-2xl px-10 py-8 rounded-full border-2 hover:bg-primary/5" 
+                className="text-lg px-8 py-6 rounded-full border-2 hover:bg-primary/5 max-w-md mx-auto sm:mx-0" 
                 onClick={scrollToFramework}
               >
                 Learn More
@@ -102,20 +106,20 @@ export function HeroSection() {
             </div>
             
             {/* Trust indicators */}
-            <div className="flex items-center justify-center gap-12 text-base text-muted-foreground pt-6">
+            <div className="flex items-center justify-center gap-8 md:gap-12 text-sm text-muted-foreground pt-6 flex-wrap">
               <div className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-500" />
-                <span>No Credit Card Required</span>
+                <Star className="h-4 w-4 text-yellow-500" />
+                <span>7-Day Free Trial</span>
               </div>
               <div className="hidden sm:block w-px h-6 bg-muted-foreground/30"></div>
               <div className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-500" />
-                <span>Start Immediately</span>
+                <Star className="h-4 w-4 text-yellow-500" />
+                <span>Cancel Anytime</span>
               </div>
               <div className="hidden sm:block w-px h-6 bg-muted-foreground/30"></div>
               <div className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-500" />
-                <span>7-Day Results</span>
+                <Star className="h-4 w-4 text-yellow-500" />
+                <span>Auto-Payment After Trial</span>
               </div>
             </div>
           </div>
