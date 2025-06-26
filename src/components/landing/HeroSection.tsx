@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +5,6 @@ import { LogIn, Brain, UserPlus, Star } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { QuickRegisterModal } from "./QuickRegisterModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const [showRegisterModal, setShowRegisterModal] = React.useState(false);
@@ -21,9 +19,7 @@ export function HeroSection() {
       });
     }
   };
-
-  return (
-    <TooltipProvider>
+  return <TooltipProvider>
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-20 md:py-28">
         {/* Login button at top right */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
@@ -71,32 +67,19 @@ export function HeroSection() {
                 <Brain className="h-6 w-6 text-primary" />
                 <span className="text-xl font-semibold text-primary">Memory-First Promise</span>
               </div>
-              <p className="text-base text-gray-700 leading-relaxed">
-                Experience real memory improvement in just 7 days with our MyRhythm framework—where memory wellness is the foundation that supports every other aspect of your life.
-              </p>
+              <p className="text-base text-gray-700 leading-relaxed">Experience real memory improvement in just 7 days with our MyRhythm framework, where memory wellness is the foundation that supports every other aspect of your life.</p>
             </div>
           </div>
           
           {/* Call-to-Action Section */}
           <div className="space-y-6">
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button 
-                size="lg" 
-                className="text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-10 py-6 flex items-center gap-3 rounded-full" 
-                onClick={() => setShowRegisterModal(true)}
-              >
+              <Button size="lg" className="text-xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-10 py-6 flex items-center gap-3 rounded-full" onClick={() => setShowRegisterModal(true)}>
                 <UserPlus className="h-6 w-6" />
                 Start Your Memory-First Journey
               </Button>
               
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-xl px-8 py-6 rounded-full border-2 hover:bg-primary/5" 
-                onClick={scrollToFramework}
-              >
-                Learn About Memory-First MyRhythm
-              </Button>
+              <Button size="lg" variant="outline" className="text-xl px-8 py-6 rounded-full border-2 hover:bg-primary/5" onClick={scrollToFramework}>Learn More</Button>
             </div>
             
             {/* Trust indicators */}
@@ -123,6 +106,5 @@ export function HeroSection() {
         <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
         <QuickRegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
       </section>
-    </TooltipProvider>
-  );
+    </TooltipProvider>;
 }
