@@ -70,6 +70,7 @@ const baseWidgets: Record<string, Omit<WidgetConfig, "enabled">> = {
 
 // Focus area specific widget recommendations
 const focusSpecificWidgets: Record<FocusArea, string[]> = {
+  memory: ["focusArea", "dailyCheckin", "todaysActions", "activeGoals", "upcomingReminders"],
   structure: ["focusArea", "todaysActions", "upcomingReminders", "dailyCheckin", "activeGoals"],
   emotional: ["focusArea", "dailyCheckin", "celebrations", "activeGoals", "todaysActions"],
   achievement: ["focusArea", "activeGoals", "celebrations", "todaysActions", "assessmentHistory"],

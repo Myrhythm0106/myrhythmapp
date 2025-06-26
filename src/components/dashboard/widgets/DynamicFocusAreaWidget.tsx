@@ -14,6 +14,7 @@ import { AssessmentResultsDisplay } from "../../onboarding/steps/rhythm/Assessme
 import { getCurrentAssessmentResult } from "@/utils/rhythmAnalysis";
 
 const focusAreaIcons: Record<FocusArea, React.ComponentType<{ className?: string }>> = {
+  memory: Brain,
   structure: Calendar,
   emotional: Heart,
   achievement: Target,
@@ -64,6 +65,7 @@ export function DynamicFocusAreaWidget() {
   const handlePrimaryAction = () => {
     // Navigate based on focus area
     const navigationMap: Record<FocusArea, string> = {
+      memory: "/memory",
       structure: "/calendar",
       emotional: "/mood",
       achievement: "/calendar?view=goals",

@@ -17,6 +17,32 @@ interface GoalTemplate {
 }
 
 const goalTemplates: Record<FocusArea, GoalTemplate[]> = {
+  memory: [
+    {
+      id: "daily-memory-log",
+      title: "Track Important Daily Moments",
+      description: "Log 3 important moments each day to strengthen memory patterns",
+      timeframe: "2 weeks",
+      difficulty: "easy",
+      actions: ["Set daily memory reminder", "Use simple logging method", "Review weekly patterns"]
+    },
+    {
+      id: "memory-exercises",
+      title: "Practice Memory Enhancement",
+      description: "Complete daily memory exercises to improve cognitive function",
+      timeframe: "1 month",
+      difficulty: "medium",
+      actions: ["Choose 2-3 memory exercises", "Practice 10 minutes daily", "Track improvement"]
+    },
+    {
+      id: "memory-support-system",
+      title: "Build Memory Support Tools",
+      description: "Create external memory aids and support systems",
+      timeframe: "3 weeks",
+      difficulty: "easy",
+      actions: ["Set up calendar system", "Create note-taking routine", "Use memory apps"]
+    }
+  ],
   structure: [
     {
       id: "daily-routine",
