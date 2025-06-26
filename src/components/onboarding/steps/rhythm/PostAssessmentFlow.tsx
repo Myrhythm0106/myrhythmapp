@@ -22,13 +22,13 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
 
   const { handlePaymentSelect, handlePaymentOption } = usePaymentHandlers(
     setPaymentCompleted,
-    setCurrentStep,
+    (step: FlowStep) => setCurrentStep(step),
     triggerEncouragement,
     assessmentResult
   );
 
   const flowHandlers = useFlowHandlers(
-    setCurrentStep,
+    (step: FlowStep) => setCurrentStep(step),
     onComplete,
     triggerEncouragement,
     assessmentResult

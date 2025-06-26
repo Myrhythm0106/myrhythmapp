@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-type FlowStep = "preview" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+type FlowStep = "teaser-preview" | "registration-prompt" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 export const useFlowHandlers = (
   setCurrentStep: (step: FlowStep) => void,
@@ -13,7 +13,7 @@ export const useFlowHandlers = (
   const navigate = useNavigate();
 
   const handleBackToPreview = () => {
-    setCurrentStep("preview");
+    setCurrentStep("teaser-preview");
   };
 
   const handleResultsNext = () => {

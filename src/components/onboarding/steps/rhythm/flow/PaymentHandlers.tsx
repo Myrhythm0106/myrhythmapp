@@ -1,7 +1,7 @@
 
 import { toast } from "sonner";
 
-type FlowStep = "preview" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+type FlowStep = "teaser-preview" | "registration-prompt" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 export const usePaymentHandlers = (
   setPaymentCompleted: (completed: boolean) => void,
@@ -13,7 +13,7 @@ export const usePaymentHandlers = (
     setCurrentStep("payment");
   };
 
-  const handlePaymentOption = async (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => {
+  const handlePaymentOption = async (option: 'trial' | 'monthly' | 'annual') => {
     console.log("Processing payment option:", option);
     
     toast.info("Processing your selection...", {

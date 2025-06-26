@@ -62,18 +62,10 @@ export function FlowStepRenderer({
         />
       );
 
-    case "preview":
-      return (
-        <AssessmentResultsPreview
-          assessmentResult={assessmentResult}
-          onPaymentSelect={onPaymentSelect || (() => {})}
-        />
-      );
-
     case "payment":
       return (
         <PostAssessmentPayment
-          onPaymentOption={onPaymentOption || (() => {})}
+          onPaymentSelect={onPaymentOption || (() => {})}
           onBack={onBackToPreview || (() => {})}
         />
       );
@@ -89,6 +81,7 @@ export function FlowStepRenderer({
     case "choice":
       return (
         <PostAssessmentChoiceScreen
+          assessmentResult={assessmentResult}
           onExploreGuide={onExploreGuide || (() => {})}
           onStartGoals={onStartGoals || (() => {})}
           onLifeManagementSetup={onLifeManagementSetup || (() => {})}
@@ -98,7 +91,6 @@ export function FlowStepRenderer({
     case "user-guide":
       return (
         <MyRhythmFrameworkDisplay
-          onBack={onBackToChoice || (() => {})}
           onComplete={onBackToChoice || (() => {})}
         />
       );
@@ -107,7 +99,7 @@ export function FlowStepRenderer({
       return (
         <FocusAreaGoalTemplates
           focusArea={assessmentResult.focusArea}
-          onComplete={onGoalCreationComplete || (() => {})}
+          onComplete={() => onGoalCreationComplete?.({})}
           onBack={onBackToChoice || (() => {})}
         />
       );
@@ -116,7 +108,7 @@ export function FlowStepRenderer({
       return (
         <LifeManagementSetupWizard
           assessmentResult={assessmentResult}
-          onComplete={onLifeManagementComplete || (() => {})}
+          onComplete={() => onLifeManagementComplete?.({})}
           onBack={onBackToChoice || (() => {})}
         />
       );
