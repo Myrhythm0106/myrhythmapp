@@ -6,6 +6,7 @@ import { PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { analyzeRhythmAssessment } from "@/utils/rhythmAnalysis";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface UseOnboardingHandlersProps {
   currentStep: number;
@@ -28,6 +29,7 @@ interface UseOnboardingHandlersProps {
 
 export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const goToPreviousStep = () => {
     if (props.currentStep > 1) {
@@ -44,7 +46,19 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     // Store user type for later use
     localStorage.setItem("myrhythm_user_type", userTypeData.type);
     
-    props.setCurrentStep(2);
+    // If user is already authenticated, skip personal info step (step 2) and go to step 3
+    if (user) {
+      // Pre-populate personal info from authenticated user
+      const personalInfo: PersonalInfoFormValues = {
+        name: user.user_metadata?.name || user.email?.split('@')[0] || '',
+        email: user.email || '',
+        password: '' // Not needed for authenticated users
+      };
+      props.setPersonalInfo(personalInfo);
+      props.setCurrentStep(3); // Skip to location step
+    } else {
+      props.setCurrentStep(2); // Go to personal info step
+    }
   };
 
   const handlePersonalInfoComplete = (personalInfo: PersonalInfoFormValues) => {

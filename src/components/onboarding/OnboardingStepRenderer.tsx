@@ -4,12 +4,12 @@ import { UserTypeStep, UserType } from "./steps/UserTypeStep";
 import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
-// Payment step removed from onboarding flow
 import { PreAssessmentCompiling } from "./steps/rhythm/PreAssessmentCompiling";
 import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
 import { PlanType } from "./steps/PlanStep";
 import { PaymentFormValues } from "./steps/PaymentStep";
+import { useAuth } from "@/contexts/AuthContext";
 
 type LocationFormValues = {
   country: string;
@@ -54,6 +54,8 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
   onPreAssessmentComplete,
   onRhythmAssessmentComplete,
 }) => {
+  const { user } = useAuth();
+
   const renderStepContent = () => {
     try {
       switch (currentStep) {
@@ -72,6 +74,19 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
             </div>
           );
         case 2:
+          // Skip personal info step if user is already authenticated
+          if (user) {
+            return (
+              <div className="text-center p-8">
+                <p className="text-lg text-muted-foreground mb-4">
+                  Welcome back! We already have your account information.
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Proceeding to location setup...
+                </p>
+              </div>
+            );
+          }
           return (
             <div>
               <PersonalInfoStep 
@@ -113,7 +128,6 @@ export const OnboardingStepRenderer: React.FC<OnboardingStepRendererProps> = ({
               )}
             </div>
           );
-        // Payment step (5) removed - now goes directly to pre-assessment
         case 5:
           return <PreAssessmentCompiling onComplete={onPreAssessmentComplete} userType={userType} />;
         case 6:

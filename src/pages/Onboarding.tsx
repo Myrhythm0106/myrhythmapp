@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
 import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
@@ -7,12 +7,14 @@ import { STEPS } from "@/components/onboarding/OnboardingSteps";
 import { useAutoProgression } from "@/hooks/useAutoProgression";
 import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Updated steps for professional deployment
 const UPDATED_STEPS = STEPS.filter(step => step.id !== 5); // Remove payment step from main flow
 const TOTAL_STEPS = UPDATED_STEPS.length;
 
 const Onboarding = () => {
+  const { user, loading } = useAuth();
   const onboardingState = useOnboardingLogic(TOTAL_STEPS);
   
   const {
@@ -28,6 +30,8 @@ const Onboarding = () => {
     isLocationValid,
     isPlanSelected,
     isDirectNavigation,
+    setCurrentStep,
+    setPersonalInfo,
   } = onboardingState;
 
   const handlers = useOnboardingHandlers({
@@ -37,6 +41,24 @@ const Onboarding = () => {
     selectedPlan,
     userType,
   });
+
+  // Handle authenticated user flow - skip personal info if already authenticated
+  useEffect(() => {
+    if (user && !loading && currentStep === 2 && !personalInfo) {
+      // Auto-populate personal info from authenticated user and proceed
+      const autoPersonalInfo = {
+        name: user.user_metadata?.name || user.email?.split('@')[0] || '',
+        email: user.email || '',
+        password: ''
+      };
+      setPersonalInfo(autoPersonalInfo);
+      
+      // Auto-proceed to location step after a brief moment
+      setTimeout(() => {
+        setCurrentStep(3);
+      }, 1500);
+    }
+  }, [user, loading, currentStep, personalInfo, setPersonalInfo, setCurrentStep]);
 
   // Disable auto-progression for professional deployment to give users control
   const autoProgressionEnabled = false;
@@ -51,7 +73,7 @@ const Onboarding = () => {
   const { countdown: personalInfoCountdown } = useAutoProgression({
     isFormValid: isPersonalInfoValid,
     onProgress: () => handlers.handlePersonalInfoComplete(personalInfo!),
-    enabled: currentStep === 2 && personalInfo !== null && !isDirectNavigation && autoProgressionEnabled
+    enabled: currentStep === 2 && personalInfo !== null && !isDirectNavigation && autoProgressionEnabled && !user
   });
   
   const { countdown: locationCountdown } = useAutoProgression({
@@ -82,6 +104,18 @@ const Onboarding = () => {
 
   const currentStepInfo = getCurrentStepInfo();
 
+  // Show loading while auth is being checked
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-muted/60 to-background">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-sm text-muted-foreground">Setting up your personalized journey...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <OnboardingLayout 
@@ -98,7 +132,7 @@ const Onboarding = () => {
           location={location}
           selectedPlan={selectedPlan}
           userTypeCountdown={autoProgressionEnabled ? userTypeCountdown : null}
-          personalInfoCountdown={autoProgressionEnabled ? personalInfoCountdown : null}
+          personalInfoCountdown={autoProgressionEnabled && !user ? personalInfoCountdown : null}
           locationCountdown={autoProgressionEnabled ? locationCountdown : null}
           planCountdown={autoProgressionEnabled ? planCountdown : null}
           onUserTypeComplete={handlers.handleUserTypeComplete}
