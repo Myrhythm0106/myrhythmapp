@@ -59,10 +59,6 @@ export function HeroSection() {
               {" "}forward in every area of life
             </p>
             
-            <p className="text-lg max-w-2xl mx-auto leading-relaxed text-muted-foreground">
-              Memory is your foundation. Everything else—structure, emotions, goals, community—builds from there. One step at a time.
-            </p>
-            
             {/* Memory Partner highlight */}
             <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg border border-primary/20 max-w-2xl mx-auto">
               <div className="flex items-center justify-center gap-2 mb-2">
