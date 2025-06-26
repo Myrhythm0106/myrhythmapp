@@ -43,7 +43,7 @@ export function HeroSection() {
           
           <div className="space-y-6 mb-10">
             <p className="text-xl max-w-3xl mx-auto leading-relaxed text-annabel-600 md:text-2xl font-medium">
-              Your trusted Memory Partner that empowers you to{" "}
+              Your trusted Memory Partner that strengthens your memory first, then empowers you to{" "}
               <Tooltip>
                 <TooltipTrigger asChild>
                   <span className="text-primary font-semibold cursor-help border-b border-dotted border-primary">
@@ -56,21 +56,21 @@ export function HeroSection() {
                   </p>
                 </TooltipContent>
               </Tooltip>
-              {" "}forward
+              {" "}forward in every area of life
             </p>
             
             <p className="text-lg max-w-2xl mx-auto leading-relaxed text-muted-foreground">
-              Strengthen your memory, reclaim your rhythm, and build the life you want. One step at a time.
+              Memory is your foundation. Everything else—structure, emotions, goals, community—builds from there. One step at a time.
             </p>
             
             {/* Memory Partner highlight */}
             <div className="bg-white/80 backdrop-blur-sm p-4 rounded-lg border border-primary/20 max-w-2xl mx-auto">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Brain className="h-5 w-5 text-primary" />
-                <span className="font-semibold text-primary">Memory Partner Promise</span>
+                <span className="font-semibold text-primary">Memory-First Promise</span>
               </div>
               <p className="text-sm text-gray-700">
-                Experience real memory improvement in just 7 days with our personalized approach to cognitive wellness and life management.
+                Experience real memory improvement in just 7 days with our MyRhythm framework—where memory wellness is the foundation that supports every other aspect of your life.
               </p>
             </div>
           </div>
@@ -79,11 +79,11 @@ export function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center mt-12">
             <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all duration-200 px-8 py-4 flex items-center gap-2" onClick={() => setShowRegisterModal(true)}>
               <UserPlus className="h-5 w-5" />
-              Start Your Memory Journey
+              Start Your Memory-First Journey
             </Button>
             
             <Button size="lg" variant="outline" className="text-lg" onClick={scrollToFramework}>
-              Learn About Your Memory Partner
+              Learn About Memory-First MyRhythm
             </Button>
           </div>
         </div>
