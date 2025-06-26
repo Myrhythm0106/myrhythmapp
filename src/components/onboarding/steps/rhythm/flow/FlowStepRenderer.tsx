@@ -65,7 +65,7 @@ export function FlowStepRenderer({
     case "payment":
       return (
         <PostAssessmentPayment
-          onPaymentSelect={onPaymentOption || (() => {})}
+          onSelectPaymentOption={onPaymentOption || (() => {})}
           onBack={onBackToPreview || (() => {})}
         />
       );
@@ -90,16 +90,13 @@ export function FlowStepRenderer({
 
     case "user-guide":
       return (
-        <MyRhythmFrameworkDisplay
-          onComplete={onBackToChoice || (() => {})}
-        />
+        <MyRhythmFrameworkDisplay />
       );
 
     case "goal-creation":
       return (
         <FocusAreaGoalTemplates
           focusArea={assessmentResult.focusArea}
-          onComplete={() => onGoalCreationComplete?.({})}
           onBack={onBackToChoice || (() => {})}
         />
       );
