@@ -36,20 +36,26 @@ function App() {
               <Route path="/onboarding" element={<Onboarding />} />
               
               {/* Protected routes */}
-              <Route element={<ProtectedRoute><MainLayout /></ProtectedRoute>}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/memory" element={<MemoryEnhancementCenter />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/mood" element={<MoodTracking />} />
-                <Route path="/brain-games" element={<BrainGamesPage />} />
-                <Route path="/health-fitness" element={<SymptomTracking />} />
-                <Route path="/goals" element={<Goals />} />
-                <Route path="/accountability" element={<AccountabilityPage />} />
-                <Route path="/personal-community" element={<PersonalCommunity />} />
-                <Route path="/notes" element={<NotesPage />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/useful-info" element={<UsefulInfoPage />} />
-              </Route>
+              <Route path="/*" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Routes>
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/memory" element={<MemoryEnhancementCenter />} />
+                      <Route path="/calendar" element={<Calendar />} />
+                      <Route path="/mood" element={<MoodTracking />} />
+                      <Route path="/brain-games" element={<BrainGamesPage />} />
+                      <Route path="/health-fitness" element={<SymptomTracking />} />
+                      <Route path="/goals" element={<Goals />} />
+                      <Route path="/accountability" element={<AccountabilityPage />} />
+                      <Route path="/personal-community" element={<PersonalCommunity />} />
+                      <Route path="/notes" element={<NotesPage />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/useful-info" element={<UsefulInfoPage />} />
+                    </Routes>
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
             </Routes>
           </div>
         </Router>

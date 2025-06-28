@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -23,7 +24,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { SidebarProvider, Sidebar, SidebarTrigger, EnhancedGlobalSearch, GlobalSearch } from "@/components/ui/sidebar";
+import { SidebarProvider, Sidebar, SidebarTrigger } from "@/components/ui/sidebar";
+import { EnhancedGlobalSearch } from "@/components/navigation/EnhancedGlobalSearch";
+import { GlobalSearch } from "@/components/search/GlobalSearch";
 
 interface MainLayoutProps {
   children: React.ReactNode;

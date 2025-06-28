@@ -22,7 +22,7 @@ interface OnboardingLayoutProps {
 }
 
 // Define the onboarding steps for progress tracking
-const getOnboardingSteps = (totalSteps: number) => [
+const getOnboardingSteps = (totalSteps: number, currentStepNumber: number) => [
   {
     id: '1',
     title: 'User Type',
@@ -68,8 +68,8 @@ const getOnboardingSteps = (totalSteps: number) => [
 ].slice(0, totalSteps).map((step, index) => ({
   ...step,
   id: String(index + 1),
-  status: index + 1 < currentStep ? 'completed' as const : 
-          index + 1 === currentStep ? 'current' as const : 'upcoming' as const
+  status: index + 1 < currentStepNumber ? 'completed' as const : 
+          index + 1 === currentStepNumber ? 'current' as const : 'upcoming' as const
 }));
 
 export const OnboardingLayout = ({ 
@@ -86,7 +86,7 @@ export const OnboardingLayout = ({
   const [showBackWarning, setShowBackWarning] = useState(false);
   const [showProgressMap, setShowProgressMap] = useState(false);
 
-  const steps = getOnboardingSteps(totalSteps);
+  const steps = getOnboardingSteps(totalSteps, currentStep);
   const completedSteps = steps.filter(step => step.status === 'completed').length;
 
   const handleBackClick = () => {
