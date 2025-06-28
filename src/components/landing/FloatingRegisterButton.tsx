@@ -64,15 +64,15 @@ export function FloatingRegisterButton({
       case 'trial':
         return {
           icon: UserPlus,
-          text: "Start Free",
-          subtext: "7-Day Trial",
+          text: "Register Here",
+          subtext: "Free Trial",
           color: "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
         };
       default:
         return {
           icon: UserPlus,
-          text: "Register Free",
-          subtext: "Get Started",
+          text: "Register Here",
+          subtext: "Free Trial",
           color: "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
         };
     }

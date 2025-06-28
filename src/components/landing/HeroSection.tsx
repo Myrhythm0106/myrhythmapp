@@ -89,9 +89,9 @@ export function HeroSection() {
               >
                 <UserPlus className="h-5 w-5 flex-shrink-0" />
                 <span className="text-center leading-tight">
-                  Register Here - Get Card Details
+                  Register Here
                   <br />
-                  <span className="text-sm opacity-90">7 Days Free, Then Auto-Payment</span>
+                  <span className="text-sm opacity-90">Free Trial</span>
                 </span>
               </Button>
               
@@ -109,7 +109,7 @@ export function HeroSection() {
             <div className="flex items-center justify-center gap-8 md:gap-12 text-sm text-muted-foreground pt-6 flex-wrap">
               <div className="flex items-center gap-2">
                 <Star className="h-4 w-4 text-yellow-500" />
-                <span>7-Day Free Trial</span>
+                <span>Free Trial</span>
               </div>
               <div className="hidden sm:block w-px h-6 bg-muted-foreground/30"></div>
               <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@ export function HeroSection() {
               <div className="hidden sm:block w-px h-6 bg-muted-foreground/30"></div>
               <div className="flex items-center gap-2">
                 <Star className="h-4 w-4 text-yellow-500" />
-                <span>Auto-Payment After Trial</span>
+                <span>Start Immediately</span>
               </div>
             </div>
           </div>

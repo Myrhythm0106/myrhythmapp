@@ -29,12 +29,12 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
             onClick={() => setShowRegisterModal(true)}
           >
             <UserPlus className="h-5 w-5" />
-            Register Free Now
+            Register Here
             <ArrowRight className="h-4 w-4" />
           </Button>
           
           <div className="text-sm text-muted-foreground">
-            ✨ No credit card required • Start immediately
+            ✨ Free Trial • Start immediately
           </div>
         </div>
 
