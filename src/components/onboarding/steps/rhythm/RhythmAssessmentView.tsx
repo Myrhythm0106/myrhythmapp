@@ -9,6 +9,7 @@ import { RhythmSectionHeader } from "./RhythmSectionHeader";
 import { RhythmQuestionCard } from "./RhythmQuestionCard";
 import { AssessmentResponses } from "./rhythmAssessmentData";
 import { UserType } from "../UserTypeStep";
+import { useFormPersistence } from "@/hooks/useFormPersistence";
 
 interface RhythmAssessmentViewProps {
   currentSection: number;
@@ -31,6 +32,18 @@ export function RhythmAssessmentView({
 }: RhythmAssessmentViewProps) {
   const [autoProgressTimer, setAutoProgressTimer] = useState<NodeJS.Timeout | null>(null);
   const [countdown, setCountdown] = useState<number | null>(null);
+  
+  // Form persistence for assessment data
+  const {
+    saveData,
+    hasUnsavedChanges,
+    lastSaved
+  } = useFormPersistence(responses, {
+    key: 'rhythm_assessment',
+    enabled: true,
+    autoSave: true,
+    saveInterval: 15000 // Save every 15 seconds
+  });
   
   const section = sections[currentSection];
   const sectionId = section.id.toString();
@@ -102,6 +115,14 @@ export function RhythmAssessmentView({
 
   return (
     <div className="space-y-6 max-w-3xl mx-auto">
+      {/* Data persistence indicator */}
+      {lastSaved && (
+        <div className="flex items-center justify-between text-xs text-muted-foreground bg-green-50 px-3 py-2 rounded">
+          <span>✓ Progress saved {new Date(lastSaved).toLocaleTimeString()}</span>
+          {hasUnsavedChanges && <span className="text-amber-600">• Unsaved changes</span>}
+        </div>
+      )}
+
       {/* User Type Indicator */}
       {userType && (
         <div className="flex items-center gap-2 p-3 bg-primary/10 rounded-lg border border-primary/20">

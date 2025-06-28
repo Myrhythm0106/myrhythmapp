@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -24,8 +23,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { SidebarProvider, Sidebar, SidebarTrigger, EnhancedGlobalSearch, GlobalSearch } from "@/components/ui/sidebar";
 
-export function MainLayout() {
+interface MainLayoutProps {
+  children: React.ReactNode;
+}
+
+export function MainLayout({ children }: MainLayoutProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
@@ -56,96 +60,28 @@ export function MainLayout() {
   ];
 
   return (
-    <div className="min-h-screen flex">
-      {/* Mobile Sidebar Overlay */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <div className={cn(
-        "fixed inset-y-0 left-0 z-50 w-64 bg-background border-r transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0",
-        isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
-        <div className="flex h-full flex-col">
-          {/* Header */}
-          <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-            <div className="flex items-center gap-2 font-semibold">
-              <Heart className="h-6 w-6 text-primary" />
-              <span>MyRhythm</span>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-background">
+        <Sidebar />
+        <main className="flex-1 flex flex-col overflow-hidden">
+          <header className="flex items-center justify-between p-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              <h1 className="text-lg font-semibold">MyRhythm</h1>
             </div>
-          </div>
-
-          {/* Navigation */}
+            
+            <div className="flex items-center gap-2">
+              <EnhancedGlobalSearch variant="input" size="sm" />
+              <GlobalSearch />
+            </div>
+          </header>
+          
           <div className="flex-1 overflow-auto">
-            <nav className="grid items-start px-2 py-4 text-sm font-medium lg:px-4 gap-1">
-              {navigationItems.map((item) => (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  className={({ isActive }) =>
-                    cn(
-                      "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:bg-accent hover:text-accent-foreground",
-                      isActive ? "bg-accent text-accent-foreground" : "text-muted-foreground"
-                    )
-                  }
-                  onClick={() => setIsSidebarOpen(false)}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
+            {children}
           </div>
-
-          {/* User Menu */}
-          <div className="p-4 border-t">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full justify-start gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.user_metadata?.avatar_url || ""} alt={userData?.name || "User Avatar"} />
-                    <AvatarFallback>{userData?.name?.slice(0, 2).toUpperCase() || "MR"}</AvatarFallback>
-                  </Avatar>
-                  <span className="truncate">{userData?.name || "User"}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate("/profile")}>Profile</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/accountability")}>Accountability</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
+        </main>
       </div>
-
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Mobile Header */}
-        <div className="flex h-14 items-center gap-4 border-b px-4 md:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleSidebar}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          <div className="font-semibold">MyRhythm</div>
-        </div>
-
-        {/* Page Content */}
-        <div className="flex-1 p-4 overflow-auto">
-          <Outlet />
-        </div>
-      </div>
-    </div>
+    </SidebarProvider>
   );
 }
 

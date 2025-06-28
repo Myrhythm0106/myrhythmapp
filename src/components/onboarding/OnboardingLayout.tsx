@@ -1,9 +1,13 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Brain, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { BackButtonWarning } from "@/components/navigation/BackButtonWarning";
+import { MiniProgressIndicator } from "@/components/navigation/MiniProgressIndicator";
+import { ProgressMap } from "@/components/navigation/ProgressMap";
+import { EnhancedGlobalSearch } from "@/components/navigation/EnhancedGlobalSearch";
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;
@@ -12,7 +16,61 @@ interface OnboardingLayoutProps {
   onBack: () => void;
   title: string;
   description: string;
+  hasUnsavedData?: boolean;
+  onSaveProgress?: () => void;
+  dataDescription?: string;
 }
+
+// Define the onboarding steps for progress tracking
+const getOnboardingSteps = (totalSteps: number) => [
+  {
+    id: '1',
+    title: 'User Type',
+    description: 'Tell us about yourself',
+    status: 'completed' as const,
+    estimatedTime: '1 min'
+  },
+  {
+    id: '2', 
+    title: 'Personal Info',
+    description: 'Basic account information',
+    status: 'completed' as const,
+    estimatedTime: '2 min'
+  },
+  {
+    id: '3',
+    title: 'Location',
+    description: 'Where are you located?',
+    status: 'current' as const,
+    estimatedTime: '1 min'
+  },
+  {
+    id: '4',
+    title: 'Plan Selection',
+    description: 'Choose your MyRhythm plan',
+    status: 'upcoming' as const,
+    estimatedTime: '2 min'
+  },
+  {
+    id: '5',
+    title: 'Pre-Assessment',
+    description: 'Preparing your assessment',
+    status: 'upcoming' as const,
+    estimatedTime: '1 min'
+  },
+  {
+    id: '6',
+    title: 'Rhythm Assessment',
+    description: 'Discover your unique patterns',
+    status: 'upcoming' as const,
+    estimatedTime: '10 min'
+  }
+].slice(0, totalSteps).map((step, index) => ({
+  ...step,
+  id: String(index + 1),
+  status: index + 1 < currentStep ? 'completed' as const : 
+          index + 1 === currentStep ? 'current' as const : 'upcoming' as const
+}));
 
 export const OnboardingLayout = ({ 
   children, 
@@ -20,15 +78,46 @@ export const OnboardingLayout = ({
   totalSteps, 
   onBack,
   title,
-  description
+  description,
+  hasUnsavedData = false,
+  onSaveProgress,
+  dataDescription = "your progress"
 }: OnboardingLayoutProps) => {
+  const [showBackWarning, setShowBackWarning] = useState(false);
+  const [showProgressMap, setShowProgressMap] = useState(false);
+
+  const steps = getOnboardingSteps(totalSteps);
+  const completedSteps = steps.filter(step => step.status === 'completed').length;
+
+  const handleBackClick = () => {
+    if (hasUnsavedData) {
+      setShowBackWarning(true);
+    } else {
+      onBack();
+    }
+  };
+
+  const handleConfirmBack = () => {
+    setShowBackWarning(false);
+    onBack();
+  };
+
+  const handleSaveAndBack = () => {
+    if (onSaveProgress) {
+      onSaveProgress();
+    }
+    setShowBackWarning(false);
+    onBack();
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <div className="w-full max-w-2xl">
+        {/* Header with navigation and search */}
         <div className="flex justify-between items-center mb-6">
           <Button 
             variant="ghost" 
-            onClick={onBack} 
+            onClick={handleBackClick}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -36,11 +125,21 @@ export const OnboardingLayout = ({
           </Button>
           
           <div className="flex items-center gap-2">
-            <Brain className="h-10 w-10 text-beacon-600" />
+            <Brain className="h-10 w-10 text-primary" />
             <h1 className="text-3xl font-bold">MyRhythm</h1>
           </div>
           
-          <div className="w-[76px]"></div> {/* Empty div for balance */}
+          <EnhancedGlobalSearch variant="icon" />
+        </div>
+
+        {/* Mini progress indicator */}
+        <div className="flex justify-center mb-4">
+          <MiniProgressIndicator
+            currentStep={title}
+            totalSteps={totalSteps}
+            completedSteps={completedSteps}
+            onToggleMap={() => setShowProgressMap(true)}
+          />
         </div>
         
         <Card className="border-2 overflow-hidden">
@@ -67,6 +166,26 @@ export const OnboardingLayout = ({
           </div>
         </Card>
       </div>
+
+      {/* Back button warning dialog */}
+      <BackButtonWarning
+        open={showBackWarning}
+        onClose={() => setShowBackWarning(false)}
+        onConfirm={handleConfirmBack}
+        onSaveAndContinue={onSaveProgress ? handleSaveAndBack : undefined}
+        destination="Previous step"
+        hasUnsavedData={hasUnsavedData}
+        dataDescription={dataDescription}
+      />
+
+      {/* Progress map */}
+      <ProgressMap
+        steps={steps}
+        currentStepId={String(currentStep)}
+        isOpen={showProgressMap}
+        onClose={() => setShowProgressMap(false)}
+        showEstimatedTime={true}
+      />
     </div>
   );
 };

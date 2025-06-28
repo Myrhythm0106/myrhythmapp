@@ -1,5 +1,4 @@
-
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
 import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
@@ -88,6 +87,21 @@ const Onboarding = () => {
     enabled: currentStep === 4 && isPlanSelected && !isDirectNavigation && autoProgressionEnabled
   });
 
+  // Data persistence check
+  const hasUnsavedData = React.useMemo(() => {
+    if (currentStep === 6) { // Assessment step
+      const savedAssessment = localStorage.getItem('form_data_rhythm_assessment');
+      return !!savedAssessment;
+    }
+    return false;
+  }, [currentStep]);
+
+  const handleSaveProgress = () => {
+    // Save current step progress
+    localStorage.setItem('myrhythm_onboarding_current_step', currentStep.toString());
+    localStorage.setItem('myrhythm_onboarding_progress_saved', new Date().toISOString());
+  };
+
   // Get current step information
   const getCurrentStepInfo = () => {
     if (currentStep <= 4) {
@@ -124,6 +138,9 @@ const Onboarding = () => {
         onBack={handlers.goToPreviousStep}
         title={currentStepInfo.title}
         description={currentStepInfo.description}
+        hasUnsavedData={hasUnsavedData}
+        onSaveProgress={handleSaveProgress}
+        dataDescription={currentStep === 6 ? "your assessment responses" : "your progress"}
       >
         <OnboardingStepRenderer
           currentStep={currentStep}
