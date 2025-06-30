@@ -12,9 +12,16 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
   
   const handleRegister = () => {
-    console.log("CallToAction: Register Here button clicked - FIXED VERSION");
-    console.log("CallToAction: Navigating to /onboarding");
-    navigate("/onboarding");
+    console.log("CallToAction: Register Here button clicked - DEBUG VERSION");
+    console.log("CallToAction: About to navigate to /onboarding");
+    console.log("CallToAction: Current location:", window.location.href);
+    
+    try {
+      navigate("/onboarding");
+      console.log("CallToAction: navigate() called successfully");
+    } catch (error) {
+      console.error("CallToAction: Navigation error:", error);
+    }
   };
   
   return (

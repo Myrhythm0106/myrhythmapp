@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
@@ -14,7 +13,10 @@ const UPDATED_STEPS = STEPS.filter(step => step.id !== 5); // Remove payment ste
 const TOTAL_STEPS = UPDATED_STEPS.length;
 
 const Onboarding = () => {
+  console.log("=== ONBOARDING PAGE LOADING DEBUG ===");
   console.log("Onboarding: Component is rendering");
+  console.log("Onboarding: Location:", window.location.href);
+  console.log("Onboarding: TOTAL_STEPS:", TOTAL_STEPS);
   
   const { user, loading } = useAuth();
   console.log("Onboarding: Auth state - user:", !!user, "loading:", loading);
@@ -39,6 +41,7 @@ const Onboarding = () => {
   } = onboardingState;
 
   console.log("Onboarding: Current step:", currentStep);
+  console.log("Onboarding: Onboarding state loaded successfully");
 
   const handlers = useOnboardingHandlers({
     ...onboardingState,
@@ -125,6 +128,7 @@ const Onboarding = () => {
   };
 
   const currentStepInfo = getCurrentStepInfo();
+  console.log("Onboarding: Current step info:", currentStepInfo);
 
   // Show loading while auth is being checked
   if (loading) {
@@ -139,7 +143,8 @@ const Onboarding = () => {
     );
   }
 
-  console.log("Onboarding: Rendering main onboarding content");
+  console.log("Onboarding: About to render main onboarding content");
+  console.log("=== END ONBOARDING DEBUG ===");
 
   return (
     <>

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -21,9 +20,16 @@ export function HeroSection() {
   };
 
   const handleStartJourney = () => {
-    console.log("HeroSection: Register Here button clicked - FIXED VERSION");
-    console.log("HeroSection: Navigating to /onboarding");
-    navigate("/onboarding");
+    console.log("HeroSection: Register Here button clicked - DEBUG VERSION");
+    console.log("HeroSection: About to navigate to /onboarding");
+    console.log("HeroSection: Current location:", window.location.href);
+    
+    try {
+      navigate("/onboarding");
+      console.log("HeroSection: navigate() called successfully");
+    } catch (error) {
+      console.error("HeroSection: Navigation error:", error);
+    }
   };
 
   return (

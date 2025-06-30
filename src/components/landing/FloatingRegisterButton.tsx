@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { UserPlus, ArrowRight, Zap, Gift } from "lucide-react";
@@ -33,11 +32,16 @@ export function FloatingRegisterButton({
   }
 
   const handleRegister = () => {
-    console.log("FloatingRegisterButton: Register Here button clicked - FIXED VERSION, variant:", variant);
-    console.log("FloatingRegisterButton: Navigating to /onboarding");
+    console.log("FloatingRegisterButton: Register Here button clicked - DEBUG VERSION, variant:", variant);
+    console.log("FloatingRegisterButton: About to navigate to /onboarding");
+    console.log("FloatingRegisterButton: Current location:", window.location.href);
     
-    // Always navigate to /onboarding regardless of variant for now
-    navigate("/onboarding");
+    try {
+      navigate("/onboarding");
+      console.log("FloatingRegisterButton: navigate() called successfully");
+    } catch (error) {
+      console.error("FloatingRegisterButton: Navigation error:", error);
+    }
   };
 
   const getButtonConfig = () => {
