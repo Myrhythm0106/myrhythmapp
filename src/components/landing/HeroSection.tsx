@@ -48,7 +48,7 @@ export function HeroSection() {
             {/* Main Value Proposition */}
             <div className="space-y-12">
               <p className="text-3xl max-w-5xl mx-auto leading-relaxed text-gray-700 md:text-4xl font-medium">
-                Your trusted Memory Partner that strengthens your memory first, then empowers you to{" "}
+                Memory First.{" "}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="text-primary font-semibold cursor-help border-b border-dotted border-primary">
@@ -61,7 +61,7 @@ export function HeroSection() {
                     </p>
                   </TooltipContent>
                 </Tooltip>
-                {" "}forward in every area of life
+                {" "}Forward. Momentum Always.
               </p>
             </div>
           </div>
