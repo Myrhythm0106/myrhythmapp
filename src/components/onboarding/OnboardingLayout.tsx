@@ -83,6 +83,8 @@ export const OnboardingLayout = ({
   onSaveProgress,
   dataDescription = "your progress"
 }: OnboardingLayoutProps) => {
+  console.log("OnboardingLayout: Rendering with step", currentStep, "of", totalSteps);
+  
   const [showBackWarning, setShowBackWarning] = useState(false);
   const [showProgressMap, setShowProgressMap] = useState(false);
 

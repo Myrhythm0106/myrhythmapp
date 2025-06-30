@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
@@ -13,7 +14,11 @@ const UPDATED_STEPS = STEPS.filter(step => step.id !== 5); // Remove payment ste
 const TOTAL_STEPS = UPDATED_STEPS.length;
 
 const Onboarding = () => {
+  console.log("Onboarding: Component is rendering");
+  
   const { user, loading } = useAuth();
+  console.log("Onboarding: Auth state - user:", !!user, "loading:", loading);
+  
   const onboardingState = useOnboardingLogic(TOTAL_STEPS);
   
   const {
@@ -33,6 +38,8 @@ const Onboarding = () => {
     setPersonalInfo,
   } = onboardingState;
 
+  console.log("Onboarding: Current step:", currentStep);
+
   const handlers = useOnboardingHandlers({
     ...onboardingState,
     totalSteps: TOTAL_STEPS,
@@ -44,6 +51,7 @@ const Onboarding = () => {
   // Handle authenticated user flow - skip personal info if already authenticated
   useEffect(() => {
     if (user && !loading && currentStep === 2 && !personalInfo) {
+      console.log("Onboarding: Auto-populating personal info for authenticated user");
       // Auto-populate personal info from authenticated user and proceed
       const autoPersonalInfo = {
         name: user.user_metadata?.name || user.email?.split('@')[0] || '',
@@ -120,6 +128,7 @@ const Onboarding = () => {
 
   // Show loading while auth is being checked
   if (loading) {
+    console.log("Onboarding: Showing loading screen");
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-muted/60 to-background">
         <div className="text-center space-y-4">
@@ -129,6 +138,8 @@ const Onboarding = () => {
       </div>
     );
   }
+
+  console.log("Onboarding: Rendering main onboarding content");
 
   return (
     <>

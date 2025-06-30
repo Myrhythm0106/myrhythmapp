@@ -21,6 +21,8 @@ export function HeroSection() {
   };
 
   const handleStartJourney = () => {
+    console.log("HeroSection: Register Here button clicked");
+    console.log("HeroSection: Navigating to /onboarding");
     navigate("/onboarding");
   };
 
