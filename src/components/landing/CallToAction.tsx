@@ -12,7 +12,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
   
   const handleRegister = () => {
-    console.log("CallToAction: Register Here button clicked");
+    console.log("CallToAction: Register Here button clicked - FIXED VERSION");
     console.log("CallToAction: Navigating to /onboarding");
     navigate("/onboarding");
   };

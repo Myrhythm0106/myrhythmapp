@@ -33,19 +33,11 @@ export function FloatingRegisterButton({
   }
 
   const handleRegister = () => {
-    console.log("FloatingRegisterButton: Register Here button clicked, variant:", variant);
+    console.log("FloatingRegisterButton: Register Here button clicked - FIXED VERSION, variant:", variant);
     console.log("FloatingRegisterButton: Navigating to /onboarding");
     
-    if (variant === 'payment') {
-      // Direct to payment step
-      navigate("/onboarding?step=5");
-    } else if (variant === 'results') {
-      // Direct to assessment
-      navigate("/onboarding?step=7");
-    } else {
-      // Normal onboarding flow
-      navigate("/onboarding");
-    }
+    // Always navigate to /onboarding regardless of variant for now
+    navigate("/onboarding");
   };
 
   const getButtonConfig = () => {
