@@ -3,7 +3,6 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { UserPlus, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { QuickRegisterModal } from "./QuickRegisterModal";
 
 interface CallToActionProps {
   onGetStarted: () => void;
@@ -11,7 +10,12 @@ interface CallToActionProps {
 
 export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
-  const [showRegisterModal, setShowRegisterModal] = React.useState(false);
+  
+  const handleRegister = () => {
+    console.log("CallToAction: Register Here button clicked");
+    console.log("CallToAction: Navigating to /onboarding");
+    navigate("/onboarding");
+  };
   
   return (
     <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
@@ -26,7 +30,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
           <Button 
             size="lg" 
             className="text-lg gap-2 px-8 py-6 h-auto shadow-lg hover:shadow-xl transition-all duration-200 bg-primary hover:bg-primary/90"
-            onClick={() => setShowRegisterModal(true)}
+            onClick={handleRegister}
           >
             <UserPlus className="h-5 w-5" />
             Register Here
@@ -45,8 +49,6 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
           </p>
         </div>
       </div>
-
-      <QuickRegisterModal isOpen={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
     </section>
   );
 }

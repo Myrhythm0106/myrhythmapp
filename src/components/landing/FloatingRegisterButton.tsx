@@ -33,6 +33,9 @@ export function FloatingRegisterButton({
   }
 
   const handleRegister = () => {
+    console.log("FloatingRegisterButton: Register Here button clicked, variant:", variant);
+    console.log("FloatingRegisterButton: Navigating to /onboarding");
+    
     if (variant === 'payment') {
       // Direct to payment step
       navigate("/onboarding?step=5");
