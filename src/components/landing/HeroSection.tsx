@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -65,7 +66,7 @@ export function HeroSection() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-sm">
-                      <strong>L</strong>ive • <strong>E</strong>mpowered • <strong>A</strong>mbitious • <strong>P</strong>roductive
+                      <strong>L</strong>ive • <strong>E</strong>mpowered • <strong>A</strong>uthentic • <strong>P</strong>roductive
                     </p>
                   </TooltipContent>
                 </Tooltip>
