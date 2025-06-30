@@ -29,30 +29,94 @@ function App() {
         <Router>
           <div className="min-h-screen bg-background">
             <Routes>
-              {/* Public routes */}
+              {/* Public routes - accessible to everyone */}
               <Route path="/" element={<Landing />} />
               <Route path="/auth" element={<AuthLayout title="Welcome Back" />} />
               <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
               <Route path="/onboarding" element={<Onboarding />} />
               
-              {/* Protected routes */}
-              <Route path="/*" element={
+              {/* Protected routes - wrapped in authentication */}
+              <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <MainLayout>
-                    <Routes>
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/memory" element={<MemoryEnhancementCenter />} />
-                      <Route path="/calendar" element={<Calendar />} />
-                      <Route path="/mood" element={<MoodTracking />} />
-                      <Route path="/brain-games" element={<BrainGamesPage />} />
-                      <Route path="/health-fitness" element={<SymptomTracking />} />
-                      <Route path="/goals" element={<Goals />} />
-                      <Route path="/accountability" element={<AccountabilityPage />} />
-                      <Route path="/personal-community" element={<PersonalCommunity />} />
-                      <Route path="/notes" element={<NotesPage />} />
-                      <Route path="/profile" element={<Profile />} />
-                      <Route path="/useful-info" element={<UsefulInfoPage />} />
-                    </Routes>
+                    <Dashboard />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/memory" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <MemoryEnhancementCenter />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/calendar" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Calendar />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/mood" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <MoodTracking />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/brain-games" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <BrainGamesPage />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/health-fitness" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <SymptomTracking />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/goals" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Goals />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/accountability" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <AccountabilityPage />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/personal-community" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <PersonalCommunity />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/notes" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <NotesPage />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <Profile />
+                  </MainLayout>
+                </ProtectedRoute>
+              } />
+              <Route path="/useful-info" element={
+                <ProtectedRoute>
+                  <MainLayout>
+                    <UsefulInfoPage />
                   </MainLayout>
                 </ProtectedRoute>
               } />
