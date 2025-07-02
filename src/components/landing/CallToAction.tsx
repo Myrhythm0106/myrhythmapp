@@ -12,7 +12,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
   
   const handleRegister = () => {
-    console.log("CallToAction: Register Here button clicked - DEBUG VERSION");
+    console.log("CallToAction: Start Your LEAP button clicked - DEBUG VERSION");
     console.log("CallToAction: About to navigate to /onboarding");
     console.log("CallToAction: Current location:", window.location.href);
     
@@ -27,12 +27,12 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
   return (
     <section className="py-20 bg-gradient-to-b from-muted/30 to-background">
       <div className="container mx-auto px-4 max-w-5xl text-center">
-        <h2 className="text-3xl font-bold mb-4">Ready to Find Your Flow?</h2>
+        <h2 className="text-3xl font-bold mb-4">Ready to Discover Your LEAP?</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-          Start your journey towards a more organized, focused, and fulfilling life.
+          Start your personal journey towards discovering your unique rhythm and building unstoppable momentum in your life.
         </p>
         
-        {/* Enhanced CTA with registration prominence */}
+        {/* Enhanced CTA with personal journey emphasis */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button 
             size="lg" 
@@ -40,19 +40,19 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
             onClick={handleRegister}
           >
             <UserPlus className="h-5 w-5" />
-            Register Here
+            Start Your LEAP
             <ArrowRight className="h-4 w-4" />
           </Button>
           
           <div className="text-sm text-muted-foreground">
-            ✨ Free Trial • Start immediately
+            ✨ Free Trial • Begin Your Journey
           </div>
         </div>
 
         {/* Mobile-specific encouragement */}
         <div className="mt-6 sm:hidden">
           <p className="text-xs text-primary font-medium">
-            Join thousands who've already started their journey
+            Join thousands discovering their personal rhythm
           </p>
         </div>
       </div>

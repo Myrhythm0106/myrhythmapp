@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { UserPlus, ArrowRight, Zap, Gift } from "lucide-react";
@@ -32,7 +33,7 @@ export function FloatingRegisterButton({
   }
 
   const handleRegister = () => {
-    console.log("FloatingRegisterButton: Register Here button clicked - DEBUG VERSION, variant:", variant);
+    console.log("FloatingRegisterButton: Start Your LEAP button clicked - DEBUG VERSION, variant:", variant);
     console.log("FloatingRegisterButton: About to navigate to /onboarding");
     console.log("FloatingRegisterButton: Current location:", window.location.href);
     
@@ -63,14 +64,14 @@ export function FloatingRegisterButton({
       case 'trial':
         return {
           icon: UserPlus,
-          text: "Register Here",
+          text: "Start Your LEAP",
           subtext: "Free Trial",
           color: "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
         };
       default:
         return {
           icon: UserPlus,
-          text: "Register Here",
+          text: "Start Your LEAP",
           subtext: "Free Trial",
           color: "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
         };

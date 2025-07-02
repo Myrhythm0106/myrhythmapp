@@ -21,7 +21,7 @@ export function HeroSection() {
   };
 
   const handleStartJourney = () => {
-    console.log("HeroSection: Register Here button clicked - DEBUG VERSION");
+    console.log("HeroSection: Start Your LEAP button clicked - DEBUG VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
     console.log("HeroSection: Current location:", window.location.href);
     
@@ -57,7 +57,7 @@ export function HeroSection() {
             {/* Main Value Proposition */}
             <div className="space-y-12">
               <p className="text-3xl max-w-5xl mx-auto leading-relaxed text-gray-700 md:text-4xl font-medium">
-                Memory First.{" "}
+                Your{" "}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="text-primary font-semibold cursor-help border-b border-dotted border-primary">
@@ -66,11 +66,12 @@ export function HeroSection() {
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-sm">
+                      <strong>Your Personal Journey:</strong><br />
                       <strong>L</strong>ive • <strong>E</strong>mpowered • <strong>A</strong>uthentic • <strong>P</strong>roductive
                     </p>
                   </TooltipContent>
                 </Tooltip>
-                {" "}Forward. Momentum Always.
+                , Your Rhythm, Your Momentum.
               </p>
             </div>
           </div>
@@ -80,10 +81,10 @@ export function HeroSection() {
             <div className="bg-white/90 backdrop-blur-sm p-10 rounded-3xl border border-primary/20 max-w-4xl mx-auto shadow-lg">
               <div className="flex items-center justify-center gap-3 mb-6">
                 <Brain className="h-8 w-8 text-primary" />
-                <span className="text-2xl font-semibold text-primary">Memory-First Promise</span>
+                <span className="text-2xl font-semibold text-primary">Your Memory Partner Promise</span>
               </div>
               <p className="text-lg text-gray-700 leading-relaxed">
-                Experience real memory improvement in just 7 days with our MyRhythm framework, where memory wellness is the foundation that supports every other aspect of your life.
+                Experience real memory improvement in just 7 days as you discover <strong>YOUR unique LEAP pattern</strong>, establish <strong>YOUR personal rhythm</strong>, and build <strong>YOUR unstoppable momentum</strong>—where memory wellness becomes the foundation for your entire life transformation.
               </p>
             </div>
           </div>
@@ -98,7 +99,7 @@ export function HeroSection() {
               >
                 <UserPlus className="h-5 w-5 flex-shrink-0" />
                 <span className="text-center leading-tight">
-                  Register Here
+                  Start Your LEAP
                   <br />
                   <span className="text-sm opacity-90">Free Trial</span>
                 </span>
