@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
@@ -234,6 +235,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       const subscriptionTier = mapPlanToTier(selectedPlan);
       console.log("OnboardingHandlers: Creating checkout session with tier:", subscriptionTier);
       
+      // Call createCheckoutSession with just the subscription tier
       const checkoutUrl = await createCheckoutSession(subscriptionTier);
       console.log("OnboardingHandlers: Checkout URL received:", checkoutUrl);
       
