@@ -1,11 +1,9 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { LogIn, Brain, UserPlus, Star } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
@@ -19,12 +17,10 @@ export function HeroSection() {
       });
     }
   };
-
   const handleStartJourney = () => {
     console.log("HeroSection: Start Your LEAP button clicked - PRODUCTION VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
     console.log("HeroSection: Current location:", window.location.href);
-    
     try {
       navigate("/onboarding");
       console.log("HeroSection: navigate() called successfully");
@@ -32,9 +28,7 @@ export function HeroSection() {
       console.error("HeroSection: Navigation error:", error);
     }
   };
-
-  return (
-    <TooltipProvider>
+  return <TooltipProvider>
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-20 md:py-32">
         {/* Login button at top right */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
@@ -75,13 +69,7 @@ export function HeroSection() {
               </p>
               
               {/* Updated Framework Description */}
-              <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/20 max-w-4xl mx-auto">
-                <p className="text-xl text-gray-700 leading-relaxed">
-                  <strong className="text-primary">The MyRhythm Framework:</strong> An evidence-based 8-step system that guides you through 
-                  <span className="text-primary font-semibold"> Your LEAP, Your Rhythm, Your Momentum</span> journey - 
-                  transforming lived experience into unstoppable forward progress.
-                </p>
-              </div>
+              
             </div>
           </div>
           
@@ -101,11 +89,7 @@ export function HeroSection() {
           {/* Call-to-Action Section */}
           <div className="space-y-8">
             <div className="flex flex-col sm:flex-row gap-8 justify-center">
-              <Button 
-                size="lg" 
-                className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" 
-                onClick={handleStartJourney}
-              >
+              <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" onClick={handleStartJourney}>
                 <UserPlus className="h-5 w-5 flex-shrink-0" />
                 <span className="text-center leading-tight">
                   Start Your LEAP
@@ -114,12 +98,7 @@ export function HeroSection() {
                 </span>
               </Button>
               
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-lg px-8 py-6 rounded-full border-2 hover:bg-primary/5 max-w-md mx-auto sm:mx-0" 
-                onClick={scrollToFramework}
-              >
+              <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-full border-2 hover:bg-primary/5 max-w-md mx-auto sm:mx-0" onClick={scrollToFramework}>
                 Learn The Framework
               </Button>
             </div>
@@ -147,6 +126,5 @@ export function HeroSection() {
         {/* Login Modal */}
         <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </section>
-    </TooltipProvider>
-  );
+    </TooltipProvider>;
 }
