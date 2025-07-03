@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CreditCard, CheckCircle, Loader2, AlertCircle } from "lucide-react";
@@ -18,7 +19,7 @@ interface PaymentStepProps {
 export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const { createCheckoutSession, subscriptionData } = useSubscription();
+  const { createCheckoutSession } = useSubscription();
   
   const planInfo = {
     basic: { name: "Basic Plan", price: "$7.99/month", trial: "7 Day Free Trial" },
@@ -41,6 +42,13 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
   };
 
   const handleStartTrial = async () => {
+    console.log("PaymentStep: Start trial button clicked");
+    
+    if (isProcessing) {
+      console.log("PaymentStep: Already processing, ignoring click");
+      return;
+    }
+    
     setIsProcessing(true);
     
     try {
@@ -48,18 +56,42 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
       
       // Convert PlanType to SubscriptionTier and create Stripe checkout session
       const subscriptionTier = mapPlanToTier(selectedPlan);
-      const checkoutUrl = await createCheckoutSession(subscriptionTier);
+      console.log("PaymentStep: Mapped tier:", subscriptionTier);
       
+      const checkoutUrl = await createCheckoutSession(subscriptionTier);
       console.log("PaymentStep: Checkout URL received:", checkoutUrl);
       
-      // Redirect to Stripe checkout
-      window.location.href = checkoutUrl;
+      if (!checkoutUrl) {
+        throw new Error("No checkout URL received from Stripe");
+      }
+      
+      // Show success state briefly before redirect
+      setShowSuccess(true);
+      toast.success("Redirecting to secure payment...");
+      
+      // Small delay to show success state, then redirect
+      setTimeout(() => {
+        window.location.href = checkoutUrl;
+      }, 1500);
       
     } catch (error) {
       console.error("PaymentStep: Error creating checkout session:", error);
       setIsProcessing(false);
-      toast.error("Unable to start trial. Please try again.");
+      setShowSuccess(false);
+      
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      toast.error(`Unable to start trial: ${errorMessage}`);
     }
+  };
+
+  const handleSkipForNow = () => {
+    console.log("PaymentStep: Skip trial selected");
+    toast.info("Continuing without trial - you can upgrade anytime in settings");
+    
+    // Call onComplete to proceed to next step
+    setTimeout(() => {
+      onComplete({ paymentIntentId: 'skipped' });
+    }, 500);
   };
 
   if (showSuccess) {
@@ -69,12 +101,12 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
           <CheckCircle className="h-12 w-12 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-green-800">Trial Started Successfully!</h2>
+          <h2 className="text-2xl font-bold text-green-800">Setting Up Your Trial!</h2>
           <p className="text-green-700">
-            Your 7-day free trial is now active.
+            Redirecting you to secure payment setup...
           </p>
           <p className="text-sm text-muted-foreground">
-            Taking you to your dashboard...
+            You won't be charged until your trial ends.
           </p>
         </div>
       </div>
@@ -90,10 +122,10 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
         <div className="space-y-2">
           <h2 className="text-2xl font-bold text-blue-800">Setting Up Your Trial...</h2>
           <p className="text-blue-700">
-            Redirecting you to secure payment setup.
+            Creating your secure payment session.
           </p>
           <p className="text-sm text-muted-foreground">
-            You won't be charged until your trial ends.
+            This should only take a moment.
           </p>
         </div>
       </div>
@@ -167,8 +199,8 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
         </ul>
       </div>
 
-      {/* Action Button */}
-      <div className="pt-4">
+      {/* Action Buttons */}
+      <div className="space-y-3 pt-4">
         <Button 
           onClick={handleStartTrial}
           disabled={isProcessing}
@@ -185,6 +217,15 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
               Start Your 7-Day Free Trial
             </>
           )}
+        </Button>
+        
+        <Button 
+          onClick={handleSkipForNow}
+          disabled={isProcessing}
+          variant="outline"
+          className="w-full"
+        >
+          Skip Trial - Continue with Basic Access
         </Button>
         
         <p className="text-xs text-center text-muted-foreground mt-3">

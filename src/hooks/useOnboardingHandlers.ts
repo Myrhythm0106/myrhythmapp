@@ -109,7 +109,6 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       } else {
         console.log("OnboardingHandlers: Attempting signup with email:", values.email);
         
-        // Fixed: Call signUp with individual parameters
         const { error } = await signUp(values.email, values.password, values.name);
         
         if (error) {
@@ -172,12 +171,21 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   };
 
   const handlePaymentComplete = async (paymentData: PaymentFormValues) => {
-    console.log("OnboardingHandlers: Payment completed, moving to pre-assessment");
+    console.log("OnboardingHandlers: Payment completed:", paymentData);
     
     try {
       setPaymentData(paymentData);
       
-      localStorage.setItem('myrhythm_payment_complete', 'true');
+      // Check if user skipped trial
+      if (paymentData.paymentIntentId === 'skipped') {
+        console.log("OnboardingHandlers: User skipped trial, proceeding to pre-assessment");
+        localStorage.setItem('myrhythm_trial_skipped', 'true');
+        toast.success("Continuing with basic access - you can upgrade anytime!");
+      } else {
+        console.log("OnboardingHandlers: Payment completed successfully");
+        localStorage.setItem('myrhythm_payment_complete', 'true');
+        toast.success("Trial setup complete!");
+      }
       
       setTimeout(() => {
         setCurrentStep(6);
@@ -212,6 +220,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       localStorage.setItem('myrhythm_rhythm_assessment_complete', 'true');
       localStorage.setItem('myrhythm_onboarding_complete', 'true');
       
+      toast.success("Assessment complete! Welcome to MyRhythm!");
+      
       setTimeout(() => {
         navigate("/dashboard?onboarding_complete=true");
       }, 1500);
@@ -228,13 +238,15 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setShowPaymentConfirmation(false);
   
-      // Convert PlanType to SubscriptionTier and create checkout session
       const subscriptionTier = mapPlanToTier(selectedPlan);
       console.log("OnboardingHandlers: Creating checkout session with tier:", subscriptionTier);
       
-      // Call createCheckoutSession with just the subscription tier
       const checkoutUrl = await createCheckoutSession(subscriptionTier);
       console.log("OnboardingHandlers: Checkout URL received:", checkoutUrl);
+      
+      if (!checkoutUrl) {
+        throw new Error("No checkout URL received");
+      }
       
       window.location.href = checkoutUrl;
       
@@ -245,10 +257,14 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   };
 
   const goToPreviousStep = () => {
+    console.log("OnboardingHandlers: Going to previous step from:", currentStep);
+    
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
       setIsDirectNavigation(true);
+      toast.info("Navigated back to previous step");
     } else {
+      console.log("OnboardingHandlers: At first step, navigating to home");
       navigate("/");
     }
   };
