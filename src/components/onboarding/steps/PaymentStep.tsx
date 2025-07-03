@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CreditCard, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { PlanType } from "./PlanStep";
-import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useSubscription, SubscriptionTier } from "@/contexts/SubscriptionContext";
 import { toast } from "sonner";
 
 export type PaymentFormValues = {
@@ -27,14 +26,29 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
     family: { name: "Family Plan", price: "$19.99/month", trial: "7 Day Free Trial" }
   };
 
+  // Convert PlanType to SubscriptionTier
+  const mapPlanToTier = (plan: PlanType): SubscriptionTier => {
+    switch (plan) {
+      case 'basic':
+        return 'basic';
+      case 'premium':
+        return 'premium';
+      case 'family':
+        return 'family';
+      default:
+        return 'premium';
+    }
+  };
+
   const handleStartTrial = async () => {
     setIsProcessing(true);
     
     try {
       console.log("PaymentStep: Starting trial with Stripe checkout for plan:", selectedPlan);
       
-      // Create Stripe checkout session
-      const checkoutUrl = await createCheckoutSession(selectedPlan);
+      // Convert PlanType to SubscriptionTier and create Stripe checkout session
+      const subscriptionTier = mapPlanToTier(selectedPlan);
+      const checkoutUrl = await createCheckoutSession(subscriptionTier);
       
       console.log("PaymentStep: Checkout URL received:", checkoutUrl);
       
