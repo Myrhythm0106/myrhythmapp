@@ -12,7 +12,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
   
   const handleRegister = () => {
-    console.log("CallToAction: Start Your LEAP button clicked - PRODUCTION VERSION");
+    console.log("CallToAction: Register Here button clicked - PRODUCTION VERSION");
     console.log("CallToAction: About to navigate to /onboarding");
     console.log("CallToAction: Current location:", window.location.href);
     
@@ -40,7 +40,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
             onClick={handleRegister}
           >
             <UserPlus className="h-5 w-5" />
-            Start Your LEAP
+            Register Here
             <ArrowRight className="h-4 w-4" />
           </Button>
           

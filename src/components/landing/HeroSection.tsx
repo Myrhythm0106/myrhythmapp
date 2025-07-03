@@ -23,7 +23,7 @@ export function HeroSection() {
   };
   
   const handleStartJourney = () => {
-    console.log("HeroSection: Start Your LEAP button clicked - PRODUCTION VERSION");
+    console.log("HeroSection: Register Here button clicked - PRODUCTION VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
     console.log("HeroSection: Current location:", window.location.href);
     try {
@@ -110,7 +110,7 @@ export function HeroSection() {
               <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" onClick={handleStartJourney}>
                 <UserPlus className="h-5 w-5 flex-shrink-0" />
                 <span className="text-center leading-tight">
-                  Start Your LEAP
+                  Register Here
                   <br />
                   <span className="text-sm opacity-90">7-Day Free Trial</span>
                 </span>
