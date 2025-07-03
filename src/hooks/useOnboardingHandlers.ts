@@ -232,8 +232,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setShowPaymentConfirmation(false);
   
-      // Start trial via checkout session
-      const checkoutUrl = await createCheckoutSession(selectedPlan, 'subscription', true);
+      // Start trial via checkout session - using correct function signature
+      const checkoutUrl = await createCheckoutSession(selectedPlan);
       window.location.href = checkoutUrl;
       
     } catch (error) {

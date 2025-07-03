@@ -21,7 +21,7 @@ interface UserTypeOption {
   isPrimary?: boolean;
 }
 
-interface UserTypeData {
+export interface UserTypeData {
   type: UserType;
 }
 
