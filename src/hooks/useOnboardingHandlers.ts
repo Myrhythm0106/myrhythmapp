@@ -107,20 +107,17 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       if (!values.email || !values.password) {
         console.warn("OnboardingHandlers: Email or password missing, skipping signup");
       } else {
-        const { error } = await signUp({
-          email: values.email,
-          password: values.password,
-          options: {
-            data: {
-              name: values.name
-            }
-          }
-        });
+        console.log("OnboardingHandlers: Attempting signup with email:", values.email);
+        
+        // Fixed: Call signUp with individual parameters
+        const { error } = await signUp(values.email, values.password, values.name);
         
         if (error) {
           console.error("OnboardingHandlers: Signup error:", error);
           toast.error("Error creating account. Please try again.");
           return;
+        } else {
+          console.log("OnboardingHandlers: Signup successful");
         }
       }
       
