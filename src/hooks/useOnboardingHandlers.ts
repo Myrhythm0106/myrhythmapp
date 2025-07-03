@@ -73,26 +73,25 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
 
   const handlePlanSelected = (plan: PlanType) => {
     props.setSelectedPlan(plan);
-    
-    // Skip payment step in onboarding - go directly to pre-assessment compilation
-    // Payment will be handled in the post-assessment flow
-    props.setCurrentStep(5); // Pre-assessment compilation
+    // Go to payment step to set up trial with payment info
+    props.setCurrentStep(5);
   };
 
   const handlePaymentComplete = (paymentData: PaymentFormValues) => {
-    // This is now handled in the post-assessment flow
     props.setPaymentData(paymentData);
-    props.setShowPaymentConfirmation(true);
+    // After payment setup, go to pre-assessment
+    props.setCurrentStep(6);
+    toast.success("Trial started successfully! Let's begin your assessment.");
   };
 
   const handlePaymentConfirm = () => {
     props.setShowPaymentConfirmation(false);
-    props.setCurrentStep(5); // Go to pre-assessment compilation
-    toast.success("Payment processed successfully!");
+    props.setCurrentStep(6); // Go to pre-assessment compilation
+    toast.success("Payment confirmed! Starting your personalized journey.");
   };
 
   const handlePreAssessmentComplete = () => {
-    props.setCurrentStep(6); // Go to actual assessment
+    props.setCurrentStep(7); // Go to actual assessment
   };
 
   const handleRhythmAssessmentComplete = (responses: any) => {
@@ -117,12 +116,13 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       personalizedData: analysisResult.personalizedData // Include personalized insights
     };
     
-    // Store the assessment result but don't mark onboarding as complete yet
+    // Store the assessment result and mark onboarding as complete
     localStorage.setItem("myrhythm_current_assessment", JSON.stringify(result));
+    localStorage.setItem("myrhythm_onboarding_complete", "true");
     
-    // DON'T navigate to dashboard yet - stay in onboarding flow
-    // The PostAssessmentFlow will handle the preview -> payment -> results flow
-    console.log("Assessment completed, moving to preview flow");
+    // Navigate to dashboard with success message
+    navigate("/dashboard?onboarding_complete=true");
+    toast.success("Welcome to MyRhythm! Your personalized journey begins now.");
   };
 
   return {

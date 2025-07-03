@@ -33,7 +33,7 @@ export function FloatingRegisterButton({
   }
 
   const handleRegister = () => {
-    console.log("FloatingRegisterButton: Start Your LEAP button clicked - DEBUG VERSION, variant:", variant);
+    console.log("FloatingRegisterButton: Start Your LEAP button clicked - PRODUCTION VERSION, variant:", variant);
     console.log("FloatingRegisterButton: About to navigate to /onboarding");
     console.log("FloatingRegisterButton: Current location:", window.location.href);
     
@@ -50,22 +50,22 @@ export function FloatingRegisterButton({
       case 'payment':
         return {
           icon: Zap,
-          text: "Skip Trial",
-          subtext: "Pay & Start Now",
+          text: "Start Trial",
+          subtext: "Begin Journey",
           color: "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
         };
       case 'results':
         return {
           icon: Gift,
-          text: "See Full Results",
-          subtext: "Unlock Everything",
+          text: "Unlock Results",
+          subtext: "See Full Journey",
           color: "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
         };
       case 'trial':
         return {
           icon: UserPlus,
           text: "Start Your LEAP",
-          subtext: "Free Trial",
+          subtext: "7-Day Free Trial",
           color: "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
         };
       default:

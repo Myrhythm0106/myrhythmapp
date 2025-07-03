@@ -18,7 +18,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Initialize currentStep from URL parameter with proper validation
-  // Adjusted for new 6-step flow (removed payment step from onboarding)
+  // Updated for 7-step flow (including payment step)
   const [currentStep, setCurrentStep] = useState(() => {
     const stepParam = searchParams.get('step');
     if (stepParam) {
@@ -34,7 +34,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [userType, setUserType] = useState<UserType | null>(null);
   const [location, setLocation] = useState<LocationFormValues | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
-  const [selectedPlan, setSelectedPlan] = useState<PlanType>("basic");
+  const [selectedPlan, setSelectedPlan] = useState<PlanType>("premium");
   const [paymentData, setPaymentData] = useState<PaymentFormValues | null>(null);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   

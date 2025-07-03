@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
@@ -8,12 +9,20 @@ import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Updated steps for professional deployment
-const UPDATED_STEPS = STEPS.filter(step => step.id !== 5); // Remove payment step from main flow
+// Updated steps for professional deployment - now includes payment step
+const UPDATED_STEPS = [
+  { id: 1, title: "User Type", description: "Tell us about yourself" },
+  { id: 2, title: "Personal Info", description: "Create your account" },
+  { id: 3, title: "Location", description: "Where are you based?" },
+  { id: 4, title: "Choose Plan", description: "Select your subscription" },
+  { id: 5, title: "Start Trial", description: "Begin your 7-day free trial" },
+  { id: 6, title: "Pre-Assessment", description: "Preparing your assessment" },
+  { id: 7, title: "Rhythm Assessment", description: "Discover your unique patterns" }
+];
 const TOTAL_STEPS = UPDATED_STEPS.length;
 
 const Onboarding = () => {
-  console.log("=== ONBOARDING PAGE LOADING DEBUG ===");
+  console.log("=== ONBOARDING PAGE LOADING (PRODUCTION) ===");
   console.log("Onboarding: Component is rendering");
   console.log("Onboarding: Location:", window.location.href);
   console.log("Onboarding: TOTAL_STEPS:", TOTAL_STEPS);
@@ -73,34 +82,34 @@ const Onboarding = () => {
   // Disable auto-progression for professional deployment to give users control
   const autoProgressionEnabled = false;
 
-  // Auto-progression for steps 1-4 (disabled for professional use)
+  // Auto-progression disabled for production use
   const { countdown: userTypeCountdown } = useAutoProgression({
     isFormValid: isUserTypeSelected,
     onProgress: () => handlers.handleUserTypeComplete({ type: userType! }),
-    enabled: currentStep === 1 && userType !== null && !isDirectNavigation && autoProgressionEnabled
+    enabled: false
   });
 
   const { countdown: personalInfoCountdown } = useAutoProgression({
     isFormValid: isPersonalInfoValid,
     onProgress: () => handlers.handlePersonalInfoComplete(personalInfo!),
-    enabled: currentStep === 2 && personalInfo !== null && !isDirectNavigation && autoProgressionEnabled && !user
+    enabled: false
   });
   
   const { countdown: locationCountdown } = useAutoProgression({
     isFormValid: isLocationValid,
     onProgress: () => handlers.handleLocationComplete(location!),
-    enabled: currentStep === 3 && location !== null && !isDirectNavigation && autoProgressionEnabled
+    enabled: false
   });
   
   const { countdown: planCountdown } = useAutoProgression({
     isFormValid: isPlanSelected,
     onProgress: () => handlers.handlePlanSelected(selectedPlan),
-    enabled: currentStep === 4 && isPlanSelected && !isDirectNavigation && autoProgressionEnabled
+    enabled: false
   });
 
   // Data persistence check
   const hasUnsavedData = React.useMemo(() => {
-    if (currentStep === 6) { // Assessment step
+    if (currentStep === 7) { // Assessment step
       const savedAssessment = localStorage.getItem('form_data_rhythm_assessment');
       return !!savedAssessment;
     }
@@ -115,16 +124,7 @@ const Onboarding = () => {
 
   // Get current step information
   const getCurrentStepInfo = () => {
-    if (currentStep <= 4) {
-      return UPDATED_STEPS.find(step => step.id === currentStep) || UPDATED_STEPS[0];
-    } else {
-      // For steps 5 and 6 (pre-assessment and assessment)
-      const adjustedSteps = [
-        { id: 5, title: "Pre-Assessment", description: "Preparing your personalized assessment" },
-        { id: 6, title: "Rhythm Assessment", description: "Discover your unique rhythm patterns" }
-      ];
-      return adjustedSteps.find(step => step.id === currentStep) || adjustedSteps[0];
-    }
+    return UPDATED_STEPS.find(step => step.id === currentStep) || UPDATED_STEPS[0];
   };
 
   const currentStepInfo = getCurrentStepInfo();
@@ -156,7 +156,7 @@ const Onboarding = () => {
         description={currentStepInfo.description}
         hasUnsavedData={hasUnsavedData}
         onSaveProgress={handleSaveProgress}
-        dataDescription={currentStep === 6 ? "your assessment responses" : "your progress"}
+        dataDescription={currentStep === 7 ? "your assessment responses" : "your progress"}
       >
         <OnboardingStepRenderer
           currentStep={currentStep}
@@ -164,10 +164,10 @@ const Onboarding = () => {
           personalInfo={personalInfo}
           location={location}
           selectedPlan={selectedPlan}
-          userTypeCountdown={autoProgressionEnabled ? userTypeCountdown : null}
-          personalInfoCountdown={autoProgressionEnabled && !user ? personalInfoCountdown : null}
-          locationCountdown={autoProgressionEnabled ? locationCountdown : null}
-          planCountdown={autoProgressionEnabled ? planCountdown : null}
+          userTypeCountdown={null}
+          personalInfoCountdown={null}
+          locationCountdown={null}
+          planCountdown={null}
           onUserTypeComplete={handlers.handleUserTypeComplete}
           onPersonalInfoComplete={handlers.handlePersonalInfoComplete}
           onLocationComplete={handlers.handleLocationComplete}

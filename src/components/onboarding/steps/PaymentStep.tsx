@@ -1,23 +1,15 @@
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { CreditCard, CheckCircle, Loader2 } from "lucide-react";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/auth/PasswordInput";
+import { CreditCard, CheckCircle, Loader2, AlertCircle } from "lucide-react";
 import { PlanType } from "./PlanStep";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+import { toast } from "sonner";
 
-const paymentSchema = z.object({
-  cardName: z.string().min(2, "Name on card is required"),
-  cardNumber: z.string().regex(/^[0-9]{16}$/, "Card number must be 16 digits"),
-  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/[0-9]{2}$/, "Please use MM/YY format"),
-  cvv: z.string().regex(/^[0-9]{3,4}$/, "CVV must be 3 or 4 digits"),
-});
-
-export type PaymentFormValues = z.infer<typeof paymentSchema>;
+export type PaymentFormValues = {
+  // No longer need form values as we're using Stripe Checkout
+  paymentIntentId?: string;
+};
 
 interface PaymentStepProps {
   onComplete: (values: PaymentFormValues) => void;
@@ -25,54 +17,50 @@ interface PaymentStepProps {
 }
 
 export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
-  const [showThankYou, setShowThankYou] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const { createCheckoutSession, subscriptionData } = useSubscription();
   
-  const form = useForm<PaymentFormValues>({
-    resolver: zodResolver(paymentSchema),
-    defaultValues: {
-      cardName: "",
-      cardNumber: "",
-      expiryDate: "",
-      cvv: "",
-    },
-    mode: "onChange",
-  });
-
   const planInfo = {
     basic: { name: "Basic Plan", price: "$7.99/month", trial: "7 Day Free Trial" },
-    premium: { name: "Premium Plan", price: "$9.99/month" },
-    family: { name: "Family Plan", price: "$19.99/month" }
+    premium: { name: "Premium Plan", price: "$9.99/month", trial: "7 Day Free Trial" },
+    family: { name: "Family Plan", price: "$19.99/month", trial: "7 Day Free Trial" }
   };
 
-  const handlePaymentSubmit = (values: PaymentFormValues) => {
+  const handleStartTrial = async () => {
     setIsProcessing(true);
     
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      setShowThankYou(true);
+    try {
+      console.log("PaymentStep: Starting trial with Stripe checkout for plan:", selectedPlan);
       
-      // Show thank you message for 2 seconds, then proceed
-      setTimeout(() => {
-        onComplete(values);
-      }, 2000);
-    }, 1500);
+      // Create Stripe checkout session
+      const checkoutUrl = await createCheckoutSession(selectedPlan);
+      
+      console.log("PaymentStep: Checkout URL received:", checkoutUrl);
+      
+      // Redirect to Stripe checkout
+      window.location.href = checkoutUrl;
+      
+    } catch (error) {
+      console.error("PaymentStep: Error creating checkout session:", error);
+      setIsProcessing(false);
+      toast.error("Unable to start trial. Please try again.");
+    }
   };
 
-  if (showThankYou) {
+  if (showSuccess) {
     return (
       <div className="text-center space-y-6 py-12">
         <div className="w-20 h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center">
           <CheckCircle className="h-12 w-12 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-green-800">Payment Successful!</h2>
+          <h2 className="text-2xl font-bold text-green-800">Trial Started Successfully!</h2>
           <p className="text-green-700">
-            Your payment has been processed successfully.
+            Your 7-day free trial is now active.
           </p>
           <p className="text-sm text-muted-foreground">
-            Preparing your subscription confirmation...
+            Taking you to your dashboard...
           </p>
         </div>
       </div>
@@ -86,135 +74,111 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
           <Loader2 className="h-12 w-12 text-blue-600 animate-spin" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-blue-800">Processing Payment...</h2>
+          <h2 className="text-2xl font-bold text-blue-800">Setting Up Your Trial...</h2>
           <p className="text-blue-700">
-            Please wait while we process your payment.
+            Redirecting you to secure payment setup.
           </p>
-          <Button disabled className="mt-4">
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            Details Confirmed
-          </Button>
+          <p className="text-sm text-muted-foreground">
+            You won't be charged until your trial ends.
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(handlePaymentSubmit)} className="space-y-4">
-        <div className="bg-muted p-4 rounded-md mb-4">
-          <h3 className="font-medium">{planInfo[selectedPlan].name}</h3>
-          <p className="text-sm text-muted-foreground">
-            {selectedPlan === "basic" 
-              ? `${planInfo.basic.trial} - Your card will be charged ${planInfo.basic.price} after trial ends.` 
-              : `You will be charged ${planInfo[selectedPlan].price}.`} 
-            Cancel anytime.
+    <div className="space-y-6">
+      {/* Plan Summary */}
+      <div className="bg-muted p-6 rounded-lg border">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-xl font-semibold">{planInfo[selectedPlan].name}</h3>
+            <p className="text-lg font-bold text-primary">{planInfo[selectedPlan].price}</p>
+          </div>
+          <CreditCard className="h-8 w-8 text-muted-foreground" />
+        </div>
+        
+        <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-green-600" />
+            <span className="font-semibold text-green-800">{planInfo[selectedPlan].trial}</span>
+          </div>
+          <p className="text-sm text-green-700 mt-1">
+            Start immediately with full access. Your payment method will be charged ${planInfo[selectedPlan].price.replace('$', '').replace('/month', '')} after 7 days.
           </p>
         </div>
-        
-        <FormField
-          control={form.control}
-          name="cardName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name on Card</FormLabel>
-              <FormControl>
-                <Input placeholder="John Smith" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+      </div>
+
+      {/* Security Notice */}
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <div className="flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+          <div className="text-sm">
+            <p className="font-semibold text-blue-800">Secure Payment Processing</p>
+            <p className="text-blue-700">
+              Your payment information is processed securely by Stripe. We never store your payment details on our servers.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Included */}
+      <div className="space-y-3">
+        <h4 className="font-semibold">What's included in your trial:</h4>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            Complete MyRhythm Framework access
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            Personalized LEAP assessment & insights
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            Memory enhancement tools & exercises
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            Calendar & goal management system
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            Brain games & cognitive training
+          </li>
+          <li className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            Progress tracking & momentum building
+          </li>
+        </ul>
+      </div>
+
+      {/* Action Button */}
+      <div className="pt-4">
+        <Button 
+          onClick={handleStartTrial}
+          disabled={isProcessing}
+          className="w-full bg-primary hover:bg-primary/90 text-white py-6 text-lg font-semibold"
+        >
+          {isProcessing ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Setting Up Trial...
+            </>
+          ) : (
+            <>
+              <CreditCard className="mr-2 h-5 w-5" />
+              Start Your 7-Day Free Trial
+            </>
           )}
-        />
+        </Button>
         
-        <FormField
-          control={form.control}
-          name="cardNumber"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Card Number</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Input 
-                    placeholder="1234 5678 9012 3456" 
-                    {...field}
-                    onChange={e => {
-                      const value = e.target.value.replace(/\s/g, '');
-                      if (!/^\d*$/.test(value) || value.length > 16) return;
-                      field.onChange(value);
-                    }} 
-                  />
-                  <CreditCard className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <div className="grid grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="expiryDate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Expiry Date</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="MM/YY" 
-                    {...field} 
-                    onChange={e => {
-                      const value = e.target.value.replace(/\s/g, '');
-                      let formatted = value;
-                      if (value.length === 2 && !value.includes('/')) {
-                        formatted = value + '/';
-                      }
-                      if (formatted.length > 5) return;
-                      field.onChange(formatted);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="cvv"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>CVV</FormLabel>
-                <FormControl>
-                  <PasswordInput
-                    placeholder="123" 
-                    value={field.value}
-                    onChange={(e) => {
-                      const value = e.target.value.replace(/\s/g, '');
-                      if (!/^\d*$/.test(value) || value.length > 4) return;
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        
-        <div className="text-sm text-muted-foreground mt-4">
-          <p>By subscribing, you agree to our Terms of Service and Privacy Policy.</p>
-        </div>
-        
-        <div className="pt-4 flex justify-end">
-          <Button 
-            type="submit"
-            disabled={!form.formState.isValid}
-            className="bg-primary hover:bg-primary/90"
-          >
-            {selectedPlan === "basic" ? "Start Free Trial" : "Complete Payment"}
-          </Button>
-        </div>
-      </form>
-    </Form>
+        <p className="text-xs text-center text-muted-foreground mt-3">
+          By continuing, you agree to our Terms of Service and Privacy Policy.
+          <br />
+          Cancel anytime during your trial - no charges apply.
+        </p>
+      </div>
+    </div>
   );
 };

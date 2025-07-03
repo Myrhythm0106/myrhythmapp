@@ -4,6 +4,16 @@ import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
 export type SubscriptionTier = 'basic' | 'premium' | 'family';
+export type SubscriptionStatus = 'trial_active' | 'trial_expired' | 'active' | 'canceled' | 'past_due';
+
+export interface SubscriptionData {
+  subscribed: boolean;
+  trial_active: boolean;
+  trial_days_left: number;
+  subscription_tier: SubscriptionTier;
+  subscription_end?: string;
+  status: SubscriptionStatus;
+}
 
 export interface SubscriptionFeatures {
   // Basic features (all tiers)
@@ -37,16 +47,19 @@ export interface SubscriptionFeatures {
 }
 
 interface SubscriptionContextType {
-  tier: SubscriptionTier;
+  subscriptionData: SubscriptionData;
   features: SubscriptionFeatures;
   isLoading: boolean;
   hasFeature: (feature: keyof SubscriptionFeatures) => boolean;
   upgradeRequired: (feature: keyof SubscriptionFeatures) => boolean;
+  refreshSubscription: () => Promise<void>;
+  createCheckoutSession: (planType: SubscriptionTier) => Promise<string>;
+  openCustomerPortal: () => Promise<string>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
 
-const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
+const getFeaturesByTier = (tier: SubscriptionTier, isActive: boolean): SubscriptionFeatures => {
   const basicFeatures = {
     basicSymptomTracking: true,
     limitedCalendar: true,
@@ -73,46 +86,32 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
     processRecording: false,
   };
 
-  if (tier === 'premium') {
-    return {
-      ...basicFeatures,
-      advancedSymptomTracking: true,
-      fullCalendarManagement: true,
-      personalizedInsights: true,
-      prioritySupport: true,
-      smartInterventionAlerts: true,
-      enhancedSafetyReminders: true,
-      objectLocationTracker: true,
-      medicationPhotoVerification: true,
-      conversationNotes: true,
-      readingSupport: true,
-      financialSafetyAlerts: true,
-    };
-  }
-
-  if (tier === 'family') {
-    return {
-      ...basicFeatures,
-      advancedSymptomTracking: true,
-      fullCalendarManagement: true,
-      personalizedInsights: true,
-      prioritySupport: true,
-      smartInterventionAlerts: true,
-      enhancedSafetyReminders: true,
-      objectLocationTracker: true,
-      medicationPhotoVerification: true,
-      conversationNotes: true,
-      readingSupport: true,
-      financialSafetyAlerts: true,
-      multipleAccounts: true,
-      sharedCalendars: true,
-      caregiverResources: true,
-      familySupportGroup: true,
-      dedicatedCaseManager: true,
-      emergencySupport: true,
-      patternRecognition: true,
-      processRecording: true,
-    };
+  // During trial or active subscription, unlock features based on tier
+  if (isActive || tier === 'premium') {
+    if (tier === 'premium' || tier === 'family') {
+      return {
+        ...basicFeatures,
+        advancedSymptomTracking: true,
+        fullCalendarManagement: true,
+        personalizedInsights: true,
+        prioritySupport: true,
+        smartInterventionAlerts: true,
+        enhancedSafetyReminders: true,
+        objectLocationTracker: true,
+        medicationPhotoVerification: true,
+        conversationNotes: true,
+        readingSupport: true,
+        financialSafetyAlerts: true,
+        multipleAccounts: tier === 'family',
+        sharedCalendars: tier === 'family',
+        caregiverResources: tier === 'family',
+        familySupportGroup: tier === 'family',
+        dedicatedCaseManager: tier === 'family',
+        emergencySupport: tier === 'family',
+        patternRecognition: tier === 'family',
+        processRecording: tier === 'family',
+      };
+    }
   }
 
   return basicFeatures;
@@ -120,23 +119,96 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
 
 export function SubscriptionProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  const [tier, setTier] = useState<SubscriptionTier>('basic');
+  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData>({
+    subscribed: false,
+    trial_active: false,
+    trial_days_left: 0,
+    subscription_tier: 'premium',
+    status: 'trial_expired'
+  });
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const refreshSubscription = async () => {
     if (!user) {
-      setTier('basic');
+      setSubscriptionData({
+        subscribed: false,
+        trial_active: false,
+        trial_days_left: 0,
+        subscription_tier: 'premium',
+        status: 'trial_expired'
+      });
       setIsLoading(false);
       return;
     }
 
-    // In a real app, fetch from Supabase profiles table
-    // For now, set to premium for testing
-    setTier('premium');
-    setIsLoading(false);
+    try {
+      const { data, error } = await supabase.functions.invoke('check-subscription', {
+        headers: {
+          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+        },
+      });
+
+      if (error) throw error;
+
+      const newData: SubscriptionData = {
+        subscribed: data.subscribed || false,
+        trial_active: data.trial_active || false,
+        trial_days_left: data.trial_days_left || 0,
+        subscription_tier: data.subscription_tier || 'premium',
+        subscription_end: data.subscription_end,
+        status: data.trial_active ? 'trial_active' : 
+                data.subscribed ? 'active' : 'trial_expired'
+      };
+
+      setSubscriptionData(newData);
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+      // Default to trial for new users
+      setSubscriptionData({
+        subscribed: false,
+        trial_active: true,
+        trial_days_left: 7,
+        subscription_tier: 'premium',
+        status: 'trial_active'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const createCheckoutSession = async (planType: SubscriptionTier): Promise<string> => {
+    if (!user) throw new Error('User not authenticated');
+
+    const { data, error } = await supabase.functions.invoke('create-checkout', {
+      body: { plan_type: planType },
+      headers: {
+        Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+      },
+    });
+
+    if (error) throw error;
+    return data.url;
+  };
+
+  const openCustomerPortal = async (): Promise<string> => {
+    if (!user) throw new Error('User not authenticated');
+
+    const { data, error } = await supabase.functions.invoke('customer-portal', {
+      headers: {
+        Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+      },
+    });
+
+    if (error) throw error;
+    return data.url;
+  };
+
+  useEffect(() => {
+    refreshSubscription();
   }, [user]);
 
-  const features = getFeaturesByTier(tier);
+  const isActive = subscriptionData.subscribed || subscriptionData.trial_active;
+  const features = getFeaturesByTier(subscriptionData.subscription_tier, isActive);
 
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
     return features[feature];
@@ -148,11 +220,14 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
   return (
     <SubscriptionContext.Provider value={{
-      tier,
+      subscriptionData,
       features,
       isLoading,
       hasFeature,
-      upgradeRequired
+      upgradeRequired,
+      refreshSubscription,
+      createCheckoutSession,
+      openCustomerPortal
     }}>
       {children}
     </SubscriptionContext.Provider>

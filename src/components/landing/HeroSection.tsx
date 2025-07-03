@@ -21,7 +21,7 @@ export function HeroSection() {
   };
 
   const handleStartJourney = () => {
-    console.log("HeroSection: Start Your LEAP button clicked - DEBUG VERSION");
+    console.log("HeroSection: Start Your LEAP button clicked - PRODUCTION VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
     console.log("HeroSection: Current location:", window.location.href);
     
@@ -54,7 +54,7 @@ export function HeroSection() {
               </h1>
             </div>
             
-            {/* Main Value Proposition */}
+            {/* Main Value Proposition with Updated Framework */}
             <div className="space-y-12">
               <p className="text-3xl max-w-5xl mx-auto leading-relaxed text-gray-700 md:text-4xl font-medium">
                 Your{" "}
@@ -73,6 +73,15 @@ export function HeroSection() {
                 </Tooltip>
                 , Your Rhythm, Your Momentum.
               </p>
+              
+              {/* Updated Framework Description */}
+              <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl border border-primary/20 max-w-4xl mx-auto">
+                <p className="text-xl text-gray-700 leading-relaxed">
+                  <strong className="text-primary">The MyRhythm Framework:</strong> An evidence-based 8-step system that guides you through 
+                  <span className="text-primary font-semibold"> Your LEAP, Your Rhythm, Your Momentum</span> journey - 
+                  transforming lived experience into unstoppable forward progress.
+                </p>
+              </div>
             </div>
           </div>
           
@@ -101,7 +110,7 @@ export function HeroSection() {
                 <span className="text-center leading-tight">
                   Start Your LEAP
                   <br />
-                  <span className="text-sm opacity-90">Free Trial</span>
+                  <span className="text-sm opacity-90">7-Day Free Trial</span>
                 </span>
               </Button>
               
@@ -111,7 +120,7 @@ export function HeroSection() {
                 className="text-lg px-8 py-6 rounded-full border-2 hover:bg-primary/5 max-w-md mx-auto sm:mx-0" 
                 onClick={scrollToFramework}
               >
-                Learn More
+                Learn The Framework
               </Button>
             </div>
             
@@ -119,7 +128,7 @@ export function HeroSection() {
             <div className="flex items-center justify-center gap-8 md:gap-12 text-sm text-muted-foreground pt-6 flex-wrap">
               <div className="flex items-center gap-2">
                 <Star className="h-4 w-4 text-yellow-500" />
-                <span>Free Trial</span>
+                <span>7-Day Free Trial</span>
               </div>
               <div className="hidden sm:block w-px h-6 bg-muted-foreground/30"></div>
               <div className="flex items-center gap-2">

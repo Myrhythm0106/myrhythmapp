@@ -12,7 +12,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
   
   const handleRegister = () => {
-    console.log("CallToAction: Start Your LEAP button clicked - DEBUG VERSION");
+    console.log("CallToAction: Start Your LEAP button clicked - PRODUCTION VERSION");
     console.log("CallToAction: About to navigate to /onboarding");
     console.log("CallToAction: Current location:", window.location.href);
     
@@ -29,10 +29,10 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
       <div className="container mx-auto px-4 max-w-5xl text-center">
         <h2 className="text-3xl font-bold mb-4">Ready to Discover Your LEAP?</h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
-          Start your personal journey towards discovering your unique rhythm and building unstoppable momentum in your life.
+          Start your personal journey through <strong>Your LEAP, Your Rhythm, Your Momentum</strong> - where memory wellness becomes the foundation for your entire life transformation.
         </p>
         
-        {/* Enhanced CTA with personal journey emphasis */}
+        {/* Enhanced CTA with updated framework messaging */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <Button 
             size="lg" 
@@ -45,14 +45,23 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
           </Button>
           
           <div className="text-sm text-muted-foreground">
-            ✨ Free Trial • Begin Your Journey
+            ✨ 7-Day Free Trial • Your Personal Journey Begins
           </div>
+        </div>
+
+        {/* Framework emphasis */}
+        <div className="mt-8 bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-primary/20 max-w-3xl mx-auto">
+          <p className="text-base text-gray-700">
+            <strong className="text-primary">The MyRhythm Framework:</strong> An evidence-based 8-step system that guides you through 
+            <span className="text-primary font-semibold"> Your LEAP, Your Rhythm, Your Momentum</span> journey - 
+            transforming lived experience into unstoppable forward progress.
+          </p>
         </div>
 
         {/* Mobile-specific encouragement */}
         <div className="mt-6 sm:hidden">
           <p className="text-xs text-primary font-medium">
-            Join thousands discovering their personal rhythm
+            Join thousands building their personal momentum
           </p>
         </div>
       </div>
