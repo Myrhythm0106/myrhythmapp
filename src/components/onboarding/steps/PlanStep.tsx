@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlanHeader } from "./plan/PlanHeader";
 import { CompactPlanCard } from "./plan/CompactPlanCard";
-import { PlanSummary } from "./plan/PlanSummary";
 import { plans } from "./plan/plansData";
 import { PlanType, PlanStepProps } from "./plan/types";
 
@@ -13,6 +12,14 @@ export type { PlanType };
 export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps) => {
   const [selected, setSelected] = React.useState<PlanType>(selectedPlan);
   const isMobile = useIsMobile();
+
+  const handlePlanSelect = (planId: PlanType) => {
+    setSelected(planId);
+    // Automatically complete the plan selection after a brief delay for visual feedback
+    setTimeout(() => {
+      onComplete(planId);
+    }, 300);
+  };
 
   return (
     <div className="space-y-4 max-w-5xl mx-auto">
@@ -28,16 +35,10 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
             key={plan.id} 
             plan={plan} 
             isSelected={selected === plan.id}
-            onSelect={setSelected}
+            onSelect={handlePlanSelect}
           />
         ))}
       </div>
-      
-      <PlanSummary 
-        selectedPlan={selected}
-        plans={plans}
-        onComplete={onComplete}
-      />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Check, Star } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
@@ -22,7 +21,7 @@ export function CompactPlanCard({ plan, isSelected, onSelect }: CompactPlanCardP
         "relative border-2 rounded-xl p-4 cursor-pointer transition-all duration-200 bg-white",
         "hover:shadow-lg hover:scale-[1.02] hover:border-primary/40",
         isSelected 
-          ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20" 
+          ? "border-primary bg-gradient-to-br from-primary/5 to-primary/10 shadow-lg ring-2 ring-primary/20 scale-[1.02]" 
           : "border-gray-200"
       )}
       onClick={() => onSelect(plan.id)}
@@ -80,7 +79,7 @@ export function CompactPlanCard({ plan, isSelected, onSelect }: CompactPlanCardP
       </div>
       
       {/* Compact Features */}
-      <div className="space-y-1.5 mb-3">
+      <div className="space-y-1.5">
         {plan.features.slice(0, 3).map((feature, index) => (
           <div key={index} className="flex items-center gap-2">
             <Check className={cn(
@@ -113,21 +112,14 @@ export function CompactPlanCard({ plan, isSelected, onSelect }: CompactPlanCardP
         )}
       </div>
       
-      {/* Selection Button */}
-      <Button
-        size="sm"
-        variant={isSelected ? "default" : "outline"}
-        className={cn(
-          "w-full h-8 text-xs font-medium",
-          isSelected && "bg-primary hover:bg-primary/90"
-        )}
-        onClick={(e) => {
-          e.stopPropagation();
-          onSelect(plan.id);
-        }}
-      >
-        {isSelected ? "Selected" : "Select Plan"}
-      </Button>
+      {/* Selected state indicator */}
+      {isSelected && (
+        <div className="mt-3 text-center">
+          <div className="text-xs font-medium text-primary">
+            ✓ Plan Selected - Proceeding...
+          </div>
+        </div>
+      )}
     </div>
   );
 }

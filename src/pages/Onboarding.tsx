@@ -77,10 +77,7 @@ const Onboarding = () => {
     }
   }, [user, loading, currentStep, personalInfo, setPersonalInfo, setCurrentStep]);
 
-  // Disable auto-progression for professional deployment to give users control
-  const autoProgressionEnabled = false;
-
-  // Auto-progression disabled for production use
+  // Auto-progression disabled for user type, personal info, and location steps
   const { countdown: userTypeCountdown } = useAutoProgression({
     isFormValid: isUserTypeSelected,
     onProgress: () => handlers.handleUserTypeComplete({ type: userType! }),
@@ -99,10 +96,12 @@ const Onboarding = () => {
     enabled: false
   });
   
+  // Enable auto-progression for plan selection with 3-second delay
   const { countdown: planCountdown } = useAutoProgression({
     isFormValid: isPlanSelected,
     onProgress: () => handlers.handlePlanSelected(selectedPlan),
-    enabled: false
+    enabled: true,
+    delay: 3000
   });
 
   // Data persistence check
@@ -165,7 +164,7 @@ const Onboarding = () => {
           userTypeCountdown={null}
           personalInfoCountdown={null}
           locationCountdown={null}
-          planCountdown={null}
+          planCountdown={planCountdown}
           onUserTypeComplete={handlers.handleUserTypeComplete}
           onPersonalInfoComplete={handlers.handlePersonalInfoComplete}
           onLocationComplete={handlers.handleLocationComplete}
