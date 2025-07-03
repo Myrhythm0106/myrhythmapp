@@ -2,6 +2,8 @@
 import React from "react";
 import { Command, CommandInput, CommandList, CommandEmpty } from "@/components/ui/command";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { X } from "lucide-react";
 import { SearchResult } from "../types/searchTypes";
 import { SearchResultGroup } from "./SearchResultGroup";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -53,8 +55,16 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerContent className="max-h-[85vh]">
-          <DrawerHeader className="px-4 pt-4 pb-2">
+          <DrawerHeader className="px-4 pt-4 pb-2 relative">
             <DrawerTitle>Search</DrawerTitle>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="absolute top-2 right-2 h-8 w-8 p-0"
+              onClick={() => onOpenChange(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
           </DrawerHeader>
           <div className="px-4 pb-4">
             {renderSearchContent()}
@@ -66,7 +76,15 @@ export const SearchDialog: React.FC<SearchDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] p-0">
+      <DialogContent className="sm:max-w-[500px] p-0 relative">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="absolute top-2 right-2 h-8 w-8 p-0 z-50"
+          onClick={() => onOpenChange(false)}
+        >
+          <X className="h-4 w-4" />
+        </Button>
         {renderSearchContent()}
       </DialogContent>
     </Dialog>
