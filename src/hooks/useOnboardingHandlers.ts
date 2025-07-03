@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
@@ -233,8 +234,10 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setShowPaymentConfirmation(false);
   
-      // Start trial via checkout session - using correct function signature
-      const checkoutUrl = await createCheckoutSession(selectedPlan);
+      // Start trial via checkout session - convert PlanType to SubscriptionTier
+      const subscriptionTier = selectedPlan === 'basic' ? 'basic' : 
+                             selectedPlan === 'premium' ? 'premium' : 'family';
+      const checkoutUrl = await createCheckoutSession(subscriptionTier);
       window.location.href = checkoutUrl;
       
     } catch (error) {
