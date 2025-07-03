@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
@@ -5,7 +6,7 @@ import { PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 import { UserType, UserTypeData } from "@/components/onboarding/steps/UserTypeStep";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useSubscription, SubscriptionTier } from "@/contexts/SubscriptionContext";
 
 type LocationFormValues = {
   country: string;
@@ -59,6 +60,20 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     selectedPlan
   } = props;
 
+  // Convert PlanType to SubscriptionTier
+  const mapPlanToTier = (plan: PlanType): SubscriptionTier => {
+    switch (plan) {
+      case 'basic':
+        return 'basic';
+      case 'premium':
+        return 'premium';
+      case 'family':
+        return 'family';
+      default:
+        return 'premium';
+    }
+  };
+
   const handleUserTypeComplete = (data: UserTypeData) => {
     console.log("OnboardingHandlers: User type selected:", data.type);
     
@@ -67,10 +82,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       setIsUserTypeSelected(true);
       setIsDirectNavigation(false);
       
-      // Store user type
       localStorage.setItem('myrhythm_user_type', data.type);
       
-      // Move to personal info step
       setTimeout(() => {
         setCurrentStep(2);
       }, 300);
@@ -89,10 +102,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       setIsPersonalInfoValid(true);
       setIsDirectNavigation(false);
       
-      // Store personal info
       localStorage.setItem('myrhythm_personal_info', JSON.stringify(values));
       
-      // Sign up user if not already authenticated
       if (!values.email || !values.password) {
         console.warn("OnboardingHandlers: Email or password missing, skipping signup");
       } else {
@@ -113,7 +124,6 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
         }
       }
       
-      // Move to location step
       setTimeout(() => {
         setCurrentStep(3);
       }, 300);
@@ -132,10 +142,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       setIsLocationValid(true);
       setIsDirectNavigation(false);
       
-      // Store location data
       localStorage.setItem('myrhythm_location', JSON.stringify(locationData));
       
-      // Move to plan selection step
       setTimeout(() => {
         setCurrentStep(4);
       }, 300);
@@ -154,10 +162,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       setIsPlanSelected(true);
       setIsDirectNavigation(false);
       
-      // Store plan selection
       localStorage.setItem('myrhythm_selected_plan', plan);
       
-      // Move to payment step
       setTimeout(() => {
         setCurrentStep(5);
       }, 300);
@@ -174,10 +180,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setPaymentData(paymentData);
       
-      // Store payment completion
       localStorage.setItem('myrhythm_payment_complete', 'true');
       
-      // Move to pre-assessment step
       setTimeout(() => {
         setCurrentStep(6);
       }, 1000);
@@ -192,10 +196,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     console.log("OnboardingHandlers: Pre-assessment completed, moving to rhythm assessment");
     
     try {
-      // Store pre-assessment completion
       localStorage.setItem('myrhythm_pre_assessment_complete', 'true');
       
-      // Move to rhythm assessment step
       setTimeout(() => {
         setCurrentStep(7);
       }, 1000);
@@ -210,13 +212,9 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     console.log("OnboardingHandlers: Rhythm assessment completed, redirecting to dashboard");
     
     try {
-      // Store rhythm assessment completion
       localStorage.setItem('myrhythm_rhythm_assessment_complete', 'true');
-      
-      // Set onboarding complete flag
       localStorage.setItem('myrhythm_onboarding_complete', 'true');
       
-      // Redirect to dashboard with onboarding_complete param
       setTimeout(() => {
         navigate("/dashboard?onboarding_complete=true");
       }, 1500);
@@ -233,9 +231,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setShowPaymentConfirmation(false);
   
-      // Start trial via checkout session - convert PlanType to SubscriptionTier
-      const subscriptionTier = selectedPlan === 'basic' ? 'basic' : 
-                             selectedPlan === 'premium' ? 'premium' : 'family';
+      // Convert PlanType to SubscriptionTier and create checkout session
+      const subscriptionTier = mapPlanToTier(selectedPlan);
       const checkoutUrl = await createCheckoutSession(subscriptionTier);
       window.location.href = checkoutUrl;
       
