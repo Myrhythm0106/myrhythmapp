@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -58,7 +57,6 @@ export function HeroSection() {
             {/* Main Value Proposition with Updated Framework */}
             <div className="space-y-12">
               <p className="text-3xl max-w-5xl mx-auto leading-relaxed text-gray-700 md:text-4xl font-medium">
-                Your{" "}
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="text-primary font-semibold cursor-help border-b border-dotted border-primary">
@@ -72,7 +70,7 @@ export function HeroSection() {
                     </p>
                   </TooltipContent>
                 </Tooltip>
-                : LEAP to Align Your Memory, Focus, Habits and Momentum.
+                {" "}to Align Memory, Focus, Habits and Momentum.
               </p>
             </div>
           </div>
