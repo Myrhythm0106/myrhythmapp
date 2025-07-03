@@ -49,6 +49,7 @@ export interface SubscriptionFeatures {
 interface SubscriptionContextType {
   subscriptionData: SubscriptionData;
   features: SubscriptionFeatures;
+  tier: SubscriptionTier;
   isLoading: boolean;
   hasFeature: (feature: keyof SubscriptionFeatures) => boolean;
   upgradeRequired: (feature: keyof SubscriptionFeatures) => boolean;
@@ -222,6 +223,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     <SubscriptionContext.Provider value={{
       subscriptionData,
       features,
+      tier: subscriptionData.subscription_tier,
       isLoading,
       hasFeature,
       upgradeRequired,

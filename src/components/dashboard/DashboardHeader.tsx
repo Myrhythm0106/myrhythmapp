@@ -5,12 +5,21 @@ import { Info } from "lucide-react";
 import { WeekNaming } from "@/components/dashboard/WeekNaming";
 
 interface DashboardHeaderProps {
-  onShowTutorial: () => void;
-  currentDate: string;
+  onShowTutorial?: () => void;
+  currentDate?: string;
   userName?: string;
 }
 
-export function DashboardHeader({ onShowTutorial, currentDate, userName }: DashboardHeaderProps) {
+export function DashboardHeader({ 
+  onShowTutorial = () => console.log("Tutorial clicked"), 
+  currentDate = new Date().toLocaleDateString('en-US', { 
+    weekday: 'long', 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  }),
+  userName 
+}: DashboardHeaderProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">

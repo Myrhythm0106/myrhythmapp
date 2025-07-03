@@ -1,139 +1,264 @@
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
 import { PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
-import { analyzeRhythmAssessment } from "@/utils/rhythmAnalysis";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+
+type LocationFormValues = {
+  country: string;
+  state: string;
+  town: string;
+};
 
 interface UseOnboardingHandlersProps {
   currentStep: number;
   setCurrentStep: (step: number) => void;
-  setUserType: (type: UserType) => void;
-  setPersonalInfo: (info: PersonalInfoFormValues) => void;
-  setLocation: (location: any) => void;
+  setUserType: (type: UserType | null) => void;
+  setLocation: (location: LocationFormValues | null) => void;
+  setPersonalInfo: (info: PersonalInfoFormValues | null) => void;
   setSelectedPlan: (plan: PlanType) => void;
-  setPaymentData: (data: PaymentFormValues) => void;
+  setPaymentData: (data: PaymentFormValues | null) => void;
   setShowPaymentConfirmation: (show: boolean) => void;
+  setIsUserTypeSelected: (isSelected: boolean) => void;
+  setIsPersonalInfoValid: (isValid: boolean) => void;
+  setIsLocationValid: (isValid: boolean) => void;
+  setIsPlanSelected: (isSelected: boolean) => void;
   setIsDirectNavigation: (isDirect: boolean) => void;
   totalSteps: number;
-  paymentData: PaymentFormValues | null;
-  selectedPlan: PlanType;
   userType: UserType | null;
-  setAssessmentResult?: (result: any) => void;
-  setIsCompiling?: (compiling: boolean) => void;
-  setShowSummary?: (show: boolean) => void;
+  personalInfo: PersonalInfoFormValues | null;
+  selectedPlan: PlanType;
 }
 
 export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { signUp } = useAuth();
+  const { createCheckoutSession } = useSubscription();
+  const {
+    currentStep,
+    setCurrentStep,
+    setUserType,
+    setLocation,
+    setPersonalInfo,
+    setSelectedPlan,
+    setPaymentData,
+    setShowPaymentConfirmation,
+    setIsUserTypeSelected,
+    setIsPersonalInfoValid,
+    setIsLocationValid,
+    setIsPlanSelected,
+    setIsDirectNavigation,
+    totalSteps,
+    userType,
+    personalInfo,
+    selectedPlan
+  } = props;
+
+  const handleUserTypeComplete = (type: UserType) => {
+    console.log("OnboardingHandlers: User type selected:", type);
+    
+    try {
+      setUserType(type);
+      setIsUserTypeSelected(true);
+      setIsDirectNavigation(false);
+      
+      // Store user type
+      localStorage.setItem('myrhythm_user_type', type);
+      
+      // Move to personal info step
+      setTimeout(() => {
+        setCurrentStep(2);
+      }, 300);
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error handling user type selection:", error);
+      toast.error("Error saving user type. Please try again.");
+    }
+  };
+
+  const handlePersonalInfoComplete = async (values: PersonalInfoFormValues) => {
+    console.log("OnboardingHandlers: Personal info submitted:", values);
+    
+    try {
+      setPersonalInfo(values);
+      setIsPersonalInfoValid(true);
+      setIsDirectNavigation(false);
+      
+      // Store personal info
+      localStorage.setItem('myrhythm_personal_info', JSON.stringify(values));
+      
+      // Sign up user if not already authenticated
+      if (!values.email || !values.password) {
+        console.warn("OnboardingHandlers: Email or password missing, skipping signup");
+      } else {
+        const { error } = await signUp({
+          email: values.email,
+          password: values.password,
+          options: {
+            data: {
+              name: values.name
+            }
+          }
+        });
+        
+        if (error) {
+          console.error("OnboardingHandlers: Signup error:", error);
+          toast.error("Error creating account. Please try again.");
+          return;
+        }
+      }
+      
+      // Move to location step
+      setTimeout(() => {
+        setCurrentStep(3);
+      }, 300);
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error handling personal info submission:", error);
+      toast.error("Error saving personal information. Please try again.");
+    }
+  };
+
+  const handleLocationComplete = (locationData: LocationFormValues) => {
+    console.log("OnboardingHandlers: Location submitted:", locationData);
+    
+    try {
+      setLocation(locationData);
+      setIsLocationValid(true);
+      setIsDirectNavigation(false);
+      
+      // Store location data
+      localStorage.setItem('myrhythm_location', JSON.stringify(locationData));
+      
+      // Move to plan selection step
+      setTimeout(() => {
+        setCurrentStep(4);
+      }, 300);
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error handling location submission:", error);
+      toast.error("Error saving location. Please try again.");
+    }
+  };
+
+  const handlePlanSelected = async (plan: PlanType) => {
+    console.log("OnboardingHandlers: Plan selected:", plan);
+    
+    try {
+      setSelectedPlan(plan);
+      setIsPlanSelected(true);
+      setIsDirectNavigation(false);
+      
+      // Store plan selection
+      localStorage.setItem('myrhythm_selected_plan', plan);
+      
+      // Move to payment step
+      setTimeout(() => {
+        setCurrentStep(5);
+      }, 300);
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error handling plan selection:", error);
+      toast.error("Error selecting plan. Please try again.");
+    }
+  };
+
+  const handlePaymentComplete = async (paymentData: PaymentFormValues) => {
+    console.log("OnboardingHandlers: Payment completed, moving to pre-assessment");
+    
+    try {
+      setPaymentData(paymentData);
+      
+      // Store payment completion
+      localStorage.setItem('myrhythm_payment_complete', 'true');
+      
+      // Move to pre-assessment step
+      setTimeout(() => {
+        setCurrentStep(6);
+      }, 1000);
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error handling payment completion:", error);
+      toast.error("Error processing payment completion. Please try again.");
+    }
+  };
+
+  const handlePreAssessmentComplete = () => {
+    console.log("OnboardingHandlers: Pre-assessment completed, moving to rhythm assessment");
+    
+    try {
+      // Store pre-assessment completion
+      localStorage.setItem('myrhythm_pre_assessment_complete', 'true');
+      
+      // Move to rhythm assessment step
+      setTimeout(() => {
+        setCurrentStep(7);
+      }, 1000);
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error handling pre-assessment completion:", error);
+      toast.error("Error processing pre-assessment completion. Please try again.");
+    }
+  };
+
+  const handleRhythmAssessmentComplete = () => {
+    console.log("OnboardingHandlers: Rhythm assessment completed, redirecting to dashboard");
+    
+    try {
+      // Store rhythm assessment completion
+      localStorage.setItem('myrhythm_rhythm_assessment_complete', 'true');
+      
+      // Set onboarding complete flag
+      localStorage.setItem('myrhythm_onboarding_complete', 'true');
+      
+      // Redirect to dashboard with onboarding_complete param
+      setTimeout(() => {
+        navigate("/dashboard?onboarding_complete=true");
+      }, 1500);
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error handling rhythm assessment completion:", error);
+      toast.error("Error processing rhythm assessment completion. Please try again.");
+    }
+  };
+
+  const handlePaymentConfirm = async () => {
+    console.log("OnboardingHandlers: Payment confirmed, starting trial");
+    
+    try {
+      setShowPaymentConfirmation(false);
+  
+      // Start trial via checkout session
+      const checkoutUrl = await createCheckoutSession(selectedPlan);
+      window.location.href = checkoutUrl;
+      
+    } catch (error) {
+      console.error("OnboardingHandlers: Error confirming payment:", error);
+      toast.error("Error confirming payment. Please try again.");
+    }
+  };
 
   const goToPreviousStep = () => {
-    if (props.currentStep > 1) {
-      props.setCurrentStep(props.currentStep - 1);
-      props.setIsDirectNavigation(true);
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+      setIsDirectNavigation(true);
     } else {
       navigate("/");
     }
   };
 
-  const handleUserTypeComplete = (userTypeData: { type: UserType }) => {
-    props.setUserType(userTypeData.type);
-    
-    // Store user type for later use
-    localStorage.setItem("myrhythm_user_type", userTypeData.type);
-    
-    // If user is already authenticated, skip personal info step (step 2) and go to step 3
-    if (user) {
-      // Pre-populate personal info from authenticated user
-      const personalInfo: PersonalInfoFormValues = {
-        name: user.user_metadata?.name || user.email?.split('@')[0] || '',
-        email: user.email || '',
-        password: '' // Not needed for authenticated users
-      };
-      props.setPersonalInfo(personalInfo);
-      props.setCurrentStep(3); // Skip to location step
-    } else {
-      props.setCurrentStep(2); // Go to personal info step
-    }
-  };
-
-  const handlePersonalInfoComplete = (personalInfo: PersonalInfoFormValues) => {
-    props.setPersonalInfo(personalInfo);
-    props.setCurrentStep(3);
-  };
-
-  const handleLocationComplete = (location: any) => {
-    props.setLocation(location);
-    props.setCurrentStep(4);
-  };
-
-  const handlePlanSelected = (plan: PlanType) => {
-    props.setSelectedPlan(plan);
-    // Go to payment step to set up trial with payment info
-    props.setCurrentStep(5);
-  };
-
-  const handlePaymentComplete = (paymentData: PaymentFormValues) => {
-    props.setPaymentData(paymentData);
-    // After payment setup, go to pre-assessment
-    props.setCurrentStep(6);
-    toast.success("Trial started successfully! Let's begin your assessment.");
-  };
-
-  const handlePaymentConfirm = () => {
-    props.setShowPaymentConfirmation(false);
-    props.setCurrentStep(6); // Go to pre-assessment compilation
-    toast.success("Payment confirmed! Starting your personalized journey.");
-  };
-
-  const handlePreAssessmentComplete = () => {
-    props.setCurrentStep(7); // Go to actual assessment
-  };
-
-  const handleRhythmAssessmentComplete = (responses: any) => {
-    // Get user type from localStorage
-    const userType = localStorage.getItem("myrhythm_user_type") as UserType | null;
-    
-    // Assessment complete - analyze and show summary with personalized insights
-    const analysisResult = analyzeRhythmAssessment(responses, userType || undefined);
-    const completedAt = new Date().toISOString();
-    const nextReviewDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString();
-    
-    const result: any = {
-      id: `assessment-${Date.now()}`,
-      completedAt,
-      focusArea: analysisResult.focusArea,
-      sectionScores: analysisResult.sectionScores,
-      overallScore: analysisResult.overallScore,
-      determinationReason: analysisResult.determinationReason,
-      version: "1.0",
-      nextReviewDate,
-      userType: userType || undefined,
-      personalizedData: analysisResult.personalizedData // Include personalized insights
-    };
-    
-    // Store the assessment result and mark onboarding as complete
-    localStorage.setItem("myrhythm_current_assessment", JSON.stringify(result));
-    localStorage.setItem("myrhythm_onboarding_complete", "true");
-    
-    // Navigate to dashboard with success message
-    navigate("/dashboard?onboarding_complete=true");
-    toast.success("Welcome to MyRhythm! Your personalized journey begins now.");
-  };
-
   return {
-    goToPreviousStep,
     handleUserTypeComplete,
     handlePersonalInfoComplete,
     handleLocationComplete,
     handlePlanSelected,
     handlePaymentComplete,
-    handlePaymentConfirm,
     handlePreAssessmentComplete,
     handleRhythmAssessmentComplete,
+    handlePaymentConfirm,
+    goToPreviousStep
   };
 };

@@ -1,61 +1,63 @@
 
-import { Shield, Zap, Users } from "lucide-react";
+import { Crown, Users, Shield } from "lucide-react";
 import { Plan } from "./types";
 
 export const plans: Plan[] = [
   {
     id: "basic",
-    name: "Memory Partner Starter",
-    description: "Your essential memory support companion",
-    price: "£5.99",
+    name: "Starter Plan",
+    description: "Perfect for individuals beginning their LEAP journey",
+    price: "$7.99/month",
     trialDays: 7,
     icon: Shield,
     features: [
-      "Daily memory logging & tracking",
-      "Important moments capture", 
-      "Smart reminder system",
-      "Memory pattern insights",
-      "Progress celebrations",
-      "15-minute daily reflections"
+      "Your LEAP Assessment & Results",
+      "Personal Rhythm Discovery",
+      "Basic Calendar & Goals",
+      "Memory Enhancement Tools",
+      "Brain Games & Exercises",
+      "Daily Progress Tracking",
+      "Community Access"
     ]
   },
   {
     id: "premium",
-    name: "Memory Partner Pro", 
-    description: "Complete memory empowerment toolkit",
-    price: "£9.99",
-    popular: true,
+    name: "Pro Plan",
+    description: "Complete MyRhythm experience with advanced features",
+    price: "$9.99/month",
     trialDays: 7,
-    icon: Zap,
-    highlight: "Most Empowering",
+    popular: true,
+    icon: Crown,
+    highlight: "Most Popular",
     features: [
-      "All Starter features included",
-      "Advanced memory analytics",
-      "AI-powered memory insights",
-      "Voice-to-text logging",
-      "Memory trigger alerts",
-      "Walking & step integration",
-      "Personalized memory exercises",
-      "Priority memory coaching support"
+      "Everything in Starter Plan",
+      "Advanced LEAP Analytics",
+      "Personalized Momentum Insights",
+      "Priority Customer Support",
+      "Advanced Calendar Management",
+      "Goal Achievement Coaching",
+      "Premium Brain Training",
+      "Detailed Progress Reports",
+      "Export & Share Features"
     ]
   },
   {
-    id: "care-team",
-    name: "Memory Partner Care Team",
-    description: "Professional memory support with care coordination",
-    price: "£15.99",
+    id: "family",
+    name: "Family Plan",
+    description: "Support your whole family's cognitive wellness journey",
+    price: "$19.99/month",
     trialDays: 7,
     icon: Users,
-    highlight: "Clinical Grade",
     features: [
-      "All Memory Partner Pro features",
-      "Care team dashboard & alerts",
-      "Professional progress reports",
-      "Medical appointment integration",
-      "Family/caregiver collaboration tools",
-      "Emergency memory support access",
-      "HIPAA-compliant data sharing",
-      "Dedicated memory care specialist"
+      "Everything in Pro Plan",
+      "Up to 4 Family Members",
+      "Shared Family Calendar",
+      "Caregiver Dashboard Access",
+      "Family Progress Tracking",
+      "Collaborative Goal Setting",
+      "Family Support Resources",
+      "Dedicated Family Coach",
+      "Emergency Contact System"
     ]
   }
 ];

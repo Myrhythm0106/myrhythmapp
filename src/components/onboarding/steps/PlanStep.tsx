@@ -10,7 +10,7 @@ import { PlanType, PlanStepProps } from "./plan/types";
 
 export type { PlanType };
 
-export const PlanStep = ({ onComplete, selectedPlan = "basic" }: PlanStepProps) => {
+export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps) => {
   const [selected, setSelected] = React.useState<PlanType>(selectedPlan);
   const isMobile = useIsMobile();
 
