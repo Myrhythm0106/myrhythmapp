@@ -61,11 +61,11 @@ serve(async (req) => {
       logStep("New customer created", { customerId });
     }
 
-    // Define pricing based on plan
+    // Define pricing based on plan with updated names
     const planPricing = {
-      basic: { price: 799, name: "MyRhythm Basic" },
-      premium: { price: 999, name: "MyRhythm Premium" },
-      family: { price: 1999, name: "MyRhythm Family" }
+      basic: { price: 799, name: "MyRhythm Align" },
+      premium: { price: 999, name: "MyRhythm Flow" },
+      family: { price: 1999, name: "MyRhythm Thrive" }
     };
 
     const selectedPlan = planPricing[plan_type as keyof typeof planPricing] || planPricing.premium;

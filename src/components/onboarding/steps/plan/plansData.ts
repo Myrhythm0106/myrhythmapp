@@ -5,8 +5,8 @@ import { Plan } from "./types";
 export const plans: Plan[] = [
   {
     id: "basic",
-    name: "Starter Plan",
-    description: "Perfect for individuals beginning their LEAP journey",
+    name: "MyRhythm Align",
+    description: "Foundation for aligning memory, focus, and daily rhythm",
     price: "$7.99/month",
     trialDays: 7,
     icon: Shield,
@@ -22,15 +22,15 @@ export const plans: Plan[] = [
   },
   {
     id: "premium",
-    name: "Pro Plan",
-    description: "Complete MyRhythm experience with advanced features",
+    name: "MyRhythm Flow",
+    description: "Complete flow experience with advanced momentum building",
     price: "$9.99/month",
     trialDays: 7,
     popular: true,
     icon: Crown,
     highlight: "Most Popular",
     features: [
-      "Everything in Starter Plan",
+      "Everything in MyRhythm Align",
       "Advanced LEAP Analytics",
       "Personalized Momentum Insights",
       "Priority Customer Support",
@@ -43,13 +43,13 @@ export const plans: Plan[] = [
   },
   {
     id: "family",
-    name: "Family Plan",
-    description: "Support your whole family's cognitive wellness journey",
+    name: "MyRhythm Thrive",
+    description: "Complete family wellness journey to help everyone thrive",
     price: "$19.99/month",
     trialDays: 7,
     icon: Users,
     features: [
-      "Everything in Pro Plan",
+      "Everything in MyRhythm Flow",
       "Up to 4 Family Members",
       "Shared Family Calendar",
       "Caregiver Dashboard Access",
