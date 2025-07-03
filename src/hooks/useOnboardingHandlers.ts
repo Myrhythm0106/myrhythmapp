@@ -233,7 +233,11 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   
       // Convert PlanType to SubscriptionTier and create checkout session
       const subscriptionTier = mapPlanToTier(selectedPlan);
+      console.log("OnboardingHandlers: Creating checkout session with tier:", subscriptionTier);
+      
       const checkoutUrl = await createCheckoutSession(subscriptionTier);
+      console.log("OnboardingHandlers: Checkout URL received:", checkoutUrl);
+      
       window.location.href = checkoutUrl;
       
     } catch (error) {
