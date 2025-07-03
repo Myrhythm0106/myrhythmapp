@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -110,7 +111,7 @@ export const UserTypeStep = ({ onComplete, initialValue }: UserTypeStepProps) =>
   return (
     <div className="space-y-6">
       <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold">Welcome to MyRhythm</h2>
+        <h2 className="text-2xl font-bold">All About You</h2>
         <p className="text-muted-foreground">
           Our flagship experience supports cognitive wellness & recovery. Choose the path that best describes your empowering journey.
         </p>

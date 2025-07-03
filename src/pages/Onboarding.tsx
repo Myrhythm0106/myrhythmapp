@@ -10,7 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 // Updated steps for professional deployment - now includes payment step
 const UPDATED_STEPS = [
-  { id: 1, title: "User Type", description: "Tell us about yourself" },
+  { id: 1, title: "All About You", description: "Tell us about yourself" },
   { id: 2, title: "Personal Info", description: "Create your account" },
   { id: 3, title: "Location", description: "Where are you based?" },
   { id: 4, title: "Choose Plan", description: "Select your subscription" },

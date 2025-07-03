@@ -2,7 +2,7 @@
 export const STEPS = [
   {
     id: 1,
-    title: "Choose your path",
+    title: "All About You",
     description: "Tell us about your journey so we can personalize your experience"
   },
   {
