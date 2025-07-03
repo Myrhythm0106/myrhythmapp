@@ -1,4 +1,3 @@
-
 import React, { useEffect, useMemo } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
@@ -55,7 +54,6 @@ const Onboarding = () => {
   const handlers = useOnboardingHandlers({
     ...onboardingState,
     totalSteps: TOTAL_STEPS,
-    paymentData,
     selectedPlan,
     userType,
   });
@@ -168,7 +166,7 @@ const Onboarding = () => {
           personalInfoCountdown={null}
           locationCountdown={null}
           planCountdown={null}
-          onUserTypeComplete={handlers.handleUserTypeComplete}
+          onUserTypeComplete={(type) => handlers.handleUserTypeComplete(type)}
           onPersonalInfoComplete={handlers.handlePersonalInfoComplete}
           onLocationComplete={handlers.handleLocationComplete}
           onPlanSelected={handlers.handlePlanSelected}

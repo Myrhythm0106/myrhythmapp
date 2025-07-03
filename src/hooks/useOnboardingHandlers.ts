@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
@@ -31,6 +32,7 @@ interface UseOnboardingHandlersProps {
   userType: UserType | null;
   personalInfo: PersonalInfoFormValues | null;
   selectedPlan: PlanType;
+  paymentData: PaymentFormValues | null;
 }
 
 export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
@@ -231,8 +233,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setShowPaymentConfirmation(false);
   
-      // Start trial via checkout session
-      const checkoutUrl = await createCheckoutSession(selectedPlan);
+      // Start trial via checkout session - fix the function call
+      const checkoutUrl = await createCheckoutSession(selectedPlan as any);
       window.location.href = checkoutUrl;
       
     } catch (error) {

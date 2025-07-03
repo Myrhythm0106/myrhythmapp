@@ -28,7 +28,7 @@ interface OnboardingStepRendererProps {
   personalInfoCountdown: number | null;
   locationCountdown: number | null;
   planCountdown: number | null;
-  onUserTypeComplete: (data: { type: UserType }) => void;
+  onUserTypeComplete: (type: UserType) => void;
   onPersonalInfoComplete: (values: PersonalInfoFormValues) => void;
   onLocationComplete: (values: LocationFormValues) => void;
   onPlanSelected: (plan: PlanType) => void;
