@@ -72,7 +72,7 @@ export function HeroSection() {
                     </p>
                   </TooltipContent>
                 </Tooltip>
-                , Your Rhythm, Your Momentum.
+                : LEAP to Align Your Memory, Focus, Habits and Momentum.
               </p>
             </div>
           </div>
