@@ -5,7 +5,6 @@ import { LogIn, Brain, UserPlus, Star, ChevronDown } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const [isPromiseExpanded, setIsPromiseExpanded] = React.useState(false);
@@ -20,7 +19,6 @@ export function HeroSection() {
       });
     }
   };
-  
   const handleStartJourney = () => {
     console.log("HeroSection: Register Here button clicked - PRODUCTION VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
@@ -32,9 +30,7 @@ export function HeroSection() {
       console.error("HeroSection: Navigation error:", error);
     }
   };
-  
-  return (
-    <TooltipProvider>
+  return <TooltipProvider>
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-20 md:py-32">
         {/* Login button at top right */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
@@ -56,7 +52,7 @@ export function HeroSection() {
             
             {/* Main Value Proposition with Updated Framework */}
             <div className="space-y-12">
-              <p className="text-3xl max-w-5xl mx-auto leading-relaxed text-gray-700 md:text-4xl font-medium">
+              <p className="text-3xl max-w-5xl mx-auto leading-relaxed text-gray-700 font-medium md:text-2xl">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="text-primary font-semibold cursor-help border-b border-dotted border-primary">
@@ -83,11 +79,7 @@ export function HeroSection() {
                   <div className="flex items-center justify-center gap-3">
                     <Brain className="h-8 w-8 text-primary" />
                     <span className="text-2xl font-semibold text-primary">Your Memory Partner Promise</span>
-                    <ChevronDown 
-                      className={`h-5 w-5 text-primary transition-transform duration-200 ${
-                        isPromiseExpanded ? 'rotate-180' : ''
-                      }`}
-                    />
+                    <ChevronDown className={`h-5 w-5 text-primary transition-transform duration-200 ${isPromiseExpanded ? 'rotate-180' : ''}`} />
                   </div>
                 </div>
               </CollapsibleTrigger>
@@ -142,6 +134,5 @@ export function HeroSection() {
         {/* Login Modal */}
         <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </section>
-    </TooltipProvider>
-  );
+    </TooltipProvider>;
 }
