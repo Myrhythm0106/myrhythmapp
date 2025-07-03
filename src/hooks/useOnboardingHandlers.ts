@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
@@ -234,7 +233,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setShowPaymentConfirmation(false);
   
-      // Start trial via checkout session - using correct function signature with single argument
+      // Start trial via checkout session - using correct function signature
       const checkoutUrl = await createCheckoutSession(selectedPlan);
       window.location.href = checkoutUrl;
       
