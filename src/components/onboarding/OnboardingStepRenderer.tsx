@@ -1,6 +1,6 @@
 
 import React from "react";
-import { UserTypeStep, UserType } from "./steps/UserTypeStep";
+import { UserTypeStep, UserType, UserTypeData } from "./steps/UserTypeStep";
 import { PersonalInfoStep } from "./steps/PersonalInfoStep";
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
@@ -28,7 +28,7 @@ interface OnboardingStepRendererProps {
   personalInfoCountdown: number | null;
   locationCountdown: number | null;
   planCountdown: number | null;
-  onUserTypeComplete: (type: UserType) => void;
+  onUserTypeComplete: (data: UserTypeData) => void;
   onPersonalInfoComplete: (values: PersonalInfoFormValues) => void;
   onLocationComplete: (values: LocationFormValues) => void;
   onPlanSelected: (plan: PlanType) => void;

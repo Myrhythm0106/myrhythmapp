@@ -166,7 +166,7 @@ const Onboarding = () => {
           personalInfoCountdown={null}
           locationCountdown={null}
           planCountdown={null}
-          onUserTypeComplete={(type) => handlers.handleUserTypeComplete(type)}
+          onUserTypeComplete={handlers.handleUserTypeComplete}
           onPersonalInfoComplete={handlers.handlePersonalInfoComplete}
           onLocationComplete={handlers.handleLocationComplete}
           onPlanSelected={handlers.handlePlanSelected}

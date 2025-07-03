@@ -1,10 +1,9 @@
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
 import { PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
+import { UserType, UserTypeData } from "@/components/onboarding/steps/UserTypeStep";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
@@ -59,16 +58,16 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     selectedPlan
   } = props;
 
-  const handleUserTypeComplete = (type: UserType) => {
-    console.log("OnboardingHandlers: User type selected:", type);
+  const handleUserTypeComplete = (data: UserTypeData) => {
+    console.log("OnboardingHandlers: User type selected:", data.type);
     
     try {
-      setUserType(type);
+      setUserType(data.type);
       setIsUserTypeSelected(true);
       setIsDirectNavigation(false);
       
       // Store user type
-      localStorage.setItem('myrhythm_user_type', type);
+      localStorage.setItem('myrhythm_user_type', data.type);
       
       // Move to personal info step
       setTimeout(() => {
@@ -233,8 +232,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     try {
       setShowPaymentConfirmation(false);
   
-      // Start trial via checkout session - fix the function call
-      const checkoutUrl = await createCheckoutSession(selectedPlan as any);
+      // Start trial via checkout session
+      const checkoutUrl = await createCheckoutSession(selectedPlan, 'subscription', true);
       window.location.href = checkoutUrl;
       
     } catch (error) {
