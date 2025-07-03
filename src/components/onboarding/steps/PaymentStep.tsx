@@ -1,13 +1,12 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CreditCard, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { CreditCard, CheckCircle, Loader2, AlertCircle, ArrowRight } from "lucide-react";
 import { PlanType } from "./PlanStep";
 import { useSubscription, SubscriptionTier } from "@/contexts/SubscriptionContext";
 import { toast } from "sonner";
 
 export type PaymentFormValues = {
-  // No longer need form values as we're using Stripe Checkout
   paymentIntentId?: string;
 };
 
@@ -19,12 +18,14 @@ interface PaymentStepProps {
 export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showFallback, setShowFallback] = useState(false);
   const { createCheckoutSession } = useSubscription();
   
   const planInfo = {
-    basic: { name: "Basic Plan", price: "$7.99/month", trial: "7 Day Free Trial" },
-    premium: { name: "Premium Plan", price: "$9.99/month", trial: "7 Day Free Trial" },
-    family: { name: "Family Plan", price: "$19.99/month", trial: "7 Day Free Trial" }
+    basic: { name: "MyRhythm Align", price: "£5.99/month", trial: "7 Day Free Trial" },
+    premium: { name: "MyRhythm Flow", price: "£9.99/month", trial: "7 Day Free Trial" },
+    family: { name: "MyRhythm Thrive", price: "£15.99/month", trial: "7 Day Free Trial" }
   };
 
   // Convert PlanType to SubscriptionTier
@@ -50,11 +51,11 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
     }
     
     setIsProcessing(true);
+    setError(null);
     
     try {
       console.log("PaymentStep: Starting trial with Stripe checkout for plan:", selectedPlan);
       
-      // Convert PlanType to SubscriptionTier and create Stripe checkout session
       const subscriptionTier = mapPlanToTier(selectedPlan);
       console.log("PaymentStep: Mapped tier:", subscriptionTier);
       
@@ -80,17 +81,31 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
       setShowSuccess(false);
       
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      setError(errorMessage);
       toast.error(`Unable to start trial: ${errorMessage}`);
+      
+      // Show fallback options after error
+      setTimeout(() => {
+        setShowFallback(true);
+      }, 2000);
     }
   };
 
-  const handleSkipForNow = () => {
+  const handleSkipTrial = () => {
     console.log("PaymentStep: Skip trial selected");
-    toast.info("Continuing without trial - you can upgrade anytime in settings");
+    toast.info("Continuing without trial - you can upgrade anytime");
     
-    // Call onComplete to proceed to next step
     setTimeout(() => {
       onComplete({ paymentIntentId: 'skipped' });
+    }, 500);
+  };
+
+  const handleContinueAnyway = () => {
+    console.log("PaymentStep: Continue anyway selected");
+    toast.info("Continuing to assessment - you can set up payment later");
+    
+    setTimeout(() => {
+      onComplete({ paymentIntentId: 'continue_anyway' });
     }, 500);
   };
 
@@ -134,6 +149,19 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-semibold text-red-800">Payment Setup Error</p>
+              <p className="text-red-700 mt-1">{error}</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Plan Summary */}
       <div className="bg-muted p-6 rounded-lg border">
         <div className="flex items-center justify-between">
@@ -150,21 +178,8 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
             <span className="font-semibold text-green-800">{planInfo[selectedPlan].trial}</span>
           </div>
           <p className="text-sm text-green-700 mt-1">
-            Start immediately with full access. Your payment method will be charged ${planInfo[selectedPlan].price.replace('$', '').replace('/month', '')} after 7 days.
+            Start immediately with full access. Your payment method will be charged {planInfo[selectedPlan].price.replace('£', '£')} after 7 days.
           </p>
-        </div>
-      </div>
-
-      {/* Security Notice */}
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-        <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
-          <div className="text-sm">
-            <p className="font-semibold text-blue-800">Secure Payment Processing</p>
-            <p className="text-blue-700">
-              Your payment information is processed securely by Stripe. We never store your payment details on our servers.
-            </p>
-          </div>
         </div>
       </div>
 
@@ -219,14 +234,29 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
           )}
         </Button>
         
-        <Button 
-          onClick={handleSkipForNow}
-          disabled={isProcessing}
-          variant="outline"
-          className="w-full"
-        >
-          Skip Trial - Continue with Basic Access
-        </Button>
+        {/* Fallback Options */}
+        {(showFallback || error) && (
+          <>
+            <Button 
+              onClick={handleContinueAnyway}
+              disabled={isProcessing}
+              variant="outline"
+              className="w-full"
+            >
+              <ArrowRight className="mr-2 h-4 w-4" />
+              Continue to Assessment (Set up payment later)
+            </Button>
+            
+            <Button 
+              onClick={handleSkipTrial}
+              disabled={isProcessing}
+              variant="ghost"
+              className="w-full"
+            >
+              Skip Trial - Continue with Basic Access
+            </Button>
+          </>
+        )}
         
         <p className="text-xs text-center text-muted-foreground mt-3">
           By continuing, you agree to our Terms of Service and Privacy Policy.

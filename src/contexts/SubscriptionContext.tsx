@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -143,13 +142,20 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
 
     try {
+      console.log("SubscriptionContext: Checking subscription for user:", user.id);
+      
       const { data, error } = await supabase.functions.invoke('check-subscription', {
         headers: {
           Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("SubscriptionContext: Error checking subscription:", error);
+        throw error;
+      }
+
+      console.log("SubscriptionContext: Subscription data received:", data);
 
       const newData: SubscriptionData = {
         subscribed: data.subscribed || false,
@@ -163,7 +169,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
       setSubscriptionData(newData);
     } catch (error) {
-      console.error('Error checking subscription:', error);
+      console.error('SubscriptionContext: Error checking subscription:', error);
       // Default to trial for new users
       setSubscriptionData({
         subscribed: false,
@@ -180,15 +186,39 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const createCheckoutSession = async (planType: SubscriptionTier): Promise<string> => {
     if (!user) throw new Error('User not authenticated');
 
-    const { data, error } = await supabase.functions.invoke('create-checkout', {
-      body: { plan_type: planType },
-      headers: {
-        Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-      },
-    });
+    console.log("SubscriptionContext: Creating checkout session for plan:", planType);
 
-    if (error) throw error;
-    return data.url;
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { plan_type: planType },
+        headers: {
+          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
+        },
+      });
+
+      if (error) {
+        console.error("SubscriptionContext: Checkout session error:", error);
+        throw error;
+      }
+
+      console.log("SubscriptionContext: Checkout session created successfully");
+      return data.url;
+    } catch (error) {
+      console.error("SubscriptionContext: Failed to create checkout session:", error);
+      
+      // More specific error messages
+      if (error instanceof Error) {
+        if (error.message.includes('STRIPE_SECRET_KEY')) {
+          throw new Error('Payment system not configured. Please contact support.');
+        }
+        if (error.message.includes('authentication')) {
+          throw new Error('Please log in to continue.');
+        }
+        throw error;
+      }
+      
+      throw new Error('Unable to start payment process. Please try again.');
+    }
   };
 
   const openCustomerPortal = async (): Promise<string> => {
