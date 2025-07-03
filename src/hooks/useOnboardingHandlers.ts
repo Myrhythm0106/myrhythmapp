@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
@@ -39,6 +38,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const { createCheckoutSession } = useSubscription();
+  
   const {
     currentStep,
     setCurrentStep,
