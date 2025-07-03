@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 interface SpeechButtonProps {
   text: string;
   className?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "default" | "lg";
   variant?: "default" | "outline" | "ghost";
   showLabel?: boolean;
   autoSpeak?: boolean;
