@@ -1,11 +1,15 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { LogIn, Brain, UserPlus, Star } from "lucide-react";
+import { LogIn, Brain, UserPlus, Star, ChevronDown } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [isPromiseExpanded, setIsPromiseExpanded] = React.useState(false);
   const navigate = useNavigate();
 
   // Function to scroll to the MyRhythm Framework section
@@ -17,6 +21,7 @@ export function HeroSection() {
       });
     }
   };
+  
   const handleStartJourney = () => {
     console.log("HeroSection: Start Your LEAP button clicked - PRODUCTION VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
@@ -28,7 +33,9 @@ export function HeroSection() {
       console.error("HeroSection: Navigation error:", error);
     }
   };
-  return <TooltipProvider>
+  
+  return (
+    <TooltipProvider>
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-20 md:py-32">
         {/* Login button at top right */}
         <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
@@ -67,23 +74,34 @@ export function HeroSection() {
                 </Tooltip>
                 , Your Rhythm, Your Momentum.
               </p>
-              
-              {/* Updated Framework Description */}
-              
             </div>
           </div>
           
-          {/* Memory Partner Promise Card */}
+          {/* Memory Partner Promise Card - Now Collapsible */}
           <div className="mb-20">
-            <div className="bg-white/90 backdrop-blur-sm p-10 rounded-3xl border border-primary/20 max-w-4xl mx-auto shadow-lg">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <Brain className="h-8 w-8 text-primary" />
-                <span className="text-2xl font-semibold text-primary">Your Memory Partner Promise</span>
-              </div>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Experience real memory improvement in just 7 days as you discover <strong>YOUR unique LEAP pattern</strong>, establish <strong>YOUR personal rhythm</strong>, and build <strong>YOUR unstoppable momentum</strong>—where memory wellness becomes the foundation for your entire life transformation.
-              </p>
-            </div>
+            <Collapsible open={isPromiseExpanded} onOpenChange={setIsPromiseExpanded}>
+              <CollapsibleTrigger asChild>
+                <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-primary/20 max-w-4xl mx-auto shadow-lg cursor-pointer hover:shadow-xl transition-shadow">
+                  <div className="flex items-center justify-center gap-3">
+                    <Brain className="h-8 w-8 text-primary" />
+                    <span className="text-2xl font-semibold text-primary">Your Memory Partner Promise</span>
+                    <ChevronDown 
+                      className={`h-5 w-5 text-primary transition-transform duration-200 ${
+                        isPromiseExpanded ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </div>
+                </div>
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent>
+                <div className="bg-white/90 backdrop-blur-sm p-6 pt-2 rounded-b-3xl border-x border-b border-primary/20 max-w-4xl mx-auto shadow-lg -mt-4">
+                  <p className="text-lg text-gray-700 leading-relaxed">
+                    Experience real memory improvement in just 7 days as you discover <strong>YOUR unique LEAP pattern</strong>, establish <strong>YOUR personal rhythm</strong>, and build <strong>YOUR unstoppable momentum</strong>—where memory wellness becomes the foundation for your entire life transformation.
+                  </p>
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
           
           {/* Call-to-Action Section */}
@@ -126,5 +144,6 @@ export function HeroSection() {
         {/* Login Modal */}
         <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </section>
-    </TooltipProvider>;
+    </TooltipProvider>
+  );
 }
