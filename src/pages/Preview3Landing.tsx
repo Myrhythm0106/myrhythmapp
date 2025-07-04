@@ -3,11 +3,11 @@ import React, { useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { MyRhythmIntro } from "@/components/landing/MyRhythmIntro";
-import { WhyItHelpsSection } from "@/components/landing/WhyItHelpsSection";
-import { PersonalJourneySection } from "@/components/landing/PersonalJourneySection";
-import { CallToAction } from "@/components/landing/CallToAction";
 import { Preview3HeroSection } from "@/components/landing/Preview3HeroSection";
+import { LEAPNeuralNetwork } from "@/components/landing/preview3/LEAPNeuralNetwork";
+import { BeforeAfterBrainStates } from "@/components/landing/preview3/BeforeAfterBrainStates";
+import { MemoryPreservationTimeline } from "@/components/landing/preview3/MemoryPreservationTimeline";
+import { MountainPeakAchievement } from "@/components/landing/preview3/MountainPeakAchievement";
 import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
 import LandingFooter from "@/components/landing/LandingFooter";
 
@@ -22,10 +22,6 @@ const Preview3Landing = () => {
       navigate("/dashboard", { replace: true });
     }
   }, [user, loading, navigate]);
-
-  const handleGetStarted = () => {
-    navigate("/onboarding");
-  };
 
   // Don't show loading for unauthenticated users - just show the landing page
   if (loading && user) {
@@ -43,17 +39,10 @@ const Preview3Landing = () => {
     <div className="min-h-screen">
       <ScrollArea className="h-screen">
         <Preview3HeroSection />
-        {/* Use existing sections but with subtle modifications for brain-health theme */}
-        <div id="features-section">
-          <MyRhythmIntro />
-        </div>
-        <WhyItHelpsSection />
-        <div id="testimonials-section">
-          <PersonalJourneySection />
-        </div>
-        <div id="pricing-section">
-          <CallToAction onGetStarted={handleGetStarted} />
-        </div>
+        <LEAPNeuralNetwork />
+        <BeforeAfterBrainStates />
+        <MemoryPreservationTimeline />
+        <MountainPeakAchievement />
         <LandingFooter />
       </ScrollArea>
       
