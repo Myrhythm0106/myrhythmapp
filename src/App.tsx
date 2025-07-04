@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -5,14 +6,12 @@ import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Calendar from "./pages/Calendar";
 import Profile from "./pages/Profile";
-import BrainRecoveryHome from "./components/brain-recovery/BrainRecoveryHome";
+import { BrainRecoveryHome } from "./components/brain-recovery/BrainRecoveryHome";
 import Onboarding from "./pages/Onboarding";
 import { AuthProvider } from "./contexts/AuthContext";
 import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
-import { GlobalSwipeManager } from "./contexts/SwipeContext";
-import BrainGames from "./pages/BrainGames";
-import Game from "./pages/Game";
+import BrainGamesPage from "./pages/BrainGamesPage";
 import PreviewLanding from "./pages/PreviewLanding";
 
 function App() {
@@ -23,19 +22,16 @@ function App() {
         <AuthProvider>
           <SubscriptionProvider>
             <PomodoroProvider>
-              <GlobalSwipeManager>
-                <Routes>
-                  <Route path="/" element={<Landing />} />
-                  <Route path="/preview-landing" element={<PreviewLanding />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/calendar" element={<Calendar />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
-                  <Route path="/onboarding" element={<Onboarding />} />
-                  <Route path="/brain-games" element={<BrainGames />} />
-                  <Route path="/game/:gameId" element={<Game />} />
-                </Routes>
-              </GlobalSwipeManager>
+              <Routes>
+                <Route path="/" element={<Landing />} />
+                <Route path="/preview-landing" element={<PreviewLanding />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
+                <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/brain-games" element={<BrainGamesPage />} />
+              </Routes>
             </PomodoroProvider>
           </SubscriptionProvider>
         </AuthProvider>
