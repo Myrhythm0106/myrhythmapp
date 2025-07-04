@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -10,7 +9,7 @@ import { NotificationSettings } from "@/components/profile/NotificationSettings"
 import { PrivacySettings } from "@/components/profile/PrivacySettings";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, User, Bell, HeartPulse, Settings, CheckCircle, Calendar } from "lucide-react";
+import { Shield, User, Bell, HeartPulse, Settings, CheckCircle, Calendar, Home, Eye } from "lucide-react";
 import { FloatingStartButton } from "@/components/welcome/FloatingStartButton";
 import { toast } from "@/components/ui/use-toast";
 
@@ -91,6 +90,41 @@ const Profile = () => {
 
   return (
     <div className="space-y-6">
+      {/* Navigation Header */}
+      <div className="bg-white border-b p-4">
+        <div className="flex items-center justify-between max-w-6xl mx-auto">
+          <h1 className="text-xl font-semibold">MyRhythm Profile</h1>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2"
+            >
+              <Home className="h-4 w-4" />
+              Live Version
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate("/preview-landing")}
+              className="flex items-center gap-2"
+            >
+              <Eye className="h-4 w-4" />
+              Preview Version
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center gap-2"
+            >
+              Dashboard
+            </Button>
+          </div>
+        </div>
+      </div>
+
       <PageHeader 
         title="My Profile" 
         subtitle="Complete your personal information, medical data, and application preferences to personalise your MyRhythm experience"
