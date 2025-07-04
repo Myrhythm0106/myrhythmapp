@@ -13,29 +13,32 @@ import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
 import BrainGamesPage from "./pages/BrainGamesPage";
 import PreviewLanding from "./pages/PreviewLanding";
+import { ToastProvider } from "@/components/ui/toast";
 
 function App() {
   return (
     <div className="min-h-screen bg-background">
-      <Toaster />
-      <BrowserRouter>
-        <AuthProvider>
-          <SubscriptionProvider>
-            <PomodoroProvider>
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/preview-landing" element={<PreviewLanding />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
-                <Route path="/onboarding" element={<Onboarding />} />
-                <Route path="/brain-games" element={<BrainGamesPage />} />
-              </Routes>
-            </PomodoroProvider>
-          </SubscriptionProvider>
-        </AuthProvider>
-      </BrowserRouter>
+      <ToastProvider>
+        <Toaster />
+        <BrowserRouter>
+          <AuthProvider>
+            <SubscriptionProvider>
+              <PomodoroProvider>
+                <Routes>
+                  <Route path="/" element={<Landing />} />
+                  <Route path="/preview-landing" element={<PreviewLanding />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/brain-games" element={<BrainGamesPage />} />
+                </Routes>
+              </PomodoroProvider>
+            </SubscriptionProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </ToastProvider>
     </div>
   );
 }
