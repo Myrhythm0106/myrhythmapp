@@ -1,7 +1,8 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { LogIn, Brain, UserPlus, Star, ChevronDown, Eye } from "lucide-react";
+import { LogIn, Brain, UserPlus, Star, ChevronDown, Eye, Leaf } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -41,6 +42,10 @@ export function HeroSection() {
     navigate("/preview-2");
   };
 
+  const handleViewPreview3 = () => {
+    navigate("/preview-3");
+  };
+
   return (
     <TooltipProvider>
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-20 md:py-32">
@@ -63,6 +68,15 @@ export function HeroSection() {
           >
             <Brain className="h-4 w-4" />
             Preview 2
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-2 hover:bg-emerald-500/10 border-emerald-300" 
+            onClick={handleViewPreview3}
+          >
+            <Leaf className="h-4 w-4" />
+            Preview 3
           </Button>
           <Button 
             variant="ghost" 
