@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { MemoryEffectsContainer } from "@/components/ui/memory-effects";
-import { Brain, Heart, Users, Activity, ArrowRight, Target, Lightbulb } from "lucide-react";
+import { Brain, Heart, Users, Activity, ArrowRight, Target, Lightbulb, HelpCircle } from "lucide-react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface GoalType {
   id: string;
@@ -16,6 +18,7 @@ interface GoalType {
   color: string;
   description: string;
   examples: string[];
+  measurementPrompts: string[];
 }
 
 const GOAL_TYPES: GoalType[] = [
@@ -25,7 +28,8 @@ const GOAL_TYPES: GoalType[] = [
     icon: <Brain className="h-6 w-6" />,
     color: 'from-memory-emerald-400 to-memory-emerald-500',
     description: 'Strengthen your thinking and memory',
-    examples: ['Read 15 minutes daily', 'Complete memory games', 'Learn something new']
+    examples: ['Read 15 minutes daily', 'Complete memory games', 'Learn something new'],
+    measurementPrompts: ['How many books/articles?', 'How many games completed?', 'Skills learned?']
   },
   {
     id: 'physical',
@@ -33,7 +37,8 @@ const GOAL_TYPES: GoalType[] = [
     icon: <Activity className="h-6 w-6" />,
     color: 'from-clarity-teal-400 to-clarity-teal-500',
     description: 'Build strength and mobility',
-    examples: ['Walk to the mailbox', 'Do stretching exercises', 'Take the stairs']
+    examples: ['Walk to the mailbox', 'Do stretching exercises', 'Take the stairs'],
+    measurementPrompts: ['How far/long?', 'How many steps?', 'How many reps/sets?']
   },
   {
     id: 'emotional',
@@ -41,7 +46,8 @@ const GOAL_TYPES: GoalType[] = [
     icon: <Heart className="h-6 w-6" />,
     color: 'from-brain-health-400 to-brain-health-500',
     description: 'Nurture your emotional wellbeing',
-    examples: ['Practice gratitude daily', 'Call a friend', 'Journal feelings']
+    examples: ['Practice gratitude daily', 'Call a friend', 'Journal feelings'],
+    measurementPrompts: ['Daily mood rating?', 'Journal entries per week?', 'Social interactions?']
   },
   {
     id: 'social',
@@ -49,7 +55,8 @@ const GOAL_TYPES: GoalType[] = [
     icon: <Users className="h-6 w-6" />,
     color: 'from-purple-400 to-purple-500',
     description: 'Build meaningful relationships',
-    examples: ['Join a support group', 'Have coffee with family', 'Volunteer weekly']
+    examples: ['Join a support group', 'Have coffee with family', 'Volunteer weekly'],
+    measurementPrompts: ['How many calls/visits?', 'Activities attended?', 'New connections made?']
   }
 ];
 
@@ -68,12 +75,16 @@ export function BrainFriendlyGoalCreator({
   const [goalType, setGoalType] = useState<GoalType | null>(null);
   const [goalTitle, setGoalTitle] = useState("");
   const [goalWhy, setGoalWhy] = useState("");
+  const [goalMeasurement, setGoalMeasurement] = useState("");
+  const [goalTimeframe, setGoalTimeframe] = useState("");
 
   const handleReset = () => {
     setStep(1);
     setGoalType(null);
     setGoalTitle("");
     setGoalWhy("");
+    setGoalMeasurement("");
+    setGoalTimeframe("");
   };
 
   const handleClose = () => {
@@ -87,8 +98,8 @@ export function BrainFriendlyGoalCreator({
   };
 
   const handleCreateGoal = () => {
-    if (!goalType || !goalTitle.trim()) {
-      toast.error("Please complete all fields");
+    if (!goalType || !goalTitle.trim() || !goalMeasurement.trim()) {
+      toast.error("Please complete all required fields");
       return;
     }
 
@@ -96,7 +107,9 @@ export function BrainFriendlyGoalCreator({
       id: `goal-${Date.now()}`,
       title: goalTitle,
       myRhythmFocus: goalType.id,
-      target: goalWhy || `Achieve: ${goalTitle}`,
+      target: goalMeasurement,
+      why: goalWhy || `Achieve: ${goalTitle}`,
+      timeframe: goalTimeframe,
       progress: 0,
       actions: [],
       createdAt: new Date().toISOString()
@@ -121,7 +134,7 @@ export function BrainFriendlyGoalCreator({
               <Target className="h-6 w-6 text-white" />
             </div>
             <DialogTitle className="text-2xl bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
-              Create Your Memory-Friendly Goal
+              Create Your Goal
             </DialogTitle>
             <p className="text-brain-base text-gray-600">
               Simple steps to build goals that work with your brain, not against it
@@ -141,12 +154,6 @@ export function BrainFriendlyGoalCreator({
                 step >= 2 ? 'bg-memory-emerald-500 text-white' : 'bg-gray-200 text-gray-500'
               }`}>
                 2
-              </div>
-              <ArrowRight className="h-4 w-4 text-gray-400" />
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                step >= 3 ? 'bg-memory-emerald-500 text-white' : 'bg-gray-200 text-gray-500'
-              }`}>
-                3
               </div>
             </div>
 
@@ -177,9 +184,9 @@ export function BrainFriendlyGoalCreator({
               </div>
             )}
 
-            {/* Step 2: Define Goal */}
+            {/* Step 2: Define Goal with Guidance */}
             {step === 2 && goalType && (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 <div className="text-center">
                   <div className={`w-12 h-12 bg-gradient-to-br ${goalType.color} rounded-full flex items-center justify-center mx-auto mb-3 text-white`}>
                     {goalType.icon}
@@ -188,9 +195,39 @@ export function BrainFriendlyGoalCreator({
                   <p className="text-brain-sm text-gray-600">{goalType.description}</p>
                 </div>
 
+                {/* Goal Definition Guidance */}
+                <Card className="bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 border-memory-emerald-200">
+                  <CardContent className="pt-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <HelpCircle className="h-5 w-5 text-memory-emerald-600" />
+                      <h4 className="font-semibold text-memory-emerald-800">Goal Definition Guide</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <Badge className="bg-memory-emerald-100 text-memory-emerald-700 mb-2">WHAT</Badge>
+                        <p className="text-gray-600">Be specific about what you want to achieve</p>
+                      </div>
+                      <div>
+                        <Badge className="bg-clarity-teal-100 text-clarity-teal-700 mb-2">WHEN</Badge>
+                        <p className="text-gray-600">Set a realistic timeframe</p>
+                      </div>
+                      <div>
+                        <Badge className="bg-brain-health-100 text-brain-health-700 mb-2">HOW</Badge>
+                        <p className="text-gray-600">Define how you'll measure success</p>
+                      </div>
+                      <div>
+                        <Badge className="bg-purple-100 text-purple-700 mb-2">WHY</Badge>
+                        <p className="text-gray-600">Connect to what matters to you</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <div className="space-y-4">
+                  {/* WHAT - Goal Title */}
                   <div>
-                    <Label htmlFor="goalTitle" className="text-brain-base font-medium">
+                    <Label htmlFor="goalTitle" className="text-brain-base font-medium flex items-center gap-2">
+                      <Target className="h-4 w-4 text-memory-emerald-500" />
                       What do you want to achieve? *
                     </Label>
                     <Input
@@ -202,6 +239,51 @@ export function BrainFriendlyGoalCreator({
                     />
                   </div>
 
+                  {/* HOW - Measurement */}
+                  <div>
+                    <Label htmlFor="goalMeasurement" className="text-brain-base font-medium flex items-center gap-2">
+                      <Activity className="h-4 w-4 text-clarity-teal-500" />
+                      How will you measure success? *
+                    </Label>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        {goalType.measurementPrompts.map((prompt, idx) => (
+                          <Badge 
+                            key={idx}
+                            variant="outline" 
+                            className="cursor-pointer hover:bg-clarity-teal-50 text-xs"
+                            onClick={() => setGoalMeasurement(prompt)}
+                          >
+                            {prompt}
+                          </Badge>
+                        ))}
+                      </div>
+                      <Input
+                        id="goalMeasurement"
+                        value={goalMeasurement}
+                        onChange={(e) => setGoalMeasurement(e.target.value)}
+                        placeholder="e.g., Walk 100 steps without stopping, Complete 3 times per week"
+                        className="text-brain-base"
+                      />
+                    </div>
+                  </div>
+
+                  {/* WHEN - Timeframe */}
+                  <div>
+                    <Label htmlFor="goalTimeframe" className="text-brain-base font-medium flex items-center gap-2">
+                      <ArrowRight className="h-4 w-4 text-brain-health-500" />
+                      When do you want to achieve this?
+                    </Label>
+                    <Input
+                      id="goalTimeframe"
+                      value={goalTimeframe}
+                      onChange={(e) => setGoalTimeframe(e.target.value)}
+                      placeholder="e.g., Within 4 weeks, By the end of next month"
+                      className="mt-2 text-brain-base"
+                    />
+                  </div>
+
+                  {/* WHY - Personal Motivation */}
                   <div>
                     <Label htmlFor="goalWhy" className="text-brain-base font-medium flex items-center gap-2">
                       <Lightbulb className="h-4 w-4 text-yellow-500" />
@@ -231,7 +313,7 @@ export function BrainFriendlyGoalCreator({
                   </Button>
                   <Button 
                     onClick={handleCreateGoal}
-                    disabled={!goalTitle.trim()}
+                    disabled={!goalTitle.trim() || !goalMeasurement.trim()}
                     className="flex-1 bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600"
                   >
                     Create Goal

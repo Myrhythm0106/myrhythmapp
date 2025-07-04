@@ -1,23 +1,22 @@
 
-import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useFormContext } from "react-hook-form";
+import React from 'react';
+import { FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { useFormContext } from 'react-hook-form';
 
 export function LocationField() {
-  const form = useFormContext();
-  
+  const { control } = useFormContext();
+
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="location"
       render={({ field }) => (
         <FormItem>
           <FormLabel>Location (Optional)</FormLabel>
           <FormControl>
-            <Input placeholder="Enter location" {...field} />
+            <Input placeholder="Where will this take place?" {...field} />
           </FormControl>
-          <FormMessage />
         </FormItem>
       )}
     />

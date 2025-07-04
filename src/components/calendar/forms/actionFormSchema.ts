@@ -25,6 +25,7 @@ export const actionFormSchema = z.object({
   goalId: z.string().optional(),
   progress: z.number().optional().default(0),
   status: z.enum(["completed", "pending", "in-progress", "canceled"]).optional().default("pending"),
+  customReason: z.string().optional(),
   // Recurrence fields
   recurrencePattern: z.enum(["none", "daily", "weekly", "monthly", "yearly"]).default("none"),
   recurrenceInterval: z.number().min(1).max(365).default(1),
@@ -53,6 +54,7 @@ export const defaultActionValues: ActionFormValues = {
   goalId: "none",
   progress: 0,
   status: "pending",
+  customReason: "",
   recurrencePattern: "none",
   recurrenceInterval: 1,
   recurrenceEndDate: "",

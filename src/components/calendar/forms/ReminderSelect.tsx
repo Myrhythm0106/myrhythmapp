@@ -1,15 +1,15 @@
 
-import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useFormContext } from "react-hook-form";
+import React from 'react';
+import { FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useFormContext } from 'react-hook-form';
 
 export function ReminderSelect() {
-  const form = useFormContext();
-  
+  const { control } = useFormContext();
+
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="reminders"
       render={({ field }) => (
         <FormItem>
@@ -21,14 +21,14 @@ export function ReminderSelect() {
               </SelectTrigger>
             </FormControl>
             <SelectContent>
-              <SelectItem value="none">None</SelectItem>
-              <SelectItem value="10min">10 minutes before</SelectItem>
+              <SelectItem value="none">No reminder</SelectItem>
+              <SelectItem value="5min">5 minutes before</SelectItem>
+              <SelectItem value="15min">15 minutes before</SelectItem>
               <SelectItem value="30min">30 minutes before</SelectItem>
               <SelectItem value="1hour">1 hour before</SelectItem>
               <SelectItem value="1day">1 day before</SelectItem>
             </SelectContent>
           </Select>
-          <FormMessage />
         </FormItem>
       )}
     />

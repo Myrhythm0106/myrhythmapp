@@ -2,20 +2,26 @@
 import React from 'react';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 import { useFormContext } from 'react-hook-form';
 import { Switch } from '@/components/ui/switch';
-import { Calendar, CalendarCheck, CalendarPlus, Check, Flag, ListCheck, Target, Star } from 'lucide-react';
+import { Calendar, CalendarCheck, CalendarPlus, Check, Flag, ListCheck, Target, Star, Dumbbell, Footprints, HeartPulse, Users, Plus } from 'lucide-react';
 
 export function ActionTypeSelect() {
   const { control, watch, setValue } = useFormContext();
   const isGoal = watch('isGoal');
+  const actionType = watch('type');
 
   const actionTypes = [
-    { value: 'daily_win', label: 'Daily Victory', icon: <Star className="h-4 w-4" /> },
-    { value: 'appointment', label: 'Appointment', icon: <Calendar className="h-4 w-4" /> },
-    { value: 'meeting', label: 'Meeting', icon: <CalendarCheck className="h-4 w-4" /> },
-    { value: 'task', label: 'Task', icon: <Check className="h-4 w-4" /> },
-    { value: 'reminder', label: 'Reminder', icon: <CalendarPlus className="h-4 w-4" /> },
+    { value: 'daily_win', label: 'Daily Victory', icon: <Star className="h-4 w-4" />, category: 'personal' },
+    { value: 'appointment', label: 'Appointment', icon: <Calendar className="h-4 w-4" />, category: 'scheduled' },
+    { value: 'gym', label: 'Gym/Fitness', icon: <Dumbbell className="h-4 w-4" />, category: 'physical' },
+    { value: 'steps', label: 'Walking/Steps', icon: <Footprints className="h-4 w-4" />, category: 'physical' },
+    { value: 'therapy', label: 'Therapy/Medical', icon: <HeartPulse className="h-4 w-4" />, category: 'health' },
+    { value: 'meeting', label: 'Meeting', icon: <Users className="h-4 w-4" />, category: 'social' },
+    { value: 'task', label: 'Task', icon: <Check className="h-4 w-4" />, category: 'productivity' },
+    { value: 'reminder', label: 'Reminder', icon: <CalendarPlus className="h-4 w-4" />, category: 'personal' },
+    { value: 'custom', label: 'Other (specify)', icon: <Plus className="h-4 w-4" />, category: 'custom' }
   ];
   
   const goalTypes = [
@@ -35,7 +41,7 @@ export function ActionTypeSelect() {
   };
   
   return (
-    <>
+    <div className="space-y-4">
       <div className="flex items-center justify-between mb-2">
         <FormLabel>Action Type</FormLabel>
         <div className="flex items-center gap-2">
@@ -86,6 +92,26 @@ export function ActionTypeSelect() {
           </FormItem>
         )}
       />
-    </>
+
+      {/* Custom Reason Field for Other Actions */}
+      {actionType === 'custom' && !isGoal && (
+        <FormField
+          control={control}
+          name="customReason"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Specify the reason</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="e.g., Personal care, Hobby time, etc."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+    </div>
   );
 }

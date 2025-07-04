@@ -1,27 +1,26 @@
 
-import React from "react";
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { useFormContext } from "react-hook-form";
+import React from 'react';
+import { FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { useFormContext } from 'react-hook-form';
 
 export function NotesField() {
-  const form = useFormContext();
-  
+  const { control } = useFormContext();
+
   return (
     <FormField
-      control={form.control}
+      control={control}
       name="notes"
       render={({ field }) => (
         <FormItem>
           <FormLabel>Notes (Optional)</FormLabel>
           <FormControl>
             <Textarea 
-              placeholder="Enter any additional notes" 
-              className="resize-none" 
+              placeholder="Any additional details..."
+              className="min-h-[80px]"
               {...field} 
             />
           </FormControl>
-          <FormMessage />
         </FormItem>
       )}
     />
