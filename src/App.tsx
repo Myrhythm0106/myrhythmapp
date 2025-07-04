@@ -14,6 +14,7 @@ import { SubscriptionProvider } from "./contexts/SubscriptionContext";
 import { PomodoroProvider } from "./contexts/PomodoroContext";
 import BrainGamesPage from "./pages/BrainGamesPage";
 import PreviewLanding from "./pages/PreviewLanding";
+import Preview2Landing from "./pages/Preview2Landing";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Landing />} />
                   <Route path="/preview-landing" element={<PreviewLanding />} />
+                  <Route path="/preview-2" element={<Preview2Landing />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/calendar" element={<Calendar />} />
                   <Route path="/profile" element={<Profile />} />

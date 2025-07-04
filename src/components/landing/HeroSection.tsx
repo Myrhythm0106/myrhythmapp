@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -38,6 +37,10 @@ export function HeroSection() {
     navigate("/preview-landing");
   };
 
+  const handleViewPreview2 = () => {
+    navigate("/preview-2");
+  };
+
   return (
     <TooltipProvider>
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-20 md:py-32">
@@ -50,7 +53,16 @@ export function HeroSection() {
             onClick={handleViewPreview}
           >
             <Eye className="h-4 w-4" />
-            View Preview
+            Preview 1
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-2 hover:bg-purple-500/10 border-purple-300" 
+            onClick={handleViewPreview2}
+          >
+            <Brain className="h-4 w-4" />
+            Preview 2
           </Button>
           <Button 
             variant="ghost" 

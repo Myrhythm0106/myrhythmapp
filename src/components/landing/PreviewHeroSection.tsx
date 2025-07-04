@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { LogIn, Brain, UserPlus, Star, ChevronDown, Mountain, Compass } from "lucide-react";
+import { LogIn, Brain, UserPlus, Star, ChevronDown, Mountain, Compass, Home } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -30,11 +29,19 @@ export function PreviewHeroSection() {
     }
   };
 
+  const handleGoToLive = () => {
+    navigate("/");
+  };
+
+  const handleGoToPreview2 = () => {
+    navigate("/preview-2");
+  };
+
   return (
     <TooltipProvider>
       {/* PREVIEW BANNER */}
       <div className="bg-yellow-100 border-b-4 border-yellow-400 p-2 text-center">
-        <p className="text-yellow-800 font-semibold">🔍 PREVIEW MODE - Visual Landing Page Transformation</p>
+        <p className="text-yellow-800 font-semibold">🔍 PREVIEW 1 - Visual Landing Page Transformation</p>
       </div>
 
       <section className="relative overflow-hidden min-h-screen">
@@ -46,8 +53,26 @@ export function PreviewHeroSection() {
           }}
         />
         
-        {/* Login button at top right */}
-        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
+        {/* Top navigation buttons */}
+        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10 flex gap-2">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all" 
+            onClick={handleGoToLive}
+          >
+            <Home className="h-4 w-4" />
+            Live
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="flex items-center gap-2 bg-purple-500/20 backdrop-blur-sm text-white hover:bg-purple-500/30 transition-all" 
+            onClick={handleGoToPreview2}
+          >
+            <Brain className="h-4 w-4" />
+            Preview 2
+          </Button>
           <Button 
             variant="ghost" 
             className="flex items-center gap-2 bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-all" 
