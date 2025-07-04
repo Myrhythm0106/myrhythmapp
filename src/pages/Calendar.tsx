@@ -1,32 +1,17 @@
+
 import React, { useState } from "react";
 import { BrainHealthCalendarHeader } from "@/components/calendar/BrainHealthCalendarHeader";
 import { BrainHealthCalendarView } from "@/components/calendar/BrainHealthCalendarView";
 import { BrainHealthSidebar } from "@/components/calendar/BrainHealthSidebar";
 import { BrainFriendlyGoalCreator } from "@/components/goals/BrainFriendlyGoalCreator";
-import { QuickActionCreator } from "@/components/calendar/QuickActionCreator";
+import { GuidedActionWizard } from "@/components/calendar/forms/GuidedActionWizard";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EventForm } from "@/components/calendar/EventForm";
-import { UpcomingEvents } from "@/components/calendar/UpcomingEvents";
-import { MedicationReminders } from "@/components/calendar/MedicationReminders";
-import { DayView } from "@/components/calendar/views/DayView";
-import { WeekView } from "@/components/calendar/views/WeekView";
-import { GoalsView } from "@/components/calendar/views/GoalsView";
-import { MyGoalPlan } from "@/components/calendar/goals/MyGoalPlan";
-import { GoalDefinitionGuide } from "@/components/goals/GoalDefinitionGuide";
-import { MotivationalReminders } from "@/components/calendar/MotivationalReminders";
-import { Plus, CalendarIcon, Clock, HeartPulse, Target, Heart, Zap } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
-import { PomodoroButton } from "@/components/pomodoro/PomodoroButton";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { SetNewGoalDialog } from "@/components/goals/SetNewGoalDialog";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -56,12 +41,10 @@ const Calendar = () => {
     navigate("/calendar?view=goals");
   };
 
-  const handleQuickActionSave = (actionData: any) => {
-    console.log("Quick action saved:", actionData);
+  const handleQuickActionSave = () => {
     setShowQuickAction(false);
-    
-    toast.success("🎯 Action Added!", {
-      description: `"${actionData.title}" has been added to your brain-friendly schedule!`,
+    toast.success("🎯 Action Created!", {
+      description: "Your brain-friendly action has been added to your calendar. Your support team has been notified!",
       duration: 4000
     });
   };
@@ -132,13 +115,15 @@ const Calendar = () => {
         />
 
         <Dialog open={showQuickAction} onOpenChange={setShowQuickAction}>
-          <DialogContent className="sm:max-w-[550px]">
+          <DialogContent className="sm:max-w-[700px] max-h-[90vh]">
             <DialogHeader>
-              <DialogTitle className="text-brain-lg bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                Add Brain-Friendly Action
+              <DialogTitle className="text-xl bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
+                Create Brain-Friendly Action
               </DialogTitle>
             </DialogHeader>
-            <QuickActionCreator onSave={handleQuickActionSave} />
+            <ScrollArea className="max-h-[calc(90vh-120px)]">
+              <GuidedActionWizard onSuccess={handleQuickActionSave} />
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       </div>

@@ -1,0 +1,259 @@
+
+import React from 'react';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import { useFormContext } from 'react-hook-form';
+import { Star, Calendar, Dumbbell, Footprints, HeartPulse, Users, Check, Plus, Lightbulb, Clock, CalendarIcon } from 'lucide-react';
+
+const actionTypes = [
+  { 
+    value: 'daily_win', 
+    label: 'Daily Victory', 
+    icon: <Star className="h-4 w-4" />, 
+    description: 'Celebrate small wins that boost your confidence',
+    examples: ['Made my bed', 'Took my medication', 'Called a friend']
+  },
+  { 
+    value: 'appointment', 
+    label: 'Appointment', 
+    icon: <Calendar className="h-4 w-4" />, 
+    description: 'Scheduled meetings with healthcare providers',
+    examples: ['Doctor visit', 'Therapy session', 'Check-up']
+  },
+  { 
+    value: 'gym', 
+    label: 'Exercise/Fitness', 
+    icon: <Dumbbell className="h-4 w-4" />, 
+    description: 'Physical activities to strengthen your body',
+    examples: ['Gym workout', 'Swimming', 'Yoga class']
+  },
+  { 
+    value: 'steps', 
+    label: 'Walking/Movement', 
+    icon: <Footprints className="h-4 w-4" />, 
+    description: 'Simple movement activities for daily wellness',
+    examples: ['Walk to mailbox', '10-minute walk', 'Gentle stretching']
+  },
+  { 
+    value: 'therapy', 
+    label: 'Therapy/Medical', 
+    icon: <HeartPulse className="h-4 w-4" />, 
+    description: 'Healthcare and therapeutic activities',
+    examples: ['Physical therapy', 'Counseling', 'Medical treatment']
+  },
+  { 
+    value: 'meeting', 
+    label: 'Social Connection', 
+    icon: <Users className="h-4 w-4" />, 
+    description: 'Connecting with others for support and joy',
+    examples: ['Coffee with friend', 'Support group', 'Family dinner']
+  },
+  { 
+    value: 'task', 
+    label: 'Daily Task', 
+    icon: <Check className="h-4 w-4" />, 
+    description: 'Important daily activities and responsibilities',
+    examples: ['Grocery shopping', 'Pay bills', 'Organize room']
+  },
+  { 
+    value: 'custom', 
+    label: 'Something Else', 
+    icon: <Plus className="h-4 w-4" />, 
+    description: 'Create your own activity type',
+    examples: ['Hobby time', 'Personal care', 'Creative activity']
+  }
+];
+
+export function ActionBasicsStep() {
+  const { control, watch, setValue } = useFormContext();
+  const isGoal = watch('isGoal');
+  const actionType = watch('type');
+  const selectedType = actionTypes.find(type => type.value === actionType);
+
+  return (
+    <div className="space-y-6">
+      {/* Helper Card */}
+      <Card className="bg-gradient-to-r from-clarity-teal-50 to-memory-emerald-50 border-clarity-teal-200">
+        <CardContent className="pt-4">
+          <div className="flex items-start gap-3">
+            <Lightbulb className="h-5 w-5 text-clarity-teal-600 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-clarity-teal-800 mb-1">
+                Brain-Friendly Tip
+              </p>
+              <p className="text-sm text-clarity-teal-700">
+                Start with what you want to do, then we'll help you decide when and get the right support. 
+                Every small step counts on your journey!
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Goal Toggle */}
+      <div className="flex items-center justify-between p-4 bg-purple-50 rounded-lg border border-purple-200">
+        <div>
+          <p className="font-medium text-purple-800">Is this a long-term goal?</p>
+          <p className="text-sm text-purple-600">Goals help break big achievements into smaller steps</p>
+        </div>
+        <Switch 
+          checked={isGoal} 
+          onCheckedChange={(checked) => {
+            setValue('isGoal', checked);
+            if (checked) {
+              setValue('type', 'daily');
+            } else {
+              setValue('type', 'daily_win');
+            }
+          }}
+        />
+      </div>
+
+      {/* Action Title */}
+      <FormField
+        control={control}
+        name="title"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-base font-medium flex items-center gap-2">
+              <Star className="h-4 w-4 text-memory-emerald-500" />
+              What would you like to {isGoal ? 'achieve' : 'do'}?
+            </FormLabel>
+            <FormControl>
+              <Input
+                placeholder={
+                  isGoal 
+                    ? "e.g., Walk to the mailbox independently" 
+                    : "e.g., Take a 10-minute walk around the block"
+                }
+                className="text-base p-3"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+            <p className="text-sm text-gray-600 mt-1">
+              {isGoal 
+                ? "Describe what you want to accomplish over time"
+                : "Be specific about what you'll do - this helps your brain prepare!"
+              }
+            </p>
+          </FormItem>
+        )}
+      />
+
+      {/* Action Type Selection */}
+      {!isGoal && (
+        <FormField
+          control={control}
+          name="type"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="text-base font-medium">What type of activity is this?</FormLabel>
+              <FormControl>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="p-3">
+                    <SelectValue placeholder="Choose the type that fits best" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {actionTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value} className="p-3">
+                        <div className="flex items-center gap-3">
+                          {type.icon}
+                          <div>
+                            <div className="font-medium">{type.label}</div>
+                            <div className="text-sm text-gray-600">{type.description}</div>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+
+      {/* Show examples for selected type */}
+      {selectedType && !isGoal && (
+        <Card className="bg-gray-50 border-gray-200">
+          <CardContent className="pt-4">
+            <p className="font-medium text-gray-800 mb-2">Examples of {selectedType.label}:</p>
+            <div className="flex flex-wrap gap-2">
+              {selectedType.examples.map((example, index) => (
+                <Badge key={index} variant="outline" className="bg-white">
+                  {example}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Custom Reason Field */}
+      {actionType === 'custom' && !isGoal && (
+        <FormField
+          control={control}
+          name="customReason"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>What type of activity is this?</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="e.g., Personal care time, Creative hobby, etc."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+
+      {/* Date and Time */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <FormField
+          control={control}
+          name="date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <CalendarIcon className="h-4 w-4 text-clarity-teal-500" />
+                When will you do this?
+              </FormLabel>
+              <FormControl>
+                <Input type="date" className="p-3" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        
+        <FormField
+          control={control}
+          name="startTime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-clarity-teal-500" />
+                What time?
+              </FormLabel>
+              <FormControl>
+                <Input type="time" className="p-3" {...field} />
+              </FormControl>
+              <FormMessage />
+              <p className="text-sm text-gray-600">
+                Choose a time when you typically have good energy
+              </p>
+            </FormItem>
+          )}
+        />
+      </div>
+    </div>
+  );
+}
