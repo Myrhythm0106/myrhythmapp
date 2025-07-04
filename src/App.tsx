@@ -1,7 +1,8 @@
 
 import React from "react";
-import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
+import { Toaster } from "@/components/ui/sonner";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Calendar from "./pages/Calendar";
@@ -16,27 +17,29 @@ import PreviewLanding from "./pages/PreviewLanding";
 
 function App() {
   return (
-    <div className="min-h-screen bg-background">
-      <BrowserRouter>
-        <AuthProvider>
-          <SubscriptionProvider>
-            <PomodoroProvider>
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/preview-landing" element={<PreviewLanding />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/calendar" element={<Calendar />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
-                <Route path="/onboarding" element={<Onboarding />} />
-                <Route path="/brain-games" element={<BrainGamesPage />} />
-              </Routes>
-              <Toaster />
-            </PomodoroProvider>
-          </SubscriptionProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </div>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <div className="min-h-screen bg-background">
+        <BrowserRouter>
+          <AuthProvider>
+            <SubscriptionProvider>
+              <PomodoroProvider>
+                <Routes>
+                  <Route path="/" element={<Landing />} />
+                  <Route path="/preview-landing" element={<PreviewLanding />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/brain-games" element={<BrainGamesPage />} />
+                </Routes>
+                <Toaster />
+              </PomodoroProvider>
+            </SubscriptionProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </div>
+    </ThemeProvider>
   );
 }
 
