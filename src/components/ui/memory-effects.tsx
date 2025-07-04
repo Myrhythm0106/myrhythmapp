@@ -7,13 +7,15 @@ interface MemoryNodeProps {
   color?: 'emerald' | 'teal' | 'brain-health';
   delay?: number;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function MemoryNode({ 
   size = 'md', 
   color = 'emerald', 
   delay = 0, 
-  className 
+  className,
+  style 
 }: MemoryNodeProps) {
   const sizeClasses = {
     sm: 'w-2 h-2',
@@ -35,7 +37,7 @@ export function MemoryNode({
         colorClasses[color],
         className
       )}
-      style={{ animationDelay: `${delay}s` }}
+      style={{ animationDelay: `${delay}s`, ...style }}
     />
   );
 }
@@ -98,7 +100,7 @@ export function MemoryEffectsContainer({
           size={i % 2 === 0 ? 'sm' : 'md'}
           color={i % 3 === 0 ? 'emerald' : i % 3 === 1 ? 'teal' : 'brain-health'}
           delay={i * 0.5}
-          className={`absolute`}
+          className="absolute"
           style={{
             left: `${Math.random() * 80 + 10}%`,
             top: `${Math.random() * 80 + 10}%`,
