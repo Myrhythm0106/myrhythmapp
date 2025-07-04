@@ -1,10 +1,12 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { LogIn, Brain, UserPlus, Star, ChevronDown } from "lucide-react";
+import { LogIn, Brain, UserPlus, Star, ChevronDown, Eye } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const [isPromiseExpanded, setIsPromiseExpanded] = React.useState(false);
@@ -19,6 +21,7 @@ export function HeroSection() {
       });
     }
   };
+
   const handleStartJourney = () => {
     console.log("HeroSection: Register Here button clicked - PRODUCTION VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
@@ -30,11 +33,30 @@ export function HeroSection() {
       console.error("HeroSection: Navigation error:", error);
     }
   };
-  return <TooltipProvider>
+
+  const handleViewPreview = () => {
+    navigate("/preview-landing");
+  };
+
+  return (
+    <TooltipProvider>
       <section className="relative overflow-hidden bg-gradient-to-r from-blue-50 to-indigo-50 py-20 md:py-32">
-        {/* Login button at top right */}
-        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10">
-          <Button variant="ghost" className="flex items-center gap-2 hover:bg-primary/10" onClick={() => setShowLoginModal(true)}>
+        {/* Top right buttons */}
+        <div className="absolute top-4 right-4 md:top-8 md:right-8 z-10 flex gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-2 hover:bg-primary/10" 
+            onClick={handleViewPreview}
+          >
+            <Eye className="h-4 w-4" />
+            View Preview
+          </Button>
+          <Button 
+            variant="ghost" 
+            className="flex items-center gap-2 hover:bg-primary/10" 
+            onClick={() => setShowLoginModal(true)}
+          >
             <LogIn className="h-4 w-4" />
             Login
           </Button>
@@ -97,7 +119,11 @@ export function HeroSection() {
           {/* Call-to-Action Section */}
           <div className="space-y-8">
             <div className="flex flex-col sm:flex-row gap-8 justify-center">
-              <Button size="lg" className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" onClick={handleStartJourney}>
+              <Button 
+                size="lg" 
+                className="text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" 
+                onClick={handleStartJourney}
+              >
                 <UserPlus className="h-5 w-5 flex-shrink-0" />
                 <span className="text-center leading-tight">
                   Register Here
@@ -106,7 +132,12 @@ export function HeroSection() {
                 </span>
               </Button>
               
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6 rounded-full border-2 hover:bg-primary/5 max-w-md mx-auto sm:mx-0" onClick={scrollToFramework}>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6 rounded-full border-2 hover:bg-primary/5 max-w-md mx-auto sm:mx-0" 
+                onClick={scrollToFramework}
+              >
                 Learn The Framework
               </Button>
             </div>
@@ -134,5 +165,6 @@ export function HeroSection() {
         {/* Login Modal */}
         <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </section>
-    </TooltipProvider>;
+    </TooltipProvider>
+  );
 }
