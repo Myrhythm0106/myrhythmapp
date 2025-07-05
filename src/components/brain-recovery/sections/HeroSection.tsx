@@ -8,13 +8,13 @@ export function HeroSection() {
   const navigate = useNavigate();
   
   return (
-    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-primary/80 to-primary text-white p-6 md:p-10">
+    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-teal-600/80 to-emerald-600/80 text-white p-6 md:p-10">
       <div className="absolute right-0 bottom-0 opacity-10">
         <Brain size={280} />
       </div>
       
       <div className="relative z-10 max-w-2xl space-y-4 bg-transparent rounded-lg">
-        <h1 className="text-3xl md:text-4xl font-bold leading-tight text-emerald-900">
+        <h1 className="text-3xl md:text-4xl font-bold leading-tight text-white">
           🧠 MyRhythm: Reclaim Structure. Reignite Confidence.
         </h1>
         
