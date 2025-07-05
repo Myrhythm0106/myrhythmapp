@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { UserPlus, ArrowRight, Loader2 } from "lucide-react";
+import { Brain, ArrowRight, Loader2, Mail, Lock, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -34,7 +34,6 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
       await signUp(formData.email, formData.password, formData.name);
       toast.success("Account created! Check your email to verify your account.");
       onClose();
-      // Navigate to onboarding after successful registration
       navigate("/onboarding");
     } catch (error: any) {
       toast.error(error.message || "Failed to create account");
@@ -50,66 +49,85 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <UserPlus className="h-6 w-6 text-primary" />
-            Quick Registration
-          </DialogTitle>
+      <DialogContent className="sm:max-w-md bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 border-2 border-purple-200/50">
+        <DialogHeader className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center">
+              <Brain className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                Start Your MyRhythm Journey
+              </DialogTitle>
+              <p className="text-sm text-muted-foreground">Memory1st → LEAP Forward</p>
+            </div>
+          </div>
         </DialogHeader>
         
-        <Card className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        <Card className="p-6 bg-white/80 backdrop-blur-sm border-purple-200/50">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Enter your name"
-                required
-              />
+              <div className="relative">
+                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="name"
+                  value={formData.name}
+                  onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                  placeholder="Enter your name"
+                  className="pl-10 bg-white/80 border-purple-200 focus:border-purple-400"
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                placeholder="Enter your email"
-                required
-              />
+              <div className="relative">
+                <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                  placeholder="Enter your email"
+                  className="pl-10 bg-white/80 border-purple-200 focus:border-purple-400"
+                  required
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <PasswordInput
-                id="password"
-                placeholder="Create a password"
-                value={formData.password}
-                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                required
-                minLength={6}
-              />
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <PasswordInput
+                  id="password"
+                  placeholder="Create a password"
+                  value={formData.password}
+                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  className="pl-10 bg-white/80 border-purple-200 focus:border-purple-400"
+                  required
+                  minLength={6}
+                />
+              </div>
             </div>
 
             <div className="space-y-3 pt-2">
               <Button 
                 type="submit" 
-                className="w-full bg-primary hover:bg-primary/90" 
+                className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-white font-medium" 
                 disabled={isLoading}
               >
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Creating Account...
+                    Creating Your Memory1st Account...
                   </>
                 ) : (
                   <>
-                    <UserPlus className="mr-2 h-4 w-4" />
-                    Create Account & Start
+                    <Brain className="mr-2 h-4 w-4" />
+                    Begin Memory1st → LEAP Journey
                   </>
                 )}
               </Button>
@@ -117,10 +135,10 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
               <Button 
                 type="button"
                 variant="outline" 
-                className="w-full" 
+                className="w-full border-purple-200 text-purple-700 hover:bg-purple-50" 
                 onClick={handleContinueToFullOnboarding}
               >
-                Skip & Continue to Full Setup
+                Continue to Full Setup
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -128,7 +146,7 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
         </Card>
 
         <p className="text-xs text-muted-foreground text-center">
-          By registering, you agree to our terms of service and privacy policy.
+          By registering, you agree to our Memory1st approach to gentle, empowering brain health.
         </p>
       </DialogContent>
     </Dialog>

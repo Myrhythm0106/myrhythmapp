@@ -28,6 +28,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     
     setToasts((prevToasts) => [...prevToasts, newToast])
     
+    // Auto-dismiss after 5 seconds
+    setTimeout(() => {
+      setToasts((prevToasts) => prevToasts.filter((toast) => toast.id !== id))
+    }, 5000)
+    
     return id
   }
 
