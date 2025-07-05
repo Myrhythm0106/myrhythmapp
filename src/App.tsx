@@ -18,6 +18,16 @@ import Landing from "./pages/Landing";
 import PreviewLanding from "./pages/PreviewLanding";
 import Preview2Landing from "./pages/Preview2Landing";
 import StrategyDashboard from "./pages/StrategyDashboard";
+import PersonalEmpowermentHubPage from "./pages/PersonalEmpowermentHubPage";
+import CommunityPage from "./pages/CommunityPage";
+import GratitudePage from "./pages/GratitudePage";
+import MoodTrackingPage from "./pages/MoodTrackingPage";
+import GoalsPage from "./pages/GoalsPage";
+import PersonalCommunityPage from "./pages/PersonalCommunityPage";
+import AccountabilityPage from "./pages/AccountabilityPage";
+import NotesPage from "./pages/NotesPage";
+import UsefulInfoPage from "./pages/UsefulInfoPage";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   return (
@@ -33,7 +43,9 @@ function App() {
                   <Route path="/preview-landing" element={<PreviewLanding />} />
                   <Route path="/preview-2" element={<Preview2Landing />} />
                   <Route path="/preview-3" element={<Preview3Landing />} />
+                  <Route path="/auth" element={<AuthPage />} />
                   <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/personal-empowerment" element={<PersonalEmpowermentHubPage />} />
                   <Route path="/dashboard/brain-health" element={<BrainHealthDashboardPage />} />
                   <Route path="/calendar" element={<Calendar />} />
                   <Route path="/profile" element={<Profile />} />
@@ -41,6 +53,14 @@ function App() {
                   <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/brain-games" element={<BrainGamesPage />} />
                   <Route path="/strategy-dashboard" element={<StrategyDashboard />} />
+                  <Route path="/community" element={<CommunityPage />} />
+                  <Route path="/gratitude" element={<GratitudePage />} />
+                  <Route path="/mood" element={<MoodTrackingPage />} />
+                  <Route path="/goals" element={<GoalsPage />} />
+                  <Route path="/personal-community" element={<PersonalCommunityPage />} />
+                  <Route path="/accountability" element={<AccountabilityPage />} />
+                  <Route path="/notes" element={<NotesPage />} />
+                  <Route path="/useful-info" element={<UsefulInfoPage />} />
                 </Routes>
                 <Toaster />
               </PomodoroProvider>

@@ -7,42 +7,42 @@ import { Music, RefreshCw, TrendingUp, Sparkles, Heart } from "lucide-react";
 
 const empowermentMessages = [
   {
-    message: "Your strength and determination are writing a powerful story of resilience. Today, let's add another chapter of triumph to your LEAP journey.",
+    message: "#IChoose to honor my brain's healing journey with Memory1st gentleness, knowing that every small step builds my strength and empowers my LEAP forward.",
     category: "empowerment",
     emoji: "🚀"
   },
   {
-    message: "You are capable of incredible things, and your brain is adapting and growing stronger with every challenge you face.",
+    message: "#IChoose to trust in my incredible capacity for growth. My brain is adapting and growing stronger with every Memory1st practice I embrace.",
     category: "strength",
     emoji: "💪"
   },
   {
-    message: "Despite any challenges you face, your ability to LEAP forward - Lead, Empower, Achieve, Persist - remains unshakeable.",
+    message: "#IChoose to LEAP forward with courage, knowing that my Memory1st foundation gives me the gentle strength to face any challenge with confidence.",
     category: "leap",
     emoji: "🌟"
   },
   {
-    message: "Today's small victories are tomorrow's foundation for greatness. Your progress is building something beautiful.",
+    message: "#IChoose to celebrate today's victories, no matter how small. Each Memory1st moment is building tomorrow's empowered foundation.",
     category: "progress",
     emoji: "🏆"
   },
   {
-    message: "You have the power to shape your day with intention and purpose. Your potential is limitless.",
+    message: "#IChoose to shape my day with intention and purpose. My Memory1st approach honors my needs while empowering unlimited potential.",
     category: "empowerment",
     emoji: "⚡"
   },
   {
-    message: "Your consistency is creating positive change in your life and inspiring your brain to build new pathways of strength.",
+    message: "#IChoose consistency that creates positive change. My Memory1st commitment is inspiring my brain to build new pathways of strength and resilience.",
     category: "consistency",
     emoji: "🔥"
   },
   {
-    message: "Recovery and growth go hand in hand. You're not just healing, you're becoming stronger than before.",
+    message: "#IChoose to see recovery and growth as partners in my journey. Memory1st healing is empowering me to become stronger than before.",
     category: "growth",
     emoji: "🌱"
   },
   {
-    message: "You're not defined by your challenges - you're defined by how you rise to meet them with courage and determination.",
+    message: "#IChoose to define myself by how I rise to meet challenges with Memory1st wisdom, courage, and the determination to LEAP forward.",
     category: "resilience",
     emoji: "🦋"
   }
@@ -101,14 +101,14 @@ export function DailyEmpowermentBoost({ streak, todayScore = 8 }: DailyEmpowerme
           <div className="flex-1 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Your Daily Empowerment Boost
+                Your Daily #IChoose Empowerment
               </h3>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-white/80">
                   Empowerment Score: {getEmpowermentScore()}%
                 </Badge>
                 <Badge variant="outline" className="bg-white/80">
-                  Day {streak} LEAP Journey
+                  Day {streak} Memory1st Journey
                 </Badge>
               </div>
             </div>
@@ -134,7 +134,7 @@ export function DailyEmpowermentBoost({ streak, todayScore = 8 }: DailyEmpowerme
                   className="text-purple-600 hover:bg-purple-50"
                 >
                   <RefreshCw className={`h-4 w-4 mr-1 ${isAnimating ? 'animate-spin' : ''}`} />
-                  New Boost
+                  New #IChoose
                 </Button>
                 
                 <Button
@@ -149,7 +149,7 @@ export function DailyEmpowermentBoost({ streak, todayScore = 8 }: DailyEmpowerme
               
               <div className="flex items-center gap-1 text-sm text-gray-600">
                 <Sparkles className="h-4 w-4 text-amber-500" />
-                <span>MyRhythm LEAP Inspiration</span>
+                <span>Memory1st → LEAP Empowerment</span>
               </div>
             </div>
           </div>

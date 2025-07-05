@@ -21,7 +21,11 @@ import {
   BookOpen,
   FileText,
   Shield,
-  Smile
+  Smile,
+  Music,
+  Bell,
+  Heart,
+  StickyNote
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -34,38 +38,43 @@ const mainNavItems = [
     icon: LayoutDashboard,
   },
   {
+    title: "Personal Empowerment",
+    href: "/personal-empowerment",
+    icon: Music,
+  },
+  {
     title: "Calendar & Goals",
     href: "/calendar",
     icon: Calendar,
   },
   {
-    title: "Accountability Hub",
-    href: "/accountability",
-    icon: Users,
+    title: "Goals & Progress",
+    href: "/goals",
+    icon: Target,
   },
   {
-    title: "Mood & Wellness",
-    href: "/mood-tracking",
+    title: "Accountability Hub",
+    href: "/accountability",
+    icon: Bell,
+  },
+  {
+    title: "Mood Harmony",
+    href: "/mood",
     icon: Smile,
   },
   {
     title: "Gratitude Practice",
     href: "/gratitude", 
-    icon: HeartHandshake,
+    icon: Heart,
   },
   {
-    title: "Health Tracking",
-    href: "/symptom-tracking",
-    icon: Activity,
+    title: "My Notes",
+    href: "/notes",
+    icon: StickyNote,
   }
 ];
 
 const brainSection = [
-  {
-    title: "TBI Calendar",
-    href: "/tbi-calendar",
-    icon: Calendar,
-  },
   {
     title: "Brain Games",
     href: "/brain-games",
@@ -93,19 +102,14 @@ const communitySection = [
 
 const resourcesSection = [
   {
+    title: "Useful Resources",
+    href: "/useful-info",
+    icon: HelpCircle,
+  },
+  {
     title: "User Guide",
     href: "/user-guide",
     icon: BookOpen,
-  },
-  {
-    title: "Documentation",
-    href: "/docs",
-    icon: FileText,
-  },
-  {
-    title: "Useful Info",
-    href: "/useful-info",
-    icon: HelpCircle,
   }
 ];
 
@@ -119,11 +123,6 @@ const settingsSection = [
     title: "Security",
     href: "/security",
     icon: Shield,
-  },
-  {
-    title: "Customize",
-    href: "/customization",
-    icon: Settings,
   }
 ];
 
@@ -215,7 +214,12 @@ export function Sidebar() {
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <NavLink to="/dashboard" className="flex items-center gap-2 font-semibold">
             <HeartHandshake className="h-6 w-6" />
-            {!isCollapsed && <span>MyRhythm</span>}
+            {!isCollapsed && (
+              <div>
+                <span>MyRhythm</span>
+                <div className="text-xs text-muted-foreground">Memory1st → LEAP</div>
+              </div>
+            )}
           </NavLink>
         </div>
         <div className="flex-1">
@@ -227,7 +231,7 @@ export function Sidebar() {
             
             {/* Brain & Recovery Tools */}
             {renderCollapsibleSection(
-              "Brain & Recovery", 
+              "Memory1st Tools", 
               brainSection, 
               "brain", 
               Brain
