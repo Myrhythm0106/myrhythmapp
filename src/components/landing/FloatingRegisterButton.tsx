@@ -52,28 +52,28 @@ export function FloatingRegisterButton({
           icon: Zap,
           text: "Start Trial",
           subtext: "Begin Journey",
-          color: "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
+          color: "bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700"
         };
       case 'results':
         return {
           icon: Gift,
           text: "Unlock Results",
           subtext: "See Full Journey",
-          color: "bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+          color: "bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
         };
       case 'trial':
         return {
           icon: UserPlus,
           text: "Register Here",
           subtext: "7-Day Free Trial",
-          color: "bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+          color: "bg-gradient-to-r from-teal-500 via-emerald-500 to-green-500 hover:from-teal-600 hover:via-emerald-600 hover:to-green-600"
         };
       default:
         return {
           icon: UserPlus,
           text: "Register Here",
           subtext: "Free Trial",
-          color: "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary"
+          color: "bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700"
         };
     }
   };
@@ -92,7 +92,7 @@ export function FloatingRegisterButton({
         onClick={handleRegister}
         size={isMobile ? "lg" : "lg"}
         className={cn(
-          "text-white shadow-2xl hover:shadow-xl transition-all duration-300 rounded-full text-base font-semibold flex items-center gap-2 hover:scale-105",
+          "text-white shadow-2xl hover:shadow-xl transition-all duration-300 rounded-full text-base font-semibold flex items-center gap-2 hover:scale-105 border-2 border-white/20",
           isMobile ? "px-6 py-4" : "px-8 py-6",
           config.color
         )}
