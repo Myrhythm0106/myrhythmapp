@@ -6,12 +6,14 @@ import { BrainHealthSidebar } from "@/components/calendar/BrainHealthSidebar";
 import { BrainFriendlyGoalCreator } from "@/components/goals/BrainFriendlyGoalCreator";
 import { GuidedActionWizard } from "@/components/calendar/forms/GuidedActionWizard";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
-import { PageHeader } from "@/components/ui/PageHeader";
+import { EnhancedPomodoroTimer } from "@/components/pomodoro/EnhancedPomodoroTimer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { Timer, Coffee, Users } from "lucide-react";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -19,6 +21,7 @@ const Calendar = () => {
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const [showQuickAction, setShowQuickAction] = useState(false);
   const [showNewGoal, setShowNewGoal] = useState(false);
+  const [showEnhancedPomodoro, setShowEnhancedPomodoro] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -85,6 +88,33 @@ const Calendar = () => {
               onPlanDreams={() => setShowPlanMyDreams(true)}
             />
 
+            {/* Enhanced Action Buttons */}
+            <div className="flex flex-wrap gap-3 justify-center">
+              <Button
+                onClick={() => setShowEnhancedPomodoro(true)}
+                className="bg-gradient-to-r from-clarity-teal-500 to-memory-emerald-500 hover:from-clarity-teal-600 hover:to-memory-emerald-600 flex items-center gap-2"
+              >
+                <Timer className="h-4 w-4" />
+                Focus Timer & Breaks
+              </Button>
+              <Button
+                onClick={() => setShowQuickAction(true)}
+                variant="outline"
+                className="border-heart-300 hover:bg-heart-50 flex items-center gap-2"
+              >
+                <Users className="h-4 w-4" />
+                Schedule Family Time
+              </Button>
+              <Button
+                onClick={() => setShowQuickAction(true)}
+                variant="outline"
+                className="border-clarity-teal-300 hover:bg-clarity-teal-50 flex items-center gap-2"
+              >
+                <Coffee className="h-4 w-4" />
+                Plan Break Time
+              </Button>
+            </div>
+
             {/* Main Content Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               
@@ -99,7 +129,7 @@ const Calendar = () => {
                 />
               </div>
               
-              {/* Brain-Health Sidebar */}
+              {/* Enhanced Brain-Health Sidebar with Break & Family Features */}
               <div className="lg:col-span-1">
                 <BrainHealthSidebar date={date} />
               </div>
@@ -123,6 +153,21 @@ const Calendar = () => {
             </DialogHeader>
             <ScrollArea className="max-h-[calc(90vh-120px)]">
               <GuidedActionWizard onSuccess={handleQuickActionSave} />
+            </ScrollArea>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={showEnhancedPomodoro} onOpenChange={setShowEnhancedPomodoro}>
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh]">
+            <DialogHeader>
+              <DialogTitle className="text-xl bg-gradient-to-r from-clarity-teal-600 to-memory-emerald-600 bg-clip-text text-transparent">
+                Focus Timer, Breaks & Family Time
+              </DialogTitle>
+            </DialogHeader>
+            <ScrollArea className="max-h-[calc(90vh-120px)]">
+              <EnhancedPomodoroTimer 
+                onClose={() => setShowEnhancedPomodoro(false)}
+              />
             </ScrollArea>
           </DialogContent>
         </Dialog>

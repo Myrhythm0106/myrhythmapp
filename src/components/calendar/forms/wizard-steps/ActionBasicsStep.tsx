@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useFormContext } from 'react-hook-form';
-import { Star, Calendar, Dumbbell, Footprints, HeartPulse, Users, Check, Plus, Lightbulb, Clock, CalendarIcon } from 'lucide-react';
+import { Star, Calendar, Dumbbell, Footprints, HeartPulse, Users, Check, Plus, Lightbulb, Clock, CalendarIcon, Coffee, Heart } from 'lucide-react';
 
 const actionTypes = [
   { 
@@ -16,6 +16,20 @@ const actionTypes = [
     icon: <Star className="h-4 w-4" />, 
     description: 'Celebrate small wins that boost your confidence',
     examples: ['Made my bed', 'Took my medication', 'Called a friend']
+  },
+  { 
+    value: 'family_time', 
+    label: 'Family Time', 
+    icon: <Heart className="h-4 w-4" />, 
+    description: 'Quality time with family members for connection and support',
+    examples: ['Family dinner', 'Call with sister', 'Play with grandchildren']
+  },
+  { 
+    value: 'break_time', 
+    label: 'Break/Rest Time', 
+    icon: <Coffee className="h-4 w-4" />, 
+    description: 'Scheduled breaks to prevent burnout and maintain energy',
+    examples: ['10-minute walk', 'Breathing exercise', 'Listen to music']
   },
   { 
     value: 'appointment', 
@@ -87,7 +101,7 @@ export function ActionBasicsStep() {
               </p>
               <p className="text-sm text-clarity-teal-700">
                 Start with what you want to do, then we'll help you decide when and get the right support. 
-                Every small step counts on your journey!
+                Every small step counts on your journey! Include family time and breaks to maintain balance.
               </p>
             </div>
           </div>
@@ -195,6 +209,31 @@ export function ActionBasicsStep() {
         </Card>
       )}
 
+      {/* Special guidance for family time and breaks */}
+      {(actionType === 'family_time' || actionType === 'break_time') && (
+        <Card className="bg-gradient-to-r from-heart-50 to-clarity-teal-50 border-heart-200">
+          <CardContent className="pt-4">
+            <div className="flex items-start gap-3">
+              {actionType === 'family_time' ? 
+                <Heart className="h-5 w-5 text-heart-600 mt-0.5 flex-shrink-0" /> :
+                <Coffee className="h-5 w-5 text-clarity-teal-600 mt-0.5 flex-shrink-0" />
+              }
+              <div>
+                <p className="text-sm font-medium text-gray-800 mb-1">
+                  {actionType === 'family_time' ? 'Family Connection Benefits' : 'Break Time Benefits'}
+                </p>
+                <p className="text-sm text-gray-700">
+                  {actionType === 'family_time' 
+                    ? 'Family time strengthens emotional support, reduces isolation, and creates positive memories that aid recovery.'
+                    : 'Regular breaks prevent mental fatigue, improve focus when you return to tasks, and support brain healing.'
+                  }
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Custom Reason Field */}
       {actionType === 'custom' && !isGoal && (
         <FormField
@@ -248,7 +287,9 @@ export function ActionBasicsStep() {
               </FormControl>
               <FormMessage />
               <p className="text-sm text-gray-600">
-                Choose a time when you typically have good energy
+                {actionType === 'family_time' ? 'Choose a time when family is usually available' :
+                 actionType === 'break_time' ? 'Schedule breaks between your main activities' :
+                 'Choose a time when you typically have good energy'}
               </p>
             </FormItem>
           )}

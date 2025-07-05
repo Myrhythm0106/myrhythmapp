@@ -26,6 +26,10 @@ export const actionFormSchema = z.object({
   progress: z.number().optional().default(0),
   status: z.enum(["completed", "pending", "in-progress", "canceled"]).optional().default("pending"),
   customReason: z.string().optional(),
+  // Enhanced break and family time fields
+  breakType: z.enum(["solo", "family", "movement", "mindful"]).optional(),
+  familyMembers: z.array(z.string()).optional(),
+  breakQuality: z.enum(["refreshing", "okay", "not-helpful"]).optional(),
   // Recurrence fields
   recurrencePattern: z.enum(["none", "daily", "weekly", "monthly", "yearly"]).default("none"),
   recurrenceInterval: z.number().min(1).max(365).default(1),
@@ -55,6 +59,9 @@ export const defaultActionValues: ActionFormValues = {
   progress: 0,
   status: "pending",
   customReason: "",
+  breakType: undefined,
+  familyMembers: [],
+  breakQuality: undefined,
   recurrencePattern: "none",
   recurrenceInterval: 1,
   recurrenceEndDate: "",
