@@ -21,17 +21,20 @@ export function ActionTypeSelector() {
                 <SelectValue placeholder="Choose the type that fits best" />
               </SelectTrigger>
               <SelectContent>
-                {actionTypes.map((type) => (
-                  <SelectItem key={type.value} value={type.value} className="p-3">
-                    <div className="flex items-center gap-3">
-                      {type.icon}
-                      <div>
-                        <div className="font-medium">{type.label}</div>
-                        <div className="text-sm text-gray-600">{type.description}</div>
+                {actionTypes.map((type) => {
+                  const IconComponent = type.icon;
+                  return (
+                    <SelectItem key={type.value} value={type.value} className="p-3">
+                      <div className="flex items-center gap-3">
+                        <IconComponent className="h-4 w-4" />
+                        <div>
+                          <div className="font-medium">{type.label}</div>
+                          <div className="text-sm text-gray-600">{type.description}</div>
+                        </div>
                       </div>
-                    </div>
-                  </SelectItem>
-                ))}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
           </FormControl>
