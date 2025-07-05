@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, FormProvider } from "react-hook-form";
@@ -8,12 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, HelpCircle, Lightbulb } from "lucide-react";
+import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
 import { ActionBasicsStep } from "./wizard-steps/ActionBasicsStep";
 import { ActionDetailsStep } from "./wizard-steps/ActionDetailsStep";
 import { WatchersStep } from "./wizard-steps/WatchersStep";
 import { ReviewStep } from "./wizard-steps/ReviewStep";
 import { actionFormSchema, ActionFormValues, defaultActionValues } from "./actionFormSchema";
+import { WIZARD_STEPS } from "./data/wizardSteps";
 import { useDailyActions } from "@/hooks/use-daily-actions";
 import { format } from "date-fns";
 
@@ -22,13 +22,6 @@ interface GuidedActionWizardProps {
   goalId?: string;
   onSuccess?: () => void;
 }
-
-const WIZARD_STEPS = [
-  { id: 1, title: "What & When", description: "Define your action and timing" },
-  { id: 2, title: "Details & Goals", description: "Add context and link to goals" },
-  { id: 3, title: "Support Team", description: "Choose who will support you" },
-  { id: 4, title: "Review", description: "Confirm everything looks good" }
-];
 
 export function GuidedActionWizard({ defaultTime, goalId, onSuccess }: GuidedActionWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
