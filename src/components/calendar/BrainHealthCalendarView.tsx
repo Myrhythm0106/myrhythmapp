@@ -10,10 +10,11 @@ import { Target, Calendar, Clock, Brain } from "lucide-react";
 import { GoalsView } from "./views/GoalsView";
 import { DayView } from "./views/DayView";
 import { WeekView } from "./views/WeekView";
+import { YearView } from "./views/YearView";
 
 interface BrainHealthCalendarViewProps {
-  view: "day" | "week" | "month" | "goals";
-  onViewChange: (view: "day" | "week" | "month" | "goals") => void;
+  view: "day" | "week" | "month" | "year" | "goals";
+  onViewChange: (view: "day" | "week" | "month" | "year" | "goals") => void;
   date?: Date;
   onDateSelect: (date: Date | undefined) => void;
   onNewGoal: () => void;
@@ -26,6 +27,11 @@ export function BrainHealthCalendarView({
   onDateSelect,
   onNewGoal
 }: BrainHealthCalendarViewProps) {
+  const handleMonthClick = (monthDate: Date) => {
+    onDateSelect(monthDate);
+    onViewChange("month");
+  };
+
   return (
     <MemoryEffectsContainer nodeCount={6} className="relative">
       <Card className="border-memory-emerald-200 bg-gradient-to-br from-memory-emerald-50/30 to-white">
@@ -53,6 +59,13 @@ export function BrainHealthCalendarView({
                 >
                   <Calendar className="h-4 w-4 mr-1" />
                   Month
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="year"
+                  className="data-[state=active]:bg-memory-emerald-100 data-[state=active]:text-memory-emerald-700"
+                >
+                  <Calendar className="h-4 w-4 mr-1" />
+                  Year
                 </TabsTrigger>
                 <TabsTrigger 
                   value="goals"
@@ -94,6 +107,18 @@ export function BrainHealthCalendarView({
             
             {view === "week" && date && (
               <WeekView date={date} events={[]} />
+            )}
+
+            {view === "year" && date && (
+              <YearView 
+                currentDate={date} 
+                events={[]} 
+                onDayClick={(clickedDate) => {
+                  onDateSelect(clickedDate);
+                  onViewChange("day");
+                }}
+                onMonthClick={handleMonthClick}
+              />
             )}
 
             {view === "goals" && (
