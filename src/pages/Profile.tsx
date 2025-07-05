@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Shield, User, Bell, HeartPulse, Settings, CheckCircle, Calendar, Home, Eye } from "lucide-react";
 import { FloatingStartButton } from "@/components/welcome/FloatingStartButton";
 import { toast } from "@/components/ui/use-toast";
+import { Preview3Background } from "@/components/ui/Preview3Background";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -89,111 +90,115 @@ const Profile = () => {
   const isTabCompleted = (tabName: string) => completedTabs.includes(tabName);
 
   return (
-    <div className="space-y-6">
-      {/* Navigation Header */}
-      <div className="bg-white border-b p-4">
-        <div className="flex items-center justify-between max-w-6xl mx-auto">
-          <h1 className="text-xl font-semibold">MyRhythm Profile</h1>
-          <div className="flex gap-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate("/")}
-              className="flex items-center gap-2"
-            >
-              <Home className="h-4 w-4" />
-              Live Version
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate("/preview-landing")}
-              className="flex items-center gap-2"
-            >
-              <Eye className="h-4 w-4" />
-              Preview Version
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate("/dashboard")}
-              className="flex items-center gap-2"
-            >
-              Dashboard
-            </Button>
+    <Preview3Background>
+      <div className="space-y-6 px-4">
+        {/* Navigation Header */}
+        <div className="bg-white/80 backdrop-blur-sm border border-white/20 rounded-lg p-4">
+          <div className="flex items-center justify-between max-w-6xl mx-auto">
+            <h1 className="text-xl font-semibold">MyRhythm Profile</h1>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate("/")}
+                className="flex items-center gap-2 bg-white/50"
+              >
+                <Home className="h-4 w-4" />
+                Live Version
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate("/preview-landing")}
+                className="flex items-center gap-2 bg-white/50"
+              >
+                <Eye className="h-4 w-4" />
+                Preview Version
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => navigate("/dashboard")}
+                className="bg-white/50"
+              >
+                Dashboard
+              </Button>
+            </div>
           </div>
         </div>
+
+        <div className="max-w-6xl mx-auto">
+          <PageHeader 
+            title="My Profile" 
+            subtitle="Complete your personal information, medical data, and application preferences to personalise your MyRhythm experience"
+          >
+            {completedTabs.length === 5 && (
+              <Button onClick={() => navigate("/calendar")} className="gap-2">
+                <Calendar className="h-4 w-4" />
+                Go to Calendar
+              </Button>
+            )}
+          </PageHeader>
+          
+          <Card className="bg-white/80 backdrop-blur-sm border border-white/20">
+            <CardContent className="pt-6">
+              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+                  <TabsTrigger value="personal" className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    {isTabCompleted("personal") && <CheckCircle className="h-3 w-3 text-green-600" />}
+                    <span className="hidden md:inline">Personal</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="medical" className="flex items-center gap-2">
+                    <HeartPulse className="h-4 w-4" />
+                    {isTabCompleted("medical") && <CheckCircle className="h-3 w-3 text-green-600" />}
+                    <span className="hidden md:inline">Medical</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="emergency" className="flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
+                    {isTabCompleted("emergency") && <CheckCircle className="h-3 w-3 text-green-600" />}
+                    <span className="hidden md:inline">Emergency</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="notifications" className="flex items-center gap-2">
+                    <Bell className="h-4 w-4" />
+                    {isTabCompleted("notifications") && <CheckCircle className="h-3 w-3 text-green-600" />}
+                    <span className="hidden md:inline">Notifications</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="privacy" className="flex items-center gap-2">
+                    <Settings className="h-4 w-4" />
+                    {isTabCompleted("privacy") && <CheckCircle className="h-3 w-3 text-green-600" />}
+                    <span className="hidden md:inline">Privacy</span>
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="personal" className="space-y-4">
+                  <UserProfileForm onSave={handlePersonalSave} />
+                </TabsContent>
+                
+                <TabsContent value="medical" className="space-y-4">
+                  <MedicalInfoForm onSave={handleMedicalSave} />
+                </TabsContent>
+                
+                <TabsContent value="emergency" className="space-y-4">
+                  <EmergencyContactsForm onSave={handleEmergencySave} />
+                </TabsContent>
+                
+                <TabsContent value="notifications" className="space-y-4">
+                  <NotificationSettings onSave={handleNotificationsSave} />
+                </TabsContent>
+                
+                <TabsContent value="privacy" className="space-y-4">
+                  <PrivacySettings onSave={handlePrivacySave} />
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+
+          {/* Show floating button if coming from onboarding */}
+          {showFloatingButton && <FloatingStartButton />}
+        </div>
       </div>
-
-      <PageHeader 
-        title="My Profile" 
-        subtitle="Complete your personal information, medical data, and application preferences to personalise your MyRhythm experience"
-      >
-        {completedTabs.length === 5 && (
-          <Button onClick={() => navigate("/calendar")} className="gap-2">
-            <Calendar className="h-4 w-4" />
-            Go to Calendar
-          </Button>
-        )}
-      </PageHeader>
-      
-      <Card>
-        <CardContent className="pt-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
-              <TabsTrigger value="personal" className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                {isTabCompleted("personal") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                <span className="hidden md:inline">Personal</span>
-              </TabsTrigger>
-              <TabsTrigger value="medical" className="flex items-center gap-2">
-                <HeartPulse className="h-4 w-4" />
-                {isTabCompleted("medical") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                <span className="hidden md:inline">Medical</span>
-              </TabsTrigger>
-              <TabsTrigger value="emergency" className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
-                {isTabCompleted("emergency") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                <span className="hidden md:inline">Emergency</span>
-              </TabsTrigger>
-              <TabsTrigger value="notifications" className="flex items-center gap-2">
-                <Bell className="h-4 w-4" />
-                {isTabCompleted("notifications") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                <span className="hidden md:inline">Notifications</span>
-              </TabsTrigger>
-              <TabsTrigger value="privacy" className="flex items-center gap-2">
-                <Settings className="h-4 w-4" />
-                {isTabCompleted("privacy") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                <span className="hidden md:inline">Privacy</span>
-              </TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="personal" className="space-y-4">
-              <UserProfileForm onSave={handlePersonalSave} />
-            </TabsContent>
-            
-            <TabsContent value="medical" className="space-y-4">
-              <MedicalInfoForm onSave={handleMedicalSave} />
-            </TabsContent>
-            
-            <TabsContent value="emergency" className="space-y-4">
-              <EmergencyContactsForm onSave={handleEmergencySave} />
-            </TabsContent>
-            
-            <TabsContent value="notifications" className="space-y-4">
-              <NotificationSettings onSave={handleNotificationsSave} />
-            </TabsContent>
-            
-            <TabsContent value="privacy" className="space-y-4">
-              <PrivacySettings onSave={handlePrivacySave} />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      {/* Show floating button if coming from onboarding */}
-      {showFloatingButton && <FloatingStartButton />}
-    </div>
+    </Preview3Background>
   );
 };
 

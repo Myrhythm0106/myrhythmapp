@@ -9,6 +9,7 @@ import { CommunityCTASection } from "./sections/CommunityCTASection";
 import { BrainRecoveryHomeSkeleton } from "./BrainRecoveryHomeSkeleton";
 import { MobileMenu } from "@/components/mobile/MobileMenu";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Preview3Background } from "@/components/ui/Preview3Background";
 
 export function BrainRecoveryHome() {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,19 +28,25 @@ export function BrainRecoveryHome() {
   const recommendedGame = gameTypes[1]; // Memory Match game is ideal for new users
   
   if (isLoading) {
-    return <BrainRecoveryHomeSkeleton />;
+    return (
+      <Preview3Background>
+        <BrainRecoveryHomeSkeleton />
+      </Preview3Background>
+    );
   }
   
   return (
-    <div className="space-y-8 max-w-5xl mx-auto pb-12">
-      {/* Show mobile menu only on mobile devices */}
-      {isMobile && <MobileMenu />}
-      
-      <HeroSection />
-      <EssentialToolsSection recommendedGame={recommendedGame} />
-      <WhyMyRhythmSection />
-      <OurStorySection />
-      <CommunityCTASection />
-    </div>
+    <Preview3Background>
+      <div className="space-y-8 max-w-5xl mx-auto pb-12 px-4">
+        {/* Show mobile menu only on mobile devices */}
+        {isMobile && <MobileMenu />}
+        
+        <HeroSection />
+        <EssentialToolsSection recommendedGame={recommendedGame} />
+        <WhyMyRhythmSection />
+        <OurStorySection />
+        <CommunityCTASection />
+      </div>
+    </Preview3Background>
   );
 }

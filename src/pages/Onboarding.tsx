@@ -1,3 +1,4 @@
+
 import React, { useEffect, useMemo } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
@@ -7,6 +8,7 @@ import { useAutoProgression } from "@/hooks/useAutoProgression";
 import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
 import { useAuth } from "@/contexts/AuthContext";
+import { Preview3Background } from "@/components/ui/Preview3Background";
 
 // Updated steps for professional deployment - now includes payment step
 const UPDATED_STEPS = [
@@ -131,12 +133,14 @@ const Onboarding = () => {
   if (loading) {
     console.log("Onboarding: Showing loading screen");
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-muted/60 to-background">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground">Setting up your personalized journey...</p>
+      <Preview3Background>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+            <p className="text-sm text-muted-foreground">Setting up your personalized journey...</p>
+          </div>
         </div>
-      </div>
+      </Preview3Background>
     );
   }
 
@@ -144,7 +148,7 @@ const Onboarding = () => {
   console.log("=== END ONBOARDING DEBUG ===");
 
   return (
-    <>
+    <Preview3Background>
       <OnboardingLayout 
         currentStep={currentStep} 
         totalSteps={TOTAL_STEPS}
@@ -181,7 +185,7 @@ const Onboarding = () => {
         onCancel={() => onboardingState.setShowPaymentConfirmation(false)}
         selectedPlan={selectedPlan}
       />
-    </>
+    </Preview3Background>
   );
 };
 
