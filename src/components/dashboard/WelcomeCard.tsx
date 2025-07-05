@@ -1,9 +1,10 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Sparkles, Lightbulb, Star } from "lucide-react";
+import { Brain, Sparkles, Lightbulb, Star, Heart, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { MoodOption, moodOptions } from "@/components/dashboard/daily-checkin/MoodTypes";
@@ -66,15 +67,15 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
   const getMessage = () => {
     switch (userType) {
       case "brain-injury-recovery":
-        return "Track your empowering progress and discover resources to fuel your thriving journey.";
+        return "Using Memory1st principles, track your MYRHYTHM progress and build your LEAP life - empowered, authentic, and productive.";
       case "cognitive-optimization":
-        return "Unlock your cognitive potential and discover the amazing capabilities within you.";
+        return "Discover your MYRHYTHM and unlock your cognitive potential through Memory1st approaches designed for your LEAP success.";
       case "caregiver-support":
-        return "Find strength for yourself while empowering your loved one, with resources to help you both flourish.";
+        return "Find your MYRHYTHM as a caregiver using Memory1st self-care principles. Your LEAP journey supports both you and your loved one.";
       case "wellness-productivity":
-        return "Build empowering habits and create the structure that supports your wellness and achievement goals.";
+        return "Build empowering MYRHYTHM habits using Memory1st structure that supports your LEAP goals - authentic wellness and meaningful productivity.";
       default:
-        return "Welcome to MyRhythm. Get started by customizing your profile and exploring your potential.";
+        return "Welcome to MyRhythm. Discover your Memory1st foundation, find your MYRHYTHM process, and create your LEAP life.";
     }
   };
 
@@ -113,7 +114,26 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
         </div>
       </div>
       <CardContent className="p-4">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="flex flex-col gap-4">
+          {/* MyRhythm Foundation Concepts */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="text-center p-2 bg-green-50 rounded-lg border border-green-200">
+              <Brain className="h-4 w-4 mx-auto mb-1 text-green-600" />
+              <p className="text-xs font-medium text-green-800">Memory1st</p>
+              <p className="text-xs text-green-600">Brain Health</p>
+            </div>
+            <div className="text-center p-2 bg-blue-50 rounded-lg border border-blue-200">
+              <Heart className="h-4 w-4 mx-auto mb-1 text-blue-600" />
+              <p className="text-xs font-medium text-blue-800">MYRHYTHM</p>
+              <p className="text-xs text-blue-600">Your Process</p>
+            </div>
+            <div className="text-center p-2 bg-purple-50 rounded-lg border border-purple-200">
+              <Zap className="h-4 w-4 mx-auto mb-1 text-purple-600" />
+              <p className="text-xs font-medium text-purple-800">LEAP</p>
+              <p className="text-xs text-purple-600">Your Outcome</p>
+            </div>
+          </div>
+
           <div className="flex-1 bg-gradient-to-r from-amber-100 to-rose-100 rounded-xl p-4 shadow-sm transition-transform hover:shadow-md hover:-translate-y-0.5">
             <div className="flex items-center gap-2 mb-1">
               <Lightbulb className="h-5 w-5 text-amber-500" />
@@ -173,11 +193,25 @@ export function WelcomeCard({ name = "there", userType = "brain-injury-recovery"
               </div>
             )}
             <p className="text-xs text-gray-500 mt-2">
+              Your MYRHYTHM journey: Memory1st foundation, personal process, LEAP outcome. 
               {userType === "brain-injury-recovery" 
-                ? "Your weekly word is chosen to empower your wellness journey and celebrate your incredible strength."
-                : "Your weekly word is chosen based on your patterns to inspire and empower your growth."
+                ? " Every small step counts on your path to empowered, authentic, productive living."
+                : " Embrace your unique rhythm and celebrate your progress toward meaningful goals."
               }
             </p>
+          </div>
+
+          {/* Journey Milestones */}
+          <div className="flex justify-center gap-2 text-xs">
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+              Week 1: Finding Rhythm
+            </Badge>
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+              Month 1: Living MYRHYTHM
+            </Badge>
+            <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
+              Month 6: Full LEAP Life
+            </Badge>
           </div>
         </div>
       </CardContent>

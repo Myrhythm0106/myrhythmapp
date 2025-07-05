@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Clock, Star } from "lucide-react";
+import { Clock, Star, Heart, Brain } from "lucide-react";
 
 export interface FamilyTimeActivity {
   id: string;
@@ -59,12 +59,26 @@ export function ActivityCard({ activity, onSchedule }: ActivityCardProps) {
         </Button>
       </div>
       
-      <div className="flex flex-wrap gap-1">
-        {activity.benefits.map((benefit, index) => (
-          <Badge key={index} variant="outline" className="text-xs bg-white/70">
-            {benefit}
-          </Badge>
-        ))}
+      <div className="space-y-2">
+        <div className="flex flex-wrap gap-1">
+          {activity.benefits.map((benefit, index) => (
+            <Badge key={index} variant="outline" className="text-xs bg-white/70">
+              {benefit}
+            </Badge>
+          ))}
+        </div>
+        
+        {/* MYRHYTHM Integration */}
+        <div className="flex items-center gap-4 text-xs text-muted-foreground bg-white/50 p-2 rounded">
+          <div className="flex items-center gap-1">
+            <Brain className="h-3 w-3 text-green-600" />
+            <span>Memory1st: Brain-healthy connection</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Heart className="h-3 w-3 text-blue-600" />
+            <span>MYRHYTHM: Family bonding ritual</span>
+          </div>
+        </div>
       </div>
     </div>
   );
