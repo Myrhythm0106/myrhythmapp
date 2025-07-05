@@ -14,7 +14,7 @@ export function HeroSection() {
       </div>
       
       <div className="relative z-10 max-w-2xl space-y-4 bg-transparent rounded-lg">
-        <h1 className="text-3xl md:text-4xl font-bold leading-tight text-white">
+        <h1 className="text-3xl md:text-4xl font-bold leading-tight text-emerald-900">
           🧠 MyRhythm: Reclaim Structure. Reignite Confidence.
         </h1>
         
