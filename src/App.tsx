@@ -17,6 +17,7 @@ import BrainGamesPage from "./pages/BrainGamesPage";
 import Landing from "./pages/Landing";
 import PreviewLanding from "./pages/PreviewLanding";
 import Preview2Landing from "./pages/Preview2Landing";
+import StrategyDashboard from "./pages/StrategyDashboard";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
                   <Route path="/brain-recovery" element={<BrainRecoveryHome />} />
                   <Route path="/onboarding" element={<Onboarding />} />
                   <Route path="/brain-games" element={<BrainGamesPage />} />
+                  <Route path="/strategy-dashboard" element={<StrategyDashboard />} />
                 </Routes>
                 <Toaster />
               </PomodoroProvider>
