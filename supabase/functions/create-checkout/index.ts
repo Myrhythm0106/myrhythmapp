@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "npm:stripe@14.21.0";
 import { createClient } from "npm:@supabase/supabase-js@2.45.0";
@@ -60,14 +61,15 @@ serve(async (req) => {
       logStep("New customer created", { customerId });
     }
 
-    // Define pricing based on plan with updated names
+    // Enhanced pricing based on plan with updated names and proper trial setup
     const planPricing = {
-      basic: { price: 799, name: "MyRhythm Align" },
-      premium: { price: 999, name: "MyRhythm Flow" },
-      family: { price: 1999, name: "MyRhythm Thrive" }
+      basic: { price: 599, name: "MyRhythm Align", description: "Essential tools for cognitive wellness" },
+      premium: { price: 999, name: "MyRhythm Flow", description: "Complete MyRhythm experience with all features" },
+      family: { price: 1999, name: "MyRhythm Thrive", description: "Full family support with dedicated case management" }
     };
 
     const selectedPlan = planPricing[plan_type as keyof typeof planPricing] || planPricing.premium;
+    logStep("Plan selected", { selectedPlan, plan_type });
 
     const origin = req.headers.get("origin") || "http://localhost:3000";
     
@@ -80,7 +82,7 @@ serve(async (req) => {
             currency: "usd",
             product_data: { 
               name: selectedPlan.name,
-              description: "7-day free trial, then monthly subscription"
+              description: selectedPlan.description
             },
             unit_amount: selectedPlan.price,
             recurring: { interval: "month" },
@@ -96,12 +98,28 @@ serve(async (req) => {
           plan_type: plan_type
         }
       },
-      success_url: `${origin}/dashboard?trial_started=true`,
-      cancel_url: `${origin}/onboarding?step=4`,
+      success_url: `${origin}/dashboard?trial_started=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${origin}/onboarding?step=5&cancelled=true`,
       allow_promotion_codes: true,
+      automatic_tax: { enabled: true },
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
+
+    // Create or update subscription record in our database
+    await supabaseClient
+      .from("subscriptions")
+      .upsert({
+        user_id: user.id,
+        stripe_customer_id: customerId,
+        status: 'trial',
+        plan_type: plan_type,
+        trial_start: new Date().toISOString().split('T')[0],
+        trial_end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' });
+
+    logStep("Database updated with trial subscription");
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

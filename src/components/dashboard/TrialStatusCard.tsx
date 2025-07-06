@@ -2,7 +2,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clock, Crown, CreditCard } from 'lucide-react';
+import { Clock, Crown, CreditCard, AlertTriangle } from 'lucide-react';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { toast } from 'sonner';
 
@@ -90,13 +90,13 @@ export function TrialStatusCard() {
     <Card className="border-orange-200 bg-orange-50">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-orange-800">
-          <Clock className="h-5 w-5" />
+          <AlertTriangle className="h-5 w-5" />
           Trial Expired
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-orange-700 mb-4">
-          Your free trial has ended. Subscribe to continue your MyRhythm journey.
+          Your free trial has ended. Subscribe to continue your MyRhythm journey and unlock all features.
         </p>
         <Button 
           variant="default" 

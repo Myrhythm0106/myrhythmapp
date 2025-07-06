@@ -4,6 +4,7 @@ import { Preview3Background } from "@/components/ui/Preview3Background";
 import { Card, CardContent } from "@/components/ui/card";
 import { Brain, Sparkles } from "lucide-react";
 import { FeatureCategories } from "@/components/dashboard/FeatureCategories";
+import { TrialStatusCard } from "@/components/dashboard/TrialStatusCard";
 
 export default function Dashboard() {
   return (
@@ -23,6 +24,9 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Trial Status Card */}
+        <TrialStatusCard />
 
         {/* Enhanced Feature Categories */}
         <FeatureCategories />

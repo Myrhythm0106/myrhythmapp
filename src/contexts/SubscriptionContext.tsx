@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -163,8 +164,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         trial_days_left: data.trial_days_left || 0,
         subscription_tier: data.subscription_tier || 'premium',
         subscription_end: data.subscription_end,
-        status: data.trial_active ? 'trial_active' : 
-                data.subscribed ? 'active' : 'trial_expired'
+        status: data.status || 'trial_expired'
       };
 
       setSubscriptionData(newData);

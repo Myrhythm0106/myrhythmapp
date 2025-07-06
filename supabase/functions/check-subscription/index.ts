@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "npm:stripe@14.21.0";
 import { createClient } from "npm:@supabase/supabase-js@2.45.0";
@@ -59,7 +60,8 @@ serve(async (req) => {
         subscribed: false,
         trial_active: true,
         trial_days_left: 7,
-        subscription_tier: 'premium'
+        subscription_tier: 'premium',
+        status: 'trial_active'
       }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 200,
@@ -80,6 +82,7 @@ serve(async (req) => {
     let trial_days_left = 0;
     let subscription_tier = 'premium';
     let subscription_end = null;
+    let status = 'trial_expired';
 
     if (subscriptions.data.length > 0) {
       const subscription = subscriptions.data[0];
@@ -90,6 +93,9 @@ serve(async (req) => {
         const trialEndDate = new Date(subscription.trial_end * 1000);
         const now = new Date();
         trial_days_left = Math.max(0, Math.ceil((trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+        status = 'trial_active';
+      } else if (subscribed) {
+        status = 'active';
       }
 
       if (subscription.current_period_end) {
@@ -100,15 +106,15 @@ serve(async (req) => {
       const priceId = subscription.items.data[0].price.id;
       const price = await stripe.prices.retrieve(priceId);
       const amount = price.unit_amount || 0;
-      if (amount <= 999) {
-        subscription_tier = "Basic";
+      if (amount <= 799) {
+        subscription_tier = "basic";
       } else if (amount <= 1499) {
-        subscription_tier = "Premium";
+        subscription_tier = "premium";
       } else {
-        subscription_tier = "Family";
+        subscription_tier = "family";
       }
 
-      // Update database
+      // Update database with current subscription info
       await supabaseClient
         .from("subscriptions")
         .upsert({
@@ -116,7 +122,7 @@ serve(async (req) => {
           stripe_customer_id: customerId,
           stripe_subscription_id: subscription.id,
           status: subscription.status === 'trialing' ? 'trial' : subscription.status,
-          plan_type: subscription_tier.toLowerCase(),
+          plan_type: subscription_tier,
           trial_start: trial_active && subscription.trial_start ? new Date(subscription.trial_start * 1000).toISOString().split('T')[0] : null,
           trial_end: trial_active && subscription.trial_end ? new Date(subscription.trial_end * 1000).toISOString().split('T')[0] : null,
           current_period_start: subscription.current_period_start ? new Date(subscription.current_period_start * 1000).toISOString().split('T')[0] : null,
@@ -125,14 +131,15 @@ serve(async (req) => {
         }, { onConflict: 'user_id' });
     }
 
-    logStep("Subscription status determined", { subscribed, trial_active, trial_days_left, subscription_tier });
+    logStep("Subscription status determined", { subscribed, trial_active, trial_days_left, subscription_tier, status });
 
     return new Response(JSON.stringify({
       subscribed,
       trial_active,
       trial_days_left,
       subscription_tier,
-      subscription_end
+      subscription_end,
+      status
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,

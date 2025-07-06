@@ -25,7 +25,7 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
   const planInfo = {
     basic: { name: "MyRhythm Align", price: "£5.99/month", trial: "7 Day Free Trial" },
     premium: { name: "MyRhythm Flow", price: "£9.99/month", trial: "7 Day Free Trial" },
-    family: { name: "MyRhythm Thrive", price: "£15.99/month", trial: "7 Day Free Trial" }
+    family: { name: "MyRhythm Thrive", price: "£19.99/month", trial: "7 Day Free Trial" }
   };
 
   // Convert PlanType to SubscriptionTier
@@ -178,7 +178,7 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
             <span className="font-semibold text-green-800">{planInfo[selectedPlan].trial}</span>
           </div>
           <p className="text-sm text-green-700 mt-1">
-            Start immediately with full access. Your payment method will be charged {planInfo[selectedPlan].price.replace('£', '£')} after 7 days.
+            Start immediately with full access. Your payment method will be charged after 7 days.
           </p>
         </div>
       </div>
