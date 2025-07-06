@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Brain, Heart, Star } from "lucide-react";
+import { Brain, Zap } from "lucide-react";
 
 export function LEAPNeuralNetwork() {
   return (
@@ -15,10 +15,10 @@ export function LEAPNeuralNetwork() {
               <stop offset="100%" style={{stopColor:'#10B981', stopOpacity:0}} />
             </linearGradient>
           </defs>
-          {/* Connecting neural pathways */}
-          <path d="M 20% 50% Q 50% 20% 80% 50%" stroke="url(#memoryTrail1)" strokeWidth="2" fill="none" className="animate-pulse" />
-          <path d="M 20% 50% Q 50% 80% 80% 50%" stroke="url(#memoryTrail1)" strokeWidth="2" fill="none" className="animate-pulse" style={{animationDelay: '1s'}} />
-          <path d="M 50% 30% L 50% 70%" stroke="url(#memoryTrail1)" strokeWidth="1.5" fill="none" className="animate-pulse" style={{animationDelay: '2s'}} />
+          {/* Horizontal connecting neural pathways */}
+          <path d="M 15% 50% L 85% 50%" stroke="url(#memoryTrail1)" strokeWidth="3" fill="none" className="animate-pulse" />
+          <path d="M 20% 45% Q 50% 30% 80% 45%" stroke="url(#memoryTrail1)" strokeWidth="2" fill="none" className="animate-pulse" style={{animationDelay: '1s'}} />
+          <path d="M 20% 55% Q 50% 70% 80% 55%" stroke="url(#memoryTrail1)" strokeWidth="2" fill="none" className="animate-pulse" style={{animationDelay: '2s'}} />
         </svg>
       </div>
 
@@ -30,16 +30,16 @@ export function LEAPNeuralNetwork() {
           </h2>
         </div>
 
-        {/* Three Core Nodes */}
-        <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+        {/* Horizontal Flow of Three Core Nodes */}
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 max-w-6xl mx-auto">
           
           {/* LEAP Node */}
-          <div className="text-center group">
+          <div className="text-center group flex-1">
             <div className="relative mb-8">
               {/* Glowing background effect */}
               <div className="absolute inset-0 bg-emerald-400/20 rounded-full w-32 h-32 mx-auto animate-pulse"></div>
               <div className="relative w-32 h-32 mx-auto bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
-                <span className="text-4xl font-bold text-white">L</span>
+                <Zap className="h-12 w-12 text-white" />
               </div>
               {/* Floating memory nodes */}
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-300 rounded-full animate-pulse opacity-70"></div>
@@ -51,12 +51,19 @@ export function LEAPNeuralNetwork() {
             </p>
           </div>
 
+          {/* Connecting Arrow */}
+          <div className="hidden lg:block text-4xl text-emerald-500 animate-pulse">
+            →
+          </div>
+
           {/* REMEMBER Node */}
-          <div className="text-center group">
+          <div className="text-center group flex-1">
             <div className="relative mb-8">
               <div className="absolute inset-0 bg-teal-400/20 rounded-full w-32 h-32 mx-auto animate-pulse" style={{animationDelay: '0.5s'}}></div>
               <div className="relative w-32 h-32 mx-auto bg-gradient-to-br from-teal-500 to-teal-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
                 <Brain className="h-12 w-12 text-white" />
+                {/* Neural pathway glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-teal-300/40 to-emerald-300/40 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
               </div>
               <div className="absolute -top-3 -left-3 w-5 h-5 bg-teal-300 rounded-full animate-pulse opacity-80" style={{animationDelay: '1.2s'}}></div>
               <div className="absolute -bottom-1 -right-3 w-7 h-7 bg-emerald-300 rounded-full animate-pulse opacity-50" style={{animationDelay: '1.8s'}}></div>
@@ -67,12 +74,37 @@ export function LEAPNeuralNetwork() {
             </p>
           </div>
 
-          {/* THRIVE Node */}
-          <div className="text-center group">
+          {/* Connecting Arrow */}
+          <div className="hidden lg:block text-4xl text-teal-500 animate-pulse" style={{animationDelay: '1s'}}>
+            →
+          </div>
+
+          {/* THRIVE Node with Butterfly Transformation */}
+          <div className="text-center group flex-1">
             <div className="relative mb-8">
               <div className="absolute inset-0 bg-emerald-500/20 rounded-full w-32 h-32 mx-auto animate-pulse" style={{animationDelay: '1s'}}></div>
-              <div className="relative w-32 h-32 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
-                <Star className="h-12 w-12 text-white" />
+              <div className="relative w-32 h-32 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500 overflow-hidden">
+                {/* Butterfly Transformation Visual */}
+                <div className="relative w-full h-full">
+                  {/* Stage 1: Caterpillar (bottom left) */}
+                  <div className="absolute bottom-2 left-2 w-6 h-2 bg-emerald-300 rounded-full opacity-60"></div>
+                  
+                  {/* Stage 2: Cocoon (center left) */}
+                  <div className="absolute left-4 top-1/2 transform -translate-y-1/2 w-4 h-6 bg-emerald-400 rounded-full opacity-70"></div>
+                  
+                  {/* Stage 3: Emerging Butterfly (center) */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="relative">
+                      {/* Butterfly body */}
+                      <div className="w-1 h-8 bg-white rounded-full mx-auto"></div>
+                      {/* Butterfly wings */}
+                      <div className="absolute -top-2 -left-3 w-6 h-4 bg-white/90 rounded-full transform rotate-12 animate-pulse"></div>
+                      <div className="absolute -top-2 -right-3 w-6 h-4 bg-white/90 rounded-full transform -rotate-12 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                      <div className="absolute top-2 -left-2 w-4 h-3 bg-white/80 rounded-full transform rotate-12 animate-pulse" style={{animationDelay: '0.3s'}}></div>
+                      <div className="absolute top-2 -right-2 w-4 h-3 bg-white/80 rounded-full transform -rotate-12 animate-pulse" style={{animationDelay: '0.8s'}}></div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="absolute -top-1 -right-4 w-6 h-6 bg-teal-400 rounded-full animate-pulse opacity-60" style={{animationDelay: '2.3s'}}></div>
               <div className="absolute -bottom-3 -left-1 w-4 h-4 bg-emerald-400 rounded-full animate-pulse opacity-70" style={{animationDelay: '2.8s'}}></div>
