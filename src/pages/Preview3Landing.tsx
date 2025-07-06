@@ -15,6 +15,8 @@ const Preview3Landing = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   
+  console.log('Preview3Landing: Rendering - user:', !!user, 'loading:', loading);
+  
   // Only redirect authenticated users to dashboard
   useEffect(() => {
     if (user && !loading) {

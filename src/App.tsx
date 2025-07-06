@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -39,16 +38,20 @@ function App() {
             <Toaster />
             <BrowserRouter>
               <Routes>
-                {/* Public routes */}
-                <Route path="/" element={<LandingPage />} />
+                {/* Primary Preview 3 route - this is the main demo */}
+                <Route path="/" element={<Preview3Landing />} />
+                <Route path="/preview-3" element={<Preview3Landing />} />
+                
+                {/* Authentication and onboarding */}
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/onboarding" element={<Onboarding />} />
-                <Route path="/preview-3" element={<Preview3Landing />} />
+                
+                {/* Other preview versions */}
                 <Route path="/landing-original" element={<LandingPage />} />
                 <Route path="/preview-landing" element={<PreviewLanding />} />
                 <Route path="/preview-2" element={<Preview2Landing />} />
                 
-                {/* Protected routes with MainLayout */}
+                {/* Full application routes - accessible after completing onboarding */}
                 <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />
                 <Route path="/calendar" element={<MainLayout><CalendarPage /></MainLayout>} />
                 <Route path="/goals" element={<MainLayout><GoalsPage /></MainLayout>} />
@@ -65,8 +68,8 @@ function App() {
                 <Route path="/settings" element={<MainLayout><SettingsPage /></MainLayout>} />
                 <Route path="/useful-info" element={<MainLayout><UsefulInfoPage /></MainLayout>} />
 
-                {/* Redirect unknown routes to dashboard */}
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                {/* Redirect unknown routes back to preview-3 for demo purposes */}
+                <Route path="*" element={<Navigate to="/preview-3" replace />} />
               </Routes>
             </BrowserRouter>
           </SubscriptionProvider>

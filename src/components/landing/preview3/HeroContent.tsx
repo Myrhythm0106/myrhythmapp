@@ -10,15 +10,22 @@ export function HeroContent() {
   console.log('HeroContent: Rendering component');
 
   const handleStartJourney = () => {
+    console.log("=== REGISTRATION FLOW START ===");
     console.log("HeroContent: START YOUR CLEARER JOURNEY button clicked");
     console.log("HeroContent: Current location:", window.location.href);
+    console.log("HeroContent: Navigate function available:", typeof navigate);
     console.log("HeroContent: About to navigate to /onboarding");
     
     try {
       navigate("/onboarding");
-      console.log("HeroContent: Navigation to /onboarding completed");
+      console.log("HeroContent: Navigation to /onboarding initiated successfully");
+      console.log("=== REGISTRATION FLOW - NAVIGATION COMPLETED ===");
     } catch (error) {
       console.error("HeroContent: Navigation error:", error);
+      console.error("HeroContent: Error details:", {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : 'No stack trace'
+      });
     }
   };
 

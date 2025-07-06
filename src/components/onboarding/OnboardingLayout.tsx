@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { BackButtonWarning } from "@/components/navigation/BackButtonWarning";
 import { MiniProgressIndicator } from "@/components/navigation/MiniProgressIndicator";
 import { ProgressMap } from "@/components/navigation/ProgressMap";
-import { EnhancedGlobalSearch } from "@/components/navigation/EnhancedGlobalSearch";
 
 interface OnboardingLayoutProps {
   children: React.ReactNode;
@@ -53,13 +52,20 @@ const getOnboardingSteps = (totalSteps: number, currentStepNumber: number) => [
   },
   {
     id: '5',
+    title: 'Payment Setup',
+    description: 'Start your free trial',
+    status: 'upcoming' as const,
+    estimatedTime: '3 min'
+  },
+  {
+    id: '6',
     title: 'Pre-Assessment',
     description: 'Preparing your assessment',
     status: 'upcoming' as const,
     estimatedTime: '1 min'
   },
   {
-    id: '6',
+    id: '7',
     title: 'Rhythm Assessment',
     description: 'Discover your unique patterns',
     status: 'upcoming' as const,
@@ -115,7 +121,7 @@ export const OnboardingLayout = ({
   return (
     <div className="flex min-h-screen items-center justify-center bg-muted/40 p-4">
       <div className="w-full max-w-2xl">
-        {/* Header with navigation and search */}
+        {/* Header with navigation */}
         <div className="flex justify-between items-center mb-6">
           <Button 
             variant="ghost" 
@@ -131,7 +137,8 @@ export const OnboardingLayout = ({
             <h1 className="text-3xl font-bold">MyRhythm</h1>
           </div>
           
-          <EnhancedGlobalSearch variant="icon" />
+          {/* Simple space for balance instead of search */}
+          <div className="w-10"></div>
         </div>
 
         {/* Mini progress indicator */}
