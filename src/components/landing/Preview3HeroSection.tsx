@@ -9,6 +9,8 @@ import { HeroContent } from "./preview3/HeroContent";
 export function Preview3HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
 
+  console.log('Preview3HeroSection: Rendering component');
+
   return (
     <>
       <PreviewBanner />

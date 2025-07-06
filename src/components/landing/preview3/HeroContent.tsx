@@ -7,6 +7,8 @@ import { Brain, ArrowRight, ChevronDown } from "lucide-react";
 export function HeroContent() {
   const navigate = useNavigate();
 
+  console.log('HeroContent: Rendering component');
+
   const handleStartJourney = () => {
     console.log("HeroContent: START YOUR CLEARER JOURNEY button clicked");
     try {
