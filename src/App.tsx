@@ -24,6 +24,7 @@ import ProfilePage from "@/pages/Profile";
 import SettingsPage from "@/pages/SecuritySettings";
 import { OnboardingPage } from "@/pages/OnboardingPage";
 import UsefulInfoPage from "@/pages/UsefulInfoPage";
+import Preview3Landing from "@/pages/Preview3Landing";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ function App() {
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/onboarding" element={<OnboardingPage />} />
+                <Route path="/preview-3" element={<Preview3Landing />} />
                 
                 {/* Protected routes with MainLayout */}
                 <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />
