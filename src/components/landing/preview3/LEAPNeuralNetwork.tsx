@@ -79,49 +79,45 @@ export function LEAPNeuralNetwork() {
             →
           </div>
 
-          {/* THRIVE Node with Enhanced Butterfly Transformation */}
+          {/* THRIVE Node with Clear Transformation Visual */}
           <div className="text-center group flex-1 min-w-0">
             <div className="relative mb-4 sm:mb-8">
               <div className="absolute inset-0 bg-emerald-500/20 rounded-full w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 mx-auto animate-pulse" style={{animationDelay: '1s'}}></div>
               <div className="relative w-20 h-20 sm:w-28 sm:h-28 lg:w-32 lg:h-32 mx-auto bg-gradient-to-br from-emerald-600 to-teal-600 rounded-full flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500 overflow-hidden">
-                {/* Enhanced Butterfly Transformation Visual */}
-                <div className="relative w-full h-full p-2 sm:p-3">
-                  {/* Stage 1: Caterpillar (bottom quarter) */}
-                  <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex items-center">
-                    <div className="w-6 h-2 sm:w-8 sm:h-3 bg-emerald-300 rounded-full opacity-80 animate-pulse"></div>
-                    <div className="w-4 h-1.5 sm:w-6 sm:h-2 bg-emerald-200 rounded-full opacity-70 ml-1"></div>
+                
+                {/* Clear 3-Stage Transformation: Caterpillar → Cocoon → Butterfly */}
+                <div className="flex items-center justify-center gap-1 sm:gap-2">
+                  {/* Stage 1: Caterpillar */}
+                  <div className="flex flex-col items-center animate-pulse">
+                    <div className="text-base sm:text-lg lg:text-xl">🐛</div>
                   </div>
                   
-                  {/* Stage 2: Cocoon (middle left) */}
-                  <div className="absolute left-2 top-1/2 transform -translate-y-1/2">
-                    <div className="w-3 h-6 sm:w-4 sm:h-8 bg-gradient-to-b from-emerald-400 to-teal-400 rounded-full opacity-90 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                  {/* Transformation Arrow */}
+                  <div className="text-white/60 text-xs sm:text-sm animate-pulse" style={{animationDelay: '0.5s'}}>
+                    →
                   </div>
                   
-                  {/* Stage 3: Emerging Butterfly (center-right) */}
-                  <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2">
-                    <div className="relative">
-                      {/* Butterfly body */}
-                      <div className="w-0.5 h-6 sm:w-1 sm:h-8 bg-white rounded-full mx-auto animate-pulse" style={{animationDelay: '1s'}}></div>
-                      {/* Upper wings */}
-                      <div className="absolute -top-1 -left-2 w-4 h-3 sm:w-6 sm:h-4 bg-white/95 rounded-full transform rotate-12 animate-pulse" style={{animationDelay: '1.2s'}}></div>
-                      <div className="absolute -top-1 -right-2 w-4 h-3 sm:w-6 sm:h-4 bg-white/95 rounded-full transform -rotate-12 animate-pulse" style={{animationDelay: '1.4s'}}></div>
-                      {/* Lower wings */}
-                      <div className="absolute top-1 -left-1.5 w-3 h-2 sm:w-4 sm:h-3 bg-white/85 rounded-full transform rotate-12 animate-pulse" style={{animationDelay: '1.6s'}}></div>
-                      <div className="absolute top-1 -right-1.5 w-3 h-2 sm:w-4 sm:h-3 bg-white/85 rounded-full transform -rotate-12 animate-pulse" style={{animationDelay: '1.8s'}}></div>
-                      {/* Wing patterns */}
-                      <div className="absolute -top-0.5 -left-1.5 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-emerald-200 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
-                      <div className="absolute -top-0.5 -right-1.5 w-1 h-1 sm:w-1.5 sm:h-1.5 bg-teal-200 rounded-full animate-pulse" style={{animationDelay: '2.2s'}}></div>
-                    </div>
+                  {/* Stage 2: Cocoon */}
+                  <div className="flex flex-col items-center animate-pulse" style={{animationDelay: '1s'}}>
+                    <div className="text-base sm:text-lg lg:text-xl">🛡️</div>
                   </div>
                   
-                  {/* Transformation Trail */}
-                  <div className="absolute inset-0 pointer-events-none">
-                    <div className="absolute bottom-3 left-3 w-8 h-0.5 bg-gradient-to-r from-emerald-300/60 to-transparent animate-pulse"></div>
-                    <div className="absolute top-1/2 left-1/4 w-6 h-0.5 bg-gradient-to-r from-teal-300/60 to-transparent animate-pulse" style={{animationDelay: '0.8s'}}></div>
-                    <div className="absolute top-1/3 right-1/4 w-4 h-0.5 bg-gradient-to-r from-white/60 to-transparent animate-pulse" style={{animationDelay: '1.6s'}}></div>
+                  {/* Transformation Arrow */}
+                  <div className="text-white/60 text-xs sm:text-sm animate-pulse" style={{animationDelay: '1.5s'}}>
+                    →
+                  </div>
+                  
+                  {/* Stage 3: Butterfly */}
+                  <div className="flex flex-col items-center animate-pulse" style={{animationDelay: '2s'}}>
+                    <div className="text-base sm:text-lg lg:text-xl">🦋</div>
                   </div>
                 </div>
+                
+                {/* Transformation Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-300/20 via-teal-300/30 to-emerald-300/20 rounded-full animate-pulse" style={{animationDelay: '2.5s'}}></div>
               </div>
+              
+              {/* Floating transformation nodes */}
               <div className="absolute -top-1 -right-2 sm:-top-1 sm:-right-4 w-4 h-4 sm:w-6 sm:h-6 bg-teal-400 rounded-full animate-pulse opacity-60" style={{animationDelay: '2.3s'}}></div>
               <div className="absolute -bottom-1 -left-1 sm:-bottom-3 sm:-left-1 w-3 h-3 sm:w-4 sm:h-4 bg-emerald-400 rounded-full animate-pulse opacity-70" style={{animationDelay: '2.8s'}}></div>
             </div>

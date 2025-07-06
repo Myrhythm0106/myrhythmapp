@@ -46,9 +46,12 @@ const Auth = () => {
 
   const handleSignUpSuccess = (email: string) => {
     console.log('Auth: Sign up successful for:', email);
-    setShowResendVerification(true);
-    setResendVerificationEmail(email);
-    toast.success('Account created! Please check your email to verify your account.');
+    toast.success('Account created successfully! Welcome to MyRhythm.');
+    
+    // Since we're not requiring email verification, redirect directly to onboarding
+    setTimeout(() => {
+      navigate('/onboarding', { replace: true });
+    }, 1500);
   };
 
   const handleResendVerificationRequest = (email: string) => {
