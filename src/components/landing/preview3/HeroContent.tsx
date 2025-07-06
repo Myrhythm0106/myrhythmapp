@@ -11,8 +11,12 @@ export function HeroContent() {
 
   const handleStartJourney = () => {
     console.log("HeroContent: START YOUR CLEARER JOURNEY button clicked");
+    console.log("HeroContent: Current location:", window.location.href);
+    console.log("HeroContent: About to navigate to /onboarding");
+    
     try {
       navigate("/onboarding");
+      console.log("HeroContent: Navigation to /onboarding completed");
     } catch (error) {
       console.error("HeroContent: Navigation error:", error);
     }
