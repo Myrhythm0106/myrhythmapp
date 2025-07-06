@@ -22,7 +22,7 @@ import RevenueAnalyticsPage from "@/pages/RevenueAnalyticsPage";
 import TestingSuitePage from "@/pages/TestingSuitePage";
 import ProfilePage from "@/pages/Profile";
 import SettingsPage from "@/pages/SecuritySettings";
-import OnboardingPage from "@/pages/OnboardingPage";
+import { OnboardingPage } from "@/pages/OnboardingPage";
 import UsefulInfoPage from "@/pages/UsefulInfoPage";
 
 const queryClient = new QueryClient();
