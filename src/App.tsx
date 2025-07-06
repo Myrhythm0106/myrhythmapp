@@ -22,9 +22,11 @@ import RevenueAnalyticsPage from "@/pages/RevenueAnalyticsPage";
 import TestingSuitePage from "@/pages/TestingSuitePage";
 import ProfilePage from "@/pages/Profile";
 import SettingsPage from "@/pages/SecuritySettings";
-import { OnboardingPage } from "@/pages/OnboardingPage";
+import Onboarding from "@/pages/Onboarding";
 import UsefulInfoPage from "@/pages/UsefulInfoPage";
 import Preview3Landing from "@/pages/Preview3Landing";
+import PreviewLanding from "@/pages/PreviewLanding";
+import Preview2Landing from "@/pages/Preview2Landing";
 
 const queryClient = new QueryClient();
 
@@ -40,8 +42,11 @@ function App() {
                 {/* Public routes */}
                 <Route path="/" element={<LandingPage />} />
                 <Route path="/auth" element={<AuthPage />} />
-                <Route path="/onboarding" element={<OnboardingPage />} />
+                <Route path="/onboarding" element={<Onboarding />} />
                 <Route path="/preview-3" element={<Preview3Landing />} />
+                <Route path="/landing-original" element={<LandingPage />} />
+                <Route path="/preview-landing" element={<PreviewLanding />} />
+                <Route path="/preview-2" element={<Preview2Landing />} />
                 
                 {/* Protected routes with MainLayout */}
                 <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />

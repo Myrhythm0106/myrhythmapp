@@ -39,9 +39,15 @@ const Preview3Landing = () => {
     <div className="min-h-screen">
       <ScrollArea className="h-screen">
         <Preview3HeroSection />
-        <LEAPNeuralNetwork />
-        <BeforeAfterBrainStates />
-        <MemoryPreservationTimeline />
+        <section id="features-section">
+          <LEAPNeuralNetwork />
+        </section>
+        <section id="pricing-section">
+          <BeforeAfterBrainStates />
+        </section>
+        <section id="testimonials-section">
+          <MemoryPreservationTimeline />
+        </section>
         <MountainPeakAchievement />
         <LandingFooter />
       </ScrollArea>
