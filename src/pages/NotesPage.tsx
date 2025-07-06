@@ -1,199 +1,212 @@
 
-import React from "react";
-import { Preview3Background } from "@/components/ui/Preview3Background";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { FileText, Plus, Search, Calendar, Tag, Star } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { PageLayout } from '@/components/shared/PageLayout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+
+interface Note {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+}
 
 export default function NotesPage() {
+  const { user } = useAuth();
+  const [notes, setNotes] = useState<Note[]>([]);
+  const [isCreating, setIsCreating] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [newNote, setNewNote] = useState({ title: '', content: '' });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchNotes();
+    }
+  }, [user]);
+
+  const fetchNotes = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+      setNotes(data || []);
+    } catch (error) {
+      console.error('Error fetching notes:', error);
+      toast.error('Failed to load notes');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createNote = async () => {
+    if (!newNote.title.trim()) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .insert([{
+          title: newNote.title,
+          content: newNote.content,
+          user_id: user?.id
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setNotes([data, ...notes]);
+      setNewNote({ title: '', content: '' });
+      setIsCreating(false);
+      toast.success('Note created successfully');
+    } catch (error) {
+      console.error('Error creating note:', error);
+      toast.error('Failed to create note');
+    }
+  };
+
+  const deleteNote = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('notes')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setNotes(notes.filter(note => note.id !== id));
+      toast.success('Note deleted successfully');
+    } catch (error) {
+      console.error('Error deleting note:', error);
+      toast.error('Failed to delete note');
+    }
+  };
+
+  if (loading) {
+    return (
+      <PageLayout title="My Notes" description="Capture and organize your thoughts">
+        <div className="flex items-center justify-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      </PageLayout>
+    );
+  }
+
   return (
-    <Preview3Background>
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-full flex items-center justify-center">
-              <FileText className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent">
-                Memory1st Notes & Reflections
-              </h1>
-              <p className="text-muted-foreground">Capture Your LEAP Journey Insights</p>
-            </div>
-          </div>
+    <PageLayout 
+      title="My Notes" 
+      description="Capture and organize your thoughts and ideas"
+    >
+      <div className="space-y-6">
+        {/* Create Note Button */}
+        <div className="flex justify-end">
+          <Button
+            onClick={() => setIsCreating(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            New Note
+          </Button>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card className="border-l-4 border-l-amber-400">
+        {/* Create Note Form */}
+        {isCreating && (
+          <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Plus className="h-5 w-5 text-amber-600" />
-                Quick Capture
-              </CardTitle>
+              <CardTitle>Create New Note</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Gently capture thoughts, insights, and Memory1st observations as they come to you.
-              </p>
-              <Button className="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600">
-                <Plus className="w-4 h-4 mr-2" />
-                New Note
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-l-4 border-l-yellow-400">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-yellow-600" />
-                Find & Organize
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Easily search through your LEAP journey reflections and organize by themes.
-              </p>
-              <Button variant="outline" className="w-full">
-                <Search className="w-4 h-4 mr-2" />
-                Search Notes
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-l-4 border-l-orange-400">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Star className="h-5 w-5 text-orange-600" />
-                Favorites
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Mark important insights and breakthrough moments in your Memory1st journey.
-              </p>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">7</div>
-                <p className="text-xs text-muted-foreground">Starred Notes</p>
+              <Input
+                placeholder="Note title..."
+                value={newNote.title}
+                onChange={(e) => setNewNote({ ...newNote, title: e.target.value })}
+              />
+              <Textarea
+                placeholder="Write your note here..."
+                value={newNote.content}
+                onChange={(e) => setNewNote({ ...newNote, content: e.target.value })}
+                rows={6}
+              />
+              <div className="flex gap-2">
+                <Button onClick={createNote} disabled={!newNote.title.trim()}>
+                  <Save className="h-4 w-4 mr-2" />
+                  Save Note
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsCreating(false);
+                    setNewNote({ title: '', content: '' });
+                  }}
+                >
+                  <X className="h-4 w-4 mr-2" />
+                  Cancel
+                </Button>
               </div>
             </CardContent>
           </Card>
-        </div>
+        )}
 
-        <div className="grid gap-6 md:grid-cols-2">
+        {/* Notes List */}
+        {notes.length === 0 ? (
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-blue-600" />
-                Recent Notes
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="p-3 bg-blue-50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">LEAP Progress Reflection</span>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="secondary">Today</Badge>
-                      <Star className="h-3 w-3 text-amber-500" />
+            <CardContent className="text-center py-12">
+              <p className="text-muted-foreground mb-4">No notes yet</p>
+              <Button onClick={() => setIsCreating(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create your first note
+              </Button>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-4">
+            {notes.map((note) => (
+              <Card key={note.id}>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="text-lg">{note.title}</CardTitle>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setEditingId(note.id)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteNote(note.id)}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Noticed improved focus during Memory1st exercises. Feeling more confident about...
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground whitespace-pre-wrap">
+                    {note.content}
                   </p>
-                </div>
-                <div className="p-3 bg-green-50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Gratitude Insights</span>
-                    <Badge variant="secondary">Yesterday</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Small moments of appreciation are building stronger neural pathways...
+                  <p className="text-xs text-muted-foreground mt-4">
+                    Last updated: {new Date(note.updated_at).toLocaleDateString()}
                   </p>
-                </div>
-                <div className="p-3 bg-purple-50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Mood Pattern Discovery</span>
-                    <Badge variant="secondary">3 days ago</Badge>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Morning routine seems to have the biggest positive impact on daily mood...
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Tag className="h-5 w-5 text-purple-600" />
-                Note Categories
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
-                    <span className="text-sm">Memory1st Insights</span>
-                  </div>
-                  <Badge variant="secondary">12</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                    <span className="text-sm">LEAP Progress</span>
-                  </div>
-                  <Badge variant="secondary">8</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                    <span className="text-sm">Daily Reflections</span>
-                  </div>
-                  <Badge variant="secondary">15</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 bg-amber-400 rounded-full"></div>
-                    <span className="text-sm">Breakthrough Moments</span>
-                  </div>
-                  <Badge variant="secondary">5</Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="bg-gradient-to-br from-amber-50 to-yellow-50">
-          <CardContent className="p-6">
-            <div className="text-center space-y-4">
-              <FileText className="h-12 w-12 text-amber-600 mx-auto" />
-              <h3 className="text-xl font-semibold">Your Memory1st Journal</h3>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Notes and reflections are powerful tools in your Memory1st approach. They help process experiences, 
-                track patterns, and celebrate progress. Each entry becomes part of your LEAP journey story, 
-                building a gentle archive of growth, insights, and empowering moments.
-              </p>
-              <div className="grid grid-cols-3 gap-4 max-w-md mx-auto">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-amber-600">42</div>
-                  <div className="text-xs text-muted-foreground">Total Notes</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-yellow-600">7</div>
-                  <div className="text-xs text-muted-foreground">This Week</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">5</div>
-                  <div className="text-xs text-muted-foreground">Favorites</div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
-    </Preview3Background>
+    </PageLayout>
   );
 }

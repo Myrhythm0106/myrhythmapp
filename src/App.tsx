@@ -30,6 +30,7 @@ import NotesPage from "./pages/NotesPage";
 import UsefulInfoPage from "./pages/UsefulInfoPage";
 import AuthPage from "./pages/AuthPage";
 import MainLayout from "./components/layout/MainLayout";
+import { UserGuide } from "./docs/UserGuide";
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
                     <Route path="/accountability" element={<MainLayout><AccountabilityPage /></MainLayout>} />
                     <Route path="/notes" element={<MainLayout><NotesPage /></MainLayout>} />
                     <Route path="/useful-info" element={<MainLayout><UsefulInfoPage /></MainLayout>} />
+                    <Route path="/user-guide" element={<MainLayout><UserGuide /></MainLayout>} />
                   </Routes>
                   <Toaster />
                 </PomodoroProvider>

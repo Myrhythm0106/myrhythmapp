@@ -31,6 +31,7 @@ import { NavLink } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Card } from "@/components/ui/card";
+import { EnhancedGlobalSearch } from "@/components/navigation/EnhancedGlobalSearch";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -58,6 +59,7 @@ const communitySection = [
 ];
 
 const resourcesSection = [
+  { icon: HelpCircle, label: "User Guide", path: "/user-guide" },
   { icon: HelpCircle, label: "Useful Resources", path: "/useful-info" },
   { icon: Settings, label: "Profile", path: "/profile" },
 ];
@@ -205,6 +207,10 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
           
           <div className="flex items-center gap-4">
+            {/* Single Search Component */}
+            <EnhancedGlobalSearch variant="input" size="sm" className="hidden md:flex max-w-xs" />
+            <EnhancedGlobalSearch variant="icon" className="md:hidden" />
+            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
