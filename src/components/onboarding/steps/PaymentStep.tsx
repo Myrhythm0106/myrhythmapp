@@ -1,7 +1,9 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CreditCard, CheckCircle, Loader2, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { CreditCard, CheckCircle, Loader2, AlertCircle, ArrowRight, Sparkles, Shield, Clock, Star } from "lucide-react";
 import { PlanType } from "./PlanStep";
 import { useSubscription, SubscriptionTier } from "@/contexts/SubscriptionContext";
 import { toast } from "sonner";
@@ -105,7 +107,15 @@ export const PaymentStep = ({ onComplete, selectedPlan, billingPeriod = 'monthly
       
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       setError(errorMessage);
-      toast.error(`Unable to start payment: ${errorMessage}`);
+      
+      // Enhanced error messaging based on error type
+      if (errorMessage.includes('STRIPE_SECRET_KEY')) {
+        toast.error("Payment system configuration needed. Please contact support.");
+      } else if (errorMessage.includes('authentication')) {
+        toast.error("Please log in to continue with payment setup.");
+      } else {
+        toast.error(`Unable to start payment: ${errorMessage}`);
+      }
       
       // Show fallback options after error
       setTimeout(() => {
@@ -131,10 +141,10 @@ export const PaymentStep = ({ onComplete, selectedPlan, billingPeriod = 'monthly
         </div>
         <div className="space-y-2">
           <h2 className="text-2xl font-bold text-green-800">
-            {isAnnual ? 'Processing Payment!' : 'Setting Up Your Trial!'}
+            {isAnnual ? 'Processing Your Payment!' : 'Setting Up Your Free Trial!'}
           </h2>
           <p className="text-green-700">
-            Redirecting you to secure payment setup...
+            Redirecting you to secure Stripe payment setup...
           </p>
           {!isAnnual && (
             <p className="text-sm text-muted-foreground">
@@ -157,109 +167,147 @@ export const PaymentStep = ({ onComplete, selectedPlan, billingPeriod = 'monthly
             {isAnnual ? 'Processing Payment...' : 'Setting Up Your Trial...'}
           </h2>
           <p className="text-blue-700">
-            Creating your secure payment session.
+            Creating your secure Stripe payment session.
           </p>
-          <p className="text-sm text-muted-foreground">
-            This should only take a moment.
-          </p>
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Shield className="h-4 w-4" />
+            <span>Secured by Stripe</span>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      {/* Error Display */}
+    <div className="space-y-6 max-w-2xl mx-auto">
+      {/* Enhanced Error Display */}
       {error && (
-        <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 text-red-600 mt-0.5" />
-            <div className="text-sm">
-              <p className="font-semibold text-red-800">Payment Setup Error</p>
-              <p className="text-red-700 mt-1">{error}</p>
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-6">
+            <div className="flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
+              <div className="space-y-2">
+                <p className="font-semibold text-red-800">Payment Setup Issue</p>
+                <p className="text-sm text-red-700">{error}</p>
+                {error.includes('STRIPE_SECRET_KEY') && (
+                  <div className="mt-3 p-3 bg-red-100 rounded-lg">
+                    <p className="text-xs text-red-800">
+                      <strong>Configuration needed:</strong> The payment system requires setup. 
+                      Please contact support or try the continue option below.
+                    </p>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
 
-      {/* Plan Summary */}
-      <div className="bg-muted p-6 rounded-lg border">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-xl font-semibold">{currentPlan.name}</h3>
-            <p className="text-lg font-bold text-primary">{displayPrice}</p>
-            {isAnnual && (
-              <div className="flex items-center gap-2 mt-1">
-                <Sparkles className="h-4 w-4 text-green-600" />
-                <span className="text-sm font-medium text-green-600">{currentPlan.savings}</span>
+      {/* Enhanced Plan Summary */}
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <CardTitle className="text-xl">{currentPlan.name}</CardTitle>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl font-bold text-primary">{displayPrice?.split('/')[0]}</span>
+                <span className="text-sm text-muted-foreground">
+                  {isAnnual ? 'per year' : 'per month'}
+                </span>
               </div>
-            )}
+              {isAnnual && (
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">{currentPlan.savings}</span>
+                  <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
+                    Best Value
+                  </Badge>
+                </div>
+              )}
+            </div>
+            <div className="text-right">
+              <CreditCard className="h-8 w-8 text-muted-foreground mb-2" />
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Shield className="h-3 w-3" />
+                <span>Stripe Secured</span>
+              </div>
+            </div>
           </div>
-          <CreditCard className="h-8 w-8 text-muted-foreground" />
-        </div>
+        </CardHeader>
         
-        {!isAnnual && (
-          <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <span className="font-semibold text-green-800">{currentPlan.trial}</span>
+        <CardContent className="space-y-4">
+          {!isAnnual ? (
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2 mb-2">
+                <Clock className="h-5 w-5 text-blue-600" />
+                <span className="font-semibold text-blue-800">{currentPlan.trial}</span>
+              </div>
+              <p className="text-sm text-blue-700">
+                Start immediately with full access. Your payment method will be charged after 7 days.
+              </p>
             </div>
-            <p className="text-sm text-green-700 mt-1">
-              Start immediately with full access. Your payment method will be charged after 7 days.
-            </p>
-          </div>
-        )}
+          ) : (
+            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+              <div className="flex items-center gap-2 mb-2">
+                <Star className="h-5 w-5 text-green-600" />
+                <span className="font-semibold text-green-800">Immediate Full Access</span>
+              </div>
+              <p className="text-sm text-green-700">
+                Payment processed immediately. 30-day money-back guarantee included.
+              </p>
+            </div>
+          )}
 
-        {isAnnual && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-blue-600" />
-              <span className="font-semibold text-blue-800">Immediate Full Access</span>
+          {/* Payment Flow Explanation */}
+          <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h4 className="font-semibold text-gray-800 mb-2">🔒 Secure Payment Process</h4>
+            <div className="text-sm text-gray-600 space-y-1">
+              <p>• You'll be redirected to Stripe's secure payment page</p>
+              <p>• Enter your payment details safely on Stripe's platform</p>
+              <p>• Return to MyRhythm to complete your setup</p>
+              <p>• Your payment information is never stored on our servers</p>
             </div>
-            <p className="text-sm text-blue-700 mt-1">
-              Payment processed immediately. 30-day money-back guarantee included.
-            </p>
           </div>
-        )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Features Included */}
-      <div className="space-y-3">
-        <h4 className="font-semibold">What's included:</h4>
-        <ul className="space-y-2 text-sm text-muted-foreground">
-          <li className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            Complete MyRhythm Framework access
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            Personalized LEAP assessment & insights
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            Memory enhancement tools & exercises
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            Calendar & goal management system
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            Brain games & cognitive training
-          </li>
-          <li className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            Progress tracking & momentum building
-          </li>
-        </ul>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">What's included:</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              Complete MyRhythm Framework access
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              Personalized LEAP assessment & insights
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              Memory enhancement tools & exercises
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              Calendar & goal management system
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              Progress tracking & momentum building
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
 
       {/* Action Buttons */}
       <div className="space-y-3 pt-4">
         <Button 
           onClick={handleStartPayment}
           disabled={isProcessing}
-          className="w-full bg-primary hover:bg-primary/90 text-white py-6 text-lg font-semibold"
+          className="w-full bg-primary hover:bg-primary/90 text-white py-6 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
         >
           {isProcessing ? (
             <>
@@ -274,24 +322,42 @@ export const PaymentStep = ({ onComplete, selectedPlan, billingPeriod = 'monthly
           )}
         </Button>
         
-        {/* Fallback Options */}
+        {/* Enhanced Fallback Options */}
         {(showFallback || error) && (
-          <Button 
-            onClick={handleContinueAnyway}
-            disabled={isProcessing}
-            variant="outline"
-            className="w-full"
-          >
-            <ArrowRight className="mr-2 h-4 w-4" />
-            Continue to Assessment (Set up payment later)
-          </Button>
+          <div className="space-y-2">
+            <Button 
+              onClick={handleContinueAnyway}
+              disabled={isProcessing}
+              variant="outline"
+              className="w-full border-2 hover:bg-gray-50"
+            >
+              <ArrowRight className="mr-2 h-4 w-4" />
+              Continue to Assessment (Set up payment later)
+            </Button>
+            <p className="text-xs text-center text-muted-foreground">
+              You can complete payment setup after your assessment
+            </p>
+          </div>
         )}
         
-        <p className="text-xs text-center text-muted-foreground mt-3">
-          By continuing, you agree to our Terms of Service and Privacy Policy.
-          <br />
-          {isAnnual ? '30-day money-back guarantee applies.' : 'Cancel anytime during your trial - no charges apply.'}
-        </p>
+        <div className="text-center space-y-2">
+          <p className="text-xs text-muted-foreground">
+            By continuing, you agree to our Terms of Service and Privacy Policy.
+          </p>
+          <p className="text-xs text-muted-foreground font-medium">
+            {isAnnual ? '🛡️ 30-day money-back guarantee' : '🔄 Cancel anytime during trial - no charges apply'}
+          </p>
+          <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground mt-3">
+            <div className="flex items-center gap-1">
+              <Shield className="h-3 w-3" />
+              <span>SSL Secured</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <CreditCard className="h-3 w-3" />
+              <span>Stripe Protected</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

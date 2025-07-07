@@ -54,9 +54,11 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
         
         <div className="space-y-2">
           <h3 className="text-xl font-bold text-gray-900 leading-tight">{plan.name}</h3>
-          <p className="text-sm text-gray-600 leading-relaxed min-h-[2.5rem] flex items-center justify-center">
-            {plan.description}
-          </p>
+          <div className="min-h-[3rem] flex items-center justify-center">
+            <p className="text-sm text-gray-600 leading-relaxed text-center px-2">
+              {plan.description}
+            </p>
+          </div>
         </div>
         
         <div className="space-y-2 pt-4">
@@ -92,11 +94,20 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
           </ul>
         </div>
 
-        {/* Trial Information */}
+        {/* Trial Information - Only for Monthly Plans */}
         {!isAnnual && plan.trialDays && (
           <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 flex-shrink-0">
             <p className="text-xs text-blue-800 font-medium text-center">
               🎯 {plan.trialDays}-day free trial included
+            </p>
+          </div>
+        )}
+
+        {/* Immediate Access for Annual Plans */}
+        {isAnnual && (
+          <div className="bg-green-50 p-3 rounded-lg border border-green-200 flex-shrink-0">
+            <p className="text-xs text-green-800 font-medium text-center">
+              🚀 Immediate full access
             </p>
           </div>
         )}

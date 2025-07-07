@@ -56,7 +56,7 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
         </div>
       </div>
 
-      {/* Plans Grid - Equal Height Cards */}
+      {/* Plans Grid - Equal Height Cards with Perfect Alignment */}
       <div className={cn(
         "grid gap-6",
         isMobile ? "grid-cols-1" : "grid-cols-3 lg:gap-8"
@@ -72,26 +72,31 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
         ))}
       </div>
 
-      {/* Trial Information - Centered and Consistent */}
+      {/* Trial/Payment Information - Billing Period Specific */}
       <div className="max-w-4xl mx-auto">
-        <div className="text-center bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
-          <h3 className="font-semibold text-blue-900 mb-3 text-lg">
-            🎯 {isAnnual ? 'Annual Plans' : '7-Day Free Trial Available'}
-          </h3>
-          <p className="text-sm text-blue-800 leading-relaxed max-w-3xl mx-auto">
-            {isAnnual ? (
-              <>
-                <strong>Annual plans start immediately</strong> with full access and significant savings. 
-                30-day money-back guarantee included for peace of mind.
-              </>
-            ) : (
-              <>
-                <strong>Monthly plans include a 7-day free trial</strong> with full access. 
-                Your payment method will be charged after the trial period ends. Cancel anytime during the trial.
-              </>
-            )}
-          </p>
-        </div>
+        {!isAnnual ? (
+          // Monthly Plans - Show Trial Information
+          <div className="text-center bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
+            <h3 className="font-semibold text-blue-900 mb-3 text-lg">
+              🎯 7-Day Free Trial Available
+            </h3>
+            <p className="text-sm text-blue-800 leading-relaxed max-w-3xl mx-auto">
+              <strong>Monthly plans include a 7-day free trial</strong> with full access. 
+              Your payment method will be charged after the trial period ends. Cancel anytime during the trial.
+            </p>
+          </div>
+        ) : (
+          // Annual Plans - Show Immediate Access Information
+          <div className="text-center bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200 shadow-sm">
+            <h3 className="font-semibold text-green-900 mb-3 text-lg">
+              🚀 Annual Plans - Immediate Access & Savings
+            </h3>
+            <p className="text-sm text-green-800 leading-relaxed max-w-3xl mx-auto">
+              <strong>Annual plans start immediately</strong> with full access and significant savings. 
+              30-day money-back guarantee included for peace of mind.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
