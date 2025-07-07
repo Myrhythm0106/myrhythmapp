@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -91,16 +90,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
-      const redirectUrl = `${window.location.origin}/email-verification`;
-      
+      // REMOVED EMAIL VERIFICATION - Immediate signup without email confirmation
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
           data: {
             name: DataProtection.sanitizeInput(name)
           }
+          // NOTE: Removed emailRedirectTo to skip email confirmation for immediate launch
+          // This allows users to sign up and use the app immediately
         }
       });
       
@@ -118,8 +117,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           );
         }
       } else {
-        localStorage.setItem('pendingVerificationEmail', email);
-        toast.success('Account created! Please check your email to verify your account before signing in.');
+        // Success message for immediate access
+        toast.success('Account created successfully! Welcome to MyRhythm.');
         
         DataProtection.logSecurityEvent('USER_SIGNUP_ATTEMPT', {
           email,
@@ -156,9 +155,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           error: error.message
         });
         
-        if (error.message.includes('Email not confirmed')) {
-          toast.error('Please verify your email address before signing in. Check your inbox for a verification link.');
-        } else if (error.message.includes('Invalid login credentials')) {
+        if (error.message.includes('Invalid login credentials')) {
           toast.error('Invalid email or password. Please check your credentials and try again.');
         } else {
           errorHandler.handleError(
