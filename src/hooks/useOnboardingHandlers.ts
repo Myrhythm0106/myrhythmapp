@@ -1,7 +1,8 @@
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { PersonalInfoFormValues, UserType } from "@/components/onboarding/steps";
+import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
+import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { PlanType } from "@/components/onboarding/steps/PlanStep";
 import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 

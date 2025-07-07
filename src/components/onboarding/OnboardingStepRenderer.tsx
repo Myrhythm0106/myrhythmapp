@@ -1,7 +1,16 @@
 
 import React from "react";
-import { UserTypeStep, PersonalInfoStep, LocationStep, PlanStep, PaymentStep, PreAssessmentStep, RhythmAssessmentStep } from "./steps";
-import { UserType, PersonalInfoFormValues, PlanType, PaymentFormValues } from "./steps";
+import { UserTypeStep } from "./steps/UserTypeStep";
+import { PersonalInfoStep } from "./steps/PersonalInfoStep";
+import { LocationStep } from "./steps/LocationStep";
+import { PlanStep } from "./steps/PlanStep";
+import { PaymentStep } from "./steps/PaymentStep";
+import { PreAssessmentStep } from "./steps/rhythm/PreAssessmentStep";
+import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
+import { UserType } from "./steps/UserTypeStep";
+import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
+import { PlanType } from "./steps/PlanStep";
+import { PaymentFormValues } from "./steps/PaymentStep";
 
 interface OnboardingStepRendererProps {
   currentStep: number;
