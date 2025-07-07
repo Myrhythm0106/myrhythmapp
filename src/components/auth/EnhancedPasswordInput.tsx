@@ -1,32 +1,31 @@
 
-import React, { useState } from "react";
+import React, { useState, forwardRef } from "react";
 import { Eye, EyeOff, Shield, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { passwordStrengthCheck } from "@/utils/auth/enhancedPasswordValidation";
 
-interface EnhancedPasswordInputProps {
-  value: string;
-  onChange: (value: string) => void;
+interface EnhancedPasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
-  placeholder?: string;
   showStrengthIndicator?: boolean;
-  required?: boolean;
   error?: string;
 }
 
-export function EnhancedPasswordInput({
-  value,
-  onChange,
+export const EnhancedPasswordInput = forwardRef<HTMLInputElement, EnhancedPasswordInputProps>(({
   label = "Password",
   placeholder = "Enter your password",
   showStrengthIndicator = true,
   required = false,
-  error
-}: EnhancedPasswordInputProps) {
+  error,
+  className,
+  value,
+  onChange,
+  ...props
+}, ref) => {
   const [showPassword, setShowPassword] = useState(false);
-  const strengthData = passwordStrengthCheck(value);
+  const currentValue = value as string || '';
+  const strengthData = passwordStrengthCheck(currentValue);
 
   const getStrengthColor = (strength: string) => {
     switch (strength) {
@@ -48,7 +47,7 @@ export function EnhancedPasswordInput({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="password" className="flex items-center gap-2">
+      <Label htmlFor={props.id || "password"} className="flex items-center gap-2">
         <Shield className="h-4 w-4" />
         {label}
         {required && <span className="text-red-500">*</span>}
@@ -56,12 +55,13 @@ export function EnhancedPasswordInput({
       
       <div className="relative">
         <Input
-          id="password"
+          {...props}
+          ref={ref}
           type={showPassword ? "text" : "password"}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={onChange}
           placeholder={placeholder}
-          className={`pr-10 ${error ? 'border-red-500' : ''}`}
+          className={`pr-10 ${error ? 'border-red-500' : ''} ${className || ''}`}
         />
         <button
           type="button"
@@ -79,7 +79,7 @@ export function EnhancedPasswordInput({
         </div>
       )}
 
-      {showStrengthIndicator && value && (
+      {showStrengthIndicator && currentValue && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-sm text-gray-600">Password strength:</span>
@@ -113,4 +113,6 @@ export function EnhancedPasswordInput({
       )}
     </div>
   );
-}
+});
+
+EnhancedPasswordInput.displayName = "EnhancedPasswordInput";
