@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Brain, ArrowRight, Loader2, Mail, Lock, User } from "lucide-react";
+import { Brain, ArrowRight, Loader2, Mail, Lock, User, CheckCircle, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -23,12 +23,29 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError(null);
+
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords don't match. Please check and try again.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Basic password validation
+    if (formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       await signUp(formData.email, formData.password, formData.name);
@@ -36,7 +53,7 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
       onClose();
       navigate("/onboarding");
     } catch (error: any) {
-      toast.error(error.message || "Failed to create account");
+      setError(error.message || "Failed to create account");
     } finally {
       setIsLoading(false);
     }
@@ -46,6 +63,8 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
     onClose();
     navigate("/onboarding");
   };
+
+  const passwordsMatch = formData.password && formData.confirmPassword && formData.password === formData.confirmPassword;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -65,6 +84,15 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
         </DialogHeader>
         
         <Card className="p-6 bg-white/80 backdrop-blur-sm border-purple-200/50">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+              <div className="flex items-center gap-2 text-red-700">
+                <AlertCircle className="h-4 w-4" />
+                <span className="text-sm">{error}</span>
+              </div>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">Full Name</Label>
@@ -111,6 +139,28 @@ export function QuickRegisterModal({ isOpen, onClose }: QuickRegisterModalProps)
                   minLength={6}
                 />
               </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <PasswordInput
+                  id="confirmPassword"
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  className="pl-10 bg-white/80 border-purple-200 focus:border-purple-400"
+                  required
+                  minLength={6}
+                />
+              </div>
+              {passwordsMatch && (
+                <div className="flex items-center gap-2 text-green-600 text-sm">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>Passwords match</span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3 pt-2">

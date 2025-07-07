@@ -51,6 +51,7 @@ export const SecurityEnhancedSignUpForm = ({ onSignUpSuccess }: SecurityEnhanced
   });
 
   const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
 
   const onSubmit = async (data: SignUpFormData) => {
     setIsLoading(true);
@@ -195,9 +196,16 @@ export const SecurityEnhancedSignUpForm = ({ onSignUpSuccess }: SecurityEnhanced
               className={errors.confirmPassword ? "border-red-500" : ""}
               disabled={isLoading}
               autoComplete="new-password"
+              showStrengthIndicator={false}
             />
             {errors.confirmPassword && (
               <p className="text-sm text-red-600">{errors.confirmPassword.message}</p>
+            )}
+            {password && confirmPassword && password === confirmPassword && (
+              <div className="flex items-center gap-2 text-green-600 text-sm">
+                <CheckCircle className="h-4 w-4" />
+                <span>Passwords match</span>
+              </div>
             )}
           </div>
 

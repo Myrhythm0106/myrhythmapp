@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Brain, Mail, Lock, User, Loader2, AlertCircle } from "lucide-react";
+import { Brain, Mail, Lock, User, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { PasswordInput } from "@/components/auth/PasswordInput";
 
 interface AuthenticationGateProps {
@@ -22,13 +22,28 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: ""
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+
+    // Validate passwords match for sign up
+    if (isSignUp && formData.password !== formData.confirmPassword) {
+      setError("Passwords don't match. Please check and try again.");
+      setIsLoading(false);
+      return;
+    }
+
+    // Basic password validation
+    if (isSignUp && formData.password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       if (isSignUp) {
@@ -69,6 +84,8 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
     setFormData(prev => ({ ...prev, [field]: value }));
     if (error) setError(null);
   };
+
+  const passwordsMatch = isSignUp && formData.password && formData.confirmPassword && formData.password === formData.confirmPassword;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 p-4">
@@ -159,6 +176,30 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
               </div>
             </div>
 
+            {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <PasswordInput
+                    id="confirmPassword"
+                    placeholder="Confirm your password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                    className="pl-10"
+                    required
+                    disabled={isLoading}
+                  />
+                </div>
+                {passwordsMatch && (
+                  <div className="flex items-center gap-2 text-green-600 text-sm">
+                    <CheckCircle className="h-4 w-4" />
+                    <span>Passwords match</span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <Button 
               type="submit" 
               className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700" 
@@ -183,7 +224,7 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
               onClick={() => {
                 setIsSignUp(!isSignUp);
                 setError(null);
-                setFormData({ name: "", email: "", password: "" });
+                setFormData({ name: "", email: "", password: "", confirmPassword: "" });
               }}
               disabled={isLoading}
               className="text-sm"
