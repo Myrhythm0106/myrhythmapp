@@ -57,8 +57,7 @@ export const OnboardingStepRenderer = ({
       return (
         <UserTypeStep
           onComplete={onUserTypeComplete}
-          countdown={userTypeCountdown}
-          selectedType={userType}
+          initialValue={userType}
         />
       );
       
@@ -66,8 +65,7 @@ export const OnboardingStepRenderer = ({
       return (
         <PersonalInfoStep
           onComplete={onPersonalInfoComplete}
-          countdown={personalInfoCountdown}
-          initialData={personalInfo}
+          initialValues={personalInfo}
         />
       );
       
@@ -75,8 +73,7 @@ export const OnboardingStepRenderer = ({
       return (
         <LocationStep
           onComplete={onLocationComplete}
-          countdown={locationCountdown}
-          initialData={location}
+          initialValues={location}
         />
       );
       
@@ -101,7 +98,6 @@ export const OnboardingStepRenderer = ({
       return (
         <PreAssessmentStep
           onComplete={onPreAssessmentComplete}
-          selectedPlan={selectedPlan}
         />
       );
       
