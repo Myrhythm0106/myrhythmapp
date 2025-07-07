@@ -19,6 +19,11 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
   
   const overallPercentage = Math.round((overallScore / 3) * 100);
 
+  const handleUpgradeClick = () => {
+    console.log("Upgrade button clicked - navigating to payment");
+    onContinue();
+  };
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Current Mode Header */}
@@ -44,10 +49,10 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
               </div>
             </div>
             <Button 
-              onClick={onContinue}
+              onClick={handleUpgradeClick}
               className="bg-red-600 hover:bg-red-700 text-white"
             >
-              Upgrade Now
+              View Pricing
             </Button>
           </div>
         </CardContent>
@@ -60,7 +65,7 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
         </div>
         <h1 className="text-3xl font-bold text-gray-900">Your Assessment Preview</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          We've identified your primary focus area. This is just a preview - unlock your complete personalized plan with Premium.
+          We've identified your primary focus area. This is just a preview - upgrade for complete personalized plan.
         </p>
       </div>
 
@@ -116,11 +121,11 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
                     progress tracking, and ongoing support to achieve their goals.
                   </p>
                   <Button 
-                    onClick={onContinue}
+                    onClick={handleUpgradeClick}
                     className="mt-3 bg-orange-600 hover:bg-orange-700 text-white text-sm"
                   >
                     <Crown className="h-4 w-4 mr-2" />
-                    Get Full Access - 7 Day Trial
+                    View Premium Plans
                   </Button>
                 </div>
               </div>
@@ -155,10 +160,10 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
             </div>
             <div className="pt-2 border-t">
               <Button 
-                onClick={onContinue}
+                onClick={handleUpgradeClick}
                 className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
               >
-                Unlock Insights
+                See Pricing
               </Button>
             </div>
           </CardContent>
@@ -188,10 +193,10 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
             </div>
             <div className="pt-2 border-t">
               <Button 
-                onClick={onContinue}
+                onClick={handleUpgradeClick}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white"
               >
-                Get Action Plan
+                See Pricing
               </Button>
             </div>
           </CardContent>
@@ -219,15 +224,15 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
             Join thousands who've unlocked their full potential with our Premium assessment and personalized guidance.
           </p>
           <Button 
-            onClick={onContinue}
+            onClick={handleUpgradeClick}
             size="lg" 
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-3 text-lg"
           >
-            Start 7-Day Premium Trial
+            View Premium Plans & Pricing
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           <p className="text-sm text-purple-600 mt-2">
-            Cancel anytime • No commitment • Full access for 7 days
+            7-day free trial available • Cancel anytime • Full access
           </p>
         </div>
       </div>
