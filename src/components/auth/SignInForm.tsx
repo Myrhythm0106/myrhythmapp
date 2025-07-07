@@ -31,13 +31,11 @@ const loginRateLimiter = createRateLimiter(5, 15 * 60 * 1000);
 export function SignInForm() {
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
-  const [password, setPassword] = useState("");
   const [rateLimited, setRateLimited] = useState(false);
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
     setError
   } = useForm<SignInFormData>({
@@ -122,16 +120,14 @@ export function SignInForm() {
           </div>
 
           <EnhancedPasswordInput
-            value={password}
-            onChange={(value) => {
-              setPassword(value);
-              setValue("password", value, { shouldValidate: true });
-            }}
+            {...register("password")}
+            id="signin-password"
             label="Password"
             placeholder="Enter your password"
             showStrengthIndicator={false}
             required={true}
             error={errors.password?.message}
+            disabled={isLoading || rateLimited}
           />
 
           <Button 
