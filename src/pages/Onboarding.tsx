@@ -1,8 +1,9 @@
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
 import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
+import { AuthenticationGate } from "@/components/onboarding/AuthenticationGate";
 import { STEPS } from "@/components/onboarding/OnboardingSteps";
 import { useAutoProgression } from "@/hooks/useAutoProgression";
 import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
@@ -29,8 +30,21 @@ const Onboarding = () => {
   console.log("Onboarding: TOTAL_STEPS:", TOTAL_STEPS);
   
   const { user, loading } = useAuth();
+  const [authenticationComplete, setAuthenticationComplete] = useState(false);
+  
   console.log("Onboarding: Auth state - user:", !!user, "loading:", loading);
   
+  // Check authentication status
+  useEffect(() => {
+    if (user && !loading) {
+      console.log("Onboarding: User is authenticated, allowing access to onboarding");
+      setAuthenticationComplete(true);
+    } else if (!loading && !user) {
+      console.log("Onboarding: User is not authenticated, showing authentication gate");
+      setAuthenticationComplete(false);
+    }
+  }, [user, loading]);
+
   // Add error boundary to catch any issues
   try {
     const onboardingState = useOnboardingLogic(TOTAL_STEPS);
@@ -64,7 +78,7 @@ const Onboarding = () => {
 
     // Handle authenticated user flow - skip personal info if already authenticated
     useEffect(() => {
-      if (user && !loading && currentStep === 2 && !personalInfo) {
+      if (user && !loading && currentStep === 2 && !personalInfo && authenticationComplete) {
         console.log("Onboarding: Auto-populating personal info for authenticated user");
         // Auto-populate personal info from authenticated user and proceed
         const autoPersonalInfo = {
@@ -79,7 +93,7 @@ const Onboarding = () => {
           setCurrentStep(3);
         }, 1500);
       }
-    }, [user, loading, currentStep, personalInfo, setPersonalInfo, setCurrentStep]);
+    }, [user, loading, currentStep, personalInfo, setPersonalInfo, setCurrentStep, authenticationComplete]);
 
     // Auto-progression disabled for user type, personal info, and location steps
     const { countdown: userTypeCountdown } = useAutoProgression({
@@ -142,6 +156,21 @@ const Onboarding = () => {
               <p className="text-sm text-muted-foreground">Setting up your personalized journey...</p>
             </div>
           </div>
+        </Preview3Background>
+      );
+    }
+
+    // Show authentication gate if user is not authenticated
+    if (!authenticationComplete) {
+      console.log("Onboarding: Showing authentication gate");
+      return (
+        <Preview3Background>
+          <AuthenticationGate 
+            onAuthSuccess={() => {
+              console.log("Onboarding: Authentication successful, proceeding to onboarding");
+              setAuthenticationComplete(true);
+            }}
+          />
         </Preview3Background>
       );
     }
