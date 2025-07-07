@@ -25,30 +25,38 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
   };
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-8 max-w-6xl mx-auto px-4">
       <PlanHeader />
 
-      {/* Billing Toggle - Prominently Featured */}
-      <div className="flex items-center justify-center gap-4 p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-        <span className={cn("text-base font-medium", !isAnnual ? "text-gray-900" : "text-gray-500")}>
-          Monthly
-        </span>
-        <Switch
-          checked={isAnnual}
-          onCheckedChange={setIsAnnual}
-          className="data-[state=checked]:bg-green-600"
-        />
-        <span className={cn("text-base font-medium", isAnnual ? "text-gray-900" : "text-gray-500")}>
-          Annual
-        </span>
-        {isAnnual && (
-          <Badge className="bg-green-600 text-white font-medium px-3 py-1">
-            Save up to £47.98/year
-          </Badge>
-        )}
+      {/* Billing Toggle - Centered and Prominent */}
+      <div className="flex items-center justify-center">
+        <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 shadow-sm">
+          <span className={cn(
+            "text-sm font-medium transition-colors",
+            !isAnnual ? "text-gray-900" : "text-gray-500"
+          )}>
+            Monthly
+          </span>
+          <Switch
+            checked={isAnnual}
+            onCheckedChange={setIsAnnual}
+            className="data-[state=checked]:bg-green-600"
+          />
+          <span className={cn(
+            "text-sm font-medium transition-colors",
+            isAnnual ? "text-gray-900" : "text-gray-500"
+          )}>
+            Annual
+          </span>
+          {isAnnual && (
+            <Badge className="bg-green-600 text-white font-medium px-2 py-1 text-xs ml-2">
+              Save up to £47.98/year
+            </Badge>
+          )}
+        </div>
       </div>
 
-      {/* Plans Grid - Responsive Layout */}
+      {/* Plans Grid - Equal Height Cards */}
       <div className={cn(
         "grid gap-6",
         isMobile ? "grid-cols-1" : "grid-cols-3 lg:gap-8"
@@ -64,24 +72,26 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
         ))}
       </div>
 
-      {/* Free Trial Information */}
-      <div className="text-center bg-blue-50 p-6 rounded-lg border border-blue-200">
-        <h3 className="font-semibold text-blue-900 mb-2">
-          🎯 {isAnnual ? 'Annual Plans' : '7-Day Free Trial Available'}
-        </h3>
-        <p className="text-sm text-blue-800 max-w-3xl mx-auto">
-          {isAnnual ? (
-            <>
-              <strong>Annual plans start immediately</strong> with full access and significant savings. 
-              30-day money-back guarantee included for peace of mind.
-            </>
-          ) : (
-            <>
-              <strong>Monthly plans include a 7-day free trial</strong> with full access. 
-              Your payment method will be charged after the trial period ends. Cancel anytime during the trial.
-            </>
-          )}
-        </p>
+      {/* Trial Information - Centered and Consistent */}
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
+          <h3 className="font-semibold text-blue-900 mb-3 text-lg">
+            🎯 {isAnnual ? 'Annual Plans' : '7-Day Free Trial Available'}
+          </h3>
+          <p className="text-sm text-blue-800 leading-relaxed max-w-3xl mx-auto">
+            {isAnnual ? (
+              <>
+                <strong>Annual plans start immediately</strong> with full access and significant savings. 
+                30-day money-back guarantee included for peace of mind.
+              </>
+            ) : (
+              <>
+                <strong>Monthly plans include a 7-day free trial</strong> with full access. 
+                Your payment method will be charged after the trial period ends. Cancel anytime during the trial.
+              </>
+            )}
+          </p>
+        </div>
       </div>
     </div>
   );
