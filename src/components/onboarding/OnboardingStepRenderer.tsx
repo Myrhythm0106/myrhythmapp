@@ -1,7 +1,7 @@
 
 import React from "react";
 import { UserTypeStep } from "./steps/UserTypeStep";
-import { PersonalInfoStep } from "./steps/PersonalInfoStep";
+// Removed PersonalInfoStep import since we're skipping it
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
 import { PaymentStep } from "./steps/PaymentStep";
@@ -63,21 +63,13 @@ export const OnboardingStepRenderer = ({
       
     case 2:
       return (
-        <PersonalInfoStep
-          onComplete={onPersonalInfoComplete}
-          initialValues={personalInfo}
-        />
-      );
-      
-    case 3:
-      return (
         <LocationStep
           onComplete={onLocationComplete}
           initialValues={location}
         />
       );
       
-    case 4:
+    case 3:
       return (
         <PlanStep
           onComplete={onPlanSelected}
@@ -85,7 +77,7 @@ export const OnboardingStepRenderer = ({
         />
       );
       
-    case 5:
+    case 4:
       return (
         <PaymentStep
           onComplete={onPaymentComplete}
@@ -94,14 +86,14 @@ export const OnboardingStepRenderer = ({
         />
       );
       
-    case 6:
+    case 5:
       return (
         <PreAssessmentStep
           onComplete={onPreAssessmentComplete}
         />
       );
       
-    case 7:
+    case 6:
       return (
         <RhythmAssessmentStep
           onComplete={onRhythmAssessmentComplete}
