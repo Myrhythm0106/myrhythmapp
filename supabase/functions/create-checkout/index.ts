@@ -41,8 +41,8 @@ serve(async (req) => {
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    const { plan_type } = await req.json();
-    logStep("Plan type received", { plan_type });
+    const { plan_type, billing_period = 'monthly' } = await req.json();
+    logStep("Plan details received", { plan_type, billing_period });
 
     const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
     
@@ -61,49 +61,75 @@ serve(async (req) => {
       logStep("New customer created", { customerId });
     }
 
-    // Enhanced pricing based on plan with updated names and proper trial setup
+    // Enhanced pricing with annual options (GBP)
     const planPricing = {
-      basic: { price: 599, name: "MyRhythm Align", description: "Essential tools for cognitive wellness" },
-      premium: { price: 999, name: "MyRhythm Flow", description: "Complete MyRhythm experience with all features" },
-      family: { price: 1999, name: "MyRhythm Thrive", description: "Full family support with dedicated case management" }
+      basic: { 
+        monthly: { price: 599, name: "MyRhythm Align", description: "Foundation for aligning memory, focus, and daily rhythm" },
+        annual: { price: 5750, name: "MyRhythm Align (Annual)", description: "Foundation for aligning memory, focus, and daily rhythm - Save £14.38/year" }
+      },
+      premium: { 
+        monthly: { price: 999, name: "MyRhythm Flow", description: "Complete flow experience with advanced momentum building" },
+        annual: { price: 9590, name: "MyRhythm Flow (Annual)", description: "Complete flow experience with advanced momentum building - Save £23.98/year" }
+      },
+      family: { 
+        monthly: { price: 1999, name: "MyRhythm Thrive", description: "Complete family wellness journey to help everyone thrive" },
+        annual: { price: 19190, name: "MyRhythm Thrive (Annual)", description: "Complete family wellness journey to help everyone thrive - Save £47.98/year" }
+      }
     };
 
     const selectedPlan = planPricing[plan_type as keyof typeof planPricing] || planPricing.premium;
-    logStep("Plan selected", { selectedPlan, plan_type });
+    const billingData = selectedPlan[billing_period as keyof typeof selectedPlan] || selectedPlan.monthly;
+    logStep("Plan selected", { selectedPlan: billingData, plan_type, billing_period });
 
     const origin = req.headers.get("origin") || "http://localhost:3000";
     
-    const session = await stripe.checkout.sessions.create({
+    // Create session based on billing period
+    const sessionData: any = {
       customer: customerId,
       payment_method_types: ['card'],
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: "gbp", // Fixed to GBP
             product_data: { 
-              name: selectedPlan.name,
-              description: selectedPlan.description
+              name: billingData.name,
+              description: billingData.description
             },
-            unit_amount: selectedPlan.price,
-            recurring: { interval: "month" },
+            unit_amount: billingData.price,
+            recurring: { interval: billing_period === 'annual' ? 'year' : 'month' },
           },
           quantity: 1,
         },
       ],
       mode: "subscription",
-      subscription_data: {
-        trial_period_days: 7,
-        metadata: {
-          user_id: user.id,
-          plan_type: plan_type
-        }
-      },
       success_url: `${origin}/dashboard?trial_started=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/onboarding?step=5&cancelled=true`,
       allow_promotion_codes: true,
       automatic_tax: { enabled: true },
-    });
+    };
 
+    // For monthly plans, add trial period
+    if (billing_period === 'monthly') {
+      sessionData.subscription_data = {
+        trial_period_days: 7,
+        metadata: {
+          user_id: user.id,
+          plan_type: plan_type,
+          billing_period: billing_period
+        }
+      };
+    } else {
+      // For annual plans, immediate payment
+      sessionData.subscription_data = {
+        metadata: {
+          user_id: user.id,
+          plan_type: plan_type,
+          billing_period: billing_period
+        }
+      };
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionData);
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
 
     // Create or update subscription record in our database
@@ -112,14 +138,15 @@ serve(async (req) => {
       .upsert({
         user_id: user.id,
         stripe_customer_id: customerId,
-        status: 'trial',
+        status: billing_period === 'monthly' ? 'trial' : 'active',
         plan_type: plan_type,
-        trial_start: new Date().toISOString().split('T')[0],
-        trial_end: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+        billing_period: billing_period,
+        trial_start: billing_period === 'monthly' ? new Date().toISOString().split('T')[0] : null,
+        trial_end: billing_period === 'monthly' ? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : null,
         updated_at: new Date().toISOString(),
       }, { onConflict: 'user_id' });
 
-    logStep("Database updated with trial subscription");
+    logStep("Database updated with subscription");
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },

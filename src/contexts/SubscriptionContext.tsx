@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -54,7 +53,7 @@ interface SubscriptionContextType {
   hasFeature: (feature: keyof SubscriptionFeatures) => boolean;
   upgradeRequired: (feature: keyof SubscriptionFeatures) => boolean;
   refreshSubscription: () => Promise<void>;
-  createCheckoutSession: (planType: SubscriptionTier) => Promise<string>;
+  createCheckoutSession: (planType: SubscriptionTier, billingPeriod?: 'monthly' | 'annual') => Promise<string>;
   openCustomerPortal: () => Promise<string>;
 }
 
@@ -183,14 +182,14 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
   };
 
-  const createCheckoutSession = async (planType: SubscriptionTier): Promise<string> => {
+  const createCheckoutSession = async (planType: SubscriptionTier, billingPeriod: 'monthly' | 'annual' = 'monthly'): Promise<string> => {
     if (!user) throw new Error('User not authenticated');
 
-    console.log("SubscriptionContext: Creating checkout session for plan:", planType);
+    console.log("SubscriptionContext: Creating checkout session", { planType, billingPeriod });
 
     try {
       const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: { plan_type: planType },
+        body: { plan_type: planType, billing_period: billingPeriod },
         headers: {
           Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
         },

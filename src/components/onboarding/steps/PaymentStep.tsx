@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { CreditCard, CheckCircle, Loader2, AlertCircle, ArrowRight } from "lucide-react";
+import { CreditCard, CheckCircle, Loader2, AlertCircle, ArrowRight, Sparkles } from "lucide-react";
 import { PlanType } from "./PlanStep";
 import { useSubscription, SubscriptionTier } from "@/contexts/SubscriptionContext";
 import { toast } from "sonner";
@@ -13,9 +13,10 @@ export type PaymentFormValues = {
 interface PaymentStepProps {
   onComplete: (values: PaymentFormValues) => void;
   selectedPlan: PlanType;
+  billingPeriod?: 'monthly' | 'annual';
 }
 
-export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
+export const PaymentStep = ({ onComplete, selectedPlan, billingPeriod = 'monthly' }: PaymentStepProps) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,27 +24,45 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
   const { createCheckoutSession } = useSubscription();
   
   const planInfo = {
-    basic: { name: "MyRhythm Align", price: "£5.99/month", trial: "7 Day Free Trial" },
-    premium: { name: "MyRhythm Flow", price: "£9.99/month", trial: "7 Day Free Trial" },
-    family: { name: "MyRhythm Thrive", price: "£19.99/month", trial: "7 Day Free Trial" }
+    basic: { 
+      name: "MyRhythm Align",
+      monthlyPrice: "£5.99/month",
+      annualPrice: "£57.50/year",
+      savings: "Save £14.38",
+      trial: "7 Day Free Trial"
+    },
+    premium: { 
+      name: "MyRhythm Flow",
+      monthlyPrice: "£9.99/month", 
+      annualPrice: "£95.90/year",
+      savings: "Save £23.98",
+      trial: "7 Day Free Trial"
+    },
+    family: { 
+      name: "MyRhythm Thrive",
+      monthlyPrice: "£19.99/month",
+      annualPrice: "£191.90/year", 
+      savings: "Save £47.98",
+      trial: "7 Day Free Trial"
+    }
   };
+
+  const currentPlan = planInfo[selectedPlan];
+  const displayPrice = billingPeriod === 'annual' ? currentPlan.annualPrice : currentPlan.monthlyPrice;
+  const isAnnual = billingPeriod === 'annual';
 
   // Convert PlanType to SubscriptionTier
   const mapPlanToTier = (plan: PlanType): SubscriptionTier => {
     switch (plan) {
-      case 'basic':
-        return 'basic';
-      case 'premium':
-        return 'premium';
-      case 'family':
-        return 'family';
-      default:
-        return 'premium';
+      case 'basic': return 'basic';
+      case 'premium': return 'premium';
+      case 'family': return 'family';
+      default: return 'premium';
     }
   };
 
-  const handleStartTrial = async () => {
-    console.log("PaymentStep: Start trial button clicked");
+  const handleStartPayment = async () => {
+    console.log("PaymentStep: Start payment button clicked");
     
     if (isProcessing) {
       console.log("PaymentStep: Already processing, ignoring click");
@@ -54,12 +73,16 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
     setError(null);
     
     try {
-      console.log("PaymentStep: Starting trial with Stripe checkout for plan:", selectedPlan);
+      console.log("PaymentStep: Starting payment with Stripe checkout", { 
+        plan: selectedPlan, 
+        billingPeriod 
+      });
       
       const subscriptionTier = mapPlanToTier(selectedPlan);
       console.log("PaymentStep: Mapped tier:", subscriptionTier);
       
-      const checkoutUrl = await createCheckoutSession(subscriptionTier);
+      // Enhanced checkout session creation with billing period
+      const checkoutUrl = await createCheckoutSession(subscriptionTier, billingPeriod);
       console.log("PaymentStep: Checkout URL received:", checkoutUrl);
       
       if (!checkoutUrl) {
@@ -82,22 +105,13 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
       
       const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
       setError(errorMessage);
-      toast.error(`Unable to start trial: ${errorMessage}`);
+      toast.error(`Unable to start payment: ${errorMessage}`);
       
       // Show fallback options after error
       setTimeout(() => {
         setShowFallback(true);
       }, 2000);
     }
-  };
-
-  const handleSkipTrial = () => {
-    console.log("PaymentStep: Skip trial selected");
-    toast.info("Continuing without trial - you can upgrade anytime");
-    
-    setTimeout(() => {
-      onComplete({ paymentIntentId: 'skipped' });
-    }, 500);
   };
 
   const handleContinueAnyway = () => {
@@ -116,13 +130,17 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
           <CheckCircle className="h-12 w-12 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-green-800">Setting Up Your Trial!</h2>
+          <h2 className="text-2xl font-bold text-green-800">
+            {isAnnual ? 'Processing Payment!' : 'Setting Up Your Trial!'}
+          </h2>
           <p className="text-green-700">
             Redirecting you to secure payment setup...
           </p>
-          <p className="text-sm text-muted-foreground">
-            You won't be charged until your trial ends.
-          </p>
+          {!isAnnual && (
+            <p className="text-sm text-muted-foreground">
+              You won't be charged until your trial ends.
+            </p>
+          )}
         </div>
       </div>
     );
@@ -135,7 +153,9 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
           <Loader2 className="h-12 w-12 text-blue-600 animate-spin" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-blue-800">Setting Up Your Trial...</h2>
+          <h2 className="text-2xl font-bold text-blue-800">
+            {isAnnual ? 'Processing Payment...' : 'Setting Up Your Trial...'}
+          </h2>
           <p className="text-blue-700">
             Creating your secure payment session.
           </p>
@@ -166,26 +186,46 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
       <div className="bg-muted p-6 rounded-lg border">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-semibold">{planInfo[selectedPlan].name}</h3>
-            <p className="text-lg font-bold text-primary">{planInfo[selectedPlan].price}</p>
+            <h3 className="text-xl font-semibold">{currentPlan.name}</h3>
+            <p className="text-lg font-bold text-primary">{displayPrice}</p>
+            {isAnnual && (
+              <div className="flex items-center gap-2 mt-1">
+                <Sparkles className="h-4 w-4 text-green-600" />
+                <span className="text-sm font-medium text-green-600">{currentPlan.savings}</span>
+              </div>
+            )}
           </div>
           <CreditCard className="h-8 w-8 text-muted-foreground" />
         </div>
         
-        <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            <span className="font-semibold text-green-800">{planInfo[selectedPlan].trial}</span>
+        {!isAnnual && (
+          <div className="mt-4 p-4 bg-green-50 rounded-lg border border-green-200">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <span className="font-semibold text-green-800">{currentPlan.trial}</span>
+            </div>
+            <p className="text-sm text-green-700 mt-1">
+              Start immediately with full access. Your payment method will be charged after 7 days.
+            </p>
           </div>
-          <p className="text-sm text-green-700 mt-1">
-            Start immediately with full access. Your payment method will be charged after 7 days.
-          </p>
-        </div>
+        )}
+
+        {isAnnual && (
+          <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-blue-600" />
+              <span className="font-semibold text-blue-800">Immediate Full Access</span>
+            </div>
+            <p className="text-sm text-blue-700 mt-1">
+              Payment processed immediately. 30-day money-back guarantee included.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Features Included */}
       <div className="space-y-3">
-        <h4 className="font-semibold">What's included in your trial:</h4>
+        <h4 className="font-semibold">What's included:</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-green-600" />
@@ -217,51 +257,40 @@ export const PaymentStep = ({ onComplete, selectedPlan }: PaymentStepProps) => {
       {/* Action Buttons */}
       <div className="space-y-3 pt-4">
         <Button 
-          onClick={handleStartTrial}
+          onClick={handleStartPayment}
           disabled={isProcessing}
           className="w-full bg-primary hover:bg-primary/90 text-white py-6 text-lg font-semibold"
         >
           {isProcessing ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Setting Up Trial...
+              {isAnnual ? 'Processing Payment...' : 'Setting Up Trial...'}
             </>
           ) : (
             <>
               <CreditCard className="mr-2 h-5 w-5" />
-              Start Your 7-Day Free Trial
+              {isAnnual ? `Pay ${displayPrice} Now` : `Start Your 7-Day Free Trial`}
             </>
           )}
         </Button>
         
         {/* Fallback Options */}
         {(showFallback || error) && (
-          <>
-            <Button 
-              onClick={handleContinueAnyway}
-              disabled={isProcessing}
-              variant="outline"
-              className="w-full"
-            >
-              <ArrowRight className="mr-2 h-4 w-4" />
-              Continue to Assessment (Set up payment later)
-            </Button>
-            
-            <Button 
-              onClick={handleSkipTrial}
-              disabled={isProcessing}
-              variant="ghost"
-              className="w-full"
-            >
-              Skip Trial - Continue with Basic Access
-            </Button>
-          </>
+          <Button 
+            onClick={handleContinueAnyway}
+            disabled={isProcessing}
+            variant="outline"
+            className="w-full"
+          >
+            <ArrowRight className="mr-2 h-4 w-4" />
+            Continue to Assessment (Set up payment later)
+          </Button>
         )}
         
         <p className="text-xs text-center text-muted-foreground mt-3">
           By continuing, you agree to our Terms of Service and Privacy Policy.
           <br />
-          Cancel anytime during your trial - no charges apply.
+          {isAnnual ? '30-day money-back guarantee applies.' : 'Cancel anytime during your trial - no charges apply.'}
         </p>
       </div>
     </div>

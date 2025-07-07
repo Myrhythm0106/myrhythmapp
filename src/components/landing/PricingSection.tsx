@@ -70,7 +70,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
             price={
               <>
                 <div className="text-3xl font-bold">7 Days Free</div>
-                <div className="text-sm text-muted-foreground">Then £15.99/month</div>
+                <div className="text-sm text-muted-foreground">Then £19.99/month</div>
               </>
             }
             features={[

@@ -35,6 +35,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [location, setLocation] = useState<LocationFormValues | null>(null);
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("premium");
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
   const [paymentData, setPaymentData] = useState<PaymentFormValues | null>(null);
   const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   
@@ -94,6 +95,8 @@ export const useOnboardingLogic = (totalSteps: number) => {
     setPersonalInfo,
     selectedPlan,
     setSelectedPlan,
+    billingPeriod,
+    setBillingPeriod,
     paymentData,
     setPaymentData,
     showPaymentConfirmation,

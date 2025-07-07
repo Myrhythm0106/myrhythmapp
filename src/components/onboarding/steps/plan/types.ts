@@ -8,14 +8,16 @@ export interface Plan {
   name: string;
   description: string;
   price: string;
+  annualPrice?: string;
+  monthlySavings?: string;
   trialDays?: number;
-  features: string[];
   popular?: boolean;
   icon: LucideIcon;
   highlight?: string;
+  features: string[];
 }
 
 export interface PlanStepProps {
-  onComplete: (plan: PlanType) => void;
+  onComplete: (plan: PlanType, billingPeriod?: 'monthly' | 'annual') => void;
   selectedPlan?: PlanType;
 }
