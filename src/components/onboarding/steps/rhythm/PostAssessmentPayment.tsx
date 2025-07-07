@@ -4,10 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { CheckCircle, Lock, ChevronDown, Star, Crown, Timer, Zap } from "lucide-react";
+import { CheckCircle, Lock, Timer, Zap, Crown, Star, CreditCard, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { PaymentOptionCard } from "./payment/PaymentOptionCard";
 
 interface PostAssessmentPaymentProps {
   onSelectPaymentOption: (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => void;
@@ -17,7 +15,6 @@ interface PostAssessmentPaymentProps {
 export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAssessmentPaymentProps) {
   const [isAnnual, setIsAnnual] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [isPremiumBenefitsOpen, setIsPremiumBenefitsOpen] = useState(true); // Default to open
 
   // UK pricing in GBP
   const monthlyPrice = 9.99;
@@ -26,9 +23,10 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
   const annualSavings = Math.round(((monthlyPrice * 12 - annualTotal) / (monthlyPrice * 12)) * 100);
 
   const handleOptionSelect = (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => {
-    console.log("Processing payment option:", option);
+    console.log("User selected payment option:", option);
     setSelectedOption(option);
-    // Small delay for visual feedback
+    
+    // Show immediate processing state
     setTimeout(() => {
       onSelectPaymentOption(option);
     }, 300);
@@ -60,26 +58,29 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
         </div>
       </div>
 
-      {/* Limited Time Offer Banner */}
-      <Card className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 shadow-lg">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Timer className="h-6 w-6 animate-pulse" />
-              <div>
-                <p className="font-bold text-lg">⚡ LIMITED TIME OFFER ⚡</p>
-                <p className="text-sm opacity-90">Get 20% OFF Premium - Complete assessment today!</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <p className="font-bold text-lg">Save £23.98/year</p>
-              <p className="text-xs opacity-75">With annual plan</p>
+      {/* Important Notice about Card Details */}
+      <Card className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0 shadow-lg">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <CreditCard className="h-6 w-6" />
+            <h3 className="font-bold text-xl">💳 Card Details Required for All Options</h3>
+          </div>
+          <div className="space-y-2">
+            <p className="text-lg">Even for the free trial, we need your payment details to:</p>
+            <ul className="list-disc list-inside space-y-1 text-sm opacity-90 ml-4">
+              <li>Automatically continue your service after the trial period</li>
+              <li>Provide uninterrupted access to your personalized results</li>
+              <li>Ensure seamless transition to your chosen plan</li>
+            </ul>
+            <div className="flex items-center gap-2 mt-3 p-3 bg-white/20 rounded-lg">
+              <Shield className="h-5 w-5" />
+              <span className="text-sm font-medium">Your payment details are secured by Stripe - we never store your card information</span>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Premium Benefits Highlight - Always Open */}
+      {/* Premium Benefits Highlight */}
       <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200">
         <CardContent className="p-6">
           <h3 className="font-semibold text-blue-900 mb-4 text-center">
@@ -140,13 +141,13 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
 
       {/* Payment Options */}
       <div className="space-y-6">
-        {/* Trial Option */}
+        {/* Trial Option - Most Prominent */}
         <Card className="border-2 border-blue-500 bg-blue-50 shadow-lg">
           <CardHeader className="text-center pb-4">
             <div className="w-12 h-12 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-2">
               <Star className="h-6 w-6 text-blue-600" />
             </div>
-            <CardTitle className="text-xl text-blue-900">7-Day Free Trial</CardTitle>
+            <CardTitle className="text-xl text-blue-900">🎯 7-Day Free Trial (Most Popular)</CardTitle>
             <div className="space-y-1">
               <div className="text-3xl font-bold text-blue-600">£0</div>
               <div className="text-sm text-gray-600">
@@ -160,24 +161,25 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
             </div>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="bg-blue-100 p-3 rounded-lg">
-              <p className="text-xs text-blue-800 font-medium mb-1">✨ Trial includes full premium access:</p>
-              <ul className="space-y-1 text-xs text-blue-700">
-                <li>• Your complete personalized results</li>
-                <li>• All action plans & goal templates</li>
-                <li>• Full app access for 7 days</li>
-                <li>• Cancel anytime during trial</li>
+            <div className="bg-blue-100 p-4 rounded-lg">
+              <p className="text-sm text-blue-800 font-medium mb-2">✨ What happens next:</p>
+              <ul className="space-y-1 text-sm text-blue-700">
+                <li>• Enter your card details securely via Stripe</li>
+                <li>• Get immediate access to all premium features</li>
+                <li>• £0 charge for 7 days - full access to everything</li>
+                <li>• Automatic billing starts after trial ends</li>
+                <li>• Cancel anytime during trial - no charges</li>
               </ul>
             </div>
             <Button 
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg py-3"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg py-4"
               onClick={() => handleOptionSelect('trial')}
               disabled={selectedOption === 'trial'}
             >
-              {selectedOption === 'trial' ? 'Processing...' : 'Start 7-Day Free Trial'}
+              {selectedOption === 'trial' ? 'Redirecting to Payment...' : '🚀 Start 7-Day Free Trial'}
             </Button>
             <p className="text-xs text-gray-500 text-center">
-              No payment required • Cancel anytime • Full access
+              Card details required • Cancel anytime • Full premium access
             </p>
           </CardContent>
         </Card>
@@ -203,7 +205,7 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
                   <li>• Complete personalized assessment results</li>
                   <li>• Tailored action plans & goal templates</li>
                   <li>• Support circle activation</li>
-                  <li>• Cancel anytime</li>
+                  <li>• Charged immediately via Stripe</li>
                 </ul>
               </div>
               <Button 
@@ -211,7 +213,7 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
                 onClick={() => handleOptionSelect('skip-trial-monthly')}
                 disabled={selectedOption === 'skip-trial-monthly'}
               >
-                {selectedOption === 'skip-trial-monthly' ? 'Processing...' : 'Get Monthly Plan'}
+                {selectedOption === 'skip-trial-monthly' ? 'Redirecting...' : 'Get Monthly Plan'}
               </Button>
             </CardContent>
           </Card>
@@ -244,7 +246,7 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
                   <li>• 2 months completely FREE</li>
                   <li>• Priority customer support</li>
                   <li>• Advanced progress analytics</li>
-                  <li>• 30-day money-back guarantee</li>
+                  <li>• One-time payment of £{annualTotal}</li>
                 </ul>
               </div>
               <Button 
@@ -252,22 +254,23 @@ export function PostAssessmentPayment({ onSelectPaymentOption, onBack }: PostAss
                 onClick={() => handleOptionSelect('annual')}
                 disabled={selectedOption === 'annual'}
               >
-                {selectedOption === 'annual' ? 'Processing...' : `Get Annual Plan - £${annualTotal}/year`}
+                {selectedOption === 'annual' ? 'Redirecting...' : `Pay £${annualTotal} Now (Annual)`}
               </Button>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      {/* Value Proposition */}
-      <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200">
+      {/* Security Notice */}
+      <Card className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200">
         <CardContent className="p-6 text-center">
-          <h3 className="font-semibold text-amber-900 mb-2">
-            🎯 What happens after you subscribe?
-          </h3>
-          <p className="text-sm text-amber-800">
-            You'll immediately unlock your complete personalized results, get your tailored action plan, 
-            and your support circle will be notified to start supporting your journey! 
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Shield className="h-5 w-5 text-gray-600" />
+            <h3 className="font-semibold text-gray-800">🔒 Secure Payment Process</h3>
+          </div>
+          <p className="text-sm text-gray-600">
+            All payments are processed securely through Stripe. Your card details are never stored on our servers. 
+            You'll be redirected to Stripe's secure payment page to complete your purchase.
           </p>
         </CardContent>
       </Card>
