@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
 import { focusAreas } from "@/utils/rhythmAnalysis";
-import { Lock, Star, ArrowRight, Brain, Eye } from "lucide-react";
+import { Lock, Star, ArrowRight, Brain, Eye, Crown, Zap, Timer } from "lucide-react";
 
 interface AssessmentTeaserPreviewProps {
   assessmentResult: AssessmentResult;
@@ -21,18 +21,50 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
+      {/* Current Mode Header */}
+      <div className="text-center space-y-2">
+        <Badge variant="outline" className="bg-orange-50 text-orange-800 border-orange-300 px-4 py-2">
+          <Eye className="h-4 w-4 mr-2" />
+          Current Mode: Basic Preview
+        </Badge>
+        <p className="text-sm text-gray-600">
+          Get a taste of your personalized insights. Upgrade for complete analysis.
+        </p>
+      </div>
+
+      {/* Urgent Upgrade Banner */}
+      <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-2 border-red-200">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Timer className="h-5 w-5 text-red-600" />
+              <div>
+                <p className="font-semibold text-red-800">Limited Time: Complete Assessment Today</p>
+                <p className="text-sm text-red-600">Get 20% off Premium - Expires in 24 hours</p>
+              </div>
+            </div>
+            <Button 
+              onClick={onContinue}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              Upgrade Now
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Header */}
       <div className="text-center space-y-4">
         <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
           <Brain className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-gray-900">Your Rhythm Assessment Complete!</h1>
+        <h1 className="text-3xl font-bold text-gray-900">Your Assessment Preview</h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          We've analyzed your responses and identified your primary focus area. Here's a preview of your personalized insights.
+          We've identified your primary focus area. This is just a preview - unlock your complete personalized plan with Premium.
         </p>
       </div>
 
-      {/* Primary Focus Area Card */}
+      {/* Primary Focus Area Card - Limited Content */}
       <Card className={`relative overflow-hidden border-2 bg-gradient-to-r ${focusInfo.gradient}`}>
         <CardHeader className="text-white relative z-10">
           <div className="flex items-center justify-between">
@@ -43,13 +75,13 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
               <div>
                 <CardTitle className="text-xl text-white">Your Primary Focus Area</CardTitle>
                 <Badge className="bg-white/20 text-white border-white/30 mt-1">
-                  {focusInfo.phase}
+                  {focusInfo.phase} - Preview Mode
                 </Badge>
               </div>
             </div>
             <div className="text-right">
               <div className="text-2xl font-bold text-white">{overallPercentage}%</div>
-              <div className="text-sm text-white/80">Overall Progress</div>
+              <div className="text-sm text-white/80">Basic Score</div>
             </div>
           </div>
         </CardHeader>
@@ -57,23 +89,39 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
           <div className="space-y-4">
             <div>
               <h3 className="text-2xl font-bold text-gray-900 mb-2">{focusInfo.title}</h3>
-              <p className="text-gray-700 leading-relaxed">{focusInfo.description}</p>
+              <p className="text-gray-700 leading-relaxed">{focusInfo.description.substring(0, 120)}...</p>
+              <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
+                <Lock className="h-4 w-4" />
+                <span>Complete description available with Premium</span>
+              </div>
             </div>
             
             <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-900 mb-2">Your Top Recommended Actions:</h4>
+              <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                Preview: Your Top Recommendation
+              </h4>
               <div className="space-y-2">
-                {focusInfo.primaryActions.slice(0, 2).map((action, index) => (
-                  <div key={index} className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-primary rounded-full"></div>
-                    <span className="text-sm text-gray-700">{action}</span>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                  <span className="text-sm text-gray-700">{focusInfo.primaryActions[0]}</span>
+                </div>
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-3 rounded border-l-4 border-orange-500">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Lock className="h-4 w-4 text-orange-600" />
+                    <span className="font-semibold text-orange-800">Unlock {focusInfo.primaryActions.length - 1} More Personalized Strategies</span>
                   </div>
-                ))}
-                <div className="flex items-center gap-2 pt-2 border-t border-gray-200">
-                  <Lock className="h-4 w-4 text-gray-400" />
-                  <span className="text-sm text-gray-500 italic">
-                    + {focusInfo.primaryActions.length - 2} more personalized recommendations available with full access
-                  </span>
+                  <p className="text-sm text-orange-700">
+                    Premium members get a complete personalized action plan with step-by-step guidance, 
+                    progress tracking, and ongoing support to achieve their goals.
+                  </p>
+                  <Button 
+                    onClick={onContinue}
+                    className="mt-3 bg-orange-600 hover:bg-orange-700 text-white text-sm"
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    Get Full Access - 7 Day Trial
+                  </Button>
                 </div>
               </div>
             </div>
@@ -81,95 +129,131 @@ export function AssessmentTeaserPreview({ assessmentResult, onContinue }: Assess
         </CardContent>
       </Card>
 
-      {/* Preview of Additional Insights */}
+      {/* Locked Premium Features */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="relative">
+        <Card className="relative border-2 border-dashed border-gray-300 bg-gray-50">
           <div className="absolute top-3 right-3">
-            <Lock className="h-4 w-4 text-gray-400" />
+            <Lock className="h-5 w-5 text-gray-400" />
           </div>
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
-              <Eye className="h-5 w-5 text-blue-600" />
-              Personalized Insights
+              <Crown className="h-5 w-5 text-yellow-600" />
+              Complete Personalized Insights
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            <p className="text-sm text-gray-600">
-              We've identified {personalizedData?.insights?.length || 4} specific insights about your unique rhythm patterns...
-            </p>
-            <div className="bg-gray-50 p-3 rounded border-l-4 border-blue-500">
-              <p className="text-sm font-medium text-gray-800">
-                Preview: {personalizedData?.insights?.[0]?.title || "Your unique strength areas"}
-              </p>
-              <p className="text-xs text-gray-600 mt-1">
-                {personalizedData?.insights?.[0]?.description?.substring(0, 80) || "Based on your responses, we've identified key areas where you naturally excel"}...
-              </p>
+          <CardContent className="space-y-3">
+            <div className="space-y-2">
+              <div className="bg-white p-2 rounded text-sm">
+                <span className="font-medium text-gray-800">✓ 8 Detailed Insights</span>
+              </div>
+              <div className="bg-white p-2 rounded text-sm">
+                <span className="font-medium text-gray-800">✓ Personalized Strengths Analysis</span>
+              </div>
+              <div className="bg-white p-2 rounded text-sm">
+                <span className="font-medium text-gray-800">✓ Growth Opportunity Mapping</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 pt-2 text-xs text-gray-500">
-              <Lock className="h-3 w-3" />
-              <span>Full personalized profile available with registration</span>
+            <div className="pt-2 border-t">
+              <Button 
+                onClick={onContinue}
+                className="w-full bg-yellow-600 hover:bg-yellow-700 text-white"
+              >
+                Unlock Insights
+              </Button>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="relative">
+        <Card className="relative border-2 border-dashed border-gray-300 bg-gray-50">
           <div className="absolute top-3 right-3">
-            <Lock className="h-4 w-4 text-gray-400" />
+            <Lock className="h-5 w-5 text-gray-400" />
           </div>
           <CardHeader className="pb-3">
             <CardTitle className="text-lg flex items-center gap-2">
-              <ArrowRight className="h-5 w-5 text-green-600" />
-              Action Plan
+              <Zap className="h-5 w-5 text-blue-600" />
+              8-Week Action Plan
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
-            <p className="text-sm text-gray-600">
-              Your step-by-step personalized plan to strengthen your rhythm...
-            </p>
+          <CardContent className="space-y-3">
             <div className="space-y-2">
-              <div className="bg-green-50 p-2 rounded text-sm">
-                <span className="font-medium text-green-800">Week 1-2:</span>
-                <span className="text-green-700 ml-2">Foundation building exercises</span>
+              <div className="bg-white p-2 rounded text-sm">
+                <span className="font-medium text-gray-800">✓ Step-by-Step Weekly Goals</span>
               </div>
-              <div className="bg-gray-100 p-2 rounded text-sm flex items-center gap-2">
-                <Lock className="h-3 w-3 text-gray-400" />
-                <span className="text-gray-500">Weeks 3-8: Advanced strategies</span>
+              <div className="bg-white p-2 rounded text-sm">
+                <span className="font-medium text-gray-800">✓ Progress Tracking System</span>
+              </div>
+              <div className="bg-white p-2 rounded text-sm">
+                <span className="font-medium text-gray-800">✓ Milestone Celebrations</span>
               </div>
             </div>
-            <div className="flex items-center gap-2 pt-2 text-xs text-gray-500">
-              <Lock className="h-3 w-3" />
-              <span>Complete 8-week plan available with full access</span>
+            <div className="pt-2 border-t">
+              <Button 
+                onClick={onContinue}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Get Action Plan
+              </Button>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Progress indicator */}
+      {/* Basic Progress Indicator */}
       <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
         <div className="flex items-center gap-3 mb-2">
           <Progress value={overallPercentage} className="flex-1 h-3" />
           <span className="text-sm font-medium text-blue-800">{overallPercentage}%</span>
         </div>
         <p className="text-sm text-blue-700">
-          Your assessment shows {overallPercentage >= 70 ? 'strong' : overallPercentage >= 50 ? 'moderate' : 'developing'} rhythm patterns. 
-          Register to unlock your complete personalized journey plan.
+          Basic assessment complete. Premium analysis shows detailed progress breakdown across 12 key areas.
         </p>
       </div>
 
-      {/* Call to Action */}
+      {/* Main Call to Action */}
       <div className="text-center space-y-4 pt-4">
-        <Button 
-          onClick={onContinue}
-          size="lg" 
-          className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 px-8 py-3 text-lg"
-        >
-          See How to Get Full Access
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-        <p className="text-sm text-gray-500">
-          Discover your complete personalized rhythm plan and start your transformation journey
-        </p>
+        <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-xl border-2 border-purple-200">
+          <h3 className="text-xl font-bold text-purple-900 mb-2">
+            🚀 Ready for Your Complete Transformation Plan?
+          </h3>
+          <p className="text-purple-700 mb-4">
+            Join thousands who've unlocked their full potential with our Premium assessment and personalized guidance.
+          </p>
+          <Button 
+            onClick={onContinue}
+            size="lg" 
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-8 py-3 text-lg"
+          >
+            Start 7-Day Premium Trial
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+          <p className="text-sm text-purple-600 mt-2">
+            Cancel anytime • No commitment • Full access for 7 days
+          </p>
+        </div>
       </div>
+
+      {/* What You're Missing Section */}
+      <Card className="bg-gradient-to-r from-red-50 to-pink-50 border-2 border-red-200">
+        <CardContent className="p-6 text-center">
+          <h4 className="font-bold text-red-900 mb-3 text-lg">
+            What You're Missing in Preview Mode:
+          </h4>
+          <div className="grid grid-cols-2 gap-4 text-sm">
+            <div className="space-y-1">
+              <p className="text-red-700">• 7 Additional Personalized Insights</p>
+              <p className="text-red-700">• Complete Strengths Analysis</p>
+              <p className="text-red-700">• Detailed Growth Roadmap</p>
+              <p className="text-red-700">• 8-Week Action Plan</p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-red-700">• Progress Tracking Dashboard</p>
+              <p className="text-red-700">• Goal Setting Templates</p>
+              <p className="text-red-700">• Milestone Celebrations</p>
+              <p className="text-red-700">• Ongoing Support & Guidance</p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
