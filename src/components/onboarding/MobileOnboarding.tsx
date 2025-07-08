@@ -5,33 +5,51 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Smartphone, CheckCircle } from "lucide-react";
 import { MobileSubscriptionSelector } from "../subscription/MobileSubscriptionSelector";
+import { EmpowermentOnboarding } from "./EmpowermentOnboarding";
 import { UserTypeStep } from "./steps/UserTypeStep";
 import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
 import { UserType } from "./steps/UserTypeStep";
 import { useMobileSubscription } from "@/contexts/MobileSubscriptionContext";
 import { toast } from "sonner";
 
-type OnboardingStep = "user-type" | "subscription" | "assessment" | "complete";
+type OnboardingStep = "empowerment" | "user-type" | "subscription" | "assessment" | "complete";
 
 export function MobileOnboarding() {
-  const [currentStep, setCurrentStep] = useState<OnboardingStep>("user-type");
+  const [currentStep, setCurrentStep] = useState<OnboardingStep>("empowerment");
   const [userType, setUserType] = useState<UserType | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'premium' | 'family' | null>(null);
   const { startMobilePurchase } = useMobileSubscription();
 
+  // Check if empowerment onboarding was completed
+  const empowermentCompleted = localStorage.getItem('myrhythm_empowerment_onboarding_completed');
+  
+  // If empowerment onboarding was completed, skip to user type
+  React.useEffect(() => {
+    if (empowermentCompleted && currentStep === "empowerment") {
+      setCurrentStep("user-type");
+    }
+  }, [empowermentCompleted, currentStep]);
+
   const steps = [
-    { id: "user-type", title: "About You", progress: 33 },
-    { id: "subscription", title: "Choose Plan", progress: 66 },
-    { id: "assessment", title: "Assessment", progress: 100 }
+    { id: "empowerment", title: "Welcome", progress: 20 },
+    { id: "user-type", title: "About You", progress: 40 },
+    { id: "subscription", title: "Choose Plan", progress: 60 },
+    { id: "assessment", title: "Assessment", progress: 80 },
+    { id: "complete", title: "Ready!", progress: 100 }
   ];
 
   const currentStepInfo = steps.find(step => step.id === currentStep) || steps[0];
+
+  const handleEmpowermentComplete = () => {
+    setCurrentStep("user-type");
+    toast.success("Great! Now let's personalize your experience.");
+  };
 
   const handleUserTypeComplete = (data: { type: UserType }) => {
     console.log("Mobile onboarding: User type selected:", data.type);
     setUserType(data.type);
     setCurrentStep("subscription");
-    toast.success("Great! Let's choose your plan.");
+    toast.success("Perfect! Let's choose your plan.");
   };
 
   const handlePlanSelection = async (planType: 'basic' | 'premium' | 'family') => {
@@ -41,7 +59,7 @@ export function MobileOnboarding() {
     try {
       await startMobilePurchase(planType);
       setCurrentStep("assessment");
-      toast.success("Welcome to MyRhythm! Let's start your assessment.");
+      toast.success("Welcome to MyRhythm! Let's complete your assessment.");
     } catch (error) {
       console.error("Plan selection error:", error);
       toast.error("Something went wrong. Please try again.");
@@ -57,7 +75,7 @@ export function MobileOnboarding() {
   const handleAssessmentComplete = () => {
     console.log("Mobile onboarding: Assessment completed");
     setCurrentStep("complete");
-    toast.success("Assessment complete! Welcome to your personalized MyRhythm experience.");
+    toast.success("Assessment complete! Welcome to your empowering MyRhythm experience.");
     
     // Store completion status
     localStorage.setItem('myrhythm_mobile_onboarding_completed', 'true');
@@ -66,6 +84,9 @@ export function MobileOnboarding() {
 
   const handleBack = () => {
     switch (currentStep) {
+      case "user-type":
+        setCurrentStep("empowerment");
+        break;
       case "subscription":
         setCurrentStep("user-type");
         break;
@@ -78,12 +99,15 @@ export function MobileOnboarding() {
   };
 
   const handleEnterApp = () => {
-    console.log("Mobile onboarding: Entering main app");
+    console.log("Mobile onboarding: Entering empowering app experience");
     window.location.href = '/dashboard';
   };
 
   const renderStepContent = () => {
     switch (currentStep) {
+      case "empowerment":
+        return <EmpowermentOnboarding />;
+
       case "user-type":
         return (
           <UserTypeStep
@@ -110,34 +134,34 @@ export function MobileOnboarding() {
       case "complete":
         return (
           <div className="text-center py-8 space-y-6">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <CheckCircle className="h-10 w-10 text-green-600" />
+            <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="h-10 w-10 text-white" />
             </div>
             
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold">Welcome to MyRhythm!</h2>
+              <h2 className="text-2xl font-bold">You're All Set! 🎉</h2>
               <p className="text-muted-foreground max-w-md mx-auto">
-                Your personalized cognitive wellness journey starts now. We've created a custom plan based on your assessment.
+                Your empowering journey begins now. We've personalized everything just for you.
               </p>
             </div>
 
-            <div className="bg-blue-50 rounded-lg p-4 space-y-2">
-              <h3 className="font-semibold text-blue-900">What's Next?</h3>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 space-y-2">
+              <h3 className="font-semibold text-blue-900">Your Empowerment Hub Awaits:</h3>
               <ul className="text-sm text-blue-800 space-y-1 text-left max-w-xs mx-auto">
-                <li>• Explore your personalized dashboard</li>
-                <li>• Set up your daily routines</li>
-                <li>• Start your cognitive training</li>
-                <li>• Connect with the community</li>
+                <li>🎯 Set your daily "Today I Will..." focus</li>
+                <li>🦸‍♀️ Connect with your support heroes</li>
+                <li>🏆 Celebrate every win, big or small</li>
+                <li>🗻 Track your independence journey</li>
               </ul>
             </div>
             
             <Button 
               onClick={handleEnterApp}
-              className="mt-6 w-full max-w-xs"
+              className="mt-6 w-full max-w-xs bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white"
               size="lg"
             >
               <ArrowRight className="h-4 w-4 mr-2" />
-              Enter MyRhythm
+              Start My Journey! 🚀
             </Button>
           </div>
         );
@@ -146,6 +170,11 @@ export function MobileOnboarding() {
         return null;
     }
   };
+
+  // Show empowerment onboarding full screen
+  if (currentStep === "empowerment") {
+    return <EmpowermentOnboarding />;
+  }
 
   if (currentStep === "complete") {
     return (
@@ -165,7 +194,7 @@ export function MobileOnboarding() {
       <div className="bg-white shadow-sm p-4">
         <div className="max-w-md mx-auto">
           <div className="flex items-center justify-between mb-2">
-            {currentStep !== "user-type" && (
+            {currentStep !== "empowerment" && (
               <Button variant="ghost" size="sm" onClick={handleBack}>
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back

@@ -1,24 +1,28 @@
 
 import React from "react";
 import { BrainHealthDashboard } from "@/components/dashboard/BrainHealthDashboard";
-import { MobileDashboard } from "@/components/dashboard/MobileDashboard";
+import { EmpowermentDashboard } from "@/components/dashboard/EmpowermentDashboard";
 import { usePlatform } from "@/components/platform/PlatformProvider";
 import { Preview3Background } from "@/components/ui/Preview3Background";
 
 const Dashboard = () => {
   const { isMobile } = usePlatform();
 
-  // Mobile-first approach: use mobile dashboard by default
+  // Always use empowerment dashboard for mobile-first approach
   if (isMobile) {
     return (
       <Preview3Background>
-        <MobileDashboard />
+        <EmpowermentDashboard />
       </Preview3Background>
     );
   }
 
-  // Web fallback: use the comprehensive dashboard
-  return <BrainHealthDashboard />;
+  // Web users get choice - but default to empowerment for brain-friendly experience
+  return (
+    <Preview3Background>
+      <EmpowermentDashboard />
+    </Preview3Background>
+  );
 };
 
 export default Dashboard;
