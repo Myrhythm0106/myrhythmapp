@@ -1,7 +1,6 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
-import { PaymentConfirmationDialog } from "@/components/onboarding/PaymentConfirmationDialog";
 import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
 import { AuthenticationGate } from "@/components/onboarding/AuthenticationGate";
 import { STEPS } from "@/components/onboarding/OnboardingSteps";
@@ -16,9 +15,8 @@ const UPDATED_STEPS = [
   { id: 1, title: "All About You", description: "Tell us about yourself" },
   { id: 2, title: "Location", description: "Where are you based?" },
   { id: 3, title: "Choose Plan", description: "Select your subscription" },
-  { id: 4, title: "Start Trial", description: "Begin your 7-day free trial" },
-  { id: 5, title: "Pre-Assessment", description: "Preparing your assessment" },
-  { id: 6, title: "Rhythm Assessment", description: "Discover your unique patterns" }
+  { id: 4, title: "Pre-Assessment", description: "Preparing your assessment" },
+  { id: 5, title: "Rhythm Assessment", description: "Discover your unique patterns" }
 ];
 const TOTAL_STEPS = UPDATED_STEPS.length;
 
@@ -54,14 +52,12 @@ const Onboarding = () => {
       location,
       personalInfo,
       selectedPlan,
-      paymentData,
-      showPaymentConfirmation,
+      billingPeriod,
       isUserTypeSelected,
       isPersonalInfoValid,
       isLocationValid,
       isPlanSelected,
       isDirectNavigation,
-      setCurrentStep,
       setPersonalInfo,
     } = onboardingState;
 
@@ -112,7 +108,7 @@ const Onboarding = () => {
 
     // Data persistence check
     const hasUnsavedData = React.useMemo(() => {
-      if (currentStep === 6) { // Assessment step (now step 6 instead of 7)
+      if (currentStep === 5) { // Assessment step (now step 5 instead of 6)
         const savedAssessment = localStorage.getItem('form_data_rhythm_assessment');
         return !!savedAssessment;
       }
@@ -176,7 +172,7 @@ const Onboarding = () => {
           description={currentStepInfo.description}
           hasUnsavedData={hasUnsavedData}
           onSaveProgress={handleSaveProgress}
-          dataDescription={currentStep === 6 ? "your assessment responses" : "your progress"}
+          dataDescription={currentStep === 5 ? "your assessment responses" : "your progress"}
         >
           <OnboardingStepRenderer
             currentStep={currentStep}
@@ -184,6 +180,7 @@ const Onboarding = () => {
             personalInfo={personalInfo}
             location={location}
             selectedPlan={selectedPlan}
+            billingPeriod={billingPeriod}
             userTypeCountdown={null}
             personalInfoCountdown={null}
             locationCountdown={null}
@@ -192,18 +189,10 @@ const Onboarding = () => {
             onPersonalInfoComplete={handlers.handlePersonalInfoComplete}
             onLocationComplete={handlers.handleLocationComplete}
             onPlanSelected={handlers.handlePlanSelected}
-            onPaymentComplete={handlers.handlePaymentComplete}
             onPreAssessmentComplete={handlers.handlePreAssessmentComplete}
             onRhythmAssessmentComplete={handlers.handleRhythmAssessmentComplete}
           />
         </OnboardingLayout>
-        
-        <PaymentConfirmationDialog
-          open={showPaymentConfirmation}
-          onConfirm={handlers.handlePaymentConfirm}
-          onCancel={() => onboardingState.setShowPaymentConfirmation(false)}
-          selectedPlan={selectedPlan}
-        />
       </Preview3Background>
     );
     
