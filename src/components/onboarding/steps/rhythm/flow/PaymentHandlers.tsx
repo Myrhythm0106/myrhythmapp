@@ -12,12 +12,25 @@ export const usePaymentHandlers = (
 ) => {
   const { createCheckoutSession } = useSubscription();
 
-  const handlePaymentSelect = (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => {
+  const handlePaymentSelect = (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly' | 'skip') => {
     setCurrentStep("payment");
   };
 
-  const handlePaymentOption = async (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => {
-    console.log("Processing real payment option:", option);
+  const handlePaymentOption = async (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly' | 'skip') => {
+    console.log("Processing payment option:", option);
+    
+    // Handle skip option immediately
+    if (option === 'skip') {
+      console.log("User chose to skip payment, proceeding to results");
+      setPaymentCompleted(true);
+      setCurrentStep("results");
+      
+      toast.success("Welcome to MyRhythm!", {
+        description: "You can upgrade to premium features anytime from your dashboard.",
+        duration: 4000
+      });
+      return;
+    }
     
     try {
       toast.info("Redirecting to secure payment...", {
@@ -30,17 +43,14 @@ export const usePaymentHandlers = (
       // Map payment options to Stripe parameters
       switch (option) {
         case 'trial':
-          // Trial with monthly billing after 7 days
           planType = 'premium';
           billingPeriod = 'monthly';
           break;
         case 'skip-trial-monthly':
-          // Direct monthly payment
           planType = 'premium';
           billingPeriod = 'monthly';
           break;
         case 'annual':
-          // Direct annual payment
           planType = 'premium';
           billingPeriod = 'annual';
           break;
@@ -78,10 +88,16 @@ export const usePaymentHandlers = (
       const errorMessage = error instanceof Error ? error.message : "Unknown payment error";
       
       toast.error("Payment setup failed", {
-        description: errorMessage.includes('authentication') 
-          ? "Please log in to continue with payment" 
-          : "Unable to process payment. Please try again.",
-        duration: 5000
+        description: "You can continue without payment and upgrade later.",
+        duration: 5000,
+        action: {
+          label: "Continue Anyway",
+          onClick: () => {
+            console.log("User chose to continue anyway after payment error");
+            setPaymentCompleted(true);
+            setCurrentStep("results");
+          }
+        }
       });
 
       // If authentication error, redirect to login

@@ -22,7 +22,10 @@ serve(async (req) => {
     logStep("Function started");
 
     const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
+    if (!stripeKey) {
+      logStep("ERROR: STRIPE_SECRET_KEY not configured");
+      throw new Error("STRIPE_SECRET_KEY is not configured. Please add your Stripe secret key to the edge function secrets.");
+    }
 
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
@@ -103,7 +106,7 @@ serve(async (req) => {
       ],
       mode: "subscription",
       success_url: `${origin}/dashboard?trial_started=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/onboarding?step=5&cancelled=true`,
+      cancel_url: `${origin}/onboarding?step=4&cancelled=true`,
       allow_promotion_codes: true,
       automatic_tax: { enabled: true },
     };
