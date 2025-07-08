@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MobileSubscriptionProvider } from "@/contexts/MobileSubscriptionContext";
+import { PlatformProvider } from "@/components/platform/PlatformProvider";
 import MainLayout from "@/components/layout/MainLayout";
 import LandingPage from "@/pages/Landing";
 import AuthPage from "@/pages/AuthPage";
@@ -25,6 +26,7 @@ import UsefulInfoPage from "@/pages/UsefulInfoPage";
 import Preview3Landing from "@/pages/Preview3Landing";
 import PreviewLanding from "@/pages/PreviewLanding";
 import Preview2Landing from "@/pages/Preview2Landing";
+import WebOnboarding from "@/pages/WebOnboarding";
 import { MobileOnboarding } from "@/components/onboarding/MobileOnboarding";
 
 const queryClient = new QueryClient();
@@ -33,47 +35,52 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <AuthProvider>
-          <MobileSubscriptionProvider>
-            <Toaster />
-            <BrowserRouter>
-              <Routes>
-                {/* Primary Preview 3 route - this is the main demo */}
-                <Route path="/" element={<Preview3Landing />} />
-                <Route path="/preview-3" element={<Preview3Landing />} />
-                
-                {/* Authentication and mobile-first onboarding */}
-                <Route path="/auth" element={<AuthPage />} />
-                <Route path="/onboarding" element={<MobileOnboarding />} />
-                
-                {/* Other preview versions */}
-                <Route path="/landing-original" element={<LandingPage />} />
-                <Route path="/preview-landing" element={<PreviewLanding />} />
-                <Route path="/preview-2" element={<Preview2Landing />} />
-                
-                {/* Full application routes - accessible after completing onboarding */}
-                <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />
-                <Route path="/calendar" element={<MainLayout><CalendarPage /></MainLayout>} />
-                <Route path="/goals" element={<MainLayout><GoalsPage /></MainLayout>} />
-                <Route path="/brain-games" element={<MainLayout><BrainGamesPage /></MainLayout>} />
-                <Route path="/mood-tracking" element={<MainLayout><MoodTrackingPage /></MainLayout>} />
-                <Route path="/gratitude" element={<MainLayout><GratitudePage /></MainLayout>} />
-                <Route path="/accountability" element={<MainLayout><AccountabilityPage /></MainLayout>} />
-                <Route path="/community" element={<MainLayout><CommunityPage /></MainLayout>} />
-                <Route path="/notes" element={<MainLayout><NotesPage /></MainLayout>} />
-                <Route path="/strategy" element={<MainLayout><StrategyDashboard /></MainLayout>} />
-                <Route path="/analytics" element={<MainLayout><RevenueAnalyticsPage /></MainLayout>} />
-                <Route path="/testing" element={<MainLayout><TestingSuitePage /></MainLayout>} />
-                <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-                <Route path="/settings" element={<MainLayout><SettingsPage /></MainLayout>} />
-                <Route path="/useful-info" element={<MainLayout><UsefulInfoPage /></MainLayout>} />
+        <PlatformProvider>
+          <AuthProvider>
+            <MobileSubscriptionProvider>
+              <Toaster />
+              <BrowserRouter>
+                <Routes>
+                  {/* Primary Preview 3 route - mobile-first landing */}
+                  <Route path="/" element={<Preview3Landing />} />
+                  <Route path="/preview-3" element={<Preview3Landing />} />
+                  
+                  {/* Authentication */}
+                  <Route path="/auth" element={<AuthPage />} />
+                  
+                  {/* Onboarding routes - platform-aware */}
+                  <Route path="/onboarding" element={<MobileOnboarding />} />
+                  <Route path="/web-onboarding" element={<WebOnboarding />} />
+                  
+                  {/* Other preview versions - preserved for reference */}
+                  <Route path="/landing-original" element={<LandingPage />} />
+                  <Route path="/preview-landing" element={<PreviewLanding />} />
+                  <Route path="/preview-2" element={<Preview2Landing />} />
+                  
+                  {/* Full application routes - universal access */}
+                  <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />
+                  <Route path="/calendar" element={<MainLayout><CalendarPage /></MainLayout>} />
+                  <Route path="/goals" element={<MainLayout><GoalsPage /></MainLayout>} />
+                  <Route path="/brain-games" element={<MainLayout><BrainGamesPage /></MainLayout>} />
+                  <Route path="/mood-tracking" element={<MainLayout><MoodTrackingPage /></MainLayout>} />
+                  <Route path="/gratitude" element={<MainLayout><GratitudePage /></MainLayout>} />
+                  <Route path="/accountability" element={<MainLayout><AccountabilityPage /></MainLayout>} />
+                  <Route path="/community" element={<MainLayout><CommunityPage /></MainLayout>} />
+                  <Route path="/notes" element={<MainLayout><NotesPage /></MainLayout>} />
+                  <Route path="/strategy" element={<MainLayout><StrategyDashboard /></MainLayout>} />
+                  <Route path="/analytics" element={<MainLayout><RevenueAnalyticsPage /></MainLayout>} />
+                  <Route path="/testing" element={<MainLayout><TestingSuitePage /></MainLayout>} />
+                  <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
+                  <Route path="/settings" element={<MainLayout><SettingsPage /></MainLayout>} />
+                  <Route path="/useful-info" element={<MainLayout><UsefulInfoPage /></MainLayout>} />
 
-                {/* Redirect unknown routes back to preview-3 for demo purposes */}
-                <Route path="*" element={<Navigate to="/preview-3" replace />} />
-              </Routes>
-            </BrowserRouter>
-          </MobileSubscriptionProvider>
-        </AuthProvider>
+                  {/* Redirect unknown routes to mobile-first landing */}
+                  <Route path="*" element={<Navigate to="/preview-3" replace />} />
+                </Routes>
+              </BrowserRouter>
+            </MobileSubscriptionProvider>
+          </AuthProvider>
+        </PlatformProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

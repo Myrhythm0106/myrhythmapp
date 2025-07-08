@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, Smartphone } from "lucide-react";
+import { ArrowLeft, ArrowRight, Smartphone, CheckCircle } from "lucide-react";
 import { MobileSubscriptionSelector } from "../subscription/MobileSubscriptionSelector";
 import { UserTypeStep } from "./steps/UserTypeStep";
 import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
@@ -28,12 +28,14 @@ export function MobileOnboarding() {
   const currentStepInfo = steps.find(step => step.id === currentStep) || steps[0];
 
   const handleUserTypeComplete = (data: { type: UserType }) => {
+    console.log("Mobile onboarding: User type selected:", data.type);
     setUserType(data.type);
     setCurrentStep("subscription");
     toast.success("Great! Let's choose your plan.");
   };
 
   const handlePlanSelection = async (planType: 'basic' | 'premium' | 'family') => {
+    console.log("Mobile onboarding: Plan selected:", planType);
     setSelectedPlan(planType);
     
     try {
@@ -47,13 +49,19 @@ export function MobileOnboarding() {
   };
 
   const handleContinueFree = () => {
+    console.log("Mobile onboarding: Continuing with free plan");
     setCurrentStep("assessment");
     toast.info("Starting with free features. You can upgrade anytime!");
   };
 
   const handleAssessmentComplete = () => {
+    console.log("Mobile onboarding: Assessment completed");
     setCurrentStep("complete");
     toast.success("Assessment complete! Welcome to your personalized MyRhythm experience.");
+    
+    // Store completion status
+    localStorage.setItem('myrhythm_mobile_onboarding_completed', 'true');
+    localStorage.setItem('myrhythm_user_type', userType || 'individual');
   };
 
   const handleBack = () => {
@@ -67,6 +75,11 @@ export function MobileOnboarding() {
       default:
         break;
     }
+  };
+
+  const handleEnterApp = () => {
+    console.log("Mobile onboarding: Entering main app");
+    window.location.href = '/dashboard';
   };
 
   const renderStepContent = () => {
@@ -96,20 +109,35 @@ export function MobileOnboarding() {
 
       case "complete":
         return (
-          <div className="text-center py-8 space-y-4">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
-              <Smartphone className="h-8 w-8 text-green-600" />
+          <div className="text-center py-8 space-y-6">
+            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+              <CheckCircle className="h-10 w-10 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold">Welcome to MyRhythm!</h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              Your personalized journey starts now. We've created a custom plan based on your assessment.
-            </p>
+            
+            <div className="space-y-2">
+              <h2 className="text-2xl font-bold">Welcome to MyRhythm!</h2>
+              <p className="text-muted-foreground max-w-md mx-auto">
+                Your personalized cognitive wellness journey starts now. We've created a custom plan based on your assessment.
+              </p>
+            </div>
+
+            <div className="bg-blue-50 rounded-lg p-4 space-y-2">
+              <h3 className="font-semibold text-blue-900">What's Next?</h3>
+              <ul className="text-sm text-blue-800 space-y-1 text-left max-w-xs mx-auto">
+                <li>• Explore your personalized dashboard</li>
+                <li>• Set up your daily routines</li>
+                <li>• Start your cognitive training</li>
+                <li>• Connect with the community</li>
+              </ul>
+            </div>
+            
             <Button 
-              onClick={() => window.location.href = '/dashboard'}
-              className="mt-6"
+              onClick={handleEnterApp}
+              className="mt-6 w-full max-w-xs"
+              size="lg"
             >
               <ArrowRight className="h-4 w-4 mr-2" />
-              Enter Your Dashboard
+              Enter MyRhythm
             </Button>
           </div>
         );
