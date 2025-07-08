@@ -49,8 +49,7 @@ export function FlowStepRenderer({
         return (
           <AssessmentTeaserPreview
             assessmentResult={assessmentResult}
-            onUpgrade={() => onPaymentSelect('trial')}
-            onComplete={onTeaserComplete}
+            onContinue={onTeaserComplete}
           />
         );
 
@@ -73,7 +72,6 @@ export function FlowStepRenderer({
         return (
           <PersonalizedResultsDisplay
             assessmentResult={assessmentResult}
-            onNext={() => console.log("Navigate to next step")}
           />
         );
 
@@ -90,7 +88,6 @@ export function FlowStepRenderer({
       case "user-guide":
         return (
           <MyRhythmFrameworkDisplay
-            assessmentResult={assessmentResult}
             onComplete={onBackToChoice}
           />
         );
@@ -99,7 +96,6 @@ export function FlowStepRenderer({
         return (
           <FocusAreaGoalTemplates
             focusArea={assessmentResult.focusArea}
-            onComplete={onGoalCreationComplete}
             onBack={onBackToChoice}
           />
         );
