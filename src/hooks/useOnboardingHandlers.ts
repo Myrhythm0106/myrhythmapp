@@ -4,7 +4,6 @@ import { toast } from "sonner";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { PlanType } from "@/components/onboarding/steps/PlanStep";
-import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 
 interface UseOnboardingHandlersProps {
   currentStep: number;
@@ -15,8 +14,6 @@ interface UseOnboardingHandlersProps {
   setLocation: (location: any) => void;
   setSelectedPlan: (plan: PlanType) => void;
   setBillingPeriod: (period: 'monthly' | 'annual') => void;
-  setPaymentData: (data: PaymentFormValues) => void;
-  setShowPaymentConfirmation: (show: boolean) => void;
   userType: UserType | null;
   selectedPlan: PlanType;
   billingPeriod?: 'monthly' | 'annual';
@@ -53,39 +50,18 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     console.log("OnboardingHandlers: Plan selected:", plan, "Billing:", billingPeriod);
     props.setSelectedPlan(plan);
     props.setBillingPeriod(billingPeriod);
-    props.setCurrentStep(4); // Go to payment (step 4)
-  };
-
-  const handlePaymentComplete = (data: PaymentFormValues) => {
-    console.log("OnboardingHandlers: Payment completed:", data);
-    props.setPaymentData(data);
-    
-    if (data.paymentIntentId === 'skipped' || data.paymentIntentId === 'continue_anyway') {
-      // Skip to assessment without payment
-      console.log("OnboardingHandlers: Skipping payment, proceeding to pre-assessment");
-      props.setCurrentStep(5); // Go to pre-assessment (step 5)
-    } else {
-      // Show payment confirmation modal
-      console.log("OnboardingHandlers: Showing payment confirmation");
-      props.setShowPaymentConfirmation(true);
-    }
-  };
-
-  const handlePaymentConfirm = () => {
-    console.log("OnboardingHandlers: Payment confirmed, proceeding to pre-assessment");
-    props.setShowPaymentConfirmation(false);
-    props.setCurrentStep(5); // Go to pre-assessment (step 5)
+    props.setCurrentStep(4); // Go directly to pre-assessment (step 4) - skip payment
   };
 
   const handlePreAssessmentComplete = () => {
     console.log("OnboardingHandlers: Pre-assessment completed, proceeding to rhythm assessment");
-    props.setCurrentStep(6); // Go to rhythm assessment (step 6)
+    props.setCurrentStep(5); // Go to rhythm assessment (step 5)
   };
 
   const handleRhythmAssessmentComplete = () => {
-    console.log("OnboardingHandlers: Rhythm assessment completed, navigating to dashboard");
-    toast.success("Welcome to MyRhythm! Your personalized journey begins now.");
-    navigate("/dashboard");
+    console.log("OnboardingHandlers: Rhythm assessment completed, navigating to mobile onboarding");
+    toast.success("Assessment complete! Let's set up your mobile experience.");
+    navigate("/onboarding"); // Navigate to mobile onboarding
   };
 
   return {
@@ -94,8 +70,6 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     handlePersonalInfoComplete,
     handleLocationComplete,
     handlePlanSelected,
-    handlePaymentComplete,
-    handlePaymentConfirm,
     handlePreAssessmentComplete,
     handleRhythmAssessmentComplete,
   };

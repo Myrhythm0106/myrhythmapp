@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
 import { FlowStepRenderer } from "./flow/FlowStepRenderer";
 import { FlowNavigation } from "./flow/FlowNavigation";
-import { usePaymentHandlers } from "./flow/PaymentHandlers";
 import { useFlowHandlers } from "./flow/FlowHandlers";
 import { useEncouragement } from "../../../encouragement/EncouragementEngine";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,11 +15,10 @@ interface PostAssessmentFlowProps {
   onComplete: () => void;
 }
 
-type FlowStep = "teaser-preview" | "registration-prompt" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+type FlowStep = "teaser-preview" | "registration-prompt" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessmentFlowProps) {
   const [currentStep, setCurrentStep] = useState<FlowStep>("teaser-preview");
-  const [paymentCompleted, setPaymentCompleted] = useState(false);
   const [timeLeft, setTimeLeft] = useState(24 * 60 * 60); // 24 hours in seconds
   
   const { triggerEncouragement, EncouragementComponent } = useEncouragement();
@@ -40,13 +38,6 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
     return () => clearInterval(timer);
   }, []);
 
-  const { handlePaymentSelect, handlePaymentOption } = usePaymentHandlers(
-    setPaymentCompleted,
-    (step: FlowStep) => setCurrentStep(step),
-    triggerEncouragement,
-    assessmentResult
-  );
-
   const flowHandlers = useFlowHandlers(
     (step: FlowStep) => setCurrentStep(step),
     onComplete,
@@ -59,7 +50,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
       // Navigate to registration
       window.location.href = '/auth';
     } else {
-      setCurrentStep('payment');
+      setCurrentStep('results');
     }
   };
 
@@ -108,7 +99,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
               <p className="text-xs opacity-90">Upgrade to unlock full potential</p>
             </div>
             <Button 
-              onClick={() => setCurrentStep('payment')}
+              onClick={() => window.location.href = '/onboarding'}
               size="sm"
               className="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold"
             >
@@ -120,66 +111,6 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
     </div>
   );
 
-  // Feature comparison sidebar
-  const FeatureComparisonSidebar = () => (
-    currentStep === "teaser-preview" && (
-      <div className="fixed left-4 top-1/2 transform -translate-y-1/2 w-64 z-40 hidden lg:block">
-        <Card className="bg-white shadow-xl border-2 border-gray-200">
-          <CardContent className="p-4">
-            <div className="text-center mb-4">
-              <Badge className="bg-orange-100 text-orange-800 mb-2">
-                Current Mode: Preview
-              </Badge>
-              <p className="text-sm font-semibold text-gray-800">vs Premium Access</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="flex items-center justify-between text-sm">
-                <span>Insights</span>
-                <div className="flex gap-2">
-                  <Badge variant="outline" className="text-xs">1</Badge>
-                  <Badge className="bg-green-600 text-white text-xs">8</Badge>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between text-sm">
-                <span>Action Plans</span>
-                <div className="flex gap-2">
-                  <Badge variant="outline" className="text-xs">0</Badge>
-                  <Badge className="bg-green-600 text-white text-xs">Full</Badge>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between text-sm">
-                <span>Progress Tracking</span>
-                <div className="flex gap-2">
-                  <Lock className="h-4 w-4 text-gray-400" />
-                  <Badge className="bg-green-600 text-white text-xs">✓</Badge>
-                </div>
-              </div>
-              
-              <div className="flex items-center justify-between text-sm">
-                <span>Support</span>
-                <div className="flex gap-2">
-                  <Lock className="h-4 w-4 text-gray-400" />
-                  <Badge className="bg-green-600 text-white text-xs">✓</Badge>
-                </div>
-              </div>
-            </div>
-            
-            <Button 
-              onClick={() => setCurrentStep('payment')}
-              className="w-full mt-4 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
-            >
-              <Star className="h-4 w-4 mr-2" />
-              Upgrade Now
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  );
-
   return (
     <div className="max-w-4xl mx-auto space-y-6 relative">
       {/* Urgent conversion banner */}
@@ -187,9 +118,6 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
       
       {/* Encouragement Component */}
       {EncouragementComponent}
-      
-      {/* Feature comparison sidebar */}
-      <FeatureComparisonSidebar />
       
       {/* Persistent upgrade reminder */}
       <PersistentUpgradeReminder />
@@ -199,8 +127,6 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
         <FlowStepRenderer
           currentStep={currentStep}
           assessmentResult={assessmentResult}
-          onPaymentSelect={handlePaymentSelect}
-          onPaymentOption={handlePaymentOption}
           onBackToPreview={flowHandlers.handleBackToPreview}
           onExploreGuide={flowHandlers.handleExploreGuide}
           onStartGoals={flowHandlers.handleStartGoals}
@@ -236,7 +162,7 @@ export function PostAssessmentFlow({ assessmentResult, onComplete }: PostAssessm
                 <p className="font-mono font-bold text-red-600">{formatTime(timeLeft)}</p>
               </div>
               <Button 
-                onClick={() => setCurrentStep('payment')}
+                onClick={() => window.location.href = '/onboarding'}
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 px-6"
               >
                 <Zap className="h-4 w-4 mr-2" />

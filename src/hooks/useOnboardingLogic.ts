@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
 import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
 import { PlanType } from "@/components/onboarding/steps/PlanStep";
-import { PaymentFormValues } from "@/components/onboarding/steps/PaymentStep";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 
 type LocationFormValues = {
@@ -18,7 +17,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Initialize currentStep from URL parameter with proper validation
-  // Updated for 7-step flow (including payment step)
+  // Updated for 5-step flow (removed payment step)
   const [currentStep, setCurrentStep] = useState(() => {
     const stepParam = searchParams.get('step');
     if (stepParam) {
@@ -36,8 +35,6 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>("premium");
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
-  const [paymentData, setPaymentData] = useState<PaymentFormValues | null>(null);
-  const [showPaymentConfirmation, setShowPaymentConfirmation] = useState(false);
   
   // Form validation states for auto-progression
   const [isUserTypeSelected, setIsUserTypeSelected] = useState(false);
@@ -97,10 +94,6 @@ export const useOnboardingLogic = (totalSteps: number) => {
     setSelectedPlan,
     billingPeriod,
     setBillingPeriod,
-    paymentData,
-    setPaymentData,
-    showPaymentConfirmation,
-    setShowPaymentConfirmation,
     isUserTypeSelected,
     setIsUserTypeSelected,
     isPersonalInfoValid,

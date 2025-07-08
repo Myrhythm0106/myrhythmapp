@@ -1,16 +1,13 @@
 
 import React from "react";
 import { UserTypeStep } from "./steps/UserTypeStep";
-// Removed PersonalInfoStep import since we're skipping it
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
-import { PaymentStep } from "./steps/PaymentStep";
 import { PreAssessmentStep } from "./steps/rhythm/PreAssessmentStep";
 import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
 import { UserType } from "./steps/UserTypeStep";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
 import { PlanType } from "./steps/PlanStep";
-import { PaymentFormValues } from "./steps/PaymentStep";
 
 interface OnboardingStepRendererProps {
   currentStep: number;
@@ -27,7 +24,6 @@ interface OnboardingStepRendererProps {
   onPersonalInfoComplete: (data: PersonalInfoFormValues) => void;
   onLocationComplete: (data: any) => void;
   onPlanSelected: (plan: PlanType, billingPeriod?: 'monthly' | 'annual') => void;
-  onPaymentComplete: (data: PaymentFormValues) => void;
   onPreAssessmentComplete: () => void;
   onRhythmAssessmentComplete: () => void;
 }
@@ -47,7 +43,6 @@ export const OnboardingStepRenderer = ({
   onPersonalInfoComplete,
   onLocationComplete,
   onPlanSelected,
-  onPaymentComplete,
   onPreAssessmentComplete,
   onRhythmAssessmentComplete,
 }: OnboardingStepRendererProps) => {
@@ -79,21 +74,12 @@ export const OnboardingStepRenderer = ({
       
     case 4:
       return (
-        <PaymentStep
-          onComplete={onPaymentComplete}
-          selectedPlan={selectedPlan}
-          billingPeriod={billingPeriod}
-        />
-      );
-      
-    case 5:
-      return (
         <PreAssessmentStep
           onComplete={onPreAssessmentComplete}
         />
       );
       
-    case 6:
+    case 5:
       return (
         <RhythmAssessmentStep
           onComplete={onRhythmAssessmentComplete}

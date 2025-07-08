@@ -3,20 +3,17 @@ import React from "react";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
 import { AssessmentTeaserPreview } from "../AssessmentTeaserPreview";
 import { RegistrationPrompt } from "../RegistrationPrompt";
-import { PostAssessmentPayment } from "../PostAssessmentPayment";
 import { PersonalizedResultsDisplay } from "../PersonalizedResultsDisplay";
 import { PostAssessmentChoiceScreen } from "../PostAssessmentChoiceScreen";
 import { MyRhythmFrameworkDisplay } from "../MyRhythmFrameworkDisplay";
 import { FocusAreaGoalTemplates } from "../FocusAreaGoalTemplates";
 import { LifeManagementSetupWizard } from "../LifeManagementSetupWizard";
 
-type FlowStep = "teaser-preview" | "registration-prompt" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+type FlowStep = "teaser-preview" | "registration-prompt" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
 
 interface FlowStepRendererProps {
   currentStep: FlowStep;
   assessmentResult: AssessmentResult;
-  onPaymentSelect: (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => void;
-  onPaymentOption: (option: 'trial' | 'monthly' | 'annual' | 'skip-trial-monthly') => void;
   onBackToPreview: () => void;
   onExploreGuide: () => void;
   onStartGoals: () => void;
@@ -31,8 +28,6 @@ interface FlowStepRendererProps {
 export function FlowStepRenderer({
   currentStep,
   assessmentResult,
-  onPaymentSelect,
-  onPaymentOption,
   onBackToPreview,
   onExploreGuide,
   onStartGoals,
@@ -57,14 +52,6 @@ export function FlowStepRenderer({
         return (
           <RegistrationPrompt
             onRegistrationChoice={onRegistrationPrompt}
-          />
-        );
-
-      case "payment":
-        return (
-          <PostAssessmentPayment
-            onSelectPaymentOption={onPaymentOption}
-            onBack={onBackToPreview}
           />
         );
 
