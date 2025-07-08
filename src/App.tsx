@@ -3,7 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+import { MobileSubscriptionProvider } from "@/contexts/MobileSubscriptionContext";
 import MainLayout from "@/components/layout/MainLayout";
 import LandingPage from "@/pages/Landing";
 import AuthPage from "@/pages/AuthPage";
@@ -21,11 +21,11 @@ import RevenueAnalyticsPage from "@/pages/RevenueAnalyticsPage";
 import TestingSuitePage from "@/pages/TestingSuitePage";
 import ProfilePage from "@/pages/Profile";
 import SettingsPage from "@/pages/SecuritySettings";
-import Onboarding from "@/pages/Onboarding";
 import UsefulInfoPage from "@/pages/UsefulInfoPage";
 import Preview3Landing from "@/pages/Preview3Landing";
 import PreviewLanding from "@/pages/PreviewLanding";
 import Preview2Landing from "@/pages/Preview2Landing";
+import { MobileOnboarding } from "@/components/onboarding/MobileOnboarding";
 
 const queryClient = new QueryClient();
 
@@ -34,7 +34,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AuthProvider>
-          <SubscriptionProvider>
+          <MobileSubscriptionProvider>
             <Toaster />
             <BrowserRouter>
               <Routes>
@@ -42,9 +42,9 @@ function App() {
                 <Route path="/" element={<Preview3Landing />} />
                 <Route path="/preview-3" element={<Preview3Landing />} />
                 
-                {/* Authentication and onboarding */}
+                {/* Authentication and mobile-first onboarding */}
                 <Route path="/auth" element={<AuthPage />} />
-                <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/onboarding" element={<MobileOnboarding />} />
                 
                 {/* Other preview versions */}
                 <Route path="/landing-original" element={<LandingPage />} />
@@ -72,7 +72,7 @@ function App() {
                 <Route path="*" element={<Navigate to="/preview-3" replace />} />
               </Routes>
             </BrowserRouter>
-          </SubscriptionProvider>
+          </MobileSubscriptionProvider>
         </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
