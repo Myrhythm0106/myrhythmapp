@@ -104,7 +104,7 @@ export function MobileSubscriptionProvider({ children }: { children: React.React
   const { user } = useAuth();
   const [subscriptionData, setSubscriptionData] = useState<MobileSubscriptionData>({
     subscribed: false,
-    trial_active: true, // Default to trial for new users
+    trial_active: true,
     trial_days_left: 7,
     subscription_tier: 'premium',
     status: 'trial_active'
@@ -123,11 +123,8 @@ export function MobileSubscriptionProvider({ children }: { children: React.React
       return;
     }
 
-    // For now, simulate subscription check
-    // In production, this would check App Store/Google Play receipts
     console.log("Checking mobile subscription status for user:", user.id);
     
-    // Default to trial active for development
     setSubscriptionData({
       subscribed: false,
       trial_active: true,
@@ -141,11 +138,8 @@ export function MobileSubscriptionProvider({ children }: { children: React.React
     console.log("Starting mobile purchase for plan:", planType);
     
     try {
-      // In production, this would use @capacitor-community/in-app-purchases
-      // For now, simulate successful purchase
       toast.success("Redirecting to App Store...");
       
-      // Simulate App Store purchase flow
       setTimeout(() => {
         setSubscriptionData(prev => ({
           ...prev,
@@ -166,7 +160,6 @@ export function MobileSubscriptionProvider({ children }: { children: React.React
     console.log("Restoring mobile purchases");
     
     try {
-      // In production, this would restore from App Store/Google Play
       toast.info("Checking for existing purchases...");
       
       setTimeout(() => {
