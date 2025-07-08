@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,20 +24,20 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
     <div className="space-y-4">
       {/* Premium Features Header */}
       <div className="text-center">
-        <Badge className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 mb-2">
+        <Badge className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 mb-2">
           <Crown className="h-4 w-4 mr-2" />
-          Premium Insights Locked
+          Premium Plan Locked
         </Badge>
-        <p className="text-gray-600 text-sm">
-          Upgrade to unlock your complete personalized assessment results
+        <p className="text-slate-600 text-sm">
+          Upgrade to unlock your Full Plan with complete personalized results
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {lockedInsights.map((insight, index) => (
-          <Card key={index} className="relative overflow-hidden border-2 border-dashed border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 hover:shadow-lg transition-shadow">
+          <Card key={index} className="relative overflow-hidden border-2 border-dashed border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50 hover:shadow-lg transition-shadow">
             <div className="absolute top-2 right-2 z-10">
-              <Badge className="bg-yellow-500 text-black font-semibold">
+              <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold">
                 <Crown className="h-3 w-3 mr-1" />
                 Premium
               </Badge>
@@ -47,12 +46,12 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
             {/* Blur overlay effect */}
             <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex items-center justify-center">
               <div className="text-center">
-                <Lock className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-600">Locked</p>
+                <Lock className="h-8 w-8 text-slate-400 mx-auto mb-2" />
+                <p className="text-sm font-semibold text-slate-600">Locked</p>
                 <Button 
                   onClick={handleUpgradeClick}
                   size="sm" 
-                  className="mt-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
+                  className="mt-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
                 >
                   Unlock
                 </Button>
@@ -61,25 +60,25 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
 
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
-                <insight.icon className="h-5 w-5 text-blue-600" />
+                <insight.icon className="h-5 w-5 text-emerald-600" />
                 <CardTitle className="text-lg">{insight.title}</CardTitle>
               </div>
             </CardHeader>
             
             <CardContent className="space-y-3">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-slate-600">
                 {insight.preview}
               </p>
               
-              <div className="bg-blue-50 p-3 rounded-lg border border-blue-200">
-                <p className="text-xs text-blue-800 font-medium">
+              <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
+                <p className="text-xs text-emerald-800 font-medium">
                   {insight.value}
                 </p>
               </div>
               
-              <div className="flex items-center gap-2 pt-2 border-t border-dashed border-gray-300">
-                <Star className="h-4 w-4 text-yellow-500" />
-                <span className="text-xs text-gray-500 font-medium">
+              <div className="flex items-center gap-2 pt-2 border-t border-dashed border-emerald-300">
+                <Star className="h-4 w-4 text-amber-500" />
+                <span className="text-xs text-slate-500 font-medium">
                   {insight.userCount} users found this transformational
                 </span>
               </div>
@@ -89,49 +88,49 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
       </div>
 
       {/* Upgrade Pressure Section */}
-      <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-2 border-orange-300 mt-6">
+      <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 mt-6">
         <CardContent className="text-center p-6">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <Eye className="h-6 w-6 text-orange-600" />
-            <h3 className="text-xl font-bold text-orange-900">
-              You're Missing 7 Key Insights
+            <Eye className="h-6 w-6 text-emerald-600" />
+            <h3 className="text-xl font-bold text-emerald-900">
+              Upgrade to unlock your Full Plan
             </h3>
           </div>
           
-          <p className="text-orange-800 mb-4 max-w-2xl mx-auto">
+          <p className="text-emerald-800 mb-4 max-w-2xl mx-auto">
             These personalized insights have helped thousands of users like you achieve their goals faster. 
             Don't settle for basic information when your complete transformation plan is ready.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-sm">
-            <div className="bg-white/80 p-3 rounded-lg border border-orange-200">
-              <p className="font-semibold text-orange-800">2,847 Users</p>
-              <p className="text-orange-600">Transformed Their Lives</p>
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
+              <p className="font-semibold text-emerald-800">2,847 Users</p>
+              <p className="text-emerald-600">Transformed Their Lives</p>
             </div>
-            <div className="bg-white/80 p-3 rounded-lg border border-orange-200">
-              <p className="font-semibold text-orange-800">94% Success</p>
-              <p className="text-orange-600">Rate With Premium</p>
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
+              <p className="font-semibold text-emerald-800">94% Success</p>
+              <p className="text-emerald-600">Rate With Premium</p>
             </div>
-            <div className="bg-white/80 p-3 rounded-lg border border-orange-200">
-              <p className="font-semibold text-orange-800">2.3 Weeks</p>
-              <p className="text-orange-600">Average to See Results</p>
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
+              <p className="font-semibold text-emerald-800">2.3 Weeks</p>
+              <p className="text-emerald-600">Average to See Results</p>
             </div>
-            <div className="bg-white/80 p-3 rounded-lg border border-orange-200">
-              <p className="font-semibold text-orange-800">4.9/5 Stars</p>
-              <p className="text-orange-600">User Satisfaction</p>
+            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
+              <p className="font-semibold text-emerald-800">4.9/5 Stars</p>
+              <p className="text-emerald-600">User Satisfaction</p>
             </div>
           </div>
           
           <Button 
             onClick={handleUpgradeClick}
             size="lg"
-            className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold px-8 py-3"
+            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold px-8 py-3 shadow-lg"
           >
             <Zap className="h-5 w-5 mr-2" />
-            Unlock All 8 Insights Now
+            Unlock Full Plan Now
           </Button>
           
-          <p className="text-xs text-orange-600 mt-2">
+          <p className="text-xs text-emerald-600 mt-2">
             7-day free trial • Cancel anytime • Instant access
           </p>
         </CardContent>

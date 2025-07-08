@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,14 +62,13 @@ export function MobileOnboarding() {
       toast.success("Welcome to MyRhythm! Let's complete your assessment.");
     } catch (error) {
       console.error("Plan selection error:", error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Please complete your App Store purchase to continue.");
     }
   };
 
   const handleContinueFree = () => {
-    console.log("Mobile onboarding: Continuing with free plan");
-    setCurrentStep("assessment");
-    toast.info("Starting with free features. You can upgrade anytime!");
+    // Remove free continuation - redirect to subscription
+    toast.info("Please select a plan to continue with MyRhythm's full features.");
   };
 
   const handleAssessmentComplete = () => {
@@ -133,20 +133,20 @@ export function MobileOnboarding() {
       case "complete":
         return (
           <div className="text-center py-8 space-y-6">
-            <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto">
+            <div className="w-20 h-20 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto shadow-lg">
               <CheckCircle className="h-10 w-10 text-white" />
             </div>
             
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold">You're All Set! 🎉</h2>
-              <p className="text-muted-foreground max-w-md mx-auto">
+              <h2 className="text-2xl font-bold text-slate-800">You're All Set! 🎉</h2>
+              <p className="text-slate-600 max-w-md mx-auto">
                 Your empowering journey begins now. We've personalized everything just for you.
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 space-y-2">
-              <h3 className="font-semibold text-blue-900">Your Empowerment Hub Awaits:</h3>
-              <ul className="text-sm text-blue-800 space-y-1 text-left max-w-xs mx-auto">
+            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4 space-y-2">
+              <h3 className="font-semibold text-emerald-900">Your Empowerment Hub Awaits:</h3>
+              <ul className="text-sm text-emerald-800 space-y-1 text-left max-w-xs mx-auto">
                 <li>🎯 Set your daily "Today I Will..." focus</li>
                 <li>🦸‍♀️ Connect with your support heroes</li>
                 <li>🏆 Celebrate every win, big or small</li>
@@ -156,7 +156,7 @@ export function MobileOnboarding() {
             
             <Button 
               onClick={handleEnterApp}
-              className="mt-6 w-full max-w-xs bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700 text-white"
+              className="mt-6 w-full max-w-xs bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg"
               size="lg"
             >
               <ArrowRight className="h-4 w-4 mr-2" />
@@ -177,8 +177,8 @@ export function MobileOnboarding() {
 
   if (currentStep === "complete") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md border-emerald-200 shadow-xl">
           <CardContent className="p-8">
             {renderStepContent()}
           </CardContent>
@@ -188,26 +188,26 @@ export function MobileOnboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50">
       {/* Progress Header */}
-      <div className="bg-white shadow-sm p-4">
+      <div className="bg-white shadow-sm p-4 border-b border-emerald-100">
         <div className="max-w-md mx-auto">
           <div className="flex items-center justify-between mb-2">
             {currentStep !== "empowerment" && (
-              <Button variant="ghost" size="sm" onClick={handleBack}>
+              <Button variant="ghost" size="sm" onClick={handleBack} className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50">
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back
               </Button>
             )}
             <div className="flex-1" />
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-slate-600">
               Step {steps.findIndex(s => s.id === currentStep) + 1} of {steps.length}
             </span>
           </div>
           
           <div className="space-y-2">
-            <h1 className="text-lg font-semibold">{currentStepInfo.title}</h1>
-            <Progress value={currentStepInfo.progress} className="h-2" />
+            <h1 className="text-lg font-semibold text-slate-800">{currentStepInfo.title}</h1>
+            <Progress value={currentStepInfo.progress} className="h-2 bg-emerald-100" />
           </div>
         </div>
       </div>

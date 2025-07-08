@@ -14,81 +14,81 @@ export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptP
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-green-500 to-blue-600 rounded-full flex items-center justify-center">
+        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
           <Gift className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-gray-900">Unlock Your Complete Rhythm Plan</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Your assessment results are ready! Create your free account to access your full personalized journey and recommendations.
+        <h1 className="text-3xl font-bold text-slate-900">Complete Your Premium Purchase</h1>
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+          Your assessment results are ready! Complete your premium subscription to access your full personalized journey and recommendations.
         </p>
       </div>
 
-      {/* Benefits of Registration */}
+      {/* Benefits of Premium */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-blue-50">
+        <Card className="border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-green-800">
+            <CardTitle className="flex items-center gap-2 text-emerald-800">
               <CheckCircle2 className="h-5 w-5" />
-              With Free Registration
+              With Premium Subscription
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 <span className="text-sm">Complete personalized assessment results</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 <span className="text-sm">Detailed 8-week action plan</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 <span className="text-sm">Personalized daily recommendations</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
                 <span className="text-sm">Progress tracking dashboard</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Save and return to your journey</span>
+                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <span className="text-sm">Priority support & guidance</span>
               </div>
             </div>
-            <Badge className="bg-green-100 text-green-800 w-full justify-center py-2">
-              ✨ 100% Free - No Credit Card Required
+            <Badge className="bg-emerald-600 text-white w-full justify-center py-2">
+              ✨ 7-Day Free Trial Available
             </Badge>
           </CardContent>
         </Card>
 
-        <Card className="border border-gray-200">
+        <Card className="border border-slate-200">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-gray-700">
+            <CardTitle className="flex items-center gap-2 text-slate-700">
               <Lock className="h-5 w-5" />
-              Limited Preview Mode
+              Without Premium
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-                <span className="text-sm text-gray-600">Basic focus area overview only</span>
+                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
+                <span className="text-sm text-slate-600">Basic focus area overview only</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-                <span className="text-sm text-gray-600">Limited recommendations</span>
+                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
+                <span className="text-sm text-slate-600">Limited recommendations</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-                <span className="text-sm text-gray-600">No progress tracking</span>
+                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
+                <span className="text-sm text-slate-600">No progress tracking</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-gray-300"></div>
-                <span className="text-sm text-gray-600">Results not saved</span>
+                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
+                <span className="text-sm text-slate-600">No personal action plan</span>
               </div>
             </div>
-            <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
-              You'll miss out on your complete personalized journey
+            <div className="text-xs text-slate-500 bg-slate-50 p-2 rounded">
+              Missing the complete transformation experience
             </div>
           </CardContent>
         </Card>
@@ -99,40 +99,33 @@ export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptP
         <Button 
           onClick={() => onRegistrationChoice('register')}
           size="lg"
-          className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white px-8 py-4 text-lg w-full sm:w-auto"
+          className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-8 py-4 text-lg w-full sm:w-auto shadow-lg"
         >
           <UserPlus className="mr-2 h-5 w-5" />
-          Create Free Account & Get Full Results
+          Subscribe to Premium & Get Full Results
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
         
         <div className="flex items-center justify-center gap-4 text-sm">
-          <div className="flex items-center gap-1 text-green-600">
+          <div className="flex items-center gap-1 text-emerald-600">
             <Star className="h-4 w-4" />
-            <span>Takes 30 seconds</span>
+            <span>7-day free trial</span>
           </div>
-          <div className="w-px h-4 bg-gray-300"></div>
-          <div className="flex items-center gap-1 text-green-600">
-            <Star className="h-4 w-4" />
-            <span>No spam ever</span>
-          </div>
-          <div className="w-px h-4 bg-gray-300"></div>
-          <div className="flex items-center gap-1 text-green-600">
+          <div className="w-px h-4 bg-slate-300"></div>
+          <div className="flex items-center gap-1 text-emerald-600">
             <Star className="h-4 w-4" />
             <span>Cancel anytime</span>
           </div>
+          <div className="w-px h-4 bg-slate-300"></div>
+          <div className="flex items-center gap-1 text-emerald-600">
+            <Star className="h-4 w-4" />
+            <span>Full access included</span>
+          </div>
         </div>
 
-        <div className="pt-4 border-t border-gray-200">
-          <Button 
-            onClick={() => onRegistrationChoice('continue-guest')}
-            variant="ghost"
-            className="text-gray-600 hover:text-gray-800"
-          >
-            Continue with limited preview instead
-          </Button>
-          <p className="text-xs text-gray-500 mt-1">
-            (You can register later, but your results won't be saved)
+        <div className="pt-4 border-t border-slate-200">
+          <p className="text-xs text-slate-500 mb-2">
+            Premium subscription required for full personalized experience
           </p>
         </div>
       </div>
