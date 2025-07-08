@@ -56,8 +56,7 @@ export function FlowStepRenderer({
       case "registration-prompt":
         return (
           <RegistrationPrompt
-            onRegister={() => onRegistrationPrompt('register')}
-            onContinueGuest={() => onRegistrationPrompt('continue-guest')}
+            onRegistrationChoice={onRegistrationPrompt}
           />
         );
 
@@ -90,7 +89,7 @@ export function FlowStepRenderer({
       case "user-guide":
         return (
           <MyRhythmFrameworkDisplay
-            onBack={onBackToChoice}
+            currentStepIndex={0}
           />
         );
 
@@ -98,7 +97,8 @@ export function FlowStepRenderer({
         return (
           <FocusAreaGoalTemplates
             focusArea={assessmentResult.focusArea}
-            onComplete={onGoalCreationComplete}
+            onGoalsSelected={() => {}}
+            selectedGoals={[]}
           />
         );
 
