@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Sparkles, Heart, ArrowRight } from "lucide-react";
+import { Sparkles, Heart, ArrowRight, Target, Users, Briefcase, Activity } from "lucide-react";
 
 type OnboardingStep = "feeling" | "goal" | "ready";
 
@@ -13,41 +13,45 @@ export function EmpowermentOnboarding() {
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
 
   const feelings = [
-    { emoji: "😊", label: "Great", value: "great" },
-    { emoji: "😐", label: "Okay", value: "okay" },
-    { emoji: "😔", label: "Tough", value: "tough" },
-    { emoji: "😴", label: "Tired", value: "tired" },
-    { emoji: "🤕", label: "Struggling", value: "struggling" }
+    { emoji: "😊", label: "Excellent", value: "excellent", color: "hover:bg-emerald-50 hover:border-emerald-300" },
+    { emoji: "😌", label: "Good", value: "good", color: "hover:bg-blue-50 hover:border-blue-300" },
+    { emoji: "😐", label: "Neutral", value: "neutral", color: "hover:bg-slate-50 hover:border-slate-300" },
+    { emoji: "😔", label: "Challenging", value: "challenging", color: "hover:bg-orange-50 hover:border-orange-300" },
+    { emoji: "🤕", label: "Difficult", value: "difficult", color: "hover:bg-red-50 hover:border-red-300" }
   ];
 
   const goals = [
     { 
-      emoji: "🏃‍♀️", 
-      title: "Get Stronger", 
-      description: "Recovery & wellness",
+      icon: Activity,
+      title: "Health & Recovery", 
+      description: "Optimize wellness and rehabilitation",
       value: "recovery",
-      image: "💪"
+      gradient: "from-emerald-600 to-emerald-800",
+      accentColor: "bg-emerald-100"
     },
     { 
-      emoji: "👨‍👩‍👧‍👦", 
-      title: "Be With Family", 
-      description: "Connect with loved ones",
+      icon: Users,
+      title: "Family & Relationships", 
+      description: "Strengthen personal connections",
       value: "family",
-      image: "❤️"
+      gradient: "from-blue-600 to-blue-800",
+      accentColor: "bg-blue-100"
     },
     { 
-      emoji: "💼", 
-      title: "Work & Achieve", 
-      description: "Career & goals",
+      icon: Briefcase,
+      title: "Career & Achievement", 
+      description: "Professional development and goals",
       value: "work",
-      image: "🎯"
+      gradient: "from-indigo-600 to-indigo-800",
+      accentColor: "bg-indigo-100"
     },
     { 
-      emoji: "🌟", 
-      title: "Feel Amazing", 
-      description: "Daily wellness",
+      icon: Target,
+      title: "Personal Excellence", 
+      description: "Daily wellness and self-improvement",
       value: "wellness",
-      image: "✨"
+      gradient: "from-purple-600 to-purple-800",
+      accentColor: "bg-purple-100"
     }
   ];
 
@@ -85,41 +89,43 @@ export function EmpowermentOnboarding() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-green-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        {/* Progress */}
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2">
-            <Sparkles className="h-6 w-6 text-purple-600" />
-            <span className="text-sm font-medium text-gray-600">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-100 flex items-center justify-center p-6">
+      <div className="w-full max-w-2xl space-y-8">
+        {/* Professional Progress Header */}
+        <div className="text-center space-y-4">
+          <div className="flex items-center justify-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-slate-800 to-slate-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Sparkles className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-lg font-semibold text-slate-700">
               Step {getStepNumber()} of 3
             </span>
           </div>
-          <Progress value={(getStepNumber() / 3) * 100} className="h-2" />
+          <Progress value={(getStepNumber() / 3) * 100} className="h-3 bg-slate-200" />
         </div>
 
-        {/* Step 1: How are you feeling? */}
+        {/* Step 1: Professional Wellness Assessment */}
         {currentStep === "feeling" && (
-          <Card className="border-0 shadow-xl">
-            <CardContent className="p-8 text-center space-y-6">
-              <div className="space-y-2">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  How are you feeling today?
+          <Card className="border-0 shadow-2xl bg-white">
+            <CardContent className="p-12 text-center space-y-8">
+              <div className="space-y-4">
+                <h1 className="text-3xl font-bold text-slate-800">
+                  Wellness Assessment
                 </h1>
-                <p className="text-gray-600">
-                  Just tap the face that matches your mood
+                <p className="text-xl text-slate-600 max-w-lg mx-auto">
+                  Please select your current wellness state for personalized support
                 </p>
               </div>
               
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-6 max-w-2xl mx-auto">
                 {feelings.map((feeling) => (
                   <button
                     key={feeling.value}
                     onClick={() => handleFeelingSelect(feeling.value)}
-                    className="p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-purple-300 hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                    className={`p-8 bg-white rounded-3xl border-2 border-slate-200 ${feeling.color} transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl`}
                   >
-                    <div className="text-4xl mb-2">{feeling.emoji}</div>
-                    <div className="text-sm font-medium text-gray-700">{feeling.label}</div>
+                    <div className="text-5xl mb-4">{feeling.emoji}</div>
+                    <div className="text-lg font-semibold text-slate-800">{feeling.label}</div>
                   </button>
                 ))}
               </div>
@@ -127,76 +133,95 @@ export function EmpowermentOnboarding() {
           </Card>
         )}
 
-        {/* Step 2: What brings you here? */}
+        {/* Step 2: Professional Goal Setting */}
         {currentStep === "goal" && (
-          <Card className="border-0 shadow-xl">
-            <CardContent className="p-8 text-center space-y-6">
-              <div className="space-y-2">
-                <h1 className="text-2xl font-bold text-gray-900">
-                  What brings you here?
+          <Card className="border-0 shadow-2xl bg-white">
+            <CardContent className="p-12 text-center space-y-8">
+              <div className="space-y-4">
+                <h1 className="text-3xl font-bold text-slate-800">
+                  Priority Focus Area
                 </h1>
-                <p className="text-gray-600">
-                  Choose what matters most to you right now
+                <p className="text-xl text-slate-600 max-w-lg mx-auto">
+                  Select your primary area of focus for personalized guidance
                 </p>
               </div>
               
-              <div className="space-y-3">
-                {goals.map((goal) => (
-                  <button
-                    key={goal.value}
-                    onClick={() => handleGoalSelect(goal.value)}
-                    className="w-full p-6 bg-white rounded-2xl border-2 border-gray-100 hover:border-blue-300 hover:shadow-lg transform hover:scale-102 transition-all duration-200 text-left"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="text-4xl">{goal.emoji}</div>
-                      <div className="flex-1">
-                        <h3 className="font-bold text-gray-900">{goal.title}</h3>
-                        <p className="text-sm text-gray-600">{goal.description}</p>
+              <div className="space-y-4">
+                {goals.map((goal) => {
+                  const IconComponent = goal.icon;
+                  return (
+                    <button
+                      key={goal.value}
+                      onClick={() => handleGoalSelect(goal.value)}
+                      className="w-full p-8 bg-white rounded-3xl border-2 border-slate-200 hover:border-slate-300 hover:shadow-xl transform hover:scale-102 transition-all duration-300 text-left group"
+                    >
+                      <div className="flex items-center gap-6">
+                        <div className={`w-20 h-20 bg-gradient-to-br ${goal.gradient} rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className="h-10 w-10 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-2xl font-bold text-slate-800 mb-2">{goal.title}</h3>
+                          <p className="text-lg text-slate-600">{goal.description}</p>
+                        </div>
+                        <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center group-hover:bg-slate-200 transition-colors duration-300">
+                          <ArrowRight className="h-6 w-6 text-slate-600" />
+                        </div>
                       </div>
-                      <div className="text-2xl">{goal.image}</div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
         )}
 
-        {/* Step 3: Ready to start! */}
+        {/* Step 3: Professional Welcome */}
         {currentStep === "ready" && (
-          <Card className="border-0 shadow-xl bg-gradient-to-br from-purple-500 to-blue-600 text-white">
-            <CardContent className="p-8 text-center space-y-6">
-              <div className="space-y-4">
-                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto">
-                  <Heart className="h-10 w-10 text-white" />
+          <Card className="border-0 shadow-2xl bg-gradient-to-br from-slate-800 via-slate-700 to-slate-600 text-white">
+            <CardContent className="p-12 text-center space-y-8">
+              <div className="space-y-6">
+                <div className="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center mx-auto">
+                  <Heart className="h-12 w-12 text-white" />
                 </div>
                 
-                <h1 className="text-2xl font-bold">
-                  You're Ready to Shine! ✨
+                <h1 className="text-4xl font-bold">
+                  Welcome to Your Journey
                 </h1>
-                <p className="text-purple-100">
-                  Your personalized empowerment journey starts now. 
-                  We're here to support you every step of the way.
+                <p className="text-xl text-slate-200 max-w-2xl mx-auto leading-relaxed">
+                  Your personalized empowerment platform is ready. We've configured 
+                  professional-grade tools to support your independence and wellness goals.
                 </p>
               </div>
 
-              <div className="bg-white/10 rounded-2xl p-4 space-y-2">
-                <h3 className="font-semibold">What's waiting for you:</h3>
-                <div className="text-sm space-y-1 text-purple-100">
-                  <div>🎯 Daily focus that empowers you</div>
-                  <div>🦸‍♀️ Your personal support team</div>
-                  <div>🏆 Celebrate every win, big or small</div>
-                  <div>🗻 Track your independence journey</div>
+              <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 space-y-4">
+                <h3 className="text-2xl font-semibold">Professional Features Available:</h3>
+                <div className="grid grid-cols-2 gap-4 text-lg text-slate-200">
+                  <div className="flex items-center gap-3">
+                    <Target className="h-5 w-5" />
+                    <span>Daily focus optimization</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Users className="h-5 w-5" />
+                    <span>Professional support network</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Activity className="h-5 w-5" />
+                    <span>Progress analytics</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Briefcase className="h-5 w-5" />
+                    <span>Achievement tracking</span>
+                  </div>
                 </div>
               </div>
               
               <Button
                 onClick={handleStart}
-                className="w-full bg-white text-purple-600 hover:bg-gray-50 py-4 text-lg font-bold rounded-2xl"
+                className="w-full max-w-md bg-white text-slate-800 hover:bg-slate-100 py-6 text-xl font-bold rounded-2xl shadow-xl transform hover:scale-105 transition-all duration-300"
                 size="lg"
               >
-                Let's Go! 🚀
-                <ArrowRight className="ml-2 h-5 w-5" />
+                Launch Platform
+                <ArrowRight className="ml-3 h-6 w-6" />
               </Button>
             </CardContent>
           </Card>
