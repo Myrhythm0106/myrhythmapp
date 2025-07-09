@@ -30,7 +30,7 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
           Premium Plan Required
         </Badge>
         <p className="text-slate-600 text-sm">
-          Upgrade to unlock your Full Plan with complete personalized results
+          Upgrade to unlock your Complete Personalized Journey
         </p>
       </div>
 
@@ -94,7 +94,7 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
           <div className="flex items-center justify-center gap-2 mb-3">
             <Eye className="h-6 w-6 text-teal-600" />
             <h3 className="text-xl font-bold text-teal-900">
-              Upgrade to unlock your Full Plan
+              Upgrade to unlock your Complete Personalized Journey
             </h3>
           </div>
           
@@ -128,7 +128,7 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
             className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold px-8 py-3 shadow-lg"
           >
             <Zap className="h-5 w-5 mr-2" />
-            Unlock Full Plan Now
+            Unlock Complete Journey Now
           </Button>
           
           <p className="text-xs text-teal-600 mt-2">

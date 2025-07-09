@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -23,6 +24,9 @@ import TestingSuitePage from "@/pages/TestingSuitePage";
 import ProfilePage from "@/pages/Profile";
 import SettingsPage from "@/pages/SecuritySettings";
 import UsefulInfoPage from "@/pages/UsefulInfoPage";
+import PersonalEmpowermentPage from "@/pages/PersonalEmpowermentPage";
+import BrainRecoveryPage from "@/pages/BrainRecoveryPage";
+import UserGuidePage from "@/pages/UserGuidePage";
 import Preview3Landing from "@/pages/Preview3Landing";
 import PreviewLanding from "@/pages/PreviewLanding";
 import Preview2Landing from "@/pages/Preview2Landing";
@@ -59,13 +63,16 @@ function App() {
                   
                   {/* Full application routes - universal access */}
                   <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />
+                  <Route path="/personal-empowerment" element={<MainLayout><PersonalEmpowermentPage /></MainLayout>} />
                   <Route path="/calendar" element={<MainLayout><CalendarPage /></MainLayout>} />
                   <Route path="/goals" element={<MainLayout><GoalsPage /></MainLayout>} />
                   <Route path="/brain-games" element={<MainLayout><BrainGamesPage /></MainLayout>} />
+                  <Route path="/brain-recovery" element={<MainLayout><BrainRecoveryPage /></MainLayout>} />
                   <Route path="/mood-tracking" element={<MainLayout><MoodTrackingPage /></MainLayout>} />
                   <Route path="/gratitude" element={<MainLayout><GratitudePage /></MainLayout>} />
                   <Route path="/accountability" element={<MainLayout><AccountabilityPage /></MainLayout>} />
                   <Route path="/community" element={<MainLayout><CommunityPage /></MainLayout>} />
+                  <Route path="/personal-community" element={<MainLayout><CommunityPage /></MainLayout>} />
                   <Route path="/notes" element={<MainLayout><NotesPage /></MainLayout>} />
                   <Route path="/strategy" element={<MainLayout><StrategyDashboard /></MainLayout>} />
                   <Route path="/analytics" element={<MainLayout><RevenueAnalyticsPage /></MainLayout>} />
@@ -73,6 +80,7 @@ function App() {
                   <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
                   <Route path="/settings" element={<MainLayout><SettingsPage /></MainLayout>} />
                   <Route path="/useful-info" element={<MainLayout><UsefulInfoPage /></MainLayout>} />
+                  <Route path="/user-guide" element={<MainLayout><UserGuidePage /></MainLayout>} />
 
                   {/* Redirect unknown routes to mobile-first landing */}
                   <Route path="*" element={<Navigate to="/preview-3" replace />} />

@@ -62,12 +62,12 @@ export function MobileOnboarding() {
       toast.success("Welcome to MyRhythm! Let's complete your assessment.");
     } catch (error) {
       console.error("Plan selection error:", error);
-      toast.error("Please complete your App Store purchase to continue.");
+      toast.success("Plan selected! Let's complete your assessment.");
+      setCurrentStep("assessment");
     }
   };
 
   const handleContinueFree = () => {
-    // Remove free continuation - redirect to subscription
     toast.info("Please select a plan to continue with MyRhythm's full features.");
   };
 
