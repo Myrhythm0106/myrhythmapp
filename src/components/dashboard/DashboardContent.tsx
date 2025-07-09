@@ -9,6 +9,7 @@ import { TopPriorities } from "./TopPriorities";
 import { MoodEnergySnapshot } from "./MoodEnergySnapshot";
 import { BrainGameQuickStart } from "./BrainGameQuickStart";
 import { TrialStatusCard } from "./TrialStatusCard";
+import { DemoNavigation } from "../demo/DemoNavigation";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -48,6 +49,9 @@ export function DashboardContent() {
           <BrainGameQuickStart />
         </div>
       </div>
+      
+      {/* Demo Navigation - Only show in development/demo mode */}
+      {process.env.NODE_ENV === 'development' && <DemoNavigation />}
     </div>
   );
 }
