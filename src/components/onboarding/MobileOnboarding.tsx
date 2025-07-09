@@ -133,7 +133,7 @@ export function MobileOnboarding() {
       case "complete":
         return (
           <div className="text-center py-8 space-y-6">
-            <div className="w-20 h-20 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full flex items-center justify-center mx-auto shadow-lg">
+            <div className="w-20 h-20 bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
               <CheckCircle className="h-10 w-10 text-white" />
             </div>
             
@@ -144,9 +144,9 @@ export function MobileOnboarding() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-lg p-4 space-y-2">
-              <h3 className="font-semibold text-emerald-900">Your Empowerment Hub Awaits:</h3>
-              <ul className="text-sm text-emerald-800 space-y-1 text-left max-w-xs mx-auto">
+            <div className="bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 rounded-lg p-4 space-y-2">
+              <h3 className="font-semibold text-teal-900">Your Empowerment Hub Awaits:</h3>
+              <ul className="text-sm text-teal-800 space-y-1 text-left max-w-xs mx-auto">
                 <li>🎯 Set your daily "Today I Will..." focus</li>
                 <li>🦸‍♀️ Connect with your support heroes</li>
                 <li>🏆 Celebrate every win, big or small</li>
@@ -156,7 +156,7 @@ export function MobileOnboarding() {
             
             <Button 
               onClick={handleEnterApp}
-              className="mt-6 w-full max-w-xs bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-lg"
+              className="mt-6 w-full max-w-xs bg-gradient-to-r from-teal-600 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 text-white shadow-lg"
               size="lg"
             >
               <ArrowRight className="h-4 w-4 mr-2" />
@@ -177,8 +177,8 @@ export function MobileOnboarding() {
 
   if (currentStep === "complete") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50 flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-emerald-200 shadow-xl">
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md border-teal-200 shadow-xl">
           <CardContent className="p-8">
             {renderStepContent()}
           </CardContent>
@@ -188,13 +188,13 @@ export function MobileOnboarding() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50">
       {/* Progress Header */}
-      <div className="bg-white shadow-sm p-4 border-b border-emerald-100">
+      <div className="bg-white shadow-sm p-4 border-b border-teal-100">
         <div className="max-w-md mx-auto">
           <div className="flex items-center justify-between mb-2">
             {currentStep !== "empowerment" && (
-              <Button variant="ghost" size="sm" onClick={handleBack} className="text-emerald-700 hover:text-emerald-800 hover:bg-emerald-50">
+              <Button variant="ghost" size="sm" onClick={handleBack} className="text-teal-700 hover:text-teal-800 hover:bg-teal-50">
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back
               </Button>
@@ -207,7 +207,7 @@ export function MobileOnboarding() {
           
           <div className="space-y-2">
             <h1 className="text-lg font-semibold text-slate-800">{currentStepInfo.title}</h1>
-            <Progress value={currentStepInfo.progress} className="h-2 bg-emerald-100" />
+            <Progress value={currentStepInfo.progress} className="h-2 bg-teal-100" />
           </div>
         </div>
       </div>
