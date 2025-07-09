@@ -1,14 +1,13 @@
-
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Sparkles, Heart, ArrowRight, Target, Users, Briefcase, Activity } from "lucide-react";
 
-type OnboardingStep = "feeling" | "goal" | "ready";
+type EmpowermentStep = "feeling" | "goal" | "ready";
 
 export function EmpowermentOnboarding() {
-  const [currentStep, setCurrentStep] = useState<OnboardingStep>("feeling");
+  const [currentStep, setCurrentStep] = useState<EmpowermentStep>("feeling");
   const [selectedFeeling, setSelectedFeeling] = useState<string | null>(null);
   const [selectedGoal, setSelectedGoal] = useState<string | null>(null);
 
