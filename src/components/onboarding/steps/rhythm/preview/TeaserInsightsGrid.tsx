@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,9 +25,9 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
     <div className="space-y-4">
       {/* Premium Features Header */}
       <div className="text-center">
-        <Badge className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 mb-2">
+        <Badge className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-4 py-2 mb-2">
           <Crown className="h-4 w-4 mr-2" />
-          Premium Plan Locked
+          Premium Plan Required
         </Badge>
         <p className="text-slate-600 text-sm">
           Upgrade to unlock your Full Plan with complete personalized results
@@ -35,9 +36,9 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {lockedInsights.map((insight, index) => (
-          <Card key={index} className="relative overflow-hidden border-2 border-dashed border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50 hover:shadow-lg transition-shadow">
+          <Card key={index} className="relative overflow-hidden border-2 border-dashed border-teal-300 bg-gradient-to-br from-teal-50 to-emerald-50 hover:shadow-lg transition-shadow">
             <div className="absolute top-2 right-2 z-10">
-              <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold">
+              <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold">
                 <Crown className="h-3 w-3 mr-1" />
                 Premium
               </Badge>
@@ -51,7 +52,7 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
                 <Button 
                   onClick={handleUpgradeClick}
                   size="sm" 
-                  className="mt-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white"
+                  className="mt-2 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white"
                 >
                   Unlock
                 </Button>
@@ -60,7 +61,7 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
 
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
-                <insight.icon className="h-5 w-5 text-emerald-600" />
+                <insight.icon className="h-5 w-5 text-teal-600" />
                 <CardTitle className="text-lg">{insight.title}</CardTitle>
               </div>
             </CardHeader>
@@ -70,14 +71,14 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
                 {insight.preview}
               </p>
               
-              <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-200">
-                <p className="text-xs text-emerald-800 font-medium">
+              <div className="bg-teal-50 p-3 rounded-lg border border-teal-200">
+                <p className="text-xs text-teal-800 font-medium">
                   {insight.value}
                 </p>
               </div>
               
-              <div className="flex items-center gap-2 pt-2 border-t border-dashed border-emerald-300">
-                <Star className="h-4 w-4 text-amber-500" />
+              <div className="flex items-center gap-2 pt-2 border-t border-dashed border-teal-300">
+                <Star className="h-4 w-4 text-orange-500" />
                 <span className="text-xs text-slate-500 font-medium">
                   {insight.userCount} users found this transformational
                 </span>
@@ -88,49 +89,49 @@ export function TeaserInsightsGrid({ assessmentResult }: TeaserInsightsGridProps
       </div>
 
       {/* Upgrade Pressure Section */}
-      <Card className="bg-gradient-to-r from-emerald-50 to-teal-50 border-2 border-emerald-300 mt-6">
+      <Card className="bg-gradient-to-r from-teal-50 to-emerald-50 border-2 border-teal-300 mt-6">
         <CardContent className="text-center p-6">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <Eye className="h-6 w-6 text-emerald-600" />
-            <h3 className="text-xl font-bold text-emerald-900">
+            <Eye className="h-6 w-6 text-teal-600" />
+            <h3 className="text-xl font-bold text-teal-900">
               Upgrade to unlock your Full Plan
             </h3>
           </div>
           
-          <p className="text-emerald-800 mb-4 max-w-2xl mx-auto">
+          <p className="text-teal-800 mb-4 max-w-2xl mx-auto">
             These personalized insights have helped thousands of users like you achieve their goals faster. 
             Don't settle for basic information when your complete transformation plan is ready.
           </p>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-sm">
-            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
-              <p className="font-semibold text-emerald-800">2,847 Users</p>
-              <p className="text-emerald-600">Transformed Their Lives</p>
+            <div className="bg-white p-3 rounded-lg border border-teal-200 shadow-sm">
+              <p className="font-semibold text-teal-800">2,847 Users</p>
+              <p className="text-teal-600">Transformed Their Lives</p>
             </div>
-            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
-              <p className="font-semibold text-emerald-800">94% Success</p>
-              <p className="text-emerald-600">Rate With Premium</p>
+            <div className="bg-white p-3 rounded-lg border border-teal-200 shadow-sm">
+              <p className="font-semibold text-teal-800">94% Success</p>
+              <p className="text-teal-600">Rate With Premium</p>
             </div>
-            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
-              <p className="font-semibold text-emerald-800">2.3 Weeks</p>
-              <p className="text-emerald-600">Average to See Results</p>
+            <div className="bg-white p-3 rounded-lg border border-teal-200 shadow-sm">
+              <p className="font-semibold text-teal-800">2.3 Weeks</p>
+              <p className="text-teal-600">Average to See Results</p>
             </div>
-            <div className="bg-white p-3 rounded-lg border border-emerald-200 shadow-sm">
-              <p className="font-semibold text-emerald-800">4.9/5 Stars</p>
-              <p className="text-emerald-600">User Satisfaction</p>
+            <div className="bg-white p-3 rounded-lg border border-teal-200 shadow-sm">
+              <p className="font-semibold text-teal-800">4.9/5 Stars</p>
+              <p className="text-teal-600">User Satisfaction</p>
             </div>
           </div>
           
           <Button 
             onClick={handleUpgradeClick}
             size="lg"
-            className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold px-8 py-3 shadow-lg"
+            className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white font-bold px-8 py-3 shadow-lg"
           >
             <Zap className="h-5 w-5 mr-2" />
             Unlock Full Plan Now
           </Button>
           
-          <p className="text-xs text-emerald-600 mt-2">
+          <p className="text-xs text-teal-600 mt-2">
             7-day free trial • Cancel anytime • Instant access
           </p>
         </CardContent>

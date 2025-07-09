@@ -43,7 +43,7 @@ const navigationItems = [
   { icon: Calendar, label: "Calendar & Goals", path: "/calendar" },
   { icon: Target, label: "Goals & Progress", path: "/goals" },
   { icon: Bell, label: "Accountability Hub", path: "/accountability" },
-  { icon: Smile, label: "Mood Harmony", path: "/mood" },
+  { icon: Smile, label: "Mood Tracking", path: "/mood-tracking" },
   { icon: Heart, label: "Gratitude Practice", path: "/gratitude" },
   { icon: StickyNote, label: "My Notes", path: "/notes" },
 ];
@@ -59,9 +59,9 @@ const communitySection = [
 ];
 
 const resourcesSection = [
+  { icon: User, label: "Profile", path: "/profile" },
   { icon: HelpCircle, label: "User Guide", path: "/user-guide" },
   { icon: HelpCircle, label: "Useful Resources", path: "/useful-info" },
-  { icon: Settings, label: "Profile", path: "/profile" },
 ];
 
 export function MainLayout({ children }: MainLayoutProps) {
@@ -81,8 +81,8 @@ export function MainLayout({ children }: MainLayoutProps) {
       to={item.path}
       className={({ isActive }) =>
         cn(
-          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-purple-100 hover:text-purple-800",
-          isActive ? "bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 font-medium border-r-2 border-purple-500" : "text-muted-foreground",
+          "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:bg-teal-100 hover:text-teal-800",
+          isActive ? "bg-gradient-to-r from-teal-100 to-emerald-100 text-teal-800 font-medium border-r-2 border-teal-500" : "text-muted-foreground",
           isNested && "ml-4"
         )
       }
@@ -96,11 +96,11 @@ export function MainLayout({ children }: MainLayoutProps) {
   const SidebarContent = () => (
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 p-6 border-b">
-        <div className="w-8 h-8 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
+        <div className="w-8 h-8 bg-gradient-to-br from-teal-500 via-emerald-500 to-blue-500 rounded-lg flex items-center justify-center">
           <Brain className="h-4 w-4 text-white" />
         </div>
         <div>
-          <h2 className="text-lg font-semibold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+          <h2 className="text-lg font-semibold bg-gradient-to-r from-teal-600 via-emerald-600 to-blue-600 bg-clip-text text-transparent">
             MyRhythm
           </h2>
           <p className="text-xs text-muted-foreground">Memory1st → LEAP</p>
@@ -167,9 +167,9 @@ export function MainLayout({ children }: MainLayoutProps) {
   );
 
   return (
-    <div className="min-h-screen flex w-full bg-gradient-to-br from-purple-50/30 via-blue-50/30 to-teal-50/30">
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-teal-50/30 via-emerald-50/30 to-blue-50/30">
       {/* Desktop Sidebar */}
-      <div className="hidden lg:block w-64 bg-white/80 backdrop-blur-sm border-r border-purple-200/50 shadow-sm">
+      <div className="hidden lg:block w-64 bg-white/80 backdrop-blur-sm border-r border-teal-200/50 shadow-sm">
         <SidebarContent />
       </div>
       
@@ -183,7 +183,7 @@ export function MainLayout({ children }: MainLayoutProps) {
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-purple-200/50 shadow-sm">
+        <header className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-teal-200/50 shadow-sm">
           <div className="flex items-center gap-4">
             <Sheet>
               <SheetTrigger asChild>
@@ -197,10 +197,10 @@ export function MainLayout({ children }: MainLayoutProps) {
             </Sheet>
             
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-md flex items-center justify-center lg:hidden">
+              <div className="w-6 h-6 bg-gradient-to-br from-teal-500 via-emerald-500 to-blue-500 rounded-md flex items-center justify-center lg:hidden">
                 <Brain className="h-3 w-3 text-white" />
               </div>
-              <h1 className="text-lg font-semibold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+              <h1 className="text-lg font-semibold bg-gradient-to-r from-teal-600 via-emerald-600 to-blue-600 bg-clip-text text-transparent">
                 MyRhythm
               </h1>
             </div>
@@ -216,7 +216,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user?.user_metadata?.avatar_url} />
-                    <AvatarFallback className="bg-gradient-to-br from-purple-500 to-blue-500 text-white">
+                    <AvatarFallback className="bg-gradient-to-br from-teal-500 to-emerald-500 text-white">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>

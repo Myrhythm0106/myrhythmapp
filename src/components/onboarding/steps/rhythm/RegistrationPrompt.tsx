@@ -14,10 +14,10 @@ export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptP
     <div className="max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full flex items-center justify-center shadow-lg">
+        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
           <Gift className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-900">Complete Your Premium Purchase</h1>
+        <h1 className="text-3xl font-bold text-slate-900">Upgrade to unlock your Full Plan</h1>
         <p className="text-lg text-slate-600 max-w-2xl mx-auto">
           Your assessment results are ready! Complete your premium subscription to access your full personalized journey and recommendations.
         </p>
@@ -25,9 +25,9 @@ export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptP
 
       {/* Benefits of Premium */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50">
+        <Card className="border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-emerald-800">
+            <CardTitle className="flex items-center gap-2 text-teal-800">
               <CheckCircle2 className="h-5 w-5" />
               With Premium Subscription
             </CardTitle>
@@ -35,27 +35,27 @@ export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptP
           <CardContent className="space-y-3">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-teal-600" />
                 <span className="text-sm">Complete personalized assessment results</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-teal-600" />
                 <span className="text-sm">Detailed 8-week action plan</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-teal-600" />
                 <span className="text-sm">Personalized daily recommendations</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-teal-600" />
                 <span className="text-sm">Progress tracking dashboard</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="h-4 w-4 text-teal-600" />
                 <span className="text-sm">Priority support & guidance</span>
               </div>
             </div>
-            <Badge className="bg-emerald-600 text-white w-full justify-center py-2">
+            <Badge className="bg-teal-600 text-white w-full justify-center py-2">
               ✨ 7-Day Free Trial Available
             </Badge>
           </CardContent>
@@ -99,7 +99,7 @@ export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptP
         <Button 
           onClick={() => onRegistrationChoice('register')}
           size="lg"
-          className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-8 py-4 text-lg w-full sm:w-auto shadow-lg"
+          className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white px-8 py-4 text-lg w-full sm:w-auto shadow-lg"
         >
           <UserPlus className="mr-2 h-5 w-5" />
           Subscribe to Premium & Get Full Results
@@ -107,17 +107,17 @@ export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptP
         </Button>
         
         <div className="flex items-center justify-center gap-4 text-sm">
-          <div className="flex items-center gap-1 text-emerald-600">
+          <div className="flex items-center gap-1 text-teal-600">
             <Star className="h-4 w-4" />
             <span>7-day free trial</span>
           </div>
           <div className="w-px h-4 bg-slate-300"></div>
-          <div className="flex items-center gap-1 text-emerald-600">
+          <div className="flex items-center gap-1 text-teal-600">
             <Star className="h-4 w-4" />
             <span>Cancel anytime</span>
           </div>
           <div className="w-px h-4 bg-slate-300"></div>
-          <div className="flex items-center gap-1 text-emerald-600">
+          <div className="flex items-center gap-1 text-teal-600">
             <Star className="h-4 w-4" />
             <span>Full access included</span>
           </div>
