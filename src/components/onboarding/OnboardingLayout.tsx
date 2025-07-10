@@ -97,7 +97,7 @@ export const OnboardingLayout = ({
           <div className="w-20" /> {/* Spacer for balance */}
         </div>
 
-        {/* Interactive Progress Bar */}
+        {/* Interactive Progress Bar - More Prominent */}
         <InteractiveProgressBar
           currentStep={currentStep}
           totalSteps={totalSteps}
@@ -107,18 +107,12 @@ export const OnboardingLayout = ({
         {/* Main Content Card */}
         <Card className="border-2 border-border/50 shadow-xl bg-background/95 backdrop-blur-sm">
           <div className="p-8">
-            {/* Step Header */}
-            <div className="text-center mb-8 space-y-2">
-              <h2 className="text-3xl font-bold text-foreground">{title}</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{description}</p>
-            </div>
-            
-            {/* Step Content */}
+            {/* Step Content - Removed redundant header since it's in progress bar */}
             <div className="min-h-[400px]">
               {children}
             </div>
 
-            {/* Navigation Controls */}
+            {/* Navigation Controls - Always show when onNext is provided */}
             {onNext && (
               <NavigationControls
                 currentStep={currentStep}

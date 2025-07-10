@@ -1,7 +1,6 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
@@ -52,11 +51,12 @@ const userTypes = [
 export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || null);
 
-  const handleSubmit = () => {
+  // Auto-call onComplete when a selection is made
+  useEffect(() => {
     if (selectedType) {
       onComplete({ type: selectedType });
     }
-  };
+  }, [selectedType, onComplete]);
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -106,8 +106,8 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                 {isSelected && (
                   <CardContent className="pt-0 pb-4">
                     <div className="flex items-center gap-2 text-primary">
-                      <div className="w-2 h-2 bg-primary rounded-full"></div>
-                      <span className="text-sm font-medium">Selected - We'll personalize everything for your journey</span>
+                      <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+                      <span className="text-sm font-medium">Selected - Use the Next button below to continue</span>
                     </div>
                   </CardContent>
                 )}
@@ -117,21 +117,16 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
         </div>
       </RadioGroup>
 
-      <div className="text-center">
-        <Button 
-          onClick={handleSubmit}
-          disabled={!selectedType}
-          className="px-12 py-4 text-lg font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-          size="lg"
-        >
-          {selectedType ? "Continue Your Journey" : "Please Select Your Path"}
-        </Button>
-        {selectedType && (
-          <p className="text-sm text-muted-foreground mt-3">
-            Ready to create your personalized {userTypes.find(t => t.id === selectedType)?.title.toLowerCase()} experience
+      {selectedType && (
+        <div className="text-center p-4 bg-primary/5 rounded-lg border border-primary/20">
+          <p className="text-primary font-medium">
+            ✨ Perfect! You've selected {userTypes.find(t => t.id === selectedType)?.title}
           </p>
-        )}
-      </div>
+          <p className="text-sm text-muted-foreground mt-1">
+            Click the "Continue" button below to proceed to location setup
+          </p>
+        </div>
+      )}
     </div>
   );
 }

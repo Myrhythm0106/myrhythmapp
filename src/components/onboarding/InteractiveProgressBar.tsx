@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, Circle, Lock } from "lucide-react";
+import { Check, Circle, Lock, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ProgressStep {
@@ -78,78 +78,87 @@ export function InteractiveProgressBar({
 
   return (
     <div className={cn("w-full max-w-4xl mx-auto space-y-6", className)}>
-      {/* Main Progress Bar */}
-      <div className="relative">
-        <div className="absolute top-4 left-0 right-0 h-0.5 bg-muted" />
-        <div 
-          className="absolute top-4 left-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transition-all duration-500"
-          style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
-        />
+      {/* Main Progress Indicator - More Prominent */}
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border-2 border-blue-100">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-2xl font-bold text-primary">
+              Step {currentStep} of {totalSteps}
+            </h3>
+            <p className="text-lg text-muted-foreground">
+              {steps.find(s => s.id === currentStep)?.title} - {steps.find(s => s.id === currentStep)?.description}
+            </p>
+          </div>
+          <Badge variant="secondary" className="px-4 py-2 text-lg">
+            {Math.round((currentStep / totalSteps) * 100)}% Complete
+          </Badge>
+        </div>
         
-        <div className="flex justify-between relative">
-          {steps.map((step, index) => (
-            <Button
-              key={step.id}
-              variant="ghost"
-              size="sm"
-              onClick={() => handleStepClick(step)}
-              disabled={!step.isAccessible}
-              className={cn(
-                "flex flex-col items-center p-3 h-auto min-w-[120px] transition-all duration-300",
-                "hover:bg-background/80 rounded-xl",
-                step.isCurrent && "bg-primary/5 border border-primary/20",
-                step.isCompleted && "text-primary",
-                !step.isAccessible && "opacity-50 cursor-not-allowed"
-              )}
-            >
-              {/* Step Icon */}
-              <div className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all duration-300",
-                step.isCompleted && "bg-primary text-primary-foreground",
-                step.isCurrent && "bg-primary/10 text-primary border-2 border-primary",
-                !step.isCompleted && !step.isCurrent && step.isAccessible && "bg-muted text-muted-foreground",
-                !step.isAccessible && "bg-muted/50 text-muted-foreground/50"
-              )}>
-                {step.isCompleted ? (
-                  <Check className="h-4 w-4" />
-                ) : step.isAccessible ? (
-                  <span className="text-sm font-medium">{step.id}</span>
-                ) : (
-                  <Lock className="h-3 w-3" />
+        {/* Visual Progress Bar */}
+        <div className="relative">
+          <div className="absolute top-4 left-0 right-0 h-1 bg-muted rounded-full" />
+          <div 
+            className="absolute top-4 left-0 h-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full transition-all duration-500"
+            style={{ width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%` }}
+          />
+          
+          <div className="flex justify-between relative">
+            {steps.map((step, index) => (
+              <Button
+                key={step.id}
+                variant="ghost"
+                size="sm"
+                onClick={() => handleStepClick(step)}
+                disabled={!step.isAccessible}
+                className={cn(
+                  "flex flex-col items-center p-3 h-auto min-w-[100px] transition-all duration-300",
+                  "hover:bg-background/80 rounded-xl",
+                  step.isCurrent && "bg-primary/10 border-2 border-primary/30 shadow-lg",
+                  step.isCompleted && "text-primary",
+                  !step.isAccessible && "opacity-50 cursor-not-allowed"
                 )}
-              </div>
-              
-              {/* Step Info */}
-              <div className="text-center space-y-1">
+              >
+                {/* Step Icon */}
                 <div className={cn(
-                  "font-medium text-sm",
-                  step.isCurrent && "text-primary",
-                  step.isCompleted && "text-primary"
+                  "w-8 h-8 rounded-full flex items-center justify-center mb-2 transition-all duration-300",
+                  step.isCompleted && "bg-primary text-primary-foreground shadow-md",
+                  step.isCurrent && "bg-primary/20 text-primary border-2 border-primary ring-4 ring-primary/20",
+                  !step.isCompleted && !step.isCurrent && step.isAccessible && "bg-muted text-muted-foreground",
+                  !step.isAccessible && "bg-muted/50 text-muted-foreground/50"
                 )}>
-                  {step.title}
+                  {step.isCompleted ? (
+                    <Check className="h-4 w-4" />
+                  ) : step.isAccessible ? (
+                    <span className="text-sm font-bold">{step.id}</span>
+                  ) : (
+                    <Lock className="h-3 w-3" />
+                  )}
                 </div>
-                <div className="text-xs text-muted-foreground max-w-[100px]">
-                  {step.description}
+                
+                {/* Step Info */}
+                <div className="text-center space-y-1">
+                  <div className={cn(
+                    "font-medium text-xs",
+                    step.isCurrent && "text-primary font-bold",
+                    step.isCompleted && "text-primary"
+                  )}>
+                    {step.title}
+                  </div>
                 </div>
-              </div>
-            </Button>
-          ))}
+              </Button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Progress Stats */}
-      <div className="flex justify-between items-center text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="px-3 py-1">
-            Step {currentStep} of {totalSteps}
-          </Badge>
-          <span>•</span>
-          <span>{Math.round((currentStep / totalSteps) * 100)}% Complete</span>
+      {/* Next Step Preview */}
+      {currentStep < totalSteps && (
+        <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <span>Next:</span>
+          <span className="font-medium">{steps.find(s => s.id === currentStep + 1)?.title}</span>
+          <ChevronRight className="h-4 w-4" />
         </div>
-        <div className="text-xs">
-          Click on previous steps to review or edit
-        </div>
-      </div>
+      )}
     </div>
   );
 }
