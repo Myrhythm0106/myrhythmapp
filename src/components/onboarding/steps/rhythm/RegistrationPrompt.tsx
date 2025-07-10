@@ -2,132 +2,71 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { UserPlus, ArrowRight, CheckCircle2, Star, Lock, Gift } from "lucide-react";
+import { UserPlus, ArrowRight } from "lucide-react";
+import { UserType } from "../UserTypeStep";
 
 interface RegistrationPromptProps {
-  onRegistrationChoice: (action: 'register' | 'continue-guest') => void;
+  onAction: (action: 'register' | 'continue-guest') => void;
+  userType?: UserType | null;
 }
 
-export function RegistrationPrompt({ onRegistrationChoice }: RegistrationPromptProps) {
+export function RegistrationPrompt({ onAction, userType }: RegistrationPromptProps) {
+  const getUserTypeDisplay = () => {
+    switch (userType) {
+      case 'brain-injury': return 'Brain Injury Recovery';
+      case 'caregiver': return 'Caregiver Support';
+      case 'cognitive-optimization': return 'Cognitive Optimization';
+      case 'wellness': return 'General Wellness';
+      default: return 'Personal Development';
+    }
+  };
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      {/* Header */}
+    <div className="max-w-2xl mx-auto space-y-6">
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-teal-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg">
-          <Gift className="h-8 w-8 text-white" />
+        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+          <UserPlus className="h-8 w-8 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-slate-900">Upgrade to unlock your Full Plan</h1>
-        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-          Your assessment results are ready! Complete your premium subscription to access your full personalized journey and recommendations.
+        <h1 className="text-3xl font-bold">Create Your Account</h1>
+        <p className="text-lg text-muted-foreground">
+          Save your {getUserTypeDisplay().toLowerCase()} assessment results and continue your journey
         </p>
       </div>
 
-      {/* Benefits of Premium */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-teal-800">
-              <CheckCircle2 className="h-5 w-5" />
-              With Premium Subscription
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
-                <span className="text-sm">Complete personalized assessment results</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
-                <span className="text-sm">Detailed 8-week action plan</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
-                <span className="text-sm">Personalized daily recommendations</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
-                <span className="text-sm">Progress tracking dashboard</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-teal-600" />
-                <span className="text-sm">Priority support & guidance</span>
-              </div>
-            </div>
-            <Badge className="bg-teal-600 text-white w-full justify-center py-2">
-              ✨ 7-Day Free Trial Available
-            </Badge>
-          </CardContent>
-        </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle>Why create an account?</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <ul className="space-y-2">
+            <li className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Save your assessment results</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Access your personalized {getUserTypeDisplay().toLowerCase()} plan</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Track your progress over time</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span>Sync across all your devices</span>
+            </li>
+          </ul>
+        </CardContent>
+      </Card>
 
-        <Card className="border border-slate-200">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-slate-700">
-              <Lock className="h-5 w-5" />
-              Without Premium
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
-                <span className="text-sm text-slate-600">Basic focus area overview only</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
-                <span className="text-sm text-slate-600">Limited recommendations</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
-                <span className="text-sm text-slate-600">No progress tracking</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 rounded-full bg-slate-300"></div>
-                <span className="text-sm text-slate-600">No personal action plan</span>
-              </div>
-            </div>
-            <div className="text-xs text-slate-500 bg-slate-50 p-2 rounded">
-              Missing the complete transformation experience
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Call to Action */}
-      <div className="text-center space-y-4">
-        <Button 
-          onClick={() => onRegistrationChoice('register')}
-          size="lg"
-          className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white px-8 py-4 text-lg w-full sm:w-auto shadow-lg"
-        >
-          <UserPlus className="mr-2 h-5 w-5" />
-          Subscribe to Premium & Get Full Results
-          <ArrowRight className="ml-2 h-5 w-5" />
+      <div className="space-y-3">
+        <Button onClick={() => onAction('register')} className="w-full" size="lg">
+          Create Account & Continue
+          <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
-        
-        <div className="flex items-center justify-center gap-4 text-sm">
-          <div className="flex items-center gap-1 text-teal-600">
-            <Star className="h-4 w-4" />
-            <span>7-day free trial</span>
-          </div>
-          <div className="w-px h-4 bg-slate-300"></div>
-          <div className="flex items-center gap-1 text-teal-600">
-            <Star className="h-4 w-4" />
-            <span>Cancel anytime</span>
-          </div>
-          <div className="w-px h-4 bg-slate-300"></div>
-          <div className="flex items-center gap-1 text-teal-600">
-            <Star className="h-4 w-4" />
-            <span>Full access included</span>
-          </div>
-        </div>
-
-        <div className="pt-4 border-t border-slate-200">
-          <p className="text-xs text-slate-500 mb-2">
-            Premium subscription required for full personalized experience
-          </p>
-        </div>
+        <Button variant="outline" onClick={() => onAction('continue-guest')} className="w-full">
+          Continue as Guest
+        </Button>
       </div>
     </div>
   );

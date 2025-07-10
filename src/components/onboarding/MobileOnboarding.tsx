@@ -93,7 +93,7 @@ export function MobileOnboarding() {
     
     // Store completion status
     localStorage.setItem('myrhythm_mobile_onboarding_completed', 'true');
-    localStorage.setItem('myrhythm_user_type', userType || 'individual');
+    localStorage.setItem('myrhythm_user_type', userType || 'cognitive-optimization');
     localStorage.setItem('myrhythm_has_premium', hasPaidPremium.toString());
   };
 
