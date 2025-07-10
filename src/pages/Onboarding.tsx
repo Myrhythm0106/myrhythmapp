@@ -3,25 +3,24 @@ import React, { useEffect, useMemo, useState } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
 import { AuthenticationGate } from "@/components/onboarding/AuthenticationGate";
-import { STEPS } from "@/components/onboarding/OnboardingSteps";
 import { useAutoProgression } from "@/hooks/useAutoProgression";
 import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
 import { useAuth } from "@/contexts/AuthContext";
 import { Preview3Background } from "@/components/ui/Preview3Background";
 
-// Updated steps - REMOVED Personal Info step since auth is handled upfront
+// Updated steps - streamlined 5-step flow
 const UPDATED_STEPS = [
-  { id: 1, title: "All About You", description: "Tell us about yourself" },
-  { id: 2, title: "Location", description: "Where are you based?" },
-  { id: 3, title: "Choose Plan", description: "Select your subscription" },
-  { id: 4, title: "Pre-Assessment", description: "Preparing your assessment" },
-  { id: 5, title: "Rhythm Assessment", description: "Discover your unique patterns" }
+  { id: 1, title: "Tell Us About You", description: "Share your brain health journey type" },
+  { id: 2, title: "Location Setup", description: "Where are you based?" },
+  { id: 3, title: "Plan Selection", description: "Choose your MyRhythm experience" },
+  { id: 4, title: "Pre-Assessment", description: "Preparing your personalized assessment" },
+  { id: 5, title: "Rhythm Assessment", description: "Discover your unique cognitive patterns" }
 ];
 const TOTAL_STEPS = UPDATED_STEPS.length;
 
 const Onboarding = () => {
-  console.log("=== ONBOARDING PAGE LOADING (PRODUCTION) ===");
+  console.log("=== ONBOARDING PAGE LOADING ===");
   console.log("Onboarding: Component is rendering");
   console.log("Onboarding: Location:", window.location.href);
   console.log("Onboarding: TOTAL_STEPS:", TOTAL_STEPS);
@@ -59,6 +58,9 @@ const Onboarding = () => {
       isPlanSelected,
       isDirectNavigation,
       setPersonalInfo,
+      setIsUserTypeSelected,
+      setIsLocationValid,
+      setIsPlanSelected,
     } = onboardingState;
 
     console.log("Onboarding: Current step:", currentStep);
@@ -69,13 +71,15 @@ const Onboarding = () => {
       totalSteps: TOTAL_STEPS,
       selectedPlan,
       userType,
+      setIsUserTypeSelected,
+      setIsLocationValid,
+      setIsPlanSelected,
     });
 
     // Handle authenticated user flow - auto-populate personal info from authenticated user
     useEffect(() => {
       if (user && !loading && !personalInfo && authenticationComplete) {
         console.log("Onboarding: Auto-populating personal info for authenticated user");
-        // Auto-populate personal info from authenticated user
         const autoPersonalInfo = {
           name: user.user_metadata?.name || user.email?.split('@')[0] || '',
           email: user.email || '',
@@ -85,20 +89,7 @@ const Onboarding = () => {
       }
     }, [user, loading, personalInfo, setPersonalInfo, authenticationComplete]);
 
-    // Auto-progression disabled for user type and location steps
-    const { countdown: userTypeCountdown } = useAutoProgression({
-      isFormValid: isUserTypeSelected,
-      onProgress: () => handlers.handleUserTypeComplete({ type: userType! }),
-      enabled: false
-    });
-    
-    const { countdown: locationCountdown } = useAutoProgression({
-      isFormValid: isLocationValid,
-      onProgress: () => handlers.handleLocationComplete(location!),
-      enabled: false
-    });
-    
-    // Enable auto-progression for plan selection with 3-second delay
+    // Auto-progression for plan selection only
     const { countdown: planCountdown } = useAutoProgression({
       isFormValid: isPlanSelected,
       onProgress: () => handlers.handlePlanSelected(selectedPlan),
@@ -108,7 +99,7 @@ const Onboarding = () => {
 
     // Data persistence check
     const hasUnsavedData = React.useMemo(() => {
-      if (currentStep === 5) { // Assessment step (now step 5 instead of 6)
+      if (currentStep === 5) {
         const savedAssessment = localStorage.getItem('form_data_rhythm_assessment');
         return !!savedAssessment;
       }
@@ -116,7 +107,6 @@ const Onboarding = () => {
     }, [currentStep]);
 
     const handleSaveProgress = () => {
-      // Save current step progress
       localStorage.setItem('myrhythm_onboarding_current_step', currentStep.toString());
       localStorage.setItem('myrhythm_onboarding_progress_saved', new Date().toISOString());
     };
@@ -129,6 +119,9 @@ const Onboarding = () => {
     const currentStepInfo = getCurrentStepInfo();
     console.log("Onboarding: Current step info:", currentStepInfo);
 
+    // Step validation
+    const stepValidation = handlers.getStepValidation();
+
     // Show loading while auth is being checked
     if (loading) {
       console.log("Onboarding: Showing loading screen");
@@ -136,8 +129,9 @@ const Onboarding = () => {
         <Preview3Background>
           <div className="min-h-screen flex items-center justify-center">
             <div className="text-center space-y-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-              <p className="text-sm text-muted-foreground">Setting up your personalized journey...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+              <p className="text-lg font-medium">Setting up your personalized journey...</p>
+              <p className="text-sm text-muted-foreground">Preparing your brain health experience</p>
             </div>
           </div>
         </Preview3Background>
@@ -168,11 +162,16 @@ const Onboarding = () => {
           currentStep={currentStep} 
           totalSteps={TOTAL_STEPS}
           onBack={handlers.goToPreviousStep}
+          onStepClick={handlers.goToStep}
           title={currentStepInfo.title}
           description={currentStepInfo.description}
           hasUnsavedData={hasUnsavedData}
           onSaveProgress={handleSaveProgress}
           dataDescription={currentStep === 5 ? "your assessment responses" : "your progress"}
+          canGoNext={stepValidation.canGoNext}
+          canGoPrevious={stepValidation.canGoPrevious}
+          onNext={handlers.goToNextStep}
+          nextLabel={currentStep === TOTAL_STEPS ? "Complete Assessment" : undefined}
         >
           <OnboardingStepRenderer
             currentStep={currentStep}
@@ -204,27 +203,27 @@ const Onboarding = () => {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center space-y-4 max-w-md mx-auto p-8">
             <div className="text-red-600 text-6xl mb-4">⚠️</div>
-            <h1 className="text-2xl font-bold text-red-800">Onboarding Error</h1>
+            <h1 className="text-2xl font-bold text-red-800">Setup Error</h1>
             <p className="text-red-600">
-              We encountered an issue loading the onboarding process.
+              We encountered an issue loading your brain health setup.
             </p>
             <div className="space-y-2">
               <button 
                 onClick={() => window.location.reload()} 
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 mr-2"
+                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 mr-3 transition-colors"
               >
-                Refresh Page
+                Refresh Setup
               </button>
               <button 
                 onClick={() => window.location.href = '/preview-3'} 
-                className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+                className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
               >
-                Back to Preview
+                Back to Home
               </button>
             </div>
             <details className="text-left mt-4">
-              <summary className="cursor-pointer text-red-700">Technical Details</summary>
-              <pre className="text-xs text-red-600 mt-2 p-2 bg-red-50 rounded overflow-auto">
+              <summary className="cursor-pointer text-red-700 font-medium">Technical Details</summary>
+              <pre className="text-xs text-red-600 mt-2 p-3 bg-red-50 rounded overflow-auto">
                 {error instanceof Error ? error.message : String(error)}
               </pre>
             </details>
