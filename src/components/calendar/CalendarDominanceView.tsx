@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, Users, Target, Zap, CheckCircle, Plus } from "lucide-react";
+import { Calendar, Clock, Users, Target, Zap, CheckCircle, Plus, Heart } from "lucide-react";
 import { DailyIChooseWidget } from "../dashboard/DailyIChooseWidget";
 import { PomodoroTimer } from "../pomodoro/PomodoroTimer";
 import { useUserData } from "@/hooks/use-user-data";

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -15,13 +14,20 @@ interface PomodoroSettings {
   cyclesBeforeLongBreak: number;
 }
 
-export function PomodoroTimer() {
+interface PomodoroTimerProps {
+  taskTitle?: string;
+  onClose?: () => void;
+  initialSettings?: Partial<PomodoroSettings>;
+}
+
+export function PomodoroTimer({ taskTitle: propTaskTitle, onClose, initialSettings }: PomodoroTimerProps = {}) {
   const userData = useUserData();
   const [settings, setSettings] = useState<PomodoroSettings>({
     workMinutes: 25,
     shortBreakMinutes: 5,
     longBreakMinutes: 15,
-    cyclesBeforeLongBreak: 4
+    cyclesBeforeLongBreak: 4,
+    ...initialSettings
   });
   
   const [timeLeft, setTimeLeft] = useState(settings.workMinutes * 60);
@@ -29,6 +35,7 @@ export function PomodoroTimer() {
   const [isWork, setIsWork] = useState(true);
   const [completedCycles, setCompletedCycles] = useState(0);
   const [totalWorkTime, setTotalWorkTime] = useState(0);
+  const [taskTitle, setTaskTitle] = useState(propTaskTitle || "Focus Session");
 
   // Get user-type specific settings
   useEffect(() => {
@@ -40,10 +47,10 @@ export function PomodoroTimer() {
       'wellness': { workMinutes: 25, shortBreakMinutes: 5, longBreakMinutes: 15, cyclesBeforeLongBreak: 4 }
     };
     
-    const userSettings = defaultSettings[userType] || defaultSettings.wellness;
+    const userSettings = { ...defaultSettings[userType], ...initialSettings };
     setSettings(userSettings);
     setTimeLeft(userSettings.workMinutes * 60);
-  }, [userData.userType]);
+  }, [userData.userType, initialSettings]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -126,10 +133,17 @@ export function PomodoroTimer() {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader className="text-center">
-        <CardTitle className="flex items-center justify-center gap-2">
-          <Trophy className="h-5 w-5 text-focus-600" />
-          Focus Timer
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="flex items-center gap-2">
+            <Trophy className="h-5 w-5 text-focus-600" />
+            {taskTitle}
+          </CardTitle>
+          {onClose && (
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              ×
+            </Button>
+          )}
+        </div>
         <div className="flex justify-center gap-2">
           <Badge variant={isWork ? "default" : "secondary"}>
             {isWork ? 'Work' : 'Break'} Session
