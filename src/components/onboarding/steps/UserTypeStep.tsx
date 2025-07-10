@@ -59,16 +59,18 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold">Tell us about yourself</h2>
-        <p className="text-muted-foreground">
-          This helps us personalize your MyRhythm experience
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="text-center space-y-4">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Tell us about yourself
+        </h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          This helps us personalize your MyRhythm experience and create the most effective brain health journey for you
         </p>
       </div>
 
       <RadioGroup value={selectedType || ""} onValueChange={(value) => setSelectedType(value as UserType)}>
-        <div className="grid gap-4">
+        <div className="grid gap-6 md:grid-cols-2">
           {userTypes.map((type) => {
             const Icon = type.icon;
             const isSelected = selectedType === type.id;
@@ -76,22 +78,24 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
             return (
               <Card 
                 key={type.id}
-                className={`cursor-pointer transition-all hover:shadow-md ${
-                  isSelected ? 'ring-2 ring-primary shadow-md' : ''
+                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border-2 ${
+                  isSelected 
+                    ? 'ring-4 ring-primary/20 shadow-xl border-primary bg-gradient-to-br from-primary/5 to-primary/10' 
+                    : 'border-border hover:border-primary/40'
                 }`}
                 onClick={() => setSelectedType(type.id)}
               >
-                <CardHeader className="pb-3">
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value={type.id} id={type.id} />
+                <CardHeader className="pb-4">
+                  <div className="flex items-center space-x-3">
+                    <RadioGroupItem value={type.id} id={type.id} className="scale-125" />
                     <Label htmlFor={type.id} className="cursor-pointer flex-1">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-full ${type.color} flex items-center justify-center`}>
-                          <Icon className="h-5 w-5 text-white" />
+                      <div className="flex items-start gap-4">
+                        <div className={`w-14 h-14 rounded-2xl ${type.color} flex items-center justify-center shadow-lg`}>
+                          <Icon className="h-7 w-7 text-white" />
                         </div>
-                        <div>
-                          <CardTitle className="text-lg">{type.title}</CardTitle>
-                          <p className="text-sm text-muted-foreground mt-1">
+                        <div className="flex-1">
+                          <CardTitle className="text-xl mb-2 text-foreground">{type.title}</CardTitle>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
                             {type.description}
                           </p>
                         </div>
@@ -99,20 +103,35 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                     </Label>
                   </div>
                 </CardHeader>
+                {isSelected && (
+                  <CardContent className="pt-0 pb-4">
+                    <div className="flex items-center gap-2 text-primary">
+                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      <span className="text-sm font-medium">Selected - We'll personalize everything for your journey</span>
+                    </div>
+                  </CardContent>
+                )}
               </Card>
             );
           })}
         </div>
       </RadioGroup>
 
-      <Button 
-        onClick={handleSubmit}
-        disabled={!selectedType}
-        className="w-full"
-        size="lg"
-      >
-        Continue
-      </Button>
+      <div className="text-center">
+        <Button 
+          onClick={handleSubmit}
+          disabled={!selectedType}
+          className="px-12 py-4 text-lg font-medium bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
+          size="lg"
+        >
+          {selectedType ? "Continue Your Journey" : "Please Select Your Path"}
+        </Button>
+        {selectedType && (
+          <p className="text-sm text-muted-foreground mt-3">
+            Ready to create your personalized {userTypes.find(t => t.id === selectedType)?.title.toLowerCase()} experience
+          </p>
+        )}
+      </div>
     </div>
   );
 }

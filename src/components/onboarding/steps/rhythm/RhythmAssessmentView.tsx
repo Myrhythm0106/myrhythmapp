@@ -105,10 +105,10 @@ export function RhythmAssessmentView({
 
   const getUserTypeName = (type: UserType | null) => {
     switch (type) {
-      case "brain-injury-recovery": return "Brain Injury Recovery";
-      case "cognitive-optimization": return "Cognitive Development";
-      case "caregiver-support": return "Caregiver & Family Support";
-      case "wellness-productivity": return "Wellness & Productivity";
+      case "brain-injury": return "Brain Injury Recovery";
+      case "cognitive-optimization": return "Cognitive Optimization";
+      case "caregiver": return "Caregiver & Family Support";
+      case "wellness": return "General Wellness";
       default: return "Unknown";
     }
   };

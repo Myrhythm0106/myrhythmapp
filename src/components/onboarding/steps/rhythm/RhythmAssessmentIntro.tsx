@@ -12,7 +12,7 @@ interface RhythmAssessmentIntroProps {
 }
 
 export function RhythmAssessmentIntro({ onBeginAssessment, userType }: RhythmAssessmentIntroProps) {
-  const isRecoveryUser = userType === "brain-injury-recovery";
+  const isRecoveryUser = userType === "brain-injury";
 
   return (
     <div className="space-y-6">

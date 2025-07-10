@@ -20,13 +20,13 @@ export function PreAssessmentCompiling({ onComplete, userType }: PreAssessmentCo
 
   const getIcon = () => {
     switch (userType) {
-      case "brain-injury-recovery":
+      case "brain-injury":
         return <Brain className="h-12 w-12 text-white" />;
       case "cognitive-optimization":
         return <Target className="h-12 w-12 text-white" />;
-      case "caregiver-support":
+      case "caregiver":
         return <Users className="h-12 w-12 text-white" />;
-      case "wellness-productivity":
+      case "wellness":
         return <Heart className="h-12 w-12 text-white" />;
       default:
         return <Brain className="h-12 w-12 text-white" />;
@@ -35,13 +35,13 @@ export function PreAssessmentCompiling({ onComplete, userType }: PreAssessmentCo
 
   const getMessage = () => {
     switch (userType) {
-      case "brain-injury-recovery":
+      case "brain-injury":
         return "Personalizing your recovery-focused assessment based on your unique journey...";
       case "cognitive-optimization":
         return "Calibrating cognitive development patterns for your growth goals...";
-      case "caregiver-support":
+      case "caregiver":
         return "Preparing caregiver-specific insights and support resources...";
-      case "wellness-productivity":
+      case "wellness":
         return "Customizing wellness and productivity frameworks for your lifestyle...";
       default:
         return "Personalizing your rhythm discovery experience...";
@@ -50,13 +50,13 @@ export function PreAssessmentCompiling({ onComplete, userType }: PreAssessmentCo
 
   const getSubMessage = () => {
     switch (userType) {
-      case "brain-injury-recovery":
+      case "brain-injury":
         return "Creating a safe space for your assessment";
       case "cognitive-optimization":
         return "Analyzing your development patterns";
-      case "caregiver-support":
+      case "caregiver":
         return "Understanding your support role";
-      case "wellness-productivity":
+      case "wellness":
         return "Mapping your productivity rhythms";
       default:
         return "Understanding your unique patterns";
