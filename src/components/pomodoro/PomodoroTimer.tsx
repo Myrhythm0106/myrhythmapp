@@ -1,209 +1,192 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { toast } from "sonner";
-import { Play, Pause, RotateCcw, Bell, TimerReset } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { PomodoroSettings } from "./types";
-import { getTimeForMode } from "./utils";
-import { PomodoroTimerDisplay } from "./PomodoroTimerDisplay";
-import { PomodoroControlsPanel } from "./PomodoroControlsPanel";
-import { PomodoroSettingsPanel } from "./PomodoroSettingsPanel";
 
-export interface PomodoroTimerProps {
-  taskTitle?: string;
-  onClose?: () => void;
-  initialSettings?: Partial<PomodoroSettings>;
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Play, Pause, Square, RotateCcw, Settings, Trophy } from "lucide-react";
+import { useUserData } from "@/hooks/use-user-data";
+import { toast } from "sonner";
+
+interface PomodoroSettings {
+  workMinutes: number;
+  shortBreakMinutes: number;
+  longBreakMinutes: number;
+  cyclesBeforeLongBreak: number;
 }
 
-export function PomodoroTimer({ 
-  taskTitle, 
-  onClose,
-  initialSettings = {}
-}: PomodoroTimerProps) {
-  // Combine default settings with any provided settings
+export function PomodoroTimer() {
+  const userData = useUserData();
   const [settings, setSettings] = useState<PomodoroSettings>({
-    ...DEFAULT_SETTINGS,
-    ...initialSettings
+    workMinutes: 25,
+    shortBreakMinutes: 5,
+    longBreakMinutes: 15,
+    cyclesBeforeLongBreak: 4
   });
   
-  const [isRunning, setIsRunning] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [mode, setMode] = useState<"work" | "shortBreak" | "longBreak">("work");
-  const [secondsLeft, setSecondsLeft] = useState(settings.workMinutes * 60);
-  const [pomodoroCount, setPomodoroCount] = useState(0);
-  
-  // Calculate time based on current mode
-  const getTimeForCurrentMode = useCallback((mode: "work" | "shortBreak" | "longBreak") => {
-    if (mode === "work") return settings.workMinutes * 60;
-    if (mode === "shortBreak") return settings.shortBreakMinutes * 60;
-    return settings.longBreakMinutes * 60;
-  }, [settings]);
-  
-  // Reset timer with new mode
-  const switchMode = useCallback((newMode: "work" | "shortBreak" | "longBreak") => {
-    setMode(newMode);
-    setSecondsLeft(getTimeForCurrentMode(newMode));
-  }, [getTimeForCurrentMode]);
-  
-  // Timer logic
+  const [timeLeft, setTimeLeft] = useState(settings.workMinutes * 60);
+  const [isActive, setIsActive] = useState(false);
+  const [isWork, setIsWork] = useState(true);
+  const [completedCycles, setCompletedCycles] = useState(0);
+  const [totalWorkTime, setTotalWorkTime] = useState(0);
+
+  // Get user-type specific settings
   useEffect(() => {
-    if (!isRunning) return;
+    const userType = userData.userType || 'wellness';
+    const defaultSettings = {
+      'brain-injury': { workMinutes: 15, shortBreakMinutes: 10, longBreakMinutes: 20, cyclesBeforeLongBreak: 2 },
+      'caregiver': { workMinutes: 25, shortBreakMinutes: 5, longBreakMinutes: 15, cyclesBeforeLongBreak: 3 },
+      'cognitive-optimization': { workMinutes: 50, shortBreakMinutes: 10, longBreakMinutes: 20, cyclesBeforeLongBreak: 4 },
+      'wellness': { workMinutes: 25, shortBreakMinutes: 5, longBreakMinutes: 15, cyclesBeforeLongBreak: 4 }
+    };
     
-    const interval = setInterval(() => {
-      setSecondsLeft(seconds => {
-        if (seconds <= 1) {
-          clearInterval(interval);
-          
-          // Handle timer completion based on mode
-          if (mode === "work") {
-            const newPomodoroCount = pomodoroCount + 1;
-            setPomodoroCount(newPomodoroCount);
-            
-            // Determine if it's time for a long break or short break
-            const isLongBreakDue = newPomodoroCount % settings.longBreakInterval === 0;
-            const nextMode = isLongBreakDue ? "longBreak" : "shortBreak";
-            
-            // Show notification
-            if (settings.notificationSound) {
-              const audio = new Audio("/notification-sound.mp3");
-              audio.play().catch(err => console.error("Error playing sound:", err));
-            }
-            
-            if (settings.notificationVisual) {
-              toast.success("Work session completed! Time for a break.", {
-                description: isLongBreakDue 
-                  ? `Take a longer break (${settings.longBreakMinutes} min)` 
-                  : `Take a short break (${settings.shortBreakMinutes} min)`,
-              });
-            }
-            
-            switchMode(nextMode);
-          } else {
-            // Break is over, back to work
-            if (settings.notificationVisual) {
-              toast.info("Break time over! Ready to focus again?", {
-                description: `Starting a ${settings.workMinutes} minute work session`,
-              });
-            }
-            switchMode("work");
+    const userSettings = defaultSettings[userType] || defaultSettings.wellness;
+    setSettings(userSettings);
+    setTimeLeft(userSettings.workMinutes * 60);
+  }, [userData.userType]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    
+    if (isActive && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft(timeLeft => {
+          if (timeLeft <= 1) {
+            handleTimerComplete();
+            return 0;
           }
-          
-          return 0;
-        }
-        return seconds - 1;
-      });
-    }, 1000);
+          return timeLeft - 1;
+        });
+      }, 1000);
+    } else if (timeLeft === 0) {
+      setIsActive(false);
+    }
     
-    return () => clearInterval(interval);
-  }, [isRunning, mode, pomodoroCount, settings, switchMode]);
-  
-  // Format time as MM:SS
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isActive, timeLeft]);
+
+  const handleTimerComplete = () => {
+    setIsActive(false);
+    
+    if (isWork) {
+      // Work session completed
+      const newCompletedCycles = completedCycles + 1;
+      setCompletedCycles(newCompletedCycles);
+      setTotalWorkTime(prev => prev + settings.workMinutes);
+      
+      // Determine break type
+      const isLongBreak = newCompletedCycles % settings.cyclesBeforeLongBreak === 0;
+      const breakMinutes = isLongBreak ? settings.longBreakMinutes : settings.shortBreakMinutes;
+      
+      setTimeLeft(breakMinutes * 60);
+      setIsWork(false);
+      
+      toast.success(`🎉 Work session complete! Time for a ${isLongBreak ? 'long' : 'short'} break.`, {
+        duration: 5000,
+      });
+    } else {
+      // Break completed
+      setTimeLeft(settings.workMinutes * 60);
+      setIsWork(true);
+      
+      toast.success("Break time over! Ready for your next focused work session? 💪", {
+        duration: 5000,
+      });
+    }
+  };
+
+  const toggleTimer = () => {
+    setIsActive(!isActive);
+  };
+
+  const resetTimer = () => {
+    setIsActive(false);
+    setTimeLeft(isWork ? settings.workMinutes * 60 : settings.shortBreakMinutes * 60);
+  };
+
+  const skipSession = () => {
+    handleTimerComplete();
+  };
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
-  
-  // Calculate progress percentage
-  const totalSeconds = getTimeForCurrentMode(mode);
-  const progress = ((totalSeconds - secondsLeft) / totalSeconds) * 100;
-  
-  // Handle play/pause
-  const toggleTimer = () => {
-    setIsRunning(!isRunning);
+
+  const getProgress = () => {
+    const totalTime = isWork ? settings.workMinutes * 60 : 
+                     (completedCycles % settings.cyclesBeforeLongBreak === 0 && completedCycles > 0) ? 
+                     settings.longBreakMinutes * 60 : settings.shortBreakMinutes * 60;
+    return ((totalTime - timeLeft) / totalTime) * 100;
   };
-  
-  // Handle reset
-  const resetTimer = () => {
-    setIsRunning(false);
-    switchMode(mode); // Reset current mode's time
-  };
-  
-  // Skip to next mode
-  const skipToNext = () => {
-    let nextMode: "work" | "shortBreak" | "longBreak";
-    if (mode === "work") {
-      const isLongBreakDue = (pomodoroCount + 1) % settings.longBreakInterval === 0;
-      nextMode = isLongBreakDue ? "longBreak" : "shortBreak";
-      setPomodoroCount(pomodoroCount + 1);
-    } else {
-      nextMode = "work";
-    }
-    switchMode(nextMode);
-    setIsRunning(false);
-  };
-  
+
   return (
-    <Card className="w-full max-w-md shadow-lg border-2 border-primary/20 bg-card">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl flex justify-between items-center">
-          <div className="flex items-center">
-            <Bell className="h-5 w-5 mr-2 text-primary" />
-            Pomodoro Timer
-          </div>
-          <div>
-            <Button
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setShowSettings(!showSettings)}
-              className="text-xs"
-            >
-              {showSettings ? "Close Settings" : "Settings"}
-            </Button>
-          </div>
+    <Card className="w-full max-w-md mx-auto">
+      <CardHeader className="text-center">
+        <CardTitle className="flex items-center justify-center gap-2">
+          <Trophy className="h-5 w-5 text-focus-600" />
+          Focus Timer
         </CardTitle>
-        {taskTitle && (
-          <p className="text-sm text-muted-foreground">
-            Task: {taskTitle}
-          </p>
-        )}
+        <div className="flex justify-center gap-2">
+          <Badge variant={isWork ? "default" : "secondary"}>
+            {isWork ? 'Work' : 'Break'} Session
+          </Badge>
+          <Badge variant="outline">
+            Cycle {Math.floor(completedCycles / settings.cyclesBeforeLongBreak) + 1}
+          </Badge>
+        </div>
       </CardHeader>
       
-      <CardContent className="space-y-4">
-        {showSettings ? (
-          <PomodoroSettingsPanel settings={settings} setSettings={setSettings} />
-        ) : (
-          <PomodoroTimerDisplay 
-            mode={mode} 
-            secondsLeft={secondsLeft}
-            progress={progress}
-            formatTime={formatTime}
-            pomodoroCount={pomodoroCount}
-            settings={settings}
-            isRunning={isRunning}
-            toggleTimer={toggleTimer}
-            resetTimer={resetTimer}
-            skipToNext={skipToNext}
-          />
-        )}
-      </CardContent>
-      
-      <CardFooter className="pt-1">
-        {onClose && (
-          <Button 
-            variant="ghost" 
-            onClick={onClose} 
-            className="w-full text-sm"
+      <CardContent className="space-y-6">
+        {/* Timer Display */}
+        <div className="text-center">
+          <div className="text-6xl font-mono font-bold text-focus-600 mb-2">
+            {formatTime(timeLeft)}
+          </div>
+          <Progress value={getProgress()} className="w-full h-2" />
+        </div>
+        
+        {/* Controls */}
+        <div className="flex justify-center gap-2">
+          <Button
+            onClick={toggleTimer}
+            variant={isActive ? "destructive" : "default"}
+            size="lg"
+            className="flex-1"
           >
-            Minimize Timer
+            {isActive ? <Pause className="h-4 w-4 mr-2" /> : <Play className="h-4 w-4 mr-2" />}
+            {isActive ? 'Pause' : 'Start'}
           </Button>
-        )}
-      </CardFooter>
+          
+          <Button onClick={resetTimer} variant="outline" size="lg">
+            <RotateCcw className="h-4 w-4" />
+          </Button>
+          
+          <Button onClick={skipSession} variant="outline" size="lg">
+            <Square className="h-4 w-4" />
+          </Button>
+        </div>
+        
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-4 text-center">
+          <div className="p-3 bg-focus-50 rounded-lg">
+            <div className="text-2xl font-bold text-focus-600">{completedCycles}</div>
+            <div className="text-sm text-focus-700">Completed Cycles</div>
+          </div>
+          <div className="p-3 bg-focus-50 rounded-lg">
+            <div className="text-2xl font-bold text-focus-600">{totalWorkTime}</div>
+            <div className="text-sm text-focus-700">Minutes Focused</div>
+          </div>
+        </div>
+        
+        {/* Settings Preview */}
+        <div className="text-center text-sm text-muted-foreground">
+          Work: {settings.workMinutes}m • Short Break: {settings.shortBreakMinutes}m • Long Break: {settings.longBreakMinutes}m
+        </div>
+      </CardContent>
     </Card>
   );
 }
-
-// Keep the DEFAULT_SETTINGS export to avoid breaking changes
-export const DEFAULT_SETTINGS: PomodoroSettings = {
-  workMinutes: 25,
-  shortBreakMinutes: 5,
-  longBreakMinutes: 15,
-  longBreakInterval: 4,
-  notificationSound: true,
-  notificationVisual: true,
-};
