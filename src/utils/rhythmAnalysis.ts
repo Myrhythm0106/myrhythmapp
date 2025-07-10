@@ -184,7 +184,7 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses, userType
     focusArea = "memory"; // Cognitive optimization users benefit from memory focus
   }
   
-  if (userType === "brain-injury-recovery") {
+  if (userType === "brain-injury") {
     // Always consider memory as primary or secondary focus for brain injury recovery
     if (focusArea !== "memory" && overallScore < 2.2) {
       focusArea = "memory";

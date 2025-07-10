@@ -1,4 +1,3 @@
-
 import { AssessmentResponses, Section } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { SectionScore, FocusArea } from "./rhythmAnalysis";
@@ -135,7 +134,7 @@ function analyzeSpecificResponses(responses: AssessmentResponses, userType?: Use
   }
 
   if (lowConfidenceResponses >= 3) {
-    const message = userType === "brain-injury-recovery" 
+    const message = userType === "brain-injury" 
       ? "This is common and completely normal in recovery - it shows honest self-reflection."
       : "This honest self-assessment provides a clear foundation for targeted improvement.";
     
@@ -279,10 +278,10 @@ function generateUserTypeMessage(
   if (!userType) return "";
   
   const contextMap: Record<UserType, string> = {
-    "brain-injury-recovery": `As someone on a recovery journey, your ${focusArea} focus aligns perfectly with rebuilding your rhythm at a pace that honors your healing process. Your assessment shows you're ready for this next step.`,
+    "brain-injury": `As someone on a recovery journey, your ${focusArea} focus aligns perfectly with rebuilding your rhythm at a pace that honors your healing process. Your assessment shows you're ready for this next step.`,
     "cognitive-optimization": `For cognitive optimization, your ${focusArea} focus represents your most efficient path to enhanced mental performance. Your assessment indicates this area will yield the highest return on your optimization efforts.`,
-    "caregiver-support": `As a caregiver, your ${focusArea} focus will help you support others more effectively while maintaining your own well-being. Your assessment shows this balance is achievable and sustainable for you.`,
-    "wellness-productivity": `Your ${focusArea} focus perfectly aligns with building sustainable wellness and productivity systems. Your assessment indicates this foundation will support all your other life optimization goals.`
+    "caregiver": `As a caregiver, your ${focusArea} focus will help you support others more effectively while maintaining your own well-being. Your assessment shows this balance is achievable and sustainable for you.`,
+    "wellness": `Your ${focusArea} focus perfectly aligns with building sustainable wellness and productivity systems. Your assessment indicates this foundation will support all your other life optimization goals.`
   };
   
   return contextMap[userType] || "";
@@ -316,30 +315,30 @@ function calculateVariance(numbers: number[]): number {
 
 function getUserTypeContext(userType?: UserType): string | null {
   const contextMap: Record<UserType, string> = {
-    "brain-injury-recovery": "recovery journeys",
+    "brain-injury": "recovery journeys",
     "cognitive-optimization": "performance optimization",
-    "caregiver-support": "caregiving roles",
-    "wellness-productivity": "wellness and productivity goals"
+    "caregiver": "caregiving roles",
+    "wellness": "wellness and productivity goals"
   };
   return userType ? contextMap[userType] : null;
 }
 
 function getUserTypeCharacteristic(userType?: UserType): string | null {
   const charMap: Record<UserType, string> = {
-    "brain-injury-recovery": "Resilient and recovery-focused approach",
+    "brain-injury": "Resilient and recovery-focused approach",
     "cognitive-optimization": "Performance-driven mindset with optimization focus",
-    "caregiver-support": "Supportive nature with others-focused perspective",
-    "wellness-productivity": "Balanced approach to life optimization"
+    "caregiver": "Supportive nature with others-focused perspective",
+    "wellness": "Balanced approach to life optimization"
   };
   return userType ? charMap[userType] : null;
 }
 
 function getUserTypePersonalMessage(userType?: UserType): string {
   const messageMap: Record<UserType, string> = {
-    "brain-injury-recovery": "Your journey shows remarkable self-awareness and readiness for positive growth.",
+    "brain-injury": "Your journey shows remarkable self-awareness and readiness for positive growth.",
     "cognitive-optimization": "Your systematic approach to self-assessment indicates strong optimization potential.",
-    "caregiver-support": "Your thoughtful responses show the same care you give others applied to your own growth.",
-    "wellness-productivity": "Your balanced perspective creates an ideal foundation for sustainable life optimization."
+    "caregiver": "Your thoughtful responses show the same care you give others applied to your own growth.",
+    "wellness": "Your balanced perspective creates an ideal foundation for sustainable life optimization."
   };
   return userType ? messageMap[userType] : "Your thoughtful responses show strong self-awareness and growth potential.";
 }
@@ -348,10 +347,10 @@ function getUserTypeSpecificStep(userType?: UserType, focusArea?: FocusArea): st
   if (!userType) return null;
   
   const stepMap: Record<UserType, string> = {
-    "brain-injury-recovery": "Connect with recovery-focused community resources and support",
+    "brain-injury": "Connect with recovery-focused community resources and support",
     "cognitive-optimization": "Track and measure your cognitive performance improvements",
-    "caregiver-support": "Include family/care network in your growth journey when appropriate",
-    "wellness-productivity": "Integrate wellness practices with your productivity systems"
+    "caregiver": "Include family/care network in your growth journey when appropriate",
+    "wellness": "Integrate wellness practices with your productivity systems"
   };
   
   return stepMap[userType];

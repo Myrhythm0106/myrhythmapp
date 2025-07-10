@@ -12,14 +12,14 @@ const convertUserType = (legacyType: string): UserType => {
   switch (legacyType) {
     case "tbi":
     case "abi":
-      return "brain-injury-recovery";
+      return "brain-injury";
     case "mental-health":
       return "cognitive-optimization";
     case "caregiver":
-      return "caregiver-support";
+      return "caregiver";
     case "new":
     default:
-      return "wellness-productivity";
+      return "wellness";
   }
 };
 
@@ -27,7 +27,7 @@ export function useUserData() {
   // In a real app, we would fetch the user data from a database or API
   const [userData] = useState<UserData>({
     name: "Alex",
-    userType: convertUserType("tbi"), // This will convert "tbi" to "brain-injury-recovery"
+    userType: convertUserType("tbi"), // This will convert "tbi" to "brain-injury"
   });
 
   return userData;
