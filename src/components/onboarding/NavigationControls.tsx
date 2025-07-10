@@ -49,10 +49,24 @@ export function NavigationControls({
     return "Complete";
   };
 
+  const handleNext = () => {
+    console.log("NavigationControls: Next button clicked, canGoNext:", canGoNext);
+    if (canGoNext && !isLoading) {
+      onNext();
+    }
+  };
+
+  const handlePrevious = () => {
+    console.log("NavigationControls: Previous button clicked, canGoPrevious:", canGoPrevious);
+    if (canGoPrevious && !isLoading) {
+      onPrevious();
+    }
+  };
+
   return (
-    <div className={cn("pt-8 border-t-2 border-border/50", className)}>
+    <div className={cn("pt-6 border-t border-border/50", className)}>
       {/* Progress Reminder */}
-      <div className="text-center mb-6">
+      <div className="text-center mb-4">
         <p className="text-sm text-muted-foreground">
           Step {currentStep} of {totalSteps} • {Math.round((currentStep / totalSteps) * 100)}% Complete
         </p>
@@ -63,25 +77,26 @@ export function NavigationControls({
         )}
       </div>
 
-      <div className="flex justify-between items-center gap-4">
+      <div className="flex justify-between items-center gap-3">
         {/* Previous Button */}
         <Button
           variant="outline"
-          onClick={onPrevious}
+          onClick={handlePrevious}
           disabled={!canGoPrevious || isLoading}
           className={cn(
-            "flex items-center gap-2 px-6 py-3",
+            "flex items-center gap-2 px-4 py-2",
             !canGoPrevious && "opacity-50"
           )}
+          size="default"
         >
           <ArrowLeft className="h-4 w-4" />
           {previousLabel || defaultPreviousLabel}
         </Button>
 
         {/* Status Message */}
-        <div className="flex-1 text-center">
+        <div className="flex-1 text-center px-2">
           {!canGoNext && !isLoading && (
-            <p className="text-sm text-amber-600 bg-amber-50 px-4 py-2 rounded-lg border border-amber-200">
+            <p className="text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
               {currentStep === 1 && "Please select your user type to continue"}
               {currentStep === 2 && "Location setup (optional - you can skip)"}
               {currentStep === 3 && "Please choose a plan to continue"}
@@ -90,7 +105,7 @@ export function NavigationControls({
             </p>
           )}
           {canGoNext && !isLoading && (
-            <p className="text-sm text-green-600 bg-green-50 px-4 py-2 rounded-lg border border-green-200">
+            <p className="text-xs text-green-600 bg-green-50 px-3 py-2 rounded-lg border border-green-200">
               ✓ Ready to proceed!
             </p>
           )}
@@ -98,16 +113,16 @@ export function NavigationControls({
 
         {/* Next Button */}
         <Button
-          onClick={onNext}
+          onClick={handleNext}
           disabled={!canGoNext || isLoading}
           className={cn(
-            "flex items-center gap-2 px-8 py-3 text-lg font-medium transition-all duration-200",
-            isLastStep && "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 shadow-lg",
-            !isLastStep && "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg",
-            canGoNext && "hover:scale-105 hover:shadow-xl",
+            "flex items-center gap-2 px-4 py-2 font-medium transition-all duration-200",
+            isLastStep && "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700",
+            !isLastStep && "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
+            canGoNext && "hover:scale-105",
             !canGoNext && "opacity-50 cursor-not-allowed"
           )}
-          size="lg"
+          size="default"
         >
           {isLoading ? (
             <>
@@ -118,9 +133,9 @@ export function NavigationControls({
             <>
               {nextLabel || defaultNextLabel}
               {isLastStep ? (
-                <Check className="h-5 w-5" />
+                <Check className="h-4 w-4" />
               ) : (
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="h-4 w-4" />
               )}
             </>
           )}
@@ -128,7 +143,7 @@ export function NavigationControls({
       </div>
 
       {/* Help Text */}
-      <div className="text-center mt-4 text-xs text-muted-foreground">
+      <div className="text-center mt-3 text-xs text-muted-foreground">
         You can navigate back to previous steps at any time using the progress bar above
       </div>
     </div>

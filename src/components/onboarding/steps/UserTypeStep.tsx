@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Heart, Users, Sparkles } from "lucide-react";
 
@@ -44,28 +44,36 @@ const userTypes = [
 export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || null);
 
-  console.log("UserTypeStep: Rendering with selectedType:", selectedType);
+  console.log("UserTypeStep: Rendering with selectedType:", selectedType, "initialValue:", initialValue);
+
+  // Update selectedType when initialValue changes
+  useEffect(() => {
+    if (initialValue && initialValue !== selectedType) {
+      setSelectedType(initialValue);
+    }
+  }, [initialValue]);
 
   const handleSelection = (type: UserType) => {
     console.log("UserTypeStep: User selected type:", type);
     setSelectedType(type);
+    // Call onComplete immediately when user selects a type
     onComplete({ type });
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-8">
+    <div className="w-full max-w-4xl mx-auto space-y-6 px-4">
       {/* Header */}
-      <div className="text-center space-y-4">
-        <h2 className="text-4xl font-bold text-foreground">
+      <div className="text-center space-y-3">
+        <h2 className="text-3xl font-bold text-foreground">
           Tell us about yourself
         </h2>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           This helps us personalize your MyRhythm experience and create the most effective brain health journey for you
         </p>
       </div>
 
       {/* User Type Cards */}
-      <div className="grid gap-6 md:grid-cols-2 w-full max-w-4xl mx-auto">
+      <div className="grid gap-4 md:grid-cols-2 w-full">
         {userTypes.map((type) => {
           const Icon = type.icon;
           const isSelected = selectedType === type.id;
@@ -73,23 +81,23 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
           return (
             <Card 
               key={type.id}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full min-h-[120px] ${
+              className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full ${
                 isSelected 
-                  ? 'border-primary bg-primary/5 shadow-lg' 
+                  ? 'border-primary bg-primary/5 shadow-lg ring-2 ring-primary/20' 
                   : 'border-border hover:border-primary/50'
               }`}
               onClick={() => handleSelection(type.id)}
             >
-              <CardHeader className="pb-4">
-                <div className="flex items-start gap-4">
+              <CardHeader className="pb-3">
+                <div className="flex items-start gap-3">
                   {/* Icon */}
-                  <div className={`w-12 h-12 rounded-lg ${type.color} flex items-center justify-center flex-shrink-0`}>
-                    <Icon className="h-6 w-6 text-white" />
+                  <div className={`w-10 h-10 rounded-lg ${type.color} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className="h-5 w-5 text-white" />
                   </div>
                   
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <CardTitle className="text-lg font-semibold text-foreground mb-2">
+                    <CardTitle className="text-base font-semibold text-foreground mb-1">
                       {type.title}
                     </CardTitle>
                     <p className="text-sm text-muted-foreground leading-relaxed">
@@ -98,18 +106,18 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                   </div>
                   
                   {/* Selection indicator */}
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                     isSelected 
                       ? 'border-primary bg-primary' 
                       : 'border-muted-foreground/30'
                   }`}>
-                    {isSelected && <div className="w-3 h-3 rounded-full bg-white"></div>}
+                    {isSelected && <div className="w-2 h-2 rounded-full bg-white"></div>}
                   </div>
                 </div>
               </CardHeader>
               
               {isSelected && (
-                <CardContent className="pt-0 pb-4">
+                <CardContent className="pt-0 pb-3">
                   <div className="flex items-center gap-2 text-primary">
                     <div className="w-2 h-2 bg-primary rounded-full"></div>
                     <span className="text-sm font-medium">Selected - Ready to continue</span>
@@ -124,7 +132,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
       {/* Selection Status */}
       {selectedType && (
         <div className="text-center p-4 bg-primary/10 rounded-lg border border-primary/20 max-w-2xl mx-auto">
-          <p className="text-primary font-medium text-lg">
+          <p className="text-primary font-medium">
             ✓ {userTypes.find(t => t.id === selectedType)?.title} Selected
           </p>
           <p className="text-sm text-muted-foreground mt-1">

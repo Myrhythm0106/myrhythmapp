@@ -26,18 +26,25 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   const navigate = useNavigate();
 
   const goToPreviousStep = () => {
+    console.log("OnboardingHandlers: Going to previous step from", props.currentStep);
     if (props.currentStep > 1) {
       props.setCurrentStep(props.currentStep - 1);
     }
   };
 
   const goToNextStep = () => {
+    console.log("OnboardingHandlers: Going to next step from", props.currentStep);
     if (props.currentStep < props.totalSteps) {
       props.setCurrentStep(props.currentStep + 1);
+    } else if (props.currentStep === props.totalSteps) {
+      // If on last step, complete onboarding
+      console.log("OnboardingHandlers: Completing onboarding, navigating to dashboard");
+      navigate("/dashboard");
     }
   };
 
   const goToStep = (stepNumber: number) => {
+    console.log("OnboardingHandlers: Going to step", stepNumber);
     if (stepNumber >= 1 && stepNumber <= props.totalSteps) {
       props.setCurrentStep(stepNumber);
     }
@@ -48,13 +55,12 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     props.setUserType(data.type);
     props.setIsUserTypeSelected(true);
     toast.success("User type selected!");
-    // Don't auto-advance - wait for user to click Next
   };
 
   const handlePersonalInfoComplete = (data: PersonalInfoFormValues) => {
     console.log("OnboardingHandlers: Personal info completed");
     props.setPersonalInfo(data);
-    // Don't auto-advance - wait for user to click Next
+    toast.success("Personal information saved!");
   };
 
   const handleLocationComplete = (data: any) => {
@@ -62,7 +68,6 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     props.setLocation(data);
     props.setIsLocationValid(true);
     toast.success("Location saved!");
-    // Don't auto-advance - wait for user to click Next
   };
 
   const handlePlanSelected = (plan: PlanType, billingPeriod: 'monthly' | 'annual' = 'monthly') => {
@@ -71,7 +76,6 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     props.setBillingPeriod(billingPeriod);
     props.setIsPlanSelected(true);
     toast.success("Plan selected!");
-    // Don't auto-advance - wait for user to click Next
   };
 
   const handlePreAssessmentComplete = () => {
@@ -105,18 +109,25 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   };
 
   const getStepValidation = () => {
-    return {
+    const validation = {
       canGoNext: (() => {
         switch (props.currentStep) {
           case 1:
-            return props.userType !== null;
+            const hasUserType = props.userType !== null;
+            console.log("Step 1 validation - hasUserType:", hasUserType, "userType:", props.userType);
+            return hasUserType;
           case 2:
+            console.log("Step 2 validation - location is optional, can always proceed");
             return true; // Location is optional
           case 3:
-            return props.selectedPlan !== null;
+            const hasPlan = props.selectedPlan !== null;
+            console.log("Step 3 validation - hasPlan:", hasPlan, "selectedPlan:", props.selectedPlan);
+            return hasPlan;
           case 4:
+            console.log("Step 4 validation - pre-assessment auto-advances");
             return true; // Pre-assessment auto-advances
           case 5:
+            console.log("Step 5 validation - assessment has its own completion logic");
             return true; // Assessment has its own completion logic
           default:
             return false;
@@ -124,6 +135,9 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       })(),
       canGoPrevious: props.currentStep > 1
     };
+    
+    console.log("Step validation result:", validation);
+    return validation;
   };
 
   return {

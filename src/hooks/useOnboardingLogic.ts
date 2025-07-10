@@ -17,7 +17,6 @@ export const useOnboardingLogic = (totalSteps: number) => {
   const [searchParams, setSearchParams] = useSearchParams();
   
   // Initialize currentStep from URL parameter with proper validation
-  // Updated for 5-step flow (removed payment step)
   const [currentStep, setCurrentStep] = useState(() => {
     const stepParam = searchParams.get('step');
     if (stepParam) {
@@ -54,6 +53,7 @@ export const useOnboardingLogic = (totalSteps: number) => {
     const stepFromUrl = stepParam ? parseInt(stepParam, 10) : null;
     
     if (stepFromUrl !== currentStep) {
+      console.log("OnboardingLogic: Updating URL to step", currentStep);
       setSearchParams({ step: currentStep.toString() });
     }
   }, [currentStep, searchParams, setSearchParams]);
@@ -63,6 +63,8 @@ export const useOnboardingLogic = (totalSteps: number) => {
     const handlePopState = () => {
       const stepParam = new URLSearchParams(window.location.search).get('step');
       const stepFromUrl = stepParam ? parseInt(stepParam, 10) : 1;
+      
+      console.log("OnboardingLogic: PopState event, going to step", stepFromUrl);
       
       if (stepFromUrl >= 1 && stepFromUrl <= totalSteps) {
         setCurrentStep(stepFromUrl);
@@ -80,6 +82,17 @@ export const useOnboardingLogic = (totalSteps: number) => {
   useEffect(() => {
     localStorage.removeItem('myrhythm_security_answers');
   }, []);
+
+  // Update validation states when core state changes
+  useEffect(() => {
+    setIsUserTypeSelected(userType !== null);
+    console.log("OnboardingLogic: User type changed:", userType, "isSelected:", userType !== null);
+  }, [userType]);
+
+  useEffect(() => {
+    setIsPlanSelected(selectedPlan !== null);
+    console.log("OnboardingLogic: Selected plan changed:", selectedPlan, "isSelected:", selectedPlan !== null);
+  }, [selectedPlan]);
 
   return {
     currentStep,
