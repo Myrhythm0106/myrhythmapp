@@ -141,6 +141,7 @@ const WebOnboarding = () => {
           currentStep={currentStep} 
           totalSteps={TOTAL_STEPS}
           onBack={handlers.goToPreviousStep}
+          onStepClick={handlers.goToStep}
           title={currentStepInfo.title}
           description={currentStepInfo.description}
           hasUnsavedData={hasUnsavedData}
