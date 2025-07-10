@@ -37,8 +37,9 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     if (props.currentStep < props.totalSteps) {
       props.setCurrentStep(props.currentStep + 1);
     } else if (props.currentStep === props.totalSteps) {
-      // If on last step, complete onboarding
+      // Only navigate to dashboard if we're actually on the last step and assessment is complete
       console.log("OnboardingHandlers: Completing onboarding, navigating to dashboard");
+      toast.success("Onboarding completed! Welcome to MyRhythm!");
       navigate("/dashboard");
     }
   };
@@ -46,7 +47,9 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   const goToStep = (stepNumber: number) => {
     console.log("OnboardingHandlers: Going to step", stepNumber);
     if (stepNumber >= 1 && stepNumber <= props.totalSteps) {
-      props.setCurrentStep(stepNumber);
+      // Only allow navigation to completed or current+1 steps
+      const maxAllowedStep = Math.min(stepNumber, props.currentStep + 1);
+      props.setCurrentStep(maxAllowedStep);
     }
   };
 
@@ -80,7 +83,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
 
   const handlePreAssessmentComplete = () => {
     console.log("OnboardingHandlers: Pre-assessment completed, proceeding to rhythm assessment");
-    toast.success("Assessment prepared! Beginning your rhythm analysis.");
+    toast.success("Assessment prepared! Beginning your personalized assessment.");
     props.setCurrentStep(5);
   };
 
@@ -88,24 +91,6 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     console.log("OnboardingHandlers: Rhythm assessment completed, navigating to dashboard");
     toast.success("Assessment complete! Your personalized insights are ready.");
     navigate("/dashboard");
-  };
-
-  // Enhanced navigation validation
-  const canGoToStep = (stepNumber: number): boolean => {
-    switch (stepNumber) {
-      case 1:
-        return true; // Always can go to user type
-      case 2:
-        return props.userType !== null; // Can go to location if user type selected
-      case 3:
-        return props.userType !== null; // Can go to plan if user type selected (location optional)
-      case 4:
-        return props.userType !== null && props.selectedPlan !== null; // Need user type and plan
-      case 5:
-        return props.userType !== null && props.selectedPlan !== null; // Need user type and plan for assessment
-      default:
-        return false;
-    }
   };
 
   const getStepValidation = () => {
@@ -127,8 +112,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
             console.log("Step 4 validation - pre-assessment auto-advances");
             return true; // Pre-assessment auto-advances
           case 5:
-            console.log("Step 5 validation - assessment has its own completion logic");
-            return true; // Assessment has its own completion logic
+            console.log("Step 5 validation - assessment completion required");
+            return false; // Assessment must be completed through its own flow
           default:
             return false;
         }
@@ -150,7 +135,6 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     handlePlanSelected,
     handlePreAssessmentComplete,
     handleRhythmAssessmentComplete,
-    canGoToStep,
     getStepValidation
   };
 };

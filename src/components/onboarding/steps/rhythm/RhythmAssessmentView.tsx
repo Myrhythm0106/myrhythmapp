@@ -1,24 +1,128 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { ArrowRight, ArrowLeft, Info, User } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { RhythmSectionHeader } from "./RhythmSectionHeader";
-import { RhythmQuestionCard } from "./RhythmQuestionCard";
-import { AssessmentResponses } from "./rhythmAssessmentData";
 import { UserType } from "../UserTypeStep";
-import { useFormPersistence } from "@/hooks/useFormPersistence";
+
+interface Question {
+  id: string;
+  text: string;
+  type: 'scale' | 'multiple-choice' | 'text';
+  options?: string[];
+  userTypes?: UserType[];
+}
+
+// User type specific questions
+const getQuestionsForUserType = (userType: UserType | null): Question[] => {
+  console.log("Getting questions for user type:", userType);
+  
+  const baseQuestions: Question[] = [
+    {
+      id: 'energy_levels',
+      text: 'How would you rate your typical daily energy levels?',
+      type: 'scale',
+      userTypes: ['brain-injury', 'caregiver', 'cognitive-optimization', 'wellness']
+    },
+    {
+      id: 'focus_duration',
+      text: 'How long can you typically maintain focus on a single task?',
+      type: 'multiple-choice',
+      options: ['Less than 15 minutes', '15-30 minutes', '30-60 minutes', '1-2 hours', 'More than 2 hours'],
+      userTypes: ['brain-injury', 'cognitive-optimization', 'wellness']
+    }
+  ];
+
+  // Add user type specific questions
+  if (userType === 'brain-injury') {
+    baseQuestions.push(
+      {
+        id: 'injury_recovery_stage',
+        text: 'What stage of recovery are you currently in?',
+        type: 'multiple-choice',
+        options: ['Early recovery (0-6 months)', 'Mid recovery (6-18 months)', 'Late recovery (18+ months)', 'Long-term management'],
+        userTypes: ['brain-injury']
+      },
+      {
+        id: 'cognitive_symptoms',
+        text: 'Which cognitive symptoms do you experience most frequently?',
+        type: 'multiple-choice',
+        options: ['Memory issues', 'Attention problems', 'Processing speed', 'Executive function', 'Language difficulties'],
+        userTypes: ['brain-injury']
+      }
+    );
+  }
+
+  if (userType === 'caregiver') {
+    baseQuestions.push(
+      {
+        id: 'caregiving_duration',
+        text: 'How long have you been in a caregiving role?',
+        type: 'multiple-choice',
+        options: ['Less than 6 months', '6 months - 1 year', '1-3 years', '3-5 years', 'More than 5 years'],
+        userTypes: ['caregiver']
+      },
+      {
+        id: 'caregiver_stress',
+        text: 'How would you rate your current stress level as a caregiver?',
+        type: 'scale',
+        userTypes: ['caregiver']
+      }
+    );
+  }
+
+  if (userType === 'cognitive-optimization') {
+    baseQuestions.push(
+      {
+        id: 'optimization_goals',
+        text: 'What cognitive areas do you most want to optimize?',
+        type: 'multiple-choice',
+        options: ['Memory enhancement', 'Focus and attention', 'Processing speed', 'Problem-solving', 'Creative thinking'],
+        userTypes: ['cognitive-optimization']
+      },
+      {
+        id: 'current_performance',
+        text: 'How would you rate your current cognitive performance?',
+        type: 'scale',
+        userTypes: ['cognitive-optimization']
+      }
+    );
+  }
+
+  if (userType === 'wellness') {
+    baseQuestions.push(
+      {
+        id: 'wellness_priorities',
+        text: 'What wellness areas are most important to you?',
+        type: 'multiple-choice',
+        options: ['Stress management', 'Sleep quality', 'Mental clarity', 'Emotional balance', 'Overall brain health'],
+        userTypes: ['wellness']
+      },
+      {
+        id: 'current_wellness',
+        text: 'How would you rate your current overall wellness?',
+        type: 'scale',
+        userTypes: ['wellness']
+      }
+    );
+  }
+
+  // Filter questions based on user type
+  const filteredQuestions = baseQuestions.filter(q => 
+    !q.userTypes || q.userTypes.includes(userType as UserType)
+  );
+
+  console.log("Filtered questions for", userType, ":", filteredQuestions.length, "questions");
+  return filteredQuestions;
+};
 
 interface RhythmAssessmentViewProps {
   currentSection: number;
-  responses: AssessmentResponses;
-  onResponse: (questionId: string, value: string) => void;
+  responses: Record<string, any>;
+  onResponse: (questionId: string, response: any) => void;
   onNext: () => void;
   onBack: () => void;
   sections: any[];
-  userType: UserType | null;
+  userType?: UserType | null;
 }
 
 export function RhythmAssessmentView({
@@ -30,194 +134,122 @@ export function RhythmAssessmentView({
   sections,
   userType
 }: RhythmAssessmentViewProps) {
-  const [autoProgressTimer, setAutoProgressTimer] = useState<NodeJS.Timeout | null>(null);
-  const [countdown, setCountdown] = useState<number | null>(null);
+  console.log("RhythmAssessmentView: Rendering for userType:", userType, "currentSection:", currentSection);
   
-  // Form persistence for assessment data
-  const {
-    saveData,
-    hasUnsavedChanges,
-    lastSaved
-  } = useFormPersistence(responses, {
-    key: 'rhythm_assessment',
-    enabled: true,
-    autoSave: true,
-    saveInterval: 15000 // Save every 15 seconds
-  });
-  
-  const section = sections[currentSection];
-  const sectionId = section.id.toString();
-  const sectionResponses = responses[sectionId] || {};
-  
-  // Scroll to top when section changes
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [currentSection]);
-  
-  const canProceed = () => {
-    return section.questions.every(q => sectionResponses[q.id] !== undefined);
+  const questions = getQuestionsForUserType(userType);
+  const currentQuestion = questions[currentSection];
+
+  if (!currentQuestion) {
+    console.log("RhythmAssessmentView: No current question, completing assessment");
+    return (
+      <div className="text-center p-8">
+        <h2 className="text-2xl font-semibold mb-4">Assessment Complete!</h2>
+        <p className="text-muted-foreground mb-6">
+          Thank you for completing your personalized assessment.
+        </p>
+        <Button onClick={onNext} size="lg">
+          View Results
+        </Button>
+      </div>
+    );
+  }
+
+  const handleResponse = (value: any) => {
+    console.log("RhythmAssessmentView: Recording response for", currentQuestion.id, ":", value);
+    onResponse(currentQuestion.id, value);
   };
 
-  // Auto-advance when all questions in section are answered - reduced to 1.5 seconds
-  useEffect(() => {
-    if (canProceed()) {
-      setCountdown(2);
-      
-      const timer = setTimeout(() => {
-        onNext();
-        setCountdown(null);
-      }, 1500); // Reduced from 3000 to 1500ms
-      
-      const countdownInterval = setInterval(() => {
-        setCountdown(prev => prev ? prev - 1 : null);
-      }, 750); // Adjusted for faster countdown
-      
-      setAutoProgressTimer(timer);
-      
-      return () => {
-        clearTimeout(timer);
-        clearInterval(countdownInterval);
-        setAutoProgressTimer(null);
-        setCountdown(null);
-      };
-    } else {
-      if (autoProgressTimer) {
-        clearTimeout(autoProgressTimer);
-        setAutoProgressTimer(null);
-      }
-      setCountdown(null);
-    }
-  }, [sectionResponses, canProceed, onNext]);
-
-  const progressPercentage = ((currentSection + 1) / sections.length) * 100;
-
-  const handleResponse = (questionId: string, value: string) => {
-    onResponse(questionId, value);
-  };
-
-  const cancelAutoProgress = () => {
-    if (autoProgressTimer) {
-      clearTimeout(autoProgressTimer);
-      setAutoProgressTimer(null);
-    }
-    setCountdown(null);
-  };
-
-  const getUserTypeName = (type: UserType | null) => {
-    switch (type) {
-      case "brain-injury": return "Brain Injury Recovery";
-      case "cognitive-optimization": return "Cognitive Optimization";
-      case "caregiver": return "Caregiver & Family Support";
-      case "wellness": return "General Wellness";
-      default: return "Unknown";
-    }
-  };
+  const currentResponse = responses[currentQuestion.id];
+  const canProceed = currentResponse !== undefined && currentResponse !== null && currentResponse !== '';
 
   return (
-    <div className="space-y-6 max-w-3xl mx-auto">
-      {/* Data persistence indicator */}
-      {lastSaved && (
-        <div className="flex items-center justify-between text-xs text-muted-foreground bg-green-50 px-3 py-2 rounded">
-          <span>✓ Progress saved {new Date(lastSaved).toLocaleTimeString()}</span>
-          {hasUnsavedChanges && <span className="text-amber-600">• Unsaved changes</span>}
-        </div>
-      )}
-
-      {/* User Type Indicator */}
-      {userType && (
-        <div className="flex items-center gap-2 p-3 bg-primary/10 rounded-lg border border-primary/20">
-          <User className="h-4 w-4 text-primary" />
-          <span className="text-sm font-medium text-primary">
-            Assessment for: {getUserTypeName(userType)}
-          </span>
-        </div>
-      )}
-
-      {/* Info header */}
-      <div className="flex items-center gap-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <Info className="h-5 w-5 text-blue-600" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="max-w-xs">This assessment helps us understand your unique rhythm and personalize your MyRhythm experience. Answer honestly - there are no right or wrong answers.</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <div>
-          <h3 className="font-medium text-blue-900">Rhythm Assessment</h3>
-          <p className="text-sm text-blue-700">Help us understand your unique journey and rhythm.</p>
+    <div className="max-w-2xl mx-auto space-y-6">
+      {/* Progress */}
+      <div className="text-center mb-6">
+        <p className="text-sm text-muted-foreground mb-2">
+          Question {currentSection + 1} of {questions.length}
+        </p>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${((currentSection + 1) / questions.length) * 100}%` }}
+          />
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="space-y-2">
-        <div className="flex justify-between items-center text-sm text-gray-600">
-          <span>Progress</span>
-          <span>{currentSection + 1} of {sections.length} Sections Complete</span>
-        </div>
-        <Progress value={progressPercentage} className="h-2" />
-      </div>
-
-      {/* Auto-progress notification */}
-      {countdown && (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-center animate-pulse">
-          <p className="text-green-700 font-medium">
-            Moving to next section in {countdown}...
-          </p>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={cancelAutoProgress}
-            className="mt-2"
-          >
-            Stay on this section
-          </Button>
-        </div>
-      )}
-
-      {/* Section Content */}
-      <Card className="overflow-hidden">
-        <RhythmSectionHeader section={section} />
+      {/* Question Card */}
+      <Card className="p-6">
+        <h2 className="text-xl font-semibold mb-6">{currentQuestion.text}</h2>
         
-        <CardContent className="p-6">
-          <p className="text-lg leading-relaxed text-gray-700 mb-8">
-            {section.narrative}
-          </p>
+        {currentQuestion.type === 'scale' && (
+          <div className="space-y-4">
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span>Very Poor</span>
+              <span>Excellent</span>
+            </div>
+            <div className="flex justify-between gap-2">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+                <button
+                  key={value}
+                  onClick={() => handleResponse(value)}
+                  className={`w-10 h-10 rounded-full border-2 transition-all ${
+                    currentResponse === value
+                      ? 'border-blue-600 bg-blue-600 text-white'
+                      : 'border-gray-300 hover:border-blue-400'
+                  }`}
+                >
+                  {value}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
-          {/* Questions */}
-          <div className="space-y-8">
-            {section.questions.map((question) => (
-              <RhythmQuestionCard
-                key={question.id}
-                question={question}
-                value={sectionResponses[question.id]}
-                onValueChange={(value) => handleResponse(question.id, value)}
-              />
+        {currentQuestion.type === 'multiple-choice' && currentQuestion.options && (
+          <div className="space-y-3">
+            {currentQuestion.options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleResponse(option)}
+                className={`w-full text-left p-4 rounded-lg border transition-all ${
+                  currentResponse === option
+                    ? 'border-blue-600 bg-blue-50'
+                    : 'border-gray-200 hover:border-blue-300'
+                }`}
+              >
+                {option}
+              </button>
             ))}
           </div>
-        </CardContent>
+        )}
+
+        {currentQuestion.type === 'text' && (
+          <textarea
+            value={currentResponse || ''}
+            onChange={(e) => handleResponse(e.target.value)}
+            placeholder="Please share your thoughts..."
+            rows={4}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:border-blue-600 focus:outline-none"
+          />
+        )}
       </Card>
 
       {/* Navigation */}
-      <div className="flex justify-between items-center pt-4">
+      <div className="flex justify-between">
         <Button
           variant="outline"
           onClick={onBack}
-          className="flex items-center gap-2"
+          disabled={currentSection === 0}
         >
-          <ArrowLeft className="h-4 w-4" />
-          {currentSection === 0 ? "Back to Welcome" : "Previous"}
+          Previous
         </Button>
-
+        
         <Button
           onClick={onNext}
-          disabled={!canProceed()}
-          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800"
+          disabled={!canProceed}
+          className={canProceed ? 'bg-blue-600 hover:bg-blue-700' : ''}
         >
-          {currentSection === sections.length - 1 ? "Complete Assessment" : "Next Section"}
-          <ArrowRight className="h-4 w-4" />
+          {currentSection === questions.length - 1 ? 'Complete Assessment' : 'Next Question'}
         </Button>
       </div>
     </div>

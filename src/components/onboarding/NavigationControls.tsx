@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Check, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavigationControlsProps {
@@ -29,35 +29,24 @@ export function NavigationControls({
   isLoading = false,
   className
 }: NavigationControlsProps) {
-  const isLastStep = currentStep === totalSteps;
+  console.log("NavigationControls: Step", currentStep, "canGoNext:", canGoNext, "canGoPrevious:", canGoPrevious);
   
-  const defaultNextLabel = isLastStep ? "Complete Setup" : "Continue";
+  // Only show "Complete Assessment" on the actual final step (step 5) and only when ready
+  const isLastStep = currentStep === totalSteps;
+  const shouldShowComplete = isLastStep && canGoNext;
+  
+  const defaultNextLabel = shouldShowComplete ? "Complete Assessment" : "Continue";
   const defaultPreviousLabel = "Back";
 
-  const getNextStepName = () => {
-    const stepNames = [
-      "User Type",
-      "Location Setup", 
-      "Plan Selection",
-      "Pre-Assessment",
-      "Rhythm Assessment"
-    ];
-    
-    if (currentStep < totalSteps) {
-      return stepNames[currentStep]; // Next step (0-indexed)
-    }
-    return "Complete";
-  };
-
   const handleNext = () => {
-    console.log("NavigationControls: Next button clicked, canGoNext:", canGoNext);
+    console.log("NavigationControls: Next clicked, step:", currentStep, "canGoNext:", canGoNext);
     if (canGoNext && !isLoading) {
       onNext();
     }
   };
 
   const handlePrevious = () => {
-    console.log("NavigationControls: Previous button clicked, canGoPrevious:", canGoPrevious);
+    console.log("NavigationControls: Previous clicked, step:", currentStep, "canGoPrevious:", canGoPrevious);
     if (canGoPrevious && !isLoading) {
       onPrevious();
     }
@@ -65,62 +54,47 @@ export function NavigationControls({
 
   return (
     <div className={cn("pt-6 border-t border-border/50", className)}>
-      {/* Progress Reminder */}
+      {/* Progress Status */}
       <div className="text-center mb-4">
         <p className="text-sm text-muted-foreground">
-          Step {currentStep} of {totalSteps} • {Math.round((currentStep / totalSteps) * 100)}% Complete
+          Step {currentStep} of {totalSteps}
         </p>
-        {canGoNext && !isLastStep && (
-          <p className="text-xs text-primary mt-1 font-medium">
-            Ready to continue to {getNextStepName()}
+        {canGoNext && (
+          <p className="text-xs text-green-600 mt-1 font-medium">
+            ✓ Ready to continue
+          </p>
+        )}
+        {!canGoNext && (
+          <p className="text-xs text-amber-600 mt-1">
+            {currentStep === 1 && "Please select your user type"}
+            {currentStep === 2 && "Location setup (optional)"}
+            {currentStep === 3 && "Please choose a plan"}
+            {currentStep === 4 && "Preparing assessment..."}
+            {currentStep === 5 && "Complete your assessment"}
           </p>
         )}
       </div>
 
-      <div className="flex justify-between items-center gap-3">
+      <div className="flex justify-between items-center gap-4">
         {/* Previous Button */}
         <Button
           variant="outline"
           onClick={handlePrevious}
           disabled={!canGoPrevious || isLoading}
-          className={cn(
-            "flex items-center gap-2 px-4 py-2",
-            !canGoPrevious && "opacity-50"
-          )}
+          className="flex items-center gap-2"
           size="default"
         >
           <ArrowLeft className="h-4 w-4" />
           {previousLabel || defaultPreviousLabel}
         </Button>
 
-        {/* Status Message */}
-        <div className="flex-1 text-center px-2">
-          {!canGoNext && !isLoading && (
-            <p className="text-xs text-amber-600 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
-              {currentStep === 1 && "Please select your user type to continue"}
-              {currentStep === 2 && "Location setup (optional - you can skip)"}
-              {currentStep === 3 && "Please choose a plan to continue"}
-              {currentStep === 4 && "Preparing your assessment..."}
-              {currentStep === 5 && "Complete your assessment"}
-            </p>
-          )}
-          {canGoNext && !isLoading && (
-            <p className="text-xs text-green-600 bg-green-50 px-3 py-2 rounded-lg border border-green-200">
-              ✓ Ready to proceed!
-            </p>
-          )}
-        </div>
-
-        {/* Next Button */}
+        {/* Next/Complete Button */}
         <Button
           onClick={handleNext}
           disabled={!canGoNext || isLoading}
           className={cn(
-            "flex items-center gap-2 px-4 py-2 font-medium transition-all duration-200",
-            isLastStep && "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700",
-            !isLastStep && "bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
-            canGoNext && "hover:scale-105",
-            !canGoNext && "opacity-50 cursor-not-allowed"
+            "flex items-center gap-2",
+            shouldShowComplete && "bg-green-600 hover:bg-green-700"
           )}
           size="default"
         >
@@ -132,19 +106,10 @@ export function NavigationControls({
           ) : (
             <>
               {nextLabel || defaultNextLabel}
-              {isLastStep ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
+              <ArrowRight className="h-4 w-4" />
             </>
           )}
         </Button>
-      </div>
-
-      {/* Help Text */}
-      <div className="text-center mt-3 text-xs text-muted-foreground">
-        You can navigate back to previous steps at any time using the progress bar above
       </div>
     </div>
   );

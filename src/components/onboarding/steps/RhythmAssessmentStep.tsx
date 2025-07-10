@@ -14,6 +14,8 @@ interface RhythmAssessmentStepProps {
 }
 
 export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = false }: RhythmAssessmentStepProps) {
+  console.log("RhythmAssessmentStep: Rendering with userType:", userType);
+  
   const {
     hasStarted,
     currentSection,
@@ -30,6 +32,7 @@ export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = fa
   } = useRhythmAssessment();
 
   const handlePostAssessmentComplete = () => {
+    console.log("RhythmAssessmentStep: Assessment completed, calling onComplete");
     onComplete(responses);
   };
 
