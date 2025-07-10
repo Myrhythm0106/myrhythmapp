@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -31,6 +30,7 @@ import Preview3Landing from "@/pages/Preview3Landing";
 import PreviewLanding from "@/pages/PreviewLanding";
 import Preview2Landing from "@/pages/Preview2Landing";
 import WebOnboarding from "@/pages/WebOnboarding";
+import Onboarding from "@/pages/Onboarding";
 import { MobileOnboarding } from "@/components/onboarding/MobileOnboarding";
 
 const queryClient = new QueryClient();
@@ -52,8 +52,9 @@ function App() {
                   {/* Authentication */}
                   <Route path="/auth" element={<AuthPage />} />
                   
-                  {/* Onboarding routes - platform-aware */}
-                  <Route path="/onboarding" element={<MobileOnboarding />} />
+                  {/* Onboarding routes - FIXED TO USE THE RIGHT COMPONENT */}
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/mobile-onboarding" element={<MobileOnboarding />} />
                   <Route path="/web-onboarding" element={<WebOnboarding />} />
                   
                   {/* Other preview versions - preserved for reference */}
