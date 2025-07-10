@@ -67,38 +67,44 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
         </p>
       </div>
 
-      <RadioGroup value={selectedType || ""} onValueChange={(value) => handleSelection(value as UserType)}>
-        <div className="grid gap-6 md:grid-cols-2">
-          {userTypes.map((type) => {
-            const Icon = type.icon;
-            const isSelected = selectedType === type.id;
-            
-            return (
+      {/* Simple button-based selection instead of complex RadioGroup */}
+      <div className="grid gap-6 md:grid-cols-2">
+        {userTypes.map((type) => {
+          const Icon = type.icon;
+          const isSelected = selectedType === type.id;
+          
+          return (
+            <button
+              key={type.id}
+              onClick={() => handleSelection(type.id)}
+              className={`text-left p-0 border-0 bg-transparent w-full`}
+            >
               <Card 
-                key={type.id}
-                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border-2 ${
+                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02] border-2 h-full ${
                   isSelected 
                     ? 'ring-4 ring-primary/20 shadow-xl border-primary bg-gradient-to-br from-primary/5 to-primary/10' 
                     : 'border-border hover:border-primary/40'
                 }`}
-                onClick={() => handleSelection(type.id)}
               >
                 <CardHeader className="pb-4">
-                  <div className="flex items-center space-x-3">
-                    <RadioGroupItem value={type.id} id={type.id} className="scale-125" />
-                    <Label htmlFor={type.id} className="cursor-pointer flex-1">
-                      <div className="flex items-start gap-4">
-                        <div className={`w-14 h-14 rounded-2xl ${type.color} flex items-center justify-center shadow-lg`}>
-                          <Icon className="h-7 w-7 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <CardTitle className="text-xl mb-2 text-foreground">{type.title}</CardTitle>
-                          <p className="text-sm text-muted-foreground leading-relaxed">
-                            {type.description}
-                          </p>
-                        </div>
-                      </div>
-                    </Label>
+                  <div className="flex items-start gap-4">
+                    <div className={`w-14 h-14 rounded-2xl ${type.color} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                      <Icon className="h-7 w-7 text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <CardTitle className="text-xl mb-2 text-foreground">{type.title}</CardTitle>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {type.description}
+                      </p>
+                    </div>
+                    {/* Selection indicator */}
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
+                      isSelected 
+                        ? 'border-primary bg-primary' 
+                        : 'border-muted-foreground/30'
+                    }`}>
+                      {isSelected && <div className="w-3 h-3 rounded-full bg-white"></div>}
+                    </div>
                   </div>
                 </CardHeader>
                 {isSelected && (
@@ -110,10 +116,10 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                   </CardContent>
                 )}
               </Card>
-            );
-          })}
-        </div>
-      </RadioGroup>
+            </button>
+          );
+        })}
+      </div>
 
       {selectedType && (
         <div className="text-center p-4 bg-primary/5 rounded-lg border border-primary/20">
