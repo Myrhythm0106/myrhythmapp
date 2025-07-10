@@ -107,7 +107,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                   <CardContent className="pt-0 pb-4">
                     <div className="flex items-center gap-2 text-primary">
                       <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium">Selected - Use the Next button below to continue</span>
+                      <span className="text-sm font-medium">✓ Selected - Click Next below to continue</span>
                     </div>
                   </CardContent>
                 )}
@@ -123,7 +123,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
             ✨ Perfect! You've selected {userTypes.find(t => t.id === selectedType)?.title}
           </p>
           <p className="text-sm text-muted-foreground mt-1">
-            Click the "Continue" button below to proceed to location setup
+            Click the "Next" button below to proceed to location setup
           </p>
         </div>
       )}

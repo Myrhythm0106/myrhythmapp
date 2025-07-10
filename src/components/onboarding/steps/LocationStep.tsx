@@ -1,20 +1,22 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { MapPin, Globe, Building } from "lucide-react";
 
 const locationSchema = z.object({
   country: z.string().min(1, "Country is required"),
-  state: z.string().min(1, "State is required"),
-  town: z.string().min(1, "Town is required"),
+  state: z.string().min(1, "State/Province is required"),
+  town: z.string().min(1, "City/Town is required"),
 });
 
-type LocationFormValues = z.infer<typeof locationSchema>;
+export type LocationFormValues = z.infer<typeof locationSchema>;
 
 interface LocationStepProps {
   onComplete: (values: LocationFormValues) => void;
@@ -30,62 +32,127 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
       town: "",
     }
   });
+
+  // Auto-complete when form is valid
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      const isValid = form.formState.isValid && 
+                     values.country && 
+                     values.state && 
+                     values.town;
+      if (isValid) {
+        onComplete(values as LocationFormValues);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form, onComplete]);
   
   function onSubmit(values: LocationFormValues) {
     onComplete(values);
   }
+
+  const isFormValid = form.formState.isValid && form.watch('country') && form.watch('state') && form.watch('town');
   
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="country"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Country <span className="text-destructive">*</span></FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your country" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="state"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>State <span className="text-destructive">*</span></FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your state" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <FormField
-          control={form.control}
-          name="town"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Town <span className="text-destructive">*</span></FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your town" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        <div className="flex justify-end">
-          <Button type="submit">
-            Next
-          </Button>
+    <div className="space-y-8 max-w-2xl mx-auto">
+      <div className="text-center space-y-4">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Where are you located?
+        </h2>
+        <p className="text-lg text-muted-foreground">
+          This helps us provide region-specific resources and support options
+        </p>
+      </div>
+
+      <Card className="border-2 border-border/50 shadow-lg">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-3">
+            <MapPin className="h-6 w-6 text-primary" />
+            Your Location Details
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="country"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Globe className="h-4 w-4" />
+                      Country <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="e.g., United States, United Kingdom, Canada..." 
+                        {...field} 
+                        className="h-12 text-lg"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <Building className="h-4 w-4" />
+                      State/Province <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="e.g., California, Ontario, New South Wales..." 
+                        {...field} 
+                        className="h-12 text-lg"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="town"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      City/Town <span className="text-destructive">*</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="e.g., Los Angeles, Toronto, Sydney..." 
+                        {...field} 
+                        className="h-12 text-lg"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
+
+      {isFormValid && (
+        <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
+          <p className="text-green-800 font-medium">
+            ✓ Location details captured! Click Next to choose your plan.
+          </p>
         </div>
-      </form>
-    </Form>
+      )}
+
+      <div className="text-center text-sm text-muted-foreground bg-blue-50 p-4 rounded-lg">
+        <p className="font-medium mb-2">🔒 Privacy Notice</p>
+        <p>Your location helps us provide relevant resources and support. We never share your specific location data.</p>
+      </div>
+    </div>
   );
 }

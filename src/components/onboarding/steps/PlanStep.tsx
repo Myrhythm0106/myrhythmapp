@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlanHeader } from "./plan/PlanHeader";
@@ -18,11 +18,14 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
 
   const handlePlanSelect = (planId: PlanType) => {
     setSelected(planId);
-    // Automatically complete the plan selection after a brief delay for visual feedback
-    setTimeout(() => {
-      onComplete(planId, isAnnual ? 'annual' : 'monthly');
-    }, 300);
   };
+
+  // Auto-complete when a plan is selected
+  useEffect(() => {
+    if (selected) {
+      onComplete(selected, isAnnual ? 'annual' : 'monthly');
+    }
+  }, [selected, isAnnual, onComplete]);
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto px-4">
@@ -71,6 +74,22 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
           />
         ))}
       </div>
+
+      {/* Selection Confirmation */}
+      {selected && (
+        <div className="text-center p-6 bg-gradient-to-r from-primary/10 to-primary/5 rounded-xl border border-primary/20">
+          <h3 className="text-xl font-bold text-primary mb-2">
+            ✨ Perfect Choice!
+          </h3>
+          <p className="text-primary/80 mb-3">
+            You've selected the <strong>{plans.find(p => p.id === selected)?.name}</strong> plan 
+            ({isAnnual ? 'Annual' : 'Monthly'} billing)
+          </p>
+          <p className="text-sm text-muted-foreground">
+            Click Next below to proceed to your assessment preparation
+          </p>
+        </div>
+      )}
 
       {/* Trial/Payment Information - Billing Period Specific */}
       <div className="max-w-4xl mx-auto">
