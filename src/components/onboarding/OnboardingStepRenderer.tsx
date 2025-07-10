@@ -47,63 +47,67 @@ export const OnboardingStepRenderer = ({
   onRhythmAssessmentComplete,
 }: OnboardingStepRendererProps) => {
   
-  console.log("OnboardingStepRenderer: Rendering step", currentStep);
+  console.log("=== ONBOARDING STEP RENDERER DEBUG ===");
+  console.log("OnboardingStepRenderer: Current step:", currentStep);
   console.log("OnboardingStepRenderer: Current user type:", userType);
+  console.log("OnboardingStepRenderer: About to render step content");
   
-  switch (currentStep) {
-    case 1:
-      console.log("OnboardingStepRenderer: Rendering UserTypeStep");
-      return (
-        <div className="w-full">
-          <UserTypeStep
-            onComplete={onUserTypeComplete}
-            initialValue={userType}
-          />
-        </div>
-      );
-      
-    case 2:
-      console.log("OnboardingStepRenderer: Rendering LocationStep");
-      return (
-        <LocationStep
-          onComplete={onLocationComplete}
-          initialValues={location}
+  if (currentStep === 1) {
+    console.log("OnboardingStepRenderer: Rendering UserTypeStep for step 1");
+    return (
+      <div className="w-full">
+        <UserTypeStep
+          onComplete={onUserTypeComplete}
+          initialValue={userType}
         />
-      );
-      
-    case 3:
-      console.log("OnboardingStepRenderer: Rendering PlanStep");
-      return (
-        <PlanStep
-          onComplete={onPlanSelected}
-          selectedPlan={selectedPlan}
-        />
-      );
-      
-    case 4:
-      console.log("OnboardingStepRenderer: Rendering PreAssessmentStep");
-      return (
-        <PreAssessmentStep
-          onComplete={onPreAssessmentComplete}
-        />
-      );
-      
-    case 5:
-      console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep");
-      return (
-        <RhythmAssessmentStep
-          onComplete={onRhythmAssessmentComplete}
-        />
-      );
-      
-    default:
-      console.error("OnboardingStepRenderer: Invalid step", currentStep);
-      return (
-        <div className="text-center p-8">
-          <h2 className="text-xl font-semibold mb-4">Invalid Step</h2>
-          <p>Current step: {currentStep}</p>
-          <p>Please contact support if this error persists.</p>
-        </div>
-      );
+      </div>
+    );
   }
+  
+  if (currentStep === 2) {
+    console.log("OnboardingStepRenderer: Rendering LocationStep for step 2");
+    return (
+      <LocationStep
+        onComplete={onLocationComplete}
+        initialValues={location}
+      />
+    );
+  }
+  
+  if (currentStep === 3) {
+    console.log("OnboardingStepRenderer: Rendering PlanStep for step 3");
+    return (
+      <PlanStep
+        onComplete={onPlanSelected}
+        selectedPlan={selectedPlan}
+      />
+    );
+  }
+  
+  if (currentStep === 4) {
+    console.log("OnboardingStepRenderer: Rendering PreAssessmentStep for step 4");
+    return (
+      <PreAssessmentStep
+        onComplete={onPreAssessmentComplete}
+      />
+    );
+  }
+  
+  if (currentStep === 5) {
+    console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep for step 5");
+    return (
+      <RhythmAssessmentStep
+        onComplete={onRhythmAssessmentComplete}
+      />
+    );
+  }
+  
+  console.error("OnboardingStepRenderer: Invalid or unhandled step", currentStep);
+  return (
+    <div className="text-center p-8">
+      <h2 className="text-xl font-semibold mb-4">Invalid Step</h2>
+      <p>Current step: {currentStep}</p>
+      <p>Please contact support if this error persists.</p>
+    </div>
+  );
 };

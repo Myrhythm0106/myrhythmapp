@@ -45,12 +45,13 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || null);
 
   console.log("=== USER TYPE STEP RENDERING ===");
+  console.log("UserTypeStep: Component is mounting/rendering");
   console.log("UserTypeStep: Initial value:", initialValue);
   console.log("UserTypeStep: Selected type:", selectedType);
-  console.log("UserTypeStep: User types array length:", userTypes.length);
+  console.log("UserTypeStep: User types array:", userTypes);
 
   const handleSelection = (type: UserType) => {
-    console.log("UserTypeStep: User clicked type:", type);
+    console.log("UserTypeStep: User clicked on type:", type);
     setSelectedType(type);
     onComplete({ type });
   };
@@ -68,29 +69,32 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
       </div>
 
       {/* Debug Info */}
-      <div className="text-center p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-        <p className="text-sm text-yellow-800">
-          Debug: Rendering {userTypes.length} user type options. Selected: {selectedType || 'none'}
+      <div className="text-center p-4 bg-yellow-100 border-2 border-yellow-300 rounded-lg">
+        <p className="text-sm text-yellow-800 font-bold">
+          DEBUG: UserTypeStep is rendering. Should see {userTypes.length} cards below. Selected: {selectedType || 'none'}
         </p>
       </div>
 
       {/* User Type Cards */}
       <div className="grid gap-6 md:grid-cols-2 w-full max-w-4xl mx-auto">
-        {userTypes.map((type) => {
+        {userTypes.map((type, index) => {
           const Icon = type.icon;
           const isSelected = selectedType === type.id;
           
-          console.log(`UserTypeStep: Rendering card for ${type.id}, isSelected: ${isSelected}`);
+          console.log(`UserTypeStep: Rendering card ${index + 1} for ${type.id}, isSelected: ${isSelected}`);
           
           return (
             <Card 
               key={type.id}
-              className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full ${
+              className={`cursor-pointer transition-all duration-200 hover:shadow-lg border-2 w-full min-h-[120px] ${
                 isSelected 
                   ? 'border-primary bg-primary/5 shadow-lg' 
                   : 'border-border hover:border-primary/50'
               }`}
-              onClick={() => handleSelection(type.id)}
+              onClick={() => {
+                console.log(`UserTypeStep: Card clicked for ${type.id}`);
+                handleSelection(type.id);
+              }}
             >
               <CardHeader className="pb-4">
                 <div className="flex items-start gap-4">
@@ -144,6 +148,13 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
           </p>
         </div>
       )}
+
+      {/* Emergency fallback - if cards don't show */}
+      <div className="text-center p-4 bg-red-100 border-2 border-red-300 rounded-lg">
+        <p className="text-red-800 font-bold">
+          If you don't see 4 clickable cards above, there's a rendering issue. Please refresh the page.
+        </p>
+      </div>
     </div>
   );
 }
