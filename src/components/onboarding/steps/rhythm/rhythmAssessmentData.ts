@@ -153,120 +153,120 @@ const userTypeQuestions: Record<UserType, Section[]> = {
   "cognitive-optimization": [
     {
       id: 1,
-      title: "Memory & Cognitive Starting Point",
+      title: "Peak Performance Memory Goals",
       phase: "M",
-      phaseDescription: "Moment of Impact - Cognitive & Memory Baseline",
-      narrative: "Every peak performer recognizes the moment they decided to optimize both their cognitive abilities and memory performance.",
+      phaseDescription: "Moment of Impact - Memory Optimization Vision",
+      narrative: "High performers recognize that memory is the foundation of cognitive excellence. Your journey to memory mastery starts with clarity about your goals.",
       questions: [
-        { id: "replay_moment", text: "Do you reflect on the moment you decided to optimize your cognitive and memory performance?" },
-        { id: "memory_potential", text: "Do you feel like your current memory abilities aren't reaching their full potential?" },
-        { id: "something_broke", text: "Do you feel like your current thinking and memory patterns need significant improvement?" },
-        { id: "negative_thoughts", text: "Do you frequently think about not reaching your cognitive and memory potential?" }
+        { id: "memory_performance_gap", text: "Do you feel frustrated that your memory performance doesn't match your professional ambitions?" },
+        { id: "memory_competitive_edge", text: "Do you believe superior memory abilities would give you a significant competitive advantage?" },
+        { id: "memory_limitations", text: "Do you feel your current memory capabilities are limiting your career or personal growth?" },
+        { id: "memory_optimization_urgency", text: "Do you have a strong urgency to optimize your memory for upcoming challenges or opportunities?" }
       ],
       icon: Brain,
       gradient: "from-red-500 to-orange-500"
     },
     {
       id: 2,
-      title: "Memory & Mental Clarity",
+      title: "Cognitive Load & Mental Clarity",
       phase: "Y",
-      phaseDescription: "Yield to the Fog - Cognitive & Memory Clarity",
-      narrative: "Even high performers experience moments when both focus and memory feel elusive.",
+      phaseDescription: "Yield to Analysis - Memory Performance Assessment",
+      narrative: "Even top performers experience moments when their memory feels overwhelmed. Understanding your patterns is key to optimization.",
       questions: [
-        { id: "brain_fog", text: "Do you struggle to maintain deep focus and clear memory when working on complex tasks?" },
-        { id: "memory_issues", text: "Do you often forget important details or lose track of key information?" },
-        { id: "overwhelm", text: "Do you feel mentally overwhelmed when trying to remember and process multiple high-level projects?" },
-        { id: "memory_performance", text: "Are you frustrated with your memory performance during important tasks?" }
+        { id: "information_overload", text: "Do you struggle to retain important information when managing multiple high-stakes projects?" },
+        { id: "memory_recall_pressure", text: "Do you worry about forgetting critical details during important meetings or presentations?" },
+        { id: "cognitive_fatigue", text: "Does your memory performance decline significantly when you're mentally fatigued?" },
+        { id: "memory_system_chaos", text: "Do you feel like your current memory systems are chaotic and need complete restructuring?" }
       ],
       icon: Brain,
       gradient: "from-gray-500 to-blue-400"
     },
     {
       id: 3,
-      title: "Memory & Performance Assessment",
+      title: "Memory Performance Analysis",
       phase: "R",
-      phaseDescription: "Reckon with Reality - Memory & Cognitive Patterns",
-      narrative: "Growth begins with honest assessment of both cognitive performance and memory capabilities.",
+      phaseDescription: "Reckon with Reality - Current Memory Capabilities",
+      narrative: "Honest assessment of your memory strengths and weaknesses is essential for targeted optimization.",
       questions: [
-        { id: "acceptance", text: "Have you honestly assessed your current cognitive and memory performance levels?" },
-        { id: "grief", text: "Do you sometimes feel frustrated with your current memory and mental clarity?" },
-        { id: "exploring_new_ways", text: "Are you actively exploring new strategies to enhance both memory and cognitive abilities?" },
-        { id: "memory_patterns", text: "Are you recognizing patterns in your memory and cognitive performance?" }
+        { id: "memory_strengths_weaknesses", text: "Have you clearly identified your specific memory strengths and areas for improvement?" },
+        { id: "memory_technique_research", text: "Are you actively researching and experimenting with advanced memory techniques?" },
+        { id: "memory_measurement", text: "Do you track and measure your memory performance to identify improvement opportunities?" },
+        { id: "memory_pattern_recognition", text: "Have you identified specific patterns in when your memory performs at its peak vs. suboptimal levels?" }
       ],
       icon: Heart,
       gradient: "from-purple-500 to-pink-500"
     },
     {
       id: 4,
-      title: "Memory & Performance Systems",
+      title: "Memory Optimization Systems",
       phase: "H",
-      phaseDescription: "Harness Support - Memory & Cognitive Tools",
-      narrative: "Peak performance requires intentional systems for both cognitive function and memory enhancement.",
+      phaseDescription: "Harness Systems - Memory Enhancement Tools",
+      narrative: "Peak memory performance requires intentional systems, advanced techniques, and strategic tools for cognitive enhancement.",
       questions: [
-        { id: "daily_routines", text: "Do you use structured routines to optimize both memory and mental performance?" },
-        { id: "support_systems", text: "Do you have systems and tools that support both cognitive growth and memory enhancement?" },
-        { id: "structured_plan", text: "Do you feel more empowered when following a structured cognitive and memory development plan?" },
-        { id: "memory_tools", text: "Do you actively use tools and techniques specifically designed for memory improvement?" }
+        { id: "memory_techniques_daily", text: "Do you use advanced memory techniques (like mnemonics, memory palaces) in your daily professional work?" },
+        { id: "memory_tech_stack", text: "Have you built a comprehensive tech stack specifically designed to enhance your memory capabilities?" },
+        { id: "memory_training_regimen", text: "Do you follow a structured memory training regimen similar to how athletes train their bodies?" },
+        { id: "memory_performance_metrics", text: "Do you have specific metrics and benchmarks for measuring your memory performance improvements?" }
       ],
       icon: Target,
       gradient: "from-green-500 to-teal-500"
     },
     {
       id: 5,
-      title: "Memory & Cognitive Growth",
+      title: "Memory Mastery Progress",
       phase: "Y",
-      phaseDescription: "Yield Again - Memory & Performance Progress",
-      narrative: "Cognitive and memory optimization isn't linear. Recognizing patterns in both areas shows deepening awareness.",
+      phaseDescription: "Yield to Growth - Memory Enhancement Results",
+      narrative: "Memory optimization is an ongoing process. Recognizing progress while identifying next-level opportunities drives continuous improvement.",
       questions: [
-        { id: "recognizing_progress", text: "Are you tracking improvements in both cognitive performance and memory abilities?" },
-        { id: "flexibility", text: "Are you adapting your strategies for both thinking and memory challenges?" },
-        { id: "confident_pacing", text: "Do you feel confident managing both mental energy and memory load throughout the day?" },
-        { id: "memory_growth", text: "Are you seeing measurable improvements in your memory capabilities?" }
+        { id: "memory_performance_gains", text: "Are you seeing measurable improvements in your memory performance and information retention?" },
+        { id: "memory_confidence_professional", text: "Do you feel more confident in high-pressure situations because of your enhanced memory capabilities?" },
+        { id: "memory_efficiency_gains", text: "Have you noticed significant efficiency gains in how quickly you can learn and retain new information?" },
+        { id: "memory_competitive_advantage", text: "Are you experiencing a noticeable competitive advantage due to your superior memory performance?" }
       ],
       icon: Brain,
       gradient: "from-blue-500 to-indigo-500"
     },
     {
       id: 6,
-      title: "Memory & Cognitive Empowerment",
+      title: "Memory Excellence & Control",
       phase: "T",
-      phaseDescription: "Take Back Control - Memory & Performance Mastery",
-      narrative: "Empowerment comes from taking deliberate action on both cognitive development and memory mastery.",
+      phaseDescription: "Take Control - Memory Mastery Leadership",
+      narrative: "True memory mastery means taking complete control of your cognitive capabilities and using them strategically for maximum impact.",
       questions: [
-        { id: "setting_goals", text: "Are you setting specific goals for both mental performance and memory improvement?" },
-        { id: "shaping_healing", text: "Do you believe your daily decisions actively shape both cognitive abilities and memory?" },
-        { id: "rebuilding_trust", text: "Are you building greater trust in both mental capabilities and memory reliability?" },
-        { id: "memory_control", text: "Do you feel more in control of your memory performance and cognitive abilities?" }
+        { id: "memory_strategic_advantage", text: "Do you strategically leverage your memory capabilities to create competitive advantages in your field?" },
+        { id: "memory_leadership_tool", text: "Are you using your enhanced memory as a leadership tool to inspire and guide others?" },
+        { id: "memory_decision_making", text: "Has your improved memory significantly enhanced your decision-making speed and accuracy?" },
+        { id: "memory_expertise_reputation", text: "Are you becoming known in your field for having exceptional memory and cognitive capabilities?" }
       ],
       icon: Target,
       gradient: "from-indigo-500 to-purple-500"
     },
     {
       id: 7,
-      title: "Memory & Cognitive Optimization",
+      title: "Cognitive Excellence Evolution",
       phase: "H",
-      phaseDescription: "Heal Forward - Memory & Cognitive Excellence",
-      narrative: "You're evolving into someone with optimized thinking and enhanced memory capabilities.",
+      phaseDescription: "Heal Forward - Memory Innovation",
+      narrative: "You're evolving into someone with elite-level memory capabilities. This transformation opens new possibilities for impact and achievement.",
       questions: [
-        { id: "self_kindness", text: "Are you patient with yourself during the cognitive and memory optimization process?" },
-        { id: "new_version", text: "Do you feel you're becoming more cognitively capable with enhanced memory?" },
-        { id: "meaningful_life", text: "Are you focused on meaningful cognitive and memory growth, not just quick fixes?" },
-        { id: "memory_mastery", text: "Do you feel you're developing true memory mastery alongside cognitive excellence?" }
+        { id: "memory_innovation", text: "Are you innovating new memory techniques or systems that could benefit others in your field?" },
+        { id: "memory_peak_potential", text: "Do you feel you're approaching your peak memory potential and consistently performing at elite levels?" },
+        { id: "memory_life_transformation", text: "Has your memory optimization transformed not just your work but your entire approach to life and learning?" },
+        { id: "memory_mastery_identity", text: "Do you identify as someone with exceptional memory capabilities and cognitive excellence?" }
       ],
       icon: Heart,
       gradient: "from-pink-500 to-rose-500"
     },
     {
       id: 8,
-      title: "Memory & Cognitive Mission",
+      title: "Memory Leadership & Legacy",
       phase: "M",
-      phaseDescription: "Multiply the Mission - Sharing Memory & Cognitive Excellence",
-      narrative: "Your cognitive and memory growth can inspire others to optimize their own mental performance.",
+      phaseDescription: "Multiply Impact - Memory Excellence Sharing",
+      narrative: "Your memory mastery journey positions you to lead others toward cognitive excellence and create lasting impact through shared knowledge.",
       questions: [
-        { id: "sharing_journey", text: "Do you feel inspired to share your cognitive and memory optimization journey?" },
-        { id: "supporting_others", text: "Are you exploring ways to help others enhance both mental performance and memory?" },
-        { id: "greater_purpose", text: "Does your cognitive and memory growth contribute to something greater?" },
-        { id: "memory_teaching", text: "Do you want to help others discover the power of memory enhancement?" }
+        { id: "memory_knowledge_sharing", text: "Do you feel called to share your memory optimization knowledge and techniques with other high performers?" },
+        { id: "memory_mentorship", text: "Are you interested in mentoring others who want to achieve memory excellence in their fields?" },
+        { id: "memory_thought_leadership", text: "Do you want to become a thought leader in cognitive optimization and memory enhancement?" },
+        { id: "memory_legacy_impact", text: "Does building a legacy around memory excellence and cognitive optimization excite and motivate you?" }
       ],
       icon: Users,
       gradient: "from-amber-500 to-yellow-500"
@@ -276,39 +276,247 @@ const userTypeQuestions: Record<UserType, Section[]> = {
   "caregiver-support": [
     {
       id: 1,
-      title: "Memory & The Call to Care",
+      title: "The Caregiver's Memory Burden",
       phase: "M",
-      phaseDescription: "Moment of Impact - Caregiver Memory Challenges",
-      narrative: "Caregiving often begins when you realize someone's memory needs support—and that yours might too.",
+      phaseDescription: "Moment of Impact - When Memory Became Your Responsibility",
+      narrative: "The moment you realized you're carrying the memory load for two people changes everything. Your mind became the keeper of their memories too.",
       questions: [
-        { id: "replay_moment", text: "Do you think about the moment you realized your loved one's memory needed your support?" },
-        { id: "memory_burden", text: "Do you feel like you're carrying the memory load for both yourself and your loved one?" },
-        { id: "something_broke", text: "Do you feel like caregiving has changed your own memory and thinking abilities?" },
-        { id: "negative_thoughts", text: "Do you worry about your ability to remember everything needed for caregiving?" }
+        { id: "double_memory_load", text: "Do you feel overwhelmed remembering medical appointments, medications, and daily tasks for both yourself and your loved one?" },
+        { id: "memory_anxiety", text: "Do you constantly worry about forgetting something important that could affect your loved one's health or safety?" },
+        { id: "lost_own_memory", text: "Do you feel like caring for their memory needs has made you forget about your own memory and mental needs?" },
+        { id: "memory_responsibility_weight", text: "Does the weight of being responsible for someone else's memory feel overwhelming and exhausting?" }
       ],
       icon: Brain,
       gradient: "from-red-500 to-orange-500"
+    },
+    {
+      id: 2,
+      title: "Living in Memory Fog",
+      phase: "Y",
+      phaseDescription: "Yield to Overwhelm - Caregiver Memory Exhaustion",
+      narrative: "Caregiver stress creates its own kind of fog. When you're caring for someone's memory, your own can suffer from emotional and physical exhaustion.",
+      questions: [
+        { id: "caregiver_brain_fog", text: "Do you experience brain fog and forgetfulness due to the stress and exhaustion of caregiving?" },
+        { id: "memory_mistakes_guilt", text: "Do you feel guilty when you forget things related to your loved one's care, even though you're doing your best?" },
+        { id: "competing_priorities", text: "Do you struggle to remember your own important tasks because your mind is always focused on their needs?" },
+        { id: "memory_support_isolation", text: "Do you feel alone in managing all the memory-related responsibilities for your loved one?" }
+      ],
+      icon: Brain,
+      gradient: "from-gray-500 to-blue-400"
+    },
+    {
+      id: 3,
+      title: "Accepting the Caregiver Reality",
+      phase: "R",
+      phaseDescription: "Reckon with Reality - Caregiver Memory Challenges",
+      narrative: "Acknowledging that caregiving affects your own memory and mental capacity is not failure—it's the first step toward getting support.",
+      questions: [
+        { id: "caregiver_memory_impact", text: "Have you accepted that caregiving has impacted your own memory and cognitive abilities?" },
+        { id: "grief_old_life", text: "Do you grieve for the time when you only had to worry about your own memory and mental tasks?" },
+        { id: "seeking_memory_help", text: "Are you beginning to look for tools and strategies to help manage the memory load for both of you?" },
+        { id: "caregiver_support_need", text: "Are you recognizing that you need specific support systems designed for caregivers' unique memory challenges?" }
+      ],
+      icon: Heart,
+      gradient: "from-purple-500 to-pink-500"
+    },
+    {
+      id: 4,
+      title: "Building Caregiver Memory Systems",
+      phase: "H",
+      phaseDescription: "Harness Support - Memory Tools for Caregivers",
+      narrative: "Effective caregiving requires systems that support both your loved one's memory needs and protect your own mental capacity.",
+      questions: [
+        { id: "dual_memory_systems", text: "Have you created systems that help you manage both your loved one's memory needs and your own?" },
+        { id: "caregiver_memory_tools", text: "Do you use specific apps, calendars, or tools designed to help caregivers track medical and daily care information?" },
+        { id: "memory_backup_support", text: "Do you have backup support systems for when your own memory feels overwhelmed or unreliable?" },
+        { id: "caregiver_self_care", text: "Are you intentionally protecting time and mental space for your own memory and cognitive health?" }
+      ],
+      icon: Target,
+      gradient: "from-green-500 to-teal-500"
+    },
+    {
+      id: 5,
+      title: "Caregiver Memory Progress",
+      phase: "Y",
+      phaseDescription: "Yield to Growth - Finding Balance in Memory Management",
+      narrative: "Progress as a caregiver means finding ways to manage memory responsibilities without losing yourself in the process.",
+      questions: [
+        { id: "memory_balance_progress", text: "Are you finding better balance between managing their memory needs and preserving your own mental clarity?" },
+        { id: "caregiver_confidence", text: "Do you feel more confident in your ability to handle the memory demands of caregiving?" },
+        { id: "memory_stress_reduction", text: "Have you noticed reduced stress and anxiety about forgetting important caregiving tasks?" },
+        { id: "dual_memory_management", text: "Are you successfully managing both their memory support needs and your own cognitive health?" }
+      ],
+      icon: Brain,
+      gradient: "from-blue-500 to-indigo-500"
+    },
+    {
+      id: 6,
+      title: "Empowered Caregiver Memory",
+      phase: "T",
+      phaseDescription: "Take Control - Caregiver Memory Leadership",
+      narrative: "Taking control as a caregiver means being strategic about memory management and advocating for both their needs and your own.",
+      questions: [
+        { id: "caregiver_memory_advocacy", text: "Do you actively advocate for memory support resources for both yourself and your loved one?" },
+        { id: "memory_delegation", text: "Are you learning to delegate some memory-related tasks to other family members or professional support?" },
+        { id: "caregiver_memory_boundaries", text: "Have you established healthy boundaries around memory responsibilities to protect your own cognitive health?" },
+        { id: "memory_crisis_management", text: "Do you feel prepared to handle memory-related crises or emergencies with confidence?" }
+      ],
+      icon: Target,
+      gradient: "from-indigo-500 to-purple-500"
+    },
+    {
+      id: 7,
+      title: "Caregiver Memory Mastery",
+      phase: "H",
+      phaseDescription: "Heal Forward - Caregiver Memory Excellence",
+      narrative: "You're developing expertise in managing complex memory needs while maintaining your own cognitive health and emotional well-being.",
+      questions: [
+        { id: "caregiver_memory_expertise", text: "Do you feel you've developed real expertise in managing memory challenges for both yourself and your loved one?" },
+        { id: "memory_resilience", text: "Have you built resilience in your own memory and cognitive abilities despite the demands of caregiving?" },
+        { id: "caregiver_fulfillment", text: "Do you find meaning and fulfillment in your role as a memory advocate and supporter for your loved one?" },
+        { id: "memory_growth_both", text: "Are you seeing positive growth in memory management for both yourself and the person you care for?" }
+      ],
+      icon: Heart,
+      gradient: "from-pink-500 to-rose-500"
+    },
+    {
+      id: 8,
+      title: "Caregiver Memory Mission",
+      phase: "M",
+      phaseDescription: "Multiply Impact - Supporting Other Caregivers",
+      narrative: "Your experience managing memory challenges as a caregiver positions you to help other families navigate similar journeys.",
+      questions: [
+        { id: "caregiver_memory_sharing", text: "Do you want to share your caregiver memory management strategies with other families facing similar challenges?" },
+        { id: "caregiver_community", text: "Are you interested in building or joining communities of caregivers who support each other's memory and cognitive health?" },
+        { id: "caregiver_advocacy", text: "Do you feel called to advocate for better memory support resources and recognition for caregivers?" },
+        { id: "caregiver_legacy", text: "Does helping other caregivers develop better memory management strategies give your own journey deeper meaning?" }
+      ],
+      icon: Users,
+      gradient: "from-amber-500 to-yellow-500"
     }
-    // Continue with other caregiver sections updated with memory context...
   ],
 
   "wellness-productivity": [
     {
       id: 1,
-      title: "Memory & Life Systems",
+      title: "Memory & Life Organization Goals",
       phase: "M",
-      phaseDescription: "Moment of Impact - Memory & Organization Baseline",
-      narrative: "Transformation begins when you realize that better memory systems could revolutionize your productivity.",
+      phaseDescription: "Moment of Impact - Memory System Transformation",
+      narrative: "The realization that better memory systems could revolutionize your productivity and life satisfaction marks the beginning of transformation.",
       questions: [
-        { id: "replay_moment", text: "Do you think about when you decided to improve both memory and life organization?" },
-        { id: "memory_systems", text: "Do you feel like your current memory and organizational systems need improvement?" },
-        { id: "something_broke", text: "Do you feel like your memory and productivity systems are failing you?" },
-        { id: "negative_thoughts", text: "Do you frequently feel frustrated with forgetting important tasks and commitments?" }
+        { id: "memory_productivity_vision", text: "Do you have a clear vision of how improved memory systems could transform your daily productivity?" },
+        { id: "memory_life_balance", text: "Do you believe better memory management could help you achieve better work-life balance?" },
+        { id: "memory_overwhelm", text: "Do you feel overwhelmed by trying to remember all your personal and professional commitments without good systems?" },
+        { id: "memory_potential_unlock", text: "Do you sense there's untapped potential in how you could organize and remember information in your life?" }
       ],
       icon: Brain,
       gradient: "from-red-500 to-orange-500"
+    },
+    {
+      id: 2,
+      title: "Memory & Productivity Struggles",
+      phase: "Y",
+      phaseDescription: "Yield to Analysis - Current Memory Limitations",
+      narrative: "Recognizing where your current memory and organizational systems are failing helps identify the biggest opportunities for improvement.",
+      questions: [
+        { id: "task_memory_failure", text: "Do you frequently forget important tasks, deadlines, or commitments despite your best intentions?" },
+        { id: "memory_system_chaos", text: "Do your current memory and organizational systems feel chaotic, unreliable, or inconsistent?" },
+        { id: "memory_stress_anxiety", text: "Does worrying about forgetting important things create stress and anxiety in your daily life?" },
+        { id: "memory_efficiency_loss", text: "Do you waste time trying to remember where you put things or what you were supposed to do?" }
+      ],
+      icon: Brain,
+      gradient: "from-gray-500 to-blue-400"
+    },
+    {
+      id: 3,
+      title: "Memory & Wellness Assessment",
+      phase: "R",
+      phaseDescription: "Reckon with Reality - Memory Impact on Well-being",
+      narrative: "Understanding how memory challenges affect your overall wellness helps prioritize what changes will have the biggest positive impact.",
+      questions: [
+        { id: "memory_wellness_connection", text: "Have you recognized the connection between your memory systems and your overall wellness and life satisfaction?" },
+        { id: "memory_habit_tracking", text: "Are you interested in using memory techniques to better track and maintain healthy habits?" },
+        { id: "memory_goal_achievement", text: "Do you see improved memory systems as key to achieving your personal and wellness goals?" },
+        { id: "memory_mindfulness", text: "Are you exploring how mindfulness and memory techniques can work together to improve your life?" }
+      ],
+      icon: Heart,
+      gradient: "from-purple-500 to-pink-500"
+    },
+    {
+      id: 4,
+      title: "Memory & Productivity Systems",
+      phase: "H",
+      phaseDescription: "Harness Tools - Memory Enhancement Implementation",
+      narrative: "Building effective memory and productivity systems requires the right combination of tools, techniques, and consistent habits.",
+      questions: [
+        { id: "memory_productivity_tools", text: "Are you actively using memory-enhancing tools and apps to improve your personal productivity?" },
+        { id: "memory_habit_systems", text: "Have you developed systems that help you remember and maintain important habits and routines?" },
+        { id: "memory_information_management", text: "Do you have reliable systems for capturing, organizing, and retrieving important information in your life?" },
+        { id: "memory_stress_reduction", text: "Are your memory systems designed to reduce stress and mental load rather than add complexity?" }
+      ],
+      icon: Target,
+      gradient: "from-green-500 to-teal-500"
+    },
+    {
+      id: 5,
+      title: "Memory & Life Optimization",
+      phase: "Y",
+      phaseDescription: "Yield to Progress - Memory System Results",
+      narrative: "Progress in memory and productivity systems creates positive momentum that builds on itself, leading to greater life satisfaction.",
+      questions: [
+        { id: "memory_life_improvement", text: "Are you seeing tangible improvements in your life quality due to better memory and organizational systems?" },
+        { id: "memory_confidence_growth", text: "Do you feel more confident and in control of your daily life because of improved memory management?" },
+        { id: "memory_time_freedom", text: "Have better memory systems freed up time and mental energy for things that matter most to you?" },
+        { id: "memory_wellness_integration", text: "Are your memory systems successfully integrated with your broader wellness and self-care practices?" }
+      ],
+      icon: Brain,
+      gradient: "from-blue-500 to-indigo-500"
+    },
+    {
+      id: 6,
+      title: "Memory & Life Mastery",
+      phase: "T",
+      phaseDescription: "Take Control - Memory-Driven Life Design",
+      narrative: "Taking control means using memory systems strategically to design and live the life you truly want.",
+      questions: [
+        { id: "memory_life_design", text: "Are you using memory techniques to help design and achieve your ideal life and goals?" },
+        { id: "memory_priority_focus", text: "Do your memory systems help you stay focused on your highest priorities and values?" },
+        { id: "memory_decision_support", text: "Are you using memory techniques to make better decisions and learn from past experiences?" },
+        { id: "memory_growth_mindset", text: "Do you see memory improvement as an ongoing journey that supports continuous personal growth?" }
+      ],
+      icon: Target,
+      gradient: "from-indigo-500 to-purple-500"
+    },
+    {
+      id: 7,
+      title: "Memory & Holistic Excellence",
+      phase: "H",
+      phaseDescription: "Heal Forward - Integrated Memory Wellness",
+      narrative: "You're developing an integrated approach where memory, productivity, and wellness work together to create a fulfilling and effective life.",
+      questions: [
+        { id: "memory_holistic_integration", text: "Have you successfully integrated memory enhancement with your overall approach to health and wellness?" },
+        { id: "memory_life_satisfaction", text: "Do you feel a strong sense of satisfaction and accomplishment in how you manage your memory and life organization?" },
+        { id: "memory_inspiring_others", text: "Are you beginning to inspire others with your memory systems and life organization improvements?" },
+        { id: "memory_continuous_innovation", text: "Do you enjoy continuously refining and innovating your memory and productivity systems?" }
+      ],
+      icon: Heart,
+      gradient: "from-pink-500 to-rose-500"
+    },
+    {
+      id: 8,
+      title: "Memory & Life Leadership",
+      phase: "M",
+      phaseDescription: "Multiply Impact - Sharing Memory Wisdom",
+      narrative: "Your journey in memory and life optimization positions you to help others create more organized, productive, and fulfilling lives.",
+      questions: [
+        { id: "memory_wisdom_sharing", text: "Do you want to share your memory and life organization strategies with others seeking similar improvements?" },
+        { id: "memory_community_building", text: "Are you interested in building or joining communities focused on memory enhancement and life optimization?" },
+        { id: "memory_mentoring", text: "Do you feel called to mentor others in developing better memory systems and life organization skills?" },
+        { id: "memory_legacy_creation", text: "Does the idea of creating a lasting positive impact through memory and productivity wisdom excite you?" }
+      ],
+      icon: Users,
+      gradient: "from-amber-500 to-yellow-500"
     }
-    // Continue with other wellness sections updated with memory context...
   ]
 };
 
