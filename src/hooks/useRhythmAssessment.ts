@@ -9,7 +9,7 @@ import {
 } from "@/utils/rhythmAnalysis";
 import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 
-export function useRhythmAssessment() {
+export function useRhythmAssessment(userType?: UserType | null) {
   const [hasStarted, setHasStarted] = useState(false);
   const [currentSection, setCurrentSection] = useState(0);
   const [responses, setResponses] = useState<AssessmentResponses>({});
@@ -17,28 +17,20 @@ export function useRhythmAssessment() {
   const [showSummary, setShowSummary] = useState(false);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
 
-  // Get user type with proper debugging
-  const getUserType = (): UserType | null => {
-    const stored = localStorage.getItem("myrhythm_user_type") as UserType | null;
-    console.log("Retrieved user type from localStorage:", stored);
-    return stored;
-  };
+  // Get sections based on provided userType or fallback to localStorage
+  const effectiveUserType = userType || (localStorage.getItem("myrhythm_user_type") as UserType | null);
+  const sections = getSectionsForUserType(effectiveUserType || undefined);
 
-  const userType = getUserType();
-  const sections = getSectionsForUserType(userType || undefined);
+  console.log("useRhythmAssessment: userType:", effectiveUserType);
+  console.log("useRhythmAssessment: sections loaded:", sections.length);
 
-  // Debug logging
-  console.log("Current user type:", userType);
-  console.log("Number of sections loaded:", sections.length);
-  console.log("First section title:", sections[0]?.title);
-
-  const handleResponse = (questionId: string, value: string) => {
+  const handleResponse = (questionId: string, value: any) => {
     const sectionId = sections[currentSection].id.toString();
     setResponses(prev => ({
       ...prev,
       [sectionId]: {
         ...prev[sectionId],
-        [questionId]: parseInt(value, 10)
+        [questionId]: typeof value === 'string' ? parseInt(value, 10) : value
       }
     }));
   };
@@ -52,7 +44,7 @@ export function useRhythmAssessment() {
   };
 
   const handleCompilationComplete = () => {
-    const analysisResult = analyzeRhythmAssessment(responses, userType || undefined);
+    const analysisResult = analyzeRhythmAssessment(responses, effectiveUserType || undefined);
     const completedAt = new Date().toISOString();
     const nextReviewDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString();
     
@@ -65,7 +57,7 @@ export function useRhythmAssessment() {
       determinationReason: analysisResult.determinationReason,
       version: "1.0",
       nextReviewDate,
-      userType: userType || undefined,
+      userType: effectiveUserType || undefined,
       personalizedData: analysisResult.personalizedData
     };
     
@@ -106,7 +98,7 @@ export function useRhythmAssessment() {
     showSummary,
     assessmentResult,
     sections,
-    userType,
+    userType: effectiveUserType,
     handleResponse,
     handleNext,
     handleCompilationComplete,

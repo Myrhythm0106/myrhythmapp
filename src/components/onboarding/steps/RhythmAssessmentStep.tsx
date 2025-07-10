@@ -29,7 +29,7 @@ export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = fa
     handleCompilationComplete,
     handleBack,
     handleBeginAssessment
-  } = useRhythmAssessment();
+  } = useRhythmAssessment(userType); // Pass userType to hook
 
   const handlePostAssessmentComplete = () => {
     console.log("RhythmAssessmentStep: Assessment completed, calling onComplete");

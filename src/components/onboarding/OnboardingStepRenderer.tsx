@@ -47,7 +47,7 @@ export const OnboardingStepRenderer = ({
   onRhythmAssessmentComplete,
 }: OnboardingStepRendererProps) => {
   
-  console.log("OnboardingStepRenderer: Rendering step", currentStep);
+  console.log("OnboardingStepRenderer: Rendering step", currentStep, "with userType:", userType);
   
   if (currentStep === 1) {
     console.log("OnboardingStepRenderer: Rendering UserTypeStep");
@@ -89,10 +89,12 @@ export const OnboardingStepRenderer = ({
   }
   
   if (currentStep === 5) {
-    console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep");
+    console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep with userType:", userType);
     return (
       <RhythmAssessmentStep
         onComplete={onRhythmAssessmentComplete}
+        userType={userType}
+        hasPaidPremium={false}
       />
     );
   }
