@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,6 +24,8 @@ interface LocationStepProps {
 }
 
 export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
+  const [hasCompleted, setHasCompleted] = useState(false);
+  
   const form = useForm<LocationFormValues>({
     resolver: zodResolver(locationSchema),
     defaultValues: initialValues || {
@@ -33,25 +35,16 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
     }
   });
 
-  // Auto-complete when form is valid
-  useEffect(() => {
-    const subscription = form.watch((values) => {
-      const isValid = form.formState.isValid && 
-                     values.country && 
-                     values.state && 
-                     values.town;
-      if (isValid) {
-        onComplete(values as LocationFormValues);
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form, onComplete]);
-  
   function onSubmit(values: LocationFormValues) {
+    console.log("LocationStep: Form submitted with values:", values);
+    setHasCompleted(true);
     onComplete(values);
   }
 
-  const isFormValid = form.formState.isValid && form.watch('country') && form.watch('state') && form.watch('town');
+  const isFormValid = form.formState.isValid && 
+                     form.watch('country') && 
+                     form.watch('state') && 
+                     form.watch('town');
   
   return (
     <div className="space-y-8 max-w-2xl mx-auto">
@@ -136,15 +129,23 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
                   </FormItem>
                 )}
               />
+
+              <Button 
+                type="submit" 
+                disabled={!isFormValid}
+                className="w-full h-12 text-lg"
+              >
+                Save Location Details
+              </Button>
             </form>
           </Form>
         </CardContent>
       </Card>
 
-      {isFormValid && (
+      {hasCompleted && (
         <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
           <p className="text-green-800 font-medium">
-            ✓ Location details captured! Click Next to choose your plan.
+            ✓ Location details saved! Click Continue to choose your plan.
           </p>
         </div>
       )}

@@ -44,25 +44,25 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   };
 
   const handleUserTypeComplete = (data: { type: UserType }) => {
-    console.log("OnboardingHandlers: User type completed:", data.type);
+    console.log("OnboardingHandlers: User type selected:", data.type);
     props.setUserType(data.type);
     props.setIsUserTypeSelected(true);
-    toast.success("User type selected! Moving to location setup.");
-    props.setCurrentStep(2);
+    toast.success("User type selected!");
+    // Don't auto-advance - wait for user to click Next
   };
 
   const handlePersonalInfoComplete = (data: PersonalInfoFormValues) => {
     console.log("OnboardingHandlers: Personal info completed");
     props.setPersonalInfo(data);
-    goToNextStep();
+    // Don't auto-advance - wait for user to click Next
   };
 
   const handleLocationComplete = (data: any) => {
     console.log("OnboardingHandlers: Location completed");
     props.setLocation(data);
     props.setIsLocationValid(true);
-    toast.success("Location saved! Choose your plan next.");
-    props.setCurrentStep(3);
+    toast.success("Location saved!");
+    // Don't auto-advance - wait for user to click Next
   };
 
   const handlePlanSelected = (plan: PlanType, billingPeriod: 'monthly' | 'annual' = 'monthly') => {
@@ -70,8 +70,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
     props.setSelectedPlan(plan);
     props.setBillingPeriod(billingPeriod);
     props.setIsPlanSelected(true);
-    toast.success("Plan selected! Preparing your assessment.");
-    props.setCurrentStep(4);
+    toast.success("Plan selected!");
+    // Don't auto-advance - wait for user to click Next
   };
 
   const handlePreAssessmentComplete = () => {
@@ -81,9 +81,8 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
   };
 
   const handleRhythmAssessmentComplete = () => {
-    console.log("OnboardingHandlers: Rhythm assessment completed, navigating to mobile onboarding");
+    console.log("OnboardingHandlers: Rhythm assessment completed, navigating to dashboard");
     toast.success("Assessment complete! Your personalized insights are ready.");
-    // Navigate to results or dashboard
     navigate("/dashboard");
   };
 
@@ -95,7 +94,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
       case 2:
         return props.userType !== null; // Can go to location if user type selected
       case 3:
-        return props.userType !== null; // Can go to plan if user type selected (location can be optional)
+        return props.userType !== null; // Can go to plan if user type selected (location optional)
       case 4:
         return props.userType !== null && props.selectedPlan !== null; // Need user type and plan
       case 5:
@@ -112,7 +111,7 @@ export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
           case 1:
             return props.userType !== null;
           case 2:
-            return true; // Location can be optional
+            return true; // Location is optional
           case 3:
             return props.selectedPlan !== null;
           case 4:

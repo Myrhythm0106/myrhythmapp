@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { PlanHeader } from "./plan/PlanHeader";
@@ -12,20 +12,22 @@ import { Badge } from "@/components/ui/badge";
 export type { PlanType };
 
 export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps) => {
-  const [selected, setSelected] = useState<PlanType>(selectedPlan);
+  const [selected, setSelected] = useState<PlanType | null>(null);
   const [isAnnual, setIsAnnual] = useState(true); // Default to annual for savings
   const isMobile = useIsMobile();
 
   const handlePlanSelect = (planId: PlanType) => {
+    console.log("PlanStep: Plan selected:", planId);
     setSelected(planId);
+    onComplete(planId, isAnnual ? 'annual' : 'monthly');
   };
 
-  // Auto-complete when a plan is selected
-  useEffect(() => {
+  const handleBillingChange = (annual: boolean) => {
+    setIsAnnual(annual);
     if (selected) {
-      onComplete(selected, isAnnual ? 'annual' : 'monthly');
+      onComplete(selected, annual ? 'annual' : 'monthly');
     }
-  }, [selected, isAnnual, onComplete]);
+  };
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto px-4">
@@ -42,7 +44,7 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
           </span>
           <Switch
             checked={isAnnual}
-            onCheckedChange={setIsAnnual}
+            onCheckedChange={handleBillingChange}
             className="data-[state=checked]:bg-green-600"
           />
           <span className={cn(
@@ -86,7 +88,7 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
             ({isAnnual ? 'Annual' : 'Monthly'} billing)
           </p>
           <p className="text-sm text-muted-foreground">
-            Click Next below to proceed to your assessment preparation
+            Click Continue below to proceed to your assessment preparation
           </p>
         </div>
       )}

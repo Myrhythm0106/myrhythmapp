@@ -1,9 +1,8 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Brain, Heart, Users, Sparkles } from "lucide-react";
 
 export type UserType = "brain-injury" | "caregiver" | "cognitive-optimization" | "wellness";
@@ -51,12 +50,11 @@ const userTypes = [
 export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || null);
 
-  // Auto-call onComplete when a selection is made
-  useEffect(() => {
-    if (selectedType) {
-      onComplete({ type: selectedType });
-    }
-  }, [selectedType, onComplete]);
+  const handleSelection = (type: UserType) => {
+    console.log("UserTypeStep: User selected type:", type);
+    setSelectedType(type);
+    onComplete({ type });
+  };
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -69,7 +67,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
         </p>
       </div>
 
-      <RadioGroup value={selectedType || ""} onValueChange={(value) => setSelectedType(value as UserType)}>
+      <RadioGroup value={selectedType || ""} onValueChange={(value) => handleSelection(value as UserType)}>
         <div className="grid gap-6 md:grid-cols-2">
           {userTypes.map((type) => {
             const Icon = type.icon;
@@ -83,7 +81,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                     ? 'ring-4 ring-primary/20 shadow-xl border-primary bg-gradient-to-br from-primary/5 to-primary/10' 
                     : 'border-border hover:border-primary/40'
                 }`}
-                onClick={() => setSelectedType(type.id)}
+                onClick={() => handleSelection(type.id)}
               >
                 <CardHeader className="pb-4">
                   <div className="flex items-center space-x-3">
@@ -107,7 +105,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                   <CardContent className="pt-0 pb-4">
                     <div className="flex items-center gap-2 text-primary">
                       <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
-                      <span className="text-sm font-medium">✓ Selected - Click Next below to continue</span>
+                      <span className="text-sm font-medium">✓ Selected - Click Next to continue</span>
                     </div>
                   </CardContent>
                 )}
@@ -123,7 +121,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
             ✨ Perfect! You've selected {userTypes.find(t => t.id === selectedType)?.title}
           </p>
           <p className="text-sm text-muted-foreground mt-1">
-            Click the "Next" button below to proceed to location setup
+            Click the "Continue" button below to proceed to location setup
           </p>
         </div>
       )}
