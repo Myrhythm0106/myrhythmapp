@@ -5,12 +5,15 @@ import { AssessmentCompiling } from "./rhythm/AssessmentCompiling";
 import { RhythmAssessmentIntro } from "./rhythm/RhythmAssessmentIntro";
 import { PostAssessmentFlow } from "./rhythm/PostAssessmentFlow";
 import { useRhythmAssessment } from "@/hooks/useRhythmAssessment";
+import { UserType } from "./UserTypeStep";
 
 interface RhythmAssessmentStepProps {
   onComplete: (responses: any) => void;
+  userType?: UserType | null;
+  hasPaidPremium?: boolean;
 }
 
-export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) {
+export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = false }: RhythmAssessmentStepProps) {
   const {
     hasStarted,
     currentSection,
@@ -19,7 +22,6 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
     showSummary,
     assessmentResult,
     sections,
-    userType,
     handleResponse,
     handleNext,
     handleCompilationComplete,
@@ -49,6 +51,8 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
       <PostAssessmentFlow
         assessmentResult={assessmentResult}
         onComplete={handlePostAssessmentComplete}
+        userType={userType}
+        hasPaidPremium={hasPaidPremium}
       />
     );
   }

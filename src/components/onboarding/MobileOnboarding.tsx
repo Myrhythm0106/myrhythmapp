@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -19,6 +20,7 @@ export function MobileOnboarding() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>("empowerment");
   const [userType, setUserType] = useState<UserType | null>(null);
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'premium' | 'family' | null>(null);
+  const [hasPaidPremium, setHasPaidPremium] = useState<boolean>(false);
   const { startMobilePurchase } = useMobileSubscription();
 
   // Check if empowerment onboarding was completed
@@ -57,6 +59,9 @@ export function MobileOnboarding() {
   const handlePlanSelection = async (planType: 'basic' | 'premium' | 'family') => {
     console.log("Mobile onboarding: Plan selected:", planType);
     setSelectedPlan(planType);
+    if (planType === 'premium' || planType === 'family') {
+      setHasPaidPremium(true);
+    }
     setCurrentStep("payment");
     toast.success("Great choice! Let's complete your payment.");
   };
@@ -89,6 +94,7 @@ export function MobileOnboarding() {
     // Store completion status
     localStorage.setItem('myrhythm_mobile_onboarding_completed', 'true');
     localStorage.setItem('myrhythm_user_type', userType || 'individual');
+    localStorage.setItem('myrhythm_has_premium', hasPaidPremium.toString());
   };
 
   const handleBack = () => {
@@ -149,6 +155,8 @@ export function MobileOnboarding() {
         return (
           <RhythmAssessmentStep
             onComplete={handleAssessmentComplete}
+            userType={userType}
+            hasPaidPremium={hasPaidPremium}
           />
         );
 
@@ -181,9 +189,19 @@ export function MobileOnboarding() {
     );
   }
 
+  // Progress indicators with motivation
+  const getMotivationalMessage = () => {
+    const progress = currentStepInfo.progress;
+    if (progress >= 80) return "🎉 You're almost there! Your personalized plan awaits!";
+    if (progress >= 60) return "💪 Great progress! Assessment coming up next!";
+    if (progress >= 40) return "🚀 You're doing amazing! Keep going!";
+    if (progress >= 20) return "✨ Excellent start! Let's personalize your experience!";
+    return "🌟 Welcome! Let's begin your journey!";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-emerald-50">
-      {/* Progress Header */}
+      {/* Progress Header with Motivation */}
       <div className="bg-white shadow-sm p-4 border-b border-teal-100">
         <div className="max-w-md mx-auto">
           <div className="flex items-center justify-between mb-2">
@@ -199,9 +217,14 @@ export function MobileOnboarding() {
             </span>
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-3">
             <h1 className="text-lg font-semibold text-slate-800">{currentStepInfo.title}</h1>
-            <Progress value={currentStepInfo.progress} className="h-2 bg-teal-100" />
+            <div className="space-y-2">
+              <Progress value={currentStepInfo.progress} className="h-3 bg-teal-100" />
+              <p className="text-sm text-center text-teal-700 font-medium">
+                {getMotivationalMessage()}
+              </p>
+            </div>
           </div>
         </div>
       </div>

@@ -1,19 +1,19 @@
 
 import React from "react";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
+import { AssessmentResultsPreview } from "../AssessmentResultsPreview";
 import { AssessmentTeaserPreview } from "../AssessmentTeaserPreview";
+import { EncouragingResultsDisplay } from "../EncouragingResultsDisplay";
+import { UserGuideIntegration } from "../UserGuideIntegration";
+import { GoalCreationFlow } from "../GoalCreationFlow";
+import { LifeOperatingModelSetup } from "../LifeOperatingModelSetup";
 import { RegistrationPrompt } from "../RegistrationPrompt";
-import { PersonalizedResultsDisplay } from "../PersonalizedResultsDisplay";
-import { PostAssessmentChoiceScreen } from "../PostAssessmentChoiceScreen";
-import { MyRhythmFrameworkDisplay } from "../MyRhythmFrameworkDisplay";
-import { FocusAreaGoalTemplates } from "../FocusAreaGoalTemplates";
-import { LifeManagementSetupWizard } from "../LifeManagementSetupWizard";
-
-type FlowStep = "teaser-preview" | "registration-prompt" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
+import { UserType } from "../../UserTypeStep";
 
 interface FlowStepRendererProps {
-  currentStep: FlowStep;
+  currentStep: string;
   assessmentResult: AssessmentResult;
+  userType?: UserType | null;
   onBackToPreview: () => void;
   onExploreGuide: () => void;
   onStartGoals: () => void;
@@ -23,11 +23,13 @@ interface FlowStepRendererProps {
   onLifeManagementComplete: () => void;
   onTeaserComplete: () => void;
   onRegistrationPrompt: (action: 'register' | 'continue-guest') => void;
+  onSeePricing?: () => void;
 }
 
 export function FlowStepRenderer({
   currentStep,
   assessmentResult,
+  userType,
   onBackToPreview,
   onExploreGuide,
   onStartGoals,
@@ -36,80 +38,84 @@ export function FlowStepRenderer({
   onGoalCreationComplete,
   onLifeManagementComplete,
   onTeaserComplete,
-  onRegistrationPrompt
+  onRegistrationPrompt,
+  onSeePricing
 }: FlowStepRendererProps) {
-  const renderStep = () => {
-    switch (currentStep) {
-      case "teaser-preview":
-        return (
-          <AssessmentTeaserPreview
-            assessmentResult={assessmentResult}
-            onContinue={onTeaserComplete}
-          />
-        );
+  switch (currentStep) {
+    case "teaser-preview":
+      return (
+        <AssessmentTeaserPreview
+          assessmentResult={assessmentResult}
+          onContinue={onTeaserComplete}
+          userType={userType}
+          onSeePricing={onSeePricing}
+        />
+      );
 
-      case "registration-prompt":
-        return (
-          <RegistrationPrompt
-            onRegistrationChoice={onRegistrationPrompt}
-          />
-        );
+    case "registration-prompt":
+      return (
+        <RegistrationPrompt
+          onAction={onRegistrationPrompt}
+          userType={userType}
+        />
+      );
 
-      case "results":
-        return (
-          <PersonalizedResultsDisplay
-            assessmentResult={assessmentResult}
-            onContinue={onBackToChoice}
-          />
-        );
+    case "results":
+      return (
+        <EncouragingResultsDisplay
+          assessmentResult={assessmentResult}
+          userType={userType}
+        />
+      );
 
-      case "choice":
-        return (
-          <PostAssessmentChoiceScreen
-            assessmentResult={assessmentResult}
-            onExploreGuide={onExploreGuide}
-            onStartGoals={onStartGoals}
-            onLifeManagementSetup={onLifeManagementSetup}
-          />
-        );
+    case "choice":
+      return (
+        <AssessmentResultsPreview
+          assessmentResult={assessmentResult}
+          onPaymentSelect={(option) => {
+            if (option === 'trial' || option === 'monthly' || option === 'annual') {
+              // Handle payment selection
+              console.log('Payment option selected:', option);
+            } else {
+              // Handle skip - continue to user guide
+              onExploreGuide();
+            }
+          }}
+          userType={userType}
+        />
+      );
 
-      case "user-guide":
-        return (
-          <MyRhythmFrameworkDisplay
-            currentStepIndex={0}
-          />
-        );
+    case "user-guide":
+      return (
+        <UserGuideIntegration
+          assessmentResult={assessmentResult}
+          onBack={onBackToChoice}
+          onContinue={onStartGoals}
+          userType={userType}
+        />
+      );
 
-      case "goal-creation":
-        return (
-          <FocusAreaGoalTemplates
-            focusArea={assessmentResult.focusArea}
-            onGoalsSelected={() => {}}
-            selectedGoals={[]}
-          />
-        );
+    case "goal-creation":
+      return (
+        <GoalCreationFlow
+          assessmentResult={assessmentResult}
+          onComplete={onGoalCreationComplete}
+          onBack={onBackToChoice}
+          userType={userType}
+        />
+      );
 
-      case "life-operating-model-setup":
-        return (
-          <LifeManagementSetupWizard
-            assessmentResult={assessmentResult}
-            onComplete={onLifeManagementComplete}
-            onBack={onBackToChoice}
-          />
-        );
+    case "life-operating-model-setup":
+      return (
+        <LifeOperatingModelSetup
+          assessmentResult={assessmentResult}
+          onComplete={onLifeManagementComplete}
+          onBack={onBackToChoice}
+          userType={userType}
+        />
+      );
 
-      case "complete":
-        return (
-          <div className="text-center py-8">
-            <h2 className="text-2xl font-bold mb-4">Setup Complete!</h2>
-            <p className="text-gray-600">Welcome to your personalized MyRhythm experience.</p>
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
-  return <div>{renderStep()}</div>;
+    default:
+      return null;
+  }
 }

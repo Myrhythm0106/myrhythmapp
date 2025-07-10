@@ -3,22 +3,33 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-type FlowStep = "teaser-preview" | "registration-prompt" | "payment" | "results" | "choice" | "user-guide" | "goal-creation" | "life-operating-model-setup" | "complete";
-
 interface FlowNavigationProps {
-  currentStep: FlowStep;
+  currentStep: string;
   onResultsNext: () => void;
+  hasPaidPremium?: boolean;
 }
 
-export function FlowNavigation({ currentStep, onResultsNext }: FlowNavigationProps) {
-  if (currentStep !== "results") return null;
+export function FlowNavigation({ currentStep, onResultsNext, hasPaidPremium = false }: FlowNavigationProps) {
+  // Premium users have different navigation
+  if (hasPaidPremium) {
+    return null; // Navigation is handled within the FullAssessmentResults component
+  }
 
-  return (
-    <div className="flex justify-center pt-6 border-t">
-      <Button onClick={onResultsNext} className="bg-gradient-to-r from-primary to-primary/80">
-        Continue to Next Steps
-        <ArrowRight className="ml-2 h-4 w-4" />
-      </Button>
-    </div>
-  );
+  // Show navigation for basic users
+  if (currentStep === "results") {
+    return (
+      <div className="flex justify-center pt-6">
+        <Button 
+          onClick={onResultsNext}
+          size="lg"
+          className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700"
+        >
+          Continue Your Journey
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
+    );
+  }
+
+  return null;
 }
