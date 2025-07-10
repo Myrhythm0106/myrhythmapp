@@ -20,10 +20,7 @@ const UPDATED_STEPS = [
 const TOTAL_STEPS = UPDATED_STEPS.length;
 
 const Onboarding = () => {
-  console.log("=== ONBOARDING PAGE LOADING ===");
-  console.log("Onboarding: Component is rendering");
-  console.log("Onboarding: Location:", window.location.href);
-  console.log("Onboarding: TOTAL_STEPS:", TOTAL_STEPS);
+  console.log("Onboarding: Component rendering");
   
   const { user, loading } = useAuth();
   const [authenticationComplete, setAuthenticationComplete] = useState(false);
@@ -33,10 +30,10 @@ const Onboarding = () => {
   // Check authentication status
   useEffect(() => {
     if (user && !loading) {
-      console.log("Onboarding: User is authenticated, allowing access to onboarding");
+      console.log("Onboarding: User is authenticated");
       setAuthenticationComplete(true);
     } else if (!loading && !user) {
-      console.log("Onboarding: User is not authenticated, showing authentication gate");
+      console.log("Onboarding: User is not authenticated");
       setAuthenticationComplete(false);
     }
   }, [user, loading]);
@@ -63,12 +60,7 @@ const Onboarding = () => {
       setIsPlanSelected,
     } = onboardingState;
 
-    console.log("=== ONBOARDING STATE DEBUG ===");
-    console.log("Onboarding: Current step:", currentStep);
-    console.log("Onboarding: User type:", userType);
-    console.log("Onboarding: Is user type selected:", isUserTypeSelected);
-    console.log("Onboarding: Onboarding state loaded successfully");
-    console.log("=== END ONBOARDING STATE DEBUG ===");
+    console.log("Onboarding: Current step:", currentStep, "User type:", userType);
 
     const handlers = useOnboardingHandlers({
       ...onboardingState,
@@ -121,7 +113,6 @@ const Onboarding = () => {
     };
 
     const currentStepInfo = getCurrentStepInfo();
-    console.log("Onboarding: Current step info:", currentStepInfo);
 
     // Step validation
     const stepValidation = handlers.getStepValidation();
@@ -149,7 +140,7 @@ const Onboarding = () => {
         <Preview3Background>
           <AuthenticationGate 
             onAuthSuccess={() => {
-              console.log("Onboarding: Authentication successful, proceeding to onboarding");
+              console.log("Onboarding: Authentication successful");
               setAuthenticationComplete(true);
             }}
           />
@@ -157,11 +148,7 @@ const Onboarding = () => {
       );
     }
 
-    console.log("=== ABOUT TO RENDER MAIN CONTENT ===");
-    console.log("Onboarding: About to render OnboardingLayout");
-    console.log("Onboarding: Current step for layout:", currentStep);
-    console.log("Onboarding: Step info for layout:", currentStepInfo);
-    console.log("=== END PRE-RENDER DEBUG ===");
+    console.log("Onboarding: Rendering main onboarding layout");
 
     return (
       <Preview3Background>
@@ -180,14 +167,6 @@ const Onboarding = () => {
           onNext={handlers.goToNextStep}
           nextLabel={currentStep === TOTAL_STEPS ? "Complete Assessment" : undefined}
         >
-          <div style={{ border: '2px solid red', padding: '20px', margin: '10px' }}>
-            <p style={{ color: 'red', fontWeight: 'bold', fontSize: '18px' }}>
-              DEBUG: OnboardingLayout children content
-            </p>
-            <p>Current step: {currentStep}</p>
-            <p>About to render OnboardingStepRenderer...</p>
-          </div>
-          
           <OnboardingStepRenderer
             currentStep={currentStep}
             userType={userType}
@@ -211,7 +190,7 @@ const Onboarding = () => {
     );
     
   } catch (error) {
-    console.error("Onboarding: Critical error in component:", error);
+    console.error("Onboarding: Critical error:", error);
     
     return (
       <Preview3Background>

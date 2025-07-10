@@ -47,118 +47,62 @@ export const OnboardingStepRenderer = ({
   onRhythmAssessmentComplete,
 }: OnboardingStepRendererProps) => {
   
-  console.log("=== ONBOARDING STEP RENDERER RENDERING ===");
-  console.log("OnboardingStepRenderer: Component is rendering");
-  console.log("OnboardingStepRenderer: Current step:", currentStep);
-  console.log("OnboardingStepRenderer: Current user type:", userType);
-  console.log("OnboardingStepRenderer: Props received:", {
-    currentStep,
-    userType,
-    personalInfo,
-    location,
-    selectedPlan,
-    billingPeriod
-  });
-  
-  // Add visual debug indicator
-  const debugStyle = {
-    border: '3px solid blue',
-    padding: '15px',
-    margin: '10px',
-    backgroundColor: '#f0f8ff'
-  };
+  console.log("OnboardingStepRenderer: Rendering step", currentStep);
   
   if (currentStep === 1) {
-    console.log("OnboardingStepRenderer: RENDERING STEP 1 - UserTypeStep");
-    console.log("OnboardingStepRenderer: About to render UserTypeStep component");
+    console.log("OnboardingStepRenderer: Rendering UserTypeStep");
     return (
-      <div style={debugStyle}>
-        <div style={{ color: 'blue', fontWeight: 'bold', marginBottom: '10px' }}>
-          DEBUG: OnboardingStepRenderer - Rendering Step 1 (UserTypeStep)
-        </div>
-        <div style={{ marginBottom: '10px' }}>
-          <p>Current Step: {currentStep}</p>
-          <p>User Type: {userType || 'null'}</p>
-          <p>onUserTypeComplete function: {typeof onUserTypeComplete}</p>
-        </div>
-        <UserTypeStep
-          onComplete={onUserTypeComplete}
-          initialValue={userType}
-        />
-      </div>
+      <UserTypeStep
+        onComplete={onUserTypeComplete}
+        initialValue={userType}
+      />
     );
   }
   
   if (currentStep === 2) {
-    console.log("OnboardingStepRenderer: Rendering LocationStep for step 2");
+    console.log("OnboardingStepRenderer: Rendering LocationStep");
     return (
-      <div style={debugStyle}>
-        <div style={{ color: 'blue', fontWeight: 'bold', marginBottom: '10px' }}>
-          DEBUG: OnboardingStepRenderer - Rendering Step 2 (LocationStep)
-        </div>
-        <LocationStep
-          onComplete={onLocationComplete}
-          initialValues={location}
-        />
-      </div>
+      <LocationStep
+        onComplete={onLocationComplete}
+        initialValues={location}
+      />
     );
   }
   
   if (currentStep === 3) {
-    console.log("OnboardingStepRenderer: Rendering PlanStep for step 3");
+    console.log("OnboardingStepRenderer: Rendering PlanStep");
     return (
-      <div style={debugStyle}>
-        <div style={{ color: 'blue', fontWeight: 'bold', marginBottom: '10px' }}>
-          DEBUG: OnboardingStepRenderer - Rendering Step 3 (PlanStep)
-        </div>
-        <PlanStep
-          onComplete={onPlanSelected}
-          selectedPlan={selectedPlan}
-        />
-      </div>
+      <PlanStep
+        onComplete={onPlanSelected}
+        selectedPlan={selectedPlan}
+      />
     );
   }
   
   if (currentStep === 4) {
-    console.log("OnboardingStepRenderer: Rendering PreAssessmentStep for step 4");
+    console.log("OnboardingStepRenderer: Rendering PreAssessmentStep");
     return (
-      <div style={debugStyle}>
-        <div style={{ color: 'blue', fontWeight: 'bold', marginBottom: '10px' }}>
-          DEBUG: OnboardingStepRenderer - Rendering Step 4 (PreAssessmentStep)
-        </div>
-        <PreAssessmentStep
-          onComplete={onPreAssessmentComplete}
-        />
-      </div>
+      <PreAssessmentStep
+        onComplete={onPreAssessmentComplete}
+      />
     );
   }
   
   if (currentStep === 5) {
-    console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep for step 5");
+    console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep");
     return (
-      <div style={debugStyle}>
-        <div style={{ color: 'blue', fontWeight: 'bold', marginBottom: '10px' }}>
-          DEBUG: OnboardingStepRenderer - Rendering Step 5 (RhythmAssessmentStep)
-        </div>
-        <RhythmAssessmentStep
-          onComplete={onRhythmAssessmentComplete}
-        />
-      </div>
+      <RhythmAssessmentStep
+        onComplete={onRhythmAssessmentComplete}
+      />
     );
   }
   
-  console.error("OnboardingStepRenderer: INVALID STEP NUMBER", currentStep);
+  console.error("OnboardingStepRenderer: Invalid step", currentStep);
   return (
-    <div style={{ ...debugStyle, borderColor: 'red', backgroundColor: '#ffe0e0' }}>
-      <div style={{ color: 'red', fontWeight: 'bold', marginBottom: '10px' }}>
-        ERROR: OnboardingStepRenderer - Invalid Step
-      </div>
-      <div className="text-center p-8">
-        <h2 className="text-xl font-semibold mb-4">Invalid Step</h2>
-        <p>Current step: {currentStep}</p>
-        <p>This step number is not handled by the renderer.</p>
-        <p>Please contact support if this error persists.</p>
-      </div>
+    <div className="text-center p-8">
+      <h2 className="text-xl font-semibold mb-4">Invalid Step</h2>
+      <p>Current step: {currentStep}</p>
+      <p>This step number is not handled by the renderer.</p>
     </div>
   );
 };
