@@ -63,8 +63,12 @@ const Onboarding = () => {
       setIsPlanSelected,
     } = onboardingState;
 
+    console.log("=== ONBOARDING STATE DEBUG ===");
     console.log("Onboarding: Current step:", currentStep);
+    console.log("Onboarding: User type:", userType);
+    console.log("Onboarding: Is user type selected:", isUserTypeSelected);
     console.log("Onboarding: Onboarding state loaded successfully");
+    console.log("=== END ONBOARDING STATE DEBUG ===");
 
     const handlers = useOnboardingHandlers({
       ...onboardingState,
@@ -153,8 +157,11 @@ const Onboarding = () => {
       );
     }
 
-    console.log("Onboarding: About to render main onboarding content");
-    console.log("=== END ONBOARDING DEBUG ===");
+    console.log("=== ABOUT TO RENDER MAIN CONTENT ===");
+    console.log("Onboarding: About to render OnboardingLayout");
+    console.log("Onboarding: Current step for layout:", currentStep);
+    console.log("Onboarding: Step info for layout:", currentStepInfo);
+    console.log("=== END PRE-RENDER DEBUG ===");
 
     return (
       <Preview3Background>
@@ -173,6 +180,14 @@ const Onboarding = () => {
           onNext={handlers.goToNextStep}
           nextLabel={currentStep === TOTAL_STEPS ? "Complete Assessment" : undefined}
         >
+          <div style={{ border: '2px solid red', padding: '20px', margin: '10px' }}>
+            <p style={{ color: 'red', fontWeight: 'bold', fontSize: '18px' }}>
+              DEBUG: OnboardingLayout children content
+            </p>
+            <p>Current step: {currentStep}</p>
+            <p>About to render OnboardingStepRenderer...</p>
+          </div>
+          
           <OnboardingStepRenderer
             currentStep={currentStep}
             userType={userType}
