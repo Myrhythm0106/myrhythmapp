@@ -47,16 +47,23 @@ export const OnboardingStepRenderer = ({
   onRhythmAssessmentComplete,
 }: OnboardingStepRendererProps) => {
   
+  console.log("OnboardingStepRenderer: Rendering step", currentStep);
+  console.log("OnboardingStepRenderer: Current user type:", userType);
+  
   switch (currentStep) {
     case 1:
+      console.log("OnboardingStepRenderer: Rendering UserTypeStep");
       return (
-        <UserTypeStep
-          onComplete={onUserTypeComplete}
-          initialValue={userType}
-        />
+        <div className="w-full">
+          <UserTypeStep
+            onComplete={onUserTypeComplete}
+            initialValue={userType}
+          />
+        </div>
       );
       
     case 2:
+      console.log("OnboardingStepRenderer: Rendering LocationStep");
       return (
         <LocationStep
           onComplete={onLocationComplete}
@@ -65,6 +72,7 @@ export const OnboardingStepRenderer = ({
       );
       
     case 3:
+      console.log("OnboardingStepRenderer: Rendering PlanStep");
       return (
         <PlanStep
           onComplete={onPlanSelected}
@@ -73,6 +81,7 @@ export const OnboardingStepRenderer = ({
       );
       
     case 4:
+      console.log("OnboardingStepRenderer: Rendering PreAssessmentStep");
       return (
         <PreAssessmentStep
           onComplete={onPreAssessmentComplete}
@@ -80,6 +89,7 @@ export const OnboardingStepRenderer = ({
       );
       
     case 5:
+      console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep");
       return (
         <RhythmAssessmentStep
           onComplete={onRhythmAssessmentComplete}
@@ -87,6 +97,13 @@ export const OnboardingStepRenderer = ({
       );
       
     default:
-      return <div>Invalid step</div>;
+      console.error("OnboardingStepRenderer: Invalid step", currentStep);
+      return (
+        <div className="text-center p-8">
+          <h2 className="text-xl font-semibold mb-4">Invalid Step</h2>
+          <p>Current step: {currentStep}</p>
+          <p>Please contact support if this error persists.</p>
+        </div>
+      );
   }
 };
