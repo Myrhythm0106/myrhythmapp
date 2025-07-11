@@ -41,14 +41,14 @@ export default function AuthPage() {
                   <Label htmlFor="email">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="email" type="email" placeholder="Enter your email" className="pl-10" />
+                    <Input id="email" type="email" placeholder="Enter your email" className="pl-10" autoComplete="email" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="password" type="password" placeholder="Enter your password" className="pl-10" />
+                    <Input id="password" type="password" placeholder="Enter your password" className="pl-10" autoComplete="current-password" />
                   </div>
                 </div>
                 <Button 
@@ -56,7 +56,7 @@ export default function AuthPage() {
                   onClick={() => navigate("/dashboard")}
                 >
                   <LogIn className="w-4 h-4 mr-2" />
-                  Sign In to MyRhythm
+                  Continue Your Journey
                 </Button>
               </TabsContent>
               
@@ -65,14 +65,14 @@ export default function AuthPage() {
                   <Label htmlFor="signup-email">Email</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="signup-email" type="email" placeholder="Enter your email" className="pl-10" />
+                    <Input id="signup-email" type="email" placeholder="Enter your email" className="pl-10" autoComplete="email" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input id="signup-password" type="password" placeholder="Create a password" className="pl-10" />
+                    <Input id="signup-password" type="password" placeholder="Create a password" className="pl-10" autoComplete="new-password" />
                   </div>
                 </div>
                 <Button 
@@ -80,7 +80,7 @@ export default function AuthPage() {
                   onClick={() => navigate("/onboarding")}
                 >
                   <UserPlus className="w-4 h-4 mr-2" />
-                  Start Your Memory1st Journey
+                  Your Journey Starts Here
                 </Button>
               </TabsContent>
             </Tabs>

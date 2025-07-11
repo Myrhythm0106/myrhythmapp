@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Brain, Mail, Lock, User, Loader2, AlertCircle, CheckCircle } from "lucide-react";
 import { PasswordInput } from "@/components/auth/PasswordInput";
+import { myRhythmToast } from "@/utils/myrhythmToast";
 
 interface AuthenticationGateProps {
   onAuthSuccess: () => void;
@@ -33,14 +34,14 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
 
     // Validate passwords match for sign up
     if (isSignUp && formData.password !== formData.confirmPassword) {
-      setError("Passwords don't match. Please check and try again.");
+      setError("MyRhythm Security: Passwords don't match. Please ensure both entries are identical.");
       setIsLoading(false);
       return;
     }
 
     // Basic password validation
     if (isSignUp && formData.password.length < 6) {
-      setError("Password must be at least 6 characters long.");
+      setError("MyRhythm Security: Password must be at least 6 characters for optimal protection.");
       setIsLoading(false);
       return;
     }
@@ -52,13 +53,16 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
         
         if (error) {
           if (error.message.includes("User already registered")) {
-            setError("An account with this email already exists. Please sign in instead.");
+            setError("MyRhythm Account: This email is already part of our community. Please sign in to continue your journey.");
             setIsSignUp(false);
           } else {
-            setError(error.message || "Failed to create account. Please try again.");
+            setError(`MyRhythm Setup: ${error.message || "Unable to create your account at this time. Please try again."}`);
           }
         } else {
           console.log("AuthenticationGate: Account created successfully, proceeding to onboarding");
+          myRhythmToast.welcome("Account Created Successfully!", {
+            description: "Your Memory1st journey begins now. Let's discover your unique rhythm together."
+          });
           onAuthSuccess();
         }
       } else {
@@ -66,15 +70,18 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
         const { error } = await signIn(formData.email, formData.password);
         
         if (error) {
-          setError("Invalid email or password. Please check your credentials and try again.");
+          setError("MyRhythm Access: Invalid credentials. Please verify your email and password to continue your journey.");
         } else {
           console.log("AuthenticationGate: Sign in successful, proceeding to onboarding");
+          myRhythmToast.welcome("Welcome Back!", {
+            description: "Continuing your personalized Memory1st journey where you left off."
+          });
           onAuthSuccess();
         }
       }
     } catch (error) {
       console.error("AuthenticationGate: Unexpected error:", error);
-      setError("An unexpected error occurred. Please try again.");
+      setError("MyRhythm System: An unexpected issue occurred. Our team has been notified. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -104,12 +111,12 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
           </div>
           <div className="space-y-2">
             <h2 className="text-xl font-semibold">
-              {isSignUp ? "Create Your Account" : "Welcome Back"}
+              {isSignUp ? "Your Journey Starts Here" : "Welcome Back to MyRhythm"}
             </h2>
             <p className="text-muted-foreground text-sm">
               {isSignUp 
-                ? "Start your personalized cognitive wellness journey" 
-                : "Continue your MyRhythm journey"
+                ? "Begin your personalized Memory1st cognitive wellness journey" 
+                : "Continue building your empowered, authentic, productive life"
               }
             </p>
           </div>
@@ -117,9 +124,9 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
 
         <CardContent className="space-y-4">
           {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
+            <Alert variant="destructive" className="border-red-200 bg-red-50">
+              <AlertCircle className="h-4 w-4 text-red-600" />
+              <AlertDescription className="text-red-800">{error}</AlertDescription>
             </Alert>
           )}
 
@@ -138,6 +145,7 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
                     className="pl-10"
                     required
                     disabled={isLoading}
+                    autoComplete="name"
                   />
                 </div>
               </div>
@@ -156,6 +164,7 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
                   className="pl-10"
                   required
                   disabled={isLoading}
+                  autoComplete="email"
                 />
               </div>
             </div>
@@ -166,12 +175,13 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
                 <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                 <PasswordInput
                   id="password"
-                  placeholder={isSignUp ? "Create a password" : "Enter your password"}
+                  placeholder={isSignUp ? "Create a secure password" : "Enter your password"}
                   value={formData.password}
                   onChange={(e) => handleInputChange("password", e.target.value)}
                   className="pl-10"
                   required
                   disabled={isLoading}
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
                 />
               </div>
             </div>
@@ -189,12 +199,13 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
                     className="pl-10"
                     required
                     disabled={isLoading}
+                    autoComplete="new-password"
                   />
                 </div>
                 {passwordsMatch && (
                   <div className="flex items-center gap-2 text-green-600 text-sm">
                     <CheckCircle className="h-4 w-4" />
-                    <span>Passwords match</span>
+                    <span>MyRhythm Security: Passwords match perfectly ✓</span>
                   </div>
                 )}
               </div>
@@ -208,11 +219,11 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {isSignUp ? "Creating Account..." : "Signing In..."}
+                  {isSignUp ? "Creating Your MyRhythm Account..." : "Accessing Your Journey..."}
                 </>
               ) : (
                 <>
-                  {isSignUp ? "Create Account & Continue" : "Sign In & Continue"}
+                  {isSignUp ? "Your Journey Starts Here" : "Continue Your MyRhythm Journey"}
                 </>
               )}
             </Button>
@@ -230,15 +241,15 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
               className="text-sm"
             >
               {isSignUp 
-                ? "Already have an account? Sign in" 
-                : "Don't have an account? Sign up"
+                ? "Already part of MyRhythm? Continue your journey" 
+                : "New to MyRhythm? Your journey starts here"
               }
             </Button>
           </div>
 
-          <div className="text-center text-xs text-muted-foreground">
-            <p>Your account is ready to use immediately</p>
-            <p>No email confirmation required</p>
+          <div className="text-center text-xs text-muted-foreground space-y-1">
+            <p>🚀 Your MyRhythm account is ready to use immediately</p>
+            <p>✨ No email confirmation required - start your Memory1st journey now</p>
           </div>
         </CardContent>
       </Card>

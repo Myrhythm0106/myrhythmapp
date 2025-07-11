@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -77,6 +76,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10 bg-white/80 border-purple-200 focus:border-purple-400"
                 required
+                autoComplete="email"
               />
             </div>
           </div>
@@ -92,6 +92,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 bg-white/80 border-purple-200 focus:border-purple-400"
                 required
+                autoComplete="current-password"
               />
             </div>
           </div>
@@ -101,7 +102,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-white font-medium" 
             disabled={isLoading}
           >
-            {isLoading ? "Signing in..." : "Sign In to MyRhythm"}
+            {isLoading ? "Signing in..." : "Continue Your Journey"}
           </Button>
         </form>
         
@@ -115,7 +116,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
               navigate("/auth");
             }}
           >
-            Start Your Memory1st Journey
+            Your Journey Starts Here
           </Button>
         </div>
       </DialogContent>

@@ -1,13 +1,159 @@
 
-import React from "react";
-import { SecurityEnhancedSignUpForm } from "./SecurityEnhancedSignUpForm";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useAuth } from '@/contexts/AuthContext';
+import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { PasswordInput } from './PasswordInput';
 
 interface SignUpFormProps {
-  onSignUpSuccess?: (email: string) => void;
+  onSignUpSuccess: (email: string) => void;
 }
 
-const SignUpForm = ({ onSignUpSuccess }: SignUpFormProps) => {
-  return <SecurityEnhancedSignUpForm onSignUpSuccess={onSignUpSuccess} />;
-};
+export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
+  const { signUp } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
 
-export default SignUpForm;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords don\'t match. Please check and try again.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      setIsLoading(false);
+      return;
+    }
+
+    const { error } = await signUp(formData.email, formData.password, formData.name);
+    
+    if (error) {
+      if (error.message.includes('User already registered')) {
+        setError('An account with this email already exists. Please sign in instead.');
+      } else {
+        setError(error.message || 'Failed to create account. Please try again.');
+      }
+    } else {
+      onSignUpSuccess(formData.email);
+    }
+    
+    setIsLoading(false);
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    if (error) setError(null);
+  };
+
+  return (
+    <div className="space-y-6">
+      {error && (
+        <Alert variant="destructive" className="border-red-200 bg-red-50">
+          <AlertDescription className="text-red-800">{error}</AlertDescription>
+        </Alert>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="signup-name">Full Name</Label>
+          <div className="relative">
+            <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="signup-name"
+              type="text"
+              placeholder="Enter your full name"
+              value={formData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              className="pl-10"
+              required
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="signup-email">Email Address</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <Input
+              id="signup-email"
+              type="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              className="pl-10"
+              required
+              disabled={isLoading}
+              autoComplete="email"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="signup-password">Password</Label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <PasswordInput
+              id="signup-password"
+              placeholder="Create a password"
+              value={formData.password}
+              onChange={(e) => handleInputChange('password', e.target.value)}
+              className="pl-10"
+              required
+              disabled={isLoading}
+              autoComplete="new-password"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="signup-confirm-password">Confirm Password</Label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+            <PasswordInput
+              id="signup-confirm-password"
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+              className="pl-10"
+              required
+              disabled={isLoading}
+              autoComplete="new-password"
+            />
+          </div>
+        </div>
+
+        <Button 
+          type="submit" 
+          className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700" 
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Account...
+            </>
+          ) : (
+            'Your Journey Starts Here'
+          )}
+        </Button>
+      </form>
+    </div>
+  );
+}
