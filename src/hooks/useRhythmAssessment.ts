@@ -38,13 +38,19 @@ export function useRhythmAssessment(userType?: UserType | null) {
     
     setResponses(newResponses);
     
-    // Auto-save progress
-    localStorage.setItem('myrhythm_assessment_progress', JSON.stringify({
-      responses: newResponses,
-      currentSection,
-      userType: effectiveUserType,
-      timestamp: new Date().toISOString()
-    }));
+    // Auto-save progress every 30 seconds
+    const saveProgress = () => {
+      localStorage.setItem('myrhythm_assessment_progress', JSON.stringify({
+        responses: newResponses,
+        currentSection,
+        userType: effectiveUserType,
+        timestamp: new Date().toISOString()
+      }));
+    };
+
+    // Debounced auto-save
+    clearTimeout((window as any).assessmentSaveTimeout);
+    (window as any).assessmentSaveTimeout = setTimeout(saveProgress, 2000);
   };
 
   const handleNext = () => {
@@ -97,7 +103,7 @@ export function useRhythmAssessment(userType?: UserType | null) {
       }
 
       // Add timeout protection
-      const compilationTimeout = new Promise((_, reject) => {
+      const compilationTimeout = new Promise<never>((_, reject) => {
         setTimeout(() => reject(new Error("Assessment compilation timed out")), 10000);
       });
 
@@ -162,14 +168,24 @@ export function useRhythmAssessment(userType?: UserType | null) {
     const fallbackResult: AssessmentResult = {
       id: `assessment-fallback-${Date.now()}`,
       completedAt: new Date().toISOString(),
-      focusArea: "wellness",
-      sectionScores: {},
+      focusArea: "memory",
+      sectionScores: [],
       overallScore: 50,
       determinationReason: "Assessment completed with fallback analysis",
       version: "1.0-fallback",
       nextReviewDate: new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString(),
       userType: effectiveUserType || undefined,
-      personalizedData: {}
+      personalizedData: {
+        insights: [],
+        personalProfile: {
+          strengths: [],
+          challenges: [],
+          opportunities: []
+        },
+        customDeterminationReason: "Basic assessment analysis provided",
+        userTypeSpecificMessage: "Your assessment has been processed with standard recommendations.",
+        uniqueScoreStory: "Your cognitive wellness journey is unique and valuable."
+      }
     };
     
     setAssessmentResult(fallbackResult);
