@@ -5,14 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Brain, Zap, Target, Clock, ArrowRight } from "lucide-react";
+import { AssessmentGuide } from "../../AssessmentGuide";
+import { UserType } from "../UserTypeStep";
 
 interface PreAssessmentStepProps {
   onComplete: () => void;
+  userType?: UserType | null;
 }
 
-export function PreAssessmentStep({ onComplete }: PreAssessmentStepProps) {
+export function PreAssessmentStep({ onComplete, userType }: PreAssessmentStepProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   const preparationSteps = [
     {
@@ -54,6 +58,20 @@ export function PreAssessmentStep({ onComplete }: PreAssessmentStepProps) {
   }, [currentStep, preparationSteps]);
 
   const progress = ((currentStep + 1) / preparationSteps.length) * 100;
+
+  if (showGuide) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Assessment Preparation Guide</h2>
+          <Button variant="outline" onClick={() => setShowGuide(false)}>
+            Back to Setup
+          </Button>
+        </div>
+        <AssessmentGuide userType={userType} onStartAssessment={onComplete} />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 max-w-3xl mx-auto">
@@ -127,39 +145,53 @@ export function PreAssessmentStep({ onComplete }: PreAssessmentStepProps) {
       </Card>
 
       {isComplete && (
-        <div className="text-center space-y-6">
-          <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <CheckCircle className="h-8 w-8 text-green-600" />
-              <h3 className="text-2xl font-bold text-green-800">
-                Ready to Begin!
-              </h3>
+        <div className="space-y-6">
+          <div className="text-center space-y-6">
+            <div className="p-6 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <CheckCircle className="h-8 w-8 text-green-600" />
+                <h3 className="text-2xl font-bold text-green-800">
+                  Ready to Begin!
+                </h3>
+              </div>
+              <p className="text-green-700 mb-4">
+                Your personalized rhythm assessment is prepared and ready. This will take approximately 5-10 minutes.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button 
+                  onClick={onComplete}
+                  size="lg"
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg font-semibold"
+                >
+                  Start My Assessment
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setShowGuide(true)}
+                  className="px-8 py-3 text-lg"
+                >
+                  View Assessment Guide
+                </Button>
+              </div>
             </div>
-            <p className="text-green-700 mb-4">
-              Your personalized rhythm assessment is prepared and ready. This will take approximately 5-10 minutes.
-            </p>
-            <Button 
-              onClick={onComplete}
-              size="lg"
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 text-lg font-semibold"
-            >
-              Start My Assessment
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              5-10 minutes
-            </div>
-            <div className="flex items-center gap-2">
-              <Brain className="h-4 w-4" />
-              Personalized insights
-            </div>
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4" />
-              Actionable recommendations
+            
+            <div className="grid md:grid-cols-3 gap-4 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                5-10 minutes
+              </div>
+              <div className="flex items-center gap-2">
+                <Brain className="h-4 w-4" />
+                Personalized insights
+              </div>
+              <div className="flex items-center gap-2">
+                <Target className="h-4 w-4" />
+                Actionable recommendations
+              </div>
             </div>
           </div>
         </div>

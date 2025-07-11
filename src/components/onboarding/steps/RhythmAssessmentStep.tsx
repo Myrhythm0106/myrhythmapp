@@ -23,13 +23,15 @@ export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = fa
     isCompiling,
     showSummary,
     assessmentResult,
+    compilationError,
     sections,
     handleResponse,
     handleNext,
     handleCompilationComplete,
+    handleManualContinue,
     handleBack,
     handleBeginAssessment
-  } = useRhythmAssessment(userType); // Pass userType to hook
+  } = useRhythmAssessment(userType);
 
   const handlePostAssessmentComplete = () => {
     console.log("RhythmAssessmentStep: Assessment completed, calling onComplete");
@@ -46,7 +48,17 @@ export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = fa
   }
 
   if (isCompiling) {
-    return <AssessmentCompiling onComplete={handleCompilationComplete} />;
+    return (
+      <AssessmentCompiling 
+        onComplete={handleCompilationComplete}
+        error={compilationError}
+        onManualContinue={handleManualContinue}
+        onRetry={() => {
+          // Reset error and retry
+          handleCompilationComplete();
+        }}
+      />
+    );
   }
 
   if (showSummary && assessmentResult) {

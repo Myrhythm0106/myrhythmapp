@@ -24,6 +24,7 @@ interface OnboardingLayoutProps {
   onNext?: () => void;
   nextLabel?: string;
   isLoading?: boolean;
+  completionPercentage?: number;
 }
 
 export const OnboardingLayout = ({ 
@@ -41,14 +42,23 @@ export const OnboardingLayout = ({
   canGoPrevious = true,
   onNext,
   nextLabel,
-  isLoading = false
+  isLoading = false,
+  completionPercentage
 }: OnboardingLayoutProps) => {
   console.log("OnboardingLayout: Rendering with step", currentStep, "of", totalSteps);
   
   const [showBackWarning, setShowBackWarning] = useState(false);
 
+  // Calculate completion percentage if not provided
+  const calculatedCompletionPercentage = completionPercentage ?? 
+    Math.round((currentStep - 1) / (totalSteps - 1) * 100);
+
   const handleBackClick = () => {
-    if (hasUnsavedData) {
+    // Always show warning for assessment steps or when there's unsaved data
+    const isAssessmentStep = currentStep === 5;
+    const shouldWarn = hasUnsavedData || isAssessmentStep;
+    
+    if (shouldWarn) {
       setShowBackWarning(true);
     } else {
       onBack();
@@ -67,6 +77,20 @@ export const OnboardingLayout = ({
     setShowBackWarning(false);
     onBack();
   };
+
+  // Auto-save functionality for assessment steps
+  React.useEffect(() => {
+    if (currentStep === 5 && hasUnsavedData) {
+      const autoSaveInterval = setInterval(() => {
+        if (onSaveProgress) {
+          onSaveProgress();
+          console.log("Auto-saved assessment progress");
+        }
+      }, 30000); // Auto-save every 30 seconds
+
+      return () => clearInterval(autoSaveInterval);
+    }
+  }, [currentStep, hasUnsavedData, onSaveProgress]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-teal-50/50 p-4">
@@ -104,10 +128,26 @@ export const OnboardingLayout = ({
           onStepClick={onStepClick}
         />
         
+        {/* Progress indicator for assessment */}
+        {currentStep === 5 && calculatedCompletionPercentage > 0 && (
+          <Card className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+            <div className="flex items-center justify-between text-sm">
+              <span className="font-medium text-blue-700">Assessment Progress</span>
+              <span className="text-blue-600">{calculatedCompletionPercentage}% Complete</span>
+            </div>
+            <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
+              <div 
+                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${calculatedCompletionPercentage}%` }}
+              />
+            </div>
+          </Card>
+        )}
+        
         {/* Main Content Card */}
         <Card className="border-2 border-border/50 shadow-xl bg-background/95 backdrop-blur-sm">
           <div className="p-8">
-            {/* Step Content - Removed redundant header since it's in progress bar */}
+            {/* Step Content */}
             <div className="min-h-[400px]">
               {children}
             </div>
@@ -132,6 +172,11 @@ export const OnboardingLayout = ({
         <div className="text-center text-sm text-muted-foreground space-y-1">
           <p>✨ You're in complete control of your brain health journey</p>
           <p>Your progress is automatically saved • Navigate freely between completed steps</p>
+          {currentStep === 5 && (
+            <p className="text-blue-600 font-medium">
+              💾 Assessment responses are auto-saved every 30 seconds
+            </p>
+          )}
         </div>
       </div>
 
@@ -144,6 +189,8 @@ export const OnboardingLayout = ({
         destination="Dashboard"
         hasUnsavedData={hasUnsavedData}
         dataDescription={dataDescription}
+        completionPercentage={calculatedCompletionPercentage}
+        isAssessment={currentStep === 5}
       />
     </div>
   );
