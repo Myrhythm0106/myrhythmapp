@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { getCurrentSections, AssessmentResponses, getSectionsForUserType } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 import { 
@@ -132,7 +131,7 @@ export function useRhythmAssessment(userType?: UserType | null) {
         }
       });
 
-      const result = await Promise.race([compilationPromise, compilationTimeout]);
+      const result = await Promise.race([compilationPromise, compilationTimeout]) as AssessmentResult;
       
       // Store results
       storeAssessmentResult(result);
@@ -178,9 +177,12 @@ export function useRhythmAssessment(userType?: UserType | null) {
       personalizedData: {
         insights: [],
         personalProfile: {
-          strengths: [],
-          challenges: [],
-          opportunities: []
+          uniqueCharacteristics: [],
+          strengthAreas: [],
+          growthOpportunities: [],
+          personalizedMessage: "Your assessment has been processed with standard recommendations.",
+          nextSteps: ["Begin with memory activities that feel natural and comfortable"],
+          rhythmSignature: "Memory-Focused Standard Rhythm"
         },
         customDeterminationReason: "Basic assessment analysis provided",
         userTypeSpecificMessage: "Your assessment has been processed with standard recommendations.",
