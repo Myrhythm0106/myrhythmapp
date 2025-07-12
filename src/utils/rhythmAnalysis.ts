@@ -100,6 +100,18 @@ export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
   }
 };
 
+// Optimized focus area determination by user type
+const getUserTypeFocusPreference = (userType?: UserType): FocusArea => {
+  const preferences = {
+    'brain-injury': 'memory',
+    'caregiver': 'structure',
+    'cognitive-optimization': 'achievement',
+    'wellness': 'emotional'
+  } as const;
+  
+  return preferences[userType as keyof typeof preferences] || 'memory';
+};
+
 export function analyzeRhythmAssessment(responses: AssessmentResponses, userType?: UserType): {
   focusArea: FocusArea;
   sectionScores: SectionScore[];
@@ -107,91 +119,126 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses, userType
   determinationReason: string;
   personalizedData: PersonalizedAssessmentData;
 } {
+  console.log("Starting rhythm analysis for user type:", userType);
+  
   // Get user-type-specific sections
   const sections = getSectionsForUserType(userType);
   
-  // Calculate scores for each section
+  // Early optimization: For simple cases, use user type preference
+  if (!sections || sections.length === 0) {
+    console.log("No sections found, using user type preference");
+    const focusArea = getUserTypeFocusPreference(userType);
+    const personalizedData = generatePersonalizedInsights(
+      responses,
+      [],
+      focusArea,
+      50,
+      userType
+    );
+    
+    return {
+      focusArea,
+      sectionScores: [],
+      overallScore: 50,
+      determinationReason: `Based on your ${userType?.replace('-', ' ')} profile, we've selected ${focusAreas[focusArea].title} as your optimal starting point.`,
+      personalizedData
+    };
+  }
+  
+  // Calculate scores for each section (optimized)
   const sectionScores: SectionScore[] = [];
   let totalScore = 0;
   let responsesCount = 0;
   
-  Object.keys(responses).forEach(sectionId => {
-    const sectionIndex = parseInt(sectionId) - 1;
-    if (sectionIndex >= 0 && sectionIndex < sections.length) {
-      const section = sections[sectionIndex];
-      const sectionResponses = responses[sectionId];
-      const scores = Object.values(sectionResponses);
-      const average = scores.length > 0 
-        ? scores.reduce((sum, score) => sum + score, 0) / scores.length
-        : 0;
-      
+  // Pre-calculate response totals for efficiency
+  const responseTotals = new Map<string, { sum: number; count: number }>();
+  
+  Object.entries(responses).forEach(([sectionId, sectionResponses]) => {
+    const scores = Object.values(sectionResponses);
+    if (scores.length > 0) {
+      const sum = scores.reduce((acc, score) => acc + score, 0);
+      responseTotals.set(sectionId, { sum, count: scores.length });
+      totalScore += sum;
+      responsesCount += scores.length;
+    }
+  });
+  
+  // Build section scores efficiently
+  sections.forEach((section, index) => {
+    const sectionId = section.id.toString();
+    const totals = responseTotals.get(sectionId);
+    
+    if (totals) {
+      const average = totals.sum / totals.count;
       sectionScores.push({
         id: section.id,
         title: section.title,
         average: Number(average.toFixed(2)),
-        responses: { ...sectionResponses },
+        responses: { ...responses[sectionId] },
         phase: section.phase
       });
-      
-      totalScore += scores.reduce((sum, score) => sum + score, 0);
-      responsesCount += scores.length;
     }
   });
   
   // Calculate overall score
   const overallScore = responsesCount > 0 
     ? Number((totalScore / responsesCount).toFixed(2))
-    : 0;
+    : 50;
   
-  // Determine focus area with memory-first approach
-  let focusArea: FocusArea = "memory"; // Default to memory
-  let highestScore = 0;
-  let dominantSectionId = "1";
+  console.log("Calculated overall score:", overallScore, "for", responsesCount, "responses");
   
-  sectionScores.forEach(section => {
-    if (section.average > highestScore) {
-      highestScore = section.average;
-      dominantSectionId = section.id.toString();
-    }
-  });
+  // Optimized focus area determination
+  let focusArea: FocusArea;
   
-  // Enhanced mapping that considers memory needs first
-  const sectionToFocusArea: Record<string, FocusArea> = {
-    "1": "memory", // M - Moment of Impact (memory baseline)
-    "2": "memory", // Y - Yield to the Fog (memory fog)
-    "3": "emotional", // R - Reckon with Reality
-    "4": "structure", // H - Harness Support
-    "5": "growth", // Y - Yield Again (memory progress)
-    "6": "achievement", // T - Take Back Control
-    "7": "growth", // H - Heal Forward
-    "8": "community" // M - Multiply the Mission
-  };
-
-  // Determine focus area with memory-centric logic
-  if (overallScore < 2.0) {
-    // Low scores suggest significant memory/cognitive challenges
-    focusArea = "memory";
-  } else if (overallScore > 2.5) {
-    // Higher scores allow for other focus areas
-    focusArea = sectionToFocusArea[dominantSectionId] || "memory";
+  // Use user type preference as starting point for efficiency
+  const preferredFocus = getUserTypeFocusPreference(userType);
+  
+  if (sectionScores.length === 0) {
+    focusArea = preferredFocus;
   } else {
-    // Medium scores default to memory with some flexibility
-    focusArea = sectionToFocusArea[dominantSectionId] || "memory";
-  }
-  
-  // Adjust focus area based on user type with memory consideration
-  if (userType === "cognitive-optimization" && focusArea === "emotional") {
-    focusArea = "memory"; // Cognitive optimization users benefit from memory focus
-  }
-  
-  if (userType === "brain-injury") {
-    // Always consider memory as primary or secondary focus for brain injury recovery
-    if (focusArea !== "memory" && overallScore < 2.2) {
+    // Find highest scoring section
+    const highestSection = sectionScores.reduce((max, section) => 
+      section.average > max.average ? section : max
+    );
+    
+    // Enhanced mapping that considers memory needs first
+    const sectionToFocusArea: Record<string, FocusArea> = {
+      "1": "memory", // M - Moment of Impact (memory baseline)
+      "2": "memory", // Y - Yield to the Fog (memory fog)
+      "3": "emotional", // R - Reckon with Reality
+      "4": "structure", // H - Harness Support
+      "5": "growth", // Y - Yield Again (memory progress)
+      "6": "achievement", // T - Take Back Control
+      "7": "growth", // H - Heal Forward
+      "8": "community" // M - Multiply the Mission
+    };
+
+    // Determine focus area with optimized logic
+    if (overallScore < 2.0) {
+      // Low scores suggest significant memory/cognitive challenges
       focusArea = "memory";
+    } else if (overallScore > 2.5) {
+      // Higher scores allow for other focus areas
+      focusArea = sectionToFocusArea[highestSection.id.toString()] || preferredFocus;
+    } else {
+      // Medium scores use user type preference with section influence
+      const sectionSuggestion = sectionToFocusArea[highestSection.id.toString()];
+      focusArea = sectionSuggestion || preferredFocus;
+    }
+    
+    // Final user type adjustments
+    if (userType === "cognitive-optimization" && focusArea === "emotional") {
+      focusArea = "achievement"; // Better fit for optimization users
+    }
+    
+    if (userType === "brain-injury" && focusArea !== "memory" && overallScore < 2.2) {
+      focusArea = "memory"; // Always prioritize memory for brain injury recovery
     }
   }
   
-  // Generate personalized insights
+  console.log("Determined focus area:", focusArea);
+  
+  // Generate personalized insights (optimized call)
   const personalizedData = generatePersonalizedInsights(
     responses,
     sectionScores,
@@ -200,14 +247,15 @@ export function analyzeRhythmAssessment(responses: AssessmentResponses, userType
     userType
   );
 
-  // Generate memory-aware determination reason
-  const dominantSectionTitle = sectionScores.find(s => s.id.toString() === dominantSectionId)?.title || '';
-  const userTypeContext = userType ? ` for ${userType.replace(/-/g, ' ')} users` : '';
+  // Generate optimized determination reason
+  const userTypeContext = userType ? ` designed for ${userType.replace(/-/g, ' ')} users` : '';
   const memoryContext = focusArea === "memory" 
-    ? "Your responses indicate that strengthening memory and cognitive wellness should be your primary focus right now. " 
-    : `While your strongest area is "${dominantSectionTitle}", we've identified that ${focusAreas[focusArea].title} will best support your memory wellness journey. `;
+    ? "Your assessment indicates that strengthening memory and cognitive wellness is your ideal starting point. " 
+    : `Your personalized analysis shows that ${focusAreas[focusArea].title} will best support your cognitive wellness journey right now. `;
   
-  const determinationReason = `${memoryContext}Based on your assessment${userTypeContext}, this corresponds to the ${focusAreas[focusArea].phase} phase of the MyRhythm framework. Memory is the foundation that supports all other aspects of your wellness journey, which is why our recommendations center around cognitive wellness while addressing your ${focusAreas[focusArea].title.toLowerCase()}.`;
+  const determinationReason = `${memoryContext}This MyRhythm recommendation${userTypeContext} corresponds to the ${focusAreas[focusArea].phase} phase of our proven framework. Your journey is designed to build a strong foundation while addressing your specific ${focusAreas[focusArea].title.toLowerCase()} needs.`;
+
+  console.log("Analysis completed successfully");
 
   return { 
     focusArea, 

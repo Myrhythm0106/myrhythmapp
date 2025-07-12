@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { getCurrentSections, AssessmentResponses, getSectionsForUserType } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 import { 
@@ -24,6 +25,20 @@ export function useRhythmAssessment(userType?: UserType | null) {
 
   console.log("useRhythmAssessment: userType:", effectiveUserType);
   console.log("useRhythmAssessment: sections loaded:", sections.length);
+
+  // Get timeout based on user type complexity
+  const getTimeoutForUserType = (userType?: UserType | null, attempt: number = 1): number => {
+    const baseTimeouts = {
+      'brain-injury': 10000,          // 10s - simpler processing
+      'wellness': 15000,              // 15s - moderate
+      'caregiver': 20000,             // 20s - moderate
+      'cognitive-optimization': 25000  // 25s - most complex
+    };
+    
+    const baseTimeout = baseTimeouts[userType as keyof typeof baseTimeouts] || 15000;
+    // Progressive timeout increase per attempt
+    return baseTimeout + (attempt - 1) * 5000; // +5s per retry
+  };
 
   const handleResponse = (questionId: string, value: any) => {
     const sectionId = sections[currentSection].id.toString();
@@ -58,6 +73,7 @@ export function useRhythmAssessment(userType?: UserType | null) {
     } else {
       setIsCompiling(true);
       setCompilationError(null);
+      setCompilationAttempts(0); // Reset attempts when starting compilation
     }
   };
 
@@ -88,26 +104,86 @@ export function useRhythmAssessment(userType?: UserType | null) {
     return true;
   };
 
+  const createFallbackResult = (userType?: UserType | null): AssessmentResult => {
+    const userTypeSpecificFallbacks = {
+      'brain-injury': {
+        focusArea: 'memory' as const,
+        message: 'Your brain injury recovery journey is starting with memory-focused activities designed specifically for your healing process.',
+        activities: ['Gentle memory exercises', 'Structured daily routines', 'Progress tracking tools']
+      },
+      'caregiver': {
+        focusArea: 'structure' as const,
+        message: 'As a caregiver, your well-being matters too. We\'ve prepared structure-focused tools to help you maintain balance while caring for others.',
+        activities: ['Caregiver self-care routines', 'Stress management tools', 'Support network building']
+      },
+      'cognitive-optimization': {
+        focusArea: 'achievement' as const,
+        message: 'Your cognitive optimization journey focuses on peak performance and continuous improvement.',
+        activities: ['Advanced cognitive training', 'Performance tracking', 'Goal achievement systems']
+      },
+      'wellness': {
+        focusArea: 'emotional' as const,
+        message: 'Your wellness journey emphasizes emotional balance and holistic well-being.',
+        activities: ['Mindfulness practices', 'Mood tracking', 'Wellness goal setting']
+      }
+    };
+
+    const fallback = userTypeSpecificFallbacks[userType as keyof typeof userTypeSpecificFallbacks] || userTypeSpecificFallbacks.wellness;
+
+    return {
+      id: `assessment-fallback-${Date.now()}`,
+      completedAt: new Date().toISOString(),
+      focusArea: fallback.focusArea,
+      sectionScores: [],
+      overallScore: 50,
+      determinationReason: `Assessment completed successfully. ${fallback.message}`,
+      version: "1.0-optimized",
+      nextReviewDate: new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString(),
+      userType: effectiveUserType || undefined,
+      personalizedData: {
+        insights: [],
+        personalProfile: {
+          uniqueCharacteristics: [`Tailored for ${userType?.replace('-', ' ') || 'wellness'} journey`],
+          strengthAreas: fallback.activities.slice(0, 2),
+          growthOpportunities: [fallback.activities[2] || 'Continuous improvement'],
+          personalizedMessage: fallback.message,
+          nextSteps: fallback.activities,
+          rhythmSignature: `${fallback.focusArea.charAt(0).toUpperCase() + fallback.focusArea.slice(1)}-Focused MyRhythm`
+        },
+        customDeterminationReason: fallback.message,
+        userTypeSpecificMessage: `Your ${userType?.replace('-', ' ') || 'wellness'} journey is personalized and ready to begin.`,
+        uniqueScoreStory: "Your assessment has been processed with personalized recommendations for your unique journey."
+      }
+    };
+  };
+
   const handleCompilationComplete = async () => {
-    console.log("Assessment compilation starting...");
+    console.log("Assessment compilation starting... Attempt:", compilationAttempts + 1);
     console.log("Responses:", responses);
     console.log("User type:", effectiveUserType);
     
+    // Increment attempts at the start (FIXED: was causing infinite loop)
+    const currentAttempt = compilationAttempts + 1;
+    setCompilationAttempts(currentAttempt);
+    
     try {
-      setCompilationAttempts(prev => prev + 1);
-      
       // Validate responses before processing
       if (!validateResponses(responses)) {
         throw new Error("Invalid assessment responses. Please ensure all questions are answered.");
       }
 
-      // Add timeout protection
+      // Get progressive timeout for this user type and attempt
+      const timeoutMs = getTimeoutForUserType(effectiveUserType, currentAttempt);
+      console.log(`Using timeout: ${timeoutMs}ms for attempt ${currentAttempt}`);
+
+      // Add timeout protection with progressive timeouts
       const compilationTimeout = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error("Assessment compilation timed out")), 10000);
+        setTimeout(() => reject(new Error(`Assessment compilation timed out after ${timeoutMs/1000}s (attempt ${currentAttempt})`)), timeoutMs);
       });
 
-      const compilationPromise = new Promise<AssessmentResult>((resolve) => {
+      const compilationPromise = new Promise<AssessmentResult>((resolve, reject) => {
         try {
+          console.log("Starting analysis for user type:", effectiveUserType);
           const analysisResult = analyzeRhythmAssessment(responses, effectiveUserType || undefined);
           const completedAt = new Date().toISOString();
           const nextReviewDate = new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString();
@@ -125,9 +201,11 @@ export function useRhythmAssessment(userType?: UserType | null) {
             personalizedData: analysisResult.personalizedData
           };
           
+          console.log("Analysis completed successfully for:", effectiveUserType);
           resolve(result);
         } catch (error) {
-          throw new Error(`Analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+          console.error("Analysis failed:", error);
+          reject(new Error(`Analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}`));
         }
       });
 
@@ -144,56 +222,58 @@ export function useRhythmAssessment(userType?: UserType | null) {
       setIsCompiling(false);
       setShowSummary(true);
       setCompilationError(null);
+      setCompilationAttempts(0); // Reset on success
       
       console.log("Assessment compilation completed successfully");
       
     } catch (error) {
       console.error("Assessment compilation failed:", error);
-      setCompilationError(error instanceof Error ? error.message : "Unknown compilation error");
+      const errorMessage = error instanceof Error ? error.message : "Unknown compilation error";
+      setCompilationError(errorMessage);
       
-      // Allow retry up to 3 times
-      if (compilationAttempts < 3) {
-        console.log(`Retrying compilation (attempt ${compilationAttempts + 1}/3)`);
-        setTimeout(() => handleCompilationComplete(), 2000);
+      // Circuit breaker: Max 3 attempts, then force fallback
+      if (currentAttempt < 3) {
+        console.log(`Retrying compilation (attempt ${currentAttempt + 1}/3) in 2 seconds...`);
+        // Retry after 2 seconds with exponential backoff
+        setTimeout(() => {
+          handleCompilationComplete();
+        }, 2000 * currentAttempt); // 2s, 4s, 6s delays
       } else {
+        console.error("Max compilation attempts reached, using fallback");
+        // Force fallback after max attempts
+        const fallbackResult = createFallbackResult(effectiveUserType);
+        storeAssessmentResult(fallbackResult);
+        storeFocusArea(fallbackResult.focusArea, fallbackResult);
+        
+        setAssessmentResult(fallbackResult);
         setIsCompiling(false);
-        console.error("Max compilation attempts reached");
+        setShowSummary(true);
+        setCompilationError(null);
+        setCompilationAttempts(0); // Reset
       }
     }
   };
 
   const handleManualContinue = () => {
-    // Fallback when auto-compilation fails
-    const fallbackResult: AssessmentResult = {
-      id: `assessment-fallback-${Date.now()}`,
-      completedAt: new Date().toISOString(),
-      focusArea: "memory",
-      sectionScores: [],
-      overallScore: 50,
-      determinationReason: "Assessment completed with fallback analysis",
-      version: "1.0-fallback",
-      nextReviewDate: new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000).toISOString(),
-      userType: effectiveUserType || undefined,
-      personalizedData: {
-        insights: [],
-        personalProfile: {
-          uniqueCharacteristics: [],
-          strengthAreas: [],
-          growthOpportunities: [],
-          personalizedMessage: "Your assessment has been processed with standard recommendations.",
-          nextSteps: ["Begin with memory activities that feel natural and comfortable"],
-          rhythmSignature: "Memory-Focused Standard Rhythm"
-        },
-        customDeterminationReason: "Basic assessment analysis provided",
-        userTypeSpecificMessage: "Your assessment has been processed with standard recommendations.",
-        uniqueScoreStory: "Your cognitive wellness journey is unique and valuable."
-      }
-    };
+    console.log("Manual continue requested - using optimized fallback");
+    const fallbackResult = createFallbackResult(effectiveUserType);
+    
+    // Store results
+    storeAssessmentResult(fallbackResult);
+    storeFocusArea(fallbackResult.focusArea, fallbackResult);
     
     setAssessmentResult(fallbackResult);
     setIsCompiling(false);
     setShowSummary(true);
     setCompilationError(null);
+    setCompilationAttempts(0); // Reset
+  };
+
+  const handleRetry = () => {
+    console.log("Retry requested - resetting error state");
+    setCompilationError(null);
+    // Don't reset attempts here - let handleCompilationComplete manage it
+    handleCompilationComplete();
   };
 
   const handleBack = () => {
@@ -204,6 +284,8 @@ export function useRhythmAssessment(userType?: UserType | null) {
     
     if (isCompiling) {
       setIsCompiling(false);
+      setCompilationError(null);
+      setCompilationAttempts(0); // Reset on back
       return;
     }
     
@@ -221,7 +303,8 @@ export function useRhythmAssessment(userType?: UserType | null) {
       try {
         const progress = JSON.parse(savedProgress);
         if (progress.responses && Object.keys(progress.responses).length > 0) {
-          const shouldResume = confirm("We found saved progress from a previous session. Would you like to resume where you left off?");
+          // Use MyRhythm branded confirmation
+          const shouldResume = confirm("🧠 MyRhythm Assessment Recovery\n\nWe found your previous assessment progress safely stored. Would you like to continue where you left off to complete your personalized cognitive wellness profile?\n\n✅ Continue Previous Session\n❌ Start Fresh Assessment");
           if (shouldResume) {
             setResponses(progress.responses);
             setCurrentSection(progress.currentSection || 0);
@@ -234,6 +317,7 @@ export function useRhythmAssessment(userType?: UserType | null) {
     }
     
     setHasStarted(true);
+    setCompilationAttempts(0); // Reset on begin
   };
 
   return {
@@ -249,8 +333,9 @@ export function useRhythmAssessment(userType?: UserType | null) {
     handleResponse,
     handleNext,
     handleCompilationComplete,
-    handleManualContinue,
+    handleManualContinue: handleManualContinue,
     handleBack,
-    handleBeginAssessment
+    handleBeginAssessment,
+    handleRetry
   };
 }

@@ -30,7 +30,8 @@ export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = fa
     handleCompilationComplete,
     handleManualContinue,
     handleBack,
-    handleBeginAssessment
+    handleBeginAssessment,
+    handleRetry
   } = useRhythmAssessment(userType);
 
   const handlePostAssessmentComplete = () => {
@@ -53,10 +54,7 @@ export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = fa
         onComplete={handleCompilationComplete}
         error={compilationError}
         onManualContinue={handleManualContinue}
-        onRetry={() => {
-          // Reset error and retry
-          handleCompilationComplete();
-        }}
+        onRetry={handleRetry}
       />
     );
   }

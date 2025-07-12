@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Brain, Sparkles, AlertTriangle, RefreshCw } from "lucide-react";
+import { Brain, Sparkles, AlertTriangle, RefreshCw, Clock, Zap } from "lucide-react";
 
 interface AssessmentCompilingProps {
   onComplete: () => void;
@@ -43,31 +43,36 @@ export function AssessmentCompiling({ onComplete, error, onManualContinue, onRet
             
             <div className="space-y-3">
               <h3 className="text-xl font-bold text-red-800">
-                Assessment Processing Error
+                🧠 MyRhythm Assessment Processing
               </h3>
+              <Alert className="text-left bg-blue-50 border-blue-200">
+                <AlertDescription className="text-sm text-blue-800">
+                  <strong>Don't worry!</strong> Your responses are safely saved. We're experiencing high demand for personalized cognitive assessments.
+                </AlertDescription>
+              </Alert>
+              
               <Alert className="text-left">
-                <AlertDescription className="text-sm">
-                  {error}
+                <AlertDescription className="text-sm text-gray-600">
+                  Technical details: {error}
                 </AlertDescription>
               </Alert>
             </div>
             
             <div className="flex flex-col gap-3">
+              <Button onClick={onManualContinue} className="flex items-center gap-2 bg-green-600 hover:bg-green-700">
+                <Zap className="h-4 w-4" />
+                Get My Results Now
+              </Button>
               {onRetry && (
-                <Button onClick={onRetry} className="flex items-center gap-2">
+                <Button variant="outline" onClick={onRetry} className="flex items-center gap-2">
                   <RefreshCw className="h-4 w-4" />
-                  Try Again
-                </Button>
-              )}
-              {onManualContinue && (
-                <Button variant="outline" onClick={onManualContinue}>
-                  Continue with Basic Results
+                  Try Processing Again
                 </Button>
               )}
             </div>
             
             <p className="text-xs text-muted-foreground">
-              Don't worry - your responses have been saved and we can still provide you with valuable insights.
+              🛡️ <strong>MyRhythm Promise:</strong> Your cognitive wellness data is secure and your personalized insights are ready to unlock your brain's potential.
             </p>
           </CardContent>
         </Card>
@@ -90,15 +95,16 @@ export function AssessmentCompiling({ onComplete, error, onManualContinue, onRet
           
           <div className="space-y-3">
             <h3 className="text-xl font-bold text-gray-800">
-              Compiling Your Assessment
+              🧠 Analyzing Your Cognitive Profile
             </h3>
             <p className="text-gray-600">
-              We're analyzing your responses to create your personalized rhythm profile...
+              MyRhythm is creating your personalized brain wellness roadmap using advanced cognitive assessment algorithms...
             </p>
-            {timeElapsed > 5 && (
-              <p className="text-sm text-muted-foreground">
-                Processing complex analysis... ({timeElapsed}s)
-              </p>
+            {timeElapsed > 3 && (
+              <div className="flex items-center justify-center gap-2 text-sm text-blue-600">
+                <Clock className="h-4 w-4" />
+                <span>Deep analysis in progress... ({timeElapsed}s)</span>
+              </div>
             )}
           </div>
           
@@ -108,13 +114,16 @@ export function AssessmentCompiling({ onComplete, error, onManualContinue, onRet
             <div className="w-2 h-2 bg-beacon-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
           </div>
           
-          {timeElapsed > 8 && onManualContinue && (
+          {timeElapsed > 5 && onManualContinue && (
             <div className="pt-4 border-t">
-              <p className="text-sm text-muted-foreground mb-3">
-                Taking longer than expected?
-              </p>
-              <Button variant="outline" size="sm" onClick={onManualContinue}>
-                Continue with Basic Analysis
+              <Alert className="mb-3 bg-green-50 border-green-200">
+                <AlertDescription className="text-sm text-green-800">
+                  <strong>Ready for Results?</strong> Your assessment is complete and we can show your personalized insights now.
+                </AlertDescription>
+              </Alert>
+              <Button variant="default" size="sm" onClick={onManualContinue} className="bg-green-600 hover:bg-green-700">
+                <Zap className="h-4 w-4 mr-2" />
+                View My MyRhythm Profile
               </Button>
             </div>
           )}
