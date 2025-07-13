@@ -1,10 +1,8 @@
 
-import React from "react";
-import { RhythmAssessmentView } from "./rhythm/RhythmAssessmentView";
-import { AssessmentCompiling } from "./rhythm/AssessmentCompiling";
-import { RhythmAssessmentIntro } from "./rhythm/RhythmAssessmentIntro";
-import { PostAssessmentFlow } from "./rhythm/PostAssessmentFlow";
-import { useRhythmAssessment } from "@/hooks/useRhythmAssessment";
+import React, { useState } from "react";
+import { AssessmentFlowManager } from "./rhythm/assessment/AssessmentFlowManager";
+import { PostAssessmentManager } from "./rhythm/post-assessment/PostAssessmentManager";
+import { AssessmentResult } from "@/utils/rhythmAnalysis";
 import { UserType } from "./UserTypeStep";
 
 interface RhythmAssessmentStepProps {
@@ -16,69 +14,33 @@ interface RhythmAssessmentStepProps {
 export function RhythmAssessmentStep({ onComplete, userType, hasPaidPremium = false }: RhythmAssessmentStepProps) {
   console.log("RhythmAssessmentStep: Rendering with userType:", userType);
   
-  const {
-    hasStarted,
-    currentSection,
-    responses,
-    isCompiling,
-    showSummary,
-    assessmentResult,
-    compilationError,
-    sections,
-    handleResponse,
-    handleNext,
-    handleCompilationComplete,
-    handleManualContinue,
-    handleBack,
-    handleBeginAssessment,
-    handleRetry
-  } = useRhythmAssessment(userType);
+  const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
 
-  const handlePostAssessmentComplete = () => {
-    console.log("RhythmAssessmentStep: Assessment completed, calling onComplete");
-    onComplete(responses);
+  const handleAssessmentComplete = (result: AssessmentResult) => {
+    console.log("RhythmAssessmentStep: Assessment completed, moving to post-assessment");
+    setAssessmentResult(result);
   };
 
-  if (!hasStarted) {
-    return (
-      <RhythmAssessmentIntro
-        onBeginAssessment={handleBeginAssessment}
-        userType={userType}
-      />
-    );
-  }
+  const handlePostAssessmentComplete = () => {
+    console.log("RhythmAssessmentStep: Post-assessment completed, calling onComplete");
+    onComplete(assessmentResult);
+  };
 
-  if (isCompiling) {
+  if (!assessmentResult) {
     return (
-      <AssessmentCompiling 
-        onComplete={handleCompilationComplete}
-        error={compilationError}
-        onManualContinue={handleManualContinue}
-        onRetry={handleRetry}
-      />
-    );
-  }
-
-  if (showSummary && assessmentResult) {
-    return (
-      <PostAssessmentFlow
-        assessmentResult={assessmentResult}
-        onComplete={handlePostAssessmentComplete}
+      <AssessmentFlowManager
         userType={userType}
-        hasPaidPremium={hasPaidPremium}
+        onComplete={handleAssessmentComplete}
       />
     );
   }
 
   return (
-    <RhythmAssessmentView
-      currentSection={currentSection}
-      responses={responses}
-      onResponse={handleResponse}
-      onNext={handleNext}
-      onBack={handleBack}
-      sections={sections}
+    <PostAssessmentManager
+      assessmentResult={assessmentResult}
       userType={userType}
+      hasPaidPremium={hasPaidPremium}
+      onComplete={handlePostAssessmentComplete}
     />
   );
 }
