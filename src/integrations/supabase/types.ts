@@ -259,6 +259,57 @@ export type Database = {
         }
         Relationships: []
       }
+      empowerment_statements: {
+        Row: {
+          category: string
+          created_at: string
+          engagement_score: number | null
+          id: string
+          mood: string | null
+          season: string | null
+          subcategory: string | null
+          tags: string[] | null
+          text: string
+          theme: string | null
+          tier: string
+          updated_at: string
+          usage_count: number | null
+          user_type: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          engagement_score?: number | null
+          id?: string
+          mood?: string | null
+          season?: string | null
+          subcategory?: string | null
+          tags?: string[] | null
+          text: string
+          theme?: string | null
+          tier?: string
+          updated_at?: string
+          usage_count?: number | null
+          user_type: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          engagement_score?: number | null
+          id?: string
+          mood?: string | null
+          season?: string | null
+          subcategory?: string | null
+          tags?: string[] | null
+          text?: string
+          theme?: string | null
+          tier?: string
+          updated_at?: string
+          usage_count?: number | null
+          user_type?: string
+        }
+        Relationships: []
+      }
       goals: {
         Row: {
           category: string | null
@@ -752,6 +803,108 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_favorite_statements: {
+        Row: {
+          created_at: string
+          id: string
+          statement_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          statement_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          statement_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorite_statements_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "empowerment_statements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_statement_history: {
+        Row: {
+          created_at: string
+          id: string
+          shown_date: string
+          statement_id: string
+          user_energy: number | null
+          user_id: string
+          user_mood: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          shown_date?: string
+          statement_id: string
+          user_energy?: number | null
+          user_id: string
+          user_mood?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          shown_date?: string
+          statement_id?: string
+          user_energy?: number | null
+          user_id?: string
+          user_mood?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_statement_history_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "empowerment_statements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_statement_interactions: {
+        Row: {
+          created_at: string
+          id: string
+          interaction_data: Json | null
+          interaction_type: string
+          statement_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          interaction_data?: Json | null
+          interaction_type: string
+          statement_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          interaction_data?: Json | null
+          interaction_type?: string
+          statement_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_statement_interactions_statement_id_fkey"
+            columns: ["statement_id"]
+            isOneToOne: false
+            referencedRelation: "empowerment_statements"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       victory_celebrations: {
         Row: {
