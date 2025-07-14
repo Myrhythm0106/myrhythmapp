@@ -1,7 +1,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { SearchResult } from "../types/searchTypes";
 import { allSearchResults } from "../data/searchData";
 
@@ -10,7 +10,6 @@ export function useSearch() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<Record<string, SearchResult[]>>({});
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   // Handle search
   const handleSearch = useCallback((value: string) => {
@@ -66,8 +65,7 @@ export function useSearch() {
   const handleSelect = (result: SearchResult) => {
     setOpen(false);
     navigate(result.route);
-    toast({
-      title: `Navigating to ${result.title}`,
+    toast.success(`Navigating to ${result.title}`, {
       description: result.description
     });
   };
