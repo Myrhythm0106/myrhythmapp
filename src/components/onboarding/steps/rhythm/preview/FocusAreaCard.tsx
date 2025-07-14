@@ -1,8 +1,6 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Target } from "lucide-react";
+import { Target, Star } from "lucide-react";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
 
 interface FocusAreaCardProps {
@@ -10,8 +8,13 @@ interface FocusAreaCardProps {
 }
 
 export function FocusAreaCard({ assessmentResult }: FocusAreaCardProps) {
-  const progressPercentage = Math.round((assessmentResult.overallScore / 100) * 100);
   const focusAreaInfo = getFocusAreaInfo(assessmentResult.focusArea);
+  
+  // Convert assessment score (0-3 scale) to a 5-star rating for better user understanding
+  const starRating = Math.min(5, Math.max(0, (assessmentResult.overallScore / 3) * 5));
+  const fullStars = Math.floor(starRating);
+  const hasHalfStar = starRating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
   return (
     <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
@@ -38,14 +41,34 @@ export function FocusAreaCard({ assessmentResult }: FocusAreaCardProps) {
           </p>
         </div>
         
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium">Overall Progress Assessment</span>
-            <span className="text-sm font-bold">{progressPercentage}%</span>
+        <div className="space-y-3">
+          <div className="text-center">
+            <span className="text-sm font-medium block mb-2">Current Wellness Level</span>
+            <div className="flex items-center justify-center gap-1 mb-2">
+              {/* Full stars */}
+              {Array.from({ length: fullStars }).map((_, i) => (
+                <Star key={`full-${i}`} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+              ))}
+              {/* Half star */}
+              {hasHalfStar && (
+                <div className="relative">
+                  <Star className="h-5 w-5 text-gray-300" />
+                  <div className="absolute inset-0 overflow-hidden w-1/2">
+                    <Star className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  </div>
+                </div>
+              )}
+              {/* Empty stars */}
+              {Array.from({ length: emptyStars }).map((_, i) => (
+                <Star key={`empty-${i}`} className="h-5 w-5 text-gray-300" />
+              ))}
+            </div>
+            <span className="text-sm font-bold text-primary">
+              {starRating.toFixed(1)}/5.0
+            </span>
           </div>
-          <Progress value={progressPercentage} className="h-3" />
           <p className="text-xs text-muted-foreground text-center">
-            You're making progress! Your personalized plan will help you build on this foundation.
+            You're on a great path! Your personalized plan will help you build on this foundation.
           </p>
         </div>
       </CardContent>
