@@ -16,12 +16,16 @@ import { SmartNotificationEngine } from "./SmartNotificationEngine";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { Badge } from "@/components/ui/badge";
+import { Zap, Target, Star } from "lucide-react";
 
 export function DashboardContent() {
   const [searchParams] = useSearchParams();
   const [showMorningRitual, setShowMorningRitual] = useState(false);
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
   const [dailyIntention, setDailyIntention] = useState('');
+  const { metrics, getNextUnlock } = useUserProgress();
 
   useEffect(() => {
     // Check for onboarding completion
@@ -55,6 +59,8 @@ export function DashboardContent() {
     toast.success("Upgrade to Premium for unlimited #IChoose statements! 🚀");
   };
 
+  const nextUnlock = getNextUnlock();
+
   // If morning ritual not completed and it's morning time, show morning ritual
   if (showMorningRitual) {
     return (
@@ -71,6 +77,41 @@ export function DashboardContent() {
   return (
     <div className="space-y-6">
       <DashboardHeader />
+      
+      {/* Progress & Unlock Status */}
+      {metrics.engagementLevel !== 'advanced' && (
+        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-blue-600" />
+                  <span className="font-medium text-blue-800">Your Progress</span>
+                </div>
+                <Badge className="bg-blue-100 text-blue-700">
+                  {metrics.readinessScore}/100 points
+                </Badge>
+              </div>
+              
+              {nextUnlock && (
+                <div className="text-right">
+                  <div className="flex items-center gap-2 text-sm text-blue-600">
+                    <Target className="h-4 w-4" />
+                    <span>Next: {nextUnlock.description}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="w-full bg-blue-200 rounded-full h-2 mt-3">
+              <div 
+                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                style={{ width: `${metrics.readinessScore}%` }}
+              />
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       {/* Daily #IChoose Widget - Prominent placement */}
       <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} />
