@@ -98,7 +98,7 @@ export function AssessmentCompiling({ onComplete, error, onManualContinue, onRet
               🧠 Analyzing Your Cognitive Profile
             </h3>
             <p className="text-gray-600">
-              MyRhythm is creating your personalized brain wellness roadmap using advanced cognitive assessment algorithms...
+              MyRhythm is creating your personalised roadmap...
             </p>
             {timeElapsed > 3 && (
               <div className="flex items-center justify-center gap-2 text-sm text-blue-600">
