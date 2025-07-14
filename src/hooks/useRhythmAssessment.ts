@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getCurrentSections, AssessmentResponses, getSectionsForUserType } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 import { 
   analyzeRhythmAssessment, 
@@ -18,6 +17,7 @@ export function useRhythmAssessment(userType?: UserType | null) {
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [compilationError, setCompilationError] = useState<string | null>(null);
   const [compilationAttempts, setCompilationAttempts] = useState(0);
+  const [isRestoringFromSave, setIsRestoringFromSave] = useState(false);
 
   // Get sections based on provided userType or fallback to localStorage
   const effectiveUserType = userType || (localStorage.getItem("myrhythm_user_type") as UserType | null);
@@ -25,6 +25,21 @@ export function useRhythmAssessment(userType?: UserType | null) {
 
   console.log("useRhythmAssessment: userType:", effectiveUserType);
   console.log("useRhythmAssessment: sections loaded:", sections.length);
+
+  // Force re-render and validation after state restoration
+  useEffect(() => {
+    if (isRestoringFromSave && Object.keys(responses).length > 0) {
+      console.log("useRhythmAssessment: State restoration complete, forcing validation update");
+      console.log("useRhythmAssessment: Restored responses:", responses);
+      console.log("useRhythmAssessment: Current section after restore:", currentSection);
+      
+      // Force a small delay to ensure all state updates are processed
+      setTimeout(() => {
+        setIsRestoringFromSave(false);
+        console.log("useRhythmAssessment: Restoration flag cleared, validation should now work");
+      }, 100);
+    }
+  }, [responses, currentSection, isRestoringFromSave]);
 
   // Get timeout based on user type complexity
   const getTimeoutForUserType = (userType?: UserType | null, attempt: number = 1): number => {
@@ -50,16 +65,21 @@ export function useRhythmAssessment(userType?: UserType | null) {
       }
     };
     
+    console.log("useRhythmAssessment: Recording response", questionId, "=", value);
+    console.log("useRhythmAssessment: Updated section responses:", newResponses[sectionId]);
+    
     setResponses(newResponses);
     
     // Auto-save progress every 30 seconds
     const saveProgress = () => {
-      localStorage.setItem('myrhythm_assessment_progress', JSON.stringify({
+      const progressData = {
         responses: newResponses,
         currentSection,
         userType: effectiveUserType,
         timestamp: new Date().toISOString()
-      }));
+      };
+      localStorage.setItem('myrhythm_assessment_progress', JSON.stringify(progressData));
+      console.log("useRhythmAssessment: Progress auto-saved:", progressData);
     };
 
     // Debounced auto-save
@@ -68,9 +88,14 @@ export function useRhythmAssessment(userType?: UserType | null) {
   };
 
   const handleNext = () => {
+    console.log("useRhythmAssessment: handleNext called, currentSection:", currentSection, "totalSections:", sections.length);
+    
     if (currentSection < sections.length - 1) {
-      setCurrentSection(prev => prev + 1);
+      const nextSection = currentSection + 1;
+      console.log("useRhythmAssessment: Moving to section", nextSection);
+      setCurrentSection(nextSection);
     } else {
+      console.log("useRhythmAssessment: Assessment complete, starting compilation");
       setIsCompiling(true);
       setCompilationError(null);
       setCompilationAttempts(0); // Reset attempts when starting compilation
@@ -217,6 +242,7 @@ export function useRhythmAssessment(userType?: UserType | null) {
       
       // Clear saved progress
       localStorage.removeItem('myrhythm_assessment_progress');
+      console.log("useRhythmAssessment: Cleared saved progress after successful completion");
       
       setAssessmentResult(result);
       setIsCompiling(false);
@@ -302,12 +328,21 @@ export function useRhythmAssessment(userType?: UserType | null) {
     if (savedProgress) {
       try {
         const progress = JSON.parse(savedProgress);
+        console.log("useRhythmAssessment: Found saved progress:", progress);
+        
         if (progress.responses && Object.keys(progress.responses).length > 0) {
           // Use MyRhythm branded confirmation
           const shouldResume = confirm("🧠 MyRhythm Assessment Recovery\n\nWe found your previous assessment progress safely stored. Would you like to continue where you left off to complete your personalized cognitive wellness profile?\n\n✅ Continue Previous Session\n❌ Start Fresh Assessment");
+          
           if (shouldResume) {
+            console.log("useRhythmAssessment: User chose to resume, restoring state...");
+            setIsRestoringFromSave(true);
             setResponses(progress.responses);
             setCurrentSection(progress.currentSection || 0);
+            console.log("useRhythmAssessment: State restoration initiated");
+          } else {
+            console.log("useRhythmAssessment: User chose fresh start, clearing saved data");
+            localStorage.removeItem('myrhythm_assessment_progress');
           }
         }
       } catch (error) {
@@ -330,6 +365,7 @@ export function useRhythmAssessment(userType?: UserType | null) {
     compilationError,
     sections,
     userType: effectiveUserType,
+    isRestoringFromSave,
     handleResponse,
     handleNext,
     handleCompilationComplete,

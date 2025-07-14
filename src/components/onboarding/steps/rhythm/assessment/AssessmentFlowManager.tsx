@@ -21,6 +21,7 @@ export function AssessmentFlowManager({ userType, onComplete }: AssessmentFlowMa
     assessmentResult,
     compilationError,
     sections,
+    isRestoringFromSave,
     handleResponse,
     handleNext,
     handleCompilationComplete,
@@ -32,6 +33,7 @@ export function AssessmentFlowManager({ userType, onComplete }: AssessmentFlowMa
 
   React.useEffect(() => {
     if (assessmentResult) {
+      console.log("AssessmentFlowManager: Assessment result received, calling onComplete");
       onComplete(assessmentResult);
     }
   }, [assessmentResult, onComplete]);
@@ -65,6 +67,7 @@ export function AssessmentFlowManager({ userType, onComplete }: AssessmentFlowMa
       onBack={handleBack}
       sections={sections}
       userType={userType}
+      isRestoringFromSave={isRestoringFromSave}
     />
   );
 }

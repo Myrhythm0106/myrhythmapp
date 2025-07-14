@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UserType } from "../UserTypeStep";
@@ -13,6 +13,7 @@ interface RhythmAssessmentViewProps {
   onBack: () => void;
   sections: Section[];
   userType?: UserType | null;
+  isRestoringFromSave?: boolean;
 }
 
 export function RhythmAssessmentView({
@@ -22,11 +23,23 @@ export function RhythmAssessmentView({
   onNext,
   onBack,
   sections,
-  userType
+  userType,
+  isRestoringFromSave = false
 }: RhythmAssessmentViewProps) {
   console.log("RhythmAssessmentView: Rendering for userType:", userType, "currentSection:", currentSection);
   console.log("RhythmAssessmentView: Available sections:", sections.length);
+  console.log("RhythmAssessmentView: isRestoringFromSave:", isRestoringFromSave);
   
+  const [validationKey, setValidationKey] = useState(0);
+
+  // Force validation recalculation when responses change or restoration completes
+  useEffect(() => {
+    if (!isRestoringFromSave) {
+      console.log("RhythmAssessmentView: Triggering validation update due to state change");
+      setValidationKey(prev => prev + 1);
+    }
+  }, [responses, currentSection, isRestoringFromSave]);
+
   if (!sections || sections.length === 0) {
     console.error("RhythmAssessmentView: No sections available");
     return (
@@ -61,13 +74,36 @@ export function RhythmAssessmentView({
   const totalQuestions = currentSectionData.questions.length;
   const canProceed = answeredQuestions === totalQuestions;
 
+  console.log("RhythmAssessmentView: Section", currentSection, "validation:");
+  console.log("- Section ID:", currentSectionData.id);
+  console.log("- Current section responses:", currentSectionResponses);
+  console.log("- Answered questions:", answeredQuestions);
+  console.log("- Total questions:", totalQuestions);
+  console.log("- Can proceed:", canProceed);
+  console.log("- Validation key:", validationKey);
+
   const handleQuestionResponse = (questionId: string, value: number) => {
     console.log("RhythmAssessmentView: Recording response for", questionId, ":", value);
     onResponse(questionId, value);
+    
+    // Force validation update after response
+    setTimeout(() => {
+      setValidationKey(prev => prev + 1);
+    }, 100);
   };
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      {/* Restoration Status */}
+      {isRestoringFromSave && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-blue-800 font-medium">Restoring your assessment progress...</span>
+          </div>
+        </div>
+      )}
+
       {/* Progress */}
       <div className="text-center mb-6">
         <div className="flex items-center justify-between mb-4">
@@ -141,6 +177,15 @@ export function RhythmAssessmentView({
               <span className="text-green-600 font-medium">✓ Section complete</span>
             )}
           </div>
+          
+          {/* Debug info (only in development) */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-2 p-2 bg-gray-100 rounded text-xs text-gray-600">
+              <div>Debug - Validation Key: {validationKey}</div>
+              <div>Debug - Can Proceed: {canProceed ? 'YES' : 'NO'}</div>
+              <div>Debug - isRestoringFromSave: {isRestoringFromSave ? 'YES' : 'NO'}</div>
+            </div>
+          )}
         </div>
       </Card>
 
@@ -155,8 +200,9 @@ export function RhythmAssessmentView({
         </Button>
         
         <Button
+          key={`next-btn-${validationKey}`} // Force re-render with validation key
           onClick={onNext}
-          disabled={!canProceed}
+          disabled={!canProceed || isRestoringFromSave}
           className={canProceed ? 'bg-blue-600 hover:bg-blue-700' : ''}
         >
           {currentSection === sections.length - 1 ? 'Complete Assessment' : 'Next Section'}
