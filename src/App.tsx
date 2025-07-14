@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -5,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { MobileSubscriptionProvider } from "@/contexts/MobileSubscriptionContext";
 import { PlatformProvider } from "@/components/platform/PlatformProvider";
+import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import MainLayout from "@/components/layout/MainLayout";
 import LandingPage from "@/pages/Landing";
 import AuthPage from "@/pages/AuthPage";
@@ -62,26 +64,26 @@ function App() {
                   <Route path="/preview-landing" element={<PreviewLanding />} />
                   <Route path="/preview-2" element={<Preview2Landing />} />
                   
-                  {/* Full application routes - universal access */}
-                  <Route path="/dashboard" element={<MainLayout><DashboardPage /></MainLayout>} />
-                  <Route path="/personal-empowerment" element={<MainLayout><PersonalEmpowermentPage /></MainLayout>} />
-                  <Route path="/calendar" element={<MainLayout><CalendarPage /></MainLayout>} />
-                  <Route path="/goals" element={<MainLayout><GoalsPage /></MainLayout>} />
-                  <Route path="/brain-games" element={<MainLayout><BrainGamesPage /></MainLayout>} />
-                  <Route path="/brain-recovery" element={<MainLayout><BrainRecoveryPage /></MainLayout>} />
-                  <Route path="/mood-tracking" element={<MainLayout><MoodTrackingPage /></MainLayout>} />
-                  <Route path="/gratitude" element={<MainLayout><GratitudePage /></MainLayout>} />
-                  <Route path="/accountability" element={<MainLayout><AccountabilityPage /></MainLayout>} />
-                  <Route path="/community" element={<MainLayout><CommunityPage /></MainLayout>} />
-                  <Route path="/personal-community" element={<MainLayout><CommunityPage /></MainLayout>} />
-                  <Route path="/notes" element={<MainLayout><NotesPage /></MainLayout>} />
-                  <Route path="/strategy" element={<MainLayout><StrategyDashboard /></MainLayout>} />
-                  <Route path="/analytics" element={<MainLayout><RevenueAnalyticsPage /></MainLayout>} />
-                  <Route path="/testing" element={<MainLayout><TestingSuitePage /></MainLayout>} />
-                  <Route path="/profile" element={<MainLayout><ProfilePage /></MainLayout>} />
-                  <Route path="/settings" element={<MainLayout><SettingsPage /></MainLayout>} />
-                  <Route path="/useful-info" element={<MainLayout><UsefulInfoPage /></MainLayout>} />
-                  <Route path="/user-guide" element={<MainLayout><UserGuidePage /></MainLayout>} />
+                  {/* Full application routes - wrapped with SidebarProvider */}
+                  <Route path="/dashboard" element={<SidebarProvider><MainLayout><DashboardPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/personal-empowerment" element={<SidebarProvider><MainLayout><PersonalEmpowermentPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/calendar" element={<SidebarProvider><MainLayout><CalendarPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/goals" element={<SidebarProvider><MainLayout><GoalsPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/brain-games" element={<SidebarProvider><MainLayout><BrainGamesPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/brain-recovery" element={<SidebarProvider><MainLayout><BrainRecoveryPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/mood-tracking" element={<SidebarProvider><MainLayout><MoodTrackingPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/gratitude" element={<SidebarProvider><MainLayout><GratitudePage /></MainLayout></SidebarProvider>} />
+                  <Route path="/accountability" element={<SidebarProvider><MainLayout><AccountabilityPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/community" element={<SidebarProvider><MainLayout><CommunityPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/personal-community" element={<SidebarProvider><MainLayout><CommunityPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/notes" element={<SidebarProvider><MainLayout><NotesPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/strategy" element={<SidebarProvider><MainLayout><StrategyDashboard /></MainLayout></SidebarProvider>} />
+                  <Route path="/analytics" element={<SidebarProvider><MainLayout><RevenueAnalyticsPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/testing" element={<SidebarProvider><MainLayout><TestingSuitePage /></MainLayout></SidebarProvider>} />
+                  <Route path="/profile" element={<SidebarProvider><MainLayout><ProfilePage /></MainLayout></SidebarProvider>} />
+                  <Route path="/settings" element={<SidebarProvider><MainLayout><SettingsPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/useful-info" element={<SidebarProvider><MainLayout><UsefulInfoPage /></MainLayout></SidebarProvider>} />
+                  <Route path="/user-guide" element={<SidebarProvider><MainLayout><UserGuidePage /></MainLayout></SidebarProvider>} />
 
                   {/* Redirect unknown routes to mobile-first landing */}
                   <Route path="*" element={<Navigate to="/preview-3" replace />} />
