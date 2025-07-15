@@ -37,7 +37,7 @@
 
     --radius: 0.5rem;
 
-    /* Memory Emerald: Professional healing greens - 40-50% saturation */
+    /* Memory Emerald: Professional healing greens - therapeutic brain health touches */
     --memory-emerald-50: 156 45% 98%;
     --memory-emerald-100: 149 40% 95%;
     --memory-emerald-200: 152 42% 88%;
@@ -138,7 +138,7 @@
     @apply font-medium transition-all duration-300;
   }
   
-  /* Professional form controls */
+  /* Professional form controls */  
   input, select, textarea {
     @apply transition-all duration-300 focus:ring-2 focus:ring-primary/20;
   }
@@ -146,24 +146,24 @@
 
 @layer components {
   .card-gradient {
-    @apply bg-gradient-to-br from-card to-brain-health-50/40;
+    @apply bg-gradient-to-br from-card via-emerald-50/20 to-brain-health-50/40;
   }
   
   .beacon-card {
-    @apply rounded-2xl border-brain-health-200/60 p-6 shadow-sm transition-all hover:shadow-md bg-gradient-to-br from-white to-brain-health-50/30;
+    @apply rounded-2xl border-brain-health-200/60 p-6 shadow-sm transition-all hover:shadow-md bg-gradient-to-br from-white via-emerald-50/20 to-brain-health-50/30;
   }
   
   .nav-item {
-    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-foreground transition-all hover:bg-brain-health-50/50 hover:text-brain-health-700;
+    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-foreground transition-all hover:bg-gradient-to-r hover:from-brain-health-50/50 hover:via-emerald-50/30 hover:to-purple-50/40 hover:text-brain-health-700;
   }
   
   .nav-item-active {
-    @apply bg-brain-health-100/60 text-brain-health-700 font-medium;
+    @apply bg-gradient-to-r from-brain-health-100/60 via-emerald-100/40 to-purple-100/30 text-brain-health-700 font-medium;
   }
   
-  /* Professional, therapeutic UI elements */
+  /* Professional therapeutic UI elements with emerald brain health touches */
   .premium-card {
-    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background to-brain-health-50/20 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
+    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background via-emerald-50/10 to-brain-health-50/20 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
   }
   
   .glass-card {
@@ -171,36 +171,49 @@
   }
   
   .premium-button {
-    @apply bg-gradient-to-r from-brain-health-500/90 to-clarity-teal-500/80 text-white font-medium shadow-sm hover:shadow transition-all;
+    @apply bg-gradient-to-r from-purple-500/90 via-emerald-500/80 via-blue-500/90 to-teal-500/80 text-white font-medium shadow-sm hover:shadow transition-all;
   }
   
   .premium-input {
-    @apply border-0 bg-brain-health-50/30 focus:ring-2 focus:ring-brain-health-400/40 shadow-inner;
+    @apply border-0 bg-gradient-to-br from-brain-health-50/30 via-emerald-50/20 to-purple-50/10 focus:ring-2 focus:ring-brain-health-400/40 shadow-inner;
   }
 
-  /* Professional therapeutic color combinations */
+  /* Professional therapeutic color combinations with emerald healing touches */
   .healing-gradient {
-    @apply bg-gradient-to-r from-memory-emerald-50/60 via-background to-brain-health-50/50;
+    @apply bg-gradient-to-r from-memory-emerald-50/60 via-emerald-50/40 via-background to-brain-health-50/50;
   }
 
   .focus-gradient {
-    @apply bg-gradient-to-r from-brain-health-50/70 via-clarity-teal-50/60 to-memory-emerald-50/40;
+    @apply bg-gradient-to-r from-brain-health-50/70 via-emerald-50/50 via-clarity-teal-50/60 to-memory-emerald-50/40;
   }
 
   .calm-gradient {
-    @apply bg-gradient-to-br from-brain-health-50/40 to-clarity-teal-50/30;
+    @apply bg-gradient-to-br from-brain-health-50/40 via-emerald-50/30 to-clarity-teal-50/30;
   }
 
-  /* Professional therapeutic accent colors */
+  /* Professional therapeutic accent colors with emerald brain health touches */
   .therapeutic-accent {
-    @apply text-brain-health-600 font-medium;
+    @apply bg-gradient-to-r from-brain-health-600 via-emerald-600 to-purple-600 bg-clip-text text-transparent font-medium;
   }
 
   .healing-accent {
-    @apply text-memory-emerald-600 font-medium;
+    @apply bg-gradient-to-r from-memory-emerald-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent font-medium;
   }
 
   .clarity-accent {
-    @apply text-clarity-teal-600 font-medium;
+    @apply bg-gradient-to-r from-clarity-teal-600 via-emerald-600 to-blue-600 bg-clip-text text-transparent font-medium;
+  }
+
+  /* Brain health specific gradients */
+  .brain-wellness-gradient {
+    @apply bg-gradient-to-r from-purple-500/90 via-emerald-500/80 via-blue-500/90 to-teal-500/80;
+  }
+
+  .memory-enhancement-gradient {
+    @apply bg-gradient-to-br from-emerald-400/60 via-blue-400/70 to-purple-400/60;
+  }
+
+  .cognitive-focus-gradient {
+    @apply bg-gradient-to-r from-brain-health-500/80 via-emerald-500/70 to-clarity-teal-500/80;
   }
 }
