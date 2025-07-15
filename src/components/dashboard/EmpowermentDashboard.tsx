@@ -38,16 +38,16 @@ export function EmpowermentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 via-emerald-50/30 to-teal-50/60">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60">
       <div className="container mx-auto px-4 py-6 space-y-8 max-w-7xl">
         
-        {/* Welcome Section with brain health emerald touches */}
+        {/* Welcome Section - purple-blue-teal dominant with tiny emerald therapeutic touches */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-emerald-400 via-blue-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg border border-emerald-200/20">
               <Brain className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-emerald-500 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
               MyRhythm Dashboard
             </h1>
           </div>
@@ -55,8 +55,8 @@ export function EmpowermentDashboard() {
             Your personalized command center for cognitive wellness and empowered living
           </p>
           
-          {/* Upgrade Banner with emerald therapeutic touches */}
-          <div className="bg-gradient-to-r from-purple-500/10 via-emerald-500/5 via-blue-500/10 to-teal-500/10 rounded-2xl p-4 mb-6 border border-purple-200/50">
+          {/* Upgrade Banner - purple-blue-teal with tiny emerald therapeutic touches */}
+          <div className="bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-teal-500/10 rounded-2xl p-4 mb-6 border border-purple-200/50 border-l-2 border-l-emerald-300/30">
             <div className="flex items-center justify-between max-w-4xl mx-auto">
               <div className="flex items-center gap-3">
                 <Crown className="h-6 w-6 text-amber-500" />
@@ -72,10 +72,10 @@ export function EmpowermentDashboard() {
             </div>
           </div>
           
-          {/* Quick streak info with emerald accents */}
+          {/* Quick streak info - purple-blue-teal dominant */}
           <div className="flex justify-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gradient-to-r from-purple-500 via-emerald-500 to-teal-500 rounded-full animate-pulse"></div>
+              <div className="w-3 h-3 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-medium text-gray-700">7-day streak</span>
             </div>
             <div className="flex items-center gap-2">
@@ -85,7 +85,7 @@ export function EmpowermentDashboard() {
           </div>
         </div>
 
-        {/* Daily #IChoose Statement with therapeutic emerald touches */}
+        {/* Daily #IChoose Statement */}
         <div className="mb-8">
           <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} />
         </div>
@@ -95,7 +95,7 @@ export function EmpowermentDashboard() {
           <TodaysPriority />
         </div>
 
-        {/* Planning Command Center with brain health emerald touches */}
+        {/* Planning Command Center */}
         <div className="mb-8">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
@@ -116,9 +116,9 @@ export function EmpowermentDashboard() {
           />
         </div>
 
-        {/* Quick Actions with emerald therapeutic touches */}
+        {/* Quick Actions - purple-blue-teal with tiny emerald therapeutic touches */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <Card className="border-purple-200/60 bg-gradient-to-br from-white via-purple-50/30 to-emerald-50/20 hover:border-purple-300 transition-colors shadow-sm hover:shadow-md">
+          <Card className="border-purple-200/60 bg-gradient-to-br from-white via-purple-50/30 to-blue-50/20 hover:border-purple-300 transition-colors shadow-sm hover:shadow-md border-l border-l-emerald-200/30">
             <CardContent className="p-6 text-center">
               <Calendar className="h-8 w-8 text-purple-600 mx-auto mb-3" />
               <h3 className="font-semibold mb-2 text-gray-900">Plan My Day</h3>
@@ -126,7 +126,7 @@ export function EmpowermentDashboard() {
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-purple-300 hover:bg-gradient-to-r hover:from-purple-50/30 hover:via-emerald-50/20 hover:via-blue-50/30 hover:to-teal-50/30"
+                className="border-purple-300 hover:bg-gradient-to-r hover:from-purple-50/30 hover:to-blue-50/30"
                 onClick={() => navigate("/calendar")}
               >
                 Open Calendar
@@ -134,7 +134,7 @@ export function EmpowermentDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-blue-200/60 bg-gradient-to-br from-white via-blue-50/30 to-emerald-50/20 hover:border-blue-300 transition-colors shadow-sm hover:shadow-md">
+          <Card className="border-blue-200/60 bg-gradient-to-br from-white via-blue-50/30 to-teal-50/20 hover:border-blue-300 transition-colors shadow-sm hover:shadow-md border-l border-l-emerald-200/30">
             <CardContent className="p-6 text-center">
               <Target className="h-8 w-8 text-blue-600 mx-auto mb-3" />
               <h3 className="font-semibold mb-2 text-gray-900">Track Progress</h3>
@@ -142,7 +142,7 @@ export function EmpowermentDashboard() {
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-blue-300 hover:bg-gradient-to-r hover:from-purple-50/30 hover:via-emerald-50/20 hover:via-blue-50/30 hover:to-teal-50/30"
+                className="border-blue-300 hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-teal-50/30"
                 onClick={() => navigate("/goals")}
               >
                 View Goals
@@ -150,7 +150,7 @@ export function EmpowermentDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-teal-200/60 bg-gradient-to-br from-white via-teal-50/30 to-emerald-50/20 hover:border-teal-300 transition-colors shadow-sm hover:shadow-md">
+          <Card className="border-teal-200/60 bg-gradient-to-br from-white via-teal-50/30 to-purple-50/20 hover:border-teal-300 transition-colors shadow-sm hover:shadow-md border-l border-l-emerald-200/30">
             <CardContent className="p-6 text-center">
               <Heart className="h-8 w-8 text-teal-600 mx-auto mb-3" />
               <h3 className="font-semibold mb-2 text-gray-900">Support Circle</h3>
@@ -158,7 +158,7 @@ export function EmpowermentDashboard() {
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-teal-300 hover:bg-gradient-to-r hover:from-purple-50/30 hover:via-emerald-50/20 hover:via-blue-50/30 hover:to-teal-50/30"
+                className="border-teal-300 hover:bg-gradient-to-r hover:from-teal-50/30 hover:to-purple-50/30"
                 onClick={() => navigate("/accountability")}
               >
                 Manage Circle

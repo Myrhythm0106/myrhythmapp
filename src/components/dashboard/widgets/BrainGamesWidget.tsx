@@ -20,19 +20,19 @@ export function BrainGamesWidget() {
   const streak = 3;
 
   return (
-    <Card className="h-full border-emerald-200/40 bg-gradient-to-br from-white via-emerald-50/30 to-blue-50/20">
+    <Card className="h-full border-purple-200/40 bg-gradient-to-br from-white via-purple-50/30 to-blue-50/20 border-l border-l-emerald-200/40">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <div className="w-5 h-5 bg-gradient-to-r from-emerald-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center">
+          <div className="w-5 h-5 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center">
             <Brain className="h-3 w-3 text-white" />
           </div>
-          <span className="bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">Brain Games</span>
+          <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Brain Games</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="bg-gradient-to-r from-emerald-50/60 via-blue-50/50 to-purple-50/40 p-3 rounded-lg border border-emerald-200/30">
+        <div className="bg-gradient-to-r from-purple-50/60 via-blue-50/50 to-teal-50/40 p-3 rounded-lg border border-purple-200/30 border-l-2 border-l-emerald-300/40">
           <div className="flex items-center justify-between mb-2">
-            <span className="font-medium text-sm text-emerald-700">Today's Challenge</span>
+            <span className="font-medium text-sm text-purple-700">Today's Challenge</span>
             <Badge variant="healing" className="text-xs">
               {dailyChallenge.difficulty}
             </Badge>
@@ -46,13 +46,14 @@ export function BrainGamesWidget() {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="text-center p-2 bg-gradient-to-br from-purple-50/60 to-emerald-50/40 rounded-lg border border-purple-200/30">
-            <div className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-emerald-600 bg-clip-text text-transparent">{recentScore}</div>
+          <div className="text-center p-2 bg-gradient-to-br from-purple-50/60 to-blue-50/40 rounded-lg border border-purple-200/30">
+            <div className="text-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">{recentScore}</div>
             <div className="text-xs text-gray-600">Recent Score</div>
           </div>
-          <div className="text-center p-2 bg-gradient-to-br from-emerald-50/60 to-orange-50/40 rounded-lg border border-emerald-200/30">
+          <div className="text-center p-2 bg-gradient-to-br from-blue-50/60 to-teal-50/40 rounded-lg border border-teal-200/30">
             <div className="text-lg font-semibold text-orange-500">{streak}</div>
             <div className="text-xs text-gray-600">Day Streak</div>
+            <div className="w-1 h-1 bg-emerald-400/60 rounded-full mx-auto mt-1"></div>
           </div>
         </div>
 
@@ -69,7 +70,7 @@ export function BrainGamesWidget() {
           <Button 
             variant="outline" 
             size="sm"
-            className="border-emerald-300/60 hover:bg-gradient-to-r hover:from-emerald-50/30 hover:to-blue-50/30"
+            className="border-purple-300/60 hover:bg-gradient-to-r hover:from-purple-50/30 hover:to-blue-50/30"
             onClick={() => navigate("/brain-games")}
           >
             <ArrowRight className="h-4 w-4" />
