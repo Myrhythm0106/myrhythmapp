@@ -13,7 +13,7 @@ import {
   getFreeAffirmationsCount,
   getPremiumAffirmationsCount 
 } from "@/data/categoryAffirmations";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
+import { UserType } from "@/types/user";
 
 interface EnhancedAffirmationSystemProps {
   userType: UserType;

@@ -5,7 +5,7 @@ import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
 import { PreAssessmentStep } from "./steps/rhythm/PreAssessmentStep";
 import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
-import { UserType } from "./steps/UserTypeStep";
+import { UserType } from "@/types/user";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
 import { PlanType } from "./steps/PlanStep";
 

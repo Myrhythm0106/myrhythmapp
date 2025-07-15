@@ -1,9 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Heart, Users, Sparkles } from "lucide-react";
-
-export type UserType = "brain-injury" | "caregiver" | "cognitive-optimization" | "wellness";
+import { UserType } from "@/types/user";
 
 interface UserTypeStepProps {
   onComplete: (data: { type: UserType }) => void;
