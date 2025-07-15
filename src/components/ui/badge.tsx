@@ -17,13 +17,13 @@ const badgeVariants = cva(
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
         premium:
-          "border-transparent bg-gradient-to-r from-primary to-brain-health-500 text-primary-foreground hover:from-primary/90 hover:to-brain-health-600 shadow-md",
+          "border-transparent bg-gradient-to-r from-brain-health-500/90 to-clarity-teal-500/85 text-white hover:from-brain-health-600/95 hover:to-clarity-teal-600/90 shadow-md",
         healing:
-          "border-transparent bg-memory-emerald-500 text-white hover:bg-memory-emerald-600 shadow-sm",
+          "border-transparent bg-memory-emerald-500/90 text-white hover:bg-memory-emerald-600/95 shadow-sm",
         cognitive:
-          "border-transparent bg-brain-health-500 text-white hover:bg-brain-health-600 shadow-sm",
+          "border-transparent bg-brain-health-500/90 text-white hover:bg-brain-health-600/95 shadow-sm",
         clarity:
-          "border-transparent bg-clarity-teal-500 text-white hover:bg-clarity-teal-600 shadow-sm",
+          "border-transparent bg-clarity-teal-500/90 text-white hover:bg-clarity-teal-600/95 shadow-sm",
       },
     },
     defaultVariants: {

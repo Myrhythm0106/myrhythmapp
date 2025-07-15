@@ -14,15 +14,15 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background hover:bg-brain-health-50/30 hover:text-brain-health-700 hover:border-brain-health-300/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
-        premium: "bg-gradient-to-r from-primary/85 via-brain-health-500/70 to-clarity-teal-500/60 text-primary-foreground hover:from-primary/95 hover:via-brain-health-600/80 hover:to-clarity-teal-600/70 shadow-sm hover:shadow-md transition-all duration-200",
-        healing: "bg-memory-emerald-500/80 text-white hover:bg-memory-emerald-600/90 shadow-sm hover:shadow transition-all duration-200",
-        cognitive: "bg-brain-health-500/80 text-white hover:bg-brain-health-600/90 shadow-sm hover:shadow transition-all duration-200",
-        clarity: "bg-clarity-teal-500/80 text-white hover:bg-clarity-teal-600/90 shadow-sm hover:shadow transition-all duration-200",
+        ghost: "hover:bg-brain-health-50/40 hover:text-brain-health-700",
+        link: "text-brain-health-600 underline-offset-4 hover:underline hover:text-brain-health-700",
+        premium: "bg-gradient-to-r from-brain-health-500/90 via-clarity-teal-500/85 to-memory-emerald-500/80 text-white hover:from-brain-health-600/95 hover:via-clarity-teal-600/90 hover:to-memory-emerald-600/85 shadow-sm hover:shadow-md transition-all duration-200",
+        healing: "bg-memory-emerald-500/90 text-white hover:bg-memory-emerald-600/95 shadow-sm hover:shadow transition-all duration-200",
+        cognitive: "bg-brain-health-500/90 text-white hover:bg-brain-health-600/95 shadow-sm hover:shadow transition-all duration-200",
+        clarity: "bg-clarity-teal-500/90 text-white hover:bg-clarity-teal-600/95 shadow-sm hover:shadow transition-all duration-200",
       },
       size: {
         default: "h-10 px-4 py-2",
