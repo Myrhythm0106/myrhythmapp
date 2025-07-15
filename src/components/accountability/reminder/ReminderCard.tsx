@@ -35,7 +35,7 @@ export function ReminderCard({ reminder }: ReminderCardProps) {
   const getReminderTypeColor = (type: string) => {
     switch (type) {
       case 'medication': return 'bg-red-100 text-red-800';
-      case 'appointment': return 'bg-blue-100 text-blue-800';
+      case 'appointment': return 'bg-blue-100 text-blue-800'; 
       case 'activity': return 'bg-green-100 text-green-800';
       case 'safety': return 'bg-orange-100 text-orange-800';
       default: return 'bg-gray-100 text-gray-800';
@@ -43,15 +43,15 @@ export function ReminderCard({ reminder }: ReminderCardProps) {
   };
 
   return (
-    <Card>
+    <Card className="border-purple-200/30 border-l border-emerald-300/20 shadow-sm shadow-emerald-300/5">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className="h-12 w-12 bg-blue-100 rounded-full flex items-center justify-center">
-              <Clock className="h-6 w-6 text-blue-600" />
+            <div className="h-12 w-12 bg-gradient-to-br from-purple-100/60 via-blue-100/50 to-teal-100/60 rounded-full flex items-center justify-center border border-emerald-300/20">
+              <Clock className="h-6 w-6 text-purple-600" />
             </div>
             <div>
-              <h3 className="font-semibold">{reminder.title}</h3>
+              <h3 className="font-semibold text-gray-900">{reminder.title}</h3>
               {reminder.description && (
                 <p className="text-sm text-muted-foreground mt-1">
                   {reminder.description}
@@ -71,7 +71,7 @@ export function ReminderCard({ reminder }: ReminderCardProps) {
 
           <div className="flex items-center space-x-4">
             {reminder.escalation_enabled && (
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs border-emerald-300/30">
                 <AlertTriangle className="h-3 w-3 mr-1" />
                 Escalation
               </Badge>
@@ -86,7 +86,6 @@ export function ReminderCard({ reminder }: ReminderCardProps) {
             <Switch
               checked={reminder.is_active}
               onCheckedChange={(checked) => {
-                // Handle toggle active state
                 toast.info('Reminder status updated');
               }}
             />

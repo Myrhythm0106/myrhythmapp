@@ -1,3 +1,4 @@
+
 import React from "react";
 import { UserTypeStep } from "./steps/UserTypeStep";
 import { LocationStep } from "./steps/LocationStep";
@@ -99,8 +100,8 @@ export const OnboardingStepRenderer = ({
   
   console.error("OnboardingStepRenderer: Invalid step", currentStep);
   return (
-    <div className="text-center p-8">
-      <h2 className="text-xl font-semibold mb-4">Invalid Step</h2>
+    <div className="text-center p-8 bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 rounded-lg border border-purple-200/30 border-l border-emerald-300/20">
+      <h2 className="text-xl font-semibold mb-4 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Invalid Step</h2>
       <p>Current step: {currentStep}</p>
       <p>This step number is not handled by the renderer.</p>
     </div>

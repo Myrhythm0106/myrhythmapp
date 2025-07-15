@@ -17,7 +17,7 @@ export function ReminderCreator() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Your Helpful Reminders</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Your Helpful Reminders</h2>
           <p className="text-muted-foreground">
             Let's set you up for success with gentle nudges that keep you on track
           </p>
@@ -25,14 +25,14 @@ export function ReminderCreator() {
         
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button>
+            <Button className="border-l border-emerald-300/20 shadow-sm shadow-emerald-300/10">
               <Plus className="h-4 w-4 mr-2" />
               Set Up a New Reminder
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Let's Set You Up for Success</DialogTitle>
+              <DialogTitle className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Let's Set You Up for Success</DialogTitle>
             </DialogHeader>
             <CreateReminderForm onClose={() => setIsCreateDialogOpen(false)} />
           </DialogContent>

@@ -58,7 +58,7 @@ export function PreviewHeroSection() {
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-brain-health-400/30 rounded-full animate-pulse" style={{animationDelay: '0s', animationDuration: '8s'}}></div>
           <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-clarity-teal-400/25 rounded-full animate-pulse" style={{animationDelay: '3s', animationDuration: '10s'}}></div>
-          <div className="absolute bottom-1/3 left-1/2 w-5 h-5 bg-memory-emerald-400/20 rounded-full animate-pulse" style={{animationDelay: '6s', animationDuration: '12s'}}></div>
+          <div className="absolute bottom-1/3 left-1/2 w-2 h-2 bg-emerald-400/15 rounded-full animate-pulse" style={{animationDelay: '6s', animationDuration: '12s'}}></div>
           <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-primary/40 rounded-full animate-pulse" style={{animationDelay: '9s', animationDuration: '7s'}}></div>
         </div>
         
@@ -102,6 +102,7 @@ export function PreviewHeroSection() {
                 <div className="relative">
                   <Brain className="h-12 w-12 md:h-16 md:w-16 text-primary/80 filter drop-shadow-md" />
                   <div className="absolute inset-0 bg-primary/15 rounded-full blur-md animate-pulse"></div>
+                  <div className="absolute -inset-1 bg-emerald-300/5 rounded-full blur-sm"></div>
                 </div>
                 <h1 className="text-4xl md:text-6xl font-bold">
                   MyRhythm
@@ -116,7 +117,7 @@ export function PreviewHeroSection() {
                         LEAP*
                       </span>
                     </TooltipTrigger>
-                    <TooltipContent className="bg-white text-gray-800 border-brain-health-200">
+                    <TooltipContent className="bg-white text-gray-800 border-brain-health-200 border-l border-emerald-300/20">
                       <p className="text-sm">
                         <strong>Your Personal Journey:</strong><br />
                         <strong>L</strong>ive • <strong>E</strong>mpowered • <strong>A</strong>uthentic • <strong>P</strong>roductive
@@ -169,7 +170,7 @@ export function PreviewHeroSection() {
                     <span>Cancel Anytime</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="h-1.5 w-1.5 bg-memory-emerald-400/80 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
+                    <div className="h-1.5 w-1.5 bg-emerald-400/60 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
                     <span>Start Immediately</span>
                   </div>
                 </div>
@@ -179,19 +180,19 @@ export function PreviewHeroSection() {
             {/* Right Side - Professional promise card with therapeutic design */}
             <div className="relative">
               {/* Professional therapeutic promise card */}
-              <div className="relative bg-white/15 backdrop-blur-md rounded-3xl p-8 border border-brain-health-300/30 shadow-2xl">
+              <div className="relative bg-white/15 backdrop-blur-md rounded-3xl p-8 border border-brain-health-300/30 border-l-2 border-l-emerald-300/20 shadow-2xl">
                 <div className="text-center space-y-6">
-                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brain-health-400/30 to-clarity-teal-400/25 rounded-full flex items-center justify-center backdrop-blur-sm">
+                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-brain-health-400/30 to-clarity-teal-400/25 rounded-full flex items-center justify-center backdrop-blur-sm border border-emerald-300/20">
                     <Compass className="h-12 w-12 text-white drop-shadow-md" />
                   </div>
                   
                   <h3 className="text-2xl font-bold text-white">Your Guide to Freedom</h3>
                   
                   <p className="text-gray-200 leading-relaxed">
-                    Experience real memory improvement in just 7 days as you discover <strong className="text-brain-health-300">YOUR unique LEAP pattern</strong>, establish <strong className="text-clarity-teal-300">YOUR personal rhythm</strong>, and build <strong className="text-memory-emerald-300">YOUR unstoppable momentum</strong>.
+                    Experience real memory improvement in just 7 days as you discover <strong className="text-brain-health-300">YOUR unique LEAP pattern</strong>, establish <strong className="text-clarity-teal-300">YOUR personal rhythm</strong>, and build <strong className="text-emerald-300/80">YOUR unstoppable momentum</strong>.
                   </p>
                   
-                  <div className="bg-gradient-to-r from-brain-health-500/20 to-clarity-teal-500/15 p-4 rounded-xl backdrop-blur-sm border border-white/10">
+                  <div className="bg-gradient-to-r from-brain-health-500/20 to-clarity-teal-500/15 p-4 rounded-xl backdrop-blur-sm border border-white/10 border-l border-emerald-300/20">
                     <p className="text-sm text-gray-200 italic">
                       "Memory wellness becomes the foundation for your entire life transformation."
                     </p>
@@ -200,8 +201,8 @@ export function PreviewHeroSection() {
               </div>
 
               {/* Professional floating therapeutic accents */}
-              <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-brain-health-400/20 to-clarity-teal-400/15 rounded-full opacity-60 animate-pulse"></div>
-              <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-memory-emerald-400/20 to-brain-health-400/15 rounded-full opacity-50 animate-pulse" style={{ animationDelay: '1s' }}></div>
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-brain-health-400/20 to-clarity-teal-400/15 rounded-full opacity-60 animate-pulse border border-emerald-300/10"></div>
+              <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-gradient-to-br from-emerald-400/15 to-brain-health-400/15 rounded-full opacity-50 animate-pulse border border-emerald-300/10" style={{ animationDelay: '1s' }}></div>
             </div>
           </div>
         </div>

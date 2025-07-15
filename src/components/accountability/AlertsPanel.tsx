@@ -70,7 +70,7 @@ export function AlertsPanel() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">Alerts & Notifications</h2>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Alerts & Notifications</h2>
           <p className="text-muted-foreground">
             Stay informed about your progress and accountability updates
           </p>
@@ -84,7 +84,7 @@ export function AlertsPanel() {
       </div>
 
       <Tabs value={filter} onValueChange={(value: any) => setFilter(value)} className="space-y-4">
-        <TabsList>
+        <TabsList className="border-emerald-300/20">
           <TabsTrigger value="all">All Alerts ({alerts.length})</TabsTrigger>
           <TabsTrigger value="unacknowledged">
             Unacknowledged ({alerts.filter(a => a.acknowledged_by.length === 0).length})
@@ -96,7 +96,7 @@ export function AlertsPanel() {
 
         <TabsContent value={filter} className="space-y-4">
           {filteredAlerts.map((alert) => (
-            <Card key={alert.id} className={`${alert.acknowledged_by.length === 0 ? 'ring-2 ring-primary/20' : ''}`}>
+            <Card key={alert.id} className={`${alert.acknowledged_by.length === 0 ? 'ring-2 ring-primary/20' : ''} border-purple-200/30 border-l border-emerald-300/20 shadow-sm shadow-emerald-300/5`}>
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex items-start space-x-4">
@@ -156,7 +156,7 @@ export function AlertsPanel() {
                 </div>
 
                 {alert.target_members.length > 0 && (
-                  <div className="mt-4 p-3 bg-muted rounded-lg">
+                  <div className="mt-4 p-3 bg-gradient-to-r from-purple-50/40 via-blue-50/30 to-teal-50/40 rounded-lg border-l border-emerald-300/20">
                     <div className="text-xs text-muted-foreground mb-1">Notification sent to:</div>
                     <div className="flex flex-wrap gap-1">
                       {alert.target_members.map((member, index) => (
@@ -172,10 +172,10 @@ export function AlertsPanel() {
           ))}
 
           {filteredAlerts.length === 0 && (
-            <Card>
+            <Card className="border-purple-200/30 border-l border-emerald-300/20">
               <CardContent className="p-12 text-center">
                 <Bell className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-semibold mb-2">
+                <h3 className="text-lg font-semibold mb-2 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
                   {filter === 'all' ? 'No Alerts' : 
                    filter === 'unacknowledged' ? 'No Unacknowledged Alerts' : 
                    'No Acknowledged Alerts'}

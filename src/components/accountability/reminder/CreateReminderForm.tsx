@@ -72,7 +72,7 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
   const isFormValid = newReminder.title && newReminder.reminder_time;
 
   return (
-    <div className="grid gap-4 py-4">
+    <div className="grid gap-4 py-4 bg-gradient-to-br from-purple-50/30 via-blue-50/20 to-teal-50/30 rounded-lg p-4 border-l border-emerald-300/20">
       <ReminderBasicInfo
         title={newReminder.title}
         description={newReminder.description}
