@@ -5,83 +5,83 @@
 
 @layer base {
   :root {
-    --background: 30 30% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 160 20% 98%;
+    --foreground: 160 84% 4.9%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 160 0% 100%;
+    --card-foreground: 160 84% 4.9%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 160 0% 100%;
+    --popover-foreground: 160 84% 4.9%;
 
-    --primary: 25 45% 62%;
-    --primary-foreground: 30 30% 98%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 160 30% 98%;
 
-    --secondary: 210 95% 46%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 160 95% 46%;
+    --secondary-foreground: 160 47.4% 11.2%;
 
-    --muted: 30 10% 93%;
-    --muted-foreground: 25 10% 46.9%;
+    --muted: 160 10% 93%;
+    --muted-foreground: 160 10% 46.9%;
 
-    --accent: 30 20% 90%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 160 20% 90%;
+    --accent-foreground: 160 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 25 20% 85%;
-    --input: 25 20% 85%;
-    --ring: 25 45% 62%;
+    --border: 160 20% 85%;
+    --input: 160 20% 85%;
+    --ring: 160 84% 39%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 30 30% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 25 45% 62%;
+    --sidebar-background: 160 30% 98%;
+    --sidebar-foreground: 160 5.3% 26.1%;
+    --sidebar-primary: 160 84% 39%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 30 10% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 25 13% 91%;
-    --sidebar-ring: 25 45% 62%;
+    --sidebar-accent: 160 10% 95.9%;
+    --sidebar-accent-foreground: 160 5.9% 10%;
+    --sidebar-border: 160 13% 91%;
+    --sidebar-ring: 160 84% 39%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 30 30% 98%;
+    --background: 160 84% 4.9%;
+    --foreground: 160 30% 98%;
 
-    --card: 222.2 84% 6.9%;
-    --card-foreground: 30 30% 98%;
+    --card: 160 84% 6.9%;
+    --card-foreground: 160 30% 98%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 30 30% 98%;
+    --popover: 160 84% 4.9%;
+    --popover-foreground: 160 30% 98%;
 
-    --primary: 25 45% 62%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 160 84% 39%;
+    --primary-foreground: 160 47.4% 11.2%;
 
-    --secondary: 210 95% 46%;
-    --secondary-foreground: 30 30% 98%;
+    --secondary: 160 95% 46%;
+    --secondary-foreground: 160 30% 98%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 25 20% 75%;
+    --muted: 160 32.6% 17.5%;
+    --muted-foreground: 160 20% 75%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 30 30% 98%;
+    --accent: 160 32.6% 17.5%;
+    --accent-foreground: 160 30% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 30 30% 98%;
+    --destructive-foreground: 160 30% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 25 45% 62%;
+    --border: 160 32.6% 17.5%;
+    --input: 160 32.6% 17.5%;
+    --ring: 160 84% 39%;
     
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 30 20% 95.9%;
-    --sidebar-primary: 25 45% 62%;
+    --sidebar-background: 160 5.9% 10%;
+    --sidebar-foreground: 160 20% 95.9%;
+    --sidebar-primary: 160 84% 39%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 30 20% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 25 45% 62%;
+    --sidebar-accent: 160 3.7% 15.9%;
+    --sidebar-accent-foreground: 160 20% 95.9%;
+    --sidebar-border: 160 3.7% 15.9%;
+    --sidebar-ring: 160 84% 39%;
   }
 }
 
@@ -95,48 +95,61 @@
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
   
-  /* Premium button styles inspired by Annabel Aaron */
+  /* Therapeutic button styles for brain health */
   button, .button {
     @apply font-medium transition-all duration-200;
   }
   
-  /* Make form controls and buttons more polished */
+  /* Make form controls and buttons more polished with healing colors */
   input, select, textarea {
-    @apply transition-all duration-200;
+    @apply transition-all duration-200 focus:ring-brain-health-200;
   }
 }
 
 @layer components {
   .card-gradient {
-    @apply bg-gradient-to-br from-card to-muted/80;
+    @apply bg-gradient-to-br from-card to-brain-health-50;
   }
   
   .beacon-card {
-    @apply rounded-2xl border p-6 shadow-md transition-all hover:shadow-lg;
+    @apply rounded-2xl border-brain-health-200 p-6 shadow-md transition-all hover:shadow-lg bg-gradient-to-br from-white to-brain-health-50;
   }
   
   .nav-item {
-    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:bg-accent hover:text-foreground;
+    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-brain-health-600 transition-all hover:bg-brain-health-100 hover:text-brain-health-800;
   }
   
   .nav-item-active {
-    @apply bg-accent text-foreground font-medium;
+    @apply bg-brain-health-100 text-brain-health-800 font-medium;
   }
   
-  /* Premium UI elements inspired by Annabel Aaron */
+  /* Therapeutic UI elements for cognitive wellness */
   .premium-card {
-    @apply rounded-xl border border-border/40 bg-white shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
+    @apply rounded-xl border border-brain-health-200 bg-gradient-to-br from-white to-brain-health-50 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
   }
   
   .glass-card {
-    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-sm;
+    @apply bg-white/80 backdrop-blur-sm border border-brain-health-200 shadow-sm;
   }
   
   .premium-button {
-    @apply bg-gradient-to-r from-annabel-500 to-annabel-400 text-white font-medium shadow-sm hover:shadow transition-all;
+    @apply bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 text-white font-medium shadow-sm hover:shadow transition-all;
   }
   
   .premium-input {
-    @apply border-0 bg-muted/50 focus:ring-2 focus:ring-primary/30 shadow-inner;
+    @apply border-0 bg-brain-health-50 focus:ring-2 focus:ring-brain-health-300 shadow-inner;
+  }
+
+  /* Healing and calming therapeutic colors */
+  .healing-gradient {
+    @apply bg-gradient-to-r from-brain-health-100 via-memory-emerald-100 to-clarity-teal-100;
+  }
+
+  .focus-gradient {
+    @apply bg-gradient-to-r from-brain-health-500 via-memory-emerald-500 to-clarity-teal-500;
+  }
+
+  .calm-gradient {
+    @apply bg-gradient-to-br from-brain-health-50 to-memory-emerald-50;
   }
 }

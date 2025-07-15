@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { LogIn, Brain, UserPlus, Star, ChevronDown, Eye, Leaf } from "lucide-react";
+import { LogIn, Brain, Eye, Leaf, ChevronDown } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -23,7 +23,7 @@ export function HeroSection() {
   };
 
   const handleStartJourney = () => {
-    console.log("HeroSection: Register Here button clicked - GREEN NATURE VERSION");
+    console.log("HeroSection: Start Journey button clicked - GREEN NATURE VERSION");
     console.log("HeroSection: About to navigate to /onboarding");
     console.log("HeroSection: Current location:", window.location.href);
     try {
@@ -49,11 +49,11 @@ export function HeroSection() {
   return (
     <TooltipProvider>
       <section className="relative overflow-hidden min-h-screen">
-        {/* Background Nature Image */}
+        {/* Background Nature Image with Therapeutic Green Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `linear-gradient(rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')`
+            backgroundImage: `linear-gradient(rgba(16, 185, 129, 0.3), rgba(34, 197, 94, 0.2)), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80')`
           }}
         />
 
@@ -102,7 +102,7 @@ export function HeroSection() {
             {/* Brand and Title Section */}
             <div className="mb-16">
               <div className="flex items-center justify-center gap-4 mb-12">
-                <Brain className="h-16 w-16 md:h-24 md:w-24 text-green-400" />
+                <Brain className="h-16 w-16 md:h-24 md:w-24 text-memory-emerald-400" />
                 <h1 className="text-6xl font-bold text-white md:text-9xl drop-shadow-lg">
                   MyRhythm
                 </h1>
@@ -113,7 +113,7 @@ export function HeroSection() {
                 <p className="text-3xl max-w-5xl mx-auto leading-relaxed text-white font-medium md:text-2xl drop-shadow-md">
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="text-green-300 font-semibold cursor-help border-b border-dotted border-green-300">
+                      <span className="text-memory-emerald-300 font-semibold cursor-help border-b border-dotted border-memory-emerald-300">
                         LEAP*
                       </span>
                     </TooltipTrigger>
@@ -133,19 +133,19 @@ export function HeroSection() {
             <div className="mb-20">
               <Collapsible open={isPromiseExpanded} onOpenChange={setIsPromiseExpanded}>
                 <CollapsibleTrigger asChild>
-                  <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-green-200 max-w-4xl mx-auto shadow-xl cursor-pointer hover:shadow-2xl transition-shadow">
+                  <div className="bg-white/90 backdrop-blur-sm p-6 rounded-3xl border border-memory-emerald-200 max-w-4xl mx-auto shadow-xl cursor-pointer hover:shadow-2xl transition-shadow">
                     <div className="flex items-center justify-center gap-3">
-                      <Brain className="h-8 w-8 text-green-600" />
-                      <span className="text-2xl font-semibold text-green-700">Your Memory Partner Promise</span>
-                      <ChevronDown className={`h-5 w-5 text-green-600 transition-transform duration-200 ${isPromiseExpanded ? 'rotate-180' : ''}`} />
+                      <Brain className="h-8 w-8 text-memory-emerald-600" />
+                      <span className="text-2xl font-semibold text-memory-emerald-700">Your Memory Partner Promise</span>
+                      <ChevronDown className={`h-5 w-5 text-memory-emerald-600 transition-transform duration-200 ${isPromiseExpanded ? 'rotate-180' : ''}`} />
                     </div>
                   </div>
                 </CollapsibleTrigger>
                 
                 <CollapsibleContent>
-                  <div className="bg-white/90 backdrop-blur-sm p-6 pt-2 rounded-b-3xl border-x border-b border-green-200 max-w-4xl mx-auto shadow-xl -mt-4">
+                  <div className="bg-white/90 backdrop-blur-sm p-6 pt-2 rounded-b-3xl border-x border-b border-memory-emerald-200 max-w-4xl mx-auto shadow-xl -mt-4">
                     <p className="text-lg text-gray-700 leading-relaxed">
-                      Experience real memory improvement in just 7 days as you discover <strong className="text-green-600">YOUR unique LEAP pattern</strong>, establish <strong className="text-green-600">YOUR personal rhythm</strong>, and build <strong className="text-green-600">YOUR unstoppable momentum</strong>—where memory wellness becomes the foundation for your entire life transformation.
+                      Experience real memory improvement in just 7 days as you discover <strong className="text-memory-emerald-600">YOUR unique LEAP pattern</strong>, establish <strong className="text-memory-emerald-600">YOUR personal rhythm</strong>, and build <strong className="text-memory-emerald-600">YOUR unstoppable momentum</strong>—where memory wellness becomes the foundation for your entire life transformation.
                     </p>
                   </div>
                 </CollapsibleContent>
@@ -157,12 +157,11 @@ export function HeroSection() {
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <Button 
                   size="lg" 
-                  className="text-lg bg-green-600 hover:bg-green-500 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" 
+                  className="text-lg bg-memory-emerald-600 hover:bg-memory-emerald-500 text-white shadow-xl hover:shadow-2xl transition-all duration-300 px-8 py-6 flex items-center gap-3 rounded-full max-w-md mx-auto sm:mx-0" 
                   onClick={handleStartJourney}
                 >
-                  <UserPlus className="h-5 w-5 flex-shrink-0" />
                   <span className="text-center leading-tight">
-                    Register Here
+                    Start Your Journey
                     <br />
                     <span className="text-sm opacity-90">7-Day Free Trial</span>
                   </span>
@@ -179,19 +178,19 @@ export function HeroSection() {
               </div>
               
               {/* Trust indicators */}
-              <div className="flex items-center justify-center gap-8 md:gap-12 text-sm text-green-100 pt-6 flex-wrap">
+              <div className="flex items-center justify-center gap-8 md:gap-12 text-sm text-memory-emerald-100 pt-6 flex-wrap">
                 <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-green-300" />
+                  <div className="h-2 w-2 bg-memory-emerald-300 rounded-full"></div>
                   <span>7-Day Free Trial</span>
                 </div>
-                <div className="hidden sm:block w-px h-6 bg-green-200/30"></div>
+                <div className="hidden sm:block w-px h-6 bg-memory-emerald-200/30"></div>
                 <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-green-300" />
+                  <div className="h-2 w-2 bg-memory-emerald-300 rounded-full"></div>
                   <span>Cancel Anytime</span>
                 </div>
-                <div className="hidden sm:block w-px h-6 bg-green-200/30"></div>
+                <div className="hidden sm:block w-px h-6 bg-memory-emerald-200/30"></div>
                 <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-green-300" />
+                  <div className="h-2 w-2 bg-memory-emerald-300 rounded-full"></div>
                   <span>Start Immediately</span>
                 </div>
               </div>

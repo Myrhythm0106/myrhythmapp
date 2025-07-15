@@ -33,13 +33,23 @@ export interface SubscriptionFeatures {
   processRecording: boolean;
 }
 
+export interface SubscriptionData {
+  subscribed: boolean;
+  trial_active: boolean;
+  trial_days_left: number;
+  subscription_tier: string;
+}
+
 export type SubscriptionTier = 'free' | 'premium' | 'family';
 
 interface SubscriptionContextType {
   tier: SubscriptionTier;
   features: SubscriptionFeatures;
+  subscriptionData: SubscriptionData;
+  isLoading: boolean;
   hasFeature: (feature: keyof SubscriptionFeatures) => boolean;
   upgradeRequired: (feature: keyof SubscriptionFeatures) => boolean;
+  openCustomerPortal: () => Promise<string>;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
@@ -160,6 +170,14 @@ export function SubscriptionProvider({
 }: SubscriptionProviderProps) {
   const features = getFeaturesByTier(tier);
   
+  // Mock subscription data for demo
+  const subscriptionData: SubscriptionData = {
+    subscribed: tier !== 'free',
+    trial_active: tier === 'free',
+    trial_days_left: tier === 'free' ? 7 : 0,
+    subscription_tier: tier
+  };
+  
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
     if (feature === 'maxCommunityMembers') {
       return features[feature] > 0 || features[feature] === -1; // -1 means unlimited
@@ -170,13 +188,21 @@ export function SubscriptionProvider({
   const upgradeRequired = (feature: keyof SubscriptionFeatures): boolean => {
     return !hasFeature(feature);
   };
+
+  const openCustomerPortal = async (): Promise<string> => {
+    // Mock implementation for demo
+    return 'https://billing.stripe.com/p/session/test_portal';
+  };
   
   return (
     <SubscriptionContext.Provider value={{
       tier,
       features,
+      subscriptionData,
+      isLoading: false,
       hasFeature,
-      upgradeRequired
+      upgradeRequired,
+      openCustomerPortal
     }}>
       {children}
     </SubscriptionContext.Provider>
