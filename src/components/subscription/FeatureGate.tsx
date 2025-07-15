@@ -33,15 +33,15 @@ export function FeatureGate({
     return null;
   }
 
-  const getRequiredTier = (feature: keyof SubscriptionFeatures) => {
-    const premiumFeatures = [
+  const getRequiredTier = (feature: keyof SubscriptionFeatures): string => {
+    const premiumFeatures: (keyof SubscriptionFeatures)[] = [
       'advancedSymptomTracking', 'fullCalendarManagement', 'personalizedInsights',
       'prioritySupport', 'smartInterventionAlerts', 'enhancedSafetyReminders',
       'objectLocationTracker', 'medicationPhotoVerification', 'conversationNotes',
       'readingSupport', 'financialSafetyAlerts'
     ];
     
-    const familyFeatures = [
+    const familyFeatures: (keyof SubscriptionFeatures)[] = [
       'multipleAccounts', 'sharedCalendars', 'caregiverResources',
       'familySupportGroup', 'dedicatedCaseManager', 'emergencySupport',
       'patternRecognition', 'processRecording'

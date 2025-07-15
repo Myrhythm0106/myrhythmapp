@@ -1,11 +1,6 @@
 
 import { useState, useEffect } from 'react';
-
-interface UserData {
-  userType: string;
-  name?: string;
-  email?: string;
-}
+import { UserType, UserData } from '@/types/user';
 
 export function useUserData(): UserData {
   const [userData, setUserData] = useState<UserData>({
@@ -14,7 +9,7 @@ export function useUserData(): UserData {
 
   useEffect(() => {
     // In a real app, this would fetch from Supabase
-    const savedUserType = localStorage.getItem('userType') || 'brain-injury';
+    const savedUserType = localStorage.getItem('userType') as UserType || 'brain-injury';
     setUserData({
       userType: savedUserType,
       name: 'User',
