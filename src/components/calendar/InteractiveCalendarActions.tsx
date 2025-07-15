@@ -38,6 +38,10 @@ export function InteractiveCalendarActions({
     });
   };
 
+  const handleUpgradeClick = () => {
+    toast.success("Upgrade feature coming soon!");
+  };
+
   const getFloatingButtonPosition = () => {
     switch (view) {
       case "day":
@@ -93,6 +97,7 @@ export function InteractiveCalendarActions({
             <div className="max-h-[calc(90vh-120px)] overflow-y-auto">
               <GuidedActionWizard 
                 onSuccess={handleActionCreate}
+                onUpgradeClick={handleUpgradeClick}
                 preFilledData={{
                   date: selectedDate?.toISOString().split('T')[0],
                   time: selectedTime

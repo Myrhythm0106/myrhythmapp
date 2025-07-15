@@ -1,238 +1,175 @@
+
 import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, FormProvider } from "react-hook-form";
-import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { ChevronLeft, ChevronRight, HelpCircle } from "lucide-react";
-import { ActionBasicsStep } from "./wizard-steps/ActionBasicsStep";
-import { ActionDetailsStep } from "./wizard-steps/ActionDetailsStep";
-import { WatchersStep } from "./wizard-steps/WatchersStep";
-import { ReviewStep } from "./wizard-steps/ReviewStep";
-import { actionFormSchema, ActionFormValues, defaultActionValues } from "./actionFormSchema";
-import { WIZARD_STEPS } from "./data/wizardSteps";
-import { useDailyActions } from "@/hooks/use-daily-actions";
-import { format } from "date-fns";
+import { Target, Clock, Zap, Heart } from "lucide-react";
 
 interface GuidedActionWizardProps {
-  defaultTime?: string;
-  goalId?: string;
-  onSuccess?: () => void;
+  onSuccess: (actionData: any) => void;
+  onUpgradeClick: () => void;
+  preFilledData?: {
+    date?: string;
+    time?: string;
+  };
 }
 
-export function GuidedActionWizard({ defaultTime, goalId, onSuccess }: GuidedActionWizardProps) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const { createAction, createGoal } = useDailyActions();
-  
-  const form = useForm<ActionFormValues>({
-    resolver: zodResolver(actionFormSchema),
-    defaultValues: {
-      ...defaultActionValues,
-      startTime: defaultTime || defaultActionValues.startTime,
-      goalId: goalId || "none",
-    },
+export function GuidedActionWizard({ 
+  onSuccess, 
+  onUpgradeClick,
+  preFilledData 
+}: GuidedActionWizardProps) {
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    date: preFilledData?.date || '',
+    time: preFilledData?.time || '',
+    duration: '30',
+    difficulty: '1',
+    category: 'personal',
+    energyLevel: '2'
   });
 
-  const progress = (currentStep / WIZARD_STEPS.length) * 100;
-
-  const nextStep = () => {
-    if (currentStep < WIZARD_STEPS.length) {
-      setCurrentStep(currentStep + 1);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSuccess(formData);
   };
 
-  const prevStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const canProceed = () => {
-    const values = form.getValues();
-    switch (currentStep) {
-      case 1:
-        return values.title && values.type && values.date && values.startTime;
-      case 2:
-        return true; // Optional step
-      case 3:
-        return true; // Optional step
-      case 4:
-        return true;
-      default:
-        return false;
-    }
-  };
-
-  async function onSubmit(values: ActionFormValues) {
-    try {
-      if (values.isGoal) {
-        const goalCategory = values.type === 'therapy' ? 'health' : 
-                           values.type === 'activity' ? 'personal' : 
-                           values.type === 'cognitive' ? 'cognitive' :
-                           values.type === 'social' ? 'social' :
-                           values.type === 'mobility' ? 'mobility' : 'health';
-                           
-        await createGoal({
-          title: values.title,
-          description: values.notes || undefined,
-          category: goalCategory,
-          target_date: values.date ? new Date(values.date).toISOString().split('T')[0] : undefined
-        });
-      } else {
-        const actionData = {
-          title: values.title,
-          description: values.notes || undefined,
-          action_type: values.type === 'daily_win' ? 'daily_win' as const : 
-                      values.goalId && values.goalId !== "none" ? 'goal_linked' as const : 
-                      'regular' as const,
-          date: values.date ? format(new Date(values.date), 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'),
-          start_time: values.startTime || undefined,
-          end_time: values.endTime || undefined,
-          duration_minutes: values.duration || undefined,
-          location: values.location || undefined,
-          is_daily_win: values.type === 'daily_win',
-          goal_id: values.goalId && values.goalId !== "none" ? values.goalId : undefined,
-          difficulty_level: values.type === 'daily_win' ? 1 : 2,
-          focus_area: values.type === 'daily_win' ? 'emotional' as const : undefined,
-          watchers: values.watchers || [],
-          recurrence_pattern: values.recurrencePattern !== 'none' ? values.recurrencePattern : undefined,
-          recurrence_interval: values.recurrencePattern !== 'none' ? values.recurrenceInterval : undefined,
-          recurrence_end_date: values.recurrenceEndDate || undefined,
-          recurrence_count: values.recurrenceCount || undefined,
-          recurrence_days_of_week: values.recurrenceDaysOfWeek?.length ? values.recurrenceDaysOfWeek : undefined
-        };
-
-        await createAction(actionData);
-      }
-
-      form.reset();
-      
-      if (values.recurrencePattern !== 'none' && !values.isGoal) {
-        toast.success("Recurring Action Created! 🔄", {
-          description: `"${values.title}" will repeat ${values.recurrencePattern}. Your support team will be notified.`,
-          duration: 4000
-        });
-      } else {
-        toast.success(values.isGoal ? "🎯 Goal Created!" : "✅ Action Scheduled!", {
-          description: values.isGoal 
-            ? `"${values.title}" is now part of your journey.`
-            : `"${values.title}" has been added to your calendar. Your watchers will be notified.`,
-          duration: 4000
-        });
-      }
-      
-      if (onSuccess) {
-        onSuccess();
-      }
-      
-    } catch (error) {
-      console.error('Error creating action/goal:', error);
-      toast.error('Failed to create action/goal');
-    }
-  }
-
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return <ActionBasicsStep />;
-      case 2:
-        return <ActionDetailsStep preselectedGoalId={goalId} />;
-      case 3:
-        return <WatchersStep />;
-      case 4:
-        return <ReviewStep />;
-      default:
-        return null;
-    }
-  };
+  const categories = [
+    { value: 'health', label: 'Health & Wellness', icon: Heart },
+    { value: 'personal', label: 'Personal Growth', icon: Zap },
+    { value: 'work', label: 'Work & Focus', icon: Target },
+    { value: 'family', label: 'Family & Social', icon: Heart },
+    { value: 'rest', label: 'Rest & Recovery', icon: Clock }
+  ];
 
   return (
-    <FormProvider {...form}>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Progress Header */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-brain-base">
-                  {WIZARD_STEPS[currentStep - 1].title}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  {WIZARD_STEPS[currentStep - 1].description}
-                </p>
-              </div>
-              <Badge variant="outline" className="px-3 py-1">
-                Step {currentStep} of {WIZARD_STEPS.length}
-              </Badge>
-            </div>
-            
-            <Progress value={progress} className="h-2" />
-            
-            <div className="flex justify-between text-xs text-gray-500">
-              {WIZARD_STEPS.map((step, index) => (
-                <span 
-                  key={step.id}
-                  className={`${currentStep >= step.id ? 'text-memory-emerald-600 font-medium' : ''}`}
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <div>
+          <Label htmlFor="title">Action Title</Label>
+          <Input
+            id="title"
+            value={formData.title}
+            onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+            placeholder="What would you like to accomplish?"
+            required
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="description">Description (Optional)</Label>
+          <Textarea
+            id="description"
+            value={formData.description}
+            onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+            placeholder="Add any details or notes..."
+            rows={3}
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="date">Date</Label>
+            <Input
+              id="date"
+              type="date"
+              value={formData.date}
+              onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="time">Time</Label>
+            <Input
+              id="time"
+              type="time"
+              value={formData.time}
+              onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="duration">Duration (minutes)</Label>
+            <Select value={formData.duration} onValueChange={(value) => setFormData(prev => ({ ...prev, duration: value }))}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="15">15 minutes</SelectItem>
+                <SelectItem value="30">30 minutes</SelectItem>
+                <SelectItem value="45">45 minutes</SelectItem>
+                <SelectItem value="60">1 hour</SelectItem>
+                <SelectItem value="90">1.5 hours</SelectItem>
+                <SelectItem value="120">2 hours</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="difficulty">Difficulty Level</Label>
+            <Select value={formData.difficulty} onValueChange={(value) => setFormData(prev => ({ ...prev, difficulty: value }))}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Easy - Low energy needed</SelectItem>
+                <SelectItem value="2">Moderate - Some focus required</SelectItem>
+                <SelectItem value="3">Challenging - High focus needed</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        <div>
+          <Label>Category</Label>
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            {categories.map((category) => {
+              const Icon = category.icon;
+              return (
+                <Button
+                  key={category.value}
+                  type="button"
+                  variant={formData.category === category.value ? "default" : "outline"}
+                  onClick={() => setFormData(prev => ({ ...prev, category: category.value }))}
+                  className="justify-start"
                 >
-                  {step.title}
-                </span>
-              ))}
-            </div>
+                  <Icon className="h-4 w-4 mr-2" />
+                  {category.label}
+                </Button>
+              );
+            })}
           </div>
+        </div>
 
-          {/* Step Content */}
-          <Card className="border-memory-emerald-200/50">
-            <CardHeader className="bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 border-b border-memory-emerald-200/30">
-              <div className="flex items-center gap-2">
-                <HelpCircle className="h-5 w-5 text-memory-emerald-600" />
-                <CardTitle className="text-memory-emerald-800">
-                  Let's make this brain-friendly
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-6">
-              {renderStep()}
-            </CardContent>
-          </Card>
+        <div>
+          <Label htmlFor="energyLevel">Required Energy Level</Label>
+          <Select value={formData.energyLevel} onValueChange={(value) => setFormData(prev => ({ ...prev, energyLevel: value }))}>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">Low - Minimal energy required</SelectItem>
+              <SelectItem value="2">Medium - Moderate energy needed</SelectItem>
+              <SelectItem value="3">High - Peak energy required</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-          {/* Navigation */}
-          <div className="flex justify-between pt-4 border-t">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={prevStep}
-              disabled={currentStep === 1}
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-
-            {currentStep < WIZARD_STEPS.length ? (
-              <Button
-                type="button"
-                onClick={nextStep}
-                disabled={!canProceed()}
-                className="flex items-center gap-2 bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600"
-              >
-                Next Step
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                disabled={form.formState.isSubmitting || !canProceed()}
-                className="bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600"
-              >
-                {form.formState.isSubmitting ? "Creating..." : "Create Action"}
-              </Button>
-            )}
-          </div>
-        </form>
-      </Form>
-    </FormProvider>
+      <div className="flex gap-3 pt-4 border-t">
+        <Button type="submit" className="flex-1">
+          <Target className="h-4 w-4 mr-2" />
+          Create Action
+        </Button>
+        <Button type="button" variant="outline" onClick={onUpgradeClick}>
+          Get Premium Features
+        </Button>
+      </div>
+    </form>
   );
 }

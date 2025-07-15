@@ -120,6 +120,10 @@ export function CalendarDominanceView() {
     }
   };
 
+  const handleUpgradeClick = () => {
+    toast.success("Upgrade feature coming soon!");
+  };
+
   const getEventIcon = (type: string) => {
     switch (type) {
       case 'work': return <Target className="h-4 w-4" />;
@@ -239,7 +243,7 @@ export function CalendarDominanceView() {
         {/* Sidebar Tools */}
         <div className="space-y-6">
           {/* Daily #IChoose */}
-          <DailyIChooseWidget />
+          <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} />
           
           {/* Pomodoro Timer */}
           <div className="space-y-2">
