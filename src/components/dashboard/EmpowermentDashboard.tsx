@@ -1,11 +1,12 @@
 
 import React, { useState } from "react";
-import { Calendar, Settings, User, Crown } from "lucide-react";
+import { Calendar, Settings, User, Crown, Target, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedEmpowermentHub } from "@/components/empowerment/EnhancedEmpowermentHub";
 import { InAppPurchasePage } from "@/components/empowerment/InAppPurchasePage";
+import { PlanningSpotlight } from "@/components/planning/PlanningSpotlight";
 import { PlanningOverview } from "@/components/planning/PlanningOverview";
 
 export function EmpowermentDashboard() {
@@ -92,6 +93,11 @@ export function EmpowermentDashboard() {
           </div>
         </div>
 
+        {/* Planning Spotlight - Prominent Position */}
+        <div className="mb-8">
+          <PlanningSpotlight />
+        </div>
+
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
           {/* Enhanced Empowerment Hub */}
@@ -107,7 +113,10 @@ export function EmpowermentDashboard() {
           {/* Planning Overview */}
           <div className="space-y-6">
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Your Planning Command Center</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <Target className="h-5 w-5 text-blue-600" />
+                Your Planning Command Center
+              </h3>
               <PlanningOverview />
             </div>
           </div>
@@ -147,6 +156,7 @@ export function EmpowermentDashboard() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-green-600" />
               <span>Your Empowerment Journey</span>
               <Badge variant="outline">{hasPremiumAccess ? 'Premium' : 'Free Tier'}</Badge>
             </CardTitle>
