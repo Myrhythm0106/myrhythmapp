@@ -31,10 +31,10 @@ const Landing = () => {
   // Only show brief loading if we're still checking auth state AND user might be authenticated
   if (loading && user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-muted/60 to-background">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-memory-emerald-50/30 to-clarity-teal-50/20">
         <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground">Loading MyRhythm...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-memory-emerald-500 mx-auto"></div>
+          <p className="text-sm text-brain-health-600 font-light">Loading MyRhythm...</p>
         </div>
       </div>
     );
@@ -42,7 +42,7 @@ const Landing = () => {
 
   // For unauthenticated users or when loading is complete, show the landing page
   return (
-    <div className="min-h-screen bg-gradient-to-b from-muted/60 to-background">
+    <div className="min-h-screen bg-gradient-to-b from-white to-memory-emerald-50/20">
       <ScrollArea className="h-screen">
         <HeroSection />
         <MyRhythmIntro />
