@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -33,7 +32,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     toggleFavorite,
     recordInteraction,
     isTogglingFavorite
-  } = useEmpowermentStatements('brain-injury', true); // Include premium for better experience
+  } = useEmpowermentStatements('brain-injury', true);
 
   const { triggerHapticFeedback } = useMobileGestures({
     enableShakeToRefresh: false,
@@ -64,7 +63,6 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     setIsAnimating(true);
     triggerHapticFeedback('light');
     
-    // Get a different statement from current one
     const availableStatements = statements.filter(s => s.id !== currentStatement?.id);
     if (availableStatements.length === 0) return;
     
@@ -172,7 +170,6 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     triggerHapticFeedback('medium');
   };
 
-  // Touch handlers for swipe gestures
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0];
     setTouchStart({ x: touch.clientX, y: touch.clientY });
@@ -185,10 +182,8 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     const deltaX = touchStart.x - touch.clientX;
     const deltaY = Math.abs(touchStart.y - touch.clientY);
 
-    // Only trigger if horizontal swipe is more significant than vertical
     if (Math.abs(deltaX) > 50 && deltaY < 100) {
       if (deltaX > 0) {
-        // Swiped left - get new statement
         getNewStatement();
       }
     }
@@ -197,11 +192,11 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
 
   if (isLoading) {
     return (
-      <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 via-pink-50 to-amber-50 shadow-lg">
+      <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 shadow-lg">
         <CardContent className="p-8 text-center">
           <div className="animate-pulse">
-            <div className="h-4 bg-purple-200 rounded w-3/4 mx-auto mb-4"></div>
-            <div className="h-4 bg-purple-200 rounded w-1/2 mx-auto"></div>
+            <div className="h-4 bg-gradient-to-r from-purple-200 to-teal-200 rounded w-3/4 mx-auto mb-4"></div>
+            <div className="h-4 bg-gradient-to-r from-purple-200 to-teal-200 rounded w-1/2 mx-auto"></div>
           </div>
         </CardContent>
       </Card>
@@ -210,7 +205,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
 
   if (!currentStatement) {
     return (
-      <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 via-pink-50 to-amber-50 shadow-lg">
+      <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 shadow-lg">
         <CardContent className="p-8 text-center">
           <p className="text-purple-700">No empowerment statements available. Please check back later.</p>
         </CardContent>
@@ -222,7 +217,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
 
   return (
     <Card 
-      className="border-2 border-purple-200 bg-gradient-to-br from-purple-50 via-pink-50 to-amber-50 shadow-lg touch-pan-y select-none"
+      className="border-2 border-purple-200 bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 shadow-lg touch-pan-y select-none"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
@@ -231,7 +226,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
           <div className="animate-bounce">
             <Crown className="h-6 w-6 text-amber-500" />
           </div>
-          <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
             Today's #IChoose Statement
           </span>
           <div className="animate-bounce">
@@ -252,11 +247,11 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
             "{currentStatement.text}"
           </blockquote>
           <div className="flex items-center justify-center gap-2 mt-4">
-            <Badge className="bg-purple-100 text-purple-700 border-purple-200">
+            <Badge variant="clarity" className="border-purple-200">
               {currentStatement.category}
             </Badge>
             {currentStatement.tier === 'premium' && (
-              <Badge className="bg-gradient-to-r from-amber-100 to-yellow-100 text-amber-700 border-amber-200">
+              <Badge variant="premium" className="border-amber-200">
                 <Crown className="h-3 w-3 mr-1" />
                 Premium
               </Badge>
@@ -301,7 +296,8 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
 
           <Button 
             size="sm"
-            className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-xs px-3 py-1"
+            variant="premium"
+            className="text-xs px-3 py-1"
             onClick={onUpgradeClick}
           >
             <Zap className="h-3 w-3 mr-1" />
@@ -319,7 +315,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200 space-y-3">
+              <div className="p-4 bg-gradient-to-r from-blue-50/60 via-purple-50/50 to-teal-50/60 rounded-lg border border-blue-200 space-y-3">
                 <div className="flex items-center gap-2">
                   <BookOpen className="h-4 w-4 text-blue-600" />
                   <span className="font-medium text-blue-900">Your Reflection</span>
@@ -345,7 +341,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
                       size="sm"
                       onClick={handleReflectionSave}
                       disabled={!reflectionText.trim()}
-                      className="text-xs bg-blue-600 hover:bg-blue-700"
+                      className="text-xs bg-gradient-to-r from-blue-600 via-purple-600 to-teal-600 hover:from-blue-700 hover:via-purple-700 hover:to-teal-700"
                     >
                       Save Reflection
                     </Button>
@@ -357,7 +353,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
         </AnimatePresence>
 
         {/* Daily Tip */}
-        <div className="p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+        <div className="p-4 bg-gradient-to-r from-blue-50/60 via-purple-50/50 to-teal-50/60 rounded-lg border border-blue-200">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="h-4 w-4 text-blue-600" />
             <span className="font-medium text-blue-900">Morning Ritual Tip</span>

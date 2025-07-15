@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Calendar, Settings, User, Crown, Target, TrendingUp, Sparkles, Heart, Brain } from "lucide-react";
+import { Calendar, Settings, User, Crown, Target, TrendingUp, Sparkles, Heart, Brain, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,7 +30,7 @@ export function EmpowermentDashboard() {
   ];
 
   const handleUpgradeClick = () => {
-    setShowPurchasePage(true);
+    navigate("/in-app-purchase");
   };
 
   if (showPurchasePage) {
@@ -38,14 +38,16 @@ export function EmpowermentDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50/30 via-white to-clarity-teal-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60">
       <div className="container mx-auto px-4 py-6 space-y-8 max-w-7xl">
         
         {/* Welcome Section with Quick Stats */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-4">
-            <Crown className="h-8 w-8 text-amber-500" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+              <Brain className="h-6 w-6 text-white" />
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
               MyRhythm Dashboard
             </h1>
           </div>
@@ -53,14 +55,31 @@ export function EmpowermentDashboard() {
             Your personalized command center for cognitive wellness and empowered living
           </p>
           
+          {/* Upgrade Banner */}
+          <div className="bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-teal-500/10 rounded-2xl p-4 mb-6 border border-purple-200/50">
+            <div className="flex items-center justify-between max-w-4xl mx-auto">
+              <div className="flex items-center gap-3">
+                <Crown className="h-6 w-6 text-amber-500" />
+                <div className="text-left">
+                  <p className="font-semibold text-gray-900">Unlock Premium Features</p>
+                  <p className="text-sm text-gray-600">Advanced brain training, care team collaboration, and more</p>
+                </div>
+              </div>
+              <Button onClick={handleUpgradeClick} variant="premium" className="px-6">
+                <Zap className="h-4 w-4 mr-2" />
+                Upgrade Now
+              </Button>
+            </div>
+          </div>
+          
           {/* Quick streak info */}
           <div className="flex justify-center gap-6">
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-teal-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-medium text-gray-700">7-day streak</span>
             </div>
             <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-clarity-teal-500" />
+              <Target className="h-4 w-4 text-purple-600" />
               <span className="text-sm font-medium text-gray-700">3 goals active</span>
             </div>
           </div>
@@ -80,7 +99,7 @@ export function EmpowermentDashboard() {
         <div className="mb-8">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-              <Calendar className="h-6 w-6 text-clarity-teal-500" />
+              <Calendar className="h-6 w-6 text-purple-600" />
               Planning Command Center
             </h2>
             <p className="text-gray-600">Strategic overview and weekly priorities</p>
@@ -99,15 +118,15 @@ export function EmpowermentDashboard() {
 
         {/* Quick Actions & Journey Progress */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <Card className="border-memory-emerald-200 hover:border-memory-emerald-300 transition-colors">
+          <Card className="border-purple-200/60 bg-gradient-to-br from-white to-purple-50/30 hover:border-purple-300 transition-colors shadow-sm hover:shadow-md">
             <CardContent className="p-6 text-center">
-              <Calendar className="h-8 w-8 text-memory-emerald-500 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Plan My Day</h3>
+              <Calendar className="h-8 w-8 text-purple-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2 text-gray-900">Plan My Day</h3>
               <p className="text-sm text-gray-600 mb-4">Create brain-friendly schedules</p>
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-memory-emerald-300"
+                className="border-purple-300 hover:bg-gradient-to-r hover:from-purple-50/30 hover:via-blue-50/30 hover:to-teal-50/30"
                 onClick={() => navigate("/calendar")}
               >
                 Open Calendar
@@ -115,15 +134,15 @@ export function EmpowermentDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-clarity-teal-200 hover:border-clarity-teal-300 transition-colors">
+          <Card className="border-blue-200/60 bg-gradient-to-br from-white to-blue-50/30 hover:border-blue-300 transition-colors shadow-sm hover:shadow-md">
             <CardContent className="p-6 text-center">
-              <Target className="h-8 w-8 text-clarity-teal-500 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Track Progress</h3>
+              <Target className="h-8 w-8 text-blue-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2 text-gray-900">Track Progress</h3>
               <p className="text-sm text-gray-600 mb-4">Monitor your recovery journey</p>
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-clarity-teal-300"
+                className="border-blue-300 hover:bg-gradient-to-r hover:from-purple-50/30 hover:via-blue-50/30 hover:to-teal-50/30"
                 onClick={() => navigate("/goals")}
               >
                 View Goals
@@ -131,15 +150,15 @@ export function EmpowermentDashboard() {
             </CardContent>
           </Card>
 
-          <Card className="border-heart-300 hover:border-heart-400 transition-colors">
+          <Card className="border-teal-200/60 bg-gradient-to-br from-white to-teal-50/30 hover:border-teal-300 transition-colors shadow-sm hover:shadow-md">
             <CardContent className="p-6 text-center">
-              <Heart className="h-8 w-8 text-heart-500 mx-auto mb-3" />
-              <h3 className="font-semibold mb-2">Support Circle</h3>
+              <Heart className="h-8 w-8 text-teal-600 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2 text-gray-900">Support Circle</h3>
               <p className="text-sm text-gray-600 mb-4">Connect with your care team</p>
               <Button 
                 size="sm" 
                 variant="outline" 
-                className="border-heart-300"
+                className="border-teal-300 hover:bg-gradient-to-r hover:from-purple-50/30 hover:via-blue-50/30 hover:to-teal-50/30"
                 onClick={() => navigate("/accountability")}
               >
                 Manage Circle

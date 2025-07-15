@@ -92,7 +92,7 @@ export function FloatingRegisterButton({
         size={isMobile ? "lg" : "lg"}
         variant={config.buttonVariant}
         className={cn(
-          "rounded-full text-base font-medium flex items-center gap-3 hover:scale-105 border-2 border-white/20 backdrop-blur-sm group relative overflow-hidden",
+          "rounded-full text-base font-medium flex items-center gap-3 hover:scale-105 border-2 border-white/20 backdrop-blur-sm group relative overflow-hidden shadow-2xl hover:shadow-purple-500/20",
           isMobile ? "px-6 py-4" : "px-8 py-6"
         )}
       >

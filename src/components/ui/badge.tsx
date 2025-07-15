@@ -10,20 +10,20 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground hover:bg-primary/80",
+          "border-transparent bg-gradient-to-r from-purple-600/90 via-blue-600/90 to-teal-600/90 text-white hover:from-purple-700/95 hover:via-blue-700/95 hover:to-teal-700/95",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
         premium:
-          "border-transparent bg-gradient-to-r from-brain-health-500/90 to-clarity-teal-500/85 text-white hover:from-brain-health-600/95 hover:to-clarity-teal-600/90 shadow-md",
+          "border-transparent bg-gradient-to-r from-purple-600/90 via-blue-600/90 to-teal-600/90 text-white hover:from-purple-700/95 hover:via-blue-700/95 hover:to-teal-700/95 shadow-md relative overflow-hidden before:absolute before:inset-0 before:bg-gradient-to-r before:from-amber-300/30 before:via-transparent before:to-amber-300/30",
         healing:
-          "border-transparent bg-memory-emerald-500/90 text-white hover:bg-memory-emerald-600/95 shadow-sm",
+          "border-transparent bg-gradient-to-r from-teal-500/90 to-blue-500/90 text-white hover:from-teal-600/95 hover:to-blue-600/95 shadow-sm",
         cognitive:
-          "border-transparent bg-brain-health-500/90 text-white hover:bg-brain-health-600/95 shadow-sm",
+          "border-transparent bg-gradient-to-r from-blue-600/90 to-purple-600/90 text-white hover:from-blue-700/95 hover:to-purple-700/95 shadow-sm",
         clarity:
-          "border-transparent bg-clarity-teal-500/90 text-white hover:bg-clarity-teal-600/95 shadow-sm",
+          "border-transparent bg-gradient-to-r from-purple-500/90 to-teal-500/90 text-white hover:from-purple-600/95 hover:to-teal-600/95 shadow-sm",
       },
     },
     defaultVariants: {

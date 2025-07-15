@@ -26,6 +26,7 @@ import Goals from "./pages/Goals";
 import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
 import Welcome from "./pages/Welcome";
+import InAppPurchase from "./routes/InAppPurchase";
 
 const queryClient = new QueryClient();
 
@@ -117,6 +118,11 @@ function App() {
                   <Route path="/profile" element={
                     <ProtectedRoute>
                       <Profile />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/in-app-purchase" element={
+                    <ProtectedRoute>
+                      <InAppPurchase />
                     </ProtectedRoute>
                   } />
                 </Routes>
