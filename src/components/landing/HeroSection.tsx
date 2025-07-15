@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { LogIn, Brain, ChevronDown } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
@@ -102,19 +103,27 @@ export function HeroSection() {
               </div>
             </div>
             
-            {/* Beautiful gradient promise card */}
+            {/* Collapsible Memory Partner Promise card */}
             <div className="max-w-5xl mx-auto">
-              <div className="bg-gradient-to-r from-white/90 via-purple-50/60 to-blue-50/50 backdrop-blur-sm border border-purple-200/30 rounded-2xl p-6 shadow-xl">
-                <div className="flex items-center justify-center gap-3 mb-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center">
-                    <Brain className="h-4 w-4 text-white" />
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="memory-promise" className="border-none">
+                  <div className="bg-gradient-to-r from-white/90 via-purple-50/60 to-blue-50/50 backdrop-blur-sm border border-purple-200/30 rounded-2xl shadow-xl">
+                    <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center">
+                          <Brain className="h-4 w-4 text-white" />
+                        </div>
+                        <span className="text-lg font-medium bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Your Memory Partner Promise</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pb-4">
+                      <p className="text-sm text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                        Experience gentle memory improvement in just 7 days as you discover <strong className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">YOUR unique LEAP pattern</strong>, establish <strong className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">YOUR personal rhythm</strong>, and build <strong className="bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">YOUR unstoppable momentum</strong>.
+                      </p>
+                    </AccordionContent>
                   </div>
-                  <span className="text-lg font-medium bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Your Memory Partner Promise</span>
-                </div>
-                <p className="text-sm text-gray-600 leading-relaxed max-w-3xl mx-auto">
-                  Experience gentle memory improvement in just 7 days as you discover <strong className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">YOUR unique LEAP pattern</strong>, establish <strong className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">YOUR personal rhythm</strong>, and build <strong className="bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">YOUR unstoppable momentum</strong>.
-                </p>
-              </div>
+                </AccordionItem>
+              </Accordion>
             </div>
             
             {/* Beautiful gradient call-to-action section */}
