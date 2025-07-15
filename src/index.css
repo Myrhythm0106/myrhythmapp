@@ -5,83 +5,121 @@
 
 @layer base {
   :root {
-    --background: 160 20% 98%;
-    --foreground: 160 84% 4.9%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 160 0% 100%;
-    --card-foreground: 160 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 160 0% 100%;
-    --popover-foreground: 160 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 160 84% 39%;
-    --primary-foreground: 160 30% 98%;
+    /* Primary: Warm amber/gold brain-focused tones */
+    --primary: 45 93% 47%;
+    --primary-foreground: 45 15% 15%;
 
-    --secondary: 160 95% 46%;
-    --secondary-foreground: 160 47.4% 11.2%;
+    /* Secondary: Lighter amber tones */
+    --secondary: 48 100% 95%;
+    --secondary-foreground: 45 47% 11%;
 
-    --muted: 160 10% 93%;
-    --muted-foreground: 160 10% 46.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 160 20% 90%;
-    --accent-foreground: 160 47.4% 11.2%;
+    --accent: 210 40% 94%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 160 20% 85%;
-    --input: 160 20% 85%;
-    --ring: 160 84% 39%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 45 93% 47%;
 
     --radius: 0.5rem;
 
-    --sidebar-background: 160 30% 98%;
-    --sidebar-foreground: 160 5.3% 26.1%;
-    --sidebar-primary: 160 84% 39%;
+    /* Memory Emerald: Calming green tones for healing */
+    --memory-emerald-50: 156 100% 97%;
+    --memory-emerald-100: 149 80% 90%;
+    --memory-emerald-200: 152 76% 80%;
+    --memory-emerald-300: 156 72% 67%;
+    --memory-emerald-400: 158 64% 52%;
+    --memory-emerald-500: 160 84% 39%;
+    --memory-emerald-600: 161 94% 30%;
+    --memory-emerald-700: 163 94% 24%;
+    --memory-emerald-800: 163 88% 20%;
+    --memory-emerald-900: 164 86% 16%;
+
+    /* Brain Health: Teal tones for cognitive focus */
+    --brain-health-50: 166 76% 97%;
+    --brain-health-100: 167 85% 89%;
+    --brain-health-200: 168 84% 78%;
+    --brain-health-300: 171 77% 64%;
+    --brain-health-400: 172 66% 50%;
+    --brain-health-500: 173 80% 40%;
+    --brain-health-600: 175 84% 32%;
+    --brain-health-700: 175 77% 26%;
+    --brain-health-800: 176 69% 22%;
+    --brain-health-900: 176 61% 19%;
+
+    /* Clarity Teal: Clear mental focus colors */
+    --clarity-teal-50: 180 100% 97%;
+    --clarity-teal-100: 180 84% 90%;
+    --clarity-teal-200: 180 83% 80%;
+    --clarity-teal-300: 180 77% 64%;
+    --clarity-teal-400: 180 66% 50%;
+    --clarity-teal-500: 180 84% 39%;
+    --clarity-teal-600: 181 84% 32%;
+    --clarity-teal-700: 182 77% 26%;
+    --clarity-teal-800: 183 69% 22%;
+    --clarity-teal-900: 184 61% 19%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 45 93% 47%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 160 10% 95.9%;
-    --sidebar-accent-foreground: 160 5.9% 10%;
-    --sidebar-border: 160 13% 91%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 45 93% 47%;
   }
 
   .dark {
-    --background: 160 84% 4.9%;
-    --foreground: 160 30% 98%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 160 84% 6.9%;
-    --card-foreground: 160 30% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 160 84% 4.9%;
-    --popover-foreground: 160 30% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 160 84% 39%;
-    --primary-foreground: 160 47.4% 11.2%;
+    --primary: 48 96% 53%;
+    --primary-foreground: 45 15% 15%;
 
-    --secondary: 160 95% 46%;
-    --secondary-foreground: 160 30% 98%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 160 32.6% 17.5%;
-    --muted-foreground: 160 20% 75%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 160 32.6% 17.5%;
-    --accent-foreground: 160 30% 98%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 160 30% 98%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 160 32.6% 17.5%;
-    --input: 160 32.6% 17.5%;
-    --ring: 160 84% 39%;
-    
-    --sidebar-background: 160 5.9% 10%;
-    --sidebar-foreground: 160 20% 95.9%;
-    --sidebar-primary: 160 84% 39%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 48 96% 53%;
+
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 48 96% 53%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 160 3.7% 15.9%;
-    --sidebar-accent-foreground: 160 20% 95.9%;
-    --sidebar-border: 160 3.7% 15.9%;
-    --sidebar-ring: 160 84% 39%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 48 96% 53%;
   }
 }
 
@@ -102,54 +140,54 @@
   
   /* Make form controls and buttons more polished with healing colors */
   input, select, textarea {
-    @apply transition-all duration-200 focus:ring-brain-health-200;
+    @apply transition-all duration-200 focus:ring-2 focus:ring-primary;
   }
 }
 
 @layer components {
   .card-gradient {
-    @apply bg-gradient-to-br from-card to-brain-health-50;
+    @apply bg-gradient-to-br from-card to-memory-emerald-50;
   }
   
   .beacon-card {
-    @apply rounded-2xl border-brain-health-200 p-6 shadow-md transition-all hover:shadow-lg bg-gradient-to-br from-white to-brain-health-50;
+    @apply rounded-2xl border-memory-emerald-200 p-6 shadow-md transition-all hover:shadow-lg bg-gradient-to-br from-white to-memory-emerald-50;
   }
   
   .nav-item {
-    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-brain-health-600 transition-all hover:bg-brain-health-100 hover:text-brain-health-800;
+    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-foreground transition-all hover:bg-accent hover:text-accent-foreground;
   }
   
   .nav-item-active {
-    @apply bg-brain-health-100 text-brain-health-800 font-medium;
+    @apply bg-primary/10 text-primary font-medium;
   }
   
   /* Therapeutic UI elements for cognitive wellness */
   .premium-card {
-    @apply rounded-xl border border-brain-health-200 bg-gradient-to-br from-white to-brain-health-50 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
+    @apply rounded-xl border border-border bg-gradient-to-br from-background to-memory-emerald-50 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
   }
   
   .glass-card {
-    @apply bg-white/80 backdrop-blur-sm border border-brain-health-200 shadow-sm;
+    @apply bg-background/80 backdrop-blur-sm border border-border shadow-sm;
   }
   
   .premium-button {
-    @apply bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 text-white font-medium shadow-sm hover:shadow transition-all;
+    @apply bg-gradient-to-r from-primary to-brain-health-500 text-primary-foreground font-medium shadow-sm hover:shadow transition-all;
   }
   
   .premium-input {
-    @apply border-0 bg-brain-health-50 focus:ring-2 focus:ring-brain-health-300 shadow-inner;
+    @apply border-0 bg-accent focus:ring-2 focus:ring-primary shadow-inner;
   }
 
   /* Healing and calming therapeutic colors */
   .healing-gradient {
-    @apply bg-gradient-to-r from-brain-health-100 via-memory-emerald-100 to-clarity-teal-100;
+    @apply bg-gradient-to-r from-memory-emerald-100 via-memory-emerald-50 to-clarity-teal-100;
   }
 
   .focus-gradient {
-    @apply bg-gradient-to-r from-brain-health-500 via-memory-emerald-500 to-clarity-teal-500;
+    @apply bg-gradient-to-r from-primary via-brain-health-500 to-clarity-teal-500;
   }
 
   .calm-gradient {
-    @apply bg-gradient-to-br from-brain-health-50 to-memory-emerald-50;
+    @apply bg-gradient-to-br from-memory-emerald-50 to-clarity-teal-50;
   }
 }

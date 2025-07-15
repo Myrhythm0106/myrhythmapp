@@ -10,16 +10,19 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-brain-health-600 via-memory-emerald-600 to-clarity-teal-600 text-white hover:from-brain-health-700 hover:via-memory-emerald-700 hover:to-clarity-teal-700 shadow-md hover:shadow-lg transition-all duration-200",
+        default: "bg-gradient-to-r from-primary to-brain-health-500 text-primary-foreground hover:from-primary/90 hover:to-brain-health-600 shadow-md hover:shadow-lg transition-all duration-200",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-brain-health-200 bg-background hover:bg-brain-health-50 hover:text-brain-health-700 hover:border-brain-health-300",
+          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
         secondary:
-          "bg-gradient-to-r from-brain-health-100 to-memory-emerald-100 text-brain-health-800 hover:from-brain-health-200 hover:to-memory-emerald-200",
-        ghost: "hover:bg-brain-health-50 hover:text-brain-health-700",
-        link: "text-brain-health-600 underline-offset-4 hover:underline hover:text-brain-health-700",
-        premium: "bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 text-white hover:from-memory-emerald-600 hover:to-clarity-teal-600 shadow-lg hover:shadow-xl transition-all duration-200",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+        premium: "bg-gradient-to-r from-primary via-brain-health-500 to-clarity-teal-500 text-primary-foreground hover:from-primary/90 hover:via-brain-health-600 hover:to-clarity-teal-600 shadow-lg hover:shadow-xl transition-all duration-200",
+        healing: "bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 text-white hover:from-memory-emerald-600 hover:to-memory-emerald-700 shadow-md hover:shadow-lg transition-all duration-200",
+        cognitive: "bg-gradient-to-r from-brain-health-500 to-brain-health-600 text-white hover:from-brain-health-600 hover:to-brain-health-700 shadow-md hover:shadow-lg transition-all duration-200",
+        clarity: "bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 text-white hover:from-clarity-teal-600 hover:to-clarity-teal-700 shadow-md hover:shadow-lg transition-all duration-200",
       },
       size: {
         default: "h-10 px-4 py-2",
