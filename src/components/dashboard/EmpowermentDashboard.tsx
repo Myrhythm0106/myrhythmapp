@@ -93,8 +93,15 @@ export function EmpowermentDashboard() {
           </div>
         </div>
 
-        {/* Planning Spotlight - Prominent Position */}
+        {/* Planning Command Center - Most Prominent Position */}
         <div className="mb-8">
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
+              <Target className="h-6 w-6 text-blue-600" />
+              Your Planning Command Center
+            </h2>
+            <p className="text-gray-600">Every step forward is a victory worth celebrating</p>
+          </div>
           <PlanningSpotlight />
         </div>
 
@@ -102,6 +109,10 @@ export function EmpowermentDashboard() {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
           {/* Enhanced Empowerment Hub */}
           <div>
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Daily Empowerment</h3>
+              <p className="text-gray-600">Your personalized #IChoose statements</p>
+            </div>
             <EnhancedEmpowermentHub
               userType="brain-injury"
               hasPremiumAccess={hasPremiumAccess}
@@ -114,8 +125,8 @@ export function EmpowermentDashboard() {
           <div className="space-y-6">
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Target className="h-5 w-5 text-blue-600" />
-                Your Planning Command Center
+                <Calendar className="h-5 w-5 text-green-600" />
+                Planning Details
               </h3>
               <PlanningOverview />
             </div>
@@ -124,7 +135,7 @@ export function EmpowermentDashboard() {
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer border-2 border-blue-200 hover:border-blue-400">
             <CardContent className="p-6 text-center">
               <Calendar className="h-8 w-8 mx-auto mb-3 text-blue-600" />
               <h3 className="font-semibold text-gray-900 mb-2">Daily Planner</h3>
@@ -133,7 +144,7 @@ export function EmpowermentDashboard() {
           </Card>
           
           <Card 
-            className="hover:shadow-md transition-shadow cursor-pointer"
+            className="hover:shadow-md transition-shadow cursor-pointer border-2 border-amber-200 hover:border-amber-400"
             onClick={() => setShowPurchasePage(true)}
           >
             <CardContent className="p-6 text-center">
@@ -143,7 +154,7 @@ export function EmpowermentDashboard() {
             </CardContent>
           </Card>
           
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
+          <Card className="hover:shadow-md transition-shadow cursor-pointer border-2 border-green-200 hover:border-green-400">
             <CardContent className="p-6 text-center">
               <User className="h-8 w-8 mx-auto mb-3 text-green-600" />
               <h3 className="font-semibold text-gray-900 mb-2">Support Circle</h3>

@@ -21,6 +21,8 @@ export function PlanningSpotlight() {
   const navigate = useNavigate();
   const { data: planningData, isLoading } = usePlanningData();
 
+  console.log("PlanningSpotlight rendering:", { planningData, isLoading });
+
   if (isLoading) {
     return (
       <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-white to-secondary/5">
@@ -28,32 +30,31 @@ export function PlanningSpotlight() {
           <div className="animate-pulse space-y-4">
             <div className="h-6 bg-gray-200 rounded w-1/2"></div>
             <div className="h-20 bg-gray-200 rounded"></div>
+            <div className="text-center text-gray-500">Loading your planning data...</div>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  if (!planningData) {
-    return (
-      <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-white to-secondary/5">
-        <CardContent className="p-6 text-center">
-          <Sparkles className="h-12 w-12 mx-auto text-primary/50 mb-3" />
-          <p className="text-muted-foreground">Planning data will appear here once loaded</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  // Always show content even if no data - use fallback
+  const safeData = planningData || {
+    todayActions: [],
+    tomorrowActions: [],
+    weeklyGoals: [],
+    upcomingEvents: [],
+    thisWeekActions: []
+  };
 
-  const completedToday = planningData.todayActions.filter(action => action.status === 'completed').length;
-  const totalToday = planningData.todayActions.length;
+  const completedToday = safeData.todayActions.filter(action => action.status === 'completed').length;
+  const totalToday = safeData.todayActions.length;
   const progressPercentage = totalToday > 0 ? Math.round((completedToday / totalToday) * 100) : 0;
   
-  const dailyWinsToday = planningData.todayActions.filter(action => action.is_daily_win);
+  const dailyWinsToday = safeData.todayActions.filter(action => action.is_daily_win);
   const completedDailyWins = dailyWinsToday.filter(action => action.status === 'completed').length;
   
-  const nextEvent = planningData.upcomingEvents[0];
-  const topGoal = planningData.weeklyGoals.sort((a, b) => (b.progress_percentage || 0) - (a.progress_percentage || 0))[0];
+  const nextEvent = safeData.upcomingEvents[0];
+  const topGoal = safeData.weeklyGoals.sort((a, b) => (b.progress_percentage || 0) - (a.progress_percentage || 0))[0];
 
   return (
     <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-white to-secondary/5 shadow-lg">
@@ -89,7 +90,9 @@ export function PlanningSpotlight() {
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div>
               <p className="text-green-700 font-medium">{completedToday} of {totalToday} actions done</p>
-              <p className="text-green-600">You're making great progress!</p>
+              <p className="text-green-600">
+                {totalToday === 0 ? "Ready to plan your day!" : "You're making great progress!"}
+              </p>
             </div>
             <div>
               <p className="text-green-700 font-medium">{completedDailyWins} daily victory{completedDailyWins !== 1 ? 'ies' : 'y'}</p>
@@ -114,7 +117,7 @@ export function PlanningSpotlight() {
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-blue-700">No upcoming events</p>
+              <p className="text-sm text-blue-700">No upcoming events - perfect time to plan!</p>
             )}
           </div>
 
@@ -130,7 +133,7 @@ export function PlanningSpotlight() {
                 <p className="text-xs text-purple-700">{topGoal.progress_percentage || 0}% progress</p>
               </div>
             ) : (
-              <p className="text-sm text-purple-700">Ready to set goals</p>
+              <p className="text-sm text-purple-700">Ready to set meaningful goals</p>
             )}
           </div>
 
@@ -142,7 +145,7 @@ export function PlanningSpotlight() {
             </div>
             <div>
               <p className="text-sm font-medium text-orange-900">
-                {planningData.thisWeekActions.length} actions planned
+                {safeData.thisWeekActions.length} actions planned
               </p>
               <p className="text-xs text-orange-700">Building your rhythm</p>
             </div>
@@ -177,6 +180,11 @@ export function PlanningSpotlight() {
               Manage Goals
             </Button>
           </div>
+        </div>
+
+        {/* Debug Info - Remove this in production */}
+        <div className="text-xs text-gray-500 border-t pt-2">
+          Debug: {safeData.todayActions.length} today actions, {safeData.weeklyGoals.length} goals, {safeData.upcomingEvents.length} events
         </div>
       </CardContent>
     </Card>
