@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Calendar, Settings, User, Crown, Target, TrendingUp } from "lucide-react";
+import { Calendar, Settings, User, Crown, Target, TrendingUp, Sparkles, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +8,7 @@ import { EnhancedEmpowermentHub } from "@/components/empowerment/EnhancedEmpower
 import { InAppPurchasePage } from "@/components/empowerment/InAppPurchasePage";
 import { PlanningSpotlight } from "@/components/planning/PlanningSpotlight";
 import { PlanningOverview } from "@/components/planning/PlanningOverview";
+import { DailyIChooseWidget } from "@/components/dashboard/DailyIChooseWidget";
 
 export function EmpowermentDashboard() {
   const [showPurchasePage, setShowPurchasePage] = useState(false);
@@ -93,7 +94,35 @@ export function EmpowermentDashboard() {
           </div>
         </div>
 
-        {/* Planning Command Center - Most Prominent Position */}
+        {/* DAILY EMPOWERMENT - FIRST PRIORITY */}
+        <div className="mb-12">
+          <div className="mb-6 text-center">
+            <div className="inline-flex items-center gap-3 mb-4">
+              <div className="animate-pulse">
+                <Sparkles className="h-8 w-8 text-amber-500" />
+              </div>
+              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 bg-clip-text text-transparent">
+                Start Your Day with Empowerment
+              </h2>
+              <div className="animate-pulse">
+                <Heart className="h-8 w-8 text-pink-500" />
+              </div>
+            </div>
+            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
+              Set the perfect mindset for success. Your personalized #IChoose statement creates the foundation for an empowered, productive day.
+            </p>
+          </div>
+          
+          {/* Enhanced Daily Empowerment Widget */}
+          <div className="relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 rounded-xl blur opacity-30 animate-pulse"></div>
+            <div className="relative">
+              <DailyIChooseWidget onUpgradeClick={() => setShowPurchasePage(true)} />
+            </div>
+          </div>
+        </div>
+
+        {/* Planning Command Center - Secondary Position */}
         <div className="mb-8">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
@@ -110,8 +139,8 @@ export function EmpowermentDashboard() {
           {/* Enhanced Empowerment Hub */}
           <div>
             <div className="mb-4">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Daily Empowerment</h3>
-              <p className="text-gray-600">Your personalized #IChoose statements</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Daily Empowerment Tools</h3>
+              <p className="text-gray-600">Additional empowerment resources and activities</p>
             </div>
             <EnhancedEmpowermentHub
               userType="brain-injury"
