@@ -1,5 +1,7 @@
 
 import { Toaster } from "@/components/ui/sonner";
+import { Toaster as CustomToaster } from "@/components/ui/toaster";
+import { ToastProvider } from "@/hooks/use-toast";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -16,14 +18,17 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <PlatformProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/assessment" element={<Assessment />} />
-              </Routes>
-            </TooltipProvider>
+            <ToastProvider>
+              <TooltipProvider>
+                <Toaster />
+                <CustomToaster />
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/assessment" element={<Assessment />} />
+                </Routes>
+              </TooltipProvider>
+            </ToastProvider>
           </PlatformProvider>
         </AuthProvider>
       </QueryClientProvider>
