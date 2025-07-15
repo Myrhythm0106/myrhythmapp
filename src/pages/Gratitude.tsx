@@ -17,7 +17,7 @@ const Gratitude = () => {
   const [promptType, setPromptType] = useState<"fitness" | "mindfulness" | "social" | "general">("general");
   const { addEntry } = useGratitude();
   
-  // State for the quick add dialog
+  // State for the quick add dialog - THIS IS THE MAIN ADD BUTTON
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   
   const handleOpenPrompt = (type: "fitness" | "mindfulness" | "social" | "general") => {
@@ -28,17 +28,18 @@ const Gratitude = () => {
   const handleSaveGratitude = (entry: any) => {
     addEntry(entry);
     setIsPromptOpen(false);
-    // Auto-switch to journal tab when entry is saved
     setActiveTab("journal");
   };
   
+  // MAIN ADD FUNCTION - This opens the add dialog
   const handleQuickAdd = () => {
     setIsQuickAddOpen(true);
   };
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
+      {/* PROMINENT HEADER WITH LARGE ADD BUTTON */}
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Brain className="h-8 w-8 text-blue-500" />
@@ -49,16 +50,43 @@ const Gratitude = () => {
             Strengthen neural pathways through meaningful gratitude and reflection
           </p>
         </div>
+        {/* MAIN ADD BUTTON - LARGE AND PROMINENT */}
         <Button 
           onClick={handleQuickAdd} 
           size="lg"
-          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white px-8 py-4 text-lg"
         >
-          <Plus className="mr-2 h-5 w-5" />
-          <Brain className="mr-2 h-5 w-5" />
-          Add Gratitude Now
+          <Plus className="mr-2 h-6 w-6" />
+          <Brain className="mr-2 h-6 w-6" />
+          ADD GRATITUDE NOW
         </Button>
       </div>
+
+      {/* ANOTHER PROMINENT ADD BUTTON SECTION */}
+      <Card className="bg-gradient-to-br from-blue-50 via-purple-50 to-rose-50 border-blue-200 mb-6">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+            <Brain className="h-7 w-7 text-blue-500" />
+            Start Your Brain Health Gratitude Practice
+            <Sparkles className="h-6 w-6 text-amber-400" />
+          </CardTitle>
+          <p className="text-blue-700 text-lg">
+            Click the button below to add what you're grateful for and WHY it matters to your brain health
+          </p>
+        </CardHeader>
+        <CardContent className="text-center">
+          <Button 
+            onClick={handleQuickAdd}
+            size="lg"
+            className="bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 hover:from-green-600 hover:via-blue-600 hover:to-purple-600 text-white text-xl px-12 py-6"
+          >
+            <Plus className="h-7 w-7 mr-3" />
+            <Brain className="h-7 w-7 mr-3" />
+            ADD YOUR GRATITUDE & WHY
+            <Sparkles className="h-6 w-6 ml-3" />
+          </Button>
+        </CardContent>
+      </Card>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="w-full max-w-md">
@@ -90,7 +118,7 @@ const Gratitude = () => {
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Quick Add Button */}
+              {/* ANOTHER ADD BUTTON */}
               <div className="text-center">
                 <Button 
                   onClick={handleQuickAdd}
@@ -197,7 +225,7 @@ const Gratitude = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Quick Add Dialog */}
+      {/* MAIN Quick Add Dialog - THIS IS WHAT OPENS WHEN YOU CLICK THE BIG BUTTONS */}
       <Dialog open={isQuickAddOpen} onOpenChange={setIsQuickAddOpen}>
         <EntryDetailsDialog
           isNewEntry={true}
