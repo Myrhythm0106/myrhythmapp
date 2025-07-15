@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export interface AssessmentData {
@@ -30,11 +29,6 @@ export function useAssessmentManager() {
   ) => {
     setIsLoading(true);
     try {
-      const user = await supabase.auth.getUser();
-      if (!user.data.user) {
-        throw new Error('User not authenticated');
-      }
-
       const assessmentData: AssessmentData = {
         id: crypto.randomUUID(),
         assessmentType,
@@ -43,25 +37,10 @@ export function useAssessmentManager() {
         completedAt: new Date().toISOString(),
       };
 
-      // Try to save to database, fall back to localStorage
-      try {
-        const { error } = await supabase
-          .from('user_assessments')
-          .insert({
-            user_id: user.data.user.id,
-            assessment_type: assessmentType,
-            responses,
-            recommendations,
-          });
-
-        if (error) throw error;
-      } catch (dbError) {
-        console.log('Database not available, using localStorage:', dbError);
-        // Fallback to localStorage
-        const existingAssessments = JSON.parse(localStorage.getItem('assessments') || '[]');
-        existingAssessments.push(assessmentData);
-        localStorage.setItem('assessments', JSON.stringify(existingAssessments));
-      }
+      // Use localStorage for now since database tables don't exist yet
+      const existingAssessments = JSON.parse(localStorage.getItem('assessments') || '[]');
+      existingAssessments.push(assessmentData);
+      localStorage.setItem('assessments', JSON.stringify(existingAssessments));
 
       // Schedule reminder for comprehensive assessment if brief was completed
       if (assessmentType === 'brief') {
@@ -83,9 +62,6 @@ export function useAssessmentManager() {
 
   const scheduleUpgradeReminder = async (assessmentId: string) => {
     try {
-      const user = await supabase.auth.getUser();
-      if (!user.data.user) return;
-
       const reminderDate = new Date();
       reminderDate.setDate(reminderDate.getDate() + 7); // 7 days from now
 
@@ -96,25 +72,10 @@ export function useAssessmentManager() {
         isActive: true,
       };
 
-      // Try to save to database, fall back to localStorage
-      try {
-        const { error } = await supabase
-          .from('assessment_reminders')
-          .insert({
-            user_id: user.data.user.id,
-            assessment_id: assessmentId,
-            reminder_type: 'comprehensive_upgrade',
-            scheduled_for: reminderDate.toISOString(),
-          });
-
-        if (error) throw error;
-      } catch (dbError) {
-        console.log('Database not available for reminders, using localStorage:', dbError);
-        // Fallback to localStorage
-        const existingReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
-        existingReminders.push(reminderData);
-        localStorage.setItem('assessment_reminders', JSON.stringify(existingReminders));
-      }
+      // Use localStorage for now
+      const existingReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
+      existingReminders.push(reminderData);
+      localStorage.setItem('assessment_reminders', JSON.stringify(existingReminders));
 
       setReminders(prev => [...prev, reminderData]);
     } catch (error) {
@@ -124,34 +85,9 @@ export function useAssessmentManager() {
 
   const loadAssessments = async () => {
     try {
-      const user = await supabase.auth.getUser();
-      if (!user.data.user) return;
-
-      // Try to load from database, fall back to localStorage
-      try {
-        const { data, error } = await supabase
-          .from('user_assessments')
-          .select('*')
-          .eq('user_id', user.data.user.id)
-          .order('completed_at', { ascending: false });
-
-        if (error) throw error;
-
-        const formattedData: AssessmentData[] = (data || []).map(item => ({
-          id: item.id,
-          assessmentType: item.assessment_type as 'brief' | 'comprehensive',
-          responses: item.responses || {},
-          recommendations: item.recommendations || undefined,
-          completedAt: item.completed_at,
-        }));
-
-        setAssessments(formattedData);
-      } catch (dbError) {
-        console.log('Database not available, loading from localStorage:', dbError);
-        // Fallback to localStorage
-        const localAssessments = JSON.parse(localStorage.getItem('assessments') || '[]');
-        setAssessments(localAssessments);
-      }
+      // Load from localStorage for now
+      const localAssessments = JSON.parse(localStorage.getItem('assessments') || '[]');
+      setAssessments(localAssessments);
     } catch (error) {
       console.error('Error loading assessments:', error);
     }
@@ -159,34 +95,9 @@ export function useAssessmentManager() {
 
   const loadReminders = async () => {
     try {
-      const user = await supabase.auth.getUser();
-      if (!user.data.user) return;
-
-      // Try to load from database, fall back to localStorage
-      try {
-        const { data, error } = await supabase
-          .from('assessment_reminders')
-          .select('*')
-          .eq('user_id', user.data.user.id)
-          .eq('is_active', true)
-          .order('scheduled_for', { ascending: true });
-
-        if (error) throw error;
-
-        const formattedData: AssessmentReminder[] = (data || []).map(item => ({
-          id: item.id,
-          reminderType: item.reminder_type,
-          scheduledFor: item.scheduled_for,
-          isActive: item.is_active,
-        }));
-
-        setReminders(formattedData);
-      } catch (dbError) {
-        console.log('Database not available for reminders, loading from localStorage:', dbError);
-        // Fallback to localStorage
-        const localReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
-        setReminders(localReminders);
-      }
+      // Load from localStorage for now
+      const localReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
+      setReminders(localReminders);
     } catch (error) {
       console.error('Error loading reminders:', error);
     }
@@ -201,29 +112,12 @@ export function useAssessmentManager() {
 
   const dismissReminder = async (reminderId: string) => {
     try {
-      const user = await supabase.auth.getUser();
-      if (!user.data.user) return;
-
-      // Try to update in database, fall back to localStorage
-      try {
-        const { error } = await supabase
-          .from('assessment_reminders')
-          .update({ 
-            is_active: false,
-            acknowledged_at: new Date().toISOString()
-          })
-          .eq('id', reminderId);
-
-        if (error) throw error;
-      } catch (dbError) {
-        console.log('Database not available, updating localStorage:', dbError);
-        // Fallback to localStorage
-        const existingReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
-        const updatedReminders = existingReminders.map((reminder: AssessmentReminder) =>
-          reminder.id === reminderId ? { ...reminder, isActive: false } : reminder
-        );
-        localStorage.setItem('assessment_reminders', JSON.stringify(updatedReminders));
-      }
+      // Update localStorage
+      const existingReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
+      const updatedReminders = existingReminders.map((reminder: AssessmentReminder) =>
+        reminder.id === reminderId ? { ...reminder, isActive: false } : reminder
+      );
+      localStorage.setItem('assessment_reminders', JSON.stringify(updatedReminders));
 
       setReminders(prev => prev.map(reminder =>
         reminder.id === reminderId ? { ...reminder, isActive: false } : reminder
@@ -231,6 +125,16 @@ export function useAssessmentManager() {
     } catch (error) {
       console.error('Error dismissing reminder:', error);
     }
+  };
+
+  // Add the missing methods
+  const acknowledgeReminder = async (reminderId: string) => {
+    await dismissReminder(reminderId);
+  };
+
+  const hasBriefOnly = () => {
+    return assessments.some(a => a.assessmentType === 'brief') && 
+           !assessments.some(a => a.assessmentType === 'comprehensive');
   };
 
   useEffect(() => {
@@ -245,6 +149,8 @@ export function useAssessmentManager() {
     saveAssessment,
     getActiveReminders,
     dismissReminder,
+    acknowledgeReminder,
+    hasBriefOnly,
     loadAssessments,
     loadReminders,
   };

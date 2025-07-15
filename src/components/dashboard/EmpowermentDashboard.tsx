@@ -9,6 +9,7 @@ import { InAppPurchasePage } from "@/components/empowerment/InAppPurchasePage";
 import { PlanningSpotlight } from "@/components/planning/PlanningSpotlight";
 import { WeekPrioritiesCard } from "@/components/planning/WeekPrioritiesCard";
 import { TodaysPriority } from "@/components/dashboard/TodaysPriority";
+import { DailyIChooseWidget } from "@/components/dashboard/DailyIChooseWidget";
 import { useNavigate } from "react-router-dom";
 
 export function EmpowermentDashboard() {
@@ -28,6 +29,10 @@ export function EmpowermentDashboard() {
     { id: 3, status: 'pending' },
     { id: 4, status: 'pending' }
   ];
+
+  const handleUpgradeClick = () => {
+    setShowPurchasePage(true);
+  };
 
   if (showPurchasePage) {
     return <InAppPurchasePage onBack={() => setShowPurchasePage(false)} />;
@@ -62,12 +67,17 @@ export function EmpowermentDashboard() {
           </div>
         </div>
 
-        {/* Today's Priority - Prominent Position */}
+        {/* Daily #IChoose Statement - TOP PRIORITY PLACEMENT */}
+        <div className="mb-8">
+          <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} />
+        </div>
+
+        {/* Today's Priority - Second Priority */}
         <div className="mb-8">
           <TodaysPriority />
         </div>
 
-        {/* Planning Command Center */}
+        {/* Planning Command Center - Third Priority */}
         <div className="mb-8">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
@@ -96,7 +106,7 @@ export function EmpowermentDashboard() {
             </div>
             <EnhancedEmpowermentHub
               userType="brain-injury"
-              onUpgradeClick={() => setShowPurchasePage(true)}
+              onUpgradeClick={handleUpgradeClick}
             />
           </div>
         </div>
