@@ -1,34 +1,26 @@
 
-import { useState } from "react";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
+import { useState, useEffect } from 'react';
 
-export interface UserData {
-  name: string;
-  userType: UserType;
+interface UserData {
+  userType: string;
+  name?: string;
+  email?: string;
 }
 
-// Convert legacy user types to new category types
-const convertUserType = (legacyType: string): UserType => {
-  switch (legacyType) {
-    case "tbi":
-    case "abi":
-      return "brain-injury";
-    case "mental-health":
-      return "cognitive-optimization";
-    case "caregiver":
-      return "caregiver";
-    case "new":
-    default:
-      return "wellness";
-  }
-};
-
-export function useUserData() {
-  // In a real app, we would fetch the user data from a database or API
-  const [userData] = useState<UserData>({
-    name: "Alex",
-    userType: convertUserType("tbi"), // This will convert "tbi" to "brain-injury"
+export function useUserData(): UserData {
+  const [userData, setUserData] = useState<UserData>({
+    userType: 'brain-injury'
   });
+
+  useEffect(() => {
+    // In a real app, this would fetch from Supabase
+    const savedUserType = localStorage.getItem('userType') || 'brain-injury';
+    setUserData({
+      userType: savedUserType,
+      name: 'User',
+      email: 'user@example.com'
+    });
+  }, []);
 
   return userData;
 }
