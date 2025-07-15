@@ -1,12 +1,18 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 
 export interface SubscriptionFeatures {
-  personalizedInsights: boolean;
-  familyAccess: boolean;
-  premiumContent: boolean;
+  // Basic Features (Free tier)
+  basicAssessments: boolean;
+  simpleMoodTracking: boolean;
+  basicCalendar: boolean;
+  communityAccess: boolean;
+  maxCommunityMembers: number; // Free: 1, Premium: 10, Family: unlimited
+  
+  // Premium Features
   advancedSymptomTracking: boolean;
   fullCalendarManagement: boolean;
+  personalizedInsights: boolean;
   prioritySupport: boolean;
   smartInterventionAlerts: boolean;
   enhancedSafetyReminders: boolean;
@@ -15,6 +21,8 @@ export interface SubscriptionFeatures {
   conversationNotes: boolean;
   readingSupport: boolean;
   financialSafetyAlerts: boolean;
+  
+  // Family Plan Features
   multipleAccounts: boolean;
   sharedCalendars: boolean;
   caregiverResources: boolean;
@@ -25,93 +33,160 @@ export interface SubscriptionFeatures {
   processRecording: boolean;
 }
 
-export interface SubscriptionData {
-  subscribed: boolean;
-  trial_active: boolean;
-  trial_days_left: number;
-  subscription_tier: 'free' | 'premium' | 'family';
-  subscription_end?: string;
-}
+export type SubscriptionTier = 'free' | 'premium' | 'family';
 
 interface SubscriptionContextType {
-  tier: 'free' | 'premium' | 'family';
+  tier: SubscriptionTier;
+  features: SubscriptionFeatures;
   hasFeature: (feature: keyof SubscriptionFeatures) => boolean;
-  isTrialActive: boolean;
-  trialDaysLeft: number;
-  subscriptionData: SubscriptionData;
-  isLoading: boolean;
-  openCustomerPortal: () => Promise<string>;
+  upgradeRequired: (feature: keyof SubscriptionFeatures) => boolean;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
 
-export function SubscriptionProvider({ children }: { children: React.ReactNode }) {
-  const [tier, setTier] = useState<'free' | 'premium' | 'family'>('free');
-  const [isTrialActive, setIsTrialActive] = useState(false);
-  const [trialDaysLeft, setTrialDaysLeft] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const subscriptionData: SubscriptionData = {
-    subscribed: tier !== 'free',
-    trial_active: isTrialActive,
-    trial_days_left: trialDaysLeft,
-    subscription_tier: tier,
+const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
+  const baseFeatures: SubscriptionFeatures = {
+    // Basic Features
+    basicAssessments: false,
+    simpleMoodTracking: false,
+    basicCalendar: false,
+    communityAccess: false,
+    maxCommunityMembers: 0,
+    
+    // Premium Features
+    advancedSymptomTracking: false,
+    fullCalendarManagement: false,
+    personalizedInsights: false,
+    prioritySupport: false,
+    smartInterventionAlerts: false,
+    enhancedSafetyReminders: false,
+    objectLocationTracker: false,
+    medicationPhotoVerification: false,
+    conversationNotes: false,
+    readingSupport: false,
+    financialSafetyAlerts: false,
+    
+    // Family Plan Features
+    multipleAccounts: false,
+    sharedCalendars: false,
+    caregiverResources: false,
+    familySupportGroup: false,
+    dedicatedCaseManager: false,
+    emergencySupport: false,
+    patternRecognition: false,
+    processRecording: false,
   };
 
+  switch (tier) {
+    case 'free':
+      return {
+        ...baseFeatures,
+        basicAssessments: true,
+        simpleMoodTracking: true,
+        basicCalendar: true,
+        communityAccess: true,
+        maxCommunityMembers: 1, // Free tier limited to 1 community member
+      };
+      
+    case 'premium':
+      return {
+        ...baseFeatures,
+        // Basic Features
+        basicAssessments: true,
+        simpleMoodTracking: true,
+        basicCalendar: true,
+        communityAccess: true,
+        maxCommunityMembers: 10, // Premium tier gets 10 community members
+        
+        // Premium Features
+        advancedSymptomTracking: true,
+        fullCalendarManagement: true,
+        personalizedInsights: true,
+        prioritySupport: true,
+        smartInterventionAlerts: true,
+        enhancedSafetyReminders: true,
+        objectLocationTracker: true,
+        medicationPhotoVerification: true,
+        conversationNotes: true,
+        readingSupport: true,
+        financialSafetyAlerts: true,
+      };
+      
+    case 'family':
+      return {
+        ...baseFeatures,
+        // All Basic and Premium Features
+        basicAssessments: true,
+        simpleMoodTracking: true,
+        basicCalendar: true,
+        communityAccess: true,
+        maxCommunityMembers: -1, // Family tier gets unlimited community members
+        advancedSymptomTracking: true,
+        fullCalendarManagement: true,
+        personalizedInsights: true,
+        prioritySupport: true,
+        smartInterventionAlerts: true,
+        enhancedSafetyReminders: true,
+        objectLocationTracker: true,
+        medicationPhotoVerification: true,
+        conversationNotes: true,
+        readingSupport: true,
+        financialSafetyAlerts: true,
+        
+        // Family Plan Features
+        multipleAccounts: true,
+        sharedCalendars: true,
+        caregiverResources: true,
+        familySupportGroup: true,
+        dedicatedCaseManager: true,
+        emergencySupport: true,
+        patternRecognition: true,
+        processRecording: true,
+      };
+      
+    default:
+      return baseFeatures;
+  }
+};
+
+interface SubscriptionProviderProps {
+  children: ReactNode;
+  tier?: SubscriptionTier;
+}
+
+export function SubscriptionProvider({ 
+  children, 
+  tier = 'free' // Default to free tier for demo
+}: SubscriptionProviderProps) {
+  const features = getFeaturesByTier(tier);
+  
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
-    switch (feature) {
-      case 'personalizedInsights':
-      case 'premiumContent':
-      case 'advancedSymptomTracking':
-      case 'fullCalendarManagement':
-      case 'prioritySupport':
-      case 'smartInterventionAlerts':
-      case 'enhancedSafetyReminders':
-      case 'objectLocationTracker':
-      case 'medicationPhotoVerification':
-      case 'conversationNotes':
-      case 'readingSupport':
-      case 'financialSafetyAlerts':
-        return tier === 'premium' || tier === 'family';
-      case 'familyAccess':
-      case 'multipleAccounts':
-      case 'sharedCalendars':
-      case 'caregiverResources':
-      case 'familySupportGroup':
-      case 'dedicatedCaseManager':
-      case 'emergencySupport':
-      case 'patternRecognition':
-      case 'processRecording':
-        return tier === 'family';
-      default:
-        return false;
+    if (feature === 'maxCommunityMembers') {
+      return features[feature] > 0 || features[feature] === -1; // -1 means unlimited
     }
+    return Boolean(features[feature]);
   };
-
-  const openCustomerPortal = async (): Promise<string> => {
-    // Mock implementation - in real app this would call Stripe
-    return Promise.resolve('https://billing.stripe.com/session/example');
+  
+  const upgradeRequired = (feature: keyof SubscriptionFeatures): boolean => {
+    return !hasFeature(feature);
   };
-
+  
   return (
-    <SubscriptionContext.Provider value={{ 
-      tier, 
-      hasFeature, 
-      isTrialActive, 
-      trialDaysLeft,
-      subscriptionData,
-      isLoading,
-      openCustomerPortal
+    <SubscriptionContext.Provider value={{
+      tier,
+      features,
+      hasFeature,
+      upgradeRequired
     }}>
       {children}
     </SubscriptionContext.Provider>
   );
 }
 
-export const useSubscription = () => {
+export function useSubscription() {
   const context = useContext(SubscriptionContext);
   if (context === undefined) {
     throw new Error('useSubscription must be used within a SubscriptionProvider');
   }
   return context;
-};
+}

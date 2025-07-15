@@ -9,15 +9,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { CommunityMembers } from "@/components/community/CommunityMembers";
 import { CommunityInvite } from "@/components/community/CommunityInvite";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Plus, Users, MessageSquare, Heart, ChevronRight, Eye, Settings } from "lucide-react";
+import { Plus, Users, MessageSquare, Heart, ChevronRight, Eye, Settings, Crown, Lock } from "lucide-react";
 import { SwipeableCarousel } from "@/components/dashboard/SwipeableCarousel";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { EnhancedSupportCirclePermissions } from "@/components/personal-community/EnhancedSupportCirclePermissions";
 import { SupportCircleMessaging } from "@/components/personal-community/SupportCircleMessaging";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+import { Badge } from "@/components/ui/badge";
 
 const PersonalCommunity = () => {
   const [activeTab, setActiveTab] = useState("members");
   const isMobile = useIsMobile();
+  const { features, tier } = useSubscription();
 
   // These members should come from your MembersList component
   const communityMembers = [
@@ -89,6 +92,23 @@ const PersonalCommunity = () => {
     </Card>
   ));
 
+  // Check if user can add more members based on their subscription
+  const canAddMoreMembers = () => {
+    if (features.maxCommunityMembers === -1) return true; // Unlimited
+    return communityMembers.length < features.maxCommunityMembers;
+  };
+
+  const getMemberLimitMessage = () => {
+    if (features.maxCommunityMembers === -1) return "Unlimited members";
+    return `${communityMembers.length}/${features.maxCommunityMembers} members`;
+  };
+
+  const getUpgradeMessage = () => {
+    if (tier === 'free') return "Upgrade to Premium for 10 members";
+    if (tier === 'premium') return "Upgrade to Family for unlimited members";
+    return "";
+  };
+
   return (
     <ScrollArea className="h-[calc(100vh-64px)]">
       <div className="space-y-6 p-4">
@@ -96,20 +116,46 @@ const PersonalCommunity = () => {
           title="My Support Circle" 
           subtitle="Connect, communicate, and share your journey with your trusted support network"
         >
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="mr-1 h-4 w-4" />
-                Invite New Member
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[550px]">
-              <DialogHeader>
-                <DialogTitle>Invite to Your Support Circle</DialogTitle>
-              </DialogHeader>
-              <CommunityInvite />
-            </DialogContent>
-          </Dialog>
+          <div className="flex flex-col sm:flex-row gap-2">
+            {/* Member limit indicator */}
+            <div className="flex items-center gap-2">
+              <Badge variant={tier === 'free' ? 'secondary' : tier === 'premium' ? 'default' : 'premium'}>
+                {tier === 'free' && <Users className="h-3 w-3 mr-1" />}
+                {tier === 'premium' && <Crown className="h-3 w-3 mr-1" />}
+                {tier === 'family' && <Crown className="h-3 w-3 mr-1" />}
+                {getMemberLimitMessage()}
+              </Badge>
+            </div>
+
+            {canAddMoreMembers() ? (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button>
+                    <Plus className="mr-1 h-4 w-4" />
+                    Invite New Member
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[550px]">
+                  <DialogHeader>
+                    <DialogTitle>Invite to Your Support Circle</DialogTitle>
+                  </DialogHeader>
+                  <CommunityInvite />
+                </DialogContent>
+              </Dialog>
+            ) : (
+              <div className="flex flex-col gap-2">
+                <Button disabled variant="outline" className="relative">
+                  <Lock className="mr-1 h-4 w-4" />
+                  Member Limit Reached
+                </Button>
+                {tier !== 'family' && (
+                  <p className="text-xs text-muted-foreground text-center">
+                    {getUpgradeMessage()}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </PageHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
@@ -143,6 +189,22 @@ const PersonalCommunity = () => {
                   />
                 </div>
                 <CommunityMembers />
+                
+                {/* Show upgrade message if at limit */}
+                {!canAddMoreMembers() && tier !== 'family' && (
+                  <div className="mt-6 p-4 bg-muted/50 rounded-lg border-2 border-dashed">
+                    <div className="text-center space-y-2">
+                      <Lock className="h-8 w-8 mx-auto text-muted-foreground" />
+                      <h3 className="font-medium">Support Circle Full</h3>
+                      <p className="text-sm text-muted-foreground">
+                        You've reached your {features.maxCommunityMembers} member limit for the {tier} plan.
+                      </p>
+                      <Button variant="outline" size="sm">
+                        {getUpgradeMessage()}
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
