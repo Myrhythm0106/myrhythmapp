@@ -1,101 +1,71 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { MobileSubscriptionProvider } from "@/contexts/MobileSubscriptionContext";
-import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
-import { PlatformProvider } from "@/components/platform/PlatformProvider";
-import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
-import MainLayout from "@/components/layout/MainLayout";
-import LandingPage from "@/pages/Landing";
-import AuthPage from "@/pages/AuthPage";
-import DashboardPage from "@/pages/Dashboard";
-import CalendarPage from "@/pages/Calendar";
-import GoalsPage from "@/pages/GoalsPage";
-import BrainGamesPage from "@/pages/BrainGamesPage";
-import MoodTrackingPage from "@/pages/MoodTrackingPage";
-import GratitudePage from "@/pages/GratitudePage";
-import AccountabilityPage from "@/pages/AccountabilityPage";
-import CommunityPage from "@/pages/CommunityPage";
-import NotesPage from "@/pages/NotesPage";
-import StrategyDashboard from "@/pages/StrategyDashboard";
-import RevenueAnalyticsPage from "@/pages/RevenueAnalyticsPage";
-import TestingSuitePage from "@/pages/TestingSuitePage";
-import ProfilePage from "@/pages/Profile";
-import SettingsPage from "@/pages/SecuritySettings";
-import UsefulInfoPage from "@/pages/UsefulInfoPage";
-import PersonalEmpowermentPage from "@/pages/PersonalEmpowermentPage";
-import BrainRecoveryPage from "@/pages/BrainRecoveryPage";
-import UserGuidePage from "@/pages/UserGuidePage";
-import Preview3Landing from "@/pages/Preview3Landing";
-import PreviewLanding from "@/pages/PreviewLanding";
-import Preview2Landing from "@/pages/Preview2Landing";
-import WebOnboarding from "@/pages/WebOnboarding";
-import Onboarding from "@/pages/Onboarding";
-import { MobileOnboarding } from "@/components/onboarding/MobileOnboarding";
+import Index from "./pages/Index";
+import Onboarding from "./pages/Onboarding";
+import WebOnboarding from "./pages/WebOnboarding";
+import Assessment from "./pages/Assessment";
+import Dashboard from "./pages/Dashboard";
+import Preview3 from "./pages/Preview3";
+import EmpowermentStatements from "./pages/EmpowermentStatements";
+import Notes from "./pages/Notes";
+import Gratitude from "./pages/Gratitude";
+import AudioJournal from "@/pages/AudioJournal";
+import Pomodoro from "./pages/Pomodoro";
+import Calendar from "./pages/Calendar";
+import MoodTracker from "./pages/MoodTracker";
+import QuickActions from "./pages/QuickActions";
+import BrainHealth from "./pages/BrainHealth";
+import PersonalProgress from "./pages/PersonalProgress";
+import SupportCircle from "./pages/SupportCircle";
+import Goals from "./pages/Goals";
+import DailyWins from "./pages/DailyWins";
+import HealthLogs from "./pages/HealthLogs";
+import VoiceRecordings from "./pages/VoiceRecordings";
+import Settings from "./pages/Settings";
+import Upgrade from "./pages/Upgrade";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <PlatformProvider>
-          <AuthProvider>
-            <SubscriptionProvider>
-              <MobileSubscriptionProvider>
-                <Toaster />
-                <BrowserRouter>
-                  <Routes>
-                    {/* Primary Preview 3 route - mobile-first landing */}
-                    <Route path="/" element={<Preview3Landing />} />
-                    <Route path="/preview-3" element={<Preview3Landing />} />
-                    
-                    {/* Authentication */}
-                    <Route path="/auth" element={<AuthPage />} />
-                    
-                    {/* Onboarding routes - FIXED TO USE THE RIGHT COMPONENT */}
-                    <Route path="/onboarding" element={<Onboarding />} />
-                    <Route path="/mobile-onboarding" element={<MobileOnboarding />} />
-                    <Route path="/web-onboarding" element={<WebOnboarding />} />
-                    
-                    {/* Other preview versions - preserved for reference */}
-                    <Route path="/landing-original" element={<LandingPage />} />
-                    <Route path="/preview-landing" element={<PreviewLanding />} />
-                    <Route path="/preview-2" element={<Preview2Landing />} />
-                    
-                    {/* Full application routes - wrapped with SidebarProvider */}
-                    <Route path="/dashboard" element={<SidebarProvider><MainLayout><DashboardPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/personal-empowerment" element={<SidebarProvider><MainLayout><PersonalEmpowermentPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/calendar" element={<SidebarProvider><MainLayout><CalendarPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/goals" element={<SidebarProvider><MainLayout><GoalsPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/brain-games" element={<SidebarProvider><MainLayout><BrainGamesPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/brain-recovery" element={<SidebarProvider><MainLayout><BrainRecoveryPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/mood-tracking" element={<SidebarProvider><MainLayout><MoodTrackingPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/gratitude" element={<SidebarProvider><MainLayout><GratitudePage /></MainLayout></SidebarProvider>} />
-                    <Route path="/accountability" element={<SidebarProvider><MainLayout><AccountabilityPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/community" element={<SidebarProvider><MainLayout><CommunityPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/personal-community" element={<SidebarProvider><MainLayout><CommunityPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/notes" element={<SidebarProvider><MainLayout><NotesPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/strategy" element={<SidebarProvider><MainLayout><StrategyDashboard /></MainLayout></SidebarProvider>} />
-                    <Route path="/analytics" element={<SidebarProvider><MainLayout><RevenueAnalyticsPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/testing" element={<SidebarProvider><MainLayout><TestingSuitePage /></MainLayout></SidebarProvider>} />
-                    <Route path="/profile" element={<SidebarProvider><MainLayout><ProfilePage /></MainLayout></SidebarProvider>} />
-                    <Route path="/settings" element={<SidebarProvider><MainLayout><SettingsPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/useful-info" element={<SidebarProvider><MainLayout><UsefulInfoPage /></MainLayout></SidebarProvider>} />
-                    <Route path="/user-guide" element={<SidebarProvider><MainLayout><UserGuidePage /></MainLayout></SidebarProvider>} />
-
-                    {/* Redirect unknown routes to mobile-first landing */}
-                    <Route path="*" element={<Navigate to="/preview-3" replace />} />
-                  </Routes>
-                </BrowserRouter>
-              </MobileSubscriptionProvider>
-            </SubscriptionProvider>
-          </AuthProvider>
-        </PlatformProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/preview-3" element={<Preview3 />} />
+              <Route path="/onboarding" element={<Onboarding />} />
+              <Route path="/web-onboarding" element={<WebOnboarding />} />
+              <Route path="/assessment" element={<Assessment />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/empowerment-statements" element={<EmpowermentStatements />} />
+              <Route path="/notes" element={<Notes />} />
+              <Route path="/gratitude" element={<Gratitude />} />
+              <Route path="/audio-journal" element={<AudioJournal />} />
+              <Route path="/pomodoro" element={<Pomodoro />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/mood-tracker" element={<MoodTracker />} />
+              <Route path="/quick-actions" element={<QuickActions />} />
+              <Route path="/brain-health" element={<BrainHealth />} />
+              <Route path="/personal-progress" element={<PersonalProgress />} />
+              <Route path="/support-circle" element={<SupportCircle />} />
+              <Route path="/goals" element={<Goals />} />
+              <Route path="/daily-wins" element={<DailyWins />} />
+              <Route path="/health-logs" element={<HealthLogs />} />
+              <Route path="/voice-recordings" element={<VoiceRecordings />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/upgrade" element={<Upgrade />} />
+            </Routes>
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 }
 

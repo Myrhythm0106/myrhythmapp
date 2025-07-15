@@ -13,6 +13,7 @@ import { DemoNavigation } from "../demo/DemoNavigation";
 import { MorningRitualView } from "./views/MorningRitualView";
 import { DailyIChooseWidget } from "./DailyIChooseWidget";
 import { SmartNotificationEngine } from "./SmartNotificationEngine";
+import { AssessmentUpgradeReminder } from "./AssessmentUpgradeReminder";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -77,6 +78,9 @@ export function DashboardContent() {
   return (
     <div className="space-y-6">
       <DashboardHeader />
+      
+      {/* Assessment Upgrade Reminder */}
+      <AssessmentUpgradeReminder />
       
       {/* Progress & Unlock Status */}
       {metrics.engagementLevel !== 'advanced' && (
