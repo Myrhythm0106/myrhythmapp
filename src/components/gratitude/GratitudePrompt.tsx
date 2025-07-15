@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { HeartHandshake, Star, Share2 } from "lucide-react";
+import { HeartHandshake, Star, Share2, Brain, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useUserData } from "@/hooks/use-user-data";
 
@@ -20,7 +20,7 @@ export interface GratitudeEntry {
   promptType: string;
   activity?: string;
   gratitudeText: string;
-  whyGrateful: string; // Added field for why user is grateful
+  whyGrateful: string;
   moodScore: number;
   isShared: boolean;
   tags: string[];
@@ -28,7 +28,7 @@ export interface GratitudeEntry {
 
 export function GratitudePrompt({ promptType, activity, onSave, onClose }: GratitudePromptProps) {
   const [gratitudeText, setGratitudeText] = useState("");
-  const [whyGrateful, setWhyGrateful] = useState(""); // Added state for why field
+  const [whyGrateful, setWhyGrateful] = useState("");
   const [moodScore, setMoodScore] = useState(3);
   const [isSharing, setIsSharing] = useState(false);
   const userData = useUserData();
@@ -65,27 +65,31 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
       return;
     }
 
+    if (!whyGrateful.trim()) {
+      toast.error("Please explain why this matters to you - this deepens the brain health benefit!");
+      return;
+    }
+
     const entry: GratitudeEntry = {
       id: crypto.randomUUID(),
       date: new Date(),
       promptType,
       activity,
       gratitudeText,
-      whyGrateful, // Include the why field in the saved entry
+      whyGrateful,
       moodScore,
       isShared: isSharing,
       tags: extractTags(gratitudeText),
     };
 
     onSave(entry);
-    toast.success("Gratitude recorded!");
+    toast.success("Gratitude recorded! Your brain loves this reflection! 🧠✨");
     
     if (onClose) {
       onClose();
     }
   };
 
-  // Simple tag extraction from text - Fixed TypeScript error
   const extractTags = (text: string): string[] => {
     const commonWords = ["for", "the", "and", "that", "with", "this", "from", "have", "was", "feel", "felt"];
     const matches = text.toLowerCase().match(/\b(\w+)\b/g);
@@ -98,7 +102,6 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
       word.length > 3 && !commonWords.includes(word)
     );
     
-    // Return unique words that might be tags
     return [...new Set(potentialTags)].slice(0, 5);
   };
 
@@ -107,8 +110,12 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
       <CardHeader className="pb-4">
         <CardTitle className="flex items-center gap-2 text-xl">
           <HeartHandshake className="h-5 w-5 text-primary" />
-          Gratitude Reflection
+          Gratitude for Brain Health
+          <Brain className="h-5 w-5 text-blue-500" />
         </CardTitle>
+        <p className="text-sm text-gray-600">
+          Research shows gratitude practice strengthens neural pathways and improves cognitive function
+        </p>
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="font-medium text-lg">{getPromptText()}</p>
@@ -120,14 +127,24 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
           className="min-h-[100px] text-base"
         />
         
-        {/* Add the WHY field */}
-        <div>
-          <p className="font-medium text-lg mb-2">Why are you grateful for this?</p>
+        {/* Enhanced WHY field with brain health emphasis */}
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
+          <div className="flex items-center gap-2 mb-3">
+            <Brain className="h-5 w-5 text-blue-500" />
+            <p className="font-semibold text-lg text-blue-800">
+              🧠 Brain Health Boost: Why does this matter to you?
+            </p>
+            <Sparkles className="h-4 w-4 text-purple-500" />
+          </div>
+          <p className="text-sm text-blue-700 mb-3">
+            This "why" reflection actively engages your brain's deeper thinking patterns, 
+            strengthening neural connections and emotional processing.
+          </p>
           <Textarea
-            placeholder="Explain why this matters to you..."
+            placeholder="This matters because it helps me... / I feel grateful because... / This impacts my life by..."
             value={whyGrateful}
             onChange={e => setWhyGrateful(e.target.value)}
-            className="min-h-[100px] text-base"
+            className="min-h-[120px] text-base border-blue-300 focus:border-blue-500"
           />
         </div>
 
@@ -172,8 +189,13 @@ export function GratitudePrompt({ promptType, activity, onSave, onClose }: Grati
             Skip for now
           </Button>
         )}
-        <Button onClick={handleSave} disabled={!gratitudeText.trim()}>
-          Save Gratitude
+        <Button 
+          onClick={handleSave} 
+          disabled={!gratitudeText.trim() || !whyGrateful.trim()}
+          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+        >
+          <Brain className="h-4 w-4 mr-2" />
+          Save Brain Health Gratitude
         </Button>
       </CardFooter>
     </Card>

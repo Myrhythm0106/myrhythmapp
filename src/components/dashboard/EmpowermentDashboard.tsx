@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Calendar, Settings, User, Crown, Target, TrendingUp, Sparkles, Heart } from "lucide-react";
+import { Calendar, Settings, User, Crown, Target, TrendingUp, Sparkles, Heart, Brain } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -8,10 +8,12 @@ import { EnhancedEmpowermentHub } from "@/components/empowerment/EnhancedEmpower
 import { InAppPurchasePage } from "@/components/empowerment/InAppPurchasePage";
 import { PlanningSpotlight } from "@/components/planning/PlanningSpotlight";
 import { WeekPrioritiesCard } from "@/components/planning/WeekPrioritiesCard";
-import { DailyIChooseWidget } from "@/components/dashboard/DailyIChooseWidget";
+import { TodaysPriority } from "@/components/dashboard/TodaysPriority";
+import { useNavigate } from "react-router-dom";
 
 export function EmpowermentDashboard() {
   const [showPurchasePage, setShowPurchasePage] = useState(false);
+  const navigate = useNavigate();
 
   // Mock data for week priorities
   const mockWeeklyGoals = [
@@ -60,35 +62,12 @@ export function EmpowermentDashboard() {
           </div>
         </div>
 
-        {/* DAILY EMPOWERMENT - FIRST PRIORITY */}
-        <div className="mb-12">
-          <div className="mb-6 text-center">
-            <div className="inline-flex items-center gap-3 mb-4">
-              <div className="animate-pulse">
-                <Sparkles className="h-8 w-8 text-amber-500" />
-              </div>
-              <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 bg-clip-text text-transparent">
-                Start Your Day with Empowerment
-              </h2>
-              <div className="animate-pulse">
-                <Heart className="h-8 w-8 text-pink-500" />
-              </div>
-            </div>
-            <p className="text-lg text-gray-700 max-w-2xl mx-auto">
-              Set the perfect mindset for success. Your personalized #IChoose statement creates the foundation for an empowered, productive day.
-            </p>
-          </div>
-          
-          {/* Enhanced Daily Empowerment Widget */}
-          <div className="relative">
-            <div className="absolute -inset-1 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 rounded-xl blur opacity-30 animate-pulse"></div>
-            <div className="relative">
-              <DailyIChooseWidget onUpgradeClick={() => setShowPurchasePage(true)} />
-            </div>
-          </div>
+        {/* Today's Priority - Prominent Position */}
+        <div className="mb-8">
+          <TodaysPriority />
         </div>
 
-        {/* Planning Command Center - Secondary Position */}
+        {/* Planning Command Center */}
         <div className="mb-8">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
@@ -102,11 +81,11 @@ export function EmpowermentDashboard() {
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Week Priorities & Goals - Replaces Planning Details */}
+          {/* Week Priorities & Goals */}
           <WeekPrioritiesCard 
             weeklyGoals={mockWeeklyGoals}
             thisWeekActions={mockThisWeekActions}
-            onViewGoals={() => {/* Navigate to goals */}}
+            onViewGoals={() => navigate("/goals")}
           />
 
           {/* Enhanced Empowerment Hub */}
@@ -129,7 +108,12 @@ export function EmpowermentDashboard() {
               <Calendar className="h-8 w-8 text-memory-emerald-500 mx-auto mb-3" />
               <h3 className="font-semibold mb-2">Plan My Day</h3>
               <p className="text-sm text-gray-600 mb-4">Create brain-friendly schedules</p>
-              <Button size="sm" variant="outline" className="border-memory-emerald-300">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="border-memory-emerald-300"
+                onClick={() => navigate("/calendar")}
+              >
                 Open Calendar
               </Button>
             </CardContent>
@@ -140,8 +124,13 @@ export function EmpowermentDashboard() {
               <Target className="h-8 w-8 text-clarity-teal-500 mx-auto mb-3" />
               <h3 className="font-semibold mb-2">Track Progress</h3>
               <p className="text-sm text-gray-600 mb-4">Monitor your recovery journey</p>
-              <Button size="sm" variant="outline" className="border-clarity-teal-300">
-                View Stats
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="border-clarity-teal-300"
+                onClick={() => navigate("/goals")}
+              >
+                View Goals
               </Button>
             </CardContent>
           </Card>
@@ -151,7 +140,12 @@ export function EmpowermentDashboard() {
               <Heart className="h-8 w-8 text-heart-500 mx-auto mb-3" />
               <h3 className="font-semibold mb-2">Support Circle</h3>
               <p className="text-sm text-gray-600 mb-4">Connect with your care team</p>
-              <Button size="sm" variant="outline" className="border-heart-300">
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="border-heart-300"
+                onClick={() => navigate("/accountability")}
+              >
                 Manage Circle
               </Button>
             </CardContent>

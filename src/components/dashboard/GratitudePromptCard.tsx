@@ -2,13 +2,12 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { HeartHandshake, ArrowRight, Pencil, Sparkles, Heart } from "lucide-react";
+import { HeartHandshake, ArrowRight, Pencil, Sparkles, Heart, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { useGratitude } from "@/hooks/use-gratitude";
 import { toast } from "sonner";
 
-// Simple, encouraging gratitude prompts
 const dailyGratitudePrompts = [
   "What made you smile today?",
   "Who showed you kindness recently?",
@@ -46,6 +45,11 @@ export function GratitudePromptCard() {
       return;
     }
     
+    if (!whyResponse.trim()) {
+      toast.error("Please explain why - this boosts the brain health benefit!");
+      return;
+    }
+    
     const newEntry = {
       promptType: "general" as const,
       gratitudeText: response,
@@ -56,8 +60,8 @@ export function GratitudePromptCard() {
     };
 
     addEntry(newEntry);
-    toast.success("Your gratitude has been saved! 🌱", {
-      description: "Every grateful moment builds your resilience."
+    toast.success("Brain health gratitude saved! 🧠✨", {
+      description: "Every grateful moment strengthens your neural pathways."
     });
     
     setResponse("");
@@ -66,17 +70,21 @@ export function GratitudePromptCard() {
   };
   
   return (
-    <Card className="border-l-4 border-l-rose-400 shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-rose-50 to-pink-50">
+    <Card className="border-l-4 border-l-rose-400 shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-rose-50 to-blue-50">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
           <HeartHandshake className="h-5 w-5 text-rose-500" />
-          Your Daily Gratitude
+          Brain Health Gratitude
+          <Brain className="h-4 w-4 text-blue-500" />
           <Sparkles className="h-4 w-4 text-amber-400" />
         </CardTitle>
+        <p className="text-sm text-gray-600">
+          Strengthen neural pathways through meaningful reflection
+        </p>
       </CardHeader>
       
       <CardContent className="pt-1 space-y-4">
-        <div className="rounded-lg bg-gradient-to-r from-rose-100 to-pink-100 p-4 border border-rose-200">
+        <div className="rounded-lg bg-gradient-to-r from-rose-100 to-blue-100 p-4 border border-rose-200">
           <div className="flex items-center gap-2 mb-2">
             <Heart className="h-4 w-4 text-rose-500" />
             <span className="text-sm font-medium text-rose-700">Today's question</span>
@@ -98,13 +106,19 @@ export function GratitudePromptCard() {
               />
             </div>
             
-            <div>
-              <label className="text-sm font-medium text-rose-700 mb-2 block">
-                Why does this matter to you? 🌱
-              </label>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-lg border border-blue-200">
+              <div className="flex items-center gap-2 mb-2">
+                <Brain className="h-4 w-4 text-blue-500" />
+                <label className="text-sm font-medium text-blue-700">
+                  🧠 Why does this matter to you? (Brain Health Boost!)
+                </label>
+              </div>
+              <p className="text-xs text-blue-600 mb-2">
+                This deeper reflection strengthens your neural connections
+              </p>
               <Textarea
-                placeholder="This matters because..."
-                className="min-h-[80px] border-rose-200 focus:border-rose-400"
+                placeholder="This matters because... / I feel grateful because... / This impacts my life by..."
+                className="min-h-[80px] border-blue-200 focus:border-blue-400"
                 value={whyResponse}
                 onChange={(e) => setWhyResponse(e.target.value)}
               />
@@ -113,10 +127,11 @@ export function GratitudePromptCard() {
             <div className="flex gap-2">
               <Button 
                 onClick={handleSave}
-                className="bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
+                className="bg-gradient-to-r from-rose-500 via-blue-500 to-purple-500 hover:from-rose-600 hover:via-blue-600 hover:to-purple-600"
+                disabled={!response.trim() || !whyResponse.trim()}
               >
-                <Heart className="h-4 w-4 mr-1" />
-                Save Gratitude
+                <Brain className="h-4 w-4 mr-1" />
+                Save Brain Health Gratitude
               </Button>
               <Button 
                 variant="outline" 
@@ -134,10 +149,10 @@ export function GratitudePromptCard() {
         ) : (
           <Button 
             onClick={handleStartWriting}
-            className="w-full bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600"
+            className="w-full bg-gradient-to-r from-rose-500 to-blue-500 hover:from-rose-600 hover:to-blue-600"
           >
             <Pencil className="h-4 w-4 mr-1" />
-            Start Writing
+            Start Brain Health Reflection
           </Button>
         )}
       </CardContent>
