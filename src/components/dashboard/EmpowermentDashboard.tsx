@@ -4,7 +4,6 @@ import { Calendar, Settings, User, Crown, Target, TrendingUp, Sparkles, Heart, B
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { EnhancedEmpowermentHub } from "@/components/empowerment/EnhancedEmpowermentHub";
 import { InAppPurchasePage } from "@/components/empowerment/InAppPurchasePage";
 import { PlanningSpotlight } from "@/components/planning/PlanningSpotlight";
 import { WeekPrioritiesCard } from "@/components/planning/WeekPrioritiesCard";
@@ -89,26 +88,13 @@ export function EmpowermentDashboard() {
           <PlanningSpotlight />
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Week Priorities & Goals */}
+        {/* Week Priorities & Goals - Single Column Layout */}
+        <div className="mb-8">
           <WeekPrioritiesCard 
             weeklyGoals={mockWeeklyGoals}
             thisWeekActions={mockThisWeekActions}
             onViewGoals={() => navigate("/goals")}
           />
-
-          {/* Enhanced Empowerment Hub */}
-          <div>
-            <div className="mb-4">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Daily Empowerment Tools</h3>
-              <p className="text-gray-600">Additional empowerment resources and activities</p>
-            </div>
-            <EnhancedEmpowermentHub
-              userType="brain-injury"
-              onUpgradeClick={handleUpgradeClick}
-            />
-          </div>
         </div>
 
         {/* Quick Actions & Journey Progress */}
