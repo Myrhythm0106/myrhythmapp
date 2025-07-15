@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { X, CheckCircle, Star, Crown, Users, Zap } from "lucide-react";
-import { UserType } from "../UserTypeStep";
+import { Check, Crown, Sparkles } from "lucide-react";
+import { UserType } from "@/types/user";
 
 interface SmartPricingDisplayProps {
   userType?: UserType | null;

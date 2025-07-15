@@ -1,10 +1,9 @@
-
 import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { UserType } from "@/types/user";
 import { Check, ArrowRight, ArrowLeft, Smartphone, Bell, Calendar, Users } from "lucide-react";
-import { UserType } from "./steps/UserTypeStep";
 
 type OnboardingStep = "user-type" | "subscription" | "payment" | "assessment";
 

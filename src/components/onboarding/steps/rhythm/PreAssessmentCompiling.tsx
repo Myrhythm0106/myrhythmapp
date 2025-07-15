@@ -1,8 +1,7 @@
-
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { UserType } from "@/types/user";
 import { Brain, Sparkles, Target, Users, Heart } from "lucide-react";
-import { UserType } from "../UserTypeStep";
 
 interface PreAssessmentCompilingProps {
   onComplete: () => void;

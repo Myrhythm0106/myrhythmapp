@@ -1,5 +1,4 @@
-
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
+import { UserType } from "@/types/user";
 
 export interface CategoryAffirmation {
   text: string;

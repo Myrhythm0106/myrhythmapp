@@ -1,11 +1,8 @@
-
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Brain, Target, Zap, CheckCircle, ChevronDown, ChevronRight, BookOpen } from "lucide-react";
-import { UserType } from "./steps/UserTypeStep";
+import { Brain, Heart, Users, Sparkles, ArrowRight } from "lucide-react";
+import { UserType } from "@/types/user";
 
 interface AssessmentGuideProps {
   userType?: UserType | null;

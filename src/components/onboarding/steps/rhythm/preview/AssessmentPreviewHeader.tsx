@@ -1,33 +1,52 @@
-
 import React from "react";
-import { Sparkles } from "lucide-react";
-import { UserType } from "../../UserTypeStep";
+import { Badge } from "@/components/ui/badge";
+import { UserType } from "@/types/user";
 
 interface AssessmentPreviewHeaderProps {
-  userType?: UserType | null;
+  assessmentResult: any;
+  userType: UserType;
 }
 
-export function AssessmentPreviewHeader({ userType }: AssessmentPreviewHeaderProps) {
-  const getUserTypeDisplay = () => {
-    switch (userType) {
-      case 'brain-injury': return 'Brain Injury Recovery';
-      case 'caregiver': return 'Caregiver Support';
-      case 'cognitive-optimization': return 'Cognitive Optimization';
-      case 'wellness': return 'General Wellness';
-      default: return 'Personal Development';
-    }
+export function AssessmentPreviewHeader({ assessmentResult, userType }: AssessmentPreviewHeaderProps) {
+  const { overallScore, keyStrengths, areasForImprovement } = assessmentResult;
+
+  const getScoreBadgeColor = (score: number) => {
+    if (score >= 80) return "green";
+    if (score >= 60) return "yellow";
+    return "red";
   };
 
+  const scoreColor = getScoreBadgeColor(overallScore);
+
   return (
-    <div className="text-center space-y-4">
-      <div className="flex items-center justify-center gap-2">
-        <Sparkles className="h-6 w-6 text-yellow-500" />
-        <h1 className="text-3xl font-bold">Your {getUserTypeDisplay()} Assessment Results</h1>
-        <Sparkles className="h-6 w-6 text-yellow-500" />
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Assessment Preview</h2>
+        <Badge variant="secondary">
+          Overall Score: {overallScore}%
+        </Badge>
       </div>
-      <p className="text-lg text-muted-foreground">
-        We've analyzed your responses and discovered valuable insights about your unique {getUserTypeDisplay().toLowerCase()} journey
-      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h3 className="text-lg font-semibold">Key Strengths</h3>
+          <ul>
+            {keyStrengths.map((strength: string, index: number) => (
+              <li key={index} className="text-sm">{strength}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold">Areas for Improvement</h3>
+          <ul>
+            {areasForImprovement.map((area: string, index: number) => (
+              <li key={index} className="text-sm">{area}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
+

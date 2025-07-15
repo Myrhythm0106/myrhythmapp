@@ -1,5 +1,5 @@
+import { UserType } from "@/types/user";
 import { AssessmentResponses, Section } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { SectionScore, FocusArea } from "./rhythmAnalysis";
 
 export interface PersonalizedInsight {

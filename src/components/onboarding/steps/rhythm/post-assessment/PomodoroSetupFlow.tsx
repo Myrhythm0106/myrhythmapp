@@ -1,9 +1,8 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Timer, ArrowRight } from "lucide-react";
-import { UserType } from "../../UserTypeStep";
+import { Clock, Play, Pause } from "lucide-react";
+import { UserType } from "@/types/user";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
 
 interface PomodoroSetupFlowProps {
@@ -32,7 +31,7 @@ export function PomodoroSetupFlow({ assessmentResult, userType, onPomodoroSetup 
     <Card className="p-6">
       <CardHeader>
         <div className="flex items-center gap-3 mb-4">
-          <Timer className="h-6 w-6 text-blue-600" />
+          <Clock className="h-6 w-6 text-blue-600" />
           <CardTitle className="text-2xl">Your Personalized Pomodoro Setup</CardTitle>
         </div>
         <p className="text-muted-foreground">
@@ -62,7 +61,7 @@ export function PomodoroSetupFlow({ assessmentResult, userType, onPomodoroSetup 
 
         <Button onClick={() => onPomodoroSetup(settings)} size="lg" className="w-full">
           Set Up My Focus Timer
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <Play className="ml-2 h-4 w-4" />
         </Button>
       </CardContent>
     </Card>

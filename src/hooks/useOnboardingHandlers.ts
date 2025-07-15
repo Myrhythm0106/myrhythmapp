@@ -1,140 +1,173 @@
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
+import { UserType } from "@/types/user";
 
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
-import { PlanType } from "@/components/onboarding/steps/PlanStep";
-
-interface UseOnboardingHandlersProps {
-  currentStep: number;
-  totalSteps: number;
-  setCurrentStep: (step: number) => void;
-  setUserType: (type: UserType) => void;
-  setPersonalInfo: (info: PersonalInfoFormValues) => void;
-  setLocation: (location: any) => void;
-  setSelectedPlan: (plan: PlanType) => void;
-  setBillingPeriod: (period: 'monthly' | 'annual') => void;
-  setIsUserTypeSelected: (selected: boolean) => void;
-  setIsLocationValid: (valid: boolean) => void;
-  setIsPlanSelected: (selected: boolean) => void;
-  userType: UserType | null;
-  selectedPlan: PlanType;
-  billingPeriod?: 'monthly' | 'annual';
-}
-
-export const useOnboardingHandlers = (props: UseOnboardingHandlersProps) => {
+export function useOnboardingHandlers() {
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const goToPreviousStep = () => {
-    console.log("OnboardingHandlers: Going to previous step from", props.currentStep);
-    if (props.currentStep > 1) {
-      props.setCurrentStep(props.currentStep - 1);
+  const handleProfileSubmit = async (
+    userId: string,
+    userType: UserType,
+    firstName: string,
+    lastName: string,
+    age: number,
+    location: string
+  ) => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          user_type: userType,
+          first_name: firstName,
+          last_name: lastName,
+          age: age,
+          location: location,
+          updated_at: new Date()
+        })
+        .eq('id', userId);
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success('Profile updated successfully!');
+      return true;
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      toast.error(`Failed to update profile: ${error.message}`);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const goToNextStep = () => {
-    console.log("OnboardingHandlers: Going to next step from", props.currentStep);
-    if (props.currentStep < props.totalSteps) {
-      props.setCurrentStep(props.currentStep + 1);
-    } else if (props.currentStep === props.totalSteps) {
-      // Only navigate to dashboard if we're actually on the last step and assessment is complete
-      console.log("OnboardingHandlers: Completing onboarding, navigating to dashboard");
-      toast.success("Onboarding completed! Welcome to MyRhythm!");
-      navigate("/dashboard");
+  const handleAssessmentSubmit = async (
+    userId: string,
+    assessmentResult: any
+  ) => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from('rhythm_assessments')
+        .insert({
+          user_id: userId,
+          assessment_data: assessmentResult,
+          created_at: new Date()
+        });
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success('Assessment saved successfully!');
+      return true;
+    } catch (error: any) {
+      console.error('Error saving assessment:', error);
+      toast.error(`Failed to save assessment: ${error.message}`);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const goToStep = (stepNumber: number) => {
-    console.log("OnboardingHandlers: Going to step", stepNumber);
-    if (stepNumber >= 1 && stepNumber <= props.totalSteps) {
-      // Only allow navigation to completed or current+1 steps
-      const maxAllowedStep = Math.min(stepNumber, props.currentStep + 1);
-      props.setCurrentStep(maxAllowedStep);
+  const handleSupportIntegrationSubmit = async (
+    userId: string,
+    supportData: any
+  ) => {
+    setIsLoading(true);
+    try {
+      // Save support circle data
+      const { error: supportError } = await supabase
+        .from('support_circles')
+        .insert({
+          user_id: userId,
+          support_data: supportData,
+          created_at: new Date()
+        });
+
+      if (supportError) {
+        throw supportError;
+      }
+
+      toast.success('Support integration saved successfully!');
+      return true;
+    } catch (error: any) {
+      console.error('Error saving support integration:', error);
+      toast.error(`Failed to save support integration: ${error.message}`);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleUserTypeComplete = (data: { type: UserType }) => {
-    console.log("OnboardingHandlers: User type selected:", data.type);
-    props.setUserType(data.type);
-    props.setIsUserTypeSelected(true);
-    toast.success("User type selected!");
+  const handlePlanningIntegrationSubmit = async (
+    userId: string,
+    planningData: any
+  ) => {
+    setIsLoading(true);
+    try {
+      // Save planning data
+      const { error: planningError } = await supabase
+        .from('planning_preferences')
+        .insert({
+          user_id: userId,
+          planning_data: planningData,
+          created_at: new Date()
+        });
+
+      if (planningError) {
+        throw planningError;
+      }
+
+      toast.success('Planning integration saved successfully!');
+      return true;
+    } catch (error: any) {
+      console.error('Error saving planning integration:', error);
+      toast.error(`Failed to save planning integration: ${error.message}`);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handlePersonalInfoComplete = (data: PersonalInfoFormValues) => {
-    console.log("OnboardingHandlers: Personal info completed");
-    props.setPersonalInfo(data);
-    toast.success("Personal information saved!");
-  };
+  const handleOnboardingComplete = async (userId: string) => {
+    setIsLoading(true);
+    try {
+      // Mark onboarding as complete
+      const { error: onboardingError } = await supabase
+        .from('profiles')
+        .update({
+          onboarding_complete: true,
+          updated_at: new Date()
+        })
+        .eq('id', userId);
 
-  const handleLocationComplete = (data: any) => {
-    console.log("OnboardingHandlers: Location completed");
-    props.setLocation(data);
-    props.setIsLocationValid(true);
-    toast.success("Location saved!");
-  };
+      if (onboardingError) {
+        throw onboardingError;
+      }
 
-  const handlePlanSelected = (plan: PlanType, billingPeriod: 'monthly' | 'annual' = 'monthly') => {
-    console.log("OnboardingHandlers: Plan selected:", plan, "Billing:", billingPeriod);
-    props.setSelectedPlan(plan);
-    props.setBillingPeriod(billingPeriod);
-    props.setIsPlanSelected(true);
-    toast.success("Plan selected!");
-  };
-
-  const handlePreAssessmentComplete = () => {
-    console.log("OnboardingHandlers: Pre-assessment completed, proceeding to rhythm assessment");
-    toast.success("Assessment prepared! Beginning your personalized assessment.");
-    props.setCurrentStep(5);
-  };
-
-  const handleRhythmAssessmentComplete = () => {
-    console.log("OnboardingHandlers: Rhythm assessment completed, navigating to dashboard");
-    toast.success("Assessment complete! Your personalized insights are ready.");
-    navigate("/dashboard");
-  };
-
-  const getStepValidation = () => {
-    const validation = {
-      canGoNext: (() => {
-        switch (props.currentStep) {
-          case 1:
-            const hasUserType = props.userType !== null;
-            console.log("Step 1 validation - hasUserType:", hasUserType, "userType:", props.userType);
-            return hasUserType;
-          case 2:
-            console.log("Step 2 validation - location is optional, can always proceed");
-            return true; // Location is optional
-          case 3:
-            const hasPlan = props.selectedPlan !== null;
-            console.log("Step 3 validation - hasPlan:", hasPlan, "selectedPlan:", props.selectedPlan);
-            return hasPlan;
-          case 4:
-            console.log("Step 4 validation - pre-assessment auto-advances");
-            return true; // Pre-assessment auto-advances
-          case 5:
-            console.log("Step 5 validation - assessment completion required");
-            return false; // Assessment must be completed through its own flow
-          default:
-            return false;
-        }
-      })(),
-      canGoPrevious: props.currentStep > 1
-    };
-    
-    console.log("Step validation result:", validation);
-    return validation;
+      toast.success('Onboarding complete!');
+      navigate('/dashboard');
+      return true;
+    } catch (error: any) {
+      console.error('Error completing onboarding:', error);
+      toast.error(`Failed to complete onboarding: ${error.message}`);
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return {
-    goToPreviousStep,
-    goToNextStep,
-    goToStep,
-    handleUserTypeComplete,
-    handlePersonalInfoComplete,
-    handleLocationComplete,
-    handlePlanSelected,
-    handlePreAssessmentComplete,
-    handleRhythmAssessmentComplete,
-    getStepValidation
+    isLoading,
+    handleProfileSubmit,
+    handleAssessmentSubmit,
+    handleSupportIntegrationSubmit,
+    handlePlanningIntegrationSubmit,
+    handleOnboardingComplete
   };
-};
+}

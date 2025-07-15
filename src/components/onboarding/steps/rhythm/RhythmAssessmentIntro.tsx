@@ -1,89 +1,73 @@
-
 import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Info } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { UserType } from "../UserTypeStep";
+import { Badge } from "@/components/ui/badge";
+import { Brain, Clock, Target, TrendingUp } from "lucide-react";
+import { UserType } from "@/types/user";
 
 interface RhythmAssessmentIntroProps {
-  onBeginAssessment: () => void;
-  userType: UserType | null;
+  onStart: () => void;
 }
 
-export function RhythmAssessmentIntro({ onBeginAssessment, userType }: RhythmAssessmentIntroProps) {
-  const isRecoveryUser = userType === "brain-injury";
-
+export function RhythmAssessmentIntro({ onStart }: RhythmAssessmentIntroProps) {
   return (
-    <div className="space-y-6">
-      {/* Info section */}
-      <div className="flex items-center gap-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
-              <Info className="h-5 w-5 text-blue-600" />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p className="max-w-xs">This assessment will help us understand your unique rhythm and create a personalized experience just for you.</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        <div>
-          <h3 className="font-medium text-blue-900">
-            {isRecoveryUser ? "Rhythm Assessment" : "Personal Rhythm Discovery"}
-          </h3>
-          <p className="text-sm text-blue-700">
-            {isRecoveryUser 
-              ? "Discover your unique rhythm to personalize your MyRhythm experience." 
-              : "Understand your natural patterns to optimize your personal operating system."
-            }
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Brain className="h-5 w-5" />
+          Understand Your Rhythm
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <p>
+            Take our quick Rhythm Assessment to discover your unique patterns and
+            optimize your daily life.
+          </p>
+          <p>
+            This assessment analyzes your energy levels, focus patterns, and
+            productivity peaks to provide personalized insights.
           </p>
         </div>
-      </div>
 
-      <Card className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
-        <div className="text-center space-y-4">
-          <h3 className="text-xl font-semibold text-gray-800">
-            {isRecoveryUser 
-              ? "Your journey is unique, and so is your rhythm." 
-              : "Every high performer has their own rhythm."
-            }
-          </h3>
-          <div className="space-y-3 text-gray-700">
-            <p>
-              {isRecoveryUser 
-                ? "We believe in the power of your story, not to dwell on what was, but to illuminate the path forward."
-                : "We believe in understanding your patterns to unlock your highest potential."
-              }
-            </p>
-            <p>
-              {isRecoveryUser 
-                ? "You're about to take a small, yet powerful step towards a more personalized experience. We'll ask a few gentle questions that will help us understand your unique beat."
-                : "You're about to discover your optimal operating rhythm. We'll ask questions that reveal your natural patterns and peak performance zones."
-              }
-            </p>
-            <p className="font-medium">
-              There are no right or wrong answers, only your truth.
-            </p>
-            <p className="text-lg font-semibold text-blue-700">
-              {isRecoveryUser 
-                ? "Let's begin to build your future, together."
-                : "Let's unlock your optimal rhythm."
-              }
-            </p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="flex items-center space-x-4">
+              <Clock className="h-6 w-6 text-blue-600" />
+              <div>
+                <h3 className="text-lg font-semibold text-blue-900">
+                  Time Efficiency
+                </h3>
+                <p className="text-sm text-blue-700">
+                  Optimize your schedule for peak performance.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-green-50 border-green-200">
+            <CardContent className="flex items-center space-x-4">
+              <Target className="h-6 w-6 text-green-600" />
+              <div>
+                <h3 className="text-lg font-semibold text-green-900">
+                  Goal Alignment
+                </h3>
+                <p className="text-sm text-green-700">
+                  Align your activities with your core objectives.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </Card>
-      
-      <div className="flex justify-center">
-        <Button 
-          onClick={onBeginAssessment}
-          size="lg"
-          className="px-8 py-3"
-        >
-          Begin Assessment
-        </Button>
-      </div>
-    </div>
+
+        <div className="flex items-center justify-between">
+          <Badge variant="secondary">Quick & Insightful</Badge>
+          <Button onClick={onStart}>
+            Start Assessment
+            <TrendingUp className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

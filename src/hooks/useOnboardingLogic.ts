@@ -1,121 +1,124 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+import { UserType } from "@/types/user";
 
-import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { toast } from "@/components/ui/use-toast";
-import { PersonalInfoFormValues } from "@/components/onboarding/steps/PersonalInfoStep";
-import { PlanType } from "@/components/onboarding/steps/PlanStep";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
+interface OnboardingState {
+  step: number;
+  userType: UserType | null;
+  assessmentResult: any | null;
+  supportData: any | null;
+  dashboardLayout: 'brain-health' | 'empowerment' | null;
+}
 
-type LocationFormValues = {
-  country: string;
-  state: string;
-  town: string;
-};
-
-export const useOnboardingLogic = (totalSteps: number) => {
+export function useOnboardingLogic() {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  
-  // Initialize currentStep from URL parameter with proper validation
-  const [currentStep, setCurrentStep] = useState(() => {
-    const stepParam = searchParams.get('step');
-    if (stepParam) {
-      const stepFromUrl = parseInt(stepParam, 10);
-      if (stepFromUrl >= 1 && stepFromUrl <= totalSteps) {
-        return stepFromUrl;
-      }
-    }
-    return 1;
-  });
-  
-  // Core state
-  const [userType, setUserType] = useState<UserType | null>(null);
-  const [location, setLocation] = useState<LocationFormValues | null>(null);
-  const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
-  const [selectedPlan, setSelectedPlan] = useState<PlanType>("premium");
-  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
-  
-  // Form validation states for auto-progression
-  const [isUserTypeSelected, setIsUserTypeSelected] = useState(false);
-  const [isPersonalInfoValid, setIsPersonalInfoValid] = useState(false);
-  const [isLocationValid, setIsLocationValid] = useState(false);
-  const [isPlanSelected, setIsPlanSelected] = useState(false);
-  
-  // Track if user came from direct navigation to disable auto-progression
-  const [isDirectNavigation, setIsDirectNavigation] = useState(() => {
-    const stepParam = searchParams.get('step');
-    return stepParam !== null && parseInt(stepParam, 10) > 1;
+  const [onboardingState, setOnboardingState] = useState<OnboardingState>({
+    step: 1,
+    userType: null,
+    assessmentResult: null,
+    supportData: null,
+    dashboardLayout: null,
   });
 
-  // Sync URL with current step
-  useEffect(() => {
-    const stepParam = searchParams.get('step');
-    const stepFromUrl = stepParam ? parseInt(stepParam, 10) : null;
-    
-    if (stepFromUrl !== currentStep) {
-      console.log("OnboardingLogic: Updating URL to step", currentStep);
-      setSearchParams({ step: currentStep.toString() });
+  const nextStep = () => {
+    setOnboardingState(prevState => ({
+      ...prevState,
+      step: prevState.step + 1,
+    }));
+  };
+
+  const prevStep = () => {
+    setOnboardingState(prevState => ({
+      ...prevState,
+      step: Math.max(1, prevState.step - 1),
+    }));
+  };
+
+  const setUserType = (userType: UserType) => {
+    setOnboardingState(prevState => ({
+      ...prevState,
+      userType,
+    }));
+    nextStep();
+  };
+
+  const setAssessmentResult = (assessmentResult: any) => {
+    setOnboardingState(prevState => ({
+      ...prevState,
+      assessmentResult,
+    }));
+    nextStep();
+  };
+
+  const setSupportData = (supportData: any) => {
+    setOnboardingState(prevState => ({
+      ...prevState,
+      supportData,
+    }));
+    nextStep();
+  };
+
+  const setDashboardLayout = (dashboardLayout: 'brain-health' | 'empowerment') => {
+    setOnboardingState(prevState => ({
+      ...prevState,
+      dashboardLayout,
+    }));
+  };
+
+  const completeOnboarding = async (dashboardLayout: 'brain-health' | 'empowerment') => {
+    if (!onboardingState.userType) {
+      toast.error('User type must be selected.');
+      return;
     }
-  }, [currentStep, searchParams, setSearchParams]);
 
-  // Handle browser back/forward navigation
-  useEffect(() => {
-    const handlePopState = () => {
-      const stepParam = new URLSearchParams(window.location.search).get('step');
-      const stepFromUrl = stepParam ? parseInt(stepParam, 10) : 1;
-      
-      console.log("OnboardingLogic: PopState event, going to step", stepFromUrl);
-      
-      if (stepFromUrl >= 1 && stepFromUrl <= totalSteps) {
-        setCurrentStep(stepFromUrl);
-        setIsDirectNavigation(true);
-      } else {
-        navigate("/");
+    if (!onboardingState.assessmentResult) {
+      toast.error('Assessment must be completed.');
+      return;
+    }
+
+    if (!onboardingState.supportData) {
+      toast.error('Support information must be provided.');
+      return;
+    }
+
+    setDashboardLayout(dashboardLayout);
+
+    try {
+      // Save onboarding data to Supabase
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .update({
+          user_type: onboardingState.userType,
+          assessment_result: onboardingState.assessmentResult,
+          support_data: onboardingState.supportData,
+          dashboard_layout: dashboardLayout,
+          onboarding_complete: true,
+        })
+        .eq('id', supabase.auth.currentUser?.id);
+
+      if (error) {
+        throw new Error(error.message);
       }
-    };
-    
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, [navigate, totalSteps]);
 
-  // Clear any potentially insecure data from localStorage on component mount
-  useEffect(() => {
-    localStorage.removeItem('myrhythm_security_answers');
-  }, []);
+      // Redirect to the dashboard
+      navigate('/dashboard');
+      toast.success('Onboarding complete! Redirecting to your dashboard.');
 
-  // Update validation states when core state changes
-  useEffect(() => {
-    setIsUserTypeSelected(userType !== null);
-    console.log("OnboardingLogic: User type changed:", userType, "isSelected:", userType !== null);
-  }, [userType]);
-
-  useEffect(() => {
-    setIsPlanSelected(selectedPlan !== null);
-    console.log("OnboardingLogic: Selected plan changed:", selectedPlan, "isSelected:", selectedPlan !== null);
-  }, [selectedPlan]);
+    } catch (err: any) {
+      console.error('Onboarding failed:', err);
+      toast.error('Onboarding failed. Please try again.');
+    }
+  };
 
   return {
-    currentStep,
-    setCurrentStep,
-    userType,
+    onboardingState,
+    nextStep,
+    prevStep,
     setUserType,
-    location,
-    setLocation,
-    personalInfo,
-    setPersonalInfo,
-    selectedPlan,
-    setSelectedPlan,
-    billingPeriod,
-    setBillingPeriod,
-    isUserTypeSelected,
-    setIsUserTypeSelected,
-    isPersonalInfoValid,
-    setIsPersonalInfoValid,
-    isLocationValid,
-    setIsLocationValid,
-    isPlanSelected,
-    setIsPlanSelected,
-    isDirectNavigation,
-    setIsDirectNavigation,
+    setAssessmentResult,
+    setSupportData,
+    completeOnboarding,
   };
-};
+}

@@ -1,6 +1,5 @@
-
+import { UserType } from "@/types/user";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { AssessmentResponses } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
 
 export interface UseRhythmAssessmentReturn {

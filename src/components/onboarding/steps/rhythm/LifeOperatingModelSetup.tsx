@@ -1,65 +1,116 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Settings, ArrowRight } from "lucide-react";
-import { AssessmentResult } from "@/utils/rhythmAnalysis";
-import { UserType } from "../UserTypeStep";
+import { Badge } from "@/components/ui/badge";
+import { Settings, Clock, Target } from "lucide-react";
+import { UserType } from "@/types/user";
 
 interface LifeOperatingModelSetupProps {
-  assessmentResult: AssessmentResult;
-  onComplete: () => void;
-  onBack: () => void;
-  userType?: UserType | null;
+  onComplete: (data: any) => void;
+  assessmentResult: any;
 }
 
-export function LifeOperatingModelSetup({ assessmentResult, onComplete, onBack, userType }: LifeOperatingModelSetupProps) {
-  const getUserTypeDisplay = () => {
-    switch (userType) {
-      case 'brain-injury': return 'Brain Injury Recovery';
-      case 'caregiver': return 'Caregiver Support';
-      case 'cognitive-optimization': return 'Cognitive Optimization';
-      case 'wellness': return 'General Wellness';
-      default: return 'Personal Development';
-    }
+export function LifeOperatingModelSetup({ onComplete, assessmentResult }: LifeOperatingModelSetupProps) {
+  const [operatingModel, setOperatingModel] = useState({
+    focusHours: 4,
+    breakFrequency: 60,
+    idealWorkEnvironment: "quiet",
+    energyTrackingEnabled: true,
+    goalSettingFrequency: "weekly"
+  });
+
+  const handleContinue = () => {
+    onComplete(operatingModel);
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-600 rounded-full flex items-center justify-center">
-          <Settings className="h-8 w-8 text-white" />
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Settings className="h-5 w-5" />
+          Life Operating Model
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Focus Hours */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label htmlFor="focus-hours" className="text-base font-medium">
+              Ideal Focus Hours
+            </label>
+            <Badge variant="secondary">{operatingModel.focusHours} hours</Badge>
+          </div>
+          <input
+            type="range"
+            id="focus-hours"
+            min="1"
+            max="8"
+            value={operatingModel.focusHours}
+            onChange={(e) => setOperatingModel({ ...operatingModel, focusHours: parseInt(e.target.value) })}
+            className="w-full"
+          />
         </div>
-        <h1 className="text-3xl font-bold">Life Operating Model Setup</h1>
-        <p className="text-lg text-muted-foreground">
-          Configure your personalized {getUserTypeDisplay().toLowerCase()} system
-        </p>
-      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Setup Your Operating Model</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p>We'll help you establish:</p>
-          <ul className="space-y-2 ml-4">
-            <li>• Daily routine optimization</li>
-            <li>• Priority management system</li>
-            <li>• Progress tracking dashboard</li>
-            <li>• Personalized reminders and alerts</li>
-          </ul>
-        </CardContent>
-      </Card>
+        {/* Break Frequency */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <label htmlFor="break-frequency" className="text-base font-medium">
+              Ideal Break Frequency
+            </label>
+            <Badge variant="secondary">{operatingModel.breakFrequency} minutes</Badge>
+          </div>
+          <input
+            type="range"
+            id="break-frequency"
+            min="15"
+            max="90"
+            step="15"
+            value={operatingModel.breakFrequency}
+            onChange={(e) => setOperatingModel({ ...operatingModel, breakFrequency: parseInt(e.target.value) })}
+            className="w-full"
+          />
+        </div>
 
-      <div className="flex gap-4">
-        <Button variant="outline" onClick={onBack} className="flex-1">
-          Back
-        </Button>
-        <Button onClick={onComplete} className="flex-1">
-          Setup Model
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-    </div>
+        {/* Ideal Work Environment */}
+        <div className="space-y-2">
+          <label htmlFor="work-environment" className="text-base font-medium">
+            Ideal Work Environment
+          </label>
+          <select
+            id="work-environment"
+            value={operatingModel.idealWorkEnvironment}
+            onChange={(e) => setOperatingModel({ ...operatingModel, idealWorkEnvironment: e.target.value })}
+            className="w-full p-2 border rounded"
+          >
+            <option value="quiet">Quiet & Isolated</option>
+            <option value="collaborative">Collaborative & Social</option>
+            <option value="flexible">Flexible & Dynamic</option>
+          </select>
+        </div>
+
+        {/* Goal Setting Frequency */}
+        <div className="space-y-2">
+          <label htmlFor="goal-frequency" className="text-base font-medium">
+            Goal Setting Frequency
+          </label>
+          <select
+            id="goal-frequency"
+            value={operatingModel.goalSettingFrequency}
+            onChange={(e) => setOperatingModel({ ...operatingModel, goalSettingFrequency: e.target.value })}
+            className="w-full p-2 border rounded"
+          >
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+            <option value="monthly">Monthly</option>
+          </select>
+        </div>
+
+        <div className="pt-4 border-t">
+          <Button onClick={handleContinue} className="w-full">
+            Continue to Support Integration
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

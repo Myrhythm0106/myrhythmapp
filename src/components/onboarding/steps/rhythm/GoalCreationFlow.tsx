@@ -1,65 +1,110 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, ArrowRight } from "lucide-react";
-import { AssessmentResult } from "@/utils/rhythmAnalysis";
-import { UserType } from "../UserTypeStep";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Target, Plus } from "lucide-react";
+import { UserType } from "@/types/user";
 
 interface GoalCreationFlowProps {
-  assessmentResult: AssessmentResult;
-  onComplete: () => void;
-  onBack: () => void;
-  userType?: UserType | null;
+  userType: UserType;
+  onComplete: (goals: Goal[]) => void;
 }
 
-export function GoalCreationFlow({ assessmentResult, onComplete, onBack, userType }: GoalCreationFlowProps) {
-  const getUserTypeDisplay = () => {
-    switch (userType) {
-      case 'brain-injury': return 'Brain Injury Recovery';
-      case 'caregiver': return 'Caregiver Support';
-      case 'cognitive-optimization': return 'Cognitive Optimization';
-      case 'wellness': return 'General Wellness';
-      default: return 'Personal Development';
-    }
+interface Goal {
+  id: string;
+  title: string;
+  description: string;
+}
+
+export function GoalCreationFlow({ userType, onComplete }: GoalCreationFlowProps) {
+  const [goals, setGoals] = useState<Goal[]>([
+    { id: "1", title: "", description: "" }
+  ]);
+
+  const addGoal = () => {
+    setGoals(prev => [
+      ...prev,
+      { id: crypto.randomUUID(), title: "", description: "" }
+    ]);
+  };
+
+  const updateGoal = (id: string, field: keyof Goal, value: string) => {
+    setGoals(prev =>
+      prev.map(goal =>
+        goal.id === id ? { ...goal, [field]: value } : goal
+      )
+    );
+  };
+
+  const removeGoal = (id: string) => {
+    setGoals(prev => prev.filter(goal => goal.id !== id));
+  };
+
+  const handleSubmit = () => {
+    // Filter out empty goals
+    const filteredGoals = goals.filter(goal => goal.title.trim() !== "");
+    onComplete(filteredGoals);
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-green-500 to-teal-600 rounded-full flex items-center justify-center">
-          <Target className="h-8 w-8 text-white" />
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Target className="h-5 w-5" />
+          Set Your Goals
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {goals.map((goal, index) => (
+          <div key={goal.id} className="space-y-2 border rounded-lg p-4">
+            <div className="flex justify-between items-center">
+              <h4 className="font-semibold">Goal {index + 1}</h4>
+              {goals.length > 1 && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeGoal(goal.id)}
+                  aria-label={`Remove goal ${index + 1}`}
+                >
+                  &times;
+                </Button>
+              )}
+            </div>
+            <Input
+              placeholder="Goal title"
+              value={goal.title}
+              onChange={(e) => updateGoal(goal.id, "title", e.target.value)}
+            />
+            <Textarea
+              placeholder="Goal description (optional)"
+              value={goal.description}
+              onChange={(e) => updateGoal(goal.id, "description", e.target.value)}
+              rows={3}
+            />
+          </div>
+        ))}
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2"
+          onClick={addGoal}
+        >
+          <Plus className="h-4 w-4" />
+          Add Another Goal
+        </Button>
+
+        <div className="pt-4 border-t">
+          <Button
+            onClick={handleSubmit}
+            disabled={goals.every(goal => goal.title.trim() === "")}
+            className="w-full"
+          >
+            Continue
+          </Button>
         </div>
-        <h1 className="text-3xl font-bold">Set Your {getUserTypeDisplay()} Goals</h1>
-        <p className="text-lg text-muted-foreground">
-          Create personalized goals based on your assessment results
-        </p>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Goal Creation Process</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p>Based on your {assessmentResult.focusArea} focus area, we'll help you create:</p>
-          <ul className="space-y-2 ml-4">
-            <li>• Short-term achievable milestones</li>
-            <li>• Long-term transformation goals</li>
-            <li>• Daily action steps</li>
-            <li>• Progress tracking methods</li>
-          </ul>
-        </CardContent>
-      </Card>
-
-      <div className="flex gap-4">
-        <Button variant="outline" onClick={onBack} className="flex-1">
-          Back
-        </Button>
-        <Button onClick={onComplete} className="flex-1">
-          Create Goals
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

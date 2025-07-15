@@ -1,73 +1,45 @@
-
 import React, { useState } from "react";
-import { AssessmentResult } from "@/utils/rhythmAnalysis";
-import { UserType } from "../../UserTypeStep";
-import { RhythmAssessmentIntro } from "../RhythmAssessmentIntro";
-import { RhythmAssessmentView } from "../RhythmAssessmentView";
-import { AssessmentCompiling } from "../AssessmentCompiling";
-import { useRhythmAssessment } from "@/hooks/useRhythmAssessment";
+import { Card, CardContent } from "@/components/ui/card";
+import { UserType } from "@/types/user";
 
 interface AssessmentFlowManagerProps {
-  userType?: UserType | null;
-  onComplete: (result: AssessmentResult) => void;
+  userType: UserType;
+  onComplete: (data: any) => void;
 }
 
 export function AssessmentFlowManager({ userType, onComplete }: AssessmentFlowManagerProps) {
-  const {
-    hasStarted,
-    currentSection,
-    responses,
-    isCompiling,
-    assessmentResult,
-    compilationError,
-    sections,
-    isRestoringFromSave,
-    handleResponse,
-    handleNext,
-    handleCompilationComplete,
-    handleManualContinue,
-    handleBack,
-    handleBeginAssessment,
-    handleRetry
-  } = useRhythmAssessment(userType);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [assessmentData, setAssessmentData] = useState({});
 
-  React.useEffect(() => {
-    if (assessmentResult) {
-      console.log("AssessmentFlowManager: Assessment result received, calling onComplete");
-      onComplete(assessmentResult);
-    }
-  }, [assessmentResult, onComplete]);
+  const handleStepComplete = (stepData: any) => {
+    setAssessmentData(prev => ({ ...prev, ...stepData }));
+    setCurrentStep(prev => prev + 1);
+  };
 
-  if (!hasStarted) {
-    return (
-      <RhythmAssessmentIntro
-        onBeginAssessment={handleBeginAssessment}
-        userType={userType}
-      />
-    );
-  }
-
-  if (isCompiling) {
-    return (
-      <AssessmentCompiling 
-        onComplete={handleCompilationComplete}
-        error={compilationError}
-        onManualContinue={handleManualContinue}
-        onRetry={handleRetry}
-      />
-    );
-  }
+  const handleComplete = () => {
+    onComplete(assessmentData);
+  };
 
   return (
-    <RhythmAssessmentView
-      currentSection={currentSection}
-      responses={responses}
-      onResponse={handleResponse}
-      onNext={handleNext}
-      onBack={handleBack}
-      sections={sections}
-      userType={userType}
-      isRestoringFromSave={isRestoringFromSave}
-    />
+    <Card>
+      <CardContent className="p-6">
+        <div className="space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Assessment Flow Manager
+            </h2>
+            <p className="text-gray-600">
+              Managing your personalized assessment for {userType} users
+            </p>
+          </div>
+          
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <p className="text-blue-800">
+              Step {currentStep + 1} of assessment flow
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

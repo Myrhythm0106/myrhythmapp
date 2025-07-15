@@ -1,79 +1,116 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AssessmentResult } from "@/utils/rhythmAnalysis";
-import { focusAreas } from "@/utils/rhythmAnalysis";
-import { Trophy, Sparkles, ArrowRight } from "lucide-react";
-import { UserType } from "../UserTypeStep";
+import { TrendingUp, Clock, Target, Heart, Sparkles } from "lucide-react";
+import { UserType } from "@/types/user";
 
 interface EncouragingResultsDisplayProps {
-  assessmentResult: AssessmentResult;
-  userType?: UserType | null;
+  assessmentResult: any;
+  onContinue: () => void;
 }
 
-export function EncouragingResultsDisplay({ assessmentResult, userType }: EncouragingResultsDisplayProps) {
-  const { focusArea, overallScore } = assessmentResult;
-  const focusInfo = focusAreas[focusArea];
-  const overallPercentage = Math.round((overallScore / 3) * 100);
+export function EncouragingResultsDisplay({ assessmentResult, onContinue }: EncouragingResultsDisplayProps) {
+  const {
+    overallScore,
+    focusScore,
+    energyScore,
+    timeManagementScore,
+    resilienceScore,
+    // Add other relevant scores here
+  } = assessmentResult;
 
-  const getUserTypeDisplay = () => {
-    switch (userType) {
-      case 'brain-injury': return 'Brain Injury Recovery';
-      case 'caregiver': return 'Caregiver Support';
-      case 'cognitive-optimization': return 'Cognitive Optimization';
-      case 'wellness': return 'General Wellness';
-      default: return 'Personal Development';
+  const getScoreBadge = (score: number) => {
+    if (score >= 80) {
+      return "Excellent";
+    } else if (score >= 60) {
+      return "Good";
+    } else if (score >= 40) {
+      return "Fair";
+    } else {
+      return "Needs Improvement";
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 text-center">
-      <div className="space-y-4">
-        <div className="w-20 h-20 mx-auto bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
-          <Trophy className="h-10 w-10 text-white" />
-        </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
-          Congratulations! 🎉
-        </h1>
-        <p className="text-xl text-gray-700">
-          You've completed your {getUserTypeDisplay()} Assessment
-        </p>
-      </div>
-
-      <Card className="bg-gradient-to-r from-teal-50 to-emerald-50 border-teal-200">
-        <CardContent className="p-8">
-          <div className="space-y-4">
-            <div className="flex items-center justify-center gap-2">
-              <Sparkles className="h-6 w-6 text-teal-600" />
-              <h2 className="text-2xl font-bold text-teal-800">You're Amazing!</h2>
-              <Sparkles className="h-6 w-6 text-teal-600" />
-            </div>
-            <p className="text-lg text-teal-700">
-              Taking this assessment shows your commitment to {getUserTypeDisplay().toLowerCase()} and personal growth.
-            </p>
-            <div className="bg-white/50 p-4 rounded-lg">
-              <h3 className="font-semibold text-teal-800 mb-2">Your Primary Focus: {focusInfo.title}</h3>
-              <Badge className="bg-teal-600 text-white px-4 py-2 text-lg">
-                {overallPercentage}% Assessment Score
-              </Badge>
-            </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-yellow-500" />
+          Encouraging Results
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold">Overall Rhythm Score</h3>
+          <div className="flex items-center justify-between">
+            <div className="text-3xl font-bold">{overallScore}</div>
+            <Badge>{getScoreBadge(overallScore)}</Badge>
           </div>
-        </CardContent>
-      </Card>
-
-      <div className="bg-gradient-to-r from-emerald-100 to-teal-100 p-6 rounded-xl border-2 border-emerald-200">
-        <h3 className="text-xl font-bold text-emerald-800 mb-2">
-          ✨ You're Almost Ready! ✨
-        </h3>
-        <p className="text-emerald-700 mb-4">
-          Your personalized {getUserTypeDisplay().toLowerCase()} journey is about to begin. You're just moments away from accessing powerful tools designed specifically for your needs.
-        </p>
-        <div className="flex items-center justify-center gap-2 text-emerald-600">
-          <span>Next: Access Your Complete Results</span>
-          <ArrowRight className="h-5 w-5" />
         </div>
-      </div>
-    </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Card className="bg-blue-50 border-blue-200">
+            <CardContent className="p-3 space-y-1">
+              <div className="flex items-center gap-2">
+                <Target className="h-4 w-4 text-blue-600" />
+                <h4 className="font-medium">Focus</h4>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-xl font-bold text-blue-900">{focusScore}</div>
+                <Badge variant="secondary">{getScoreBadge(focusScore)}</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-green-50 border-green-200">
+            <CardContent className="p-3 space-y-1">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-green-600" />
+                <h4 className="font-medium">Energy</h4>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-xl font-bold text-green-900">{energyScore}</div>
+                <Badge variant="secondary">{getScoreBadge(energyScore)}</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-purple-50 border-purple-200">
+            <CardContent className="p-3 space-y-1">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-purple-600" />
+                <h4 className="font-medium">Time Management</h4>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-xl font-bold text-purple-900">{timeManagementScore}</div>
+                <Badge variant="secondary">{getScoreBadge(timeManagementScore)}</Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-red-50 border-red-200">
+            <CardContent className="p-3 space-y-1">
+              <div className="flex items-center gap-2">
+                <Heart className="h-4 w-4 text-red-600" />
+                <h4 className="font-medium">Resilience</h4>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-xl font-bold text-red-900">{resilienceScore}</div>
+                <Badge variant="secondary">{getScoreBadge(resilienceScore)}</Badge>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <p className="text-sm text-muted-foreground">
+          These scores provide insights into different aspects of your daily rhythm.
+        </p>
+
+        <Button onClick={onContinue} className="w-full">
+          Continue to Personalized Recommendations
+        </Button>
+      </CardContent>
+    </Card>
   );
 }

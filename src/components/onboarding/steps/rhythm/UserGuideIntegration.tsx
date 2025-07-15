@@ -1,74 +1,85 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { BookOpen, ArrowRight, CheckCircle } from "lucide-react";
-import { AssessmentResult } from "@/utils/rhythmAnalysis";
-import { UserType } from "../UserTypeStep";
+import { Badge } from "@/components/ui/badge";
+import { BookOpen, Target, Clock } from "lucide-react";
+import { UserType } from "@/types/user";
 
 interface UserGuideIntegrationProps {
-  assessmentResult: AssessmentResult;
-  onBack: () => void;
-  onContinue: () => void;
-  userType?: UserType | null;
+  onComplete: (data: any) => void;
+  assessmentResult: any;
 }
 
-export function UserGuideIntegration({ assessmentResult, onBack, onContinue, userType }: UserGuideIntegrationProps) {
-  const getUserTypeDisplay = () => {
-    switch (userType) {
-      case 'brain-injury': return 'Brain Injury Recovery';
-      case 'caregiver': return 'Caregiver Support';
-      case 'cognitive-optimization': return 'Cognitive Optimization';
-      case 'wellness': return 'General Wellness';
-      default: return 'Personal Development';
-    }
+export function UserGuideIntegration({ onComplete, assessmentResult }: UserGuideIntegrationProps) {
+  const [userGuideData, setUserGuideData] = useState({
+    viewedIntro: false,
+    completedGuide: false,
+    setGoals: false,
+    reviewedCalendar: false
+  });
+
+  const handleContinue = () => {
+    onComplete(userGuideData);
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div className="text-center space-y-4">
-        <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-          <BookOpen className="h-8 w-8 text-white" />
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <BookOpen className="h-5 w-5" />
+          User Guide & Next Steps
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Intro Section */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium">Welcome to Your Personalized Guide</h3>
+          <p>
+            We've compiled a quick guide to help you get the most out of your MyRhythm experience.
+          </p>
+          <Button variant="outline" className="w-full justify-start">
+            <BookOpen className="h-4 w-4 mr-2" />
+            View Quick Start Guide
+          </Button>
         </div>
-        <h1 className="text-3xl font-bold">Your {getUserTypeDisplay()} Guide</h1>
-        <p className="text-lg text-muted-foreground">
-          Access your personalized user guide tailored to your assessment results
-        </p>
-      </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>What's included in your guide:</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            <span>Personalized action plan based on your {assessmentResult.focusArea} focus</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            <span>Step-by-step implementation strategies</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            <span>Progress tracking tools and techniques</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <CheckCircle className="h-5 w-5 text-green-600" />
-            <span>Specialized guidance for {getUserTypeDisplay().toLowerCase()}</span>
-          </div>
-        </CardContent>
-      </Card>
+        {/* Goal Setting */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium">Set Your First Goal</h3>
+          <p>
+            Based on your assessment, setting a small, achievable goal can help you build momentum.
+          </p>
+          <Button variant="outline" className="w-full justify-start">
+            <Target className="h-4 w-4 mr-2" />
+            Create a Goal
+          </Button>
+        </div>
 
-      <div className="flex gap-4">
-        <Button variant="outline" onClick={onBack} className="flex-1">
-          Back
-        </Button>
-        <Button onClick={onContinue} className="flex-1">
-          Access Guide
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-    </div>
+        {/* Calendar Integration */}
+        <div className="space-y-3">
+          <h3 className="text-lg font-medium">Explore Your Calendar</h3>
+          <p>
+            See how your recommended activities fit into your daily schedule.
+          </p>
+          <Button variant="outline" className="w-full justify-start">
+            <Clock className="h-4 w-4 mr-2" />
+            View Calendar
+          </Button>
+        </div>
+
+        {/* Progress Badge */}
+        <div className="pt-4 border-t">
+          <Badge variant="secondary">
+            Complete these steps to unlock more features!
+          </Badge>
+        </div>
+
+        <div className="pt-4 border-t">
+          <Button onClick={handleContinue} className="w-full">
+            Continue to Support Integration
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,5 +1,5 @@
+import { UserType } from "@/types/user";
 import { Brain, Heart, Target, Users } from "lucide-react";
-import { UserType } from "../UserTypeStep";
 
 export interface Question {
   id: string;

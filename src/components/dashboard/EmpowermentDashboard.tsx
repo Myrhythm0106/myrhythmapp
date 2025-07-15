@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedEmpowermentHub } from "@/components/empowerment/EnhancedEmpowermentHub";
 import { InAppPurchasePage } from "@/components/empowerment/InAppPurchasePage";
+import { PlanningOverview } from "@/components/planning/PlanningOverview";
 
 export function EmpowermentDashboard() {
   const [showPurchasePage, setShowPurchasePage] = useState(false);
@@ -71,7 +72,7 @@ export function EmpowermentDashboard() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-6">
         {/* Welcome Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
@@ -80,7 +81,7 @@ export function EmpowermentDashboard() {
                 Welcome to Your Empowerment Hub
               </h2>
               <p className="text-lg text-gray-600">
-                Transform your day with personalized #IChoose statements designed for your journey
+                Transform your day with personalized #IChoose statements and smart planning
               </p>
             </div>
             
@@ -91,14 +92,25 @@ export function EmpowermentDashboard() {
           </div>
         </div>
 
-        {/* Enhanced Empowerment Hub */}
-        <div className="mb-8">
-          <EnhancedEmpowermentHub
-            userType="brain-injury"
-            hasPremiumAccess={hasPremiumAccess}
-            currentStreak={currentStreak}
-            mood={userMood}
-          />
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+          {/* Enhanced Empowerment Hub */}
+          <div>
+            <EnhancedEmpowermentHub
+              userType="brain-injury"
+              hasPremiumAccess={hasPremiumAccess}
+              currentStreak={currentStreak}
+              mood={userMood}
+            />
+          </div>
+          
+          {/* Planning Overview */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Your Planning Command Center</h3>
+              <PlanningOverview />
+            </div>
+          </div>
         </div>
 
         {/* Quick Actions */}
@@ -126,7 +138,7 @@ export function EmpowermentDashboard() {
             <CardContent className="p-6 text-center">
               <User className="h-8 w-8 mx-auto mb-3 text-green-600" />
               <h3 className="font-semibold text-gray-900 mb-2">Support Circle</h3>
-              <p className="text-sm text-gray-600">Connect with your team</p>
+              <p className="text-sm text-gray-600">Connect with your support</p>
             </CardContent>
           </Card>
         </div>

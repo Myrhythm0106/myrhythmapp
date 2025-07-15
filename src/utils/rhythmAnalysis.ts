@@ -1,5 +1,5 @@
+import { UserType } from "@/types/user";
 import { AssessmentResponses, getSectionsForUserType } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
-import { UserType } from "@/components/onboarding/steps/UserTypeStep";
 import { generatePersonalizedInsights, PersonalizedAssessmentData } from "./personalizedInsights";
 
 export type FocusArea = "memory" | "structure" | "emotional" | "achievement" | "community" | "growth";
