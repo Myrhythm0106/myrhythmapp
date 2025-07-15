@@ -1,154 +1,135 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { myRhythmToast } from '@/utils/myrhythmToast';
-import { AuthLayout } from '@/components/auth/AuthLayout';
-import { AuthTabs } from '@/components/auth/AuthTabs';
-import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
-import { ResendVerificationForm } from '@/components/auth/ResendVerificationForm';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
+import { Brain, ArrowLeft } from "lucide-react";
 
 const Auth = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { user, loading } = useAuth();
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
-  const [showResendVerification, setShowResendVerification] = useState(false);
-  const [resendVerificationEmail, setResendVerificationEmail] = useState('');
-  
-  // SECURITY FIX: Clear any sensitive parameters from URL immediately
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const hasSensitiveParams = urlParams.has('email') || urlParams.has('password') || urlParams.has('token');
-    
-    if (hasSensitiveParams) {
-      // Remove all sensitive parameters and update URL without them
-      const cleanParams = new URLSearchParams();
-      const allowedParams = ['reset', 'step', 'redirect']; // Only keep safe parameters
-      
-      for (const [key, value] of urlParams.entries()) {
-        if (allowedParams.includes(key)) {
-          cleanParams.set(key, value);
-        }
+
+  const from = (location.state as any)?.from?.pathname || "/dashboard";
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      if (isLogin) {
+        await signIn(email, password);
+        toast.success("Welcome back!");
+        navigate(from);
+      } else {
+        await signUp(email, password, { name });
+        toast.success("Account created successfully!");
+        navigate("/onboarding");
       }
-      
-      // Update URL without sensitive parameters
-      const newUrl = `${window.location.pathname}${cleanParams.toString() ? '?' + cleanParams.toString() : ''}`;
-      window.history.replaceState({}, '', newUrl);
-      
-      console.warn('MyRhythm Security: Sensitive parameters removed from URL for user protection');
+    } catch (error: any) {
+      toast.error(error.message || "Authentication failed");
+    } finally {
+      setIsLoading(false);
     }
-  }, []);
-  
-  // Check if this is a password reset
-  const isPasswordReset = searchParams.get('reset') === 'true';
-  
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (user && !loading) {
-      // Get the intended destination from location state, or default to dashboard
-      const from = location.state?.from?.pathname || '/dashboard';
-      console.log('Auth: Redirecting authenticated user to:', from);
-      navigate(from, { replace: true });
-      myRhythmToast.welcome('Welcome Back to MyRhythm!', {
-        description: 'Your Memory1st journey continues with renewed energy and focus.'
-      });
-    }
-  }, [user, loading, navigate, location.state]);
-
-  // Show password reset message if coming from reset link
-  useEffect(() => {
-    if (isPasswordReset) {
-      myRhythmToast.info('MyRhythm Password Reset', {
-        description: 'You can now securely update your password to continue your journey.'
-      });
-    }
-  }, [isPasswordReset]);
-
-  const handleSignInSuccess = () => {
-    // Navigation will be handled by the useEffect above
-    console.log('Auth: Sign in successful, navigation will be handled by useEffect');
-    myRhythmToast.welcome('Welcome Back to MyRhythm!', {
-      description: 'Your personalized Memory1st journey continues where you left off.'
-    });
   };
-
-  const handleSignUpSuccess = (email: string) => {
-    console.log('Auth: Sign up successful for:', email);
-    myRhythmToast.welcome('MyRhythm Account Created!', {
-      description: 'Your journey starts now! Let\'s build your Memory1st foundation together.'
-    });
-    
-    // Since we're not requiring email verification, redirect directly to onboarding
-    setTimeout(() => {
-      navigate('/onboarding', { replace: true });
-    }, 1500);
-  };
-
-  const handleResendVerificationRequest = (email: string) => {
-    setShowResendVerification(true);
-    setResendVerificationEmail(email);
-  };
-
-  const handleBackToAuth = () => {
-    setShowForgotPassword(false);
-    setShowResendVerification(false);
-    setResendVerificationEmail('');
-  };
-
-  // Show loading while checking auth state
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground">MyRhythm: Preparing your secure authentication...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Don't render auth forms if user is already authenticated (redirect will happen via useEffect)
-  if (user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="text-center space-y-4">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-          <p className="text-sm text-muted-foreground">MyRhythm: Redirecting to your personalized dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (showResendVerification) {
-    return (
-      <AuthLayout title="MyRhythm Email Verification">
-        <ResendVerificationForm
-          onBack={handleBackToAuth}
-          initialEmail={resendVerificationEmail}
-        />
-      </AuthLayout>
-    );
-  }
-
-  if (showForgotPassword) {
-    return (
-      <AuthLayout title="MyRhythm Password Recovery">
-        <ForgotPasswordForm onBack={handleBackToAuth} />
-      </AuthLayout>
-    );
-  }
 
   return (
-    <AuthLayout title="Your personalized Memory1st brain recovery companion">
-      <AuthTabs
-        onForgotPassword={() => setShowForgotPassword(true)}
-        onResendVerification={handleResendVerificationRequest}
-        onSignInSuccess={handleSignInSuccess}
-        onSignUpSuccess={handleSignUpSuccess}
-      />
-    </AuthLayout>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/")}
+          className="mb-6 text-muted-foreground hover:text-foreground"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Button>
+
+        <Card className="shadow-lg border-purple-200/50">
+          <CardHeader className="text-center space-y-4">
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                MyRhythm
+              </h1>
+            </div>
+            <CardTitle className="text-xl">
+              {isLogin ? "Welcome Back" : "Create Account"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {!isLogin && (
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                    placeholder="Enter your full name"
+                  />
+                </div>
+              )}
+              
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="Enter your email"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Enter your password"
+                />
+              </div>
+              
+              <Button
+                type="submit"
+                className="w-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
+                disabled={isLoading}
+              >
+                {isLoading ? "Please wait..." : (isLogin ? "Sign In" : "Create Account")}
+              </Button>
+            </form>
+            
+            <div className="mt-6 text-center">
+              <Button
+                variant="ghost"
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-sm text-muted-foreground hover:text-foreground"
+              >
+                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 

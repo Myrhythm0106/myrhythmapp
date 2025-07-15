@@ -27,6 +27,7 @@ import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
 import Welcome from "./pages/Welcome";
 import InAppPurchase from "./routes/InAppPurchase";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ function App() {
                   {/* Public Routes */}
                   <Route path="/" element={<Landing />} />
                   <Route path="/home" element={<Home />} />
+                  <Route path="/auth" element={<Auth />} />
                   
                   {/* Onboarding Routes */}
                   <Route path="/onboarding" element={<Onboarding />} />
