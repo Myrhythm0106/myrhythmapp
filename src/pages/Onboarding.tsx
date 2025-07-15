@@ -1,231 +1,117 @@
 
-import React, { useEffect, useMemo, useState } from "react";
-import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
-import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
-import { AuthenticationGate } from "@/components/onboarding/AuthenticationGate";
-import { useAutoProgression } from "@/hooks/useAutoProgression";
-import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
-import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Preview3Background } from "@/components/ui/Preview3Background";
-
-// Updated steps - streamlined 5-step flow
-const UPDATED_STEPS = [
-  { id: 1, title: "Tell Us About You", description: "Share your brain health journey type" },
-  { id: 2, title: "Location Setup", description: "Where are you based?" },
-  { id: 3, title: "Plan Selection", description: "Choose your MyRhythm experience" },
-  { id: 4, title: "Pre-Assessment", description: "Preparing your personalized assessment" },
-  { id: 5, title: "Rhythm Assessment", description: "Discover your unique cognitive patterns" }
-];
-const TOTAL_STEPS = UPDATED_STEPS.length;
+import { AuthenticationGate } from "@/components/onboarding/AuthenticationGate";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Brain, CheckCircle, ArrowRight } from "lucide-react";
 
 const Onboarding = () => {
-  console.log("Onboarding: Component rendering");
-  
   const { user, loading } = useAuth();
-  const [authenticationComplete, setAuthenticationComplete] = useState(false);
-  
-  console.log("Onboarding: Auth state - user:", !!user, "loading:", loading);
-  
-  // Check authentication status
+  const navigate = useNavigate();
+  const [currentStep, setCurrentStep] = useState(0);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   useEffect(() => {
     if (user && !loading) {
-      console.log("Onboarding: User is authenticated");
-      setAuthenticationComplete(true);
-    } else if (!loading && !user) {
-      console.log("Onboarding: User is not authenticated");
-      setAuthenticationComplete(false);
+      setIsAuthenticated(true);
+      setCurrentStep(1);
     }
   }, [user, loading]);
 
-  // Add error boundary to catch any issues
-  try {
-    const onboardingState = useOnboardingLogic(TOTAL_STEPS);
-    
-    const {
-      currentStep,
-      userType,
-      location,
-      personalInfo,
-      selectedPlan,
-      billingPeriod,
-      isUserTypeSelected,
-      isPersonalInfoValid,
-      isLocationValid,
-      isPlanSelected,
-      isDirectNavigation,
-      setPersonalInfo,
-      setIsUserTypeSelected,
-      setIsLocationValid,
-      setIsPlanSelected,
-    } = onboardingState;
+  const handleAuthSuccess = () => {
+    console.log("Onboarding: Authentication successful");
+    setIsAuthenticated(true);
+    setCurrentStep(1);
+  };
 
-    console.log("Onboarding: Current step:", currentStep, "User type:", userType);
+  const handleComplete = () => {
+    navigate("/dashboard");
+  };
 
-    const handlers = useOnboardingHandlers({
-      ...onboardingState,
-      totalSteps: TOTAL_STEPS,
-      selectedPlan,
-      userType,
-      setIsUserTypeSelected,
-      setIsLocationValid,
-      setIsPlanSelected,
-    });
-
-    // Handle authenticated user flow - auto-populate personal info from authenticated user
-    useEffect(() => {
-      if (user && !loading && !personalInfo && authenticationComplete) {
-        console.log("Onboarding: Auto-populating personal info for authenticated user");
-        const autoPersonalInfo = {
-          name: user.user_metadata?.name || user.email?.split('@')[0] || '',
-          email: user.email || '',
-          password: ''
-        };
-        setPersonalInfo(autoPersonalInfo);
-      }
-    }, [user, loading, personalInfo, setPersonalInfo, authenticationComplete]);
-
-    // Auto-progression for plan selection only
-    const { countdown: planCountdown } = useAutoProgression({
-      isFormValid: isPlanSelected,
-      onProgress: () => handlers.handlePlanSelected(selectedPlan),
-      enabled: true,
-      delay: 3000
-    });
-
-    // Data persistence check
-    const hasUnsavedData = React.useMemo(() => {
-      if (currentStep === 5) {
-        const savedAssessment = localStorage.getItem('form_data_rhythm_assessment');
-        return !!savedAssessment;
-      }
-      return false;
-    }, [currentStep]);
-
-    const handleSaveProgress = () => {
-      localStorage.setItem('myrhythm_onboarding_current_step', currentStep.toString());
-      localStorage.setItem('myrhythm_onboarding_progress_saved', new Date().toISOString());
-    };
-
-    // Get current step information
-    const getCurrentStepInfo = () => {
-      return UPDATED_STEPS.find(step => step.id === currentStep) || UPDATED_STEPS[0];
-    };
-
-    const currentStepInfo = getCurrentStepInfo();
-
-    // Step validation
-    const stepValidation = handlers.getStepValidation();
-
-    // Show loading while auth is being checked
-    if (loading) {
-      console.log("Onboarding: Showing loading screen");
-      return (
-        <Preview3Background>
-          <div className="min-h-screen flex items-center justify-center">
-            <div className="text-center space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-              <p className="text-lg font-medium">Setting up your personalized journey...</p>
-              <p className="text-sm text-muted-foreground">Preparing your brain health experience</p>
-            </div>
-          </div>
-        </Preview3Background>
-      );
-    }
-
-    // Show authentication gate if user is not authenticated
-    if (!authenticationComplete) {
-      console.log("Onboarding: Showing authentication gate");
-      return (
-        <Preview3Background>
-          <AuthenticationGate 
-            onAuthSuccess={() => {
-              console.log("Onboarding: Authentication successful");
-              setAuthenticationComplete(true);
-            }}
-          />
-        </Preview3Background>
-      );
-    }
-
-    console.log("Onboarding: Rendering main onboarding layout");
-
+  if (loading) {
     return (
-      <Preview3Background>
-        <OnboardingLayout 
-          currentStep={currentStep} 
-          totalSteps={TOTAL_STEPS}
-          onBack={handlers.goToPreviousStep}
-          onStepClick={handlers.goToStep}
-          title={currentStepInfo.title}
-          description={currentStepInfo.description}
-          hasUnsavedData={hasUnsavedData}
-          onSaveProgress={handleSaveProgress}
-          dataDescription={currentStep === 5 ? "your assessment responses" : "your progress"}
-          canGoNext={stepValidation.canGoNext}
-          canGoPrevious={stepValidation.canGoPrevious}
-          onNext={handlers.goToNextStep}
-          nextLabel={currentStep === TOTAL_STEPS ? "Complete Assessment" : undefined}
-        >
-          <OnboardingStepRenderer
-            currentStep={currentStep}
-            userType={userType}
-            personalInfo={personalInfo}
-            location={location}
-            selectedPlan={selectedPlan}
-            billingPeriod={billingPeriod}
-            userTypeCountdown={null}
-            personalInfoCountdown={null}
-            locationCountdown={null}
-            planCountdown={planCountdown}
-            onUserTypeComplete={handlers.handleUserTypeComplete}
-            onPersonalInfoComplete={handlers.handlePersonalInfoComplete}
-            onLocationComplete={handlers.handleLocationComplete}
-            onPlanSelected={handlers.handlePlanSelected}
-            onPreAssessmentComplete={handlers.handlePreAssessmentComplete}
-            onRhythmAssessmentComplete={handlers.handleRhythmAssessmentComplete}
-          />
-        </OnboardingLayout>
-      </Preview3Background>
-    );
-    
-  } catch (error) {
-    console.error("Onboarding: Critical error:", error);
-    
-    return (
-      <Preview3Background>
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center space-y-4 max-w-md mx-auto p-8">
-            <div className="text-red-600 text-6xl mb-4">⚠️</div>
-            <h1 className="text-2xl font-bold text-red-800">Setup Error</h1>
-            <p className="text-red-600">
-              We encountered an issue loading your brain health setup.
-            </p>
-            <div className="space-y-2">
-              <button 
-                onClick={() => window.location.reload()} 
-                className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 mr-3 transition-colors"
-              >
-                Refresh Setup
-              </button>
-              <button 
-                onClick={() => window.location.href = '/preview-3'} 
-                className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                Back to Home
-              </button>
-            </div>
-            <details className="text-left mt-4">
-              <summary className="cursor-pointer text-red-700 font-medium">Technical Details</summary>
-              <pre className="text-xs text-red-600 mt-2 p-3 bg-red-50 rounded overflow-auto">
-                {error instanceof Error ? error.message : String(error)}
-              </pre>
-            </details>
-          </div>
-        </div>
-      </Preview3Background>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
     );
   }
+
+  if (!isAuthenticated) {
+    return <AuthenticationGate onAuthSuccess={handleAuthSuccess} />;
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50 p-4">
+      <div className="max-w-2xl mx-auto pt-8">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center">
+              <Brain className="h-6 w-6 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+              Welcome to MyRhythm
+            </h1>
+          </div>
+          <Progress value={(currentStep / 2) * 100} className="w-full max-w-md mx-auto" />
+          <p className="text-muted-foreground mt-2">Step {currentStep} of 2</p>
+        </div>
+
+        <Card className="shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-500" />
+              Account Created Successfully!
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="text-center space-y-4">
+              <p className="text-lg">
+                🎉 Congratulations! Your MyRhythm journey begins now.
+              </p>
+              <p className="text-muted-foreground">
+                You're ready to start building your personalized Memory1st experience. 
+                Let's discover your unique rhythm together.
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg">
+              <h3 className="font-semibold mb-3">What's Next?</h3>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  Complete your initial assessment
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  Set up your daily wellness routine
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  Explore brain training games
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  Track your progress and celebrate wins
+                </li>
+              </ul>
+            </div>
+
+            <Button 
+              onClick={handleComplete}
+              className="w-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700"
+              size="lg"
+            >
+              Start Your MyRhythm Journey
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 };
 
 export default Onboarding;

@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as CustomToaster } from "@/components/ui/toaster";
 import { ToastProvider } from "@/hooks/use-toast";
@@ -6,6 +7,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PlatformProvider } from "@/components/platform/PlatformProvider";
+import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import Landing from "./pages/Landing";
+import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Assessment from "./pages/Assessment";
 import Calendar from "./pages/Calendar";
@@ -20,6 +24,8 @@ import Analytics from "./pages/Analytics";
 import Testing from "./pages/Testing";
 import Goals from "./pages/Goals";
 import Profile from "./pages/Profile";
+import Onboarding from "./pages/Onboarding";
+import Welcome from "./pages/Welcome";
 
 const queryClient = new QueryClient();
 
@@ -34,21 +40,85 @@ function App() {
                 <Toaster />
                 <CustomToaster />
                 <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/assessment" element={<Assessment />} />
-                  <Route path="/calendar" element={<Calendar />} />
-                  <Route path="/gratitude" element={<Gratitude />} />
-                  <Route path="/brain-games" element={<BrainGames />} />
-                  <Route path="/mood-tracking" element={<MoodTracking />} />
-                  <Route path="/accountability" element={<Accountability />} />
-                  <Route path="/community" element={<Community />} />
-                  <Route path="/notes" element={<Notes />} />
-                  <Route path="/strategy" element={<Strategy />} />
-                  <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/testing" element={<Testing />} />
-                  <Route path="/goals" element={<Goals />} />
-                  <Route path="/profile" element={<Profile />} />
+                  {/* Public Routes */}
+                  <Route path="/" element={<Landing />} />
+                  <Route path="/home" element={<Home />} />
+                  
+                  {/* Onboarding Routes */}
+                  <Route path="/onboarding" element={<Onboarding />} />
+                  <Route path="/welcome" element={<Welcome />} />
+                  
+                  {/* Protected Routes */}
+                  <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/assessment" element={
+                    <ProtectedRoute>
+                      <Assessment />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/calendar" element={
+                    <ProtectedRoute>
+                      <Calendar />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/gratitude" element={
+                    <ProtectedRoute>
+                      <Gratitude />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/brain-games" element={
+                    <ProtectedRoute>
+                      <BrainGames />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/mood-tracking" element={
+                    <ProtectedRoute>
+                      <MoodTracking />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/accountability" element={
+                    <ProtectedRoute>
+                      <Accountability />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/community" element={
+                    <ProtectedRoute>
+                      <Community />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/notes" element={
+                    <ProtectedRoute>
+                      <Notes />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/strategy" element={
+                    <ProtectedRoute>
+                      <Strategy />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/analytics" element={
+                    <ProtectedRoute>
+                      <Analytics />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/testing" element={
+                    <ProtectedRoute>
+                      <Testing />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/goals" element={
+                    <ProtectedRoute>
+                      <Goals />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/profile" element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  } />
                 </Routes>
               </TooltipProvider>
             </ToastProvider>
