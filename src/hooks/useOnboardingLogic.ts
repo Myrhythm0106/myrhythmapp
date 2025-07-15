@@ -13,6 +13,12 @@ interface OnboardingState {
   dashboardLayout: 'brain-health' | 'empowerment' | null;
 }
 
+interface PersonalInfoFormValues {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export function useOnboardingLogic() {
   const navigate = useNavigate();
   const [onboardingState, setOnboardingState] = useState<OnboardingState>({
@@ -22,6 +28,17 @@ export function useOnboardingLogic() {
     supportData: null,
     dashboardLayout: null,
   });
+
+  // Additional state for the complex onboarding flow
+  const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
+  const [location, setLocation] = useState<any>(null);
+  const [selectedPlan, setSelectedPlan] = useState<any>('starter');
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+  const [isUserTypeSelected, setIsUserTypeSelected] = useState(false);
+  const [isPersonalInfoValid, setIsPersonalInfoValid] = useState(false);
+  const [isLocationValid, setIsLocationValid] = useState(true); // Location is optional
+  const [isPlanSelected, setIsPlanSelected] = useState(false);
+  const [isDirectNavigation, setIsDirectNavigation] = useState(false);
 
   const nextStep = () => {
     setOnboardingState(prevState => ({
@@ -42,6 +59,7 @@ export function useOnboardingLogic() {
       ...prevState,
       userType,
     }));
+    setIsUserTypeSelected(true);
     nextStep();
   };
 
@@ -87,35 +105,33 @@ export function useOnboardingLogic() {
     setDashboardLayout(dashboardLayout);
 
     try {
-      // Save onboarding data to Supabase using profiles table
-      const { data, error } = await supabase
-        .from('profiles')
-        .update({
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', supabase.auth.getUser().then(u => u.data.user?.id));
+      const user = await supabase.auth.getUser();
+      if (user.data.user) {
+        // Save onboarding data to Supabase using profiles table
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', user.data.user.id);
 
-      if (error) {
-        throw new Error(error.message);
-      }
-
-      // Save additional data as notes
-      if (supabase.auth.getUser()) {
-        const user = await supabase.auth.getUser();
-        if (user.data.user) {
-          await supabase.from('notes').insert([
-            {
-              user_id: user.data.user.id,
-              title: 'Onboarding Data',
-              content: JSON.stringify({
-                userType: onboardingState.userType,
-                assessmentResult: onboardingState.assessmentResult,
-                supportData: onboardingState.supportData,
-                dashboardLayout
-              })
-            }
-          ]);
+        if (error) {
+          throw new Error(error.message);
         }
+
+        // Save additional data as notes
+        await supabase.from('notes').insert([
+          {
+            user_id: user.data.user.id,
+            title: 'Onboarding Data',
+            content: JSON.stringify({
+              userType: onboardingState.userType,
+              assessmentResult: onboardingState.assessmentResult,
+              supportData: onboardingState.supportData,
+              dashboardLayout
+            })
+          }
+        ]);
       }
 
       // Redirect to the dashboard
@@ -130,6 +146,21 @@ export function useOnboardingLogic() {
 
   return {
     onboardingState,
+    currentStep: onboardingState.step,
+    userType: onboardingState.userType,
+    location,
+    personalInfo,
+    selectedPlan,
+    billingPeriod,
+    isUserTypeSelected,
+    isPersonalInfoValid,
+    isLocationValid,
+    isPlanSelected,
+    isDirectNavigation,
+    setPersonalInfo,
+    setIsUserTypeSelected,
+    setIsLocationValid,
+    setIsPlanSelected,
     nextStep,
     prevStep,
     setUserType,
