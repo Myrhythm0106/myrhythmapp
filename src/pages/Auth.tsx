@@ -31,7 +31,7 @@ const Auth = () => {
         toast.success("Welcome back!");
         navigate(from);
       } else {
-        await signUp(email, password, { name });
+        await signUp(email, password, name);
         toast.success("Account created successfully!");
         navigate("/onboarding");
       }
