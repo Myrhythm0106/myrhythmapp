@@ -10,7 +10,7 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-primary to-brain-health-500 text-primary-foreground hover:from-primary/90 hover:to-brain-health-600 shadow-md hover:shadow-lg transition-all duration-200",
+        default: "bg-primary/90 text-primary-foreground hover:bg-primary shadow-sm hover:shadow transition-all duration-200",
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
@@ -19,10 +19,10 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        premium: "bg-gradient-to-r from-primary via-brain-health-500 to-clarity-teal-500 text-primary-foreground hover:from-primary/90 hover:via-brain-health-600 hover:to-clarity-teal-600 shadow-lg hover:shadow-xl transition-all duration-200",
-        healing: "bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 text-white hover:from-memory-emerald-600 hover:to-memory-emerald-700 shadow-md hover:shadow-lg transition-all duration-200",
-        cognitive: "bg-gradient-to-r from-brain-health-500 to-brain-health-600 text-white hover:from-brain-health-600 hover:to-brain-health-700 shadow-md hover:shadow-lg transition-all duration-200",
-        clarity: "bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 text-white hover:from-clarity-teal-600 hover:to-clarity-teal-700 shadow-md hover:shadow-lg transition-all duration-200",
+        premium: "bg-gradient-to-r from-primary/85 via-brain-health-500/70 to-clarity-teal-500/60 text-primary-foreground hover:from-primary/95 hover:via-brain-health-600/80 hover:to-clarity-teal-600/70 shadow-sm hover:shadow-md transition-all duration-200",
+        healing: "bg-memory-emerald-500/80 text-white hover:bg-memory-emerald-600/90 shadow-sm hover:shadow transition-all duration-200",
+        cognitive: "bg-brain-health-500/80 text-white hover:bg-brain-health-600/90 shadow-sm hover:shadow transition-all duration-200",
+        clarity: "bg-clarity-teal-500/80 text-white hover:bg-clarity-teal-600/90 shadow-sm hover:shadow transition-all duration-200",
       },
       size: {
         default: "h-10 px-4 py-2",
