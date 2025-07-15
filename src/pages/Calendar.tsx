@@ -63,6 +63,10 @@ const Calendar = () => {
     });
   };
 
+  const handleUpgradeClick = () => {
+    navigate("/in-app-purchase");
+  };
+
   if (showPlanMyDreams) {
     return (
       <PlanMyDreams 
@@ -152,7 +156,10 @@ const Calendar = () => {
               </DialogTitle>
             </DialogHeader>
             <ScrollArea className="max-h-[calc(90vh-120px)]">
-              <GuidedActionWizard onSuccess={handleQuickActionSave} />
+              <GuidedActionWizard 
+                onSuccess={handleQuickActionSave} 
+                onUpgradeClick={handleUpgradeClick}
+              />
             </ScrollArea>
           </DialogContent>
         </Dialog>

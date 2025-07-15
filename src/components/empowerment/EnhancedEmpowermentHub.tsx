@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,13 +22,15 @@ interface EnhancedEmpowermentHubProps {
   hasPremiumAccess?: boolean;
   currentStreak?: number;
   mood?: 'great' | 'okay' | 'struggling';
+  onUpgradeClick?: () => void;
 }
 
 export function EnhancedEmpowermentHub({ 
   userType = 'brain-injury',
   hasPremiumAccess = false,
   currentStreak = 0,
-  mood
+  mood,
+  onUpgradeClick
 }: EnhancedEmpowermentHubProps) {
   const [currentStatement, setCurrentStatement] = useState<any>(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -319,7 +320,10 @@ export function EnhancedEmpowermentHub({
                   </p>
                 </div>
               </div>
-              <Button className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600">
+              <Button 
+                className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600"
+                onClick={onUpgradeClick}
+              >
                 <Lock className="h-4 w-4 mr-2" />
                 Upgrade Now
               </Button>
