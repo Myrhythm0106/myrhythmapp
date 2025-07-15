@@ -14,15 +14,15 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-brain-health-50/30 hover:text-brain-health-700 hover:border-brain-health-300/50",
+          "border border-input bg-background hover:bg-purple-50/30 hover:text-purple-700 hover:border-purple-300/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-brain-health-50/40 hover:text-brain-health-700",
-        link: "text-brain-health-600 underline-offset-4 hover:underline hover:text-brain-health-700",
-        premium: "bg-gradient-to-r from-brain-health-500/90 via-clarity-teal-500/85 to-memory-emerald-500/80 text-white hover:from-brain-health-600/95 hover:via-clarity-teal-600/90 hover:to-memory-emerald-600/85 shadow-sm hover:shadow-md transition-all duration-200",
-        healing: "bg-memory-emerald-500/90 text-white hover:bg-memory-emerald-600/95 shadow-sm hover:shadow transition-all duration-200",
-        cognitive: "bg-brain-health-500/90 text-white hover:bg-brain-health-600/95 shadow-sm hover:shadow transition-all duration-200",
-        clarity: "bg-clarity-teal-500/90 text-white hover:bg-clarity-teal-600/95 shadow-sm hover:shadow transition-all duration-200",
+        ghost: "hover:bg-purple-50/40 hover:text-purple-700",
+        link: "text-purple-600 underline-offset-4 hover:underline hover:text-purple-700",
+        premium: "bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 text-white hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 shadow-xl hover:shadow-purple-200/50 transition-all duration-300",
+        healing: "bg-gradient-to-r from-teal-500 to-blue-500 text-white hover:from-teal-600 hover:to-blue-600 shadow-lg hover:shadow-teal-200/50 transition-all duration-200",
+        cognitive: "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-blue-200/50 transition-all duration-200",
+        clarity: "bg-gradient-to-r from-purple-500 to-teal-500 text-white hover:from-purple-600 hover:to-teal-600 shadow-lg hover:shadow-purple-200/50 transition-all duration-200",
       },
       size: {
         default: "h-10 px-4 py-2",
