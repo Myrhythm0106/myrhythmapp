@@ -19,7 +19,7 @@ interface PersonalInfoFormValues {
   password: string;
 }
 
-export function useOnboardingLogic() {
+export function useOnboardingLogic(totalSteps: number = 5) {
   const navigate = useNavigate();
   const [onboardingState, setOnboardingState] = useState<OnboardingState>({
     step: 1,
@@ -43,7 +43,7 @@ export function useOnboardingLogic() {
   const nextStep = () => {
     setOnboardingState(prevState => ({
       ...prevState,
-      step: prevState.step + 1,
+      step: Math.min(prevState.step + 1, totalSteps),
     }));
   };
 
