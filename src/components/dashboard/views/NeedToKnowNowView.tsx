@@ -7,6 +7,8 @@ import { AssessmentHistoryWidget } from "../widgets/AssessmentHistoryWidget";
 import { ActiveGoalsWidget } from "../widgets/ActiveGoalsWidget";
 import { DynamicFocusAreaWidget } from "../widgets/DynamicFocusAreaWidget";
 import { WelcomeCard } from "../WelcomeCard";
+import { PlanningSpotlight } from "../../planning/PlanningSpotlight";
+import { PlanningOverview } from "../../planning/PlanningOverview";
 import { useUserData } from "@/hooks/use-user-data";
 import { getCurrentFocusArea } from "@/utils/rhythmAnalysis";
 
@@ -18,20 +20,21 @@ export function NeedToKnowNowView() {
   // If user has completed assessment but not the personalization flow, prioritize focus area
   if (currentFocusArea && !hasCompletedSetup) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <DynamicFocusAreaWidget />
+      <div className="space-y-6">
+        <DynamicFocusAreaWidget />
+        <PlanningSpotlight />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <TodaysActions />
+          <ActiveGoalsWidget />
+          <DailyCheckin />
+          <UpcomingReminders />
+          <AssessmentHistoryWidget />
         </div>
-        <TodaysActions />
-        <ActiveGoalsWidget />
-        <DailyCheckin />
-        <UpcomingReminders />
-        <AssessmentHistoryWidget />
       </div>
     );
   }
 
-  // If user has completed full setup, show personalized layout
+  // If user has completed full setup, show personalized layout with planning prominence
   if (hasCompletedSetup && currentFocusArea) {
     const savedWidgets = JSON.parse(localStorage.getItem("myrhythm_dashboard_widgets") || "[]");
     const enabledWidgetIds = savedWidgets.map((w: any) => w.id);
@@ -39,6 +42,8 @@ export function NeedToKnowNowView() {
     return (
       <div className="space-y-6">
         <DynamicFocusAreaWidget />
+        <PlanningSpotlight />
+        <PlanningOverview />
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {enabledWidgetIds.includes("todaysActions") && <TodaysActions />}
           {enabledWidgetIds.includes("activeGoals") && <ActiveGoalsWidget />}
@@ -50,13 +55,15 @@ export function NeedToKnowNowView() {
     );
   }
 
-  // Default layout for new users or those without assessment
+  // Default layout for new users - emphasize planning to build habits
   return (
     <div className="space-y-6">
       <WelcomeCard name={userData.name} />
+      <PlanningSpotlight />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <TodaysActions />
         <ActiveGoalsWidget />
+        <PlanningOverview />
         <DailyCheckin />
         <UpcomingReminders />
         <AssessmentHistoryWidget />
