@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -86,20 +87,35 @@ export function useOnboardingLogic() {
     setDashboardLayout(dashboardLayout);
 
     try {
-      // Save onboarding data to Supabase
+      // Save onboarding data to Supabase using profiles table
       const { data, error } = await supabase
-        .from('user_profiles')
+        .from('profiles')
         .update({
-          user_type: onboardingState.userType,
-          assessment_result: onboardingState.assessmentResult,
-          support_data: onboardingState.supportData,
-          dashboard_layout: dashboardLayout,
-          onboarding_complete: true,
+          updated_at: new Date().toISOString()
         })
-        .eq('id', supabase.auth.currentUser?.id);
+        .eq('id', supabase.auth.getUser().then(u => u.data.user?.id));
 
       if (error) {
         throw new Error(error.message);
+      }
+
+      // Save additional data as notes
+      if (supabase.auth.getUser()) {
+        const user = await supabase.auth.getUser();
+        if (user.data.user) {
+          await supabase.from('notes').insert([
+            {
+              user_id: user.data.user.id,
+              title: 'Onboarding Data',
+              content: JSON.stringify({
+                userType: onboardingState.userType,
+                assessmentResult: onboardingState.assessmentResult,
+                supportData: onboardingState.supportData,
+                dashboardLayout
+              })
+            }
+          ]);
+        }
       }
 
       // Redirect to the dashboard

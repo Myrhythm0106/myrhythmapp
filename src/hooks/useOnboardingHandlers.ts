@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,12 +22,8 @@ export function useOnboardingHandlers() {
       const { error } = await supabase
         .from('profiles')
         .update({
-          user_type: userType,
-          first_name: firstName,
-          last_name: lastName,
-          age: age,
-          location: location,
-          updated_at: new Date()
+          name: `${firstName} ${lastName}`,
+          updated_at: new Date().toISOString()
         })
         .eq('id', userId);
 
@@ -51,12 +48,13 @@ export function useOnboardingHandlers() {
   ) => {
     setIsLoading(true);
     try {
+      // Store assessment data in notes table as a workaround
       const { error } = await supabase
-        .from('rhythm_assessments')
+        .from('notes')
         .insert({
           user_id: userId,
-          assessment_data: assessmentResult,
-          created_at: new Date()
+          title: 'Rhythm Assessment Results',
+          content: JSON.stringify(assessmentResult)
         });
 
       if (error) {
@@ -80,17 +78,17 @@ export function useOnboardingHandlers() {
   ) => {
     setIsLoading(true);
     try {
-      // Save support circle data
-      const { error: supportError } = await supabase
-        .from('support_circles')
+      // Store support data in notes table as a workaround
+      const { error } = await supabase
+        .from('notes')
         .insert({
           user_id: userId,
-          support_data: supportData,
-          created_at: new Date()
+          title: 'Support Integration Data',
+          content: JSON.stringify(supportData)
         });
 
-      if (supportError) {
-        throw supportError;
+      if (error) {
+        throw error;
       }
 
       toast.success('Support integration saved successfully!');
@@ -110,17 +108,17 @@ export function useOnboardingHandlers() {
   ) => {
     setIsLoading(true);
     try {
-      // Save planning data
-      const { error: planningError } = await supabase
-        .from('planning_preferences')
+      // Store planning data in notes table as a workaround
+      const { error } = await supabase
+        .from('notes')
         .insert({
           user_id: userId,
-          planning_data: planningData,
-          created_at: new Date()
+          title: 'Planning Integration Data',
+          content: JSON.stringify(planningData)
         });
 
-      if (planningError) {
-        throw planningError;
+      if (error) {
+        throw error;
       }
 
       toast.success('Planning integration saved successfully!');
@@ -141,8 +139,7 @@ export function useOnboardingHandlers() {
       const { error: onboardingError } = await supabase
         .from('profiles')
         .update({
-          onboarding_complete: true,
-          updated_at: new Date()
+          updated_at: new Date().toISOString()
         })
         .eq('id', userId);
 

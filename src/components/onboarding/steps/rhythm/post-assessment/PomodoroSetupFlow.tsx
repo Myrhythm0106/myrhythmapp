@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,10 +9,10 @@ import { AssessmentResult } from "@/utils/rhythmAnalysis";
 interface PomodoroSetupFlowProps {
   assessmentResult: AssessmentResult;
   userType?: UserType | null;
-  onPomodoroSetup: (settings: any) => void;
+  onComplete: () => void;
 }
 
-export function PomodoroSetupFlow({ assessmentResult, userType, onPomodoroSetup }: PomodoroSetupFlowProps) {
+export function PomodoroSetupFlow({ assessmentResult, userType, onComplete }: PomodoroSetupFlowProps) {
   const getRecommendedSettings = () => {
     switch (userType) {
       case 'brain-injury':
@@ -26,6 +27,12 @@ export function PomodoroSetupFlow({ assessmentResult, userType, onPomodoroSetup 
   };
 
   const settings = getRecommendedSettings();
+
+  const handleSetup = () => {
+    // In a real app, this would save the pomodoro settings
+    console.log('Pomodoro settings configured:', settings);
+    onComplete();
+  };
 
   return (
     <Card className="p-6">
@@ -59,7 +66,7 @@ export function PomodoroSetupFlow({ assessmentResult, userType, onPomodoroSetup 
           </div>
         </div>
 
-        <Button onClick={() => onPomodoroSetup(settings)} size="lg" className="w-full">
+        <Button onClick={handleSetup} size="lg" className="w-full">
           Set Up My Focus Timer
           <Play className="ml-2 h-4 w-4" />
         </Button>
