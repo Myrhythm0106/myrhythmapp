@@ -7,89 +7,55 @@ import { Badge } from "@/components/ui/badge";
 import { EnhancedEmpowermentHub } from "@/components/empowerment/EnhancedEmpowermentHub";
 import { InAppPurchasePage } from "@/components/empowerment/InAppPurchasePage";
 import { PlanningSpotlight } from "@/components/planning/PlanningSpotlight";
-import { PlanningOverview } from "@/components/planning/PlanningOverview";
+import { WeekPrioritiesCard } from "@/components/planning/WeekPrioritiesCard";
 import { DailyIChooseWidget } from "@/components/dashboard/DailyIChooseWidget";
 
 export function EmpowermentDashboard() {
   const [showPurchasePage, setShowPurchasePage] = useState(false);
-  const [currentStreak] = useState(12); // Mock data
-  const [hasPremiumAccess] = useState(false); // Mock data
-  const [userMood] = useState<'great' | 'okay' | 'struggling'>('great'); // Mock data
+
+  // Mock data for week priorities
+  const mockWeeklyGoals = [
+    { id: 1, title: "Improve Energy Management", progress_percentage: 75 },
+    { id: 2, title: "Strengthen Focus & Memory", progress_percentage: 60 },
+    { id: 3, title: "Build Family Connections", progress_percentage: 45 }
+  ];
+
+  const mockThisWeekActions = [
+    { id: 1, status: 'completed' },
+    { id: 2, status: 'completed' },
+    { id: 3, status: 'pending' },
+    { id: 4, status: 'pending' }
+  ];
 
   if (showPurchasePage) {
-    return (
-      <div className="min-h-screen">
-        <div className="mb-4 p-4">
-          <Button 
-            variant="ghost" 
-            onClick={() => setShowPurchasePage(false)}
-            className="mb-4"
-          >
-            ← Back to Dashboard
-          </Button>
-        </div>
-        <InAppPurchasePage />
-      </div>
-    );
+    return <InAppPurchasePage onBack={() => setShowPurchasePage(false)} />;
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-purple-500 to-blue-600 p-2 rounded-lg">
-                <span className="text-white font-bold text-lg">MR</span>
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-gray-900">MyRhythm</h1>
-                <p className="text-sm text-gray-600">Empowerment Hub</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              {!hasPremiumAccess && (
-                <Button
-                  onClick={() => setShowPurchasePage(true)}
-                  className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-white"
-                  size="sm"
-                >
-                  <Crown className="h-4 w-4 mr-2" />
-                  Upgrade
-                </Button>
-              )}
-              
-              <Button variant="ghost" size="sm">
-                <Settings className="h-4 w-4" />
-              </Button>
-              
-              <Button variant="ghost" size="sm">
-                <User className="h-4 w-4" />
-              </Button>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50/30 via-white to-clarity-teal-50/30">
+      <div className="container mx-auto px-4 py-6 space-y-8 max-w-7xl">
+        
+        {/* Welcome Section with Quick Stats */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 mb-4">
+            <Crown className="h-8 w-8 text-amber-500" />
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
+              MyRhythm Dashboard
+            </h1>
           </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-6">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                Welcome to Your Empowerment Hub
-              </h2>
-              <p className="text-lg text-gray-600">
-                Transform your day with personalized #IChoose statements and smart planning
-              </p>
+          <p className="text-xl text-gray-700 max-w-2xl mx-auto mb-6">
+            Your personalized command center for cognitive wellness and empowered living
+          </p>
+          
+          {/* Quick streak info */}
+          <div className="flex justify-center gap-6">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium text-gray-700">7-day streak</span>
             </div>
-            
-            <div className="text-right">
-              <div className="text-2xl font-bold text-purple-600">Day {currentStreak}</div>
-              <div className="text-sm text-gray-600">Current Streak</div>
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4 text-clarity-teal-500" />
+              <span className="text-sm font-medium text-gray-700">3 goals active</span>
             </div>
           </div>
         </div>
@@ -126,16 +92,23 @@ export function EmpowermentDashboard() {
         <div className="mb-8">
           <div className="mb-4">
             <h2 className="text-2xl font-bold text-gray-900 mb-2 flex items-center gap-2">
-              <Target className="h-6 w-6 text-blue-600" />
-              Your Planning Command Center
+              <Calendar className="h-6 w-6 text-clarity-teal-500" />
+              Planning Command Center
             </h2>
-            <p className="text-gray-600">Every step forward is a victory worth celebrating</p>
+            <p className="text-gray-600">Strategic overview and weekly priorities</p>
           </div>
           <PlanningSpotlight />
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Week Priorities & Goals - Replaces Planning Details */}
+          <WeekPrioritiesCard 
+            weeklyGoals={mockWeeklyGoals}
+            thisWeekActions={mockThisWeekActions}
+            onViewGoals={() => {/* Navigate to goals */}}
+          />
+
           {/* Enhanced Empowerment Hub */}
           <div>
             <div className="mb-4">
@@ -144,84 +117,46 @@ export function EmpowermentDashboard() {
             </div>
             <EnhancedEmpowermentHub
               userType="brain-injury"
-              hasPremiumAccess={hasPremiumAccess}
-              currentStreak={currentStreak}
-              mood={userMood}
+              onUpgradeClick={() => setShowPurchasePage(true)}
             />
           </div>
-          
-          {/* Planning Overview */}
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-green-600" />
-                Planning Details
-              </h3>
-              <PlanningOverview />
-            </div>
-          </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-2 border-blue-200 hover:border-blue-400">
+        {/* Quick Actions & Journey Progress */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <Card className="border-memory-emerald-200 hover:border-memory-emerald-300 transition-colors">
             <CardContent className="p-6 text-center">
-              <Calendar className="h-8 w-8 mx-auto mb-3 text-blue-600" />
-              <h3 className="font-semibold text-gray-900 mb-2">Daily Planner</h3>
-              <p className="text-sm text-gray-600">Organize your empowered day</p>
+              <Calendar className="h-8 w-8 text-memory-emerald-500 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">Plan My Day</h3>
+              <p className="text-sm text-gray-600 mb-4">Create brain-friendly schedules</p>
+              <Button size="sm" variant="outline" className="border-memory-emerald-300">
+                Open Calendar
+              </Button>
             </CardContent>
           </Card>
-          
-          <Card 
-            className="hover:shadow-md transition-shadow cursor-pointer border-2 border-amber-200 hover:border-amber-400"
-            onClick={() => setShowPurchasePage(true)}
-          >
+
+          <Card className="border-clarity-teal-200 hover:border-clarity-teal-300 transition-colors">
             <CardContent className="p-6 text-center">
-              <Crown className="h-8 w-8 mx-auto mb-3 text-amber-600" />
-              <h3 className="font-semibold text-gray-900 mb-2">Premium Content</h3>
-              <p className="text-sm text-gray-600">Unlock 700+ statements</p>
+              <Target className="h-8 w-8 text-clarity-teal-500 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">Track Progress</h3>
+              <p className="text-sm text-gray-600 mb-4">Monitor your recovery journey</p>
+              <Button size="sm" variant="outline" className="border-clarity-teal-300">
+                View Stats
+              </Button>
             </CardContent>
           </Card>
-          
-          <Card className="hover:shadow-md transition-shadow cursor-pointer border-2 border-green-200 hover:border-green-400">
+
+          <Card className="border-heart-300 hover:border-heart-400 transition-colors">
             <CardContent className="p-6 text-center">
-              <User className="h-8 w-8 mx-auto mb-3 text-green-600" />
-              <h3 className="font-semibold text-gray-900 mb-2">Support Circle</h3>
-              <p className="text-sm text-gray-600">Connect with your support</p>
+              <Heart className="h-8 w-8 text-heart-500 mx-auto mb-3" />
+              <h3 className="font-semibold mb-2">Support Circle</h3>
+              <p className="text-sm text-gray-600 mb-4">Connect with your care team</p>
+              <Button size="sm" variant="outline" className="border-heart-300">
+                Manage Circle
+              </Button>
             </CardContent>
           </Card>
         </div>
-
-        {/* Journey Progress */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-green-600" />
-              <span>Your Empowerment Journey</span>
-              <Badge variant="outline">{hasPremiumAccess ? 'Premium' : 'Free Tier'}</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <div className="text-2xl font-bold text-purple-600 mb-1">{currentStreak}</div>
-                <div className="text-sm text-gray-600">Days Active</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-600 mb-1">{hasPremiumAccess ? '760+' : '60'}</div>
-                <div className="text-sm text-gray-600">Statements Available</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-green-600 mb-1">3</div>
-                <div className="text-sm text-gray-600">Favorites Saved</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-amber-600 mb-1">85%</div>
-                <div className="text-sm text-gray-600">Empowerment Score</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ import { GoalsView } from "./views/GoalsView";
 import { DayView } from "./views/DayView";
 import { WeekView } from "./views/WeekView";
 import { YearView } from "./views/YearView";
+import { InteractiveCalendarActions } from "./InteractiveCalendarActions";
 
 interface BrainHealthCalendarViewProps {
   view: "day" | "week" | "month" | "year" | "goals";
@@ -27,9 +28,22 @@ export function BrainHealthCalendarView({
   onDateSelect,
   onNewGoal
 }: BrainHealthCalendarViewProps) {
+  const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(date);
+  const [selectedTime, setSelectedTime] = React.useState<string>();
+
   const handleMonthClick = (monthDate: Date) => {
     onDateSelect(monthDate);
     onViewChange("month");
+  };
+
+  const handleDateClick = (clickedDate: Date | undefined) => {
+    setSelectedDate(clickedDate);
+    onDateSelect(clickedDate);
+  };
+
+  const handleActionCreate = (actionData: any) => {
+    console.log("New action created:", actionData);
+    // TODO: Integrate with action creation system
   };
 
   return (
@@ -89,31 +103,32 @@ export function BrainHealthCalendarView({
             )}
           </div>
           
-          <div className="min-h-[400px]">
+          <div className="min-h-[400px] relative">
             {view === "month" && (
               <div className="flex justify-center">
                 <CalendarComponent
                   mode="single"
-                  selected={date}
-                  onSelect={onDateSelect}
+                  selected={selectedDate}
+                  onSelect={handleDateClick}
                   className="rounded-md border border-memory-emerald-200 bg-white/80 backdrop-blur-sm"
                 />
               </div>
             )}
             
-            {view === "day" && date && (
-              <DayView date={date} events={[]} />
+            {view === "day" && selectedDate && (
+              <DayView date={selectedDate} events={[]} />
             )}
             
-            {view === "week" && date && (
-              <WeekView date={date} events={[]} />
+            {view === "week" && selectedDate && (
+              <WeekView date={selectedDate} events={[]} />
             )}
 
-            {view === "year" && date && (
+            {view === "year" && selectedDate && (
               <YearView 
-                currentDate={date} 
+                currentDate={selectedDate} 
                 events={[]} 
                 onDayClick={(clickedDate) => {
+                  setSelectedDate(clickedDate);
                   onDateSelect(clickedDate);
                   onViewChange("day");
                 }}
@@ -139,6 +154,16 @@ export function BrainHealthCalendarView({
                 </div>
                 <GoalsView />
               </div>
+            )}
+
+            {/* Interactive Calendar Actions for all calendar views */}
+            {view !== "goals" && (
+              <InteractiveCalendarActions
+                selectedDate={selectedDate}
+                selectedTime={selectedTime}
+                onActionCreate={handleActionCreate}
+                view={view}
+              />
             )}
           </div>
         </CardContent>
