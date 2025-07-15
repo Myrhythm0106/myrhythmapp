@@ -51,40 +51,40 @@ export function HeroSection() {
           <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-gradient-to-r from-amber-300/60 to-yellow-300/40 rounded-full animate-pulse opacity-30" style={{animationDelay: '9s', animationDuration: '12s'}}></div>
         </div>
 
-        {/* Top navigation with gradient styling */}
-        <div className="absolute top-6 right-6 z-10">
+        {/* Fixed top navigation with better mobile positioning */}
+        <div className="fixed top-4 right-4 md:top-6 md:right-6 z-50">
           <Button 
             variant="ghost" 
-            className="bg-white/80 backdrop-blur-md text-purple-700 border border-purple-200/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 rounded-full px-6 py-2 text-sm font-medium transition-all duration-300" 
+            className="bg-white/80 backdrop-blur-md text-purple-700 border border-purple-200/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 rounded-full px-4 py-2 md:px-6 md:py-2 text-sm font-medium transition-all duration-300" 
             onClick={() => setShowLoginModal(true)}
           >
-            <LogIn className="h-4 w-4 mr-2" />
-            Login
+            <LogIn className="h-4 w-4 mr-1 md:mr-2" />
+            <span className="hidden sm:inline">Login</span>
           </Button>
         </div>
 
         <div className="relative z-10 container mx-auto px-6 max-w-6xl min-h-screen flex items-center">
-          <div className="text-center w-full space-y-12">
+          <div className="text-center w-full space-y-8 md:space-y-12 pt-16 md:pt-0">
             
             {/* Beautiful gradient brand section */}
-            <div className="space-y-8">
-              <div className="flex items-center justify-center gap-6 mb-8">
+            <div className="space-y-6 md:space-y-8">
+              <div className="flex items-center justify-center gap-4 md:gap-6 mb-6 md:mb-8">
                 <div className="relative">
                   {/* BEAUTIFUL GRADIENT BRAIN ICON - matching onboarding exactly */}
-                  <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center shadow-2xl">
-                    <Brain className="h-8 w-8 md:h-12 md:w-12 text-white filter drop-shadow-md" />
+                  <div className="w-12 h-12 md:w-16 md:h-16 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center shadow-2xl">
+                    <Brain className="h-6 w-6 md:h-8 md:w-8 lg:h-12 lg:w-12 text-white filter drop-shadow-md" />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-blue-400/30 to-teal-400/30 rounded-full blur-xl animate-pulse"></div>
                 </div>
                 {/* BEAUTIFUL GRADIENT TITLE - matching onboarding style */}
-                <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent tracking-wide drop-shadow-sm">
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent tracking-wide drop-shadow-sm">
                   MyRhythm
                 </h1>
               </div>
               
               {/* Gradient value proposition */}
-              <div className="space-y-6">
-                <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed text-gray-700 font-light tracking-wide">
+              <div className="space-y-4 md:space-y-6">
+                <p className="text-lg md:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed text-gray-700 font-light tracking-wide px-4">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent font-medium cursor-help border-b border-dotted border-purple-300/50 transition-all hover:border-purple-500/80">
@@ -126,20 +126,20 @@ export function HeroSection() {
               </Accordion>
             </div>
             
-            {/* Beautiful gradient call-to-action section */}
-            <div className="space-y-8 pt-8">
-              <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            {/* Beautiful gradient call-to-action section - mobile optimized */}
+            <div className="space-y-6 md:space-y-8 pt-6 md:pt-8">
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
                 <Button 
                   size="lg" 
-                  className="text-lg px-12 py-8 rounded-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 text-white hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 shadow-2xl hover:shadow-purple-200/50 transition-all duration-300 border-2 border-white/20 group relative overflow-hidden font-semibold" 
+                  className="text-base md:text-lg px-8 py-6 md:px-12 md:py-8 rounded-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 text-white hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 shadow-2xl hover:shadow-purple-200/50 transition-all duration-300 border-2 border-white/20 group relative overflow-hidden font-semibold w-full sm:w-auto max-w-sm" 
                   onClick={handleStartJourney}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="relative flex items-center gap-3">
+                  <div className="relative flex items-center gap-2 md:gap-3">
                     <span className="font-semibold tracking-wide">
                       Start Your Journey
                     </span>
-                    <div className="text-xs opacity-90 border-l border-white/30 pl-3">
+                    <div className="text-xs opacity-90 border-l border-white/30 pl-2 md:pl-3">
                       7-Day Free Trial
                     </div>
                   </div>
@@ -148,7 +148,7 @@ export function HeroSection() {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="text-lg px-10 py-8 rounded-full border-2 border-purple-300/60 text-purple-700 bg-white/70 backdrop-blur-sm hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 hover:border-purple-400/80 transition-all duration-300" 
+                  className="text-base md:text-lg px-6 py-6 md:px-10 md:py-8 rounded-full border-2 border-purple-300/60 text-purple-700 bg-white/70 backdrop-blur-sm hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 hover:border-purple-400/80 transition-all duration-300 w-full sm:w-auto max-w-sm" 
                   onClick={scrollToFramework}
                 >
                   Learn The Framework
@@ -156,23 +156,23 @@ export function HeroSection() {
               </div>
               
               {/* Beautiful gradient trust indicators */}
-              <div className="flex items-center justify-center gap-12 text-sm text-gray-600 pt-4">
+              <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12 text-sm text-gray-600 pt-4">
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full animate-pulse"></div>
                   <span className="font-light">7-Day Free Trial</span>
                 </div>
-                <div className="w-px h-4 bg-gradient-to-b from-purple-300 to-blue-300"></div>
+                <div className="w-px h-4 bg-gradient-to-b from-purple-300 to-blue-300 hidden sm:block"></div>
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 bg-gradient-to-r from-blue-400 to-teal-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
                   <span className="font-light">Cancel Anytime</span>
                 </div>
-                <div className="w-px h-4 bg-gradient-to-b from-blue-300 to-teal-300"></div>
+                <div className="w-px h-4 bg-gradient-to-b from-blue-300 to-teal-300 hidden sm:block"></div>
                 <div className="flex items-center gap-2">
                   <div className="h-2 w-2 bg-gradient-to-r from-teal-400 to-purple-400 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
                   <span className="font-light">Start Immediately</span>
                 </div>
                 {/* Subtle amber accent */}
-                <div className="w-px h-4 bg-gradient-to-b from-teal-300 to-amber-200/60"></div>
+                <div className="w-px h-4 bg-gradient-to-b from-teal-300 to-amber-200/60 hidden lg:block"></div>
                 <div className="flex items-center gap-2">
                   <div className="h-1.5 w-1.5 bg-gradient-to-r from-amber-300/70 to-yellow-300/50 rounded-full animate-pulse" style={{animationDelay: '3s'}}></div>
                   <span className="font-light text-amber-600/80">Premium Support</span>
