@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { useGratitude } from "@/hooks/use-gratitude";
-import { HeartHandshake, Share2, Trash2, Save } from "lucide-react";
+import { HeartHandshake, Share2, Trash2, Save, Brain, Sparkles } from "lucide-react";
 import { GratitudeEntry } from "../GratitudePrompt";
 import { toast } from "@/components/ui/use-toast";
 import { 
@@ -72,6 +72,15 @@ export function EntryDetailsDialog({
       return;
     }
 
+    if (!whyGrateful.trim()) {
+      toast({
+        title: "Please explain WHY you're grateful",
+        description: "The 'why' is crucial for brain health benefits!",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const newEntry = {
       promptType,
       gratitudeText,
@@ -83,8 +92,8 @@ export function EntryDetailsDialog({
 
     addEntry(newEntry);
     toast({
-      title: "New gratitude entry saved!",
-      description: "Your gratitude has been recorded successfully.",
+      title: "Brain Health Gratitude Saved! 🧠✨",
+      description: "Your reflection strengthens neural pathways and builds resilience.",
     });
     
     if (onClose) {
@@ -112,17 +121,21 @@ export function EntryDetailsDialog({
   // Render different content based on whether we're viewing or creating
   if (isNewEntry) {
     return (
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <HeartHandshake className="h-5 w-5 text-primary" />
-            Add New Gratitude Entry
+            <Brain className="h-5 w-5 text-blue-500" />
+            Add Brain Health Gratitude
+            <Sparkles className="h-4 w-4 text-amber-400" />
           </DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            Remember: The "WHY" is where the real brain health magic happens!
+          </p>
         </DialogHeader>
         
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Gratitude Type</label>
+            <label className="text-sm font-medium">Gratitude Context</label>
             <Select
               value={promptType}
               onValueChange={(value: "fitness" | "mindfulness" | "social" | "general") => setPromptType(value)}
@@ -131,16 +144,19 @@ export function EntryDetailsDialog({
                 <SelectValue placeholder="Select gratitude type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="general">General</SelectItem>
-                <SelectItem value="fitness">Fitness</SelectItem>
-                <SelectItem value="mindfulness">Mindfulness</SelectItem>
-                <SelectItem value="social">Social</SelectItem>
+                <SelectItem value="general">General Gratitude</SelectItem>
+                <SelectItem value="fitness">After Exercise</SelectItem>
+                <SelectItem value="mindfulness">Quiet Moments</SelectItem>
+                <SelectItem value="social">With Others</SelectItem>
               </SelectContent>
             </Select>
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">What are you grateful for?</label>
+            <label className="text-sm font-medium flex items-center gap-2">
+              <HeartHandshake className="h-4 w-4 text-rose-500" />
+              What are you grateful for? 💖
+            </label>
             <Textarea
               placeholder="I'm grateful for..."
               value={gratitudeText}
@@ -149,13 +165,24 @@ export function EntryDetailsDialog({
             />
           </div>
           
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Why are you grateful for this?</label>
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
+            <div className="flex items-center gap-2 mb-3">
+              <Brain className="h-5 w-5 text-blue-500" />
+              <label className="text-sm font-medium text-blue-800">
+                🧠 WHY are you grateful for this? (Brain Health Boost!)
+              </label>
+              <Sparkles className="h-4 w-4 text-purple-500" />
+            </div>
+            <p className="text-xs text-blue-600 mb-3">
+              This deeper reflection actively engages your brain's thinking patterns, 
+              strengthening neural connections and emotional processing.
+            </p>
             <Textarea
-              placeholder="Because..."
+              placeholder="This matters to me because... / I feel grateful because... / This impacts my life by... / This helps me grow by..."
               value={whyGrateful}
               onChange={(e) => setWhyGrateful(e.target.value)}
-              className="min-h-[80px]"
+              className="min-h-[100px] border-blue-300 focus:border-blue-500"
+              required
             />
           </div>
           
@@ -175,14 +202,22 @@ export function EntryDetailsDialog({
                 </Button>
               ))}
             </div>
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>Less positive</span>
+              <span>More positive</span>
+            </div>
           </div>
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={handleSaveNew} disabled={!gratitudeText.trim()}>
-            <Save className="h-4 w-4 mr-1" />
-            Save Entry
+          <Button 
+            onClick={handleSaveNew} 
+            disabled={!gratitudeText.trim() || !whyGrateful.trim()}
+            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+          >
+            <Brain className="h-4 w-4 mr-1" />
+            Save Brain Health Gratitude
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -214,16 +249,22 @@ export function EntryDetailsDialog({
             </div>
             
             <div>
-              <h3 className="font-semibold mb-2">What I'm grateful for:</h3>
+              <h3 className="font-semibold mb-2 flex items-center gap-2">
+                <HeartHandshake className="h-4 w-4 text-rose-500" />
+                What I'm grateful for:
+              </h3>
               <div className="bg-muted/20 p-3 rounded-md">
                 {selectedEntry.gratitudeText}
               </div>
             </div>
             
             <div>
-              <h3 className="font-semibold mb-2">Why I'm grateful:</h3>
-              <div className="bg-muted/20 p-3 rounded-md">
-                {selectedEntry.whyGrateful || "No reason provided"}
+              <h3 className="font-semibold mb-2 flex items-center gap-2">
+                <Brain className="h-4 w-4 text-blue-500" />
+                Why I'm grateful (Brain Health):
+              </h3>
+              <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-3 rounded-md border border-blue-200">
+                {selectedEntry.whyGrateful || "No deeper reflection provided"}
               </div>
             </div>
             
