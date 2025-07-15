@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { AssessmentTypeSelection } from "@/components/onboarding/steps/rhythm/AssessmentTypeSelection";
@@ -9,7 +8,6 @@ import { BriefAssessmentView } from "@/components/onboarding/steps/rhythm/BriefA
 import { RhythmAssessmentView } from "@/components/onboarding/steps/rhythm/RhythmAssessmentView";
 import { useAssessmentManager } from "@/hooks/useAssessmentManager";
 import { UserType } from "@/types/user";
-import { Preview3Background } from "@/components/ui/Preview3Background";
 
 const Assessment = () => {
   const [searchParams] = useSearchParams();
@@ -51,51 +49,49 @@ const Assessment = () => {
   };
 
   return (
-    <Preview3Background>
-      <div className="min-h-screen py-8">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Header */}
-          <div className="mb-8">
-            <Button 
-              onClick={handleBack}
-              variant="ghost" 
-              className="mb-4"
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              {selectedType ? 'Back to Selection' : 'Back to Dashboard'}
-            </Button>
-            
-            <div className="text-center">
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
-                RHYTHM Assessment
-              </h1>
-              <p className="text-gray-600 mt-2">
-                Discover your unique cognitive patterns and optimize your daily life
-              </p>
-            </div>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        {/* Header */}
+        <div className="mb-8">
+          <Button 
+            onClick={handleBack}
+            variant="ghost" 
+            className="mb-4"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            {selectedType ? 'Back to Selection' : 'Back to Dashboard'}
+          </Button>
+          
+          <div className="text-center">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
+              RHYTHM Assessment
+            </h1>
+            <p className="text-gray-600 mt-2">
+              Discover your unique cognitive patterns and optimize your daily life
+            </p>
           </div>
-
-          {/* Assessment Content */}
-          {!selectedType && (
-            <AssessmentTypeSelection onSelectType={handleTypeSelection} />
-          )}
-
-          {selectedType === 'brief' && (
-            <BriefAssessmentView 
-              userType={userType} 
-              onComplete={handleAssessmentComplete}
-            />
-          )}
-
-          {selectedType === 'comprehensive' && (
-            <RhythmAssessmentView 
-              userType={userType} 
-              onComplete={handleAssessmentComplete}
-            />
-          )}
         </div>
+
+        {/* Assessment Content */}
+        {!selectedType && (
+          <AssessmentTypeSelection onSelectType={handleTypeSelection} />
+        )}
+
+        {selectedType === 'brief' && (
+          <BriefAssessmentView 
+            userType={userType} 
+            onComplete={handleAssessmentComplete}
+          />
+        )}
+
+        {selectedType === 'comprehensive' && (
+          <RhythmAssessmentView 
+            userType={userType} 
+            onComplete={handleAssessmentComplete}
+          />
+        )}
       </div>
-    </Preview3Background>
+    </div>
   );
 };
 
