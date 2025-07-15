@@ -1,6 +1,5 @@
 
-import React, { useState, useEffect } from "react";
-import { PageHeader } from "@/components/ui/PageHeader";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -10,26 +9,16 @@ import { GratitudePrompt } from "@/components/gratitude/GratitudePrompt";
 import { GratitudeJournal } from "@/components/gratitude/GratitudeJournal";
 import { useGratitude } from "@/hooks/use-gratitude";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { GratitudeEntryCard } from "@/components/gratitude/journal/GratitudeEntryCard";
 import { EntryDetailsDialog } from "@/components/gratitude/journal/EntryDetailsDialog";
 
 const Gratitude = () => {
   const [activeTab, setActiveTab] = useState("add-gratitude");
   const [isPromptOpen, setIsPromptOpen] = useState(false);
   const [promptType, setPromptType] = useState<"fitness" | "mindfulness" | "social" | "general">("general");
-  const { entries, addEntry } = useGratitude();
-  const [latestEntry, setLatestEntry] = useState<any>(null);
-  const [showLatestEntry, setShowLatestEntry] = useState(false);
+  const { addEntry } = useGratitude();
   
-  // New state for quick add dialog
+  // State for the quick add dialog
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
-  
-  // When the component mounts or entries change, check if we have entries
-  useEffect(() => {
-    if (entries.length > 0) {
-      setLatestEntry(entries[0]);
-    }
-  }, [entries]);
   
   const handleOpenPrompt = (type: "fitness" | "mindfulness" | "social" | "general") => {
     setPromptType(type);
@@ -39,58 +28,40 @@ const Gratitude = () => {
   const handleSaveGratitude = (entry: any) => {
     addEntry(entry);
     setIsPromptOpen(false);
-    setLatestEntry(entry);
-    setShowLatestEntry(true);
     // Auto-switch to journal tab when entry is saved
     setActiveTab("journal");
   };
   
-  // Handle actions on the latest entry
-  const handleSelectLatestEntry = () => {
-    // This would be implemented in the journal component
-    setShowLatestEntry(false);
-  };
-  
-  const handleShareLatestEntry = () => {
-    // This would be implemented in the journal component
-    setShowLatestEntry(false);
+  const handleQuickAdd = () => {
+    setIsQuickAddOpen(true);
   };
 
   return (
-    <div className="space-y-6">
-      <PageHeader 
-        title="Brain Health Gratitude Practice" 
-        subtitle="Strengthen neural pathways through meaningful gratitude and reflection"
-      >
-        <Button onClick={() => setIsQuickAddOpen(true)} className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
-          <Plus className="mr-1 h-4 w-4" />
-          <Brain className="mr-1 h-4 w-4" />
-          Add Brain Health Gratitude
-        </Button>
-      </PageHeader>
-      
-      {/* Show the latest entry immediately after saving */}
-      {showLatestEntry && latestEntry && (
-        <div className="animate-fade-in">
-          <h3 className="text-lg font-medium mb-2 flex items-center gap-2">
-            <HeartHandshake className="h-5 w-5 text-primary" />
-            Your Latest Gratitude
-          </h3>
-          <GratitudeEntryCard 
-            entry={latestEntry} 
-            onSelectEntry={handleSelectLatestEntry}
-            onShareEntry={handleShareLatestEntry}
-          />
-          <div className="mt-4 flex justify-end">
-            <Button variant="outline" size="sm" onClick={() => setShowLatestEntry(false)}>
-              Dismiss
-            </Button>
-          </div>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold flex items-center gap-2">
+            <Brain className="h-8 w-8 text-blue-500" />
+            Brain Health Gratitude Practice
+            <Sparkles className="h-6 w-6 text-amber-400" />
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Strengthen neural pathways through meaningful gratitude and reflection
+          </p>
         </div>
-      )}
+        <Button 
+          onClick={handleQuickAdd} 
+          size="lg"
+          className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+        >
+          <Plus className="mr-2 h-5 w-5" />
+          <Brain className="mr-2 h-5 w-5" />
+          Add Gratitude Now
+        </Button>
+      </div>
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="w-full">
+        <TabsList className="w-full max-w-md">
           <TabsTrigger value="add-gratitude" className="flex-1">
             <Plus className="h-4 w-4 mr-2" />
             Add Gratitude
@@ -118,9 +89,25 @@ const Gratitude = () => {
                 The key is not just <strong>what</strong> you're grateful for, but deeply reflecting on <strong>why</strong> it matters to you.
               </p>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
+              {/* Quick Add Button */}
+              <div className="text-center">
+                <Button 
+                  onClick={handleQuickAdd}
+                  size="lg"
+                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-rose-500 hover:from-blue-600 hover:via-purple-600 hover:to-rose-600 text-lg px-8 py-4"
+                >
+                  <Brain className="h-6 w-6 mr-2" />
+                  Start Your Brain Health Gratitude
+                  <Sparkles className="h-5 w-5 ml-2" />
+                </Button>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Click to add what you're grateful for and why it matters
+                </p>
+              </div>
+              
               <div className="text-center mb-6">
-                <h3 className="text-lg font-semibold mb-2">Choose Your Gratitude Context</h3>
+                <h3 className="text-lg font-semibold mb-2">Or Choose Your Gratitude Context</h3>
                 <p className="text-sm text-muted-foreground mb-4">
                   Select what feels right for your reflection today
                 </p>
@@ -186,18 +173,6 @@ const Gratitude = () => {
                   strengthen emotional processing, and create lasting positive mental patterns. This isn't just feel-good practice—it's brain training!
                 </p>
               </div>
-              
-              <div className="text-center mt-6">
-                <Button 
-                  onClick={() => setIsQuickAddOpen(true)}
-                  size="lg"
-                  className="bg-gradient-to-r from-blue-500 via-purple-500 to-rose-500 hover:from-blue-600 hover:via-purple-600 hover:to-rose-600"
-                >
-                  <Brain className="h-5 w-5 mr-2" />
-                  Start Quick Brain Health Gratitude
-                  <Sparkles className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -222,7 +197,7 @@ const Gratitude = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Simple Quick Add Dialog */}
+      {/* Quick Add Dialog */}
       <Dialog open={isQuickAddOpen} onOpenChange={setIsQuickAddOpen}>
         <EntryDetailsDialog
           isNewEntry={true}
