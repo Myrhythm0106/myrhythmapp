@@ -2,217 +2,250 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { UserType } from "@/types/user";
 
-interface AssessmentData {
+export interface AssessmentData {
   id: string;
   assessmentType: 'brief' | 'comprehensive';
   responses: Record<string, any>;
-  recommendations: any;
+  recommendations?: Record<string, any>;
   completedAt: string;
-  userType?: UserType;
 }
 
-interface AssessmentReminder {
+export interface AssessmentReminder {
   id: string;
   reminderType: string;
   scheduledFor: string;
-  sentAt?: string;
-  acknowledgedAt?: string;
   isActive: boolean;
 }
 
 export function useAssessmentManager() {
   const [assessments, setAssessments] = useState<AssessmentData[]>([]);
   const [reminders, setReminders] = useState<AssessmentReminder[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const saveAssessment = async (assessmentData: Omit<AssessmentData, 'id'>) => {
-    setLoading(true);
+  const saveAssessment = async (
+    assessmentType: 'brief' | 'comprehensive',
+    responses: Record<string, any>,
+    recommendations?: Record<string, any>
+  ) => {
+    setIsLoading(true);
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) throw new Error('User not authenticated');
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) {
+        throw new Error('User not authenticated');
+      }
 
-      // For now, we'll use a workaround until the tables are created
-      // Try to insert into user_assessments table, but handle the error gracefully
+      const assessmentData: AssessmentData = {
+        id: crypto.randomUUID(),
+        assessmentType,
+        responses,
+        recommendations,
+        completedAt: new Date().toISOString(),
+      };
+
+      // Try to save to database, fall back to localStorage
       try {
-        const { data, error } = await supabase
-          .from('user_assessments' as any)
+        const { error } = await supabase
+          .from('user_assessments')
           .insert({
-            user_id: user.user.id,
-            assessment_type: assessmentData.assessmentType,
-            responses: assessmentData.responses,
-            recommendations: assessmentData.recommendations
-          })
-          .select()
-          .single();
+            user_id: user.data.user.id,
+            assessment_type: assessmentType,
+            responses,
+            recommendations,
+          });
 
         if (error) throw error;
-
-        // If this is a brief assessment, schedule a reminder for 7 days
-        if (assessmentData.assessmentType === 'brief') {
-          const reminderDate = new Date();
-          reminderDate.setDate(reminderDate.getDate() + 7);
-
-          await supabase
-            .from('assessment_reminders' as any)
-            .insert({
-              user_id: user.user.id,
-              assessment_id: data.id,
-              reminder_type: 'comprehensive_upgrade',
-              scheduled_for: reminderDate.toISOString()
-            });
-        }
-
-        // Store in localStorage for immediate access
-        localStorage.setItem('myrhythm_current_assessment', JSON.stringify({
-          id: data.id,
-          ...assessmentData
-        }));
-
-        toast.success('Assessment completed successfully!');
-        return data;
       } catch (dbError) {
-        console.warn('Database tables not yet created, using localStorage fallback');
-        
-        // Fallback to localStorage until tables are created
-        const assessmentId = crypto.randomUUID();
-        const assessmentRecord = {
-          id: assessmentId,
-          ...assessmentData
-        };
-
-        localStorage.setItem('myrhythm_current_assessment', JSON.stringify(assessmentRecord));
-        toast.success('Assessment completed successfully!');
-        return assessmentRecord;
+        console.log('Database not available, using localStorage:', dbError);
+        // Fallback to localStorage
+        const existingAssessments = JSON.parse(localStorage.getItem('assessments') || '[]');
+        existingAssessments.push(assessmentData);
+        localStorage.setItem('assessments', JSON.stringify(existingAssessments));
       }
+
+      // Schedule reminder for comprehensive assessment if brief was completed
+      if (assessmentType === 'brief') {
+        await scheduleUpgradeReminder(assessmentData.id);
+      }
+
+      setAssessments(prev => [...prev, assessmentData]);
+      toast.success('Assessment saved successfully!');
+      
+      return assessmentData.id;
     } catch (error: any) {
       console.error('Error saving assessment:', error);
       toast.error('Failed to save assessment: ' + error.message);
       throw error;
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const loadUserAssessments = async () => {
-    setLoading(true);
+  const scheduleUpgradeReminder = async (assessmentId: string) => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) return;
 
+      const reminderDate = new Date();
+      reminderDate.setDate(reminderDate.getDate() + 7); // 7 days from now
+
+      const reminderData: AssessmentReminder = {
+        id: crypto.randomUUID(),
+        reminderType: 'comprehensive_upgrade',
+        scheduledFor: reminderDate.toISOString(),
+        isActive: true,
+      };
+
+      // Try to save to database, fall back to localStorage
+      try {
+        const { error } = await supabase
+          .from('assessment_reminders')
+          .insert({
+            user_id: user.data.user.id,
+            assessment_id: assessmentId,
+            reminder_type: 'comprehensive_upgrade',
+            scheduled_for: reminderDate.toISOString(),
+          });
+
+        if (error) throw error;
+      } catch (dbError) {
+        console.log('Database not available for reminders, using localStorage:', dbError);
+        // Fallback to localStorage
+        const existingReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
+        existingReminders.push(reminderData);
+        localStorage.setItem('assessment_reminders', JSON.stringify(existingReminders));
+      }
+
+      setReminders(prev => [...prev, reminderData]);
+    } catch (error) {
+      console.error('Error scheduling reminder:', error);
+    }
+  };
+
+  const loadAssessments = async () => {
+    try {
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) return;
+
+      // Try to load from database, fall back to localStorage
       try {
         const { data, error } = await supabase
-          .from('user_assessments' as any)
+          .from('user_assessments')
           .select('*')
-          .eq('user_id', user.user.id)
+          .eq('user_id', user.data.user.id)
           .order('completed_at', { ascending: false });
 
         if (error) throw error;
-        setAssessments(data || []);
+
+        const formattedData: AssessmentData[] = (data || []).map(item => ({
+          id: item.id,
+          assessmentType: item.assessment_type as 'brief' | 'comprehensive',
+          responses: item.responses || {},
+          recommendations: item.recommendations || undefined,
+          completedAt: item.completed_at,
+        }));
+
+        setAssessments(formattedData);
       } catch (dbError) {
-        console.warn('Database tables not yet created, using localStorage fallback');
-        
+        console.log('Database not available, loading from localStorage:', dbError);
         // Fallback to localStorage
-        const stored = localStorage.getItem('myrhythm_current_assessment');
-        if (stored) {
-          try {
-            const assessment = JSON.parse(stored);
-            setAssessments([assessment]);
-          } catch {
-            setAssessments([]);
-          }
-        }
+        const localAssessments = JSON.parse(localStorage.getItem('assessments') || '[]');
+        setAssessments(localAssessments);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error loading assessments:', error);
-      toast.error('Failed to load assessments');
-    } finally {
-      setLoading(false);
     }
   };
 
-  const loadActiveReminders = async () => {
+  const loadReminders = async () => {
     try {
-      const { data: user } = await supabase.auth.getUser();
-      if (!user.user) return;
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) return;
 
+      // Try to load from database, fall back to localStorage
       try {
         const { data, error } = await supabase
-          .from('assessment_reminders' as any)
+          .from('assessment_reminders')
           .select('*')
-          .eq('user_id', user.user.id)
+          .eq('user_id', user.data.user.id)
           .eq('is_active', true)
-          .is('acknowledged_at', null)
-          .lte('scheduled_for', new Date().toISOString());
+          .order('scheduled_for', { ascending: true });
 
         if (error) throw error;
-        setReminders(data || []);
+
+        const formattedData: AssessmentReminder[] = (data || []).map(item => ({
+          id: item.id,
+          reminderType: item.reminder_type,
+          scheduledFor: item.scheduled_for,
+          isActive: item.is_active,
+        }));
+
+        setReminders(formattedData);
       } catch (dbError) {
-        console.warn('Database tables not yet created, reminders will be empty');
-        setReminders([]);
+        console.log('Database not available for reminders, loading from localStorage:', dbError);
+        // Fallback to localStorage
+        const localReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
+        setReminders(localReminders);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error loading reminders:', error);
     }
   };
 
-  const acknowledgeReminder = async (reminderId: string) => {
+  const getActiveReminders = () => {
+    const now = new Date();
+    return reminders.filter(reminder => 
+      reminder.isActive && new Date(reminder.scheduledFor) <= now
+    );
+  };
+
+  const dismissReminder = async (reminderId: string) => {
     try {
-      const { error } = await supabase
-        .from('assessment_reminders' as any)
-        .update({ 
-          acknowledged_at: new Date().toISOString(),
-          is_active: false 
-        })
-        .eq('id', reminderId);
+      const user = await supabase.auth.getUser();
+      if (!user.data.user) return;
 
-      if (error) throw error;
-
-      setReminders(prev => prev.filter(r => r.id !== reminderId));
-    } catch (error: any) {
-      console.error('Error acknowledging reminder:', error);
-      toast.error('Failed to acknowledge reminder');
-    }
-  };
-
-  const getCurrentAssessment = () => {
-    const stored = localStorage.getItem('myrhythm_current_assessment');
-    if (stored) {
+      // Try to update in database, fall back to localStorage
       try {
-        return JSON.parse(stored);
-      } catch {
-        return null;
+        const { error } = await supabase
+          .from('assessment_reminders')
+          .update({ 
+            is_active: false,
+            acknowledged_at: new Date().toISOString()
+          })
+          .eq('id', reminderId);
+
+        if (error) throw error;
+      } catch (dbError) {
+        console.log('Database not available, updating localStorage:', dbError);
+        // Fallback to localStorage
+        const existingReminders = JSON.parse(localStorage.getItem('assessment_reminders') || '[]');
+        const updatedReminders = existingReminders.map((reminder: AssessmentReminder) =>
+          reminder.id === reminderId ? { ...reminder, isActive: false } : reminder
+        );
+        localStorage.setItem('assessment_reminders', JSON.stringify(updatedReminders));
       }
+
+      setReminders(prev => prev.map(reminder =>
+        reminder.id === reminderId ? { ...reminder, isActive: false } : reminder
+      ));
+    } catch (error) {
+      console.error('Error dismissing reminder:', error);
     }
-    return assessments.length > 0 ? assessments[0] : null;
-  };
-
-  const hasCompletedComprehensive = () => {
-    return assessments.some(a => a.assessmentType === 'comprehensive');
-  };
-
-  const hasBriefOnly = () => {
-    return assessments.length > 0 && 
-           assessments.every(a => a.assessmentType === 'brief') &&
-           !hasCompletedComprehensive();
   };
 
   useEffect(() => {
-    loadUserAssessments();
-    loadActiveReminders();
+    loadAssessments();
+    loadReminders();
   }, []);
 
   return {
     assessments,
     reminders,
-    loading,
+    isLoading,
     saveAssessment,
-    loadUserAssessments,
-    loadActiveReminders,
-    acknowledgeReminder,
-    getCurrentAssessment,
-    hasCompletedComprehensive,
-    hasBriefOnly
+    getActiveReminders,
+    dismissReminder,
+    loadAssessments,
+    loadReminders,
   };
 }
