@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as CustomToaster } from "@/components/ui/toaster";
 import { ToastProvider } from "@/hooks/use-toast";
@@ -11,6 +10,16 @@ import Dashboard from "./pages/Dashboard";
 import Assessment from "./pages/Assessment";
 import Calendar from "./pages/Calendar";
 import Gratitude from "./pages/Gratitude";
+import BrainGames from "./pages/BrainGames";
+import MoodTracking from "./pages/MoodTracking";
+import Accountability from "./pages/Accountability";
+import Community from "./pages/Community";
+import Notes from "./pages/Notes";
+import Strategy from "./pages/Strategy";
+import Analytics from "./pages/Analytics";
+import Testing from "./pages/Testing";
+import Goals from "./pages/Goals";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +39,16 @@ function App() {
                   <Route path="/assessment" element={<Assessment />} />
                   <Route path="/calendar" element={<Calendar />} />
                   <Route path="/gratitude" element={<Gratitude />} />
+                  <Route path="/brain-games" element={<BrainGames />} />
+                  <Route path="/mood-tracking" element={<MoodTracking />} />
+                  <Route path="/accountability" element={<Accountability />} />
+                  <Route path="/community" element={<Community />} />
+                  <Route path="/notes" element={<Notes />} />
+                  <Route path="/strategy" element={<Strategy />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/testing" element={<Testing />} />
+                  <Route path="/goals" element={<Goals />} />
+                  <Route path="/profile" element={<Profile />} />
                 </Routes>
               </TooltipProvider>
             </ToastProvider>

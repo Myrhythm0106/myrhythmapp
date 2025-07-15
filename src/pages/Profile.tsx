@@ -1,204 +1,190 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserProfileForm } from "@/components/profile/UserProfileForm";
-import { MedicalInfoForm } from "@/components/profile/MedicalInfoForm";
-import { EmergencyContactsForm } from "@/components/profile/EmergencyContactsForm";
-import { NotificationSettings } from "@/components/profile/NotificationSettings";
-import { PrivacySettings } from "@/components/profile/PrivacySettings";
-import { Card, CardContent } from "@/components/ui/card";
+
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, User, Bell, HeartPulse, Settings, CheckCircle, Calendar, Home, Eye } from "lucide-react";
-import { FloatingStartButton } from "@/components/welcome/FloatingStartButton";
-import { toast } from "@/components/ui/use-toast";
-import { Preview3Background } from "@/components/ui/Preview3Background";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, Mail, Phone, Calendar, Shield, Bell, Edit } from "lucide-react";
 
 const Profile = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState("personal");
-  const [showFloatingButton, setShowFloatingButton] = useState(false);
-  const [completedTabs, setCompletedTabs] = useState<string[]>([]);
-
-  // Check if we're coming from onboarding flow
-  useEffect(() => {
-    const fromOnboarding = searchParams.get('from') === 'onboarding';
-    if (fromOnboarding) {
-      setShowFloatingButton(true);
-    }
-    
-    // Load completed tabs from localStorage
-    const savedCompletedTabs = JSON.parse(localStorage.getItem("myrhythm_profile_completed_tabs") || "[]");
-    setCompletedTabs(savedCompletedTabs);
-  }, [searchParams]);
-
-  const markTabCompleted = (tabName: string) => {
-    if (!completedTabs.includes(tabName)) {
-      const newCompletedTabs = [...completedTabs, tabName];
-      setCompletedTabs(newCompletedTabs);
-      localStorage.setItem("myrhythm_profile_completed_tabs", JSON.stringify(newCompletedTabs));
-      
-      // Check if all tabs are completed
-      const allTabs = ["personal", "medical", "emergency", "notifications", "privacy"];
-      if (newCompletedTabs.length === allTabs.length) {
-        localStorage.setItem("myrhythm_profile_complete", "true");
-        toast({
-          title: "Profile Complete!",
-          description: "Your profile is now complete. You can start using MyRhythm!",
-          variant: "default",
-        });
-      }
-    }
+  const userInfo = {
+    name: "Sarah Johnson",
+    email: "sarah.johnson@email.com",
+    phone: "+1 (555) 123-4567",
+    joinDate: "January 8, 2024",
+    userType: "Brain Injury Recovery",
+    subscription: "Premium Plan"
   };
 
-  const handlePersonalSave = () => {
-    markTabCompleted("personal");
-    setActiveTab("medical");
-  };
+  const securitySettings = [
+    { label: "Two-Factor Authentication", enabled: true },
+    { label: "Email Notifications", enabled: true },
+    { label: "SMS Alerts", enabled: false },
+    { label: "Data Backup", enabled: true }
+  ];
 
-  const handleMedicalSave = () => {
-    markTabCompleted("medical");
-    setActiveTab("emergency");
-  };
-
-  const handleEmergencySave = () => {
-    markTabCompleted("emergency");
-    setActiveTab("notifications");
-  };
-
-  const handleNotificationsSave = () => {
-    markTabCompleted("notifications");
-    setActiveTab("privacy");
-  };
-
-  const handlePrivacySave = () => {
-    markTabCompleted("privacy");
-    
-    // Show completion message and redirect to calendar
-    toast({
-      title: "Profile Setup Complete!",
-      description: "Welcome to MyRhythm! You're now ready to start scheduling your actions.",
-      variant: "default",
-    });
-    
-    setTimeout(() => {
-      navigate("/calendar");
-    }, 2000);
-  };
-
-  const isTabCompleted = (tabName: string) => completedTabs.includes(tabName);
+  const emergencyContacts = [
+    { name: "Dr. Michael Chen", relationship: "Primary Doctor", phone: "(555) 234-5678" },
+    { name: "Lisa Johnson", relationship: "Sister", phone: "(555) 345-6789" },
+    { name: "Emergency Services", relationship: "Emergency", phone: "911" }
+  ];
 
   return (
-    <Preview3Background>
-      <div className="space-y-6 px-4">
-        {/* Navigation Header */}
-        <div className="bg-white/80 backdrop-blur-sm border border-white/20 rounded-lg p-4">
-          <div className="flex items-center justify-between max-w-6xl mx-auto">
-            <h1 className="text-xl font-semibold">MyRhythm Profile</h1>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigate("/")}
-                className="flex items-center gap-2 bg-white/50"
-              >
-                <Home className="h-4 w-4" />
-                Live Version
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Profile Settings
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          Manage your account information and preferences
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <User className="h-5 w-5 mr-2" />
+              Personal Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-20 w-20">
+                <AvatarImage src="/placeholder-avatar.jpg" />
+                <AvatarFallback className="text-lg">SJ</AvatarFallback>
+              </Avatar>
+              <div>
+                <h3 className="text-lg font-medium">{userInfo.name}</h3>
+                <p className="text-sm text-muted-foreground">{userInfo.userType}</p>
+                <Button variant="outline" size="sm" className="mt-2">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Change Photo
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="name">Full Name</Label>
+                <Input id="name" defaultValue={userInfo.name} />
+              </div>
+              <div>
+                <Label htmlFor="email">Email Address</Label>
+                <Input id="email" type="email" defaultValue={userInfo.email} />
+              </div>
+              <div>
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input id="phone" type="tel" defaultValue={userInfo.phone} />
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                <Calendar className="h-4 w-4" />
+                <span>Member since {userInfo.joinDate}</span>
+              </div>
+            </div>
+
+            <Button className="w-full">Save Changes</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Shield className="h-5 w-5 mr-2" />
+              Security & Privacy
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {securitySettings.map((setting, index) => (
+              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div className="flex items-center space-x-3">
+                  {setting.label === "Two-Factor Authentication" && <Shield className="h-4 w-4" />}
+                  {setting.label === "Email Notifications" && <Mail className="h-4 w-4" />}
+                  {setting.label === "SMS Alerts" && <Bell className="h-4 w-4" />}
+                  {setting.label === "Data Backup" && <Shield className="h-4 w-4" />}
+                  <span className="text-sm">{setting.label}</span>
+                </div>
+                <div className={`w-10 h-6 rounded-full border-2 transition-colors ${
+                  setting.enabled 
+                    ? 'bg-primary border-primary' 
+                    : 'bg-gray-200 border-gray-300'
+                }`}>
+                  <div className={`w-4 h-4 rounded-full bg-white transition-transform ${
+                    setting.enabled ? 'translate-x-4' : 'translate-x-0'
+                  }`} />
+                </div>
+              </div>
+            ))}
+
+            <div className="space-y-2 pt-4">
+              <Button variant="outline" className="w-full">
+                Change Password
               </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigate("/preview-landing")}
-                className="flex items-center gap-2 bg-white/50"
-              >
-                <Eye className="h-4 w-4" />
-                Preview Version
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => navigate("/dashboard")}
-                className="bg-white/50"
-              >
-                Dashboard
+              <Button variant="outline" className="w-full">
+                Download My Data
               </Button>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
 
-        <div className="max-w-6xl mx-auto">
-          <PageHeader 
-            title="My Profile" 
-            subtitle="Complete your personal information, medical data, and application preferences to personalise your MyRhythm experience"
-          >
-            {completedTabs.length === 5 && (
-              <Button onClick={() => navigate("/calendar")} className="gap-2">
-                <Calendar className="h-4 w-4" />
-                Go to Calendar
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Phone className="h-5 w-5 mr-2" />
+              Emergency Contacts
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {emergencyContacts.map((contact, index) => (
+              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                <div>
+                  <div className="font-medium">{contact.name}</div>
+                  <div className="text-sm text-muted-foreground">{contact.relationship}</div>
+                </div>
+                <div className="text-sm font-mono">{contact.phone}</div>
+              </div>
+            ))}
+            <Button variant="outline" className="w-full">
+              <Phone className="h-4 w-4 mr-2" />
+              Add Emergency Contact
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Subscription & Billing</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 bg-blue-50 rounded-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">{userInfo.subscription}</div>
+                  <div className="text-sm text-muted-foreground">Active until Feb 8, 2024</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold">$19.99/month</div>
+                  <div className="text-sm text-green-600">Auto-renew ON</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Button variant="outline" className="w-full">
+                View Billing History
               </Button>
-            )}
-          </PageHeader>
-          
-          <Card className="bg-white/80 backdrop-blur-sm border border-white/20">
-            <CardContent className="pt-6">
-              <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-                <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
-                  <TabsTrigger value="personal" className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    {isTabCompleted("personal") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                    <span className="hidden md:inline">Personal</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="medical" className="flex items-center gap-2">
-                    <HeartPulse className="h-4 w-4" />
-                    {isTabCompleted("medical") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                    <span className="hidden md:inline">Medical</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="emergency" className="flex items-center gap-2">
-                    <Shield className="h-4 w-4" />
-                    {isTabCompleted("emergency") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                    <span className="hidden md:inline">Emergency</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="notifications" className="flex items-center gap-2">
-                    <Bell className="h-4 w-4" />
-                    {isTabCompleted("notifications") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                    <span className="hidden md:inline">Notifications</span>
-                  </TabsTrigger>
-                  <TabsTrigger value="privacy" className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    {isTabCompleted("privacy") && <CheckCircle className="h-3 w-3 text-green-600" />}
-                    <span className="hidden md:inline">Privacy</span>
-                  </TabsTrigger>
-                </TabsList>
-                
-                <TabsContent value="personal" className="space-y-4">
-                  <UserProfileForm onSave={handlePersonalSave} />
-                </TabsContent>
-                
-                <TabsContent value="medical" className="space-y-4">
-                  <MedicalInfoForm onSave={handleMedicalSave} />
-                </TabsContent>
-                
-                <TabsContent value="emergency" className="space-y-4">
-                  <EmergencyContactsForm onSave={handleEmergencySave} />
-                </TabsContent>
-                
-                <TabsContent value="notifications" className="space-y-4">
-                  <NotificationSettings onSave={handleNotificationsSave} />
-                </TabsContent>
-                
-                <TabsContent value="privacy" className="space-y-4">
-                  <PrivacySettings onSave={handlePrivacySave} />
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-
-          {/* Show floating button if coming from onboarding */}
-          {showFloatingButton && <FloatingStartButton />}
-        </div>
+              <Button variant="outline" className="w-full">
+                Update Payment Method
+              </Button>
+              <Button variant="outline" className="w-full text-red-600 hover:text-red-700">
+                Cancel Subscription
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </Preview3Background>
+    </div>
   );
 };
 

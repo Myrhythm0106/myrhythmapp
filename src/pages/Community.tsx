@@ -1,171 +1,181 @@
 
-import React, { useState } from "react";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Input } from "@/components/ui/input";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent } from "@/components/ui/card";
-import { CommunityPost } from "@/components/community/CommunityPost";
-import { CommunityGroup } from "@/components/community/CommunityGroup";
-import { SearchResults } from "@/components/community/SearchResults";
-import { ExpertQA } from "@/components/community/ExpertQA";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { NewPostForm } from "@/components/community/NewPostForm";
-import { Users, MessageSquare, Search, Plus, User, Heart } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { MessageCircle, ThumbsUp, Share2, Users, Heart, Star } from "lucide-react";
 
 const Community = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const posts = [
+    {
+      id: 1,
+      author: "Alex M.",
+      avatar: "AM",
+      time: "2 hours ago",
+      content: "Just completed my 30th day of brain training! The memory games are really helping. Anyone else seeing improvements?",
+      likes: 12,
+      comments: 5,
+      tag: "milestone"
+    },
+    {
+      id: 2,
+      author: "Sarah K.",
+      avatar: "SK", 
+      time: "4 hours ago",
+      content: "Having a tough day with focus today. Any tips for when concentration feels impossible?",
+      likes: 8,
+      comments: 12,
+      tag: "support"
+    },
+    {
+      id: 3,
+      author: "Dr. Chen",
+      avatar: "DC",
+      time: "6 hours ago",
+      content: "Research shows that consistent sleep schedules can improve cognitive recovery by up to 40%. What's your bedtime routine?",
+      likes: 25,
+      comments: 8,
+      tag: "expert-tip"
+    }
+  ];
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real app, this would trigger a search
-    console.log("Searching for:", searchQuery);
-  };
+  const groups = [
+    { name: "TBI Recovery Support", members: 1247, active: true },
+    { name: "Cognitive Training Tips", members: 892, active: false },
+    { name: "Family & Caregivers", members: 634, active: true },
+    { name: "Return to Work", members: 456, active: false }
+  ];
 
   return (
-    <div className="space-y-6">
-      <PageHeader 
-        title="Community" 
-        subtitle="Connect with others, share experiences, and find support"
-      >
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-1 h-4 w-4" />
-              New Post
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
-            <DialogHeader>
-              <DialogTitle>Create New Post</DialogTitle>
-            </DialogHeader>
-            <NewPostForm />
-          </DialogContent>
-        </Dialog>
-      </PageHeader>
+    <div className="container mx-auto p-6 space-y-6">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          Community
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          Connect, share, and support each other on your journey
+        </p>
+      </div>
 
-      <form onSubmit={handleSearch} className="flex gap-2">
-        <Input
-          placeholder="Search posts, topics, or members..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-md"
-        />
-        <Button type="submit">
-          <Search className="h-4 w-4" />
-        </Button>
-      </form>
-
-      <Tabs defaultValue="support-circle" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="support-circle" className="flex items-center gap-2">
-            <Heart className="h-4 w-4" />
-            My Support Circle
-          </TabsTrigger>
-          <TabsTrigger value="expert-qa" className="flex items-center gap-2">
-            <User className="h-4 w-4" />
-            Expert Q&A
-          </TabsTrigger>
-          <TabsTrigger value="groups" className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            Groups
-          </TabsTrigger>
-          <TabsTrigger value="discussions" className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Discussions
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="support-circle" className="space-y-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardContent className="pt-6">
-              <div className="text-center mb-6">
-                <h3 className="text-xl font-semibold">My Support Circle</h3>
-                <p className="text-muted-foreground">
-                  Connect with your personal support network of family, friends, and caregivers
-                </p>
-              </div>
-              <div className="flex justify-center mb-4">
-                <Button asChild variant="outline">
-                  <a href="/personal-community" className="flex items-center gap-2">
-                    <Heart className="h-4 w-4" />
-                    Go to My Support Circle
-                  </a>
-                </Button>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <MessageCircle className="h-5 w-5 mr-2" />
+                Share an Update
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <textarea 
+                className="w-full p-3 border rounded-lg resize-none"
+                rows={3}
+                placeholder="Share your progress, ask a question, or offer support..."
+              />
+              <div className="flex justify-between items-center mt-3">
+                <div className="flex space-x-2">
+                  <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">#milestone</span>
+                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">#support</span>
+                  <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded">#tip</span>
+                </div>
+                <Button>Share</Button>
               </div>
             </CardContent>
           </Card>
-        </TabsContent>
 
-        <TabsContent value="expert-qa">
-          <Card>
-            <CardContent className="pt-6">
-              <ExpertQA />
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="groups" className="space-y-4">
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            <CommunityGroup 
-              name="TBI Survivors"
-              description="A supportive community for individuals recovering from traumatic brain injuries."
-              memberCount={126}
-              image="/placeholder.svg"
-            />
-            
-            <CommunityGroup 
-              name="Caregivers Support"
-              description="Connect with others caring for loved ones with brain injuries or mental health conditions."
-              memberCount={94}
-              image="/placeholder.svg"
-            />
-            
-            <CommunityGroup 
-              name="Young Adults with Brain Injuries"
-              description="A group for people under 40 navigating life after brain injury."
-              memberCount={58}
-              image="/placeholder.svg"
-            />
+          <div className="space-y-4">
+            {posts.map((post) => (
+              <Card key={post.id}>
+                <CardContent className="pt-6">
+                  <div className="flex items-start space-x-3">
+                    <Avatar>
+                      <AvatarFallback className="bg-primary text-primary-foreground">
+                        {post.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <span className="font-medium">{post.author}</span>
+                        <span className="text-xs text-muted-foreground">{post.time}</span>
+                        <span className={`text-xs px-2 py-1 rounded ${
+                          post.tag === 'milestone' ? 'bg-blue-100 text-blue-800' :
+                          post.tag === 'support' ? 'bg-green-100 text-green-800' :
+                          'bg-purple-100 text-purple-800'
+                        }`}>
+                          {post.tag}
+                        </span>
+                      </div>
+                      <p className="text-sm mb-3">{post.content}</p>
+                      <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                        <button className="flex items-center space-x-1 hover:text-red-500">
+                          <Heart className="h-4 w-4" />
+                          <span>{post.likes}</span>
+                        </button>
+                        <button className="flex items-center space-x-1 hover:text-blue-500">
+                          <MessageCircle className="h-4 w-4" />
+                          <span>{post.comments}</span>
+                        </button>
+                        <button className="flex items-center space-x-1 hover:text-green-500">
+                          <Share2 className="h-4 w-4" />
+                          <span>Share</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </TabsContent>
-        
-        <TabsContent value="discussions" className="space-y-6">
-          {searchQuery ? (
-            <SearchResults query={searchQuery} />
-          ) : (
-            <>
-              <CommunityPost 
-                id="1"
-                user={{
-                  name: "Alex Johnson",
-                  avatar: undefined,
-                  initials: "AJ"
-                }}
-                topic="TBI Support"
-                title="Has anyone tried cognitive therapy with Dr. Williams at Dallas Neuro?"
-                content="I've been dealing with memory issues since my injury last year, and my doctor recommended Dr. Williams. I'd love to hear from anyone who has experience with their cognitive therapy program."
-                comments={5}
-                time="2h ago"
-              />
-              
-              <CommunityPost 
-                id="2"
-                user={{
-                  name: "Morgan Lee",
-                  avatar: undefined,
-                  initials: "ML"
-                }}
-                topic="Caregivers Corner"
-                title="Looking for respite care options in North Dallas"
-                content="I've been caring for my partner who had a stroke 6 months ago. I'm looking for trustworthy respite care options in the North Dallas area so I can take a short break. Any recommendations would be greatly appreciated."
-                comments={3}
-                time="5h ago"
-              />
-            </>
-          )}
-        </TabsContent>
-      </Tabs>
+        </div>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Users className="h-5 w-5 mr-2" />
+                Your Groups
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {groups.map((group, index) => (
+                <div key={index} className="flex items-center justify-between p-2 border rounded">
+                  <div>
+                    <div className="font-medium text-sm">{group.name}</div>
+                    <div className="text-xs text-muted-foreground">{group.members} members</div>
+                  </div>
+                  <div className={`w-2 h-2 rounded-full ${group.active ? 'bg-green-500' : 'bg-gray-300'}`} />
+                </div>
+              ))}
+              <Button variant="outline" className="w-full text-sm">
+                Discover Groups
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Star className="h-5 w-5 mr-2" />
+                Community Highlights
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="p-3 bg-yellow-50 rounded-lg">
+                <div className="text-sm font-medium">🎉 Weekly Challenge</div>
+                <div className="text-xs text-muted-foreground">Complete 5 brain games this week</div>
+              </div>
+              <div className="p-3 bg-blue-50 rounded-lg">
+                <div className="text-sm font-medium">📚 Expert Session</div>
+                <div className="text-xs text-muted-foreground">Dr. Smith - Memory Techniques (Tomorrow 3PM)</div>
+              </div>
+              <div className="p-3 bg-green-50 rounded-lg">
+                <div className="text-sm font-medium">🌟 Success Story</div>
+                <div className="text-xs text-muted-foreground">"How I returned to work after 6 months"</div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 };
