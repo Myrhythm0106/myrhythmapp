@@ -24,13 +24,11 @@ const Assessment = () => {
 
   const handleAssessmentComplete = async (assessmentData: any) => {
     try {
-      await saveAssessment({
-        assessmentType: selectedType || 'brief',
-        responses: assessmentData.responses,
-        recommendations: assessmentData.recommendations,
-        completedAt: assessmentData.completedAt,
-        userType: assessmentData.userType
-      });
+      await saveAssessment(
+        selectedType || 'brief',
+        assessmentData.responses,
+        assessmentData.recommendations
+      );
       
       navigate('/dashboard?assessment_complete=true');
     } catch (error) {
