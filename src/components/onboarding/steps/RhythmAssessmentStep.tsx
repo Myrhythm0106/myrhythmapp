@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,24 +47,24 @@ export function RhythmAssessmentStep({ onComplete }: RhythmAssessmentStepProps) 
           </Button>
           <Button
             variant="outline"
-            className={userType === "mental-wellness" ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : ""}
-            onClick={() => handleUserTypeSelection("mental-wellness")}
+            className={userType === "wellness" ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : ""}
+            onClick={() => handleUserTypeSelection("wellness")}
           >
             Improving Mental Wellness
           </Button>
           <Button
             variant="outline"
-            className={userType === "peak-performance" ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : ""}
-            onClick={() => handleUserTypeSelection("peak-performance")}
+            className={userType === "cognitive-optimization" ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : ""}
+            onClick={() => handleUserTypeSelection("cognitive-optimization")}
           >
             Achieving Peak Performance
           </Button>
           <Button
             variant="outline"
-            className={userType === "stress-management" ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : ""}
-            onClick={() => handleUserTypeSelection("stress-management")}
+            className={userType === "caregiver" ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : ""}
+            onClick={() => handleUserTypeSelection("caregiver")}
           >
-            Managing Stress & Burnout
+            Supporting as Caregiver
           </Button>
         </div>
 

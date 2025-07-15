@@ -1,4 +1,3 @@
-
 import React from "react";
 import { UserTypeStep } from "./steps/UserTypeStep";
 import { LocationStep } from "./steps/LocationStep";
@@ -84,6 +83,7 @@ export const OnboardingStepRenderer = ({
     return (
       <PreAssessmentStep
         onComplete={onPreAssessmentComplete}
+        userType={userType}
       />
     );
   }
@@ -93,8 +93,6 @@ export const OnboardingStepRenderer = ({
     return (
       <RhythmAssessmentStep
         onComplete={onRhythmAssessmentComplete}
-        userType={userType}
-        hasPaidPremium={false}
       />
     );
   }

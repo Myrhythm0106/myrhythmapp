@@ -3,14 +3,16 @@ import React, { useState } from "react";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
 import { PostAssessmentFlow } from "./PostAssessmentFlow";
 import { MotivationalMessageView } from "./MotivationalMessageView";
+import { UserType } from "@/types/user";
 
 interface RhythmSummaryViewProps {
   onComplete: () => void;
   onBack?: () => void;
   assessmentResult: AssessmentResult | null;
+  userType?: UserType | null;
 }
 
-export function RhythmSummaryView({ onComplete, onBack, assessmentResult }: RhythmSummaryViewProps) {
+export function RhythmSummaryView({ onComplete, onBack, assessmentResult, userType }: RhythmSummaryViewProps) {
   const [showMotivationalMessage, setShowMotivationalMessage] = useState(false);
 
   if (showMotivationalMessage) {
@@ -29,6 +31,7 @@ export function RhythmSummaryView({ onComplete, onBack, assessmentResult }: Rhyt
     <PostAssessmentFlow 
       assessmentResult={assessmentResult}
       onComplete={onComplete}
+      userType={userType}
     />
   );
 }
