@@ -85,9 +85,9 @@ export function EmotionalWellnessCapture({
     
     onEmotionCapture?.(selectedEmotion, emotionalNote, gratitudeNote);
     
-    // Show encouraging feedback
-    toast.success("Your feelings matter! Thank you for sharing ✨", {
-      description: "Every emotion is valid and helps you grow stronger."
+    // Show encouraging feedback with growth mindset
+    toast.success("Your emotional awareness is a superpower! ✨", {
+      description: "Every feeling you acknowledge helps you grow stronger and more resilient."
     });
 
     // Reset form

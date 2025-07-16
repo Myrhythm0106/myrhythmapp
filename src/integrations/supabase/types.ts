@@ -456,27 +456,39 @@ export type Database = {
       }
       mood_entries: {
         Row: {
+          context: string | null
           created_at: string
           date: string
+          emotional_note: string | null
+          emotions: string[] | null
           energy_level: number
+          gratitude_note: string | null
           id: string
           mood: string
           notes: string | null
           user_id: string
         }
         Insert: {
+          context?: string | null
           created_at?: string
           date?: string
+          emotional_note?: string | null
+          emotions?: string[] | null
           energy_level: number
+          gratitude_note?: string | null
           id?: string
           mood: string
           notes?: string | null
           user_id: string
         }
         Update: {
+          context?: string | null
           created_at?: string
           date?: string
+          emotional_note?: string | null
+          emotions?: string[] | null
           energy_level?: number
+          gratitude_note?: string | null
           id?: string
           mood?: string
           notes?: string | null

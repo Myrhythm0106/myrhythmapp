@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { CurrentEventCard } from '../components/CurrentEventCard';
 import { NextEventCard } from '../components/NextEventCard';
 import { CompletedTasksList } from '../components/CompletedTasksList';
-import { EnergyLevelInput } from '../components/EnergyLevelInput';
+import { WellnessCheckIn } from '../components/WellnessCheckIn';
 import { TBIEvent, EnergyLevel, DayData } from '../types/calendarTypes';
 import { getCurrentEvent, getNextEvent, getCompletedEventsToday } from '../utils/eventUtils';
+import { useEnhancedMoodTracker } from '@/hooks/use-enhanced-mood-tracker';
 import { format } from 'date-fns';
 import { Calendar, Settings, Users } from 'lucide-react';
 
@@ -29,6 +30,7 @@ export function DayViewTBI({
   onOpenCaregiver
 }: DayViewTBIProps) {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const { addEmotionalEntry, isLoading: isAddingEntry } = useEnhancedMoodTracker();
 
   // Update current time every minute
   useEffect(() => {
@@ -106,11 +108,18 @@ export function DayViewTBI({
           <NextEventCard event={nextEvent} />
         </div>
 
-        {/* Energy Level Input - Only for individuals */}
+        {/* Wellness Check-In - Only for individuals */}
         {userRole === 'individual' && (
-          <EnergyLevelInput
-            currentLevel={dayData.energyLevel}
-            onLevelChange={onEnergyLevelChange || (() => {})}
+          <WellnessCheckIn
+            currentEnergyLevel={dayData.energyLevel}
+            onEnergyLevelChange={onEnergyLevelChange || (() => {})}
+            onEmotionCapture={(emotion, note, gratitude) => {
+              if (dayData.energyLevel) {
+                addEmotionalEntry(emotion, dayData.energyLevel, note, gratitude, 'daily');
+              }
+            }}
+            disabled={isAddingEntry}
+            context="daily"
           />
         )}
 
