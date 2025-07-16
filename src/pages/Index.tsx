@@ -1,15 +1,11 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Brain, ArrowRight, Shield, Users, Calendar, Heart, Lightbulb, Target, Zap } from "lucide-react";
 import { BeforeAfterBrainStates } from "@/components/landing/preview3/BeforeAfterBrainStates";
-
 const Index = () => {
   const navigate = useNavigate();
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60">
+  return <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
@@ -21,11 +17,7 @@ const Index = () => {
               MyRhythm
             </h1>
           </div>
-          <Button
-            onClick={() => navigate("/auth")}
-            variant="outline"
-            className="border-purple-200 hover:bg-purple-50"
-          >
+          <Button onClick={() => navigate("/auth")} variant="outline" className="border-purple-200 hover:bg-purple-50">
             Sign In
           </Button>
         </div>
@@ -34,9 +26,8 @@ const Index = () => {
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-12">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-            Rewire Your Mind. Transform Your Life.
-          </h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Rewire Your Mind. 
+Transform Your Life.</h1>
           <p className="text-lg md:text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
             MyRhythm bridges consumer cognitive wellness with clinical-grade brain injury support, 
             built by founders with lived experience in cognitive recovery.
@@ -45,19 +36,11 @@ const Index = () => {
             "Your brain is neuroplastic - it can change, adapt, and grow stronger. We help you harness that power."
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button
-              onClick={() => navigate("/auth")}
-              size="lg"
-              className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
-            >
+            <Button onClick={() => navigate("/auth")} size="lg" className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600">
               Start Your Transformation
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border-purple-200 hover:bg-purple-50"
-            >
+            <Button variant="outline" size="lg" className="border-purple-200 hover:bg-purple-50">
               See The Science
             </Button>
           </div>
@@ -197,25 +180,15 @@ const Index = () => {
             </div>
           </div>
           <div className="flex gap-4 mt-6">
-            <Button
-              variant="link"
-              onClick={() => navigate("/privacy-policy")}
-              className="text-purple-600 p-0"
-            >
+            <Button variant="link" onClick={() => navigate("/privacy-policy")} className="text-purple-600 p-0">
               Privacy Policy
             </Button>
-            <Button
-              variant="link"
-              onClick={() => navigate("/terms")}
-              className="text-purple-600 p-0"
-            >
+            <Button variant="link" onClick={() => navigate("/terms")} className="text-purple-600 p-0">
               Terms of Service
             </Button>
           </div>
         </div>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
