@@ -206,6 +206,23 @@ export function useUserProgress() {
       const updatedUnlocked = [...unlockedFeatures, ...newUnlocks];
       setUnlockedFeatures(updatedUnlocked);
       localStorage.setItem('myrhythm_unlocked_features', JSON.stringify(updatedUnlocked));
+      
+      // Show celebration for new unlocks
+      newUnlocks.forEach(featureId => {
+        const featureName = featureId.charAt(0).toUpperCase() + featureId.slice(1).replace('-', ' ');
+        // Using a timeout to show multiple toasts if needed
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && window.location.pathname.includes('dashboard')) {
+            // Import toast dynamically to avoid SSR issues
+            import('sonner').then(({ toast }) => {
+              toast.success(`🎉 New Feature Unlocked: ${featureName}!`, {
+                description: 'Check your sidebar to explore this new capability',
+                duration: 5000,
+              });
+            });
+          }
+        }, 100);
+      });
     }
   }, [metrics.readinessScore, metrics.completedActions]);
 

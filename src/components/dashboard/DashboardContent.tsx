@@ -18,6 +18,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useUserProgress } from "@/hooks/useUserProgress";
+import { QuickActionsToProgress } from "@/components/layout/QuickActionsToProgress";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
 
@@ -122,6 +123,9 @@ export function DashboardContent() {
       
       {/* Trial Status - Show prominently at top */}
       <TrialStatusCard />
+      
+      {/* Quick Actions for Progress */}
+      <QuickActionsToProgress />
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">

@@ -24,6 +24,7 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { ProgressLevelsDisplay } from "./ProgressLevelsDisplay";
 import { useUserProgress } from "@/hooks/useUserProgress";
 
 interface SidebarItem {
@@ -154,8 +155,11 @@ export function DynamicSidebar({ isCollapsed }: DynamicSidebarProps) {
           </div>
         </div>
 
-        {/* Progress Hint - Only show when sidebar is expanded */}
-        {!isCollapsed && renderProgressHint()}
+        {/* Progress Levels Display - Only show when sidebar is expanded */}
+        {!isCollapsed && <ProgressLevelsDisplay />}
+
+        {/* Legacy Progress Hint - Show only if user hasn't seen the new display */}
+        {!isCollapsed && !nextUnlockItem && renderProgressHint()}
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
