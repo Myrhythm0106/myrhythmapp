@@ -14,6 +14,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import InAppPurchase from "./routes/InAppPurchase";
+import TBICalendar from "./pages/TBICalendar";
 
 const queryClient = new QueryClient();
 
@@ -33,7 +34,7 @@ function App() {
               <Route path="/founders-story" element={<FoundersMemoryStory />} />
               <Route path="/in-app-purchase" element={<InAppPurchase />} />
               <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-              <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><TBICalendar /></ProtectedRoute>} />
               <Route path="/goals" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
               <Route path="/gratitude" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
               <Route path="/analytics" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />

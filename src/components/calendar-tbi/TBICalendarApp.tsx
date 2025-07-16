@@ -6,6 +6,10 @@ import { WeekViewTBI } from './views/WeekViewTBI';
 import { MonthViewTBI } from './views/MonthViewTBI';
 import { TBIEvent, EnergyLevel, DayData, CalendarSettings } from './types/calendarTypes';
 import { toast } from 'sonner';
+import { usePomodoro } from '@/contexts/PomodoroContext';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Timer, Users, Target } from 'lucide-react';
 
 // Mock data for demonstration
 const mockEvents: TBIEvent[] = [
@@ -62,6 +66,7 @@ export function TBICalendarApp() {
 
   const [activeTab, setActiveTab] = useState('day');
   const [userRole] = useState<'individual' | 'caregiver'>('individual');
+  const { isRunning, timeLeft, currentSession, startTimer, pauseTimer, resetTimer } = usePomodoro();
 
   const handleEventComplete = (eventId: string) => {
     setDayData(prev => ({
@@ -110,7 +115,7 @@ export function TBICalendarApp() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10">
           <div className="px-4 py-3">
-            <TabsList className="grid w-full grid-cols-3 max-w-md mx-auto">
+            <TabsList className="grid w-full grid-cols-4 max-w-xl mx-auto">
               <TabsTrigger value="day" className="text-sm font-medium">
                 Day
               </TabsTrigger>
@@ -119,6 +124,9 @@ export function TBICalendarApp() {
               </TabsTrigger>
               <TabsTrigger value="month" className="text-sm font-medium">
                 Month
+              </TabsTrigger>
+              <TabsTrigger value="pomodoro" className="text-sm font-medium">
+                Pomodoro
               </TabsTrigger>
             </TabsList>
           </div>
@@ -150,6 +158,73 @@ export function TBICalendarApp() {
               events={dayData.events}
               onDayClick={handleDayClick}
             />
+          </TabsContent>
+
+          <TabsContent value="pomodoro" className="mt-0">
+            <div className="max-w-4xl mx-auto space-y-6">
+              {/* Pomodoro Timer Card */}
+              <Card className="bg-gradient-to-br from-purple-50 to-blue-50 border-purple-200">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Timer className="h-5 w-5 text-purple-600" />
+                    Pomodoro Focus Timer
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center space-y-4">
+                    <div className="text-6xl font-mono font-bold text-purple-600">
+                      {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+                    </div>
+                    <div className="text-lg font-medium text-purple-700">
+                      {currentSession === 'work' ? 'Focus Session' : 'Break Time'}
+                    </div>
+                    <div className="flex gap-3 justify-center">
+                      <Button 
+                        onClick={isRunning ? pauseTimer : startTimer}
+                        variant="default"
+                        size="lg"
+                      >
+                        {isRunning ? 'Pause' : 'Start'}
+                      </Button>
+                      <Button onClick={resetTimer} variant="outline" size="lg">
+                        Reset
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Accountability Card */}
+              <Card className="bg-gradient-to-br from-green-50 to-emerald-50 border-green-200">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Users className="h-5 w-5 text-green-600" />
+                    Accountability Circle
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <p className="text-green-700">
+                      Share your progress with trusted supporters who help keep you motivated.
+                    </p>
+                    <div className="flex gap-2 flex-wrap">
+                      <Button variant="outline" size="sm" className="border-green-300 text-green-700">
+                        <Target className="h-4 w-4 mr-2" />
+                        Share Current Session
+                      </Button>
+                      <Button variant="outline" size="sm" className="border-green-300 text-green-700">
+                        <Users className="h-4 w-4 mr-2" />
+                        Invite Supporters
+                      </Button>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg border border-green-200">
+                      <p className="text-sm text-green-600 font-medium">Today's Progress</p>
+                      <p className="text-xs text-green-500">2 focus sessions completed • 1 supporter notified</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
         </div>
       </Tabs>
