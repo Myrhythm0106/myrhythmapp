@@ -52,8 +52,8 @@ const Landing = () => {
         <LandingFooter />
       </ScrollArea>
       
-      {/* Show floating button only for unauthenticated users */}
-      {!user && <FloatingRegisterButton />}
+      {/* Show floating button until user completes registration */}
+      <FloatingRegisterButton />
     </div>
   );
 };
