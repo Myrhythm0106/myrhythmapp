@@ -51,7 +51,7 @@ export function BrainHealthCalendarView({
       <Card className="border-memory-emerald-200 bg-gradient-to-br from-memory-emerald-50/30 to-white">
         <CardContent className="pt-6">
           <div className="mb-6 flex justify-between items-center">
-            <Tabs value={view} onValueChange={(v) => onViewChange(v as typeof view)}>
+            <Tabs value={view} onValueChange={(v) => onViewChange(v as typeof view)} className="w-full">
               <TabsList className="bg-white border border-memory-emerald-200">
                 <TabsTrigger 
                   value="day" 
@@ -104,7 +104,7 @@ export function BrainHealthCalendarView({
           </div>
           
           <div className="min-h-[400px] relative">
-            {view === "month" && (
+            <TabsContent value="month" className="mt-0">
               <div className="flex justify-center">
                 <CalendarComponent
                   mode="single"
@@ -113,30 +113,32 @@ export function BrainHealthCalendarView({
                   className="rounded-md border border-memory-emerald-200 bg-white/80 backdrop-blur-sm"
                 />
               </div>
-            )}
+            </TabsContent>
             
-            {view === "day" && selectedDate && (
-              <DayView date={selectedDate} events={[]} />
-            )}
+            <TabsContent value="day" className="mt-0">
+              {selectedDate && <DayView date={selectedDate} events={[]} />}
+            </TabsContent>
             
-            {view === "week" && selectedDate && (
-              <WeekView date={selectedDate} events={[]} />
-            )}
+            <TabsContent value="week" className="mt-0">
+              {selectedDate && <WeekView date={selectedDate} events={[]} />}
+            </TabsContent>
 
-            {view === "year" && selectedDate && (
-              <YearView 
-                currentDate={selectedDate} 
-                events={[]} 
-                onDayClick={(clickedDate) => {
-                  setSelectedDate(clickedDate);
-                  onDateSelect(clickedDate);
-                  onViewChange("day");
-                }}
-                onMonthClick={handleMonthClick}
-              />
-            )}
+            <TabsContent value="year" className="mt-0">
+              {selectedDate && (
+                <YearView 
+                  currentDate={selectedDate} 
+                  events={[]} 
+                  onDayClick={(clickedDate) => {
+                    setSelectedDate(clickedDate);
+                    onDateSelect(clickedDate);
+                    onViewChange("day");
+                  }}
+                  onMonthClick={handleMonthClick}
+                />
+              )}
+            </TabsContent>
 
-            {view === "goals" && (
+            <TabsContent value="goals" className="mt-0">
               <div className="space-y-4">
                 <div className="text-center py-4">
                   <div className="w-16 h-16 bg-gradient-to-br from-clarity-teal-400 to-brain-health-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-memory-pulse">
@@ -154,7 +156,7 @@ export function BrainHealthCalendarView({
                 </div>
                 <GoalsView />
               </div>
-            )}
+            </TabsContent>
 
             {/* Interactive Calendar Actions for all calendar views */}
             {/* Interactive Calendar Actions and Event Creation */}
