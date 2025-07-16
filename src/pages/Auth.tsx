@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import { Brain, ArrowLeft, Eye, EyeOff, Shield } from "lucide-react";
+import { EmailVerificationStatus } from "@/components/auth/EmailVerificationStatus";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -20,11 +21,24 @@ const Auth = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [acceptPrivacy, setAcceptPrivacy] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const [showEmailStatus, setShowEmailStatus] = useState(false);
+  
+  const { signIn, signUp, user, emailVerificationStatus } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const from = (location.state as any)?.from?.pathname || "/dashboard";
+  const from = (location.state as any)?.from?.pathname || "/onboarding";
+
+  // Redirect authenticated users
+  useEffect(() => {
+    if (user && !showEmailStatus) {
+      if (emailVerificationStatus === 'verified') {
+        navigate("/dashboard");
+      } else {
+        navigate("/onboarding");
+      }
+    }
+  }, [user, emailVerificationStatus, navigate, showEmailStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,9 +46,11 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        await signIn(email, password);
-        toast.success("Welcome back!");
-        navigate(from);
+        const { error } = await signIn(email, password);
+        if (!error) {
+          toast.success("Welcome back!");
+          navigate(from);
+        }
       } else {
         // Validation for signup
         if (password !== confirmPassword) {
@@ -55,9 +71,10 @@ const Auth = () => {
           return;
         }
 
-        await signUp(email, password, name);
-        toast.success("Account created successfully!");
-        navigate("/onboarding");
+        const { error } = await signUp(email, password, name);
+        if (!error) {
+          setShowEmailStatus(true);
+        }
       }
     } catch (error: any) {
       toast.error(error.message || "Authentication failed");
@@ -65,6 +82,49 @@ const Auth = () => {
       setIsLoading(false);
     }
   };
+
+  const handleContinueWithLimitedAccess = () => {
+    navigate("/onboarding");
+  };
+
+  // Show email verification status after successful signup
+  if (showEmailStatus && user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                MyRhythm
+              </h1>
+            </div>
+            <p className="text-gray-600 mt-2">Welcome to your journey!</p>
+          </div>
+
+          <EmailVerificationStatus 
+            onContinue={handleContinueWithLimitedAccess}
+            showContinueButton={true}
+          />
+
+          <div className="text-center mt-6">
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setShowEmailStatus(false);
+                setIsLogin(true);
+              }}
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              Back to sign in
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
@@ -228,13 +288,13 @@ const Auth = () => {
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 space-y-2">
                     <div className="flex items-center gap-2">
                       <Shield className="h-4 w-4 text-blue-600" />
-                      <h4 className="text-sm font-medium text-blue-900">Data Privacy & Security</h4>
+                      <h4 className="text-sm font-medium text-blue-900">Email Verification</h4>
                     </div>
                     <div className="text-xs text-blue-800 space-y-1">
-                      <p>• Your data is encrypted and stored securely</p>
-                      <p>• We comply with GDPR and healthcare data regulations</p>
-                      <p>• You can delete your account and data at any time</p>
-                      <p>• We never share your personal information with third parties</p>
+                      <p>• You'll receive a verification email within 10-30 seconds</p>
+                      <p>• You can start using MyRhythm immediately</p>
+                      <p>• Full features unlock after email verification</p>
+                      <p>• Check spam folder if email doesn't arrive</p>
                     </div>
                   </div>
                 </div>
@@ -245,7 +305,7 @@ const Auth = () => {
                 className="w-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
                 disabled={isLoading}
               >
-                {isLoading ? "Please wait..." : (isLogin ? "Sign In" : "Create Account")}
+                {isLoading ? "Please wait..." : (isLogin ? "Sign In" : "Create Account & Continue")}
               </Button>
             </form>
             

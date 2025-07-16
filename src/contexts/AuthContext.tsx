@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,6 +12,7 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  emailVerificationStatus: 'pending' | 'verified' | 'unverified';
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
@@ -24,6 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [emailVerificationStatus, setEmailVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
 
   useEffect(() => {
     console.log('AuthProvider: Setting up auth state listener');
@@ -35,6 +38,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+        
+        // Update email verification status
+        if (session?.user) {
+          const isEmailConfirmed = session.user.email_confirmed_at !== null;
+          setEmailVerificationStatus(isEmailConfirmed ? 'verified' : 'pending');
+        } else {
+          setEmailVerificationStatus('unverified');
+        }
         
         // Handle different auth events with enhanced security
         if (event === 'SIGNED_IN') {
@@ -57,6 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_OUT') {
           SessionSecurity.endSession('USER_SIGNOUT');
           DataProtection.logSecurityEvent('USER_SIGNED_OUT', {});
+          setEmailVerificationStatus('unverified');
           toast.success('Successfully signed out!');
         }
       }
@@ -80,8 +92,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
       setLoading(false);
       
-      if (session) {
+      if (session?.user) {
         SessionSecurity.startSession();
+        const isEmailConfirmed = session.user.email_confirmed_at !== null;
+        setEmailVerificationStatus(isEmailConfirmed ? 'verified' : 'pending');
       }
     });
 
@@ -90,20 +104,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
-      // REMOVED EMAIL VERIFICATION - Immediate signup without email confirmation
+      // Store email for potential resending
+      localStorage.setItem('pendingVerificationEmail', email);
+      
       const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
             name: DataProtection.sanitizeInput(name)
-          }
-          // NOTE: Removed emailRedirectTo to skip email confirmation for immediate launch
-          // This allows users to sign up and use the app immediately
+          },
+          emailRedirectTo: `${window.location.origin}/dashboard`
         }
       });
       
       if (error) {
+        localStorage.removeItem('pendingVerificationEmail');
         if (isLeakedPasswordError(error)) {
           toast.error(getLeakedPasswordMessage());
         } else {
@@ -117,8 +133,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           );
         }
       } else {
-        // Success message for immediate access
-        toast.success('Account created successfully! Welcome to MyRhythm.');
+        // Success message for hybrid flow
+        toast.success('Account created! Check your email to verify your account.', {
+          description: 'You can start using MyRhythm immediately while we send your verification email.'
+        });
         
         DataProtection.logSecurityEvent('USER_SIGNUP_ATTEMPT', {
           email,
@@ -128,6 +146,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return { error };
     } catch (error) {
+      localStorage.removeItem('pendingVerificationEmail');
       const appError = errorHandler.createError(
         'Sign up failed',
         'error',
@@ -244,7 +263,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: email
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
       });
       
       if (error) {
@@ -278,6 +300,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       session,
       loading,
+      emailVerificationStatus,
       signUp,
       signIn,
       signOut,
