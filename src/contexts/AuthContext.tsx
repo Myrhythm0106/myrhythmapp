@@ -27,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     console.log('AuthProvider: Setting up auth state listener');
     
+    // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state change:', event, 'user:', !!session?.user, 'session:', !!session);
@@ -37,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user) {
           const emailVerified = session.user.email_confirmed_at != null;
           setEmailVerificationStatus(emailVerified ? 'verified' : 'pending');
+          console.log('User email verification status:', emailVerified ? 'verified' : 'pending');
         } else {
           setEmailVerificationStatus('unknown');
         }
@@ -56,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     );
 
+    // Get initial session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
         console.error('Error retrieving session:', error);
@@ -88,7 +91,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         options: {
           data: {
             name: name
-          }
+          },
+          emailRedirectTo: `${window.location.origin}/auth`
         }
       });
       
@@ -113,6 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting sign in for:', email);
       
+      // Simple sign in without additional options
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
         password: password,
@@ -120,17 +125,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         console.error('AuthContext: Sign in error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          status: error.status,
+          code: (error as any).code
+        });
         
+        // Provide specific error messages
         if (error.message.includes('Invalid login credentials')) {
-          toast.error('Invalid email or password. Please check your credentials and try again.');
+          toast.error('Invalid email or password. Please check your credentials.');
         } else if (error.message.includes('Email not confirmed')) {
-          toast.error('Please check your email and click the confirmation link before signing in.');
+          toast.error('Please verify your email address before signing in.');
           setEmailVerificationStatus('pending');
+        } else if (error.message.includes('Too many requests')) {
+          toast.error('Too many login attempts. Please wait a moment and try again.');
         } else {
-          toast.error(error.message);
+          toast.error(`Sign in failed: ${error.message}`);
         }
       } else {
         console.log('AuthContext: Sign in successful for user:', data.user?.email);
+        // Don't show success toast here as it will be handled by onAuthStateChange
       }
       
       return { error };
@@ -159,7 +173,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting password reset for:', email);
       
-      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`
+      });
       
       if (error) {
         console.error('AuthContext: Password reset error:', error);
@@ -182,7 +198,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: email
+        email: email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth`
+        }
       });
       
       if (error) {

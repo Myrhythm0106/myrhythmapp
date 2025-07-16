@@ -20,6 +20,18 @@ export default function SignInForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Basic validation
+    if (!formData.email || !formData.password) {
+      setError('Please enter both email and password.');
+      return;
+    }
+
+    if (!formData.email.includes('@')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -32,6 +44,8 @@ export default function SignInForm() {
       setError('Sign in failed. Please check your email and password.');
     } else {
       console.log('SignInForm: Sign in successful');
+      // Clear form on success
+      setFormData({ email: '', password: '' });
     }
     
     setIsLoading(false);
