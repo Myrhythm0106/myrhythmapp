@@ -12,6 +12,7 @@ import { OnboardingPage } from "./pages/OnboardingPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
+import InAppPurchase from "./routes/InAppPurchase";
 
 const queryClient = new QueryClient();
 
@@ -28,10 +29,11 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/founders-story" element={<FoundersMemoryStory />} />
+              <Route path="/purchase" element={<InAppPurchase />} />
               <Route
                 path="/dashboard"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireAuth={false}>
                     <Dashboard />
                   </ProtectedRoute>
                 }
@@ -39,7 +41,7 @@ function App() {
               <Route
                 path="/onboarding"
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requireAuth={false}>
                     <OnboardingPage />
                   </ProtectedRoute>
                 }
