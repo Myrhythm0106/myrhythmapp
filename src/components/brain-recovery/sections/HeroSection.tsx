@@ -8,7 +8,7 @@ export function HeroSection() {
   const navigate = useNavigate();
   
   return (
-    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600/80 via-blue-600/80 to-teal-600/80 text-white p-6 md:p-10 border-l border-emerald-300/20">
+    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600/60 via-blue-600/60 to-teal-600/60 text-white p-6 md:p-10 border-l border-emerald-300/30">
       <div className="absolute right-0 bottom-0 opacity-10">
         <Brain size={280} />
       </div>
