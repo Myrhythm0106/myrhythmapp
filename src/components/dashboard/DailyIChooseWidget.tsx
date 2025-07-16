@@ -7,7 +7,7 @@ import { Sparkles, Heart, Crown, Zap, Share2, BookOpen, RefreshCw } from "lucide
 import { useEmpowermentStatements } from "@/hooks/useEmpowermentStatements";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMobileGestures } from "@/hooks/use-mobile-gestures";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface DailyIChooseWidgetProps {
@@ -16,7 +16,6 @@ interface DailyIChooseWidgetProps {
 
 export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) {
   const { user } = useAuth();
-  const { toast } = useToast();
   const [currentStatement, setCurrentStatement] = useState<any>(null);
   const [showReflection, setShowReflection] = useState(false);
   const [reflectionText, setReflectionText] = useState("");
@@ -88,7 +87,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
 
   const handleFavorite = () => {
     if (!currentStatement || !user) {
-      toast({ title: "Please sign in to save favorites", variant: "destructive" });
+      toast.error("Please sign in to save favorites");
       return;
     }
 
@@ -96,10 +95,11 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     toggleFavorite(currentStatement.id);
     
     const isFavorited = favorites.some(f => f.statement_id === currentStatement.id);
-    toast({
-      title: isFavorited ? "Removed from favorites" : "Added to favorites",
-      description: isFavorited ? "Statement removed from your collection" : "Statement saved to your favorites"
-    });
+    if (isFavorited) {
+      toast.success("Removed from favorites");
+    } else {
+      toast.success("Added to favorites");
+    }
 
     recordInteraction({
       statementId: currentStatement.id,
@@ -120,16 +120,16 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
           title: "Daily #IChoose Statement",
           text: shareText,
         });
-        toast({ title: "Statement shared successfully!" });
+        toast.success("Statement shared successfully!");
       } catch (error) {
         // User cancelled share
       }
     } else {
       try {
         await navigator.clipboard.writeText(shareText);
-        toast({ title: "Statement copied to clipboard!" });
+        toast.success("Statement copied to clipboard!");
       } catch (error) {
-        toast({ title: "Unable to copy statement", variant: "destructive" });
+        toast.error("Unable to copy statement");
       }
     }
 
@@ -160,10 +160,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
       interactionData: { reflection: reflectionText.trim() }
     });
 
-    toast({ 
-      title: "Reflection saved", 
-      description: "Your thoughts have been captured for your journey" 
-    });
+    toast.success("Reflection saved - Your thoughts have been captured for your journey");
 
     setReflectionText("");
     setShowReflection(false);
