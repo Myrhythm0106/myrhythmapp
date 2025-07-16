@@ -8,10 +8,12 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  emailVerificationStatus: 'verified' | 'pending' | 'unknown';
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
+  resendVerification: (email: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,16 +22,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [emailVerificationStatus, setEmailVerificationStatus] = useState<'verified' | 'pending' | 'unknown'>('unknown');
 
   useEffect(() => {
     console.log('AuthProvider: Setting up auth state listener');
     
-    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         console.log('Auth state change:', event, 'user:', !!session?.user, 'session:', !!session);
         setSession(session);
         setUser(session?.user ?? null);
+        
+        // Check email verification status
+        if (session?.user) {
+          const emailVerified = session.user.email_confirmed_at != null;
+          setEmailVerificationStatus(emailVerified ? 'verified' : 'pending');
+        } else {
+          setEmailVerificationStatus('unknown');
+        }
+        
         setLoading(false);
         
         if (event === 'SIGNED_IN') {
@@ -40,11 +51,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_OUT') {
           console.log('User signed out');
           toast.success('Successfully signed out!');
+          setEmailVerificationStatus('unknown');
         }
       }
     );
 
-    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
         console.error('Error retrieving session:', error);
@@ -53,6 +64,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.log('Initial session check:', !!session?.user, 'session:', !!session);
       setSession(session);
       setUser(session?.user ?? null);
+      
+      if (session?.user) {
+        const emailVerified = session.user.email_confirmed_at != null;
+        setEmailVerificationStatus(emailVerified ? 'verified' : 'pending');
+      } else {
+        setEmailVerificationStatus('unknown');
+      }
+      
       setLoading(false);
     });
 
@@ -69,8 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         options: {
           data: {
             name: name
-          },
-          emailRedirectTo: `${window.location.origin}/dashboard`
+          }
         }
       });
       
@@ -79,7 +97,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error(error.message);
       } else {
         console.log('AuthContext: Sign up successful:', data);
-        toast.success('Account created successfully! You can now sign in.');
+        toast.success('Account created successfully! Please check your email to verify your account.');
+        setEmailVerificationStatus('pending');
       }
       
       return { error };
@@ -101,16 +120,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         console.error('AuthContext: Sign in error:', error);
-        console.error('Error details:', {
-          message: error.message,
-          status: error.status,
-          name: error.name
-        });
         
         if (error.message.includes('Invalid login credentials')) {
           toast.error('Invalid email or password. Please check your credentials and try again.');
         } else if (error.message.includes('Email not confirmed')) {
           toast.error('Please check your email and click the confirmation link before signing in.');
+          setEmailVerificationStatus('pending');
         } else {
           toast.error(error.message);
         }
@@ -144,9 +159,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting password reset for:', email);
       
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth?reset=true`,
-      });
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
       
       if (error) {
         console.error('AuthContext: Password reset error:', error);
@@ -163,15 +176,41 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resendVerification = async (email: string) => {
+    try {
+      console.log('AuthContext: Attempting to resend verification for:', email);
+      
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email
+      });
+      
+      if (error) {
+        console.error('AuthContext: Resend verification error:', error);
+        toast.error(error.message);
+      } else {
+        toast.success('Verification email sent! Check your inbox.');
+      }
+      
+      return { error };
+    } catch (error) {
+      console.error('AuthContext: Resend verification exception:', error);
+      toast.error('Failed to resend verification email. Please try again.');
+      return { error };
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
       session,
       loading,
+      emailVerificationStatus,
       signUp,
       signIn,
       signOut,
       resetPassword,
+      resendVerification,
     }}>
       {children}
     </AuthContext.Provider>

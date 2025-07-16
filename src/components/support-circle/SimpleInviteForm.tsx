@@ -21,7 +21,7 @@ export function SimpleInviteForm() {
     name: '',
     email: '',
     relationship: '',
-    role: 'viewer' as const,
+    role: 'viewer' as 'viewer' | 'supporter' | 'caregiver' | 'medical',
     permissions: {
       mood: false,
       health: false,
@@ -170,7 +170,9 @@ export function SimpleInviteForm() {
             <Label htmlFor="role">Role</Label>
             <Select 
               value={formData.role} 
-              onValueChange={(value: any) => setFormData(prev => ({ ...prev, role: value }))}
+              onValueChange={(value: 'viewer' | 'supporter' | 'caregiver' | 'medical') => 
+                setFormData(prev => ({ ...prev, role: value }))
+              }
               disabled={isLoading}
             >
               <SelectTrigger>
