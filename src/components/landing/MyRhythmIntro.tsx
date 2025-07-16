@@ -5,136 +5,137 @@ import { Brain, Heart, Star, ChevronDown, Leaf } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export function MyRhythmIntro() {
+  // Updated MYRHYTHM Framework - Empowering & Bright
   const frameworkSteps = [
     {
       letter: 'M',
-      word: 'Mindset',
-      phase: 'Moment of Impact',
-      description: 'Acknowledge where you are right now. This is your starting point, not your end point. Every journey begins with honest recognition of the present moment.',
+      word: 'MINDSET',
+      phase: 'Memory-Aware Mindset Foundation',
+      description: 'Build cognitive confidence and self-awareness as your foundation for growth and empowerment.',
       icon: '🧠'
     },
     {
       letter: 'Y',
-      word: 'Yearning', 
-      phase: 'Yield to the Fog',
-      description: 'Allow yourself to feel confused, overwhelmed, or uncertain. This is natural and necessary. Healing begins when we stop fighting the fog and start moving through it gently.',
+      word: 'Yield', 
+      phase: 'Acknowledge Your Current Reality',
+      description: 'Honor where you are in your recovery journey without judgment—this is your starting point for transformation.',
       icon: '🌟'
     },
     {
       letter: 'R',
-      word: 'Routine',
-      phase: 'Reckon with Reality', 
-      description: 'Face the truth of your situation with compassion. Understanding your new reality empowers you to work with it, not against it.',
-      icon: '⚖️'
+      word: 'Restore',
+      phase: 'Rhythm-Based Energy Management', 
+      description: 'Map your cognitive peaks and rest periods to work with your brain\'s natural energy patterns.',
+      icon: '⚡'
     },
     {
       letter: 'H',
-      word: 'Health',
-      phase: 'Harness Support',
-      description: 'Build your support network and prioritize your physical and mental wellbeing. You don\'t have to do this alone—strength comes from connection.',
-      icon: '💚'
+      word: 'Harness',
+      phase: 'Hope Through Community Support',
+      description: 'Build your circle of care and maintain independence—support systems that empower, not enable.',
+      icon: '💪'
     },
     {
       letter: 'Y',
       word: 'Yield',
-      phase: 'Yield to Progress',
-      description: 'Embrace small wins and gradual improvement. Progress isn\'t always linear, and that\'s perfectly okay. Every step forward matters.',
-      icon: '🌱'
+      phase: 'Your Small Victories Matter',
+      description: 'Celebrate every step forward, no matter how small—progress tracking that builds unstoppable confidence.',
+      icon: '🎉'
     },
     {
       letter: 'T',
-      word: 'Thrive',
-      phase: 'Take Back Control',
-      description: 'Reclaim agency over your life through structure, routine, and intentional choices. This is where you start to feel like yourself again.',
+      word: 'Take',
+      phase: 'Transform Your Daily Experience',
+      description: 'Reclaim agency in your life through reliable memory anchors and external systems you can trust.',
       icon: '✨'
     },
     {
       letter: 'H',
       word: 'Heal',
-      phase: 'Heal Forward',
-      description: 'Move beyond recovery into growth. Use your experience to build resilience, wisdom, and a deeper understanding of your own strength.',
-      icon: '🕊️'
+      phase: 'Hope, Growth & Cognitive Strengthening',
+      description: 'Gentle brain exercises that build resilience and recovery-focused cognitive enhancement.',
+      icon: '🌈'
     },
     {
       letter: 'M',
       word: 'Multiply',
-      phase: 'Multiply the Mission',
-      description: 'Share your journey and support others. Your story becomes a beacon of hope, multiplying the impact of your healing journey.',
+      phase: 'Mission to Share & Inspire',
+      description: 'Transform your experience into hope for others—become an advocate and share your inspiring journey.',
       icon: '🌍'
     }
   ];
 
   return (
-    <section id="myrhythm-framework" className="py-20 bg-gradient-to-b from-white via-memory-emerald-50/30 to-clarity-teal-50/20 relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-brain-health-200 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-memory-emerald-200 rounded-full blur-3xl"></div>
+    <section id="myrhythm-framework" className="py-20 bg-gradient-to-b from-purple-50/60 via-blue-50/50 to-teal-50/60 relative overflow-hidden">
+      {/* Bright, energizing background pattern */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-r from-blue-400 to-teal-400 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-r from-teal-300 to-purple-300 rounded-full blur-3xl"></div>
       </div>
       
       <div className="container mx-auto px-6 max-w-6xl relative">
         <div className="text-center mb-16">
           <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="p-3 bg-gradient-to-r from-primary to-brain-health-500 rounded-full shadow-lg">
+            <div className="p-3 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-full shadow-lg">
               <Star className="h-8 w-8 text-white" />
             </div>
-            <h2 className="text-4xl font-light text-foreground tracking-wide">
-              The MyRhythm Framework
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent tracking-wide">
+              The MYRHYTHM Framework
             </h2>
           </div>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
-            An evidence-based 8-step system crafted from lived experience to help you reclaim your rhythm and thrive.
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto font-medium leading-relaxed">
+            An empowering 8-step system that transforms your memory recovery into unstoppable momentum and life transformation.
           </p>
         </div>
         
         <div className="grid gap-8 md:grid-cols-2 mb-16">
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-white via-purple-50/30 to-blue-50/20 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <CardContent className="p-8">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-r from-primary to-memory-emerald-500 rounded-full shadow-md">
+                <div className="p-3 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-full shadow-md">
                   <Brain className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-medium text-foreground">Born from Experience</h3>
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">Born from Experience</h3>
               </div>
-              <p className="text-muted-foreground leading-relaxed font-light">
+              <p className="text-gray-700 leading-relaxed font-medium">
                 Created by cognitive wellness champions who understand the journey firsthand. 
-                MyRhythm transforms real challenges into practical solutions that work.
+                MYRHYTHM transforms real challenges into practical, empowering solutions that work.
               </p>
             </CardContent>
           </Card>
           
-          <Card className="border-0 shadow-lg bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+          <Card className="border-0 shadow-xl bg-gradient-to-br from-white via-blue-50/30 to-teal-50/20 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 hover:scale-105">
             <CardContent className="p-8">
               <div className="flex items-center gap-4 mb-6">
-                <div className="p-3 bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 rounded-full shadow-md">
+                <div className="p-3 bg-gradient-to-r from-blue-500 via-teal-500 to-purple-500 rounded-full shadow-md">
                   <Heart className="h-6 w-6 text-white" />
                 </div>
-                <h3 className="text-xl font-medium text-brain-health-700">Your Personal Guide</h3>
+                <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">Your Personal Guide</h3>
               </div>
-              <p className="text-brain-health-600 leading-relaxed font-light">
+              <p className="text-gray-700 leading-relaxed font-medium">
                 Whether navigating brain injury recovery, optimizing performance, or supporting a loved one—
-                MyRhythm adapts to your unique needs and goals.
+                MYRHYTHM adapts to your unique needs and transforms your journey into triumph.
               </p>
             </CardContent>
           </Card>
         </div>
         
-        {/* Enhanced Framework Steps Visual */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-10 shadow-xl border border-border mb-12">
-          <h3 className="text-2xl font-light mb-8 text-foreground text-center">The 8 Steps of MyRhythm</h3>
+        {/* Enhanced MYRHYTHM Framework Steps Visual */}
+        <div className="bg-gradient-to-br from-white via-purple-50/40 to-blue-50/30 backdrop-blur-sm rounded-3xl p-10 shadow-2xl border border-purple-200/40 mb-12">
+          <h3 className="text-2xl font-bold mb-8 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent text-center">The 8 Steps of MYRHYTHM</h3>
           <div className="grid grid-cols-4 md:grid-cols-8 gap-6 mb-8">
             {['M', 'Y', 'R', 'H', 'Y', 'T', 'H', 'M'].map((letter, index) => (
               <div key={index} className="relative group">
-                <div className="w-16 h-16 bg-gradient-to-r from-primary to-brain-health-500 text-white rounded-2xl flex items-center justify-center font-medium text-lg shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:scale-105">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 text-white rounded-2xl flex items-center justify-center font-bold text-lg shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
                   {letter}
                 </div>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-primary/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-pulse"></div>
               </div>
             ))}
           </div>
-          <p className="text-muted-foreground text-center font-light leading-relaxed">
-            A structured pathway from impact to empowerment, designed to help you discover and strengthen your personal rhythm.
+          <p className="text-gray-700 text-center font-medium leading-relaxed">
+            A powerful pathway from challenge to empowerment, designed to help you discover and strengthen your unstoppable personal rhythm.
           </p>
         </div>
 

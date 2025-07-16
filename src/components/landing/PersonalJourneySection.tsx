@@ -9,28 +9,28 @@ export function PersonalJourneySection() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <section className="py-16 bg-gradient-to-r from-cyan-50 to-teal-50">
+    <section className="py-16 bg-gradient-to-r from-purple-50/50 via-blue-50/40 to-teal-50/50">
       <div className="container mx-auto px-4 max-w-4xl">
         <Collapsible open={isOpen} onOpenChange={setIsOpen}>
           <CollapsibleTrigger asChild>
-            <Card className="cursor-pointer hover:shadow-lg transition-all duration-200 border-2 border-cyan-200 hover:border-cyan-300">
+            <Card className="cursor-pointer hover:shadow-2xl transition-all duration-300 border-2 border-purple-200/60 hover:border-purple-400/80 bg-gradient-to-br from-white via-purple-50/30 to-blue-50/20">
               <CardContent className="p-8 text-center">
                 <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="bg-cyan-100 p-3 rounded-full">
-                    <Heart className="h-8 w-8 text-cyan-600" />
+                  <div className="bg-gradient-to-r from-purple-100 via-blue-100 to-teal-100 p-3 rounded-full">
+                    <Heart className="h-8 w-8 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent" />
                   </div>
-                  <h2 className="text-3xl font-bold text-cyan-900">
-                    How MyRhythm Changed My Life
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                    How MYRHYTHM Changed My Life
                   </h2>
                   <ChevronDown 
-                    className={`h-6 w-6 text-cyan-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                    className={`h-6 w-6 text-purple-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                   />
                 </div>
-                <p className="text-lg text-cyan-700 font-medium">
-                  A personal story of transformation, resilience, and finding rhythm after brain aneurysm
+                <p className="text-lg text-gray-700 font-semibold">
+                  A personal story of transformation, resilience, and finding unstoppable rhythm after brain aneurysm
                 </p>
-                <p className="text-sm text-cyan-600 mt-2">
-                  Click to read the full inspiring journey →
+                <p className="text-sm text-purple-600 mt-2 font-medium">
+                  Click to read this inspiring journey of triumph →
                 </p>
               </CardContent>
             </Card>
