@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,38 +15,36 @@ import { toast } from 'sonner';
 export function SupportCircleManager() {
   const { supportCircle, addSupportMember, updateMemberPermissions } = useAccountabilitySystem();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<SupportCircleMember | null>(null);
   
   const [newMember, setNewMember] = useState({
     member_name: '',
     member_email: '',
     member_phone: '',
     relationship: '',
-    role: 'viewer' as const,
+    role: 'viewer' as SupportCircleMember['role'],
     permissions: {
       mood: false,
       health: false,
       calendar: false,
       goals: false,
-      gratitude: false
+      gratitude: false,
     },
     can_send_reminders: false,
     can_receive_alerts: true,
     notification_preferences: {
       email: true,
-      sms: false
+      sms: false,
     }
   });
 
   const handleAddMember = async () => {
     if (!newMember.member_name || !newMember.relationship) {
-      toast.error('Please fill in required fields');
+      toast.error('Please provide name and relationship');
       return;
     }
 
     try {
       await addSupportMember(newMember);
-      setIsAddDialogOpen(false);
       setNewMember({
         member_name: '',
         member_email: '',
@@ -59,30 +56,26 @@ export function SupportCircleManager() {
           health: false,
           calendar: false,
           goals: false,
-          gratitude: false
+          gratitude: false,
         },
         can_send_reminders: false,
         can_receive_alerts: true,
         notification_preferences: {
           email: true,
-          sms: false
+          sms: false,
         }
       });
+      setIsAddDialogOpen(false);
     } catch (error) {
-      // Error handled in hook
+      console.error('Error adding member:', error);
     }
   };
 
-  const handleUpdatePermissions = async (member: SupportCircleMember, updates: Partial<SupportCircleMember>) => {
-    await updateMemberPermissions(member.id, updates);
-  };
-
-  const getRoleColor = (role: string) => {
-    switch (role) {
-      case 'medical': return 'bg-red-100 text-red-800';
-      case 'caregiver': return 'bg-blue-100 text-blue-800';
-      case 'supporter': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const handlePermissionChange = async (memberId: string, field: string, value: any) => {
+    try {
+      await updateMemberPermissions(memberId, { [field]: value });
+    } catch (error) {
+      console.error('Error updating permissions:', error);
     }
   };
 
@@ -92,10 +85,9 @@ export function SupportCircleManager() {
         <div>
           <h2 className="text-2xl font-bold">Support Circle</h2>
           <p className="text-muted-foreground">
-            Manage who can help you stay accountable and connected
+            Manage who can help keep you accountable and supported
           </p>
         </div>
-        
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button>
@@ -103,26 +95,26 @@ export function SupportCircleManager() {
               Add Member
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
               <DialogTitle>Add Support Circle Member</DialogTitle>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="name">Name *</Label>
                   <Input
                     id="name"
                     value={newMember.member_name}
-                    onChange={(e) => setNewMember(prev => ({ ...prev, member_name: e.target.value }))}
-                    placeholder="Full name"
+                    onChange={(e) => setNewMember({ ...newMember, member_name: e.target.value })}
+                    placeholder="John Doe"
                   />
                 </div>
                 <div>
                   <Label htmlFor="relationship">Relationship *</Label>
-                  <Select 
-                    value={newMember.relationship} 
-                    onValueChange={(value) => setNewMember(prev => ({ ...prev, relationship: value }))}
+                  <Select
+                    value={newMember.relationship}
+                    onValueChange={(value) => setNewMember({ ...newMember, relationship: value })}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select relationship" />
@@ -132,7 +124,8 @@ export function SupportCircleManager() {
                       <SelectItem value="friend">Friend</SelectItem>
                       <SelectItem value="caregiver">Caregiver</SelectItem>
                       <SelectItem value="healthcare">Healthcare Provider</SelectItem>
-                      <SelectItem value="colleague">Colleague</SelectItem>
+                      <SelectItem value="therapist">Therapist</SelectItem>
+                      <SelectItem value="social-worker">Social Worker</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -145,56 +138,57 @@ export function SupportCircleManager() {
                     id="email"
                     type="email"
                     value={newMember.member_email}
-                    onChange={(e) => setNewMember(prev => ({ ...prev, member_email: e.target.value }))}
-                    placeholder="email@example.com"
+                    onChange={(e) => setNewMember({ ...newMember, member_email: e.target.value })}
+                    placeholder="john@example.com"
                   />
                 </div>
                 <div>
                   <Label htmlFor="phone">Phone</Label>
                   <Input
                     id="phone"
+                    type="tel"
                     value={newMember.member_phone}
-                    onChange={(e) => setNewMember(prev => ({ ...prev, member_phone: e.target.value }))}
-                    placeholder="Phone number"
+                    onChange={(e) => setNewMember({ ...newMember, member_phone: e.target.value })}
+                    placeholder="(555) 123-4567"
                   />
                 </div>
               </div>
 
               <div>
                 <Label htmlFor="role">Role</Label>
-                <Select 
-                  value={newMember.role} 
-                  onValueChange={(value: any) => setNewMember(prev => ({ ...prev, role: value }))}
+                <Select
+                  value={newMember.role}
+                  onValueChange={(value) => setNewMember({ ...newMember, role: value as SupportCircleMember['role'] })}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="viewer">Viewer - Can see shared information</SelectItem>
-                    <SelectItem value="supporter">Supporter - Can encourage and remind</SelectItem>
-                    <SelectItem value="caregiver">Caregiver - Can help with daily tasks</SelectItem>
-                    <SelectItem value="medical">Medical - Healthcare provider access</SelectItem>
+                    <SelectItem value="viewer">Viewer</SelectItem>
+                    <SelectItem value="supporter">Supporter</SelectItem>
+                    <SelectItem value="caregiver">Caregiver</SelectItem>
+                    <SelectItem value="medical">Medical Professional</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-3">
                 <Label>Permissions</Label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   {Object.entries(newMember.permissions).map(([key, value]) => (
                     <div key={key} className="flex items-center space-x-2">
                       <Checkbox
                         id={key}
                         checked={value}
                         onCheckedChange={(checked) => 
-                          setNewMember(prev => ({
-                            ...prev,
-                            permissions: { ...prev.permissions, [key]: checked }
-                          }))
+                          setNewMember({
+                            ...newMember,
+                            permissions: { ...newMember.permissions, [key]: !!checked }
+                          })
                         }
                       />
-                      <Label htmlFor={key} className="text-sm capitalize">
-                        {key === 'gratitude' ? 'Gratitude Practice' : key}
+                      <Label htmlFor={key} className="capitalize text-sm">
+                        {key === 'mood' ? 'Mood & Energy' : key}
                       </Label>
                     </div>
                   ))}
@@ -207,7 +201,7 @@ export function SupportCircleManager() {
                     id="reminders"
                     checked={newMember.can_send_reminders}
                     onCheckedChange={(checked) => 
-                      setNewMember(prev => ({ ...prev, can_send_reminders: checked as boolean }))
+                      setNewMember({ ...newMember, can_send_reminders: !!checked })
                     }
                   />
                   <Label htmlFor="reminders">Can send reminders</Label>
@@ -217,76 +211,63 @@ export function SupportCircleManager() {
                     id="alerts"
                     checked={newMember.can_receive_alerts}
                     onCheckedChange={(checked) => 
-                      setNewMember(prev => ({ ...prev, can_receive_alerts: checked as boolean }))
+                      setNewMember({ ...newMember, can_receive_alerts: !!checked })
                     }
                   />
                   <Label htmlFor="alerts">Receive alerts</Label>
                 </div>
               </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddMember}>
-                Add Member
-              </Button>
+
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddMember}>
+                  Add Member
+                </Button>
+              </div>
             </div>
           </DialogContent>
         </Dialog>
       </div>
 
+      {/* Support Circle Members */}
       <div className="grid gap-4">
-        {supportCircle.map((member) => (
-          <Card key={member.id}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="h-12 w-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Users className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold">{member.member_name}</h3>
-                    <p className="text-sm text-muted-foreground capitalize">
-                      {member.relationship}
-                    </p>
-                    <div className="flex items-center gap-2 mt-1">
-                      {member.member_email && (
-                        <div className="flex items-center text-xs text-muted-foreground">
-                          <Mail className="h-3 w-3 mr-1" />
-                          {member.member_email}
-                        </div>
-                      )}
-                      {member.member_phone && (
-                        <div className="flex items-center text-xs text-muted-foreground">
-                          <Phone className="h-3 w-3 mr-1" />
-                          {member.member_phone}
-                        </div>
-                      )}
+        {supportCircle.length === 0 ? (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center py-8">
+                <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="text-lg font-semibold mb-2">No support circle members yet</h3>
+                <p className="text-muted-foreground mb-4">
+                  Add family, friends, or healthcare providers to your support network
+                </p>
+                <Button onClick={() => setIsAddDialogOpen(true)}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add First Member
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          supportCircle.map((member) => (
+            <Card key={member.id}>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">{member.member_name}</CardTitle>
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                        <span className="capitalize">{member.relationship}</span>
+                        <Badge variant={member.role === 'medical' ? 'default' : 'secondary'}>
+                          {member.role}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                  <Badge className={getRoleColor(member.role)}>
-                    {member.role}
-                  </Badge>
-                  
-                  <div className="flex items-center space-x-2">
-                    {member.can_send_reminders && (
-                      <Badge variant="outline" className="text-xs">
-                        <Clock className="h-3 w-3 mr-1" />
-                        Reminders
-                      </Badge>
-                    )}
-                    {member.can_receive_alerts && (
-                      <Badge variant="outline" className="text-xs">
-                        <Bell className="h-3 w-3 mr-1" />
-                        Alerts
-                      </Badge>
-                    )}
-                  </div>
-
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline" size="sm">
@@ -298,20 +279,33 @@ export function SupportCircleManager() {
                         <DialogTitle>Manage {member.member_name}</DialogTitle>
                       </DialogHeader>
                       <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          {member.member_email && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Mail className="h-4 w-4" />
+                              <span>{member.member_email}</span>
+                            </div>
+                          )}
+                          {member.member_phone && (
+                            <div className="flex items-center space-x-2 text-sm">
+                              <Phone className="h-4 w-4" />
+                              <span>{member.member_phone}</span>
+                            </div>
+                          )}
+                        </div>
+                        
                         <div className="space-y-3">
-                          <Label>Data Access Permissions</Label>
-                          <div className="space-y-2">
+                          <Label>Permissions</Label>
+                          <div className="grid grid-cols-2 gap-3">
                             {Object.entries(member.permissions).map(([key, value]) => (
                               <div key={key} className="flex items-center justify-between">
-                                <Label className="text-sm capitalize">
-                                  {key === 'gratitude' ? 'Gratitude Practice' : key}
+                                <Label className="capitalize text-sm">
+                                  {key === 'mood' ? 'Mood & Energy' : key}
                                 </Label>
                                 <Switch
                                   checked={value}
                                   onCheckedChange={(checked) => 
-                                    handleUpdatePermissions(member, {
-                                      permissions: { ...member.permissions, [key]: checked }
-                                    })
+                                    handlePermissionChange(member.id, `permissions.${key}`, checked)
                                   }
                                 />
                               </div>
@@ -319,64 +313,62 @@ export function SupportCircleManager() {
                           </div>
                         </div>
 
-                        <div className="space-y-3">
-                          <Label>Actions</Label>
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <Label className="text-sm">Can send reminders</Label>
-                              <Switch
-                                checked={member.can_send_reminders}
-                                onCheckedChange={(checked) => 
-                                  handleUpdatePermissions(member, { can_send_reminders: checked })
-                                }
-                              />
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <Label className="text-sm">Receive alerts</Label>
-                              <Switch
-                                checked={member.can_receive_alerts}
-                                onCheckedChange={(checked) => 
-                                  handleUpdatePermissions(member, { can_receive_alerts: checked })
-                                }
-                              />
-                            </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Clock className="h-4 w-4" />
+                            <Label>Can send reminders</Label>
                           </div>
+                          <Switch
+                            checked={member.can_send_reminders}
+                            onCheckedChange={(checked) => 
+                              handlePermissionChange(member.id, 'can_send_reminders', checked)
+                            }
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Bell className="h-4 w-4" />
+                            <Label>Receive alerts</Label>
+                          </div>
+                          <Switch
+                            checked={member.can_receive_alerts}
+                            onCheckedChange={(checked) => 
+                              handlePermissionChange(member.id, 'can_receive_alerts', checked)
+                            }
+                          />
                         </div>
                       </div>
                     </DialogContent>
                   </Dialog>
                 </div>
-              </div>
-
-              {/* Permissions Summary */}
-              <div className="mt-4 flex flex-wrap gap-2">
-                {Object.entries(member.permissions)
-                  .filter(([_, value]) => value)
-                  .map(([key]) => (
-                    <Badge key={key} variant="secondary" className="text-xs">
-                      <Shield className="h-3 w-3 mr-1" />
-                      {key === 'gratitude' ? 'Gratitude' : key}
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(member.permissions)
+                    .filter(([_, enabled]) => enabled)
+                    .map(([permission]) => (
+                      <Badge key={permission} variant="outline" className="text-xs">
+                        <Shield className="h-3 w-3 mr-1" />
+                        {permission === 'mood' ? 'Mood & Energy' : permission}
+                      </Badge>
+                    ))}
+                  {member.can_send_reminders && (
+                    <Badge variant="outline" className="text-xs">
+                      <Clock className="h-3 w-3 mr-1" />
+                      Reminders
                     </Badge>
-                  ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-
-        {supportCircle.length === 0 && (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <Users className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h3 className="text-lg font-semibold mb-2">No Support Circle Members</h3>
-              <p className="text-muted-foreground mb-4">
-                Add family, friends, or healthcare providers to your support circle to stay connected and accountable.
-              </p>
-              <Button onClick={() => setIsAddDialogOpen(true)}>
-                <Plus className="h-4 w-4 mr-2" />
-                Add Your First Member
-              </Button>
-            </CardContent>
-          </Card>
+                  )}
+                  {member.can_receive_alerts && (
+                    <Badge variant="outline" className="text-xs">
+                      <Bell className="h-3 w-3 mr-1" />
+                      Alerts
+                    </Badge>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))
         )}
       </div>
     </div>

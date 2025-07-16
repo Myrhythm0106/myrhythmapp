@@ -1,13 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Clock, Plus } from 'lucide-react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
-import { CreateReminderForm } from './reminder/CreateReminderForm';
-import { ReminderCard } from './reminder/ReminderCard';
-import { EmptyRemindersState } from './reminder/EmptyRemindersState';
 
 export function ReminderCreator() {
   const { reminders } = useAccountabilitySystem();
@@ -17,37 +13,82 @@ export function ReminderCreator() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Your Helpful Reminders</h2>
+          <h2 className="text-2xl font-bold">Reminders</h2>
           <p className="text-muted-foreground">
-            Let's set you up for success with gentle nudges that keep you on track
+            Stay on track with personalized reminders from your support circle
           </p>
         </div>
-        
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="border-l border-emerald-300/20 shadow-sm shadow-emerald-300/10">
+            <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Set Up a New Reminder
+              Create Reminder
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-              <DialogTitle className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Let's Set You Up for Success</DialogTitle>
+              <DialogTitle>Create New Reminder</DialogTitle>
             </DialogHeader>
-            <CreateReminderForm onClose={() => setIsCreateDialogOpen(false)} />
+            <div className="p-4">
+              <p className="text-muted-foreground">Reminder creation form will go here.</p>
+              <Button 
+                className="mt-4" 
+                onClick={() => setIsCreateDialogOpen(false)}
+              >
+                Close for now
+              </Button>
+            </div>
           </DialogContent>
         </Dialog>
       </div>
 
-      <div className="grid gap-4">
-        {reminders.map((reminder) => (
-          <ReminderCard key={reminder.id} reminder={reminder} />
-        ))}
-
-        {reminders.length === 0 && (
-          <EmptyRemindersState onCreateClick={() => setIsCreateDialogOpen(true)} />
-        )}
-      </div>
+      {/* Reminders List */}
+      {reminders.length === 0 ? (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No reminders set yet</h3>
+              <p className="text-muted-foreground mb-4">
+                Stay on track with gentle reminders from your support circle
+              </p>
+              <Button onClick={() => setIsCreateDialogOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Create Your First Reminder
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {reminders.map((reminder) => (
+            <Card key={reminder.id}>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-semibold">{reminder.title}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {reminder.description}
+                    </p>
+                    <div className="flex items-center space-x-2 mt-2">
+                      <Clock className="h-4 w-4" />
+                      <span className="text-sm">{reminder.reminder_time}</span>
+                      <span className="text-sm text-muted-foreground">
+                        {reminder.frequency}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-muted-foreground">
+                      {reminder.is_active ? 'Active' : 'Inactive'}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

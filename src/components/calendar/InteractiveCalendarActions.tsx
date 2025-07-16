@@ -26,15 +26,16 @@ export function InteractiveCalendarActions({
       ...actionData,
       date: selectedDate,
       time: selectedTime,
-      id: Math.random().toString(36).substr(2, 9)
+      id: Math.random().toString(36).substr(2, 9),
+      watchers: actionData.watchers || []
     };
     
     onActionCreate?.(newAction);
     setShowActionDialog(false);
     
     toast.success("🎯 Action Created!", {
-      description: `New action scheduled for ${selectedDate?.toLocaleDateString()}`,
-      duration: 3000
+      description: `New ${actionData.type || 'action'} scheduled for ${selectedDate?.toLocaleDateString()}${actionData.watchers?.length ? ' with accountability watchers' : ''}`,
+      duration: 4000
     });
   };
 

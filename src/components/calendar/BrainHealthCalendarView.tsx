@@ -157,13 +157,65 @@ export function BrainHealthCalendarView({
             )}
 
             {/* Interactive Calendar Actions for all calendar views */}
+            {/* Interactive Calendar Actions and Event Creation */}
             {view !== "goals" && (
-              <InteractiveCalendarActions
-                selectedDate={selectedDate}
-                selectedTime={selectedTime}
-                onActionCreate={handleActionCreate}
-                view={view}
-              />
+              <>
+                <InteractiveCalendarActions
+                  selectedDate={selectedDate}
+                  selectedTime={selectedTime}
+                  onActionCreate={handleActionCreate}
+                  view={view}
+                />
+                
+                {/* Enhanced Day View with Event Details and Watchers */}
+                {view === "day" && selectedDate && (
+                  <div className="mt-4 p-4 bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 rounded-lg border">
+                    <h3 className="font-semibold text-lg mb-2">
+                      Day Details - {selectedDate.toLocaleDateString()}
+                    </h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Add events, set reminders, and invite watchers from your accountability circle
+                    </p>
+                    
+                    {/* Quick Action Buttons */}
+                    <div className="flex gap-2 flex-wrap">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleActionCreate({ 
+                          type: 'event', 
+                          date: selectedDate,
+                          watchers: [] 
+                        })}
+                      >
+                        Add Event
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleActionCreate({ 
+                          type: 'reminder', 
+                          date: selectedDate,
+                          watchers: [] 
+                        })}
+                      >
+                        Set Reminder
+                      </Button>
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => handleActionCreate({ 
+                          type: 'task', 
+                          date: selectedDate,
+                          watchers: [] 
+                        })}
+                      >
+                        Add Task
+                      </Button>
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </CardContent>
