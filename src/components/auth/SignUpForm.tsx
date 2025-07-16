@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { User, Mail, Lock, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { PasswordInput } from './PasswordInput';
 
 interface SignUpFormProps {
@@ -29,27 +29,33 @@ export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
     setIsLoading(true);
     setError(null);
 
+    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords don\'t match. Please check and try again.');
+      setError('Passwords do not match. Please check and try again.');
       setIsLoading(false);
       return;
     }
 
+    // Basic password validation
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters long.');
       setIsLoading(false);
       return;
     }
 
+    console.log('SignUpForm: Attempting sign up with email:', formData.email);
+
     const { error } = await signUp(formData.email, formData.password, formData.name);
     
     if (error) {
-      if (error.message.includes('User already registered')) {
+      console.error('SignUpForm: Sign up failed:', error);
+      if (error.message?.includes('User already registered')) {
         setError('An account with this email already exists. Please sign in instead.');
       } else {
-        setError(error.message || 'Failed to create account. Please try again.');
+        setError('Sign up failed. Please try again.');
       }
     } else {
+      console.log('SignUpForm: Sign up successful');
       onSignUpSuccess(formData.email);
     }
     
@@ -61,10 +67,13 @@ export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
     if (error) setError(null);
   };
 
+  const passwordsMatch = formData.password && formData.confirmPassword && formData.password === formData.confirmPassword;
+
   return (
     <div className="space-y-6">
       {error && (
         <Alert variant="destructive" className="border-red-200 bg-red-50">
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription className="text-red-800">{error}</AlertDescription>
         </Alert>
       )}
@@ -83,6 +92,7 @@ export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
               className="pl-10"
               required
               disabled={isLoading}
+              autoComplete="name"
             />
           </div>
         </div>
@@ -137,6 +147,12 @@ export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
               autoComplete="new-password"
             />
           </div>
+          {passwordsMatch && (
+            <div className="flex items-center gap-2 text-green-600 text-sm">
+              <CheckCircle className="h-4 w-4" />
+              <span>Passwords match</span>
+            </div>
+          )}
         </div>
 
         <Button 
@@ -150,7 +166,7 @@ export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
               Creating Account...
             </>
           ) : (
-            'Your Journey Starts Here'
+            'Create Account'
           )}
         </Button>
       </form>

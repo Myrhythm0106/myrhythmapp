@@ -3,21 +3,15 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { isLeakedPasswordError, getLeakedPasswordMessage } from '@/utils/auth/passwordValidation';
-import { SessionSecurity } from '@/utils/security/sessionSecurity';
-import { DataProtection } from '@/utils/security/dataProtection';
-import { errorHandler } from '@/utils/errorHandler';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  emailVerificationStatus: 'pending' | 'verified' | 'unverified';
   signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
-  resendVerification: (email: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,49 +20,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [emailVerificationStatus, setEmailVerificationStatus] = useState<'pending' | 'verified' | 'unverified'>('unverified');
 
   useEffect(() => {
     console.log('AuthProvider: Setting up auth state listener');
     
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         console.log('Auth state change:', event, 'user:', !!session?.user, 'session:', !!session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Update email verification status
-        if (session?.user) {
-          const isEmailConfirmed = session.user.email_confirmed_at !== null;
-          setEmailVerificationStatus(isEmailConfirmed ? 'verified' : 'pending');
-        } else {
-          setEmailVerificationStatus('unverified');
-        }
-        
-        // Handle different auth events with enhanced security
         if (event === 'SIGNED_IN') {
           console.log('User signed in successfully');
-          SessionSecurity.startSession();
-          DataProtection.logSecurityEvent('USER_SIGNED_IN', {
-            userId: session?.user?.id,
-            email: session?.user?.email
-          });
-          
-          // Clear any potentially insecure data from localStorage
-          localStorage.removeItem('pendingVerificationEmail');
-          localStorage.removeItem('myrhythm_security_answers');
+          toast.success('Welcome back!');
         }
         
-        if (event === 'PASSWORD_RECOVERY') {
-          toast.success('You can now update your password');
-        }
-
         if (event === 'SIGNED_OUT') {
-          SessionSecurity.endSession('USER_SIGNOUT');
-          DataProtection.logSecurityEvent('USER_SIGNED_OUT', {});
-          setEmailVerificationStatus('unverified');
+          console.log('User signed out');
           toast.success('Successfully signed out!');
         }
       }
@@ -77,26 +47,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
-        errorHandler.handleError(
-          errorHandler.createError(
-            'Failed to retrieve session',
-            'error',
-            'SESSION_RETRIEVAL_ERROR',
-            { error }
-          )
-        );
+        console.error('Error retrieving session:', error);
       }
       
       console.log('Initial session check:', !!session?.user, 'session:', !!session);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
-      
-      if (session?.user) {
-        SessionSecurity.startSession();
-        const isEmailConfirmed = session.user.email_confirmed_at !== null;
-        setEmailVerificationStatus(isEmailConfirmed ? 'verified' : 'pending');
-      }
     });
 
     return () => subscription.unsubscribe();
@@ -104,194 +61,105 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, name: string) => {
     try {
-      // Store email for potential resending
-      localStorage.setItem('pendingVerificationEmail', email);
+      console.log('AuthContext: Attempting sign up for:', email);
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
           data: {
-            name: DataProtection.sanitizeInput(name)
+            name: name
           },
           emailRedirectTo: `${window.location.origin}/dashboard`
         }
       });
       
       if (error) {
-        localStorage.removeItem('pendingVerificationEmail');
-        if (isLeakedPasswordError(error)) {
-          toast.error(getLeakedPasswordMessage());
-        } else {
-          errorHandler.handleError(
-            errorHandler.createError(
-              error.message,
-              'error',
-              'SIGNUP_ERROR',
-              { email }
-            )
-          );
-        }
+        console.error('AuthContext: Sign up error:', error);
+        toast.error(error.message);
       } else {
-        // Success message for hybrid flow
-        toast.success('Account created! Check your email to verify your account.', {
-          description: 'You can start using MyRhythm immediately while we send your verification email.'
-        });
-        
-        DataProtection.logSecurityEvent('USER_SIGNUP_ATTEMPT', {
-          email,
-          success: true
-        });
+        console.log('AuthContext: Sign up successful:', data);
+        toast.success('Account created successfully! You can now sign in.');
       }
       
       return { error };
     } catch (error) {
-      localStorage.removeItem('pendingVerificationEmail');
-      const appError = errorHandler.createError(
-        'Sign up failed',
-        'error',
-        'SIGNUP_EXCEPTION',
-        { error, email }
-      );
-      errorHandler.handleError(appError);
-      return { error: appError };
+      console.error('AuthContext: Sign up exception:', error);
+      toast.error('Sign up failed. Please try again.');
+      return { error };
     }
   };
 
   const signIn = async (email: string, password: string) => {
     try {
-      console.log('AuthContext: Attempting sign in');
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      console.log('AuthContext: Attempting sign in for:', email);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password: password,
       });
       
       if (error) {
-        console.log('AuthContext: Sign in error:', error.message);
-        
-        DataProtection.logSecurityEvent('SIGNIN_FAILED', {
-          email,
-          error: error.message
+        console.error('AuthContext: Sign in error:', error);
+        console.error('Error details:', {
+          message: error.message,
+          status: error.status,
+          name: error.name
         });
         
         if (error.message.includes('Invalid login credentials')) {
           toast.error('Invalid email or password. Please check your credentials and try again.');
+        } else if (error.message.includes('Email not confirmed')) {
+          toast.error('Please check your email and click the confirmation link before signing in.');
         } else {
-          errorHandler.handleError(
-            errorHandler.createError(
-              error.message,
-              'error',
-              'SIGNIN_ERROR',
-              { email }
-            )
-          );
+          toast.error(error.message);
         }
       } else {
-        console.log('AuthContext: Sign in successful, waiting for auth state change');
+        console.log('AuthContext: Sign in successful for user:', data.user?.email);
       }
       
       return { error };
     } catch (error) {
-      const appError = errorHandler.createError(
-        'Sign in failed',
-        'error',
-        'SIGNIN_EXCEPTION',
-        { error, email }
-      );
-      errorHandler.handleError(appError);
-      return { error: appError };
+      console.error('AuthContext: Sign in exception:', error);
+      toast.error('Sign in failed. Please try again.');
+      return { error };
     }
   };
 
   const signOut = async () => {
     try {
+      console.log('AuthContext: Attempting sign out');
       const { error } = await supabase.auth.signOut();
       if (error) {
-        errorHandler.handleError(
-          errorHandler.createError(
-            error.message,
-            'error',
-            'SIGNOUT_ERROR'
-          )
-        );
+        console.error('AuthContext: Sign out error:', error);
+        toast.error('Sign out failed. Please try again.');
       }
     } catch (error) {
-      const appError = errorHandler.createError(
-        'Sign out failed',
-        'error',
-        'SIGNOUT_EXCEPTION',
-        { error }
-      );
-      errorHandler.handleError(appError);
+      console.error('AuthContext: Sign out exception:', error);
+      toast.error('Sign out failed. Please try again.');
     }
   };
 
   const resetPassword = async (email: string) => {
     try {
+      console.log('AuthContext: Attempting password reset for:', email);
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth?reset=true`,
       });
       
       if (error) {
-        errorHandler.handleError(
-          errorHandler.createError(
-            error.message,
-            'error',
-            'PASSWORD_RESET_ERROR',
-            { email }
-          )
-        );
+        console.error('AuthContext: Password reset error:', error);
+        toast.error(error.message);
       } else {
         toast.success('Password reset email sent! Check your inbox for instructions.');
-        DataProtection.logSecurityEvent('PASSWORD_RESET_REQUESTED', { email });
       }
       
       return { error };
     } catch (error) {
-      const appError = errorHandler.createError(
-        'Password reset failed',
-        'error',
-        'PASSWORD_RESET_EXCEPTION',
-        { error, email }
-      );
-      errorHandler.handleError(appError);
-      return { error: appError };
-    }
-  };
-
-  const resendVerification = async (email: string) => {
-    try {
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`
-        }
-      });
-      
-      if (error) {
-        errorHandler.handleError(
-          errorHandler.createError(
-            error.message,
-            'error',
-            'VERIFICATION_RESEND_ERROR',
-            { email }
-          )
-        );
-      } else {
-        toast.success('Verification email sent! Please check your inbox.');
-      }
-      
+      console.error('AuthContext: Password reset exception:', error);
+      toast.error('Password reset failed. Please try again.');
       return { error };
-    } catch (error) {
-      const appError = errorHandler.createError(
-        'Verification resend failed',
-        'error',
-        'VERIFICATION_RESEND_EXCEPTION',
-        { error, email }
-      );
-      errorHandler.handleError(appError);
-      return { error: appError };
     }
   };
 
@@ -300,12 +168,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       session,
       loading,
-      emailVerificationStatus,
       signUp,
       signIn,
       signOut,
       resetPassword,
-      resendVerification,
     }}>
       {children}
     </AuthContext.Provider>

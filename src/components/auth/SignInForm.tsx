@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
-import { Mail, Lock, Loader2 } from 'lucide-react';
+import { Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
 import { PasswordInput } from './PasswordInput';
 
 export default function SignInForm() {
@@ -23,10 +23,15 @@ export default function SignInForm() {
     setIsLoading(true);
     setError(null);
 
+    console.log('SignInForm: Attempting sign in with email:', formData.email);
+
     const { error } = await signIn(formData.email, formData.password);
     
     if (error) {
-      setError('Invalid email or password. Please check your credentials and try again.');
+      console.error('SignInForm: Sign in failed:', error);
+      setError('Sign in failed. Please check your email and password.');
+    } else {
+      console.log('SignInForm: Sign in successful');
     }
     
     setIsLoading(false);
@@ -41,6 +46,7 @@ export default function SignInForm() {
     <div className="space-y-6">
       {error && (
         <Alert variant="destructive" className="border-red-200 bg-red-50">
+          <AlertCircle className="h-4 w-4" />
           <AlertDescription className="text-red-800">{error}</AlertDescription>
         </Alert>
       )}
@@ -92,7 +98,7 @@ export default function SignInForm() {
               Signing In...
             </>
           ) : (
-            'Continue Your Journey'
+            'Sign In'
           )}
         </Button>
       </form>
