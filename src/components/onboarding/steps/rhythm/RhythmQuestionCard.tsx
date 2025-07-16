@@ -3,11 +3,11 @@ import React from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Question, scaleLabels } from "./rhythmAssessmentData";
+import { MyrhythmQuestion } from "./data/myrhythmQuestions";
 
 interface RhythmQuestionCardProps {
-  question: Question;
-  value: number | undefined;
+  question: MyrhythmQuestion;
+  value: string | number | string[] | undefined;
   onValueChange: (value: string) => void;
 }
 
@@ -22,53 +22,91 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
     }, 500);
   };
 
+  const renderQuestion = () => {
+    if (question.type === 'multiple_choice') {
+      return (
+        <div className="space-y-3">
+          {question.options?.map((option) => (
+            <label key={option.value} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+              <input
+                type="radio"
+                name={question.id}
+                value={option.value}
+                checked={value === option.value}
+                onChange={(e) => onValueChange(e.target.value)}
+                className="w-4 h-4 text-primary"
+              />
+              <span className="text-foreground">{option.label}</span>
+            </label>
+          ))}
+        </div>
+      );
+    }
+
+    if (question.type === 'multiple_select') {
+      return (
+        <div className="space-y-3">
+          {question.options?.map((option) => (
+            <label key={option.value} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border hover:bg-muted/50 transition-colors">
+              <input
+                type="checkbox"
+                value={option.value}
+                checked={Array.isArray(value) && value.includes(option.value)}
+                onChange={(e) => {
+                  const currentValues = Array.isArray(value) ? value : [];
+                  const newValues = e.target.checked
+                    ? [...currentValues, option.value]
+                    : currentValues.filter((v: string) => v !== option.value);
+                  onValueChange(newValues.join(','));
+                }}
+                className="w-4 h-4 text-primary"
+              />
+              <span className="text-foreground">{option.label}</span>
+            </label>
+          ))}
+        </div>
+      );
+    }
+
+    if (question.type === 'scale') {
+      return (
+        <div className="space-y-4">
+          <div className="flex justify-between items-center">
+            {[1, 2, 3, 4, 5].map((scaleValue) => (
+              <label key={scaleValue} className="flex flex-col items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name={question.id}
+                  value={scaleValue}
+                  checked={value === scaleValue}
+                  onChange={(e) => onValueChange(e.target.value)}
+                  className="w-4 h-4 text-primary mb-2"
+                />
+                <span className="text-sm text-muted-foreground">{scaleValue}</span>
+              </label>
+            ))}
+          </div>
+          {question.labels && (
+            <div className="flex justify-between text-xs text-muted-foreground">
+              <span>{question.labels[1]}</span>
+              <span>{question.labels[3]}</span>
+              <span>{question.labels[5]}</span>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium text-gray-800">
-        {question.text}
+      <h3 className="text-lg font-medium text-foreground">
+        {question.question}
       </h3>
       
-      <RadioGroup
-        value={value?.toString() || ""}
-        onValueChange={handleValueChange}
-        className="grid grid-cols-2 md:grid-cols-4 gap-4"
-      >
-        {scaleLabels.map((label, index) => {
-          const optionValue = (index + 1).toString();
-          const isSelected = value === (index + 1);
-          return (
-            <div key={optionValue} className="flex items-center space-x-2">
-              <RadioGroupItem 
-                value={optionValue}
-                id={`${question.id}-${optionValue}`}
-                className="sr-only"
-              />
-              <Label
-                htmlFor={`${question.id}-${optionValue}`}
-                className={cn(
-                  "flex-1 p-4 text-center border-2 rounded-lg cursor-pointer transition-all duration-200 hover:border-beacon-400 hover:bg-beacon-50",
-                  isSelected 
-                    ? "border-beacon-500 bg-beacon-100 text-beacon-800 shadow-md ring-2 ring-beacon-200 transform scale-105" 
-                    : "border-gray-200 bg-white hover:shadow-sm"
-                )}
-              >
-                <div className={cn(
-                  "font-semibold text-lg mb-1",
-                  isSelected ? "text-beacon-700" : "text-gray-700"
-                )}>
-                  {index + 1}
-                </div>
-                <div className={cn(
-                  "text-xs leading-tight",
-                  isSelected ? "text-beacon-600" : "text-gray-600"
-                )}>
-                  {label}
-                </div>
-              </Label>
-            </div>
-          );
-        })}
-      </RadioGroup>
+      {renderQuestion()}
     </div>
   );
 }
