@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { QuickActionsToProgress } from "@/components/layout/QuickActionsToProgress";
+import { QuickAccessWidget } from "../guide/QuickAccessWidget";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
 
@@ -135,6 +136,7 @@ export function DashboardContent() {
         
         <div className="space-y-6">
           <RecentWins />
+          <QuickAccessWidget />
           <TopPriorities />
           <MoodEnergySnapshot />
           <BrainGameQuickStart />
