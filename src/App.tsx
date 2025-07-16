@@ -30,14 +30,15 @@ function App() {
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/founders-story" element={<FoundersMemoryStory />} />
               <Route path="/purchase" element={<InAppPurchase />} />
-              <Route
-                path="/dashboard"
-                element={
-                  <ProtectedRoute requireAuth={false}>
-                    <Dashboard />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/goals" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/gratitude" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/analytics" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/brain-games" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/support" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+              <Route path="/settings" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
               <Route
                 path="/onboarding"
                 element={
