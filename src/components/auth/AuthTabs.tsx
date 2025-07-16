@@ -42,7 +42,7 @@ export const AuthTabs = ({
             </TabsList>
 
             <TabsContent value="signin">
-              <SignInForm />
+              <SignInForm onForgotPassword={onForgotPassword} />
             </TabsContent>
 
             <TabsContent value="signup">

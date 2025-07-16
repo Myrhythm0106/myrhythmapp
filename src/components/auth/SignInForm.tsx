@@ -8,7 +8,11 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
 import { PasswordInput } from './PasswordInput';
 
-export default function SignInForm() {
+interface SignInFormProps {
+  onForgotPassword?: () => void;
+}
+
+export default function SignInForm({ onForgotPassword }: SignInFormProps) {
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -99,6 +103,19 @@ export default function SignInForm() {
               autoComplete="current-password"
             />
           </div>
+        </div>
+
+        <div className="flex items-center justify-end">
+          {onForgotPassword && (
+            <Button
+              type="button"
+              variant="link"
+              onClick={onForgotPassword}
+              className="text-sm text-purple-600 hover:text-purple-700 p-0 h-auto"
+            >
+              Forgot Password?
+            </Button>
+          )}
         </div>
 
         <Button 
