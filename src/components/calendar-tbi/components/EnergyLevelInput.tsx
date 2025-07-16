@@ -7,11 +7,12 @@ interface EnergyLevelInputProps {
   currentLevel?: EnergyLevel;
   onLevelChange: (level: EnergyLevel) => void;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 const energyEmojis = {
   1: '😴',
-  2: '😑',
+  2: '😑', 
   3: '😊',
   4: '😄',
   5: '🚀'
@@ -20,7 +21,7 @@ const energyEmojis = {
 const energyLabels = {
   1: 'Very Low',
   2: 'Low',
-  3: 'Okay',
+  3: 'Okay', 
   4: 'Good',
   5: 'Great'
 };
@@ -33,7 +34,41 @@ const energyColors = {
   5: 'bg-blue-100 border-blue-300'
 };
 
-export function EnergyLevelInput({ currentLevel, onLevelChange, disabled = false }: EnergyLevelInputProps) {
+export function EnergyLevelInput({ currentLevel, onLevelChange, disabled = false, compact = false }: EnergyLevelInputProps) {
+  if (compact) {
+    return (
+      <div className="flex-1">
+        <div className="text-center mb-2">
+          <h3 className="text-sm font-medium text-foreground">Energy Level</h3>
+          <p className="text-xs text-muted-foreground">Rate your energy</p>
+        </div>
+        
+        <div className="flex justify-center gap-1">
+          {([1, 2, 3, 4, 5] as EnergyLevel[]).map((level) => (
+            <button
+              key={level}
+              onClick={() => !disabled && onLevelChange(level)}
+              disabled={disabled}
+              className={`
+                p-2 rounded-lg border transition-all duration-200 min-w-[40px]
+                ${currentLevel === level 
+                  ? `${energyColors[level]} scale-105 shadow-sm` 
+                  : 'bg-background border-border hover:bg-accent'
+                }
+                ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}
+              `}
+            >
+              <div className="text-lg">{energyEmojis[level]}</div>
+              <div className="text-xs font-medium text-foreground">
+                {level}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Card className="p-4 bg-gradient-to-r from-blue-50 to-purple-50">
       <div className="text-center mb-3">
