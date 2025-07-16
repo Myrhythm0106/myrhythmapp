@@ -155,14 +155,22 @@ export function DynamicSidebar({ isCollapsed }: DynamicSidebarProps) {
           </div>
         </div>
 
-        {/* Progress Levels Display - Only show when sidebar is expanded */}
-        {!isCollapsed && <ProgressLevelsDisplay />}
-
-        {/* Legacy Progress Hint - Show only if user hasn't seen the new display */}
-        {!isCollapsed && !nextUnlockItem && renderProgressHint()}
-
         {/* Navigation */}
         <nav className="flex-1 space-y-1 p-2 overflow-y-auto">
+          {/* Progress Levels Display - Only show when sidebar is expanded */}
+          {!isCollapsed && (
+            <div className="mb-4">
+              <ProgressLevelsDisplay />
+            </div>
+          )}
+
+          {/* Legacy Progress Hint - Show only if user hasn't seen the new display */}
+          {!isCollapsed && !nextUnlockItem && (
+            <div className="mb-4">
+              {renderProgressHint()}
+            </div>
+          )}
+
           {/* Engagement Level Badge */}
           {!isCollapsed && (
             <div className="px-3 py-2 mb-2">
