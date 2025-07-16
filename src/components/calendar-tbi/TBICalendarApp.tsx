@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayViewTBI } from './views/DayViewTBI';
 import { WeekViewTBI } from './views/WeekViewTBI';
 import { MonthViewTBI } from './views/MonthViewTBI';
+import { DayDetailsModal } from './components/DayDetailsModal';
 import { TBIEvent, EnergyLevel, DayData, CalendarSettings } from './types/calendarTypes';
 import { toast } from 'sonner';
 import { usePomodoro } from '@/contexts/PomodoroContext';
@@ -66,6 +67,8 @@ export function TBICalendarApp() {
 
   const [activeTab, setActiveTab] = useState('day');
   const [userRole] = useState<'individual' | 'caregiver'>('individual');
+  const [showDayDetails, setShowDayDetails] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const { isRunning, timeLeft, currentSession, startTimer, pauseTimer, resetTimer } = usePomodoro();
 
   const handleEventComplete = (eventId: string) => {
@@ -103,11 +106,12 @@ export function TBICalendarApp() {
   };
 
   const handleDayClick = (date: Date) => {
-    setDayData(prev => ({
-      ...prev,
-      date: date
-    }));
-    setActiveTab('day');
+    setSelectedDate(date);
+    setShowDayDetails(true);
+  };
+
+  const handleDayDetailsClose = () => {
+    setShowDayDetails(false);
   };
 
   return (
@@ -228,6 +232,14 @@ export function TBICalendarApp() {
           </TabsContent>
         </div>
       </Tabs>
+
+      {/* Day Details Modal */}
+      <DayDetailsModal
+        isOpen={showDayDetails}
+        onClose={handleDayDetailsClose}
+        selectedDate={selectedDate}
+        events={dayData.events}
+      />
     </div>
   );
 }
