@@ -18,62 +18,71 @@ import {
 export function Memory8StepFrameworkSection() {
   const navigate = useNavigate();
   
+  // MYRHYTHM Framework - Empowering Memory Recovery
   const steps = [
     {
       number: 1,
-      title: "Memory-Safe Morning",
-      icon: Clock,
-      description: "Start each day with gentle routines that don't overwhelm your cognitive load",
-      memorySpecific: "Visual cues, not complex lists"
+      letter: "M",
+      title: "MINDSET - Memory-Aware Foundation",
+      icon: Brain,
+      description: "Build cognitive confidence and self-awareness as your foundation",
+      memorySpecific: "Start with self-compassion and realistic expectations"
     },
     {
       number: 2,
-      title: "Energy Mapping",
+      letter: "Y", 
+      title: "YIELD - Acknowledge Your Reality",
       icon: Heart,
-      description: "Track when your mind is sharpest and when it needs rest",
-      memorySpecific: "Plan around your brain's natural rhythms"
+      description: "Honor where you are in your recovery journey without judgment",
+      memorySpecific: "Accept your current abilities while planning growth"
     },
     {
       number: 3,
-      title: "Micro-Priorities",
-      icon: Target,
-      description: "Break big goals into memory-friendly, bite-sized pieces",
-      memorySpecific: "One clear focus at a time"
+      letter: "R",
+      title: "RESTORE - Rhythm-Based Energy",
+      icon: Clock,
+      description: "Map your cognitive peaks and rest periods to optimize your day",
+      memorySpecific: "Work with your brain's natural energy patterns"
     },
     {
       number: 4,
-      title: "Support Circle",
+      letter: "H",
+      title: "HARNESS - Hope Through Community",
       icon: Users,
-      description: "Keep family in the loop without making them your full-time reminder system",
-      memorySpecific: "Independence with safety net"
+      description: "Build your circle of care and maintain your independence",
+      memorySpecific: "Support systems that empower, not enable"
     },
     {
       number: 5,
-      title: "Cognitive Strengthening",
-      icon: Brain,
-      description: "Brain exercises designed for recovery, not performance pressure",
-      memorySpecific: "Gentle progress, celebrating small wins"
+      letter: "Y",
+      title: "YIELD - Your Victories Matter",
+      icon: Trophy,
+      description: "Celebrate every step forward, no matter how small",
+      memorySpecific: "Progress tracking that builds confidence"
     },
     {
       number: 6,
-      title: "Memory Anchors",
-      icon: Calendar,
-      description: "Create reliable touchpoints throughout your day",
-      memorySpecific: "External memory you can trust"
+      letter: "T",
+      title: "TAKE - Transform Daily Experience",
+      icon: Target,
+      description: "Reclaim agency in your life with reliable memory anchors",
+      memorySpecific: "External memory systems you can trust"
     },
     {
       number: 7,
-      title: "Progress Celebration",
-      icon: Trophy,
-      description: "Acknowledge every step forward, no matter how small",
-      memorySpecific: "Rebuilding confidence one win at a time"
+      letter: "H",
+      title: "HEAL - Hope & Growth Forward",
+      icon: Sparkles,
+      description: "Gentle brain exercises that build cognitive resilience",
+      memorySpecific: "Recovery-focused cognitive enhancement"
     },
     {
       number: 8,
-      title: "Identity Restoration",
-      icon: Sparkles,
-      description: "Rediscover who you are beyond your memory challenges",
-      memorySpecific: "You are more than your diagnosis"
+      letter: "M",
+      title: "MULTIPLY - Mission to Inspire",
+      icon: Calendar,
+      description: "Become an advocate and share your journey to inspire others",
+      memorySpecific: "Transform your experience into hope for others"
     }
   ];
 
@@ -85,8 +94,8 @@ export function Memory8StepFrameworkSection() {
           Exclusive to Memory-First Users
         </Badge>
         
-        <h2 className="text-3xl md:text-4xl font-bold">
-          The 8-Step Memory-First Framework
+        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+          The MYRHYTHM Framework
         </h2>
         
         <p className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed">
@@ -95,32 +104,32 @@ export function Memory8StepFrameworkSection() {
         </p>
       </div>
 
-      {/* Framework Grid */}
+      {/* MYRHYTHM Framework Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {steps.map((step, index) => (
-          <Card key={index} className="relative group hover:shadow-lg transition-shadow border-l-4 border-l-blue-200 hover:border-l-blue-400">
+          <Card key={index} className="relative group hover:shadow-lg transition-shadow border-l-4 border-l-purple-200 hover:border-l-purple-400 bg-gradient-to-br from-white via-purple-50/10 to-blue-50/15">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3 mb-2">
-                <div className="bg-blue-100 p-2 rounded-lg group-hover:bg-blue-200 transition-colors">
-                  <step.icon className="h-5 w-5 text-blue-600" />
+                <div className="bg-gradient-to-r from-purple-100 via-blue-100 to-teal-100 p-2 rounded-lg group-hover:from-purple-200 group-hover:via-blue-200 group-hover:to-teal-200 transition-colors">
+                  <step.icon className="h-5 w-5 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent" />
                 </div>
-                <Badge variant="secondary" className="text-xs">
-                  Step {step.number}
+                <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-50 via-blue-50 to-teal-50 text-purple-700">
+                  {step.letter}
                 </Badge>
               </div>
-              <CardTitle className="text-lg leading-tight">
+              <CardTitle className="text-lg leading-tight bg-gradient-to-r from-purple-700 via-blue-700 to-teal-700 bg-clip-text text-transparent">
                 {step.title}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm text-gray-700 leading-relaxed">
                 {step.description}
               </p>
-              <div className="bg-blue-50 p-3 rounded-md border-l-2 border-l-blue-300">
-                <p className="text-xs font-medium text-blue-700">
-                  Memory-First Difference:
+              <div className="bg-gradient-to-r from-purple-50/60 via-blue-50/50 to-teal-50/60 p-3 rounded-md border-l-2 border-l-purple-300">
+                <p className="text-xs font-medium bg-gradient-to-r from-purple-700 via-blue-700 to-teal-700 bg-clip-text text-transparent">
+                  Memory-First Approach:
                 </p>
-                <p className="text-xs text-blue-600 mt-1">
+                <p className="text-xs text-gray-600 mt-1">
                   {step.memorySpecific}
                 </p>
               </div>
@@ -130,7 +139,7 @@ export function Memory8StepFrameworkSection() {
       </div>
 
       {/* Comparison Box */}
-      <div className="bg-gradient-to-r from-amber-50 to-orange-50 p-8 rounded-lg border border-amber-200">
+      <div className="bg-gradient-to-r from-purple-50/40 via-blue-50/30 to-teal-50/40 p-8 rounded-lg border border-purple-200/50">
         <h3 className="text-2xl font-semibold mb-6 text-center">
           Why Other Apps Fail Memory-Challenged Brains
         </h3>
@@ -207,9 +216,9 @@ export function Memory8StepFrameworkSection() {
         <Button 
           size="lg" 
           onClick={() => navigate("/onboarding")}
-          className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6"
+          className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-lg px-8 py-6 shadow-lg"
         >
-          Start My 8-Step Journey
+          Start My MYRHYTHM Journey
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>

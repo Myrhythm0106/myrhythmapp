@@ -26,9 +26,9 @@ export function FloatingRegisterButton({
     return null;
   }
 
-  // Don't show if user is already logged in (basic check)
-  const isLoggedIn = localStorage.getItem("myrhythm_onboarding_complete") === "true";
-  if (!forceShow && isLoggedIn) {
+  // Don't show if user has completed onboarding (persistent until registration complete)
+  const isRegistered = localStorage.getItem("myrhythm_onboarding_complete") === "true";
+  if (!forceShow && isRegistered) {
     return null;
   }
 
@@ -83,7 +83,7 @@ export function FloatingRegisterButton({
 
   return (
     <div className={cn(
-      "fixed z-50 animate-fade-in",
+      "fixed z-50 animate-fade-in transition-all duration-300",
       isMobile ? "bottom-6 right-6" : "bottom-8 right-8",
       className
     )}>
@@ -92,7 +92,7 @@ export function FloatingRegisterButton({
         size={isMobile ? "lg" : "lg"}
         variant={config.buttonVariant}
         className={cn(
-          "rounded-full text-base font-medium flex items-center gap-3 hover:scale-105 border-2 border-white/20 backdrop-blur-sm group relative overflow-hidden shadow-2xl hover:shadow-purple-500/20",
+          "rounded-full text-base font-medium flex items-center gap-3 hover:scale-105 border-2 border-white/30 backdrop-blur-sm group relative overflow-hidden shadow-2xl hover:shadow-purple-300/40 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 pulse",
           isMobile ? "px-6 py-4" : "px-8 py-6"
         )}
       >

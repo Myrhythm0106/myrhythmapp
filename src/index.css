@@ -14,13 +14,13 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    /* Primary: Subtle warm amber/gold - maximum 30% saturation for professional touches */
-    --primary: 42 30% 65%;
-    --primary-foreground: 42 15% 15%;
+    /* Primary: Bright, empowering purple-blue gradient */
+    --primary: 250 70% 65%;
+    --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Soft, barely-there tones */
-    --secondary: 48 15% 95%;
-    --secondary-foreground: 45 25% 25%;
+    /* Secondary: Bright, uplifting tones */
+    --secondary: 250 40% 95%;
+    --secondary-foreground: 250 50% 25%;
 
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;

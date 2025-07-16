@@ -13,62 +13,62 @@ interface MyRhythmFrameworkDisplayProps {
 }
 
 export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFrameworkDisplayProps) {
-  // Memory-enhanced 8 steps of MYRHYTHM
+  // MYRHYTHM Framework - Memory-First Approach
   const rhythmSteps: RhythmStep[] = [
     { 
       letter: 'M', 
-      word: 'Memory', 
-      description: 'Moment of Impact',
-      memoryFocus: 'Memory Baseline & Assessment'
+      word: 'MINDSET', 
+      description: 'Memory-Aware Mindset Foundation',
+      memoryFocus: 'Build cognitive confidence & self-awareness'
     },
     { 
       letter: 'Y', 
       word: 'Yield', 
-      description: 'Yield to the Fog',
-      memoryFocus: 'Memory Fog Recognition'
+      description: 'Acknowledge Your Current Reality',
+      memoryFocus: 'Honor where you are without judgment'
     },
     { 
       letter: 'R', 
-      word: 'Reality', 
-      description: 'Reckon with Reality',
-      memoryFocus: 'Memory Pattern Awareness'
+      word: 'Restore', 
+      description: 'Rhythm-Based Energy Management',
+      memoryFocus: 'Work with your brain\'s natural patterns'
     },
     { 
       letter: 'H', 
       word: 'Harness', 
-      description: 'Harness Support',
-      memoryFocus: 'Memory Support Systems'
+      description: 'Hope Through Community Support',
+      memoryFocus: 'Build your empowering support network'
     },
     { 
       letter: 'Y', 
       word: 'Yield', 
-      description: 'Yield to Progress',
-      memoryFocus: 'Memory Progress Tracking'
+      description: 'Your Small Victories Matter',
+      memoryFocus: 'Celebrate every step of progress'
     },
     { 
       letter: 'T', 
       word: 'Take', 
-      description: 'Take Back Control',
-      memoryFocus: 'Memory Empowerment'
+      description: 'Transform Your Daily Experience',
+      memoryFocus: 'Reclaim agency with memory anchors'
     },
     { 
       letter: 'H', 
       word: 'Heal', 
-      description: 'Heal Forward',
-      memoryFocus: 'Memory Growth & Mastery'
+      description: 'Hope, Growth & Cognitive Strengthening',
+      memoryFocus: 'Gentle exercises that build resilience'
     },
     { 
       letter: 'M', 
       word: 'Multiply', 
-      description: 'Multiply the Mission',
-      memoryFocus: 'Memory Advocacy & Sharing'
+      description: 'Mission to Share & Inspire',
+      memoryFocus: 'Become an advocate for your journey'
     }
   ];
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-8 rounded-2xl">
-      <h2 className="text-2xl font-bold text-gray-800 mb-2">The Memory-First MyRhythm Framework</h2>
-      <p className="text-gray-600 text-sm mb-6">Each phase strengthens your memory foundation while building other life skills</p>
+    <div className="bg-gradient-to-r from-purple-50/80 via-blue-50/60 to-teal-50/70 p-8 rounded-2xl border border-purple-200/30">
+      <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent mb-2">The MYRHYTHM Framework</h2>
+      <p className="text-gray-700 text-sm mb-6">Each phase empowers your memory recovery and builds unstoppable momentum</p>
       
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 items-center">
         {rhythmSteps.map((step, index) => (
