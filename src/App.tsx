@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import MemoryFirstIndex from "./pages/MemoryFirstIndex";
 import Dashboard from "./pages/Dashboard";
@@ -23,9 +24,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <SubscriptionProvider>
-          <TooltipProvider>
-          <Toaster />
-          <BrowserRouter>
+          <PomodoroProvider>
+            <TooltipProvider>
+            <Toaster />
+            <BrowserRouter>
             <Routes>
               <Route path="/" element={<MemoryFirstIndex />} />
               <Route path="/auth" element={<Auth />} />
@@ -54,8 +56,9 @@ function App() {
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
-      </SubscriptionProvider>
-    </AuthProvider>
+          </PomodoroProvider>
+        </SubscriptionProvider>
+      </AuthProvider>
   </QueryClientProvider>
   );
 }
