@@ -89,23 +89,25 @@ export function BrainHealthCalendarView({
                   Goals
                 </TabsTrigger>
               </TabsList>
-            </Tabs>
             
-            {view === "goals" && (
-              <Button 
-                size="sm"
-                onClick={onNewGoal}
-                className="bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 hover:from-clarity-teal-600 hover:to-clarity-teal-700"
-              >
-                <Target className="h-4 w-4 mr-1" />
-                New Goal
-              </Button>
-            )}
+              {view === "goals" && (
+                <Button 
+                  size="sm"
+                  onClick={onNewGoal}
+                  className="bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 hover:from-clarity-teal-600 hover:to-clarity-teal-700 ml-4"
+                >
+                  <Target className="h-4 w-4 mr-1" />
+                  New Goal
+                </Button>
+              )}
+            </Tabs>
           </div>
           
+          
+          {/* DIRECT CONDITIONAL RENDERING - NO TABS CONTENT */}
           <div className="min-h-[400px] relative">
-            <TabsContent value="month" className="mt-0">
-              <div className="flex justify-center">
+            {view === "month" && (
+              <div className="flex justify-center animate-fade-in">
                 <CalendarComponent
                   mode="single"
                   selected={selectedDate}
@@ -113,18 +115,22 @@ export function BrainHealthCalendarView({
                   className="rounded-md border border-memory-emerald-200 bg-white/80 backdrop-blur-sm"
                 />
               </div>
-            </TabsContent>
+            )}
             
-            <TabsContent value="day" className="mt-0">
-              {selectedDate && <DayView date={selectedDate} events={[]} />}
-            </TabsContent>
+            {view === "day" && selectedDate && (
+              <div className="animate-fade-in">
+                <DayView date={selectedDate} events={[]} />
+              </div>
+            )}
             
-            <TabsContent value="week" className="mt-0">
-              {selectedDate && <WeekView date={selectedDate} events={[]} />}
-            </TabsContent>
+            {view === "week" && selectedDate && (
+              <div className="animate-fade-in">
+                <WeekView date={selectedDate} events={[]} />
+              </div>
+            )}
 
-            <TabsContent value="year" className="mt-0">
-              {selectedDate && (
+            {view === "year" && selectedDate && (
+              <div className="animate-fade-in">
                 <YearView 
                   currentDate={selectedDate} 
                   events={[]} 
@@ -135,19 +141,19 @@ export function BrainHealthCalendarView({
                   }}
                   onMonthClick={handleMonthClick}
                 />
-              )}
-            </TabsContent>
+              </div>
+            )}
 
-            <TabsContent value="goals" className="mt-0">
-              <div className="space-y-4">
+            {view === "goals" && (
+              <div className="space-y-4 animate-fade-in">
                 <div className="text-center py-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-clarity-teal-400 to-brain-health-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-memory-pulse">
+                  <div className="w-16 h-16 bg-gradient-to-br from-clarity-teal-400 to-brain-health-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
                     <Brain className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-brain-xl font-semibold bg-gradient-to-r from-clarity-teal-600 to-brain-health-600 bg-clip-text text-transparent mb-2">
+                  <h3 className="text-xl font-semibold bg-gradient-to-r from-clarity-teal-600 to-brain-health-600 bg-clip-text text-transparent mb-2">
                     Your Goal Journey
                   </h3>
-                  <p className="text-brain-base text-gray-600 mb-4">
+                  <p className="text-base text-gray-600 mb-4">
                     Every small step builds new neural pathways. Your brain is constantly growing and adapting.
                   </p>
                   <Badge className="bg-brain-health-100 text-brain-health-700 border-brain-health-200">
@@ -156,7 +162,7 @@ export function BrainHealthCalendarView({
                 </div>
                 <GoalsView />
               </div>
-            </TabsContent>
+            )}
 
             {/* Interactive Calendar Actions for all calendar views */}
             {/* Interactive Calendar Actions and Event Creation */}
