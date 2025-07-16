@@ -1,19 +1,9 @@
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { 
-  Clock, 
-  Heart, 
-  Target, 
-  Users, 
-  Brain, 
-  Calendar, 
-  Trophy, 
-  Sparkles,
-  ArrowRight
-} from "lucide-react";
+import { Brain, ArrowRight } from "lucide-react";
+import { ExpandableMyRhythmCards } from "@/components/shared/ExpandableMyRhythmCards";
 
 export function Memory8StepFrameworkSection() {
   const navigate = useNavigate();
@@ -21,68 +11,68 @@ export function Memory8StepFrameworkSection() {
   // MYRHYTHM Framework - Empowering Memory Recovery
   const steps = [
     {
-      number: 1,
       letter: "M",
-      title: "MINDSET - Memory-Aware Foundation",
-      icon: Brain,
-      description: "Build cognitive confidence and self-awareness as your foundation",
-      memorySpecific: "Start with self-compassion and realistic expectations"
+      word: "MINDSET",
+      phase: "Memory-Aware Foundation",
+      description: "Build cognitive confidence and self-awareness as your foundation for growth and empowerment.",
+      memoryFocus: "Start with self-compassion and realistic expectations",
+      icon: "🧠"
     },
     {
-      number: 2,
       letter: "Y", 
-      title: "YIELD - Acknowledge Your Reality",
-      icon: Heart,
-      description: "Honor where you are in your recovery journey without judgment",
-      memorySpecific: "Accept your current abilities while planning growth"
+      word: "Yield",
+      phase: "Acknowledge Your Reality",
+      description: "Honor where you are in your recovery journey without judgment—this is your starting point for transformation.",
+      memoryFocus: "Accept your current abilities while planning growth",
+      icon: "🌟"
     },
     {
-      number: 3,
       letter: "R",
-      title: "RESTORE - Rhythm-Based Energy",
-      icon: Clock,
-      description: "Map your cognitive peaks and rest periods to optimize your day",
-      memorySpecific: "Work with your brain's natural energy patterns"
+      word: "Restore",
+      phase: "Rhythm-Based Energy",
+      description: "Map your cognitive peaks and rest periods to work with your brain's natural energy patterns.",
+      memoryFocus: "Work with your brain's natural energy patterns",
+      icon: "⚡"
     },
     {
-      number: 4,
       letter: "H",
-      title: "HARNESS - Hope Through Community",
-      icon: Users,
-      description: "Build your circle of care and maintain your independence",
-      memorySpecific: "Support systems that empower, not enable"
+      word: "Harness",
+      phase: "Hope Through Community",
+      description: "Build your circle of care and maintain independence—support systems that empower, not enable.",
+      memoryFocus: "Support systems that empower, not enable",
+      icon: "💪"
     },
     {
-      number: 5,
       letter: "Y",
-      title: "YIELD - Your Victories Matter",
-      icon: Trophy,
-      description: "Celebrate every step forward, no matter how small",
-      memorySpecific: "Progress tracking that builds confidence"
+      word: "Yield",
+      phase: "Your Victories Matter",
+      description: "Celebrate every step forward, no matter how small—progress tracking that builds unstoppable confidence.",
+      memoryFocus: "Progress tracking that builds confidence",
+      icon: "🎉"
     },
     {
-      number: 6,
       letter: "T",
-      title: "TAKE - Transform Daily Experience",
-      icon: Target,
-      description: "Reclaim agency in your life with reliable memory anchors",
-      memorySpecific: "External memory systems you can trust"
+      word: "Take",
+      phase: "Transform Daily Experience",
+      description: "Reclaim agency in your life through reliable memory anchors and external systems you can trust.",
+      memoryFocus: "External memory systems you can trust",
+      icon: "✨"
     },
     {
-      number: 7,
       letter: "H",
-      title: "HEAL - Hope & Growth Forward",
-      icon: Sparkles,
-      description: "Gentle brain exercises that build cognitive resilience",
-      memorySpecific: "Recovery-focused cognitive enhancement"
+      word: "Heal",
+      phase: "Hope & Growth Forward",
+      description: "Gentle brain exercises that build resilience and recovery-focused cognitive enhancement.",
+      memoryFocus: "Recovery-focused cognitive enhancement",
+      icon: "🌈"
     },
     {
-      number: 8,
       letter: "M",
-      title: "MULTIPLY - Mission to Inspire",
-      icon: Calendar,
-      description: "Become an advocate and share your journey to inspire others",
-      memorySpecific: "Transform your experience into hope for others"
+      word: "Multiply",
+      phase: "Mission to Inspire",
+      description: "Transform your experience into hope for others—become an advocate and share your inspiring journey.",
+      memoryFocus: "Transform your experience into hope for others",
+      icon: "🌍"
     }
   ];
 
@@ -104,39 +94,12 @@ export function Memory8StepFrameworkSection() {
         </p>
       </div>
 
-      {/* MYRHYTHM Framework Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {steps.map((step, index) => (
-          <Card key={index} className="relative group hover:shadow-lg transition-shadow border-l-4 border-l-purple-200 hover:border-l-purple-400 bg-gradient-to-br from-white via-purple-50/10 to-blue-50/15">
-            <CardHeader className="pb-3">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="bg-gradient-to-r from-purple-100 via-blue-100 to-teal-100 p-2 rounded-lg group-hover:from-purple-200 group-hover:via-blue-200 group-hover:to-teal-200 transition-colors">
-                  <step.icon className="h-5 w-5 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent" />
-                </div>
-                <Badge variant="secondary" className="text-xs bg-gradient-to-r from-purple-50 via-blue-50 to-teal-50 text-purple-700">
-                  {step.letter}
-                </Badge>
-              </div>
-              <CardTitle className="text-lg leading-tight bg-gradient-to-r from-purple-700 via-blue-700 to-teal-700 bg-clip-text text-transparent">
-                {step.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-sm text-gray-700 leading-relaxed">
-                {step.description}
-              </p>
-              <div className="bg-gradient-to-r from-purple-50/60 via-blue-50/50 to-teal-50/60 p-3 rounded-md border-l-2 border-l-purple-300">
-                <p className="text-xs font-medium bg-gradient-to-r from-purple-700 via-blue-700 to-teal-700 bg-clip-text text-transparent">
-                  Memory-First Approach:
-                </p>
-                <p className="text-xs text-gray-600 mt-1">
-                  {step.memorySpecific}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* MYRHYTHM Framework Cards */}
+      <ExpandableMyRhythmCards 
+        steps={steps}
+        variant="framework"
+        showExpandAll={true}
+      />
 
       {/* Comparison Box */}
       <div className="bg-gradient-to-r from-purple-50/40 via-blue-50/30 to-teal-50/40 p-8 rounded-lg border border-purple-200/50">

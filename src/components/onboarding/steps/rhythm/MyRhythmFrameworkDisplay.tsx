@@ -1,5 +1,6 @@
 
 import React from "react";
+import { ExpandableMyRhythmCards } from "@/components/shared/ExpandableMyRhythmCards";
 
 interface RhythmStep {
   letter: string;
@@ -14,54 +15,70 @@ interface MyRhythmFrameworkDisplayProps {
 
 export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFrameworkDisplayProps) {
   // MYRHYTHM Framework - Memory-First Approach
-  const rhythmSteps: RhythmStep[] = [
+  const rhythmSteps = [
     { 
       letter: 'M', 
       word: 'MINDSET', 
-      description: 'Memory-Aware Mindset Foundation',
-      memoryFocus: 'Build cognitive confidence & self-awareness'
+      phase: 'Memory-Aware Mindset Foundation',
+      description: 'Build cognitive confidence and self-awareness as your foundation for growth and empowerment.',
+      memoryFocus: 'Build cognitive confidence & self-awareness',
+      icon: '🧠'
     },
     { 
       letter: 'Y', 
       word: 'Yield', 
-      description: 'Acknowledge Your Current Reality',
-      memoryFocus: 'Honor where you are without judgment'
+      phase: 'Acknowledge Your Current Reality',
+      description: 'Honor where you are in your recovery journey without judgment—this is your starting point for transformation.',
+      memoryFocus: 'Honor where you are without judgment',
+      icon: '🌟'
     },
     { 
       letter: 'R', 
       word: 'Restore', 
-      description: 'Rhythm-Based Energy Management',
-      memoryFocus: 'Work with your brain\'s natural patterns'
+      phase: 'Rhythm-Based Energy Management',
+      description: 'Map your cognitive peaks and rest periods to work with your brain\'s natural energy patterns.',
+      memoryFocus: 'Work with your brain\'s natural patterns',
+      icon: '⚡'
     },
     { 
       letter: 'H', 
       word: 'Harness', 
-      description: 'Hope Through Community Support',
-      memoryFocus: 'Build your empowering support network'
+      phase: 'Hope Through Community Support',
+      description: 'Build your circle of care and maintain independence—support systems that empower, not enable.',
+      memoryFocus: 'Build your empowering support network',
+      icon: '💪'
     },
     { 
       letter: 'Y', 
       word: 'Yield', 
-      description: 'Your Small Victories Matter',
-      memoryFocus: 'Celebrate every step of progress'
+      phase: 'Your Small Victories Matter',
+      description: 'Celebrate every step forward, no matter how small—progress tracking that builds unstoppable confidence.',
+      memoryFocus: 'Celebrate every step of progress',
+      icon: '🎉'
     },
     { 
       letter: 'T', 
       word: 'Take', 
-      description: 'Transform Your Daily Experience',
-      memoryFocus: 'Reclaim agency with memory anchors'
+      phase: 'Transform Your Daily Experience',
+      description: 'Reclaim agency in your life through reliable memory anchors and external systems you can trust.',
+      memoryFocus: 'Reclaim agency with memory anchors',
+      icon: '✨'
     },
     { 
       letter: 'H', 
       word: 'Heal', 
-      description: 'Hope, Growth & Cognitive Strengthening',
-      memoryFocus: 'Gentle exercises that build resilience'
+      phase: 'Hope, Growth & Cognitive Strengthening',
+      description: 'Gentle brain exercises that build resilience and recovery-focused cognitive enhancement.',
+      memoryFocus: 'Gentle exercises that build resilience',
+      icon: '🌈'
     },
     { 
       letter: 'M', 
       word: 'Multiply', 
-      description: 'Mission to Share & Inspire',
-      memoryFocus: 'Become an advocate for your journey'
+      phase: 'Mission to Share & Inspire',
+      description: 'Transform your experience into hope for others—become an advocate and share your inspiring journey.',
+      memoryFocus: 'Become an advocate for your journey',
+      icon: '🌍'
     }
   ];
 
@@ -70,27 +87,12 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
       <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent mb-2">The MYRHYTHM Framework</h2>
       <p className="text-gray-700 text-sm mb-6">Each phase empowers your memory recovery and builds unstoppable momentum</p>
       
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 items-center">
-        {rhythmSteps.map((step, index) => (
-          <div key={`${step.letter}-${index}`} className="flex flex-col items-center">
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-lg mb-2 ${
-              currentStepIndex === index
-                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 ring-4 ring-indigo-300' 
-                : 'bg-gradient-to-r from-gray-400 to-gray-500'
-            }`}>
-              {step.letter}
-            </div>
-            <span className="text-sm font-medium text-gray-700 text-center">{step.word}</span>
-            <span className="text-xs text-gray-500 text-center mt-1">{step.description}</span>
-            <span className="text-xs text-indigo-600 text-center mt-1 font-medium">{step.memoryFocus}</span>
-            {currentStepIndex === index && (
-              <div className="mt-2 text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
-                You are here
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
+      <ExpandableMyRhythmCards 
+        steps={rhythmSteps}
+        variant="onboarding"
+        showExpandAll={false}
+        className="mb-6"
+      />
       
       <div className="mt-6 p-4 bg-indigo-50 rounded-lg border border-indigo-200">
         <div className="flex items-center gap-2 mb-2">

@@ -1,8 +1,8 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Brain, Heart, Star, ChevronDown, Leaf } from "lucide-react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Brain, Heart, Star, Leaf } from "lucide-react";
+import { ExpandableMyRhythmCards } from "@/components/shared/ExpandableMyRhythmCards";
 
 export function MyRhythmIntro() {
   // Updated MYRHYTHM Framework - Empowering & Bright
@@ -123,73 +123,23 @@ export function MyRhythmIntro() {
         
         {/* Enhanced MYRHYTHM Framework Steps Visual */}
         <div className="bg-gradient-to-br from-white via-purple-50/40 to-blue-50/30 backdrop-blur-sm rounded-3xl p-10 shadow-2xl border border-purple-200/40 mb-12">
-          <h3 className="text-2xl font-bold mb-8 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent text-center">The 8 Steps of MYRHYTHM</h3>
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-6 mb-8">
-            {['M', 'Y', 'R', 'H', 'Y', 'T', 'H', 'M'].map((letter, index) => (
-              <div key={index} className="relative group">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 text-white rounded-2xl flex items-center justify-center font-bold text-lg shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
-                  {letter}
-                </div>
-                <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity animate-pulse"></div>
-              </div>
-            ))}
-          </div>
-          <p className="text-gray-700 text-center font-medium leading-relaxed">
-            A powerful pathway from challenge to empowerment, designed to help you discover and strengthen your unstoppable personal rhythm.
+          <h3 className="text-2xl font-bold mb-8 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent text-center">Explore the 8 Steps of MYRHYTHM</h3>
+          <p className="text-gray-700 text-center font-medium leading-relaxed mb-8">
+            Click any card to discover how each step empowers your memory recovery journey.
           </p>
+          
+          <ExpandableMyRhythmCards 
+            steps={frameworkSteps}
+            variant="landing"
+            showExpandAll={true}
+          />
+          
+          <div className="mt-10 p-6 bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 rounded-2xl border border-memory-emerald-200/50">
+            <p className="text-sm text-muted-foreground italic text-center font-light">
+              💡 <strong>Remember:</strong> Your journey through these steps isn't linear. You might find yourself revisiting earlier steps, and that's completely normal. MyRhythm is designed to meet you wherever you are in your journey.
+            </p>
+          </div>
         </div>
-
-        {/* Refined Framework Details */}
-        <Card className="border-0 shadow-xl bg-white/95 backdrop-blur-sm">
-          <CardContent className="p-8">
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="framework-details" className="border-0">
-                <AccordionTrigger className="text-xl font-light text-foreground hover:text-primary pb-6">
-                  <div className="flex items-center gap-3">
-                    <Leaf className="h-6 w-6 text-memory-emerald-600" />
-                    Explore the Complete 8-Step Framework
-                  </div>
-                </AccordionTrigger>
-                <AccordionContent>
-                  <div className="space-y-8 pt-6">
-                    <p className="text-muted-foreground mb-8 font-light leading-relaxed">
-                      Each step of MyRhythm represents a phase in your journey from challenge to empowerment. 
-                      Discover how this framework can guide your path to wellness.
-                    </p>
-                    
-                    <div className="grid gap-6">
-                      {frameworkSteps.map((step, index) => (
-                        <div key={index} className="flex gap-6 p-6 bg-gradient-to-r from-memory-emerald-50/50 to-clarity-teal-50/30 rounded-2xl border border-memory-emerald-100/50 hover:shadow-md transition-all duration-300">
-                          <div className="flex-shrink-0 flex flex-col items-center">
-                            <div className="w-14 h-14 bg-gradient-to-r from-primary to-brain-health-500 text-white rounded-xl flex items-center justify-center font-medium text-lg shadow-md">
-                              {step.letter}
-                            </div>
-                            <div className="text-2xl mt-2">{step.icon}</div>
-                          </div>
-                          <div className="flex-1">
-                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3">
-                              <h4 className="font-medium text-xl text-foreground">{step.word}</h4>
-                              <span className="text-sm text-brain-health-600 font-light">• {step.phase}</span>
-                            </div>
-                            <p className="text-muted-foreground leading-relaxed font-light">
-                              {step.description}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    <div className="mt-10 p-6 bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 rounded-2xl border border-memory-emerald-200/50">
-                      <p className="text-sm text-muted-foreground italic text-center font-light">
-                        💡 <strong>Remember:</strong> Your journey through these steps isn't linear. You might find yourself revisiting earlier steps, and that's completely normal. MyRhythm is designed to meet you wherever you are in your journey.
-                      </p>
-                    </div>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          </CardContent>
-        </Card>
       </div>
     </section>
   );
