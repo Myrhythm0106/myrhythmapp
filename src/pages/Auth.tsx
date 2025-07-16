@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { Brain, ArrowLeft } from "lucide-react";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
@@ -12,11 +11,26 @@ const Auth = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successEmail, setSuccessEmail] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   const from = (location.state as any)?.from?.pathname || "/dashboard";
+
+  // Check for password recovery parameters
+  useEffect(() => {
+    const type = searchParams.get('type');
+    const accessToken = searchParams.get('access_token');
+    
+    if (type === 'recovery' && accessToken) {
+      console.log('Password recovery detected in URL parameters');
+      // The auth state change will handle the recovery automatically
+      // Just show a message to the user
+      setShowForgotPassword(false);
+      setShowSuccessMessage(false);
+    }
+  }, [searchParams]);
 
   // Redirect authenticated users
   useEffect(() => {

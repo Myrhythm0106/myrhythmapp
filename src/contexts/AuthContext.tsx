@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -54,6 +53,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log('User signed out');
           toast.success('Successfully signed out!');
           setEmailVerificationStatus('unknown');
+        }
+
+        if (event === 'PASSWORD_RECOVERY') {
+          console.log('Password recovery event detected');
+          toast.success('You can now set your new password');
         }
       }
     );
@@ -173,8 +177,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting password reset for:', email);
       
+      // Use the current domain for the redirect URL
+      const currentDomain = window.location.origin;
+      const redirectUrl = `${currentDomain}/auth`;
+      
+      console.log('Password reset redirect URL:', redirectUrl);
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth`
+        redirectTo: redirectUrl
       });
       
       if (error) {
@@ -182,6 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         toast.error(error.message);
       } else {
         toast.success('Password reset email sent! Check your inbox for instructions.');
+        console.log('Password reset email sent successfully to:', email);
       }
       
       return { error };
