@@ -31,13 +31,13 @@ export function HeroSection() {
         </div>
 
         <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-          🧠 The Only Memory-First<br />
-          Life Rebuilding App
+          🧠 Unlock Your Brain's<br />
+          Amazing Potential
         </h1>
         
         <p className="text-xl md:text-2xl opacity-95 max-w-3xl leading-relaxed">
-          When memory fails, life doesn't have to. Rebuild your confidence, reclaim your independence, 
-          and reconnect with your family—one gentle step at a time.
+          Your brain is incredible and adaptive. Discover new pathways to confidence, independence, 
+          and deeper family connections. Your greatest chapters are ahead of you.
         </p>
 
         {/* Problem Statement */}
