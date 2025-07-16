@@ -1,8 +1,6 @@
-
 import React from "react";
 import { MemoryEffectsContainer } from "@/components/ui/memory-effects";
 import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -50,64 +48,68 @@ export function BrainHealthCalendarView({
     <MemoryEffectsContainer nodeCount={6} className="relative">
       <Card className="border-memory-emerald-200 bg-gradient-to-br from-memory-emerald-50/30 to-white">
         <CardContent className="pt-6">
-          <div className="mb-6 flex justify-between items-center">
-            <Tabs value={view} onValueChange={(v) => onViewChange(v as typeof view)} className="w-full">
-              <TabsList className="bg-white border border-memory-emerald-200">
-                <TabsTrigger 
-                  value="day" 
-                  className="data-[state=active]:bg-memory-emerald-100 data-[state=active]:text-memory-emerald-700"
-                >
-                  <Clock className="h-4 w-4 mr-1" />
-                  Day
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="week"
-                  className="data-[state=active]:bg-memory-emerald-100 data-[state=active]:text-memory-emerald-700"
-                >
-                  <Calendar className="h-4 w-4 mr-1" />
-                  Week
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="month"
-                  className="data-[state=active]:bg-memory-emerald-100 data-[state=active]:text-memory-emerald-700"
-                >
-                  <Calendar className="h-4 w-4 mr-1" />
-                  Month
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="year"
-                  className="data-[state=active]:bg-memory-emerald-100 data-[state=active]:text-memory-emerald-700"
-                >
-                  <Calendar className="h-4 w-4 mr-1" />
-                  Year
-                </TabsTrigger>
-                <TabsTrigger 
-                  value="goals"
-                  className="data-[state=active]:bg-clarity-teal-100 data-[state=active]:text-clarity-teal-700"
-                >
-                  <Target className="h-4 w-4 mr-1" />
-                  Goals
-                </TabsTrigger>
-              </TabsList>
-            
-              {view === "goals" && (
-                <Button 
-                  size="sm"
-                  onClick={onNewGoal}
-                  className="bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 hover:from-clarity-teal-600 hover:to-clarity-teal-700 ml-4"
-                >
-                  <Target className="h-4 w-4 mr-1" />
-                  New Goal
-                </Button>
-              )}
-            </Tabs>
+          {/* View Selector Buttons */}
+          <div className="mb-6 flex justify-center">
+            <div className="flex bg-white border border-memory-emerald-200 rounded-lg p-1">
+              <Button
+                variant={view === "day" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onViewChange("day")}
+                className="flex items-center gap-1"
+              >
+                <Clock className="h-4 w-4" />
+                Day
+              </Button>
+              <Button
+                variant={view === "week" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onViewChange("week")}
+                className="flex items-center gap-1"
+              >
+                <Calendar className="h-4 w-4" />
+                Week
+              </Button>
+              <Button
+                variant={view === "month" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onViewChange("month")}
+                className="flex items-center gap-1"
+              >
+                <Calendar className="h-4 w-4" />
+                Month
+              </Button>
+              <Button
+                variant={view === "year" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onViewChange("year")}
+                className="flex items-center gap-1"
+              >
+                <Calendar className="h-4 w-4" />
+                Year
+              </Button>
+              <Button
+                variant={view === "goals" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onViewChange("goals")}
+                className="flex items-center gap-1"
+              >
+                <Target className="h-4 w-4" />
+                Goals
+              </Button>
+            </div>
+          </div>
+
+          {/* Current View Indicator */}
+          <div className="text-center mb-4">
+            <Badge variant="outline" className="text-lg px-4 py-2">
+              Current View: {view.toUpperCase()}
+            </Badge>
           </div>
           
-          
-          {/* DIRECT CONDITIONAL RENDERING - NO TABS CONTENT */}
+          {/* Calendar Content */}
           <div className="min-h-[400px] relative">
             {view === "month" && (
-              <div className="flex justify-center animate-fade-in">
+              <div className="flex justify-center">
                 <CalendarComponent
                   mode="single"
                   selected={selectedDate}
@@ -117,22 +119,34 @@ export function BrainHealthCalendarView({
               </div>
             )}
             
-            {view === "day" && selectedDate && (
-              <div className="animate-fade-in">
-                <DayView date={selectedDate} events={[]} />
+            {view === "day" && (
+              <div className="text-center p-8">
+                <h3 className="text-xl font-semibold mb-4">Day View</h3>
+                <p className="text-muted-foreground mb-4">
+                  Selected Date: {selectedDate?.toLocaleDateString() || "No date selected"}
+                </p>
+                <DayView date={selectedDate || new Date()} events={[]} />
               </div>
             )}
             
-            {view === "week" && selectedDate && (
-              <div className="animate-fade-in">
-                <WeekView date={selectedDate} events={[]} />
+            {view === "week" && (
+              <div className="text-center p-8">
+                <h3 className="text-xl font-semibold mb-4">Week View</h3>
+                <p className="text-muted-foreground mb-4">
+                  Week of: {selectedDate?.toLocaleDateString() || "No date selected"}
+                </p>
+                <WeekView date={selectedDate || new Date()} events={[]} />
               </div>
             )}
 
-            {view === "year" && selectedDate && (
-              <div className="animate-fade-in">
+            {view === "year" && (
+              <div className="text-center p-8">
+                <h3 className="text-xl font-semibold mb-4">Year View</h3>
+                <p className="text-muted-foreground mb-4">
+                  Year: {selectedDate?.getFullYear() || new Date().getFullYear()}
+                </p>
                 <YearView 
-                  currentDate={selectedDate} 
+                  currentDate={selectedDate || new Date()} 
                   events={[]} 
                   onDayClick={(clickedDate) => {
                     setSelectedDate(clickedDate);
@@ -145,87 +159,87 @@ export function BrainHealthCalendarView({
             )}
 
             {view === "goals" && (
-              <div className="space-y-4 animate-fade-in">
+              <div className="space-y-4">
                 <div className="text-center py-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-clarity-teal-400 to-brain-health-400 rounded-full flex items-center justify-center mx-auto mb-4 animate-pulse">
+                  <div className="w-16 h-16 bg-gradient-to-br from-clarity-teal-400 to-clarity-teal-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Brain className="h-8 w-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold bg-gradient-to-r from-clarity-teal-600 to-brain-health-600 bg-clip-text text-transparent mb-2">
+                  <h3 className="text-xl font-semibold bg-gradient-to-r from-clarity-teal-600 to-clarity-teal-700 bg-clip-text text-transparent mb-2">
                     Your Goal Journey
                   </h3>
                   <p className="text-base text-gray-600 mb-4">
                     Every small step builds new neural pathways. Your brain is constantly growing and adapting.
                   </p>
-                  <Badge className="bg-brain-health-100 text-brain-health-700 border-brain-health-200">
-                    Memory1st Goal Planning
-                  </Badge>
+                  <Button onClick={onNewGoal} className="mt-4">
+                    <Target className="h-4 w-4 mr-2" />
+                    Create New Goal
+                  </Button>
                 </div>
                 <GoalsView />
               </div>
             )}
-
-            {/* Interactive Calendar Actions for all calendar views */}
-            {/* Interactive Calendar Actions and Event Creation */}
-            {view !== "goals" && (
-              <>
-                <InteractiveCalendarActions
-                  selectedDate={selectedDate}
-                  selectedTime={selectedTime}
-                  onActionCreate={handleActionCreate}
-                  view={view}
-                />
-                
-                {/* Enhanced Day View with Event Details and Watchers */}
-                {view === "day" && selectedDate && (
-                  <div className="mt-4 p-4 bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 rounded-lg border">
-                    <h3 className="font-semibold text-lg mb-2">
-                      Day Details - {selectedDate.toLocaleDateString()}
-                    </h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Add events, set reminders, and invite watchers from your accountability circle
-                    </p>
-                    
-                    {/* Quick Action Buttons */}
-                    <div className="flex gap-2 flex-wrap">
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleActionCreate({ 
-                          type: 'event', 
-                          date: selectedDate,
-                          watchers: [] 
-                        })}
-                      >
-                        Add Event
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleActionCreate({ 
-                          type: 'reminder', 
-                          date: selectedDate,
-                          watchers: [] 
-                        })}
-                      >
-                        Set Reminder
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => handleActionCreate({ 
-                          type: 'task', 
-                          date: selectedDate,
-                          watchers: [] 
-                        })}
-                      >
-                        Add Task
-                      </Button>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
           </div>
+
+          {/* Interactive Calendar Actions for all calendar views */}
+          {view !== "goals" && (
+            <>
+              <InteractiveCalendarActions
+                selectedDate={selectedDate}
+                selectedTime={selectedTime}
+                onActionCreate={handleActionCreate}
+                view={view}
+              />
+              
+              {/* Enhanced Day View with Event Details and Watchers */}
+              {view === "day" && selectedDate && (
+                <div className="mt-4 p-4 bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 rounded-lg border">
+                  <h3 className="font-semibold text-lg mb-2">
+                    Day Details - {selectedDate.toLocaleDateString()}
+                  </h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Add events, set reminders, and invite watchers from your accountability circle
+                  </p>
+                  
+                  {/* Quick Action Buttons */}
+                  <div className="flex gap-2 flex-wrap">
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleActionCreate({ 
+                        type: 'event', 
+                        date: selectedDate,
+                        watchers: [] 
+                      })}
+                    >
+                      Add Event
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleActionCreate({ 
+                        type: 'reminder', 
+                        date: selectedDate,
+                        watchers: [] 
+                      })}
+                    >
+                      Set Reminder
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => handleActionCreate({ 
+                        type: 'task', 
+                        date: selectedDate,
+                        watchers: [] 
+                      })}
+                    >
+                      Add Task
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </CardContent>
       </Card>
     </MemoryEffectsContainer>
