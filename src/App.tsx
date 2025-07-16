@@ -31,7 +31,7 @@ function App() {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/founders-story" element={<FoundersMemoryStory />} />
-              <Route path="/purchase" element={<InAppPurchase />} />
+              <Route path="/in-app-purchase" element={<InAppPurchase />} />
               <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
               <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
               <Route path="/goals" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />

@@ -120,22 +120,16 @@ export function BrainHealthCalendarView({
             )}
             
             {view === "day" && (
-              <div className="text-center p-8">
-                <h3 className="text-xl font-semibold mb-4">Day View</h3>
-                <p className="text-muted-foreground mb-4">
-                  Selected Date: {selectedDate?.toLocaleDateString() || "No date selected"}
-                </p>
-                <DayView date={selectedDate || new Date()} events={[]} />
+              <div className="animate-in fade-in-50 duration-200">
+                <DayView date={selectedDate || new Date()} />
               </div>
             )}
             
             {view === "week" && (
-              <div className="text-center p-8">
-                <h3 className="text-xl font-semibold mb-4">Week View</h3>
-                <p className="text-muted-foreground mb-4">
-                  Week of: {selectedDate?.toLocaleDateString() || "No date selected"}
-                </p>
-                <WeekView date={selectedDate || new Date()} events={[]} />
+              <div className="animate-in fade-in-50 duration-200">
+                <WeekView 
+                  date={selectedDate || new Date()} 
+                />
               </div>
             )}
 

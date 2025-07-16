@@ -91,26 +91,6 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
           
           <div className="flex items-center gap-4">
-            {/* Upgrade Button */}
-            <Button 
-              variant="premium" 
-              size="sm" 
-              onClick={handleUpgradeClick}
-              className="hidden md:flex px-4"
-            >
-              <Crown className="h-4 w-4 mr-2" />
-              Upgrade
-            </Button>
-            
-            {/* Mobile Upgrade Button */}
-            <Button 
-              variant="premium" 
-              size="icon" 
-              onClick={handleUpgradeClick}
-              className="md:hidden"
-            >
-              <Zap className="h-4 w-4" />
-            </Button>
             
             {/* Single Search Component */}
             <EnhancedGlobalSearch variant="input" size="sm" className="hidden md:flex max-w-xs" />
