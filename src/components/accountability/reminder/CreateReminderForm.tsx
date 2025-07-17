@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
 import { toast } from 'sonner';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { ReminderBasicInfo } from './ReminderBasicInfo';
 import { ReminderScheduling } from './ReminderScheduling';
 import { ReminderEscalation } from './ReminderEscalation';
+import { ReminderVolumeIntensity } from './ReminderVolumeIntensity';
 import { ReminderFormActions } from './ReminderFormActions';
 
 interface CreateReminderFormProps {
@@ -27,7 +29,13 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
     is_active: true,
     escalation_enabled: false,
     escalation_delay_minutes: 30,
-    escalation_members: [] as string[]
+    escalation_members: [] as string[],
+    // Volume and intensity settings
+    volume: 7,
+    vibration_enabled: true,
+    vibration_intensity: 'medium' as 'gentle' | 'medium' | 'strong',
+    alert_types: ['audio', 'vibration'],
+    voice_note_url: ''
   });
 
   const handleCreateReminder = async () => {
@@ -52,7 +60,12 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
         is_active: true,
         escalation_enabled: false,
         escalation_delay_minutes: 30,
-        escalation_members: []
+        escalation_members: [],
+        volume: 7,
+        vibration_enabled: true,
+        vibration_intensity: 'medium',
+        alert_types: ['audio', 'vibration'],
+        voice_note_url: ''
       });
       toast.success('Perfect! Your reminder is all set up to help you succeed! 🎉');
     } catch (error) {
@@ -69,10 +82,28 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
     }));
   };
 
+  const handleAlertTypeToggle = (type: string) => {
+    setNewReminder(prev => ({
+      ...prev,
+      alert_types: prev.alert_types.includes(type)
+        ? prev.alert_types.filter(t => t !== type)
+        : [...prev.alert_types, type]
+    }));
+  };
+
+  const handleVoiceNoteUpload = async (file: File) => {
+    // In a real implementation, you would upload to storage
+    // For now, we'll create a local URL
+    const url = URL.createObjectURL(file);
+    setNewReminder(prev => ({ ...prev, voice_note_url: url }));
+    toast.success('Voice note uploaded successfully!');
+  };
+
   const isFormValid = newReminder.title && newReminder.reminder_time;
 
   return (
-    <div className="grid gap-4 py-4 bg-gradient-to-br from-purple-50/30 via-blue-50/20 to-teal-50/30 rounded-lg p-4 border-l border-emerald-300/20">
+    <ScrollArea className="max-h-[70vh] w-full">
+      <div className="grid gap-4 py-4 bg-gradient-to-br from-purple-50/30 via-blue-50/20 to-teal-50/30 rounded-lg p-4 border-l border-emerald-300/20">
       <ReminderBasicInfo
         title={newReminder.title}
         description={newReminder.description}
@@ -105,11 +136,29 @@ export function CreateReminderForm({ onClose }: CreateReminderFormProps) {
         onDelayChange={(escalation_delay_minutes) => setNewReminder(prev => ({ ...prev, escalation_delay_minutes }))}
       />
 
-      <ReminderFormActions
-        onClose={onClose}
-        onSubmit={handleCreateReminder}
-        isValid={!!isFormValid}
+      <ReminderVolumeIntensity
+        volume={newReminder.volume}
+        vibrationEnabled={newReminder.vibration_enabled}
+        vibrationIntensity={newReminder.vibration_intensity}
+        alertTypes={newReminder.alert_types}
+        voiceNoteUrl={newReminder.voice_note_url}
+        onVolumeChange={(volume) => setNewReminder(prev => ({ ...prev, volume }))}
+        onVibrationToggle={(vibration_enabled) => setNewReminder(prev => ({ ...prev, vibration_enabled }))}
+        onVibrationIntensityChange={(vibration_intensity) => setNewReminder(prev => ({ ...prev, vibration_intensity }))}
+        onAlertTypeToggle={handleAlertTypeToggle}
+        onVoiceNoteUpload={handleVoiceNoteUpload}
       />
-    </div>
+
+      </div>
+      
+      {/* Sticky bottom actions */}
+      <div className="sticky bottom-0 bg-background/95 backdrop-blur-sm border-t p-4 mt-4">
+        <ReminderFormActions
+          onClose={onClose}
+          onSubmit={handleCreateReminder}
+          isValid={!!isFormValid}
+        />
+      </div>
+    </ScrollArea>
   );
 }

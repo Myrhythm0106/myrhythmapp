@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Users, Bell, Clock, AlertTriangle, Plus, Shield } from 'lucide-react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
 import { SupportCircleManager } from './SupportCircleManager';
@@ -45,8 +46,9 @@ export function AccountabilityDashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <ScrollArea className="h-[calc(100vh-8rem)] w-full">
+      <div className="space-y-6 p-1">
+        <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Accountability Hub</h1>
           <p className="text-muted-foreground">
@@ -229,6 +231,7 @@ export function AccountabilityDashboard() {
           <AlertsPanel />
         </TabsContent>
       </Tabs>
-    </div>
+      </div>
+    </ScrollArea>
   );
 }
