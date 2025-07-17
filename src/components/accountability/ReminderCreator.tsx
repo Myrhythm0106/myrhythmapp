@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Clock, Plus } from 'lucide-react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
+import { CreateReminderForm } from './reminder/CreateReminderForm';
 
 export function ReminderCreator() {
   const { reminders } = useAccountabilitySystem();
@@ -29,15 +30,7 @@ export function ReminderCreator() {
             <DialogHeader>
               <DialogTitle>Create New Reminder</DialogTitle>
             </DialogHeader>
-            <div className="p-4">
-              <p className="text-muted-foreground">Reminder creation form will go here.</p>
-              <Button 
-                className="mt-4" 
-                onClick={() => setIsCreateDialogOpen(false)}
-              >
-                Close for now
-              </Button>
-            </div>
+            <CreateReminderForm onClose={() => setIsCreateDialogOpen(false)} />
           </DialogContent>
         </Dialog>
       </div>

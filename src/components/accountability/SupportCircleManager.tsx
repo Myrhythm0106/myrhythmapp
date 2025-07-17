@@ -168,6 +168,7 @@ export function SupportCircleManager() {
                     <SelectItem value="supporter">Supporter</SelectItem>
                     <SelectItem value="caregiver">Caregiver</SelectItem>
                     <SelectItem value="medical">Medical Professional</SelectItem>
+                    <SelectItem value="colleague">Colleague</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

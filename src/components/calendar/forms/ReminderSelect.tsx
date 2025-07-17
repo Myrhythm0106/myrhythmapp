@@ -27,6 +27,12 @@ export function ReminderSelect() {
               <SelectItem value="30min">30 minutes before</SelectItem>
               <SelectItem value="1hour">1 hour before</SelectItem>
               <SelectItem value="1day">1 day before</SelectItem>
+              <SelectItem value="email">Email reminder</SelectItem>
+              <SelectItem value="sms">SMS reminder</SelectItem>
+              <SelectItem value="push">Push notification</SelectItem>
+              <SelectItem value="vibration">Vibration alert</SelectItem>
+              <SelectItem value="audio">Audio alert</SelectItem>
+              <SelectItem value="escalation">With escalation</SelectItem>
             </SelectContent>
           </Select>
         </FormItem>
