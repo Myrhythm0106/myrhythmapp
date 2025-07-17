@@ -20,12 +20,14 @@ export function OnboardingPage() {
     personalInfo,
     location,
     selectedPlan,
+    assessmentType,
     nextStep,
     prevStep,
     setUserType,
+    setAssessmentType,
     setAssessmentResult,
     completeOnboarding,
-  } = useOnboardingLogic(5);
+  } = useOnboardingLogic(6);
 
   useEffect(() => {
     if (user && !loading) {
@@ -63,13 +65,20 @@ export function OnboardingPage() {
     nextStep();
   };
 
-  const handleRhythmAssessmentComplete = () => {
+  const handleAssessmentTypeSelected = (type: 'brief' | 'comprehensive') => {
+    console.log("OnboardingPage: Assessment type selected:", type);
+    setAssessmentType(type);
+    nextStep();
+  };
+
+  const handleRhythmAssessmentComplete = (data: any) => {
     console.log("OnboardingPage: Rhythm assessment completed");
+    setAssessmentResult(data);
     completeOnboarding('brain-health');
   };
 
   const handleNext = () => {
-    if (currentStep < 5) {
+    if (currentStep < 6) {
       nextStep();
     }
   };
@@ -96,10 +105,10 @@ export function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60">
       <SwipeableOnboarding
         currentStep={currentStep}
-        totalSteps={5}
+        totalSteps={6}
         onNext={handleNext}
         onPrevious={handlePrevious}
-        canGoNext={currentStep < 5}
+        canGoNext={currentStep < 6}
         canGoPrevious={currentStep > 1}
         title="Welcome to MyRhythm"
       >
@@ -109,6 +118,7 @@ export function OnboardingPage() {
           personalInfo={personalInfo}
           location={location}
           selectedPlan={selectedPlan}
+          assessmentType={assessmentType}
           userTypeCountdown={null}
           personalInfoCountdown={null}
           locationCountdown={null}
@@ -118,6 +128,7 @@ export function OnboardingPage() {
           onLocationComplete={handleLocationComplete}
           onPlanSelected={handlePlanSelected}
           onPreAssessmentComplete={handlePreAssessmentComplete}
+          onAssessmentTypeSelected={handleAssessmentTypeSelected}
           onRhythmAssessmentComplete={handleRhythmAssessmentComplete}
         />
       </SwipeableOnboarding>

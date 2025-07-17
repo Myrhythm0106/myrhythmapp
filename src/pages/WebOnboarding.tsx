@@ -15,7 +15,8 @@ const WEB_ONBOARDING_STEPS = [
   { id: 2, title: "Location", description: "Where are you based?" },
   { id: 3, title: "Choose Plan", description: "Select your subscription" },
   { id: 4, title: "Pre-Assessment", description: "Preparing your assessment" },
-  { id: 5, title: "Rhythm Assessment", description: "Discover your unique patterns" }
+  { id: 5, title: "Assessment Type", description: "Choose your assessment length" },
+  { id: 6, title: "Rhythm Assessment", description: "Discover your unique patterns" }
 ];
 const TOTAL_STEPS = WEB_ONBOARDING_STEPS.length;
 
@@ -44,10 +45,12 @@ const WebOnboarding = () => {
     personalInfo,
     selectedPlan,
     billingPeriod,
+    assessmentType,
     isUserTypeSelected,
     isLocationValid,
     isPlanSelected,
     setPersonalInfo,
+    setAssessmentType,
   } = onboardingState;
 
   const handlers = useOnboardingHandlers({
@@ -78,12 +81,18 @@ const WebOnboarding = () => {
   });
 
   const hasUnsavedData = React.useMemo(() => {
-    if (currentStep === 5) {
+    if (currentStep === 6) {
       const savedAssessment = localStorage.getItem('form_data_rhythm_assessment');
       return !!savedAssessment;
     }
     return false;
   }, [currentStep]);
+
+  const handleAssessmentTypeSelected = (type: 'brief' | 'comprehensive') => {
+    console.log("WebOnboarding: Assessment type selected:", type);
+    setAssessmentType(type);
+    handlers.goToNextStep();
+  };
 
   const handleSaveProgress = () => {
     localStorage.setItem('myrhythm_web_onboarding_current_step', currentStep.toString());
@@ -146,7 +155,7 @@ const WebOnboarding = () => {
           description={currentStepInfo.description}
           hasUnsavedData={hasUnsavedData}
           onSaveProgress={handleSaveProgress}
-          dataDescription={currentStep === 5 ? "your assessment responses" : "your progress"}
+          dataDescription={currentStep === 6 ? "your assessment responses" : "your progress"}
         >
           <OnboardingStepRenderer
             currentStep={currentStep}
@@ -155,6 +164,7 @@ const WebOnboarding = () => {
             location={location}
             selectedPlan={selectedPlan}
             billingPeriod={billingPeriod}
+            assessmentType={assessmentType}
             userTypeCountdown={null}
             personalInfoCountdown={null}
             locationCountdown={null}
@@ -164,6 +174,7 @@ const WebOnboarding = () => {
             onLocationComplete={handlers.handleLocationComplete}
             onPlanSelected={handlers.handlePlanSelected}
             onPreAssessmentComplete={handlers.handlePreAssessmentComplete}
+            onAssessmentTypeSelected={handleAssessmentTypeSelected}
             onRhythmAssessmentComplete={handlers.handleRhythmAssessmentComplete}
           />
         </OnboardingLayout>

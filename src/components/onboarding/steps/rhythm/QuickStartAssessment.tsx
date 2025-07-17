@@ -120,7 +120,7 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
           Build Your MYRHYTHM Foundation
         </h2>
         <p className="text-muted-foreground">
-          7 strategic questions to unlock your personalized cognitive wellness plan
+          7 strategic questions to unlock your personalized cognitive optimization plan
         </p>
       </div>
 
@@ -144,11 +144,11 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
               </div>
             </div>
             <div className="text-right">
-              <div className="text-sm text-muted-foreground">
-                {Math.round(progress)}% complete
+              <div className="text-sm font-medium text-primary">
+                {Math.round(progress)}% insights discovered
               </div>
               <div className="text-xs text-muted-foreground">
-                MYRHYTHM Framework
+                Building your personalized plan
               </div>
             </div>
           </div>

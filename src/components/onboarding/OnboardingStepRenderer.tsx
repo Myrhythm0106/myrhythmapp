@@ -4,7 +4,9 @@ import { UserTypeStep } from "./steps/UserTypeStep";
 import { LocationStep } from "./steps/LocationStep";
 import { PlanStep } from "./steps/PlanStep";
 import { PreAssessmentStep } from "./steps/rhythm/PreAssessmentStep";
-import { RhythmAssessmentStep } from "./steps/RhythmAssessmentStep";
+import { AssessmentTypeSelection } from "./steps/rhythm/AssessmentTypeSelection";
+import { BriefAssessmentView } from "./steps/rhythm/BriefAssessmentView";
+import { RhythmAssessmentView } from "./steps/rhythm/RhythmAssessmentView";
 import { UserType } from "@/types/user";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
 import { PlanType } from "./steps/PlanStep";
@@ -16,6 +18,7 @@ interface OnboardingStepRendererProps {
   location: any;
   selectedPlan: PlanType;
   billingPeriod?: 'monthly' | 'annual';
+  assessmentType?: 'brief' | 'comprehensive' | null;
   userTypeCountdown: number | null;
   personalInfoCountdown: number | null;
   locationCountdown: number | null;
@@ -25,7 +28,8 @@ interface OnboardingStepRendererProps {
   onLocationComplete: (data: any) => void;
   onPlanSelected: (plan: PlanType, billingPeriod?: 'monthly' | 'annual') => void;
   onPreAssessmentComplete: () => void;
-  onRhythmAssessmentComplete: () => void;
+  onAssessmentTypeSelected: (type: 'brief' | 'comprehensive') => void;
+  onRhythmAssessmentComplete: (data: any) => void;
 }
 
 export const OnboardingStepRenderer = ({
@@ -35,6 +39,7 @@ export const OnboardingStepRenderer = ({
   location,
   selectedPlan,
   billingPeriod = 'monthly',
+  assessmentType,
   userTypeCountdown,
   personalInfoCountdown,
   locationCountdown,
@@ -44,6 +49,7 @@ export const OnboardingStepRenderer = ({
   onLocationComplete,
   onPlanSelected,
   onPreAssessmentComplete,
+  onAssessmentTypeSelected,
   onRhythmAssessmentComplete,
 }: OnboardingStepRendererProps) => {
   
@@ -90,10 +96,35 @@ export const OnboardingStepRenderer = ({
   }
   
   if (currentStep === 5) {
-    console.log("OnboardingStepRenderer: Rendering RhythmAssessmentStep with userType:", userType);
+    console.log("OnboardingStepRenderer: Rendering Assessment Type Selection");
     return (
-      <RhythmAssessmentStep
-        onComplete={onRhythmAssessmentComplete}
+      <AssessmentTypeSelection
+        onSelectType={onAssessmentTypeSelected}
+      />
+    );
+  }
+  
+  if (currentStep === 6) {
+    console.log("OnboardingStepRenderer: Rendering Assessment with type:", assessmentType, "userType:", userType);
+    if (assessmentType === 'brief') {
+      return (
+        <BriefAssessmentView
+          userType={userType || 'brain-injury'}
+          onComplete={onRhythmAssessmentComplete}
+        />
+      );
+    } else if (assessmentType === 'comprehensive') {
+      return (
+        <RhythmAssessmentView
+          userType={userType || 'brain-injury'}
+          onComplete={onRhythmAssessmentComplete}
+        />
+      );
+    }
+    // Fallback if no assessment type selected
+    return (
+      <AssessmentTypeSelection
+        onSelectType={onAssessmentTypeSelected}
       />
     );
   }

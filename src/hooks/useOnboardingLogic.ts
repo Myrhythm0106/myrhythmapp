@@ -34,6 +34,7 @@ export function useOnboardingLogic(totalSteps: number = 5) {
   const [location, setLocation] = useState<any>(null);
   const [selectedPlan, setSelectedPlan] = useState<any>('starter');
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+  const [assessmentType, setAssessmentType] = useState<'brief' | 'comprehensive' | null>(null);
   const [isUserTypeSelected, setIsUserTypeSelected] = useState(false);
   const [isPersonalInfoValid, setIsPersonalInfoValid] = useState(false);
   const [isLocationValid, setIsLocationValid] = useState(true); // Location is optional
@@ -97,10 +98,7 @@ export function useOnboardingLogic(totalSteps: number = 5) {
       return;
     }
 
-    if (!onboardingState.supportData) {
-      toast.error('Support information must be provided.');
-      return;
-    }
+    // Support data is optional for now
 
     setDashboardLayout(dashboardLayout);
 
@@ -152,12 +150,14 @@ export function useOnboardingLogic(totalSteps: number = 5) {
     personalInfo,
     selectedPlan,
     billingPeriod,
+    assessmentType,
     isUserTypeSelected,
     isPersonalInfoValid,
     isLocationValid,
     isPlanSelected,
     isDirectNavigation,
     setPersonalInfo,
+    setAssessmentType,
     setIsUserTypeSelected,
     setIsLocationValid,
     setIsPlanSelected,

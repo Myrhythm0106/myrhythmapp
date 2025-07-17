@@ -44,6 +44,16 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
         value: 'task_switching', 
         label: 'Managing multiple tasks and priorities',
         insight: 'You\'ll benefit from systems that help organize and prioritize cognitive demands.'
+      },
+      { 
+        value: 'professional_performance', 
+        label: 'Optimizing cognitive performance for professional excellence',
+        insight: 'Professional cognitive optimization strategies will enhance your workplace effectiveness and decision-making speed.'
+      },
+      { 
+        value: 'strategic_thinking', 
+        label: 'Enhancing strategic thinking and problem-solving speed',
+        insight: 'Advanced cognitive strategies for faster analysis and more effective problem-solving approaches.'
       }
     ],
     quickStartQuestion: true,
@@ -209,6 +219,16 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
         value: 'work_focus', 
         label: 'Staying focused and productive during work',
         insight: 'Professional performance is key for you - we\'ll optimize your work-focused cognitive strategies.'
+      },
+      { 
+        value: 'strategic_effectiveness', 
+        label: 'Enhancing strategic thinking and decision-making speed',
+        insight: 'Professional cognitive optimization will boost your strategic capabilities and analytical efficiency.'
+      },
+      { 
+        value: 'memory_sharpness', 
+        label: 'Sharpening memory for professional information retention',
+        insight: 'Memory enhancement techniques will improve your ability to retain and recall critical professional information.'
       },
       { 
         value: 'task_completion', 

@@ -21,14 +21,29 @@ export function FloatingRegisterButton({
   const location = useLocation();
   const isMobile = useIsMobile();
 
-  // Don't show on onboarding pages unless forced
-  if (!forceShow && location.pathname.includes('/onboarding')) {
-    return null;
-  }
+  // Check if user is actually authenticated (using Supabase auth state)
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  // Don't show if user has completed onboarding (persistent until registration complete)
-  const isRegistered = localStorage.getItem("myrhythm_onboarding_complete") === "true";
-  if (!forceShow && isRegistered) {
+  React.useEffect(() => {
+    const checkAuthState = async () => {
+      try {
+        const { supabase } = await import("@/integrations/supabase/client");
+        const { data: { session } } = await supabase.auth.getSession();
+        setIsAuthenticated(!!session?.user);
+      } catch (error) {
+        console.error("Error checking auth state:", error);
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuthState();
+  }, []);
+
+  // Don't show if user is actually authenticated
+  if (!forceShow && (isAuthenticated || isLoading)) {
     return null;
   }
 
