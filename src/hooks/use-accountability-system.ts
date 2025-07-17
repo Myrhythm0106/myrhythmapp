@@ -70,10 +70,27 @@ export function useAccountabilitySystem() {
 
   // Load support circle data
   useEffect(() => {
-    if (!user) return;
-    loadSupportCircle();
-    loadReminders();
-    loadAlerts();
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
+    
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        await Promise.all([
+          loadSupportCircle(),
+          loadReminders(),
+          loadAlerts()
+        ]);
+      } catch (error) {
+        console.error('Error loading accountability data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadData();
   }, [user]);
 
   const loadSupportCircle = async () => {
@@ -156,8 +173,6 @@ export function useAccountabilitySystem() {
     } catch (error) {
       console.error('Error loading alerts:', error);
       toast.error('Failed to load alerts');
-    } finally {
-      setIsLoading(false);
     }
   };
 
