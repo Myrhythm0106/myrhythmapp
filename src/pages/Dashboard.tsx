@@ -12,6 +12,7 @@ import BrainGamesPage from "./BrainGamesPage";
 import AccountabilityPage from "./AccountabilityPage";
 import ProfilePage from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
+import SupportPage from "./SupportPage";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -30,6 +31,8 @@ const Dashboard = () => {
         return <BrainGamesPage />;
       case '/accountability':
         return <AccountabilityPage />;
+      case '/support':
+        return <SupportPage />;
       case '/profile':
         return <ProfilePage />;
       case '/settings':

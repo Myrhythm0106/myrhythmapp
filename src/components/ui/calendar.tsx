@@ -62,24 +62,32 @@ function Calendar({
         showOutsideDays={showOutsideDays}
         className={cn("p-3", className)}
         classNames={{
-          months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-          month: "space-y-4",
-          caption: "flex justify-center pt-1 relative items-center",
-          caption_label: "text-sm font-medium",
+          months: "flex flex-col space-y-4",
+          month: "space-y-3 w-full",
+          caption: "flex justify-center pt-1 relative items-center px-8",
+          caption_label: cn(
+            "text-base font-semibold",
+            isMobile ? "text-lg" : "text-sm"
+          ),
           nav: "space-x-1 flex items-center",
           nav_button: cn(
             buttonVariants({ variant: "outline" }),
-            "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 transition-all duration-200 hover:scale-110"
+            isMobile 
+              ? "h-10 w-10 bg-transparent p-0 opacity-70 hover:opacity-100 transition-all duration-200 touch-manipulation" 
+              : "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 transition-all duration-200 hover:scale-110"
           ),
           nav_button_previous: "absolute left-1",
           nav_button_next: "absolute right-1",
           table: "w-full border-collapse space-y-1",
-          head_row: "flex",
-          head_cell:
-            "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
-          row: "flex w-full mt-2",
+          head_row: "flex justify-between",
+          head_cell: cn(
+            "text-muted-foreground rounded-md font-normal text-center flex-1",
+            isMobile ? "text-sm py-2" : "text-[0.8rem] w-9"
+          ),
+          row: "flex w-full mt-1 justify-between",
           cell: cn(
-            "h-9 w-9 text-center text-sm p-0 relative",
+            "text-center text-sm p-0 relative flex-1",
+            isMobile ? "h-12 min-w-[44px]" : "h-9 w-9",
             "[&:has([aria-selected].day-range-end)]:rounded-r-md",
             "[&:has([aria-selected].day-outside)]:bg-accent/50",
             "[&:has([aria-selected])]:bg-accent",
@@ -90,7 +98,10 @@ function Calendar({
           ),
           day: cn(
             buttonVariants({ variant: "ghost" }),
-            "h-9 w-9 p-0 font-normal aria-selected:opacity-100 transition-all duration-200 hover:scale-110"
+            "font-normal aria-selected:opacity-100 transition-all duration-200 w-full h-full",
+            isMobile 
+              ? "text-base min-h-[44px] touch-manipulation hover:bg-accent/80" 
+              : "h-9 w-9 p-0 hover:scale-110"
           ),
           day_range_end: "day-range-end",
           day_selected:

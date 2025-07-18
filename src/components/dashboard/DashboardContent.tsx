@@ -19,7 +19,10 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useUserProgress } from "@/hooks/useUserProgress";
 import { QuickActionsToProgress } from "@/components/layout/QuickActionsToProgress";
-import { QuickAccessWidget } from "../guide/QuickAccessWidget";
+import { QuickAccessWidget } from "@/components/guide/QuickAccessWidget";
+import { FloatingGratitudeButton } from "@/components/gratitude/FloatingGratitudeButton";
+import { UserGuideIntegration } from "@/components/onboarding/UserGuideIntegration";
+import { NeverLostSystem } from "@/components/navigation/NeverLostSystem";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
 
@@ -148,6 +151,15 @@ export function DashboardContent() {
         energyLevel={energyLevel || undefined}
         dailyIntention={dailyIntention}
       />
+      
+      {/* Floating Gratitude Button */}
+      <FloatingGratitudeButton />
+      
+      {/* User Guide Integration */}
+      <UserGuideIntegration showOnMount={false} />
+      
+      {/* Never Lost System */}
+      <NeverLostSystem />
       
       {/* Demo Navigation - Only show in development/demo mode */}
       {process.env.NODE_ENV === 'development' && <DemoNavigation />}
