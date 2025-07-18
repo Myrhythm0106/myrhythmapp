@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { UserType } from "@/types/user";
+import { PostAssessmentWelcomeDashboard } from "./PostAssessmentWelcomeDashboard";
+import { InteractiveUserGuide } from "./InteractiveUserGuide";
+import { PostAssessmentManager } from "./post-assessment/PostAssessmentManager";
+import { NextStepsWidget } from "./NextStepsWidget";
+import { HelpOrientationSystem } from "./HelpOrientationSystem";
 
 interface PostAssessmentFlowProps {
   userType: UserType;
@@ -10,71 +15,102 @@ interface PostAssessmentFlowProps {
 
 export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: PostAssessmentFlowProps) {
   const [activeStep, setActiveStep] = useState<
-    "teaser" | "full" | "calendar" | "pomodoro" | "support" | "complete"
-  >("teaser");
+    "welcome" | "guide" | "setup" | "complete"
+  >("welcome");
+  const [showHelp, setShowHelp] = useState(false);
+  const [setupProgress, setSetupProgress] = useState(0);
 
-  const handleStepComplete = (data: any) => {
-    if (activeStep === "teaser") {
-      setActiveStep("full");
-    } else if (activeStep === "full") {
-      setActiveStep("calendar");
-    } else if (activeStep === "calendar") {
-      setActiveStep("pomodoro");
-    } else if (activeStep === "pomodoro") {
-      setActiveStep("support");
-    } else if (activeStep === "support") {
+  const handleStepComplete = (data?: any) => {
+    if (activeStep === "welcome") {
+      setActiveStep("setup");
+      setSetupProgress(25);
+    } else if (activeStep === "guide") {
+      setActiveStep("setup");
+      setSetupProgress(25);
+    } else if (activeStep === "setup") {
       setActiveStep("complete");
-      onComplete(data);
+      setSetupProgress(100);
+      onComplete(data || {});
+    }
+  };
+
+  const handleWelcomeContinue = () => {
+    handleStepComplete();
+  };
+
+  const handleGuideComplete = () => {
+    handleStepComplete();
+  };
+
+  const handleSetupComplete = () => {
+    handleStepComplete({ setupCompleted: true });
+  };
+
+  const handleNextAction = () => {
+    handleStepComplete();
+  };
+
+  const handleShowGuide = () => {
+    setActiveStep("guide");
+  };
+
+  const handleSetupProgress = (progress: number) => {
+    setSetupProgress(progress);
+  };
+
+  const handleNavigateTo = (location: string) => {
+    switch (location) {
+      case 'life_setup':
+        setActiveStep("setup");
+        setSetupProgress(25);
+        break;
+      case 'user_guide':
+        setActiveStep("guide");
+        break;
+      case 'dashboard':
+        setActiveStep("complete");
+        onComplete({ skipToEnd: true });
+        break;
     }
   };
 
   const renderStepContent = () => {
     switch (activeStep) {
-      case "teaser":
+      case "welcome":
         return (
-          <div>
-            <h2>Assessment Teaser</h2>
-            <p>Brief overview of assessment results.</p>
-            <button onClick={() => handleStepComplete(null)}>Continue</button>
-          </div>
+          <PostAssessmentWelcomeDashboard
+            userType={userType}
+            assessmentResult={assessmentResult}
+            onContinue={handleWelcomeContinue}
+          />
         );
-      case "full":
+      case "guide":
         return (
-          <div>
-            <h2>Full Assessment Results</h2>
-            <p>Detailed breakdown of assessment findings.</p>
-            <button onClick={() => handleStepComplete(null)}>Continue</button>
-          </div>
+          <InteractiveUserGuide
+            onComplete={handleGuideComplete}
+            onSkip={handleGuideComplete}
+          />
         );
-      case "calendar":
+      case "setup":
         return (
-          <div>
-            <h2>Calendar Integration</h2>
-            <p>Connect your calendar for scheduling.</p>
-            <button onClick={() => handleStepComplete(null)}>Continue</button>
-          </div>
-        );
-      case "pomodoro":
-        return (
-          <div>
-            <h2>Pomodoro Setup</h2>
-            <p>Configure Pomodoro timer for focused work.</p>
-            <button onClick={() => handleStepComplete(null)}>Continue</button>
-          </div>
-        );
-      case "support":
-        return (
-          <div>
-            <h2>Support Integration</h2>
-            <p>Connect with your support network.</p>
-            <button onClick={() => handleStepComplete(null)}>Complete</button>
-          </div>
+          <PostAssessmentManager
+            userType={userType}
+            assessmentResult={assessmentResult}
+            onComplete={handleSetupComplete}
+          />
         );
       case "complete":
         return (
-          <div>
-            <h2>Setup Complete!</h2>
-            <p>You're all set to start using the app.</p>
+          <div className="text-center py-12">
+            <div className="max-w-md mx-auto space-y-4">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
+                <span className="text-2xl">🎉</span>
+              </div>
+              <h2 className="text-2xl font-bold text-foreground">Setup Complete!</h2>
+              <p className="text-muted-foreground">
+                You're all set to start living your MYRHYTHM. Your dashboard is ready!
+              </p>
+            </div>
           </div>
         );
       default:
@@ -82,9 +118,45 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
     }
   };
 
+  const getCurrentStepForWidget = () => {
+    switch (activeStep) {
+      case "welcome":
+        return "assessment_complete";
+      case "setup":
+        return "calendar_setup"; // This could be more dynamic based on PostAssessmentManager state
+      case "complete":
+        return "setup_complete";
+      default:
+        return "assessment_complete";
+    }
+  };
+
   return (
-    <Card>
-      <CardContent>{renderStepContent()}</CardContent>
-    </Card>
+    <div className="relative min-h-screen">
+      {renderStepContent()}
+      
+      {/* Next Steps Widget - Always visible except on complete */}
+      {activeStep !== "complete" && (
+        <NextStepsWidget
+          currentStep={getCurrentStepForWidget()}
+          onNextAction={handleNextAction}
+          onGetHelp={() => setShowHelp(true)}
+          completionPercentage={setupProgress}
+        />
+      )}
+
+      {/* Help Orientation System */}
+      {showHelp && (
+        <HelpOrientationSystem
+          currentLocation={getCurrentStepForWidget()}
+          onClose={() => setShowHelp(false)}
+          onNavigateTo={handleNavigateTo}
+          onStartOver={() => {
+            setActiveStep("welcome");
+            setSetupProgress(0);
+          }}
+        />
+      )}
+    </div>
   );
 }
