@@ -9,6 +9,7 @@ import { MemoryFirstHomeSkeleton } from "./MemoryFirstHomeSkeleton";
 import { MobileMenu } from "@/components/mobile/MobileMenu";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Preview3Background } from "@/components/ui/Preview3Background";
+import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
 
 export function MemoryFirstHomePage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,6 +43,9 @@ export function MemoryFirstHomePage() {
         <FounderStorySection />
         <MemoryCommunitySection />
       </div>
+      
+      {/* Floating Register Button */}
+      <FloatingRegisterButton />
     </Preview3Background>
   );
 }
