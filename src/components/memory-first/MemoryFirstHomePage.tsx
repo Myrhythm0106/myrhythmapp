@@ -6,6 +6,7 @@ import { MemorySuccessStoriesSection } from "./sections/MemorySuccessStoriesSect
 import { FounderStorySection } from "./sections/FounderStorySection";
 import { MemoryCommunitySection } from "./sections/MemoryCommunitySection";
 import { MemoryFirstHomeSkeleton } from "./MemoryFirstHomeSkeleton";
+import { BrainFriendlyAccessibility } from "./sections/BrainFriendlyAccessibility";
 import { MobileMenu } from "@/components/mobile/MobileMenu";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Preview3Background } from "@/components/ui/Preview3Background";
@@ -33,19 +34,26 @@ export function MemoryFirstHomePage() {
   
   return (
     <Preview3Background>
-      <div className="space-y-12 max-w-6xl mx-auto pb-12 px-4">
-        {isMobile && <MobileMenu />}
+      <div className="relative">
+        {/* Brain-Friendly Accessibility Toolbar */}
+        <div className="absolute top-4 right-4 z-20 hidden md:block">
+          <BrainFriendlyAccessibility />
+        </div>
         
-        <HeroSection />
-        <MemoryStrugglesSection />
-        <Memory8StepFrameworkSection />
-        <MemorySuccessStoriesSection />
-        <FounderStorySection />
-        <MemoryCommunitySection />
+        <div className="space-y-16 max-w-6xl mx-auto pb-12 px-4 pt-4">
+          {isMobile && <MobileMenu />}
+          
+          <HeroSection />
+          <MemoryStrugglesSection />
+          <Memory8StepFrameworkSection />
+          <MemorySuccessStoriesSection />
+          <FounderStorySection />
+          <MemoryCommunitySection />
+        </div>
+        
+        {/* Floating Register Button */}
+        <FloatingRegisterButton />
       </div>
-      
-      {/* Floating Register Button */}
-      <FloatingRegisterButton />
     </Preview3Background>
   );
 }

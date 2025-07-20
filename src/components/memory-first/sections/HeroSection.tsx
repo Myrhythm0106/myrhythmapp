@@ -1,102 +1,177 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Heart, Users, Award } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Brain, Users, Heart, ArrowRight, CheckCircle, Star, Play, Volume2, Eye, Zap, User, UserPlus } from "lucide-react";
 
 export function HeroSection() {
   const navigate = useNavigate();
+  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | null>(null);
+  const [showQuickView, setShowQuickView] = useState(true);
   
+  const userTypes = [
+    {
+      id: 'individual' as const,
+      icon: Brain,
+      title: 'I\'m a Survivor',
+      subtitle: 'Living with memory challenges',
+      color: 'purple',
+      description: 'Built specifically for your recovery journey'
+    },
+    {
+      id: 'family' as const,
+      icon: Heart,
+      title: 'I\'m Family/Caregiver',
+      subtitle: 'Supporting someone I love',
+      color: 'teal',
+      description: 'Help without taking over their independence'
+    }
+  ];
+
+  const quickBenefits = [
+    { icon: Brain, text: 'Works with memory challenges, not against them', color: 'purple' },
+    { icon: Users, text: 'Family support without dependency', color: 'blue' },
+    { icon: Heart, text: 'Built by survivors, for survivors', color: 'teal' }
+  ];
+
   return (
-    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-200/60 via-blue-200/60 to-teal-200/60 text-gray-800 p-8 md:p-12 border border-purple-200/40 shadow-soft">
-        <div className="absolute right-0 bottom-0 opacity-5">
-        <Brain size={320} className="text-purple-300" />
+    <section className="relative overflow-hidden space-y-8">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 via-blue-600/5 to-teal-600/5 rounded-lg" />
+      <div className="absolute top-0 right-0 opacity-5">
+        <Brain size={300} />
       </div>
       
-      <div className="relative z-10 max-w-4xl space-y-6">
-        {/* Header Badges */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Badge variant="secondary" className="bg-purple-100/60 text-purple-700 border-purple-300/50">
-            <Brain className="h-3 w-3 mr-1" />
+      <div className="relative z-10 p-6 md:p-10 space-y-8">
+        {/* Top Badges - Brain-Friendly Visual */}
+        <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+          <Badge className="bg-purple-100 text-purple-700 border border-purple-200 text-sm px-3 py-1">
+            <Brain className="h-4 w-4 mr-2" />
             Memory-First Design
           </Badge>
-          <Badge variant="secondary" className="bg-blue-100/60 text-blue-700 border-blue-300/50">
-            <Heart className="h-3 w-3 mr-1" />
+          <Badge className="bg-teal-100 text-teal-700 border border-teal-200 text-sm px-3 py-1">
+            <Heart className="h-4 w-4 mr-2" />
             Brain Injury Survivor Built
           </Badge>
-          <Badge variant="secondary" className="bg-teal-100/60 text-teal-700 border-teal-300/50">
-            <Users className="h-3 w-3 mr-1" />
-            Family-Centered
-          </Badge>
         </div>
 
-        <h1 className="text-4xl md:text-6xl font-bold leading-tight text-gray-800">
-          🧠 Unlock Your Brain's<br />
-          <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Amazing Potential</span>
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-gray-700 max-w-3xl leading-relaxed">
-          Your brain is incredible and adaptive. Discover new pathways to confidence, independence, 
-          and deeper family connections. Your greatest chapters are ahead of you.
-        </p>
-
-        {/* Problem Statement */}
-        <div className="bg-amber-50/70 backdrop-blur-sm p-6 rounded-lg border border-amber-200/50 border-l-4 border-l-amber-400">
-          <h3 className="text-lg font-semibold mb-3 text-amber-800">
-            🤔 "I used to remember everything. Now I can't even trust myself to remember to eat lunch."
-          </h3>
-          <p className="text-gray-700">
-            If this sounds familiar, you're not alone. Memory challenges affect millions, but most apps treat 
-            you like a broken computer that needs fixing. We treat you like a whole person rebuilding their rhythm.
-          </p>
-        </div>
-
-        {/* Founder Credibility */}
-        <div className="bg-emerald-50/70 backdrop-blur-sm p-6 rounded-lg border border-emerald-200/50">
-          <div className="flex items-start gap-4">
-            <div className="bg-emerald-200/40 p-3 rounded-full">
-              <Award className="h-6 w-6 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-gray-700 italic leading-relaxed">
-                "After my brain aneurysm, I lived the frustration you're feeling. Sticky notes everywhere, 
-                constant worry, family stress. My husband and I rebuilt our rhythm together—and that 
-                became this app."
-              </p>
-              <p className="text-sm font-medium mt-3 text-gray-600">
-                — Bella A., Founder & Brain Aneurysm Survivor<br />
-                Brain Health Coach • Bee Foundation Ambassador
-              </p>
-            </div>
+        {/* Visual-First Main Content */}
+        <div className="space-y-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+            <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+              Memory Challenges
+            </span>
+            <br />
+            <span className="text-foreground">
+              Don't End Your Story
+            </span>
+          </h1>
+          
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg border border-blue-200 max-w-4xl">
+            <p className="text-xl md:text-2xl text-blue-800 leading-relaxed font-medium">
+              🧠 The only app designed for minds recovering from brain injury, stroke, concussion, or memory challenges
+            </p>
           </div>
         </div>
-        
-        <div className="pt-4 flex flex-col sm:flex-row gap-4">
-          <Button 
-            size="lg" 
-            onClick={() => navigate("/onboarding")} 
-            className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 text-white hover:from-purple-600 hover:via-blue-600 hover:to-teal-600 shadow-lg text-lg px-8 py-6"
-          >
-            👉 Start My Memory-First Journey
-          </Button>
-          <Button 
-            size="lg" 
-            variant="outline"
-            onClick={() => navigate("/auth")} 
-            className="border-purple-300 text-purple-600 hover:bg-purple-50 text-lg px-8 py-6"
-          >
-            I'm a Family Member/Caregiver
-          </Button>
+
+        {/* User Type Selection - Brain-Friendly Visual Choice */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-center">👋 Which describes you?</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {userTypes.map((type) => (
+              <Card 
+                key={type.id}
+                className={`cursor-pointer transition-all hover:shadow-lg border-2 ${
+                  selectedUserType === type.id 
+                    ? `border-${type.color}-300 bg-${type.color}-50` 
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+                onClick={() => setSelectedUserType(type.id)}
+              >
+                <CardContent className="p-6 text-center space-y-3">
+                  <div className={`bg-${type.color}-100 p-4 rounded-full w-fit mx-auto`}>
+                    <type.icon className={`h-8 w-8 text-${type.color}-600`} />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg">{type.title}</h4>
+                    <p className="text-sm text-muted-foreground">{type.subtitle}</p>
+                    <p className="text-xs text-muted-foreground mt-2">{type.description}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
-        {/* Trust Indicators */}
-        <div className="pt-6 border-t border-purple-200/30">
-          <p className="text-sm text-gray-600 mb-2">Trusted by brain injury survivors and families worldwide:</p>
-          <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-            <span>✓ 1,000+ memory-challenged users</span>
-            <span>✓ Neurologist recommended</span>
-            <span>✓ Family-tested approach</span>
-            <span>✓ Privacy-first design</span>
+        {/* Quick Benefits - Visual Icons with Minimal Text */}
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg border border-emerald-200 max-w-4xl mx-auto">
+          <h3 className="text-center font-semibold mb-4 text-emerald-800">✨ Why We're Different</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {quickBenefits.map((benefit, index) => (
+              <div key={index} className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
+                <div className={`bg-${benefit.color}-100 p-2 rounded-lg`}>
+                  <benefit.icon className={`h-5 w-5 text-${benefit.color}-600`} />
+                </div>
+                <span className="text-sm text-emerald-700 leading-tight">{benefit.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Accessibility Features - Brain-Friendly Options */}
+        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-4 text-sm">
+            <Button variant="outline" size="sm" className="gap-2">
+              <Volume2 className="h-4 w-4" />
+              Read Aloud
+            </Button>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Eye className="h-4 w-4" />
+              Larger Text
+            </Button>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Zap className="h-4 w-4" />
+              Quick Mode
+            </Button>
+          </div>
+        </div>
+
+        {/* Progressive Disclosure CTA */}
+        <div className="text-center space-y-4">
+          <Button 
+            size="lg" 
+            onClick={() => navigate("/onboarding")}
+            className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-lg px-8 py-6 shadow-lg"
+          >
+            🧠 Start Your Memory-First Journey
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+          
+          <div className="flex justify-center gap-4 text-sm">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <Play className="h-4 w-4" />
+              Quick Demo (2 min)
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => setShowQuickView(!showQuickView)}>
+              {showQuickView ? 'Show More Details' : 'Show Less'}
+            </Button>
+          </div>
+
+          {/* Trust Indicators - Visual */}
+          <div className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground pt-4">
+            <span className="flex items-center gap-1">
+              <CheckCircle className="h-3 w-3 text-green-500" />
+              1,000+ survivors
+            </span>
+            <span className="flex items-center gap-1">
+              <CheckCircle className="h-3 w-3 text-green-500" />
+              Family-tested
+            </span>
+            <span className="flex items-center gap-1">
+              <CheckCircle className="h-3 w-3 text-green-500" />
+              Medical approved
+            </span>
           </div>
         </div>
       </div>
