@@ -11,7 +11,9 @@ import { EnhancedGlobalSearch } from "@/components/navigation/EnhancedGlobalSear
 import { DynamicSidebar } from "./DynamicSidebar";
 import { useSidebar } from "./Sidebar/SidebarContext";
 import { useUserProgress } from "@/hooks/useUserProgress";
-import { Brain, Menu, User, LogOut, Crown, Zap } from "lucide-react";
+import { Brain, Menu, User, LogOut, Crown, ArrowLeft } from "lucide-react";
+import { useUserData } from "@/hooks/use-user-data";
+import { Badge } from "@/components/ui/badge";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -22,6 +24,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const { user, signOut } = useAuth();
   const { isCollapsed } = useSidebar();
   const { trackTimeSpent } = useUserProgress();
+  const userData = useUserData();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   // Track session time
@@ -45,6 +48,30 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   const handleUpgradeClick = () => {
     navigate("/in-app-purchase");
+  };
+
+  const handleBackToWelcome = () => {
+    navigate("/");
+  };
+
+  const getUserTypeLabel = (userType: string) => {
+    const labels = {
+      'brain-injury': 'Brain Recovery',
+      'caregiver': 'Caregiver Support',
+      'cognitive-optimization': 'Peak Performance',
+      'wellness': 'Wellness & Growth'
+    };
+    return labels[userType] || 'General Wellness';
+  };
+
+  const getUserTypeBadgeVariant = (userType: string) => {
+    const variants = {
+      'brain-injury': 'healing',
+      'caregiver': 'premium',
+      'cognitive-optimization': 'cognitive',
+      'wellness': 'clarity'
+    };
+    return variants[userType] || 'default';
   };
 
   return (
@@ -80,6 +107,17 @@ export function MainLayout({ children }: MainLayoutProps) {
               </SheetContent>
             </Sheet>
             
+            {/* Back Navigation */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBackToWelcome}
+              className="flex items-center gap-2 text-purple-600 hover:bg-purple-50"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Back to Welcome</span>
+            </Button>
+            
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-md flex items-center justify-center lg:hidden">
                 <Brain className="h-3 w-3 text-white" />
@@ -91,6 +129,15 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
           
           <div className="flex items-center gap-4">
+            {/* User Role Badge */}
+            {userData.userType && (
+              <Badge 
+                variant={getUserTypeBadgeVariant(userData.userType)}
+                className="hidden sm:inline-flex"
+              >
+                {getUserTypeLabel(userData.userType)}
+              </Badge>
+            )}
             
             {/* Single Search Component */}
             <EnhancedGlobalSearch variant="input" size="sm" className="hidden md:flex max-w-xs" />
@@ -112,6 +159,14 @@ export function MainLayout({ children }: MainLayoutProps) {
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium">{user?.user_metadata?.name || 'User'}</p>
                     <p className="text-xs text-muted-foreground">{user?.email}</p>
+                    {userData.userType && (
+                      <Badge 
+                        variant={getUserTypeBadgeVariant(userData.userType)}
+                        className="w-fit text-xs"
+                      >
+                        {getUserTypeLabel(userData.userType)}
+                      </Badge>
+                    )}
                   </div>  
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />

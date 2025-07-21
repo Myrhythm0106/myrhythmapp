@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -112,29 +111,29 @@ export function EnhancedAffirmationSystem({
 
   const getCategoryTitle = (category: UserType): string => {
     const titles = {
-      'brain-injury-recovery': 'Recovery & Growth Affirmations',
+      'brain-injury': 'Recovery & Growth Affirmations',
       'cognitive-optimization': 'Peak Performance Affirmations', 
-      'caregiver-support': 'Caregiver Strength Affirmations',
-      'wellness-productivity': 'Life Optimization Affirmations'
+      'caregiver': 'Caregiver Strength Affirmations',
+      'wellness': 'Life Optimization Affirmations'
     };
-    return titles[category];
+    return titles[category] || 'Personal Growth Affirmations';
   };
 
   const getCategoryIcon = (category: UserType) => {
     const icons = {
-      'brain-injury-recovery': <Heart className="h-5 w-5" />,
+      'brain-injury': <Heart className="h-5 w-5" />,
       'cognitive-optimization': <TrendingUp className="h-5 w-5" />,
-      'caregiver-support': <Heart className="h-5 w-5" />,
-      'wellness-productivity': <Sparkles className="h-5 w-5" />
+      'caregiver': <Heart className="h-5 w-5" />,
+      'wellness': <Sparkles className="h-5 w-5" />
     };
-    return icons[category];
+    return icons[category] || <Sparkles className="h-5 w-5" />;
   };
 
   if (!availableAffirmations.length) {
     return (
       <Card className="text-center p-6">
         <CardContent>
-          <p className="text-muted-foreground">No affirmations available for your category.</p>
+          <p className="text-muted-foreground">No affirmations available for your {userType.replace('-', ' ')} profile.</p>
         </CardContent>
       </Card>
     );
@@ -189,6 +188,9 @@ export function EnhancedAffirmationSystem({
                       {currentAffirmation.mood} mood
                     </Badge>
                   )}
+                  <Badge variant="outline" className="text-xs">
+                    {userType.replace('-', ' ')} focused
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -215,7 +217,7 @@ export function EnhancedAffirmationSystem({
                 <div>
                   <h3 className="font-semibold text-amber-900">Unlock Your Full Potential</h3>
                   <p className="text-sm text-amber-700 mt-1">
-                    You've explored all {freeCount} free affirmations. 
+                    You've explored all {freeCount} free {userType.replace('-', ' ')} affirmations. 
                     Get access to {premiumCount}+ more personalized affirmations with Premium!
                   </p>
                 </div>
@@ -234,7 +236,7 @@ export function EnhancedAffirmationSystem({
           {!isPremium && !showUpgradePrompt && (
             <div className="text-center">
               <p className="text-xs text-muted-foreground">
-                {freeCount - viewedAffirmations.length} free affirmations remaining
+                {freeCount - viewedAffirmations.length} free {userType.replace('-', ' ')} affirmations remaining
               </p>
               <p className="text-xs text-muted-foreground mt-1">
                 Unlock {premiumCount}+ more with Premium

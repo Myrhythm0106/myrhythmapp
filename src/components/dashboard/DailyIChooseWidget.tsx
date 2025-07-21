@@ -12,9 +12,10 @@ import { AnimatePresence, motion } from "framer-motion";
 
 interface DailyIChooseWidgetProps {
   onUpgradeClick: () => void;
+  userType?: string;
 }
 
-export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) {
+export function DailyIChooseWidget({ onUpgradeClick, userType = 'brain-injury' }: DailyIChooseWidgetProps) {
   const { user } = useAuth();
   const [currentStatement, setCurrentStatement] = useState<any>(null);
   const [showReflection, setShowReflection] = useState(false);
@@ -31,7 +32,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     toggleFavorite,
     recordInteraction,
     isTogglingFavorite
-  } = useEmpowermentStatements('brain-injury', true);
+  } = useEmpowermentStatements(userType, true);
 
   const { triggerHapticFeedback } = useMobileGestures({
     enableShakeToRefresh: false,
@@ -187,6 +188,16 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     setTouchStart(null);
   };
 
+  const getUserTypeTitle = () => {
+    const titles = {
+      'brain-injury': 'Brain Recovery #IChoose',
+      'caregiver': 'Caregiver Support #IChoose',
+      'cognitive-optimization': 'Peak Performance #IChoose',
+      'wellness': 'Wellness Growth #IChoose'
+    };
+    return titles[userType] || 'Today\'s #IChoose Statement';
+  };
+
   if (isLoading) {
     return (
       <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 shadow-lg">
@@ -204,7 +215,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
     return (
       <Card className="border-2 border-purple-200 bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 shadow-lg">
         <CardContent className="p-8 text-center">
-          <p className="text-purple-700">No empowerment statements available. Please check back later.</p>
+          <p className="text-purple-700">No empowerment statements available for your profile. Please check back later.</p>
         </CardContent>
       </Card>
     );
@@ -224,7 +235,7 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
             <Crown className="h-6 w-6 text-amber-500" />
           </div>
           <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-            Today's #IChoose Statement
+            {getUserTypeTitle()}
           </span>
           <div className="animate-bounce">
             <Sparkles className="h-6 w-6 text-purple-500" />
@@ -353,10 +364,10 @@ export function DailyIChooseWidget({ onUpgradeClick }: DailyIChooseWidgetProps) 
         <div className="p-4 bg-gradient-to-r from-blue-50/60 via-purple-50/50 to-teal-50/60 rounded-lg border border-blue-200">
           <div className="flex items-center gap-2 mb-2">
             <Sparkles className="h-4 w-4 text-blue-600" />
-            <span className="font-medium text-blue-900">Morning Ritual Tip</span>
+            <span className="font-medium text-blue-900">Personalized Tip</span>
           </div>
           <p className="text-sm text-blue-800">
-            Read your #IChoose statement aloud 3 times while taking deep breaths. Swipe left for a new statement anytime. This activates both your conscious and subconscious mind for lasting positive change.
+            This statement is tailored for your {userType.replace('-', ' ')} journey. Read it aloud 3 times while taking deep breaths. Swipe left for a new statement anytime.
           </p>
         </div>
       </CardContent>

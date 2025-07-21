@@ -9,7 +9,6 @@ import { TopPriorities } from "./TopPriorities";
 import { MoodEnergySnapshot } from "./MoodEnergySnapshot";
 import { BrainGameQuickStart } from "./BrainGameQuickStart";
 import { TrialStatusCard } from "./TrialStatusCard";
-import { DemoNavigation } from "../demo/DemoNavigation";
 import { MorningRitualView } from "./views/MorningRitualView";
 import { DailyIChooseWidget } from "./DailyIChooseWidget";
 import { SmartNotificationEngine } from "./SmartNotificationEngine";
@@ -25,6 +24,7 @@ import { UserGuideIntegration } from "@/components/onboarding/UserGuideIntegrati
 import { NeverLostSystem } from "@/components/navigation/NeverLostSystem";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
+import { useUserData } from "@/hooks/use-user-data";
 
 export function DashboardContent() {
   const [searchParams] = useSearchParams();
@@ -32,6 +32,7 @@ export function DashboardContent() {
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
   const [dailyIntention, setDailyIntention] = useState('');
   const { metrics, getNextUnlock } = useUserProgress();
+  const userData = useUserData();
 
   useEffect(() => {
     // Check for onboarding completion
@@ -67,6 +68,33 @@ export function DashboardContent() {
 
   const nextUnlock = getNextUnlock();
 
+  const getRoleSpecificWelcome = () => {
+    const welcomeMessages = {
+      'brain-injury': {
+        title: 'Your Brain Recovery Journey',
+        message: 'Every step forward is progress. Your brain is healing and growing stronger.',
+        icon: '🧠'
+      },
+      'caregiver': {
+        title: 'Supporting Your Loved One',
+        message: 'Your care and dedication make a meaningful difference every day.',
+        icon: '❤️'
+      },
+      'cognitive-optimization': {
+        title: 'Peak Performance Mode',
+        message: 'Optimize your cognitive abilities and achieve your highest potential.',
+        icon: '🚀'
+      },
+      'wellness': {
+        title: 'Your Wellness Journey',
+        message: 'Building habits and mindsets for lasting well-being and growth.',
+        icon: '🌟'
+      }
+    };
+    
+    return welcomeMessages[userData.userType] || welcomeMessages['wellness'];
+  };
+
   // If morning ritual not completed and it's morning time, show morning ritual
   if (showMorningRitual) {
     return (
@@ -80,9 +108,26 @@ export function DashboardContent() {
     );
   }
 
+  const roleWelcome = getRoleSpecificWelcome();
+
   return (
     <div className="space-y-6">
       <DashboardHeader />
+      
+      {/* Role-Specific Welcome Message */}
+      {userData.userType && (
+        <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">{roleWelcome.icon}</div>
+              <div>
+                <h3 className="font-semibold text-purple-800">{roleWelcome.title}</h3>
+                <p className="text-sm text-purple-700">{roleWelcome.message}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       {/* Assessment Upgrade Reminder */}
       <AssessmentUpgradeReminder />
@@ -122,8 +167,11 @@ export function DashboardContent() {
         </Card>
       )}
       
-      {/* Daily #IChoose Widget - Prominent placement */}
-      <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} />
+      {/* Daily #IChoose Widget - Prominent placement with user type */}
+      <DailyIChooseWidget 
+        onUpgradeClick={handleUpgradeClick}
+        userType={userData.userType}
+      />
       
       {/* Trial Status - Show prominently at top */}
       <TrialStatusCard />
@@ -160,9 +208,6 @@ export function DashboardContent() {
       
       {/* Never Lost System */}
       <NeverLostSystem />
-      
-      {/* Demo Navigation - Only show in development/demo mode */}
-      {process.env.NODE_ENV === 'development' && <DemoNavigation />}
     </div>
   );
 }
