@@ -88,22 +88,22 @@ export function BrainFriendlyAccessibility() {
             <span className="text-sm font-medium text-amber-800">Brain-Friendly Options</span>
           </div>
           
-          <div className="flex gap-2">
+          <div className="flex gap-1">
             {accessibilityOptions.map((option, index) => (
               <Button
                 key={index}
                 variant={option.isActive ? "default" : "outline"}
                 size="sm"
                 onClick={option.action}
-                className={`gap-2 ${
+                className={`gap-1 text-xs px-2 py-1 ${
                   option.isActive 
                     ? 'bg-amber-600 text-white hover:bg-amber-700' 
                     : 'border-amber-300 text-amber-700 hover:bg-amber-100'
                 }`}
                 title={option.subtitle}
               >
-                <option.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">
+                <option.icon className="h-3 w-3" />
+                <span className="hidden md:inline whitespace-nowrap">
                   {option.isActive ? option.activeText : option.inactiveText}
                 </span>
               </Button>

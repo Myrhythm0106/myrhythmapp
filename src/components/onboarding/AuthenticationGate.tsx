@@ -115,7 +115,7 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
             </h2>
             <p className="text-muted-foreground text-sm">
               {isSignUp 
-                ? "Begin your personalized Memory1st cognitive wellness journey" 
+                ? "We're ready to begin! Registration takes 2-3 minutes to complete." 
                 : "Continue building your empowered, authentic, productive life"
               }
             </p>

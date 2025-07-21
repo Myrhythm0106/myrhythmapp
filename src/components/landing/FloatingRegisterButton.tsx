@@ -47,7 +47,9 @@ export function FloatingRegisterButton({
     return null;
   }
 
-  const handleRegister = () => {
+  const handleRegister = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log("FloatingRegisterButton: Register Here button clicked, variant:", variant);
     console.log("FloatingRegisterButton: About to navigate to /onboarding");
     console.log("FloatingRegisterButton: Current location:", window.location.href);

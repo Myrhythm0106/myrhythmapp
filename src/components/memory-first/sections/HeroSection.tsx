@@ -120,19 +120,19 @@ export function HeroSection() {
         </div>
 
         {/* Accessibility Features - Brain-Friendly Options */}
-        <div className="bg-amber-50 p-4 rounded-lg border border-amber-200 max-w-2xl mx-auto">
-          <div className="flex items-center justify-center gap-4 text-sm">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Volume2 className="h-4 w-4" />
-              Read Aloud
+        <div className="bg-amber-50 p-3 rounded-lg border border-amber-200 max-w-2xl mx-auto">
+          <div className="flex items-center justify-center gap-2 text-xs">
+            <Button variant="outline" size="sm" className="gap-1 px-3 py-2">
+              <Volume2 className="h-3 w-3" />
+              <span className="hidden sm:inline">Read Aloud</span>
             </Button>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Eye className="h-4 w-4" />
-              Larger Text
+            <Button variant="outline" size="sm" className="gap-1 px-3 py-2">
+              <Eye className="h-3 w-3" />
+              <span className="hidden sm:inline">Larger Text</span>
             </Button>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Zap className="h-4 w-4" />
-              Quick Mode
+            <Button variant="outline" size="sm" className="gap-1 px-3 py-2">
+              <Zap className="h-3 w-3" />
+              <span className="hidden sm:inline">Quick Mode</span>
             </Button>
           </div>
         </div>
@@ -141,10 +141,14 @@ export function HeroSection() {
         <div className="text-center space-y-4">
           <Button 
             size="lg" 
-            onClick={() => navigate("/onboarding")}
-            className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-lg px-8 py-6 shadow-lg"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/onboarding");
+            }}
+            className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-base md:text-lg px-6 md:px-8 py-4 md:py-6 shadow-lg"
           >
-            🧠 Start Your Memory-First Journey
+            <span className="hidden sm:inline">🧠 Start Your Memory-First Journey</span>
+            <span className="sm:hidden">🧠 Start Journey</span>
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
           
