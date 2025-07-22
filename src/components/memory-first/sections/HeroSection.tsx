@@ -60,13 +60,13 @@ export function HeroSection() {
       </div>
       
       <div className="relative z-10 p-6 md:p-10 space-y-8">
-        {/* Top Badges - Brain-Friendly Visual */}
+        {/* Top Badges - Improved Visibility */}
         <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-          <Badge className="bg-purple-100 text-purple-700 border border-purple-200 text-sm px-3 py-1">
+          <Badge className="bg-gradient-to-r from-purple-600 to-purple-700 text-white border-0 text-sm px-4 py-2 shadow-lg">
             <Brain className="h-4 w-4 mr-2" />
             Memory-First Design
           </Badge>
-          <Badge className="bg-teal-100 text-teal-700 border border-teal-200 text-sm px-3 py-1">
+          <Badge className="bg-gradient-to-r from-teal-600 to-teal-700 text-white border-0 text-sm px-4 py-2 shadow-lg">
             <Heart className="h-4 w-4 mr-2" />
             Brain Injury Survivor Built
           </Badge>
