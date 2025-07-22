@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { format } from "date-fns";
 import { 
   DialogContent,
@@ -22,9 +22,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { useGratitude } from "@/hooks/use-gratitude";
-import { HeartHandshake, Share2, Trash2, Save, Brain, Sparkles } from "lucide-react";
+import { HeartHandshake, Share2, Trash2, Save, Brain, Sparkles, ArrowDown, CheckCircle } from "lucide-react";
 import { GratitudeEntry } from "../GratitudePrompt";
 import { toast } from "@/components/ui/use-toast";
+import { Progress } from "@/components/ui/progress";
 import { 
   Select,
   SelectContent,
@@ -50,12 +51,56 @@ export function EntryDetailsDialog({
 }: EntryDetailsDialogProps) {
   const { addEntry } = useGratitude();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const whyFieldRef = useRef<HTMLTextAreaElement>(null);
   
   // For new entries
   const [gratitudeText, setGratitudeText] = useState("");
   const [whyGrateful, setWhyGrateful] = useState("");
   const [promptType, setPromptType] = useState<"fitness" | "mindfulness" | "social" | "general">("general");
   const [moodScore, setMoodScore] = useState(3);
+
+  // Progress calculation for new entries
+  const getProgress = () => {
+    if (!isNewEntry) return 100;
+    let progress = 0;
+    if (gratitudeText.trim()) progress += 40;
+    if (whyGrateful.trim()) progress += 40;
+    if (moodScore !== 3) progress += 20;
+    return Math.min(progress, 100);
+  };
+
+  const currentProgress = getProgress();
+  const isComplete = gratitudeText.trim() && whyGrateful.trim();
+
+  useEffect(() => {
+    if (!isNewEntry) return;
+    
+    const checkScroll = () => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+        setShowScrollHint(scrollHeight > clientHeight && scrollTop < scrollHeight - clientHeight - 50);
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScroll);
+      checkScroll(); // Initial check
+      return () => container.removeEventListener('scroll', checkScroll);
+    }
+  }, [isNewEntry]);
+
+  const scrollToWhy = () => {
+    if (whyFieldRef.current) {
+      whyFieldRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center' 
+      });
+      whyFieldRef.current.focus();
+    }
+  };
 
   // Format the date if we have a selected entry
   const formattedDate = selectedEntry 
@@ -78,6 +123,7 @@ export function EntryDetailsDialog({
         description: "The 'why' is crucial for brain health benefits!",
         variant: "destructive",
       });
+      scrollToWhy();
       return;
     }
 
@@ -101,7 +147,7 @@ export function EntryDetailsDialog({
     }
   };
 
-  // Simple tag extraction from text - Fixed TypeScript error
+  // Simple tag extraction from text
   const extractTags = (text: string): string[] => {
     const commonWords = ["for", "the", "and", "that", "with", "this", "from", "have", "was", "feel", "felt"];
     const matches = text.toLowerCase().match(/\b(\w+)\b/g);
@@ -114,15 +160,14 @@ export function EntryDetailsDialog({
       word.length > 3 && !commonWords.includes(word)
     );
     
-    // Return unique words that might be tags
     return [...new Set(potentialTags)].slice(0, 5);
   };
 
   // Render different content based on whether we're viewing or creating
   if (isNewEntry) {
     return (
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-lg max-h-[90vh] flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle className="flex items-center gap-2">
             <Brain className="h-5 w-5 text-blue-500" />
             Add Brain Health Gratitude
@@ -131,9 +176,32 @@ export function EntryDetailsDialog({
           <p className="text-sm text-muted-foreground">
             Remember: The "WHY" is where the real brain health magic happens!
           </p>
+          
+          {/* Progress indicator */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Completion Progress</span>
+              <span className="font-medium">{Math.round(currentProgress)}%</span>
+            </div>
+            <Progress value={currentProgress} className="h-2" />
+          </div>
         </DialogHeader>
         
-        <div className="space-y-4 py-4">
+        <div 
+          ref={containerRef}
+          className="space-y-4 py-4 flex-1 overflow-y-auto relative"
+          style={{ maxHeight: 'calc(90vh - 200px)' }}
+        >
+          {/* Scroll hint */}
+          {showScrollHint && (
+            <div className="absolute top-0 right-4 z-10 animate-bounce">
+              <div className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                <ArrowDown className="h-3 w-3" />
+                Scroll down
+              </div>
+            </div>
+          )}
+          
           <div className="space-y-2">
             <label className="text-sm font-medium">Gratitude Context</label>
             <Select
@@ -153,16 +221,30 @@ export function EntryDetailsDialog({
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium flex items-center gap-2">
-              <HeartHandshake className="h-4 w-4 text-rose-500" />
-              What are you grateful for? 💖
-            </label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium flex items-center gap-2">
+                <HeartHandshake className="h-4 w-4 text-rose-500" />
+                What are you grateful for? 💖
+              </label>
+              {gratitudeText.trim() && <CheckCircle className="h-4 w-4 text-green-500" />}
+            </div>
             <Textarea
               placeholder="I'm grateful for..."
               value={gratitudeText}
               onChange={(e) => setGratitudeText(e.target.value)}
               className="min-h-[80px]"
             />
+            {gratitudeText.trim() && !whyGrateful.trim() && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={scrollToWhy}
+                className="w-full mt-2 bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+              >
+                <ArrowDown className="h-4 w-4 mr-2" />
+                Continue to "WHY" section below ⬇️
+              </Button>
+            )}
           </div>
           
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 rounded-lg border border-blue-200">
@@ -172,12 +254,14 @@ export function EntryDetailsDialog({
                 🧠 WHY are you grateful for this? (Brain Health Boost!)
               </label>
               <Sparkles className="h-4 w-4 text-purple-500" />
+              {whyGrateful.trim() && <CheckCircle className="h-4 w-4 text-green-500" />}
             </div>
             <p className="text-xs text-blue-600 mb-3">
               This deeper reflection actively engages your brain's thinking patterns, 
               strengthening neural connections and emotional processing.
             </p>
             <Textarea
+              ref={whyFieldRef}
               placeholder="This matters to me because... / I feel grateful because... / This impacts my life by... / This helps me grow by..."
               value={whyGrateful}
               onChange={(e) => setWhyGrateful(e.target.value)}
@@ -187,7 +271,10 @@ export function EntryDetailsDialog({
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium">How does this make you feel? (1-5)</label>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">How does this make you feel? (1-5)</label>
+              {moodScore !== 3 && <CheckCircle className="h-4 w-4 text-green-500" />}
+            </div>
             <div className="flex gap-2 justify-between">
               {[1, 2, 3, 4, 5].map((score) => (
                 <Button
@@ -209,15 +296,18 @@ export function EntryDetailsDialog({
           </div>
         </div>
         
-        <DialogFooter>
+        <DialogFooter className="flex-shrink-0 border-t pt-4">
           <Button variant="outline" onClick={onClose}>Cancel</Button>
           <Button 
             onClick={handleSaveNew} 
-            disabled={!gratitudeText.trim() || !whyGrateful.trim()}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
+            disabled={!isComplete}
+            className={`${isComplete 
+              ? "bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600" 
+              : "bg-muted"
+            }`}
           >
             <Brain className="h-4 w-4 mr-1" />
-            Save Brain Health Gratitude
+            {isComplete ? "Save Brain Health Gratitude" : `Complete fields (${Math.round(currentProgress)}%)`}
           </Button>
         </DialogFooter>
       </DialogContent>

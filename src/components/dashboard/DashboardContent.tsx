@@ -22,6 +22,7 @@ import { QuickAccessWidget } from "@/components/guide/QuickAccessWidget";
 import { FloatingGratitudeButton } from "@/components/gratitude/FloatingGratitudeButton";
 import { UserGuideIntegration } from "@/components/onboarding/UserGuideIntegration";
 import { NeverLostSystem } from "@/components/navigation/NeverLostSystem";
+import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
@@ -33,6 +34,15 @@ export function DashboardContent() {
   const [dailyIntention, setDailyIntention] = useState('');
   const { metrics, getNextUnlock } = useUserProgress();
   const userData = useUserData();
+
+  // Define sections for reading progress
+  const dashboardSections = [
+    { id: 'header', title: 'Header & Overview' },
+    { id: 'ichoose', title: 'Daily #IChoose' },
+    { id: 'focus', title: 'Today Focus' },
+    { id: 'mood', title: 'Mood & Energy' },
+    { id: 'activities', title: 'Quick Actions' }
+  ];
 
   useEffect(() => {
     // Check for onboarding completion
@@ -60,6 +70,16 @@ export function DashboardContent() {
       setEnergyLevel(ritualData.energyLevel);
       setDailyIntention(ritualData.intention);
     }
+
+    // Set up section elements for progress tracking
+    setTimeout(() => {
+      dashboardSections.forEach(section => {
+        const element = document.getElementById(section.id);
+        if (element) {
+          section.element = element;
+        }
+      });
+    }, 100);
   }, [searchParams]);
 
   const handleUpgradeClick = () => {
@@ -99,7 +119,10 @@ export function DashboardContent() {
   if (showMorningRitual) {
     return (
       <div className="space-y-6">
-        <MorningRitualView />
+        <ReadingProgressBar sections={[{ id: 'morning-ritual', title: 'Morning Ritual' }]} />
+        <div id="morning-ritual" className="pt-4">
+          <MorningRitualView />
+        </div>
         <SmartNotificationEngine 
           energyLevel={energyLevel || undefined}
           dailyIntention={dailyIntention}
@@ -112,7 +135,11 @@ export function DashboardContent() {
 
   return (
     <div className="space-y-6">
-      <DashboardHeader />
+      <ReadingProgressBar sections={dashboardSections} />
+      
+      <div id="header" className="pt-4">
+        <DashboardHeader />
+      </div>
       
       {/* Role-Specific Welcome Message */}
       {userData.userType && (
@@ -168,20 +195,26 @@ export function DashboardContent() {
       )}
       
       {/* Daily #IChoose Widget - Prominent placement with user type */}
-      <DailyIChooseWidget 
-        onUpgradeClick={handleUpgradeClick}
-        userType={userData.userType}
-      />
+      <div id="ichoose">
+        <DailyIChooseWidget 
+          onUpgradeClick={handleUpgradeClick}
+          userType={userData.userType}
+        />
+      </div>
       
       {/* Trial Status - Show prominently at top */}
       <TrialStatusCard />
       
       {/* Quick Actions for Progress */}
-      <QuickActionsToProgress />
+      <div id="activities">
+        <QuickActionsToProgress />
+      </div>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
-          <TodayFocus />
+          <div id="focus">
+            <TodayFocus />
+          </div>
           <UpcomingToday />
         </div>
         
@@ -189,7 +222,9 @@ export function DashboardContent() {
           <RecentWins />
           <QuickAccessWidget />
           <TopPriorities />
-          <MoodEnergySnapshot />
+          <div id="mood">
+            <MoodEnergySnapshot />
+          </div>
           <BrainGameQuickStart />
         </div>
       </div>

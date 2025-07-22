@@ -1,9 +1,9 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { HeartHandshake, ArrowRight, Flame, Sparkles } from "lucide-react";
+import { HeartHandshake, ArrowRight, Flame, Sparkles, ArrowDown, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -16,6 +16,8 @@ export function GratitudePracticeWidget() {
   const { notifyTaskCompleted } = useAccountabilityIntegration();
   const [gratitudeNote, setGratitudeNote] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Mock data for display
   const currentStreak = 5;
@@ -28,6 +30,23 @@ export function GratitudePracticeWidget() {
   ];
   
   const todayPrompt = todayPrompts[Math.floor(Math.random() * todayPrompts.length)];
+  const hasContent = gratitudeNote.trim().length > 0;
+
+  useEffect(() => {
+    const checkScroll = () => {
+      if (containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+        setShowScrollHint(scrollHeight > clientHeight && scrollTop < scrollHeight - clientHeight - 20);
+      }
+    };
+
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('scroll', checkScroll);
+      checkScroll(); // Initial check
+      return () => container.removeEventListener('scroll', checkScroll);
+    }
+  }, []);
 
   const handleQuickEntry = async () => {
     if (!user) {
@@ -70,6 +89,10 @@ export function GratitudePracticeWidget() {
     }
   };
 
+  const handleViewAll = () => {
+    navigate("/gratitude");
+  };
+
   return (
     <Card className="h-full bg-gradient-to-br from-rose-50 via-pink-50 to-orange-50 border-rose-200">
       <CardHeader className="pb-3">
@@ -79,7 +102,21 @@ export function GratitudePracticeWidget() {
           <Sparkles className="h-4 w-4 text-amber-400" />
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent 
+        ref={containerRef}
+        className="space-y-4 relative overflow-y-auto"
+        style={{ maxHeight: '300px' }}
+      >
+        {/* Scroll hint */}
+        {showScrollHint && (
+          <div className="absolute top-0 right-2 z-10 animate-bounce">
+            <div className="bg-rose-500 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
+              <ArrowDown className="h-3 w-3" />
+              More
+            </div>
+          </div>
+        )}
+        
         <div className="bg-gradient-to-r from-rose-100 to-pink-100 p-4 rounded-lg border border-rose-200">
           <p className="text-sm font-medium mb-2 text-rose-800">Today's question</p>
           <p className="text-sm text-rose-700 italic">
@@ -89,9 +126,12 @@ export function GratitudePracticeWidget() {
 
         <div className="space-y-3">
           <div>
-            <label className="text-xs font-medium text-rose-700 mb-1 block">
-              What are you grateful for? 💖
-            </label>
+            <div className="flex items-center gap-2 mb-1">
+              <label className="text-xs font-medium text-rose-700">
+                What are you grateful for? 💖
+              </label>
+              {hasContent && <CheckCircle className="h-4 w-4 text-green-500" />}
+            </div>
             <Input
               placeholder="I'm grateful for..."
               value={gratitudeNote}
@@ -110,9 +150,21 @@ export function GratitudePracticeWidget() {
             <HeartHandshake className="h-4 w-4 mr-1" />
             {isSubmitting ? "Saving..." : "Save This Moment"}
           </Button>
+          
+          <div className="text-center">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleViewAll}
+              className="text-rose-600 hover:text-rose-800 hover:bg-rose-100 border-rose-200"
+            >
+              <Brain className="h-4 w-4 mr-1" />
+              Add Brain Health Gratitude
+            </Button>
+          </div>
         </div>
 
-        <div className="flex items-center justify-between pt-2">
+        <div className="flex items-center justify-between pt-2 border-t border-rose-200">
           <div className="flex items-center gap-2">
             <Flame className="h-4 w-4 text-orange-500" />
             <span className="text-sm font-medium text-rose-700">{currentStreak} day streak</span>
@@ -120,7 +172,7 @@ export function GratitudePracticeWidget() {
           <Button 
             variant="ghost" 
             size="sm"
-            onClick={() => navigate("/gratitude")}
+            onClick={handleViewAll}
             className="text-rose-600 hover:text-rose-800 hover:bg-rose-100"
           >
             View All
