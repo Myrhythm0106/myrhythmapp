@@ -73,12 +73,11 @@ export function DashboardContent() {
 
     // Set up section elements for progress tracking
     setTimeout(() => {
-      dashboardSections.forEach(section => {
+      const sectionsWithElements = dashboardSections.map(section => {
         const element = document.getElementById(section.id);
-        if (element) {
-          section.element = element;
-        }
+        return { ...section, element };
       });
+      // Update sections if needed for progress tracking
     }, 100);
   }, [searchParams]);
 

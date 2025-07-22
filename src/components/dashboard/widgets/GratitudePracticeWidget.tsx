@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { HeartHandshake, ArrowRight, Flame, Sparkles, ArrowDown, CheckCircle } from "lucide-react";
+import { HeartHandshake, ArrowRight, Flame, Sparkles, ArrowDown, CheckCircle, Brain } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";

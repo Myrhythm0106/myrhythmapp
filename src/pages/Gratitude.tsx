@@ -34,12 +34,11 @@ const Gratitude = () => {
   useEffect(() => {
     // Set up section elements for progress tracking
     setTimeout(() => {
-      gratitudeSections.forEach(section => {
+      const sectionsWithElements = gratitudeSections.map(section => {
         const element = document.getElementById(section.id);
-        if (element) {
-          section.element = element;
-        }
+        return { ...section, element };
       });
+      // Update sections if needed for progress tracking
     }, 100);
   }, []);
   
