@@ -7,7 +7,7 @@ import { Brain, Users, Heart, ArrowRight, CheckCircle, Star, Play, Volume2, Eye,
 
 export function HeroSection() {
   const navigate = useNavigate();
-  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | null>(null);
+  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | 'cognitive-optimization' | 'wellness' | null>(null);
   const [showQuickView, setShowQuickView] = useState(true);
   
   const userTypes = [
@@ -26,6 +26,22 @@ export function HeroSection() {
       subtitle: 'Supporting someone I love',
       color: 'teal',
       description: 'Help without taking over their independence'
+    },
+    {
+      id: 'cognitive-optimization' as const,
+      icon: Brain,
+      title: 'Cognitive Enhancement',
+      subtitle: 'Optimizing mental performance',
+      color: 'blue',
+      description: 'Enhance your cognitive abilities and mental clarity'
+    },
+    {
+      id: 'wellness' as const,
+      icon: Users,
+      title: 'General Wellness',
+      subtitle: 'Overall mental health focus',
+      color: 'green',
+      description: 'Supporting your overall mental wellness journey'
     }
   ];
 
@@ -78,7 +94,7 @@ export function HeroSection() {
         {/* User Type Selection - Brain-Friendly Visual Choice */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-center">👋 Which describes you?</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {userTypes.map((type) => (
               <Card 
                 key={type.id}
@@ -119,21 +135,28 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Accessibility Features - Brain-Friendly Options */}
-        <div className="bg-amber-50 p-3 rounded-lg border border-amber-200 max-w-2xl mx-auto">
-          <div className="flex items-center justify-center gap-2 text-xs">
-            <Button variant="outline" size="sm" className="gap-1 px-3 py-2">
-              <Volume2 className="h-3 w-3" />
-              <span className="hidden sm:inline">Read Aloud</span>
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1 px-3 py-2">
-              <Eye className="h-3 w-3" />
-              <span className="hidden sm:inline">Larger Text</span>
-            </Button>
-            <Button variant="outline" size="sm" className="gap-1 px-3 py-2">
-              <Zap className="h-3 w-3" />
-              <span className="hidden sm:inline">Quick Mode</span>
-            </Button>
+        {/* Brain-Friendly Accessibility Features - Redesigned */}
+        <div className="bg-gradient-to-r from-emerald-50 to-blue-50 p-6 rounded-xl border border-emerald-200 max-w-4xl mx-auto">
+          <div className="text-center space-y-4">
+            <h3 className="text-lg font-semibold text-emerald-800 flex items-center justify-center gap-2">
+              <Brain className="h-5 w-5" />
+              Brain-Friendly Features
+            </h3>
+            <p className="text-sm text-emerald-700">Designed to work with your brain, not against it</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <Button variant="outline" className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-emerald-300 text-emerald-700 hover:text-emerald-800">
+                <Volume2 className="h-4 w-4" />
+                Read Aloud
+              </Button>
+              <Button variant="outline" className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-blue-300 text-blue-700 hover:text-blue-800">
+                <Eye className="h-4 w-4" />
+                Larger Text
+              </Button>
+              <Button variant="outline" className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-purple-300 text-purple-700 hover:text-purple-800">
+                <Zap className="h-4 w-4" />
+                Simple Mode
+              </Button>
+            </div>
           </div>
         </div>
 
