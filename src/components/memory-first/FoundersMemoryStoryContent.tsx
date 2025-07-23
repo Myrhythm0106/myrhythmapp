@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Brain, Heart, Users, Award, Calendar, Target, Lightbulb, Sparkles } from "lucide-react";
+import { BrainFriendlyAccessibility } from "./sections/BrainFriendlyAccessibility";
 
 export function FoundersMemoryStoryContent() {
   const navigate = useNavigate();
@@ -61,6 +62,11 @@ export function FoundersMemoryStoryContent() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
+      {/* Accessibility Controls */}
+      <div className="mb-6">
+        <BrainFriendlyAccessibility />
+      </div>
+
       {/* Header */}
       <div className="space-y-6">
         <Button 
@@ -90,8 +96,10 @@ export function FoundersMemoryStoryContent() {
         </div>
       </div>
 
-      {/* Personal Introduction */}
-      <Card className="border-l-4 border-l-purple-300">
+      {/* Main Content */}
+      <main className="accessibility-text space-y-8">
+        {/* Personal Introduction */}
+        <Card className="border-l-4 border-l-purple-300">
         <CardContent className="p-8">
           <div className="flex items-start gap-6">
             <div className="bg-purple-100 p-4 rounded-full">
@@ -273,7 +281,8 @@ export function FoundersMemoryStoryContent() {
             Your courage to rebuild inspires us to keep building."
           </p>
         </CardContent>
-      </Card>
+        </Card>
+      </main>
     </div>
   );
 }

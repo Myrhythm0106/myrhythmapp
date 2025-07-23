@@ -1,27 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Volume2, Eye, Zap, Pause, RotateCcw, BookOpen } from 'lucide-react';
+import { Volume2, Eye, Zap, Pause, RotateCcw, BookOpen, Loader2 } from 'lucide-react';
+import { speechService } from '@/utils/speechSynthesis';
+import { toast } from 'sonner';
 
 export function BrainFriendlyAccessibility() {
-  const [textSize, setTextSize] = useState('normal');
+  const [textSize, setTextSize] = useState(() => 
+    localStorage.getItem('accessibility-text-size') || 'normal'
+  );
   const [isReading, setIsReading] = useState(false);
-  const [showSimpleMode, setShowSimpleMode] = useState(false);
+  const [showSimpleMode, setShowSimpleMode] = useState(() => 
+    localStorage.getItem('accessibility-simple-mode') === 'true'
+  );
 
-  const handleTextToSpeech = () => {
-    if ('speechSynthesis' in window) {
-      const text = document.body.innerText;
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.rate = 0.8; // Slower for memory challenges
-      utterance.pitch = 1;
+  // Apply settings on mount
+  useEffect(() => {
+    applyTextSize(textSize);
+    applySimpleMode(showSimpleMode);
+  }, []);
+
+  const applyTextSize = (size: string) => {
+    const root = document.documentElement;
+    const sizeMap = {
+      normal: '1rem',
+      large: '1.125rem', 
+      xl: '1.25rem'
+    };
+    root.style.setProperty('--accessibility-text-size', sizeMap[size as keyof typeof sizeMap]);
+    localStorage.setItem('accessibility-text-size', size);
+  };
+
+  const applySimpleMode = (enabled: boolean) => {
+    document.body.classList.toggle('simple-mode', enabled);
+    localStorage.setItem('accessibility-simple-mode', enabled.toString());
+  };
+
+  const handleTextToSpeech = async () => {
+    if (!speechService.isAvailable()) {
+      toast.error("Speech not supported in this browser");
+      return;
+    }
+
+    if (isReading) {
+      speechService.cancel();
+      setIsReading(false);
+      return;
+    }
+
+    try {
+      setIsReading(true);
+      const textContent = document.querySelector('main')?.innerText || 
+                         document.body.innerText;
       
-      if (isReading) {
-        speechSynthesis.cancel();
-        setIsReading(false);
-      } else {
-        speechSynthesis.speak(utterance);
-        setIsReading(true);
-      }
+      await speechService.speak(textContent, { 
+        rate: 0.8, // Slower for memory challenges
+        volume: 0.9 
+      });
+    } catch (error) {
+      console.error("Speech error:", error);
+      toast.error("Could not read text aloud");
+    } finally {
+      setIsReading(false);
     }
   };
 
@@ -32,26 +72,20 @@ export function BrainFriendlyAccessibility() {
     const newSize = sizes[nextIndex];
     
     setTextSize(newSize);
-    
-    // Apply text size to document
-    const sizeClasses = {
-      normal: 'text-base',
-      large: 'text-lg', 
-      xl: 'text-xl'
-    };
-    
-    document.documentElement.className = sizeClasses[newSize as keyof typeof sizeClasses];
+    applyTextSize(newSize);
+    toast.success(`Text size: ${newSize}`);
   };
 
   const toggleSimpleMode = () => {
-    setShowSimpleMode(!showSimpleMode);
-    // This would trigger a simplified view of content
-    document.body.classList.toggle('simple-mode', !showSimpleMode);
+    const newSimpleMode = !showSimpleMode;
+    setShowSimpleMode(newSimpleMode);
+    applySimpleMode(newSimpleMode);
+    toast.success(newSimpleMode ? 'Simple mode enabled' : 'Simple mode disabled');
   };
 
   const accessibilityOptions = [
     {
-      icon: Volume2,
+      icon: isReading ? Loader2 : Volume2,
       title: 'Read Aloud',
       subtitle: 'Listen instead of reading',
       action: handleTextToSpeech,
@@ -102,7 +136,7 @@ export function BrainFriendlyAccessibility() {
                 }`}
                 title={option.subtitle}
               >
-                <option.icon className="h-3 w-3" />
+                <option.icon className={`h-3 w-3 ${option.title === 'Read Aloud' && isReading ? 'animate-spin' : ''}`} />
                 <span className="hidden md:inline whitespace-nowrap">
                   {option.isActive ? option.activeText : option.inactiveText}
                 </span>
