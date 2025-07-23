@@ -231,34 +231,21 @@
   .simple-mode .shadow-lg,
   .simple-mode .shadow-md,
   .simple-mode .shadow-sm {
-    @apply shadow-none bg-background;
+    background: hsl(var(--background)) !important;
+    box-shadow: none !important;
   }
 
-  .simple-mode .border-2,
-  .simple-mode .border {
-    @apply border border-gray-300;
+  .simple-mode [class*="border-2"],
+  .simple-mode [class*="border-"] {
+    border: 1px solid hsl(var(--border)) !important;
   }
 
   .simple-mode [class*="gradient"] {
-    @apply bg-background;
+    background: hsl(var(--background)) !important;
   }
 
-  .simple-mode .opacity-50,
-  .simple-mode .opacity-60,
-  .simple-mode .opacity-70,
-  .simple-mode .opacity-80 {
-    @apply opacity-100;
+  .simple-mode [class*="opacity-"] {
+    opacity: 1 !important;
   }
 
-  /* Ensure text respects accessibility size */
-  body * {
-    font-size: var(--accessibility-text-size, inherit);
-  }
-
-  /* Exceptions for icons and specific UI elements */
-  .icon, .lucide, [class*="icon"], button svg, .h-3, .h-4, .h-5, .h-6 {
-    font-size: inherit !important;
-    width: auto !important;
-    height: auto !important;
-  }
 }
