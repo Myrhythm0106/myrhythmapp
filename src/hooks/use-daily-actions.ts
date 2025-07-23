@@ -46,7 +46,7 @@ export function useDailyActions() {
   useEffect(() => {
     const today = format(new Date(), 'yyyy-MM-dd');
     fetchActionsForDate(today);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch actions for a specific date
   const fetchActionsForDate = async (date: string) => {
