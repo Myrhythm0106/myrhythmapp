@@ -213,7 +213,18 @@ export function BrainHealthCalendarView({
                 <InteractiveCalendarActions
                   selectedDate={selectedDate}
                   selectedTime={selectedTime}
-                  onActionCreate={handleActionCreate}
+                  onActionCreate={(actionData) => {
+                    console.log('Action created:', actionData);
+                    // Refresh calendar data to show new action
+                    if (selectedDate) {
+                      fetchActionsForDate(selectedDate.toISOString().split('T')[0]);
+                    }
+                  }}
+                  onRefreshCalendar={() => {
+                    if (selectedDate) {
+                      fetchActionsForDate(selectedDate.toISOString().split('T')[0]);
+                    }
+                  }}
                   view={view}
                 />
                 

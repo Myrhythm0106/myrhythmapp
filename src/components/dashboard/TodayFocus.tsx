@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Plus, Target, Trash2, Brain, Clock } from "lucide-react";
+import { CheckCircle, Plus, Target, Trash2, Brain, Clock, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { useDailyActions } from "@/hooks/use-daily-actions";
+import { format } from "date-fns";
 
 interface FocusItem {
   id: string;
@@ -18,29 +20,15 @@ interface FocusItem {
 
 export function TodayFocus() {
   const navigate = useNavigate();
-  const [focusItems, setFocusItems] = useState<FocusItem[]>([
-    { 
-      id: "1", 
-      text: "Log the important decision to start morning walks earlier", 
-      completed: false, 
-      type: "decision",
-      timestamp: "9:30 AM"
-    },
-    { 
-      id: "2", 
-      text: "Capture key moments from team meeting about project priorities", 
-      completed: true, 
-      type: "moment",
-      timestamp: "11:00 AM"
-    },
-    { 
-      id: "3", 
-      text: "Record the action taken to call the doctor for appointment", 
-      completed: false, 
-      type: "action",
-      timestamp: "2:00 PM"
-    },
-  ]);
+  const { actions, loading } = useDailyActions();
+  
+  // Get today's priority actions (top 3-5 most important)
+  const today = new Date().toISOString().split('T')[0];
+  const todayPriorityActions = actions
+    .filter(action => action.date === today)
+    .slice(0, 5); // Show top 5 priority items
+  
+  const [focusItems, setFocusItems] = useState<FocusItem[]>([]);
   const [isAddingItem, setIsAddingItem] = useState(false);
   const [newItemText, setNewItemText] = useState("");
   const [newItemType, setNewItemType] = useState<"moment" | "decision" | "action">("moment");
@@ -94,11 +82,14 @@ export function TodayFocus() {
     setNewItemType("moment");
   };
 
-  const getTypeColor = (type: "moment" | "decision" | "action") => {
+  const getTypeColor = (type: string) => {
     switch (type) {
-      case "moment": return "bg-blue-100 text-blue-800";
-      case "decision": return "bg-purple-100 text-purple-800";
-      case "action": return "bg-green-100 text-green-800";
+      case "health": return "bg-green-100 text-green-800";
+      case "work": return "bg-blue-100 text-blue-800"; 
+      case "personal": return "bg-purple-100 text-purple-800";
+      case "family": return "bg-rose-100 text-rose-800";
+      case "rest": return "bg-amber-100 text-amber-800";
+      default: return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -110,132 +101,131 @@ export function TodayFocus() {
     }
   };
 
+  if (loading) {
+    return (
+      <Card className="border-l-4 border-l-clarity-teal-400 shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Target className="h-5 w-5 text-clarity-teal-500 animate-pulse" />
+            Loading Your Focus Actions...
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="animate-pulse space-y-3">
+            <div className="h-10 bg-muted rounded"></div>
+            <div className="h-10 bg-muted rounded"></div>
+            <div className="h-10 bg-muted rounded"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="border-l-4 border-l-primary shadow-sm hover:shadow-md transition-shadow">
+    <Card className="border-l-4 border-l-clarity-teal-400 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
-          <Brain className="h-5 w-5 text-primary" />
-          My Memory Focus for Today
+          <Target className="h-5 w-5 text-clarity-teal-500" />
+          Your Priority Focus Today
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Track important moments, decisions, and actions to strengthen your memory
+          {todayPriorityActions.length > 0 
+            ? `${todayPriorityActions.filter(a => a.status === 'completed').length} of ${todayPriorityActions.length} priority actions completed`
+            : "Ready to set your focus priorities?"
+          }
         </p>
       </CardHeader>
       
       <CardContent className="pt-1">
-        <ul className="space-y-3">
-          {focusItems.map(item => (
-            <li key={item.id} className="flex items-start gap-3 group p-2 rounded-lg hover:bg-muted/30 transition-colors">
-              <Checkbox 
-                checked={item.completed} 
-                onCheckedChange={() => handleToggleComplete(item.id)}
-                className="mt-1"
-              />
-              
-              <div className="flex-1 space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{getTypeEmoji(item.type)}</span>
-                  <Badge variant="secondary" className={getTypeColor(item.type)}>
-                    {item.type}
-                  </Badge>
-                  {item.timestamp && (
-                    <span className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {item.timestamp}
-                    </span>
+        {todayPriorityActions.length === 0 ? (
+          <div className="text-center py-6 space-y-3">
+            <Target className="h-10 w-10 text-muted-foreground mx-auto opacity-50" />
+            <p className="text-sm text-muted-foreground">No priority actions set for today</p>
+            <p className="text-xs text-muted-foreground">Create your first action to establish your daily focus!</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => navigate("/calendar")}
+              className="mt-2"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Set Priority Actions
+            </Button>
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {todayPriorityActions.map(action => (
+              <li key={action.id} className="flex items-start gap-3 group p-3 rounded-lg hover:bg-muted/20 transition-colors border border-muted">
+                <div className="flex items-center gap-2 mt-1">
+                  <div className={`w-3 h-3 rounded-full ${action.status === 'completed' ? 'bg-clarity-teal-500' : 'bg-muted-foreground/30'}`}></div>
+                  {action.difficulty_level && (
+                    <div className="flex items-center gap-0.5">
+                      {Array.from({ length: action.difficulty_level }, (_, i) => (
+                        <div key={i} className="w-1 h-1 bg-clarity-teal-500 rounded-full"></div>
+                      ))}
+                    </div>
                   )}
                 </div>
-                <span 
-                  className={`block text-sm ${item.completed ? 'line-through text-muted-foreground' : 'text-foreground'}`}
-                >
-                  {item.text}
-                </span>
-              </div>
-              
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="opacity-0 group-hover:opacity-100 h-6 w-6 p-0 shrink-0"
-                onClick={() => handleRemoveItem(item.id)}
-              >
-                <Trash2 className="h-4 w-4 text-muted-foreground" />
-              </Button>
-            </li>
-          ))}
-          
-          {isAddingItem ? (
-            <li className="flex flex-col gap-3 pt-2 p-2 bg-muted/20 rounded-lg">
-              <div className="flex gap-2">
-                {(["moment", "decision", "action"] as const).map((type) => (
-                  <Button
-                    key={type}
-                    variant={newItemType === type ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setNewItemType(type)}
-                    className="text-xs capitalize"
-                  >
-                    {getTypeEmoji(type)} {type}
-                  </Button>
-                ))}
-              </div>
-              <input
-                type="text"
-                value={newItemText}
-                onChange={(e) => setNewItemText(e.target.value)}
-                placeholder={`What important ${newItemType} do you want to log today?`}
-                className="w-full p-2 text-sm rounded-md border focus:outline-none focus:ring-2 focus:ring-primary"
-                autoFocus
-              />
-              <div className="flex gap-2">
+                
+                <div className="flex-1 space-y-1">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className={`font-medium ${action.status === 'completed' ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
+                      {action.title}
+                    </span>
+                    {action.start_time && (
+                      <span className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {format(new Date(`2000-01-01T${action.start_time}`), 'h:mm a')}
+                      </span>
+                    )}
+                    <Badge variant="secondary" className={getTypeColor(action.action_type)}>
+                      {action.action_type}
+                    </Badge>
+                  </div>
+                  
+                  {action.description && (
+                    <p className="text-xs text-muted-foreground">
+                      {action.description}
+                    </p>
+                  )}
+                  
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <span>Duration: {action.duration_minutes || 30}min</span>
+                    <span>•</span>
+                    <span>Focus Level: {action.difficulty_level}/3</span>
+                  </div>
+                </div>
+                
                 <Button 
-                  size="sm" 
-                  onClick={handleAddItem}
-                  className="text-xs py-1 h-8"
+                  variant="ghost" 
+                  size="sm"
+                  className="opacity-0 group-hover:opacity-100 h-8 w-8 p-0 shrink-0"
+                  onClick={() => navigate(`/calendar?actionId=${action.id}`)}
                 >
-                  Add Memory Task
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
                 </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleCancel}
-                  className="text-xs py-1 h-8"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </li>
-          ) : focusItems.length < 5 && (
-            <li>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="w-full justify-start text-muted-foreground hover:text-foreground"
-                onClick={() => setIsAddingItem(true)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                Add memory focus item
-              </Button>
-            </li>
-          )}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        )}
       </CardContent>
       
-      {focusItems.length > 0 && (
+      {todayPriorityActions.length > 0 && (
         <CardFooter className="pt-0 flex items-center justify-between">
           <div className="text-sm text-muted-foreground flex items-center gap-1">
-            <CheckCircle className="h-4 w-4 text-primary" />
+            <CheckCircle className="h-4 w-4 text-clarity-teal-500" />
             <span>
-              {focusItems.filter(i => i.completed).length} of {focusItems.length} memory tasks completed
+              {todayPriorityActions.filter(a => a.status === 'completed').length} of {todayPriorityActions.length} priority actions completed
             </span>
           </div>
           
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate("/memory")}
-            className="text-xs text-primary hover:text-primary/80"
+            onClick={() => navigate("/calendar")}
+            className="text-xs text-clarity-teal-600 hover:text-clarity-teal-500"
           >
-            View Memory Center →
+            Manage Calendar →
           </Button>
         </CardFooter>
       )}

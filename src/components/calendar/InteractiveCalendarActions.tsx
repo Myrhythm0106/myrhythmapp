@@ -2,14 +2,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Calendar, Clock, Target } from "lucide-react";
+import { Plus, Calendar, Clock, Target, Brain } from "lucide-react";
 import { GuidedActionWizard } from "./forms/GuidedActionWizard";
 import { toast } from "sonner";
+import { useDailyActions } from "@/hooks/use-daily-actions";
 
 interface InteractiveCalendarActionsProps {
   selectedDate?: Date;
   selectedTime?: string;
   onActionCreate?: (actionData: any) => void;
+  onRefreshCalendar?: () => void;
   view: "day" | "week" | "month" | "year";
 }
 
@@ -17,26 +19,17 @@ export function InteractiveCalendarActions({
   selectedDate, 
   selectedTime, 
   onActionCreate,
+  onRefreshCalendar,
   view 
 }: InteractiveCalendarActionsProps) {
   const [showActionDialog, setShowActionDialog] = React.useState(false);
 
   const handleActionCreate = (actionData: any) => {
-    const newAction = {
-      ...actionData,
-      date: selectedDate,
-      time: selectedTime,
-      id: Math.random().toString(36).substr(2, 9),
-      watchers: actionData.watchers || []
-    };
-    
-    onActionCreate?.(newAction);
+    // The action is already created in the database by GuidedActionWizard
+    // Just trigger calendar refresh and close dialog
+    onActionCreate?.(actionData);
+    onRefreshCalendar?.();
     setShowActionDialog(false);
-    
-    toast.success("🎯 Action Created!", {
-      description: `New ${actionData.type || 'action'} scheduled for ${selectedDate?.toLocaleDateString()}${actionData.watchers?.length ? ' with accountability watchers' : ''}`,
-      duration: 4000
-    });
   };
 
   const handleUpgradeClick = () => {
@@ -73,13 +66,13 @@ export function InteractiveCalendarActions({
           </DialogTrigger>
           <DialogContent className="sm:max-w-[700px] max-h-[90vh]">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2 text-xl bg-gradient-to-r from-clarity-teal-600 to-memory-emerald-600 bg-clip-text text-transparent">
-                <Target className="h-5 w-5 text-clarity-teal-600" />
-                Create Brain-Friendly Action
+              <DialogTitle className="flex items-center gap-2 text-xl bg-gradient-to-r from-brain-purple-600 to-clarity-teal-600 bg-clip-text text-transparent">
+                <Brain className="h-5 w-5 text-brain-purple-600" />
+                Create Your Empowering Action
               </DialogTitle>
               <DialogDescription>
                 {selectedDate && (
-                  <div className="flex items-center gap-4 text-sm text-gray-600 mt-2">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
                       <span>{selectedDate.toLocaleDateString()}</span>
@@ -92,7 +85,10 @@ export function InteractiveCalendarActions({
                     )}
                   </div>
                 )}
-                Create a personalized action that fits your energy and recovery needs.
+                <div className="mt-3 p-3 bg-gradient-to-r from-brain-purple-50 to-clarity-teal-50 rounded-lg border border-brain-purple-200">
+                  <p className="text-sm font-medium text-brain-purple-800">✨ Design an action that empowers your brain and builds cognitive strength</p>
+                  <p className="text-xs text-brain-purple-600 mt-1">Every thoughtful action you schedule builds neural pathways and strengthens your executive function!</p>
+                </div>
               </DialogDescription>
             </DialogHeader>
             <div className="max-h-[calc(90vh-120px)] overflow-y-auto">

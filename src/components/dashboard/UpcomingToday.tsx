@@ -2,10 +2,12 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, MapPin, Info, Plus } from "lucide-react";
+import { Calendar, Clock, MapPin, Info, Plus, Brain } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useDailyActions } from "@/hooks/use-daily-actions";
+import { format } from "date-fns";
 
 interface Event {
   id: string;
@@ -19,132 +21,141 @@ interface Event {
 
 export function UpcomingToday() {
   const navigate = useNavigate();
-  const [events, setEvents] = React.useState<Event[]>([
-    { 
-      id: "1", 
-      title: "Doctor Appointment", 
-      time: "2:30 PM", 
-      location: "Memorial Hospital",
-      type: "appointment",
-      notes: "Bring medication list and recent test results"
-    },
-    { 
-      id: "2", 
-      title: "Evening Medication", 
-      time: "8:00 PM",
-      type: "medication",
-      notes: "Take with food and water"
-    },
-    { 
-      id: "3", 
-      title: "Physical Therapy Exercises", 
-      time: "5:00 PM",
-      type: "exercise",
-      completed: false,
-      notes: "Focus on balance exercises today"
-    }
-  ]);
+  const { actions, completeAction, loading } = useDailyActions();
   
-  const handleViewDetails = (event: Event) => {
-    navigate(`/calendar?eventId=${event.id}`);
-    toast.info(`Opening details for ${event.title}`);
+  // Get today's actions
+  const today = new Date().toISOString().split('T')[0];
+  const todayActions = actions.filter(action => action.date === today);
+  
+  React.useEffect(() => {
+    // Auto-fetch today's actions when component mounts
+  }, []);
+  
+  const handleViewDetails = (action: any) => {
+    navigate(`/calendar?actionId=${action.id}`);
+    toast.info(`Opening details for ${action.title}`);
   };
   
-  const markEventCompleted = (id: string) => {
-    setEvents(events.map(event => 
-      event.id === id ? { ...event, completed: !event.completed } : event
-    ));
-    
-    const event = events.find(e => e.id === id);
-    if (event) {
-      toast.success(`${event.completed ? 'Unmarked' : 'Marked'} "${event.title}" as ${event.completed ? 'incomplete' : 'complete'}`);
+  const markActionCompleted = async (id: string) => {
+    try {
+      await completeAction(id);
+      toast.success("🎯 Action completed!", {
+        description: "Great job following through on your plan! This builds cognitive strength.",
+        duration: 4000
+      });
+    } catch (error) {
+      toast.error("Failed to update action");
     }
   };
 
-  const getEventTypeColor = (type: Event["type"]) => {
+  const getActionTypeColor = (type: string) => {
     switch (type) {
-      case "appointment": return "bg-blue-100 text-blue-800";
-      case "medication": return "bg-purple-100 text-purple-800";
-      case "task": return "bg-amber-100 text-amber-800";
-      case "exercise": return "bg-green-100 text-green-800";
+      case "health": return "bg-green-100 text-green-800";
+      case "work": return "bg-blue-100 text-blue-800";
+      case "personal": return "bg-purple-100 text-purple-800";
+      case "family": return "bg-rose-100 text-rose-800";
+      case "rest": return "bg-amber-100 text-amber-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
   
+  if (loading) {
+    return (
+      <Card className="border-l-4 border-l-brain-purple-400 shadow-sm">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Brain className="h-5 w-5 text-brain-purple-500 animate-pulse" />
+            Loading Your Empowering Actions...
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="animate-pulse space-y-3">
+            <div className="h-12 bg-muted rounded"></div>
+            <div className="h-12 bg-muted rounded"></div>
+            <div className="h-12 bg-muted rounded"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <Card className="border-l-4 border-l-blue-400 shadow-sm hover:shadow-md transition-shadow">
+    <Card className="border-l-4 border-l-brain-purple-400 shadow-sm hover:shadow-md transition-shadow">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
-          <Calendar className="h-5 w-5 text-blue-500" />
-          Upcoming Today
+          <Brain className="h-5 w-5 text-brain-purple-500" />
+          Your Empowering Actions Today
         </CardTitle>
+        <p className="text-sm text-muted-foreground">
+          {todayActions.length > 0 
+            ? `${todayActions.filter(a => a.status === 'completed').length} of ${todayActions.length} actions completed - building cognitive strength!`
+            : "Ready to create some brain-empowering actions?"
+          }
+        </p>
       </CardHeader>
       
       <CardContent className="pt-1">
-        <ul className="space-y-3">
-          {events.map(event => (
-            <li 
-              key={event.id}
-              className={`p-3 border rounded-md ${event.completed ? 'bg-muted/30 border-dashed' : 'bg-white'} hover:bg-muted/10 transition-colors cursor-pointer`}
-              onClick={() => handleViewDetails(event)}
-            >
-              <div className="flex items-center gap-2">
-                <input 
-                  type="checkbox" 
-                  checked={!!event.completed} 
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    markEventCompleted(event.id);
-                  }}
-                  className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-                  onClick={(e) => e.stopPropagation()}
-                />
-                <div className={`flex-1 ${event.completed ? 'text-muted-foreground line-through' : ''}`}>
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
-                    <span className="font-medium">{event.title}</span>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Clock className="h-3 w-3" />
-                      <span>{event.time}</span>
+        {todayActions.length === 0 ? (
+          <div className="text-center py-8 space-y-3">
+            <Brain className="h-12 w-12 text-muted-foreground mx-auto opacity-50" />
+            <p className="text-muted-foreground">No actions scheduled for today</p>
+            <p className="text-xs text-muted-foreground">Create your first empowering action to start building cognitive strength!</p>
+          </div>
+        ) : (
+          <ul className="space-y-3">
+            {todayActions.map(action => (
+              <li 
+                key={action.id}
+                className={`p-3 border rounded-md ${action.status === 'completed' ? 'bg-muted/30 border-dashed' : 'bg-white'} hover:bg-muted/10 transition-colors cursor-pointer`}
+                onClick={() => handleViewDetails(action)}
+              >
+                <div className="flex items-center gap-2">
+                  <input 
+                    type="checkbox" 
+                    checked={action.status === 'completed'} 
+                    onChange={(e) => {
+                      e.stopPropagation();
+                      if (action.status !== 'completed') {
+                        markActionCompleted(action.id);
+                      }
+                    }}
+                    className="h-4 w-4 rounded border-gray-300 text-brain-purple-600 focus:ring-brain-purple-500"
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  <div className={`flex-1 ${action.status === 'completed' ? 'text-muted-foreground line-through' : ''}`}>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                      <span className="font-medium">{action.title}</span>
+                      {action.start_time && (
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>{format(new Date(`2000-01-01T${action.start_time}`), 'h:mm a')}</span>
+                        </div>
+                      )}
                     </div>
+                    
+                    {action.description && (
+                      <div className="text-xs text-muted-foreground mt-1">
+                        {action.description}
+                      </div>
+                    )}
                   </div>
                   
-                  {event.location && (
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
-                      <MapPin className="h-3 w-3" />
-                      <span>{event.location}</span>
+                  <Badge className={`text-xs ${getActionTypeColor(action.action_type)}`} variant="outline">
+                    {action.action_type}
+                  </Badge>
+                  
+                  {action.difficulty_level && (
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: action.difficulty_level }, (_, i) => (
+                        <div key={i} className="w-1.5 h-1.5 bg-clarity-teal-500 rounded-full"></div>
+                      ))}
                     </div>
                   )}
                 </div>
-                
-                <Badge className={`text-xs ${getEventTypeColor(event.type)}`} variant="outline">
-                  {event.type}
-                </Badge>
-                
-                {event.notes && (
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="h-7 w-7 p-0 text-muted-foreground"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toast.info(`Notes: ${event.notes}`);
-                    }}
-                  >
-                    <Info className="h-4 w-4" />
-                    <span className="sr-only">View notes</span>
-                  </Button>
-                )}
-              </div>
-              
-              {/* Show notes preview if available */}
-              {event.notes && (
-                <div className="mt-2 ml-6 text-xs text-muted-foreground bg-muted/20 p-1.5 rounded">
-                  <p className="line-clamp-1">{event.notes}</p>
-                </div>
-              )}
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        )}
       </CardContent>
       
       <CardFooter className="pt-0">
@@ -155,7 +166,7 @@ export function UpcomingToday() {
           onClick={() => navigate("/calendar")}
         >
           <Plus className="h-4 w-4 mr-1" />
-          Add Event
+          Create Empowering Action
         </Button>
       </CardFooter>
     </Card>
