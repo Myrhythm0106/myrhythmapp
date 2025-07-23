@@ -15,6 +15,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import InAppPurchase from "./routes/InAppPurchase";
+import MemoryBank from "./routes/MemoryBank";
 import TBICalendar from "./pages/TBICalendar";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 
@@ -36,6 +37,7 @@ function App() {
               <Route path="/terms" element={<TermsOfService />} />
               <Route path="/founders-story" element={<FoundersMemoryStory />} />
               <Route path="/in-app-purchase" element={<InAppPurchase />} />
+              <Route path="/memory-bank" element={<ProtectedRoute requireAuth={false}><MemoryBank /></ProtectedRoute>} />
               <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
               <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><TBICalendar /></ProtectedRoute>} />
               <Route path="/organizations" element={<ProtectedRoute requireAuth={false}><OrganizationsDirectory /></ProtectedRoute>} />

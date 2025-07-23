@@ -13,6 +13,7 @@ import AccountabilityPage from "./AccountabilityPage";
 import ProfilePage from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
 import SupportPage from "./SupportPage";
+import MemoryBankPage from "./MemoryBankPage";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -35,6 +36,8 @@ const Dashboard = () => {
         return <SupportPage />;
       case '/profile':
         return <ProfilePage />;
+      case '/memory-bank':
+        return <MemoryBankPage />;
       case '/settings':
         return <SettingsPage />;
       default:

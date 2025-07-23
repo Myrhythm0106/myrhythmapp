@@ -11,13 +11,14 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavLink, useLocation } from "react-router-dom";
-import { Brain, Calendar, Target, Heart, BarChart3, Gamepad2, Users, User, Settings, HelpCircle } from "lucide-react";
+import { Brain, Calendar, Target, Heart, BarChart3, Gamepad2, Users, User, Settings, HelpCircle, Camera } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DevelopmentNavigation } from "@/components/demo/DevelopmentNavigation";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: Brain },
   { title: "Calendar", url: "/calendar", icon: Calendar },
+  { title: "Memory Bank", url: "/memory-bank", icon: Camera },
   { title: "Goals", url: "/goals", icon: Target },
   { title: "Gratitude", url: "/gratitude", icon: Heart },
   { title: "Analytics", url: "/analytics", icon: BarChart3 },
