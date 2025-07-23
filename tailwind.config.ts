@@ -137,12 +137,47 @@ const config: Config = {
             opacity: "1"
           }
         },
+        "neural-pulse": {
+          "0%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 0 hsl(var(--brain-health-400) / 0.7)"
+          },
+          "70%": {
+            transform: "scale(1.05)",
+            boxShadow: "0 0 0 10px hsl(var(--brain-health-400) / 0)"
+          },
+          "100%": {
+            transform: "scale(1)",
+            boxShadow: "0 0 0 0 hsl(var(--brain-health-400) / 0)"
+          }
+        },
+        "achievement-celebration": {
+          "0%": { transform: "scale(1) rotate(0deg)" },
+          "25%": { transform: "scale(1.1) rotate(5deg)" },
+          "50%": { transform: "scale(1.2) rotate(-5deg)" },
+          "75%": { transform: "scale(1.1) rotate(3deg)" },
+          "100%": { transform: "scale(1) rotate(0deg)" }
+        },
+        "cognitive-flow": {
+          "0%": { 
+            background: "linear-gradient(45deg, hsl(var(--brain-health-100)), hsl(var(--clarity-teal-100)))"
+          },
+          "50%": { 
+            background: "linear-gradient(45deg, hsl(var(--clarity-teal-100)), hsl(var(--memory-emerald-100)))"
+          },
+          "100%": { 
+            background: "linear-gradient(45deg, hsl(var(--memory-emerald-100)), hsl(var(--brain-health-100)))"
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "scale-in": "scale-in 0.2s ease-out",
+        "neural-pulse": "neural-pulse 2s infinite",
+        "achievement-celebration": "achievement-celebration 0.6s ease-out",
+        "cognitive-flow": "cognitive-flow 3s ease-in-out infinite",
       },
     },
   },

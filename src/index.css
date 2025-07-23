@@ -217,6 +217,35 @@
     @apply bg-gradient-to-r from-purple-500/80 via-blue-500/75 to-clarity-teal-500/70;
   }
 
+  /* Brain-Health Calendar Enhancements */
+  .calendar-command-center {
+    @apply bg-gradient-to-br from-brain-health-50/40 via-clarity-teal-50/30 to-memory-emerald-50/20 border border-brain-health-200/60 shadow-xl backdrop-blur-sm;
+  }
+  
+  .neural-pathway-effect {
+    @apply relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-brain-health-400/20 before:via-clarity-teal-400/20 before:to-memory-emerald-400/20 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-300 before:rounded-lg;
+  }
+  
+  .brain-energy-high {
+    @apply bg-gradient-to-r from-memory-emerald-100 to-clarity-teal-100 border-memory-emerald-300;
+  }
+  
+  .brain-energy-medium {
+    @apply bg-gradient-to-r from-brain-health-100 to-clarity-teal-100 border-brain-health-300;
+  }
+  
+  .brain-energy-low {
+    @apply bg-gradient-to-r from-clarity-teal-100 to-brain-health-100 border-clarity-teal-300;
+  }
+  
+  .cognitive-achievement {
+    @apply bg-gradient-to-br from-memory-emerald-400 via-brain-health-400 to-clarity-teal-400 text-white shadow-lg animate-pulse;
+  }
+  
+  .memory-anchor {
+    @apply relative after:absolute after:top-1 after:right-1 after:w-2 after:h-2 after:bg-gradient-to-br after:from-memory-emerald-400 after:to-brain-health-400 after:rounded-full after:animate-pulse;
+  }
+
   /* Accessibility Features */
   .accessibility-text {
     font-size: var(--accessibility-text-size, 1rem);
@@ -246,6 +275,29 @@
 
   .simple-mode [class*="opacity-"] {
     opacity: 1 !important;
+  }
+
+  /* Focus Mode Styles */
+  .focus-mode {
+    --focus-bg: hsl(var(--brain-health-50));
+    --focus-text: hsl(var(--brain-health-700));
+    --focus-border: hsl(var(--brain-health-200));
+  }
+
+  .focus-mode .calendar-command-center {
+    @apply bg-gradient-to-br from-brain-health-50/60 to-clarity-teal-50/40 border-brain-health-300/60;
+  }
+
+  .focus-mode .neural-pathway-effect {
+    @apply opacity-70;
+  }
+
+  .focus-mode [data-focus-level="deep"] {
+    filter: grayscale(0.3) contrast(1.1);
+  }
+
+  .focus-mode [data-focus-level="gentle"] {
+    filter: brightness(1.1) contrast(0.9);
   }
 
 }
