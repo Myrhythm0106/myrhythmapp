@@ -42,6 +42,12 @@ export function useDailyActions() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // Auto-fetch today's actions on mount
+  useEffect(() => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    fetchActionsForDate(today);
+  }, []);
+
   // Fetch actions for a specific date
   const fetchActionsForDate = async (date: string) => {
     try {

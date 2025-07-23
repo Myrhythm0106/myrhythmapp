@@ -27,9 +27,6 @@ export function UpcomingToday() {
   const today = new Date().toISOString().split('T')[0];
   const todayActions = actions.filter(action => action.date === today);
   
-  React.useEffect(() => {
-    // Auto-fetch today's actions when component mounts
-  }, []);
   
   const handleViewDetails = (action: any) => {
     navigate(`/calendar?actionId=${action.id}`);
