@@ -61,14 +61,6 @@ export function useDailyActions() {
       setLoading(false);
     }
   }, []);
-
-  // Auto-fetch today's actions on mount
-  useEffect(() => {
-    const today = format(new Date(), 'yyyy-MM-dd');
-    fetchActionsForDate(today);
-  }, [fetchActionsForDate]);
-
-  // Fetch all active goals
   const fetchGoals = async () => {
     try {
       const { data, error } = await supabase

@@ -21,12 +21,16 @@ interface Event {
 
 export function UpcomingToday() {
   const navigate = useNavigate();
-  const { actions, completeAction, loading } = useDailyActions();
+  const { actions, completeAction, loading, fetchActionsForDate } = useDailyActions();
   
   // Get today's actions
   const today = new Date().toISOString().split('T')[0];
   const todayActions = actions.filter(action => action.date === today);
   
+  // Fetch today's actions on mount - ONLY ONCE
+  React.useEffect(() => {
+    fetchActionsForDate(today);
+  }, [fetchActionsForDate, today]);
   
   const handleViewDetails = (action: any) => {
     navigate(`/calendar?actionId=${action.id}`);
