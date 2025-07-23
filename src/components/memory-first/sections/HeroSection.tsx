@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -76,11 +77,11 @@ export function HeroSection() {
         <div className="space-y-6">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
             <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-              Memory Challenges
+              MyRhythm
             </span>
             <br />
-            <span className="text-foreground">
-              Don't End Your Story
+            <span className="text-foreground text-3xl md:text-4xl lg:text-5xl">
+              Memory Challenges Don't End Your Story
             </span>
           </h1>
           
