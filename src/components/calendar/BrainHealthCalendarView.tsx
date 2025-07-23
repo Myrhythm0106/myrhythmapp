@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MemoryEffectsContainer } from "@/components/ui/memory-effects";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -10,6 +10,9 @@ import { DayView } from "./views/DayView";
 import { WeekView } from "./views/WeekView";
 import { YearView } from "./views/YearView";
 import { InteractiveCalendarActions } from "./InteractiveCalendarActions";
+import { useDailyActions } from "@/hooks/use-daily-actions";
+import { CalendarEvent } from "./types/calendarTypes";
+import { format } from "date-fns";
 
 interface BrainHealthCalendarViewProps {
   view: "day" | "week" | "month" | "year" | "goals";
@@ -31,6 +34,33 @@ export function BrainHealthCalendarView({
   
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(date);
   const [selectedTime, setSelectedTime] = React.useState<string>();
+  const { actions, goals, fetchActionsForDate, fetchGoals } = useDailyActions();
+
+  // Fetch data when component mounts or date changes
+  useEffect(() => {
+    if (selectedDate) {
+      const dateStr = format(selectedDate, 'yyyy-MM-dd');
+      console.log('🔄 Fetching actions for date:', dateStr);
+      fetchActionsForDate(dateStr);
+    }
+    console.log('🔄 Fetching goals...');
+    fetchGoals();
+  }, [selectedDate, fetchActionsForDate, fetchGoals]);
+
+  console.log('📅 Calendar rendered with actions:', actions.length, 'goals:', goals.length);
+
+  // Convert actions to Action format for the views
+  const actionEvents = actions.map(action => ({
+    id: action.id,
+    title: action.title,
+    date: action.date,
+    time: action.start_time || '12:00',
+    location: '',
+    description: action.description || '',
+    status: (action.status === 'skipped' ? 'canceled' : action.status) as "pending" | "completed" | "in-progress" | "canceled",
+    type: 'activity' as const,
+    watchers: []
+  }));
 
   const handleMonthClick = (monthDate: Date) => {
     onDateSelect(monthDate);
@@ -121,14 +151,14 @@ export function BrainHealthCalendarView({
         
               {view === "day" && (
                 <div className="animate-in fade-in-50 duration-200">
-                  <DayView date={selectedDate || new Date()} />
+                  <DayView date={selectedDate || new Date()} events={actionEvents} onEventClick={(event) => console.log('Event clicked:', event)} />
                 </div>
               )}
               
               {view === "week" && (
                 <div className="animate-in fade-in-50 duration-200">
                   <WeekView 
-                    date={selectedDate || new Date()} 
+                    date={selectedDate || new Date()}
                   />
                 </div>
               )}
@@ -139,16 +169,16 @@ export function BrainHealthCalendarView({
                   <p className="text-muted-foreground mb-4">
                     Year: {selectedDate?.getFullYear() || new Date().getFullYear()}
                   </p>
-                  <YearView 
-                    currentDate={selectedDate || new Date()} 
-                    events={[]} 
-                    onDayClick={(clickedDate) => {
-                      setSelectedDate(clickedDate);
-                      onDateSelect(clickedDate);
-                      onViewChange("day");
-                    }}
-                    onMonthClick={handleMonthClick}
-                  />
+                   <YearView 
+                     currentDate={selectedDate || new Date()} 
+                     events={[]} 
+                     onDayClick={(clickedDate) => {
+                       setSelectedDate(clickedDate);
+                       onDateSelect(clickedDate);
+                       onViewChange("day");
+                     }}
+                     onMonthClick={handleMonthClick}
+                   />
                 </div>
               )}
 

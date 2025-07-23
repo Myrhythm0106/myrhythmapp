@@ -14,6 +14,7 @@ import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Timer, Coffee, Users } from "lucide-react";
+import { useDailyActions } from "@/hooks/use-daily-actions";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -24,6 +25,7 @@ const Calendar = () => {
   const [showEnhancedPomodoro, setShowEnhancedPomodoro] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { createAction, createGoal } = useDailyActions();
 
   // Check URL parameters for different actions
   React.useEffect(() => {
@@ -44,23 +46,52 @@ const Calendar = () => {
     navigate("/calendar?view=goals");
   };
 
-  const handleQuickActionSave = () => {
-    setShowQuickAction(false);
-    toast.success("🎯 Action Created!", {
-      description: "Your brain-friendly action has been added to your calendar. Your support team has been notified!",
-      duration: 4000
-    });
+  const handleQuickActionSave = async (actionData: any) => {
+    try {
+      await createAction({
+        title: actionData.title,
+        description: actionData.description,
+        action_type: 'regular',
+        date: actionData.date,
+        start_time: actionData.time,
+        duration_minutes: parseInt(actionData.duration),
+        is_daily_win: false,
+        difficulty_level: parseInt(actionData.difficulty),
+        focus_area: actionData.category as any,
+        status: 'pending'
+      });
+      setShowQuickAction(false);
+      toast.success("🎯 Action Created!", {
+        description: "Your brain-friendly action has been added to your calendar and saved!",
+        duration: 4000
+      });
+    } catch (error) {
+      console.error('Error saving action:', error);
+      toast.error("Failed to save action. Please try again.");
+    }
   };
 
-  const handleNewGoalSave = (goalData: any) => {
-    console.log("New goal created:", goalData);
-    setShowNewGoal(false);
-    setView("goals");
-    
-    toast.success("🧠 Goal Created Successfully!", {
-      description: "Your new goal is ready! Let's break it into brain-friendly steps.",
-      duration: 4000
-    });
+  const handleNewGoalSave = async (goalData: any) => {
+    try {
+      await createGoal({
+        title: goalData.title,
+        description: goalData.description,
+        category: goalData.category,
+        target_date: goalData.target_date,
+        status: 'active',
+        progress_percentage: 0
+      });
+      setShowNewGoal(false);
+      setView("goals");
+      
+      toast.success("🧠 Goal Created Successfully!", {
+        description: "Your new goal is ready and saved to your dashboard!",
+        duration: 4000
+      });
+    } catch (error) {
+      console.error('Error saving goal:', error);
+      toast.error("Failed to save goal. Please try again.");
+    }
   };
 
   const handleUpgradeClick = () => {
