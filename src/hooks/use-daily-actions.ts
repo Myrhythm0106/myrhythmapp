@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -42,14 +42,8 @@ export function useDailyActions() {
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Auto-fetch today's actions on mount
-  useEffect(() => {
-    const today = format(new Date(), 'yyyy-MM-dd');
-    fetchActionsForDate(today);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   // Fetch actions for a specific date
-  const fetchActionsForDate = async (date: string) => {
+  const fetchActionsForDate = useCallback(async (date: string) => {
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -66,7 +60,13 @@ export function useDailyActions() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Auto-fetch today's actions on mount
+  useEffect(() => {
+    const today = format(new Date(), 'yyyy-MM-dd');
+    fetchActionsForDate(today);
+  }, [fetchActionsForDate]);
 
   // Fetch all active goals
   const fetchGoals = async () => {
