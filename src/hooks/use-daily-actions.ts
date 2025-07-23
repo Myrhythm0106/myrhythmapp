@@ -44,6 +44,7 @@ export function useDailyActions() {
 
   // Fetch actions for a specific date
   const fetchActionsForDate = useCallback(async (date: string) => {
+    console.log('🔄 fetchActionsForDate called for date:', date);
     try {
       setLoading(true);
       const { data, error } = await supabase
@@ -54,8 +55,9 @@ export function useDailyActions() {
 
       if (error) throw error;
       setActions((data || []) as DailyAction[]);
+      console.log('✅ fetchActionsForDate completed, found', data?.length || 0, 'actions');
     } catch (error) {
-      console.error('Error fetching actions:', error);
+      console.error('❌ Error fetching actions:', error);
       toast.error('Failed to load actions');
     } finally {
       setLoading(false);
