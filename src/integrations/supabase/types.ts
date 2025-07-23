@@ -382,6 +382,130 @@ export type Database = {
         }
         Relationships: []
       }
+      memory_comments: {
+        Row: {
+          comment: string
+          commenter_email: string
+          commenter_name: string
+          created_at: string
+          id: string
+          memory_id: string
+          updated_at: string
+        }
+        Insert: {
+          comment: string
+          commenter_email: string
+          commenter_name: string
+          created_at?: string
+          id?: string
+          memory_id: string
+          updated_at?: string
+        }
+        Update: {
+          comment?: string
+          commenter_email?: string
+          commenter_name?: string
+          created_at?: string
+          id?: string
+          memory_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_comments_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "memory_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_entries: {
+        Row: {
+          category: string | null
+          content: string | null
+          created_at: string
+          file_path: string | null
+          file_size_bytes: number | null
+          id: string
+          is_favorite: boolean | null
+          memory_type: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          user_id: string
+          visibility_level: string
+        }
+        Insert: {
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          file_path?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          is_favorite?: boolean | null
+          memory_type?: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          user_id: string
+          visibility_level?: string
+        }
+        Update: {
+          category?: string | null
+          content?: string | null
+          created_at?: string
+          file_path?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          is_favorite?: boolean | null
+          memory_type?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+          visibility_level?: string
+        }
+        Relationships: []
+      }
+      memory_watchers: {
+        Row: {
+          can_comment: boolean | null
+          can_view: boolean | null
+          created_at: string
+          id: string
+          memory_id: string
+          user_id: string
+          watcher_email: string
+        }
+        Insert: {
+          can_comment?: boolean | null
+          can_view?: boolean | null
+          created_at?: string
+          id?: string
+          memory_id: string
+          user_id: string
+          watcher_email: string
+        }
+        Update: {
+          can_comment?: boolean | null
+          can_view?: boolean | null
+          created_at?: string
+          id?: string
+          memory_id?: string
+          user_id?: string
+          watcher_email?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_watchers_memory_id_fkey"
+            columns: ["memory_id"]
+            isOneToOne: false
+            referencedRelation: "memory_entries"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mfa_factors: {
         Row: {
           backup_codes: Json | null

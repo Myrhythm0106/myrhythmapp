@@ -48,7 +48,9 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
       description: 'For families and care teams',
       features: [
         'All Pro features',
+        'Memory Bank - Capture & preserve memories',
         'Care team collaboration',
+        'Watcher collaboration on memories',
         'Family member access',
         'Shared progress tracking',
         'Emergency alerts',
