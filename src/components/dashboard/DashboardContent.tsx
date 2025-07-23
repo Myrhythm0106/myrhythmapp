@@ -21,6 +21,8 @@ import { QuickActionsToProgress } from "@/components/layout/QuickActionsToProgre
 import { QuickAccessWidget } from "@/components/guide/QuickAccessWidget";
 import { FloatingGratitudeButton } from "@/components/gratitude/FloatingGratitudeButton";
 import { UserGuideIntegration } from "@/components/onboarding/UserGuideIntegration";
+import { WelcomeToApp } from "@/components/onboarding/WelcomeToApp";
+import { FloatingGuideButton } from "@/components/guide/FloatingGuideButton";
 import { NeverLostSystem } from "@/components/navigation/NeverLostSystem";
 import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { Badge } from "@/components/ui/badge";
@@ -44,9 +46,12 @@ export function DashboardContent() {
     { id: 'activities', title: 'Quick Actions' }
   ];
 
+  const [showWelcome, setShowWelcome] = useState(false);
+
   useEffect(() => {
     // Check for onboarding completion
     if (searchParams.get('onboarding_complete') === 'true') {
+      setShowWelcome(true);
       toast.success("🎉 Welcome to MyRhythm! Your personalized journey begins now.");
     }
     
@@ -237,8 +242,14 @@ export function DashboardContent() {
       {/* Floating Gratitude Button */}
       <FloatingGratitudeButton />
       
+      {/* Welcome to App - Show for new users */}
+      <WelcomeToApp showOnMount={showWelcome} onClose={() => setShowWelcome(false)} />
+      
       {/* User Guide Integration */}
       <UserGuideIntegration showOnMount={false} />
+      
+      {/* Floating Guide Button */}
+      <FloatingGuideButton />
       
       {/* Never Lost System */}
       <NeverLostSystem />

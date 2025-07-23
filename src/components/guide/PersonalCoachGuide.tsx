@@ -78,14 +78,14 @@ export function PersonalCoachGuide() {
     },
     {
       id: 'calendar',
-      title: 'Your Healing Schedule',
-      description: 'Organize your appointments, therapy, and recovery activities with ease',
+      title: 'Your Future Planning Hub',
+      description: 'Plan upcoming appointments, goals, and recovery activities to stay organized',
       path: '/calendar',
       icon: Calendar,
       status: 'not-started',
       timeEstimate: '10 minutes to set up',
-      coachTip: "Ready for the next step? Your calendar will become your recovery anchor, helping you build the routine that supports your healing.",
-      nextSteps: ['Add your next appointment', 'Set up recurring therapy sessions']
+      coachTip: "Ready to plan your future? Your calendar helps you organize what's coming next and build routines that support your healing journey.",
+      nextSteps: ['Plan your next appointment', 'Set up future therapy sessions', 'Schedule weekly goal reviews']
     },
     {
       id: 'brain-games',

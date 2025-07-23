@@ -31,7 +31,7 @@ export function BrainHealthCalendarHeader({
             </h1>
           </div>
           <p className="text-brain-base text-gray-600 max-w-2xl mx-auto">
-            Plan your goals and actions in a way that supports your brain health and builds lasting neural pathways.
+            What will you accomplish today? Plan your future actions and goals to support your brain health journey.
           </p>
           <Badge variant="outline" className="bg-brain-health-50 text-brain-health-700 border-brain-health-200">
             Brain-Friendly Planning • Memory1st Approach
@@ -45,7 +45,7 @@ export function BrainHealthCalendarHeader({
             className="bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 text-white font-medium shadow-sm hover:shadow-md transition-all hover:scale-105"
           >
             <Zap className="mr-2 h-4 w-4" />
-            Quick Action
+            Plan Next Step
           </Button>
           
           <Button 
@@ -53,7 +53,7 @@ export function BrainHealthCalendarHeader({
             className="bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 text-white font-medium shadow-sm hover:shadow-md transition-all hover:scale-105"
           >
             <Target className="mr-2 h-4 w-4" />
-            New Goal
+            Create Future Goal
           </Button>
           
           <Button 
@@ -61,7 +61,7 @@ export function BrainHealthCalendarHeader({
             className="bg-gradient-to-r from-brain-health-500 to-brain-health-600 text-white font-medium shadow-sm hover:shadow-md transition-all hover:scale-105"
           >
             <Heart className="mr-2 h-4 w-4" />
-            Plan Dreams
+            Plan Future Dreams
           </Button>
         </div>
       </div>

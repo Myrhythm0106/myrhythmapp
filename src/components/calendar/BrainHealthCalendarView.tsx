@@ -191,7 +191,7 @@ export function BrainHealthCalendarView({
                     Day Details - {selectedDate.toLocaleDateString()}
                   </h3>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Add events, set reminders, and invite watchers from your accountability circle
+                    What will you accomplish on this day? Plan your future activities and invite support from your circle.
                   </p>
                   
                   {/* Quick Action Buttons */}
@@ -205,7 +205,7 @@ export function BrainHealthCalendarView({
                         watchers: [] 
                       })}
                     >
-                      Add Event
+                      Plan Future Event
                     </Button>
                     <Button 
                       size="sm" 
@@ -216,7 +216,7 @@ export function BrainHealthCalendarView({
                         watchers: [] 
                       })}
                     >
-                      Set Reminder
+                      Set Future Reminder
                     </Button>
                     <Button 
                       size="sm" 
@@ -227,7 +227,7 @@ export function BrainHealthCalendarView({
                         watchers: [] 
                       })}
                     >
-                      Add Task
+                      Plan Future Task
                     </Button>
                   </div>
                 </div>
