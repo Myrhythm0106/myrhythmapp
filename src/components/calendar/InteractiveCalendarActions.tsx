@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Plus, Calendar, Clock, Target, Brain } from "lucide-react";
 import { GuidedActionWizard } from "./forms/GuidedActionWizard";
 import { toast } from "sonner";
-import { useDailyActions } from "@/hooks/use-daily-actions";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 
 interface InteractiveCalendarActionsProps {
   selectedDate?: Date;

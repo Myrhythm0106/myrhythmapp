@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { useDailyActions } from "@/hooks/use-daily-actions";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { format } from "date-fns";
 
 interface FocusItem {

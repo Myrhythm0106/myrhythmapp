@@ -6,7 +6,7 @@ import { Calendar, Clock, MapPin, Info, Plus, Brain } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useDailyActions } from "@/hooks/use-daily-actions";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { format } from "date-fns";
 
 interface Event {
@@ -20,19 +20,12 @@ interface Event {
 }
 
 export function UpcomingToday() {
-  console.log('🏠 UpcomingToday component rendering');
   const navigate = useNavigate();
-  const { actions, completeAction, loading, fetchActionsForDate } = useDailyActions();
+  const { actions, completeAction, loading } = useDailyActions();
   
   // Get today's actions
   const today = React.useMemo(() => new Date().toISOString().split('T')[0], []);
   const todayActions = actions.filter(action => action.date === today);
-  
-  // Fetch today's actions on mount - ONLY ONCE
-  React.useEffect(() => {
-    console.log('📅 UpcomingToday useEffect triggered, fetching for:', today);
-    fetchActionsForDate(today);
-  }, [fetchActionsForDate, today]);
   
   const handleViewDetails = (action: any) => {
     navigate(`/calendar?actionId=${action.id}`);

@@ -10,7 +10,7 @@ import { DayView } from "./views/DayView";
 import { WeekView } from "./views/WeekView";
 import { YearView } from "./views/YearView";
 import { InteractiveCalendarActions } from "./InteractiveCalendarActions";
-import { useDailyActions } from "@/hooks/use-daily-actions";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { CalendarEvent } from "./types/calendarTypes";
 import { format } from "date-fns";
 

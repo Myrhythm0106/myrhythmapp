@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { useDailyActions, type DailyAction } from "@/hooks/use-daily-actions";
+import { useDailyActions, type DailyAction } from "@/contexts/DailyActionsContext";
 import { useVictoryTracker } from "@/hooks/use-victory-tracker";
 
 export function TodaysActions() {

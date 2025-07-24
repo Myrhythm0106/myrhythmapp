@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Target, Clock, Zap, Heart, Brain, Info, Lightbulb } from "lucide-react";
-import { useDailyActions } from "@/hooks/use-daily-actions";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { toast } from "sonner";
 
 interface GuidedActionWizardProps {

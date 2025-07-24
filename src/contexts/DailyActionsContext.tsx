@@ -1,5 +1,4 @@
-
-import { useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format } from "date-fns";
@@ -37,33 +36,51 @@ export interface Goal {
   updated_at: string;
 }
 
-export function useDailyActions() {
+interface DailyActionsContextType {
+  actions: DailyAction[];
+  goals: Goal[];
+  loading: boolean;
+  createAction: (actionData: Partial<DailyAction>) => Promise<any>;
+  completeAction: (actionId: string) => Promise<any>;
+  ensureDailyWinExists: (date?: string) => Promise<void>;
+  createGoal: (goalData: Partial<Goal>) => Promise<any>;
+  fetchGoals: () => Promise<void>;
+  refreshActions: () => Promise<void>;
+  fetchActionsForDate: (date: string) => Promise<void>;
+}
+
+const DailyActionsContext = createContext<DailyActionsContextType | undefined>(undefined);
+
+export function DailyActionsProvider({ children }: { children: React.ReactNode }) {
   const [actions, setActions] = useState<DailyAction[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch actions for a specific date
-  const fetchActionsForDate = useCallback(async (date: string) => {
-    console.log('🔄 fetchActionsForDate called for date:', date);
+  const today = format(new Date(), 'yyyy-MM-dd');
+
+  // Fetch actions for today
+  const fetchActionsForToday = useCallback(async () => {
+    console.log('🔄 DailyActionsProvider: fetchActionsForToday called');
     try {
       setLoading(true);
       const { data, error } = await supabase
         .from('daily_actions')
         .select('*')
-        .eq('date', date)
+        .eq('date', today)
         .order('created_at');
 
       if (error) throw error;
       setActions((data || []) as DailyAction[]);
-      console.log('✅ fetchActionsForDate completed, found', data?.length || 0, 'actions');
+      console.log('✅ DailyActionsProvider: found', data?.length || 0, 'actions for today');
     } catch (error) {
-      console.error('❌ Error fetching actions:', error);
+      console.error('❌ DailyActionsProvider: Error fetching actions:', error);
       toast.error('Failed to load actions');
     } finally {
       setLoading(false);
     }
-  }, []);
-  const fetchGoals = async () => {
+  }, [today]);
+
+  const fetchGoals = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('goals')
@@ -77,10 +94,10 @@ export function useDailyActions() {
       console.error('Error fetching goals:', error);
       toast.error('Failed to load goals');
     }
-  };
+  }, []);
 
   // Create a new daily action
-  const createAction = async (actionData: Partial<DailyAction>) => {
+  const createAction = useCallback(async (actionData: Partial<DailyAction>) => {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) throw new Error('User not authenticated');
@@ -105,10 +122,10 @@ export function useDailyActions() {
       toast.error('Failed to create action');
       throw error;
     }
-  };
+  }, []);
 
   // Complete an action
-  const completeAction = async (actionId: string) => {
+  const completeAction = useCallback(async (actionId: string) => {
     try {
       const { data, error } = await supabase
         .from('daily_actions')
@@ -143,7 +160,7 @@ export function useDailyActions() {
       toast.error('Failed to complete action');
       throw error;
     }
-  };
+  }, []);
 
   // Create a celebration record
   const createCelebration = async (actionId: string, type: string, milestoneValue?: number) => {
@@ -167,7 +184,7 @@ export function useDailyActions() {
   };
 
   // Ensure today has a daily win
-  const ensureDailyWinExists = async (date: string = format(new Date(), 'yyyy-MM-dd')) => {
+  const ensureDailyWinExists = useCallback(async (date: string = today) => {
     const todayActions = actions.filter(action => action.date === date);
     const hasDailyWin = todayActions.some(action => action.is_daily_win);
 
@@ -192,10 +209,10 @@ export function useDailyActions() {
         focus_area: 'emotional'
       });
     }
-  };
+  }, [actions, today, createAction]);
 
   // Create a new goal
-  const createGoal = async (goalData: Partial<Goal>) => {
+  const createGoal = useCallback(async (goalData: Partial<Goal>) => {
     try {
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) throw new Error('User not authenticated');
@@ -220,17 +237,44 @@ export function useDailyActions() {
       toast.error('Failed to create goal');
       throw error;
     }
-  };
+  }, []);
 
-  return {
+  // Refresh actions (public method for components that need to trigger refresh)
+  const refreshActions = useCallback(async () => {
+    await fetchActionsForToday();
+  }, [fetchActionsForToday]);
+
+  // Initial fetch on mount
+  useEffect(() => {
+    console.log('🚀 DailyActionsProvider: Initial fetch on mount');
+    fetchActionsForToday();
+    fetchGoals();
+  }, [fetchActionsForToday, fetchGoals]);
+
+  const value = {
     actions,
     goals,
     loading,
-    fetchActionsForDate,
-    fetchGoals,
     createAction,
     completeAction,
     ensureDailyWinExists,
-    createGoal
+    createGoal,
+    fetchGoals,
+    refreshActions,
+    fetchActionsForDate: fetchActionsForToday
   };
+
+  return (
+    <DailyActionsContext.Provider value={value}>
+      {children}
+    </DailyActionsContext.Provider>
+  );
+}
+
+export function useDailyActions() {
+  const context = useContext(DailyActionsContext);
+  if (context === undefined) {
+    throw new Error('useDailyActions must be used within a DailyActionsProvider');
+  }
+  return context;
 }

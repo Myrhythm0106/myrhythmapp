@@ -17,7 +17,7 @@ import { FormActions } from "./forms/FormActions";
 import { MediaAttachment } from "./forms/MediaAttachment";
 import { RecurrenceFields } from "./forms/RecurrenceFields";
 import { actionFormSchema, ActionFormValues, defaultActionValues } from "./forms/actionFormSchema";
-import { useDailyActions } from "@/hooks/use-daily-actions";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { format } from "date-fns";
 
 interface EventFormProps {

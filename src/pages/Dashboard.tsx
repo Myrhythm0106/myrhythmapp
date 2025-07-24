@@ -3,6 +3,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
+import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import CalendarPage from "./CalendarPage";
 import GoalsPage from "./GoalsPage";
@@ -47,9 +48,11 @@ const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <MainLayout>
-        {renderContent()}
-      </MainLayout>
+      <DailyActionsProvider>
+        <MainLayout>
+          {renderContent()}
+        </MainLayout>
+      </DailyActionsProvider>
     </SidebarProvider>
   );
 };

@@ -14,7 +14,7 @@ import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Timer, Coffee, Users } from "lucide-react";
-import { useDailyActions } from "@/hooks/use-daily-actions";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
