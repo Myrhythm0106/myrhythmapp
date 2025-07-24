@@ -137,7 +137,7 @@ const Calendar = () => {
               <div className="flex flex-col gap-2">
                 <BreadcrumbNav />
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                  Brain-Health Calendar
+                  Brain Health Calendar
                 </h1>
               </div>
               <div className="flex items-center gap-3">
@@ -198,7 +198,7 @@ const Calendar = () => {
           <DialogContent className="sm:max-w-[700px] max-h-[90vh]">
             <DialogHeader>
               <DialogTitle className="text-xl bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                Create Brain-Friendly Action
+                Create Action
               </DialogTitle>
             </DialogHeader>
             <ScrollArea className="max-h-[calc(90vh-120px)]">

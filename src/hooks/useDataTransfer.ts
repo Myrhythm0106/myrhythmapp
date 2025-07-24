@@ -8,6 +8,9 @@ interface TransferData {
   location?: string;
   duration?: number;
   prefillData?: Record<string, any>;
+  dateFormat?: "dd/mm/yyyy" | "mm/dd/yyyy";
+  timeFormat?: "12h" | "24h";
+  watchers?: string[];
 }
 
 // Global state for seamless data transfer between components

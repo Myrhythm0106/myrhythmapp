@@ -49,7 +49,7 @@ export function OverviewMenu() {
           label: "Smart Breaks",
           path: "/calendar?addAction=true&type=break",
           icon: <Heart className="h-4 w-4" />,
-          description: "Schedule brain-healthy breaks"
+          description: "Schedule brain healthy breaks"
         },
         {
           label: "Family Time",

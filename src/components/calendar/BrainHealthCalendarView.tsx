@@ -5,6 +5,7 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Target, Calendar, Clock, Brain, Zap, Settings } from "lucide-react";
+import { CalendarViewSlider } from "./CalendarViewSlider";
 import { GoalsView } from "./views/GoalsView";
 import { DayView } from "./views/DayView";
 import { WeekView } from "./views/WeekView";
@@ -82,50 +83,25 @@ export function BrainHealthCalendarView({
       <div className="space-y-6">
         {/* TEST: New Brain Health Banner */}
         <div className="p-4 bg-gradient-to-r from-brain-health-400 to-clarity-teal-400 text-white rounded-lg text-center">
-          <h2 className="text-xl font-bold">🧠 Enhanced Brain-Health Calendar is Active! 🚀</h2>
-          <p className="text-sm opacity-90">New cognitive features and brain-health colors are now loaded</p>
+          <h2 className="text-xl font-bold">🧠 Enhanced Brain Health Calendar is Active! 🚀</h2>
+          <p className="text-sm opacity-90">New cognitive features and brain health colors are now loaded</p>
         </div>
         
         {/* Enhanced Calendar Card */}
         <Card className="calendar-command-center">
           <CardContent className="pt-6">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent mb-2">
-                Your Brain-Health Command Center
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent mb-2">
+                Your Brain Health Command Center
               </h2>
               <p className="text-sm text-brain-health-600">
                 Plan with cognitive awareness • Build neural pathways • Achieve with intention
               </p>
             </div>
 
-            {/* Enhanced View Selector */}
-            <div className="mb-6 flex justify-center">
-              <div className="flex bg-gradient-to-r from-brain-health-50 to-clarity-teal-50 border border-brain-health-200 rounded-lg p-1 shadow-sm">
-                {[
-                  { key: "day", icon: Clock, label: "Today" },
-                  { key: "week", icon: Calendar, label: "Week" },
-                  { key: "month", icon: Calendar, label: "Month" },
-                  { key: "year", icon: Calendar, label: "Year" },
-                  { key: "goals", icon: Target, label: "Goals" }
-                ].map(({ key, icon: Icon, label }) => (
-                  <Button
-                    key={key}
-                    variant={view === key ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => onViewChange(key as any)}
-                    className={`
-                      flex items-center gap-2 transition-all duration-300
-                      ${view === key 
-                        ? "bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 text-white shadow-md hover:shadow-lg" 
-                        : "hover:bg-brain-health-100/50"
-                      }
-                    `}
-                  >
-                    <Icon className="h-4 w-4" />
-                    {label}
-                  </Button>
-                ))}
-              </div>
+            {/* Enhanced View Slider */}
+            <div className="mb-6">
+              <CalendarViewSlider view={view} onViewChange={onViewChange} />
             </div>
 
             {/* Current View Indicator */}

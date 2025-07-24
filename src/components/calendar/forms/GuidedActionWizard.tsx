@@ -10,6 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Target, Clock, Zap, Heart, Brain, Info, Lightbulb } from "lucide-react";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { toast } from "sonner";
+import { WatchersField } from "./WatchersField";
 
 interface GuidedActionWizardProps {
   onSuccess: (actionData: any) => void;
@@ -17,6 +18,7 @@ interface GuidedActionWizardProps {
   preFilledData?: {
     date?: string;
     time?: string;
+    watchers?: string[];
   };
 }
 
@@ -34,7 +36,8 @@ export function GuidedActionWizard({
     duration: '30',
     difficulty: '1',
     category: 'personal',
-    energyLevel: '2'
+    energyLevel: '2',
+    watchers: preFilledData?.watchers || []
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -221,12 +224,16 @@ export function GuidedActionWizard({
           </Select>
         </div>
 
+        <div>
+          <WatchersField />
+        </div>
+
         <Card className="bg-gradient-to-r from-brain-purple-50 to-clarity-teal-50 border-brain-purple-200">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
               <Lightbulb className="h-5 w-5 text-brain-purple-600 mt-0.5 flex-shrink-0" />
               <div className="space-y-2">
-                <h4 className="font-semibold text-brain-purple-800">🧠 Brain-Health Impact</h4>
+                <h4 className="font-semibold text-brain-purple-800">🧠 Brain Health Impact</h4>
                 <p className="text-sm text-brain-purple-700">
                   By scheduling this thoughtfully, you're building neural pathways that support better planning, follow-through, and cognitive resilience. Each completed action strengthens your brain's executive function!
                 </p>
@@ -239,19 +246,19 @@ export function GuidedActionWizard({
       <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">
         <Button 
           type="submit" 
-          className="w-full sm:flex-1 bg-gradient-to-r from-brain-purple-600 to-clarity-teal-600 hover:from-brain-purple-700 hover:to-clarity-teal-700 min-h-[44px]" 
+          className="w-full sm:flex-1 bg-gradient-to-r from-brain-purple-600 to-clarity-teal-600 hover:from-brain-purple-700 hover:to-clarity-teal-700 min-h-[44px] text-white" 
           disabled={loading}
         >
           <Target className="h-4 w-4 mr-2" />
-          {loading ? "Creating..." : "Create Action"}
+          {loading ? "Creating..." : "Save & Continue"}
         </Button>
         <Button 
           type="button" 
           variant="outline" 
           onClick={onUpgradeClick}
-          className="w-full sm:w-auto min-h-[44px]"
+          className="w-full sm:w-auto min-h-[44px] text-foreground"
         >
-          Get Premium
+          Save & Close
         </Button>
       </div>
     </form>

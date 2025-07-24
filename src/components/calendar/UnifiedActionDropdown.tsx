@@ -70,8 +70,8 @@ export function UnifiedActionDropdown({
         >
           <Calendar className="h-4 w-4 mr-3 text-brain-health-500" />
           <div>
-            <div className="font-medium">Plan Next Step</div>
-            <div className="text-xs text-muted-foreground">Create a brain-friendly action</div>
+            <div className="font-medium text-foreground">Create Action</div>
+            <div className="text-xs text-muted-foreground">Plan your next brain-friendly step</div>
           </div>
         </DropdownMenuItem>
         
