@@ -43,6 +43,13 @@ const userTypes = [
     description: "I'm a healthcare provider supporting patients with cognitive challenges",
     icon: Stethoscope,
     color: "bg-teal-500",
+  },
+  {
+    id: "colleague" as const,
+    title: "Colleague",
+    description: "I'm supporting workplace wellness for colleagues with cognitive challenges",
+    icon: Users,
+    color: "bg-indigo-500",
   }
 ];
 

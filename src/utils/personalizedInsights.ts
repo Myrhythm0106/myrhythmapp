@@ -282,7 +282,8 @@ function generateUserTypeMessage(
     "cognitive-optimization": `For cognitive optimization, your ${focusArea} focus represents your most efficient path to enhanced mental performance. Your assessment indicates this area will yield the highest return on your optimization efforts.`,
     "caregiver": `As a caregiver, your ${focusArea} focus will help you support others more effectively while maintaining your own well-being. Your assessment shows this balance is achievable and sustainable for you.`,
     "wellness": `Your ${focusArea} focus perfectly aligns with building sustainable wellness and productivity systems. Your assessment indicates this foundation will support all your other life optimization goals.`,
-    "medical-professional": `As a healthcare professional, your ${focusArea} focus will enhance your clinical understanding and enable you to provide even better patient care. Your assessment indicates this knowledge will benefit both your practice and your patients.`
+    "medical-professional": `As a healthcare professional, your ${focusArea} focus will enhance your clinical understanding and enable you to provide even better patient care. Your assessment indicates this knowledge will benefit both your practice and your patients.`,
+    "colleague": `As a supportive colleague, your ${focusArea} focus will help you create a more inclusive and understanding workplace while developing skills that benefit both you and your colleagues. Your assessment shows this collaborative approach will strengthen your professional relationships.`
   };
   
   return contextMap[userType] || "";
@@ -320,7 +321,8 @@ function getUserTypeContext(userType?: UserType): string | null {
     "cognitive-optimization": "performance optimization",
     "caregiver": "caregiving roles",
     "wellness": "wellness and productivity goals",
-    "medical-professional": "clinical practice and patient care"
+    "medical-professional": "clinical practice and patient care",
+    "colleague": "workplace wellness and collaboration"
   };
   return userType ? contextMap[userType] : null;
 }
@@ -331,7 +333,8 @@ function getUserTypeCharacteristic(userType?: UserType): string | null {
     "cognitive-optimization": "Performance-driven mindset with optimization focus",
     "caregiver": "Supportive nature with others-focused perspective",
     "wellness": "Balanced approach to life optimization",
-    "medical-professional": "Evidence-based clinical approach with patient-centered focus"
+    "medical-professional": "Evidence-based clinical approach with patient-centered focus",
+    "colleague": "Collaborative and workplace-supportive approach"
   };
   return userType ? charMap[userType] : null;
 }
@@ -342,7 +345,8 @@ function getUserTypePersonalMessage(userType?: UserType): string {
     "cognitive-optimization": "Your systematic approach to self-assessment indicates strong optimization potential.",
     "caregiver": "Your thoughtful responses show the same care you give others applied to your own growth.",
     "wellness": "Your balanced perspective creates an ideal foundation for sustainable life optimization.",
-    "medical-professional": "Your clinical insight combined with personal reflection demonstrates exceptional professional growth potential."
+    "medical-professional": "Your clinical insight combined with personal reflection demonstrates exceptional professional growth potential.",
+    "colleague": "Your thoughtful approach to supporting colleagues shows strong collaborative leadership potential."
   };
   return userType ? messageMap[userType] : "Your thoughtful responses show strong self-awareness and growth potential.";
 }
@@ -355,7 +359,8 @@ function getUserTypeSpecificStep(userType?: UserType, focusArea?: FocusArea): st
     "cognitive-optimization": "Track and measure your cognitive performance improvements",
     "caregiver": "Include family/care network in your growth journey when appropriate",
     "wellness": "Integrate wellness practices with your productivity systems",
-    "medical-professional": "Apply evidence-based assessment insights to enhance patient care protocols"
+    "medical-professional": "Apply evidence-based assessment insights to enhance patient care protocols",
+    "colleague": "Build inclusive workplace practices and support colleague wellbeing initiatives"
   };
   
   return stepMap[userType];

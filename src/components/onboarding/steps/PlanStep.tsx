@@ -9,6 +9,7 @@ import { PlanType, PlanStepProps } from "./plan/types";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { PaymentDetailsForm } from "@/components/payment/PaymentDetailsForm";
+import { LifeEmpowermentGuide } from "../LifeEmpowermentGuide";
 
 export type { PlanType };
 
@@ -30,6 +31,14 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
 
   const handlePaymentComplete = (paymentDetails: any) => {
     console.log("Payment details collected:", paymentDetails);
+    // Payment completed successfully - now show the Life Empowerment Guide
+    setShowLifeGuide(true);
+  };
+
+  const [showLifeGuide, setShowLifeGuide] = useState(false);
+
+  const handleLifeGuideComplete = () => {
+    setShowLifeGuide(false);
     onComplete(selected!, isAnnual ? 'annual' : 'monthly');
   };
 
@@ -37,6 +46,15 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     setShowPaymentForm(false);
     setSelected(null);
   };
+
+  // Show Life Empowerment Guide after payment
+  if (showLifeGuide) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto px-4">
+        <LifeEmpowermentGuide onComplete={handleLifeGuideComplete} />
+      </div>
+    );
+  }
 
   // Show payment form if a plan is selected
   if (showPaymentForm && selected) {

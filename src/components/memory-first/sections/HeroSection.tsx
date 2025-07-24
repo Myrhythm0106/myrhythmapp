@@ -8,7 +8,7 @@ import { Brain, Users, Heart, ArrowRight, CheckCircle, Star, Play, Volume2, Eye,
 
 export function HeroSection() {
   const navigate = useNavigate();
-  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | 'cognitive-optimization' | 'wellness' | null>(null);
+  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | 'cognitive-optimization' | 'wellness' | 'colleague' | null>(null);
   const [showQuickView, setShowQuickView] = useState(true);
   
   const userTypes = [
@@ -36,14 +36,22 @@ export function HeroSection() {
       color: 'blue',
       description: 'Enhance your cognitive abilities and mental clarity'
     },
-    {
-      id: 'wellness' as const,
-      icon: Users,
-      title: 'General Wellness',
-      subtitle: 'Overall mental health focus',
-      color: 'green',
-      description: 'Supporting your overall mental wellness journey'
-    }
+        {
+          id: 'wellness' as const,
+          icon: Users,
+          title: 'General Wellness',
+          subtitle: 'Overall mental health focus',
+          color: 'green',
+          description: 'Supporting your overall mental wellness journey'
+        },
+        {
+          id: 'colleague' as const,
+          icon: UserPlus,
+          title: 'Colleague',
+          subtitle: 'Supporting workplace wellness',
+          color: 'indigo',
+          description: 'Help colleagues navigate cognitive challenges'
+        }
   ];
 
   const quickBenefits = [
@@ -80,7 +88,7 @@ export function HeroSection() {
               MyRhythm
             </span>
             <br />
-            <span className="text-foreground text-3xl md:text-4xl lg:text-5xl">
+            <span className="text-foreground text-lg md:text-xl lg:text-2xl">
               Memory Challenges Don't End Your Story
             </span>
           </h1>

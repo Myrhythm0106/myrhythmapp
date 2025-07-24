@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Target, Clock } from "lucide-react";
+import { BookOpen, Target, Clock, Brain } from "lucide-react";
 import { UserType } from "@/types/user";
+import { LifeEmpowermentGuide } from "../../LifeEmpowermentGuide";
 
 interface UserGuideIntegrationProps {
   onComplete: (data: any) => void;
@@ -11,6 +12,7 @@ interface UserGuideIntegrationProps {
 }
 
 export function UserGuideIntegration({ onComplete, assessmentResult }: UserGuideIntegrationProps) {
+  const [showLifeGuide, setShowLifeGuide] = useState(false);
   const [userGuideData, setUserGuideData] = useState({
     viewedIntro: false,
     completedGuide: false,
@@ -21,6 +23,19 @@ export function UserGuideIntegration({ onComplete, assessmentResult }: UserGuide
   const handleContinue = () => {
     onComplete(userGuideData);
   };
+
+  const handleViewLifeGuide = () => {
+    setShowLifeGuide(true);
+  };
+
+  const handleLifeGuideComplete = () => {
+    setShowLifeGuide(false);
+    setUserGuideData(prev => ({ ...prev, viewedIntro: true, completedGuide: true }));
+  };
+
+  if (showLifeGuide) {
+    return <LifeEmpowermentGuide onComplete={handleLifeGuideComplete} />;
+  }
 
   return (
     <Card>
@@ -37,9 +52,9 @@ export function UserGuideIntegration({ onComplete, assessmentResult }: UserGuide
           <p>
             We've compiled a quick guide to help you get the most out of your MyRhythm experience.
           </p>
-          <Button variant="outline" className="w-full justify-start">
-            <BookOpen className="h-4 w-4 mr-2" />
-            View Quick Start Guide
+          <Button onClick={handleViewLifeGuide} className="w-full justify-start bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white">
+            <Brain className="h-4 w-4 mr-2" />
+            View Your Life Empowerment Timeline
           </Button>
         </div>
 

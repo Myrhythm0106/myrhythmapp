@@ -550,6 +550,54 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       icon: Brain,
       gradient: "from-blue-500 to-indigo-500"
     }
+  ],
+
+  "colleague": [
+    {
+      id: 1,
+      title: "Workplace Support Goals",
+      phase: "M",
+      phaseDescription: "Moment of Impact - Colleague Support Vision",
+      narrative: "As a supportive colleague, you understand that cognitive challenges affect workplace dynamics and productivity, and you want to create a more inclusive environment.",
+      questions: [
+        { id: "workplace_inclusion_vision", text: "Do you have a vision for creating more inclusive workplace practices for colleagues with cognitive challenges?" },
+        { id: "colleague_support_motivation", text: "Are you motivated to learn how to better support colleagues who may be experiencing memory or cognitive difficulties?" },
+        { id: "team_productivity_enhancement", text: "Do you believe that supporting cognitive wellness could improve overall team productivity and collaboration?" },
+        { id: "workplace_wellness_advocacy", text: "Are you interested in becoming an advocate for cognitive wellness and accessibility in your workplace?" }
+      ],
+      icon: Users,
+      gradient: "from-blue-500 to-indigo-500"
+    },
+    {
+      id: 2,
+      title: "Workplace Understanding Assessment",
+      phase: "Y", 
+      phaseDescription: "Yield to Analysis - Current Workplace Dynamics",
+      narrative: "Understanding current workplace challenges helps identify opportunities to create more supportive and productive environments for everyone.",
+      questions: [
+        { id: "workplace_awareness", text: "Have you observed how cognitive challenges can impact workplace performance and team dynamics?" },
+        { id: "support_system_gaps", text: "Do you notice gaps in your workplace's support systems for colleagues with cognitive or memory challenges?" },
+        { id: "communication_barriers", text: "Are you aware of communication barriers that might affect colleagues with cognitive differences?" },
+        { id: "inclusive_practices_need", text: "Do you see opportunities to implement more inclusive practices in your daily work interactions?" }
+      ],
+      icon: Brain,
+      gradient: "from-purple-500 to-pink-500"
+    },
+    {
+      id: 3,
+      title: "Collaborative Enhancement",
+      phase: "R",
+      phaseDescription: "Reckon with Reality - Team Support Implementation", 
+      narrative: "Building supportive workplace relationships requires understanding, patience, and practical strategies that benefit everyone.",
+      questions: [
+        { id: "supportive_communication", text: "Are you developing communication strategies that work well for colleagues with different cognitive needs?" },
+        { id: "inclusive_meeting_practices", text: "Do you advocate for meeting practices and workplace policies that are inclusive of cognitive differences?" },
+        { id: "knowledge_sharing", text: "Are you actively sharing knowledge about cognitive wellness and workplace accessibility with your team?" },
+        { id: "peer_mentoring", text: "Are you interested in providing peer mentoring or support for colleagues navigating cognitive challenges?" }
+      ],
+      icon: Heart,
+      gradient: "from-green-500 to-teal-500"
+    }
   ]
 };
 
