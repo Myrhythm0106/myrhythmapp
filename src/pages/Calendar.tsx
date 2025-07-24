@@ -15,6 +15,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
 import { Timer, Coffee, Users } from "lucide-react";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
+import { BreadcrumbNav } from "@/components/navigation/BreadcrumbNav";
+import { ContextualNextButton } from "@/components/navigation/ContextualNextButton";
+import { OverviewMenu } from "@/components/navigation/OverviewMenu";
+import { UnifiedActionDropdown } from "@/components/calendar/UnifiedActionDropdown";
+import { FloatingNextButton } from "@/components/navigation/FloatingNextButton";
+import { useDataTransfer } from "@/hooks/useDataTransfer";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -26,19 +32,29 @@ const Calendar = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { createAction, createGoal } = useDailyActions();
+  const { updateTransferData, prefillForm } = useDataTransfer();
 
-  // Check URL parameters for different actions
+  // Check URL parameters for different actions and update transfer data
   React.useEffect(() => {
+    // Update transfer data with current date selection
+    updateTransferData({ selectedDate: date });
+    
     if (searchParams.get('planMyDreams') === 'true') {
       setShowPlanMyDreams(true);
     }
     if (searchParams.get('addAction') === 'true') {
       setShowQuickAction(true);
+      // Pre-fill action type from URL
+      const actionType = searchParams.get('type') || 'regular';
+      updateTransferData({ actionType });
     }
     if (searchParams.get('newGoal') === 'true') {
       setShowNewGoal(true);
     }
-  }, [searchParams]);
+    if (searchParams.get('view') === 'goals') {
+      setView('goals');
+    }
+  }, [searchParams, date, updateTransferData]);
 
   const handleSaveDreamPlan = (dreamPlan: any) => {
     console.log("Dream plan saved:", dreamPlan);
@@ -116,38 +132,37 @@ const Calendar = () => {
         <ScrollArea className="h-[calc(100vh-64px)]">
           <div className="container mx-auto px-4 py-6 space-y-6">
             
-            {/* Brain-Health Header */}
-            <BrainHealthCalendarHeader
-              onQuickAction={() => setShowQuickAction(true)}
-              onNewGoal={() => setShowNewGoal(true)}
-              onPlanDreams={() => setShowPlanMyDreams(true)}
-            />
+            {/* Enhanced Navigation Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+              <div className="flex flex-col gap-2">
+                <BreadcrumbNav />
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+                  Brain-Health Calendar
+                </h1>
+              </div>
+              <div className="flex items-center gap-3">
+                <OverviewMenu />
+                <ContextualNextButton />
+              </div>
+            </div>
 
-            {/* Enhanced Action Buttons */}
-            <div className="flex flex-wrap gap-3 justify-center">
-              <Button
-                onClick={() => setShowEnhancedPomodoro(true)}
-                className="bg-gradient-to-r from-clarity-teal-500 to-memory-emerald-500 hover:from-clarity-teal-600 hover:to-memory-emerald-600 flex items-center gap-2"
-              >
-                <Timer className="h-4 w-4" />
-                Focus Timer & Breaks
-              </Button>
-              <Button
-                onClick={() => setShowQuickAction(true)}
-                variant="outline"
-                className="border-heart-300 hover:bg-heart-50 flex items-center gap-2"
-              >
-                <Users className="h-4 w-4" />
-                Schedule Family Time
-              </Button>
-              <Button
-                onClick={() => setShowQuickAction(true)}
-                variant="outline"
-                className="border-clarity-teal-300 hover:bg-clarity-teal-50 flex items-center gap-2"
-              >
-                <Coffee className="h-4 w-4" />
-                Plan Break Time
-              </Button>
+            {/* Unified Action Center */}
+            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+              <UnifiedActionDropdown
+                onQuickAction={() => setShowQuickAction(true)}
+                onNewGoal={() => setShowNewGoal(true)}
+                onPlanDreams={() => setShowPlanMyDreams(true)}
+                onFocusTimer={() => setShowEnhancedPomodoro(true)}
+                onScheduleFamily={() => {
+                  updateTransferData({ actionType: 'family' });
+                  setShowQuickAction(true);
+                }}
+                onPlanBreak={() => {
+                  updateTransferData({ actionType: 'break' });
+                  setShowQuickAction(true);
+                }}
+                selectedDate={date}
+              />
             </div>
 
             {/* Main Content Grid */}
@@ -190,6 +205,7 @@ const Calendar = () => {
               <GuidedActionWizard 
                 onSuccess={handleQuickActionSave} 
                 onUpgradeClick={handleUpgradeClick}
+                preFilledData={prefillForm('action')}
               />
             </ScrollArea>
           </DialogContent>
@@ -209,6 +225,9 @@ const Calendar = () => {
             </ScrollArea>
           </DialogContent>
         </Dialog>
+
+        {/* Mobile Floating Next Button */}
+        <FloatingNextButton />
       </div>
     </PomodoroProvider>
   );

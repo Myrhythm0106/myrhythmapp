@@ -33,6 +33,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "Personal Rhythm Discovery",
               "Basic Calendar & Goals",
               "Memory Enhancement Tools",
+              "Smart Break Reminders",
               "Brain Games & Exercises",
               "Daily Progress Tracking"
             ]}
@@ -57,6 +58,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "Advanced Calendar Management",
               "Goal Achievement Coaching",
               "Premium Brain Training",
+              "Smart Break Scheduling",
               "Detailed Progress Reports"
             ]}
             buttonText="Start with Flow"
@@ -77,6 +79,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "Everything in MyRhythm Flow",
               "Up to 4 Family Members",
               "Shared Family Calendar",
+              "Family Time Scheduling",
               "Family Progress Tracking", 
               "Collaborative Goal Setting",
               "Family Support Resources",
