@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Clock, Users, Stethoscope, ArrowRight, ChevronDown, ChevronUp, Lightbulb, CheckCircle } from "lucide-react";
+import { AlertTriangle, Clock, Users, Stethoscope, ArrowRight, ChevronDown, ChevronUp, Lightbulb, CheckCircle, Eye } from "lucide-react";
+import { FeatureShowcaseSection } from "./FeatureShowcaseSection";
 
 export function MemoryStrugglesSection() {
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
@@ -199,10 +200,14 @@ export function MemoryStrugglesSection() {
             🧠 Start Your Journey
           </Button>
           <Button size="lg" variant="outline" className="border-emerald-300 text-emerald-600">
-            📖 Learn MYRHYTHM Framework
+            <Eye className="h-4 w-4 mr-2" />
+            See It In Action
           </Button>
         </div>
       </div>
+
+      {/* Feature Showcase Section */}
+      <FeatureShowcaseSection />
     </section>
   );
 }
