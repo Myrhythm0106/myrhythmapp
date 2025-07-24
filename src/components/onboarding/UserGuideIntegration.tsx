@@ -189,17 +189,19 @@ export function UserGuideIntegration({ showOnMount = false, onClose }: UserGuide
         </DialogContent>
       </Dialog>
 
-      {/* Quick Access Button (always available) */}
+      {/* Quick Access Guide Link */}
       {!isOpen && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setIsOpen(true)}
-          className="fixed top-4 left-4 z-40 bg-white/90 backdrop-blur-sm"
-        >
-          <BookOpen className="h-4 w-4 mr-2" />
-          User Guide
-        </Button>
+        <div className="flex justify-center mt-8">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsOpen(true)}
+            className="text-sm text-muted-foreground hover:text-foreground border-border/50 hover:border-border"
+          >
+            <BookOpen className="h-4 w-4 mr-2" />
+            View User Guide
+          </Button>
+        </div>
       )}
     </>
   );

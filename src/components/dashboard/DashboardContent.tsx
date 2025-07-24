@@ -260,14 +260,12 @@ export function DashboardContent() {
       {/* Welcome to App - Show for new users */}
       <WelcomeToApp showOnMount={showWelcome} onClose={() => setShowWelcome(false)} />
       
-      {/* User Guide Integration */}
-      <UserGuideIntegration showOnMount={false} />
-      
-      {/* Floating Guide Button */}
-      <FloatingGuideButton />
-      
-      {/* Never Lost System */}
-      <NeverLostSystem />
+      {/* Bottom Support Section */}
+      <div className="mt-12 pt-8 border-t border-border/20 space-y-4">
+        <UserGuideIntegration showOnMount={false} />
+        <FloatingGuideButton />
+        <NeverLostSystem />
+      </div>
     </div>
   );
 }

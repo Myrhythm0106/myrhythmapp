@@ -16,13 +16,16 @@ export function FloatingGuideButton() {
 
   return (
     <>
-      <div className="fixed bottom-20 right-6 z-40">
+      <div className="flex justify-center mt-6">
         <Button
           onClick={() => setIsOpen(true)}
-          className="bg-primary hover:bg-primary/90 text-white shadow-lg hover:shadow-xl transition-all duration-200 rounded-full w-14 h-14 p-0"
+          variant="ghost"
+          size="sm"
+          className="text-sm text-muted-foreground hover:text-foreground"
           aria-label="Open Getting Started Guide"
         >
-          <HelpCircle className="h-6 w-6" />
+          <HelpCircle className="h-4 w-4 mr-2" />
+          Need Help? Quick Guide
         </Button>
       </div>
 
