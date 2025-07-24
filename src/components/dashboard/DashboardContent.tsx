@@ -13,6 +13,7 @@ import { BrainGameQuickStart } from "./BrainGameQuickStart";
 import { TrialStatusCard } from "./TrialStatusCard";
 import { MorningRitualView } from "./views/MorningRitualView";
 import { DailyIChooseWidget } from "./DailyIChooseWidget";
+import { MonthlyTheme } from "./MonthlyTheme";
 import { SmartNotificationEngine } from "./SmartNotificationEngine";
 import { AssessmentUpgradeReminder } from "./AssessmentUpgradeReminder";
 import { useSearchParams } from "react-router-dom";
@@ -140,7 +141,13 @@ export function DashboardContent() {
   const roleWelcome = getRoleSpecificWelcome();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20">
+      {/* Hero Section: Monthly Theme & Daily #IChoose */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <MonthlyTheme />
+        <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} userType={userData?.userType} />
+      </div>
+
       <ReadingProgressBar sections={dashboardSections} />
       
       <div id="header" className="pt-4">

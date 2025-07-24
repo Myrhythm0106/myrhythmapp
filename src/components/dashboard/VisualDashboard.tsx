@@ -71,15 +71,6 @@ export function VisualDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Monthly Theme & Daily Statement Hero */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <MonthlyTheme />
-        </div>
-        <div className="lg:col-span-2">
-          <DailyIChooseWidget onUpgradeClick={() => navigate("/upgrade")} />
-        </div>
-      </div>
 
       {/* Enhanced Plan on a Page */}
       <Card className="bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 border-2 border-purple-200/50 shadow-lg">

@@ -75,24 +75,25 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-gradient-to-br from-emerald-50 via-white to-teal-50">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block">
-        <DynamicSidebar isCollapsed={isCollapsed} />
-      </div>
-      
-      {/* Mobile Sidebar */}
-      <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="left" className="w-64 p-0 bg-white/95 backdrop-blur-sm">
-          <DynamicSidebar isCollapsed={false} />
-        </SheetContent>
-      </Sheet>
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-2">
+      <div className="min-h-[calc(100vh-16px)] w-full border border-border/20 rounded-lg bg-background/50 backdrop-blur-sm">
+        {/* Desktop Sidebar */}
+        <div className="hidden lg:block">
+          <DynamicSidebar isCollapsed={isCollapsed} />
+        </div>
+        
+        {/* Mobile Sidebar */}
+        <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+          <SheetContent side="left" className="w-64 p-0 bg-white/95 backdrop-blur-sm">
+            <DynamicSidebar isCollapsed={false} />
+          </SheetContent>
+        </Sheet>
 
-      {/* Main Content */}
-      <main className={cn(
-        "flex-1 flex flex-col overflow-hidden transition-all duration-300",
-        isCollapsed ? "lg:ml-16" : "lg:ml-64"
-      )}>
+        {/* Main Content */}
+        <main className={cn(
+          "flex-1 flex flex-col overflow-hidden transition-all duration-300",
+          isCollapsed ? "lg:ml-16" : "lg:ml-64"
+        )}>
         {/* Header */}
         <header className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-purple-200/50 shadow-sm">
           <div className="flex items-center gap-4">
@@ -188,11 +189,12 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
         </header>
         
-        {/* Content */}
-        <div className="flex-1 overflow-auto">
-          {children}
-        </div>
-      </main>
+          {/* Content */}
+          <div className="flex-1 overflow-auto p-6">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

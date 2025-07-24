@@ -2,8 +2,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
-import { WeekNaming } from "@/components/dashboard/WeekNaming";
-
 interface DashboardHeaderProps {
   onShowTutorial?: () => void;
   currentDate?: string;
@@ -41,7 +39,6 @@ export function DashboardHeader({
         {userName && (
           <p className="text-xl font-medium">Hello, {userName}</p>
         )}
-        <WeekNaming />
       </div>
     </div>
   );
