@@ -236,17 +236,22 @@ export function GuidedActionWizard({
         </Card>
       </div>
 
-      <div className="flex gap-3 pt-4 border-t">
+      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">
         <Button 
           type="submit" 
-          className="flex-1 bg-gradient-to-r from-brain-purple-600 to-clarity-teal-600 hover:from-brain-purple-700 hover:to-clarity-teal-700" 
+          className="w-full sm:flex-1 bg-gradient-to-r from-brain-purple-600 to-clarity-teal-600 hover:from-brain-purple-700 hover:to-clarity-teal-700 min-h-[44px]" 
           disabled={loading}
         >
           <Target className="h-4 w-4 mr-2" />
-          {loading ? "Creating Your Brain-Friendly Action..." : "Create Empowering Action"}
+          {loading ? "Creating..." : "Create Action"}
         </Button>
-        <Button type="button" variant="outline" onClick={onUpgradeClick}>
-          Get Premium Features
+        <Button 
+          type="button" 
+          variant="outline" 
+          onClick={onUpgradeClick}
+          className="w-full sm:w-auto min-h-[44px]"
+        >
+          Get Premium
         </Button>
       </div>
     </form>

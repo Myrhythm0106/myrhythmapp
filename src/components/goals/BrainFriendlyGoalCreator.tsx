@@ -77,7 +77,7 @@ export function BrainFriendlyGoalCreator({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-4 sm:p-6">
         <MemoryEffectsContainer nodeCount={4} className="relative">
           <DialogHeader className="text-center space-y-4 pb-6">
             <div className="w-12 h-12 bg-gradient-to-br from-memory-emerald-400 to-clarity-teal-400 rounded-full flex items-center justify-center mx-auto animate-memory-pulse">
@@ -126,18 +126,18 @@ export function BrainFriendlyGoalCreator({
                   setGoalWhy={setGoalWhy}
                 />
 
-                <div className="flex gap-3 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">
                   <Button 
                     variant="outline" 
                     onClick={() => setStep(1)}
-                    className="flex-1"
+                    className="w-full sm:flex-1 min-h-[44px]"
                   >
                     Back
                   </Button>
                   <Button 
                     onClick={handleCreateGoal}
                     disabled={!goalTitle.trim() || !goalMeasurement.trim()}
-                    className="flex-1 bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600"
+                    className="w-full sm:flex-1 bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 min-h-[44px]"
                   >
                     Create Goal
                   </Button>
