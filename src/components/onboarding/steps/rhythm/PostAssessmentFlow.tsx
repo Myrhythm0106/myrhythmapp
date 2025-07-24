@@ -6,6 +6,9 @@ import { InteractiveUserGuide } from "./InteractiveUserGuide";
 import { PostAssessmentManager } from "./post-assessment/PostAssessmentManager";
 import { NextStepsWidget } from "./NextStepsWidget";
 import { HelpOrientationSystem } from "./HelpOrientationSystem";
+import { PersonalizedResultsDisplay } from "./PersonalizedResultsDisplay";
+import { AssessmentResultsPreview } from "./AssessmentResultsPreview";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 interface PostAssessmentFlowProps {
   userType: UserType;
@@ -14,14 +17,19 @@ interface PostAssessmentFlowProps {
 }
 
 export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: PostAssessmentFlowProps) {
+  const { hasFeature, subscriptionData } = useSubscription();
   const [activeStep, setActiveStep] = useState<
-    "welcome" | "guide" | "setup" | "complete"
-  >("welcome");
+    "results" | "welcome" | "guide" | "setup" | "complete"
+  >("results");
   const [showHelp, setShowHelp] = useState(false);
   const [setupProgress, setSetupProgress] = useState(0);
 
+  const showFullResults = hasFeature('personalizedInsights');
+
   const handleStepComplete = (data?: any) => {
-    if (activeStep === "welcome") {
+    if (activeStep === "results") {
+      setActiveStep("welcome");
+    } else if (activeStep === "welcome") {
       setActiveStep("setup");
       setSetupProgress(25);
     } else if (activeStep === "guide") {
@@ -32,6 +40,11 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
       setSetupProgress(100);
       onComplete(data || {});
     }
+  };
+
+  const handleUpgrade = () => {
+    // TODO: Navigate to upgrade flow
+    console.log("Navigate to upgrade");
   };
 
   const handleWelcomeContinue = () => {
@@ -76,6 +89,20 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
 
   const renderStepContent = () => {
     switch (activeStep) {
+      case "results":
+        return showFullResults ? (
+          <PersonalizedResultsDisplay
+            assessmentResult={assessmentResult}
+            onContinue={handleStepComplete}
+          />
+        ) : (
+          <AssessmentResultsPreview
+            assessmentResult={assessmentResult}
+            onUpgrade={handleUpgrade}
+            onContinue={handleStepComplete}
+            daysLeft={subscriptionData.trial_days_left}
+          />
+        );
       case "welcome":
         return (
           <PostAssessmentWelcomeDashboard
@@ -120,6 +147,8 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
 
   const getCurrentStepForWidget = () => {
     switch (activeStep) {
+      case "results":
+        return "assessment_complete";
       case "welcome":
         return "assessment_complete";
       case "setup":
@@ -135,8 +164,8 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
     <div className="relative min-h-screen">
       {renderStepContent()}
       
-      {/* Next Steps Widget - Always visible except on complete */}
-      {activeStep !== "complete" && (
+      {/* Next Steps Widget - Always visible except on complete and results */}
+      {activeStep !== "complete" && activeStep !== "results" && (
         <NextStepsWidget
           currentStep={getCurrentStepForWidget()}
           onNextAction={handleNextAction}
