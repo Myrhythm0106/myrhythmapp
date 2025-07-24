@@ -75,7 +75,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-gradient-to-br from-purple-50/30 via-blue-50/30 to-teal-50/30">
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-emerald-50 via-white to-teal-50">
       {/* Desktop Sidebar */}
       <div className="hidden lg:block">
         <DynamicSidebar isCollapsed={isCollapsed} />

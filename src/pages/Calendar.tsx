@@ -21,6 +21,8 @@ import { OverviewMenu } from "@/components/navigation/OverviewMenu";
 import { UnifiedActionDropdown } from "@/components/calendar/UnifiedActionDropdown";
 import { FloatingNextButton } from "@/components/navigation/FloatingNextButton";
 import { useDataTransfer } from "@/hooks/useDataTransfer";
+import { FloatingPlanButton } from "@/components/ui/FloatingPlanButton";
+import { Preview3Background } from "@/components/ui/Preview3Background";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -128,7 +130,8 @@ const Calendar = () => {
 
   return (
     <PomodoroProvider>
-      <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50/30 via-white to-clarity-teal-50/30">
+      <Preview3Background>
+        <div className="min-h-screen">{/* Remove duplicate background */}
         <ScrollArea className="h-[calc(100vh-64px)]">
           <div className="container mx-auto px-4 py-6 space-y-6">
             
@@ -226,9 +229,11 @@ const Calendar = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Mobile Floating Next Button */}
+        {/* Floating Buttons */}
+        <FloatingPlanButton onClick={() => setShowQuickAction(true)} />
         <FloatingNextButton />
-      </div>
+        </div>
+      </Preview3Background>
     </PomodoroProvider>
   );
 };

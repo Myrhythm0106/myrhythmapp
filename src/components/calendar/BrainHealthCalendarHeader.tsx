@@ -41,14 +41,6 @@ export function BrainHealthCalendarHeader({
         {/* Action Buttons */}
         <div className="flex gap-3 justify-center flex-wrap">
           <Button 
-            onClick={onQuickAction}
-            className="bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 text-white font-medium shadow-sm hover:shadow-md transition-all hover:scale-105"
-          >
-            <Zap className="mr-2 h-4 w-4" />
-            Plan Next Step
-          </Button>
-          
-          <Button 
             onClick={onNewGoal}
             className="bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 text-white font-medium shadow-sm hover:shadow-md transition-all hover:scale-105"
           >

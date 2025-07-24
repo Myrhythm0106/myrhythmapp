@@ -14,6 +14,7 @@ import { InteractiveCalendarActions } from "./InteractiveCalendarActions";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { CalendarEvent } from "./types/calendarTypes";
 import { format } from "date-fns";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface BrainHealthCalendarViewProps {
   view: "day" | "week" | "month" | "year" | "goals";
@@ -36,6 +37,7 @@ export function BrainHealthCalendarView({
   const [selectedDate, setSelectedDate] = React.useState<Date | undefined>(date);
   const [selectedTime, setSelectedTime] = React.useState<string>();
   const { actions, goals, fetchActionsForDate, fetchGoals } = useDailyActions();
+  const { user } = useAuth();
 
   // Fetch data when component mounts or date changes
   useEffect(() => {
@@ -92,7 +94,7 @@ export function BrainHealthCalendarView({
           <CardContent className="pt-6">
             <div className="text-center mb-6">
                 <h2 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent mb-2">
-                Your Brain Health Command Center
+                {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Your'} Command Center
               </h2>
               <p className="text-sm text-brain-health-600">
                 Plan with cognitive awareness • Build neural pathways • Achieve with intention
