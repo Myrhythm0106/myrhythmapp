@@ -16,6 +16,7 @@ import { GoalLinkField } from "./forms/GoalLinkField";
 import { FormActions } from "./forms/FormActions";
 import { MediaAttachment } from "./forms/MediaAttachment";
 import { RecurrenceFields } from "./forms/RecurrenceFields";
+import { CelebrationFields } from "./forms/components/CelebrationFields";
 import { actionFormSchema, ActionFormValues, defaultActionValues } from "./forms/actionFormSchema";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { format } from "date-fns";
@@ -69,9 +70,20 @@ export function EventForm({ defaultTime, goalId, onSuccess }: EventFormProps = {
           goal_id: values.goalId && values.goalId !== "none" ? values.goalId : undefined,
           difficulty_level: values.type === 'daily_win' ? 1 : 2,
           focus_area: values.type === 'daily_win' ? 'emotional' as const : undefined,
-          // Add recurrence data if pattern is not 'none'
-          recurrence_pattern: values.recurrencePattern !== 'none' ? values.recurrencePattern : undefined,
-          recurrence_interval: values.recurrencePattern !== 'none' ? values.recurrenceInterval : undefined,
+          // Add celebration-specific data
+          celebration_data: {
+            celebrantName: values.celebrantName,
+            celebrantAge: values.celebrantAge,
+            relationshipYears: values.relationshipYears,
+            giftIdeas: values.giftIdeas,
+            celebrationNotes: values.celebrationNotes,
+            isRecurringCelebration: values.isRecurringCelebration
+          },
+          // Add recurrence data if pattern is not 'none' or if it's a recurring celebration
+          recurrence_pattern: (values.recurrencePattern !== 'none' || values.isRecurringCelebration) ? 
+                             (values.isRecurringCelebration ? 'yearly' : values.recurrencePattern) : undefined,
+          recurrence_interval: (values.recurrencePattern !== 'none' || values.isRecurringCelebration) ? 
+                              values.recurrenceInterval : undefined,
           recurrence_end_date: values.recurrenceEndDate || undefined,
           recurrence_count: values.recurrenceCount || undefined,
           recurrence_days_of_week: values.recurrenceDaysOfWeek?.length ? values.recurrenceDaysOfWeek : undefined
@@ -83,12 +95,22 @@ export function EventForm({ defaultTime, goalId, onSuccess }: EventFormProps = {
       // Reset form
       form.reset();
       
-      // Enhanced success feedback for recurring events
-      if (values.recurrencePattern !== 'none' && !values.isGoal) {
-        toast.success("Recurring Event Created! 🔄", {
-          description: `"${values.title}" will repeat ${values.recurrencePattern}. You can edit individual occurrences anytime.`,
-          duration: 4000
-        });
+      // Enhanced success feedback for recurring events and celebrations
+      if ((values.recurrencePattern !== 'none' || values.isRecurringCelebration) && !values.isGoal) {
+        const celebrationTypes = ['birthday', 'anniversary', 'milestone', 'achievement', 'special_occasion', 'memory_marker', 'gift_reminder', 'celebration'];
+        const isCelebration = celebrationTypes.includes(values.type);
+        
+        if (isCelebration) {
+          toast.success("🎉 Celebration Created!", {
+            description: `"${values.title}" ${values.isRecurringCelebration ? 'will repeat every year' : `will repeat ${values.recurrencePattern}`}. You'll never miss this special moment!`,
+            duration: 4000
+          });
+        } else {
+          toast.success("Recurring Event Created! 🔄", {
+            description: `"${values.title}" will repeat ${values.recurrencePattern}. You can edit individual occurrences anytime.`,
+            duration: 4000
+          });
+        }
       } else {
         // Call success callback
         if (onSuccess) {
@@ -112,6 +134,7 @@ export function EventForm({ defaultTime, goalId, onSuccess }: EventFormProps = {
             <div className="space-y-6 pb-2">
               <ActionTitleField />
               <ActionTypeSelect />
+              <CelebrationFields />
               <DateTimeFields />
               <LocationField />
               <NotesField />

@@ -1,5 +1,5 @@
 
-import { Star, Calendar, Dumbbell, Footprints, HeartPulse, Users, Check, Plus, Coffee, Heart } from 'lucide-react';
+import { Star, Calendar, Dumbbell, Footprints, HeartPulse, Users, Check, Plus, Coffee, Heart, Cake, Gift, Trophy, Sparkles, Camera, PartyPopper } from 'lucide-react';
 
 export const actionTypes = [
   { 
@@ -64,6 +64,62 @@ export const actionTypes = [
     icon: Check, 
     description: 'Important daily activities and responsibilities',
     examples: ['Grocery shopping', 'Pay bills', 'Organize room']
+  },
+  { 
+    value: 'birthday', 
+    label: 'Birthday', 
+    icon: Cake, 
+    description: 'Celebrate birthdays and special age milestones',
+    examples: ['My birthday', 'Mom\'s 60th birthday', 'Best friend\'s birthday']
+  },
+  { 
+    value: 'anniversary', 
+    label: 'Anniversary', 
+    icon: Heart, 
+    description: 'Mark relationship milestones and special dates',
+    examples: ['Wedding anniversary', 'First date anniversary', 'Work anniversary']
+  },
+  { 
+    value: 'milestone', 
+    label: 'Personal Milestone', 
+    icon: Trophy, 
+    description: 'Celebrate achievements and life milestones',
+    examples: ['Graduation', 'Job promotion', 'First home purchase']
+  },
+  { 
+    value: 'achievement', 
+    label: 'Achievement', 
+    icon: Star, 
+    description: 'Mark personal accomplishments and victories',
+    examples: ['Completed marathon', 'Finished project', 'Learned new skill']
+  },
+  { 
+    value: 'special_occasion', 
+    label: 'Special Occasion', 
+    icon: PartyPopper, 
+    description: 'Mark holidays, parties, and special events',
+    examples: ['Christmas dinner', 'Family reunion', 'Holiday celebration']
+  },
+  { 
+    value: 'memory_marker', 
+    label: 'Memory Moment', 
+    icon: Camera, 
+    description: 'Capture and plan moments worth remembering',
+    examples: ['Photo session', 'Family gathering', 'Special outing']
+  },
+  { 
+    value: 'gift_reminder', 
+    label: 'Gift Reminder', 
+    icon: Gift, 
+    description: 'Remember to buy or prepare gifts for special people',
+    examples: ['Buy birthday gift', 'Prepare anniversary surprise', 'Holiday shopping']
+  },
+  { 
+    value: 'celebration', 
+    label: 'Celebration', 
+    icon: Sparkles, 
+    description: 'Plan and organize celebrations and parties',
+    examples: ['Birthday party planning', 'Anniversary dinner', 'Victory celebration']
   },
   { 
     value: 'custom', 
