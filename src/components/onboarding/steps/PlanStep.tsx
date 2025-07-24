@@ -8,26 +8,53 @@ import { plans } from "./plan/plansData";
 import { PlanType, PlanStepProps } from "./plan/types";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { PaymentDetailsForm } from "@/components/payment/PaymentDetailsForm";
 
 export type { PlanType };
 
 export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps) => {
   const [selected, setSelected] = useState<PlanType | null>(null);
   const [isAnnual, setIsAnnual] = useState(true); // Default to annual for savings
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
   const isMobile = useIsMobile();
 
   const handlePlanSelect = (planId: PlanType) => {
     console.log("PlanStep: Plan selected:", planId);
     setSelected(planId);
-    onComplete(planId, isAnnual ? 'annual' : 'monthly');
+    setShowPaymentForm(true);
   };
 
   const handleBillingChange = (annual: boolean) => {
     setIsAnnual(annual);
-    if (selected) {
-      onComplete(selected, annual ? 'annual' : 'monthly');
-    }
   };
+
+  const handlePaymentComplete = (paymentDetails: any) => {
+    console.log("Payment details collected:", paymentDetails);
+    onComplete(selected!, isAnnual ? 'annual' : 'monthly');
+  };
+
+  const handlePaymentCancel = () => {
+    setShowPaymentForm(false);
+    setSelected(null);
+  };
+
+  // Show payment form if a plan is selected
+  if (showPaymentForm && selected) {
+    const selectedPlanData = plans.find(p => p.id === selected);
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto px-4">
+        <PaymentDetailsForm
+          selectedPlan={{
+            name: selectedPlanData?.name || '',
+            price: isAnnual ? selectedPlanData?.annualPrice || selectedPlanData?.price || '' : selectedPlanData?.price || '',
+            trialDays: !isAnnual && selected === 'basic' ? 7 : undefined
+          }}
+          onSubmit={handlePaymentComplete}
+          onCancel={handlePaymentCancel}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto px-4">

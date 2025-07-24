@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Heart, Users, Sparkles } from "lucide-react";
+import { Brain, Heart, Users, Sparkles, Stethoscope } from "lucide-react";
 import { UserType } from "@/types/user";
 
 interface UserTypeStepProps {
@@ -36,6 +36,13 @@ const userTypes = [
     description: "I'm focused on overall mental health and wellness",
     icon: Users,
     color: "bg-green-500",
+  },
+  {
+    id: "medical-professional" as const,
+    title: "Medical Professional",
+    description: "I'm a healthcare provider supporting patients with cognitive challenges",
+    icon: Stethoscope,
+    color: "bg-teal-500",
   }
 ];
 

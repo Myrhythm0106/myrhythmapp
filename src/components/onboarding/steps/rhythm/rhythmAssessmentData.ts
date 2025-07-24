@@ -517,6 +517,39 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       icon: Users,
       gradient: "from-amber-500 to-yellow-500"
     }
+  ],
+
+  "medical-professional": [
+    {
+      id: 1,
+      title: "Clinical Memory Goals",
+      phase: "M",
+      phaseDescription: "Moment of Impact - Professional Memory Vision",
+      narrative: "As a healthcare professional, understanding memory challenges enhances your ability to provide comprehensive patient care and support.",
+      questions: [
+        { id: "clinical_memory_vision", text: "Do you see memory assessment and support as integral to your patient care approach?" },
+        { id: "professional_development", text: "Are you motivated to enhance your clinical skills in memory-related patient support?" },
+        { id: "evidence_based_practice", text: "Do you value evidence-based approaches to memory assessment and intervention?" },
+        { id: "patient_centered_care", text: "Are you interested in incorporating memory wellness into your patient-centered care model?" }
+      ],
+      icon: Heart,
+      gradient: "from-teal-500 to-emerald-500"
+    },
+    {
+      id: 2,
+      title: "Clinical Memory Assessment",
+      phase: "Y",
+      phaseDescription: "Your Reality - Current Clinical Practice",
+      narrative: "Understanding your current knowledge and experience with memory-related patient care helps identify areas for professional growth.",
+      questions: [
+        { id: "current_clinical_knowledge", text: "Do you currently feel confident in your ability to assess and support patients with memory challenges?" },
+        { id: "clinical_tools", text: "Do you have adequate tools and resources for memory-related patient assessment and support?" },
+        { id: "interdisciplinary_approach", text: "Are you comfortable collaborating with other professionals in memory care?" },
+        { id: "continuing_education", text: "Do you actively seek continuing education opportunities in memory and cognitive health?" }
+      ],
+      icon: Brain,
+      gradient: "from-blue-500 to-indigo-500"
+    }
   ]
 };
 

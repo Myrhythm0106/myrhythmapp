@@ -239,8 +239,6 @@ export function DashboardContent() {
         dailyIntention={dailyIntention}
       />
       
-      {/* Floating Gratitude Button */}
-      <FloatingGratitudeButton />
       
       {/* Welcome to App - Show for new users */}
       <WelcomeToApp showOnMount={showWelcome} onClose={() => setShowWelcome(false)} />

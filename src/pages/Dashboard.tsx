@@ -5,6 +5,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
+import { BackButton } from "@/components/ui/BackButton";
 import CalendarPage from "./CalendarPage";
 import GoalsPage from "./GoalsPage";
 import GratitudePage from "./GratitudePage";
@@ -20,30 +21,45 @@ const Dashboard = () => {
   const location = useLocation();
   
   const renderContent = () => {
-    switch (location.pathname) {
-      case '/calendar':
-        return <CalendarPage />;
-      case '/goals':
-        return <GoalsPage />;
-      case '/gratitude':
-        return <GratitudePage />;
-      case '/analytics':
-        return <AnalyticsPage />;
-      case '/brain-games':
-        return <BrainGamesPage />;
-      case '/accountability':
-        return <AccountabilityPage />;
-      case '/support':
-        return <SupportPage />;
-      case '/profile':
-        return <ProfilePage />;
-      case '/memory-bank':
-        return <MemoryBankPage />;
-      case '/settings':
-        return <SettingsPage />;
-      default:
-        return <DashboardContent />;
-    }
+    const showBackButton = location.pathname !== '/' && location.pathname !== '/dashboard';
+    
+    return (
+      <>
+        {showBackButton && (
+          <div className="p-4 border-b">
+            <BackButton />
+          </div>
+        )}
+        <div className={showBackButton ? "" : ""}>
+          {(() => {
+            switch (location.pathname) {
+              case '/calendar':
+                return <CalendarPage />;
+              case '/goals':
+                return <GoalsPage />;
+              case '/gratitude':
+                return <GratitudePage />;
+              case '/analytics':
+                return <AnalyticsPage />;
+              case '/brain-games':
+                return <BrainGamesPage />;
+              case '/accountability':
+                return <AccountabilityPage />;
+              case '/support':
+                return <SupportPage />;
+              case '/profile':
+                return <ProfilePage />;
+              case '/memory-bank':
+                return <MemoryBankPage />;
+              case '/settings':
+                return <SettingsPage />;
+              default:
+                return <DashboardContent />;
+            }
+          })()}
+        </div>
+      </>
+    );
   };
 
   return (
