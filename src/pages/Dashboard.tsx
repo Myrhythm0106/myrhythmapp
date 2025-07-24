@@ -34,7 +34,11 @@ const Dashboard = () => {
           {(() => {
             switch (location.pathname) {
               case '/calendar':
-                return <CalendarPage />;
+                return (
+                  <DailyActionsProvider>
+                    <CalendarPage />
+                  </DailyActionsProvider>
+                );
               case '/goals':
                 return <GoalsPage />;
               case '/gratitude':
