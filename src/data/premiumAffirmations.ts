@@ -57,7 +57,8 @@ export function getRandomIChooseStatement(
   userType: string = 'wellness',
   hasPremium: boolean = false,
   mood?: 'great' | 'okay' | 'struggling',
-  excludeIds: string[] = []
+  excludeIds: string[] = [],
+  monthlyTheme?: string
 ): PremiumIChooseStatement | null {
   let availableStatements = [...freeStatements];
   
@@ -69,6 +70,21 @@ export function getRandomIChooseStatement(
   availableStatements = availableStatements
     .filter(s => s.userType === userType || s.userType === 'wellness')
     .filter(s => !excludeIds.includes(s.id));
+
+  // If monthly theme is provided, prioritize statements that align with the theme
+  if (monthlyTheme) {
+    const themeAlignedStatements = availableStatements.filter(s => 
+      s.tags.some(tag => 
+        tag.toLowerCase().includes(monthlyTheme.toLowerCase()) ||
+        s.theme.toLowerCase().includes(monthlyTheme.toLowerCase()) ||
+        s.category.toLowerCase().includes(monthlyTheme.toLowerCase())
+      )
+    );
+    
+    if (themeAlignedStatements.length > 0) {
+      availableStatements = themeAlignedStatements;
+    }
+  }
 
   if (availableStatements.length === 0) {
     return null;

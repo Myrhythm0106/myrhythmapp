@@ -168,7 +168,7 @@ export function WelcomeToApp({ showOnMount = false, onClose }: WelcomeToAppProps
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <BookOpen className="w-5 h-5" />
-              Your Personal Recovery Coach
+              Your Personal Empowerment Coach
             </DialogTitle>
           </DialogHeader>
           <div className="overflow-y-auto max-h-[calc(90vh-120px)]">

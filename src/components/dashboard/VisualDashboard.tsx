@@ -1,31 +1,57 @@
-import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Target, Heart, Clock, Trophy, ArrowRight, CheckCircle, Zap } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { 
+  Calendar, 
+  BarChart3, 
+  TrendingUp, 
+  TrendingDown,
+  Star,
+  Target,
+  Zap,
+  Trophy,
+  ArrowRight,
+  CheckCircle,
+  Clock,
+  Sparkles
+} from "lucide-react";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
-import { useUserProgress } from "@/hooks/useUserProgress";
+import { useNavigate } from "react-router-dom";
+import { MonthlyTheme } from "./MonthlyTheme";
+import { DailyIChooseWidget } from "./DailyIChooseWidget";
 
 export function VisualDashboard() {
-  const navigate = useNavigate();
   const { actions } = useDailyActions();
-  const { metrics } = useUserProgress();
   
-  // Calculate today's metrics
+  // Get today's actions
   const today = new Date().toISOString().split('T')[0];
-  const todayActions = actions.filter(action => action.date === today);
-  const completedActions = todayActions.filter(action => action.status === 'completed');
-  const completionRate = todayActions.length > 0 ? Math.round((completedActions.length / todayActions.length) * 100) : 0;
+  const todaysActions = actions.filter(action => action.date === today);
+  const navigate = useNavigate();
+  const [yesterdayData, setYesterdayData] = useState({
+    carryover: 2,
+    completed: 4,
+    achievements: ["Morning routine", "Therapy session"]
+  });
   
-  // Mock data for visual demo - in real app, these would come from actual user data
+  // Calculate today's completion rate
+  const completedActions = todaysActions.filter(action => action.status === 'completed').length;
+  const totalActions = todaysActions.length;
+  const completionRate = totalActions > 0 ? Math.round((completedActions / totalActions) * 100) : 0;
+  
+  // Get today's top 3 priorities (first 3 uncompleted or most important)
+  const topPriorities = todaysActions
+    .filter(action => action.status !== 'completed')
+    .slice(0, 3)
+    .map(action => action.title);
+
+  // Mock visual metrics for demo
   const visualMetrics = {
-    mood: 8, // out of 10
-    energy: 75, // percentage
-    focusStreak: 3, // days
-    weeklyWins: 12,
-    upcomingCount: todayActions.filter(a => a.status === 'pending').length,
-    progressScore: metrics.readinessScore || 65
+    mood: 8,
+    energy: 75,
+    streak: 5,
+    weekWins: 12
   };
 
   const getMoodEmoji = (mood: number) => {
@@ -37,7 +63,7 @@ export function VisualDashboard() {
 
   const getTrendIcon = (value: number, threshold: number = 70) => {
     return value >= threshold ? (
-      <TrendingUp className="h-4 w-4 text-green-500" />
+      <TrendingUp className="h-4 w-4 text-emerald-500" />
     ) : (
       <TrendingDown className="h-4 w-4 text-amber-500" />
     );
@@ -45,60 +71,138 @@ export function VisualDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Plan on a Page - Visual Overview */}
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
-        <CardContent className="p-6">
-          <div className="text-center space-y-2 mb-6">
-            <h2 className="text-2xl font-bold text-purple-800">Plan on a Page</h2>
-            <p className="text-purple-600">Your day at a glance</p>
+      {/* Monthly Theme & Daily Statement Hero */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-1">
+          <MonthlyTheme />
+        </div>
+        <div className="lg:col-span-2">
+          <DailyIChooseWidget onUpgradeClick={() => navigate("/upgrade")} />
+        </div>
+      </div>
+
+      {/* Enhanced Plan on a Page */}
+      <Card className="bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 border-2 border-purple-200/50 shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+            <Target className="w-5 h-5 text-purple-600" />
+            <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+              Your Command Center
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Yesterday's Context */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="bg-gradient-to-br from-amber-50/60 to-orange-50/40 border border-amber-200/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-amber-700 flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  Yesterday's Carryover
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-amber-600">{yesterdayData.carryover}</div>
+                <p className="text-xs text-amber-600">Tasks to complete today</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-emerald-50/60 to-teal-50/40 border border-emerald-200/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-emerald-700 flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4" />
+                  Yesterday's Results
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-emerald-600">{yesterdayData.completed}</div>
+                <p className="text-xs text-emerald-600">Actions completed</p>
+                <div className="mt-2 space-y-1">
+                  {yesterdayData.achievements.map((achievement, index) => (
+                    <div key={index} className="text-xs text-emerald-600 flex items-center gap-1">
+                      <Star className="w-3 h-3" />
+                      {achievement}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </div>
-          
-          {/* Key Numbers Grid */}
+
+          {/* Today's Focus */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Card className="bg-gradient-to-br from-purple-50/60 to-blue-50/40 border border-purple-200/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-purple-700 flex items-center gap-2">
+                  <Zap className="w-4 h-4" />
+                  Today's Focus
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-purple-600">{completionRate}%</div>
+                <p className="text-xs text-purple-600">Completion rate</p>
+                <Progress value={completionRate} className="mt-2 h-2" />
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-gradient-to-br from-teal-50/60 to-cyan-50/40 border border-teal-200/60">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-teal-700 flex items-center gap-2">
+                  <Trophy className="w-4 h-4" />
+                  Top 3 Priorities
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {topPriorities.length > 0 ? (
+                    topPriorities.map((priority, index) => (
+                      <div key={index} className="text-xs text-teal-600 flex items-center gap-2">
+                        <div className="w-4 h-4 rounded-full border border-teal-300 flex items-center justify-center text-xs font-bold">
+                          {index + 1}
+                        </div>
+                        {priority}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-xs text-teal-600">All priorities complete! 🎉</div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* High-Level Overview */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {/* Today's Progress */}
-            <div className="text-center space-y-2">
-              <div className="relative">
-                <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-green-400 to-green-600 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">{completionRate}%</span>
-                </div>
-                {getTrendIcon(completionRate)}
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center mb-2">
+                <span className="text-lg">{getMoodEmoji(visualMetrics.mood)}</span>
               </div>
-              <p className="text-sm font-medium text-green-700">Today's Focus</p>
+              <p className="text-xs font-medium">Mood</p>
+              <p className="text-xs text-muted-foreground">{visualMetrics.energy}% Energy</p>
             </div>
             
-            {/* Mood & Energy */}
-            <div className="text-center space-y-2">
-              <div className="relative">
-                <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
-                  <span className="text-2xl">{getMoodEmoji(visualMetrics.mood)}</span>
-                </div>
-                <Badge className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 bg-white text-orange-600 text-xs">
-                  {visualMetrics.energy}%
-                </Badge>
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-emerald-100 to-teal-100 rounded-full flex items-center justify-center mb-2">
+                <span className="text-lg font-bold text-emerald-600">{visualMetrics.streak}</span>
               </div>
-              <p className="text-sm font-medium text-orange-700">Mood & Energy</p>
+              <p className="text-xs font-medium">Streak</p>
+              <p className="text-xs text-muted-foreground">Days</p>
             </div>
             
-            {/* Streak Counter */}
-            <div className="text-center space-y-2">
-              <div className="relative">
-                <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">{visualMetrics.focusStreak}</span>
-                </div>
-                <Zap className="absolute -top-1 -right-1 h-4 w-4 text-yellow-500" />
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-amber-100 to-orange-100 rounded-full flex items-center justify-center mb-2">
+                <span className="text-lg font-bold text-amber-600">{visualMetrics.weekWins}</span>
               </div>
-              <p className="text-sm font-medium text-purple-700">Focus Streak</p>
+              <p className="text-xs font-medium">Week Wins</p>
+              <p className="text-xs text-muted-foreground">Achievements</p>
             </div>
             
-            {/* Weekly Wins */}
-            <div className="text-center space-y-2">
-              <div className="relative">
-                <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center">
-                  <span className="text-2xl font-bold text-white">{visualMetrics.weeklyWins}</span>
-                </div>
-                <Trophy className="absolute -top-1 -right-1 h-4 w-4 text-yellow-500" />
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mb-2">
+                <span className="text-lg font-bold text-blue-600">5</span>
               </div>
-              <p className="text-sm font-medium text-blue-700">This Week's Wins</p>
+              <p className="text-xs font-medium">Upcoming</p>
+              <p className="text-xs text-muted-foreground">Events</p>
             </div>
           </div>
         </CardContent>
@@ -106,95 +210,116 @@ export function VisualDashboard() {
 
       {/* Quick Visual Status Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {/* Need to Know NOW */}
         <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow border-red-200 bg-red-50"
+          className="cursor-pointer hover:shadow-md transition-shadow bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 border-purple-200/50"
           onClick={() => navigate("/calendar")}
         >
-          <CardContent className="p-4 text-center space-y-3">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <Clock className="h-5 w-5 text-red-600" />
-              <Badge className="bg-red-100 text-red-700">{visualMetrics.upcomingCount}</Badge>
+              <div>
+                <h3 className="font-semibold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Need to Know NOW</h3>
+                <p className="text-sm text-purple-600">3 upcoming actions</p>
+              </div>
+              <Calendar className="w-8 h-8 text-purple-500" />
             </div>
-            <div>
-              <p className="text-2xl font-bold text-red-700">{visualMetrics.upcomingCount}</p>
-              <p className="text-sm text-red-600">Need Attention NOW</p>
+            <div className="mt-3 flex items-center text-xs text-purple-600">
+              <span>View Calendar</span>
+              <ArrowRight className="w-3 h-3 ml-1" />
             </div>
-            <ArrowRight className="h-4 w-4 text-red-500 mx-auto" />
           </CardContent>
         </Card>
 
-        {/* Overall Progress */}
         <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow border-blue-200 bg-blue-50"
+          className="cursor-pointer hover:shadow-md transition-shadow bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 border-purple-200/50"
           onClick={() => navigate("/analytics")}
         >
-          <CardContent className="p-4 text-center space-y-3">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <Target className="h-5 w-5 text-blue-600" />
-              {getTrendIcon(visualMetrics.progressScore)}
+              <div>
+                <h3 className="font-semibold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Overall Progress</h3>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-blue-600">Score: 85</span>
+                  {getTrendIcon(85, 80)}
+                </div>
+              </div>
+              <BarChart3 className="w-8 h-8 text-blue-500" />
             </div>
-            <div>
-              <p className="text-2xl font-bold text-blue-700">{visualMetrics.progressScore}</p>
-              <p className="text-sm text-blue-600">Progress Score</p>
+            <div className="mt-3 flex items-center text-xs text-blue-600">
+              <span>View Analytics</span>
+              <ArrowRight className="w-3 h-3 ml-1" />
             </div>
-            <Progress value={visualMetrics.progressScore} className="h-2" />
           </CardContent>
         </Card>
 
-        {/* Quick Actions */}
         <Card 
-          className="cursor-pointer hover:shadow-lg transition-shadow border-green-200 bg-green-50"
+          className="cursor-pointer hover:shadow-md transition-shadow bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 border-purple-200/50"
           onClick={() => navigate("/calendar")}
         >
-          <CardContent className="p-4 text-center space-y-3">
+          <CardContent className="p-4">
             <div className="flex items-center justify-between">
-              <CheckCircle className="h-5 w-5 text-green-600" />
-              <Badge className="bg-green-100 text-green-700">Quick</Badge>
+              <div>
+                <h3 className="font-semibold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Quick Actions</h3>
+                <p className="text-sm text-teal-600">Add new task</p>
+              </div>
+              <Zap className="w-8 h-8 text-teal-500" />
             </div>
-            <div>
-              <p className="text-lg font-bold text-green-700">Add Action</p>
-              <p className="text-sm text-green-600">What needs doing?</p>
+            <div className="mt-3 flex items-center text-xs text-teal-600">
+              <span>Open Calendar</span>
+              <ArrowRight className="w-3 h-3 ml-1" />
             </div>
-            <ArrowRight className="h-4 w-4 text-green-500 mx-auto" />
           </CardContent>
         </Card>
       </div>
 
       {/* Visual Progress Indicators */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Today's Focus Visual */}
-        <Card className="border-l-4 border-l-green-400">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-green-700">Today's Focus</h3>
-              <span className="text-2xl font-bold text-green-600">{completedActions.length}/{todayActions.length}</span>
+        <Card className="bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 border-purple-200/50">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <Target className="w-5 h-5 text-purple-600" />
+              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                Today's Focus
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Completion Rate</span>
+                <span className="text-sm text-muted-foreground">{completedActions}/{totalActions}</span>
+              </div>
+              <Progress value={completionRate} className="h-3" />
+              <p className="text-sm text-purple-600 font-medium">
+                {completionRate >= 80 ? "Excellent progress! You're empowered and in control! 🔥" :
+                 completionRate >= 50 ? "Great momentum! Your strength is showing! 💪" :
+                 "Every step builds your power. You've got this! 🌟"}
+              </p>
             </div>
-            <Progress value={completionRate} className="h-3 mb-2" />
-            <p className="text-sm text-muted-foreground">
-              {completionRate >= 70 ? "🎉 Great progress!" : 
-               completionRate >= 40 ? "💪 Keep going!" : 
-               "🌱 Just getting started"}
-            </p>
           </CardContent>
         </Card>
 
-        {/* Mood & Energy Visual */}
-        <Card className="border-l-4 border-l-orange-400">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-orange-700">Mood & Energy</h3>
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">{getMoodEmoji(visualMetrics.mood)}</span>
-                <span className="text-lg font-bold text-orange-600">{visualMetrics.energy}%</span>
+        <Card className="bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 border-purple-200/50">
+          <CardHeader>
+            <CardTitle className="text-lg font-semibold flex items-center gap-2">
+              <Zap className="w-5 h-5 text-teal-600" />
+              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                Mood & Energy
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-4xl">{getMoodEmoji(visualMetrics.mood)}</span>
+                <span className="text-sm text-muted-foreground">{visualMetrics.energy}% Energy</span>
               </div>
+              <Progress value={visualMetrics.energy} className="h-3" />
+              <p className="text-sm text-teal-600 font-medium">
+                {visualMetrics.energy >= 80 ? "High energy day! You're unstoppable! ⚡" :
+                 visualMetrics.energy >= 50 ? "Steady energy. You're in your flow. 🎯" :
+                 "Honoring your energy. You're wise and self-aware. 🤗"}
+              </p>
             </div>
-            <Progress value={visualMetrics.energy} className="h-3 mb-2" />
-            <p className="text-sm text-muted-foreground">
-              {visualMetrics.energy >= 70 ? "⚡ High energy day!" : 
-               visualMetrics.energy >= 40 ? "🔋 Moderate energy" : 
-               "🌙 Low energy - be gentle"}
-            </p>
           </CardContent>
         </Card>
       </div>

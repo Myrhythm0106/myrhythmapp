@@ -56,7 +56,7 @@ export function PersonalCoachGuide() {
   const appFeatures: AppFeature[] = [
     {
       id: 'dashboard',
-      title: 'Your Recovery Command Center',
+      title: 'Your Empowerment Command Center',
       description: 'Start each day with confidence by checking your personalized dashboard',
       path: '/dashboard',
       icon: Home,
@@ -67,7 +67,7 @@ export function PersonalCoachGuide() {
     },
     {
       id: 'goals',
-      title: 'Your Recovery Roadmap',
+      title: 'Your Empowerment Roadmap',
       description: 'Set meaningful goals that celebrate every step forward in your journey',
       path: '/goals',
       icon: Target,
@@ -153,7 +153,7 @@ export function PersonalCoachGuide() {
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2 mb-2">
           <Heart className="w-6 h-6 text-primary" />
-          <h1 className="text-3xl font-bold text-foreground">Your Personal Recovery Coach</h1>
+          <h1 className="text-3xl font-bold text-foreground">Your Personal Empowerment Coach</h1>
           <Heart className="w-6 h-6 text-primary" />
         </div>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -167,7 +167,7 @@ export function PersonalCoachGuide() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="w-5 h-5 text-primary" />
-            Your Recovery Progress
+            Your Empowerment Progress
             <Badge variant="secondary" className="ml-2">
               {userProgress.currentStreak} day streak!
             </Badge>
@@ -279,7 +279,7 @@ export function PersonalCoachGuide() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-primary" />
-                Your Daily Recovery Routine
+                Your Daily Empowerment Routine
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">

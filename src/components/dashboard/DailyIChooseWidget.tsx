@@ -63,7 +63,26 @@ export function DailyIChooseWidget({ onUpgradeClick, userType = 'brain-injury' }
     setIsAnimating(true);
     triggerHapticFeedback('light');
     
-    const availableStatements = statements.filter(s => s.id !== currentStatement?.id);
+    // Get monthly theme from localStorage
+    const monthlyTheme = localStorage.getItem("myrhythm_monthly_theme");
+    
+    let availableStatements = statements.filter(s => s.id !== currentStatement?.id);
+    
+    // If monthly theme is set, try to find theme-aligned statements first
+    if (monthlyTheme && availableStatements.length > 1) {
+      const themeAlignedStatements = availableStatements.filter(s => 
+        s.tags?.some(tag => 
+          tag.toLowerCase().includes(monthlyTheme.toLowerCase()) ||
+          s.theme?.toLowerCase().includes(monthlyTheme.toLowerCase()) ||
+          s.category?.toLowerCase().includes(monthlyTheme.toLowerCase())
+        )
+      );
+      
+      if (themeAlignedStatements.length > 0) {
+        availableStatements = themeAlignedStatements;
+      }
+    }
+    
     if (availableStatements.length === 0) return;
     
     const newStatement = availableStatements[Math.floor(Math.random() * availableStatements.length)];
