@@ -12,42 +12,62 @@ export interface GoalType {
   measurementPrompts: string[];
 }
 
+import { Home, Briefcase, DollarSign, GraduationCap } from 'lucide-react';
+
 export const GOAL_TYPES: GoalType[] = [
   {
-    id: 'cognitive',
-    title: 'Brain Power',
-    icon: <Brain className="h-6 w-6" />,
-    color: 'from-memory-emerald-400 to-memory-emerald-500',
-    description: 'Strengthen your thinking and memory',
-    examples: ['Read 15 minutes daily', 'Complete memory games', 'Learn something new'],
-    measurementPrompts: ['How many books/articles?', 'How many games completed?', 'Skills learned?']
-  },
-  {
-    id: 'physical',
-    title: 'Body Wellness',
-    icon: <Activity className="h-6 w-6" />,
-    color: 'from-clarity-teal-400 to-clarity-teal-500',
-    description: 'Build strength and mobility',
-    examples: ['Walk to the mailbox', 'Do stretching exercises', 'Take the stairs'],
-    measurementPrompts: ['How far/long?', 'How many steps?', 'How many reps/sets?']
-  },
-  {
-    id: 'emotional',
-    title: 'Heart Health',
+    id: 'health',
+    title: 'Health & Wellness',
     icon: <Heart className="h-6 w-6" />,
     color: 'from-brain-health-400 to-brain-health-500',
-    description: 'Nurture your emotional wellbeing',
-    examples: ['Practice gratitude daily', 'Call a friend', 'Journal feelings'],
-    measurementPrompts: ['Daily mood rating?', 'Journal entries per week?', 'Social interactions?']
+    description: 'Physical and mental wellbeing',
+    examples: ['Exercise 3x weekly', 'Therapy sessions', 'Healthy eating habits'],
+    measurementPrompts: ['How many sessions?', 'What frequency?', 'Daily/weekly targets?']
   },
   {
-    id: 'social',
-    title: 'Connection',
+    id: 'career',
+    title: 'Career & Work',
+    icon: <Briefcase className="h-6 w-6" />,
+    color: 'from-clarity-teal-400 to-clarity-teal-500',
+    description: 'Professional development and work goals',
+    examples: ['Complete certification', 'Network with colleagues', 'Job search activities'],
+    measurementPrompts: ['Skills to learn?', 'Applications to submit?', 'Meetings to attend?']
+  },
+  {
+    id: 'home',
+    title: 'Home & Living',
+    icon: <Home className="h-6 w-6" />,
+    color: 'from-memory-emerald-400 to-memory-emerald-500',
+    description: 'Household management and living space',
+    examples: ['Organize one room weekly', 'Establish cleaning routine', 'Home improvements'],
+    measurementPrompts: ['Rooms to organize?', 'Tasks per week?', 'Projects to complete?']
+  },
+  {
+    id: 'family',
+    title: 'Family & Relationships',
     icon: <Users className="h-6 w-6" />,
     color: 'from-purple-400 to-purple-500',
-    description: 'Build meaningful relationships',
-    examples: ['Join a support group', 'Have coffee with family', 'Volunteer weekly'],
-    measurementPrompts: ['How many calls/visits?', 'Activities attended?', 'New connections made?']
+    description: 'Building stronger connections',
+    examples: ['Weekly family dinner', 'Call parents daily', 'Plan date nights'],
+    measurementPrompts: ['How often?', 'Who to connect with?', 'Activities to share?']
+  },
+  {
+    id: 'personal',
+    title: 'Personal Growth',
+    icon: <GraduationCap className="h-6 w-6" />,
+    color: 'from-energy-amber-400 to-energy-amber-500',
+    description: 'Learning and self-improvement',
+    examples: ['Read 30 min daily', 'Practice meditation', 'Learn new skill'],
+    measurementPrompts: ['Books to read?', 'Skills to develop?', 'Habits to build?']
+  },
+  {
+    id: 'financial',
+    title: 'Financial Goals',
+    icon: <DollarSign className="h-6 w-6" />,
+    color: 'from-success-green-400 to-success-green-500',
+    description: 'Money management and financial security',
+    examples: ['Save $500 monthly', 'Track expenses', 'Build emergency fund'],
+    measurementPrompts: ['Amount to save?', 'Budget targets?', 'Financial milestones?']
   }
 ];
 

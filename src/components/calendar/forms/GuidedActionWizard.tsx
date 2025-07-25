@@ -154,19 +154,25 @@ export function GuidedActionWizard({
                   </div>
                 </div>
               </Label>
-              <Select value="30" onValueChange={() => {}}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="15">15 minutes - Quick boost</SelectItem>
-                  <SelectItem value="30">30 minutes - Focused session</SelectItem>
-                  <SelectItem value="45">45 minutes - Deep work</SelectItem>
-                  <SelectItem value="60">1 hour - Comprehensive</SelectItem>
-                  <SelectItem value="90">1.5 hours - Extended focus</SelectItem>
-                  <SelectItem value="120">2 hours - Marathon session</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormField
+                control={form.control}
+                name="duration"
+                render={({ field }) => (
+                  <Select value={field.value?.toString() || "30"} onValueChange={(value) => field.onChange(parseInt(value))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="15">15 minutes - Quick boost</SelectItem>
+                      <SelectItem value="30">30 minutes - Focused session</SelectItem>
+                      <SelectItem value="45">45 minutes - Deep work</SelectItem>
+                      <SelectItem value="60">1 hour - Comprehensive</SelectItem>
+                      <SelectItem value="90">1.5 hours - Extended focus</SelectItem>
+                      <SelectItem value="120">2 hours - Marathon session</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
             <div>
               <Label className="flex items-center gap-2">
@@ -193,25 +199,33 @@ export function GuidedActionWizard({
             </div>
           </div>
 
-          <div>
-            <Label>Category</Label>
-            <div className="grid grid-cols-2 gap-2 mt-2">
-              {categories.map((category) => {
-                const Icon = category.icon;
-                return (
-                  <Button
-                    key={category.value}
-                    type="button"
-                    variant="outline"
-                    className="justify-start"
-                  >
-                    <Icon className="h-4 w-4 mr-2" />
-                    {category.label}
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
+          <FormField
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  {categories.map((category) => {
+                    const Icon = category.icon;
+                    const isSelected = field.value === category.value;
+                    return (
+                      <Button
+                        key={category.value}
+                        type="button"
+                        variant={isSelected ? "default" : "outline"}
+                        className="justify-start"
+                        onClick={() => field.onChange(category.value)}
+                      >
+                        <Icon className="h-4 w-4 mr-2" />
+                        {category.label}
+                      </Button>
+                    );
+                  })}
+                </div>
+              </FormItem>
+            )}
+          />
 
           <div>
             <Label className="flex items-center gap-2">
@@ -266,10 +280,10 @@ export function GuidedActionWizard({
         <Button 
           type="button" 
           variant="outline" 
-          onClick={onUpgradeClick}
+          onClick={() => form.reset()}
           className="w-full sm:w-auto min-h-[44px] text-foreground"
         >
-          Save & Close
+          Clear Form
         </Button>
         </div>
       </form>

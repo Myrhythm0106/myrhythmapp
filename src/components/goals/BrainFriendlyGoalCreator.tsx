@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { MemoryEffectsContainer } from "@/components/ui/memory-effects";
 import { Target } from "lucide-react";
 import { toast } from "sonner";
+import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { GoalTypeSelector, GoalType, GOAL_TYPES } from "./components/GoalTypeSelector";
 import { GoalDefinitionGuide } from "./components/GoalDefinitionGuide";
 import { GoalFormFields } from "./components/GoalFormFields";
@@ -29,6 +30,7 @@ export function BrainFriendlyGoalCreator({
   const [goalWhy, setGoalWhy] = useState("");
   const [goalMeasurement, setGoalMeasurement] = useState("");
   const [goalTimeframe, setGoalTimeframe] = useState("");
+  const { createGoal } = useDailyActions();
 
   const handleReset = () => {
     setStep(1);
@@ -49,32 +51,36 @@ export function BrainFriendlyGoalCreator({
     setStep(2);
   };
 
-  const handleCreateGoal = () => {
+  const handleCreateGoal = async () => {
     if (!goalType || !goalTitle.trim() || !goalMeasurement.trim()) {
       toast.error("Please complete all required fields");
       return;
     }
 
-    const newGoal = {
-      id: `goal-${Date.now()}`,
-      title: goalTitle,
-      myRhythmFocus: goalType.id,
-      target: goalMeasurement,
-      why: goalWhy || `Achieve: ${goalTitle}`,
-      timeframe: goalTimeframe,
-      progress: 0,
-      actions: [],
-      createdAt: new Date().toISOString()
-    };
+    try {
+      const goalData = {
+        title: goalTitle,
+        description: goalWhy || undefined,
+        category: goalType.id as 'mobility' | 'cognitive' | 'health' | 'personal' | 'social',
+        target_date: goalTimeframe ? new Date(goalTimeframe).toISOString().split('T')[0] : undefined,
+        status: 'active' as const
+      };
 
-    onGoalCreated(newGoal);
-    
-    toast.success("🎯 Goal Created!", {
-      description: `"${goalTitle}" is now part of your journey. Let's break it into small steps!`,
-      duration: 4000
-    });
-    
-    handleClose();
+      const newGoal = await createGoal(goalData);
+      onGoalCreated(newGoal);
+      
+      toast.success("🎯 Goal Created!", {
+        description: `"${goalTitle}" is now saved and ready to help guide your journey!`,
+        duration: 4000
+      });
+      
+      handleClose();
+    } catch (error) {
+      console.error('Error creating goal:', error);
+      toast.error("Failed to create goal", {
+        description: "Please try again or contact support if the issue persists."
+      });
+    }
   };
 
   return (

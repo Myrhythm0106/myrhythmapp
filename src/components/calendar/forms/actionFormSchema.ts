@@ -26,6 +26,7 @@ export const actionFormSchema = z.object({
   progress: z.number().optional().default(0),
   status: z.enum(["completed", "pending", "in-progress", "canceled"]).optional().default("pending"),
   customReason: z.string().optional(),
+  category: z.string().optional(),
   // Enhanced break and family time fields
   breakType: z.enum(["solo", "family", "movement", "mindful"]).optional(),
   familyMembers: z.array(z.string()).optional(),
@@ -66,6 +67,7 @@ export const defaultActionValues: ActionFormValues = {
   progress: 0,
   status: "pending",
   customReason: "",
+  category: "",
   breakType: undefined,
   familyMembers: [],
   breakQuality: undefined,
