@@ -153,14 +153,24 @@ export function HeroSection() {
 
         {/* Progressive Disclosure CTA */}
         <div className="text-center space-y-4">
-          <Button size="lg" onClick={e => {
-          e.preventDefault();
-          navigate("/onboarding");
-        }} className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-base md:text-lg px-6 md:px-8 py-4 md:py-6 shadow-lg">
-            <span className="hidden sm:inline">🧠 Start Your Memory-First Journey</span>
-            <span className="sm:hidden">🧠 Start Journey</span>
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
+          <div className="space-y-3">
+            <Button size="lg" onClick={e => {
+            e.preventDefault();
+            navigate("/onboarding");
+          }} className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-base md:text-lg px-6 md:px-8 py-4 md:py-6 shadow-lg">
+              <span className="hidden sm:inline">🧠 Start Your Memory-First Journey</span>
+              <span className="sm:hidden">🧠 Start Journey</span>
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            
+            <div className="text-center">
+              <p className="text-sm text-muted-foreground mb-2">Already have an account?</p>
+              <Button variant="outline" onClick={() => navigate("/auth")} className="gap-2">
+                <User className="h-4 w-4" />
+                Sign In
+              </Button>
+            </div>
+          </div>
           
           <div className="flex justify-center gap-4 text-sm">
             <Button variant="ghost" size="sm" className="gap-2">
