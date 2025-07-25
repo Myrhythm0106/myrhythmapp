@@ -1,5 +1,6 @@
 
 import { toast } from "sonner";
+import { SecureLogger } from '@/utils/security/secureLogger';
 
 export interface AuthAttempt {
   email: string;
@@ -66,7 +67,7 @@ export class LoginAttemptsManager {
       toast.error(`Too many failed attempts. Account locked for ${Math.ceil((this.LOCKOUT_DURATION * lockoutMultiplier) / 60000)} minutes.`);
       
       // Log security event
-      console.warn(`Security: Account lockout for email: ${email.substring(0, 3)}***`);
+      SecureLogger.warn(`Security: Account lockout for email: ${email.substring(0, 3)}***`);
     } else {
       const remaining = this.MAX_ATTEMPTS - currentAttempt.attempts;
       toast.error(`Invalid credentials. ${remaining} attempts remaining.`);

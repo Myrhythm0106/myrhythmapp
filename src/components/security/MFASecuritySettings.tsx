@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MFASetup } from './MFASetup';
 import { SecurityAudit } from './SecurityAudit';
+import { ComprehensiveSecurityDashboard } from './ComprehensiveSecurityDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, Settings, Search } from 'lucide-react';
 
@@ -17,7 +18,7 @@ export function MFASecuritySettings() {
       </div>
 
       <Tabs defaultValue="mfa" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="mfa" className="flex items-center gap-2">
             <Shield className="h-4 w-4" />
             Multi-Factor Authentication
@@ -25,6 +26,10 @@ export function MFASecuritySettings() {
           <TabsTrigger value="audit" className="flex items-center gap-2">
             <Search className="h-4 w-4" />
             Security Audit
+          </TabsTrigger>
+          <TabsTrigger value="dashboard" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Security Dashboard
           </TabsTrigger>
         </TabsList>
 
@@ -67,6 +72,10 @@ export function MFASecuritySettings() {
 
         <TabsContent value="audit" className="space-y-6">
           <SecurityAudit />
+        </TabsContent>
+
+        <TabsContent value="dashboard" className="space-y-6">
+          <ComprehensiveSecurityDashboard />
         </TabsContent>
       </Tabs>
     </div>

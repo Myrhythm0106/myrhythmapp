@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { SecureLogger } from '@/utils/security/secureLogger';
 
 interface AuthContextType {
   user: User | null;
@@ -65,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (error) {
-        console.error('Error retrieving session:', error);
+        SecureLogger.error('Error retrieving session:', error);
       }
       
       console.log('Initial session check:', !!session?.user, 'session:', !!session);
@@ -101,7 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       
       if (error) {
-        console.error('AuthContext: Sign up error:', error);
+        SecureLogger.error('AuthContext: Sign up error:', error);
         toast.error(error.message);
       } else {
         console.log('AuthContext: Sign up successful:', data);
@@ -111,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return { error };
     } catch (error) {
-      console.error('AuthContext: Sign up exception:', error);
+      SecureLogger.error('AuthContext: Sign up exception:', error);
       toast.error('Sign up failed. Please try again.');
       return { error };
     }
@@ -128,7 +129,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       
       if (error) {
-        console.error('AuthContext: Sign in error:', error);
+        SecureLogger.error('AuthContext: Sign in error:', error);
         console.error('Error details:', {
           message: error.message,
           status: error.status,
@@ -153,7 +154,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return { error };
     } catch (error) {
-      console.error('AuthContext: Sign in exception:', error);
+      SecureLogger.error('AuthContext: Sign in exception:', error);
       toast.error('Sign in failed. Please try again.');
       return { error };
     }
