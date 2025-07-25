@@ -13,6 +13,7 @@ import { Preview3Background } from "@/components/ui/Preview3Background";
 import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
 
 export function MemoryFirstHomePage() {
+  console.log('🏠 MemoryFirstHomePage: Component starting to render');
   const [isLoading, setIsLoading] = useState(true);
   const isMobile = useIsMobile();
   

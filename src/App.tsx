@@ -23,6 +23,7 @@ import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 const queryClient = new QueryClient();
 
 function App() {
+  console.log('🎯 App.tsx: App component rendering');
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
