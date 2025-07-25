@@ -49,8 +49,7 @@ export function UnifiedActionDropdown({
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button 
-          variant="default" 
-          className="bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white shadow-md"
+          variant="default"
         >
           <Zap className="h-4 w-4 mr-2" />
           Quick Actions

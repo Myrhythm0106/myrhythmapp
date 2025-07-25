@@ -83,11 +83,6 @@ export function BrainHealthCalendarView({
   return (
     <MemoryEffectsContainer nodeCount={8} className="relative" variant="brain-focus">
       <div className="space-y-6">
-        {/* TEST: New Brain Health Banner */}
-        <div className="p-4 bg-gradient-to-r from-brain-health-400 to-clarity-teal-400 text-white rounded-lg text-center">
-          <h2 className="text-xl font-bold">🧠 Enhanced Brain Health Calendar is Active! 🚀</h2>
-          <p className="text-sm opacity-90">New cognitive features and brain health colors are now loaded</p>
-        </div>
         
         {/* Enhanced Calendar Card */}
         <Card className="calendar-command-center">

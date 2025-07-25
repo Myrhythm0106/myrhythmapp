@@ -230,7 +230,6 @@ const Calendar = () => {
 
         {/* Floating Buttons */}
         <FloatingPlanButton onClick={() => setShowQuickAction(true)} />
-        <FloatingNextButton />
         </div>
       </Preview3Background>
     </PomodoroProvider>
