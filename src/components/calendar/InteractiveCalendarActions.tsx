@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -6,7 +5,6 @@ import { Plus, Calendar, Clock, Target, Brain } from "lucide-react";
 import { GuidedActionWizard } from "./forms/GuidedActionWizard";
 import { toast } from "sonner";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
-
 interface InteractiveCalendarActionsProps {
   selectedDate?: Date;
   selectedTime?: string;
@@ -14,16 +12,14 @@ interface InteractiveCalendarActionsProps {
   onRefreshCalendar?: () => void;
   view: "day" | "week" | "month" | "year";
 }
-
-export function InteractiveCalendarActions({ 
-  selectedDate, 
-  selectedTime, 
+export function InteractiveCalendarActions({
+  selectedDate,
+  selectedTime,
   onActionCreate,
   onRefreshCalendar,
-  view 
+  view
 }: InteractiveCalendarActionsProps) {
   const [showActionDialog, setShowActionDialog] = React.useState(false);
-
   const handleActionCreate = (actionData: any) => {
     // The action is already created in the database by GuidedActionWizard
     // Just trigger calendar refresh and close dialog
@@ -31,11 +27,9 @@ export function InteractiveCalendarActions({
     onRefreshCalendar?.();
     setShowActionDialog(false);
   };
-
   const handleUpgradeClick = () => {
     toast.success("Upgrade feature coming soon!");
   };
-
   const getFloatingButtonPosition = () => {
     switch (view) {
       case "day":
@@ -50,19 +44,12 @@ export function InteractiveCalendarActions({
         return "fixed bottom-6 right-6 z-50";
     }
   };
-
-  return (
-    <>
+  return <>
       {/* Floating Action Button */}
       <div className={getFloatingButtonPosition()}>
         <Dialog open={showActionDialog} onOpenChange={setShowActionDialog}>
           <DialogTrigger asChild>
-            <Button 
-              size="lg"
-              className="h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-clarity-teal-500 to-memory-emerald-500 hover:from-clarity-teal-600 hover:to-memory-emerald-600 hover:scale-110 transition-all duration-200"
-            >
-              <Plus className="h-6 w-6" />
-            </Button>
+            
           </DialogTrigger>
           <DialogContent className="sm:max-w-[700px] max-h-[90vh]">
             <DialogHeader>
@@ -71,20 +58,16 @@ export function InteractiveCalendarActions({
                 Create Your Empowering Action
               </DialogTitle>
               <DialogDescription>
-                {selectedDate && (
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
+                {selectedDate && <div className="flex items-center gap-4 text-sm text-muted-foreground mt-2">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
                       <span>{selectedDate.toLocaleDateString()}</span>
                     </div>
-                    {selectedTime && (
-                      <div className="flex items-center gap-1">
+                    {selectedTime && <div className="flex items-center gap-1">
                         <Clock className="h-4 w-4" />
                         <span>{selectedTime}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
+                      </div>}
+                  </div>}
                 <div className="mt-3 p-3 bg-gradient-to-r from-brain-purple-50 to-clarity-teal-50 rounded-lg border border-brain-purple-200">
                   <p className="text-sm font-medium text-brain-purple-800">✨ Design an action that empowers your brain and builds cognitive strength</p>
                   <p className="text-xs text-brain-purple-600 mt-1">Every thoughtful action you schedule builds neural pathways and strengthens your executive function!</p>
@@ -92,14 +75,10 @@ export function InteractiveCalendarActions({
               </DialogDescription>
             </DialogHeader>
             <div className="max-h-[calc(90vh-120px)] overflow-y-auto">
-              <GuidedActionWizard 
-                onSuccess={handleActionCreate}
-                onUpgradeClick={handleUpgradeClick}
-                preFilledData={{
-                  date: selectedDate?.toISOString().split('T')[0],
-                  time: selectedTime
-                }}
-              />
+              <GuidedActionWizard onSuccess={handleActionCreate} onUpgradeClick={handleUpgradeClick} preFilledData={{
+              date: selectedDate?.toISOString().split('T')[0],
+              time: selectedTime
+            }} />
             </div>
           </DialogContent>
         </Dialog>
@@ -116,6 +95,5 @@ export function InteractiveCalendarActions({
           </ul>
         </div>
       </div>
-    </>
-  );
+    </>;
 }
