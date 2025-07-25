@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { Timer, Coffee, Users } from "lucide-react";
+import { Timer, Coffee, Users, Target } from "lucide-react";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { BreadcrumbNav } from "@/components/navigation/BreadcrumbNav";
 import { ContextualNextButton } from "@/components/navigation/ContextualNextButton";
@@ -165,6 +165,13 @@ const Calendar = () => {
                 }}
                 selectedDate={date}
               />
+              <Button 
+                variant="default"
+                onClick={() => setShowQuickAction(true)}
+              >
+                <Target className="h-4 w-4 mr-2" />
+                Actions
+              </Button>
             </div>
 
             {/* Main Content Grid */}

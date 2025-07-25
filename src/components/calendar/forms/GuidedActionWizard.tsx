@@ -37,7 +37,7 @@ export function GuidedActionWizard({
     defaultValues: {
       ...defaultActionValues,
       date: preFilledData?.date || new Date().toISOString().split('T')[0],
-      time: preFilledData?.time || '',
+      startTime: preFilledData?.time || '',
       watchers: preFilledData?.watchers || []
     }
   });
@@ -48,9 +48,9 @@ export function GuidedActionWizard({
         title: data.title,
         description: data.description || '',
         date: data.date,
-        start_time: data.time || null,
-        duration_minutes: parseInt(data.duration || '30'),
-        difficulty_level: parseInt(data.difficulty || '1'),
+        start_time: data.startTime || null,
+        duration_minutes: data.duration || 30,
+        difficulty_level: 1, // Default difficulty
         action_type: 'regular' as const,
         focus_area: 'cognitive' as const,
         status: 'pending' as const
@@ -129,7 +129,7 @@ export function GuidedActionWizard({
             />
             <FormField
               control={form.control}
-              name="time"
+              name="startTime"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Time</FormLabel>
@@ -142,131 +142,100 @@ export function GuidedActionWizard({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="duration"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-brain-purple-500" />
-                    Duration (minutes)
-                    <div className="group relative">
-                      <Info className="h-3 w-3 text-muted-foreground cursor-help" />
-                      <div className="invisible group-hover:visible absolute bottom-6 left-0 bg-popover border rounded-md p-2 text-xs shadow-md z-10 w-48">
-                        <p className="font-medium text-brain-purple-600">🧠 Why we ask:</p>
-                        <p>Duration helps us match this activity to your natural energy cycles and cognitive rhythms for optimal brain performance.</p>
-                      </div>
-                    </div>
-                  </FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="15">15 minutes - Quick boost</SelectItem>
-                        <SelectItem value="30">30 minutes - Focused session</SelectItem>
-                        <SelectItem value="45">45 minutes - Deep work</SelectItem>
-                        <SelectItem value="60">1 hour - Comprehensive</SelectItem>
-                        <SelectItem value="90">1.5 hours - Extended focus</SelectItem>
-                        <SelectItem value="120">2 hours - Marathon session</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="difficulty"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex items-center gap-2">
-                    <Brain className="h-4 w-4 text-clarity-teal-500" />
-                    Cognitive Load
-                    <div className="group relative">
-                      <Info className="h-3 w-3 text-muted-foreground cursor-help" />
-                      <div className="invisible group-hover:visible absolute bottom-6 left-0 bg-popover border rounded-md p-2 text-xs shadow-md z-10 w-48">
-                        <p className="font-medium text-clarity-teal-600">🎯 Why we ask:</p>
-                        <p>This helps us suggest optimal times based on your cognitive patterns and energy levels for maximum success.</p>
-                      </div>
-                    </div>
-                  </FormLabel>
-                  <FormControl>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="1">Light - Minimal mental energy</SelectItem>
-                        <SelectItem value="2">Moderate - Some concentration needed</SelectItem>
-                        <SelectItem value="3">Intensive - Peak mental focus required</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div>
+              <Label className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-brain-purple-500" />
+                Duration (minutes)
+                <div className="group relative">
+                  <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                  <div className="invisible group-hover:visible absolute bottom-6 left-0 bg-popover border rounded-md p-2 text-xs shadow-md z-10 w-48">
+                    <p className="font-medium text-brain-purple-600">🧠 Why we ask:</p>
+                    <p>Duration helps us match this activity to your natural energy cycles and cognitive rhythms for optimal brain performance.</p>
+                  </div>
+                </div>
+              </Label>
+              <Select value="30" onValueChange={() => {}}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="15">15 minutes - Quick boost</SelectItem>
+                  <SelectItem value="30">30 minutes - Focused session</SelectItem>
+                  <SelectItem value="45">45 minutes - Deep work</SelectItem>
+                  <SelectItem value="60">1 hour - Comprehensive</SelectItem>
+                  <SelectItem value="90">1.5 hours - Extended focus</SelectItem>
+                  <SelectItem value="120">2 hours - Marathon session</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label className="flex items-center gap-2">
+                <Brain className="h-4 w-4 text-clarity-teal-500" />
+                Cognitive Load
+                <div className="group relative">
+                  <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                  <div className="invisible group-hover:visible absolute bottom-6 left-0 bg-popover border rounded-md p-2 text-xs shadow-md z-10 w-48">
+                    <p className="font-medium text-clarity-teal-600">🎯 Why we ask:</p>
+                    <p>This helps us suggest optimal times based on your cognitive patterns and energy levels for maximum success.</p>
+                  </div>
+                </div>
+              </Label>
+              <Select value="2" onValueChange={() => {}}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">Light - Minimal mental energy</SelectItem>
+                  <SelectItem value="2">Moderate - Some concentration needed</SelectItem>
+                  <SelectItem value="3">Intensive - Peak mental focus required</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <div className="grid grid-cols-2 gap-2 mt-2">
-                  {categories.map((category) => {
-                    const Icon = category.icon;
-                    return (
-                      <Button
-                        key={category.value}
-                        type="button"
-                        variant={field.value === category.value ? "default" : "outline"}
-                        onClick={() => field.onChange(category.value)}
-                        className="justify-start"
-                      >
-                        <Icon className="h-4 w-4 mr-2" />
-                        {category.label}
-                      </Button>
-                    );
-                  })}
-                </div>
-              </FormItem>
-            )}
-          />
+          <div>
+            <Label>Category</Label>
+            <div className="grid grid-cols-2 gap-2 mt-2">
+              {categories.map((category) => {
+                const Icon = category.icon;
+                return (
+                  <Button
+                    key={category.value}
+                    type="button"
+                    variant="outline"
+                    className="justify-start"
+                  >
+                    <Icon className="h-4 w-4 mr-2" />
+                    {category.label}
+                  </Button>
+                );
+              })}
+            </div>
+          </div>
 
-          <FormField
-            control={form.control}
-            name="energyLevel"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-energy-amber-500" />
-                  Energy Requirements
-                  <div className="group relative">
-                    <Info className="h-3 w-3 text-muted-foreground cursor-help" />
-                    <div className="invisible group-hover:visible absolute bottom-6 left-0 bg-popover border rounded-md p-2 text-xs shadow-md z-10 w-48">
-                      <p className="font-medium text-energy-amber-600">⚡ Why we ask:</p>
-                      <p>We'll match this to your natural energy rhythms and suggest the best times when you'll feel most capable and motivated.</p>
-                    </div>
-                  </div>
-                </FormLabel>
-                <FormControl>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Gentle - Perfect for low-energy moments</SelectItem>
-                      <SelectItem value="2">Moderate - Balanced energy needed</SelectItem>
-                      <SelectItem value="3">Energetic - Best when you're feeling strong</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          <div>
+            <Label className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-energy-amber-500" />
+              Energy Requirements
+              <div className="group relative">
+                <Info className="h-3 w-3 text-muted-foreground cursor-help" />
+                <div className="invisible group-hover:visible absolute bottom-6 left-0 bg-popover border rounded-md p-2 text-xs shadow-md z-10 w-48">
+                  <p className="font-medium text-energy-amber-600">⚡ Why we ask:</p>
+                  <p>We'll match this to your natural energy rhythms and suggest the best times when you'll feel most capable and motivated.</p>
+                </div>
+              </div>
+            </Label>
+            <Select value="2" onValueChange={() => {}}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Gentle - Perfect for low-energy moments</SelectItem>
+                <SelectItem value="2">Moderate - Balanced energy needed</SelectItem>
+                <SelectItem value="3">Energetic - Best when you're feeling strong</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           <WatchersField />
 

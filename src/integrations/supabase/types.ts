@@ -177,6 +177,7 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
+          watchers: Json | null
         }
         Insert: {
           action_type?: string
@@ -196,6 +197,7 @@ export type Database = {
           title: string
           updated_at?: string
           user_id: string
+          watchers?: Json | null
         }
         Update: {
           action_type?: string
@@ -215,6 +217,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          watchers?: Json | null
         }
         Relationships: [
           {
