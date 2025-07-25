@@ -15,7 +15,7 @@ export function FloatingPlanButton({ onClick, className }: FloatingPlanButtonPro
         onClick={onClick}
       >
         <Zap className="mr-2 h-4 w-4" />
-        Plan Next Step
+        Actions
       </Button>
     </div>
   );
