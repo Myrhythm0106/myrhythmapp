@@ -15,7 +15,9 @@ import AccountabilityPage from "./AccountabilityPage";
 import ProfilePage from "./ProfilePage";
 import SettingsPage from "./SettingsPage";
 import SupportPage from "./SupportPage";
+import SupportCirclePage from "./SupportCirclePage";
 import MemoryBankPage from "./MemoryBankPage";
+import TestingPage from "./TestingPage";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -51,12 +53,16 @@ const Dashboard = () => {
                 return <AccountabilityPage />;
               case '/support':
                 return <SupportPage />;
+              case '/support-circle':
+                return <SupportCirclePage />;
               case '/profile':
                 return <ProfilePage />;
               case '/memory-bank':
                 return <MemoryBankPage />;
               case '/settings':
                 return <SettingsPage />;
+              case '/testing':
+                return <TestingPage />;
               default:
                 return <DashboardContent />;
             }

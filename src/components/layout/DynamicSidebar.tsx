@@ -11,7 +11,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavLink, useLocation } from "react-router-dom";
-import { Brain, Calendar, Target, Heart, BarChart3, Gamepad2, Users, User, Settings, HelpCircle, Camera } from "lucide-react";
+import { Brain, Calendar, Target, Heart, BarChart3, Gamepad2, Users, User, Settings, HelpCircle, Camera, TestTube } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DevelopmentNavigation } from "@/components/demo/DevelopmentNavigation";
 
@@ -29,7 +29,9 @@ const mainNavItems = [
 const settingsNavItems = [
   { title: "Profile", url: "/profile", icon: User },
   { title: "Settings", url: "/settings", icon: Settings },
+  { title: "Support Circle", url: "/support-circle", icon: Users },
   { title: "Support", url: "/support", icon: HelpCircle },
+  { title: "Testing", url: "/testing", icon: TestTube },
 ];
 
 interface DynamicSidebarProps {
