@@ -58,7 +58,7 @@ export function UnifiedActionDropdown({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64 bg-background/95 backdrop-blur-sm border shadow-lg">
         <DropdownMenuLabel className="font-medium text-primary">
-          Today's Actions for {formatSelectedDate()}
+          Actions for {formatSelectedDate()}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         
