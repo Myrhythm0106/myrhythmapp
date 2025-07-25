@@ -1,356 +1,201 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Shield, AlertTriangle, CheckCircle, Trash2, Info, Eye, EyeOff } from "lucide-react";
+import { 
+  Shield, 
+  AlertTriangle, 
+  CheckCircle, 
+  RefreshCw,
+  Eye,
+  EyeOff,
+  Trash2,
+  Info
+} from "lucide-react";
 import { SecureStorage } from "@/utils/secureStorage";
+import { SecurityAudit as SecurityAuditService, SecurityAuditResult } from '@/utils/security/securityAudit';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from "sonner";
 
-interface SecurityIssue {
-  type: 'critical' | 'warning' | 'info';
-  title: string;
-  description: string;
-  recommendation: string;
-}
-
 export function SecurityAudit() {
-  const [auditResults, setAuditResults] = useState<{
-    sensitiveDatatFound: boolean;
-    keys: string[];
-    issues: SecurityIssue[];
-    score: number;
-  } | null>(null);
+  const { user } = useAuth();
+  const [auditResult, setAuditResult] = useState<SecurityAuditResult | null>(null);
+  const [loading, setLoading] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
 
-  const runComprehensiveAudit = () => {
-    const storageResults = SecureStorage.auditStorage();
-    const issues: SecurityIssue[] = [];
-    let score = 100;
-
-    // Check for sensitive data in localStorage
-    if (storageResults.sensitiveDatatFound) {
-      issues.push({
-        type: 'critical',
-        title: 'Sensitive Data in Local Storage',
-        description: `Found ${storageResults.keys.length} items containing sensitive data in browser storage`,
-        recommendation: 'Remove sensitive data from client-side storage immediately'
-      });
-      score -= 30;
-    }
-
-    // Check for session security
-    const sessionData = sessionStorage.getItem('userSession');
-    if (sessionData) {
-      try {
-        const session = JSON.parse(sessionData);
-        if (session.password || session.token) {
-          issues.push({
-            type: 'critical',
-            title: 'Session Data Security Risk',
-            description: 'Authentication tokens or passwords found in session storage',
-            recommendation: 'Use secure HTTP-only cookies for authentication'
-          });
-          score -= 25;
-        }
-      } catch (e) {
-        // Invalid session data
-      }
-    }
-
-    // Check for HTTPS
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-      issues.push({
-        type: 'critical',
-        title: 'Insecure Connection',
-        description: 'Application is not served over HTTPS',
-        recommendation: 'Enable HTTPS to encrypt data in transit'
-      });
-      score -= 40;
-    }
-
-    // Check for mixed content
-    const hasInsecureContent = Array.from(document.querySelectorAll('img, script, link')).some(
-      (element) => {
-        const src = element.getAttribute('src') || element.getAttribute('href');
-        return src && src.startsWith('http://') && location.protocol === 'https:';
-      }
-    );
-
-    if (hasInsecureContent) {
-      issues.push({
-        type: 'warning',
-        title: 'Mixed Content Detected',
-        description: 'Some resources are loaded over HTTP on an HTTPS page',
-        recommendation: 'Ensure all resources use HTTPS'
-      });
-      score -= 15;
-    }
-
-    // Check for console logs (potential information disclosure)
-    const hasConsoleOverride = console.log.toString().includes('[native code]');
-    if (!hasConsoleOverride) {
-      issues.push({
-        type: 'info',
-        title: 'Console Logging Enabled',
-        description: 'Console logging may expose sensitive information in production',
-        recommendation: 'Disable console logs in production builds'
-      });
-      score -= 5;
-    }
-
-    // Check for inline scripts (CSP violation potential)
-    const inlineScripts = document.querySelectorAll('script:not([src])');
-    if (inlineScripts.length > 0) {
-      issues.push({
-        type: 'warning',
-        title: 'Inline Scripts Detected',
-        description: `Found ${inlineScripts.length} inline script(s) which may violate CSP`,
-        recommendation: 'Move scripts to external files and implement Content Security Policy'
-      });
-      score -= 10;
-    }
-
-    // Check for autocomplete on sensitive forms
-    const sensitiveInputs = document.querySelectorAll('input[type="password"], input[name*="card"], input[name*="ssn"]');
-    const hasInsecureAutocomplete = Array.from(sensitiveInputs).some(
-      (input) => input.getAttribute('autocomplete') !== 'off'
-    );
-
-    if (hasInsecureAutocomplete) {
-      issues.push({
-        type: 'warning',
-        title: 'Autocomplete Security Risk',
-        description: 'Sensitive form fields allow autocomplete',
-        recommendation: 'Disable autocomplete on sensitive form fields'
-      });
-      score -= 10;
-    }
-
-    // Check for local development indicators in production
-    if (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
-      const devIndicators = document.querySelectorAll('[data-testid], [data-cy]');
-      if (devIndicators.length > 0) {
-        issues.push({
-          type: 'info',
-          title: 'Development Artifacts',
-          description: 'Test attributes found in production build',
-          recommendation: 'Remove test attributes from production builds'
-        });
-        score -= 5;
-      }
-    }
-
-    const finalScore = Math.max(0, score);
+  const runServerAudit = async () => {
+    if (!user) return;
     
-    setAuditResults({
-      sensitiveDatatFound: storageResults.sensitiveDatatFound,
-      keys: storageResults.keys,
-      issues,
-      score: finalScore
-    });
-    
-    if (issues.length === 0) {
-      toast.success(`Security audit complete! Score: ${finalScore}/100`);
-    } else {
-      const criticalIssues = issues.filter(i => i.type === 'critical').length;
-      if (criticalIssues > 0) {
-        toast.error(`Security audit found ${criticalIssues} critical issue(s)! Score: ${finalScore}/100`);
-      } else {
-        toast.warning(`Security audit found ${issues.length} issue(s). Score: ${finalScore}/100`);
-      }
-    }
-  };
-
-  const cleanupSensitiveData = () => {
-    SecureStorage.clearSensitiveData();
-    setAuditResults(null);
-    toast.success("Sensitive data cleared from local storage");
-    runComprehensiveAudit(); // Re-run audit
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-green-600 bg-green-100';
-    if (score >= 70) return 'text-yellow-600 bg-yellow-100';
-    return 'text-red-600 bg-red-100';
-  };
-
-  const getIssueIcon = (type: SecurityIssue['type']) => {
-    switch (type) {
-      case 'critical': return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      case 'warning': return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case 'info': return <Info className="h-4 w-4 text-blue-500" />;
-    }
-  };
-
-  const getIssueColor = (type: SecurityIssue['type']) => {
-    switch (type) {
-      case 'critical': return 'border-red-200 bg-red-50';
-      case 'warning': return 'border-yellow-200 bg-yellow-50';
-      case 'info': return 'border-blue-200 bg-blue-50';
+    setLoading(true);
+    try {
+      const result = await SecurityAuditService.performAudit(user.id);
+      setAuditResult(result);
+    } catch (error) {
+      toast.error('Security audit failed');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    runComprehensiveAudit();
-  }, []);
+    if (user) {
+      runServerAudit();
+    }
+  }, [user]);
+
+  if (!user) {
+    return (
+      <Card>
+        <CardContent className="pt-6">
+          <p className="text-gray-600">Please log in to view comprehensive security audit.</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Shield className="h-5 w-5 text-blue-600" />
-          Comprehensive Security Audit
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="flex gap-2 flex-wrap">
-          <Button onClick={runComprehensiveAudit} variant="outline" size="sm">
-            Run Full Audit
-          </Button>
-          {auditResults?.sensitiveDatatFound && (
-            <Button 
-              onClick={cleanupSensitiveData} 
-              variant="destructive" 
+    <div className="space-y-6">
+      {/* Security Score Card */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-blue-600" />
+              Security Score
+            </CardTitle>
+            <Button
+              onClick={runServerAudit}
+              disabled={loading}
               size="sm"
-              className="flex items-center gap-1"
+              variant="outline"
             >
-              <Trash2 className="h-4 w-4" />
-              Clear Sensitive Data
+              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              {loading ? 'Scanning...' : 'Refresh'}
             </Button>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {auditResult ? (
+            <div className="space-y-4">
+              <div className="text-center">
+                <div className="text-4xl font-bold mb-2">
+                  <span className={SecurityAuditService.getScoreColor(auditResult.score)}>
+                    {auditResult.score}
+                  </span>
+                  <span className="text-gray-400">/{auditResult.maxScore}</span>
+                </div>
+                <Badge 
+                  variant={auditResult.score >= 70 ? 'default' : 'destructive'}
+                  className="text-sm"
+                >
+                  {SecurityAuditService.getScoreLabel(auditResult.score)}
+                </Badge>
+              </div>
+              
+              <Progress 
+                value={auditResult.score} 
+                max={auditResult.maxScore}
+                className="h-3"
+              />
+              
+              <div className="grid grid-cols-3 gap-4 text-center text-sm">
+                <div>
+                  <div className="font-semibold text-green-600">
+                    {auditResult.issues.filter(i => i.severity === 'low').length}
+                  </div>
+                  <div className="text-gray-600">Low Issues</div>
+                </div>
+                <div>
+                  <div className="font-semibold text-yellow-600">
+                    {auditResult.issues.filter(i => ['medium', 'high'].includes(i.severity)).length}
+                  </div>
+                  <div className="text-gray-600">Med/High Issues</div>
+                </div>
+                <div>
+                  <div className="font-semibold text-red-600">
+                    {auditResult.issues.filter(i => i.severity === 'critical').length}
+                  </div>
+                  <div className="text-gray-600">Critical Issues</div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <Shield className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">Run a security audit to see your score</p>
+            </div>
           )}
-          <Button 
-            onClick={() => setShowDetails(!showDetails)} 
-            variant="ghost" 
-            size="sm"
-            className="flex items-center gap-1"
-          >
-            {showDetails ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            {showDetails ? 'Hide Details' : 'Show Details'}
-          </Button>
-        </div>
+        </CardContent>
+      </Card>
 
-        {auditResults && (
-          <div className="space-y-4">
-            {/* Security Score */}
-            <div className="flex items-center justify-between p-4 border rounded-lg">
-              <div>
-                <h3 className="font-semibold text-lg">Security Score</h3>
-                <p className="text-sm text-gray-600">Overall security assessment</p>
-              </div>
-              <div className={`text-2xl font-bold px-4 py-2 rounded-lg ${getScoreColor(auditResults.score)}`}>
-                {auditResults.score}/100
-              </div>
+      {/* Security Issues */}
+      {auditResult && auditResult.issues.length > 0 && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Security Issues</CardTitle>
+              <Button
+                onClick={() => setShowDetails(!showDetails)}
+                variant="ghost"
+                size="sm"
+              >
+                {showDetails ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                {showDetails ? 'Hide' : 'Show'} Details
+              </Button>
             </div>
-
-            {/* Issues Summary */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="flex items-center gap-2 p-3 border rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-500" />
-                <div>
-                  <p className="font-medium">Critical Issues</p>
-                  <p className="text-sm text-gray-600">
-                    {auditResults.issues.filter(i => i.type === 'critical').length}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 p-3 border rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-yellow-500" />
-                <div>
-                  <p className="font-medium">Warnings</p>
-                  <p className="text-sm text-gray-600">
-                    {auditResults.issues.filter(i => i.type === 'warning').length}
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 p-3 border rounded-lg">
-                <Info className="h-5 w-5 text-blue-500" />
-                <div>
-                  <p className="font-medium">Info</p>
-                  <p className="text-sm text-gray-600">
-                    {auditResults.issues.filter(i => i.type === 'info').length}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Detailed Issues */}
-            {showDetails && auditResults.issues.length > 0 && (
-              <div className="space-y-3">
-                <h4 className="font-semibold">Security Issues Found:</h4>
-                {auditResults.issues.map((issue, index) => (
-                  <Alert key={index} className={getIssueColor(issue.type)}>
-                    <div className="flex items-start gap-3">
-                      {getIssueIcon(issue.type)}
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="font-medium">{issue.title}</span>
-                          <Badge variant={issue.type === 'critical' ? 'destructive' : issue.type === 'warning' ? 'secondary' : 'default'}>
-                            {issue.type.toUpperCase()}
-                          </Badge>
-                        </div>
-                        <AlertDescription className="mb-2">
-                          {issue.description}
-                        </AlertDescription>
-                        <div className="text-sm font-medium text-gray-700">
-                          <strong>Recommendation:</strong> {issue.recommendation}
-                        </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {auditResult.issues.map((issue, index) => (
+                <Alert key={index} className="border-l-4">
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="h-4 w-4 mt-0.5" />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-medium">{issue.description}</span>
+                        <Badge variant="outline">
+                          {issue.severity.toUpperCase()}
+                        </Badge>
                       </div>
+                      {showDetails && issue.fix && (
+                        <AlertDescription>
+                          <p className="text-sm text-blue-600">
+                            <strong>Fix:</strong> {issue.fix}
+                          </p>
+                        </AlertDescription>
+                      )}
                     </div>
-                  </Alert>
-                ))}
-              </div>
-            )}
-
-            {/* Storage Audit Results */}
-            {auditResults.sensitiveDatatFound && showDetails && (
-              <Alert className="border-orange-200 bg-orange-50">
-                <AlertTriangle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Sensitive Data in Storage:</strong>
-                  <ul className="mt-2 ml-4 list-disc">
-                    {auditResults.keys.map((key, index) => (
-                      <li key={index} className="text-sm font-mono">{key}</li>
-                    ))}
-                  </ul>
-                </AlertDescription>
-              </Alert>
-            )}
-
-            {/* All Clear Message */}
-            {auditResults.issues.length === 0 && (
-              <Alert className="border-green-200 bg-green-50">
-                <CheckCircle className="h-4 w-4" />
-                <AlertDescription>
-                  <strong>Excellent!</strong> No security issues detected in this audit.
-                </AlertDescription>
-              </Alert>
-            )}
-          </div>
-        )}
-
-        {/* Security Best Practices */}
-        <div className="bg-gray-50 p-4 rounded-lg text-sm">
-          <h4 className="font-medium mb-3">Security Best Practices:</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-600">
-            <div>
-              <p>• Never store sensitive data in browser storage</p>
-              <p>• Use HTTPS for all communications</p>
-              <p>• Implement proper authentication & authorization</p>
-              <p>• Validate and sanitize all user inputs</p>
-              <p>• Use Content Security Policy (CSP)</p>
+                  </div>
+                </Alert>
+              ))}
             </div>
-            <div>
-              <p>• Implement rate limiting on forms</p>
-              <p>• Keep dependencies updated</p>
-              <p>• Use secure session management</p>
-              <p>• Log security events for monitoring</p>
-              <p>• Regular security audits and penetration testing</p>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Recommendations */}
+      {auditResult && auditResult.recommendations.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              Security Recommendations
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {auditResult.recommendations.map((recommendation, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm">{recommendation}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }

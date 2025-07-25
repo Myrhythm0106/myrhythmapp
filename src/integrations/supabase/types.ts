@@ -763,6 +763,36 @@ export type Database = {
           },
         ]
       }
+      security_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           cancel_at_period_end: boolean | null
@@ -1173,6 +1203,16 @@ export type Database = {
       }
       get_user_subscription_status: {
         Args: { user_uuid: string }
+        Returns: string
+      }
+      log_security_event: {
+        Args: {
+          p_user_id: string
+          p_event_type: string
+          p_event_data?: Json
+          p_ip_address?: unknown
+          p_user_agent?: string
+        }
         Returns: string
       }
       verify_backup_code: {

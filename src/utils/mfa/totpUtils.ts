@@ -1,17 +1,15 @@
 
+import { authenticator } from 'otplib';
+
 export function generateTOTPSecret(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
-  let secret = '';
-  for (let i = 0; i < 32; i++) {
-    secret += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return secret;
+  return authenticator.generateSecret();
 }
 
-export function verifyTOTPCode(code: string, factorId: string): boolean {
-  // In a real implementation, use a TOTP library like 'otplib'
-  // For demo purposes, accept any 6-digit code
-  return /^\d{6}$/.test(code);
+export function verifyTOTPCode(code: string, secret: string): boolean {
+  return authenticator.verify({
+    token: code,
+    secret: secret
+  });
 }
 
 export function generateQRCodeUrl(secret: string, issuer: string, accountName: string): string {
