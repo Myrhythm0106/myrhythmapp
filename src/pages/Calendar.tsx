@@ -151,23 +151,47 @@ const Calendar = () => {
             {/* Unified Action Center */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
               <UnifiedActionDropdown
-                onQuickAction={() => setShowQuickAction(true)}
+                onQuickAction={() => {
+                  const now = new Date();
+                  updateTransferData({ 
+                    selectedDate: new Date(),
+                    selectedTime: now.toTimeString().slice(0, 5)
+                  });
+                  setShowQuickAction(true);
+                }}
                 onNewGoal={() => setShowNewGoal(true)}
                 onPlanDreams={() => setShowPlanMyDreams(true)}
                 onFocusTimer={() => setShowEnhancedPomodoro(true)}
                 onScheduleFamily={() => {
-                  updateTransferData({ actionType: 'family' });
+                  const now = new Date();
+                  updateTransferData({ 
+                    actionType: 'family',
+                    selectedDate: new Date(),
+                    selectedTime: now.toTimeString().slice(0, 5)
+                  });
                   setShowQuickAction(true);
                 }}
                 onPlanBreak={() => {
-                  updateTransferData({ actionType: 'break' });
+                  const now = new Date();
+                  updateTransferData({ 
+                    actionType: 'break',
+                    selectedDate: new Date(),
+                    selectedTime: now.toTimeString().slice(0, 5)
+                  });
                   setShowQuickAction(true);
                 }}
                 selectedDate={date}
               />
               <Button 
                 variant="default"
-                onClick={() => setShowQuickAction(true)}
+                onClick={() => {
+                  const now = new Date();
+                  updateTransferData({ 
+                    selectedDate: new Date(),
+                    selectedTime: now.toTimeString().slice(0, 5)
+                  });
+                  setShowQuickAction(true);
+                }}
               >
                 <Target className="h-4 w-4 mr-2" />
                 Actions
