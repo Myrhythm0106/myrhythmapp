@@ -145,7 +145,6 @@ const Calendar = () => {
               </div>
               <div className="flex items-center gap-3">
                 <OverviewMenu />
-                <ContextualNextButton />
               </div>
             </div>
 
