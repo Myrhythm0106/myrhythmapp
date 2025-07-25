@@ -21,7 +21,7 @@ import { OverviewMenu } from "@/components/navigation/OverviewMenu";
 import { UnifiedActionDropdown } from "@/components/calendar/UnifiedActionDropdown";
 import { FloatingNextButton } from "@/components/navigation/FloatingNextButton";
 import { useDataTransfer } from "@/hooks/useDataTransfer";
-import { FloatingPlanButton } from "@/components/ui/FloatingPlanButton";
+import { FloatingActionDropdown } from "@/components/ui/FloatingActionDropdown";
 import { Preview3Background } from "@/components/ui/Preview3Background";
 
 const Calendar = () => {
@@ -149,7 +149,7 @@ const Calendar = () => {
             </div>
 
             {/* Unified Action Center */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <div className="flex justify-center items-center">
               <UnifiedActionDropdown
                 onQuickAction={() => {
                   const now = new Date();
@@ -182,20 +182,6 @@ const Calendar = () => {
                 }}
                 selectedDate={date}
               />
-              <Button 
-                variant="default"
-                onClick={() => {
-                  const now = new Date();
-                  updateTransferData({ 
-                    selectedDate: new Date(),
-                    selectedTime: now.toTimeString().slice(0, 5)
-                  });
-                  setShowQuickAction(true);
-                }}
-              >
-                <Target className="h-4 w-4 mr-2" />
-                Today's Actions
-              </Button>
             </div>
 
             {/* Main Content Grid */}
@@ -259,8 +245,38 @@ const Calendar = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Floating Buttons */}
-        <FloatingPlanButton onClick={() => setShowQuickAction(true)} />
+        {/* Floating Action Dropdown */}
+        <FloatingActionDropdown
+          onQuickAction={() => {
+            const now = new Date();
+            updateTransferData({ 
+              selectedDate: new Date(),
+              selectedTime: now.toTimeString().slice(0, 5)
+            });
+            setShowQuickAction(true);
+          }}
+          onNewGoal={() => setShowNewGoal(true)}
+          onPlanDreams={() => setShowPlanMyDreams(true)}
+          onFocusTimer={() => setShowEnhancedPomodoro(true)}
+          onScheduleFamily={() => {
+            const now = new Date();
+            updateTransferData({ 
+              actionType: 'family',
+              selectedDate: new Date(),
+              selectedTime: now.toTimeString().slice(0, 5)
+            });
+            setShowQuickAction(true);
+          }}
+          onPlanBreak={() => {
+            const now = new Date();
+            updateTransferData({ 
+              actionType: 'break',
+              selectedDate: new Date(),
+              selectedTime: now.toTimeString().slice(0, 5)
+            });
+            setShowQuickAction(true);
+          }}
+        />
         </div>
       </Preview3Background>
     </PomodoroProvider>
