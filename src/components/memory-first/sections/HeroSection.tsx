@@ -65,16 +65,26 @@ export function HeroSection() {
       </div>
       
       <div className="relative z-10 p-6 md:p-10 space-y-8">
-        {/* Top Badges - Improved Visibility */}
-        <div className="flex flex-wrap gap-3 justify-center md:justify-start">
-          <Badge className="bg-gradient-to-r from-purple-600 to-purple-700 text-white border-0 text-sm px-4 py-2 shadow-lg">
-            <Brain className="h-4 w-4 mr-2" />
-            Memory-First Design
-          </Badge>
-          <Badge className="bg-gradient-to-r from-teal-600 to-teal-700 text-white border-0 text-sm px-4 py-2 shadow-lg">
-            <Heart className="h-4 w-4 mr-2" />
-            Brain Injury Survivor Built
-          </Badge>
+        {/* Top Section with Login and Badges */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-wrap gap-3">
+            <Badge className="bg-gradient-to-r from-purple-600 to-purple-700 text-white border-0 text-sm px-4 py-2 shadow-lg">
+              <Brain className="h-4 w-4 mr-2" />
+              Memory-First Design
+            </Badge>
+            <Badge className="bg-gradient-to-r from-teal-600 to-teal-700 text-white border-0 text-sm px-4 py-2 shadow-lg">
+              <Heart className="h-4 w-4 mr-2" />
+              Brain Injury Survivor Built
+            </Badge>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Already have an account?</span>
+            <Button variant="outline" onClick={() => navigate("/auth")} className="gap-2">
+              <User className="h-4 w-4" />
+              Sign In
+            </Button>
+          </div>
         </div>
 
         {/* Visual-First Main Content */}
@@ -163,13 +173,6 @@ export function HeroSection() {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-2">Already have an account?</p>
-              <Button variant="outline" onClick={() => navigate("/auth")} className="gap-2">
-                <User className="h-4 w-4" />
-                Sign In
-              </Button>
-            </div>
           </div>
           
           <div className="flex justify-center gap-4 text-sm">
