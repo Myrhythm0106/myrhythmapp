@@ -63,18 +63,22 @@ export function KeepInMindView() {
   );
 
   return (
-    <div className="space-y-6">
-      {/* Dashboard Info Banner */}
-      <Card className="bg-blue-50 border-blue-200">
-        <CardContent className="p-4">
+    <div className="space-y-8">
+      {/* Planning & Strategic Overview */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+          <div className="w-1 h-8 bg-gradient-to-b from-purple-500 to-blue-500 rounded"></div>
+          Planning & Strategic Overview
+        </h2>
+        <Card className="bg-blue-50 border-blue-200 p-6">
           <div className="flex items-center gap-2 text-blue-800">
             <Info className="h-4 w-4" />
             <span className="text-sm">
               This dashboard is view-only. Click on any section to navigate to the relevant page for editing and interactions.
             </span>
           </div>
-        </CardContent>
-      </Card>
+        </Card>
+      </div>
 
       {/* Calendar Overview Section */}
       <Card className="bg-gradient-to-br from-slate-50 to-slate-100 border-slate-200">

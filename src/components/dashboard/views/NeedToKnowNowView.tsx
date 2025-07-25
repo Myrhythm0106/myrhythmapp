@@ -17,56 +17,54 @@ export function NeedToKnowNowView() {
   const currentFocusArea = getCurrentFocusArea();
   const hasCompletedSetup = localStorage.getItem("myrhythm_initial_setup_complete") === "true";
   
-  // If user has completed assessment but not the personalization flow, prioritize focus area
-  if (currentFocusArea && !hasCompletedSetup) {
-    return (
-      <div className="space-y-6">
-        <DynamicFocusAreaWidget />
-        <PlanningSpotlight />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  return (
+    <div className="space-y-8">
+      {/* Command Center Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+          <div className="w-1 h-8 bg-gradient-to-b from-purple-500 to-blue-500 rounded"></div>
+          Your Command Center
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <TodaysActions />
-          <ActiveGoalsWidget />
           <DailyCheckin />
-          <UpcomingReminders />
+        </div>
+      </div>
+
+      {/* Progress Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+          <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-teal-500 rounded"></div>
+          Your Progress
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ActiveGoalsWidget />
           <AssessmentHistoryWidget />
         </div>
       </div>
-    );
-  }
 
-  // If user has completed full setup, show personalized layout with planning prominence
-  if (hasCompletedSetup && currentFocusArea) {
-    const savedWidgets = JSON.parse(localStorage.getItem("myrhythm_dashboard_widgets") || "[]");
-    const enabledWidgetIds = savedWidgets.map((w: any) => w.id);
-    
-    return (
-      <div className="space-y-6">
-        <DynamicFocusAreaWidget />
-        <PlanningSpotlight />
-        <PlanningOverview />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {enabledWidgetIds.includes("todaysActions") && <TodaysActions />}
-          {enabledWidgetIds.includes("activeGoals") && <ActiveGoalsWidget />}
-          {enabledWidgetIds.includes("dailyCheckin") && <DailyCheckin />}
-          {enabledWidgetIds.includes("upcomingReminders") && <UpcomingReminders />}
-          {enabledWidgetIds.includes("assessmentHistory") && <AssessmentHistoryWidget />}
+      {/* Upcoming Events Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+          <div className="w-1 h-8 bg-gradient-to-b from-teal-500 to-green-500 rounded"></div>
+          Upcoming Events
+        </h2>
+        <div className="grid grid-cols-1 gap-6">
+          <UpcomingReminders />
         </div>
       </div>
-    );
-  }
 
-  // Default layout for new users - emphasize planning to build habits
-  return (
-    <div className="space-y-6">
-      <WelcomeCard name={userData.name} />
-      <PlanningSpotlight />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <TodaysActions />
-        <ActiveGoalsWidget />
-        <PlanningOverview />
-        <DailyCheckin />
-        <UpcomingReminders />
-        <AssessmentHistoryWidget />
+      {/* Today's Focus Section */}
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
+          <div className="w-1 h-8 bg-gradient-to-b from-green-500 to-purple-500 rounded"></div>
+          Today's Focus
+        </h2>
+        <div className="grid grid-cols-1 gap-6">
+          {currentFocusArea && <DynamicFocusAreaWidget />}
+          <PlanningSpotlight />
+          {!hasCompletedSetup && <WelcomeCard name={userData.name} />}
+        </div>
       </div>
     </div>
   );

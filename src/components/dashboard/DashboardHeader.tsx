@@ -19,9 +19,15 @@ export function DashboardHeader({
   userName 
 }: DashboardHeaderProps) {
   return (
-    <div className="space-y-4">
+    <div className="bg-white/80 backdrop-blur-sm border-b border-purple-200/50 shadow-sm p-6 mb-6 rounded-lg">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-primary">MyRhythm</h1>
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold text-primary">MyRhythm</h1>
+          <p className="text-lg text-muted-foreground">{currentDate}</p>
+          {userName && (
+            <p className="text-xl font-medium">Hello, {userName}</p>
+          )}
+        </div>
         <Button 
           variant="outline" 
           size="sm"
@@ -32,13 +38,6 @@ export function DashboardHeader({
           <Info className="h-4 w-4" />
           Help
         </Button>
-      </div>
-      
-      <div className="space-y-2">
-        <p className="text-lg text-muted-foreground">{currentDate}</p>
-        {userName && (
-          <p className="text-xl font-medium">Hello, {userName}</p>
-        )}
       </div>
     </div>
   );

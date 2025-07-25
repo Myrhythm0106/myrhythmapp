@@ -208,13 +208,7 @@ export function DailyIChooseWidget({ onUpgradeClick, userType = 'brain-injury' }
   };
 
   const getUserTypeTitle = () => {
-    const titles = {
-      'brain-injury': 'Brain Recovery #IChoose',
-      'caregiver': 'Caregiver Support #IChoose',
-      'cognitive-optimization': 'Peak Performance #IChoose',
-      'wellness': 'Wellness Growth #IChoose'
-    };
-    return titles[userType] || 'Today\'s #IChoose Statement';
+    return 'Be Empowered! #IChoose';
   };
 
   if (isLoading) {
