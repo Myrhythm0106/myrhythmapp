@@ -52,13 +52,13 @@ export function UnifiedActionDropdown({
           variant="default"
         >
           <Zap className="h-4 w-4 mr-2" />
-          Quick Actions
+          Today's Actions
           <ChevronDown className="h-4 w-4 ml-2" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64 bg-background/95 backdrop-blur-sm border shadow-lg">
         <DropdownMenuLabel className="font-medium text-primary">
-          Actions for {formatSelectedDate()}
+          Today's Actions for {formatSelectedDate()}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         
