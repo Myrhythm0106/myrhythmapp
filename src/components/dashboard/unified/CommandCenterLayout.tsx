@@ -5,6 +5,7 @@ import { TodayQuadrant } from "./quadrants/TodayQuadrant";
 import { ThisWeekQuadrant } from "./quadrants/ThisWeekQuadrant";
 import { ThisMonthQuadrant } from "./quadrants/ThisMonthQuadrant";
 import { ThisYearQuadrant } from "./quadrants/ThisYearQuadrant";
+import { GoalsOverview } from "./GoalsOverview";
 import { Calendar, Target, TrendingUp, Star } from "lucide-react";
 
 export function CommandCenterLayout() {
@@ -106,6 +107,9 @@ export function CommandCenterLayout() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Goals Overview */}
+      <GoalsOverview />
     </div>
   );
 }

@@ -2,15 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Star, Calendar, Sparkles } from "lucide-react";
+import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics";
 
 export function ThisMonthQuadrant() {
   const [monthlyTheme, setMonthlyTheme] = useState("");
-  const [monthlyMetrics, setMonthlyMetrics] = useState({
-    activeDays: 0,
-    totalDays: 0,
-    streakDays: 0,
-    completedGoals: 0
-  });
+  const { data: metrics } = useDashboardMetrics();
 
   useEffect(() => {
     // Load monthly theme from localStorage
@@ -18,22 +14,18 @@ export function ThisMonthQuadrant() {
     if (savedTheme) {
       setMonthlyTheme(savedTheme);
     }
-
-    // Calculate monthly metrics
-    const now = new Date();
-    const currentDay = now.getDate();
-    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    
-    // Mock data - in real app, this would come from user activity
-    setMonthlyMetrics({
-      activeDays: Math.floor(currentDay * 0.7), // 70% activity rate
-      totalDays: daysInMonth,
-      streakDays: 5,
-      completedGoals: 3
-    });
   }, []);
 
-  const monthProgress = (monthlyMetrics.activeDays / monthlyMetrics.totalDays) * 100;
+  const monthlyMetrics = metrics?.monthlyMetrics || {
+    activeDays: 0,
+    totalDays: 30,
+    streakDays: 0,
+    completedGoals: 0
+  };
+
+  const monthProgress = monthlyMetrics.totalDays > 0 
+    ? (monthlyMetrics.activeDays / monthlyMetrics.totalDays) * 100 
+    : 0;
 
   return (
     <div className="space-y-4">

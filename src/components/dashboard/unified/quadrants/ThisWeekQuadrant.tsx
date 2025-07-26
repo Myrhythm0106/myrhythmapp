@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { TrendingUp, Calendar, Target, Sparkles } from "lucide-react";
+import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics";
 
 export function ThisWeekQuadrant() {
-  const [weeklyGoals, setWeeklyGoals] = useState<any[]>([]);
   const [weekName, setWeekName] = useState("");
+  const { data: metrics } = useDashboardMetrics();
 
   useEffect(() => {
     // Load week name from localStorage
@@ -13,17 +14,12 @@ export function ThisWeekQuadrant() {
     if (savedWeekName) {
       setWeekName(savedWeekName);
     }
-
-    // Mock weekly goals data - in real app, this would come from hooks
-    setWeeklyGoals([
-      { id: 1, title: "Complete 3 brain training sessions", progress: 67, target: 3, current: 2 },
-      { id: 2, title: "Daily morning walks", progress: 57, target: 7, current: 4 },
-      { id: 3, title: "Gratitude journaling", progress: 43, target: 7, current: 3 }
-    ]);
   }, []);
 
+  const weeklyGoals = metrics?.weeklyGoals || [];
+
   const weekProgress = weeklyGoals.length > 0 
-    ? weeklyGoals.reduce((acc, goal) => acc + goal.progress, 0) / weeklyGoals.length 
+    ? weeklyGoals.reduce((acc, goal) => acc + goal.progress_percentage, 0) / weeklyGoals.length 
     : 0;
 
   return (
@@ -55,13 +51,13 @@ export function ThisWeekQuadrant() {
           <span className="text-sm font-medium text-purple-700">Active Goals</span>
         </div>
         <div className="space-y-2">
-          {weeklyGoals.map((goal) => (
+          {weeklyGoals.slice(0, 3).map((goal) => (
             <div key={goal.id} className="p-2 bg-white/60 rounded border border-purple-200">
               <div className="flex justify-between items-center mb-1">
                 <span className="text-xs text-purple-800 font-medium truncate">{goal.title}</span>
-                <span className="text-xs text-purple-600">{goal.current}/{goal.target}</span>
+                <span className="text-xs text-purple-600">{Math.round(goal.progress_percentage)}%</span>
               </div>
-              <Progress value={goal.progress} className="h-1.5" />
+              <Progress value={goal.progress_percentage} className="h-1.5" />
             </div>
           ))}
         </div>

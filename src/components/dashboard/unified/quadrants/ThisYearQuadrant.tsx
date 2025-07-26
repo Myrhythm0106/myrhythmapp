@@ -1,36 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, TrendingUp, Calendar, Target } from "lucide-react";
+import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics";
 
 export function ThisYearQuadrant() {
-  const [yearlyMetrics, setYearlyMetrics] = useState({
+  const { data: metrics } = useDashboardMetrics();
+
+  const yearlyMetrics = metrics?.yearlyMetrics || {
     daysCompleted: 0,
     totalDays: 365,
     majorGoalsCompleted: 0,
     totalMajorGoals: 0,
     longestStreak: 0,
     currentYear: new Date().getFullYear()
-  });
+  };
 
-  useEffect(() => {
-    // Calculate yearly metrics
-    const now = new Date();
-    const startOfYear = new Date(now.getFullYear(), 0, 1);
-    const dayOfYear = Math.floor((now.getTime() - startOfYear.getTime()) / (1000 * 60 * 60 * 24));
-    
-    // Mock data - in real app, this would come from user activity
-    setYearlyMetrics({
-      daysCompleted: dayOfYear,
-      totalDays: 365,
-      majorGoalsCompleted: 2,
-      totalMajorGoals: 5,
-      longestStreak: 28,
-      currentYear: now.getFullYear()
-    });
-  }, []);
-
-  const yearProgress = (yearlyMetrics.daysCompleted / yearlyMetrics.totalDays) * 100;
+  const yearProgress = yearlyMetrics.totalDays > 0 
+    ? (yearlyMetrics.daysCompleted / yearlyMetrics.totalDays) * 100 
+    : 0;
   const goalProgress = yearlyMetrics.totalMajorGoals > 0 
     ? (yearlyMetrics.majorGoalsCompleted / yearlyMetrics.totalMajorGoals) * 100 
     : 0;
