@@ -111,21 +111,31 @@ The MyRhythm Team`
     try {
       const template = getEmailTemplate();
       
-      // In a real implementation, this would call a Supabase edge function
-      // that sends the actual email using a service like SendGrid, Resend, etc.
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Log the email for demo purposes
-      console.log('Email would be sent:', {
-        to: memberEmail,
-        subject: template.subject,
-        content: template.content
+      // Call the Supabase edge function to send email
+      const { data, error } = await supabase.functions.invoke('send-email', {
+        body: {
+          to: memberEmail,
+          subject: template.subject,
+          content: template.content,
+          invitationType,
+          memberName
+        }
       });
+      
+      if (error) {
+        console.error('Error calling send-email function:', error);
+        throw new Error('Failed to send email');
+      }
+      
+      if (!data?.success) {
+        console.error('Email sending failed:', data?.error);
+        throw new Error(data?.error || 'Failed to send email');
+      }
+      
+      console.log('Email sent successfully:', data);
 
       // Store notification in database for tracking
-      const { error } = await supabase
+      const { error: dbError } = await supabase
         .from('accountability_alerts')
         .insert({
           user_id: user.id,
@@ -136,7 +146,7 @@ The MyRhythm Team`
           sent_at: new Date().toISOString()
         });
 
-      if (error) throw error;
+      if (dbError) throw dbError;
 
       setEmailSent(true);
       toast.success(`Email sent to ${memberName}!`);
