@@ -7,6 +7,7 @@ import { PreAssessmentStep } from "./steps/rhythm/PreAssessmentStep";
 import { AssessmentTypeSelection } from "./steps/rhythm/AssessmentTypeSelection";
 import { BriefAssessmentView } from "./steps/rhythm/BriefAssessmentView";
 import { RhythmAssessmentView } from "./steps/rhythm/RhythmAssessmentView";
+import { BackButton } from "@/components/ui/BackButton";
 import { UserType } from "@/types/user";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
 import { PlanType } from "./steps/PlanStep";
@@ -30,6 +31,7 @@ interface OnboardingStepRendererProps {
   onPreAssessmentComplete: () => void;
   onAssessmentTypeSelected: (type: 'brief' | 'comprehensive') => void;
   onRhythmAssessmentComplete: (data: any) => void;
+  onGoBack?: () => void;
 }
 
 export const OnboardingStepRenderer = ({
@@ -51,13 +53,30 @@ export const OnboardingStepRenderer = ({
   onPreAssessmentComplete,
   onAssessmentTypeSelected,
   onRhythmAssessmentComplete,
+  onGoBack,
 }: OnboardingStepRendererProps) => {
   
   console.log("OnboardingStepRenderer: Rendering step", currentStep, "with userType:", userType);
   
+  const renderStepWithBackButton = (stepComponent: React.ReactNode) => (
+    <div className="space-y-4">
+      {currentStep > 1 && onGoBack && (
+        <div className="mb-4">
+          <BackButton 
+            onClick={onGoBack}
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground"
+          />
+        </div>
+      )}
+      {stepComponent}
+    </div>
+  );
+  
   if (currentStep === 1) {
     console.log("OnboardingStepRenderer: Rendering UserTypeStep");
-    return (
+    return renderStepWithBackButton(
       <UserTypeStep
         onComplete={onUserTypeComplete}
         initialValue={userType}
@@ -67,7 +86,7 @@ export const OnboardingStepRenderer = ({
   
   if (currentStep === 2) {
     console.log("OnboardingStepRenderer: Rendering LocationStep");
-    return (
+    return renderStepWithBackButton(
       <LocationStep
         onComplete={onLocationComplete}
         initialValues={location}
@@ -77,7 +96,7 @@ export const OnboardingStepRenderer = ({
   
   if (currentStep === 3) {
     console.log("OnboardingStepRenderer: Rendering PlanStep");
-    return (
+    return renderStepWithBackButton(
       <PlanStep
         onComplete={onPlanSelected}
         selectedPlan={selectedPlan}
@@ -87,7 +106,7 @@ export const OnboardingStepRenderer = ({
   
   if (currentStep === 4) {
     console.log("OnboardingStepRenderer: Rendering PreAssessmentStep");
-    return (
+    return renderStepWithBackButton(
       <PreAssessmentStep
         onComplete={onPreAssessmentComplete}
         userType={userType}
@@ -97,7 +116,7 @@ export const OnboardingStepRenderer = ({
   
   if (currentStep === 5) {
     console.log("OnboardingStepRenderer: Rendering Assessment Type Selection");
-    return (
+    return renderStepWithBackButton(
       <AssessmentTypeSelection
         onSelectType={onAssessmentTypeSelected}
       />
@@ -107,14 +126,14 @@ export const OnboardingStepRenderer = ({
   if (currentStep === 6) {
     console.log("OnboardingStepRenderer: Rendering Assessment with type:", assessmentType, "userType:", userType);
     if (assessmentType === 'brief') {
-      return (
+      return renderStepWithBackButton(
         <BriefAssessmentView
           userType={userType || 'brain-injury'}
           onComplete={onRhythmAssessmentComplete}
         />
       );
     } else if (assessmentType === 'comprehensive') {
-      return (
+      return renderStepWithBackButton(
         <RhythmAssessmentView
           userType={userType || 'brain-injury'}
           onComplete={onRhythmAssessmentComplete}
@@ -122,7 +141,7 @@ export const OnboardingStepRenderer = ({
       );
     }
     // Fallback if no assessment type selected
-    return (
+    return renderStepWithBackButton(
       <AssessmentTypeSelection
         onSelectType={onAssessmentTypeSelected}
       />

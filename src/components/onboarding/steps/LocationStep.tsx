@@ -11,9 +11,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { MapPin, Globe, Building } from "lucide-react";
 
 const locationSchema = z.object({
-  country: z.string().min(1, "Country is required"),
-  state: z.string().min(1, "State/Province is required"),
-  town: z.string().min(1, "City/Town is required"),
+  country: z.string().min(1, "Please enter your country"),
+  state: z.string().min(1, "Please enter your state or province"),
+  town: z.string().min(1, "Please enter your city or town"),
 });
 
 export type LocationFormValues = z.infer<typeof locationSchema>;
@@ -50,10 +50,14 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
     <div className="space-y-8 max-w-2xl mx-auto">
       <div className="text-center space-y-4">
         <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Where are you located?
+          Step 2: Where are you located?
         </h2>
         <p className="text-lg text-muted-foreground">
-          This helps us provide region-specific resources and support options
+          This helps us provide region-specific resources and support options.
+          <br />
+          <span className="text-sm font-medium text-blue-600">
+            ✨ This step is optional - you can skip it if you prefer
+          </span>
         </p>
       </div>
 
@@ -130,13 +134,23 @@ export function LocationStep({ onComplete, initialValues }: LocationStepProps) {
                 )}
               />
 
-              <Button 
-                type="submit" 
-                disabled={!isFormValid}
-                className="w-full h-12 text-lg"
-              >
-                Save Location Details
-              </Button>
+              <div className="space-y-3">
+                <Button 
+                  type="submit" 
+                  disabled={!isFormValid}
+                  className="w-full h-12 text-lg"
+                >
+                  Save My Location
+                </Button>
+                <Button 
+                  type="button"
+                  variant="outline"
+                  onClick={() => onComplete({ country: "Not specified", state: "Not specified", town: "Not specified" })}
+                  className="w-full h-12 text-lg text-muted-foreground hover:text-foreground"
+                >
+                  Skip This Step
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>

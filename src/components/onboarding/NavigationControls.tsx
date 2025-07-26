@@ -66,26 +66,27 @@ export function NavigationControls({
         )}
         {!canGoNext && (
           <p className="text-xs text-amber-600 mt-1">
-            {currentStep === 1 && "Please select your user type"}
-            {currentStep === 2 && "Location setup (optional)"}
-            {currentStep === 3 && "Please choose a plan"}
-            {currentStep === 4 && "Preparing assessment..."}
-            {currentStep === 5 && "Complete your assessment"}
+            {currentStep === 1 && "👆 Please select your user type above to continue"}
+            {currentStep === 2 && "📍 Fill in your location or click 'Skip This Step'"}
+            {currentStep === 3 && "💳 Please choose a plan above to continue"}
+            {currentStep === 4 && "⏳ Preparing your personalized assessment..."}
+            {currentStep === 5 && "📝 Complete your assessment to continue"}
           </p>
         )}
       </div>
 
       <div className="flex justify-between items-center gap-4">
-        {/* Previous Button */}
+        {/* Previous Button - Always show but sometimes disabled */}
         <Button
           variant="outline"
           onClick={handlePrevious}
-          disabled={!canGoPrevious || isLoading}
+          disabled={!canGoPrevious || isLoading || currentStep === 1}
           className="flex items-center gap-2"
           size="default"
+          title={currentStep === 1 ? "You're on the first step" : "Go back to previous step"}
         >
           <ArrowLeft className="h-4 w-4" />
-          {previousLabel || defaultPreviousLabel}
+          {currentStep === 1 ? "First Step" : (previousLabel || defaultPreviousLabel)}
         </Button>
 
         {/* Next/Complete Button */}

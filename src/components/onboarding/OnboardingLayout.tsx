@@ -54,14 +54,25 @@ export const OnboardingLayout = ({
     Math.round((currentStep - 1) / (totalSteps - 1) * 100);
 
   const handleBackClick = () => {
-    // Always show warning for assessment steps or when there's unsaved data
-    const isAssessmentStep = currentStep === 5;
-    const shouldWarn = hasUnsavedData || isAssessmentStep;
-    
-    if (shouldWarn) {
-      setShowBackWarning(true);
+    // If we're on step 1, go to dashboard; otherwise go to previous step
+    if (currentStep === 1) {
+      // Going back to dashboard from step 1, show warning if unsaved data
+      if (hasUnsavedData) {
+        setShowBackWarning(true);
+      } else {
+        // Navigate back to dashboard
+        window.location.href = '/dashboard';
+      }
     } else {
-      onBack();
+      // Going to previous onboarding step
+      const isAssessmentStep = currentStep === 5;
+      const shouldWarn = hasUnsavedData || isAssessmentStep;
+      
+      if (shouldWarn) {
+        setShowBackWarning(true);
+      } else {
+        onBack();
+      }
     }
   };
 
@@ -103,7 +114,7 @@ export const OnboardingLayout = ({
             className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Back to Dashboard
+            {currentStep > 1 ? `Back to Step ${currentStep - 1}` : 'Back to Dashboard'}
           </Button>
           
           <div className="flex items-center gap-3">
@@ -186,7 +197,7 @@ export const OnboardingLayout = ({
         onClose={() => setShowBackWarning(false)}
         onConfirm={handleConfirmBack}
         onSaveAndContinue={onSaveProgress ? handleSaveAndBack : undefined}
-        destination="Dashboard"
+        destination={currentStep === 1 ? "Dashboard" : `Step ${currentStep - 1}`}
         hasUnsavedData={hasUnsavedData}
         dataDescription={dataDescription}
         completionPercentage={calculatedCompletionPercentage}

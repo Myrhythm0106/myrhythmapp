@@ -130,6 +130,7 @@ export function OnboardingPage() {
           onPreAssessmentComplete={handlePreAssessmentComplete}
           onAssessmentTypeSelected={handleAssessmentTypeSelected}
           onRhythmAssessmentComplete={handleRhythmAssessmentComplete}
+          onGoBack={handlePrevious}
         />
       </SwipeableOnboarding>
     </div>
