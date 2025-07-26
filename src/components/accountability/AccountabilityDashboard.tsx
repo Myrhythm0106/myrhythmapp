@@ -61,8 +61,30 @@ export function AccountabilityDashboard() {
         </Button>
       </div>
 
-      {/* Overview Cards */}
-      <div className="grid gap-4 md:grid-cols-4">
+      {/* Quick Actions */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Users className="h-5 w-5 text-primary" />
+              Add Support Member
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-3">
+              Invite someone to your circle
+            </p>
+            <Button 
+              onClick={() => setActiveTab('support-circle')}
+              className="w-full"
+              size="sm"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Member
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Support Circle</CardTitle>
@@ -203,6 +225,7 @@ export function AccountabilityDashboard() {
                     <div className="text-center py-6 text-muted-foreground">
                       <Users className="h-8 w-8 mx-auto mb-2 opacity-50" />
                       <p>No support circle members yet</p>
+                      <p className="text-xs mt-1">Added members will appear here</p>
                       <Button 
                         size="sm" 
                         onClick={() => setActiveTab('support-circle')}
