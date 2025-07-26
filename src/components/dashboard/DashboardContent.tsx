@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardHeader } from "./DashboardHeader";
-import { DashboardViewSelector } from "./DashboardViewSelector";
-import { VisualDashboard } from "./VisualDashboard";
+import { HeroSection } from "./unified/HeroSection";
+import { CommandCenterLayout } from "./unified/CommandCenterLayout";
+import { QuickActionZone } from "./unified/QuickActionZone";
 import { TodayFocus } from "./TodayFocus";
 import { UpcomingToday } from "./UpcomingToday";
 import { RecentWins } from "./RecentWins";
@@ -36,7 +37,7 @@ export function DashboardContent() {
   const [showMorningRitual, setShowMorningRitual] = useState(false);
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
   const [dailyIntention, setDailyIntention] = useState('');
-  const [dashboardView, setDashboardView] = useState<"now" | "week">("now");
+  // Removed dashboard view toggle - now unified experience
   const { metrics, getNextUnlock } = useUserProgress();
   const userData = useUserData();
 
@@ -141,26 +142,14 @@ export function DashboardContent() {
   const roleWelcome = getRoleSpecificWelcome();
 
   return (
-    <div className="space-y-6 pb-20">
-      {/* Hero Section: Monthly Theme & Daily #IChoose */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <MonthlyTheme />
-        <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} userType={userData?.userType} />
-      </div>
+    <div className="space-y-8 pb-20">
+      {/* Hero Section - Commanding Headlines */}
+      <HeroSection 
+        onUpgradeClick={handleUpgradeClick} 
+        userType={userData?.userType} 
+      />
 
       <ReadingProgressBar sections={dashboardSections} />
-      
-      <div id="header" className="pt-4">
-        <DashboardHeader />
-      </div>
-      
-      {/* Dashboard View Toggle */}
-      <div className="flex justify-center">
-        <DashboardViewSelector 
-          currentView={dashboardView} 
-          onViewChange={setDashboardView} 
-        />
-      </div>
       
       {/* Role-Specific Welcome Message */}
       {userData.userType && (
@@ -215,47 +204,14 @@ export function DashboardContent() {
         </Card>
       )}
       
-      {/* Conditional Dashboard Content */}
-      {dashboardView === "now" ? (
-        <VisualDashboard />
-      ) : (
-        <>
-          {/* Daily #IChoose Widget - Prominent placement with user type */}
-          <div id="ichoose">
-            <DailyIChooseWidget 
-              onUpgradeClick={handleUpgradeClick}
-              userType={userData.userType}
-            />
-          </div>
-          
-          {/* Trial Status - Show prominently at top */}
-          <TrialStatusCard />
-          
-          {/* Quick Actions for Progress */}
-          <div id="activities">
-            <QuickActionsToProgress />
-          </div>
-          
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-6">
-              <div id="focus">
-                <TodayFocus />
-              </div>
-              <UpcomingToday />
-            </div>
-            
-            <div className="space-y-6">
-              <RecentWins />
-              <QuickAccessWidget />
-              <TopPriorities />
-              <div id="mood">
-                <MoodEnergySnapshot />
-              </div>
-              <BrainGameQuickStart />
-            </div>
-          </div>
-        </>
-      )}
+      {/* Command Center Layout - Unified Four-Quadrant View */}
+      <CommandCenterLayout />
+      
+      {/* Quick Action Zone */}
+      <QuickActionZone />
+      
+      {/* Trial Status */}
+      <TrialStatusCard />
       
       {/* Smart Notification Engine */}
       <SmartNotificationEngine 
