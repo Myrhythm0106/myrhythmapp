@@ -4,6 +4,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { SessionSecurity } from '@/utils/security/sessionSecurity';
 import { DataProtection } from '@/utils/security/dataProtection';
+import { getOnboardingRoute } from '@/utils/platform/platformDetection';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -48,6 +49,14 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
   if (requireAuth && user && SessionSecurity.isSessionExpired()) {
     SessionSecurity.endSession('SESSION_EXPIRED');
     return <Navigate to="/auth" replace />;
+  }
+
+  // Check if user needs onboarding (only for dashboard route)
+  if (requireAuth && user && location.pathname === '/dashboard') {
+    const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete') === 'true';
+    if (!onboardingComplete) {
+      return <Navigate to={getOnboardingRoute()} replace />;
+    }
   }
 
   return <>{children}</>;
