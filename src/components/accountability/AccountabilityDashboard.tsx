@@ -7,12 +7,14 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Users, Bell, Clock, AlertTriangle, Plus, Shield } from 'lucide-react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
+import { useAuth } from '@/contexts/AuthContext';
 import { SupportCircleManager } from './SupportCircleManager';
 import { ReminderCreator } from './ReminderCreator';
 import { AlertsPanel } from './AlertsPanel';
 import { format } from 'date-fns';
 
 export function AccountabilityDashboard() {
+  const { user } = useAuth();
   const { 
     supportCircle, 
     reminders, 
@@ -61,6 +63,21 @@ export function AccountabilityDashboard() {
         </Button>
       </div>
 
+      {/* Authentication Check */}
+      {!user && (
+        <Card className="border-yellow-200 bg-yellow-50">
+          <CardContent className="pt-6">
+            <div className="flex items-center gap-3 text-yellow-700">
+              <AlertTriangle className="h-5 w-5" />
+              <div>
+                <p className="font-medium">Authentication Required</p>
+                <p className="text-sm">You must be signed in to use the accountability system.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Quick Actions */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-gradient-to-r from-primary/10 to-primary/5 border-primary/20">
@@ -78,9 +95,10 @@ export function AccountabilityDashboard() {
               onClick={() => setActiveTab('support-circle')}
               className="w-full"
               size="sm"
+              disabled={!user}
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Member
+              {user ? 'Add Member' : 'Sign In Required'}
             </Button>
           </CardContent>
         </Card>

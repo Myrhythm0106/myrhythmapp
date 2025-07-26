@@ -177,7 +177,17 @@ export function useAccountabilitySystem() {
   };
 
   const addSupportMember = async (memberData: Omit<SupportCircleMember, 'id' | 'user_id' | 'status' | 'created_at'>) => {
-    if (!user) return;
+    if (!user) {
+      console.error('No authenticated user when trying to add support member');
+      throw new Error('You must be logged in to add support members');
+    }
+
+    console.log('Adding support member to database:', {
+      user_id: user.id,
+      member_name: memberData.member_name,
+      member_email: memberData.member_email,
+      relationship: memberData.relationship
+    });
 
     try {
       const { data, error } = await supabase
@@ -190,7 +200,12 @@ export function useAccountabilitySystem() {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error when adding support member:', error);
+        throw error;
+      }
+      
+      console.log('Support member added to database successfully:', data);
       
       // Properly cast the returned data
       const typedData = {
@@ -202,11 +217,13 @@ export function useAccountabilitySystem() {
       } as SupportCircleMember;
       
       setSupportCircle(prev => [typedData, ...prev]);
-      toast.success(`${memberData.member_name} added to your support circle`);
+      console.log('Support circle updated in state');
       return typedData;
     } catch (error) {
       console.error('Error adding support member:', error);
-      toast.error('Failed to add support member');
+      if (error.message?.includes('JWT')) {
+        throw new Error('Authentication expired. Please sign in again.');
+      }
       throw error;
     }
   };

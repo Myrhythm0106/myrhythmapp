@@ -10,11 +10,13 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Users, Plus, Mail, Phone, Shield, Clock, Bell, Settings } from 'lucide-react';
 import { useAccountabilitySystem, SupportCircleMember } from '@/hooks/use-accountability-system';
+import { EmailValidator } from '@/utils/security/emailValidator';
 import { toast } from 'sonner';
 
 export function SupportCircleManager() {
-  const { supportCircle, addSupportMember, updateMemberPermissions } = useAccountabilitySystem();
+  const { supportCircle, addSupportMember, updateMemberPermissions, isLoading } = useAccountabilitySystem();
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [newMember, setNewMember] = useState({
     member_name: '',
@@ -38,13 +40,42 @@ export function SupportCircleManager() {
   });
 
   const handleAddMember = async () => {
-    if (!newMember.member_name || !newMember.relationship) {
-      toast.error('Please provide name and relationship');
+    // Validation
+    if (!newMember.member_name.trim()) {
+      toast.error('Please provide a name');
+      return;
+    }
+    
+    if (!newMember.relationship) {
+      toast.error('Please select a relationship');
       return;
     }
 
+    // Email validation if provided
+    if (newMember.member_email && !EmailValidator.isValidEmail(newMember.member_email)) {
+      toast.error('Please provide a valid email address (e.g., name@example.com)');
+      return;
+    }
+
+    // At least email or phone required for contact
+    if (!newMember.member_email && !newMember.member_phone) {
+      toast.error('Please provide either an email or phone number');
+      return;
+    }
+
+    setIsSubmitting(true);
+    console.log('Adding support member:', {
+      name: newMember.member_name,
+      email: newMember.member_email,
+      relationship: newMember.relationship,
+      role: newMember.role
+    });
+
     try {
-      await addSupportMember(newMember);
+      const result = await addSupportMember(newMember);
+      console.log('Support member added successfully:', result);
+      
+      // Reset form
       setNewMember({
         member_name: '',
         member_email: '',
@@ -66,8 +97,12 @@ export function SupportCircleManager() {
         }
       });
       setIsAddDialogOpen(false);
+      toast.success(`${newMember.member_name} has been added to your support circle!`);
     } catch (error) {
       console.error('Error adding member:', error);
+      toast.error('Failed to add support member. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -223,8 +258,8 @@ export function SupportCircleManager() {
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button onClick={handleAddMember}>
-                  Add Member
+                <Button onClick={handleAddMember} disabled={isSubmitting}>
+                  {isSubmitting ? 'Adding...' : 'Add Member'}
                 </Button>
               </div>
             </div>
@@ -234,7 +269,16 @@ export function SupportCircleManager() {
 
       {/* Support Circle Members */}
       <div className="grid gap-4">
-        {supportCircle.length === 0 ? (
+        {isLoading ? (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center py-8">
+                <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading support circle...</p>
+              </div>
+            </CardContent>
+          </Card>
+        ) : supportCircle.length === 0 ? (
           <Card>
             <CardContent className="pt-6">
               <div className="text-center py-8">

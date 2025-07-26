@@ -3,14 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Bell, CheckCircle, AlertTriangle, Info, Clock, Users, Mail, Send } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Bell, CheckCircle, AlertTriangle, Info, Clock, Users, Mail, Send, TestTube } from 'lucide-react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
 import { EmailNotificationSystem } from './EmailNotificationSystem';
+import { toast } from 'sonner';
 import { format } from 'date-fns';
 
 export function AlertsPanel() {
-  const { alerts, acknowledgeAlert, supportCircle } = useAccountabilitySystem();
+  const { alerts, acknowledgeAlert, supportCircle, generateAlert } = useAccountabilitySystem();
   const [filter, setFilter] = useState<'all' | 'unacknowledged' | 'acknowledged' | 'test'>('all');
+  const [selectedMember, setSelectedMember] = useState('');
+  const [testEmailType, setTestEmailType] = useState<'accountability_invite' | 'reminder_notification' | 'alert_notification'>('accountability_invite');
+  const [isGeneratingAlert, setIsGeneratingAlert] = useState(false);
 
   const filteredAlerts = alerts.filter(alert => {
     switch (filter) {
@@ -60,15 +66,48 @@ export function AlertsPanel() {
     }
   };
 
+  const handleAcknowledge = async (alertId: string) => {
+    try {
+      await acknowledgeAlert(alertId, 'user');
+      toast.success('Alert acknowledged');
+    } catch (error) {
+      console.error('Error acknowledging alert:', error);
+      toast.error('Failed to acknowledge alert');
+    }
+  };
+
+  const handleTestAlert = async () => {
+    setIsGeneratingAlert(true);
+    try {
+      await generateAlert(
+        'task_completed',
+        'Test Alert: System Working',
+        'This is a test alert to verify the accountability system is functioning correctly.',
+        undefined,
+        'info'
+      );
+      toast.success('Test alert generated successfully!');
+    } catch (error) {
+      console.error('Error generating test alert:', error);
+      toast.error('Failed to generate test alert');
+    } finally {
+      setIsGeneratingAlert(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Alerts & Notifications</h2>
           <p className="text-muted-foreground">
-            Stay informed about important updates and patterns
+            View and manage accountability alerts and test the email system
           </p>
         </div>
+        <Button onClick={handleTestAlert} disabled={isGeneratingAlert} variant="outline">
+          <TestTube className="h-4 w-4 mr-2" />
+          {isGeneratingAlert ? 'Generating...' : 'Test Alert'}
+        </Button>
       </div>
 
       {/* Filter Tabs */}
@@ -91,68 +130,73 @@ export function AlertsPanel() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Send className="h-5 w-5" />
+                <Mail className="h-5 w-5" />
                 Test Email System
               </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-6">
-                Send test emails to your support circle members to verify the email system is working correctly.
+              <p className="text-sm text-muted-foreground">
+                Send test emails to support circle members to verify the email system is working
               </p>
-              
+            </CardHeader>
+            <CardContent className="space-y-6">
               {supportCircle.length === 0 ? (
-                <div className="text-center py-8">
-                  <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Support Circle Members</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Add members to your support circle first to test email notifications.
-                  </p>
-                  <Button onClick={() => setFilter('all')}>
-                    <Users className="h-4 w-4 mr-2" />
-                    Manage Support Circle
-                  </Button>
+                <div className="text-center py-8 text-muted-foreground">
+                  <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p className="font-medium mb-2">No Support Circle Members</p>
+                  <p className="text-sm">Add support circle members first to test email notifications</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {supportCircle
-                    .filter(member => member.member_email && member.can_receive_alerts)
-                    .map((member) => (
-                      <Card key={member.id} className="p-4">
-                        <div className="flex items-center justify-between mb-4">
-                          <div>
-                            <h4 className="font-medium">{member.member_name}</h4>
-                            <p className="text-sm text-muted-foreground">{member.member_email}</p>
-                          </div>
-                          <Badge variant="outline">{member.role}</Badge>
-                        </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="test-member">Select Member</Label>
+                      <Select value={selectedMember} onValueChange={setSelectedMember}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose a member" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {supportCircle
+                            .filter(member => member.member_email)
+                            .map((member) => (
+                              <SelectItem key={member.id} value={member.id}>
+                                {member.member_name} ({member.member_email})
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label htmlFor="test-type">Email Type</Label>
+                      <Select value={testEmailType} onValueChange={(value: any) => setTestEmailType(value)}>
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="accountability_invite">Invitation</SelectItem>
+                          <SelectItem value="reminder_notification">Reminder</SelectItem>
+                          <SelectItem value="alert_notification">Alert</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+
+                  {selectedMember && (
+                    <div className="border rounded-lg p-4 bg-muted/30">
+                      <h4 className="font-medium mb-3">Email Preview & Send</h4>
+                      {(() => {
+                        const member = supportCircle.find(m => m.id === selectedMember);
+                        if (!member?.member_email) return null;
                         
-                        <div className="grid gap-3 md:grid-cols-3">
+                        return (
                           <EmailNotificationSystem
-                            memberEmail={member.member_email!}
+                            memberEmail={member.member_email}
                             memberName={member.member_name}
-                            invitationType="accountability_invite"
+                            invitationType={testEmailType}
+                            onSent={() => {
+                              toast.success(`Test email sent to ${member.member_name}!`);
+                            }}
                           />
-                          <EmailNotificationSystem
-                            memberEmail={member.member_email!}
-                            memberName={member.member_name}
-                            invitationType="reminder_notification"
-                          />
-                          <EmailNotificationSystem
-                            memberEmail={member.member_email!}
-                            memberName={member.member_name}
-                            invitationType="alert_notification"
-                          />
-                        </div>
-                      </Card>
-                    ))}
-                  
-                  {supportCircle.filter(member => member.member_email && member.can_receive_alerts).length === 0 && (
-                    <div className="text-center py-8">
-                      <Mail className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">No Email-Enabled Members</h3>
-                      <p className="text-muted-foreground">
-                        Your support circle members need email addresses and alert permissions to receive test emails.
-                      </p>
+                        );
+                      })()}
                     </div>
                   )}
                 </div>
@@ -250,7 +294,7 @@ export function AlertsPanel() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => acknowledgeAlert(alert.id, 'user')}
+                            onClick={() => handleAcknowledge(alert.id)}
                           >
                             <CheckCircle className="h-4 w-4 mr-1" />
                             Acknowledge
