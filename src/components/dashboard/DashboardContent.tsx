@@ -31,6 +31,7 @@ import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
+import { CalendarDashboardIntegration } from "@/components/calendar/CalendarDashboardIntegration";
 
 export function DashboardContent() {
   const [searchParams] = useSearchParams();
@@ -203,6 +204,9 @@ export function DashboardContent() {
           </CardContent>
         </Card>
       )}
+      
+      {/* Calendar-Dashboard Integration */}
+      <CalendarDashboardIntegration />
       
       {/* Command Center Layout - Unified Four-Quadrant View */}
       <CommandCenterLayout />

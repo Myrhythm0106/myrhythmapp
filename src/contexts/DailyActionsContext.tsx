@@ -55,6 +55,7 @@ export function DailyActionsProvider({ children }: { children: React.ReactNode }
   const [actions, setActions] = useState<DailyAction[]>([]);
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(false);
+  const { syncCalendarToDashboard } = useCalendarDashboardSync();
 
   const today = format(new Date(), 'yyyy-MM-dd');
 
@@ -63,6 +64,10 @@ export function DailyActionsProvider({ children }: { children: React.ReactNode }
     console.log('🔄 DailyActionsProvider: fetchActionsForToday called');
     try {
       setLoading(true);
+      
+      // First sync calendar events to dashboard
+      await syncCalendarToDashboard(today);
+      
       const { data, error } = await supabase
         .from('daily_actions')
         .select('*')
@@ -78,7 +83,7 @@ export function DailyActionsProvider({ children }: { children: React.ReactNode }
     } finally {
       setLoading(false);
     }
-  }, [today]);
+  }, [today, syncCalendarToDashboard]);
 
   const fetchGoals = useCallback(async () => {
     try {

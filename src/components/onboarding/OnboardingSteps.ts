@@ -12,8 +12,8 @@ export const STEPS = [
   },
   {
     id: 3,
-    title: "Where are you located?",
-    description: "Tell us where you're from so we can personalize your experience"
+    title: "Find Your Rhythm",
+    description: "Help us understand your journey to personalize your experience"
   },
   {
     id: 4,
@@ -32,7 +32,7 @@ export const STEPS = [
   },
   {
     id: 7,
-    title: "Find Your Rhythm",
-    description: "Help us understand your journey to personalize your experience"
+    title: "Where are you located?",
+    description: "Tell us where you're from so we can personalize your experience"
   }
 ];
