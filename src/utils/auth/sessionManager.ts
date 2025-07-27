@@ -1,11 +1,12 @@
 
 import { supabase } from "@/integrations/supabase/client";
 import { SecureStorage } from "@/utils/secureStorage";
+import { SecureLogger } from "@/utils/security/secureLogger";
 
 export class SessionManager {
   static startSession(): void {
     // Initialize secure session
-    console.log('Session started with enhanced security');
+    SecureLogger.info('Session started with enhanced security');
   }
 
   static extendSession(): void {
@@ -20,7 +21,7 @@ export class SessionManager {
       SecureStorage.clearSensitiveData();
       localStorage.removeItem('lastActivity');
     } catch (error) {
-      console.error('Error ending session:', error);
+      SecureLogger.error('Error ending session', error);
       // Force cleanup even if logout fails
       SecureStorage.clearSensitiveData();
       localStorage.removeItem('lastActivity');

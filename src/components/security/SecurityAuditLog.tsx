@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Shield, AlertTriangle, Eye, Clock } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { SecureLogger } from "@/utils/security/secureLogger";
 
 interface SecurityEvent {
   id: string;
@@ -49,7 +50,7 @@ export function SecurityAuditLog() {
 
         setEvents(securityEvents);
       } catch (error) {
-        console.error('Error fetching security events:', error);
+        SecureLogger.error('Error fetching security events', error, user?.id);
       } finally {
         setLoading(false);
       }

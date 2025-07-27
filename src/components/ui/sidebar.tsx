@@ -112,19 +112,22 @@ const SidebarMenuButton = React.forwardRef<
   React.ButtonHTMLAttributes<HTMLButtonElement> & {
     asChild?: boolean
   }
->(({ className, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? React.Fragment : "button"
+>(({ className, asChild = false, children, ...props }, ref) => {
+  if (asChild) {
+    return <>{children}</>
+  }
+  
   return (
-    <Comp
-      ref={asChild ? undefined : ref}
-      className={asChild ? undefined : cn(
+    <button
+      ref={ref}
+      className={cn(
         "w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground",
         className
       )}
-      {...(asChild ? {} : props)}
+      {...props}
     >
-      {asChild ? props.children : props.children}
-    </Comp>
+      {children}
+    </button>
   )
 })
 SidebarMenuButton.displayName = "SidebarMenuButton"

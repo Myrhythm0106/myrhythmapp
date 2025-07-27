@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { AlertTriangle, CheckCircle, Copy, Download } from 'lucide-react';
 import { MFAFactor } from '@/types/mfa';
 import { toast } from 'sonner';
+import { SecureLogger } from '@/utils/security/secureLogger';
 
 interface BackupCode {
   code: string;
@@ -36,11 +37,11 @@ export function BackupCodesPanel({
           });
           setBackupCodes(typedCodes);
         } else {
-          console.error('Unexpected backup codes format:', codes);
+          SecureLogger.error('Unexpected backup codes format', { codes });
           toast.error('Failed to process backup codes');
         }
       } catch (error) {
-        console.error('Error processing backup codes:', error);
+        SecureLogger.error('Error processing backup codes', error);
         toast.error('Failed to process backup codes');
       }
     }

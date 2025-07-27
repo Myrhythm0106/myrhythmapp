@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { useAuth } from '@/contexts/AuthContext';
+import { SecureLogger } from '@/utils/security/secureLogger';
 import { MFAVerificationHeader } from './mfa-verification/MFAVerificationHeader';
 import { MFAFactorSelector } from './mfa-verification/MFAFactorSelector';
 import { MFACodeInput } from './mfa-verification/MFACodeInput';
@@ -19,6 +21,7 @@ interface MFAVerificationProps {
 }
 
 export function MFAVerification({ onVerificationComplete, availableFactors }: MFAVerificationProps) {
+  const { user } = useAuth();
   const [selectedFactor, setSelectedFactor] = useState<'totp' | 'sms' | 'backup_codes'>('totp');
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -52,7 +55,7 @@ export function MFAVerification({ onVerificationComplete, availableFactors }: MF
         setVerificationCode('');
       }
     } catch (error) {
-      console.error('Verification error:', error);
+      SecureLogger.error('MFA verification error', error, user?.id);
       toast.error('Verification failed. Please try again.');
     } finally {
       setLoading(false);

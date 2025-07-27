@@ -1,13 +1,16 @@
 
 import { RealMFAVerification } from '@/utils/mfa/realMFAVerification';
 import { supabase } from '@/integrations/supabase/client';
+import { SecureLogger } from '@/utils/security/secureLogger';
 
 export const verifyMFACode = async (
   selectedFactor: 'totp' | 'sms' | 'backup_codes',
   verificationCode: string
 ): Promise<boolean> => {
+  let user = null;
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { user: authUser } } = await supabase.auth.getUser();
+    user = authUser;
     if (!user) {
       return false;
     }
@@ -29,7 +32,7 @@ export const verifyMFACode = async (
 
     return result.success;
   } catch (error) {
-    // Use secure logger instead of console.error
+    SecureLogger.error('MFA verification failed', error, user?.id);
     return false;
   }
 };

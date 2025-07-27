@@ -4,8 +4,11 @@ import { useTOTPSetup } from './mfa/useTOTPSetup';
 import { useSMSSetup } from './mfa/useSMSSetup';
 import { useBackupCodes } from './mfa/useBackupCodes';
 import { useMFALogging } from './mfa/useMFALogging';
+import { useAuth } from '@/contexts/AuthContext';
+import { SecureLogger } from '@/utils/security/secureLogger';
 
 export function useMFA() {
+  const { user } = useAuth();
   const {
     factors,
     mfaEnabled,
@@ -59,7 +62,7 @@ export function useMFA() {
     const result = await toggleMFA(enabled);
     if (result) {
       const message = enabled ? 'enabled' : 'disabled';
-      console.log(`MFA ${message} successfully`);
+      SecureLogger.info(`MFA ${message} successfully`, { enabled }, user?.id);
     }
     return result;
   };
@@ -67,7 +70,7 @@ export function useMFA() {
   const enhancedRemoveFactor = async (factorId: string): Promise<boolean> => {
     const result = await removeFactor(factorId);
     if (result) {
-      console.log('MFA factor removed successfully');
+      SecureLogger.info('MFA factor removed successfully', { factorId }, user?.id);
     }
     return result;
   };
