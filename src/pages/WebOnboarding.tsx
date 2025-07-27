@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { OnboardingLayout } from "@/components/onboarding/OnboardingLayout";
 import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
 import { AuthenticationGate } from "@/components/onboarding/AuthenticationGate";
+import { WelcomeIntroduction } from "@/components/onboarding/WelcomeIntroduction";
 import { useAutoProgression } from "@/hooks/useAutoProgression";
 import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
@@ -25,6 +26,7 @@ const WebOnboarding = () => {
   
   const { user, loading } = useAuth();
   const [authenticationComplete, setAuthenticationComplete] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
   
   useEffect(() => {
     if (user && !loading) {
@@ -103,6 +105,10 @@ const WebOnboarding = () => {
     return WEB_ONBOARDING_STEPS.find(step => step.id === currentStep) || WEB_ONBOARDING_STEPS[0];
   };
 
+  const handleStartOnboarding = () => {
+    setShowWelcome(false);
+  };
+
   const currentStepInfo = getCurrentStepInfo();
 
   if (loading) {
@@ -129,6 +135,10 @@ const WebOnboarding = () => {
         />
       </Preview3Background>
     );
+  }
+
+  if (showWelcome) {
+    return <WelcomeIntroduction onGetStarted={handleStartOnboarding} />;
   }
 
   return (

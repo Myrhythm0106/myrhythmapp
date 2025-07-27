@@ -12,6 +12,7 @@ import MemoryFirstIndex from "./pages/MemoryFirstIndex";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import { OnboardingPage } from "./pages/OnboardingPage";
+import WebOnboarding from "./pages/WebOnboarding";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
@@ -61,6 +62,14 @@ function App() {
                       element={
                         <ProtectedRoute requireAuth={false}>
                           <OnboardingPage />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/web-onboarding"
+                      element={
+                        <ProtectedRoute requireAuth={true}>
+                          <WebOnboarding />
                         </ProtectedRoute>
                       }
                     />

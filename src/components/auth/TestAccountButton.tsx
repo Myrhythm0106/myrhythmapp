@@ -11,13 +11,21 @@ export const TestAccountButton = () => {
   const createTestAccount = async () => {
     setIsCreating(true);
     
-    const testEmail = `test${Date.now()}@example.com`;
-    const testPassword = 'TestPassword123!';
-    const testName = 'Test User';
-
     try {
-      console.log('Creating test account:', testEmail);
-      toast.info(`Creating test account: ${testEmail}`);
+      // Clear all onboarding related localStorage
+      localStorage.removeItem('myrhythm_onboarding_complete');
+      localStorage.removeItem('myrhythm_onboarding_step');
+      localStorage.removeItem('myrhythm_profile_complete');
+      localStorage.removeItem('myrhythm-welcome-seen');
+      localStorage.removeItem('myrhythm_web_onboarding_current_step');
+      localStorage.removeItem('myrhythm_web_onboarding_progress_saved');
+      
+      const testEmail = `test${Date.now()}@example.com`;
+      const testPassword = 'TestPassword123!';
+      const testName = 'Test User';
+
+      console.log('🧪 Creating test account:', testEmail);
+      toast.info('Creating test account and clearing onboarding flags...');
       
       const { error: signUpError } = await signUp(testEmail, testPassword, testName);
       
@@ -38,7 +46,7 @@ export const TestAccountButton = () => {
           console.error('Test account login failed:', signInError);
           toast.error(`Auto-login failed: ${signInError.message}. Try manual login with: ${testEmail}`);
         } else {
-          toast.success('Test account login successful!');
+          toast.success('Test account ready! You will go through the complete onboarding flow.');
         }
         setIsCreating(false);
       }, 2000);
