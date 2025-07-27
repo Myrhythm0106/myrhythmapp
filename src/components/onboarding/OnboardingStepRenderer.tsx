@@ -100,6 +100,16 @@ export const OnboardingStepRenderer = ({
   }
   
   if (currentStep === 3) {
+    console.log("OnboardingStepRenderer: Rendering PlanStep");
+    return renderStepWithBackButton(
+      <PlanStep
+        onComplete={onPlanSelected}
+        selectedPlan={selectedPlan}
+      />
+    );
+  }
+  
+  if (currentStep === 4) {
     console.log("OnboardingStepRenderer: Rendering PreAssessmentStep");
     return renderStepWithBackButton(
       <PreAssessmentStep
@@ -109,7 +119,7 @@ export const OnboardingStepRenderer = ({
     );
   }
   
-  if (currentStep === 4) {
+  if (currentStep === 5) {
     console.log("OnboardingStepRenderer: Rendering Assessment Type Selection");
     return renderStepWithBackButton(
       <AssessmentTypeSelection
@@ -118,7 +128,7 @@ export const OnboardingStepRenderer = ({
     );
   }
   
-  if (currentStep === 5) {
+  if (currentStep === 6) {
     console.log("OnboardingStepRenderer: Rendering Assessment with type:", assessmentType, "userType:", userType);
     if (assessmentType === 'brief') {
       return renderStepWithBackButton(
@@ -139,16 +149,6 @@ export const OnboardingStepRenderer = ({
     return renderStepWithBackButton(
       <AssessmentTypeSelection
         onSelectType={onAssessmentTypeSelected}
-      />
-    );
-  }
-  
-  if (currentStep === 6) {
-    console.log("OnboardingStepRenderer: Rendering PlanStep");
-    return renderStepWithBackButton(
-      <PlanStep
-        onComplete={onPlanSelected}
-        selectedPlan={selectedPlan}
       />
     );
   }
