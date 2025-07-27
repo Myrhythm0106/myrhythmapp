@@ -19,6 +19,7 @@ import InAppPurchase from "./routes/InAppPurchase";
 import MemoryBank from "./routes/MemoryBank";
 import Calendar from "./pages/Calendar";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
+import SymptomTracking from "./pages/SymptomTracking";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ function App() {
                     <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><Calendar /></ProtectedRoute>} />
                     <Route path="/organizations" element={<ProtectedRoute requireAuth={false}><OrganizationsDirectory /></ProtectedRoute>} />
+                    <Route path="/tracking" element={<ProtectedRoute requireAuth={false}><SymptomTracking /></ProtectedRoute>} />
                     <Route path="/goals" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/gratitude" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/analytics" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
