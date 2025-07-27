@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Shield, UserPlus, LogIn } from 'lucide-react';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
+import { TestAccountButton } from './TestAccountButton';
 
 interface AuthTabsProps {
   onForgotPassword: () => void;
@@ -26,6 +27,9 @@ export const AuthTabs = ({
           <div className="flex items-center justify-center gap-2 mb-2">
             <Shield className="h-5 w-5 text-primary" />
             <CardTitle className="text-xl">Secure Access</CardTitle>
+          </div>
+          <div className="flex justify-center">
+            <TestAccountButton />
           </div>
         </CardHeader>
         <CardContent>

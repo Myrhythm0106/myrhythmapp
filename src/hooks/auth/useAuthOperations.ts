@@ -10,32 +10,51 @@ export function useAuthOperations() {
     // Input sanitization
     email = sanitizeEmail(email);
     
+    console.log("SignIn Debug - Attempting login for:", email);
+    
     if (!email || !password) {
+      console.log("SignIn Debug - Missing email or password");
       toast.error("Email and password are required");
       return { error: { message: "Invalid input" } };
     }
 
     // Email validation
     if (!validateEmail(email)) {
+      console.log("SignIn Debug - Invalid email format:", email);
       toast.error("Please enter a valid email address");
       return { error: { message: "Invalid email format" } };
     }
 
     try {
+      console.log("SignIn Debug - Calling Supabase signInWithPassword");
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
       });
 
+      console.log("SignIn Debug - Supabase response:", { data: !!data, error: error?.message });
+
       if (error) {
-        // Don't reveal whether email exists
-        toast.error("Invalid email or password");
-        return { error: { message: "Authentication failed" } };
+        console.error("SignIn Debug - Supabase error:", error);
+        
+        // More specific error messages for debugging
+        if (error.message.includes("Invalid login credentials")) {
+          toast.error("Email or password is incorrect. Try 'Forgot Password' if needed.");
+        } else if (error.message.includes("Email not confirmed")) {
+          toast.error("Please check your email and confirm your account before signing in.");
+        } else {
+          toast.error(`Sign in failed: ${error.message}`);
+        }
+        
+        return { error: { message: error.message } };
       }
 
+      console.log("SignIn Debug - Login successful for user:", data.user?.email);
       toast.success("Successfully signed in");
       return { data, error: null };
     } catch (error) {
+      console.error("SignIn Debug - Unexpected error:", error);
+      toast.error("An unexpected error occurred. Please try again.");
       return { error: { message: "Login failed" } };
     }
   };
