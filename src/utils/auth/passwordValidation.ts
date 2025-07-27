@@ -47,7 +47,10 @@ export const isLeakedPasswordError = (error: any): boolean => {
   return message.includes('password found in breach') || 
          message.includes('password has been found in data breaches') ||
          message.includes('compromised password') ||
-         message.includes('leaked password');
+         message.includes('leaked password') ||
+         message.includes('password appears in') ||
+         message.includes('weak password') ||
+         message.includes('password strength');
 };
 
 export const getLeakedPasswordMessage = (): string => {
