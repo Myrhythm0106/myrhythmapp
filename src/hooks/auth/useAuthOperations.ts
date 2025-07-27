@@ -3,11 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { validatePasswordStrength, isLeakedPasswordError, getLeakedPasswordMessage } from "@/utils/auth/passwordValidation";
 import { sanitizeEmail, sanitizeName, validateEmail, validateNameLength } from "@/utils/auth/inputValidation";
-import { SessionManager } from "@/utils/auth/sessionManager";
-import { useLoginAttempts } from "./useLoginAttempts";
 
 export function useAuthOperations() {
-  const { isEmailLocked, recordFailedAttempt, clearAttempts } = useLoginAttempts();
 
   const secureSignIn = async (email: string, password: string) => {
     // Input sanitization
@@ -24,11 +21,6 @@ export function useAuthOperations() {
       return { error: { message: "Invalid email format" } };
     }
 
-    // Check if account is locked
-    if (isEmailLocked(email)) {
-      return { error: { message: "Account temporarily locked" } };
-    }
-
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -36,20 +28,14 @@ export function useAuthOperations() {
       });
 
       if (error) {
-        recordFailedAttempt(email);
         // Don't reveal whether email exists
         toast.error("Invalid email or password");
         return { error: { message: "Authentication failed" } };
       }
 
-      // Success - clear attempts and start session
-      clearAttempts(email);
-      SessionManager.startSession();
       toast.success("Successfully signed in");
-      
       return { data, error: null };
     } catch (error) {
-      recordFailedAttempt(email);
       return { error: { message: "Login failed" } };
     }
   };
@@ -108,15 +94,16 @@ export function useAuthOperations() {
   };
 
   const secureSignOut = async () => {
-    await SessionManager.endSession();
-    toast.success("Successfully signed out");
+    const { error } = await supabase.auth.signOut();
+    if (!error) {
+      toast.success("Successfully signed out");
+    }
   };
 
   return {
     secureSignIn,
     secureSignUp,
     secureSignOut,
-    isEmailLocked,
     validatePasswordStrength
   };
 }

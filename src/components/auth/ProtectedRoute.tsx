@@ -2,8 +2,6 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { SessionSecurity } from '@/utils/security/sessionSecurity';
-import { DataProtection } from '@/utils/security/dataProtection';
 import { getOnboardingRoute } from '@/utils/platform/platformDetection';
 
 interface ProtectedRouteProps {
@@ -17,13 +15,11 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
 
   useEffect(() => {
     if (user && requireAuth) {
-      // Update activity on route change
-      SessionSecurity.extendSession();
-      
       // Log page access for security monitoring
-      DataProtection.logSecurityEvent('PAGE_ACCESS', {
-        path: location.pathname,
-        userId: user.id
+      console.log(`Protected route accessed: ${location.pathname}`, {
+        userId: user.id,
+        timestamp: new Date().toISOString(),
+        path: location.pathname
       });
     }
   }, [user, location.pathname, requireAuth]);
@@ -45,11 +41,6 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
-  // Check if session has expired
-  if (requireAuth && user && SessionSecurity.isSessionExpired()) {
-    SessionSecurity.endSession('SESSION_EXPIRED');
-    return <Navigate to="/auth" replace />;
-  }
 
   // Check if user needs onboarding (only for dashboard route)
   if (requireAuth && user && location.pathname === '/dashboard') {

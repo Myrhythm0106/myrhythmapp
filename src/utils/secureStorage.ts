@@ -82,33 +82,3 @@ export class SecureStorage {
   }
 }
 
-// Session management
-export class SessionManager {
-  private static readonly SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-  private static timeoutId: NodeJS.Timeout | null = null;
-
-  static startSession(): void {
-    this.resetTimeout();
-  }
-
-  static resetTimeout(): void {
-    if (this.timeoutId) {
-      clearTimeout(this.timeoutId);
-    }
-    
-    this.timeoutId = setTimeout(() => {
-      this.endSession();
-    }, this.SESSION_TIMEOUT);
-  }
-
-  static endSession(): void {
-    console.log('Session timeout - logging out user');
-    SecureStorage.clearSensitiveData();
-    supabase.auth.signOut();
-    window.location.href = '/auth';
-  }
-
-  static extendSession(): void {
-    this.resetTimeout();
-  }
-}
