@@ -19,7 +19,7 @@ interface PersonalInfoFormValues {
   password: string;
 }
 
-export function useOnboardingLogic(totalSteps: number = 5) {
+export function useOnboardingLogic(totalSteps: number = 6) {
   const navigate = useNavigate();
   const [onboardingState, setOnboardingState] = useState<OnboardingState>({
     step: 1,

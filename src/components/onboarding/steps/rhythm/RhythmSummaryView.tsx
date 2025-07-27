@@ -32,6 +32,10 @@ export function RhythmSummaryView({ onComplete, onBack, assessmentResult, userTy
       assessmentResult={assessmentResult}
       onComplete={onComplete}
       userType={userType}
+      onPaymentRequired={() => {
+        // Handle payment flow navigation if needed
+        console.log("Payment required - navigate to payment");
+      }}
     />
   );
 }

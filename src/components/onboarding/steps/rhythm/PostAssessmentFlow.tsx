@@ -8,26 +8,30 @@ import { NextStepsWidget } from "./NextStepsWidget";
 import { HelpOrientationSystem } from "./HelpOrientationSystem";
 import { PersonalizedResultsDisplay } from "./PersonalizedResultsDisplay";
 import { AssessmentResultsPreview } from "./AssessmentResultsPreview";
+import { AssessmentPaymentGate } from "./AssessmentPaymentGate";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 
 interface PostAssessmentFlowProps {
   userType: UserType;
   assessmentResult: any;
   onComplete: (data: any) => void;
+  onPaymentRequired?: () => void;
 }
 
-export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: PostAssessmentFlowProps) {
+export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onPaymentRequired }: PostAssessmentFlowProps) {
   const { hasFeature, subscriptionData } = useSubscription();
   const [activeStep, setActiveStep] = useState<
-    "results" | "welcome" | "guide" | "setup" | "complete"
-  >("results");
+    "payment-gate" | "results" | "welcome" | "guide" | "setup" | "complete"
+  >("payment-gate");
   const [showHelp, setShowHelp] = useState(false);
   const [setupProgress, setSetupProgress] = useState(0);
 
   const showFullResults = hasFeature('personalizedInsights');
 
   const handleStepComplete = (data?: any) => {
-    if (activeStep === "results") {
+    if (activeStep === "payment-gate") {
+      setActiveStep("results");
+    } else if (activeStep === "results") {
       setActiveStep("welcome");
     } else if (activeStep === "welcome") {
       setActiveStep("setup");
@@ -40,6 +44,20 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
       setSetupProgress(100);
       onComplete(data || {});
     }
+  };
+
+  const handlePaymentSelect = (option: 'trial' | 'monthly' | 'annual' | 'skip') => {
+    if (option === 'skip') {
+      setActiveStep("results");
+    } else {
+      // Handle payment processing here
+      onPaymentRequired?.();
+      setActiveStep("results");
+    }
+  };
+
+  const handleContinueWithFree = () => {
+    setActiveStep("results");
   };
 
   const handleUpgrade = () => {
@@ -89,6 +107,15 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
 
   const renderStepContent = () => {
     switch (activeStep) {
+      case "payment-gate":
+        return (
+          <AssessmentPaymentGate
+            assessmentResult={assessmentResult}
+            onPaymentSelect={handlePaymentSelect}
+            onContinueWithFree={handleContinueWithFree}
+            daysLeft={subscriptionData.trial_days_left}
+          />
+        );
       case "results":
         return showFullResults ? (
           <PersonalizedResultsDisplay
@@ -147,6 +174,8 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
 
   const getCurrentStepForWidget = () => {
     switch (activeStep) {
+      case "payment-gate":
+        return "assessment_complete";
       case "results":
         return "assessment_complete";
       case "welcome":
@@ -164,8 +193,8 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete }: P
     <div className="relative min-h-screen">
       {renderStepContent()}
       
-      {/* Next Steps Widget - Always visible except on complete and results */}
-      {activeStep !== "complete" && activeStep !== "results" && (
+      {/* Next Steps Widget - Always visible except on complete, results, and payment-gate */}
+      {activeStep !== "complete" && activeStep !== "results" && activeStep !== "payment-gate" && (
         <NextStepsWidget
           currentStep={getCurrentStepForWidget()}
           onNextAction={handleNextAction}
