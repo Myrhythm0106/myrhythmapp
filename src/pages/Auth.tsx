@@ -8,7 +8,7 @@ import { AuthTabs } from "@/components/auth/AuthTabs";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 const Auth = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -32,13 +32,38 @@ const Auth = () => {
     }
   }, [searchParams]);
 
-  // Redirect authenticated users
-  useEffect(() => {
-    if (user && !loading) {
-      console.log('Auth page: User is authenticated, redirecting to:', from);
-      navigate(from);
-    }
-  }, [user, loading, navigate, from]);
+  // If user is already logged in, show logout option instead of redirecting
+  if (user && !loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
+        <Card className="shadow-lg border-purple-200/50 w-full max-w-md">
+          <CardHeader className="text-center space-y-4">
+            <CardTitle className="text-xl">Already Logged In</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-center text-gray-600">
+              You are already logged in as <strong>{user.email}</strong>
+            </p>
+            <div className="space-y-2">
+              <Button
+                onClick={() => navigate('/dashboard')}
+                className="w-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
+              >
+                Go to Dashboard
+              </Button>
+              <Button
+                onClick={signOut}
+                variant="outline"
+                className="w-full"
+              >
+                Log Out to Test Login
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const handleSignUpSuccess = (email: string) => {
     console.log('Auth page: Sign up successful for:', email);
