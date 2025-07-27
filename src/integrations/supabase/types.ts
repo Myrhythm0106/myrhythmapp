@@ -637,7 +637,13 @@ export type Database = {
         Row: {
           content: string | null
           created_at: string
+          decision_context: string | null
+          decision_outcome: string | null
+          decision_tags: string[] | null
+          decision_type: string | null
           id: string
+          is_decision: boolean | null
+          reflection_date: string | null
           title: string
           updated_at: string
           user_id: string
@@ -645,7 +651,13 @@ export type Database = {
         Insert: {
           content?: string | null
           created_at?: string
+          decision_context?: string | null
+          decision_outcome?: string | null
+          decision_tags?: string[] | null
+          decision_type?: string | null
           id?: string
+          is_decision?: boolean | null
+          reflection_date?: string | null
           title: string
           updated_at?: string
           user_id: string
@@ -653,7 +665,13 @@ export type Database = {
         Update: {
           content?: string | null
           created_at?: string
+          decision_context?: string | null
+          decision_outcome?: string | null
+          decision_tags?: string[] | null
+          decision_type?: string | null
           id?: string
+          is_decision?: boolean | null
+          reflection_date?: string | null
           title?: string
           updated_at?: string
           user_id?: string

@@ -10,7 +10,8 @@ import {
   TrendingUp, 
   Plus,
   Zap,
-  Award
+  Award,
+  FileText
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -56,6 +57,15 @@ export function QuickActionZone() {
       badge: "Today's entry"
     },
     {
+      id: "decisions",
+      title: "Decision Journal",
+      description: "Log decision moments",
+      icon: FileText,
+      color: "indigo",
+      action: () => navigate("/decisions"),
+      badge: "Capture wisdom"
+    },
+    {
       id: "analytics",
       title: "Analytics",
       description: "View your progress",
@@ -82,6 +92,7 @@ export function QuickActionZone() {
       blue: "from-blue-50 to-blue-100 border-blue-200 text-blue-700 hover:shadow-blue-200/50",
       purple: "from-purple-50 to-purple-100 border-purple-200 text-purple-700 hover:shadow-purple-200/50",
       teal: "from-teal-50 to-teal-100 border-teal-200 text-teal-700 hover:shadow-teal-200/50",
+      indigo: "from-indigo-50 to-indigo-100 border-indigo-200 text-indigo-700 hover:shadow-indigo-200/50",
       rose: "from-rose-50 to-rose-100 border-rose-200 text-rose-700 hover:shadow-rose-200/50",
       green: "from-green-50 to-green-100 border-green-200 text-green-700 hover:shadow-green-200/50",
       amber: "from-amber-50 to-amber-100 border-amber-200 text-amber-700 hover:shadow-amber-200/50"
@@ -94,6 +105,7 @@ export function QuickActionZone() {
       blue: "bg-blue-100",
       purple: "bg-purple-100",
       teal: "bg-teal-100",
+      indigo: "bg-indigo-100",
       rose: "bg-rose-100",
       green: "bg-green-100",
       amber: "bg-amber-100"

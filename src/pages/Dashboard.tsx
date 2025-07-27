@@ -18,6 +18,7 @@ import SupportPage from "./SupportPage";
 import SupportCirclePage from "./SupportCirclePage";
 import MemoryBankPage from "./MemoryBankPage";
 import TestingPage from "./TestingPage";
+import DecisionsPage from "./DecisionsPage";
 
 const Dashboard = () => {
   const location = useLocation();
@@ -63,6 +64,8 @@ const Dashboard = () => {
                 return <SettingsPage />;
               case '/testing':
                 return <TestingPage />;
+              case '/decisions':
+                return <DecisionsPage />;
               default:
                 return <DashboardContent />;
             }

@@ -17,7 +17,8 @@ import {
   Gamepad2,
   TrendingUp,
   BarChart3,
-  TestTube
+  TestTube,
+  FileText
 } from "lucide-react";
 
 const sidebarItems = [
@@ -30,6 +31,7 @@ const sidebarItems = [
   { name: "Accountability", href: "/accountability", icon: Users },
   { name: "Community", href: "/community", icon: MessageCircle },
   { name: "Notes", href: "/notes", icon: BookOpen },
+  { name: "Decision Journal", href: "/decisions", icon: FileText },
   { name: "Strategy", href: "/strategy", icon: TrendingUp },
   { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Testing", href: "/testing", icon: TestTube },

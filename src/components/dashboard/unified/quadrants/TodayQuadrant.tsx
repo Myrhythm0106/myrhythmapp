@@ -1,8 +1,9 @@
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Clock, Zap, Target } from "lucide-react";
+import { CheckCircle2, Clock, Zap, Target, Brain } from "lucide-react";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
+import { QuickDecisionWidget } from "@/components/decisions/QuickDecisionWidget";
 
 export function TodayQuadrant() {
   const { actions } = useDailyActions();
@@ -65,6 +66,11 @@ export function TodayQuadrant() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Decision Widget */}
+      <div className="pt-2 border-t border-blue-200">
+        <QuickDecisionWidget />
       </div>
 
       {/* Quick Action */}
