@@ -346,3 +346,73 @@ export function getFocusAreaEvolution(): any[] {
     return [];
   }
 }
+
+// Generate a compelling sample assessment result for the payment gate
+export function generateSampleAssessmentResult(userType: UserType = 'cognitive-optimization'): any {
+  const sampleInsights = [
+    "Your cognitive peak occurs between 9-11 AM, making this ideal for complex tasks",
+    "You show strong focus patterns but benefit from 15-minute breaks every 90 minutes",
+    "Your attention span increases by 40% when you use structured environment cues",
+    "Evening reflection time significantly improves your next-day performance",
+    "You have natural energy dips at 2-4 PM - perfect timing for lighter, creative tasks",
+    "Your memory consolidation is strongest with 7-8 hours of consistent sleep",
+    "Background ambient sounds boost your concentration by up to 25%",
+    "You perform best with 3 main focus blocks rather than scattered work sessions",
+    "Physical movement every 2 hours enhances your cognitive flexibility",
+    "You show exceptional problem-solving skills during your morning peak hours"
+  ];
+
+  const focusAreaMap: Record<UserType, FocusArea> = {
+    'brain-injury': 'memory',
+    'cognitive-optimization': 'achievement',
+    'caregiver': 'community',
+    'wellness': 'emotional',
+    'medical-professional': 'growth',
+    'colleague': 'structure'
+  };
+
+  const primaryRhythms = [
+    "Morning Achiever",
+    "Balanced Powerhouse", 
+    "Evening Creator",
+    "Steady Performer",
+    "Peak Flow Master"
+  ];
+
+  return {
+    id: `sample-${Date.now()}`,
+    completedAt: new Date().toISOString(),
+    overallScore: Math.floor(Math.random() * 20) + 75, // 75-95%
+    primaryRhythm: primaryRhythms[Math.floor(Math.random() * primaryRhythms.length)],
+    focusArea: focusAreaMap[userType],
+    keyInsights: sampleInsights.slice(0, 3 + Math.floor(Math.random() * 4)), // 3-6 insights
+    allInsights: sampleInsights, // For full version
+    primaryFocus: userType === 'brain-injury' 
+      ? "Optimizing memory consolidation and cognitive recovery patterns"
+      : userType === 'cognitive-optimization'
+      ? "Maximizing peak performance windows and flow states"
+      : userType === 'caregiver'
+      ? "Creating sustainable support routines while maintaining personal wellness"
+      : userType === 'wellness'
+      ? "Building holistic wellness practices that enhance daily rhythm"
+      : userType === 'medical-professional'
+      ? "Integrating evidence-based cognitive optimization into practice"
+      : "Creating structured workflows that support team cognitive performance",
+    strengthAreas: [
+      "Strong morning focus capability",
+      "Excellent pattern recognition",
+      "High task completion rates"
+    ],
+    improvementAreas: [
+      "Energy management in afternoon hours",
+      "Transition time between tasks",
+      "Evening wind-down routine optimization"
+    ],
+    personalizedRecommendations: [
+      "Implement the 90-minute focus protocol",
+      "Create environmental cues for deep work",
+      "Establish consistent sleep-wake rhythms",
+      "Design optimal break sequences"
+    ]
+  };
+}

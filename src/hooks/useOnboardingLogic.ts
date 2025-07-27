@@ -19,7 +19,7 @@ interface PersonalInfoFormValues {
   password: string;
 }
 
-export function useOnboardingLogic(totalSteps: number = 6) {
+export function useOnboardingLogic(totalSteps: number = 7) {
   const navigate = useNavigate();
   const [onboardingState, setOnboardingState] = useState<OnboardingState>({
     step: 1,
@@ -69,7 +69,7 @@ export function useOnboardingLogic(totalSteps: number = 6) {
       ...prevState,
       assessmentResult,
     }));
-    nextStep();
+    // Don't auto-advance to next step here, let the parent handle it
   };
 
   const setSupportData = (supportData: any) => {
@@ -146,6 +146,7 @@ export function useOnboardingLogic(totalSteps: number = 6) {
     onboardingState,
     currentStep: onboardingState.step,
     userType: onboardingState.userType,
+    assessmentResult: onboardingState.assessmentResult,
     location,
     personalInfo,
     selectedPlan,

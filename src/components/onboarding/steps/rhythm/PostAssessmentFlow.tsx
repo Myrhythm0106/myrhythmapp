@@ -113,6 +113,7 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onP
             assessmentResult={assessmentResult}
             onPaymentSelect={handlePaymentSelect}
             onContinueWithFree={handleContinueWithFree}
+            userType={userType}
             daysLeft={subscriptionData.trial_days_left}
           />
         );

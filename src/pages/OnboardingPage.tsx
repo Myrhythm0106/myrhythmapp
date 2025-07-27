@@ -21,13 +21,14 @@ export function OnboardingPage() {
     location,
     selectedPlan,
     assessmentType,
+    onboardingState,
     nextStep,
     prevStep,
     setUserType,
     setAssessmentType,
     setAssessmentResult,
     completeOnboarding,
-  } = useOnboardingLogic(6);
+  } = useOnboardingLogic(7);
 
   useEffect(() => {
     if (user && !loading) {
@@ -74,11 +75,16 @@ export function OnboardingPage() {
   const handleRhythmAssessmentComplete = (data: any) => {
     console.log("OnboardingPage: Rhythm assessment completed");
     setAssessmentResult(data);
+    nextStep(); // Go to payment gate instead of completing onboarding
+  };
+
+  const handlePaymentGateComplete = () => {
+    console.log("OnboardingPage: Payment gate completed");
     completeOnboarding('brain-health');
   };
 
   const handleNext = () => {
-    if (currentStep < 6) {
+    if (currentStep < 7) {
       nextStep();
     }
   };
@@ -105,10 +111,10 @@ export function OnboardingPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60">
       <SwipeableOnboarding
         currentStep={currentStep}
-        totalSteps={6}
+        totalSteps={7}
         onNext={handleNext}
         onPrevious={handlePrevious}
-        canGoNext={currentStep < 6}
+        canGoNext={currentStep < 7}
         canGoPrevious={currentStep > 1}
         title="Welcome to MyRhythm"
       >
@@ -119,6 +125,7 @@ export function OnboardingPage() {
           location={location}
           selectedPlan={selectedPlan}
           assessmentType={assessmentType}
+          assessmentResult={onboardingState.assessmentResult}
           userTypeCountdown={null}
           personalInfoCountdown={null}
           locationCountdown={null}
@@ -131,6 +138,7 @@ export function OnboardingPage() {
           onAssessmentTypeSelected={handleAssessmentTypeSelected}
           onRhythmAssessmentComplete={handleRhythmAssessmentComplete}
           onGoBack={handlePrevious}
+          onComplete={handlePaymentGateComplete}
         />
       </SwipeableOnboarding>
     </div>

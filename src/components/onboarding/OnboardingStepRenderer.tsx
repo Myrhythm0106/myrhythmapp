@@ -7,6 +7,7 @@ import { PreAssessmentStep } from "./steps/rhythm/PreAssessmentStep";
 import { AssessmentTypeSelection } from "./steps/rhythm/AssessmentTypeSelection";
 import { BriefAssessmentView } from "./steps/rhythm/BriefAssessmentView";
 import { RhythmAssessmentView } from "./steps/rhythm/RhythmAssessmentView";
+import { RhythmSummaryView } from "./steps/rhythm/RhythmSummaryView";
 import { BackButton } from "@/components/ui/BackButton";
 import { UserType } from "@/types/user";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
@@ -20,6 +21,7 @@ interface OnboardingStepRendererProps {
   selectedPlan: PlanType;
   billingPeriod?: 'monthly' | 'annual';
   assessmentType?: 'brief' | 'comprehensive' | null;
+  assessmentResult?: any;
   userTypeCountdown: number | null;
   personalInfoCountdown: number | null;
   locationCountdown: number | null;
@@ -32,6 +34,7 @@ interface OnboardingStepRendererProps {
   onAssessmentTypeSelected: (type: 'brief' | 'comprehensive') => void;
   onRhythmAssessmentComplete: (data: any) => void;
   onGoBack?: () => void;
+  onComplete?: () => void;
 }
 
 export const OnboardingStepRenderer = ({
@@ -42,6 +45,7 @@ export const OnboardingStepRenderer = ({
   selectedPlan,
   billingPeriod = 'monthly',
   assessmentType,
+  assessmentResult,
   userTypeCountdown,
   personalInfoCountdown,
   locationCountdown,
@@ -54,6 +58,7 @@ export const OnboardingStepRenderer = ({
   onAssessmentTypeSelected,
   onRhythmAssessmentComplete,
   onGoBack,
+  onComplete,
 }: OnboardingStepRendererProps) => {
   
   console.log("OnboardingStepRenderer: Rendering step", currentStep, "with userType:", userType);
@@ -144,6 +149,18 @@ export const OnboardingStepRenderer = ({
       <PlanStep
         onComplete={onPlanSelected}
         selectedPlan={selectedPlan}
+      />
+    );
+  }
+  
+  if (currentStep === 7) {
+    console.log("OnboardingStepRenderer: Rendering RhythmSummaryView (Payment Gate)");
+    return renderStepWithBackButton(
+      <RhythmSummaryView
+        assessmentResult={assessmentResult}
+        userType={userType}
+        onComplete={onComplete || (() => {})}
+        onBack={onGoBack}
       />
     );
   }

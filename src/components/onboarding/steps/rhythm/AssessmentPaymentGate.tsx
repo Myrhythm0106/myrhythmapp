@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Brain, Star, TrendingUp, Lock, Sparkles, Clock, CheckCircle2, Zap, Users, Calendar } from "lucide-react";
 import { PaymentCallToAction } from "./preview/PaymentCallToAction";
+import { generateSampleAssessmentResult } from "@/utils/rhythmAnalysis";
+import { UserType } from "@/types/user";
 
 interface AssessmentPaymentGateProps {
   assessmentResult: any;
   onPaymentSelect: (option: 'trial' | 'monthly' | 'annual' | 'skip') => void;
   onContinueWithFree: () => void;
+  userType?: UserType;
   daysLeft?: number;
 }
 
@@ -17,16 +20,30 @@ export function AssessmentPaymentGate({
   assessmentResult, 
   onPaymentSelect,
   onContinueWithFree,
+  userType = 'cognitive-optimization',
   daysLeft = 7 
 }: AssessmentPaymentGateProps) {
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [displayResult, setDisplayResult] = useState<any>(null);
   
-  const overallScore = assessmentResult?.overallScore || 75;
-  const primaryRhythm = assessmentResult?.primaryRhythm || "Balanced Achiever";
-  const keyInsights = assessmentResult?.keyInsights?.slice(0, 2) || [
+  // Generate compelling sample result if none provided
+  useEffect(() => {
+    const result = assessmentResult || generateSampleAssessmentResult(userType);
+    setDisplayResult(result);
+  }, [assessmentResult, userType]);
+  
+  const overallScore = displayResult?.overallScore || 75;
+  const primaryRhythm = displayResult?.primaryRhythm || "Balanced Achiever";
+  const keyInsights = displayResult?.keyInsights?.slice(0, 2) || [
     "You have strong focus during morning hours",
     "Your energy peaks align with cognitive demands"
   ];
+  
+  if (!displayResult) {
+    return <div className="flex items-center justify-center p-8">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+    </div>;
+  }
 
   const handleUnlockFull = () => {
     setShowPaymentOptions(true);
