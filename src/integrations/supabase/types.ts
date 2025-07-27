@@ -178,7 +178,7 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
-          watchers: Json | null
+          watchers: string[] | null
         }
         Insert: {
           action_type?: string
@@ -199,7 +199,7 @@ export type Database = {
           title: string
           updated_at?: string
           user_id: string
-          watchers?: Json | null
+          watchers?: string[] | null
         }
         Update: {
           action_type?: string
@@ -220,7 +220,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
-          watchers?: Json | null
+          watchers?: string[] | null
         }
         Relationships: [
           {
@@ -911,6 +911,53 @@ export type Database = {
         }
         Relationships: []
       }
+      support_circle_messages: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          message_text: string
+          message_type: string
+          recipient_user_id: string
+          related_action_id: string | null
+          sender_member_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message_text: string
+          message_type?: string
+          recipient_user_id: string
+          related_action_id?: string | null
+          sender_member_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          message_text?: string
+          message_type?: string
+          recipient_user_id?: string
+          related_action_id?: string | null
+          sender_member_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_circle_messages_sender_member_id_fkey"
+            columns: ["sender_member_id"]
+            isOneToOne: false
+            referencedRelation: "support_circle_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       symptom_logs: {
         Row: {
           created_at: string
@@ -1222,6 +1269,15 @@ export type Database = {
           p_event_data?: Json
           p_ip_address?: unknown
           p_user_agent?: string
+        }
+        Returns: string
+      }
+      notify_watchers_of_action_completion: {
+        Args: {
+          p_action_id: string
+          p_user_id: string
+          p_action_title: string
+          p_completion_status: string
         }
         Returns: string
       }
