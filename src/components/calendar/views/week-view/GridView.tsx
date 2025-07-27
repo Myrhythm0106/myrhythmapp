@@ -6,7 +6,6 @@ import { Card } from "@/components/ui/card";
 import { Action } from "@/components/calendar/ActionItem";
 import { getActionTypeStyles } from "@/components/calendar/utils/actionStyles";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Clock, MapPin, Target } from "lucide-react";
 
 interface GridViewProps {
   weekDays: Date[];
@@ -45,24 +44,6 @@ export function GridView({
                 {format(day, "d")}
               </div>
               
-              {/* Routine indicators */}
-              <div className="flex justify-center space-x-1 mt-1">
-                {Object.entries(getRoutineStatus(day)).map(([routine, completed], i) => (
-                  <Tooltip key={routine}>
-                    <TooltipTrigger asChild>
-                      <div 
-                        className={cn(
-                          "w-2 h-2 rounded-full cursor-help",
-                          completed ? "bg-green-500" : "bg-gray-300"
-                        )}
-                      />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="text-xs">{routine.charAt(0).toUpperCase() + routine.slice(1)}: {completed ? "Completed" : "Not completed"}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                ))}
-              </div>
             </div>
           ))}
         </div>
@@ -87,59 +68,24 @@ export function GridView({
                 return (
                   <div 
                     key={day.toString()} 
-                    className={cn(
-                      "px-1 py-1 relative border-r",
-                      showEnergyOverlay && (
-                        energyLevel === "high" ? "bg-green-50" : 
-                        energyLevel === "medium" ? "bg-yellow-50" : 
-                        "bg-red-50"
-                      )
-                    )}
+                    className="px-1 py-1 relative border-r"
                   >
                     {eventsForSlot.map(event => (
                       <Tooltip key={event.id}>
                         <TooltipTrigger asChild>
                           <div 
                             className={cn(
-                              "text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 hover:shadow transition-all",
+                              "text-xs p-1 mb-1 rounded truncate cursor-pointer hover:opacity-80 transition-opacity",
                               getActionTypeStyles(event.type)
                             )}
                             onClick={() => handleEventClick(event)}
                           >
                             <span className="font-medium">{event.title}</span>
-                            <div className="text-[10px]">{event.time}</div>
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent className="w-56 p-0">
-                          <div className="bg-popover rounded-md shadow-md">
-                            <div className={cn(
-                              "p-2 rounded-t-md",
-                              getActionTypeStyles(event.type)
-                            )}>
-                              <p className="font-medium">{event.title}</p>
-                            </div>
-                            <div className="p-2 space-y-1">
-                              <div className="flex items-center text-xs">
-                                <Clock className="h-3 w-3 mr-1" />
-                                <span>{event.time}</span>
-                              </div>
-                              {event.location && (
-                                <div className="flex items-center text-xs">
-                                  <MapPin className="h-3 w-3 mr-1" />
-                                  <span>{event.location}</span>
-                                </div>
-                              )}
-                              {event.linkedGoal && (
-                                <div className="flex items-center text-xs">
-                                  <Target className="h-3 w-3 mr-1" />
-                                  <span>Goal: {event.linkedGoal.title}</span>
-                                </div>
-                              )}
-                              <div className="text-xs text-muted-foreground">
-                                Click to view details
-                              </div>
-                            </div>
-                          </div>
+                        <TooltipContent>
+                          <p className="text-sm font-medium">{event.title}</p>
+                          <p className="text-xs text-muted-foreground">{event.time}</p>
                         </TooltipContent>
                       </Tooltip>
                     ))}
