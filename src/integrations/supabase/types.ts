@@ -161,6 +161,7 @@ export type Database = {
       daily_actions: {
         Row: {
           action_type: string
+          calendar_event_id: string | null
           celebration_shown: boolean | null
           completed_at: string | null
           created_at: string
@@ -181,6 +182,7 @@ export type Database = {
         }
         Insert: {
           action_type?: string
+          calendar_event_id?: string | null
           celebration_shown?: boolean | null
           completed_at?: string | null
           created_at?: string
@@ -201,6 +203,7 @@ export type Database = {
         }
         Update: {
           action_type?: string
+          calendar_event_id?: string | null
           celebration_shown?: boolean | null
           completed_at?: string | null
           created_at?: string
@@ -220,6 +223,13 @@ export type Database = {
           watchers?: Json | null
         }
         Relationships: [
+          {
+            foreignKeyName: "daily_actions_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "fk_daily_actions_goal"
             columns: ["goal_id"]

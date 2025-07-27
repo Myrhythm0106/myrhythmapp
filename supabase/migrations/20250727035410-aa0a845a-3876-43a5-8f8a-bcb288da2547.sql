@@ -1,0 +1,2 @@
+-- Add calendar_event_id column to daily_actions table to link calendar events to dashboard activities
+ALTER TABLE public.daily_actions ADD COLUMN calendar_event_id UUID REFERENCES public.calendar_events(id) ON DELETE SET NULL;

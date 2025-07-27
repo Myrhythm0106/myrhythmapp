@@ -2,20 +2,17 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Calendar, Activity, Users, CheckCircle } from 'lucide-react';
-import { useCalendarDashboardSync } from '@/hooks/useCalendarDashboardSync';
 import { useDailyActions } from '@/contexts/DailyActionsContext';
 import { Badge } from '@/components/ui/badge';
 
 export function CalendarDashboardIntegration() {
-  const { syncCalendarToDashboard } = useCalendarDashboardSync();
   const { actions, refreshActions } = useDailyActions();
 
   const calendarLinkedActions = actions.filter(action => action.calendar_event_id);
   const manualActions = actions.filter(action => !action.calendar_event_id);
 
   const handleSyncNow = async () => {
-    await syncCalendarToDashboard();
-    refreshActions();
+    await refreshActions();
   };
 
   return (
