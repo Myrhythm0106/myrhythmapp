@@ -12,42 +12,42 @@ const userTypes = [
   {
     id: "brain-injury" as const,
     title: "Brain Injury Recovery",
-    description: "I'm recovering from a brain injury and want to rebuild my cognitive abilities",
+    description: "...you feel like your brain betrayed you, and you're desperately searching for a way back to feeling like yourself again",
     icon: Brain,
     color: "bg-blue-500",
   },
   {
     id: "caregiver" as const,
     title: "Caregiver Support", 
-    description: "I'm caring for someone with cognitive challenges and need support",
+    description: "...you're exhausted from holding it all together while watching someone you love struggle, and you need support too",
     icon: Heart,
     color: "bg-rose-500",
   },
   {
     id: "cognitive-optimization" as const,
     title: "Cognitive Optimization",
-    description: "I want to enhance my mental performance and cognitive abilities",
+    description: "...you know there's more potential locked inside your mind, and you're ready to unlock peak mental performance",
     icon: Sparkles,
     color: "bg-purple-500",
   },
   {
     id: "wellness" as const,
     title: "General Wellness",
-    description: "I'm focused on overall mental health and wellness",
+    description: "...you're tired of feeling scattered and want to build mental resilience that sustains you through life's challenges",
     icon: Users,
     color: "bg-green-500",
   },
   {
     id: "medical-professional" as const,
     title: "Medical Professional",
-    description: "I'm a healthcare provider supporting patients with cognitive challenges",
+    description: "...you see the gaps in traditional care and want evidence-based tools to truly help your patients thrive",
     icon: Stethoscope,
     color: "bg-teal-500",
   },
   {
     id: "colleague" as const,
     title: "Colleague",
-    description: "I'm supporting workplace wellness for colleagues with cognitive challenges",
+    description: "...you've witnessed how cognitive challenges impact your workplace family, and you want to create real change",
     icon: Users,
     color: "bg-indigo-500",
   }
@@ -77,10 +77,10 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
       {/* Header */}
       <div className="text-center space-y-3">
         <h2 className="text-3xl font-bold text-foreground">
-          Tell us about yourself
+          This is for you if...
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          This helps us personalize your MyRhythm experience and create the most effective brain health journey for you
+          Choose the path that speaks to your heart. We'll create a personalized journey that honors your unique story.
         </p>
       </div>
 

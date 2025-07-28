@@ -75,7 +75,7 @@ export function WelcomeIntroduction({ onGetStarted }: WelcomeIntroductionProps) 
                 <div className="w-6 h-6 bg-beacon-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mt-1">
                   1
                 </div>
-                <p><strong>Tell us about yourself</strong> - We'll ask about your goals and what you're looking to achieve.</p>
+                <p><strong>Find your path forward</strong> - We'll help you discover the right support for your unique journey.</p>
               </div>
               <div className="flex items-start space-x-3">
                 <div className="w-6 h-6 bg-beacon-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mt-1">
