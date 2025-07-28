@@ -56,7 +56,7 @@ export function EmpowermentDashboard() {
           </p>
           
           {/* Upgrade Banner - purple-blue-teal with tiny emerald therapeutic touches */}
-          <div className="bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-teal-500/10 rounded-2xl p-4 mb-6 border border-purple-200/50 border-l-2 border-l-emerald-300/30">
+          <div className="bg-gradient-to-r from-purple-500/10 via-blue-500/10 to-teal-500/10 rounded-2xl p-4 mb-6">
             <div className="flex items-center justify-between max-w-4xl mx-auto">
               <div className="flex items-center gap-3">
                 <Crown className="h-6 w-6 text-amber-500" />

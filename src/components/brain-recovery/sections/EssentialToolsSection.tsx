@@ -23,7 +23,7 @@ export function EssentialToolsSection({ recommendedGame }: EssentialToolsSection
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Focus Card */}
-        <Card className="border-l-4 border-l-primary">
+        <Card className="bg-gradient-to-br from-blue-50/50 to-blue-100/30">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
               <CheckCircle2 className="h-5 w-5 text-primary" />
@@ -56,7 +56,7 @@ export function EssentialToolsSection({ recommendedGame }: EssentialToolsSection
         </Card>
         
         {/* Brain Game */}
-        <Card className="border-l-4 border-l-amber-400">
+        <Card className="bg-gradient-to-br from-amber-50/50 to-amber-100/30">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
               <Brain className="h-5 w-5 text-amber-500" />
@@ -90,7 +90,7 @@ export function EssentialToolsSection({ recommendedGame }: EssentialToolsSection
         </Card>
         
         {/* Routine Check-in */}
-        <Card className="border-l-4 border-l-green-400">
+        <Card className="bg-gradient-to-br from-green-50/50 to-green-100/30">
           <CardHeader className="pb-2">
             <CardTitle className="text-lg flex items-center gap-2">
               <Calendar className="h-5 w-5 text-green-500" />

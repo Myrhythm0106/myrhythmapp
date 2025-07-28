@@ -37,11 +37,11 @@ export const getActionStatusStyles = (actionDate: string) => {
   const actionDateObj = new Date(actionDate);
   
   if (isPast(actionDateObj) && !isToday(actionDateObj)) {
-    return "border-l-4 border-destructive"; // Late
+    return "bg-destructive/10"; // Late
   } else if (isToday(actionDateObj)) {
-    return "border-l-4 border-secondary"; // Today
+    return "bg-secondary/20"; // Today
   } else if (isFuture(actionDateObj) && actionDateObj <= addDays(today, 3)) {
-    return "border-l-4 border-beacon-500"; // Upcoming (within 3 days)
+    return "bg-amber-50"; // Upcoming (within 3 days)
   }
   
   return ""; // Default - no special styling

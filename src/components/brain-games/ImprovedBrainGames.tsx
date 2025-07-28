@@ -146,7 +146,7 @@ export function ImprovedBrainGames() {
           const progress = getProgressForGame(game.id);
           
           return (
-            <Card key={game.id} className="hover:shadow-lg transition-all duration-300 border-l-4 border-l-blue-500">
+            <Card key={game.id} className="hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-blue-50/50 to-blue-100/30">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">

@@ -70,7 +70,7 @@ export function GratitudePromptCard() {
   };
   
   return (
-    <Card className="border-l-4 border-l-rose-400 shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-rose-50 to-blue-50">
+    <Card className="shadow-sm hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-rose-50 to-blue-50">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
           <HeartHandshake className="h-5 w-5 text-rose-500" />

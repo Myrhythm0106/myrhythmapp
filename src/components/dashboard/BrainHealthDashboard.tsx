@@ -76,7 +76,7 @@ export function BrainHealthDashboard() {
 
             {/* Today's Rhythm Focus */}
             <MemoryEffectsContainer nodeCount={4}>
-              <Card className="h-full border-l-4 border-l-blue-400 bg-gradient-to-br from-blue-50/50 to-cyan-50/50">
+              <Card className="h-full bg-gradient-to-br from-blue-50/50 to-cyan-50/50">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <div className="bg-gradient-to-br from-blue-500 to-cyan-500 p-2 rounded-full">
@@ -117,7 +117,7 @@ export function BrainHealthDashboard() {
 
             {/* Today's Rhythm Schedule */}
             <MemoryEffectsContainer nodeCount={2}>
-              <Card className="h-full border-l-4 border-l-emerald-400 bg-gradient-to-br from-emerald-50/50 to-green-50/50">
+              <Card className="h-full bg-gradient-to-br from-emerald-50/50 to-green-50/50">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
                     <Calendar className="h-5 w-5 text-emerald-600" />

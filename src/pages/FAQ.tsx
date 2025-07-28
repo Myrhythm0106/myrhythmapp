@@ -21,7 +21,7 @@ const FAQ = () => {
                 How should I think about Goals?
               </AccordionTrigger>
               <AccordionContent className="space-y-4 text-base">
-                <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="font-medium text-blue-900 mb-2">Think Simple, Think Big Picture</p>
                   <p className="text-blue-800">
                     A Goal is something important you want to achieve. It might take weeks or months. 
@@ -53,7 +53,7 @@ const FAQ = () => {
                 How do I write a Goal?
               </AccordionTrigger>
               <AccordionContent className="space-y-4 text-base">
-                <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                <div className="bg-purple-50 p-4 rounded-lg">
                   <p className="font-medium text-purple-900 mb-2">The Simple Goal Formula</p>
                   <p className="text-purple-800">
                     "I want to [ACTION] by [WHEN]"
@@ -122,12 +122,12 @@ const FAQ = () => {
                   <p className="font-medium mb-4">Example Breakdown:</p>
                   
                   <div className="space-y-4">
-                    <div className="bg-white p-3 rounded border-l-4 border-blue-400">
+                    <div className="bg-white p-3 rounded">
                       <p className="font-medium text-blue-900">🎯 GOAL: Walk to the mailbox by myself</p>
                     </div>
                     
                     <div className="ml-4 space-y-3">
-                      <div className="bg-white p-3 rounded border-l-4 border-orange-400">
+                      <div className="bg-orange-50 p-3 rounded">
                         <p className="font-medium text-orange-900">📋 Small Step: Walk to the front door and back</p>
                         <div className="ml-4 mt-2 space-y-1">
                           <p className="text-sm">→ Tiny Action: Today at 10 AM, walk from chair to front door, touch door, walk back</p>
@@ -135,7 +135,7 @@ const FAQ = () => {
                         </div>
                       </div>
                       
-                      <div className="bg-white p-3 rounded border-l-4 border-orange-400">
+                      <div className="bg-orange-50 p-3 rounded">
                         <p className="font-medium text-orange-900">📋 Small Step: Walk to the driveway and back</p>
                         <div className="ml-4 mt-2 space-y-1">
                           <p className="text-sm">→ Tiny Action: Next week at 10 AM, walk to the driveway, count to 10, walk back</p>
@@ -159,7 +159,7 @@ const FAQ = () => {
                 How do I write good Daily Actions?
               </AccordionTrigger>
               <AccordionContent className="space-y-4 text-base">
-                <div className="bg-purple-50 p-4 rounded-lg border-l-4 border-purple-400">
+                <div className="bg-purple-50 p-4 rounded-lg">
                   <p className="font-medium text-purple-900 mb-2">The Action Formula</p>
                   <p className="text-purple-800">
                     "On [DAY] at [TIME], I will [DO WHAT] for [HOW LONG]"
@@ -203,7 +203,7 @@ const FAQ = () => {
                 How do Goals and Actions work together?
               </AccordionTrigger>
               <AccordionContent className="space-y-4 text-base">
-                <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="font-medium text-blue-900 mb-2">Think of it like a staircase:</p>
                   <p className="text-blue-800">
                     Your Goal is at the top. Each Small Step is a section of stairs. Each Tiny Action is one single step you take today.

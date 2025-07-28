@@ -49,10 +49,10 @@ const statusConfig = {
 };
 
 const categoryStyles = {
-  essential: "border-l-4 border-l-blue-400 bg-gradient-to-br from-blue-50/50 to-blue-100/30",
-  memory1st: "border-l-4 border-l-purple-400 bg-gradient-to-br from-purple-50/50 to-purple-100/30",
-  community: "border-l-4 border-l-teal-400 bg-gradient-to-br from-teal-50/50 to-teal-100/30",
-  resources: "border-l-4 border-l-green-400 bg-gradient-to-br from-green-50/50 to-green-100/30"
+  essential: "bg-gradient-to-br from-blue-50/50 to-blue-100/30",
+  memory1st: "bg-gradient-to-br from-purple-50/50 to-purple-100/30",
+  community: "bg-gradient-to-br from-teal-50/50 to-teal-100/30",
+  resources: "bg-gradient-to-br from-green-50/50 to-green-100/30"
 };
 
 export function FeatureCard({ 

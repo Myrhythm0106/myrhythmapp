@@ -22,7 +22,7 @@ export function HeroSection() {
           Your personalised path to rebuilding your rhythm and reclaiming your day.
         </p>
         
-        <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 border-l-2 border-l-emerald-300/30 italic mt-6">
+        <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 italic mt-6">
           <p className="text-sm md:text-base text-white">
             💬 "After my brain aneurysm, remembering simple things felt impossible. With my husband's support, we rebuilt a rhythm that gave us back our peace. That rhythm became MyRhythm. Now, it's here for you, your loved ones, and your care team."
           </p>

@@ -16,14 +16,14 @@ export function Toaster() {
     <ToastProvider>
       {toasts && toasts.map(function ({ id, title, description, action, ...props }) {
         return (
-          <Toast 
-            key={id} 
-            {...props} 
-            className="bg-gradient-to-r from-purple-50 to-blue-50 border-l-4 border-l-purple-500"
-            onOpenChange={(open) => {
-              if (!open) dismiss(id)
-            }}
-          >
+            <Toast 
+              key={id} 
+              {...props} 
+              className="bg-gradient-to-r from-purple-50 to-blue-50"
+              onOpenChange={(open) => {
+                if (!open) dismiss(id)
+              }}
+            >
             <div className="grid gap-1">
               {title && (
                 <ToastTitle className="text-purple-800 font-semibold">

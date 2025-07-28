@@ -76,7 +76,7 @@ export function BrainGameQuickStart() {
   };
   
   return (
-    <Card className="border-l-4 border-l-purple-400 shadow-sm hover:shadow-md transition-shadow">
+    <Card className="shadow-sm hover:shadow-md transition-shadow bg-gradient-to-br from-purple-50/50 to-purple-100/30">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-xl">
           <Brain className="h-5 w-5 text-purple-500" />

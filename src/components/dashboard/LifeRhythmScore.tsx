@@ -40,7 +40,7 @@ export function LifeRhythmScore({
   const rhythmStatus = getRhythmLabel(rhythmScore);
 
   return (
-    <Card className="border-l-4 border-l-purple-400 bg-gradient-to-br from-purple-50/50 to-blue-50/50">
+    <Card className="bg-gradient-to-br from-purple-50/50 to-blue-50/50">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <div className="bg-gradient-to-br from-purple-500 to-blue-500 p-2 rounded-full">

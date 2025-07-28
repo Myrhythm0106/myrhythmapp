@@ -188,7 +188,7 @@ export function BrainGamesLibrary() {
             {Object.entries(brainCategories).map(([key, category]) => {
               const IconComponent = category.icon;
               return (
-                <Card key={key} className={`${category.bgColor} ${category.borderColor} border-l-4`}>
+                <Card key={key} className={`${category.bgColor}`}>
                   <CardHeader>
                     <CardTitle className={`flex items-center gap-3 ${category.color}`}>
                       <IconComponent className="h-6 w-6" />
