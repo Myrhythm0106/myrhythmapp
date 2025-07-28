@@ -29,23 +29,23 @@ export function AssessmentResultsPreview({
 
   return (
     <div className="space-y-6">
-      {/* Trial Status Banner */}
-      <Card className="bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20">
+      {/* Experience First Banner */}
+      <Card className="bg-gradient-to-r from-emerald-50 via-blue-50 to-purple-50 border border-emerald-200/50">
         <CardContent className="pt-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Clock className="h-5 w-5 text-primary" />
+              <Sparkles className="h-5 w-5 text-emerald-600" />
               <div>
                 <p className="font-semibold text-foreground">
-                  {daysLeft} days left in your trial
+                  🎉 You're experiencing your personalized insights first!
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Unlock your complete personalized insights
+                  See the value, then choose your plan based on what works for you
                 </p>
               </div>
             </div>
-            <Button onClick={onUpgrade} size="sm" className="bg-primary hover:bg-primary/90">
-              Upgrade Now
+            <Button onClick={onUpgrade} size="sm" className="bg-gradient-to-r from-emerald-600 to-blue-600 hover:opacity-90">
+              Unlock Full Plan
             </Button>
           </div>
         </CardContent>
@@ -107,34 +107,73 @@ export function AssessmentResultsPreview({
             </div>
           </div>
 
-          {/* Locked Content Preview */}
-          <Card className="bg-muted/30 border-dashed border-2">
+          {/* Value-First Unlock Preview */}
+          <Card className="bg-gradient-to-br from-primary/5 via-accent/5 to-secondary/5 border border-primary/20">
             <CardContent className="pt-6">
-              <div className="text-center space-y-3">
-                <Lock className="h-8 w-8 text-muted-foreground mx-auto" />
-                <div>
-                  <h4 className="font-semibold text-foreground">Your Complete Personalized Roadmap</h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    + 8 more detailed insights and recommendations
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    + Comprehensive personal rhythm profile
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    + Week-by-week action plan for the next month
+              <div className="space-y-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Lock className="h-6 w-6 text-white" />
+                  </div>
+                  <h4 className="font-semibold text-foreground mb-2">Ready to unlock your complete plan?</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    You've seen the power of personalized insights. Here's what awaits in your full plan:
                   </p>
                 </div>
-                <Button onClick={onUpgrade} variant="outline" size="sm">
-                  Unlock Full Results
-                </Button>
+                
+                <div className="grid grid-cols-1 gap-3">
+                  <div className="flex items-start gap-3 p-3 bg-white/50 rounded-lg">
+                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Brain className="h-3 w-3 text-primary" />
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-foreground">Complete Cognitive Profile</p>
+                      <p className="text-muted-foreground">8+ additional insights tailored to your specific patterns</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 bg-white/50 rounded-lg">
+                    <div className="w-6 h-6 bg-accent/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <TrendingUp className="h-3 w-3 text-accent" />
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-foreground">30-Day Action Roadmap</p>
+                      <p className="text-muted-foreground">Week-by-week personalized strategies for maximum impact</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3 p-3 bg-white/50 rounded-lg">
+                    <div className="w-6 h-6 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Sparkles className="h-3 w-3 text-secondary" />
+                    </div>
+                    <div className="text-sm">
+                      <p className="font-medium text-foreground">Advanced Rhythm Optimization</p>
+                      <p className="text-muted-foreground">Comprehensive assessment + ongoing tracking tools</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t">
+                  <Button onClick={onUpgrade} className="w-full bg-gradient-to-r from-primary via-accent to-secondary hover:opacity-90">
+                    Unlock Your Complete Plan
+                  </Button>
+                  <p className="text-xs text-center text-muted-foreground mt-2">
+                    Based on what you've experienced, choose the plan that works for you
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Continue Button */}
-          <div className="pt-4 border-t">
-            <Button onClick={onContinue} className="w-full">
-              Continue with Preview Results
+          <div className="pt-4 border-t space-y-3">
+            <div className="bg-muted/30 p-3 rounded-lg">
+              <p className="text-sm text-center text-muted-foreground">
+                Want to explore more before deciding? You can continue with these preview insights.
+              </p>
+            </div>
+            <Button onClick={onContinue} variant="outline" className="w-full">
+              Continue with Preview for Now
             </Button>
           </div>
         </CardContent>

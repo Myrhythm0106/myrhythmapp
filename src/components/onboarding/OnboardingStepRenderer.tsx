@@ -31,6 +31,7 @@ interface OnboardingStepRendererProps {
   onLocationComplete: (data: any) => void;
   onPlanSelected: (plan: PlanType, billingPeriod?: 'monthly' | 'annual') => void;
   onPreAssessmentComplete: () => void;
+  onSkipPayment?: () => void;
   onAssessmentTypeSelected: (type: 'brief' | 'comprehensive') => void;
   onRhythmAssessmentComplete: (data: any) => void;
   onGoBack?: () => void;
@@ -55,6 +56,7 @@ export const OnboardingStepRenderer = ({
   onLocationComplete,
   onPlanSelected,
   onPreAssessmentComplete,
+  onSkipPayment,
   onAssessmentTypeSelected,
   onRhythmAssessmentComplete,
   onGoBack,
@@ -114,6 +116,7 @@ export const OnboardingStepRenderer = ({
     return renderStepWithBackButton(
       <PreAssessmentStep
         onComplete={onPreAssessmentComplete}
+        onSkipPayment={onSkipPayment}
         userType={userType}
       />
     );

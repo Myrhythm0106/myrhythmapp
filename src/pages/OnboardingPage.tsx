@@ -62,8 +62,16 @@ export function OnboardingPage() {
   };
 
   const handlePreAssessmentComplete = () => {
-    console.log("OnboardingPage: Pre-assessment completed");
-    nextStep();
+    console.log("OnboardingPage: Pre-assessment completed - going to payment gate");
+    nextStep(); // Go to assessment type selection
+  };
+
+  const handleSkipPayment = () => {
+    console.log("OnboardingPage: Payment skipped - going directly to brief assessment");
+    setAssessmentType('brief');
+    // Skip steps 5 (assessment type selection) and go directly to step 6 (assessment)
+    nextStep(); // step 5
+    nextStep(); // step 6 (assessment)
   };
 
   const handleAssessmentTypeSelected = (type: 'brief' | 'comprehensive') => {
@@ -135,6 +143,7 @@ export function OnboardingPage() {
           onLocationComplete={handleLocationComplete}
           onPlanSelected={handlePlanSelected}
           onPreAssessmentComplete={handlePreAssessmentComplete}
+          onSkipPayment={handleSkipPayment}
           onAssessmentTypeSelected={handleAssessmentTypeSelected}
           onRhythmAssessmentComplete={handleRhythmAssessmentComplete}
           onGoBack={handlePrevious}
