@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { UserType } from "@/types/user";
 import { quickStartQuestions } from "./data/myrhythmQuestions";
 import { RhythmQuestionCard } from "./RhythmQuestionCard";
+import { BasicAssessmentResult } from "@/types/assessmentTypes";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 interface QuickStartAssessmentProps {
   userType: UserType;
@@ -15,6 +17,7 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [showInsight, setShowInsight] = useState(false);
+  const { hasFeature } = useSubscription();
 
   const currentQuestion = quickStartQuestions[currentStep];
   const progress = ((currentStep + 1) / quickStartQuestions.length) * 100;
@@ -37,21 +40,24 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
       setCurrentStep(currentStep + 1);
       setShowInsight(false);
     } else {
-      // Complete quick assessment - format result for payment gate
-      const assessmentResult = {
+      // Complete quick assessment - create appropriate result based on subscription
+      const hasPersonalizedInsights = hasFeature('personalizedInsights');
+      
+      const basicResult: BasicAssessmentResult = {
+        id: `quick-${Date.now()}`,
         userType,
-        assessmentType: 'brief',
+        assessmentType: 'brief' as const,
         responses,
         completedAt: new Date().toISOString(),
-        // Format for payment gate display
         overallScore: 78 + Math.floor(Math.random() * 15), // 78-92%
         primaryRhythm: generatePrimaryRhythm(responses),
-        keyInsights: generateKeyInsights(responses, userType),
+        keyInsights: generateBasicInsights(responses, userType), // Non-personalized insights
         primaryFocus: generatePrimaryFocus(userType),
         myrhythmProfile: generateQuickProfile(responses)
       };
-      console.log("QuickStartAssessment: Completing with result:", assessmentResult);
-      onComplete(assessmentResult);
+      
+      console.log("QuickStartAssessment: Completing with basic result (no personalized insights for free users):", basicResult);
+      onComplete(basicResult);
     }
   };
 
@@ -151,27 +157,34 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
     return rhythms[Math.floor(Math.random() * rhythms.length)];
   };
 
-  const generateKeyInsights = (responses: Record<string, any>, userType: UserType) => {
+  // Generate basic, non-personalized insights for free users
+  const generateBasicInsights = (responses: Record<string, any>, userType: UserType) => {
     const insights = [];
     
+    // Generic insights based on common patterns (not personalized)
     if (responses.energy_peak === 'morning') {
-      insights.push("Your cognitive peak occurs in the morning - perfect for complex problem-solving");
+      insights.push("Morning cognitive peaks are common - many people perform complex tasks better in early hours");
     } else if (responses.energy_peak === 'evening') {
-      insights.push("Your creative energy peaks in the evening - ideal for innovative thinking");
+      insights.push("Evening energy peaks often align with creative thinking - this is a typical pattern");
     } else {
-      insights.push("Your balanced energy allows for consistent performance throughout the day");
+      insights.push("Balanced energy throughout the day is a common pattern for steady performance");
     }
     
     if (responses.overwhelm_handling === 'step_back') {
-      insights.push("Taking strategic pauses enhances your decision-making quality by 35%");
+      insights.push("Taking breaks during overwhelm is a widely recommended strategy");
     } else if (responses.overwhelm_handling === 'break_down') {
-      insights.push("Your systematic approach to complex tasks improves completion rates");
+      insights.push("Breaking down complex tasks is a proven approach to task management");
     }
     
+    // Generic user type insights (not personalized)
     if (userType === 'brain-injury') {
-      insights.push("Your cognitive recovery patterns show optimal progress with structured routines");
+      insights.push("Structured routines are generally beneficial for cognitive recovery journeys");
     } else if (userType === 'cognitive-optimization') {
-      insights.push("Your performance metrics indicate high potential for flow state optimization");
+      insights.push("Performance optimization often involves identifying peak focus periods");
+    } else if (userType === 'caregiver') {
+      insights.push("Caregivers benefit from establishing sustainable support routines");
+    } else if (userType === 'wellness') {
+      insights.push("Holistic wellness approaches support overall cognitive health");
     }
     
     return insights.slice(0, 3);

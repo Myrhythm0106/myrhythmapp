@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Brain, Star, TrendingUp, Lock, Sparkles, Clock } from "lucide-react";
 
 interface AssessmentResultsPreviewProps {
-  assessmentResult: any;
+  assessmentResult: any; // Use any to avoid type issues for now
   onUpgrade: () => void;
   onContinue: () => void;
   daysLeft?: number;

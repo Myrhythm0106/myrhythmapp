@@ -65,10 +65,10 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
     communityAccess: false,
     maxCommunityMembers: 0,
     
-    // Premium Features
-    advancedSymptomTracking: false,
-    fullCalendarManagement: false,
-    personalizedInsights: false,
+  // Premium Features
+  advancedSymptomTracking: false,
+  fullCalendarManagement: false,
+  personalizedInsights: false, // Only available for paid tiers
     prioritySupport: false,
     smartInterventionAlerts: false,
     enhancedSafetyReminders: false,

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,23 +5,62 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentResult } from "@/utils/rhythmAnalysis";
 import { PersonalizedInsight } from "@/utils/personalizedInsights";
-import { Target, Lightbulb, TrendingUp, Heart, Star, ArrowRight, Sparkles } from "lucide-react";
+import { PremiumAssessmentResult } from "@/types/assessmentTypes";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+import { Target, Lightbulb, TrendingUp, Heart, Star, ArrowRight, Sparkles, Crown } from "lucide-react";
 
 interface PersonalizedResultsDisplayProps {
-  assessmentResult: AssessmentResult;
+  assessmentResult: AssessmentResult | PremiumAssessmentResult;
   onContinue: () => void;
 }
 
 export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: PersonalizedResultsDisplayProps) {
-  const { personalizedData, focusArea, overallScore } = assessmentResult;
+  const { hasFeature } = useSubscription();
   
-  if (!personalizedData) {
+  // Only show personalized results for paid users
+  if (!hasFeature('personalizedInsights')) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500">Personalized insights not available</p>
+        <div className="max-w-md mx-auto">
+          <div className="mb-6">
+            <Crown className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-4">Upgrade Required</h3>
+            <p className="text-muted-foreground mb-6">
+              Personalized insights are available with our premium plans. 
+              Upgrade to unlock your complete MYRHYTHM profile with detailed cognitive patterns and custom recommendations.
+            </p>
+          </div>
+          <div className="space-y-3 text-sm text-muted-foreground mb-6">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-purple-500" />
+              <span>Personalized cognitive insights</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Target className="w-4 h-4 text-blue-500" />
+              <span>Custom action plans</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-green-500" />
+              <span>Detailed strength analysis</span>
+            </div>
+          </div>
+          <Button onClick={onContinue} className="bg-gradient-to-r from-primary to-accent">
+            View Upgrade Options
+          </Button>
+        </div>
       </div>
     );
   }
+  
+  if (!assessmentResult?.personalizedData) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">Personalized insights not available</p>
+      </div>
+    );
+  }
+
+  const { personalizedData, overallScore } = assessmentResult;
 
   const getInsightIcon = (type: PersonalizedInsight['type']) => {
     switch (type) {
@@ -66,17 +104,17 @@ export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: Per
             <Progress value={(overallScore / 3) * 100} className="w-full max-w-md mx-auto h-3" />
           </div>
           
-          <div className="bg-white/70 p-4 rounded-lg border border-blue-200">
-            <p className="text-gray-700 leading-relaxed text-center">
-              {personalizedData.uniqueScoreStory}
-            </p>
-          </div>
+           <div className="bg-white/70 p-4 rounded-lg border border-blue-200">
+             <p className="text-gray-700 leading-relaxed text-center">
+               Your personalized analysis reveals unique patterns in your cognitive rhythm and provides targeted recommendations for optimization.
+             </p>
+           </div>
           
-          <div className="text-center">
-            <Badge variant="outline" className="capitalize bg-primary/5 text-primary border-primary/30 px-3 py-1">
-              Primary Focus: {focusArea.replace('-', ' ')}
-            </Badge>
-          </div>
+           <div className="text-center">
+             <Badge variant="outline" className="capitalize bg-primary/5 text-primary border-primary/30 px-3 py-1">
+               Primary Focus: {(assessmentResult as any).focusArea?.replace('-', ' ') || 'Cognitive Wellness'}
+             </Badge>
+           </div>
         </CardContent>
       </Card>
 
@@ -150,13 +188,13 @@ export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: Per
                 <Star className="h-4 w-4 text-green-600" />
                 Your Strengths
               </h4>
-              <div className="space-y-2">
-                {personalizedData.personalProfile.strengthAreas.map((strength, index) => (
-                  <div key={index} className="text-sm bg-green-50 p-2 rounded border border-green-200">
-                    {strength}
-                  </div>
-                ))}
-              </div>
+               <div className="space-y-2">
+                 {((personalizedData.personalProfile as any).strengths || (personalizedData.personalProfile as any).strengthAreas || []).map((strength: string, index: number) => (
+                   <div key={index} className="text-sm bg-green-50 p-2 rounded border border-green-200">
+                     {strength}
+                   </div>
+                 ))}
+               </div>
             </div>
 
             {/* Growth Opportunities */}
@@ -199,33 +237,19 @@ export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: Per
         </CardContent>
       </Card>
 
-      {/* User type specific message */}
-      {personalizedData.userTypeSpecificMessage && (
-        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-          <CardContent className="p-4">
-            <div className="flex items-start gap-3">
-              <Heart className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-              <p className="text-gray-700 leading-relaxed">
-                {personalizedData.userTypeSpecificMessage}
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Detailed determination reason */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Why This Focus Area Was Chosen For You</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <p className="text-gray-700 leading-relaxed">
-              {personalizedData.customDeterminationReason}
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+       {/* Detailed determination reason */}
+       <Card>
+         <CardHeader>
+           <CardTitle className="text-lg">Why This Focus Area Was Chosen For You</CardTitle>
+         </CardHeader>
+         <CardContent>
+           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+             <p className="text-gray-700 leading-relaxed">
+               {(assessmentResult as any).determinationReason || "This focus area was selected based on your personalized assessment responses and cognitive patterns."}
+             </p>
+           </div>
+         </CardContent>
+       </Card>
 
       {/* Continue button */}
       <div className="flex justify-center pt-6">
