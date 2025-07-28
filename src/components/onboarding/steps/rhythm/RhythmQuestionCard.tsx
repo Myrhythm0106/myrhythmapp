@@ -34,7 +34,7 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
                 value={option.value}
                 checked={value === option.value}
                 onChange={(e) => onValueChange(e.target.value)}
-                className="w-4 h-4 text-primary"
+                className="w-4 h-4 text-sunrise-amber-500 focus:ring-sunrise-amber-500"
               />
               <span className="text-foreground">{option.label}</span>
             </label>
@@ -51,15 +51,15 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
               <input
                 type="checkbox"
                 value={option.value}
-                checked={Array.isArray(value) && value.includes(option.value)}
+                checked={Array.isArray(value) ? value.includes(option.value) : false}
                 onChange={(e) => {
-                  const currentValues = Array.isArray(value) ? value : [];
+                  const currentValues = Array.isArray(value) ? value : (typeof value === 'string' && value ? value.split(',') : []);
                   const newValues = e.target.checked
                     ? [...currentValues, option.value]
                     : currentValues.filter((v: string) => v !== option.value);
                   onValueChange(newValues.join(','));
                 }}
-                className="w-4 h-4 text-primary"
+                className="w-4 h-4 text-sunrise-amber-500 focus:ring-sunrise-amber-500 rounded"
               />
               <span className="text-foreground">{option.label}</span>
             </label>
@@ -78,9 +78,9 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
                   type="radio"
                   name={question.id}
                   value={scaleValue}
-                  checked={value === scaleValue}
+                  checked={value === scaleValue.toString()}
                   onChange={(e) => onValueChange(e.target.value)}
-                  className="w-4 h-4 text-primary mb-2"
+                  className="w-4 h-4 text-sunrise-amber-500 focus:ring-sunrise-amber-500 mb-2"
                 />
                 <span className="text-sm text-muted-foreground">{scaleValue}</span>
               </label>
