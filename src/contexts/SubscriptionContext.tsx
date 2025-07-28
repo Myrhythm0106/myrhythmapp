@@ -21,6 +21,7 @@ export interface SubscriptionFeatures {
   conversationNotes: boolean;
   readingSupport: boolean;
   financialSafetyAlerts: boolean;
+  smartScheduling: boolean;
   
   // Family Plan Features
   multipleAccounts: boolean;
@@ -75,6 +76,7 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
     conversationNotes: false,
     readingSupport: false,
     financialSafetyAlerts: false,
+    smartScheduling: false,
     
     // Family Plan Features
     multipleAccounts: false,
@@ -120,6 +122,7 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         conversationNotes: true,
         readingSupport: true,
         financialSafetyAlerts: true,
+        smartScheduling: true,
       };
       
     case 'family':
@@ -142,6 +145,7 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         conversationNotes: true,
         readingSupport: true,
         financialSafetyAlerts: true,
+        smartScheduling: true,
         
         // Family Plan Features
         multipleAccounts: true,
