@@ -25,7 +25,11 @@ interface ScheduleSlot {
   energyMatch: 'optimal' | 'good' | 'fair';
 }
 
-const SmartSchedulingPage = () => {
+interface SmartSchedulingPageProps {
+  onCalendarIntegration?: () => void;
+}
+
+const SmartSchedulingPage = ({ onCalendarIntegration }: SmartSchedulingPageProps) => {
   const navigate = useNavigate();
   const [activities, setActivities] = useState<Activity[]>([]);
   const [newActivity, setNewActivity] = useState({
@@ -94,9 +98,12 @@ const SmartSchedulingPage = () => {
   };
 
   const applyToCalendar = () => {
-    // In a real app, this would integrate with the calendar system
-    toast.success('Schedule applied to your calendar!');
-    navigate('/calendar');
+    if (onCalendarIntegration) {
+      onCalendarIntegration();
+    } else {
+      toast.success('Schedule applied to your calendar!');
+      navigate('/calendar');
+    }
   };
 
   const getCognitiveLoadColor = (load: string) => {
@@ -289,7 +296,7 @@ const SmartSchedulingPage = () => {
               <div className="flex gap-4">
                 <Button onClick={applyToCalendar} className="flex-1">
                   <Calendar className="h-4 w-4 mr-2" />
-                  Apply to Calendar
+                  {onCalendarIntegration ? "Connect & Apply to Calendar" : "Apply to Calendar"}
                 </Button>
                 <Button variant="outline" onClick={() => setGeneratedSchedule([])}>
                   Generate New Schedule

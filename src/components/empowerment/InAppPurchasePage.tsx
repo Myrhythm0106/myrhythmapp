@@ -12,20 +12,35 @@ interface InAppPurchasePageProps {
 export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
   const individualFeatures = [
     {
+      id: 'calendar-integration',
+      name: 'Calendar Integration',
+      price: '£2.99',
+      period: '/month',
+      icon: Calendar,
+      description: 'Seamless sync with Google, Outlook & Apple Calendar',
+      features: [
+        '3-step setup process',
+        'Real-time two-way sync',
+        'Multi-calendar support',
+        'Offline capability'
+      ],
+      popular: true,
+      tier: 'free'
+    },
+    {
       id: 'smart-scheduling',
       name: 'Smart AI Scheduling',
-      price: '£19.99',
+      price: '£4.99',
       period: '/month',
-      originalPrice: '£29.99',
       icon: Calendar,
-      description: 'AI-powered weekly schedule optimization',
+      description: 'AI-powered schedule optimization with calendar sync',
       features: [
         'Intelligent task prioritization',
         'Energy level optimization',
         'Cognitive load balancing',
-        'Automated routine suggestions'
+        'Direct calendar integration'
       ],
-      popular: true
+      tier: 'smart'
     },
     {
       id: 'object-tracker',
@@ -82,43 +97,40 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
         'Comprehension tracking',
         'Progress analytics'
       ]
-    },
-    {
-      id: 'financial-safety',
-      name: 'Financial Safety Alerts',
-      price: '£12.99',
-      period: '/month',
-      icon: AlertTriangle,
-      description: 'Protection from financial mistakes',
-      features: [
-        'Transaction monitoring',
-        'Spending pattern analysis',
-        'Fraud detection',
-        'Emergency notifications'
-      ]
     }
   ];
 
   const featureBundles = [
     {
-      id: 'safety-suite',
-      name: 'Safety Suite',
-      price: '£24.99',
+      id: 'calendar-pro',
+      name: 'Calendar Pro Bundle',
+      price: '£9.99',
       period: '/month',
-      originalPrice: '£30.97',
-      description: 'Complete safety package',
-      features: ['Object Location Tracker', 'Medication Photo Verification', 'Financial Safety Alerts'],
-      savings: 'Save £5.98/month'
+      originalPrice: '£12.97',
+      description: 'Complete calendar management with AI optimization',
+      features: ['Calendar Integration', 'Smart AI Scheduling', 'Custom Reminders'],
+      savings: 'Save £2.98/month',
+      popular: true
     },
     {
       id: 'cognitive-support',
       name: 'Cognitive Support Package',
+      price: '£17.99',
+      period: '/month',
+      originalPrice: '£22.97',
+      description: 'Enhanced cognitive assistance tools',
+      features: ['Smart AI Scheduling', 'Conversation Notes', 'Reading Support'],
+      savings: 'Save £4.98/month'
+    },
+    {
+      id: 'safety-suite',
+      name: 'Safety Suite',
       price: '£19.99',
       period: '/month',
-      originalPrice: '£24.97',
-      description: 'Enhanced cognitive assistance',
-      features: ['Conversation Notes', 'Reading Support', 'Smart AI Scheduling'],
-      savings: 'Save £4.98/month'
+      originalPrice: '£25.97',
+      description: 'Essential safety and tracking tools',
+      features: ['Object Location Tracker', 'Medication Photo Verification', 'Custom Reminders'],
+      savings: 'Save £5.98/month'
     }
   ];
 
@@ -263,22 +275,19 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
                   </div>
                 )}
                 
-                <CardHeader className="text-center pb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <feature.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <CardTitle className="text-lg font-bold text-gray-900 mb-2">{feature.name}</CardTitle>
-                  <div className="space-y-1">
-                    {feature.originalPrice && (
-                      <div className="text-sm text-gray-500 line-through">{feature.originalPrice}</div>
-                    )}
-                    <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-                      {feature.price}
-                      <span className="text-sm font-normal text-gray-600">{feature.period}</span>
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-600">{feature.description}</p>
-                </CardHeader>
+                 <CardHeader className="text-center pb-4">
+                   <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-lg flex items-center justify-center mx-auto mb-3">
+                     <feature.icon className="h-6 w-6 text-white" />
+                   </div>
+                   <CardTitle className="text-lg font-bold text-gray-900 mb-2">{feature.name}</CardTitle>
+                   <div className="space-y-1">
+                     <div className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                       {feature.price}
+                       <span className="text-sm font-normal text-gray-600">{feature.period}</span>
+                     </div>
+                   </div>
+                   <p className="text-sm text-gray-600">{feature.description}</p>
+                 </CardHeader>
                 
                 <CardContent className="space-y-4">
                   <ul className="space-y-2">
