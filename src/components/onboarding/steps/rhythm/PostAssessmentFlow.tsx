@@ -19,10 +19,29 @@ interface PostAssessmentFlowProps {
 }
 
 export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onPaymentRequired }: PostAssessmentFlowProps) {
-  const { hasFeature, subscriptionData } = useSubscription();
+  const { hasFeature, subscriptionData, tier } = useSubscription();
+  
+  // Determine initial step based on subscription status
+  const getInitialStep = () => {
+    console.log("PostAssessmentFlow: Checking subscription status", { 
+      tier, 
+      subscribed: subscriptionData.subscribed,
+      hasPremiumFeatures: hasFeature('personalizedInsights')
+    });
+    
+    // If user has premium features or is subscribed, skip payment gate
+    if (tier !== 'free' || subscriptionData.subscribed || hasFeature('personalizedInsights')) {
+      console.log("PostAssessmentFlow: User has premium access, skipping payment gate");
+      return "results";
+    }
+    
+    console.log("PostAssessmentFlow: User needs payment, showing payment gate");
+    return "payment-gate";
+  };
+  
   const [activeStep, setActiveStep] = useState<
     "payment-gate" | "results" | "welcome" | "guide" | "setup" | "complete"
-  >("payment-gate");
+  >(getInitialStep());
   const [showHelp, setShowHelp] = useState(false);
   const [setupProgress, setSetupProgress] = useState(0);
 

@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { PaymentDetailsForm } from "@/components/payment/PaymentDetailsForm";
 import { LifeEmpowermentGuide } from "../LifeEmpowermentGuide";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 export type { PlanType };
 
@@ -18,6 +19,7 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
   const [isAnnual, setIsAnnual] = useState(true); // Default to annual for savings
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const isMobile = useIsMobile();
+  const { updateSubscription } = useSubscription();
 
   const handlePlanSelect = (planId: PlanType) => {
     console.log("PlanStep: Plan selected:", planId);
@@ -30,7 +32,15 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
   };
 
   const handlePaymentComplete = (paymentDetails: any) => {
-    console.log("Payment details collected:", paymentDetails);
+    console.log("PlanStep: Payment completed for plan:", selected);
+    
+    // Update subscription status based on selected plan
+    if (selected) {
+      const subscriptionTier = selected === 'basic' ? 'premium' : selected === 'premium' ? 'premium' : 'family';
+      console.log("PlanStep: Updating subscription to tier:", subscriptionTier);
+      updateSubscription(subscriptionTier);
+    }
+    
     // Payment completed successfully - now show the Life Empowerment Guide
     setShowLifeGuide(true);
   };

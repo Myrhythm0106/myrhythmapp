@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useState } from 'react';
 
 export interface SubscriptionFeatures {
   // Basic Features (Free tier)
@@ -51,6 +51,7 @@ interface SubscriptionContextType {
   hasFeature: (feature: keyof SubscriptionFeatures) => boolean;
   upgradeRequired: (feature: keyof SubscriptionFeatures) => boolean;
   openCustomerPortal: () => Promise<string>;
+  updateSubscription: (newTier: SubscriptionTier) => void;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
@@ -170,16 +171,22 @@ interface SubscriptionProviderProps {
 
 export function SubscriptionProvider({ 
   children, 
-  tier = 'free' // Default to free tier for demo
+  tier: initialTier = 'free' // Default to free tier for demo
 }: SubscriptionProviderProps) {
-  const features = getFeaturesByTier(tier);
+  const [currentTier, setCurrentTier] = useState<SubscriptionTier>(initialTier);
+  const features = getFeaturesByTier(currentTier);
   
   // Mock subscription data for demo
   const subscriptionData: SubscriptionData = {
-    subscribed: tier !== 'free',
-    trial_active: tier === 'free',
-    trial_days_left: tier === 'free' ? 7 : 0,
-    subscription_tier: tier
+    subscribed: currentTier !== 'free',
+    trial_active: currentTier === 'free',
+    trial_days_left: currentTier === 'free' ? 7 : 0,
+    subscription_tier: currentTier
+  };
+  
+  const updateSubscription = (newTier: SubscriptionTier) => {
+    console.log("SubscriptionContext: Updating subscription tier from", currentTier, "to", newTier);
+    setCurrentTier(newTier);
   };
   
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
@@ -200,13 +207,14 @@ export function SubscriptionProvider({
   
   return (
     <SubscriptionContext.Provider value={{
-      tier,
+      tier: currentTier,
       features,
       subscriptionData,
       isLoading: false,
       hasFeature,
       upgradeRequired,
-      openCustomerPortal
+      openCustomerPortal,
+      updateSubscription
     }}>
       {children}
     </SubscriptionContext.Provider>
