@@ -33,7 +33,10 @@ export function PostAssessmentWelcomeDashboard({
     const profile = assessmentResult?.myrhythmProfile;
     if (!profile) return "Welcome to your personalized MYRHYTHM journey!";
     
-    return `Great! We've identified that you're focusing on ${profile.primaryChallenge} with ${profile.energyPeak} energy patterns.`;
+    const challenge = profile.primaryChallenge?.replace(/_/g, ' ') || 'your focus area';
+    const energy = profile.energyPeak?.replace(/_/g, ' ') || 'your energy patterns';
+    
+    return `Your personalized MYRHYTHM profile shows a focus on ${challenge} with peak energy during ${energy}.`;
   };
 
   const getTimelineSteps = () => [
