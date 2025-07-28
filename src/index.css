@@ -73,6 +73,18 @@
     --clarity-teal-800: 183 56% 20%;
     --clarity-teal-900: 184 58% 14%;
 
+    /* Sunrise Amber: Peaceful warmth - subtle touches of renewal */
+    --sunrise-amber-50: 22 65% 97%;
+    --sunrise-amber-100: 22 68% 94%;
+    --sunrise-amber-200: 22 70% 88%;
+    --sunrise-amber-300: 22 72% 78%;
+    --sunrise-amber-400: 22 74% 68%;
+    --sunrise-amber-500: 22 70% 55%;
+    --sunrise-amber-600: 22 68% 45%;
+    --sunrise-amber-700: 22 65% 35%;
+    --sunrise-amber-800: 22 62% 25%;
+    --sunrise-amber-900: 22 60% 18%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 42 30% 65%;

@@ -92,6 +92,19 @@ const config: Config = {
           800: "hsl(var(--clarity-teal-800))",
           900: "hsl(var(--clarity-teal-900))",
         },
+        // Sunrise Amber: Peaceful warmth for renewal moments
+        "sunrise-amber": {
+          50: "hsl(var(--sunrise-amber-50))",
+          100: "hsl(var(--sunrise-amber-100))",
+          200: "hsl(var(--sunrise-amber-200))",
+          300: "hsl(var(--sunrise-amber-300))",
+          400: "hsl(var(--sunrise-amber-400))",
+          500: "hsl(var(--sunrise-amber-500))",
+          600: "hsl(var(--sunrise-amber-600))",
+          700: "hsl(var(--sunrise-amber-700))",
+          800: "hsl(var(--sunrise-amber-800))",
+          900: "hsl(var(--sunrise-amber-900))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
