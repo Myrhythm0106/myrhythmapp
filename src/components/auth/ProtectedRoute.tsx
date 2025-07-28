@@ -43,9 +43,11 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
 
 
   // Check if user needs onboarding (for all protected routes except onboarding routes)
-  if (requireAuth && user && !location.pathname.includes('/onboarding')) {
+  if (requireAuth && user && !location.pathname.includes('onboarding')) {
     const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete') === 'true';
+    console.log('Checking onboarding status:', { onboardingComplete, currentPath: location.pathname });
     if (!onboardingComplete) {
+      console.log('Redirecting to onboarding:', getOnboardingRoute());
       return <Navigate to={getOnboardingRoute()} replace />;
     }
   }
