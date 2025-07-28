@@ -161,7 +161,9 @@ const userTypeQuestions: Record<UserType, Section[]> = {
         { id: "memory_performance_gap", text: "Do you feel frustrated that your memory performance doesn't match your professional ambitions?" },
         { id: "memory_competitive_edge", text: "Do you believe superior memory abilities would give you a significant competitive advantage?" },
         { id: "memory_limitations", text: "Do you feel your current memory capabilities are limiting your career or personal growth?" },
-        { id: "memory_optimization_urgency", text: "Do you have a strong urgency to optimize your memory for upcoming challenges or opportunities?" }
+        { id: "memory_optimization_urgency", text: "Do you have a strong urgency to optimize your memory for upcoming challenges or opportunities?" },
+        { id: "task_completion_efficiency", text: "Do you struggle with efficiently completing all the high-priority tasks you start?" },
+        { id: "project_follow_through", text: "Do you find it challenging to maintain focus and follow through on complex projects over time?" }
       ],
       icon: Brain,
       gradient: "from-red-500 to-orange-500"
@@ -176,7 +178,9 @@ const userTypeQuestions: Record<UserType, Section[]> = {
         { id: "information_overload", text: "Do you struggle to retain important information when managing multiple high-stakes projects?" },
         { id: "memory_recall_pressure", text: "Do you worry about forgetting critical details during important meetings or presentations?" },
         { id: "cognitive_fatigue", text: "Does your memory performance decline significantly when you're mentally fatigued?" },
-        { id: "memory_system_chaos", text: "Do you feel like your current memory systems are chaotic and need complete restructuring?" }
+        { id: "memory_system_chaos", text: "Do you feel like your current memory systems are chaotic and need complete restructuring?" },
+        { id: "partial_task_overload", text: "Do you feel overwhelmed by partially completed tasks accumulating in your mental space?" },
+        { id: "interruption_impact", text: "Do interruptions significantly derail your ability to complete important tasks?" }
       ],
       icon: Brain,
       gradient: "from-gray-500 to-blue-400"
@@ -284,7 +288,9 @@ const userTypeQuestions: Record<UserType, Section[]> = {
         { id: "double_memory_load", text: "Do you feel overwhelmed remembering medical appointments, medications, and daily tasks for both yourself and your loved one?" },
         { id: "memory_anxiety", text: "Do you constantly worry about forgetting something important that could affect your loved one's health or safety?" },
         { id: "lost_own_memory", text: "Do you feel like caring for their memory needs has made you forget about your own memory and mental needs?" },
-        { id: "memory_responsibility_weight", text: "Does the weight of being responsible for someone else's memory feel overwhelming and exhausting?" }
+        { id: "memory_responsibility_weight", text: "Does the weight of being responsible for someone else's memory feel overwhelming and exhausting?" },
+        { id: "caregiver_task_juggling", text: "Do you struggle to complete your own personal tasks while managing caregiving responsibilities?" },
+        { id: "partial_task_abandonment", text: "Do you frequently start personal projects or tasks but abandon them due to caregiving demands?" }
       ],
       icon: Brain,
       gradient: "from-red-500 to-orange-500"
@@ -299,7 +305,9 @@ const userTypeQuestions: Record<UserType, Section[]> = {
         { id: "caregiver_brain_fog", text: "Do you experience brain fog and forgetfulness due to the stress and exhaustion of caregiving?" },
         { id: "memory_mistakes_guilt", text: "Do you feel guilty when you forget things related to your loved one's care, even though you're doing your best?" },
         { id: "competing_priorities", text: "Do you struggle to remember your own important tasks because your mind is always focused on their needs?" },
-        { id: "memory_support_isolation", text: "Do you feel alone in managing all the memory-related responsibilities for your loved one?" }
+        { id: "memory_support_isolation", text: "Do you feel alone in managing all the memory-related responsibilities for your loved one?" },
+        { id: "interrupted_task_completion", text: "Do caregiving interruptions make it difficult to complete tasks you've started for yourself?" },
+        { id: "mental_task_switching", text: "Do you feel mentally exhausted from constantly switching between their needs and your own tasks?" }
       ],
       icon: Brain,
       gradient: "from-gray-500 to-blue-400"

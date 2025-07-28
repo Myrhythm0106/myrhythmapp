@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { UserType } from "@/types/user";
 import { comprehensiveQuestions, preferenceQuestions } from "./data/myrhythmQuestions";
 import { RhythmQuestionCard } from "./RhythmQuestionCard";
+import { TaskCompletionAssessment } from "./TaskCompletionAssessment";
 
 interface ComprehensiveAssessmentProps {
   userType: UserType;
@@ -24,6 +25,12 @@ const clusters: ClusterInfo[] = [
     description: "Understanding your mental approach and stress responses",
     letters: ["M", "Y"],
     color: "from-purple-500 to-blue-500"
+  },
+  {
+    name: "Task Completion & Memory",
+    description: "Exploring your task completion patterns and memory integration",
+    letters: ["T", "R"],
+    color: "from-emerald-500 to-cyan-500"
   },
   {
     name: "Energy & Support",
@@ -50,6 +57,8 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [showClusterInsight, setShowClusterInsight] = useState(false);
+  const [taskCompletionData, setTaskCompletionData] = useState<any>(null);
+  const [showTaskCompletion, setShowTaskCompletion] = useState(false);
 
   // For this demo, we'll use a subset of questions per cluster
   const questionsPerCluster = Math.ceil(comprehensiveQuestions.length / clusters.length);
@@ -98,6 +107,9 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
     if (currentQuestion < currentClusterQuestions.length - 1) {
       // Next question in current cluster
       setCurrentQuestion(currentQuestion + 1);
+    } else if (currentCluster === 1 && !taskCompletionData) {
+      // Show task completion assessment after cluster 1
+      setShowTaskCompletion(true);
     } else if (currentCluster < clusters.length - 1) {
       // Next cluster
       setShowClusterInsight(true);
@@ -112,11 +124,23 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
         userType,
         assessmentType: 'comprehensive',
         responses,
+        taskCompletionData,
         completedAt: new Date().toISOString(),
-        deepProfile: generateDeepProfile(responses)
+        deepProfile: generateDeepProfile(responses, taskCompletionData)
       };
       onComplete(assessmentResult);
     }
+  };
+
+  const handleTaskCompletionComplete = (data: any) => {
+    setTaskCompletionData(data);
+    setShowTaskCompletion(false);
+    setShowClusterInsight(true);
+    setTimeout(() => {
+      setCurrentCluster(currentCluster + 1);
+      setCurrentQuestion(0);
+      setShowClusterInsight(false);
+    }, 2000);
   };
 
   const handlePrevious = () => {
@@ -132,7 +156,7 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
     }
   };
 
-  const generateDeepProfile = (responses: Record<string, any>) => {
+  const generateDeepProfile = (responses: Record<string, any>, taskData?: any) => {
     const detailedInsights = Object.entries(responses).map(([questionId, value]) => {
       const question = comprehensiveQuestions.find(q => q.id === questionId);
       const primaryValue = extractPrimaryValue(value);
@@ -149,12 +173,21 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
 
     return {
       detailedInsights,
+      taskCompletionProfile: taskData ? extractTaskCompletionProfile(taskData) : null,
       cognitivePatterns: extractClusterInsights(responses, 'cognitive'),
       energySupport: extractClusterInsights(responses, 'energy'),
       actionControl: extractClusterInsights(responses, 'action'),
       growthIntegration: extractClusterInsights(responses, 'growth'),
-      comprehensiveRecommendations: generateComprehensiveRecommendations(responses),
+      comprehensiveRecommendations: generateComprehensiveRecommendations(responses, taskData),
       secondaryInsights: detailedInsights.filter(insight => insight.hasMultipleAnswers)
+    };
+  };
+
+  const extractTaskCompletionProfile = (taskData: any) => {
+    return {
+      completionStrengths: taskData.insights || [],
+      primaryChallenges: taskData.recommendations?.map((r: any) => r.category) || [],
+      recommendedStrategies: taskData.recommendations || []
     };
   };
 
@@ -167,16 +200,31 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
     };
   };
 
-  const generateComprehensiveRecommendations = (responses: Record<string, any>) => {
-    return [
+  const generateComprehensiveRecommendations = (responses: Record<string, any>, taskData?: any) => {
+    const baseRecommendations = [
       "Personalized cognitive training program",
       "Optimized daily rhythm schedule",
       "Targeted support system design",
       "Progress tracking and celebration system"
     ];
+
+    if (taskData?.recommendations) {
+      baseRecommendations.push(...taskData.recommendations.map((r: any) => r.title));
+    }
+
+    return baseRecommendations;
   };
 
   const getCurrentCluster = () => clusters[currentCluster];
+
+  if (showTaskCompletion) {
+    return (
+      <TaskCompletionAssessment 
+        userType={userType}
+        onComplete={handleTaskCompletionComplete}
+      />
+    );
+  }
 
   if (showClusterInsight) {
     return (

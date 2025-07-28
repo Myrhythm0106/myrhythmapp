@@ -246,6 +246,11 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
         insight: 'Execution is your growth edge - we\'ll build systems that support consistent follow-through.'
       },
       { 
+        value: 'task_memory_integration', 
+        label: 'Remembering and returning to partially completed tasks',
+        insight: 'Task memory integration is key - we\'ll help you build systems for tracking and resuming ongoing work.'
+      },
+      { 
         value: 'daily_planning', 
         label: 'Planning and organizing my day effectively',
         insight: 'Structure creates freedom - we\'ll help you build planning systems that feel natural and effective.'
@@ -333,10 +338,144 @@ export const comprehensiveQuestions: MyrhythmQuestion[] = [
     insight: "Your beliefs about neuroplasticity directly impact your potential for cognitive growth.",
     nextStepPreview: "This mindset foundation influences everything else we'll build together..."
   },
-  // Continue with remaining questions...
+  
+  // CLUSTER 2: TASK COMPLETION & MEMORY INTEGRATION
+  {
+    id: 'task_initiation_confidence',
+    letter: 'T',
+    letterName: 'TAKE CONTROL',
+    question: "How confident are you starting new tasks compared to finishing them?",
+    type: 'primary_secondary',
+    allowSecondaryAnswers: true,
+    secondaryPrompt: "What's your biggest challenge?",
+    options: [
+      { 
+        value: 'starting_easier', 
+        label: 'I start tasks easily but struggle to finish them',
+        insight: 'Building completion systems and follow-through strategies will be your focus area.'
+      },
+      { 
+        value: 'finishing_easier', 
+        label: 'I finish what I start but have trouble beginning',
+        insight: 'Initiation techniques and momentum-building strategies will help you get started.'
+      },
+      { 
+        value: 'both_challenging', 
+        label: 'Both starting and finishing are challenging for me',
+        insight: 'We\'ll build comprehensive task management systems for both initiation and completion.'
+      },
+      { 
+        value: 'depends_on_task', 
+        label: 'It depends on the type of task or project',
+        insight: 'Understanding your task preferences will help us create targeted completion strategies.'
+      }
+    ],
+    insight: "Understanding your task completion patterns helps us design the most effective support systems.",
+    nextStepPreview: "Let's explore how you handle partially completed tasks..."
+  },
+  {
+    id: 'partial_task_memory',
+    letter: 'R',
+    letterName: 'RESTORE ENERGY',
+    question: "How well do you remember tasks you've started but haven't finished?",
+    type: 'scale',
+    min: 1,
+    max: 5,
+    labels: {
+      1: 'I completely forget about them',
+      2: 'I sometimes remember but lose track of details',
+      3: 'I remember some but not others consistently',
+      4: 'I usually remember but need reminders for details',
+      5: 'I clearly remember and track all ongoing tasks'
+    },
+    insight: "Task memory integration is crucial for maintaining progress on multiple projects.",
+    nextStepPreview: "This helps us understand your working memory patterns..."
+  },
+  {
+    id: 'task_completion_percentage',
+    letter: 'Y',
+    letterName: 'YIELD PROGRESS',
+    question: "What percentage of tasks do you typically complete once you start them?",
+    type: 'multiple_choice',
+    options: [
+      { value: 'less_than_25', label: 'Less than 25% - I start many but finish few' },
+      { value: '25_to_50', label: '25-50% - About half of what I start gets completed' },
+      { value: '50_to_75', label: '50-75% - Most things get done but some fall through' },
+      { value: '75_to_90', label: '75-90% - Nearly everything gets completed eventually' },
+      { value: 'more_than_90', label: 'More than 90% - I almost always finish what I start' }
+    ],
+    insight: "Your completion rate reveals patterns that help us design targeted improvement strategies.",
+    nextStepPreview: "Understanding your completion patterns guides our intervention approach..."
+  },
+  {
+    id: 'interruption_recovery',
+    letter: 'H',
+    letterName: 'HARNESS SUPPORT',
+    question: "How well do you return to incomplete tasks after interruptions?",
+    type: 'primary_secondary',
+    allowSecondaryAnswers: true,
+    secondaryPrompt: "What makes it most difficult?",
+    options: [
+      { 
+        value: 'return_easily', 
+        label: 'I easily pick up where I left off',
+        insight: 'Your interruption recovery is strong - we can build on this natural ability.'
+      },
+      { 
+        value: 'need_reminders', 
+        label: 'I can return but need notes or reminders about where I was',
+        insight: 'External memory aids and resumption cues will be powerful tools for you.'
+      },
+      { 
+        value: 'lose_momentum', 
+        label: 'I lose momentum and motivation after interruptions',
+        insight: 'Momentum preservation and re-engagement strategies will be key for you.'
+      },
+      { 
+        value: 'start_over', 
+        label: 'I often need to start over or abandon the task',
+        insight: 'We\'ll focus on interruption management and task resumption techniques.'
+      }
+    ],
+    insight: "Interruption recovery patterns show us how to design resilient task management systems.",
+    nextStepPreview: "Let's explore the emotional impact of incomplete tasks..."
+  },
+  {
+    id: 'incomplete_task_impact',
+    letter: 'Y',
+    letterName: 'YIELD & ACKNOWLEDGE',
+    question: "How do incomplete tasks affect your mental energy and mood?",
+    type: 'multiple_choice',
+    options: [
+      { value: 'heavy_burden', label: 'They feel like a heavy mental burden that drains my energy' },
+      { value: 'mild_background_stress', label: 'They create mild background stress but I can function' },
+      { value: 'motivating_reminder', label: 'They serve as motivating reminders to get things done' },
+      { value: 'easy_to_ignore', label: 'I can easily set them aside and not think about them' },
+      { value: 'depends_on_importance', label: 'It depends on how important the task is to me' }
+    ],
+    insight: "The emotional impact of incomplete tasks helps us prioritize completion strategies vs. stress management.",
+    nextStepPreview: "Understanding this emotional pattern guides our therapeutic approach..."
+  },
+  {
+    id: 'task_tracking_methods',
+    letter: 'H',
+    letterName: 'HARNESS SUPPORT',
+    question: "What methods do you currently use to track partially completed tasks?",
+    type: 'multiple_select',
+    options: [
+      { value: 'mental_memory', label: 'I try to remember them mentally' },
+      { value: 'written_lists', label: 'Written lists or notebooks' },
+      { value: 'digital_apps', label: 'Digital apps or task managers' },
+      { value: 'visual_cues', label: 'Visual cues or physical reminders' },
+      { value: 'calendar_blocks', label: 'Calendar time blocks or scheduling' },
+      { value: 'no_system', label: 'I don\'t have a consistent system' }
+    ],
+    insight: "Your current tracking methods show us what feels natural and where we can enhance your systems.",
+    nextStepPreview: "We'll build on what's already working for you..."
+  }
 ];
 
-// Preference integration questions
+// Preference integration questions  
 export const preferenceQuestions: MyrhythmQuestion[] = [
   {
     id: 'notification_style',
@@ -353,8 +492,41 @@ export const preferenceQuestions: MyrhythmQuestion[] = [
     ],
     insight: "The right notification style helps support without overwhelming.",
     nextStepPreview: "We'll customize your reminder system to feel natural and helpful..."
+  },
+  {
+    id: 'task_resumption_preference',
+    letter: 'T',
+    letterName: 'TAKE CONTROL',
+    question: "What helps you most when returning to an incomplete task?",
+    type: 'multiple_select',
+    options: [
+      { value: 'progress_summary', label: 'A summary of what I\'ve already completed' },
+      { value: 'next_step_clarity', label: 'Clear indication of the very next step' },
+      { value: 'context_refresh', label: 'Quick reminder of why this task matters' },
+      { value: 'time_estimate', label: 'Estimate of how much time is needed to finish' },
+      { value: 'visual_progress', label: 'Visual progress bar or completion indicator' },
+      { value: 'momentum_ritual', label: 'A small ritual or routine to rebuild momentum' }
+    ],
+    insight: "Understanding your resumption preferences helps us design task continuation systems.",
+    nextStepPreview: "We'll create resumption cues that feel natural and motivating..."
+  },
+  {
+    id: 'completion_celebration_style',
+    letter: 'Y',
+    letterName: 'YIELD PROGRESS',
+    question: "How do you prefer to acknowledge task completion?",
+    type: 'multiple_choice',
+    options: [
+      { value: 'immediate_recognition', label: 'Immediate recognition or celebration' },
+      { value: 'progress_tracking', label: 'Adding it to my progress tracking system' },
+      { value: 'share_with_others', label: 'Sharing the accomplishment with others' },
+      { value: 'personal_reward', label: 'A personal reward or treat' },
+      { value: 'reflect_on_impact', label: 'Reflecting on the impact or value created' },
+      { value: 'move_to_next', label: 'Simply moving on to the next task' }
+    ],
+    insight: "Your completion style affects motivation and the likelihood of finishing future tasks.",
+    nextStepPreview: "We'll design completion rituals that reinforce your success patterns..."
   }
-  // Add more preference questions...
 ];
 
 export const scaleLabels = [
