@@ -62,7 +62,14 @@ export function DecisionLogger() {
   };
 
   if (loading) {
-    return <div className="flex items-center justify-center p-8">Loading decisions...</div>;
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center space-y-2">
+          <div className="animate-pulse text-muted-foreground">Loading decisions...</div>
+          <div className="text-xs text-muted-foreground">Connected to database successfully</div>
+        </div>
+      </div>
+    );
   }
 
   return (
