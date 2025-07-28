@@ -34,7 +34,41 @@ export interface AssessmentResult {
   nextReviewDate: string;
   userType?: UserType;
   personalizedData?: PersonalizedAssessmentData;
+  secondaryInsights?: Array<{
+    questionId: string;
+    secondary: string[];
+    context: string;
+  }>;
 }
+
+export interface PrimarySecondaryResponse {
+  primary: string;
+  secondary: string[];
+}
+
+export const extractPrimaryValue = (response: any): string => {
+  if (typeof response === 'string') {
+    try {
+      const parsed = JSON.parse(response);
+      return parsed.primary || response;
+    } catch {
+      return response;
+    }
+  }
+  return response || '';
+};
+
+export const extractSecondaryValues = (response: any): string[] => {
+  if (typeof response === 'string') {
+    try {
+      const parsed = JSON.parse(response);
+      return parsed.secondary || [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+};
 
 // Memory-enhanced focus areas for the MyRhythm framework
 export const focusAreas: Record<FocusArea, FocusAreaInfo> = {

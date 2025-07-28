@@ -63,6 +63,30 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
   const currentQuestionNumber = currentCluster * questionsPerCluster + currentQuestion + 1;
   const progress = (currentQuestionNumber / totalQuestions) * 100;
 
+  const extractPrimaryValue = (response: any): string => {
+    if (typeof response === 'string') {
+      try {
+        const parsed = JSON.parse(response);
+        return parsed.primary || response;
+      } catch {
+        return response;
+      }
+    }
+    return response || '';
+  };
+
+  const extractSecondaryValues = (response: any): string[] => {
+    if (typeof response === 'string') {
+      try {
+        const parsed = JSON.parse(response);
+        return parsed.secondary || [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
+
   const handleResponse = (questionId: string, value: any) => {
     setResponses(prev => ({
       ...prev,
@@ -109,12 +133,28 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
   };
 
   const generateDeepProfile = (responses: Record<string, any>) => {
+    const detailedInsights = Object.entries(responses).map(([questionId, value]) => {
+      const question = comprehensiveQuestions.find(q => q.id === questionId);
+      const primaryValue = extractPrimaryValue(value);
+      const secondaryValues = extractSecondaryValues(value);
+      
+      return {
+        questionId,
+        primaryValue,
+        secondaryValues,
+        category: question?.letter || 'Unknown',
+        hasMultipleAnswers: secondaryValues.length > 0
+      };
+    });
+
     return {
+      detailedInsights,
       cognitivePatterns: extractClusterInsights(responses, 'cognitive'),
       energySupport: extractClusterInsights(responses, 'energy'),
       actionControl: extractClusterInsights(responses, 'action'),
       growthIntegration: extractClusterInsights(responses, 'growth'),
-      comprehensiveRecommendations: generateComprehensiveRecommendations(responses)
+      comprehensiveRecommendations: generateComprehensiveRecommendations(responses),
+      secondaryInsights: detailedInsights.filter(insight => insight.hasMultipleAnswers)
     };
   };
 

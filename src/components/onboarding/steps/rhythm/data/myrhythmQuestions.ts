@@ -6,12 +6,14 @@ export interface MyrhythmQuestion {
   letter: string;
   letterName: string;
   question: string;
-  type: 'multiple_choice' | 'multiple_select' | 'scale';
+  type: 'multiple_choice' | 'multiple_select' | 'scale' | 'primary_secondary';
   options?: Array<{ value: string; label: string; insight?: string }>;
   min?: number;
   max?: number;
   labels?: Record<number, string>;
   quickStartQuestion?: boolean;
+  allowSecondaryAnswers?: boolean;
+  secondaryPrompt?: string;
   insight: string;
   nextStepPreview: string;
 }
@@ -23,7 +25,9 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
     letter: 'M',
     letterName: 'MINDSET',
     question: "What's your biggest daily challenge with memory or focus?",
-    type: 'multiple_choice',
+    type: 'primary_secondary',
+    allowSecondaryAnswers: true,
+    secondaryPrompt: "Any other challenges that also apply?",
     options: [
       { 
         value: 'attention_drift', 
@@ -65,7 +69,9 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
     letter: 'Y',
     letterName: 'YIELD & ACKNOWLEDGE',
     question: "How do you currently handle overwhelming moments?",
-    type: 'multiple_choice',
+    type: 'primary_secondary',
+    allowSecondaryAnswers: true,
+    secondaryPrompt: "Other approaches you sometimes use?",
     options: [
       { 
         value: 'push_through', 
@@ -134,7 +140,9 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
     letter: 'H',
     letterName: 'HARNESS SUPPORT',
     question: "What type of support helps you most?",
-    type: 'multiple_choice',
+    type: 'primary_secondary',
+    allowSecondaryAnswers: true,
+    secondaryPrompt: "Additional support that helps?",
     options: [
       { 
         value: 'gentle_reminders', 
@@ -208,7 +216,9 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
     letter: 'T',
     letterName: 'TAKE CONTROL',
     question: "What daily task would you most like to improve?",
-    type: 'multiple_choice',
+    type: 'primary_secondary',
+    allowSecondaryAnswers: true,
+    secondaryPrompt: "Other areas you'd also like to work on?",
     options: [
       { 
         value: 'morning_routine', 

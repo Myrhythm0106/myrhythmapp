@@ -62,6 +62,30 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
     }
   };
 
+  const extractPrimaryValue = (response: any): string => {
+    if (typeof response === 'string') {
+      try {
+        const parsed = JSON.parse(response);
+        return parsed.primary || response;
+      } catch {
+        return response;
+      }
+    }
+    return response || '';
+  };
+
+  const extractSecondaryValues = (response: any): string[] => {
+    if (typeof response === 'string') {
+      try {
+        const parsed = JSON.parse(response);
+        return parsed.secondary || [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  };
+
   const generateQuickProfile = (responses: Record<string, any>) => {
     const profile = {
       primaryChallenge: '',
@@ -71,30 +95,35 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
       celebrationStyle: '',
       controlPriority: '',
       motivation: '',
+      secondaryInsights: {} as Record<string, string[]>,
       quickRecommendations: [] as string[]
     };
 
     // Generate profile based on MYRHYTHM responses
     if (responses.mindset_challenge) {
-      profile.primaryChallenge = responses.mindset_challenge;
+      profile.primaryChallenge = extractPrimaryValue(responses.mindset_challenge);
+      profile.secondaryInsights.challenges = extractSecondaryValues(responses.mindset_challenge);
     }
     if (responses.overwhelm_handling) {
-      profile.overwhelmStyle = responses.overwhelm_handling;
+      profile.overwhelmStyle = extractPrimaryValue(responses.overwhelm_handling);
+      profile.secondaryInsights.overwhelm = extractSecondaryValues(responses.overwhelm_handling);
     }
     if (responses.energy_peak) {
-      profile.energyPeak = responses.energy_peak;
+      profile.energyPeak = extractPrimaryValue(responses.energy_peak);
     }
     if (responses.support_preference) {
-      profile.supportStyle = responses.support_preference;
+      profile.supportStyle = extractPrimaryValue(responses.support_preference);
+      profile.secondaryInsights.support = extractSecondaryValues(responses.support_preference);
     }
     if (responses.progress_celebration) {
-      profile.celebrationStyle = responses.progress_celebration;
+      profile.celebrationStyle = extractPrimaryValue(responses.progress_celebration);
     }
     if (responses.control_priority) {
-      profile.controlPriority = responses.control_priority;
+      profile.controlPriority = extractPrimaryValue(responses.control_priority);
+      profile.secondaryInsights.priorities = extractSecondaryValues(responses.control_priority);
     }
     if (responses.healing_motivation) {
-      profile.motivation = responses.healing_motivation;
+      profile.motivation = extractPrimaryValue(responses.healing_motivation);
     }
 
     // Generate quick recommendations
@@ -164,7 +193,12 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
   const getSelectedOptionInsight = () => {
     if (!currentResponse) return null;
     
-    const option = currentQuestion.options?.find(opt => opt.value === currentResponse);
+    let primaryValue = currentResponse;
+    if (currentQuestion.type === 'primary_secondary') {
+      primaryValue = extractPrimaryValue(currentResponse);
+    }
+    
+    const option = currentQuestion.options?.find(opt => opt.value === primaryValue);
     return option?.insight;
   };
 
@@ -278,7 +312,7 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
             
             <Button
               onClick={handleNext}
-              disabled={!currentResponse}
+              disabled={!currentResponse || (currentQuestion.type === 'primary_secondary' && !extractPrimaryValue(currentResponse))}
               className="bg-gradient-to-r from-primary to-accent hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {currentStep === quickStartQuestions.length - 1 ? (

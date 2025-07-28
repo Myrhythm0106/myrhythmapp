@@ -11,6 +11,11 @@ interface RhythmQuestionCardProps {
   onValueChange: (value: string) => void;
 }
 
+interface PrimarySecondaryValue {
+  primary: string;
+  secondary: string[];
+}
+
 export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQuestionCardProps) {
   
   const handleValueChange = (newValue: string) => {
@@ -22,7 +27,78 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
     }, 500);
   };
 
+  const parsePrimarySecondaryValue = (val: any): PrimarySecondaryValue => {
+    if (typeof val === 'string') {
+      try {
+        const parsed = JSON.parse(val);
+        return { primary: parsed.primary || '', secondary: parsed.secondary || [] };
+      } catch {
+        return { primary: val, secondary: [] };
+      }
+    }
+    return { primary: '', secondary: [] };
+  };
+
+  const handlePrimarySecondaryChange = (primary: string, secondary: string[]) => {
+    const newValue = JSON.stringify({ primary, secondary });
+    onValueChange(newValue);
+  };
+
   const renderQuestion = () => {
+    if (question.type === 'primary_secondary') {
+      const currentValue = parsePrimarySecondaryValue(value);
+      
+      return (
+        <div className="space-y-6">
+          {/* Primary Answer Section */}
+          <div className="space-y-3">
+            <h4 className="text-base font-medium text-foreground">What's your main answer?</h4>
+            <div className="space-y-2">
+              {question.options?.map((option) => (
+                <label key={option.value} className="flex items-center space-x-3 cursor-pointer p-4 rounded-lg border-2 hover:bg-muted/50 transition-all duration-200 hover:border-sunrise-amber-200">
+                  <input
+                    type="radio"
+                    name={`${question.id}_primary`}
+                    value={option.value}
+                    checked={currentValue.primary === option.value}
+                    onChange={(e) => handlePrimarySecondaryChange(e.target.value, currentValue.secondary)}
+                    className="w-5 h-5 text-sunrise-amber-500 focus:ring-sunrise-amber-500 focus:ring-2"
+                  />
+                  <span className="text-foreground font-medium">{option.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Secondary Answer Section - Only show if primary is selected */}
+          {currentValue.primary && question.secondaryPrompt && (
+            <div className="space-y-3 pt-4 border-t border-border">
+              <h4 className="text-sm font-medium text-muted-foreground">{question.secondaryPrompt}</h4>
+              <div className="space-y-2">
+                {question.options?.filter(option => option.value !== currentValue.primary).map((option) => (
+                  <label key={option.value} className="flex items-center space-x-3 cursor-pointer p-3 rounded-lg border hover:bg-muted/30 transition-colors">
+                    <input
+                      type="checkbox"
+                      value={option.value}
+                      checked={currentValue.secondary.includes(option.value)}
+                      onChange={(e) => {
+                        const newSecondary = e.target.checked
+                          ? [...currentValue.secondary, option.value]
+                          : currentValue.secondary.filter(v => v !== option.value);
+                        handlePrimarySecondaryChange(currentValue.primary, newSecondary);
+                      }}
+                      className="w-4 h-4 text-sunrise-amber-400 focus:ring-sunrise-amber-400 rounded"
+                    />
+                    <span className="text-muted-foreground text-sm">{option.label}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     if (question.type === 'multiple_choice') {
       return (
         <div className="space-y-3">
