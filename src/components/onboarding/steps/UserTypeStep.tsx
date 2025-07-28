@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
-import { Brain, Heart, Users, Sparkles, Stethoscope, ChevronDown } from "lucide-react";
+import { Brain, Heart, Users, Sparkles, Stethoscope } from "lucide-react";
 import { UserType } from "@/types/user";
 
 interface UserTypeStepProps {
@@ -56,7 +55,6 @@ const userTypes = [
 
 export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || null);
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
   console.log("UserTypeStep: Rendering with selectedType:", selectedType, "initialValue:", initialValue);
 
@@ -91,108 +89,7 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
         {userTypes.map((type) => {
           const Icon = type.icon;
           const isSelected = selectedType === type.id;
-          const isExpanded = expandedCard === type.id;
           
-          // Enhanced Brain Injury Recovery card with striking visual
-          if (type.id === "brain-injury") {
-            return (
-              <div key={type.id} className="md:col-span-2">
-                <Collapsible 
-                  open={isExpanded} 
-                  onOpenChange={(open) => setExpandedCard(open ? type.id : null)}
-                >
-                  <Card 
-                    className={`overflow-hidden transition-all duration-300 hover:shadow-xl border-2 ${
-                      isSelected 
-                        ? 'border-brain-health-400 bg-brain-health-50/50 shadow-lg ring-2 ring-brain-health-400/20' 
-                        : 'border-border hover:border-brain-health-300'
-                    }`}
-                  >
-                    {/* Hero Image Section */}
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2000&q=80"
-                        alt="Neural network circuit board representing brain connectivity"
-                        className="w-full h-full object-cover"
-                      />
-                      {/* Gradient overlay for text readability */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-brain-health-900/60 via-brain-health-800/40 to-brain-health-700/30"></div>
-                      
-                      {/* Content over image */}
-                      <div className="absolute inset-0 flex flex-col justify-between p-6">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-xl bg-brain-health-500/90 backdrop-blur-sm flex items-center justify-center">
-                              <Icon className="h-6 w-6 text-white" />
-                            </div>
-                            <div>
-                              <h3 className="text-xl font-bold text-white mb-1">{type.title}</h3>
-                              <p className="text-brain-health-100 text-sm">Click to explore your journey</p>
-                            </div>
-                          </div>
-                          
-                          {/* Selection indicator */}
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            isSelected 
-                              ? 'border-white bg-white' 
-                              : 'border-white/60 bg-white/10'
-                          }`}>
-                            {isSelected && <div className="w-3 h-3 rounded-full bg-brain-health-500"></div>}
-                          </div>
-                        </div>
-                        
-                        {/* Expand trigger */}
-                        <CollapsibleTrigger className="flex items-center justify-center gap-2 text-white hover:text-brain-health-100 transition-colors group">
-                          <span className="text-sm font-medium">
-                            {isExpanded ? 'Show less' : 'Learn more about this path'}
-                          </span>
-                          <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${
-                            isExpanded ? 'rotate-180' : 'group-hover:translate-y-0.5'
-                          }`} />
-                        </CollapsibleTrigger>
-                      </div>
-                    </div>
-                    
-                    {/* Expandable content */}
-                    <CollapsibleContent className="animate-accordion-down">
-                      <CardContent className="p-6 bg-gradient-to-br from-brain-health-50/30 to-clarity-teal-50/20">
-                        <div className="space-y-4">
-                          <p className="text-foreground leading-relaxed">
-                            {type.description}
-                          </p>
-                          
-                          <div className="flex items-center gap-4">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleSelection(type.id);
-                              }}
-                              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                                isSelected
-                                  ? 'bg-brain-health-500 text-white shadow-md'
-                                  : 'bg-brain-health-100 text-brain-health-700 hover:bg-brain-health-200'
-                              }`}
-                            >
-                              {isSelected ? '✓ Selected' : 'Choose this path'}
-                            </button>
-                            
-                            {isSelected && (
-                              <div className="flex items-center gap-2 text-brain-health-600">
-                                <div className="w-2 h-2 bg-brain-health-500 rounded-full animate-pulse"></div>
-                                <span className="text-sm font-medium">Ready to continue your journey</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </CollapsibleContent>
-                  </Card>
-                </Collapsible>
-              </div>
-            );
-          }
-          
-          // Regular cards for other types
           return (
             <Card 
               key={type.id}
