@@ -875,6 +875,7 @@ export type Database = {
           can_send_reminders: boolean
           created_at: string
           id: string
+          invitation_expires_at: string | null
           invitation_token: string | null
           invited_at: string | null
           joined_at: string | null
@@ -894,6 +895,7 @@ export type Database = {
           can_send_reminders?: boolean
           created_at?: string
           id?: string
+          invitation_expires_at?: string | null
           invitation_token?: string | null
           invited_at?: string | null
           joined_at?: string | null
@@ -913,6 +915,7 @@ export type Database = {
           can_send_reminders?: boolean
           created_at?: string
           id?: string
+          invitation_expires_at?: string | null
           invitation_token?: string | null
           invited_at?: string | null
           joined_at?: string | null
@@ -1253,6 +1256,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      accept_invitation: {
+        Args: { p_token: string; p_user_email: string }
+        Returns: Json
+      }
+      cleanup_expired_invitations: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       cleanup_expired_voice_recordings: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -1276,6 +1287,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      generate_invitation_token: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_user_subscription_status: {
         Args: { user_uuid: string }
         Returns: string
@@ -1298,6 +1313,10 @@ export type Database = {
           p_completion_status: string
         }
         Returns: string
+      }
+      revoke_invitation: {
+        Args: { p_member_id: string; p_user_id: string }
+        Returns: boolean
       }
       verify_backup_code: {
         Args: { p_user_id: string; p_code: string }
