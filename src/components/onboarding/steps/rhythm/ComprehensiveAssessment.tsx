@@ -19,36 +19,37 @@ interface ClusterInfo {
   color: string;
 }
 
+// MYRHYTHM clusters for organizing assessment flow
 const clusters: ClusterInfo[] = [
   {
     name: "Cognitive Patterns",
-    description: "Understanding your mental approach and stress responses",
+    description: "Understanding how your mind processes information and approaches challenges",
     letters: ["M", "Y"],
-    color: "from-purple-500 to-blue-500"
+    color: "from-purple-500 to-purple-600"
   },
   {
     name: "Task Completion & Memory",
-    description: "Exploring your task completion patterns and memory integration",
-    letters: ["T", "R"],
-    color: "from-emerald-500 to-cyan-500"
+    description: "Exploring your task management and memory integration abilities",
+    letters: ["R", "T"],
+    color: "from-blue-500 to-blue-600"
   },
   {
-    name: "Energy & Support",
-    description: "Optimizing your energy rhythms and support systems",
-    letters: ["R", "H"],
-    color: "from-green-500 to-teal-500"
-  },
-  {
-    name: "Action & Control",
-    description: "Building agency and recognizing progress",
-    letters: ["Y", "T"],
-    color: "from-blue-500 to-indigo-500"
+    name: "Energy & Recovery",
+    description: "Assessing your energy patterns and restoration needs",
+    letters: ["H"],
+    color: "from-green-500 to-green-600"
   },
   {
     name: "Growth & Integration",
-    description: "Healing forward and creating lasting change",
-    letters: ["H", "M"],
-    color: "from-indigo-500 to-purple-500"
+    description: "Understanding your approach to learning and personal development",
+    letters: ["R"],
+    color: "from-orange-500 to-orange-600"
+  },
+  {
+    name: "Personal Motivation",
+    description: "Exploring what drives and sustains your progress",
+    letters: ["M"],
+    color: "from-red-500 to-red-600"
   }
 ];
 
@@ -60,14 +61,26 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
   const [taskCompletionData, setTaskCompletionData] = useState<any>(null);
   const [showTaskCompletion, setShowTaskCompletion] = useState(false);
 
-  // For this demo, we'll use a subset of questions per cluster
-  const questionsPerCluster = Math.ceil(comprehensiveQuestions.length / clusters.length);
-  const currentClusterQuestions = comprehensiveQuestions.slice(
-    currentCluster * questionsPerCluster,
-    (currentCluster + 1) * questionsPerCluster
-  );
+  // Distribute questions evenly across clusters
+  const questionsPerCluster = Math.floor(comprehensiveQuestions.length / clusters.length);
+  const startIndex = currentCluster * questionsPerCluster;
+  const endIndex = currentCluster === clusters.length - 1 ? comprehensiveQuestions.length : (currentCluster + 1) * questionsPerCluster;
+  const currentClusterQuestions = comprehensiveQuestions.slice(startIndex, endIndex);
 
   const currentQuestionData = currentClusterQuestions[currentQuestion];
+  
+  // Safety check for undefined questions
+  if (!currentQuestionData) {
+    console.error('No question data found for cluster', currentCluster, 'question', currentQuestion);
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto px-4">
+        <Card className="p-6">
+          <p className="text-center text-red-600">Error loading questions. Please refresh and try again.</p>
+        </Card>
+      </div>
+    );
+  }
+
   const totalQuestions = comprehensiveQuestions.length;
   const currentQuestionNumber = currentCluster * questionsPerCluster + currentQuestion + 1;
   const progress = (currentQuestionNumber / totalQuestions) * 100;
@@ -81,7 +94,7 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
         return response;
       }
     }
-    return response || '';
+    return response?.toString() || '';
   };
 
   const extractSecondaryValues = (response: any): string[] => {
@@ -178,45 +191,54 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
       energySupport: extractClusterInsights(responses, 'energy'),
       actionControl: extractClusterInsights(responses, 'action'),
       growthIntegration: extractClusterInsights(responses, 'growth'),
-      comprehensiveRecommendations: generateComprehensiveRecommendations(responses, taskData),
-      secondaryInsights: detailedInsights.filter(insight => insight.hasMultipleAnswers)
+      personalizedData: generatePersonalizedInsights(detailedInsights, taskData),
+      recommendations: generateComprehensiveRecommendations(detailedInsights)
     };
   };
 
   const extractTaskCompletionProfile = (taskData: any) => {
     return {
-      completionStrengths: taskData.insights || [],
-      primaryChallenges: taskData.recommendations?.map((r: any) => r.category) || [],
-      recommendedStrategies: taskData.recommendations || []
+      completionRate: taskData.completionRate || 0,
+      patterns: taskData.patterns || [],
+      strengths: taskData.strengths || [],
+      challenges: taskData.challenges || []
     };
   };
 
-  const extractClusterInsights = (responses: Record<string, any>, clusterType: string) => {
-    // Generate insights based on cluster responses
+  const extractClusterInsights = (responses: Record<string, any>, category: string) => {
     return {
-      strengths: [],
-      growthAreas: [],
-      strategies: []
+      category,
+      insights: Object.values(responses).slice(0, 3) // Simplified for demo
     };
   };
 
-  const generateComprehensiveRecommendations = (responses: Record<string, any>, taskData?: any) => {
-    const baseRecommendations = [
-      "Personalized cognitive training program",
-      "Optimized daily rhythm schedule",
-      "Targeted support system design",
-      "Progress tracking and celebration system"
-    ];
-
-    if (taskData?.recommendations) {
-      baseRecommendations.push(...taskData.recommendations.map((r: any) => r.title));
-    }
-
-    return baseRecommendations;
+  const generatePersonalizedInsights = (insights: any[], taskData?: any) => {
+    return {
+      strengths: [
+        { type: 'strength', text: 'Strong analytical thinking patterns', icon: '🧠' },
+        { type: 'strength', text: 'Consistent energy management', icon: '⚡' }
+      ],
+      challenges: [
+        { type: 'challenge', text: 'Task initiation barriers', icon: '🚧' },
+        { type: 'challenge', text: 'Working memory optimization', icon: '🔄' }
+      ],
+      opportunities: [
+        { type: 'opportunity', text: 'Enhanced focus techniques', icon: '🎯' },
+        { type: 'opportunity', text: 'Personalized productivity systems', icon: '📊' }
+      ]
+    };
   };
 
-  const getCurrentCluster = () => clusters[currentCluster];
+  const generateComprehensiveRecommendations = (insights: any[]) => {
+    return [
+      'Implement morning cognitive priming routines',
+      'Use visual task completion tracking',
+      'Schedule regular energy restoration breaks',
+      'Apply personalized memory enhancement techniques'
+    ];
+  };
 
+  // Show task completion assessment
   if (showTaskCompletion) {
     return (
       <TaskCompletionAssessment 
@@ -226,174 +248,106 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
     );
   }
 
+  // Show cluster insight message
   if (showClusterInsight) {
     return (
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardContent className="p-8 text-center">
-            <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${getCurrentCluster().color} mx-auto mb-4 flex items-center justify-center`}>
-              <span className="text-white font-bold text-lg">✓</span>
+      <div className="space-y-6 max-w-4xl mx-auto px-4 text-center">
+        <Card className="p-8">
+          <div className="space-y-6">
+            <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${clusters[currentCluster].color} flex items-center justify-center mx-auto`}>
+              <span className="text-white text-xl font-bold">
+                {clusters[currentCluster].letters.join('')}
+              </span>
             </div>
-            <h3 className="text-xl font-semibold text-foreground mb-2">
-              {getCurrentCluster().name} Complete!
-            </h3>
-            <p className="text-muted-foreground mb-4">
-              Analyzing your {getCurrentCluster().description.toLowerCase()} patterns...
-            </p>
-            <div className="animate-pulse">
-              <div className="text-sm text-muted-foreground">
-                Preparing insights for the next section...
-              </div>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                {clusters[currentCluster].name} Complete!
+              </h2>
+              <p className="text-gray-600">
+                Moving to the next assessment cluster...
+              </p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (!currentQuestionData) {
-    return (
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardContent className="p-8 text-center">
-            <div className="text-muted-foreground">Loading questions...</div>
-          </CardContent>
+          </div>
         </Card>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      {/* Header */}
-      <div className="text-center">
-        <Badge className="bg-accent/10 text-accent mb-4">
-          Comprehensive Assessment
-        </Badge>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          Deep MYRHYTHM Analysis
-        </h2>
-        <p className="text-muted-foreground">
-          Comprehensive insights for your personalized cognitive wellness plan
-        </p>
-      </div>
-
-      {/* Cluster Progress */}
-      <Card className={`bg-gradient-to-r ${getCurrentCluster().color}/10`}>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-full bg-gradient-to-r ${getCurrentCluster().color} flex items-center justify-center`}>
-                <span className="text-white font-bold">
-                  {getCurrentCluster().letters.join('')}
-                </span>
-              </div>
-              <div>
-                <div className="font-semibold text-foreground">
-                  {getCurrentCluster().name}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {getCurrentCluster().description}
-                </div>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-sm text-muted-foreground">
-                Question {currentQuestionNumber} of {totalQuestions}
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Cluster {currentCluster + 1} of {clusters.length}
-              </div>
-            </div>
+    <div className="space-y-6 max-w-4xl mx-auto px-4">
+      <div className="space-y-8 max-w-3xl mx-auto">
+        <div className="text-center space-y-6">
+          <div className="flex items-center justify-center gap-3">
+            <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${clusters[currentCluster].color}`}></div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
+              MYRHYTHM Assessment
+            </h1>
           </div>
-          
-          {/* Overall Progress */}
-          <div className="w-full bg-muted rounded-full h-2 mb-2">
+          <div className="space-y-3">
+            <h2 className="text-xl font-semibold text-gray-800">
+              {clusters[currentCluster].name}
+            </h2>
+            <p className="text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              {clusters[currentCluster].description}
+            </p>
+          </div>
+        </div>
+
+        {/* Progress indicators */}
+        <div className="space-y-4 bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+          {/* Overall progress */}
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-gray-700">Overall Progress</span>
+            <span className="text-sm font-bold text-beacon-700">{Math.round(progress)}%</span>
+          </div>
+          <div className="w-full bg-gray-100 rounded-full h-3">
             <div 
-              className={`bg-gradient-to-r ${getCurrentCluster().color} h-2 rounded-full transition-all duration-500`}
+              className="bg-gradient-to-r from-beacon-500 to-beacon-600 h-3 rounded-full transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
           
-          {/* Cluster Progress */}
-          <div className="flex justify-between text-xs text-muted-foreground">
-            {clusters.map((cluster, index) => (
-              <span 
-                key={cluster.name}
-                className={`${index < currentCluster ? 'text-primary font-semibold' : index === currentCluster ? 'text-accent font-semibold' : ''}`}
-              >
-                {cluster.letters.join('')}
-              </span>
-            ))}
+          {/* Cluster progress */}
+          <div className="flex justify-between items-center text-sm text-gray-500 pt-2 border-t border-gray-50">
+            <span>
+              Cluster {currentCluster + 1} of {clusters.length}: Question {currentQuestion + 1} of {currentClusterQuestions.length}
+            </span>
+            <span className="font-medium">
+              {Math.round(((currentQuestion + 1) / currentClusterQuestions.length) * 100)}% cluster complete
+            </span>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Question Card */}
-      <Card>
-        <CardContent className="p-6">
-          <RhythmQuestionCard
+        <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+          <RhythmQuestionCard 
             question={currentQuestionData}
-            value={responses[currentQuestionData.id]}
+            value={responses[currentQuestionData.id] || ''}
             onValueChange={(value) => handleResponse(currentQuestionData.id, value)}
           />
+        </div>
 
-          {/* Question insight */}
-          {responses[currentQuestionData.id] && (
-            <div className="mt-6 p-4 bg-accent/10 rounded-lg border border-accent/20">
-              <div className="flex items-start gap-3">
-                <div className="w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-accent text-sm">🔍</span>
-                </div>
-                <div>
-                  <div className="font-medium text-foreground mb-1">Deep Insight</div>
-                  <div className="text-sm text-muted-foreground">
-                    {currentQuestionData.insight}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Navigation */}
-          <div className="flex justify-between mt-8">
-            <Button
-              onClick={handlePrevious}
-              disabled={currentCluster === 0 && currentQuestion === 0}
-              variant="outline"
-              className="disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Previous
-            </Button>
-            
-            <Button
-              onClick={handleNext}
-              disabled={!responses[currentQuestionData.id]}
-              className={`bg-gradient-to-r ${getCurrentCluster().color} hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-white`}
-            >
-              {currentCluster === clusters.length - 1 && currentQuestion === currentClusterQuestions.length - 1 ? (
-                <>Complete Deep Assessment</>
-              ) : currentQuestion === currentClusterQuestions.length - 1 ? (
-                <>Next Cluster: {clusters[currentCluster + 1]?.name}</>
-              ) : (
-                <>Next Question</>
-              )}
-            </Button>
-          </div>
-
-          {/* Fatigue management */}
-          {currentQuestionNumber > 10 && currentQuestionNumber % 5 === 0 && (
-            <div className="mt-6 p-4 bg-primary/5 rounded-lg text-center">
-              <div className="text-sm text-muted-foreground mb-2">
-                💪 You're doing great! {totalQuestions - currentQuestionNumber} questions remaining.
-              </div>
-              <div className="text-xs text-muted-foreground">
-                Your insights are building a powerful personalized plan.
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        {/* Navigation */}
+        <div className="flex justify-between items-center pt-4">
+          <Button
+            variant="outline"
+            onClick={handlePrevious}
+            disabled={currentCluster === 0 && currentQuestion === 0}
+            className="px-8 py-2 h-11 border-gray-200 hover:bg-gray-50"
+          >
+            Previous
+          </Button>
+          
+          <Button
+            onClick={handleNext}
+            disabled={!responses[currentQuestionData.id]}
+            className="px-8 py-2 h-11 bg-gradient-to-r from-beacon-600 to-beacon-700 hover:from-beacon-700 hover:to-beacon-800 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {currentCluster === clusters.length - 1 && currentQuestion === currentClusterQuestions.length - 1 
+              ? 'Complete Assessment' 
+              : 'Next'}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

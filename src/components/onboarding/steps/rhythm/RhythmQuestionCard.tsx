@@ -177,12 +177,21 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-medium text-foreground">
-        {question.question}
-      </h3>
-      
-      {renderQuestion()}
+    <div className="p-8 space-y-8">
+      <div className="space-y-4">
+        <div className="flex items-center gap-3">
+          <div className="px-3 py-1 bg-beacon-50 text-beacon-700 border border-beacon-200 rounded-full text-sm font-semibold">
+            {question.letter} - {question.letterName}
+          </div>
+        </div>
+        <h3 className="text-xl font-medium text-gray-900 leading-relaxed">
+          {question.question}
+        </h3>
+      </div>
+
+      <div className="space-y-4">
+        {renderQuestion()}
+      </div>
     </div>
   );
 }

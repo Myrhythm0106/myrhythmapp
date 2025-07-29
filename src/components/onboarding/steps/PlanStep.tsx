@@ -116,6 +116,24 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
         </div>
       </div>
 
+      {/* Experience First Option */}
+      <div className="mb-8 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
+        <div className="text-center space-y-4">
+          <h3 className="text-xl font-semibold text-blue-900">
+            🌟 Experience MyRhythm First
+          </h3>
+          <p className="text-blue-700 max-w-2xl mx-auto">
+            Try our assessment preview to experience how MyRhythm works before committing to a plan.
+          </p>
+          <button 
+            onClick={() => handlePlanSelect('preview' as PlanType)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+          >
+            Try Assessment Preview (Free)
+          </button>
+        </div>
+      </div>
+
       {/* Plans Grid - Equal Height Cards with Perfect Alignment */}
       <div className={cn(
         "grid gap-6",

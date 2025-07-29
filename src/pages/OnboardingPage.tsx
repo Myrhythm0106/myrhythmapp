@@ -62,8 +62,9 @@ export function OnboardingPage() {
   };
 
   const handlePreAssessmentComplete = () => {
-    console.log("OnboardingPage: Pre-assessment completed - going to payment gate");
-    nextStep(); // Go to assessment type selection
+    console.log("OnboardingPage: Pre-assessment completed - going to comprehensive assessment");
+    setAssessmentType('comprehensive');
+    nextStep(); // Skip assessment type selection, go directly to comprehensive assessment
   };
 
   const handleSkipPayment = () => {
