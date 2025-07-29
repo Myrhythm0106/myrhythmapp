@@ -25,7 +25,11 @@ export interface SupportCircleMember {
     email: boolean;
     sms: boolean;
   };
-  status: 'active' | 'pending' | 'inactive';
+  status: 'active' | 'pending' | 'inactive' | 'revoked' | 'expired';
+  invitation_token?: string;
+  invited_at?: string;
+  joined_at?: string;
+  invitation_expires_at?: string;
   created_at: string;
 }
 
@@ -101,7 +105,7 @@ export function useAccountabilitySystem() {
         .from('support_circle_members')
         .select('*')
         .eq('user_id', user.id)
-        .eq('status', 'active')
+        .in('status', ['active', 'pending'])
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -190,12 +194,27 @@ export function useAccountabilitySystem() {
     });
 
     try {
+      // Generate secure invitation token
+      const { data: tokenData, error: tokenError } = await supabase.rpc('generate_invitation_token');
+      
+      if (tokenError) {
+        console.error('Error generating invitation token:', tokenError);
+        throw new Error('Failed to generate secure invitation token');
+      }
+
+      // Set invitation expiration (48 hours from now)
+      const expirationDate = new Date();
+      expirationDate.setHours(expirationDate.getHours() + 48);
+
       const { data, error } = await supabase
         .from('support_circle_members')
         .insert({
           user_id: user.id,
           ...memberData,
-          status: 'active'
+          status: 'pending',
+          invitation_token: tokenData,
+          invited_at: new Date().toISOString(),
+          invitation_expires_at: expirationDate.toISOString()
         })
         .select()
         .single();
@@ -218,6 +237,35 @@ export function useAccountabilitySystem() {
       
       setSupportCircle(prev => [typedData, ...prev]);
       console.log('Support circle updated in state');
+
+      // Send invitation email if email is provided
+      if (typedData.member_email) {
+        try {
+          console.log('Sending invitation email...');
+          const emailResponse = await supabase.functions.invoke('send-invitation-email', {
+            body: {
+              memberName: typedData.member_name,
+              memberEmail: typedData.member_email,
+              inviterName: user.user_metadata?.name || user.email || 'MyRhythm User',
+              relationship: typedData.relationship,
+              role: typedData.role,
+              invitationToken: tokenData,
+              permissions: typedData.permissions || {}
+            }
+          });
+
+          if (emailResponse.error) {
+            console.error('Error sending invitation email:', emailResponse.error);
+            // Don't throw here - the member was added successfully, just email failed
+          } else {
+            console.log('Invitation email sent successfully');
+          }
+        } catch (emailError) {
+          console.error('Failed to send invitation email:', emailError);
+          // Don't throw here - the member was added successfully, just email failed
+        }
+      }
+
       return typedData;
     } catch (error) {
       console.error('Error adding support member:', error);

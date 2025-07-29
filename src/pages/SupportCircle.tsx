@@ -2,6 +2,7 @@
 import React from 'react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
 import { SimpleInviteForm } from '@/components/support-circle/SimpleInviteForm';
+import { PendingInvitations } from '@/components/support-circle/PendingInvitations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -38,6 +39,7 @@ export default function SupportCircle() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">
           <SimpleInviteForm />
+          <PendingInvitations />
           
           <div className="text-center">
             <Button
@@ -56,11 +58,11 @@ export default function SupportCircle() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Current Members ({supportCircle.length})
+                Active Members ({supportCircle.filter(m => m.status === 'active').length})
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {supportCircle.length === 0 ? (
+              {supportCircle.filter(m => m.status === 'active').length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
                   <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
                   <p>No members in your support circle yet.</p>
@@ -68,7 +70,7 @@ export default function SupportCircle() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {supportCircle.map((member) => (
+                  {supportCircle.filter(m => m.status === 'active').map((member) => (
                     <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">

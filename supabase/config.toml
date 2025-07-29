@@ -10,3 +10,6 @@ otp_expiry = 300
 [auth.password]
 # Enable password breach detection
 breach_detection = true
+
+[functions.send-invitation-email]
+verify_jwt = false

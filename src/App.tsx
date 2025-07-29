@@ -21,6 +21,7 @@ import MemoryBank from "./routes/MemoryBank";
 import Calendar from "./pages/Calendar";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
+import AcceptInvitation from "./pages/AcceptInvitation";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ function App() {
                   <Routes>
                     <Route path="/" element={<MemoryFirstIndex />} />
                     <Route path="/auth" element={<Auth />} />
+                    <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/founders-story" element={<FoundersMemoryStory />} />

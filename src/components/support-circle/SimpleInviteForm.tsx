@@ -98,7 +98,7 @@ export function SimpleInviteForm() {
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
             <h3 className="text-lg font-semibold text-green-700">Invitation Sent!</h3>
             <p className="text-sm text-gray-600">
-              {formData.name} will receive an email invitation to join your support circle.
+              {formData.name} will receive a secure email invitation that expires in 48 hours. They must verify their identity before gaining access.
             </p>
           </div>
         </CardContent>
