@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { TodayQuadrant } from "./quadrants/TodayQuadrant";
 import { ThisWeekQuadrant } from "./quadrants/ThisWeekQuadrant";
 import { ThisMonthQuadrant } from "./quadrants/ThisMonthQuadrant";
 import { ThisYearQuadrant } from "./quadrants/ThisYearQuadrant";
 import { GoalsOverview } from "./GoalsOverview";
-import { Calendar, Target, TrendingUp, Star } from "lucide-react";
+import { Calendar, Target, TrendingUp, Star, ChevronDown } from "lucide-react";
+import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics";
 
 export function CommandCenterLayout() {
+  const { refetch } = useDashboardMetrics();
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
+
   return (
     <div className="space-y-8">
       {/* Time Horizons Navigation */}
@@ -71,41 +84,55 @@ export function CommandCenterLayout() {
           </CardContent>
         </Card>
 
-        {/* This Month Quadrant */}
-        <Card className="bg-gradient-to-br from-teal-50/60 to-emerald-50/60 border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-teal-100 rounded-lg">
-                <TrendingUp className="h-5 w-5 text-teal-600" />
-              </div>
-              <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
-                THIS MONTH
-              </span>
-              <Badge variant="secondary" className="ml-auto">30 Days</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ThisMonthQuadrant />
-          </CardContent>
-        </Card>
+        {/* This Month Quadrant - Collapsible */}
+        <Collapsible defaultOpen={false}>
+          <Card className="bg-gradient-to-br from-teal-50/60 to-emerald-50/60 border-2 border-teal-200/50 shadow-lg hover:shadow-xl transition-all">
+            <CollapsibleTrigger asChild>
+              <CardHeader className="pb-4 cursor-pointer hover:bg-teal-50/40 transition-colors">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 bg-teal-100 rounded-lg">
+                    <TrendingUp className="h-5 w-5 text-teal-600" />
+                  </div>
+                  <span className="bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
+                    THIS MONTH
+                  </span>
+                  <Badge variant="secondary" className="ml-auto mr-2">30 Days</Badge>
+                  <ChevronDown className="h-4 w-4 text-teal-600 transition-transform duration-200" />
+                </CardTitle>
+              </CardHeader>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent>
+                <ThisMonthQuadrant />
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
 
-        {/* This Year Quadrant */}
-        <Card className="bg-gradient-to-br from-amber-50/60 to-orange-50/60 border-2 border-amber-200/50 shadow-lg hover:shadow-xl transition-all">
-          <CardHeader className="pb-4">
-            <CardTitle className="flex items-center gap-3 text-xl">
-              <div className="p-2 bg-amber-100 rounded-lg">
-                <Star className="h-5 w-5 text-amber-600" />
-              </div>
-              <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-                THIS YEAR
-              </span>
-              <Badge variant="secondary" className="ml-auto">365 Days</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ThisYearQuadrant />
-          </CardContent>
-        </Card>
+        {/* This Year Quadrant - Collapsible */}
+        <Collapsible defaultOpen={false}>
+          <Card className="bg-gradient-to-br from-amber-50/60 to-orange-50/60 border-2 border-amber-200/50 shadow-lg hover:shadow-xl transition-all">
+            <CollapsibleTrigger asChild>
+              <CardHeader className="pb-4 cursor-pointer hover:bg-amber-50/40 transition-colors">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 bg-amber-100 rounded-lg">
+                    <Star className="h-5 w-5 text-amber-600" />
+                  </div>
+                  <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+                    THIS YEAR
+                  </span>
+                  <Badge variant="secondary" className="ml-auto mr-2">365 Days</Badge>
+                  <ChevronDown className="h-4 w-4 text-amber-600 transition-transform duration-200" />
+                </CardTitle>
+              </CardHeader>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent>
+                <ThisYearQuadrant />
+              </CardContent>
+            </CollapsibleContent>
+          </Card>
+        </Collapsible>
       </div>
 
       {/* Goals Overview */}

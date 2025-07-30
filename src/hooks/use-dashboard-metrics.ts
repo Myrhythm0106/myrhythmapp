@@ -136,6 +136,7 @@ export function useDashboardMetrics() {
       }
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 30 * 1000, // Auto-refresh every 30 seconds
   });
 }
 

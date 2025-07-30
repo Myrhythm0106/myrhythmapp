@@ -140,7 +140,7 @@ const Calendar = () => {
               <div className="flex flex-col gap-2">
                 <BreadcrumbNav />
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                  Brain Health Calendar
+                  My Daily Rhythm
                 </h1>
               </div>
               <div className="flex items-center gap-3">
@@ -154,7 +154,7 @@ const Calendar = () => {
                 onQuickAction={() => {
                   const now = new Date();
                   updateTransferData({ 
-                    selectedDate: new Date(),
+                    selectedDate: date, // Use the actually selected date
                     selectedTime: now.toTimeString().slice(0, 5)
                   });
                   setShowQuickAction(true);
@@ -166,7 +166,7 @@ const Calendar = () => {
                   const now = new Date();
                   updateTransferData({ 
                     actionType: 'family',
-                    selectedDate: new Date(),
+                    selectedDate: date, // Use the actually selected date
                     selectedTime: now.toTimeString().slice(0, 5)
                   });
                   setShowQuickAction(true);
@@ -175,7 +175,7 @@ const Calendar = () => {
                   const now = new Date();
                   updateTransferData({ 
                     actionType: 'break',
-                    selectedDate: new Date(),
+                    selectedDate: date, // Use the actually selected date
                     selectedTime: now.toTimeString().slice(0, 5)
                   });
                   setShowQuickAction(true);
@@ -250,7 +250,7 @@ const Calendar = () => {
           onQuickAction={() => {
             const now = new Date();
             updateTransferData({ 
-              selectedDate: new Date(),
+              selectedDate: date, // Use the actually selected date
               selectedTime: now.toTimeString().slice(0, 5)
             });
             setShowQuickAction(true);
@@ -262,7 +262,7 @@ const Calendar = () => {
             const now = new Date();
             updateTransferData({ 
               actionType: 'family',
-              selectedDate: new Date(),
+              selectedDate: date, // Use the actually selected date
               selectedTime: now.toTimeString().slice(0, 5)
             });
             setShowQuickAction(true);
@@ -271,7 +271,7 @@ const Calendar = () => {
             const now = new Date();
             updateTransferData({ 
               actionType: 'break',
-              selectedDate: new Date(),
+              selectedDate: date, // Use the actually selected date
               selectedTime: now.toTimeString().slice(0, 5)
             });
             setShowQuickAction(true);

@@ -20,15 +20,16 @@ export function TodayQuadrant() {
 
   return (
     <div className="space-y-4">
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="text-center p-3 bg-white/80 rounded-lg border border-blue-200">
-          <div className="text-2xl font-bold text-blue-600">{completedActions}</div>
-          <div className="text-xs text-blue-700">Completed</div>
+      {/* Quick Stats - Compact */}
+      <div className="flex gap-4 justify-center">
+        <div className="text-center">
+          <div className="text-xl font-bold text-blue-600">{completedActions}</div>
+          <div className="text-xs text-blue-700">Done</div>
         </div>
-        <div className="text-center p-3 bg-white/80 rounded-lg border border-blue-200">
-          <div className="text-2xl font-bold text-blue-600">{totalActions - completedActions}</div>
-          <div className="text-xs text-blue-700">Remaining</div>
+        <div className="w-px bg-blue-200"></div>
+        <div className="text-center">
+          <div className="text-xl font-bold text-blue-600">{totalActions - completedActions}</div>
+          <div className="text-xs text-blue-700">Left</div>
         </div>
       </div>
 
@@ -41,29 +42,30 @@ export function TodayQuadrant() {
         <Progress value={completionRate} className="h-3" />
       </div>
 
-      {/* Top Priorities */}
+      {/* Top Priorities - Compact */}
       <div className="space-y-2">
         <div className="flex items-center gap-2">
           <Target className="h-4 w-4 text-blue-600" />
-          <span className="text-sm font-medium text-blue-700">Top Priorities</span>
+          <span className="text-sm font-medium text-blue-700">Next Up</span>
         </div>
         {topPriorities.length > 0 ? (
           <div className="space-y-1">
-            {topPriorities.map((action, index) => (
-              <div key={action.id} className="flex items-center gap-2 p-2 bg-white/60 rounded border border-blue-200">
-                <div className="text-xs font-bold text-blue-600 w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
+            {topPriorities.slice(0, 2).map((action, index) => (
+              <div key={action.id} className="flex items-center gap-2 p-1.5 bg-white/60 rounded text-xs">
+                <div className="text-xs font-bold text-blue-600 w-3 h-3 rounded-full bg-blue-100 flex items-center justify-center text-[10px]">
                   {index + 1}
                 </div>
-                <span className="text-sm text-blue-800 flex-1 truncate">{action.title}</span>
+                <span className="text-blue-800 flex-1 truncate">{action.title}</span>
               </div>
             ))}
+            {topPriorities.length > 2 && (
+              <div className="text-xs text-blue-600 text-center">+{topPriorities.length - 2} more</div>
+            )}
           </div>
         ) : (
-          <div className="flex items-center justify-center p-4 text-center">
-            <div>
-              <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
-              <p className="text-sm text-blue-700">All done for today! 🎉</p>
-            </div>
+          <div className="text-center py-2">
+            <CheckCircle2 className="h-6 w-6 text-green-500 mx-auto mb-1" />
+            <p className="text-xs text-blue-700">All done! 🎉</p>
           </div>
         )}
       </div>
@@ -73,13 +75,11 @@ export function TodayQuadrant() {
         <QuickDecisionWidget />
       </div>
 
-      {/* Quick Action */}
+      {/* Encouragement - Compact */}
       <div className="pt-2 border-t border-blue-200">
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-2 text-sm text-blue-600">
-            <Zap className="h-4 w-4" />
-            <span>Take action now to build momentum</span>
-          </div>
+        <div className="flex items-center justify-center gap-2 text-xs text-blue-600">
+          <Zap className="h-3 w-3" />
+          <span>Keep going! 💪</span>
         </div>
       </div>
     </div>

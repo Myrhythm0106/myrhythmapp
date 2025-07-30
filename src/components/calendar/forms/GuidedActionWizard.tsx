@@ -14,6 +14,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { actionFormSchema, type ActionFormValues, defaultActionValues } from "./actionFormSchema";
 import { FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
+import { useDataTransfer } from "@/hooks/useDataTransfer";
 
 interface GuidedActionWizardProps {
   onSuccess: (actionData: any) => void;
@@ -31,13 +32,19 @@ export function GuidedActionWizard({
   preFilledData 
 }: GuidedActionWizardProps) {
   const { createAction, loading } = useDailyActions();
+  const { transferData } = useDataTransfer();
+  
+  // Use transferred data if available, fall back to preFilledData
+  const selectedDate = transferData.selectedDate ? 
+    new Date(transferData.selectedDate).toISOString().split('T')[0] : 
+    preFilledData?.date || new Date().toISOString().split('T')[0];
   
   const form = useForm<ActionFormValues>({
     resolver: zodResolver(actionFormSchema),
     defaultValues: {
       ...defaultActionValues,
-      date: preFilledData?.date || new Date().toISOString().split('T')[0],
-      startTime: preFilledData?.time || '',
+      date: selectedDate,
+      startTime: transferData.selectedTime || preFilledData?.time || '',
       watchers: preFilledData?.watchers || []
     }
   });
@@ -186,16 +193,22 @@ export function GuidedActionWizard({
                   </div>
                 </div>
               </Label>
-              <Select value="2" onValueChange={() => {}}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Light - Minimal mental energy</SelectItem>
-                  <SelectItem value="2">Moderate - Some concentration needed</SelectItem>
-                  <SelectItem value="3">Intensive - Peak mental focus required</SelectItem>
-                </SelectContent>
-              </Select>
+              <FormField
+                control={form.control}
+                name="cognitiveLoad"
+                render={({ field }) => (
+                  <Select value={field.value?.toString() || "2"} onValueChange={(value) => field.onChange(parseInt(value))}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Light - Minimal mental energy</SelectItem>
+                      <SelectItem value="2">Moderate - Some concentration needed</SelectItem>
+                      <SelectItem value="3">Intensive - Peak mental focus required</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
             </div>
           </div>
 
@@ -239,16 +252,22 @@ export function GuidedActionWizard({
                 </div>
               </div>
             </Label>
-            <Select value="2" onValueChange={() => {}}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">Gentle - Perfect for low-energy moments</SelectItem>
-                <SelectItem value="2">Moderate - Balanced energy needed</SelectItem>
-                <SelectItem value="3">Energetic - Best when you're feeling strong</SelectItem>
-              </SelectContent>
-            </Select>
+            <FormField
+              control={form.control}
+              name="energyLevel"
+              render={({ field }) => (
+                <Select value={field.value?.toString() || "2"} onValueChange={(value) => field.onChange(parseInt(value))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Gentle - Perfect for low-energy moments</SelectItem>
+                    <SelectItem value="2">Moderate - Balanced energy needed</SelectItem>
+                    <SelectItem value="3">Energetic - Best when you're feeling strong</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
           </div>
 
           <WatchersField />
@@ -275,7 +294,7 @@ export function GuidedActionWizard({
           disabled={loading}
         >
           <Target className="h-4 w-4 mr-2" />
-          {loading ? "Creating..." : "Save & Continue"}
+          {loading ? "Creating your action..." : "Create Action"}
         </Button>
         <Button 
           type="button" 

@@ -24,16 +24,6 @@ export function ThisWeekQuadrant() {
 
   return (
     <div className="space-y-4">
-      {/* Week Theme */}
-      {weekName && (
-        <div className="text-center p-3 bg-white/80 rounded-lg border border-purple-200">
-          <div className="flex items-center justify-center gap-2 mb-1">
-            <Sparkles className="h-4 w-4 text-purple-600" />
-            <span className="text-xs font-medium text-purple-700">This Week's Theme</span>
-          </div>
-          <div className="text-sm font-bold text-purple-800">{weekName}</div>
-        </div>
-      )}
 
       {/* Week Progress */}
       <div className="space-y-2">

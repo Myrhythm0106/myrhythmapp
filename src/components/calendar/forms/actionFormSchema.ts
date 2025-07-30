@@ -44,6 +44,9 @@ export const actionFormSchema = z.object({
   recurrenceEndDate: z.string().optional(),
   recurrenceCount: z.number().optional(),
   recurrenceDaysOfWeek: z.array(z.enum(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"])).optional(),
+  // Brain health specific fields
+  cognitiveLoad: z.number().min(1).max(3).optional().default(2),
+  energyLevel: z.number().min(1).max(3).optional().default(2),
 });
 
 export type ActionFormValues = z.infer<typeof actionFormSchema>;
@@ -82,4 +85,6 @@ export const defaultActionValues: ActionFormValues = {
   recurrenceEndDate: "",
   recurrenceCount: undefined,
   recurrenceDaysOfWeek: [],
+  cognitiveLoad: 2,
+  energyLevel: 2,
 };
