@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSupportMemberRole } from '@/hooks/use-support-member-role';
 import { getOnboardingRoute } from '@/utils/platform/platformDetection';
 
 interface ProtectedRouteProps {
@@ -11,6 +12,7 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteProps) {
   const { user, loading } = useAuth();
+  const { isSupportMember, isLoading: supportRoleLoading } = useSupportMemberRole();
   const location = useLocation();
 
   useEffect(() => {
@@ -24,8 +26,8 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     }
   }, [user, location.pathname, requireAuth]);
 
-  // Show loading spinner while checking auth
-  if (loading) {
+  // Show loading spinner while checking auth and support role
+  if (loading || supportRoleLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60">
         <div className="text-center space-y-4">
@@ -41,9 +43,13 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 
+  // If user is authenticated and is a support member, redirect to support dashboard
+  if (user && isSupportMember && !location.pathname.includes('/support-member-dashboard')) {
+    return <Navigate to="/support-member-dashboard" replace />;
+  }
 
-  // Check if user needs onboarding (for all protected routes except onboarding routes)
-  if (requireAuth && user && !location.pathname.includes('onboarding')) {
+  // Check if user needs onboarding (for all protected routes except onboarding routes and support members)
+  if (requireAuth && user && !isSupportMember && !location.pathname.includes('onboarding')) {
     const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete') === 'true';
     console.log('Checking onboarding status:', { onboardingComplete, currentPath: location.pathname });
     if (!onboardingComplete) {

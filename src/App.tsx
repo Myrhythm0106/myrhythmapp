@@ -22,6 +22,7 @@ import Calendar from "./pages/Calendar";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
 import AcceptInvitation from "./pages/AcceptInvitation";
+import SupportMemberDashboard from "./pages/SupportMemberDashboard";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ function App() {
                     <Route path="/" element={<MemoryFirstIndex />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
+                    <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/founders-story" element={<FoundersMemoryStory />} />
