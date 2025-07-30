@@ -13,6 +13,18 @@ export function WatchersField() {
   const { supportCircle, isLoading } = useAccountabilitySystem();
   const [selectedWatchers, setSelectedWatchers] = useState<string[]>(watch('watchers') || []);
 
+  // Debug: Log what we're getting
+  console.log('🔍 WatchersField Debug:', {
+    supportCircleCount: supportCircle.length,
+    isLoading,
+    members: supportCircle.map(m => ({ 
+      id: m.id, 
+      name: m.member_name, 
+      status: m.status,
+      permissions: m.permissions 
+    }))
+  });
+
   const getRoleIcon = (role: string) => {
     switch (role.toLowerCase()) {
       case 'family':
