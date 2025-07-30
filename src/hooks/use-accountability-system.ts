@@ -74,12 +74,16 @@ export function useAccountabilitySystem() {
 
   // Load support circle data
   useEffect(() => {
+    console.log('🔍 useAccountabilitySystem effect triggered:', { hasUser: !!user, userId: user?.id });
+    
     if (!user) {
+      console.log('❌ No user, setting loading to false');
       setIsLoading(false);
       return;
     }
     
     const loadData = async () => {
+      console.log('🚀 Starting to load accountability data for user:', user.id);
       setIsLoading(true);
       try {
         await Promise.all([
@@ -88,8 +92,9 @@ export function useAccountabilitySystem() {
           loadAlerts()
         ]);
       } catch (error) {
-        console.error('Error loading accountability data:', error);
+        console.error('❌ Error loading accountability data:', error);
       } finally {
+        console.log('✅ Finished loading accountability data');
         setIsLoading(false);
       }
     };
@@ -98,7 +103,12 @@ export function useAccountabilitySystem() {
   }, [user]);
 
   const loadSupportCircle = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('❌ No authenticated user in loadSupportCircle');
+      return;
+    }
+    
+    console.log('🔍 Loading support circle for user:', user.id);
     
     try {
       const { data, error } = await supabase
@@ -108,7 +118,12 @@ export function useAccountabilitySystem() {
         .in('status', ['active', 'pending'])
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('📊 Support circle query result:', { data, error, userID: user.id });
+
+      if (error) {
+        console.error('❌ Database error:', error);
+        throw error;
+      }
       
       // Properly cast database types to our interfaces
       const typedData = (data || []).map(member => ({
@@ -119,9 +134,10 @@ export function useAccountabilitySystem() {
         notification_preferences: (member.notification_preferences as any) || { email: true, sms: false }
       })) as SupportCircleMember[];
       
+      console.log('✅ Support circle loaded:', typedData.length, 'members');
       setSupportCircle(typedData);
     } catch (error) {
-      console.error('Error loading support circle:', error);
+      console.error('❌ Error loading support circle:', error);
       toast.error('Failed to load support circle');
     }
   };
