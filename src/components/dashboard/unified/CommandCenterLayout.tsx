@@ -13,9 +13,11 @@ import { SupportCirclePresence } from "../support/SupportCirclePresence";
 import { EncouragementMessages } from "../support/EncouragementMessages";
 import { Calendar, Target, TrendingUp, Star, ChevronDown } from "lucide-react";
 import { useDashboardMetrics } from "@/hooks/use-dashboard-metrics";
+import { useSupportCircleMessaging } from "@/hooks/use-support-circle-messaging";
 
 export function CommandCenterLayout() {
-  const { refetch } = useDashboardMetrics();
+  const { data: metrics, refetch } = useDashboardMetrics();
+  const { unreadCount } = useSupportCircleMessaging();
   const [isClinicalView, setIsClinicalView] = useState(false);
   
   // TODO: Get user role from auth context or props
@@ -187,7 +189,9 @@ export function CommandCenterLayout() {
                   <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent font-bold">
                     Growing My Confidence
                   </span>
-                  <Badge variant="outline" className="ml-auto mr-2 border-blue-300 text-blue-700">30 Days of Progress</Badge>
+                  <Badge variant="outline" className="ml-auto mr-2 border-blue-300 text-blue-700">
+                    {metrics?.monthlyMetrics.activeDays || 0}/30 Days of Progress
+                  </Badge>
                   <ChevronDown className="h-4 w-4 text-blue-600 transition-transform duration-200" />
                 </CardTitle>
               </CardHeader>
@@ -212,7 +216,9 @@ export function CommandCenterLayout() {
                   <span className="bg-gradient-to-r from-amber-600 to-yellow-600 bg-clip-text text-transparent font-bold">
                     Transforming My Life
                   </span>
-                  <Badge variant="outline" className="ml-auto mr-2 border-amber-300 text-amber-700">365 Days of Change</Badge>
+                  <Badge variant="outline" className="ml-auto mr-2 border-amber-300 text-amber-700">
+                    {metrics?.yearlyMetrics.daysCompleted || 0}/365 Days of Change
+                  </Badge>
                   <ChevronDown className="h-4 w-4 text-amber-600 transition-transform duration-200" />
                 </CardTitle>
               </CardHeader>
