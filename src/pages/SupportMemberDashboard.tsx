@@ -15,6 +15,7 @@ import {
 import { useSupportMemberRole } from '@/hooks/use-support-member-role';
 import { SupportMemberActions } from '@/components/support-member/SupportMemberActions';
 import { SupportMemberMessages } from '@/components/support-member/SupportMemberMessages';
+import { SupportCircleCheatSheet } from '@/components/support-member/SupportCircleCheatSheet';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function SupportMemberDashboard() {
@@ -188,37 +189,11 @@ export default function SupportMemberDashboard() {
       <div className="max-w-6xl mx-auto p-4">
         {activeTab === 'overview' && (
           <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Welcome to the Support Circle</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">
-                  You're here to support {currentUser.supportedUserName} on their wellness journey. 
-                  Here's what you can do:
-                </p>
-                <div className="grid gap-4 md:grid-cols-2">
-                  <div className="flex gap-3 p-3 bg-muted/50 rounded-lg">
-                    <Calendar className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <h4 className="font-medium">View Activities</h4>
-                      <p className="text-sm text-muted-foreground">
-                        See their daily actions and provide encouragement
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3 p-3 bg-muted/50 rounded-lg">
-                    <MessageCircle className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <h4 className="font-medium">Send Messages</h4>
-                      <p className="text-sm text-muted-foreground">
-                        Offer support and celebrate their progress
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <SupportCircleCheatSheet
+              supportedUserName={currentUser.supportedUserName}
+              onNavigateToActions={() => setActiveTab('actions')}
+              onNavigateToMessages={() => setActiveTab('messages')}
+            />
 
             <div className="grid gap-6 md:grid-cols-2">
               <Card>
