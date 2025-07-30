@@ -194,13 +194,8 @@ export function useAccountabilitySystem() {
     });
 
     try {
-      // Generate secure invitation token
-      const { data: tokenData, error: tokenError } = await supabase.rpc('generate_invitation_token');
-      
-      if (tokenError) {
-        console.error('Error generating invitation token:', tokenError);
-        throw new Error('Failed to generate secure invitation token');
-      }
+      // Generate secure invitation token using crypto.randomUUID()
+      const invitationToken = crypto.randomUUID().replace(/-/g, '');
 
       // Set invitation expiration (48 hours from now)
       const expirationDate = new Date();
@@ -212,7 +207,7 @@ export function useAccountabilitySystem() {
           user_id: user.id,
           ...memberData,
           status: 'pending',
-          invitation_token: tokenData,
+          invitation_token: invitationToken,
           invited_at: new Date().toISOString(),
           invitation_expires_at: expirationDate.toISOString()
         })
@@ -249,7 +244,7 @@ export function useAccountabilitySystem() {
               inviterName: user.user_metadata?.name || user.email || 'MyRhythm User',
               relationship: typedData.relationship,
               role: typedData.role,
-              invitationToken: tokenData,
+              invitationToken: invitationToken,
               expiresAt: expirationDate.toISOString()
             }
           });
