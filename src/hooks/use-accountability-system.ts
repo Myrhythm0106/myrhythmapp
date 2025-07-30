@@ -242,7 +242,7 @@ export function useAccountabilitySystem() {
       if (typedData.member_email) {
         try {
           console.log('Sending invitation email...');
-          const emailResponse = await supabase.functions.invoke('send-invitation-email', {
+          const emailResponse = await supabase.functions.invoke('send-support-invitation', {
             body: {
               memberName: typedData.member_name,
               memberEmail: typedData.member_email,
@@ -250,7 +250,7 @@ export function useAccountabilitySystem() {
               relationship: typedData.relationship,
               role: typedData.role,
               invitationToken: tokenData,
-              permissions: typedData.permissions || {}
+              expiresAt: expirationDate.toISOString()
             }
           });
 
