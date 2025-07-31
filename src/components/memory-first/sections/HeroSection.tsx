@@ -3,12 +3,45 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { SpeechButton } from "@/components/ui/SpeechButton";
 import { Brain, Users, Heart, ArrowRight, CheckCircle, Star, Play, Volume2, Eye, Zap, User, UserPlus, Stethoscope } from "lucide-react";
 
 export function HeroSection() {
   const navigate = useNavigate();
   const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | 'cognitive-optimization' | 'wellness' | 'colleague' | 'professional' | null>(null);
   const [showQuickView, setShowQuickView] = useState(true);
+  const [textSize, setTextSize] = useState('medium');
+  const [simpleMode, setSimpleMode] = useState(false);
+
+  const handleTextToSpeech = () => {
+    const textToRead = "MyRhythm. Memory Challenges Don't End Your Story. The only authentic app designed for minds recovering from brain injury, stroke, concussion, or memory challenges.";
+    // SpeechButton will handle the actual speech
+  };
+
+  const handleLargerText = () => {
+    const sizes = ['medium', 'large', 'xl'];
+    const currentIndex = sizes.indexOf(textSize);
+    const nextSize = sizes[(currentIndex + 1) % sizes.length];
+    setTextSize(nextSize);
+    
+    // Apply to document root
+    document.documentElement.style.setProperty('--text-scale', 
+      nextSize === 'large' ? '1.1' : nextSize === 'xl' ? '1.2' : '1'
+    );
+  };
+
+  const handleSimpleMode = () => {
+    setSimpleMode(!simpleMode);
+    if (!simpleMode) {
+      document.body.classList.add('simple-mode');
+    } else {
+      document.body.classList.remove('simple-mode');
+    }
+  };
+
+  const handleShowDemo = () => {
+    window.open('https://www.youtube.com/watch?v=demolink', '_blank');
+  };
   
   const userTypes = [{
     id: 'individual' as const,
@@ -154,38 +187,60 @@ export function HeroSection() {
             </h3>
             <p className="text-sm text-emerald-700">Designed to work with your brain, not against it</p>
             <div className="flex flex-wrap justify-center gap-3">
-              <Button variant="outline" className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-emerald-300 text-emerald-700 hover:text-emerald-800">
-                <Volume2 className="h-4 w-4" />
-                Read Aloud
-              </Button>
-              <Button variant="outline" className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-blue-300 text-blue-700 hover:text-blue-800">
+              <SpeechButton 
+                text="MyRhythm. Memory Challenges Don't End Your Story. The only authentic app designed for minds recovering from brain injury, stroke, concussion, or memory challenges."
+                variant="outline"
+                showLabel={true}
+                className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-emerald-300 text-emerald-700 hover:text-emerald-800"
+              />
+              <Button 
+                variant="outline" 
+                onClick={handleLargerText}
+                className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-blue-300 text-blue-700 hover:text-blue-800"
+              >
                 <Eye className="h-4 w-4" />
-                Larger Text
+                {textSize === 'medium' ? 'Larger Text' : textSize === 'large' ? 'Extra Large' : 'Normal Text'}
               </Button>
-              <Button variant="outline" className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-purple-300 text-purple-700 hover:text-purple-800">
+              <Button 
+                variant="outline" 
+                onClick={handleSimpleMode}
+                className="gap-2 px-4 py-3 bg-white/80 hover:bg-white border-purple-300 text-purple-700 hover:text-purple-800"
+              >
                 <Zap className="h-4 w-4" />
-                Simple Mode
+                {simpleMode ? 'Normal Mode' : 'Simple Mode'}
               </Button>
             </div>
           </div>
         </div>
 
         {/* Progressive Disclosure CTA */}
-        <div className="text-center space-y-4">
-          <div className="space-y-3">
-            <Button size="lg" onClick={e => {
-            e.preventDefault();
-            navigate("/onboarding");
-          }} className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-base md:text-lg px-6 md:px-8 py-4 md:py-6 shadow-lg">
+        <div className="text-center space-y-6">
+          <div className="space-y-4">
+            <Button 
+              size="lg" 
+              onClick={() => navigate("/onboarding")}
+              className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 text-base md:text-lg px-6 md:px-8 py-4 md:py-6 shadow-lg block mx-auto"
+            >
               <span className="hidden sm:inline">🧠 Start Your Memory-First Journey</span>
               <span className="sm:hidden">🧠 Start Journey</span>
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             
+            {selectedUserType === 'family' && (
+              <Button 
+                size="lg"
+                variant="outline" 
+                onClick={() => navigate("/onboarding?type=family")}
+                className="border-2 border-teal-300 text-teal-700 hover:bg-teal-50 text-base md:text-lg px-6 md:px-8 py-4 md:py-6 shadow-lg block mx-auto mt-4"
+              >
+                <Heart className="mr-2 h-5 w-5" />
+                I'm a Family Member/Caregiver
+              </Button>
+            )}
           </div>
           
           <div className="flex justify-center gap-4 text-sm">
-            <Button variant="ghost" size="sm" className="gap-2">
+            <Button variant="ghost" size="sm" className="gap-2" onClick={handleShowDemo}>
               <Play className="h-4 w-4" />
               Quick Demo (2 min)
             </Button>
@@ -194,18 +249,60 @@ export function HeroSection() {
             </Button>
           </div>
 
+          {!showQuickView && (
+            <div className="bg-white/80 backdrop-blur-sm p-6 rounded-lg border border-gray-200 max-w-4xl mx-auto space-y-4">
+              <h4 className="font-semibold text-lg text-gray-800">Why MyRhythm Works</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                <div className="space-y-3">
+                  <h5 className="font-medium text-gray-700">📊 Proven Results</h5>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span><strong>95% reduction</strong> in missed appointments</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span><strong>78% improvement</strong> in daily task completion</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span><strong>85% of families</strong> report reduced stress</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="space-y-3">
+                  <h5 className="font-medium text-gray-700">🧠 Memory-First Design</h5>
+                  <ul className="text-sm text-gray-600 space-y-2">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>Visual cues replace complex text</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>Automatic reminders and prompts</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>Family support without dependency</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Trust Indicators - Visual */}
-          <div className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground pt-4">
-            <span className="flex items-center gap-1">
-              <CheckCircle className="h-3 w-3 text-green-500" />
+          <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground pt-4">
+            <span className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
               1,000+ survivors
             </span>
-            <span className="flex items-center gap-1">
-              <CheckCircle className="h-3 w-3 text-green-500" />
+            <span className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
               Family-tested
             </span>
-            <span className="flex items-center gap-1">
-              <CheckCircle className="h-3 w-3 text-green-500" />
+            <span className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
               Medical approved
             </span>
           </div>
