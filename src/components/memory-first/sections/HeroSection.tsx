@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Brain, Users, Heart, ArrowRight, CheckCircle, Star, Play, Volume2, Eye, Zap, User, UserPlus } from "lucide-react";
+import { Brain, Users, Heart, ArrowRight, CheckCircle, Star, Play, Volume2, Eye, Zap, User, UserPlus, Stethoscope } from "lucide-react";
+
 export function HeroSection() {
   const navigate = useNavigate();
-  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | 'cognitive-optimization' | 'wellness' | 'colleague' | null>(null);
+  const [selectedUserType, setSelectedUserType] = useState<'individual' | 'family' | 'cognitive-optimization' | 'wellness' | 'colleague' | 'professional' | null>(null);
   const [showQuickView, setShowQuickView] = useState(true);
+  
   const userTypes = [{
     id: 'individual' as const,
     icon: Brain,
@@ -36,6 +38,13 @@ export function HeroSection() {
     subtitle: 'Overall mental health focus',
     color: 'green',
     description: 'Supporting your overall mental wellness journey'
+  }, {
+    id: 'professional' as const,
+    icon: Stethoscope,
+    title: 'Medical Professional',
+    subtitle: 'Healthcare provider',
+    color: 'rose',
+    description: 'Supporting patients with cognitive challenges'
   }, {
     id: 'colleague' as const,
     icon: UserPlus,
