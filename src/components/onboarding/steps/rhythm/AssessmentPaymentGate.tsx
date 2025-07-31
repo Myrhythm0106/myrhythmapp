@@ -108,23 +108,39 @@ export function AssessmentPaymentGate({
             </div>
           </div>
 
-          {/* Sample Insights */}
+          {/* Enticing Preview Insights */}
           <div className="space-y-3">
             <h4 className="text-lg font-semibold flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-primary" />
-              Sample Insights
+              Your Preview Insights
             </h4>
             <div className="space-y-2">
               {keyInsights.map((insight, index) => (
-                <div key={index} className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
+                <div key={index} className="flex items-start gap-3 p-3 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg border border-primary/10">
                   <Star className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-                  <p className="text-sm text-foreground">{insight}</p>
+                  <p className="text-sm text-foreground font-medium">{insight}</p>
                 </div>
               ))}
+              
+              {/* Teaser insights */}
+              <div className="space-y-2">
+                <div className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg border-2 border-dashed">
+                  <Lock className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground">🧠 Your optimal focus times and energy patterns</p>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg border-2 border-dashed">
+                  <Lock className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground">⚡ Personalized productivity enhancement strategies</p>
+                </div>
+                <div className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg border-2 border-dashed">
+                  <Lock className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <p className="text-sm text-muted-foreground">📊 Daily action plan tailored to your rhythm</p>
+                </div>
+              </div>
             </div>
-            <div className="p-3 bg-muted/30 rounded-lg border-2 border-dashed">
-              <p className="text-sm text-muted-foreground text-center">
-                + 8 more detailed insights unlock with full access
+            <div className="p-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-primary/20 text-center">
+              <p className="text-sm text-primary font-semibold">
+                ✨ + 15 more personalized insights, recommendations, and tools unlock with subscription
               </p>
             </div>
           </div>

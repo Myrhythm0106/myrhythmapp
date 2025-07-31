@@ -120,16 +120,16 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
       <div className="mb-8 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
         <div className="text-center space-y-4">
           <h3 className="text-xl font-semibold text-blue-900">
-            🌟 Experience MyRhythm First
+            🌟 Try Before You Subscribe
           </h3>
           <p className="text-blue-700 max-w-2xl mx-auto">
-            Try our assessment preview to experience how MyRhythm works before committing to a plan.
+            <strong>Assessment First, Payment Later:</strong> Complete your personalized MYRHYTHM assessment and see preview results before choosing a subscription plan.
           </p>
           <button 
             onClick={() => handlePlanSelect('preview' as PlanType)}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            Try Assessment Preview (Free)
+            Start Free Assessment Preview
           </button>
         </div>
       </div>
@@ -172,22 +172,22 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
           // Monthly Plans - Show Trial Information
           <div className="text-center bg-blue-50 p-6 rounded-xl border border-blue-200 shadow-sm">
             <h3 className="font-semibold text-blue-900 mb-3 text-lg">
-              🎯 7-Day Free Trial Available
+              🎯 How It Works: Assessment → Preview → Subscribe
             </h3>
             <p className="text-sm text-blue-800 leading-relaxed max-w-3xl mx-auto">
-              <strong>Monthly plans include a 7-day free trial</strong> with full access. 
-              Your payment method will be charged after the trial period ends. Cancel anytime during the trial.
+              <strong>1. Complete Assessment (Free)</strong> → <strong>2. See Preview Results</strong> → <strong>3. Subscribe for Full Access</strong><br/>
+              Monthly plans include a 7-day free trial. Cancel anytime during the trial.
             </p>
           </div>
         ) : (
           // Annual Plans - Show Immediate Access Information
           <div className="text-center bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl border border-green-200 shadow-sm">
             <h3 className="font-semibold text-green-900 mb-3 text-lg">
-              🚀 Annual Plans - Immediate Access & Savings
+              🚀 How It Works: Assessment → Preview → Subscribe & Save
             </h3>
             <p className="text-sm text-green-800 leading-relaxed max-w-3xl mx-auto">
-              <strong>Annual plans start immediately</strong> with full access and significant savings. 
-              30-day money-back guarantee included for peace of mind.
+              <strong>1. Complete Assessment (Free)</strong> → <strong>2. See Preview Results</strong> → <strong>3. Subscribe Annually & Save</strong><br/>
+              Immediate full access with significant savings. 30-day money-back guarantee.
             </p>
           </div>
         )}

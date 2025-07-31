@@ -62,15 +62,17 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
         </div>
         
         <div className="space-y-2 pt-4">
-          <div className="text-3xl font-bold text-primary">
-            {currentPrice?.split('/')[0]}
-          </div>
-          <div className="text-sm text-gray-500">
-            {isAnnual ? 'per year' : 'per month'}
+          <div className="flex items-baseline justify-center gap-1">
+            <span className="text-3xl font-bold text-primary">
+              {currentPrice?.split('/')[0]}
+            </span>
+            <span className="text-sm text-gray-500 font-medium">
+              /{isAnnual ? 'year' : 'month'}
+            </span>
           </div>
           {isAnnual && (
             <div className="text-xs text-green-600 font-medium">
-              Equivalent to £{(parseFloat(currentPrice?.replace(/[£,]/g, '') || '0') / 12).toFixed(2)}/month
+              Only £{(parseFloat(currentPrice?.replace(/[£,]/g, '') || '0') / 12).toFixed(2)}/month
             </div>
           )}
         </div>
