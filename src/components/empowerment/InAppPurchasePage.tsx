@@ -1,15 +1,35 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Crown, Star, Zap, Check, Shield, Heart, Brain, Target, Sparkles, MapPin, Camera, MessageCircle, BookOpen, AlertTriangle, Activity, Lightbulb, Calendar } from "lucide-react";
+import { useSubscription } from "@/contexts/SubscriptionContext";
+import { toast } from "sonner";
 
 interface InAppPurchasePageProps {
   onBack: () => void;
 }
 
 export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
+  const navigate = useNavigate();
+  const { updateSubscription, setDemoMode } = useSubscription();
+
+  const handlePurchase = (featureId: string, featureName: string) => {
+    if (featureId === 'memory-bridge-premium' || featureId === 'memory-bridge-pro') {
+      // Upgrade to premium and navigate to Memory Bridge
+      updateSubscription('premium');
+      setDemoMode(true); // Enable demo mode for testing
+      toast.success(`🎉 ${featureName} activated! Redirecting to Memory Bridge...`);
+      setTimeout(() => {
+        navigate('/memory-bridge');
+      }, 1500);
+    } else {
+      // Handle other purchases
+      toast.success(`🎉 ${featureName} activated!`);
+    }
+  };
   const individualFeatures = [
     {
       id: 'memory-bridge-premium',
@@ -352,6 +372,7 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
                          ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
                          : ''
                      }`}
+                     onClick={() => handlePurchase(feature.id, feature.name)}
                    >
                      {feature.highlight ? <Brain className="h-3 w-3 mr-2" /> : <Zap className="h-3 w-3 mr-2" />}
                      {feature.highlight ? 'Transform Relationships' : 'Add Feature'}
@@ -409,6 +430,7 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
                            ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700'
                            : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'
                        }`}
+                       onClick={() => handlePurchase(bundle.id, bundle.name)}
                      >
                        {bundle.highlight ? <Brain className="h-3 w-3 mr-2" /> : <Sparkles className="h-3 w-3 mr-2" />}
                        {bundle.highlight ? 'Transform Your Life' : 'Get Bundle'}
@@ -505,6 +527,7 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
                        ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
                        : ''
                    }`}
+                   onClick={() => handlePurchase(plan.id, plan.name)}
                  >
                    {plan.highlight ? <Brain className="h-4 w-4 mr-2" /> : <Zap className="h-4 w-4 mr-2" />}
                    {plan.highlight ? 'Start Transforming' : `Choose ${plan.name}`}
