@@ -175,7 +175,7 @@ export function useMemoryBridge() {
       }
 
       console.log('✅ useMemoryBridge: Fetched extracted actions:', actions?.length || 0, 'actions');
-      setExtractedActions(actions || []);
+      setExtractedActions((actions || []) as ExtractedAction[]);
     } catch (error) {
       console.error('❌ useMemoryBridge: Unexpected error fetching extracted actions:', error);
       toast.error('Failed to fetch extracted actions');
@@ -257,7 +257,7 @@ export function useMemoryBridge() {
       }
 
       console.log('✅ useMemoryBridge: Fetched meeting history:', meetings?.length || 0, 'meetings');
-      return meetings || [];
+      return (meetings || []) as MeetingRecording[];
     } catch (error) {
       console.error('❌ useMemoryBridge: Unexpected error fetching meeting history:', error);
       toast.error('Failed to fetch meeting history');

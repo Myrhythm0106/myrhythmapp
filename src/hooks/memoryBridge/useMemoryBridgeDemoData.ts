@@ -14,7 +14,7 @@ export function useMemoryBridgeDemoData() {
         user_id: 'demo-user',
         meeting_recording_id: 'demo-meeting-1',
         action_text: 'Call Sarah back about the school meeting by Friday',
-        action_type: 'commitment',
+        action_type: 'commitment' as const,
         priority_level: 5,
         confidence_score: 0.95,
         timestamp_in_recording: 120,
@@ -32,7 +32,7 @@ export function useMemoryBridgeDemoData() {
         user_id: 'demo-user',
         meeting_recording_id: 'demo-meeting-2',
         action_text: 'Send Mom the photos from last weekend',
-        action_type: 'promise',
+        action_type: 'promise' as const,
         priority_level: 3,
         confidence_score: 0.88,
         timestamp_in_recording: 85,
@@ -50,7 +50,7 @@ export function useMemoryBridgeDemoData() {
         user_id: 'demo-user',
         meeting_recording_id: 'demo-meeting-3',
         action_text: 'Pick up prescription for John by Tuesday',
-        action_type: 'commitment',
+        action_type: 'commitment' as const,
         priority_level: 5,
         confidence_score: 0.92,
         timestamp_in_recording: 45,
@@ -111,7 +111,7 @@ export function useMemoryBridgeDemoData() {
         id: 'context-1',
         user_id: 'demo-user',
         participant_name: 'Sarah',
-        participant_contact: 'sarah@example.com',
+        relationship_type: 'spouse' as const,
         conversation_history: [
           {
             date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
@@ -146,7 +146,6 @@ export function useMemoryBridgeDemoData() {
         ],
         important_topics: ['Emma\'s education', 'Family time', 'Work-life balance'],
         last_conversation_date: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        last_conversation_summary: 'Discussed Emma\'s upcoming parent-teacher conference and Sarah\'s concerns about her math grades',
         created_at: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
         updated_at: new Date().toISOString()
       },
@@ -154,7 +153,7 @@ export function useMemoryBridgeDemoData() {
         id: 'context-2',
         user_id: 'demo-user',
         participant_name: 'Mom',
-        participant_contact: 'mom@example.com',
+        relationship_type: 'parent' as const,
         conversation_history: [
           {
             date: new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString(),
@@ -189,7 +188,6 @@ export function useMemoryBridgeDemoData() {
         ],
         important_topics: ['Grandchildren', 'Health updates', 'Family memories'],
         last_conversation_date: new Date(Date.now() - 25 * 60 * 60 * 1000).toISOString(),
-        last_conversation_summary: 'Mom enjoyed hearing about Emma\'s recent achievements and requested more photos from our weekend activities',
         created_at: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
         updated_at: new Date().toISOString()
       }
