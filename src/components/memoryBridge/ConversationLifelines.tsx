@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { 
   MessageCircle, 
   Clock, 
@@ -53,6 +54,7 @@ interface ContextPrompt {
 
 export function ConversationLifelines() {
   const { user } = useAuth();
+  const { extractedActions } = useMemoryBridge();
   const [contexts, setContexts] = useState<ConversationContext[]>([]);
   const [activePrompts, setActivePrompts] = useState<ContextPrompt[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -202,15 +204,8 @@ export function ConversationLifelines() {
         ...context.conversation_history
       ].slice(0, 10); // Keep last 10 conversations
 
-      const { error } = await supabase
-        .from('conversation_contexts')
-        .update({
-          last_conversation_date: new Date().toISOString().split('T')[0],
-          conversation_history: updatedHistory
-        })
-        .eq('id', contextId);
-
-      if (error) throw error;
+      // TODO: Update conversation context when table is ready
+      console.log('Would update conversation:', contextId, updatedHistory);
       await fetchConversationContexts();
     } catch (error) {
       console.error('Error updating conversation:', error);
@@ -252,10 +247,9 @@ export function ConversationLifelines() {
                   <div className="flex-1">
                     <p className="text-sm font-medium">{prompt.message}</p>
                     <div className="flex items-center gap-2 mt-1">
-                      <Badge variant="outline" size="sm">{prompt.participant}</Badge>
+                      <Badge variant="outline">{prompt.participant}</Badge>
                       <Badge 
-                        variant={prompt.priority === 'high' ? 'destructive' : 'secondary'} 
-                        size="sm"
+                        variant={prompt.priority === 'high' ? 'destructive' : 'secondary'}
                       >
                         {prompt.priority} priority
                       </Badge>
@@ -386,7 +380,7 @@ export function ConversationLifelines() {
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {context.conversation_history[0].key_topics.map((topic, index) => (
-                      <Badge key={index} variant="secondary" size="sm">
+                      <Badge key={index} variant="secondary">
                         {topic}
                       </Badge>
                     ))}
@@ -407,7 +401,6 @@ export function ConversationLifelines() {
                         <span className="text-sm">{commitment.description}</span>
                         <Badge 
                           variant={commitment.status === 'completed' ? 'default' : 'secondary'}
-                          size="sm"
                         >
                           {commitment.status}
                         </Badge>
@@ -423,7 +416,7 @@ export function ConversationLifelines() {
                   <p className="text-sm font-medium mb-2">Important Topics</p>
                   <div className="flex flex-wrap gap-1">
                     {context.important_topics.map((topic, index) => (
-                      <Badge key={index} variant="outline" size="sm">
+                      <Badge key={index} variant="outline">
                         {topic}
                       </Badge>
                     ))}

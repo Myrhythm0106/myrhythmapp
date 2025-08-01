@@ -68,14 +68,17 @@ export function FamilyIntegrationDashboard() {
 
       if (error) throw error;
       
-      const familyData = members?.map(member => ({
-        ...member,
-        permissions: {
-          memory_bridge: member.permissions?.memory_bridge || false,
-          action_visibility: member.permissions?.action_visibility || false,
-          crisis_alerts: member.permissions?.crisis_alerts || false
-        }
-      })) || [];
+      const familyData = members?.map(member => {
+        const permissions = member.permissions as Record<string, any> || {};
+        return {
+          ...member,
+          permissions: {
+            memory_bridge: permissions.memory_bridge || false,
+            action_visibility: permissions.action_visibility || false,
+            crisis_alerts: permissions.crisis_alerts || false
+          }
+        };
+      }) || [];
       
       setFamilyMembers(familyData);
     } catch (error) {
@@ -247,7 +250,6 @@ export function FamilyIntegrationDashboard() {
                           onCheckedChange={(checked) => 
                             updateMemberPermissions(member.id, 'memory_bridge', checked)
                           }
-                          size="sm"
                         />
                         <span className="text-xs">Memory Bridge Access</span>
                       </div>
@@ -257,7 +259,6 @@ export function FamilyIntegrationDashboard() {
                           onCheckedChange={(checked) => 
                             updateMemberPermissions(member.id, 'action_visibility', checked)
                           }
-                          size="sm"
                         />
                         <span className="text-xs">See Commitments</span>
                       </div>
@@ -267,7 +268,6 @@ export function FamilyIntegrationDashboard() {
                           onCheckedChange={(checked) => 
                             updateMemberPermissions(member.id, 'crisis_alerts', checked)
                           }
-                          size="sm"
                         />
                         <span className="text-xs">Crisis Alerts</span>
                       </div>

@@ -24,10 +24,11 @@ import { MeetingSetupData } from '@/types/memoryBridge';
 
 interface MeetingSetupDialogProps {
   onStartMeeting: (setupData: MeetingSetupData) => void;
+  onClose?: () => void;
   isLoading?: boolean;
 }
 
-export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDialogProps) {
+export function MeetingSetupDialog({ onStartMeeting, onClose, isLoading }: MeetingSetupDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [participants, setParticipants] = useState<{ name: string; relationship: string }[]>([]);
