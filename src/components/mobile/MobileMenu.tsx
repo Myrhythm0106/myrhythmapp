@@ -7,7 +7,7 @@ import {
   DrawerClose
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle, FileText, Sliders, Palette, Type, Volume2, Shield, Smile, Target } from "lucide-react";
+import { Menu, X, Home, Calendar, HeartPulse, Brain, User, Users, Heart, Info, Settings, HelpCircle, FileText, Sliders, Palette, Type, Volume2, Shield, Smile, Target, MemoryStick } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function MobileMenu() {
@@ -16,6 +16,7 @@ export function MobileMenu() {
   // Primary navigation items
   const primaryNavItems = [
     { to: "/dashboard", icon: <Home className="h-5 w-5" />, label: "Dashboard", badge: null },
+    { to: "/memory-bridge", icon: <Brain className="h-5 w-5" />, label: "Memory Bridge", badge: "Premium" },
     { to: "/calendar", icon: <Calendar className="h-5 w-5" />, label: "Calendar", badge: null },
     { to: "/mood", icon: <Smile className="h-5 w-5" />, label: "Mood Tracking", badge: null },
     { to: "/tracking", icon: <HeartPulse className="h-5 w-5" />, label: "Health Tracking", badge: null },
