@@ -37,29 +37,29 @@
 
     --radius: 0.5rem;
 
-    /* Memory Emerald: Subtle therapeutic touches - VERY LIGHT for micro-accents only */
-    --memory-emerald-50: 156 25% 98%;
-    --memory-emerald-100: 149 20% 95%;
-    --memory-emerald-200: 152 22% 88%;
-    --memory-emerald-300: 156 24% 78%;
-    --memory-emerald-400: 158 26% 65%;
-    --memory-emerald-500: 160 28% 50%;
-    --memory-emerald-600: 161 30% 40%;
-    --memory-emerald-700: 163 32% 30%;
-    --memory-emerald-800: 163 34% 22%;
-    --memory-emerald-900: 164 36% 16%;
+    /* Memory Emerald: VIBRANT therapeutic emerald for engagement */
+    --memory-emerald-50: 156 70% 97%;
+    --memory-emerald-100: 149 65% 92%;
+    --memory-emerald-200: 152 68% 85%;
+    --memory-emerald-300: 156 70% 75%;
+    --memory-emerald-400: 158 72% 65%;
+    --memory-emerald-500: 160 75% 55%;
+    --memory-emerald-600: 161 78% 45%;
+    --memory-emerald-700: 163 80% 35%;
+    --memory-emerald-800: 163 82% 25%;
+    --memory-emerald-900: 164 85% 18%;
 
-    /* Brain Health: Professional teals - 45-55% saturation for prominence */
-    --brain-health-50: 166 50% 98%;
-    --brain-health-100: 167 48% 95%;
-    --brain-health-200: 168 46% 88%;
-    --brain-health-300: 171 48% 75%;
-    --brain-health-400: 172 50% 62%;
-    --brain-health-500: 173 52% 48%;
-    --brain-health-600: 175 54% 38%;
-    --brain-health-700: 175 56% 28%;
-    --brain-health-800: 176 58% 20%;
-    --brain-health-900: 176 60% 14%;
+    /* Brain Health: BOLD professional teals - high saturation for trust */
+    --brain-health-50: 166 85% 97%;
+    --brain-health-100: 167 80% 92%;
+    --brain-health-200: 168 75% 85%;
+    --brain-health-300: 171 78% 72%;
+    --brain-health-400: 172 80% 60%;
+    --brain-health-500: 173 85% 50%;
+    --brain-health-600: 175 88% 40%;
+    --brain-health-700: 175 90% 30%;
+    --brain-health-800: 176 92% 22%;
+    --brain-health-900: 176 95% 16%;
 
     /* Clarity Teal: Clear focus colors - 40-50% saturation */
     --clarity-teal-50: 180 45% 98%;
@@ -94,13 +94,14 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 42 30% 65%;
 
-    /* Memory Bridge specialized colors */
-    --memory-emerald: 158 70% 50%;
-    --memory-emerald-dark: 158 70% 45%;
-    --memory-emerald-light: 158 70% 85%;
-    --brain-health: 210 100% 56%;
-    --brain-health-dark: 210 100% 50%;
-    --brain-health-light: 210 100% 85%;
+    /* Memory Bridge specialized colors - ULTRA VIBRANT */
+    --memory-emerald: 158 85% 55%;
+    --memory-emerald-dark: 158 85% 45%;
+    --memory-emerald-light: 158 75% 80%;
+
+    --brain-health: 173 90% 50%;
+    --brain-health-dark: 173 90% 40%;
+    --brain-health-light: 173 80% 75%;
     
     /* Memory Bridge gradients */
     --gradient-memory: linear-gradient(135deg, hsl(var(--memory-emerald)), hsl(var(--brain-health)));

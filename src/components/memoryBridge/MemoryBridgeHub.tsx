@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
+import { CodeWordSettings } from './CodeWordSettings';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { formatDistanceToNow } from 'date-fns';
@@ -113,76 +114,79 @@ export function MemoryBridgeHub() {
   const renderDashboard = () => (
     <div className="space-y-6">
       {/* Hero Section */}
-      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-memory-emerald/10 via-brain-health/10 to-memory-emerald/20">
-        <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald/20 via-transparent to-brain-health/20" />
+      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-memory-emerald/40 via-brain-health/30 to-memory-emerald/50 shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald/60 via-transparent to-brain-health/60" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
         <CardContent className="relative pt-8 pb-8">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-memory-emerald to-brain-health shadow-glow mb-4">
-              <Brain className="h-10 w-10 text-white" />
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-memory-emerald via-brain-health to-memory-emerald shadow-2xl mb-4 animate-pulse">
+              <Brain className="h-12 w-12 text-white drop-shadow-lg" />
             </div>
             
             <div>
-              <h1 className="text-3xl font-bold bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-memory-emerald-100 to-white bg-clip-text text-transparent drop-shadow-lg">
                 Memory Bridge Command Center
               </h1>
-              <p className="text-lg text-muted-foreground mt-2">
+              <p className="text-xl text-white/90 mt-2 font-medium drop-shadow">
                 Your Personal Promise Keeper & Trust Builder
               </p>
             </div>
 
             {/* Trust Score */}
-            <div className="inline-flex items-center gap-3 bg-white/70 dark:bg-gray-900/70 rounded-full px-6 py-3 border border-memory-emerald/30">
-              <Trophy className="h-5 w-5 text-memory-emerald" />
-              <span className="font-semibold text-memory-emerald">Trust Score: {trustScore}%</span>
-              <Flame className="h-5 w-5 text-brain-health" />
-              <span className="font-semibold text-brain-health">{currentStreak} day streak</span>
+            <div className="inline-flex items-center gap-4 bg-white/20 backdrop-blur-sm rounded-full px-8 py-4 border border-white/30 shadow-lg">
+              <Trophy className="h-6 w-6 text-yellow-300 drop-shadow" />
+              <span className="font-bold text-white text-lg drop-shadow">Trust Score: {trustScore}%</span>
+              <Flame className="h-6 w-6 text-orange-300 drop-shadow" />
+              <span className="font-bold text-white text-lg drop-shadow">{currentStreak} day streak</span>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Quick Actions */}
-      <Card className="border border-memory-emerald/20 bg-gradient-to-r from-white to-memory-emerald/5 dark:from-gray-900 dark:to-memory-emerald/10">
+      <Card className="border-2 border-memory-emerald/40 bg-gradient-to-r from-white via-memory-emerald/10 to-brain-health/10 dark:from-gray-900 dark:via-memory-emerald/20 dark:to-brain-health/20 shadow-xl">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-memory-emerald">
-            <Zap className="h-5 w-5" />
-            Quick Actions
+          <CardTitle className="flex items-center gap-2 text-2xl">
+            <Zap className="h-6 w-6 text-memory-emerald" />
+            <span className="bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent font-bold">
+              Quick Actions
+            </span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Button 
               size="lg" 
-              className="h-20 bg-gradient-to-r from-memory-emerald to-brain-health hover:from-memory-emerald/90 hover:to-brain-health/90 text-white font-semibold"
+              className="h-24 bg-gradient-to-br from-memory-emerald via-brain-health to-memory-emerald hover:from-memory-emerald/80 hover:via-brain-health/80 hover:to-memory-emerald/80 text-white font-bold shadow-lg transform hover:scale-105 transition-all duration-200"
               onClick={() => setActiveTab('record')}
             >
-              <div className="flex flex-col items-center gap-2">
-                <Mic className="h-6 w-6" />
-                <span>Start Recording</span>
+              <div className="flex flex-col items-center gap-3">
+                <Mic className="h-8 w-8 drop-shadow" />
+                <span className="text-lg">Start Recording</span>
               </div>
             </Button>
             
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-20 border-2 border-memory-emerald/50 hover:bg-memory-emerald/10"
+              className="h-24 border-3 border-memory-emerald/60 hover:bg-gradient-to-br hover:from-memory-emerald/20 hover:to-memory-emerald/30 hover:border-memory-emerald transform hover:scale-105 transition-all duration-200"
               onClick={() => setActiveTab('actions')}
             >
-              <div className="flex flex-col items-center gap-2">
-                <Target className="h-6 w-6 text-memory-emerald" />
-                <span>Review Actions</span>
+              <div className="flex flex-col items-center gap-3">
+                <Target className="h-8 w-8 text-memory-emerald" />
+                <span className="text-lg font-semibold text-memory-emerald">Review Actions</span>
               </div>
             </Button>
             
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-20 border-2 border-brain-health/50 hover:bg-brain-health/10"
+              className="h-24 border-3 border-brain-health/60 hover:bg-gradient-to-br hover:from-brain-health/20 hover:to-brain-health/30 hover:border-brain-health transform hover:scale-105 transition-all duration-200"
               onClick={() => setActiveTab('recordings')}
             >
-              <div className="flex flex-col items-center gap-2">
-                <Archive className="h-6 w-6 text-brain-health" />
-                <span>View History</span>
+              <div className="flex flex-col items-center gap-3">
+                <Archive className="h-8 w-8 text-brain-health" />
+                <span className="text-lg font-semibold text-brain-health">View History</span>
               </div>
             </Button>
           </div>
@@ -191,22 +195,22 @@ export function MemoryBridgeHub() {
 
       {/* Performance Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border border-memory-emerald/20 bg-gradient-to-br from-memory-emerald/5 to-memory-emerald/10">
+        <Card className="border-2 border-memory-emerald/50 bg-gradient-to-br from-memory-emerald/30 to-memory-emerald/40 shadow-lg transform hover:scale-105 transition-all duration-200">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-memory-emerald">{totalPromises}</div>
-              <p className="text-sm text-muted-foreground">Total Promises</p>
-              <TrendingUp className="h-4 w-4 mx-auto mt-1 text-memory-emerald" />
+              <div className="text-4xl font-bold text-white drop-shadow-lg">{totalPromises}</div>
+              <p className="text-sm text-white/90 font-medium">Total Promises</p>
+              <TrendingUp className="h-5 w-5 mx-auto mt-2 text-white drop-shadow" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border border-brain-health/20 bg-gradient-to-br from-brain-health/5 to-brain-health/10">
+        <Card className="border-2 border-brain-health/50 bg-gradient-to-br from-brain-health/30 to-brain-health/40 shadow-lg transform hover:scale-105 transition-all duration-200">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-brain-health">{keptPromises}</div>
-              <p className="text-sm text-muted-foreground">Kept</p>
-              <CheckCircle className="h-4 w-4 mx-auto mt-1 text-brain-health" />
+              <div className="text-4xl font-bold text-white drop-shadow-lg">{keptPromises}</div>
+              <p className="text-sm text-white/90 font-medium">Kept</p>
+              <CheckCircle className="h-5 w-5 mx-auto mt-2 text-white drop-shadow" />
             </div>
           </CardContent>
         </Card>
@@ -366,8 +370,15 @@ export function MemoryBridgeHub() {
     </div>
   );
 
+  const handleCodeWordDetected = () => {
+    setActiveTab('record');
+  };
+
   const renderSettings = () => (
     <div className="space-y-6">
+      {/* Code Word Settings */}
+      <CodeWordSettings onCodeWordDetected={handleCodeWordDetected} />
+      
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
