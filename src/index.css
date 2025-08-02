@@ -37,29 +37,29 @@
 
     --radius: 0.5rem;
 
-    /* Memory Emerald: VIBRANT therapeutic emerald for engagement */
-    --memory-emerald-50: 156 70% 97%;
-    --memory-emerald-100: 149 65% 92%;
-    --memory-emerald-200: 152 68% 85%;
-    --memory-emerald-300: 156 70% 75%;
-    --memory-emerald-400: 158 72% 65%;
-    --memory-emerald-500: 160 75% 55%;
-    --memory-emerald-600: 161 78% 45%;
-    --memory-emerald-700: 163 80% 35%;
-    --memory-emerald-800: 163 82% 25%;
-    --memory-emerald-900: 164 85% 18%;
+    /* GORGEOUS THERAPEUTIC PURPLE - Rich, empowering, calming */
+    --memory-emerald-50: 280 65% 97%;
+    --memory-emerald-100: 280 60% 94%;
+    --memory-emerald-200: 280 65% 88%;
+    --memory-emerald-300: 280 70% 78%;
+    --memory-emerald-400: 280 75% 68%;
+    --memory-emerald-500: 280 80% 58%;
+    --memory-emerald-600: 280 85% 48%;
+    --memory-emerald-700: 280 90% 38%;
+    --memory-emerald-800: 280 95% 28%;
+    --memory-emerald-900: 280 100% 20%;
 
-    /* Brain Health: BOLD professional teals - high saturation for trust */
-    --brain-health-50: 166 85% 97%;
-    --brain-health-100: 167 80% 92%;
-    --brain-health-200: 168 75% 85%;
-    --brain-health-300: 171 78% 72%;
-    --brain-health-400: 172 80% 60%;
-    --brain-health-500: 173 85% 50%;
-    --brain-health-600: 175 88% 40%;
-    --brain-health-700: 175 90% 30%;
-    --brain-health-800: 176 92% 22%;
-    --brain-health-900: 176 95% 16%;
+    /* STUNNING THERAPEUTIC TEAL - Calm, trustworthy, healing */
+    --brain-health-50: 180 70% 97%;
+    --brain-health-100: 180 65% 94%;
+    --brain-health-200: 180 70% 88%;
+    --brain-health-300: 180 75% 78%;
+    --brain-health-400: 180 80% 68%;
+    --brain-health-500: 180 85% 58%;
+    --brain-health-600: 180 90% 48%;
+    --brain-health-700: 180 95% 38%;
+    --brain-health-800: 180 100% 28%;
+    --brain-health-900: 180 100% 20%;
 
     /* Clarity Teal: Clear focus colors - 40-50% saturation */
     --clarity-teal-50: 180 45% 98%;
@@ -94,14 +94,14 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 42 30% 65%;
 
-    /* Memory Bridge specialized colors - ULTRA VIBRANT */
-    --memory-emerald: 158 85% 55%;
-    --memory-emerald-dark: 158 85% 45%;
-    --memory-emerald-light: 158 75% 80%;
+    /* Memory Bridge PURPLE & TEAL - The colors you actually wanted! */
+    --memory-emerald: 280 80% 60%;     /* Rich therapeutic purple */
+    --memory-emerald-dark: 280 85% 50%;
+    --memory-emerald-light: 280 70% 85%;
 
-    --brain-health: 173 90% 50%;
-    --brain-health-dark: 173 90% 40%;
-    --brain-health-light: 173 80% 75%;
+    --brain-health: 180 85% 50%;       /* Calming therapeutic teal */
+    --brain-health-dark: 180 90% 40%;
+    --brain-health-light: 180 75% 80%;
     
     /* Memory Bridge gradients */
     --gradient-memory: linear-gradient(135deg, hsl(var(--memory-emerald)), hsl(var(--brain-health)));
