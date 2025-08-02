@@ -209,11 +209,21 @@ export function MobileMemoryBridge() {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="grid grid-cols-2 gap-2">
-                <Button size="sm" variant="outline" className="text-xs">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="text-xs"
+                  onClick={() => setCurrentSection(4)} // Navigate to Record section
+                >
                   <Mic className="h-3 w-3 mr-1" />
                   Start Recording
                 </Button>
-                <Button size="sm" variant="outline" className="text-xs">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="text-xs"
+                  onClick={() => setCurrentSection(0)} // Navigate to Actions section
+                >
                   <List className="h-3 w-3 mr-1" />
                   Review Actions
                 </Button>

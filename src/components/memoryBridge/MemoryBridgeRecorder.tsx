@@ -30,33 +30,25 @@ export function MemoryBridgeRecorder() {
 
   const handleStartMeeting = async (setupData: MeetingSetupData) => {
     try {
+      console.log('Starting PACT recording with setup:', setupData);
+      
       // Start voice recording first
       await startVoiceRecording();
       
-      // Create a temporary voice recording entry
-      const tempBlob = new Blob(['temp'], { type: 'audio/wav' });
-      const voiceData = await saveRecording(
-        tempBlob, 
-        setupData.title, 
-        'memory_bridge',
-        `Memory Bridge recording for: ${setupData.title}`,
-        false
-      );
-
-      if (voiceData) {
-        // Start the meeting recording with the voice recording ID
-        const meetingRecord = await startMeetingRecording(setupData, voiceData.id);
+      // Start the meeting recording (without voice recording ID initially)
+      const meetingRecord = await startMeetingRecording(setupData, null);
+      
+      if (meetingRecord) {
+        const startTime = new Date();
+        setRecordingStartTime(startTime);
         
-        if (meetingRecord) {
-          const startTime = new Date();
-          setRecordingStartTime(startTime);
-          
-          // Start duration counter
-          intervalRef.current = setInterval(() => {
-            const duration = Math.floor((Date.now() - startTime.getTime()) / 1000);
-            setCurrentDuration(duration);
-          }, 1000);
-        }
+        // Start duration counter
+        intervalRef.current = setInterval(() => {
+          const duration = Math.floor((Date.now() - startTime.getTime()) / 1000);
+          setCurrentDuration(duration);
+        }, 1000);
+        
+        toast.success('PACT recording started! Speak naturally.');
       }
     } catch (error) {
       console.error('Error starting meeting:', error);
