@@ -48,7 +48,7 @@ export function MemoryBridgeRecorder() {
           setCurrentDuration(duration);
         }, 1000);
         
-        toast.success('PACT recording started! Speak naturally.');
+        toast.success('PACT recording started! Speak naturally about your conversation.');
       }
     } catch (error) {
       console.error('Error starting meeting:', error);
@@ -58,7 +58,9 @@ export function MemoryBridgeRecorder() {
 
   const handleStopMeeting = async () => {
     try {
-      // Stop the timer
+      console.log('Stopping PACT recording...');
+      
+      // Clear the duration timer
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -66,16 +68,22 @@ export function MemoryBridgeRecorder() {
 
       // Stop voice recording and get the audio blob
       const audioBlob = await stopVoiceRecording();
-      
-      if (audioBlob && currentMeeting) {
-        // Process through Memory Bridge
-        await stopMeetingRecording(audioBlob);
+      if (!audioBlob) {
+        toast.error('Failed to capture audio recording');
+        return;
       }
+
+      console.log('Audio captured, processing PACT items...');
+
+      // Stop meeting recording and process the audio
+      await stopMeetingRecording(audioBlob);
       
+      // Reset state
       setRecordingStartTime(null);
       setCurrentDuration(0);
     } catch (error) {
-      console.error('Error stopping meeting:', error);
+      console.error('Error stopping PACT recording:', error);
+      toast.error('Failed to process recording. Please try again.');
     }
   };
 
