@@ -7,6 +7,7 @@ import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { Heart, Users, Clock, StopCircle, Activity } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
+import { toast } from 'sonner';
 
 export function MemoryBridgeRecorder() {
   const { 
@@ -47,19 +48,19 @@ export function MemoryBridgeRecorder() {
         const meetingRecord = await startMeetingRecording(setupData, voiceData.id);
         
         if (meetingRecord) {
-          setRecordingStartTime(new Date());
+          const startTime = new Date();
+          setRecordingStartTime(startTime);
           
           // Start duration counter
           intervalRef.current = setInterval(() => {
-            if (recordingStartTime) {
-              const duration = Math.floor((Date.now() - recordingStartTime.getTime()) / 1000);
-              setCurrentDuration(duration);
-            }
+            const duration = Math.floor((Date.now() - startTime.getTime()) / 1000);
+            setCurrentDuration(duration);
           }, 1000);
         }
       }
     } catch (error) {
       console.error('Error starting meeting:', error);
+      toast.error('Failed to start recording. Please check microphone permissions.');
     }
   };
 
@@ -174,8 +175,11 @@ export function MemoryBridgeRecorder() {
           <Heart className="h-6 w-6 text-primary" />
           Memory Bridge
         </CardTitle>
-        <p className="text-muted-foreground">
-          Capture conversations and never miss what matters to your relationships
+        <p className="text-muted-foreground text-lg font-medium">
+          Your Promise Keeper & Second Brain
+        </p>
+        <p className="text-sm text-muted-foreground">
+          Never forget what matters. Transform conversations into kept promises, building trust and independence.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -185,9 +189,9 @@ export function MemoryBridgeRecorder() {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
               <Heart className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="font-medium">Preserve Intent</h3>
+            <h3 className="font-medium">PACT Tracking</h3>
             <p className="text-xs text-muted-foreground">
-              Capture the 'why' behind commitments
+              Promises, Actions, Commitments & Takeaways
             </p>
           </div>
           
@@ -195,9 +199,9 @@ export function MemoryBridgeRecorder() {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
               <Users className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="font-medium">Relationship Context</h3>
+            <h3 className="font-medium">Trust Building</h3>
             <p className="text-xs text-muted-foreground">
-              Understand family dynamics
+              Strengthen relationships through reliability
             </p>
           </div>
           
@@ -205,9 +209,9 @@ export function MemoryBridgeRecorder() {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
               <Clock className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="font-medium">Memory Safety</h3>
+            <h3 className="font-medium">Confidence Builder</h3>
             <p className="text-xs text-muted-foreground">
-              Never forget what you promised
+              Your reliable second brain
             </p>
           </div>
         </div>
@@ -221,13 +225,14 @@ export function MemoryBridgeRecorder() {
         </div>
 
         {/* Help Text */}
-        <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-lg p-4">
-          <p className="mb-2 font-medium">Perfect for:</p>
+        <div className="text-center text-sm text-muted-foreground bg-gradient-to-r from-primary/5 to-primary-glow/5 rounded-lg p-4 border border-primary/10">
+          <p className="mb-2 font-medium text-primary">Transform Your Life:</p>
           <div className="space-y-1">
-            <p>• Family conversations & planning</p>
-            <p>• Medical appointments</p>
-            <p>• Important discussions with loved ones</p>
-            <p>• Any conversation where commitments are made</p>
+            <p>• Never let family down again</p>
+            <p>• Remember every medical detail</p>
+            <p>• Build unshakeable trust</p>
+            <p>• Gain independence & confidence</p>
+            <p>• Perfect for rehabilitation & memory support</p>
           </div>
         </div>
       </CardContent>
