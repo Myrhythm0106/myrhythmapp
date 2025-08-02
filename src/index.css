@@ -263,19 +263,25 @@
   }
   
   .brain-energy-high {
-    @apply bg-gradient-to-r from-memory-emerald-100 to-clarity-teal-100 border-memory-emerald-300;
+    background: linear-gradient(to right, hsl(var(--memory-emerald-100)), hsl(var(--clarity-teal-100)));
+    border-color: hsl(var(--memory-emerald-300));
   }
   
   .brain-energy-medium {
-    @apply bg-gradient-to-r from-brain-health-100 to-clarity-teal-100 border-brain-health-300;
+    background: linear-gradient(to right, hsl(var(--brain-health-100)), hsl(var(--clarity-teal-100)));
+    border-color: hsl(var(--brain-health-300));
   }
   
   .brain-energy-low {
-    @apply bg-gradient-to-r from-clarity-teal-100 to-brain-health-100 border-clarity-teal-300;
+    background: linear-gradient(to right, hsl(var(--clarity-teal-100)), hsl(var(--brain-health-100)));
+    border-color: hsl(var(--clarity-teal-300));
   }
   
   .cognitive-achievement {
-    @apply bg-gradient-to-br from-memory-emerald-400 via-brain-health-400 to-clarity-teal-400 text-white shadow-lg animate-pulse;
+    background: linear-gradient(to bottom right, hsl(var(--memory-emerald-400)), hsl(var(--brain-health-400)), hsl(var(--clarity-teal-400)));
+    color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
   
   .memory-anchor {
@@ -321,7 +327,11 @@
   }
 
   .focus-mode .calendar-command-center {
-    @apply bg-gradient-to-br from-brain-health-50/60 to-clarity-teal-50/40 border-brain-health-300/60;
+    background: linear-gradient(to bottom right, 
+      hsl(var(--brain-health-50) / 0.6), 
+      hsl(var(--clarity-teal-50) / 0.4)
+    );
+    border-color: hsl(var(--brain-health-300) / 0.6);
   }
 
   .focus-mode .neural-pathway-effect {
