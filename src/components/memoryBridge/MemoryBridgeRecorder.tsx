@@ -3,9 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MeetingSetupDialog } from './MeetingSetupDialog';
+import { QuickRecordButton } from './QuickRecordButton';
+import { AmbientModeToggle } from './AmbientModeToggle';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
-import { Heart, Users, Clock, StopCircle, Activity } from 'lucide-react';
+import { Heart, Users, Clock, StopCircle, Activity, Zap, Settings } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
 import { toast } from 'sonner';
 
@@ -216,12 +218,27 @@ export function MemoryBridgeRecorder() {
           </div>
         </div>
 
-        {/* Start Recording */}
-        <div className="flex justify-center">
-          <MeetingSetupDialog 
-            onStartMeeting={handleStartMeeting}
-            isLoading={isProcessing}
-          />
+        {/* Recording Options */}
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <QuickRecordButton />
+            <MeetingSetupDialog 
+              onStartMeeting={handleStartMeeting}
+              isLoading={isProcessing}
+            />
+          </div>
+          
+          <div className="text-center">
+            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-full px-4 py-2">
+              <Zap className="h-4 w-4 text-primary" />
+              Quick Record for immediate conversations • Setup for planned meetings
+            </div>
+          </div>
+        </div>
+
+        {/* Ambient Mode */}
+        <div className="border-t pt-6">
+          <AmbientModeToggle />
         </div>
 
         {/* Help Text */}

@@ -1,11 +1,16 @@
+export interface Participant {
+  name: string;
+  relationship: string;
+}
+
 export interface MeetingRecording {
   id: string;
   user_id: string;
   recording_id: string;
   meeting_title: string;
-  participants: { name: string; relationship: string }[];
+  participants: Participant[];
   meeting_context?: string;
-  meeting_type: 'formal' | 'informal' | 'family' | 'medical';
+  meeting_type: 'formal' | 'informal' | 'family' | 'medical' | 'planning' | 'unplanned' | 'emergency';
   location?: string;
   energy_level?: number;
   emotional_context?: string;
@@ -79,8 +84,8 @@ export interface ActionConfirmation {
 
 export interface MeetingSetupData {
   title: string;
-  participants: { name: string; relationship: string }[];
-  meetingType: 'formal' | 'informal' | 'family' | 'medical';
+  participants: Participant[];
+  meetingType: 'formal' | 'informal' | 'family' | 'medical' | 'planning' | 'unplanned' | 'emergency';
   context?: string;
   location?: string;
   energyLevel?: number;

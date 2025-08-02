@@ -80,7 +80,7 @@ export function useMemoryBridge() {
       if (meetingError) throw meetingError;
 
       console.log('✅ useMemoryBridge: PACT recording created:', meetingRecord.id);
-      setCurrentMeeting(meetingRecord as MeetingRecording);
+      setCurrentMeeting(meetingRecord as unknown as MeetingRecording);
       setIsRecording(true);
       return meetingRecord;
 
@@ -331,7 +331,7 @@ export function useMemoryBridge() {
       }
 
       console.log('✅ useMemoryBridge: Fetched meeting history:', meetings?.length || 0, 'meetings');
-      return (meetings || []) as MeetingRecording[];
+      return (meetings || []) as unknown as MeetingRecording[];
     } catch (error) {
       console.error('❌ useMemoryBridge: Unexpected error fetching meeting history:', error);
       toast.error('Failed to fetch meeting history');
