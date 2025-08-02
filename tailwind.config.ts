@@ -115,6 +115,21 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "memory-emerald": "hsl(var(--memory-emerald))",
+        "memory-emerald-dark": "hsl(var(--memory-emerald-dark))",
+        "memory-emerald-light": "hsl(var(--memory-emerald-light))",
+        "brain-health": "hsl(var(--brain-health))",
+        "brain-health-dark": "hsl(var(--brain-health-dark))",
+        "brain-health-light": "hsl(var(--brain-health-light))",
+      },
+      backgroundImage: {
+        "gradient-memory": "var(--gradient-memory)",
+        "gradient-subtle": "var(--gradient-subtle)",
+        "gradient-trust": "var(--gradient-trust)",
+      },
+      boxShadow: {
+        "glow": "var(--shadow-glow)",
+        "elegant": "var(--shadow-elegant)",
       },
       borderRadius: {
         lg: "var(--radius)",

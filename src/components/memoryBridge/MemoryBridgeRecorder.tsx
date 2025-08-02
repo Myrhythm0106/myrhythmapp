@@ -97,22 +97,29 @@ export function MemoryBridgeRecorder() {
 
   if (isRecording && currentMeeting) {
     return (
-      <Card className="w-full max-w-2xl mx-auto border-primary/20 shadow-elegant">
+      <Card className="w-full max-w-4xl mx-auto border-2 border-memory-emerald/30 shadow-glow bg-gradient-trust">
         <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-xl">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            Recording: {currentMeeting.meeting_title}
+          <CardTitle className="flex items-center justify-center gap-3 text-2xl">
+            <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse shadow-glow"></div>
+            <span className="bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
+              Recording: {currentMeeting.meeting_title}
+            </span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8">
           {/* Recording Status */}
           <div className="flex justify-center">
-            <div className="bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-full px-6 py-3 border border-red-200 dark:border-red-800">
-              <div className="flex items-center gap-3">
-                <Activity className="h-5 w-5 text-red-500 animate-pulse" />
-                <span className="text-lg font-mono text-red-600 dark:text-red-400">
+            <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 rounded-full px-8 py-4 border-2 border-red-300 dark:border-red-700 shadow-glow">
+              <div className="flex items-center gap-4">
+                <Activity className="h-6 w-6 text-red-500 animate-pulse" />
+                <span className="text-2xl font-mono font-bold text-red-600 dark:text-red-400">
                   {formatDuration(currentDuration)}
                 </span>
+                <div className="flex gap-1">
+                  <div className="w-2 h-6 bg-red-500 animate-pulse rounded"></div>
+                  <div className="w-2 h-4 bg-red-400 animate-pulse rounded"></div>
+                  <div className="w-2 h-8 bg-red-500 animate-pulse rounded"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -171,17 +178,19 @@ export function MemoryBridgeRecorder() {
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-          <Heart className="h-6 w-6 text-primary" />
-          Memory Bridge
+    <Card className="w-full max-w-4xl mx-auto border-2 border-memory-emerald/20 shadow-elegant bg-gradient-trust">
+      <CardHeader className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-memory shadow-glow mb-4">
+          <Heart className="h-8 w-8 text-white" />
+        </div>
+        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
+          Memory Bridge Studio
         </CardTitle>
-        <p className="text-muted-foreground text-lg font-medium">
-          Your Promise Keeper & Second Brain
+        <p className="text-xl font-semibold text-muted-foreground">
+          Your AI-Powered Promise Keeper & Trust Builder
         </p>
-        <p className="text-sm text-muted-foreground">
-          Never forget what matters. Transform conversations into kept promises, building trust and independence.
+        <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+          Transform conversations into kept promises. Build unshakeable trust and independence through AI-powered memory assistance.
         </p>
       </CardHeader>
       <CardContent className="space-y-6">

@@ -93,6 +93,23 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 42 30% 65%;
+
+    /* Memory Bridge specialized colors */
+    --memory-emerald: 158 70% 50%;
+    --memory-emerald-dark: 158 70% 45%;
+    --memory-emerald-light: 158 70% 85%;
+    --brain-health: 210 100% 56%;
+    --brain-health-dark: 210 100% 50%;
+    --brain-health-light: 210 100% 85%;
+    
+    /* Memory Bridge gradients */
+    --gradient-memory: linear-gradient(135deg, hsl(var(--memory-emerald)), hsl(var(--brain-health)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--memory-emerald) / 0.03));
+    --gradient-trust: linear-gradient(135deg, hsl(var(--memory-emerald) / 0.1), hsl(var(--brain-health) / 0.1));
+    
+    /* Memory Bridge shadows */
+    --shadow-glow: 0 0 40px hsl(var(--memory-emerald) / 0.3);
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--memory-emerald) / 0.2);
   }
 
   .dark {
