@@ -248,7 +248,13 @@
 
   /* Brain-Health Calendar Enhancements */
   .calendar-command-center {
-    @apply bg-gradient-to-br from-brain-health-50/40 via-clarity-teal-50/30 to-memory-emerald-50/20 border border-brain-health-200/60 shadow-xl backdrop-blur-sm;
+    @apply bg-gradient-to-br from-brain-health-50 via-clarity-teal-50 to-memory-emerald-50 border border-brain-health-200 shadow-xl backdrop-blur-sm;
+    background: linear-gradient(to bottom right, 
+      hsl(var(--brain-health-50) / 0.4), 
+      hsl(var(--clarity-teal-50) / 0.3), 
+      hsl(var(--memory-emerald-50) / 0.2)
+    );
+    border-color: hsl(var(--brain-health-200) / 0.6);
   }
   
   .neural-pathway-effect {
