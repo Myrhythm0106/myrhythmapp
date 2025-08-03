@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { MemoryCapture } from './MemoryCapture';
 import { MemoryCard } from './MemoryCard';
+import { ConfidenceTracker } from './ConfidenceTracker';
 import { useMemoryBank, MemoryEntry } from '@/hooks/useMemoryBank';
 import { Plus, Search, Filter, Heart, Calendar, Camera, Mic, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -15,8 +16,14 @@ export function MemoryBank() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const { memories, loading, updateMemory, refetch } = useMemoryBank();
+
+  const totalMemories = memories.length;
+  const todayMemories = memories.filter(m => 
+    new Date(m.created_at).toDateString() === new Date().toDateString()
+  ).length;
 
   const categories = [
     { id: 'general', label: 'General', count: 0 },
@@ -53,6 +60,10 @@ export function MemoryBank() {
 
   const handleToggleFavorite = async (memory: MemoryEntry) => {
     await updateMemory(memory.id, { is_favorite: !memory.is_favorite });
+    if (!memory.is_favorite) {
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 2000);
+    }
   };
 
   const handleShare = (memory: MemoryEntry) => {
@@ -86,57 +97,51 @@ export function MemoryBank() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Memory Bank</h1>
-          <p className="text-muted-foreground">
-            Capture and preserve your precious moments
-          </p>
+    <div className="container mx-auto px-4 py-6 space-y-8">
+      {/* Success Celebration */}
+      {showSuccess && (
+        <Card className="border-2 border-memory-emerald bg-gradient-to-r from-memory-emerald/10 to-brain-health/10 animate-fade-in">
+          <CardContent className="p-6 text-center">
+            <div className="flex items-center justify-center space-x-3">
+              <div className="w-12 h-12 rounded-full bg-memory-emerald/20 flex items-center justify-center animate-scale-in">
+                <Heart className="w-6 h-6 text-memory-emerald" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-memory-emerald">Memory Loved! ❤️</h3>
+                <p className="text-sm text-muted-foreground">Your favorite memories build confidence</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Confidence Building Header */}
+      <div className="text-center space-y-4">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-memory shadow-glow mb-4">
+          <Heart className="h-10 w-10 text-white" />
         </div>
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
+          Your Memory Bank
+        </h1>
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          {totalMemories === 0 
+            ? "Start building your confidence with your first memory" 
+            : `You've captured ${totalMemories} precious memories${todayMemories > 0 ? ` • ${todayMemories} today!` : ''}`
+          }
+        </p>
+        
+        {/* Giant Capture Button */}
         <Button
           onClick={() => setShowCapture(true)}
-          className="bg-gradient-primary hover:opacity-90"
+          className="h-16 text-xl px-12 bg-gradient-to-r from-memory-emerald to-brain-health hover:scale-105 transition-transform shadow-glow"
         >
-          <Plus className="w-4 h-4 mr-2" />
-          Capture Memory
+          <Plus className="w-6 h-6 mr-3" />
+          {totalMemories === 0 ? "Capture Your First Memory" : "Add New Memory"}
         </Button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-primary">{memories.length}</div>
-            <div className="text-sm text-muted-foreground">Total Memories</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-red-500">
-              {memories.filter(m => m.is_favorite).length}
-            </div>
-            <div className="text-sm text-muted-foreground">Favorites</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-blue-500">
-              {memories.filter(m => m.memory_type === 'photo').length}
-            </div>
-            <div className="text-sm text-muted-foreground">Photos</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center">
-            <div className="text-2xl font-bold text-green-500">
-              {memories.filter(m => m.memory_type === 'voice').length}
-            </div>
-            <div className="text-sm text-muted-foreground">Voice Notes</div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Confidence Tracker */}
+      <ConfidenceTracker memories={memories} />
 
       {/* Filters */}
       <Card>

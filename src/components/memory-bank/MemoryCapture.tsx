@@ -91,15 +91,16 @@ export function MemoryCapture({ onMemoryCreated }: MemoryCaptureProps) {
 
   if (saved) {
     return (
-      <Card className="border-success bg-success/5">
-        <CardContent className="p-6 text-center">
-          <div className="flex flex-col items-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center">
-              <Check className="w-8 h-8 text-success" />
+      <Card className="border-2 border-memory-emerald bg-gradient-to-r from-memory-emerald/10 to-brain-health/10 animate-scale-in">
+        <CardContent className="p-8 text-center">
+          <div className="flex flex-col items-center space-y-6 animate-fade-in">
+            <div className="w-24 h-24 rounded-full bg-gradient-memory flex items-center justify-center animate-pulse shadow-glow">
+              <Check className="w-12 h-12 text-white" />
             </div>
-            <div>
-              <h3 className="text-lg font-semibold text-success">Memory Saved!</h3>
-              <p className="text-sm text-muted-foreground">Your memory has been safely stored</p>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-bold text-memory-emerald">🎉 Memory Captured!</h3>
+              <p className="text-lg text-muted-foreground">Another precious moment safely stored</p>
+              <p className="text-sm text-brain-health font-medium">Building your confidence, one memory at a time</p>
             </div>
           </div>
         </CardContent>
@@ -108,45 +109,55 @@ export function MemoryCapture({ onMemoryCreated }: MemoryCaptureProps) {
   }
 
   return (
-    <Card className="border-primary/20 bg-gradient-to-br from-background via-background to-primary/5">
-      <CardContent className="p-6 space-y-6">
-        <div className="text-center space-y-2">
-          <h2 className="text-xl font-semibold">Capture a Memory</h2>
-          <p className="text-sm text-muted-foreground">
-            Preserve your special moments with one-tap capture
+    <Card className="border-2 border-memory-emerald/30 bg-gradient-trust shadow-glow">
+      <CardContent className="p-8 space-y-8">
+        <div className="text-center space-y-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-memory shadow-glow">
+            <Heart className="w-8 h-8 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
+            Capture a Memory
+          </h2>
+          <p className="text-lg text-muted-foreground">
+            Every memory matters - capture it with confidence
           </p>
         </div>
 
-        {/* Capture Type Selection */}
+        {/* One-Tap Capture Selection - Senior Friendly */}
         {!captureType && (
-          <div className="grid grid-cols-3 gap-4">
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setCaptureType('text')}
-              className="h-24 flex-col space-y-2 border-primary/20 hover:bg-primary/5"
-            >
-              <FileText className="w-8 h-8 text-primary" />
-              <span className="text-sm">Text</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => handleFileCapture('photo')}
-              className="h-24 flex-col space-y-2 border-primary/20 hover:bg-primary/5"
-            >
-              <Camera className="w-8 h-8 text-primary" />
-              <span className="text-sm">Photo</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => handleFileCapture('voice')}
-              className="h-24 flex-col space-y-2 border-primary/20 hover:bg-primary/5"
-            >
-              <Mic className="w-8 h-8 text-primary" />
-              <span className="text-sm">Voice</span>
-            </Button>
+          <div className="space-y-6">
+            <p className="text-center text-lg text-muted-foreground">
+              How would you like to capture this memory?
+            </p>
+            <div className="grid grid-cols-1 gap-6">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setCaptureType('text')}
+                className="h-20 text-xl border-2 border-memory-emerald/30 hover:bg-memory-emerald/10 hover:scale-105 transition-all"
+              >
+                <FileText className="w-10 h-10 text-memory-emerald mr-4" />
+                <span>Write a Memory</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => handleFileCapture('photo')}
+                className="h-20 text-xl border-2 border-brain-health/30 hover:bg-brain-health/10 hover:scale-105 transition-all"
+              >
+                <Camera className="w-10 h-10 text-brain-health mr-4" />
+                <span>Add a Photo</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => handleFileCapture('voice')}
+                className="h-20 text-xl border-2 border-memory-emerald/30 hover:bg-memory-emerald/10 hover:scale-105 transition-all"
+              >
+                <Mic className="w-10 h-10 text-memory-emerald mr-4" />
+                <span>Record Voice Note</span>
+              </Button>
+            </div>
           </div>
         )}
 
