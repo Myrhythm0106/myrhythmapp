@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SeniorMemoryBridge } from './SeniorMemoryBridge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
@@ -67,7 +68,8 @@ export function MemoryBridgeHub() {
   } = useMemoryBridge();
   
   const { tier } = useSubscription();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('senior-mode');
+  const [isSeniorMode, setIsSeniorMode] = useState(true);
   const [meetingHistory, setMeetingHistory] = useState<MeetingRecording[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [settings, setSettings] = useState<RecordingSettings>({
@@ -501,9 +503,38 @@ export function MemoryBridgeHub() {
     </div>
   );
 
+  // Show senior mode by default
+  if (isSeniorMode) {
+    return (
+      <div className="space-y-6">
+        {/* Mode Toggle */}
+        <div className="flex justify-center">
+          <Button
+            onClick={() => setIsSeniorMode(false)}
+            variant="outline"
+            className="text-lg px-6 py-3"
+          >
+            Switch to Advanced Mode
+          </Button>
+        </div>
+        <SeniorMemoryBridge />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-subtle p-6">
       <div className="max-w-6xl mx-auto space-y-6">
+        {/* Mode Toggle */}
+        <div className="flex justify-center">
+          <Button
+            onClick={() => setIsSeniorMode(true)}
+            className="bg-gradient-to-r from-memory-emerald to-brain-health text-white text-lg px-6 py-3"
+          >
+            Switch to Simple Mode
+          </Button>
+        </div>
+        
         {/* Status Bar */}
         {isRecording && (
           <Card className="border-2 border-red-500/50 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20">
