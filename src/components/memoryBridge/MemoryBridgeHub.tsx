@@ -12,7 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { CodeWordSettings } from './CodeWordSettings';
-import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { ProfessionalPactReport } from './ProfessionalPactReport';
+import { ScheduleActionDialog, ScheduleData } from './ScheduleActionDialog';
+import { useMemoryBridge } from '@/hooks/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { formatDistanceToNow } from 'date-fns';
 import { 
@@ -61,17 +63,18 @@ interface RecordingSettings {
 export function MemoryBridgeHub() {
   const { 
     extractedActions, 
-    isRecording, 
-    isProcessing, 
-    currentMeeting,
-    fetchMeetingHistory 
+    meetingRecordings,
+    activeMeeting,
+    loading,
+    scheduleAction
   } = useMemoryBridge();
   
   const { tier } = useSubscription();
   const [activeTab, setActiveTab] = useState('senior-mode');
   const [isSeniorMode, setIsSeniorMode] = useState(true);
-  const [meetingHistory, setMeetingHistory] = useState<MeetingRecording[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedActionForScheduling, setSelectedActionForScheduling] = useState(null);
+  const [showScheduleDialog, setShowScheduleDialog] = useState(false);
   const [settings, setSettings] = useState<RecordingSettings>({
     autoRecord: false,
     retentionDays: 30,
@@ -81,21 +84,6 @@ export function MemoryBridgeHub() {
     enableTranscription: true
   });
 
-  useEffect(() => {
-    const loadHistory = async () => {
-      try {
-        const history = await fetchMeetingHistory();
-        setMeetingHistory(history || []);
-      } catch (error) {
-        console.error('Failed to load meeting history:', error);
-      }
-    };
-    
-    if (activeTab === 'recordings') {
-      loadHistory();
-    }
-  }, [activeTab, fetchMeetingHistory]);
-
   // Calculate trust metrics
   const totalPromises = extractedActions.length;
   const keptPromises = extractedActions.filter(a => a.status === 'completed').length;
@@ -103,10 +91,25 @@ export function MemoryBridgeHub() {
   const trustScore = totalPromises > 0 ? Math.round((keptPromises / totalPromises) * 100) : 100;
   const currentStreak = 5; // This would come from actual data
   
-  const filteredRecordings = meetingHistory.filter(recording =>
+  const filteredRecordings = meetingRecordings.filter(recording =>
     recording.meeting_title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     recording.meeting_type.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleScheduleAction = (action: any) => {
+    setSelectedActionForScheduling(action);
+    setShowScheduleDialog(true);
+  };
+
+  const handleScheduleSubmit = async (actionId: string, scheduleData: ScheduleData) => {
+    await scheduleAction(actionId, scheduleData);
+    setShowScheduleDialog(false);
+    setSelectedActionForScheduling(null);
+  };
+
+  const handleExportPDF = () => {
+    window.print();
+  };
 
   const handleSettingChange = (key: keyof RecordingSettings, value: any) => {
     setSettings(prev => ({ ...prev, [key]: value }));
@@ -230,7 +233,7 @@ export function MemoryBridgeHub() {
         <Card className="border border-purple-400/20 bg-gradient-to-br from-purple-100/50 to-purple-200/50 dark:from-purple-900/20 dark:to-purple-800/20">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">{meetingHistory.length}</div>
+              <div className="text-3xl font-bold text-purple-600">{meetingRecordings.length}</div>
               <p className="text-sm text-muted-foreground">Recordings</p>
               <Mic className="h-4 w-4 mx-auto mt-1 text-purple-600" />
             </div>
@@ -273,6 +276,16 @@ export function MemoryBridgeHub() {
         </CardContent>
       </Card>
     </div>
+  );
+
+  const renderPactReport = () => (
+    <ProfessionalPactReport
+      actions={extractedActions}
+      meetingTitle={activeMeeting?.meeting_title || "Recent Meetings"}
+      meetingDate={activeMeeting?.created_at}
+      onScheduleAction={handleScheduleAction}
+      onExportPDF={handleExportPDF}
+    />
   );
 
   const renderRecordings = () => (
@@ -536,13 +549,13 @@ export function MemoryBridgeHub() {
         </div>
         
         {/* Status Bar */}
-        {isRecording && (
+        {activeMeeting?.is_active && (
           <Card className="border-2 border-red-500/50 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20">
             <CardContent className="pt-4">
               <div className="flex items-center justify-center gap-3">
                 <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
                 <span className="font-semibold text-red-700 dark:text-red-300">
-                  Recording in Progress - {currentMeeting?.meeting_title}
+                  Recording in Progress - {activeMeeting?.meeting_title}
                 </span>
                 <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
               </div>
@@ -552,7 +565,7 @@ export function MemoryBridgeHub() {
 
         {/* Main Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 h-12 bg-white/70 dark:bg-gray-900/70 border border-memory-emerald/20">
+          <TabsList className="grid w-full grid-cols-6 h-12 bg-white/70 dark:bg-gray-900/70 border border-memory-emerald/20">
             <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Brain className="h-4 w-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -568,6 +581,10 @@ export function MemoryBridgeHub() {
             <TabsTrigger value="recordings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Archive className="h-4 w-4" />
               <span className="hidden sm:inline">History</span>
+            </TabsTrigger>
+            <TabsTrigger value="pact-report" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+              <Target className="h-4 w-4" />
+              <span className="hidden sm:inline">P.A.C.T. Report</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Settings className="h-4 w-4" />
@@ -587,6 +604,10 @@ export function MemoryBridgeHub() {
             <ExtractedActionsReview />
           </TabsContent>
 
+          <TabsContent value="pact-report" className="mt-6">
+            {renderPactReport()}
+          </TabsContent>
+
           <TabsContent value="recordings" className="mt-6">
             {renderRecordings()}
           </TabsContent>
@@ -595,6 +616,14 @@ export function MemoryBridgeHub() {
             {renderSettings()}
           </TabsContent>
         </Tabs>
+
+        {/* Schedule Action Dialog */}
+        <ScheduleActionDialog
+          action={selectedActionForScheduling}
+          isOpen={showScheduleDialog}
+          onClose={() => setShowScheduleDialog(false)}
+          onSchedule={handleScheduleSubmit}
+        />
       </div>
     </div>
   );
