@@ -1552,6 +1552,14 @@ export type Database = {
         Args: { p_member_id: string; p_user_id: string }
         Returns: boolean
       }
+      user_can_access_memory: {
+        Args: { memory_uuid: string }
+        Returns: boolean
+      }
+      user_owns_memory: {
+        Args: { memory_uuid: string }
+        Returns: boolean
+      }
       verify_backup_code: {
         Args: { p_user_id: string; p_code: string }
         Returns: boolean
