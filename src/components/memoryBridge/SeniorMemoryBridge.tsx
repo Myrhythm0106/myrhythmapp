@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
+import { SeniorRecordingControls } from './SeniorRecordingControls';
+import { MyRecordings } from './MyRecordings';
 import { 
   Mic, 
   Play, 
@@ -17,7 +19,9 @@ import {
   ZoomIn,
   ZoomOut,
   Sun,
-  Moon
+  Moon,
+  FolderOpen,
+  Archive
 } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
 import { toast } from 'sonner';
@@ -45,6 +49,8 @@ export function SeniorMemoryBridge() {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
   const [fontSize, setFontSize] = useState(20); // Default 20px
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [activeTab, setActiveTab] = useState<'record' | 'recordings'>('record');
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Auto-format duration
@@ -54,72 +60,37 @@ export function SeniorMemoryBridge() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // One-click recording with auto-setup
-  const handleQuickRecord = async () => {
+  const handleRecordingComplete = async (blob: Blob) => {
+    setAudioBlob(blob);
+    
     try {
-      console.log('Starting simple recording...');
-      
-      await startVoiceRecording();
-      
       const setupData: MeetingSetupData = {
-        title: 'My Conversation',
+        title: 'P.A.C.T. Recording',
         participants: [{ name: 'Me', relationship: 'self' }],
         meetingType: 'informal'
       };
       
+      // Start and immediately stop meeting recording with the blob
       const meetingRecord = await startMeetingRecording(setupData, null);
-      
       if (meetingRecord) {
-        const startTime = new Date();
-        setRecordingStartTime(startTime);
-        
-        intervalRef.current = setInterval(() => {
-          const duration = Math.floor((Date.now() - startTime.getTime()) / 1000);
-          setCurrentDuration(duration);
-        }, 1000);
-        
-        toast.success('Recording started! Speak naturally about your promises.', {
+        await stopMeetingRecording(blob);
+        toast.success('✨ Recording processed! Looking for your P.A.C.T. items...', {
+          duration: 5000,
           style: { fontSize: `${fontSize}px` }
         });
       }
     } catch (error) {
-      console.error('Error starting recording:', error);
-      toast.error('Could not start recording. Please try again.', {
+      console.error('Error processing recording:', error);
+      toast.error('Problem processing recording. Please try again.', {
         style: { fontSize: `${fontSize}px` }
       });
     }
   };
 
-  const handleStopRecording = async () => {
-    try {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
-
-      const audioBlob = await stopVoiceRecording();
-      if (!audioBlob) {
-        toast.error('Could not save recording', {
-          style: { fontSize: `${fontSize}px` }
-        });
-        return;
-      }
-
-      await stopMeetingRecording(audioBlob);
-      
-      setRecordingStartTime(null);
-      setCurrentDuration(0);
-      
-      toast.success('✨ Recording saved! Looking for your promises now...', {
-        duration: 5000,
-        style: { fontSize: `${fontSize}px` }
-      });
-    } catch (error) {
-      console.error('Error stopping recording:', error);
-      toast.error('Problem saving recording. Please try again.', {
-        style: { fontSize: `${fontSize}px` }
-      });
-    }
+  const handleSavedRecording = (recording: any) => {
+    toast.success('Recording saved to "My Recordings"!', {
+      style: { fontSize: `${fontSize}px` }
+    });
   };
 
   const handlePlayRecording = async (recordingId: string, filePath: string) => {
@@ -281,6 +252,32 @@ export function SeniorMemoryBridge() {
           </p>
         </div>
 
+        {/* Tab Navigation */}
+        <div className="flex justify-center">
+          <div className="bg-white rounded-lg p-2 shadow-sm border">
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setActiveTab('record')}
+                variant={activeTab === 'record' ? 'default' : 'ghost'}
+                size="lg"
+                className="text-xl px-8 h-16"
+              >
+                <Mic className="h-6 w-6 mr-3" />
+                Record
+              </Button>
+              <Button
+                onClick={() => setActiveTab('recordings')}
+                variant={activeTab === 'recordings' ? 'default' : 'ghost'}
+                size="lg" 
+                className="text-xl px-8 h-16"
+              >
+                <FolderOpen className="h-6 w-6 mr-3" />
+                My Recordings
+              </Button>
+            </div>
+          </div>
+        </div>
+
         {/* Trust Score Display */}
         {totalPromises > 0 && (
           <Card className="border-4 border-green-200 bg-green-50">
@@ -308,58 +305,42 @@ export function SeniorMemoryBridge() {
           </Card>
         )}
 
-        {/* Recording Interface */}
-        {isRecording ? (
-          <Card className="border-4 border-red-300 bg-red-50">
-            <CardContent className="text-center py-12">
-              <div className="space-y-8">
-                <div className="flex justify-center">
-                  <div className="w-24 h-24 bg-red-500 rounded-full animate-pulse flex items-center justify-center">
-                    <Mic className="h-12 w-12 text-white" />
-                  </div>
-                </div>
-                
-                <div className="text-6xl font-mono font-bold text-red-600">
-                  {formatDuration(currentDuration)}
-                </div>
-                
-                <p className="text-2xl font-semibold text-red-800">
-                  Recording your conversation...
+        {/* Tab Content */}
+        {activeTab === 'record' && (
+          <Card className="border-4 border-blue-300 bg-blue-50">
+            <CardContent className="py-12">
+              <div className="text-center space-y-8">
+                <h2 className="text-3xl font-bold text-blue-800">
+                  Record Your P.A.C.T.
+                </h2>
+                <p className="text-xl text-blue-600">
+                  Promises, Actions, Commitments and Tasks
                 </p>
                 
-                <Button
-                  onClick={handleStopRecording}
-                  size="lg"
-                  className="h-20 px-12 bg-red-500 hover:bg-red-600 text-white text-2xl"
-                  disabled={isProcessing}
-                >
-                  {isProcessing ? 'Saving...' : 'Stop Recording'}
-                </Button>
+                <SeniorRecordingControls
+                  onRecordingComplete={handleRecordingComplete}
+                  onSavedRecording={handleSavedRecording}
+                />
               </div>
             </CardContent>
           </Card>
-        ) : (
-          <Card className="border-4 border-blue-300 bg-blue-50">
-            <CardContent className="text-center py-12">
-              <div className="space-y-8">
-                <Button
-                  onClick={handleQuickRecord}
-                  size="lg"
-                  className="h-32 px-16 bg-blue-500 hover:bg-blue-600 text-white text-3xl font-bold"
-                  disabled={isProcessing}
-                >
-                  <Mic className="h-16 w-16 mr-6" />
-                  Start Recording
-                </Button>
-                
-                <div className="space-y-2">
-                  <p className="text-2xl font-medium text-blue-800">
-                    Press to capture your P.A.C.T.
-                  </p>
-                  <p className="text-lg text-blue-600">
-                    Promises, Actions, Commitments and Tasks
-                  </p>
-                </div>
+        )}
+
+        {activeTab === 'recordings' && (
+          <Card className="border-4 border-purple-300 bg-purple-50">
+            <CardContent className="py-8">
+              <div className="space-y-6">
+                <h2 className="text-3xl font-bold text-center text-purple-800">
+                  My Recordings
+                </h2>
+                <MyRecordings 
+                  onSelectRecording={(recording) => {
+                    console.log('Selected recording:', recording);
+                    toast.success(`Playing: ${recording.title}`, {
+                      style: { fontSize: `${fontSize}px` }
+                    });
+                  }}
+                />
               </div>
             </CardContent>
           </Card>

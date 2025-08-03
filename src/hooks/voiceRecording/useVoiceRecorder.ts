@@ -13,10 +13,13 @@ import {
 export function useVoiceRecorder() {
   const { user } = useAuth();
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [recordings, setRecordings] = useState<VoiceRecording[]>([]);
+  const [recordingDuration, setRecordingDuration] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const startRecording = useCallback(async () => {
     try {
@@ -33,12 +36,44 @@ export function useVoiceRecorder() {
 
       mediaRecorder.start();
       setIsRecording(true);
+      setIsPaused(false);
+      setRecordingDuration(0);
+      
+      // Start timer
+      timerRef.current = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
+      }, 1000);
+      
       toast.success('Recording started');
     } catch (error) {
       console.error('Error starting recording:', error);
       toast.error('Failed to start recording. Please check microphone permissions.');
     }
   }, []);
+
+  const pauseRecording = useCallback(() => {
+    if (mediaRecorderRef.current && isRecording && !isPaused) {
+      mediaRecorderRef.current.pause();
+      setIsPaused(true);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      toast.info('Recording paused');
+    }
+  }, [isRecording, isPaused]);
+
+  const resumeRecording = useCallback(() => {
+    if (mediaRecorderRef.current && isRecording && isPaused) {
+      mediaRecorderRef.current.resume();
+      setIsPaused(false);
+      // Resume timer
+      timerRef.current = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
+      }, 1000);
+      toast.info('Recording resumed');
+    }
+  }, [isRecording, isPaused]);
 
   const stopRecording = useCallback((): Promise<Blob | null> => {
     return new Promise((resolve) => {
@@ -47,11 +82,18 @@ export function useVoiceRecorder() {
         return;
       }
 
+      // Clear timer
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+
       mediaRecorderRef.current.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         const tracks = mediaRecorderRef.current?.stream.getTracks();
         tracks?.forEach(track => track.stop());
         setIsRecording(false);
+        setIsPaused(false);
         resolve(audioBlob);
       };
 
@@ -134,9 +176,13 @@ export function useVoiceRecorder() {
 
   return {
     isRecording,
+    isPaused,
     isProcessing,
     recordings,
+    recordingDuration,
     startRecording,
+    pauseRecording,
+    resumeRecording,
     stopRecording,
     saveRecording,
     fetchRecordings,
