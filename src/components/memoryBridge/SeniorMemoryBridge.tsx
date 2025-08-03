@@ -352,9 +352,14 @@ export function SeniorMemoryBridge() {
                   Start Recording
                 </Button>
                 
-                <p className="text-2xl font-medium text-blue-800">
-                  Press to capture your promises
-                </p>
+                <div className="space-y-2">
+                  <p className="text-2xl font-medium text-blue-800">
+                    Press to capture your P.A.C.T.
+                  </p>
+                  <p className="text-lg text-blue-600">
+                    Promises, Actions, Commitments and Tasks
+                  </p>
+                </div>
               </div>
             </CardContent>
           </Card>
