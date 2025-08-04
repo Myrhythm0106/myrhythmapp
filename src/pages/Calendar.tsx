@@ -4,7 +4,7 @@ import { BrainHealthCalendarHeader } from "@/components/calendar/BrainHealthCale
 import { BrainHealthCalendarView } from "@/components/calendar/BrainHealthCalendarView";
 import { BrainHealthSidebar } from "@/components/calendar/BrainHealthSidebar";
 import { BrainFriendlyGoalCreator } from "@/components/goals/BrainFriendlyGoalCreator";
-import { GuidedActionWizard } from "@/components/calendar/forms/GuidedActionWizard";
+import { EventForm } from "@/components/calendar/EventForm";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
 import { EnhancedPomodoroTimer } from "@/components/pomodoro/EnhancedPomodoroTimer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -34,7 +34,7 @@ const Calendar = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { createAction, createGoal } = useDailyActions();
-  const { updateTransferData, prefillForm } = useDataTransfer();
+  const { updateTransferData, prefillForm, transferData } = useDataTransfer();
 
   // Check URL parameters for different actions and update transfer data
   React.useEffect(() => {
@@ -220,13 +220,16 @@ const Calendar = () => {
                 Create Action
               </DialogTitle>
             </DialogHeader>
-            <ScrollArea className="max-h-[calc(90vh-120px)]">
-              <GuidedActionWizard 
-                onSuccess={handleQuickActionSave} 
-                onUpgradeClick={handleUpgradeClick}
-                preFilledData={prefillForm('action')}
-              />
-            </ScrollArea>
+            <EventForm 
+              defaultTime={transferData.selectedTime || prefillForm('action')?.time}
+              onSuccess={() => {
+                setShowQuickAction(false);
+                toast.success("🎯 Action Created!", {
+                  description: "Your action has been added to your calendar!",
+                  duration: 4000
+                });
+              }}
+            />
           </DialogContent>
         </Dialog>
 
