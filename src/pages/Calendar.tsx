@@ -26,7 +26,7 @@ import { Preview3Background } from "@/components/ui/Preview3Background";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [view, setView] = useState<"day" | "week" | "month" | "year" | "goals">("month");
+  const [view, setView] = useState<"day" | "week" | "month" | "year" | "goals">("day");
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const [showQuickAction, setShowQuickAction] = useState(false);
   const [showNewGoal, setShowNewGoal] = useState(false);
