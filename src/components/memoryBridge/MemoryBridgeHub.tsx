@@ -16,6 +16,7 @@ import { ProfessionalPactReport } from './ProfessionalPactReport';
 import { ScheduleActionDialog, ScheduleData } from './ScheduleActionDialog';
 import { useMemoryBridge } from '@/hooks/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
+import { RecordingUsageTracker } from './RecordingUsageTracker';
 import { formatDistanceToNow } from 'date-fns';
 import { 
   Brain, 
@@ -130,10 +131,10 @@ export function MemoryBridgeHub() {
             
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-memory-emerald-100 to-white bg-clip-text text-transparent drop-shadow-lg">
-                Memory Bridge Command Center
+                Capture Command Center
               </h1>
               <p className="text-xl text-white/90 mt-2 font-medium drop-shadow">
-                Your Personal Promise Keeper & Trust Builder
+                Remember Everything - Your Trust Builder
               </p>
             </div>
 
@@ -197,6 +198,9 @@ export function MemoryBridgeHub() {
           </div>
         </CardContent>
       </Card>
+
+      {/* Recording Usage Tracker */}
+      <RecordingUsageTracker />
 
       {/* Performance Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
