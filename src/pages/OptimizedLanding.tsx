@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Brain, Users, Calendar, Target, Shield, Clock } from "lucide-react";
 import { Preview3Background } from "@/components/ui/Preview3Background";
+import { QuickLogout } from "@/components/testing/QuickLogout";
 
 export default function OptimizedLanding() {
   const navigate = useNavigate();
@@ -14,20 +15,26 @@ export default function OptimizedLanding() {
   // If user is already authenticated, redirect to dashboard
   React.useEffect(() => {
     if (user) {
+      console.log('🔄 OptimizedLanding: User authenticated, redirecting to dashboard');
       navigate('/dashboard');
+    } else {
+      console.log('✅ OptimizedLanding: No user, showing landing page');
     }
   }, [user, navigate]);
 
   const handleGetStarted = () => {
+    console.log('🚀 OptimizedLanding: Get started clicked, navigating to auth');
     navigate('/auth');
   };
 
   const handleStartFree = () => {
+    console.log('🆓 OptimizedLanding: Start free clicked, navigating to dashboard');
     navigate('/dashboard');
   };
 
   return (
     <Preview3Background>
+      <QuickLogout />
       <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 space-y-12">
         {/* Header */}
         <div className="text-center space-y-4 max-w-4xl">
