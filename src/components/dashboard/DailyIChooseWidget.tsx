@@ -238,41 +238,36 @@ export function DailyIChooseWidget({ onUpgradeClick, userType = 'brain-injury' }
 
   return (
     <Card 
-      className="border-2 border-purple-200 bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 shadow-lg touch-pan-y select-none"
+      className="border border-purple-200/60 bg-gradient-to-br from-purple-50/40 via-blue-50/30 to-teal-50/40 shadow-md touch-pan-y select-none"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <CardHeader className="text-center pb-4">
-        <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-          <div className="animate-bounce">
-            <Crown className="h-6 w-6 text-amber-500" />
-          </div>
+      <CardHeader className="text-center pb-3">
+        <CardTitle className="flex items-center justify-center gap-2 text-lg">
+          <Crown className="h-5 w-5 text-amber-500" />
           <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
             {getUserTypeTitle()}
           </span>
-          <div className="animate-bounce">
-            <Sparkles className="h-6 w-6 text-purple-500" />
-          </div>
+          <Sparkles className="h-5 w-5 text-purple-500" />
         </CardTitle>
       </CardHeader>
       
-      <CardContent className="space-y-6">
-        {/* Main Statement */}
+      <CardContent className="space-y-4">
+        {/* Compact Statement */}
         <motion.div 
-          className="text-center p-6 bg-white/80 rounded-xl border-2 border-dashed border-purple-300"
+          className="text-center p-4 bg-white/70 rounded-lg border border-purple-200/50"
           animate={isAnimating ? { scale: 0.95, opacity: 0.7 } : { scale: 1, opacity: 1 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="text-2xl mb-4">💜</div>
-          <blockquote className="text-lg font-medium text-gray-800 leading-relaxed italic">
+          <blockquote className="text-base font-medium text-gray-800 leading-relaxed italic mb-3">
             "{currentStatement.text}"
           </blockquote>
-          <div className="flex items-center justify-center gap-2 mt-4">
-            <Badge variant="clarity" className="border-purple-200">
+          <div className="flex items-center justify-center gap-2">
+            <Badge variant="clarity" className="text-xs px-2 py-1">
               {currentStatement.category}
             </Badge>
             {currentStatement.tier === 'premium' && (
-              <Badge variant="premium" className="border-amber-200">
+              <Badge variant="premium" className="text-xs px-2 py-1">
                 <Crown className="h-3 w-3 mr-1" />
                 Premium
               </Badge>
@@ -280,50 +275,54 @@ export function DailyIChooseWidget({ onUpgradeClick, userType = 'brain-injury' }
           </div>
         </motion.div>
 
-        {/* Subtle Action Links */}
-        <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-          <button
-            onClick={handleFavorite}
-            disabled={isTogglingFavorite}
-            className="flex items-center gap-2 text-purple-700 hover:text-purple-900 transition-colors min-h-[44px] px-2"
-          >
-            <Heart className={`h-4 w-4 ${isFavorited ? 'fill-current text-red-500' : ''}`} />
-            <span>{isFavorited ? 'Favorited' : 'Favorite'}</span>
-          </button>
+        {/* Compact Action Row */}
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex gap-4">
+            <button
+              onClick={handleFavorite}
+              disabled={isTogglingFavorite}
+              className="flex items-center gap-1 text-purple-600 hover:text-purple-800 transition-colors"
+            >
+              <Heart className={`h-3 w-3 ${isFavorited ? 'fill-current text-red-500' : ''}`} />
+              <span>{isFavorited ? 'Saved' : 'Save'}</span>
+            </button>
 
-          <button
-            onClick={handleShare}
-            className="flex items-center gap-2 text-purple-700 hover:text-purple-900 transition-colors min-h-[44px] px-2"
-          >
-            <Share2 className="h-4 w-4" />
-            <span>Share</span>
-          </button>
+            <button
+              onClick={handleShare}
+              className="flex items-center gap-1 text-purple-600 hover:text-purple-800 transition-colors"
+            >
+              <Share2 className="h-3 w-3" />
+              <span>Share</span>
+            </button>
 
-          <button
-            onClick={handleReflectionToggle}
-            className="flex items-center gap-2 text-purple-700 hover:text-purple-900 transition-colors min-h-[44px] px-2"
-          >
-            <BookOpen className="h-4 w-4" />
-            <span>Reflect</span>
-          </button>
+            <button
+              onClick={handleReflectionToggle}
+              className="flex items-center gap-1 text-purple-600 hover:text-purple-800 transition-colors"
+            >
+              <BookOpen className="h-3 w-3" />
+              <span>Reflect</span>
+            </button>
+          </div>
 
-          <button
-            onClick={getNewStatement}
-            className="flex items-center gap-2 text-purple-700 hover:text-purple-900 transition-colors min-h-[44px] px-2"
-          >
-            <RefreshCw className="h-4 w-4" />
-            <span>New Statement</span>
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={getNewStatement}
+              className="flex items-center gap-1 text-purple-600 hover:text-purple-800 transition-colors"
+            >
+              <RefreshCw className="h-3 w-3" />
+              <span>New</span>
+            </button>
 
-          <Button 
-            size="sm"
-            variant="premium"
-            className="text-xs px-3 py-1"
-            onClick={onUpgradeClick}
-          >
-            <Zap className="h-3 w-3 mr-1" />
-            Get More
-          </Button>
+            <Button 
+              size="sm"
+              variant="premium"
+              className="text-xs px-2 py-1 h-6"
+              onClick={onUpgradeClick}
+            >
+              <Zap className="h-2 w-2 mr-1" />
+              More
+            </Button>
+          </div>
         </div>
 
         {/* Expandable Reflection */}
@@ -373,16 +372,14 @@ export function DailyIChooseWidget({ onUpgradeClick, userType = 'brain-injury' }
           )}
         </AnimatePresence>
 
-        {/* Daily Tip */}
-        <div className="p-4 bg-gradient-to-r from-blue-50/60 via-purple-50/50 to-teal-50/60 rounded-lg border border-blue-200">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="h-4 w-4 text-blue-600" />
-            <span className="font-medium text-blue-900">Personalized Tip</span>
+        {/* Compact Daily Tip */}
+        {!showReflection && (
+          <div className="p-3 bg-gradient-to-r from-blue-50/40 via-purple-50/30 to-teal-50/40 rounded-md border border-blue-100/50">
+            <p className="text-xs text-blue-700 text-center">
+              💡 Read aloud 3x while breathing deeply. Swipe left for new statement.
+            </p>
           </div>
-          <p className="text-sm text-blue-800">
-            This statement is tailored for your {userType.replace('-', ' ')} journey. Read it aloud 3 times while taking deep breaths. Swipe left for a new statement anytime.
-          </p>
-        </div>
+        )}
       </CardContent>
     </Card>
   );

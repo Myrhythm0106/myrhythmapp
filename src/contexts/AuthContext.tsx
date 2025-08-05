@@ -90,8 +90,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting sign up for:', email);
       
-      // Allow test email to be used multiple times for testing
-      const isTestEmail = email.trim().toLowerCase() === 'annabelaaron@gmail.com';
+      // Allow test emails to be used multiple times for testing  
+      const testEmails = ['annabelaaron@gmail.com', 'bella@myrhythm.app', 'test@myrhythm.app'];
+      const isTestEmail = testEmails.includes(email.trim().toLowerCase());
       
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -126,8 +127,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting sign in for:', email);
       
-      // Allow test email to bypass duplicate restrictions
-      const isTestEmail = email.trim().toLowerCase() === 'annabelaaron@gmail.com';
+      // Allow test emails to bypass duplicate restrictions
+      const testEmails = ['annabelaaron@gmail.com', 'bella@myrhythm.app', 'test@myrhythm.app'];
+      const isTestEmail = testEmails.includes(email.trim().toLowerCase());
       
       // Simple sign in without additional options
       const { data, error } = await supabase.auth.signInWithPassword({

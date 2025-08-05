@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LogIn, Brain, ChevronDown, Users, Clock, Shield, Award, Heart, Calendar, Archive, Lightbulb, Star, TrendingUp } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
 import { Badge } from "@/components/ui/badge";
+import { NeuralNetworkBackground } from "@/components/ui/NeuralNetworkBackground";
 
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
@@ -22,45 +23,15 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
-      {/* Neural network background with purple/teal integration */}
+      {/* Neural Network Background */}
+      <NeuralNetworkBackground opacity={0.12} />
+      
+      {/* Enhanced background layers with purple/teal integration */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-purple-600/20 to-teal-600/30"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.3),transparent)] opacity-80"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.3),transparent)] opacity-80"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.15),transparent)] opacity-60"></div>
-        
-        {/* Subtle neural network SVG background */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="neuralGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.8"/>
-              <stop offset="50%" stopColor="#9333ea" stopOpacity="0.6"/>
-              <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.8"/>
-            </linearGradient>
-            <linearGradient id="neuralGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#9333ea" stopOpacity="0.7"/>
-              <stop offset="50%" stopColor="#10b981" stopOpacity="0.5"/>
-              <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.7"/>
-            </linearGradient>
-          </defs>
-          
-          {/* Neural pathways */}
-          <path d="M100,200 Q300,100 500,200 T900,150 Q1000,120 1100,180" stroke="url(#neuralGradient1)" strokeWidth="2" fill="none" opacity="0.6"/>
-          <path d="M150,400 Q350,300 550,380 T950,320 Q1050,290 1150,350" stroke="url(#neuralGradient2)" strokeWidth="1.5" fill="none" opacity="0.5"/>
-          <path d="M50,600 Q250,500 450,580 T850,520 Q950,490 1050,550" stroke="url(#neuralGradient1)" strokeWidth="1.8" fill="none" opacity="0.4"/>
-          <path d="M200,100 Q400,50 600,120 T1000,80 Q1100,60 1200,100" stroke="url(#neuralGradient2)" strokeWidth="1.2" fill="none" opacity="0.3"/>
-          <path d="M120,700 Q320,650 520,720 T920,680 Q1020,660 1120,700" stroke="url(#neuralGradient1)" strokeWidth="1.6" fill="none" opacity="0.5"/>
-          
-          {/* Neural nodes */}
-          <circle cx="300" cy="200" r="4" fill="#14b8a6" opacity="0.6"/>
-          <circle cx="550" cy="380" r="3" fill="#9333ea" opacity="0.5"/>
-          <circle cx="850" cy="150" r="5" fill="#10b981" opacity="0.7"/>
-          <circle cx="450" cy="580" r="3.5" fill="#14b8a6" opacity="0.4"/>
-          <circle cx="750" cy="320" r="4.5" fill="#9333ea" opacity="0.6"/>
-          <circle cx="950" cy="680" r="3" fill="#10b981" opacity="0.5"/>
-          <circle cx="600" cy="120" r="4" fill="#14b8a6" opacity="0.4"/>
-          <circle cx="1000" cy="490" r="3.5" fill="#9333ea" opacity="0.5"/>
-        </svg>
       </div>
 
       {/* Enhanced floating elements with purple integration */}
@@ -103,7 +74,7 @@ export function HeroSection() {
             </h1>
             
             <p className="text-2xl md:text-3xl text-emerald-100 max-w-5xl mx-auto leading-relaxed font-light">
-              The memory first MyRhythm Framework that turns your biggest challenges into your greatest victories
+              The Memory First MyRhythm Framework that turns your biggest challenges into your greatest victories
             </p>
           </div>
 
