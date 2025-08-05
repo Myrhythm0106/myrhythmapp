@@ -27,6 +27,7 @@ export function OnboardingPage() {
     setUserType,
     setAssessmentType,
     setAssessmentResult,
+    setPlanSelection,
     completeOnboarding,
   } = useOnboardingLogic(7);
 
@@ -58,6 +59,10 @@ export function OnboardingPage() {
 
   const handlePlanSelected = (plan: PlanType, billingPeriod?: 'monthly' | 'annual') => {
     console.log("OnboardingPage: Plan selected:", plan);
+    
+    // Store the selected plan for later use
+    setPlanSelection(plan, billingPeriod);
+    
     nextStep();
   };
 
@@ -83,7 +88,15 @@ export function OnboardingPage() {
 
   const handleRhythmAssessmentComplete = (data: any) => {
     console.log("OnboardingPage: Rhythm assessment completed");
-    setAssessmentResult(data);
+    
+    // Include plan information for free assessment detection
+    const enrichedData = {
+      ...data,
+      planType: selectedPlan,
+      isFreeAssessment: selectedPlan === 'preview'
+    };
+    
+    setAssessmentResult(enrichedData);
     nextStep(); // Go to payment gate instead of completing onboarding
   };
 

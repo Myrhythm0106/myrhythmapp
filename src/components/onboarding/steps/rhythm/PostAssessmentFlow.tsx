@@ -21,13 +21,23 @@ interface PostAssessmentFlowProps {
 export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onPaymentRequired }: PostAssessmentFlowProps) {
   const { hasFeature, subscriptionData, tier } = useSubscription();
   
-  // Determine initial step based on subscription status
+  // Determine initial step based on subscription status and free assessment
   const getInitialStep = () => {
     console.log("PostAssessmentFlow: Checking subscription status", { 
       tier, 
       subscribed: subscriptionData.subscribed,
-      hasPremiumFeatures: hasFeature('personalizedInsights')
+      hasPremiumFeatures: hasFeature('personalizedInsights'),
+      assessmentResult
     });
+    
+    // Check if this is a free assessment user (from preview plan)
+    const isFreeAssessmentUser = assessmentResult?.planType === 'preview' || 
+                                 assessmentResult?.isFreeAssessment === true;
+    
+    if (isFreeAssessmentUser) {
+      console.log("PostAssessmentFlow: Free assessment user, going directly to results");
+      return "results";
+    }
     
     // If user has premium features or is subscribed, skip payment gate
     if (tier !== 'free' || subscriptionData.subscribed || hasFeature('personalizedInsights')) {
@@ -48,10 +58,20 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onP
   const showFullResults = hasFeature('personalizedInsights');
 
   const handleStepComplete = (data?: any) => {
+    const isFreeAssessmentUser = assessmentResult?.planType === 'preview' || 
+                                 assessmentResult?.isFreeAssessment === true;
+    
     if (activeStep === "payment-gate") {
       setActiveStep("results");
     } else if (activeStep === "results") {
-      setActiveStep("welcome");
+      // Free assessment users skip welcome and guide, go straight to complete
+      if (isFreeAssessmentUser) {
+        setActiveStep("complete");
+        setSetupProgress(100);
+        onComplete(data || { skipToEnd: true });
+      } else {
+        setActiveStep("welcome");
+      }
     } else if (activeStep === "welcome") {
       setActiveStep("setup");
       setSetupProgress(25);
@@ -174,15 +194,23 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onP
           />
         );
       case "complete":
+        const isFreeAssessmentUser = assessmentResult?.planType === 'preview' || 
+                                     assessmentResult?.isFreeAssessment === true;
+        
         return (
           <div className="text-center py-12">
             <div className="max-w-md mx-auto space-y-4">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto">
                 <span className="text-2xl">🎉</span>
               </div>
-              <h2 className="text-2xl font-bold text-foreground">Setup Complete!</h2>
+              <h2 className="text-2xl font-bold text-foreground">
+                {isFreeAssessmentUser ? "Assessment Complete!" : "Setup Complete!"}
+              </h2>
               <p className="text-muted-foreground">
-                You're all set to start living your MYRHYTHM. Your dashboard is ready!
+                {isFreeAssessmentUser 
+                  ? "Thank you for completing your free assessment. Your dashboard is ready with basic insights!"
+                  : "You're all set to start living your MYRHYTHM. Your dashboard is ready!"
+                }
               </p>
             </div>
           </div>

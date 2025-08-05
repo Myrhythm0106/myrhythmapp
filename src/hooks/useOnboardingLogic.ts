@@ -32,7 +32,7 @@ export function useOnboardingLogic(totalSteps: number = 7) {
   // Additional state for the complex onboarding flow
   const [personalInfo, setPersonalInfo] = useState<PersonalInfoFormValues | null>(null);
   const [location, setLocation] = useState<any>(null);
-  const [selectedPlan, setSelectedPlan] = useState<any>('starter');
+  const [selectedPlan, setSelectedPlan] = useState<any>('premium');
   const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
   const [assessmentType, setAssessmentType] = useState<'brief' | 'comprehensive' | null>(null);
   const [isUserTypeSelected, setIsUserTypeSelected] = useState(false);
@@ -142,6 +142,12 @@ export function useOnboardingLogic(totalSteps: number = 7) {
     }
   };
 
+  const setPlanSelection = (plan: any, billing?: 'monthly' | 'annual') => {
+    setSelectedPlan(plan);
+    if (billing) setBillingPeriod(billing);
+    setIsPlanSelected(true);
+  };
+
   return {
     onboardingState,
     currentStep: onboardingState.step,
@@ -162,6 +168,7 @@ export function useOnboardingLogic(totalSteps: number = 7) {
     setIsUserTypeSelected,
     setIsLocationValid,
     setIsPlanSelected,
+    setPlanSelection,
     nextStep,
     prevStep,
     setUserType,
