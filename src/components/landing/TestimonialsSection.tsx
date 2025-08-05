@@ -11,21 +11,21 @@ const TestimonialsSection = () => {
     {
       quote: "I went from forgetting my kids' names to helping them with homework. MyRhythm gave me my identity back.",
       author: "Maria C.",
-      condition: "Stroke Survivor, 2 years recovery",
+      condition: "Stroke Survivor, 2 years empowerment",
       rating: 5,
       highlight: "Identity Restored"
     }, 
     {
       quote: "My husband and I were falling apart. Now we're stronger than ever. MyRhythm saved our marriage and our family.",
       author: "David & Jennifer K.",
-      condition: "TBI Recovery Journey",
+      condition: "TBI Empowerment Journey",
       rating: 5,
       highlight: "Marriage Saved"
     }, 
     {
       quote: "From dependent to independent in 6 months. I'm driving again, working again, LIVING again.",
       author: "Marcus T.",
-      condition: "Concussion Recovery",
+      condition: "Concussion Empowerment",
       rating: 5,
       highlight: "Independence Regained"
     }
@@ -106,7 +106,7 @@ const TestimonialsSection = () => {
                 className="text-xl px-12 py-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold rounded-2xl shadow-2xl hover:scale-105 transition-all"
                 onClick={() => navigate("/onboarding")}
               >
-                Start My Recovery Journey
+                Start My Empowerment Journey
                 <ArrowRight className="ml-3 h-6 w-6" />
               </Button>
               <div className="text-emerald-200 font-medium">

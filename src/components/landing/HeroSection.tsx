@@ -22,18 +22,54 @@ export function HeroSection() {
 
   return (
     <section className="relative overflow-hidden min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
-      {/* Bold, dramatic background */}
+      {/* Neural network background with purple/teal integration */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-transparent to-teal-600/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-purple-600/20 to-teal-600/30"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.3),transparent)] opacity-80"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.3),transparent)] opacity-80"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.15),transparent)] opacity-60"></div>
+        
+        {/* Subtle neural network SVG background */}
+        <svg className="absolute inset-0 w-full h-full opacity-[0.08]" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="neuralGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#14b8a6" stopOpacity="0.8"/>
+              <stop offset="50%" stopColor="#9333ea" stopOpacity="0.6"/>
+              <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.8"/>
+            </linearGradient>
+            <linearGradient id="neuralGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#9333ea" stopOpacity="0.7"/>
+              <stop offset="50%" stopColor="#10b981" stopOpacity="0.5"/>
+              <stop offset="100%" stopColor="#14b8a6" stopOpacity="0.7"/>
+            </linearGradient>
+          </defs>
+          
+          {/* Neural pathways */}
+          <path d="M100,200 Q300,100 500,200 T900,150 Q1000,120 1100,180" stroke="url(#neuralGradient1)" strokeWidth="2" fill="none" opacity="0.6"/>
+          <path d="M150,400 Q350,300 550,380 T950,320 Q1050,290 1150,350" stroke="url(#neuralGradient2)" strokeWidth="1.5" fill="none" opacity="0.5"/>
+          <path d="M50,600 Q250,500 450,580 T850,520 Q950,490 1050,550" stroke="url(#neuralGradient1)" strokeWidth="1.8" fill="none" opacity="0.4"/>
+          <path d="M200,100 Q400,50 600,120 T1000,80 Q1100,60 1200,100" stroke="url(#neuralGradient2)" strokeWidth="1.2" fill="none" opacity="0.3"/>
+          <path d="M120,700 Q320,650 520,720 T920,680 Q1020,660 1120,700" stroke="url(#neuralGradient1)" strokeWidth="1.6" fill="none" opacity="0.5"/>
+          
+          {/* Neural nodes */}
+          <circle cx="300" cy="200" r="4" fill="#14b8a6" opacity="0.6"/>
+          <circle cx="550" cy="380" r="3" fill="#9333ea" opacity="0.5"/>
+          <circle cx="850" cy="150" r="5" fill="#10b981" opacity="0.7"/>
+          <circle cx="450" cy="580" r="3.5" fill="#14b8a6" opacity="0.4"/>
+          <circle cx="750" cy="320" r="4.5" fill="#9333ea" opacity="0.6"/>
+          <circle cx="950" cy="680" r="3" fill="#10b981" opacity="0.5"/>
+          <circle cx="600" cy="120" r="4" fill="#14b8a6" opacity="0.4"/>
+          <circle cx="1000" cy="490" r="3.5" fill="#9333ea" opacity="0.5"/>
+        </svg>
       </div>
 
-      {/* Dynamic floating elements */}
+      {/* Enhanced floating elements with purple integration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-20 w-32 h-32 bg-emerald-400/40 rounded-full blur-2xl animate-pulse"></div>
         <div className="absolute top-1/3 right-20 w-24 h-24 bg-teal-400/50 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-purple-400/35 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
         <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-emerald-300/45 rounded-full blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
+        <div className="absolute top-1/4 right-1/3 w-22 h-22 bg-purple-300/40 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
         <div className="absolute bottom-20 right-20 w-36 h-36 bg-teal-300/35 rounded-full blur-3xl animate-pulse" style={{animationDelay: '6s'}}></div>
       </div>
 
@@ -67,26 +103,26 @@ export function HeroSection() {
             </h1>
             
             <p className="text-2xl md:text-3xl text-emerald-100 max-w-5xl mx-auto leading-relaxed font-light">
-              The brain recovery platform that turns your biggest challenges into your greatest victories
+              The memory first MyRhythm Framework that turns your biggest challenges into your greatest victories
             </p>
           </div>
 
-          {/* Survivor Success Stats - BOLD Impact */}
+          {/* Empowerment Success Stats - BOLD Impact */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
-            <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
-              <div className="text-6xl font-black text-emerald-400 mb-4">94%</div>
+            <div className="bg-purple-500/20 backdrop-blur-md rounded-3xl p-10 border border-purple-400/30 hover:scale-105 transition-transform">
+              <div className="text-6xl font-black text-purple-400 mb-4">94%</div>
               <div className="text-2xl text-white font-bold mb-2">Feel More Confident</div>
-              <div className="text-emerald-200 text-lg">Within 30 days</div>
+              <div className="text-purple-200 text-lg">Within 30 days</div>
             </div>
-            <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
-              <div className="text-6xl font-black text-teal-400 mb-4">2,847</div>
+            <div className="bg-emerald-500/20 backdrop-blur-md rounded-3xl p-10 border border-emerald-400/30 hover:scale-105 transition-transform">
+              <div className="text-6xl font-black text-emerald-400 mb-4">2,847</div>
               <div className="text-2xl text-white font-bold mb-2">Survivors Thriving</div>
-              <div className="text-teal-200 text-lg">And counting daily</div>
+              <div className="text-emerald-200 text-lg">And counting daily</div>
             </div>
-            <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
-              <div className="text-6xl font-black text-emerald-400 mb-4">89%</div>
-              <div className="text-2xl text-white font-bold mb-2">Families Reconnected</div>
-              <div className="text-emerald-200 text-lg">Stronger than before</div>
+            <div className="bg-teal-500/20 backdrop-blur-md rounded-3xl p-10 border border-teal-400/30 hover:scale-105 transition-transform">
+              <div className="text-6xl font-black text-teal-400 mb-4">91%</div>
+              <div className="text-2xl text-white font-bold mb-2">Report Sharper Memory</div>
+              <div className="text-teal-200 text-lg">Memory first results</div>
             </div>
           </div>
 
@@ -102,7 +138,7 @@ export function HeroSection() {
               MyRhythm didn't just help me remember—it helped me believe in myself again."
             </div>
             <div className="text-emerald-300 font-bold text-xl">
-              — Sarah M., Brain Injury Survivor, 3 years post-recovery
+              — Sarah M., Brain Injury Survivor, 3 years post-empowerment
             </div>
           </div>
 
@@ -134,7 +170,7 @@ export function HeroSection() {
                 <Archive className="h-10 w-10" />
               </div>
               <h3 className="font-black text-white text-xl mb-3">Memory Bank</h3>
-              <p className="text-teal-100 text-lg">Secure vault for your most precious moments and milestones</p>
+              <p className="text-teal-100 text-lg">Secure vault for your most precious moments and milestones for you to keep safe and remember</p>
             </div>
           </div>
 
@@ -156,7 +192,7 @@ export function HeroSection() {
                 className="text-2xl px-16 py-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 font-black shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-white/20" 
                 onClick={handleStartJourney}
               >
-                Join The Recovery Revolution
+                Join The Empowerment Revolution
                 <Badge className="ml-4 bg-white/30 text-white border-white/50 text-lg px-3 py-1">FREE ACCESS</Badge>
               </Button>
               <Button 
@@ -170,7 +206,7 @@ export function HeroSection() {
             </div>
             
             <div className="text-lg text-emerald-200 max-w-3xl mx-auto font-medium">
-              Join 2,847 survivors who've reclaimed their confidence. No credit card required. Your journey starts now.
+              Join 2,847 survivors who've reclaimed their confidence. No credit card required. Your empowerment journey starts now.
             </div>
           </div>
         </div>
