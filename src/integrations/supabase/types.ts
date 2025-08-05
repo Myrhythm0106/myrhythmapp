@@ -577,7 +577,7 @@ export type Database = {
           meeting_title: string
           meeting_type: string
           participants: Json
-          recording_id: string
+          recording_id: string | null
           relationship_context: Json | null
           started_at: string
           updated_at: string
@@ -595,7 +595,7 @@ export type Database = {
           meeting_title: string
           meeting_type?: string
           participants?: Json
-          recording_id: string
+          recording_id?: string | null
           relationship_context?: Json | null
           started_at?: string
           updated_at?: string
@@ -613,7 +613,7 @@ export type Database = {
           meeting_title?: string
           meeting_type?: string
           participants?: Json
-          recording_id?: string
+          recording_id?: string | null
           relationship_context?: Json | null
           started_at?: string
           updated_at?: string
