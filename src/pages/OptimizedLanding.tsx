@@ -2,159 +2,267 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Brain, Users, Calendar, Target, Shield, Clock, Star, Zap } from "lucide-react";
-import { Preview3Background } from "@/components/ui/Preview3Background";
-import { QuickLogout } from "@/components/testing/QuickLogout";
+import { ArrowRight, Heart, Star, TrendingUp, Quote, LogIn, Lightbulb, Calendar, Archive, ChevronDown } from "lucide-react";
+import { LoginModal } from "@/components/auth/LoginModal";
 
 export default function OptimizedLanding() {
   const navigate = useNavigate();
   const { user } = useAuth();
-
-  // TEMPORARILY DISABLED FOR DEMO - If user is already authenticated, redirect to dashboard
-  // React.useEffect(() => {
-  //   if (user) {
-  //     console.log('🔄 OptimizedLanding: User authenticated, redirecting to dashboard');
-  //     navigate('/dashboard');
-  //   } else {
-  //     console.log('✅ OptimizedLanding: No user, showing landing page');
-  //   }
-  // }, [user, navigate]);
+  const [showLoginModal, setShowLoginModal] = React.useState(false);
 
   const handleGetStarted = () => {
-    console.log('🚀 OptimizedLanding: Get started clicked, navigating to auth');
-    navigate('/auth');
+    console.log('🚀 OptimizedLanding: Get started clicked, navigating to onboarding');
+    navigate('/onboarding');
   };
 
-  const handleStartFree = () => {
-    console.log('🆓 OptimizedLanding: Start free clicked, navigating to dashboard');
-    navigate('/dashboard');
-  };
+  const testimonials = [
+    {
+      quote: "I went from forgetting my kids' names to helping them with homework. MyRhythm gave me my identity back.",
+      author: "Maria C.",
+      condition: "Stroke Survivor, 2 years recovery",
+      highlight: "Identity Restored"
+    }, 
+    {
+      quote: "My husband and I were falling apart. Now we're stronger than ever. MyRhythm saved our marriage and our family.",
+      author: "David & Jennifer K.",
+      condition: "TBI Recovery Journey",
+      highlight: "Marriage Saved"
+    }, 
+    {
+      quote: "From dependent to independent in 6 months. I'm driving again, working again, LIVING again.",
+      author: "Marcus T.",
+      condition: "Concussion Recovery",
+      highlight: "Independence Regained"
+    }
+  ];
 
   return (
-    <Preview3Background>
-      <QuickLogout />
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-8 space-y-12">
-        {/* Header */}
-        <div className="text-center space-y-6 max-w-4xl">
-          <Badge 
+    <div className="min-h-screen">
+      {/* HERO SECTION - Dark, Bold, Dramatic */}
+      <section className="relative overflow-hidden min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
+        {/* Bold, dramatic background */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-transparent to-teal-600/30"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.3),transparent)] opacity-80"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.3),transparent)] opacity-80"></div>
+        </div>
+
+        {/* Dynamic floating elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-20 w-32 h-32 bg-emerald-400/40 rounded-full blur-2xl animate-pulse"></div>
+          <div className="absolute top-1/3 right-20 w-24 h-24 bg-teal-400/50 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-emerald-300/45 rounded-full blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
+          <div className="absolute bottom-20 right-20 w-36 h-36 bg-teal-300/35 rounded-full blur-3xl animate-pulse" style={{animationDelay: '6s'}}></div>
+        </div>
+
+        {/* Top navigation */}
+        <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50">
+          <Button 
             variant="outline" 
-            className="mb-4 px-4 py-2 bg-gradient-to-r from-memory-emerald-100 to-brain-health-100 border-memory-emerald-300 text-memory-emerald-700 font-medium"
+            className="bg-white/10 backdrop-blur-md text-white border-white/30 hover:bg-white/20 rounded-full px-6 py-2 font-medium" 
+            onClick={() => setShowLoginModal(true)}
           >
-            <Clock className="w-4 h-4 mr-2" />
-            🚀 Start Your 7-Day Free Trial Today
-          </Badge>
-          
-          <h1 className="text-5xl md:text-7xl font-black leading-tight">
-            <span className="bg-gradient-to-r from-memory-emerald-600 via-memory-emerald-700 to-brain-health-600 bg-clip-text text-transparent">
-              Reclaim Your Memory,
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-brain-health-700 to-memory-emerald-600 bg-clip-text text-transparent">
-              Rebuild Your Life
-            </span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl bg-gradient-to-r from-memory-emerald-700 via-brain-health-700 to-sunrise-amber-700 bg-clip-text text-transparent max-w-3xl mx-auto leading-relaxed font-bold">
-            Join thousands who've transformed brain fog into mental clarity with our proven cognitive recovery system
-          </p>
+            <LogIn className="h-4 w-4 mr-2" />
+            Login
+          </Button>
         </div>
 
-        {/* Value Proposition Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl w-full">
-          <Card className="p-8 text-center space-y-6 border-memory-emerald-200/60 bg-gradient-to-br from-white via-memory-emerald-50/20 to-brain-health-50/25 hover:shadow-elegant transition-all duration-300">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-memory-emerald-500 to-brain-health-500 rounded-2xl flex items-center justify-center shadow-glow">
-              <Zap className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-memory-emerald-800">Immediate Relief</h3>
-            <p className="text-memory-emerald-700 leading-relaxed font-semibold">
-              Start feeling clearer within your first session with our daily empowerment rituals
-            </p>
-          </Card>
-
-          <Card className="p-8 text-center space-y-6 border-brain-health-200/60 bg-gradient-to-br from-white via-brain-health-50/20 to-memory-emerald-50/25 hover:shadow-elegant transition-all duration-300">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-brain-health-500 to-memory-emerald-500 rounded-2xl flex items-center justify-center shadow-glow">
-              <Target className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-brain-health-800">Proven System</h3>
-            <p className="text-brain-health-700 leading-relaxed font-semibold">
-              Our PACT framework has helped 10,000+ people rebuild their cognitive strength
-            </p>
-          </Card>
-
-          <Card className="p-8 text-center space-y-6 border-sunrise-amber-200/60 bg-gradient-to-br from-white via-sunrise-amber-50/20 to-brain-health-50/25 hover:shadow-elegant transition-all duration-300">
-            <div className="w-16 h-16 mx-auto bg-gradient-to-br from-sunrise-amber-500 to-brain-health-500 rounded-2xl flex items-center justify-center shadow-glow">
-              <Users className="h-8 w-8 text-white" />
-            </div>
-            <h3 className="text-xl font-bold text-sunrise-amber-800">Never Alone</h3>
-            <p className="text-sunrise-amber-700 leading-relaxed font-semibold">
-              Connect with others on the same journey and build your support network
-            </p>
-          </Card>
-        </div>
-
-        {/* CTA Section */}
-        <Card className="p-10 text-center space-y-8 max-w-2xl w-full bg-gradient-to-br from-memory-emerald-50/40 via-brain-health-50/30 to-sunrise-amber-50/20 border-memory-emerald-200/50 shadow-glow">
-          <h2 className="text-4xl font-bold bg-gradient-to-r from-memory-emerald-700 to-brain-health-700 bg-clip-text text-transparent">
-            Ready to Transform Your Life?
-          </h2>
-          <p className="text-lg bg-gradient-to-r from-brain-health-700 to-memory-emerald-700 bg-clip-text text-transparent font-bold">
-            Join thousands who've already discovered their rhythm and transformed their daily experience.
-          </p>
-          
-          <div className="space-y-4">
-            <Button 
-              onClick={handleGetStarted}
-              size="lg"
-              className="w-full py-6 text-lg font-semibold bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-elegant hover:shadow-glow transition-all text-white"
-            >
-              Start Your 7-Day Free Trial
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+        <div className="relative z-10 container mx-auto px-6 max-w-7xl min-h-screen flex items-center">
+          <div className="text-center w-full space-y-16 pt-16">
             
-            <Button 
-              variant="outline"
-              onClick={handleStartFree}
-              size="lg"
-              className="w-full py-4 text-lg font-semibold border-2 border-brain-health-400 text-brain-health-700 hover:bg-gradient-to-r hover:from-brain-health-50 hover:to-memory-emerald-50 hover:border-memory-emerald-400 hover:text-memory-emerald-700 transition-all"
-            >
-              Try MyRhythm Free (Limited Features)
-            </Button>
+            {/* Powerful opening */}
+            <div className="space-y-8">
+              <div className="inline-block px-8 py-3 bg-emerald-400/20 rounded-full border border-emerald-400/40 backdrop-blur-sm mb-6">
+                <span className="text-emerald-200 font-bold text-lg">🔥 By Survivors, For Survivors</span>
+              </div>
+              
+              <h1 className="text-6xl md:text-8xl font-black text-white leading-tight tracking-tight">
+                No One Walks
+                <br />
+                <span className="text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text">
+                  Alone
+                </span>
+              </h1>
+              
+              <p className="text-2xl md:text-3xl text-emerald-100 max-w-5xl mx-auto leading-relaxed font-light">
+                The brain recovery platform that turns your biggest challenges into your greatest victories
+              </p>
+            </div>
+
+            {/* Survivor Success Stats - BOLD Impact */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
+              <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
+                <div className="text-6xl font-black text-emerald-400 mb-4">94%</div>
+                <div className="text-2xl text-white font-bold mb-2">Feel More Confident</div>
+                <div className="text-emerald-200 text-lg">Within 30 days</div>
+              </div>
+              <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
+                <div className="text-6xl font-black text-teal-400 mb-4">2,847</div>
+                <div className="text-2xl text-white font-bold mb-2">Survivors Thriving</div>
+                <div className="text-teal-200 text-lg">And counting daily</div>
+              </div>
+              <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
+                <div className="text-6xl font-black text-emerald-400 mb-4">89%</div>
+                <div className="text-2xl text-white font-bold mb-2">Families Reconnected</div>
+                <div className="text-emerald-200 text-lg">Stronger than before</div>
+              </div>
+            </div>
+
+            {/* Core Features - Survivor Focused */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-8">
+              <div className="bg-emerald-500/25 backdrop-blur-md rounded-2xl p-8 border border-emerald-400/30 hover:scale-105 transition-all group">
+                <div className="text-emerald-300 mb-4 group-hover:scale-110 transition-transform">
+                  <Lightbulb className="h-10 w-10" />
+                </div>
+                <h3 className="font-black text-white text-xl mb-3">Memory Bridge</h3>
+                <p className="text-emerald-100 text-lg">Smart reminders that actually understand your recovery journey</p>
+              </div>
+              <div className="bg-teal-500/25 backdrop-blur-md rounded-2xl p-8 border border-teal-400/30 hover:scale-105 transition-all group">
+                <div className="text-teal-300 mb-4 group-hover:scale-110 transition-transform">
+                  <Heart className="h-10 w-10" />
+                </div>
+                <h3 className="font-black text-white text-xl mb-3">Empowerment Hub</h3>
+                <p className="text-teal-100 text-lg">Track wins, celebrate progress, build unstoppable momentum</p>
+              </div>
+              <div className="bg-emerald-500/25 backdrop-blur-md rounded-2xl p-8 border border-emerald-400/30 hover:scale-105 transition-all group">
+                <div className="text-emerald-300 mb-4 group-hover:scale-110 transition-transform">
+                  <Calendar className="h-10 w-10" />
+                </div>
+                <h3 className="font-black text-white text-xl mb-3">Cognitive Calendar</h3>
+                <p className="text-emerald-100 text-lg">Visual planning that makes complex days feel manageable</p>
+              </div>
+              <div className="bg-teal-500/25 backdrop-blur-md rounded-2xl p-8 border border-teal-400/30 hover:scale-105 transition-all group">
+                <div className="text-teal-300 mb-4 group-hover:scale-110 transition-transform">
+                  <Archive className="h-10 w-10" />
+                </div>
+                <h3 className="font-black text-white text-xl mb-3">Memory Bank</h3>
+                <p className="text-teal-100 text-lg">Secure vault for your most precious moments and milestones</p>
+              </div>
+            </div>
+
+            {/* Urgent CTA with Scarcity */}
+            <div className="space-y-8">
+              <div className="flex items-center justify-center gap-4 mb-6">
+                <div className="inline-block px-6 py-3 bg-orange-500/30 rounded-full border border-orange-400/50">
+                  <span className="text-orange-200 font-bold text-lg">🚀 Limited Beta Access - Only 127 spots left</span>
+                </div>
+                <div className="flex items-center gap-2 text-orange-200">
+                  <TrendingUp className="h-5 w-5" />
+                  <span className="font-medium">Filling Fast!</span>
+                </div>
+              </div>
+              
+              <div className="flex flex-col lg:flex-row gap-6 justify-center items-center">
+                <Button 
+                  size="lg" 
+                  className="text-2xl px-16 py-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 font-black shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-white/20" 
+                  onClick={handleGetStarted}
+                >
+                  Join The Recovery Revolution
+                  <Badge className="ml-4 bg-white/30 text-white border-white/50 text-lg px-3 py-1">FREE ACCESS</Badge>
+                </Button>
+              </div>
+              
+              <div className="text-lg text-emerald-200 max-w-3xl mx-auto font-medium">
+                Join 2,847 survivors who've reclaimed their confidence. No credit card required. Your journey starts now.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+          <ChevronDown className="h-8 w-8 text-emerald-400" />
+        </div>
+
+        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      </section>
+
+      {/* TESTIMONIALS SECTION - High Impact */}
+      <section className="py-20 bg-gradient-to-br from-emerald-50 to-teal-50 relative overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-20 w-64 h-64 bg-emerald-400 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-20 right-20 w-80 h-80 bg-teal-400 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4 max-w-7xl relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-block px-6 py-2 bg-emerald-500/20 rounded-full border border-emerald-500/30 mb-6">
+              <span className="text-emerald-700 font-bold">💪 REAL STORIES, REAL VICTORIES</span>
+            </div>
+            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6">
+              They Did It.
+              <br />
+              <span className="text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text">
+                So Can You.
+              </span>
+            </h2>
+            <p className="text-2xl text-gray-600 max-w-3xl mx-auto font-light">
+              Real survivors. Real transformations. Real hope.
+            </p>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-6 text-sm font-semibold">
-            <div className="flex items-center gap-2 text-brain-health-700">
-              <Shield className="h-4 w-4 text-brain-health-600" />
-              <span className="font-semibold">No Credit Card</span>
-            </div>
-            <div className="flex items-center gap-2 text-memory-emerald-700">
-              <Clock className="h-4 w-4 text-memory-emerald-600" />
-              <span className="font-semibold">Cancel Anytime</span>
-            </div>
-            <div className="flex items-center gap-2 text-sunrise-amber-700">
-              <Zap className="h-4 w-4 text-sunrise-amber-600" />
-              <span className="font-semibold">Instant Access</span>
-            </div>
-          </div>
-        </Card>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            {testimonials.map((testimonial, index) => (
+              <div 
+                key={index}
+                className="bg-white rounded-3xl p-8 shadow-2xl border border-emerald-100 hover:scale-105 transition-all duration-300 group relative overflow-hidden"
+              >
+                {/* Highlight badge */}
+                <div className="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2 rounded-bl-2xl font-bold text-sm">
+                  {testimonial.highlight}
+                </div>
 
-        {/* Social Proof */}
-        <div className="text-center space-y-6 max-w-3xl">
-          <div className="flex justify-center space-x-1 text-sunrise-amber-500">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-6 w-6 fill-current" />
+                <div className="mb-6 pt-8">
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-6 w-6 text-yellow-400 fill-yellow-400" />
+                    ))}
+                  </div>
+                  <Quote className="h-12 w-12 text-emerald-500/30 mb-4" />
+                </div>
+
+                <p className="text-xl text-gray-800 font-medium italic leading-relaxed mb-6 group-hover:text-emerald-700 transition-colors">
+                  "{testimonial.quote}"
+                </p>
+
+                <div className="border-t border-emerald-100 pt-6">
+                  <p className="font-bold text-emerald-700 text-lg">{testimonial.author}</p>
+                  <p className="text-gray-600 font-medium">{testimonial.condition}</p>
+                </div>
+
+                {/* Hover effect */}
+                <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 to-teal-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+              </div>
             ))}
           </div>
-          <blockquote className="text-xl italic bg-gradient-to-r from-memory-emerald-800 via-brain-health-800 to-sunrise-amber-800 bg-clip-text text-transparent leading-relaxed font-bold">
-            "MyRhythm gave me my life back. Within a week, I felt like myself again and completely transformed how I approach my daily routine."
-          </blockquote>
-          <cite className="text-memory-emerald-700 font-bold text-lg">
-            — Sarah M., Verified User
-          </cite>
-          <p className="text-sm text-brain-health-700 font-bold">4.9/5 from 2,847 users</p>
+
+          {/* Final CTA */}
+          <div className="text-center bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl p-12 text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+            <div className="relative z-10">
+              <Heart className="h-16 w-16 mx-auto mb-6 text-white/80" />
+              <h3 className="text-4xl font-black mb-4">Your Victory Story Starts Now</h3>
+              <p className="text-xl mb-8 text-emerald-100 max-w-2xl mx-auto">
+                Join 2,847 survivors who've transformed their lives. Your breakthrough is waiting.
+              </p>
+              <Button 
+                size="lg" 
+                className="text-xl px-12 py-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold rounded-2xl shadow-2xl hover:scale-105 transition-all"
+                onClick={handleGetStarted}
+              >
+                Start My Recovery Journey
+                <ArrowRight className="ml-3 h-6 w-6" />
+              </Button>
+              <div className="text-emerald-200 font-medium mt-4">
+                Free access • No credit card • Join in 60 seconds
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </Preview3Background>
+      </section>
+    </div>
   );
 }
