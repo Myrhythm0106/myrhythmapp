@@ -256,6 +256,39 @@ export type Database = {
         }
         Relationships: []
       }
+      cross_device_notifications: {
+        Row: {
+          created_at: string
+          data: Json
+          device_source: string
+          expires_at: string | null
+          id: string
+          is_read: boolean
+          notification_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          device_source: string
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          notification_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          device_source?: string
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          notification_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_actions: {
         Row: {
           action_type: string
