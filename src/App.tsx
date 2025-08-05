@@ -8,6 +8,7 @@ import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import MemoryFirstIndex from "./pages/MemoryFirstIndex";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
@@ -38,9 +39,10 @@ function App() {
         <SubscriptionProvider>
           <PomodoroProvider>
             <DailyActionsProvider>
-              <TooltipProvider>
-                <Toaster />
-                <BrowserRouter>
+              <SidebarProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<MemoryFirstIndex />} />
                     <Route path="/auth" element={<Auth />} />
@@ -85,8 +87,9 @@ function App() {
                       }
                     />
                   </Routes>
-                </BrowserRouter>
-              </TooltipProvider>
+                  </BrowserRouter>
+                </TooltipProvider>
+              </SidebarProvider>
             </DailyActionsProvider>
           </PomodoroProvider>
         </SubscriptionProvider>
