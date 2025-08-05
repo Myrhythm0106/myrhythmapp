@@ -56,7 +56,7 @@ export default function OptimizedLanding() {
             </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium">
+          <p className="text-xl md:text-2xl bg-gradient-to-r from-memory-emerald-700 via-brain-health-700 to-sunrise-amber-700 bg-clip-text text-transparent max-w-3xl mx-auto leading-relaxed font-bold">
             Join thousands who've transformed brain fog into mental clarity with our proven cognitive recovery system
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function OptimizedLanding() {
               <Zap className="h-8 w-8 text-white" />
             </div>
             <h3 className="text-xl font-bold text-memory-emerald-800">Immediate Relief</h3>
-            <p className="text-gray-700 leading-relaxed font-medium">
+            <p className="text-memory-emerald-700 leading-relaxed font-semibold">
               Start feeling clearer within your first session with our daily empowerment rituals
             </p>
           </Card>
@@ -78,7 +78,7 @@ export default function OptimizedLanding() {
               <Target className="h-8 w-8 text-white" />
             </div>
             <h3 className="text-xl font-bold text-brain-health-800">Proven System</h3>
-            <p className="text-gray-700 leading-relaxed font-medium">
+            <p className="text-brain-health-700 leading-relaxed font-semibold">
               Our PACT framework has helped 10,000+ people rebuild their cognitive strength
             </p>
           </Card>
@@ -88,7 +88,7 @@ export default function OptimizedLanding() {
               <Users className="h-8 w-8 text-white" />
             </div>
             <h3 className="text-xl font-bold text-sunrise-amber-800">Never Alone</h3>
-            <p className="text-gray-700 leading-relaxed font-medium">
+            <p className="text-sunrise-amber-700 leading-relaxed font-semibold">
               Connect with others on the same journey and build your support network
             </p>
           </Card>
@@ -99,7 +99,7 @@ export default function OptimizedLanding() {
           <h2 className="text-4xl font-bold bg-gradient-to-r from-memory-emerald-700 to-brain-health-700 bg-clip-text text-transparent">
             Ready to Transform Your Life?
           </h2>
-          <p className="text-lg text-gray-700 font-medium">
+          <p className="text-lg bg-gradient-to-r from-brain-health-700 to-memory-emerald-700 bg-clip-text text-transparent font-bold">
             Join thousands who've already discovered their rhythm and transformed their daily experience.
           </p>
           
@@ -123,18 +123,18 @@ export default function OptimizedLanding() {
             </Button>
           </div>
 
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap justify-center gap-6 text-sm font-semibold">
+            <div className="flex items-center gap-2 text-brain-health-700">
               <Shield className="h-4 w-4 text-brain-health-600" />
-              <span className="font-medium">No Credit Card</span>
+              <span className="font-semibold">No Credit Card</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-memory-emerald-700">
               <Clock className="h-4 w-4 text-memory-emerald-600" />
-              <span className="font-medium">Cancel Anytime</span>
+              <span className="font-semibold">Cancel Anytime</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-sunrise-amber-700">
               <Zap className="h-4 w-4 text-sunrise-amber-600" />
-              <span className="font-medium">Instant Access</span>
+              <span className="font-semibold">Instant Access</span>
             </div>
           </div>
         </Card>
@@ -146,13 +146,13 @@ export default function OptimizedLanding() {
               <Star key={i} className="h-6 w-6 fill-current" />
             ))}
           </div>
-          <blockquote className="text-xl italic text-gray-800 leading-relaxed font-medium">
+          <blockquote className="text-xl italic bg-gradient-to-r from-memory-emerald-800 via-brain-health-800 to-sunrise-amber-800 bg-clip-text text-transparent leading-relaxed font-bold">
             "MyRhythm gave me my life back. Within a week, I felt like myself again and completely transformed how I approach my daily routine."
           </blockquote>
-          <cite className="text-memory-emerald-700 font-semibold">
+          <cite className="text-memory-emerald-700 font-bold text-lg">
             — Sarah M., Verified User
           </cite>
-          <p className="text-sm text-gray-600 font-medium">4.9/5 from 2,847 users</p>
+          <p className="text-sm text-brain-health-700 font-bold">4.9/5 from 2,847 users</p>
         </div>
       </div>
     </Preview3Background>

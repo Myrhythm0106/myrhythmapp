@@ -165,15 +165,25 @@ export function DashboardContent() {
 
   return (
     <div className="space-y-8 pb-20">
-      {/* Simplified header - no need for repetitive hero since welcome screen handles encouragement */}
-      <div className="text-center space-y-4 p-6 bg-gradient-to-br from-purple-50/80 via-blue-50/60 to-teal-50/80 rounded-2xl border-2 border-purple-200/50 shadow-lg">
+      {/* EMPOWERMENT SEQUENCE - This is the month of [THEME] */}
+      <div id="monthly-theme" className="space-y-6">
+        <MonthlyTheme />
+      </div>
+
+      {/* Daily #IChoose Statement - Primary empowerment */}
+      <div id="ichoose" className="space-y-6">
+        <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} userType={userData?.userType} />
+      </div>
+
+      {/* Command Center Header */}
+      <div className="text-center space-y-4 p-6 bg-gradient-to-br from-memory-emerald-50/80 via-brain-health-50/60 to-sunrise-amber-50/80 rounded-2xl border-2 border-memory-emerald-200/50 shadow-glow">
         <h1 className="text-3xl md:text-4xl font-black">
-          <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-            YOUR COMMAND CENTER
+          <span className="bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-sunrise-amber-600 bg-clip-text text-transparent">
+            YOUR PACT COMMAND CENTER
           </span>
         </h1>
-        <p className="text-lg text-gray-700 font-medium">
-          Track progress, manage activities, and stay on top of your goals
+        <p className="text-lg bg-gradient-to-r from-memory-emerald-700 to-brain-health-700 bg-clip-text text-transparent font-bold">
+          Productivity • Authenticity • Connection • Transformation
         </p>
       </div>
 
