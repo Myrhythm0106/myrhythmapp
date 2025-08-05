@@ -36,7 +36,7 @@ export default function OptimizedLanding() {
             7-Day Free Trial - No Credit Card Required
           </Badge>
           
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-beacon-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-brain-health-600 bg-clip-text text-transparent">
             Reclaim Your Memory,
             <br />
             Rebuild Your Life
@@ -59,9 +59,9 @@ export default function OptimizedLanding() {
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-beacon-500/20 hover:border-beacon-500/40 transition-all">
+          <Card className="border-2 border-brain-health-500/20 hover:border-brain-health-500/40 transition-all">
             <CardContent className="p-6 text-center space-y-4">
-              <Target className="w-12 h-12 mx-auto text-beacon-600" />
+              <Target className="w-12 h-12 mx-auto text-brain-health-600" />
               <h3 className="text-xl font-semibold">Proven System</h3>
               <p className="text-muted-foreground">
                 Our PACT framework has helped 10,000+ people rebuild their cognitive strength
@@ -86,7 +86,7 @@ export default function OptimizedLanding() {
             <Button 
               onClick={handleGetStarted}
               size="lg"
-              className="w-full py-6 text-lg bg-gradient-to-r from-primary to-beacon-600 hover:from-primary/90 hover:to-beacon-700 transition-all duration-300 transform hover:scale-105"
+              className="w-full py-6 text-lg bg-gradient-to-r from-primary to-brain-health-600 hover:from-primary/90 hover:to-brain-health-700 transition-all duration-300 transform hover:scale-105"
             >
               Start Your 7-Day Free Trial
               <ArrowRight className="ml-2 h-5 w-5" />
