@@ -37,19 +37,19 @@
 
     --radius: 0.5rem;
 
-    /* GORGEOUS THERAPEUTIC PURPLE - Rich, empowering, calming */
-    --memory-emerald-50: 280 65% 97%;
-    --memory-emerald-100: 280 60% 94%;
-    --memory-emerald-200: 280 65% 88%;
-    --memory-emerald-300: 280 70% 78%;
-    --memory-emerald-400: 280 75% 68%;
-    --memory-emerald-500: 280 80% 58%;
-    --memory-emerald-600: 280 85% 48%;
-    --memory-emerald-700: 280 90% 38%;
-    --memory-emerald-800: 280 95% 28%;
-    --memory-emerald-900: 280 100% 20%;
+    /* TRUE EMERALD - Cooling & Calming Therapeutic */
+    --emerald-50: 160 85% 97%;
+    --emerald-100: 160 80% 94%;
+    --emerald-200: 160 75% 88%;
+    --emerald-300: 160 70% 78%;
+    --emerald-400: 160 65% 68%;
+    --emerald-500: 160 60% 58%;
+    --emerald-600: 160 65% 48%;
+    --emerald-700: 160 70% 38%;
+    --emerald-800: 160 75% 28%;
+    --emerald-900: 160 80% 20%;
 
-    /* STUNNING THERAPEUTIC TEAL - Calm, trustworthy, healing */
+    /* THERAPEUTIC TEAL - Calm, trustworthy, healing */
     --brain-health-50: 180 70% 97%;
     --brain-health-100: 180 65% 94%;
     --brain-health-200: 180 70% 88%;
@@ -94,23 +94,23 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 42 30% 65%;
 
-    /* Memory Bridge PURPLE & TEAL - The colors you actually wanted! */
-    --memory-emerald: 280 80% 60%;     /* Rich therapeutic purple */
-    --memory-emerald-dark: 280 85% 50%;
-    --memory-emerald-light: 280 70% 85%;
+    /* PACT Colors - Emerald & Teal Therapy */
+    --emerald-primary: 160 60% 55%;    /* True emerald - cooling & calming */
+    --emerald-dark: 160 65% 45%;
+    --emerald-light: 160 50% 85%;
 
     --brain-health: 180 85% 50%;       /* Calming therapeutic teal */
     --brain-health-dark: 180 90% 40%;
     --brain-health-light: 180 75% 80%;
     
-    /* Memory Bridge gradients */
-    --gradient-memory: linear-gradient(135deg, hsl(var(--memory-emerald)), hsl(var(--brain-health)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--memory-emerald) / 0.03));
-    --gradient-trust: linear-gradient(135deg, hsl(var(--memory-emerald) / 0.1), hsl(var(--brain-health) / 0.1));
+    /* PACT gradients */
+    --gradient-pact: linear-gradient(135deg, hsl(var(--emerald-primary)), hsl(var(--brain-health)));
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--emerald-primary) / 0.03));
+    --gradient-trust: linear-gradient(135deg, hsl(var(--emerald-primary) / 0.1), hsl(var(--brain-health) / 0.1));
     
-    /* Memory Bridge shadows */
-    --shadow-glow: 0 0 40px hsl(var(--memory-emerald) / 0.3);
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--memory-emerald) / 0.2);
+    /* PACT shadows */
+    --shadow-glow: 0 0 40px hsl(var(--emerald-primary) / 0.3);
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--emerald-primary) / 0.2);
   }
 
   .dark {

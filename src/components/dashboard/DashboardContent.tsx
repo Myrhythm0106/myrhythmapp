@@ -176,13 +176,13 @@ export function DashboardContent() {
       </div>
 
       {/* Command Center Header */}
-      <div className="text-center space-y-4 p-6 bg-gradient-to-br from-memory-emerald-50/80 via-brain-health-50/60 to-sunrise-amber-50/80 rounded-2xl border-2 border-memory-emerald-200/50 shadow-glow">
+      <div className="text-center space-y-4 p-6 bg-gradient-to-br from-emerald-50/80 via-brain-health-50/60 to-sunrise-amber-50/80 rounded-2xl border-2 border-emerald-200/50 shadow-glow">
         <h1 className="text-3xl md:text-4xl font-black">
-          <span className="bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-sunrise-amber-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-600 via-brain-health-600 to-sunrise-amber-600 bg-clip-text text-transparent">
             YOUR PACT COMMAND CENTER
           </span>
         </h1>
-        <p className="text-lg bg-gradient-to-r from-memory-emerald-700 to-brain-health-700 bg-clip-text text-transparent font-bold">
+        <p className="text-lg bg-gradient-to-r from-emerald-700 to-brain-health-700 bg-clip-text text-transparent font-bold">
           Productivity • Authenticity • Connection • Transformation
         </p>
       </div>
