@@ -20,9 +20,13 @@ export const TestAccountButton = () => {
       localStorage.removeItem('myrhythm_web_onboarding_current_step');
       localStorage.removeItem('myrhythm_web_onboarding_progress_saved');
       
-      const testEmail = `test${Date.now()}@example.com`;
+      // Generate unique test email for multiple demo accounts
+      const demoCounter = parseInt(localStorage.getItem('demo_account_counter') || '0') + 1;
+      localStorage.setItem('demo_account_counter', demoCounter.toString());
+      
+      const testEmail = `test-demo-${demoCounter}@example.com`;
       const testPassword = 'TestPassword123!';
-      const testName = 'Test User';
+      const testName = `Demo User ${demoCounter}`;
 
       console.log('🧪 Creating test account:', testEmail);
       toast.info('Creating test account and clearing onboarding flags...');
