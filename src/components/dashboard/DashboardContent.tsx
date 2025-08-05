@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardHeader } from "./DashboardHeader";
 import { HeroSection } from "./unified/HeroSection";
-import { CommandCenterLayout } from "./unified/CommandCenterLayout";
+import { ActivityFlowLayout } from "./unified/ActivityFlowLayout";
 import { QuickActionZone } from "./unified/QuickActionZone";
 import { TodayFocus } from "./TodayFocus";
 import { UpcomingToday } from "./UpcomingToday";
@@ -32,12 +32,14 @@ import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
 import { CalendarDashboardIntegration } from "@/components/calendar/CalendarDashboardIntegration";
+import { WelcomeScreen } from "./WelcomeScreen";
 
 export function DashboardContent() {
   const [searchParams] = useSearchParams();
   const [showMorningRitual, setShowMorningRitual] = useState(false);
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
   const [dailyIntention, setDailyIntention] = useState('');
+  const [showWelcomeScreen, setShowWelcomeScreen] = useState(false);
   // Removed dashboard view toggle - now unified experience
   const { metrics, getNextUnlock } = useUserProgress();
   const userData = useUserData();
@@ -65,14 +67,23 @@ export function DashboardContent() {
       toast.success("🚀 Your 7-day free trial has started! Explore all features.");
     }
 
-    // Check if morning ritual is completed today
+    // Check if welcome screen should be shown (first time today)
     const today = new Date().toDateString();
+    const welcomeComplete = localStorage.getItem(`welcome_complete_${today}`);
+    const hour = new Date().getHours();
+    
+    // Show welcome screen first thing in the morning if not completed today
+    if (!welcomeComplete && hour >= 6 && hour <= 11) {
+      setShowWelcomeScreen(true);
+      return; // Exit early to show welcome screen first
+    }
+
+    // Check if morning ritual is completed today
     const morningRitual = localStorage.getItem(`morning_ritual_${today}`);
     
     if (!morningRitual) {
-      const hour = new Date().getHours();
-      // Show morning ritual if it's morning and not completed
-      if (hour >= 6 && hour <= 11) {
+      // Show morning ritual if welcome is complete but ritual isn't
+      if (welcomeComplete && hour >= 6 && hour <= 11) {
         setShowMorningRitual(true);
       }
     } else {
@@ -124,6 +135,16 @@ export function DashboardContent() {
     return welcomeMessages[userData.userType] || welcomeMessages['wellness'];
   };
 
+  // Show welcome screen first if not completed today
+  if (showWelcomeScreen) {
+    return (
+      <WelcomeScreen 
+        onProceedToDashboard={() => setShowWelcomeScreen(false)}
+        userType={userData?.userType}
+      />
+    );
+  }
+
   // If morning ritual not completed and it's morning time, show morning ritual
   if (showMorningRitual) {
     return (
@@ -144,28 +165,19 @@ export function DashboardContent() {
 
   return (
     <div className="space-y-8 pb-20">
-      {/* Hero Section - Commanding Headlines */}
-      <HeroSection 
-        onUpgradeClick={handleUpgradeClick} 
-        userType={userData?.userType} 
-      />
+      {/* Simplified header - no need for repetitive hero since welcome screen handles encouragement */}
+      <div className="text-center space-y-4 p-6 bg-gradient-to-br from-purple-50/80 via-blue-50/60 to-teal-50/80 rounded-2xl border-2 border-purple-200/50 shadow-lg">
+        <h1 className="text-3xl md:text-4xl font-black">
+          <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+            YOUR COMMAND CENTER
+          </span>
+        </h1>
+        <p className="text-lg text-gray-700 font-medium">
+          Track progress, manage activities, and stay on top of your goals
+        </p>
+      </div>
 
       <ReadingProgressBar sections={dashboardSections} />
-      
-      {/* Role-Specific Welcome Message */}
-      {userData.userType && (
-        <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="text-2xl">{roleWelcome.icon}</div>
-              <div>
-                <h3 className="font-semibold text-purple-800">{roleWelcome.title}</h3>
-                <p className="text-sm text-purple-700">{roleWelcome.message}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
       
       {/* Assessment Upgrade Reminder */}
       <AssessmentUpgradeReminder />
@@ -205,11 +217,8 @@ export function DashboardContent() {
         </Card>
       )}
       
-      {/* Calendar-Dashboard Integration */}
-      <CalendarDashboardIntegration />
-      
-      {/* Command Center Layout - Unified Four-Quadrant View */}
-      <CommandCenterLayout />
+      {/* Activity Flow Layout - Today → Week → Month → Year */}
+      <ActivityFlowLayout />
       
       {/* Quick Action Zone */}
       <QuickActionZone />
