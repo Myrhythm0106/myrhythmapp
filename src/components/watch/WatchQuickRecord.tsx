@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Mic, Square, Check, AlertCircle } from 'lucide-react';
+import { Mic, Square, Smartphone, Tablet, Laptop } from 'lucide-react';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
+import { usePlatform } from '@/components/platform/PlatformProvider';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 /**
@@ -15,8 +17,30 @@ export function WatchQuickRecord() {
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [recordingTimer, setRecordingTimer] = useState<NodeJS.Timeout | null>(null);
   
+  const { deviceLabel } = usePlatform();
   const { startMeetingRecording, stopMeetingRecording, isProcessing } = useMemoryBridge();
   const { startRecording, stopRecording } = useVoiceRecorder();
+
+  // Cross-device notification system
+  const sendCrossDeviceNotification = async (type: string, data: any) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      // Create notification for other devices
+      await supabase.from('cross_device_notifications').insert({
+        user_id: user.id,
+        notification_type: type,
+        device_source: deviceLabel,
+        data: data,
+        created_at: new Date().toISOString()
+      });
+      
+      console.log(`📱 Cross-device notification sent: ${type} from ${deviceLabel}`);
+    } catch (error) {
+      console.error('Failed to send cross-device notification:', error);
+    }
+  };
 
   useEffect(() => {
     // Cleanup timer on unmount
@@ -34,13 +58,20 @@ export function WatchQuickRecord() {
       // Start voice recording
       await startRecording();
       
-      // Start meeting recording with minimal setup
+      // Start meeting recording with device context
       await startMeetingRecording({
-        title: `Watch Recording ${new Date().toLocaleTimeString()}`,
+        title: `${deviceLabel} PACT Capture ${new Date().toLocaleTimeString()}`,
         participants: [{ name: 'Me', relationship: 'self' }],
-        meetingType: 'informal',
-        context: 'Recorded via watch for instant PACT capture'
+        meetingType: 'unplanned',
+        context: `Instant PACT capture from ${deviceLabel} - ready for cross-device review`
       }, null);
+
+      // Notify other devices that recording started
+      await sendCrossDeviceNotification('recording_started', {
+        device: deviceLabel,
+        timestamp: new Date().toISOString(),
+        type: 'instant_pact_capture'
+      });
 
       setIsRecording(true);
       setRecordingDuration(0);
@@ -82,6 +113,14 @@ export function WatchQuickRecord() {
       // Process the recording
       await stopMeetingRecording(audioBlob);
       
+      // Notify other devices that recording completed
+      await sendCrossDeviceNotification('recording_completed', {
+        device: deviceLabel,
+        timestamp: new Date().toISOString(),
+        duration: formatDuration(recordingDuration),
+        type: 'instant_pact_capture'
+      });
+      
       setIsRecording(false);
       setRecordingDuration(0);
 
@@ -90,7 +129,7 @@ export function WatchQuickRecord() {
         navigator.vibrate([100, 50, 100]);
       }
 
-      toast.success('🎯 PACT captured! Check your phone for results.');
+      toast.success('🎯 PACT captured! Review on phone/iPad/laptop.');
     } catch (error) {
       console.error('❌ Error stopping watch recording:', error);
       toast.error('Failed to save recording');
@@ -164,7 +203,12 @@ export function WatchQuickRecord() {
 
       {/* Quick help */}
       <div className="mt-4 text-xs text-gray-500 text-center max-w-[180px]">
-        Instantly capture promises, actions, commitments &amp; takeaways
+        Instant PACT capture syncs to your phone, iPad &amp; laptop
+        <div className="flex justify-center gap-1 mt-2">
+          <Smartphone className="w-3 h-3" />
+          <Tablet className="w-3 h-3" />
+          <Laptop className="w-3 h-3" />
+        </div>
       </div>
     </div>
   );
