@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { HeroSection } from "./sections/HeroSection";
+import { CoreFeaturesSection } from "./sections/CoreFeaturesSection";
 import { MemoryStrugglesSection } from "./sections/MemoryStrugglesSection";
-import { Memory8StepFrameworkSection } from "./sections/Memory8StepFrameworkSection";
 import { MemorySuccessStoriesSection } from "./sections/MemorySuccessStoriesSection";
 import { FounderStorySection } from "./sections/FounderStorySection";
 import { MemoryCommunitySection } from "./sections/MemoryCommunitySection";
@@ -40,8 +40,8 @@ export function MemoryFirstHomePage() {
           {isMobile && <MobileMenu />}
           
           <HeroSection />
+          <CoreFeaturesSection />
           <MemoryStrugglesSection />
-          <Memory8StepFrameworkSection />
           <MemorySuccessStoriesSection />
           <FounderStorySection />
           <MemoryCommunitySection />

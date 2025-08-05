@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { useDemoData } from '@/hooks/useDemoData';
+import { useSubscription } from '@/contexts/SubscriptionContext';
 import { 
   MeetingRecording, 
   ExtractedAction, 
@@ -11,11 +13,14 @@ import {
 
 export const useMemoryBridge = () => {
   const { user } = useAuth();
+  const { demoMode } = useSubscription();
+  const { demoExtractedActions } = useDemoData();
   const [meetingRecordings, setMeetingRecordings] = useState<MeetingRecording[]>([]);
   const [extractedActions, setExtractedActions] = useState<ExtractedAction[]>([]);
   const [conversations, setConversations] = useState<ConversationContext[]>([]);
   const [activeMeeting, setActiveMeeting] = useState<MeetingRecording | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
 
   // Fetch all data when user changes
   useEffect(() => {
@@ -275,12 +280,13 @@ export const useMemoryBridge = () => {
   };
 
   return {
-    // State
+    // State - Use demo data if in demo mode
     meetingRecordings,
-    extractedActions,
+    extractedActions: demoMode ? demoExtractedActions : extractedActions,
     conversations,
     activeMeeting,
     loading,
+    isRecording,
 
     // Actions
     startMeeting,

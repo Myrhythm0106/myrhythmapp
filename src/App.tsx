@@ -20,6 +20,7 @@ import InAppPurchase from "./routes/InAppPurchase";
 import MemoryBank from "./routes/MemoryBank";
 import MemoryBridge from "./routes/MemoryBridge";
 import PACTs from "./routes/PACTs";
+import SupportCircle from "./routes/SupportCircle";
 import Watch from "./routes/Watch";
 import Calendar from "./pages/Calendar";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
@@ -63,7 +64,7 @@ function App() {
                     <Route path="/brain-games" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/accountability" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/support" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/support-circle" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+                    <Route path="/support-circle" element={<ProtectedRoute requireAuth={false}><SupportCircle /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/settings" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/testing" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />

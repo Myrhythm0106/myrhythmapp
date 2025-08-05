@@ -173,10 +173,10 @@ interface SubscriptionProviderProps {
 
 export function SubscriptionProvider({ 
   children, 
-  tier: initialTier = 'free' // Default to free tier for demo
+  tier: initialTier = 'premium' // Default to premium tier for demo
 }: SubscriptionProviderProps) {
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>(initialTier);
-  const [demoMode, setDemoMode] = useState(false);
+  const [demoMode, setDemoMode] = useState(true); // Enable demo mode by default
   const features = getFeaturesByTier(demoMode ? 'premium' : currentTier);
   
   // Mock subscription data for demo
