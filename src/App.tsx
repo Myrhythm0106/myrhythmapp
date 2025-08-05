@@ -10,6 +10,7 @@ import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import MemoryFirstIndex from "./pages/MemoryFirstIndex";
+import OptimizedLanding from "./pages/OptimizedLanding";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -43,8 +44,9 @@ function App() {
                 <TooltipProvider>
                   <Toaster />
                   <BrowserRouter>
-                  <Routes>
-                    <Route path="/" element={<MemoryFirstIndex />} />
+                   <Routes>
+                     <Route path="/" element={<OptimizedLanding />} />
+                     <Route path="/old-landing" element={<MemoryFirstIndex />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />

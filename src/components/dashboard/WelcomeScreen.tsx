@@ -5,7 +5,10 @@ import { Sparkles, Crown, ArrowRight, Calendar } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MonthlyTheme } from "./MonthlyTheme";
 import { DailyIChooseWidget } from "./DailyIChooseWidget";
+import { SubscriptionGate } from "@/components/subscription/SubscriptionGate";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useSubscription } from "@/contexts/SubscriptionContext";
 
 interface WelcomeScreenProps {
   onProceedToDashboard: () => void;
@@ -13,24 +16,45 @@ interface WelcomeScreenProps {
 }
 
 export function WelcomeScreen({ onProceedToDashboard, userType }: WelcomeScreenProps) {
-  const [currentStep, setCurrentStep] = useState<"theme" | "choose" | "ready">("theme");
+  const [currentStep, setCurrentStep] = useState<"subscription" | "theme" | "choose" | "ready">("subscription");
   const [hasTheme, setHasTheme] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { subscriptionData, hasFeature } = useSubscription();
 
   useEffect(() => {
-    // Check if monthly theme is already set
-    const savedTheme = localStorage.getItem("myrhythm_monthly_theme");
-    if (savedTheme) {
-      setHasTheme(true);
-      setCurrentStep("choose");
+    // Check subscription status first
+    if (subscriptionData.subscribed || subscriptionData.trial_active) {
+      // Check if monthly theme is already set
+      const savedTheme = localStorage.getItem("myrhythm_monthly_theme");
+      if (savedTheme) {
+        setHasTheme(true);
+        setCurrentStep("choose");
+      } else {
+        setCurrentStep("theme");
+      }
+    } else {
+      setCurrentStep("subscription");
     }
-  }, []);
+  }, [subscriptionData]);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
     if (hour < 12) return "Good Morning";
     if (hour < 17) return "Good Afternoon";
     return "Good Evening";
+  };
+
+  const handlePlanSelected = (planType: 'basic' | 'premium' | 'family') => {
+    setSelectedPlan(planType);
+    // Move to theme selection after plan selection
+    setCurrentStep("theme");
+  };
+
+  const handleContinueFree = () => {
+    // Continue with limited features
+    setCurrentStep("theme");
   };
 
   const handleThemeComplete = () => {
@@ -70,6 +94,22 @@ export function WelcomeScreen({ onProceedToDashboard, userType }: WelcomeScreenP
       {/* Step Flow */}
       <div className="max-w-4xl mx-auto space-y-8">
         <AnimatePresence mode="wait">
+          {currentStep === "subscription" && (
+            <motion.div
+              key="subscription"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="space-y-6"
+            >
+              <SubscriptionGate 
+                onPlanSelected={handlePlanSelected}
+                onContinueFree={handleContinueFree}
+                showFreeTrial={true}
+              />
+            </motion.div>
+          )}
+
           {currentStep === "theme" && (
             <motion.div
               key="theme"
