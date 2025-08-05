@@ -19,6 +19,7 @@ import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import InAppPurchase from "./routes/InAppPurchase";
 import MemoryBank from "./routes/MemoryBank";
 import MemoryBridge from "./routes/MemoryBridge";
+import PACTs from "./routes/PACTs";
 import Watch from "./routes/Watch";
 import Calendar from "./pages/Calendar";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
@@ -50,6 +51,7 @@ function App() {
                     <Route path="/in-app-purchase" element={<InAppPurchase />} />
                     <Route path="/memory-bank" element={<ProtectedRoute requireAuth={false}><MemoryBank /></ProtectedRoute>} />
                     <Route path="/memory-bridge" element={<ProtectedRoute requireAuth={false}><MemoryBridge /></ProtectedRoute>} />
+                    <Route path="/pacts" element={<ProtectedRoute requireAuth={false}><PACTs /></ProtectedRoute>} />
                     <Route path="/watch" element={<ProtectedRoute requireAuth={false}><Watch /></ProtectedRoute>} />
                     <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><Calendar /></ProtectedRoute>} />
