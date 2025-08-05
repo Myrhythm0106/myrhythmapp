@@ -175,15 +175,20 @@ export function DashboardContent() {
         <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} userType={userData?.userType} />
       </div>
 
-      {/* Command Center Header */}
-      <div className="text-center space-y-4 p-6 bg-gradient-to-br from-emerald-50/80 via-brain-health-50/60 to-sunrise-amber-50/80 rounded-2xl border-2 border-emerald-200/50 shadow-glow">
-        <h1 className="text-3xl md:text-4xl font-black">
-          <span className="bg-gradient-to-r from-emerald-600 via-brain-health-600 to-sunrise-amber-600 bg-clip-text text-transparent">
-            YOUR PACT COMMAND CENTER
-          </span>
-        </h1>
-        <p className="text-lg bg-gradient-to-r from-emerald-700 to-brain-health-700 bg-clip-text text-transparent font-bold">
-          Productivity • Authenticity • Connection • Transformation
+      {/* The Empowerment Hub Header */}
+      <div className="text-center space-y-4 p-6 bg-gradient-to-br from-memory-emerald-50/80 via-clarity-teal-50/60 to-sunrise-amber-50/80 rounded-2xl border-2 border-memory-emerald-200/50 shadow-glow">
+        <div className="flex items-center justify-center gap-4">
+          <h1 className="text-3xl md:text-4xl font-black">
+            <span className="bg-gradient-to-r from-memory-emerald-600 via-clarity-teal-600 to-sunrise-amber-600 bg-clip-text text-transparent">
+              THE EMPOWERMENT HUB
+            </span>
+          </h1>
+          <div className="text-sm font-mono bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
+            {Math.floor((new Date(new Date().getFullYear(), 11, 31).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))}/365
+          </div>
+        </div>
+        <p className="text-lg bg-gradient-to-r from-memory-emerald-700 to-clarity-teal-700 bg-clip-text text-transparent font-bold">
+          Memory Bridge • Memory Bank • Calendar • Accountability
         </p>
       </div>
 
