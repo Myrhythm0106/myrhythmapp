@@ -8,6 +8,7 @@ import { Target, Calendar, Clock, Brain, Zap, Settings } from "lucide-react";
 import { CalendarViewSlider } from "./CalendarViewSlider";
 import { GoalsView } from "./views/GoalsView";
 import { DayView } from "./views/DayView";
+import { EnhancedDayView } from "./views/EnhancedDayView";
 import { WeekView } from "./views/WeekView";
 import { YearView } from "./views/YearView";
 import { InteractiveCalendarActions } from "./InteractiveCalendarActions";
@@ -15,6 +16,7 @@ import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { CalendarEvent } from "./types/calendarTypes";
 import { format } from "date-fns";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 interface BrainHealthCalendarViewProps {
   view: "day" | "week" | "month" | "year" | "goals";
@@ -80,6 +82,28 @@ export function BrainHealthCalendarView({
     // TODO: Integrate with action creation system
   };
 
+  const handleQuickActionCreate = (type: 'memory-bridge' | 'support-checkin' | 'brain-task') => {
+    const actionData = {
+      type,
+      date: selectedDate || new Date(),
+      watchers: []
+    };
+    
+    switch (type) {
+      case 'memory-bridge':
+        toast.success("🧠 Memory Anchor ready! Connect your thoughts...");
+        break;
+      case 'support-checkin':
+        toast.success("👥 Support Circle activated! Stay connected...");
+        break;
+      case 'brain-task':
+        toast.success("⚡ Brain-Building Task initiated! Neural growth mode...");
+        break;
+    }
+    
+    handleActionCreate(actionData);
+  };
+
   return (
     <MemoryEffectsContainer nodeCount={8} className="relative" variant="brain-focus">
       <div className="space-y-6">
@@ -124,7 +148,12 @@ export function BrainHealthCalendarView({
         
               {view === "day" && (
                 <div className="animate-in fade-in-50 duration-200">
-                  <DayView date={selectedDate || new Date()} events={actionEvents} onEventClick={(event) => console.log('Event clicked:', event)} />
+                  <EnhancedDayView 
+                    date={selectedDate || new Date()} 
+                    events={actionEvents} 
+                    onEventClick={(event) => console.log('Event clicked:', event)}
+                    onQuickActionCreate={handleQuickActionCreate}
+                  />
                 </div>
               )}
               
