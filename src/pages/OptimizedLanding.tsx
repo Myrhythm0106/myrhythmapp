@@ -12,15 +12,15 @@ export default function OptimizedLanding() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // If user is already authenticated, redirect to dashboard
-  React.useEffect(() => {
-    if (user) {
-      console.log('🔄 OptimizedLanding: User authenticated, redirecting to dashboard');
-      navigate('/dashboard');
-    } else {
-      console.log('✅ OptimizedLanding: No user, showing landing page');
-    }
-  }, [user, navigate]);
+  // TEMPORARILY DISABLED FOR DEMO - If user is already authenticated, redirect to dashboard
+  // React.useEffect(() => {
+  //   if (user) {
+  //     console.log('🔄 OptimizedLanding: User authenticated, redirecting to dashboard');
+  //     navigate('/dashboard');
+  //   } else {
+  //     console.log('✅ OptimizedLanding: No user, showing landing page');
+  //   }
+  // }, [user, navigate]);
 
   const handleGetStarted = () => {
     console.log('🚀 OptimizedLanding: Get started clicked, navigating to auth');
