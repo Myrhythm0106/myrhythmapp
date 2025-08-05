@@ -304,6 +304,87 @@ export function useMemoryBridge() {
     }
   }, [user, fetchExtractedActions, demoMode]);
 
+  const scheduleAction = useCallback(async (actionId: string, scheduleData: any) => {
+    if (!user) {
+      console.log('⚠️ useMemoryBridge: No user for scheduling action');
+      return;
+    }
+
+    if (demoMode) {
+      console.log('📋 useMemoryBridge: Demo mode - simulating action scheduling');
+      toast.success('Demo: Action scheduled successfully!');
+      return;
+    }
+
+    try {
+      console.log('📅 useMemoryBridge: Scheduling action:', actionId);
+      
+      // Create calendar event
+      const { data: eventData, error: eventError } = await supabase
+        .from('calendar_events')
+        .insert({
+          user_id: user.id,
+          title: scheduleData.title,
+          description: scheduleData.description,
+          date: scheduleData.date,
+          time: scheduleData.time,
+          type: 'scheduled_action',
+          category: 'pact'
+        })
+        .select()
+        .single();
+
+      if (eventError) {
+        console.error('❌ useMemoryBridge: Error creating calendar event:', eventError);
+        throw eventError;
+      }
+
+      // Create daily action
+      const { data: actionData, error: actionError } = await supabase
+        .from('daily_actions')
+        .insert({
+          user_id: user.id,
+          title: scheduleData.title,
+          description: scheduleData.description,
+          date: scheduleData.date,
+          start_time: scheduleData.time,
+          calendar_event_id: eventData.id,
+          action_type: 'scheduled',
+          status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (actionError) {
+        console.error('❌ useMemoryBridge: Error creating daily action:', actionError);
+        throw actionError;
+      }
+
+      // Update extracted action status
+      const { error: updateError } = await supabase
+        .from('extracted_actions')
+        .update({ 
+          status: 'confirmed',
+          user_notes: `Scheduled for ${scheduleData.date} at ${scheduleData.time}`
+        })
+        .eq('id', actionId)
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        console.error('❌ useMemoryBridge: Error updating extracted action:', updateError);
+        throw updateError;
+      }
+
+      // Refresh extracted actions
+      await fetchExtractedActions();
+      
+      console.log('✅ useMemoryBridge: Action scheduled successfully');
+    } catch (error) {
+      console.error('❌ useMemoryBridge: Error scheduling action:', error);
+      throw error;
+    }
+  }, [user, demoMode, fetchExtractedActions]);
+
   const fetchMeetingHistory = useCallback(async (): Promise<MeetingRecording[]> => {
     if (demoMode) {
       console.log('🔍 useMemoryBridge: Returning demo meeting history');
@@ -348,6 +429,7 @@ export function useMemoryBridge() {
     stopMeetingRecording,
     fetchExtractedActions,
     confirmAction,
+    scheduleAction,
     fetchMeetingHistory
   };
 }

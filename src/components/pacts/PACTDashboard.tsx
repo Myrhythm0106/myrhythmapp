@@ -10,6 +10,7 @@ import { QuickRecordButton } from '@/components/memoryBridge/QuickRecordButton';
 import { PACTSchedulingInterface } from './PACTSchedulingInterface';
 import { PACTBatchOperations } from './PACTBatchOperations';
 import { PACTCrossDeviceSync } from './PACTCrossDeviceSync';
+import { DemoModeToggle } from '@/components/demo/DemoModeToggle';
 import { 
   CheckCircle, 
   Clock, 
@@ -47,6 +48,9 @@ export function PACTDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50">
       <div className="max-w-7xl mx-auto space-y-6">
+        {/* Demo Mode Toggle */}
+        <DemoModeToggle />
+        
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>

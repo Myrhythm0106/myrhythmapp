@@ -3,11 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { ScheduleActionDialog, ScheduleData } from '@/components/memoryBridge/ScheduleActionDialog';
 import { Calendar, Clock, Zap, Target, Brain, Heart } from 'lucide-react';
+import { ExtractedAction } from '@/types/memoryBridge';
+import { toast } from 'sonner';
 
 export function PACTSchedulingInterface() {
-  const { extractedActions } = useMemoryBridge();
+  const { extractedActions, scheduleAction } = useMemoryBridge();
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+  const [selectedAction, setSelectedAction] = useState<ExtractedAction | null>(null);
+  const [isScheduleDialogOpen, setIsScheduleDialogOpen] = useState(false);
 
   const unscheduledPACTs = extractedActions.filter(a => a.status === 'pending');
 
@@ -23,6 +28,23 @@ export function PACTSchedulingInterface() {
     if (energyLevel > 5) return <Target className="h-4 w-4 text-green-500" />;
     if (energyLevel > 3) return <Brain className="h-4 w-4 text-blue-500" />;
     return <Heart className="h-4 w-4 text-purple-500" />;
+  };
+
+  const handleScheduleAction = (action: ExtractedAction) => {
+    setSelectedAction(action);
+    setIsScheduleDialogOpen(true);
+  };
+
+  const handleScheduleConfirm = async (actionId: string, scheduleData: ScheduleData) => {
+    try {
+      await scheduleAction(actionId, scheduleData);
+      setIsScheduleDialogOpen(false);
+      setSelectedAction(null);
+      toast.success('PACT scheduled successfully!');
+    } catch (error) {
+      console.error('Error scheduling action:', error);
+      toast.error('Failed to schedule PACT. Please try again.');
+    }
   };
 
   const timeSlots = [
@@ -87,7 +109,11 @@ export function PACTSchedulingInterface() {
                           </div>
                         )}
                       </div>
-                      <Button size="sm" className="shrink-0">
+                      <Button 
+                        size="sm" 
+                        className="shrink-0"
+                        onClick={() => handleScheduleAction(pact)}
+                      >
                         Schedule Now
                       </Button>
                     </div>
@@ -156,6 +182,17 @@ export function PACTSchedulingInterface() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Schedule Action Dialog */}
+      <ScheduleActionDialog
+        action={selectedAction}
+        isOpen={isScheduleDialogOpen}
+        onClose={() => {
+          setIsScheduleDialogOpen(false);
+          setSelectedAction(null);
+        }}
+        onSchedule={handleScheduleConfirm}
+      />
 
       {/* Quick Actions */}
       <Card>
