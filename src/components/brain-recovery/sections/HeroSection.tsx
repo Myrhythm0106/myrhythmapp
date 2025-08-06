@@ -8,32 +8,50 @@ export function HeroSection() {
   const navigate = useNavigate();
   
   return (
-    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600/60 via-blue-600/60 to-teal-600/60 text-white p-6 md:p-10 border-l border-emerald-300/30">
-      <div className="absolute right-0 bottom-0 opacity-10">
-        <Brain size={280} />
+    <section className="relative overflow-hidden rounded-lg bg-gradient-to-br from-memory-emerald/20 via-brain-health/15 to-clarity-teal/20 backdrop-blur-sm text-white p-6 md:p-10 border border-memory-emerald/30 shadow-lg">
+      {/* Professional geometric patterns */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-memory-emerald/30 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-clarity-teal/20 to-transparent rounded-full blur-2xl"></div>
       </div>
       
       <div className="relative z-10 max-w-2xl space-y-4 bg-transparent rounded-lg">
         <h1 className="text-3xl md:text-4xl font-bold leading-tight text-white">
-          🧠 MyRhythm: Reclaim Structure. Reignite Confidence.
+          🌟 MyRhythm: Empowerment Through Structure
         </h1>
         
         <p className="text-xl opacity-90 text-white">
-          Your personalised path to rebuilding your rhythm and reclaiming your day.
+          Professional-grade platform designed to restore confidence and independence
         </p>
+        
+        {/* Professional Feature Highlights */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div className="bg-memory-emerald/20 backdrop-blur-sm p-4 rounded-lg border border-memory-emerald/30">
+            <div className="text-memory-emerald-200 font-semibold text-lg mb-2">Memory Bridge</div>
+            <p className="text-sm text-white/90">Smart promise tracking</p>
+          </div>
+          <div className="bg-brain-health/20 backdrop-blur-sm p-4 rounded-lg border border-brain-health/30">
+            <div className="text-brain-health-200 font-semibold text-lg mb-2">Memory Bank</div>
+            <p className="text-sm text-white/90">Secure moment vault</p>
+          </div>
+          <div className="bg-clarity-teal/20 backdrop-blur-sm p-4 rounded-lg border border-clarity-teal/30">
+            <div className="text-clarity-teal-200 font-semibold text-lg mb-2">Cognitive Calendar</div>
+            <p className="text-sm text-white/90">Visual daily planning</p>
+          </div>
+        </div>
         
         <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 italic mt-6">
           <p className="text-sm md:text-base text-white">
-            💬 "After my brain aneurysm, remembering simple things felt impossible. With my husband's support, we rebuilt a rhythm that gave us back our peace. That rhythm became MyRhythm. Now, it's here for you, your loved ones, and your care team."
+            💬 "We rebuilt a rhythm that gave us back our peace. That rhythm became MyRhythm. Now, it's here for you, your loved ones, and your care team."
           </p>
           <p className="text-sm font-medium mt-2 text-white/80">
-            — Bella A., Brain Health Coach, Brain Aneurysm Survivor, Brain Aneurysm Ambassador, Bee Foundation Ambassador
+            — Bella A., Founder & Brain Aneurysm Survivor
           </p>
         </div>
         
         <div className="pt-4">
-          <Button size="lg" onClick={() => navigate("/onboarding")} className="bg-white text-primary hover:bg-white/90 shadow-sm shadow-emerald-300/10">
-            👉 Start Your Recovery Journey
+          <Button size="lg" onClick={() => navigate("/onboarding")} className="bg-gradient-to-r from-memory-emerald to-clarity-teal text-white hover:from-memory-emerald/90 hover:to-clarity-teal/90 shadow-lg font-semibold">
+            🚀 Begin Your Empowerment Journey
           </Button>
         </div>
       </div>
