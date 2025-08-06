@@ -10,6 +10,7 @@ import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UnifiedMemoryFlow } from './UnifiedMemoryFlow';
+import { CalendarView } from '@/components/calendar/CalendarView';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { CodeWordSettings } from './CodeWordSettings';
 import { ProfessionalPactReport } from './ProfessionalPactReport';
@@ -176,24 +177,24 @@ export function MemoryBridgeHub() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-24 border-3 border-brain-health/60 hover:bg-gradient-to-br hover:from-brain-health/20 hover:to-brain-health/30 hover:border-brain-health transform hover:scale-105 transition-all duration-200"
-              onClick={() => setActiveTab('pact-reports')}
+              className="h-24 border-3 border-memory-emerald/60 hover:bg-gradient-to-br hover:from-memory-emerald/20 hover:to-memory-emerald/30 hover:border-memory-emerald transform hover:scale-105 transition-all duration-200"
+              onClick={() => setActiveTab('calendar')}
             >
               <div className="flex flex-col items-center gap-3">
-                <Target className="h-8 w-8 text-brain-health" />
-                <span className="text-lg font-semibold text-brain-health">PACT Reports</span>
+                <Calendar className="h-8 w-8 text-memory-emerald" />
+                <span className="text-lg font-semibold text-memory-emerald">Calendar</span>
               </div>
             </Button>
             
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-24 border-3 border-emerald/60 hover:bg-gradient-to-br hover:from-emerald/20 hover:to-emerald/30 hover:border-emerald transform hover:scale-105 transition-all duration-200"
-              onClick={() => setActiveTab('actions')}
+              className="h-24 border-3 border-brain-health/60 hover:bg-gradient-to-br hover:from-brain-health/20 hover:to-brain-health/30 hover:border-brain-health transform hover:scale-105 transition-all duration-200"
+              onClick={() => setActiveTab('pact-reports')}
             >
               <div className="flex flex-col items-center gap-3">
-                <CheckCircle className="h-8 w-8 text-emerald-600" />
-                <span className="text-lg font-semibold text-emerald-600">Review Actions</span>
+                <Target className="h-8 w-8 text-brain-health" />
+                <span className="text-lg font-semibold text-brain-health">PACT Reports</span>
               </div>
             </Button>
           </div>
@@ -579,6 +580,10 @@ export function MemoryBridgeHub() {
               <Mic className="h-4 w-4" />
               <span className="hidden sm:inline">Record</span>
             </TabsTrigger>
+            <TabsTrigger value="calendar" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+              <Calendar className="h-4 w-4" />
+              <span className="hidden sm:inline">Calendar</span>
+            </TabsTrigger>
             <TabsTrigger value="actions" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Target className="h-4 w-4" />
               <span className="hidden sm:inline">Actions</span>
@@ -603,6 +608,10 @@ export function MemoryBridgeHub() {
 
           <TabsContent value="record" className="mt-6">
             <UnifiedMemoryFlow />
+          </TabsContent>
+
+          <TabsContent value="calendar" className="mt-6">
+            <CalendarView />
           </TabsContent>
 
           <TabsContent value="actions" className="mt-6">
