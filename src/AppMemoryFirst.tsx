@@ -11,6 +11,7 @@ import { OnboardingPage } from "./pages/OnboardingPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
+import { LandingPagePreview } from "./components/landing/LandingPagePreview";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,11 @@ function AppMemoryFirst() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<MemoryFirstIndex />} />
+              <Route path="/preview" element={
+                <div className="min-h-screen">
+                  <LandingPagePreview />
+                </div>
+              } />
               <Route path="/auth" element={<Auth />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms" element={<TermsOfService />} />
