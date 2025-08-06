@@ -1,9 +1,8 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { AssessmentResult } from "@/utils/rhythmAnalysis";
+import { AssessmentResult, createPreviewResult } from "@/utils/rhythmAnalysis";
 import { TeaserInsightsGrid } from "./preview/TeaserInsightsGrid";
 import { PaymentCallToAction } from "./preview/PaymentCallToAction";
 import { UserType } from "@/types/user";
@@ -27,8 +26,11 @@ export function PostAssessmentFlow({
   const [email, setEmail] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
 
+  // Ensure we have a properly formatted result
+  const result = assessmentResult.planType ? assessmentResult : createPreviewResult(assessmentResult);
+  
   // Check if this is a free assessment (limited results)
-  const isFreeAssessment = !assessmentResult.planType || assessmentResult.planType === 'preview';
+  const isFreeAssessment = !result.planType || result.planType === 'preview';
 
   const handlePaymentSelect = async (option: 'trial' | 'monthly' | 'annual' | 'skip') => {
     setSelectedPaymentOption(option);
@@ -151,17 +153,17 @@ export function PostAssessmentFlow({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-emerald-800">
             <Star className="h-6 w-6 text-emerald-600" />
-            Your Primary Strength: {assessmentResult.primaryStrength}
+            Your Primary Strength: {result.primaryStrength}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-emerald-700 text-lg mb-4">
-            {assessmentResult.basicInsight}
+            {result.basicInsight}
           </p>
           <div className="bg-emerald-100 p-4 rounded-lg">
             <p className="text-emerald-800 font-medium mb-2">Quick Win for Today:</p>
             <p className="text-emerald-700">
-              {assessmentResult.quickWin || "Focus on one small task at a time and celebrate each completion."}
+              {result.quickWin}
             </p>
           </div>
         </CardContent>
@@ -170,7 +172,7 @@ export function PostAssessmentFlow({
       {isFreeAssessment ? (
         <>
           {/* Premium Features Preview */}
-          <TeaserInsightsGrid assessmentResult={assessmentResult} />
+          <TeaserInsightsGrid assessmentResult={result} />
           
           {/* Payment Call to Action */}
           <div data-payment-section>
@@ -181,7 +183,7 @@ export function PostAssessmentFlow({
         <>
           {/* Full Results - Complete Insights Grid */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {assessmentResult.detailedInsights?.map((insight, index) => (
+            {result.detailedInsights?.map((insight, index) => (
               <Card key={index} className="border-2 border-teal-200 hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-lg text-teal-800">{insight.title}</CardTitle>
@@ -203,7 +205,7 @@ export function PostAssessmentFlow({
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2">
-                {assessmentResult.actionPlan?.map((week, index) => (
+                {result.actionPlan?.map((week, index) => (
                   <div key={index} className="bg-white p-4 rounded-lg border border-teal-200">
                     <h4 className="font-semibold text-teal-800 mb-2">Week {index + 1}: {week.focus}</h4>
                     <ul className="space-y-1 text-sm text-slate-600">
