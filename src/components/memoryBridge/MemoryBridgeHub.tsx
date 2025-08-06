@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { UnifiedMemoryFlow } from './UnifiedMemoryFlow';
 import { CalendarView } from '@/components/calendar/CalendarView';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
+import { InteractivePACTReports } from './InteractivePACTReports';
 import { CodeWordSettings } from './CodeWordSettings';
 import { ProfessionalPactReport } from './ProfessionalPactReport';
 import { ScheduleActionDialog, ScheduleData } from './ScheduleActionDialog';
@@ -635,7 +636,7 @@ export function MemoryBridgeHub() {
           </TabsContent>
 
           <TabsContent value="pact-reports" className="mt-6">
-            <PACTReportsHub />
+            <InteractivePACTReports />
           </TabsContent>
 
           <TabsContent value="support-circle" className="mt-6">
