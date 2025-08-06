@@ -104,35 +104,70 @@ export default function OptimizedLanding() {
               </div>
             </div>
 
-            {/* Core Features - Survivor Focused */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-8">
-              <div className="bg-emerald-500/25 backdrop-blur-md rounded-2xl p-8 border border-emerald-400/30 hover:scale-105 transition-all group">
-                <div className="text-emerald-300 mb-4 group-hover:scale-110 transition-transform">
-                  <Lightbulb className="h-10 w-10" />
-                </div>
-                <h3 className="font-black text-white text-xl mb-3">Memory Bridge</h3>
-                <p className="text-emerald-100 text-lg">Smart reminders that actually understand your journey</p>
+            {/* Perfect Match System - Problem → Solution */}
+            <div className="space-y-12 py-8">
+              <div className="text-center mb-12">
+                <h2 className="text-4xl font-black text-white mb-4">Your Struggles → Our Solutions</h2>
+                <p className="text-xl text-emerald-200">The perfect match for every challenge you face</p>
               </div>
-              <div className="bg-teal-500/25 backdrop-blur-md rounded-2xl p-8 border border-teal-400/30 hover:scale-105 transition-all group">
-                <div className="text-teal-300 mb-4 group-hover:scale-110 transition-transform">
-                  <Heart className="h-10 w-10" />
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                {/* Problem → Solution Cards */}
+                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-red-300">
+                      <div className="text-2xl font-bold mb-2">😔 I Can't Remember</div>
+                      <p className="text-lg text-red-200">Names, appointments, medications</p>
+                    </div>
+                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-emerald-400 transition-colors" />
+                    <div className="text-emerald-300">
+                      <div className="text-2xl font-bold mb-2">✨ Memory Bridge</div>
+                      <p className="text-lg text-emerald-200">Smart prompts that rebuild connections</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-black text-white text-xl mb-3">Empowerment Hub</h3>
-                <p className="text-teal-100 text-lg">Track wins, celebrate progress, build unstoppable momentum</p>
-              </div>
-              <div className="bg-emerald-500/25 backdrop-blur-md rounded-2xl p-8 border border-emerald-400/30 hover:scale-105 transition-all group">
-                <div className="text-emerald-300 mb-4 group-hover:scale-110 transition-transform">
-                  <Calendar className="h-10 w-10" />
+
+                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-red-300">
+                      <div className="text-2xl font-bold mb-2">😞 I Feel Lost</div>
+                      <p className="text-lg text-red-200">No progress, no hope, no direction</p>
+                    </div>
+                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-teal-400 transition-colors" />
+                    <div className="text-teal-300">
+                      <div className="text-2xl font-bold mb-2">🎯 Empowerment Hub</div>
+                      <p className="text-lg text-teal-200">Track wins, celebrate every victory</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-black text-white text-xl mb-3">Cognitive Calendar</h3>
-                <p className="text-emerald-100 text-lg">Visual planning that makes complex days feel manageable</p>
-              </div>
-              <div className="bg-teal-500/25 backdrop-blur-md rounded-2xl p-8 border border-teal-400/30 hover:scale-105 transition-all group">
-                <div className="text-teal-300 mb-4 group-hover:scale-110 transition-transform">
-                  <Archive className="h-10 w-10" />
+
+                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-red-300">
+                      <div className="text-2xl font-bold mb-2">😵 Days Feel Chaos</div>
+                      <p className="text-lg text-red-200">Overwhelmed, scattered, stressed</p>
+                    </div>
+                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-emerald-400 transition-colors" />
+                    <div className="text-emerald-300">
+                      <div className="text-2xl font-bold mb-2">📅 Cognitive Calendar</div>
+                      <p className="text-lg text-emerald-200">Visual clarity for complex days</p>
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-black text-white text-xl mb-3">Memory Bank</h3>
-                <p className="text-teal-100 text-lg">Secure vault for your most precious moments and milestones</p>
+
+                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="text-red-300">
+                      <div className="text-2xl font-bold mb-2">💔 Losing Myself</div>
+                      <p className="text-lg text-red-200">Forgetting who I used to be</p>
+                    </div>
+                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-teal-400 transition-colors" />
+                    <div className="text-teal-300">
+                      <div className="text-2xl font-bold mb-2">🏆 Memory Bank</div>
+                      <p className="text-lg text-teal-200">Preserve your precious moments</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -202,7 +237,22 @@ export default function OptimizedLanding() {
                   {testimonial.highlight}
                 </div>
 
+                {/* Before/After Visual */}
                 <div className="mb-6 pt-8">
+                  <div className="flex items-center justify-between mb-6 p-4 bg-gradient-to-r from-red-50 to-emerald-50 rounded-2xl">
+                    <div className="text-center">
+                      <div className="text-red-500 text-2xl mb-2">😔</div>
+                      <div className="text-sm font-bold text-red-700">BEFORE</div>
+                      <div className="text-xs text-red-600">Struggling</div>
+                    </div>
+                    <ArrowRight className="h-6 w-6 text-gray-400" />
+                    <div className="text-center">
+                      <div className="text-emerald-500 text-2xl mb-2">🌟</div>
+                      <div className="text-sm font-bold text-emerald-700">AFTER</div>
+                      <div className="text-xs text-emerald-600">Thriving</div>
+                    </div>
+                  </div>
+                  
                   <div className="flex items-center mb-4">
                     {[...Array(5)].map((_, i) => <Star key={i} className="h-6 w-6 text-yellow-400 fill-yellow-400" />)}
                   </div>
