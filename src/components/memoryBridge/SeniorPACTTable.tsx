@@ -1,24 +1,15 @@
 
 import React, { useState } from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { GripVertical, CheckCircle, Clock, AlertCircle, Target, Edit3, Trash2, Star } from 'lucide-react';
 import { ExtractedAction } from '@/types/memoryBridge';
-import { 
-  CheckCircle, 
-  Clock, 
-  XCircle, 
-  Search, 
-  GripVertical,
-  Heart,
-  Users,
-  Calendar,
-  Edit3,
-  Trash2
-} from 'lucide-react';
+import { updateExtractedAction } from '@/utils/memoryBridgeApi';
+import { useAuth } from '@/components/AuthProvider';
 import { toast } from 'sonner';
 
 interface SeniorPACTTableProps {
@@ -26,93 +17,104 @@ interface SeniorPACTTableProps {
 }
 
 export function SeniorPACTTable({ extractedActions }: SeniorPACTTableProps) {
-  const { confirmAction, updateExtractedAction } = useMemoryBridge();
+  const { user } = useAuth();
+  const [actions, setActions] = useState(extractedActions);
+  const [filter, setFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredActions, setFilteredActions] = useState(extractedActions);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
 
+  // Update local state when props change
   React.useEffect(() => {
-    let filtered = extractedActions;
-    
-    if (searchTerm) {
-      filtered = filtered.filter(action =>
-        action.action_text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        action.assigned_to?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-    
-    if (statusFilter !== 'all') {
-      filtered = filtered.filter(action => action.status === statusFilter);
-    }
-    
-    setFilteredActions(filtered);
-  }, [extractedActions, searchTerm, statusFilter]);
+    setActions(extractedActions);
+  }, [extractedActions]);
 
-  const handleStatusUpdate = async (actionId: string, newStatus: 'confirmed' | 'completed' | 'rejected') => {
+  const handleStatusChange = async (actionId: string, newStatus: string, notes?: string) => {
+    if (!user?.id) return;
+    
     try {
-      if (newStatus === 'confirmed' || newStatus === 'rejected') {
-        await confirmAction(actionId, newStatus);
-      } else {
-        await updateExtractedAction(actionId, { status: newStatus });
-      }
+      await updateExtractedAction(actionId, user.id, newStatus, notes);
       
-      const statusMessages = {
-        confirmed: 'Promise confirmed! 💜',
-        completed: 'Promise completed! Well done! ✨',
-        rejected: 'Marked as not accurate'
-      };
+      setActions(prev => 
+        prev.map(action => 
+          action.id === actionId 
+            ? { ...action, status: newStatus as ExtractedAction['status'], user_notes: notes }
+            : action
+        )
+      );
       
-      toast.success(statusMessages[newStatus]);
+      toast.success('Action updated successfully!');
     } catch (error) {
-      toast.error('Failed to update promise status');
+      toast.error('Failed to update action');
+      console.error('Error updating action:', error);
     }
   };
 
-  const onDragEnd = (result: any) => {
+  const handleDragEnd = (result: any) => {
     if (!result.destination) return;
-    
-    const items = Array.from(filteredActions);
+
+    const items = Array.from(actions);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-    
-    setFilteredActions(items);
-    toast.success('Promise order updated');
+
+    setActions(items);
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return <CheckCircle className="h-5 w-5 text-emerald-600" />;
+      case 'confirmed':
+        return <Target className="h-5 w-5 text-brain-health" />;
+      case 'pending':
+        return <Clock className="h-5 w-5 text-orange-600" />;
+      case 'rejected':
+        return <AlertCircle className="h-5 w-5 text-red-600" />;
+      default:
+        return <Clock className="h-5 w-5 text-gray-400" />;
+    }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-emerald-100 text-emerald-700 border-emerald-200';
+        return 'bg-emerald-50 text-emerald-700 border-emerald-200';
       case 'confirmed':
         return 'bg-brain-health/10 text-brain-health border-brain-health/20';
       case 'pending':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'bg-orange-50 text-orange-700 border-orange-200';
       case 'rejected':
-        return 'bg-gray-100 text-gray-600 border-gray-200';
+        return 'bg-red-50 text-red-700 border-red-200';
       default:
-        return 'bg-gray-100 text-gray-600 border-gray-200';
+        return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
 
-  const getPriorityHearts = (priority: number) => {
-    const heartCount = Math.ceil(priority / 2);
-    return [...Array(5)].map((_, i) => (
-      <Heart 
+  const getPriorityStars = (priority: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star 
         key={i} 
         className={`h-4 w-4 ${
-          i < heartCount ? 'text-red-400 fill-current' : 'text-gray-200'
+          i < priority ? 'text-sunrise-amber fill-current' : 'text-gray-200'
         }`} 
       />
     ));
   };
 
-  if (extractedActions.length === 0) {
+  const filteredActions = actions.filter(action => {
+    const matchesFilter = filter === 'all' || action.status === filter;
+    const matchesSearch = action.action_text.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (action.assigned_to?.toLowerCase().includes(searchTerm.toLowerCase()));
+    return matchesFilter && matchesSearch;
+  });
+
+  if (actions.length === 0) {
     return (
       <div className="text-center py-12">
-        <Heart className="h-16 w-16 mx-auto mb-4 text-brain-health/40" />
-        <h3 className="text-xl font-semibold text-brain-health mb-3">No Promises Found</h3>
-        <p className="text-muted-foreground text-lg">
-          Record conversations to start tracking your commitments
+        <div className="mx-auto w-16 h-16 bg-brain-health/10 rounded-full flex items-center justify-center mb-4">
+          <Target className="h-8 w-8 text-brain-health" />
+        </div>
+        <h3 className="text-xl font-semibold text-brain-health mb-2">No PACTs Found</h3>
+        <p className="text-muted-foreground">
+          Record a conversation to automatically extract your Promises, Actions, Commitments & Tasks
         </p>
       </div>
     );
@@ -120,191 +122,139 @@ export function SeniorPACTTable({ extractedActions }: SeniorPACTTableProps) {
 
   return (
     <div className="space-y-6">
-      {/* Search and Filter Controls */}
+      {/* Filters and Search */}
       <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+        <div className="flex-1">
           <Input
-            placeholder="Search your promises..."
+            placeholder="Search actions..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10 text-lg py-3"
+            className="text-lg p-3"
           />
         </div>
-        
-        <div className="flex gap-2">
-          {['all', 'pending', 'confirmed', 'completed'].map((status) => (
-            <Button
-              key={status}
-              variant={statusFilter === status ? 'default' : 'outline'}
-              onClick={() => setStatusFilter(status)}
-              className="capitalize"
-            >
-              {status === 'all' ? 'All' : status}
-            </Button>
-          ))}
-        </div>
+        <Select value={filter} onValueChange={setFilter}>
+          <SelectTrigger className="w-48 text-lg p-3">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Actions</SelectItem>
+            <SelectItem value="pending">Need Action</SelectItem>
+            <SelectItem value="confirmed">Confirmed</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
+            <SelectItem value="rejected">Rejected</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Draggable Promise Cards */}
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="pact-list">
-          {(provided) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              className="space-y-4"
-            >
-              {filteredActions.map((action, index) => (
-                <Draggable key={action.id} draggableId={action.id} index={index}>
-                  {(provided, snapshot) => (
-                    <Card
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      className={`border-l-4 border-l-brain-health transition-all ${
-                        snapshot.isDragging ? 'shadow-lg scale-105' : 'hover:shadow-md'
-                      }`}
-                    >
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-4">
-                          {/* Drag Handle */}
-                          <div
-                            {...provided.dragHandleProps}
-                            className="flex flex-col items-center justify-center p-2 text-gray-400 hover:text-brain-health cursor-grab"
-                          >
-                            <GripVertical className="h-5 w-5" />
-                          </div>
-
-                          {/* Main Content */}
-                          <div className="flex-1 space-y-4">
-                            {/* Header with Status */}
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="flex items-center gap-3 mb-2">
-                                  <Heart className="h-5 w-5 text-brain-health flex-shrink-0" />
-                                  <span className="text-sm font-medium text-brain-health uppercase tracking-wide">
-                                    {action.action_type === 'commitment' ? 'My Promise' : 
-                                     action.action_type === 'promise' ? 'Promise Made' : 
-                                     action.action_type === 'reminder' ? 'Don\'t Forget' : 'Action Needed'}
-                                  </span>
-                                </div>
-                                <h3 className="text-lg font-semibold text-gray-800 leading-relaxed mb-3">
-                                  {action.action_text}
-                                </h3>
-                              </div>
-                              
-                              <Badge className={`${getStatusColor(action.status)} text-sm font-medium`}>
-                                {action.status === 'completed' ? '✓ Done' :
-                                 action.status === 'confirmed' ? '✓ Confirmed' :
-                                 action.status === 'rejected' ? '✗ Not Accurate' : 'Needs Review'}
-                              </Badge>
-                            </div>
-
-                            {/* Details Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {/* Priority and Due Date */}
-                              <div className="bg-gray-50 rounded-lg p-4">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <Calendar className="h-4 w-4 text-brain-health" />
-                                    <span className="text-sm font-medium">Due Date</span>
-                                  </div>
-                                  <div className="flex items-center gap-1">
-                                    <span className="text-xs text-muted-foreground">Priority:</span>
-                                    <div className="flex">{getPriorityHearts(action.priority_level)}</div>
-                                  </div>
-                                </div>
-                                <p className="text-sm text-gray-700">
-                                  {action.due_context || 'No deadline set'}
-                                </p>
-                              </div>
-
-                              {/* Assigned To */}
+      {/* PACT Table */}
+      <div className="border rounded-lg overflow-hidden bg-white">
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Droppable droppableId="actions">
+            {(provided) => (
+              <Table {...provided.droppableProps} ref={provided.innerRef}>
+                <TableHeader>
+                  <TableRow className="bg-brain-health/5">
+                    <TableHead className="w-12"></TableHead>
+                    <TableHead className="text-lg font-semibold">Promise/Action</TableHead>
+                    <TableHead className="text-lg font-semibold">Priority</TableHead>
+                    <TableHead className="text-lg font-semibold">Status</TableHead>
+                    <TableHead className="text-lg font-semibold">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredActions.map((action, index) => (
+                    <Draggable key={action.id} draggableId={action.id} index={index}>
+                      {(provided, snapshot) => (
+                        <TableRow
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          className={`${snapshot.isDragging ? 'bg-brain-health/5' : ''} hover:bg-muted/50`}
+                        >
+                          <TableCell {...provided.dragHandleProps} className="text-center">
+                            <GripVertical className="h-5 w-5 text-muted-foreground" />
+                          </TableCell>
+                          
+                          <TableCell className="max-w-md">
+                            <div className="space-y-2">
+                              <p className="font-medium text-lg leading-relaxed">{action.action_text}</p>
                               {action.assigned_to && (
-                                <div className="bg-blue-50 rounded-lg p-4">
-                                  <div className="flex items-center gap-2 mb-2">
-                                    <Users className="h-4 w-4 text-blue-500" />
-                                    <span className="text-sm font-medium text-blue-800">Assigned To</span>
-                                  </div>
-                                  <p className="text-sm text-blue-700">{action.assigned_to}</p>
-                                </div>
+                                <Badge variant="secondary" className="text-sm">
+                                  Assigned to: {action.assigned_to}
+                                </Badge>
+                              )}
+                              {action.due_context && (
+                                <p className="text-sm text-muted-foreground">Due: {action.due_context}</p>
                               )}
                             </div>
-
-                            {/* Emotional Context */}
-                            {action.emotional_stakes && (
-                              <div className="bg-gradient-to-r from-brain-health/5 to-emerald/5 rounded-lg p-4 border border-brain-health/10">
-                                <div className="flex items-start gap-3">
-                                  <Heart className="h-5 w-5 text-brain-health mt-1 flex-shrink-0" />
-                                  <div>
-                                    <span className="text-sm font-medium text-brain-health">Why This Matters:</span>
-                                    <p className="text-sm text-gray-700 mt-1">{action.emotional_stakes}</p>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-wrap gap-3 pt-2">
+                          </TableCell>
+                          
+                          <TableCell>
+                            <div className="flex items-center gap-1">
+                              {getPriorityStars(action.priority_level)}
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              {getStatusIcon(action.status)}
+                              <Badge className={`${getStatusColor(action.status)} text-sm font-medium`}>
+                                {action.status}
+                              </Badge>
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell>
+                            <div className="flex gap-2">
                               {action.status === 'pending' && (
                                 <>
                                   <Button
-                                    onClick={() => handleStatusUpdate(action.id, 'confirmed')}
-                                    className="bg-emerald-600 hover:bg-emerald-700 text-white"
                                     size="sm"
+                                    variant="outline"
+                                    onClick={() => handleStatusChange(action.id, 'confirmed')}
+                                    className="text-brain-health border-brain-health/30 hover:bg-brain-health/10"
                                   >
-                                    <CheckCircle className="h-4 w-4 mr-2" />
-                                    Confirm Promise
+                                    Confirm
                                   </Button>
                                   <Button
-                                    onClick={() => handleStatusUpdate(action.id, 'rejected')}
-                                    variant="outline"
-                                    className="text-red-600 border-red-200 hover:bg-red-50"
                                     size="sm"
+                                    variant="outline"
+                                    onClick={() => handleStatusChange(action.id, 'completed')}
+                                    className="text-emerald-600 border-emerald-300 hover:bg-emerald/10"
                                   >
-                                    <XCircle className="h-4 w-4 mr-2" />
-                                    Not Accurate
+                                    Complete
                                   </Button>
                                 </>
                               )}
                               
                               {action.status === 'confirmed' && (
                                 <Button
-                                  onClick={() => handleStatusUpdate(action.id, 'completed')}
-                                  className="bg-brain-health hover:bg-brain-health/90 text-white"
                                   size="sm"
+                                  onClick={() => handleStatusChange(action.id, 'completed')}
+                                  className="bg-emerald-600 hover:bg-emerald-700 text-white"
                                 >
                                   <CheckCircle className="h-4 w-4 mr-2" />
                                   Mark Complete
                                 </Button>
                               )}
                               
-                              <div className="flex items-center text-xs text-muted-foreground ml-auto">
-                                AI Confidence: {Math.round(action.confidence_score * 100)}%
-                              </div>
+                              {action.status === 'completed' && (
+                                <Badge className="bg-emerald-100 text-emerald-800 text-sm font-medium">
+                                  ✓ Done
+                                </Badge>
+                              )}
                             </div>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-
-      {filteredActions.length === 0 && searchTerm && (
-        <div className="text-center py-8">
-          <Search className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-          <h3 className="text-lg font-semibold text-gray-600 mb-2">No promises found</h3>
-          <p className="text-muted-foreground">
-            Try adjusting your search or filter settings
-          </p>
-        </div>
-      )}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </TableBody>
+              </Table>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </div>
   );
 }
