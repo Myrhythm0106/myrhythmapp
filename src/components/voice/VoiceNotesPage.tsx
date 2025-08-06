@@ -4,7 +4,8 @@ import { PageHeader } from '@/components/ui/PageHeader';
 import { VoiceRecorder } from './VoiceRecorder';
 import { VoiceRecordingsList } from './VoiceRecordingsList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Mic, List } from 'lucide-react';
+import { Mic, List, Target } from 'lucide-react';
+import { FollowThroughTab } from './FollowThroughTab';
 
 export function VoiceNotesPage() {
   return (
@@ -15,7 +16,7 @@ export function VoiceNotesPage() {
       />
       
       <Tabs defaultValue="record" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="record" className="flex items-center gap-2">
             <Mic className="h-4 w-4" />
             New Recording
@@ -23,6 +24,10 @@ export function VoiceNotesPage() {
           <TabsTrigger value="list" className="flex items-center gap-2">
             <List className="h-4 w-4" />
             My Recordings
+          </TabsTrigger>
+          <TabsTrigger value="follow-through" className="flex items-center gap-2">
+            <Target className="h-4 w-4" />
+            Follow Through
           </TabsTrigger>
         </TabsList>
         
@@ -32,6 +37,10 @@ export function VoiceNotesPage() {
         
         <TabsContent value="list" className="mt-6">
           <VoiceRecordingsList />
+        </TabsContent>
+        
+        <TabsContent value="follow-through" className="mt-6">
+          <FollowThroughTab />
         </TabsContent>
       </Tabs>
     </div>
