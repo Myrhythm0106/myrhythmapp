@@ -21,6 +21,13 @@ export const useMemoryBridge = () => {
   const [activeMeeting, setActiveMeeting] = useState<MeetingRecording | null>(null);
   const [loading, setLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [currentMeeting, setCurrentMeeting] = useState<MeetingRecording | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [showPACTFlow, setShowPACTFlow] = useState(false);
+  const [lastRecordingData, setLastRecordingData] = useState<{
+    meetingId: string;
+    audioData: string;
+  } | null>(null);
 
   // Fetch all data when user changes
   useEffect(() => {
@@ -90,6 +97,157 @@ export const useMemoryBridge = () => {
     } catch (error) {
       console.error('Error fetching conversations:', error);
       toast.error('Failed to fetch conversations');
+    }
+  };
+
+  // New unified recording flow
+  const startMeetingRecording = async (meetingData: MeetingSetupData, voiceRecordingId?: string | null): Promise<MeetingRecording | null> => {
+    if (!user) {
+      toast.error('Please log in to start a meeting');
+      return null;
+    }
+
+    try {
+      setLoading(true);
+      setIsRecording(true);
+
+      // End any existing active meeting first
+      if (activeMeeting) {
+        await endMeeting(activeMeeting.id);
+      }
+
+      const { data, error } = await supabase
+        .from('meeting_recordings')
+        .insert({
+          user_id: user.id,
+          recording_id: voiceRecordingId || crypto.randomUUID(),
+          meeting_title: meetingData.title,
+          participants: meetingData.participants as any,
+          meeting_type: meetingData.meetingType,
+          meeting_context: meetingData.context,
+          location: meetingData.location,
+          energy_level: meetingData.energyLevel,
+          emotional_context: meetingData.emotionalContext,
+          relationship_context: {},
+          is_active: true
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      const meeting = {
+        ...data,
+        participants: data.participants as any[]
+      } as MeetingRecording;
+
+      setActiveMeeting(meeting);
+      setCurrentMeeting(meeting);
+      await fetchMeetingRecordings();
+      
+      // Notify support circle of recording start
+      await notifySupportCircle('recording_started', {
+        meetingTitle: meetingData.title,
+        participants: meetingData.participants
+      });
+
+      toast.success('Recording started - your support circle has been notified');
+      return meeting;
+    } catch (error) {
+      console.error('Error starting meeting:', error);
+      toast.error('Failed to start meeting');
+      setIsRecording(false);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const stopMeetingRecording = async (audioBlob?: Blob): Promise<void> => {
+    if (!currentMeeting) return;
+
+    try {
+      setIsProcessing(true);
+
+      // Convert audio blob to base64 if provided
+      let audioData = '';
+      if (audioBlob) {
+        const reader = new FileReader();
+        audioData = await new Promise((resolve) => {
+          reader.onloadend = () => {
+            const base64 = reader.result as string;
+            resolve(base64.split(',')[1]); // Remove data:audio/... prefix
+          };
+          reader.readAsDataURL(audioBlob);
+        });
+      }
+
+      // End the meeting
+      await endMeeting(currentMeeting.id);
+
+      // Store recording data for PACT generation
+      setLastRecordingData({
+        meetingId: currentMeeting.id,
+        audioData
+      });
+
+      // Show PACT generation flow
+      setShowPACTFlow(true);
+      setIsRecording(false);
+      setCurrentMeeting(null);
+
+      toast.success('Recording saved! Generate your PACT report to extract commitments.');
+    } catch (error) {
+      console.error('Error stopping meeting:', error);
+      toast.error('Failed to process recording');
+      setIsRecording(false);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const completePACTGeneration = async () => {
+    setShowPACTFlow(false);
+    setLastRecordingData(null);
+    
+    // Notify support circle of PACT completion
+    await notifySupportCircle('pact_generated', {
+      extractedActionsCount: extractedActions.length
+    });
+
+    toast.success('PACT report complete! Your support circle has been notified of new commitments.');
+    await fetchExtractedActions();
+  };
+
+  const notifySupportCircle = async (eventType: string, data: any) => {
+    if (!user) return;
+
+    try {
+      // Get support circle members
+      const { data: members } = await supabase
+        .from('support_circle_members')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .eq('can_receive_alerts', true);
+
+      if (members && members.length > 0) {
+        // Create accountability alert
+        await supabase
+          .from('accountability_alerts')
+          .insert({
+            user_id: user.id,
+            alert_type: eventType,
+            title: eventType === 'recording_started' ? 'Recording Started' : 'PACT Report Generated',
+            message: eventType === 'recording_started' 
+              ? `Recording started: ${data.meetingTitle}` 
+              : `New PACT report with ${data.extractedActionsCount} action items`,
+            severity: 'info',
+            target_members: members.map(m => m.member_email || m.member_name)
+          });
+      }
+    } catch (error) {
+      console.error('Error notifying support circle:', error);
     }
   };
 
@@ -285,10 +443,19 @@ export const useMemoryBridge = () => {
     extractedActions: demoMode ? demoExtractedActions : extractedActions,
     conversations,
     activeMeeting,
+    currentMeeting,
     loading,
     isRecording,
+    isProcessing,
+    showPACTFlow,
+    lastRecordingData,
 
-    // Actions
+    // Unified Recording Actions
+    startMeetingRecording,
+    stopMeetingRecording,
+    completePACTGeneration,
+
+    // Legacy Actions (for compatibility)
     startMeeting,
     endMeeting,
     processMeetingAudio,

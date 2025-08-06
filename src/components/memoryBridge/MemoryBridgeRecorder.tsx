@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { MeetingSetupDialog } from './MeetingSetupDialog';
 import { QuickRecordButton } from './QuickRecordButton';
 import { AmbientModeToggle } from './AmbientModeToggle';
-import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { useMemoryBridge } from '@/hooks/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { Heart, Users, Clock, StopCircle, Activity, Zap, Settings } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
@@ -17,7 +17,10 @@ export function MemoryBridgeRecorder() {
     isProcessing, 
     currentMeeting, 
     startMeetingRecording, 
-    stopMeetingRecording 
+    stopMeetingRecording,
+    showPACTFlow,
+    lastRecordingData,
+    completePACTGeneration
   } = useMemoryBridge();
   
   const { 
@@ -32,12 +35,12 @@ export function MemoryBridgeRecorder() {
 
   const handleStartMeeting = async (setupData: MeetingSetupData) => {
     try {
-      console.log('Starting PACT recording with setup:', setupData);
+      console.log('Starting unified PACT recording with setup:', setupData);
       
       // Start voice recording first
       await startVoiceRecording();
       
-      // Start the meeting recording (without voice recording ID initially)
+      // Start the meeting recording
       const meetingRecord = await startMeetingRecording(setupData, null);
       
       if (meetingRecord) {
@@ -50,7 +53,7 @@ export function MemoryBridgeRecorder() {
           setCurrentDuration(duration);
         }, 1000);
         
-        toast.success('PACT recording started! Speak naturally about your conversation.');
+        toast.success('Recording started! Your support circle has been notified.');
       }
     } catch (error) {
       console.error('Error starting meeting:', error);
@@ -60,7 +63,7 @@ export function MemoryBridgeRecorder() {
 
   const handleStopMeeting = async () => {
     try {
-      console.log('Stopping PACT recording...');
+      console.log('Stopping unified PACT recording...');
       
       // Clear the duration timer
       if (intervalRef.current) {
@@ -70,19 +73,15 @@ export function MemoryBridgeRecorder() {
 
       // Stop voice recording and get the audio blob
       const audioBlob = await stopVoiceRecording();
-      if (!audioBlob) {
-        toast.error('Failed to capture audio recording');
-        return;
-      }
-
-      console.log('Audio captured, processing PACT items...');
-
-      // Stop meeting recording and process the audio
+      
+      // Stop meeting recording with audio data
       await stopMeetingRecording(audioBlob);
       
       // Reset state
       setRecordingStartTime(null);
       setCurrentDuration(0);
+      
+      toast.success('Recording saved! Ready to generate PACT report.');
     } catch (error) {
       console.error('Error stopping PACT recording:', error);
       toast.error('Failed to process recording. Please try again.');

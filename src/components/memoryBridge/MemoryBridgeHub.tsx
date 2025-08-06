@@ -9,12 +9,10 @@ import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
+import { UnifiedMemoryFlow } from './UnifiedMemoryFlow';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { CodeWordSettings } from './CodeWordSettings';
 import { ProfessionalPactReport } from './ProfessionalPactReport';
-import { PACTGenerationFlow } from './PACTGenerationFlow';
-import { PACTReportsHub } from './PACTReportsHub';
 import { ScheduleActionDialog, ScheduleData } from './ScheduleActionDialog';
 import { useMemoryBridge } from '@/hooks/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
@@ -604,7 +602,7 @@ export function MemoryBridgeHub() {
           </TabsContent>
 
           <TabsContent value="record" className="mt-6">
-            <MemoryBridgeRecorder />
+            <UnifiedMemoryFlow />
           </TabsContent>
 
           <TabsContent value="actions" className="mt-6">
@@ -612,7 +610,7 @@ export function MemoryBridgeHub() {
           </TabsContent>
 
           <TabsContent value="pact-reports" className="mt-6">
-            <PACTReportsHub />
+            <UnifiedMemoryFlow />
           </TabsContent>
 
           <TabsContent value="recordings" className="mt-6">
