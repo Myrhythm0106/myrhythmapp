@@ -159,7 +159,7 @@ export default function OptimizedLanding() {
                   className="text-2xl px-16 py-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 font-black shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-white/20" 
                   onClick={handleGetStarted}
                 >
-                  Join The Recovery Revolution
+                  The Empowerment Revolution
                   <Badge className="ml-4 bg-white/30 text-white border-white/50 text-lg px-3 py-1">FREE ACCESS</Badge>
                 </Button>
               </div>
