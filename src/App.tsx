@@ -29,7 +29,6 @@ import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import SupportMemberDashboard from "./pages/SupportMemberDashboard";
-import { LandingPagePreview } from "./components/landing/LandingPagePreview";
 
 const queryClient = new QueryClient();
 
@@ -44,13 +43,10 @@ function App() {
               <SidebarProvider>
                 <TooltipProvider>
                   <Toaster />
-                   <BrowserRouter>
-                   <div>
-                     <p>Router is working!</p>
+                  <BrowserRouter>
                    <Routes>
                      <Route path="/" element={<OptimizedLanding />} />
                      <Route path="/old-landing" element={<MemoryFirstIndex />} />
-                     <Route path="/preview" element={<div style={{padding: '50px', background: 'red', color: 'white', fontSize: '24px'}}>PREVIEW ROUTE IS WORKING! <LandingPagePreview /></div>} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
@@ -92,9 +88,8 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
-                   </Routes>
-                   </div>
-                   </BrowserRouter>
+                  </Routes>
+                  </BrowserRouter>
                 </TooltipProvider>
               </SidebarProvider>
             </DailyActionsProvider>

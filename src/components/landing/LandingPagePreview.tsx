@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import { MemoryStrugglesSection } from "@/components/memory-first/sections/MemoryStrugglesSection";
 import { 
   Brain, 
   Heart, 
@@ -21,7 +20,6 @@ import {
 } from "lucide-react";
 
 export function LandingPagePreview() {
-  console.log('🎯 LandingPagePreview: Component is rendering!');
   const navigate = useNavigate();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [showBeforeAfter, setShowBeforeAfter] = useState(false);
@@ -30,7 +28,6 @@ export function LandingPagePreview() {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
-  console.log('🎯 LandingPagePreview: About to return JSX');
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-blue-50/25 to-teal-50/30 relative">
       {/* Clean Professional Background - No Toy Elements */}
@@ -125,9 +122,6 @@ export function LandingPagePreview() {
             </div>
           </div>
         </section>
-
-        {/* Pain Points and Solutions Section */}
-        <MemoryStrugglesSection />
 
         {/* Visual Journey Map - Replacing Text-Heavy Sections */}
         <section className="py-16">
@@ -281,13 +275,8 @@ export function LandingPagePreview() {
               { name: "Family Support", icon: Users, color: "teal" },
               { name: "Progress Tracking", icon: TrendingUp, color: "emerald" }
             ].map((feature, index) => (
-               <Card key={index} className="p-6 text-center hover:shadow-lg transition-all">
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${
-                  feature.color === 'purple' ? 'bg-gradient-to-br from-purple-400 to-purple-600' :
-                  feature.color === 'blue' ? 'bg-gradient-to-br from-blue-400 to-blue-600' :
-                  feature.color === 'teal' ? 'bg-gradient-to-br from-teal-400 to-teal-600' :
-                  'bg-gradient-to-br from-emerald-400 to-emerald-600'
-                }`}>
+              <Card key={index} className="p-6 text-center hover:shadow-lg transition-all">
+                <div className={`w-16 h-16 bg-gradient-to-br from-${feature.color}-400 to-${feature.color}-600 rounded-2xl flex items-center justify-center mx-auto mb-4`}>
                   <feature.icon className="h-8 w-8 text-white" />
                 </div>
                 <h4 className="font-semibold">{feature.name}</h4>
