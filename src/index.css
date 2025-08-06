@@ -193,7 +193,7 @@
   
   /* Professional therapeutic UI elements - purple-blue-teal dominant with tiny emerald therapeutic touches */
   .premium-card {
-    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background via-purple-50 to-brain-health-50 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
+    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background via-purple-50 to-teal-50 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
   }
   
   .glass-card {
