@@ -9,7 +9,7 @@ import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import { GripVertical, CheckCircle, Clock, AlertCircle, Target, Edit3, Trash2, Star } from 'lucide-react';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { updateExtractedAction } from '@/utils/memoryBridgeApi';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 interface SeniorPACTTableProps {

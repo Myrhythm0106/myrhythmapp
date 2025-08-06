@@ -4,11 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Play, Users, Clock, Calendar, Target, Heart } from 'lucide-react';
-import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { useMeetingHistory } from '@/hooks/memoryBridge/useMeetingHistory';
 import { formatDistanceToNow } from 'date-fns';
 
 export function SeniorRecordingsList() {
-  const { meetingHistory, fetchMeetingHistory } = useMemoryBridge();
+  const { meetingHistory, fetchMeetingHistory } = useMeetingHistory();
 
   useEffect(() => {
     fetchMeetingHistory();
