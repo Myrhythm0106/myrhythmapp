@@ -287,7 +287,7 @@ export function EnhancedCalendarView() {
     try {
       const { error } = await supabase
         .from('calendar_events')
-        .update({ watchers: watcherIds } as any)
+        .update({ watchers: watcherIds })
         .eq('id', eventId);
 
       if (error) throw error;
