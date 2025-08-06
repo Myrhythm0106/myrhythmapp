@@ -5,40 +5,33 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Heart, Star, TrendingUp, Quote, LogIn, Lightbulb, Calendar, Archive, ChevronDown } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
-
 export default function OptimizedLanding() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const [showLoginModal, setShowLoginModal] = React.useState(false);
-
   const handleGetStarted = () => {
     console.log('🚀 OptimizedLanding: Get started clicked, navigating to onboarding');
     navigate('/onboarding');
   };
-
-  const testimonials = [
-    {
-      quote: "I went from forgetting my kids' names to helping them with homework. MyRhythm gave me my identity back.",
-      author: "Maria C.",
-      condition: "Stroke Survivor, 2 years recovery",
-      highlight: "Identity Restored"
-    }, 
-    {
-      quote: "My husband and I were falling apart. Now we're stronger than ever. MyRhythm saved our marriage and our family.",
-      author: "David & Jennifer K.",
-      condition: "TBI Recovery Journey",
-      highlight: "Marriage Saved"
-    }, 
-    {
-      quote: "From dependent to independent in 6 months. I'm driving again, working again, LIVING again.",
-      author: "Marcus T.",
-      condition: "Concussion Recovery",
-      highlight: "Independence Regained"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen">
+  const testimonials = [{
+    quote: "I went from forgetting my kids' names to helping them with homework. MyRhythm gave me my identity back.",
+    author: "Maria C.",
+    condition: "Stroke Survivor, 2 years recovery",
+    highlight: "Identity Restored"
+  }, {
+    quote: "My husband and I were falling apart. Now we're stronger than ever. MyRhythm saved our marriage and our family.",
+    author: "David & Jennifer K.",
+    condition: "TBI Recovery Journey",
+    highlight: "Marriage Saved"
+  }, {
+    quote: "From dependent to independent in 6 months. I'm driving again, working again, LIVING again.",
+    author: "Marcus T.",
+    condition: "Concussion Recovery",
+    highlight: "Independence Regained"
+  }];
+  return <div className="min-h-screen">
       {/* HERO SECTION - Dark, Bold, Dramatic */}
       <section className="relative overflow-hidden min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
         {/* Bold, dramatic background */}
@@ -51,18 +44,20 @@ export default function OptimizedLanding() {
         {/* Dynamic floating elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-20 left-20 w-32 h-32 bg-emerald-400/40 rounded-full blur-2xl animate-pulse"></div>
-          <div className="absolute top-1/3 right-20 w-24 h-24 bg-teal-400/50 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
-          <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-emerald-300/45 rounded-full blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
-          <div className="absolute bottom-20 right-20 w-36 h-36 bg-teal-300/35 rounded-full blur-3xl animate-pulse" style={{animationDelay: '6s'}}></div>
+          <div className="absolute top-1/3 right-20 w-24 h-24 bg-teal-400/50 rounded-full blur-xl animate-pulse" style={{
+          animationDelay: '2s'
+        }}></div>
+          <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-emerald-300/45 rounded-full blur-xl animate-pulse" style={{
+          animationDelay: '4s'
+        }}></div>
+          <div className="absolute bottom-20 right-20 w-36 h-36 bg-teal-300/35 rounded-full blur-3xl animate-pulse" style={{
+          animationDelay: '6s'
+        }}></div>
         </div>
 
         {/* Top navigation */}
         <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50">
-          <Button 
-            variant="outline" 
-            className="bg-white/10 backdrop-blur-md text-white border-white/30 hover:bg-white/20 rounded-full px-6 py-2 font-medium" 
-            onClick={() => setShowLoginModal(true)}
-          >
+          <Button variant="outline" className="bg-white/10 backdrop-blur-md text-white border-white/30 hover:bg-white/20 rounded-full px-6 py-2 font-medium" onClick={() => setShowLoginModal(true)}>
             <LogIn className="h-4 w-4 mr-2" />
             Login
           </Button>
@@ -116,7 +111,7 @@ export default function OptimizedLanding() {
                   <Lightbulb className="h-10 w-10" />
                 </div>
                 <h3 className="font-black text-white text-xl mb-3">Memory Bridge</h3>
-                <p className="text-emerald-100 text-lg">Smart reminders that actually understand your recovery journey</p>
+                <p className="text-emerald-100 text-lg">Smart reminders that actually understand your journey</p>
               </div>
               <div className="bg-teal-500/25 backdrop-blur-md rounded-2xl p-8 border border-teal-400/30 hover:scale-105 transition-all group">
                 <div className="text-teal-300 mb-4 group-hover:scale-110 transition-transform">
@@ -154,11 +149,7 @@ export default function OptimizedLanding() {
               </div>
               
               <div className="flex flex-col lg:flex-row gap-6 justify-center items-center">
-                <Button 
-                  size="lg" 
-                  className="text-2xl px-16 py-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 font-black shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-white/20" 
-                  onClick={handleGetStarted}
-                >
+                <Button size="lg" className="text-2xl px-16 py-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 font-black shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-white/20" onClick={handleGetStarted}>
                   The Empowerment Revolution
                   <Badge className="ml-4 bg-white/30 text-white border-white/50 text-lg px-3 py-1">FREE ACCESS</Badge>
                 </Button>
@@ -205,11 +196,7 @@ export default function OptimizedLanding() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            {testimonials.map((testimonial, index) => (
-              <div 
-                key={index}
-                className="bg-white rounded-3xl p-8 shadow-2xl border border-emerald-100 hover:scale-105 transition-all duration-300 group relative overflow-hidden"
-              >
+            {testimonials.map((testimonial, index) => <div key={index} className="bg-white rounded-3xl p-8 shadow-2xl border border-emerald-100 hover:scale-105 transition-all duration-300 group relative overflow-hidden">
                 {/* Highlight badge */}
                 <div className="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2 rounded-bl-2xl font-bold text-sm">
                   {testimonial.highlight}
@@ -217,9 +204,7 @@ export default function OptimizedLanding() {
 
                 <div className="mb-6 pt-8">
                   <div className="flex items-center mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-6 w-6 text-yellow-400 fill-yellow-400" />
-                    ))}
+                    {[...Array(5)].map((_, i) => <Star key={i} className="h-6 w-6 text-yellow-400 fill-yellow-400" />)}
                   </div>
                   <Quote className="h-12 w-12 text-emerald-500/30 mb-4" />
                 </div>
@@ -235,8 +220,7 @@ export default function OptimizedLanding() {
 
                 {/* Hover effect */}
                 <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 to-teal-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
-              </div>
-            ))}
+              </div>)}
           </div>
 
           {/* Final CTA */}
@@ -248,11 +232,7 @@ export default function OptimizedLanding() {
               <p className="text-xl mb-8 text-emerald-100 max-w-2xl mx-auto">
                 Join 2,847 survivors who've transformed their lives. Your breakthrough is waiting.
               </p>
-              <Button 
-                size="lg" 
-                className="text-xl px-12 py-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold rounded-2xl shadow-2xl hover:scale-105 transition-all"
-                onClick={handleGetStarted}
-              >
+              <Button size="lg" className="text-xl px-12 py-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold rounded-2xl shadow-2xl hover:scale-105 transition-all" onClick={handleGetStarted}>
                 Start My Recovery Journey
                 <ArrowRight className="ml-3 h-6 w-6" />
               </Button>
@@ -263,6 +243,5 @@ export default function OptimizedLanding() {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 }
