@@ -1,9 +1,9 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Target, Users, Calendar, Brain, Heart, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { MemoryStrugglesSection } from "@/components/memory-first/sections/MemoryStrugglesSection";
 
 export default function OptimizedLanding() {
   const navigate = useNavigate();
@@ -20,6 +20,13 @@ export default function OptimizedLanding() {
   const handleLearnMore = () => {
     // Scroll to features section
     document.getElementById('features-section')?.scrollIntoView({ 
+      behavior: 'smooth' 
+    });
+  };
+
+  const handleSeePainPoints = () => {
+    // Scroll to pain points section
+    document.getElementById('pain-points-section')?.scrollIntoView({ 
       behavior: 'smooth' 
     });
   };
@@ -94,10 +101,10 @@ export default function OptimizedLanding() {
             <Button
               size="lg"
               variant="outline"
-              onClick={handleLearnMore}
+              onClick={handleSeePainPoints}
               className="border-2 border-emerald-300/30 text-emerald-100 hover:bg-emerald-800/20 hover:border-emerald-300/50 font-semibold px-8 py-4 text-lg rounded-xl backdrop-blur-sm transition-all duration-300"
             >
-              Explore Features
+              See Pain Points
             </Button>
           </div>
 
@@ -123,6 +130,13 @@ export default function OptimizedLanding() {
           </div>
         </div>
       </main>
+
+      {/* Pain Points Section */}
+      <section id="pain-points-section" className="relative z-10 py-20 bg-black/30 backdrop-blur-sm">
+        <div className="container mx-auto px-6">
+          <MemoryStrugglesSection />
+        </div>
+      </section>
 
       {/* Features Preview Section */}
       <section id="features-section" className="relative z-10 py-20 bg-black/20 backdrop-blur-sm">
