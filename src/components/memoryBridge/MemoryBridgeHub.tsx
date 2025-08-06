@@ -13,6 +13,8 @@ import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { CodeWordSettings } from './CodeWordSettings';
 import { ProfessionalPactReport } from './ProfessionalPactReport';
+import { PACTGenerationFlow } from './PACTGenerationFlow';
+import { PACTReportsHub } from './PACTReportsHub';
 import { ScheduleActionDialog, ScheduleData } from './ScheduleActionDialog';
 import { useMemoryBridge } from '@/hooks/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
@@ -71,11 +73,12 @@ export function MemoryBridgeHub() {
   } = useMemoryBridge();
   
   const { tier } = useSubscription();
-  const [activeTab, setActiveTab] = useState('senior-mode');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [isSeniorMode, setIsSeniorMode] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedActionForScheduling, setSelectedActionForScheduling] = useState(null);
   const [showScheduleDialog, setShowScheduleDialog] = useState(false);
+  const [showPACTGeneration, setShowPACTGeneration] = useState(false);
   const [settings, setSettings] = useState<RecordingSettings>({
     autoRecord: false,
     retentionDays: 30,
@@ -163,7 +166,7 @@ export function MemoryBridgeHub() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Button 
               size="lg" 
-              className="h-24 bg-gradient-to-br from-memory-emerald via-brain-health to-memory-emerald hover:from-memory-emerald/80 hover:via-brain-health/80 hover:to-memory-emerald/80 text-white font-bold shadow-lg transform hover:scale-105 transition-all duration-200"
+              className="h-24 bg-gradient-to-br from-brain-health via-emerald-500 to-clarity-teal-500 hover:from-brain-health/80 hover:via-emerald-500/80 hover:to-clarity-teal-500/80 text-white font-bold shadow-lg transform hover:scale-105 transition-all duration-200"
               onClick={() => setActiveTab('record')}
             >
               <div className="flex flex-col items-center gap-3">
@@ -175,24 +178,24 @@ export function MemoryBridgeHub() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-24 border-3 border-memory-emerald/60 hover:bg-gradient-to-br hover:from-memory-emerald/20 hover:to-memory-emerald/30 hover:border-memory-emerald transform hover:scale-105 transition-all duration-200"
-              onClick={() => setActiveTab('actions')}
+              className="h-24 border-3 border-brain-health/60 hover:bg-gradient-to-br hover:from-brain-health/20 hover:to-brain-health/30 hover:border-brain-health transform hover:scale-105 transition-all duration-200"
+              onClick={() => setActiveTab('pact-reports')}
             >
               <div className="flex flex-col items-center gap-3">
-                <Target className="h-8 w-8 text-memory-emerald" />
-                <span className="text-lg font-semibold text-memory-emerald">Review Actions</span>
+                <Target className="h-8 w-8 text-brain-health" />
+                <span className="text-lg font-semibold text-brain-health">PACT Reports</span>
               </div>
             </Button>
             
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-24 border-3 border-brain-health/60 hover:bg-gradient-to-br hover:from-brain-health/20 hover:to-brain-health/30 hover:border-brain-health transform hover:scale-105 transition-all duration-200"
-              onClick={() => setActiveTab('recordings')}
+              className="h-24 border-3 border-emerald/60 hover:bg-gradient-to-br hover:from-emerald/20 hover:to-emerald/30 hover:border-emerald transform hover:scale-105 transition-all duration-200"
+              onClick={() => setActiveTab('actions')}
             >
               <div className="flex flex-col items-center gap-3">
-                <Archive className="h-8 w-8 text-brain-health" />
-                <span className="text-lg font-semibold text-brain-health">View History</span>
+                <CheckCircle className="h-8 w-8 text-emerald-600" />
+                <span className="text-lg font-semibold text-emerald-600">Review Actions</span>
               </div>
             </Button>
           </div>
@@ -204,7 +207,7 @@ export function MemoryBridgeHub() {
 
       {/* Performance Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border-2 border-memory-emerald/50 bg-gradient-to-br from-memory-emerald/30 to-memory-emerald/40 shadow-lg transform hover:scale-105 transition-all duration-200">
+        <Card className="border-2 border-brain-health/50 bg-gradient-to-br from-brain-health/30 to-brain-health/40 shadow-lg transform hover:scale-105 transition-all duration-200">
           <CardContent className="pt-6">
             <div className="text-center">
               <div className="text-4xl font-bold text-white drop-shadow-lg">{totalPromises}</div>
@@ -214,7 +217,7 @@ export function MemoryBridgeHub() {
           </CardContent>
         </Card>
         
-        <Card className="border-2 border-brain-health/50 bg-gradient-to-br from-brain-health/30 to-brain-health/40 shadow-lg transform hover:scale-105 transition-all duration-200">
+        <Card className="border-2 border-emerald/50 bg-gradient-to-br from-emerald/30 to-emerald/40 shadow-lg transform hover:scale-105 transition-all duration-200">
           <CardContent className="pt-6">
             <div className="text-center">
               <div className="text-4xl font-bold text-white drop-shadow-lg">{keptPromises}</div>
@@ -586,9 +589,9 @@ export function MemoryBridgeHub() {
               <Archive className="h-4 w-4" />
               <span className="hidden sm:inline">History</span>
             </TabsTrigger>
-            <TabsTrigger value="pact-report" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+            <TabsTrigger value="pact-reports" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Target className="h-4 w-4" />
-              <span className="hidden sm:inline">P.A.C.T. Report</span>
+              <span className="hidden sm:inline">PACT Reports</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Settings className="h-4 w-4" />
@@ -608,8 +611,8 @@ export function MemoryBridgeHub() {
             <ExtractedActionsReview />
           </TabsContent>
 
-          <TabsContent value="pact-report" className="mt-6">
-            {renderPactReport()}
+          <TabsContent value="pact-reports" className="mt-6">
+            <PACTReportsHub />
           </TabsContent>
 
           <TabsContent value="recordings" className="mt-6">

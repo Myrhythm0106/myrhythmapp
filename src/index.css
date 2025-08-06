@@ -49,6 +49,11 @@
     --emerald-800: 160 75% 28%;
     --emerald-900: 160 80% 20%;
 
+    /* Memory-specific semantic tokens */
+    --memory-emerald: 160 60% 55%;
+    --memory-emerald-50: 160 85% 97%;
+    --memory-emerald-100: 160 80% 94%;
+
     /* THERAPEUTIC TEAL - Calm, trustworthy, healing */
     --brain-health-50: 180 70% 97%;
     --brain-health-100: 180 65% 94%;
@@ -107,6 +112,12 @@
     --gradient-pact: linear-gradient(135deg, hsl(var(--emerald-primary)), hsl(var(--brain-health)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--emerald-primary) / 0.03));
     --gradient-trust: linear-gradient(135deg, hsl(var(--emerald-primary) / 0.1), hsl(var(--brain-health) / 0.1));
+    --gradient-memory: linear-gradient(135deg, hsl(var(--memory-emerald)), hsl(var(--brain-health)));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--brain-health)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--emerald-primary)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--clarity-teal-500)));
+    --gradient-tertiary: linear-gradient(135deg, hsl(var(--brain-health)), hsl(var(--clarity-teal-600)));
+    --gradient-success: linear-gradient(135deg, hsl(var(--emerald-500)), hsl(var(--memory-emerald)));
     
     /* PACT shadows */
     --shadow-glow: 0 0 40px hsl(var(--emerald-primary) / 0.3);
