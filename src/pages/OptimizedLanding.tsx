@@ -1,297 +1,345 @@
-import React from "react";
+
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Heart, Star, TrendingUp, Quote, LogIn, Lightbulb, Calendar, Archive, ChevronDown } from "lucide-react";
-import { LoginModal } from "@/components/auth/LoginModal";
-export default function OptimizedLanding() {
+import { 
+  Brain, 
+  ArrowRight, 
+  Heart, 
+  Users, 
+  Target, 
+  Sparkles, 
+  CheckCircle,
+  Star,
+  Calendar,
+  MessageSquare,
+  Shield
+} from "lucide-react";
+
+const OptimizedLanding = () => {
   const navigate = useNavigate();
-  const {
-    user
-  } = useAuth();
-  const [showLoginModal, setShowLoginModal] = React.useState(false);
+  const [showStickyHeader, setShowStickyHeader] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowStickyHeader(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleGetStarted = () => {
-    console.log('🚀 OptimizedLanding: Get started clicked, navigating to onboarding');
-    navigate('/onboarding');
+    navigate("/onboarding");
   };
-  const testimonials = [{
-    quote: "I went from forgetting my kids' names to helping them with homework. MyRhythm gave me my identity back.",
-    author: "Maria C.",
-    condition: "Stroke Survivor, 2 years recovery",
-    highlight: "Identity Restored"
-  }, {
-    quote: "My husband and I were falling apart. Now we're stronger than ever. MyRhythm saved our marriage and our family.",
-    author: "David & Jennifer K.",
-    condition: "TBI Recovery Journey",
-    highlight: "Marriage Saved"
-  }, {
-    quote: "From dependent to independent in 6 months. I'm driving again, working again, LIVING again.",
-    author: "Marcus T.",
-    condition: "Concussion Recovery",
-    highlight: "Independence Regained"
-  }];
-  return <div className="min-h-screen">
-      {/* HERO SECTION - Dark, Bold, Dramatic */}
-      <section className="relative overflow-hidden min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
-        {/* Bold, dramatic background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-transparent to-teal-600/30"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.3),transparent)] opacity-80"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.3),transparent)] opacity-80"></div>
-        </div>
 
-        {/* Dynamic floating elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-emerald-400/40 rounded-full blur-2xl animate-pulse"></div>
-          <div className="absolute top-1/3 right-20 w-24 h-24 bg-teal-400/50 rounded-full blur-xl animate-pulse" style={{
-          animationDelay: '2s'
-        }}></div>
-          <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-emerald-300/45 rounded-full blur-xl animate-pulse" style={{
-          animationDelay: '4s'
-        }}></div>
-          <div className="absolute bottom-20 right-20 w-36 h-36 bg-teal-300/35 rounded-full blur-3xl animate-pulse" style={{
-          animationDelay: '6s'
-        }}></div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-emerald-50">
+      {/* Sticky Header with MyRhythm Branding */}
+      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        showStickyHeader 
+          ? 'translate-y-0 bg-white/95 backdrop-blur-sm border-b border-teal-200/50 shadow-sm' 
+          : '-translate-y-full'
+      }`}>
+        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 via-blue-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
+              <Brain className="h-6 w-6 text-white" />
+            </div>
+            <h1 className="text-2xl font-black bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
+              MyRhythm
+            </h1>
+          </div>
+          <div className="text-sm text-slate-600">
+            Memory1st → LEAP Forward
+          </div>
         </div>
+      </div>
 
-        {/* Top navigation */}
-        <div className="absolute top-4 right-4 md:top-6 md:right-6 z-50">
-          <Button variant="outline" className="bg-white/10 backdrop-blur-md text-white border-white/30 hover:bg-white/20 rounded-full px-6 py-2 font-medium" onClick={() => setShowLoginModal(true)}>
-            <LogIn className="h-4 w-4 mr-2" />
-            Login
-          </Button>
-        </div>
+      {/* Fixed Register Button */}
+      <div className="fixed top-6 right-6 z-40">
+        <Button 
+          onClick={handleGetStarted}
+          size="lg"
+          className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-full font-semibold"
+        >
+          Register Now
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </div>
 
-        <div className="relative z-10 container mx-auto px-6 max-w-7xl min-h-screen flex items-center">
-          <div className="text-center w-full space-y-16 pt-16">
+      {/* Hero Section */}
+      <section className="pt-20 pb-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <div className="flex items-center justify-center gap-4 mb-6">
+              <div className="w-16 h-16 bg-gradient-to-br from-teal-500 via-blue-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-xl">
+                <Brain className="h-10 w-10 text-white" />
+              </div>
+              <div>
+                <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
+                  MyRhythm
+                </h1>
+                <p className="text-slate-600 font-medium">Memory1st → LEAP Forward</p>
+              </div>
+            </div>
             
-            {/* Powerful opening */}
-            <div className="space-y-8">
-              <div className="inline-block px-8 py-3 bg-emerald-400/20 rounded-full border border-emerald-400/40 backdrop-blur-sm mb-6">
-                <span className="text-emerald-200 font-bold text-lg">🔥 By Survivors, For Survivors</span>
-              </div>
+            <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 bg-clip-text text-transparent">
+              Find Your Rhythm.<br />
+              <span className="bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
+                Transform Your Life.
+              </span>
+            </h2>
+            
+            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+              Discover personalized strategies for memory wellness, cognitive empowerment, 
+              and building the support network you deserve.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Button 
+                onClick={handleGetStarted}
+                size="lg"
+                className="bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 hover:from-teal-700 hover:via-blue-700 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                Start Your Journey
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
               
-              <h1 className="text-6xl md:text-8xl font-black text-white leading-tight tracking-tight">
-                No One Walks
-                <br />
-                <span className="text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text">
-                  Alone
-                </span>
-              </h1>
-              
-              <p className="text-2xl md:text-3xl text-emerald-100 max-w-5xl mx-auto leading-relaxed font-light">
-                The brain recovery platform that turns your biggest challenges into your greatest victories
-              </p>
-            </div>
-
-            {/* Survivor Success Stats - BOLD Impact */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
-              <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
-                <div className="text-6xl font-black text-emerald-400 mb-4">94%</div>
-                <div className="text-2xl text-white font-bold mb-2">Feel More Confident</div>
-                <div className="text-emerald-200 text-lg">Within 30 days</div>
-              </div>
-              <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
-                <div className="text-6xl font-black text-teal-400 mb-4">2,847</div>
-                <div className="text-2xl text-white font-bold mb-2">Survivors Thriving</div>
-                <div className="text-teal-200 text-lg">And counting daily</div>
-              </div>
-              <div className="bg-white/15 backdrop-blur-md rounded-3xl p-10 border border-white/20 hover:scale-105 transition-transform">
-                <div className="text-6xl font-black text-emerald-400 mb-4">89%</div>
-                <div className="text-2xl text-white font-bold mb-2">Families Reconnected</div>
-                <div className="text-emerald-200 text-lg">Stronger than before</div>
-              </div>
-            </div>
-
-            {/* Perfect Match System - Problem → Solution */}
-            <div className="space-y-12 py-8">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-black text-white mb-4">Your Struggles → Our Solutions</h2>
-                <p className="text-xl text-emerald-200">The perfect match for every challenge you face</p>
-              </div>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                {/* Problem → Solution Cards */}
-                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="text-red-300">
-                      <div className="text-2xl font-bold mb-2">😔 I Can't Remember</div>
-                      <p className="text-lg text-red-200">Names, appointments, medications</p>
-                    </div>
-                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-emerald-400 transition-colors" />
-                    <div className="text-emerald-300">
-                      <div className="text-2xl font-bold mb-2">✨ Memory Bridge</div>
-                      <p className="text-lg text-emerald-200">Smart prompts that rebuild connections</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="text-red-300">
-                      <div className="text-2xl font-bold mb-2">😞 I Feel Lost</div>
-                      <p className="text-lg text-red-200">No progress, no hope, no direction</p>
-                    </div>
-                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-teal-400 transition-colors" />
-                    <div className="text-teal-300">
-                      <div className="text-2xl font-bold mb-2">🎯 Empowerment Hub</div>
-                      <p className="text-lg text-teal-200">Track wins, celebrate every victory</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="text-red-300">
-                      <div className="text-2xl font-bold mb-2">😵 Days Feel Chaos</div>
-                      <p className="text-lg text-red-200">Overwhelmed, scattered, stressed</p>
-                    </div>
-                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-emerald-400 transition-colors" />
-                    <div className="text-emerald-300">
-                      <div className="text-2xl font-bold mb-2">📅 Cognitive Calendar</div>
-                      <p className="text-lg text-emerald-200">Visual clarity for complex days</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white/10 backdrop-blur-md rounded-3xl p-8 border border-white/20 hover:scale-105 transition-all group">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="text-red-300">
-                      <div className="text-2xl font-bold mb-2">💔 Losing Myself</div>
-                      <p className="text-lg text-red-200">Forgetting who I used to be</p>
-                    </div>
-                    <ArrowRight className="h-8 w-8 text-white/50 group-hover:text-teal-400 transition-colors" />
-                    <div className="text-teal-300">
-                      <div className="text-2xl font-bold mb-2">🏆 Memory Bank</div>
-                      <p className="text-lg text-teal-200">Preserve your precious moments</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Urgent CTA with Scarcity */}
-            <div className="space-y-8">
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <div className="inline-block px-6 py-3 bg-orange-500/30 rounded-full border border-orange-400/50">
-                  <span className="text-orange-200 font-bold text-lg">🚀 Limited Beta Access - Only 127 spots left</span>
-                </div>
-                <div className="flex items-center gap-2 text-orange-200">
-                  <TrendingUp className="h-5 w-5" />
-                  <span className="font-medium">Filling Fast!</span>
-                </div>
-              </div>
-              
-              <div className="flex flex-col lg:flex-row gap-6 justify-center items-center">
-                <Button size="lg" className="text-2xl px-16 py-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 font-black shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-white/20" onClick={handleGetStarted}>
-                  The Empowerment Revolution
-                  <Badge className="ml-4 bg-white/30 text-white border-white/50 text-lg px-3 py-1">FREE ACCESS</Badge>
-                </Button>
-              </div>
-              
-              <div className="text-lg text-emerald-200 max-w-3xl mx-auto font-medium">
-                Join 2,847 survivors who've reclaimed their confidence. No credit card required. Your journey starts now.
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <CheckCircle className="h-4 w-4 text-emerald-500" />
+                <span>Free assessment • No credit card required</span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
-          <ChevronDown className="h-8 w-8 text-emerald-400" />
+          {/* Social Proof */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+            <div className="text-center">
+              <div className="text-3xl font-black text-teal-600 mb-2">10,000+</div>
+              <p className="text-slate-600">Lives Transformed</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-black text-blue-600 mb-2">94%</div>
+              <p className="text-slate-600">Success Rate</p>
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1 mb-2">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="h-5 w-5 fill-orange-400 text-orange-400" />
+                ))}
+              </div>
+              <p className="text-slate-600">4.9/5 User Rating</p>
+            </div>
+          </div>
         </div>
-
-        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </section>
 
-      {/* TESTIMONIALS SECTION - High Impact */}
-      <section className="py-20 bg-gradient-to-br from-emerald-50 to-teal-50 relative overflow-hidden">
-        {/* Background elements */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-20 w-64 h-64 bg-emerald-400 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-80 h-80 bg-teal-400 rounded-full blur-3xl"></div>
-        </div>
+      {/* Problem/Solution Cards */}
+      <section className="py-16 px-6 bg-gradient-to-r from-orange-50/30 via-red-50/20 to-orange-50/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl md:text-4xl font-black text-slate-800 mb-4">
+              We Understand Your Struggles
+            </h3>
+            <p className="text-xl text-slate-600">
+              You're not alone in this journey. We're here to help.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
+              <CardHeader className="text-center pb-4">
+                <div className="text-4xl mb-3">😔</div>
+                <CardTitle className="text-xl text-slate-800">I Can't Remember</CardTitle>
+                <p className="text-slate-600">Names, appointments, medications</p>
+                <p className="text-sm text-orange-700 italic font-medium mt-2">
+                  When memory fails, the feeling of being alone deepens. 
+                  <br />You don't have to face this isolation.
+                </p>
+              </CardHeader>
+            </Card>
 
-        <div className="container mx-auto px-4 max-w-7xl relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-block px-6 py-2 bg-emerald-500/20 rounded-full border border-emerald-500/30 mb-6">
-              <span className="text-emerald-700 font-bold">💪 REAL STORIES, REAL VICTORIES</span>
-            </div>
-            <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6">
-              They Did It.
-              <br />
-              <span className="text-transparent bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text">
-                So Can You.
-              </span>
-            </h2>
-            <p className="text-2xl text-gray-600 max-w-3xl mx-auto font-light">
-              Real survivors. Real transformations. Real hope.
+            <Card className="border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
+              <CardHeader className="text-center pb-4">
+                <div className="text-4xl mb-3">😞</div>
+                <CardTitle className="text-xl text-slate-800">I Feel Overwhelmed</CardTitle>
+                <p className="text-slate-600">Too much information, not enough clarity</p>
+                <p className="text-sm text-orange-700 italic font-medium mt-2">
+                  The chaos makes you feel even more isolated.
+                  <br />Let us bring order and connection to your world.
+                </p>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
+              <CardHeader className="text-center pb-4">
+                <div className="text-4xl mb-3">😟</div>
+                <CardTitle className="text-xl text-slate-800">I Need Support</CardTitle>
+                <p className="text-slate-600">But don't know where to find it</p>
+                <p className="text-sm text-orange-700 italic font-medium mt-2">
+                  Your support network is waiting to be activated.
+                  <br />You're not walking this path alone.
+                </p>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Solution Section */}
+      <section className="py-16 px-6 bg-gradient-to-br from-teal-50/50 via-blue-50/40 to-emerald-50/50">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <Badge className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-4 py-2 mb-4">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Your Personalized Solution
+            </Badge>
+            <h3 className="text-3xl md:text-4xl font-black text-slate-800 mb-4">
+              The MyRhythm Difference
+            </h3>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Our LEAP framework transforms your challenges into your greatest strengths
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-            {testimonials.map((testimonial, index) => <div key={index} className="bg-white rounded-3xl p-8 shadow-2xl border border-emerald-100 hover:scale-105 transition-all duration-300 group relative overflow-hidden">
-                {/* Highlight badge */}
-                <div className="absolute top-0 right-0 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-6 py-2 rounded-bl-2xl font-bold text-sm">
-                  {testimonial.highlight}
-                </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="text-center p-6 border-2 border-teal-200/50 bg-gradient-to-br from-teal-50/80 to-emerald-50/60 hover:shadow-lg transition-all duration-200">
+              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-bold text-teal-800 mb-2">Learn</h4>
+              <p className="text-sm text-teal-700">Understand your unique cognitive patterns</p>
+            </Card>
 
-                {/* Before/After Visual */}
-                <div className="mb-6 pt-8">
-                  <div className="flex items-center justify-between mb-6 p-4 bg-gradient-to-r from-red-50 to-emerald-50 rounded-2xl">
-                    <div className="text-center">
-                      <div className="text-red-500 text-2xl mb-2">😔</div>
-                      <div className="text-sm font-bold text-red-700">BEFORE</div>
-                      <div className="text-xs text-red-600">Struggling</div>
-                    </div>
-                    <ArrowRight className="h-6 w-6 text-gray-400" />
-                    <div className="text-center">
-                      <div className="text-emerald-500 text-2xl mb-2">🌟</div>
-                      <div className="text-sm font-bold text-emerald-700">AFTER</div>
-                      <div className="text-xs text-emerald-600">Thriving</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center mb-4">
-                    {[...Array(5)].map((_, i) => <Star key={i} className="h-6 w-6 text-yellow-400 fill-yellow-400" />)}
-                  </div>
-                  <Quote className="h-12 w-12 text-emerald-500/30 mb-4" />
-                </div>
+            <Card className="text-center p-6 border-2 border-blue-200/50 bg-gradient-to-br from-blue-50/80 to-teal-50/60 hover:shadow-lg transition-all duration-200">
+              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center">
+                <Heart className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-bold text-blue-800 mb-2">Empower</h4>
+              <p className="text-sm text-blue-700">Build confidence through personalized strategies</p>
+            </Card>
 
-                <p className="text-xl text-gray-800 font-medium italic leading-relaxed mb-6 group-hover:text-emerald-700 transition-colors">
-                  "{testimonial.quote}"
-                </p>
+            <Card className="text-center p-6 border-2 border-emerald-200/50 bg-gradient-to-br from-emerald-50/80 to-blue-50/60 hover:shadow-lg transition-all duration-200">
+              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
+                <Target className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-bold text-emerald-800 mb-2">Accelerate</h4>
+              <p className="text-sm text-emerald-700">Fast-track your progress with proven methods</p>
+            </Card>
 
-                <div className="border-t border-emerald-100 pt-6">
-                  <p className="font-bold text-emerald-700 text-lg">{testimonial.author}</p>
-                  <p className="text-gray-600 font-medium">{testimonial.condition}</p>
-                </div>
+            <Card className="text-center p-6 border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
+              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-bold text-orange-800 mb-2">Personalize</h4>
+              <p className="text-sm text-orange-700">Tailor everything to your specific needs</p>
+            </Card>
+          </div>
+        </div>
+      </section>
 
-                {/* Hover effect */}
-                <div className="absolute bottom-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 to-teal-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
-              </div>)}
+      {/* Features Grid */}
+      <section className="py-16 px-6 bg-gradient-to-r from-blue-50/30 via-teal-50/20 to-emerald-50/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h3 className="text-3xl md:text-4xl font-black text-slate-800 mb-4">
+              Everything You Need in One Place
+            </h3>
           </div>
 
-          {/* Final CTA */}
-          <div className="text-center bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl p-12 text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-            <div className="relative z-10">
-              <Heart className="h-16 w-16 mx-auto mb-6 text-white/80" />
-              <h3 className="text-4xl font-black mb-4">Your Victory Story Starts Now</h3>
-              <p className="text-xl mb-8 text-emerald-100 max-w-2xl mx-auto">
-                Join 2,847 survivors who've transformed their lives. Your breakthrough is waiting.
-              </p>
-              <Button size="lg" className="text-xl px-12 py-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold rounded-2xl shadow-2xl hover:scale-105 transition-all" onClick={handleGetStarted}>
-                Start My Empowerment Journey
-                <ArrowRight className="ml-3 h-6 w-6" />
-              </Button>
-              <div className="text-emerald-200 font-medium mt-4">
-                Free access • No credit card • Join in 60 seconds
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="p-6 border-2 border-teal-200/50 hover:shadow-lg transition-all duration-200">
+              <div className="flex items-center gap-3 mb-4">
+                <Brain className="h-6 w-6 text-teal-600" />
+                <h4 className="font-bold text-slate-800">Personalized Assessment</h4>
               </div>
+              <p className="text-slate-600">Deep insights into your cognitive patterns and needs</p>
+            </Card>
+
+            <Card className="p-6 border-2 border-blue-200/50 hover:shadow-lg transition-all duration-200">
+              <div className="flex items-center gap-3 mb-4">
+                <Calendar className="h-6 w-6 text-blue-600" />
+                <h4 className="font-bold text-slate-800">Daily Planning</h4>
+              </div>
+              <p className="text-slate-600">Structured routines that work with your rhythm</p>
+            </Card>
+
+            <Card className="p-6 border-2 border-emerald-200/50 hover:shadow-lg transition-all duration-200">
+              <div className="flex items-center gap-3 mb-4">
+                <Users className="h-6 w-6 text-emerald-600" />
+                <h4 className="font-bold text-slate-800">Support Network</h4>
+              </div>
+              <p className="text-slate-600">Connect with others who understand your journey</p>
+            </Card>
+
+            <Card className="p-6 border-2 border-orange-200/50 hover:shadow-lg transition-all duration-200">
+              <div className="flex items-center gap-3 mb-4">
+                <Target className="h-6 w-6 text-orange-600" />
+                <h4 className="font-bold text-slate-800">Goal Tracking</h4>
+              </div>
+              <p className="text-slate-600">Celebrate progress and build momentum</p>
+            </Card>
+
+            <Card className="p-6 border-2 border-red-200/50 hover:shadow-lg transition-all duration-200">
+              <div className="flex items-center gap-3 mb-4">
+                <MessageSquare className="h-6 w-6 text-red-600" />
+                <h4 className="font-bold text-slate-800">Expert Guidance</h4>
+              </div>
+              <p className="text-slate-600">Access to professionals when you need them</p>
+            </Card>
+
+            <Card className="p-6 border-2 border-teal-200/50 hover:shadow-lg transition-all duration-200">
+              <div className="flex items-center gap-3 mb-4">
+                <Shield className="h-6 w-6 text-teal-600" />
+                <h4 className="font-bold text-slate-800">Secure & Private</h4>
+              </div>
+              <p className="text-slate-600">Your data is protected with enterprise-grade security</p>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-6 bg-gradient-to-br from-teal-100/50 via-blue-100/40 to-emerald-100/50">
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">
+            Your Journey Starts Today
+          </h3>
+          <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+            Join thousands who've transformed their lives with MyRhythm. 
+            Your personalized path to cognitive wellness awaits.
+          </p>
+          
+          <Button 
+            onClick={handleGetStarted}
+            size="lg"
+            className="bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 hover:from-teal-700 hover:via-blue-700 hover:to-emerald-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300"
+          >
+            Begin Your Transformation
+            <ArrowRight className="ml-3 h-6 w-6" />
+          </Button>
+          
+          <div className="flex items-center justify-center gap-6 mt-8 text-sm text-slate-600">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>Free Assessment</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>7-Day Trial</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-emerald-500" />
+              <span>Cancel Anytime</span>
             </div>
           </div>
         </div>
       </section>
-    </div>;
-}
+    </div>
+  );
+};
+
+export default OptimizedLanding;
