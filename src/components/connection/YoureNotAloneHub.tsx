@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,8 @@ import {
   Star,
   Lightbulb,
   Calendar,
-  Share2
+  Share2,
+  Brain
 } from "lucide-react";
 
 export function YoureNotAloneHub() {
