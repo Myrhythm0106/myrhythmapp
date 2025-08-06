@@ -233,7 +233,7 @@ export default function OptimizedLanding() {
                 Join 2,847 survivors who've transformed their lives. Your breakthrough is waiting.
               </p>
               <Button size="lg" className="text-xl px-12 py-6 bg-white text-emerald-600 hover:bg-emerald-50 font-bold rounded-2xl shadow-2xl hover:scale-105 transition-all" onClick={handleGetStarted}>
-                Start My Recovery Journey
+                Start My Empowerment Journey
                 <ArrowRight className="ml-3 h-6 w-6" />
               </Button>
               <div className="text-emerald-200 font-medium mt-4">
