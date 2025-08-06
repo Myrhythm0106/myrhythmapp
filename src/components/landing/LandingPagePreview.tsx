@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 export function LandingPagePreview() {
+  console.log('🎯 LandingPagePreview: Component is rendering!');
   const navigate = useNavigate();
   const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [showBeforeAfter, setShowBeforeAfter] = useState(false);
@@ -28,6 +29,7 @@ export function LandingPagePreview() {
     setExpandedSection(expandedSection === section ? null : section);
   };
 
+  console.log('🎯 LandingPagePreview: About to return JSX');
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50/30 via-blue-50/25 to-teal-50/30 relative">
       {/* Clean Professional Background - No Toy Elements */}

@@ -29,6 +29,7 @@ import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import SupportMemberDashboard from "./pages/SupportMemberDashboard";
+import { LandingPagePreview } from "./components/landing/LandingPagePreview";
 
 const queryClient = new QueryClient();
 
@@ -47,6 +48,7 @@ function App() {
                    <Routes>
                      <Route path="/" element={<OptimizedLanding />} />
                      <Route path="/old-landing" element={<MemoryFirstIndex />} />
+                     <Route path="/preview" element={<LandingPagePreview />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
