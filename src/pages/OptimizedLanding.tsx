@@ -1,345 +1,253 @@
 
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { PersistentRegisterButton } from '@/components/ui/PersistentRegisterButton';
+import { useNavigate } from 'react-router-dom';
 import { 
   Brain, 
-  ArrowRight, 
   Heart, 
+  Zap, 
   Users, 
   Target, 
-  Sparkles, 
-  CheckCircle,
+  CheckCircle, 
   Star,
-  Calendar,
-  MessageSquare,
-  Shield
-} from "lucide-react";
+  ArrowRight,
+  Clock,
+  Shield,
+  Sparkles,
+  Crown
+} from 'lucide-react';
 
-const OptimizedLanding = () => {
+export function OptimizedLanding() {
   const navigate = useNavigate();
-  const [showStickyHeader, setShowStickyHeader] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowStickyHeader(window.scrollY > 100);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const handleGetStarted = () => {
-    navigate("/onboarding");
+    navigate('/onboarding');
   };
 
+  const painPoints = [
+    {
+      id: 'memory',
+      icon: Brain,
+      title: "I Can't Remember",
+      subtitle: "I am alone",
+      description: "Conversations slip away, promises forgotten, relationships strained by missed commitments",
+      gradient: "from-red-500 to-orange-500"
+    },
+    {
+      id: 'overwhelm',
+      icon: Zap,
+      title: "I'm Overwhelmed",
+      description: "Too many tasks, scattered focus, feeling burned out and unproductive",
+      gradient: "from-orange-500 to-yellow-500"
+    },
+    {
+      id: 'disconnect',
+      icon: Heart,
+      title: "I Feel Disconnected",
+      description: "Lost touch with family, struggling to maintain meaningful relationships",
+      gradient: "from-purple-500 to-pink-500"
+    }
+  ];
+
+  const solutions = [
+    {
+      icon: Target,
+      title: "Never Forget Again",
+      description: "AI-powered Memory Bridge captures every promise and commitment automatically"
+    },
+    {
+      icon: Users,
+      title: "Strengthen Relationships",
+      description: "Keep your support circle informed and engaged in your journey"
+    },
+    {
+      icon: CheckCircle,
+      title: "Follow Through",
+      description: "Track progress and accountability with your personal PACT system"
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-emerald-50">
-      {/* Sticky Header with MyRhythm Branding */}
-      <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        showStickyHeader 
-          ? 'translate-y-0 bg-white/95 backdrop-blur-sm border-b border-teal-200/50 shadow-sm' 
-          : '-translate-y-full'
-      }`}>
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 via-blue-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
-              <Brain className="h-6 w-6 text-white" />
-            </div>
-            <h1 className="text-2xl font-black bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
-              MyRhythm
-            </h1>
-          </div>
-          <div className="text-sm text-slate-600">
-            Memory1st → LEAP Forward
-          </div>
-        </div>
-      </div>
-
-      {/* Fixed Register Button */}
-      <div className="fixed top-6 right-6 z-40">
-        <Button 
-          onClick={handleGetStarted}
-          size="lg"
-          className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 px-6 py-3 rounded-full font-semibold"
-        >
-          Register Now
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
-
-      {/* Hero Section */}
-      <section className="pt-20 pb-16 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-gradient-to-br from-teal-500 via-blue-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-xl">
-                <Brain className="h-10 w-10 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-teal-50 to-emerald-50">
+      {/* Sticky Header */}
+      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-teal-200">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                <Brain className="w-6 h-6 text-white" />
               </div>
-              <div>
-                <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
-                  MyRhythm
-                </h1>
-                <p className="text-slate-600 font-medium">Memory1st → LEAP Forward</p>
-              </div>
-            </div>
-            
-            <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 bg-clip-text text-transparent">
-              Find Your Rhythm.<br />
-              <span className="bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 bg-clip-text text-transparent">
-                Transform Your Life.
+              <span className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-emerald-600 bg-clip-text text-transparent">
+                MyRhythm
               </span>
-            </h2>
-            
-            <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover personalized strategies for memory wellness, cognitive empowerment, 
-              and building the support network you deserve.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button 
-                onClick={handleGetStarted}
-                size="lg"
-                className="bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 hover:from-teal-700 hover:via-blue-700 hover:to-emerald-700 text-white px-8 py-4 text-lg font-semibold rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                Start Your Journey
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              
-              <div className="flex items-center gap-2 text-sm text-slate-600">
-                <CheckCircle className="h-4 w-4 text-emerald-500" />
-                <span>Free assessment • No credit card required</span>
-              </div>
             </div>
+            
+            <Button
+              onClick={handleGetStarted}
+              className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 text-white px-6 py-2"
+            >
+              <Crown className="w-4 h-4 mr-2" />
+              Get Started Free
+            </Button>
           </div>
+        </div>
+      </div>
 
-          {/* Social Proof */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            <div className="text-center">
-              <div className="text-3xl font-black text-teal-600 mb-2">10,000+</div>
-              <p className="text-slate-600">Lives Transformed</p>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-black text-blue-600 mb-2">94%</div>
-              <p className="text-slate-600">Success Rate</p>
-            </div>
-            <div className="text-center">
-              <div className="flex items-center justify-center gap-1 mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-orange-400 text-orange-400" />
-                ))}
-              </div>
-              <p className="text-slate-600">4.9/5 User Rating</p>
+      <div className="container mx-auto px-6 py-12">
+        {/* Hero Section */}
+        <div className="text-center space-y-8 mb-16">
+          <Badge className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-6 py-2 text-lg">
+            <Sparkles className="w-4 h-4 mr-2" />
+            Transform Your Life Today
+          </Badge>
+          
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 leading-tight">
+            Never Forget a
+            <span className="block bg-gradient-to-r from-teal-600 via-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              Promise Again
+            </span>
+          </h1>
+          
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            AI-powered Memory Bridge helps you remember commitments, strengthen relationships, 
+            and follow through on what matters most—with your support circle by your side.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button
+              onClick={handleGetStarted}
+              size="lg"
+              className="bg-gradient-to-r from-teal-600 via-emerald-600 to-blue-600 hover:from-teal-700 hover:via-emerald-700 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+            >
+              Start Your Free Assessment
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            
+            <div className="flex items-center gap-2 text-gray-600">
+              <Clock className="w-4 h-4" />
+              <span>5-minute setup</span>
+              <Shield className="w-4 h-4 ml-2" />
+              <span>100% private</span>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Problem/Solution Cards */}
-      <section className="py-16 px-6 bg-gradient-to-r from-orange-50/30 via-red-50/20 to-orange-50/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl md:text-4xl font-black text-slate-800 mb-4">
-              We Understand Your Struggles
-            </h3>
-            <p className="text-xl text-slate-600">
-              You're not alone in this journey. We're here to help.
-            </p>
+        {/* Pain Points Section */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            You're Not Alone in These Struggles
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {painPoints.map((pain) => {
+              const Icon = pain.icon;
+              return (
+                <Card
+                  key={pain.id}
+                  className="border-2 border-gray-200 hover:border-gray-300 transition-all duration-300 hover:shadow-lg cursor-pointer"
+                  onMouseEnter={() => setHoveredCard(pain.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  <CardContent className="p-8 text-center space-y-4">
+                    <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${pain.gradient} flex items-center justify-center mx-auto`}>
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {pain.title}
+                      </h3>
+                      {pain.subtitle && (
+                        <p className="text-sm text-gray-500 italic mb-3">
+                          {pain.subtitle}
+                        </p>
+                      )}
+                      <p className="text-gray-600 leading-relaxed">
+                        {pain.description}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Solutions Section */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            Here's How MyRhythm Changes Everything
+          </h2>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {solutions.map((solution, index) => {
+              const Icon = solution.icon;
+              return (
+                <Card key={index} className="border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-50 hover:shadow-lg transition-all duration-300">
+                  <CardContent className="p-8 text-center space-y-4">
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-teal-500 to-emerald-500 flex items-center justify-center mx-auto">
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    
+                    <h3 className="text-xl font-bold text-teal-900">
+                      {solution.title}
+                    </h3>
+                    
+                    <p className="text-teal-700 leading-relaxed">
+                      {solution.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Social Proof */}
+        <div className="text-center bg-white rounded-2xl shadow-xl p-12 mb-16">
+          <div className="flex justify-center mb-4">
+            {[...Array(5)].map((_, i) => (
+              <Star key={i} className="w-6 h-6 text-yellow-500 fill-current" />
+            ))}
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
-              <CardHeader className="text-center pb-4">
-                <div className="text-4xl mb-3">😔</div>
-                <CardTitle className="text-xl text-slate-800">I Can't Remember</CardTitle>
-                <p className="text-slate-600">Names, appointments, medications</p>
-                <p className="text-sm text-orange-700 italic font-medium mt-2">
-                  When memory fails, the feeling of being alone deepens. 
-                  <br />You don't have to face this isolation.
-                </p>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
-              <CardHeader className="text-center pb-4">
-                <div className="text-4xl mb-3">😞</div>
-                <CardTitle className="text-xl text-slate-800">I Feel Overwhelmed</CardTitle>
-                <p className="text-slate-600">Too much information, not enough clarity</p>
-                <p className="text-sm text-orange-700 italic font-medium mt-2">
-                  The chaos makes you feel even more isolated.
-                  <br />Let us bring order and connection to your world.
-                </p>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
-              <CardHeader className="text-center pb-4">
-                <div className="text-4xl mb-3">😟</div>
-                <CardTitle className="text-xl text-slate-800">I Need Support</CardTitle>
-                <p className="text-slate-600">But don't know where to find it</p>
-                <p className="text-sm text-orange-700 italic font-medium mt-2">
-                  Your support network is waiting to be activated.
-                  <br />You're not walking this path alone.
-                </p>
-              </CardHeader>
-            </Card>
+          <blockquote className="text-2xl text-gray-700 italic mb-6">
+            "MyRhythm helped me rebuild trust with my family. I finally follow through on my promises."
+          </blockquote>
+          
+          <div className="text-gray-600">
+            <p className="font-semibold">Sarah M.</p>
+            <p>Working parent, Premium user</p>
           </div>
         </div>
-      </section>
 
-      {/* Solution Section */}
-      <section className="py-16 px-6 bg-gradient-to-br from-teal-50/50 via-blue-50/40 to-emerald-50/50">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <Badge className="bg-gradient-to-r from-teal-500 to-emerald-500 text-white px-4 py-2 mb-4">
-              <Sparkles className="h-4 w-4 mr-2" />
-              Your Personalized Solution
-            </Badge>
-            <h3 className="text-3xl md:text-4xl font-black text-slate-800 mb-4">
-              The MyRhythm Difference
-            </h3>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Our LEAP framework transforms your challenges into your greatest strengths
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="text-center p-6 border-2 border-teal-200/50 bg-gradient-to-br from-teal-50/80 to-emerald-50/60 hover:shadow-lg transition-all duration-200">
-              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-teal-500 to-emerald-500 rounded-xl flex items-center justify-center">
-                <Brain className="h-6 w-6 text-white" />
-              </div>
-              <h4 className="font-bold text-teal-800 mb-2">Learn</h4>
-              <p className="text-sm text-teal-700">Understand your unique cognitive patterns</p>
-            </Card>
-
-            <Card className="text-center p-6 border-2 border-blue-200/50 bg-gradient-to-br from-blue-50/80 to-teal-50/60 hover:shadow-lg transition-all duration-200">
-              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-teal-500 rounded-xl flex items-center justify-center">
-                <Heart className="h-6 w-6 text-white" />
-              </div>
-              <h4 className="font-bold text-blue-800 mb-2">Empower</h4>
-              <p className="text-sm text-blue-700">Build confidence through personalized strategies</p>
-            </Card>
-
-            <Card className="text-center p-6 border-2 border-emerald-200/50 bg-gradient-to-br from-emerald-50/80 to-blue-50/60 hover:shadow-lg transition-all duration-200">
-              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-emerald-500 to-blue-500 rounded-xl flex items-center justify-center">
-                <Target className="h-6 w-6 text-white" />
-              </div>
-              <h4 className="font-bold text-emerald-800 mb-2">Accelerate</h4>
-              <p className="text-sm text-emerald-700">Fast-track your progress with proven methods</p>
-            </Card>
-
-            <Card className="text-center p-6 border-2 border-orange-200/50 bg-gradient-to-br from-orange-50/80 to-red-50/60 hover:shadow-lg transition-all duration-200">
-              <div className="w-12 h-12 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
-                <Users className="h-6 w-6 text-white" />
-              </div>
-              <h4 className="font-bold text-orange-800 mb-2">Personalize</h4>
-              <p className="text-sm text-orange-700">Tailor everything to your specific needs</p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="py-16 px-6 bg-gradient-to-r from-blue-50/30 via-teal-50/20 to-emerald-50/30">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h3 className="text-3xl md:text-4xl font-black text-slate-800 mb-4">
-              Everything You Need in One Place
-            </h3>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="p-6 border-2 border-teal-200/50 hover:shadow-lg transition-all duration-200">
-              <div className="flex items-center gap-3 mb-4">
-                <Brain className="h-6 w-6 text-teal-600" />
-                <h4 className="font-bold text-slate-800">Personalized Assessment</h4>
-              </div>
-              <p className="text-slate-600">Deep insights into your cognitive patterns and needs</p>
-            </Card>
-
-            <Card className="p-6 border-2 border-blue-200/50 hover:shadow-lg transition-all duration-200">
-              <div className="flex items-center gap-3 mb-4">
-                <Calendar className="h-6 w-6 text-blue-600" />
-                <h4 className="font-bold text-slate-800">Daily Planning</h4>
-              </div>
-              <p className="text-slate-600">Structured routines that work with your rhythm</p>
-            </Card>
-
-            <Card className="p-6 border-2 border-emerald-200/50 hover:shadow-lg transition-all duration-200">
-              <div className="flex items-center gap-3 mb-4">
-                <Users className="h-6 w-6 text-emerald-600" />
-                <h4 className="font-bold text-slate-800">Support Network</h4>
-              </div>
-              <p className="text-slate-600">Connect with others who understand your journey</p>
-            </Card>
-
-            <Card className="p-6 border-2 border-orange-200/50 hover:shadow-lg transition-all duration-200">
-              <div className="flex items-center gap-3 mb-4">
-                <Target className="h-6 w-6 text-orange-600" />
-                <h4 className="font-bold text-slate-800">Goal Tracking</h4>
-              </div>
-              <p className="text-slate-600">Celebrate progress and build momentum</p>
-            </Card>
-
-            <Card className="p-6 border-2 border-red-200/50 hover:shadow-lg transition-all duration-200">
-              <div className="flex items-center gap-3 mb-4">
-                <MessageSquare className="h-6 w-6 text-red-600" />
-                <h4 className="font-bold text-slate-800">Expert Guidance</h4>
-              </div>
-              <p className="text-slate-600">Access to professionals when you need them</p>
-            </Card>
-
-            <Card className="p-6 border-2 border-teal-200/50 hover:shadow-lg transition-all duration-200">
-              <div className="flex items-center gap-3 mb-4">
-                <Shield className="h-6 w-6 text-teal-600" />
-                <h4 className="font-bold text-slate-800">Secure & Private</h4>
-              </div>
-              <p className="text-slate-600">Your data is protected with enterprise-grade security</p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 px-6 bg-gradient-to-br from-teal-100/50 via-blue-100/40 to-emerald-100/50">
-        <div className="max-w-4xl mx-auto text-center">
-          <h3 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">
-            Your Journey Starts Today
-          </h3>
-          <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-            Join thousands who've transformed their lives with MyRhythm. 
-            Your personalized path to cognitive wellness awaits.
+        {/* Final CTA */}
+        <div className="text-center bg-gradient-to-r from-teal-500 via-emerald-500 to-blue-500 rounded-2xl text-white p-12">
+          <h2 className="text-4xl font-bold mb-4">
+            Ready to Transform Your Life?
+          </h2>
+          
+          <p className="text-xl mb-8 opacity-90">
+            Join thousands who never miss a commitment again
           </p>
           
-          <Button 
+          <Button
             onClick={handleGetStarted}
             size="lg"
-            className="bg-gradient-to-r from-teal-600 via-blue-600 to-emerald-600 hover:from-teal-700 hover:via-blue-700 hover:to-emerald-700 text-white px-12 py-6 text-xl font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300"
+            className="bg-white text-teal-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold"
           >
-            Begin Your Transformation
-            <ArrowRight className="ml-3 h-6 w-6" />
+            Start Your Free Journey Now
+            <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
-          
-          <div className="flex items-center justify-center gap-6 mt-8 text-sm text-slate-600">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-emerald-500" />
-              <span>Free Assessment</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-emerald-500" />
-              <span>7-Day Trial</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-emerald-500" />
-              <span>Cancel Anytime</span>
-            </div>
-          </div>
         </div>
-      </section>
+      </div>
+
+      {/* Persistent Register Button */}
+      <PersistentRegisterButton />
     </div>
   );
-};
-
-export default OptimizedLanding;
+}

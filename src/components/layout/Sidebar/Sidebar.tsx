@@ -1,103 +1,107 @@
 
-import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { useSidebar } from "./SidebarContext";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 import { 
   Home, 
-  Calendar, 
-  Target, 
-  Heart, 
+  Brain, 
   Users, 
-  BookOpen, 
-  User, 
-  Settings,
-  Brain,
+  Calendar,
   MessageCircle,
-  Gamepad2,
-  TrendingUp,
+  Target,
+  Settings,
+  HelpCircle,
   BarChart3,
-  TestTube,
-  FileText
-} from "lucide-react";
+  CheckSquare
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useSidebar } from './SidebarContext';
 
-const sidebarItems = [
-  { name: "Dashboard", href: "/dashboard", icon: Home },
-  { name: "Calendar", href: "/calendar", icon: Calendar },
-  { name: "Goals", href: "/goals", icon: Target },
-  { name: "Brain Games", href: "/brain-games", icon: Brain },
-  { name: "Mood Tracking", href: "/mood-tracking", icon: Heart },
-  { name: "Gratitude", href: "/gratitude", icon: BookOpen },
-  { name: "Accountability", href: "/accountability", icon: Users },
-  { name: "Community", href: "/community", icon: MessageCircle },
-  { name: "Notes", href: "/notes", icon: BookOpen },
-  { name: "Decision Journal", href: "/decisions", icon: FileText },
-  { name: "Strategy", href: "/strategy", icon: TrendingUp },
-  { name: "Analytics", href: "/analytics", icon: BarChart3 },
-  { name: "Testing", href: "/testing", icon: TestTube },
-  { name: "Profile", href: "/profile", icon: User },
+const navigationItems = [
+  { name: 'Dashboard', href: '/dashboard', icon: Home },
+  { name: 'Memory Bridge', href: '/memory-bridge', icon: Brain },
+  { name: 'Community', href: '/community', icon: Users },
+  { name: 'Calendar', href: '/calendar', icon: Calendar },
+  { name: 'Messages', href: '/messages', icon: MessageCircle },
+  { name: 'PACTs', href: '/pacts', icon: Target },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+  { name: 'Tasks', href: '/tasks', icon: CheckSquare },
+];
+
+const secondaryItems = [
+  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Help', href: '/help', icon: HelpCircle },
 ];
 
 export function Sidebar() {
   const { isCollapsed } = useSidebar();
-  const location = useLocation();
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 z-40 h-screen bg-background border-r transition-all duration-300",
-      isCollapsed ? "w-16" : "w-64"
+      'bg-card border-r border-border transition-all duration-300 flex flex-col',
+      isCollapsed ? 'w-16' : 'w-64'
     )}>
-      <div className="flex h-full flex-col">
-        {/* Logo */}
-        <div className="flex h-16 items-center justify-center border-b px-4">
-          <Link to="/" className="flex items-center space-x-2">
-            <Brain className="h-8 w-8 text-primary" />
-            {!isCollapsed && (
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                MyRhythm
-              </span>
-            )}
-          </Link>
+      {/* Logo/Brand */}
+      <div className="p-4 border-b border-border">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center flex-shrink-0">
+            <Brain className="w-5 h-5 text-primary-foreground" />
+          </div>
+          {!isCollapsed && (
+            <span className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              MyRhythm
+            </span>
+          )}
         </div>
+      </div>
 
-        {/* Navigation */}
-        <nav className="flex-1 space-y-1 p-2">
-          {sidebarItems.map((item) => {
-            const isActive = location.pathname === item.href;
-            const Icon = item.icon;
-            
-            return (
-              <Link
-                key={item.name}
-                to={item.href}
-                className={cn(
-                  "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                  isActive ? "bg-accent text-accent-foreground" : "text-muted-foreground",
-                  isCollapsed ? "justify-center" : "justify-start"
-                )}
-                title={isCollapsed ? item.name : undefined}
-              >
-                <Icon className="h-4 w-4" />
-                {!isCollapsed && <span className="ml-3">{item.name}</span>}
-              </Link>
-            );
-          })}
-        </nav>
+      {/* Main Navigation */}
+      <nav className="flex-1 p-4 space-y-2">
+        {navigationItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.name}
+              to={item.href}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
+                  isActive
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                  isCollapsed && 'justify-center'
+                )
+              }
+            >
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              {!isCollapsed && <span>{item.name}</span>}
+            </NavLink>
+          );
+        })}
+      </nav>
 
-        {/* Footer */}
-        <div className="border-t p-2">
-          <Link
-            to="/settings"
-            className={cn(
-              "flex items-center rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
-              isCollapsed ? "justify-center" : "justify-start"
-            )}
-            title={isCollapsed ? "Settings" : undefined}
-          >
-            <Settings className="h-4 w-4" />
-            {!isCollapsed && <span className="ml-3">Settings</span>}
-          </Link>
-        </div>
+      {/* Secondary Navigation */}
+      <div className="p-4 border-t border-border space-y-2">
+        {secondaryItems.map((item) => {
+          const Icon = item.icon;
+          return (
+            <NavLink
+              key={item.name}
+              to={item.href}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all',
+                  isActive
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+                  isCollapsed && 'justify-center'
+                )
+              }
+            >
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              {!isCollapsed && <span>{item.name}</span>}
+            </NavLink>
+          );
+        })}
       </div>
     </div>
   );
