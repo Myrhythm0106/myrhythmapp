@@ -275,8 +275,13 @@ export function LandingPagePreview() {
               { name: "Family Support", icon: Users, color: "teal" },
               { name: "Progress Tracking", icon: TrendingUp, color: "emerald" }
             ].map((feature, index) => (
-              <Card key={index} className="p-6 text-center hover:shadow-lg transition-all">
-                <div className={`w-16 h-16 bg-gradient-to-br from-${feature.color}-400 to-${feature.color}-600 rounded-2xl flex items-center justify-center mx-auto mb-4`}>
+               <Card key={index} className="p-6 text-center hover:shadow-lg transition-all">
+                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 ${
+                  feature.color === 'purple' ? 'bg-gradient-to-br from-purple-400 to-purple-600' :
+                  feature.color === 'blue' ? 'bg-gradient-to-br from-blue-400 to-blue-600' :
+                  feature.color === 'teal' ? 'bg-gradient-to-br from-teal-400 to-teal-600' :
+                  'bg-gradient-to-br from-emerald-400 to-emerald-600'
+                }`}>
                   <feature.icon className="h-8 w-8 text-white" />
                 </div>
                 <h4 className="font-semibold">{feature.name}</h4>
