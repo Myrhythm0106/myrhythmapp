@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { supabase } from '@/integrations/supabase/client';
@@ -31,7 +32,9 @@ import {
   Repeat,
   Settings,
   Share,
-  Eye
+  Eye,
+  Bell,
+  MessageSquare
 } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday, addMonths, subMonths, parseISO } from 'date-fns';
 import { toast } from 'sonner';
@@ -43,10 +46,18 @@ interface CalendarEvent {
   description?: string;
   date: string;
   time: string;
-  type: 'event' | 'task' | 'appointment' | 'reminder';
+  type: 'event' | 'task' | 'appointment' | 'reminder' | 'pact-action';
   category?: string;
   user_id: string;
   requires_acceptance?: boolean;
+  watchers?: string[];
+  recurring?: {
+    frequency: 'daily' | 'weekly' | 'monthly';
+    interval: number;
+    endDate?: string;
+  };
+  pact_action_id?: string;
+  priority?: number;
 }
 
 interface DailyAction {
@@ -59,23 +70,54 @@ interface DailyAction {
   action_type: string;
   is_daily_win: boolean;
   user_id: string;
+  watchers?: string[];
 }
 
-export function CalendarView() {
+export function EnhancedCalendarView() {
   const { user } = useAuth();
+  const { members } = useSupportCircle();
+  const router = useRouter();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [dailyActions, setDailyActions] = useState<DailyAction[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showAddEvent, setShowAddEvent] = useState(false);
+  const [showWatchersPanel, setShowWatchersPanel] = useState(false);
+  const [selectedEventForWatchers, setSelectedEventForWatchers] = useState<string | null>(null);
   const [newEvent, setNewEvent] = useState({
     title: '',
     description: '',
     time: '',
     type: 'event' as const,
-    category: ''
+    category: '',
+    watchers: [] as string[],
+    isRecurring: false,
+    recurringFrequency: 'weekly' as const,
+    recurringInterval: 1
   });
+
+  // Parse URL parameters for direct navigation
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const dateParam = urlParams.get('date');
+    const actionParam = urlParams.get('action');
+    
+    if (dateParam) {
+      try {
+        const targetDate = parseISO(dateParam);
+        setSelectedDate(targetDate);
+        setCurrentDate(targetDate);
+      } catch (error) {
+        console.error('Invalid date parameter:', dateParam);
+      }
+    }
+    
+    if (actionParam) {
+      // Highlight specific action when coming from PACT reports
+      toast.info('Action highlighted from PACT report');
+    }
+  }, []);
 
   // Fetch calendar data
   useEffect(() => {
@@ -116,11 +158,13 @@ export function CalendarView() {
 
       setEvents((eventsData || []).map(event => ({
         ...event,
-        type: event.type as 'event' | 'task' | 'appointment' | 'reminder'
+        type: event.type as 'event' | 'task' | 'appointment' | 'reminder' | 'pact-action',
+        
       })));
       setDailyActions((actionsData || []).map(action => ({
         ...action,
-        status: action.status as 'pending' | 'completed' | 'missed'
+        status: action.status as 'pending' | 'completed' | 'missed',
+        watchers: action.watchers || []
       })));
     } catch (error) {
       console.error('Error fetching calendar data:', error);
@@ -134,27 +178,78 @@ export function CalendarView() {
     if (!user || !selectedDate || !newEvent.title.trim()) return;
 
     try {
+      const eventData = {
+        user_id: user.id,
+        title: newEvent.title,
+        description: newEvent.description,
+        date: format(selectedDate, 'yyyy-MM-dd'),
+        time: newEvent.time,
+        type: newEvent.type,
+        category: newEvent.category,
+        
+      };
+
+      // Add recurring data if applicable
+      if (newEvent.isRecurring) {
+        (eventData as any).recurring = {
+          frequency: newEvent.recurringFrequency,
+          interval: newEvent.recurringInterval,
+          endDate: null // Could add end date selector
+        };
+      }
+
       const { error } = await supabase
         .from('calendar_events')
-        .insert({
-          user_id: user.id,
-          title: newEvent.title,
-          description: newEvent.description,
-          date: format(selectedDate, 'yyyy-MM-dd'),
-          time: newEvent.time,
-          type: newEvent.type,
-          category: newEvent.category
-        });
+        .insert(eventData);
 
       if (error) throw error;
 
+      // Notify watchers if any are selected
+      if (newEvent.watchers.length > 0) {
+        await notifyWatchers(newEvent.watchers, 'event_created', {
+          eventTitle: newEvent.title,
+          eventDate: format(selectedDate, 'yyyy-MM-dd'),
+          eventTime: newEvent.time
+        });
+      }
+
       toast.success('Event added successfully!');
       setShowAddEvent(false);
-      setNewEvent({ title: '', description: '', time: '', type: 'event', category: '' });
+      setNewEvent({ 
+        title: '', 
+        description: '', 
+        time: '', 
+        type: 'event', 
+        category: '',
+        watchers: [],
+        isRecurring: false,
+        recurringFrequency: 'weekly',
+        recurringInterval: 1
+      });
       fetchCalendarData();
     } catch (error) {
       console.error('Error adding event:', error);
       toast.error('Failed to add event');
+    }
+  };
+
+  const notifyWatchers = async (watcherIds: string[], eventType: string, eventData: any) => {
+    try {
+      const watcherMembers = members.filter(m => watcherIds.includes(m.id));
+      if (watcherMembers.length === 0) return;
+
+      await supabase
+        .from('accountability_alerts')
+        .insert({
+          user_id: user?.id,
+          alert_type: eventType,
+          title: `Calendar Update: ${eventData.eventTitle}`,
+          message: `New ${eventType.replace('_', ' ')} scheduled for ${eventData.eventDate} at ${eventData.eventTime}`,
+          severity: 'info',
+          target_members: watcherMembers.map(m => m.name)
+        });
+    } catch (error) {
+      console.error('Error notifying watchers:', error);
     }
   };
 
@@ -170,11 +265,40 @@ export function CalendarView() {
 
       if (error) throw error;
 
+      // Notify watchers of completion
+      const action = dailyActions.find(a => a.id === actionId);
+      if (action?.watchers && action.watchers.length > 0) {
+        await notifyWatchers(action.watchers, 'action_completed', {
+          eventTitle: action.title,
+          eventDate: action.date,
+          eventTime: action.start_time || 'No time set'
+        });
+      }
+
       toast.success('Action completed!');
       fetchCalendarData();
     } catch (error) {
       console.error('Error completing action:', error);
       toast.error('Failed to complete action');
+    }
+  };
+
+  const handleAddWatchersToEvent = async (eventId: string, watcherIds: string[]) => {
+    try {
+      const { error } = await supabase
+        .from('calendar_events')
+        .update({ watchers: watcherIds })
+        .eq('id', eventId);
+
+      if (error) throw error;
+
+      toast.success('Watchers updated for event');
+      setShowWatchersPanel(false);
+      setSelectedEventForWatchers(null);
+      fetchCalendarData();
+    } catch (error) {
+      console.error('Error updating watchers:', error);
+      toast.error('Failed to update watchers');
     }
   };
 
@@ -190,18 +314,21 @@ export function CalendarView() {
     const totalItems = dayEvents.length + dayActions.length;
     const completedActions = dayActions.filter(a => a.status === 'completed').length;
     const hasDailyWin = dayActions.some(a => a.is_daily_win);
+    const hasPACTActions = dayEvents.some(e => e.type === 'pact-action');
 
     return (
       <div
         className={cn(
           "h-20 p-1 border border-border/20 cursor-pointer hover:bg-muted/30 transition-colors relative",
           isToday(date) && "bg-memory-emerald/10 border-memory-emerald/40",
-          selectedDate && isSameDay(date, selectedDate) && "bg-brain-health/20 border-brain-health"
+          selectedDate && isSameDay(date, selectedDate) && "bg-brain-health/20 border-brain-health",
+          hasPACTActions && "border-l-4 border-l-purple-500"
         )}
         onClick={() => setSelectedDate(date)}
       >
-        <div className="text-sm font-medium mb-1">
-          {format(date, 'd')}
+        <div className="text-sm font-medium mb-1 flex items-center justify-between">
+          <span>{format(date, 'd')}</span>
+          {hasPACTActions && <Target className="w-3 h-3 text-purple-500" />}
         </div>
         
         {/* Progress indicator */}
@@ -221,9 +348,11 @@ export function CalendarView() {
                   key={idx}
                   className={cn(
                     "w-2 h-2 rounded-full",
+                    event.type === 'pact-action' ? 'bg-purple-500' :
                     event.type === 'task' ? 'bg-brain-health' :
                     event.type === 'appointment' ? 'bg-emerald-500' :
-                    event.type === 'reminder' ? 'bg-orange-500' : 'bg-blue-500'
+                    event.type === 'reminder' ? 'bg-orange-500' : 'bg-blue-500',
+                    event.watchers && event.watchers.length > 0 && 'ring-1 ring-offset-1 ring-gray-400'
                   )}
                 />
               ))}
@@ -233,7 +362,8 @@ export function CalendarView() {
                   className={cn(
                     "w-2 h-2 rounded-full",
                     action.status === 'completed' ? 'bg-emerald-500' :
-                    action.status === 'pending' ? 'bg-orange-500' : 'bg-red-500'
+                    action.status === 'pending' ? 'bg-orange-500' : 'bg-red-500',
+                    action.watchers && action.watchers.length > 0 && 'ring-1 ring-offset-1 ring-gray-400'
                   )}
                 />
               ))}
@@ -258,14 +388,14 @@ export function CalendarView() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Enhanced Header */}
       <Card className="border-2 border-memory-emerald/30 shadow-glow bg-gradient-trust">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-3 text-2xl">
               <CalendarIcon className="w-8 h-8 text-memory-emerald" />
               <span className="bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
-                Memory Calendar
+                Enhanced Memory Calendar
               </span>
             </CardTitle>
             
@@ -297,9 +427,9 @@ export function CalendarView() {
                     Add Event
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-w-md">
                   <DialogHeader>
-                    <DialogTitle>Add New Event</DialogTitle>
+                    <DialogTitle>Add Enhanced Event</DialogTitle>
                   </DialogHeader>
                   <div className="space-y-4">
                     <div>
@@ -344,9 +474,81 @@ export function CalendarView() {
                             <SelectItem value="task">Task</SelectItem>
                             <SelectItem value="appointment">Appointment</SelectItem>
                             <SelectItem value="reminder">Reminder</SelectItem>
+                            <SelectItem value="pact-action">PACT Action</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
+                    </div>
+
+                    {/* Support Circle Watchers */}
+                    <div>
+                      <Label>Support Circle Watchers</Label>
+                      <div className="space-y-2 max-h-32 overflow-y-auto">
+                        {members.map((member) => (
+                          <div key={member.id} className="flex items-center justify-between p-2 border rounded">
+                            <div className="flex items-center gap-2">
+                              <Avatar className="w-6 h-6">
+                                <AvatarFallback className="text-xs">
+                                  {member.name.charAt(0)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="text-sm">{member.name}</span>
+                            </div>
+                            <Switch
+                              checked={newEvent.watchers.includes(member.id)}
+                              onCheckedChange={(checked) => {
+                                if (checked) {
+                                  setNewEvent(prev => ({
+                                    ...prev,
+                                    watchers: [...prev.watchers, member.id]
+                                  }));
+                                } else {
+                                  setNewEvent(prev => ({
+                                    ...prev,
+                                    watchers: prev.watchers.filter(id => id !== member.id)
+                                  }));
+                                }
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Recurring Options */}
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={newEvent.isRecurring}
+                          onCheckedChange={(checked) => setNewEvent(prev => ({ ...prev, isRecurring: checked }))}
+                        />
+                        <Label>Recurring Event</Label>
+                      </div>
+                      
+                      {newEvent.isRecurring && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <Select 
+                            value={newEvent.recurringFrequency} 
+                            onValueChange={(value: any) => setNewEvent(prev => ({ ...prev, recurringFrequency: value }))}
+                          >
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="daily">Daily</SelectItem>
+                              <SelectItem value="weekly">Weekly</SelectItem>
+                              <SelectItem value="monthly">Monthly</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Input
+                            type="number"
+                            min="1"
+                            value={newEvent.recurringInterval}
+                            onChange={(e) => setNewEvent(prev => ({ ...prev, recurringInterval: parseInt(e.target.value) || 1 }))}
+                            placeholder="Interval"
+                          />
+                        </div>
+                      )}
                     </div>
                     
                     <div className="flex justify-end gap-2">
@@ -362,11 +564,31 @@ export function CalendarView() {
               </Dialog>
             </div>
           </div>
+          
+          {/* Calendar Legend */}
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+              <span>PACT Actions</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 bg-brain-health rounded-full"></div>
+              <span>Tasks</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 bg-emerald-500 rounded-full"></div>
+              <span>Appointments</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-3 h-3 bg-gray-400 rounded-full ring-1 ring-offset-1 ring-gray-400"></div>
+              <span>Has Watchers</span>
+            </div>
+          </div>
         </CardHeader>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Calendar Grid */}
+        {/* Enhanced Calendar Grid */}
         <Card className="lg:col-span-2">
           <CardContent className="p-6">
             {/* Calendar Header */}
@@ -385,7 +607,7 @@ export function CalendarView() {
           </CardContent>
         </Card>
 
-        {/* Selected Date Details */}
+        {/* Enhanced Selected Date Details */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -402,18 +624,46 @@ export function CalendarView() {
                     <h4 className="font-semibold text-sm text-memory-emerald">Events</h4>
                     {selectedDateEvents.events.map(event => (
                       <div key={event.id} className="p-3 rounded-lg border border-memory-emerald/20 bg-memory-emerald/5">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <div className="font-medium">{event.title}</div>
-                            {event.description && (
-                              <div className="text-sm text-muted-foreground">{event.description}</div>
-                            )}
-                            <div className="flex items-center gap-2 mt-1">
-                              <Clock className="w-3 h-3 text-muted-foreground" />
-                              <span className="text-xs text-muted-foreground">{event.time}</span>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="font-medium">{event.title}</div>
+                              {event.type === 'pact-action' && (
+                                <Badge variant="outline" className="text-xs bg-purple-50 text-purple-600">
+                                  PACT
+                                </Badge>
+                              )}
+                              {event.recurring && (
+                                <Repeat className="w-3 h-3 text-muted-foreground" />
+                              )}
                             </div>
+                            {event.description && (
+                              <div className="text-sm text-muted-foreground mb-1">{event.description}</div>
+                            )}
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <Clock className="w-3 h-3" />
+                              <span>{event.time}</span>
+                              <Badge variant="outline" className="text-xs">{event.type}</Badge>
+                            </div>
+                            {event.watchers && event.watchers.length > 0 && (
+                              <div className="flex items-center gap-1 mt-1">
+                                <Eye className="w-3 h-3 text-muted-foreground" />
+                                <span className="text-xs text-muted-foreground">
+                                  {event.watchers.length} watcher(s)
+                                </span>
+                              </div>
+                            )}
                           </div>
-                          <Badge variant="outline">{event.type}</Badge>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedEventForWatchers(event.id);
+                              setShowWatchersPanel(true);
+                            }}
+                          >
+                            <Users className="w-4 h-4" />
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -428,19 +678,27 @@ export function CalendarView() {
                       <div key={action.id} className="p-3 rounded-lg border border-brain-health/20 bg-brain-health/5">
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 mb-1">
                               <div className="font-medium">{action.title}</div>
                               {action.is_daily_win && <Crown className="w-4 h-4 text-yellow-500" />}
                             </div>
                             {action.description && (
-                              <div className="text-sm text-muted-foreground">{action.description}</div>
+                              <div className="text-sm text-muted-foreground mb-1">{action.description}</div>
                             )}
-                            {action.start_time && (
-                              <div className="flex items-center gap-2 mt-1">
-                                <Clock className="w-3 h-3 text-muted-foreground" />
-                                <span className="text-xs text-muted-foreground">{action.start_time}</span>
-                              </div>
-                            )}
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              {action.start_time && (
+                                <>
+                                  <Clock className="w-3 h-3" />
+                                  <span>{action.start_time}</span>
+                                </>
+                              )}
+                              {action.watchers && action.watchers.length > 0 && (
+                                <>
+                                  <Eye className="w-3 h-3" />
+                                  <span>{action.watchers.length} watcher(s)</span>
+                                </>
+                              )}
+                            </div>
                           </div>
                           <div className="flex items-center gap-2">
                             <Badge 
@@ -467,15 +725,13 @@ export function CalendarView() {
 
                 {selectedDateEvents.events.length === 0 && selectedDateEvents.actions.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
-                    <CalendarIcon className="w-12 h-12 mx-auto mb-4 text-muted-foreground/50" />
-                    <p>No events or tasks for this date</p>
-                    <Button
-                      variant="outline"
-                      size="sm"
+                    <CalendarIcon className="h-12 w-12 mx-auto mb-4 text-memory-emerald/50" />
+                    <p>No events or tasks for this day</p>
+                    <Button 
                       className="mt-4"
+                      variant="outline"
                       onClick={() => setShowAddEvent(true)}
                     >
-                      <Plus className="w-4 h-4 mr-2" />
                       Add Event
                     </Button>
                   </div>
@@ -485,6 +741,50 @@ export function CalendarView() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Watchers Management Dialog */}
+      <Dialog open={showWatchersPanel} onOpenChange={setShowWatchersPanel}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Manage Event Watchers</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Select support circle members who should be notified about this event:
+            </p>
+            {members.map((member) => {
+              const event = selectedEventForWatchers ? events.find(e => e.id === selectedEventForWatchers) : null;
+              const isWatching = event?.watchers?.includes(member.id) || false;
+              
+              return (
+                <div key={member.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="w-8 h-8">
+                      <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium">{member.name}</div>
+                      <div className="text-sm text-muted-foreground">Family Member</div>
+                    </div>
+                  </div>
+                  <Switch
+                    checked={isWatching}
+                    onCheckedChange={(checked) => {
+                      if (selectedEventForWatchers) {
+                        const currentWatchers = event?.watchers || [];
+                        const newWatchers = checked
+                          ? [...currentWatchers, member.id]
+                          : currentWatchers.filter(id => id !== member.id);
+                        handleAddWatchersToEvent(selectedEventForWatchers, newWatchers);
+                      }
+                    }}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

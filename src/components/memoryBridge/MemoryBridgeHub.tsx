@@ -162,7 +162,7 @@ export function MemoryBridgeHub() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Button 
               size="lg" 
               className="h-24 bg-gradient-to-br from-brain-health via-emerald-500 to-clarity-teal-500 hover:from-brain-health/80 hover:via-emerald-500/80 hover:to-clarity-teal-500/80 text-white font-bold shadow-lg transform hover:scale-105 transition-all duration-200"
@@ -195,6 +195,18 @@ export function MemoryBridgeHub() {
               <div className="flex flex-col items-center gap-3">
                 <Target className="h-8 w-8 text-brain-health" />
                 <span className="text-lg font-semibold text-brain-health">PACT Reports</span>
+              </div>
+            </Button>
+
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="h-24 border-3 border-purple-500/60 hover:bg-gradient-to-br hover:from-purple-500/20 hover:to-purple-500/30 hover:border-purple-500 transform hover:scale-105 transition-all duration-200"
+              onClick={() => setActiveTab('support-circle')}
+            >
+              <div className="flex flex-col items-center gap-3">
+                <Users className="h-8 w-8 text-purple-500" />
+                <span className="text-lg font-semibold text-purple-500">Support Circle</span>
               </div>
             </Button>
           </div>
@@ -571,7 +583,7 @@ export function MemoryBridgeHub() {
 
         {/* Main Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 h-12 bg-white/70 dark:bg-gray-900/70 border border-memory-emerald/20">
+          <TabsList className="grid w-full grid-cols-7 h-12 bg-white/70 dark:bg-gray-900/70 border border-memory-emerald/20">
             <TabsTrigger value="dashboard" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Brain className="h-4 w-4" />
               <span className="hidden sm:inline">Dashboard</span>
@@ -588,13 +600,17 @@ export function MemoryBridgeHub() {
               <Target className="h-4 w-4" />
               <span className="hidden sm:inline">Actions</span>
             </TabsTrigger>
-            <TabsTrigger value="recordings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
-              <Archive className="h-4 w-4" />
-              <span className="hidden sm:inline">History</span>
-            </TabsTrigger>
             <TabsTrigger value="pact-reports" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Target className="h-4 w-4" />
               <span className="hidden sm:inline">PACT Reports</span>
+            </TabsTrigger>
+            <TabsTrigger value="support-circle" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+              <Users className="h-4 w-4" />
+              <span className="hidden sm:inline">Support</span>
+            </TabsTrigger>
+            <TabsTrigger value="recordings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+              <Archive className="h-4 w-4" />
+              <span className="hidden sm:inline">History</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Settings className="h-4 w-4" />
@@ -619,7 +635,15 @@ export function MemoryBridgeHub() {
           </TabsContent>
 
           <TabsContent value="pact-reports" className="mt-6">
-            <UnifiedMemoryFlow />
+            <PACTReportsHub />
+          </TabsContent>
+
+          <TabsContent value="support-circle" className="mt-6">
+            <div className="text-center py-8">
+              <Users className="h-16 w-16 mx-auto mb-4 text-purple-500/50" />
+              <h3 className="text-lg font-semibold mb-2">Support Circle Management</h3>
+              <p className="text-muted-foreground">Coming soon - Manage your trusted support network</p>
+            </div>
           </TabsContent>
 
           <TabsContent value="recordings" className="mt-6">
