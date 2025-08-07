@@ -7,10 +7,15 @@ import { UserType } from "@/types/user";
 import { Brain, Heart, Zap } from "lucide-react";
 
 interface UserTypeStepProps {
-  onUserTypeSelect: (userType: UserType) => void;
+  onComplete: (data: { type: UserType }) => void;
+  initialValue?: UserType | null;
 }
 
-export function UserTypeStep({ onUserTypeSelect }: UserTypeStepProps) {
+export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
+  const handleUserTypeSelect = (type: UserType) => {
+    onComplete({ type });
+  };
+
   const userTypes = [
     {
       type: 'cognitive-optimization' as UserType,
@@ -52,11 +57,17 @@ export function UserTypeStep({ onUserTypeSelect }: UserTypeStepProps) {
       <div className="grid gap-6 md:grid-cols-3">
         {userTypes.map((userType) => {
           const Icon = userType.icon;
+          const isSelected = initialValue === userType.type;
+          
           return (
             <Card
               key={userType.type}
-              className="relative overflow-hidden border-2 hover:border-primary/50 transition-all cursor-pointer group hover:shadow-lg"
-              onClick={() => onUserTypeSelect(userType.type)}
+              className={`relative overflow-hidden border-2 transition-all cursor-pointer group hover:shadow-lg ${
+                isSelected 
+                  ? 'border-primary ring-2 ring-primary/20' 
+                  : 'border-border hover:border-primary/50'
+              }`}
+              onClick={() => handleUserTypeSelect(userType.type)}
             >
               <CardHeader className="text-center pb-4">
                 <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${userType.color} flex items-center justify-center mx-auto mb-4`}>
@@ -84,10 +95,14 @@ export function UserTypeStep({ onUserTypeSelect }: UserTypeStepProps) {
                 </div>
 
                 <Button 
-                  className="w-full group-hover:bg-primary group-hover:text-primary-foreground"
-                  variant="outline"
+                  className={`w-full transition-all ${
+                    isSelected 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'group-hover:bg-primary group-hover:text-primary-foreground'
+                  }`}
+                  variant={isSelected ? "default" : "outline"}
                 >
-                  Select This Path
+                  {isSelected ? 'Selected' : 'Select This Path'}
                 </Button>
               </CardContent>
             </Card>

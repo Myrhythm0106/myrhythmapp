@@ -10,7 +10,7 @@ import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import MemoryFirstIndex from "./pages/MemoryFirstIndex";
-import OptimizedLanding from "./pages/OptimizedLanding";
+import { OptimizedLanding } from "./pages/OptimizedLanding";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import { OnboardingPage } from "./pages/OnboardingPage";
