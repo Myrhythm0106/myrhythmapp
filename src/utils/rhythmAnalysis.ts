@@ -33,7 +33,7 @@ export interface AssessmentResult {
   version?: string;
   personalizedData?: {
     insights: Array<{
-      type: 'strength' | 'challenge' | 'opportunity' | 'recommendation';
+      type: 'strength' | 'challenge' | 'opportunity' | 'unique';
       title: string;
       description: string;
       actionable: boolean;
@@ -95,6 +95,12 @@ export interface FocusAreaInfo {
     description: string;
   }>;
   recommendations: string[];
+  // Include all properties from FocusAreaConfig for direct access
+  title: string;
+  description: string;
+  gradient: string;
+  phase: string;
+  keyFeatures: string[];
 }
 
 export const focusAreas: Record<FocusArea, FocusAreaConfig> = {
@@ -304,7 +310,7 @@ export function getCurrentFocusArea(userType?: UserType): FocusArea | null {
     const storedUserData = localStorage.getItem('myrhythm_user_data');
     if (storedUserData) {
       const userData = JSON.parse(storedUserData);
-      userType = userData.type;
+      userType = userData.userType;
     }
   }
   
@@ -313,7 +319,12 @@ export function getCurrentFocusArea(userType?: UserType): FocusArea | null {
   const focusMap: Record<UserType, FocusArea> = {
     'cognitive-optimization': 'memory',
     'empowerment': 'community',
-    'brain-health': 'structure'
+    'brain-health': 'structure',
+    'brain-injury': 'memory',
+    'caregiver': 'emotional',
+    'wellness': 'structure',
+    'medical-professional': 'community',
+    'colleague': 'growth'
   };
   
   return focusMap[userType] || 'memory';
@@ -369,6 +380,12 @@ export function getFocusAreaEvolution(focusAreaId?: string): FocusAreaInfo | nul
       'Track progress consistently',
       'Gradually increase complexity',
       'Share knowledge with others'
-    ]
+    ],
+    // Include properties for direct access
+    title: focusArea.title,
+    description: focusArea.description,
+    gradient: focusArea.gradient,
+    phase: focusArea.phase,
+    keyFeatures: focusArea.keyFeatures
   };
 }

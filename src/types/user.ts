@@ -1,5 +1,5 @@
 
-export type UserType = 'brain-injury' | 'caregiver' | 'cognitive-optimization' | 'wellness' | 'medical-professional' | 'colleague';
+export type UserType = 'cognitive-optimization' | 'empowerment' | 'brain-health' | 'brain-injury' | 'caregiver' | 'wellness' | 'medical-professional' | 'colleague';
 
 export interface UserData {
   userType: UserType;
