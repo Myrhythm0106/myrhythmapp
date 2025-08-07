@@ -14,7 +14,7 @@ import { getCurrentFocusArea } from "@/utils/rhythmAnalysis";
 
 export function NeedToKnowNowView() {
   const userData = useUserData();
-  const currentFocusArea = getCurrentFocusArea();
+  const currentFocusArea = getCurrentFocusArea(userData.type);
   const hasCompletedSetup = localStorage.getItem("myrhythm_initial_setup_complete") === "true";
   
   return (

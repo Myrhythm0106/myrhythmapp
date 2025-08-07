@@ -25,7 +25,7 @@ const focusAreaIcons: Record<FocusArea, React.ComponentType<{ className?: string
 export function DynamicFocusAreaWidget() {
   const navigate = useNavigate();
   const userData = useUserData();
-  const currentFocusArea = getCurrentFocusArea();
+  const currentFocusArea = getCurrentFocusArea(userData.type);
   const [isAssessmentDialogOpen, setIsAssessmentDialogOpen] = useState(false);
   
   const currentAssessment = getCurrentAssessmentResult();

@@ -1,3 +1,4 @@
+
 export interface Participant {
   name: string;
   relationship: string;
@@ -30,6 +31,8 @@ export interface ExtractedAction {
   action_type: 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up';
   assigned_to?: string;
   due_context?: string;
+  due_date?: string;
+  context?: string;
   priority_level: number;
   confidence_score: number;
   relationship_impact?: string;
