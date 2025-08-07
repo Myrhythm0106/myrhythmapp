@@ -18,6 +18,10 @@ export interface Section {
   gradient: string;
 }
 
+export interface AssessmentResponses {
+  [questionId: string]: number;
+}
+
 export const scaleLabels = {
   1: "Never/Not at all",
   2: "Rarely/A little",
