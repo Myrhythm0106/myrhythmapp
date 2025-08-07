@@ -1,6 +1,13 @@
 import { UserType } from "@/types/user";
 import { FocusArea } from "./rhythmAnalysis";
 
+export interface PersonalizedInsight {
+  type: 'strength' | 'challenge' | 'opportunity' | 'unique';
+  title: string;
+  description: string;
+  actionable: boolean;
+}
+
 interface ProfileData {
   primaryChallenge: string;
   energyPeak: string;
@@ -353,4 +360,59 @@ const quickWins: Record<UserType, string> = {
   'wellness': 'Track one wellness metric consistently for a week',
   'medical-professional': 'Use evidence-based cognitive breaks between patients',
   'colleague': 'Share one cognitive wellness tip with a team member'
+};
+
+const focusAreaPhases: Record<UserType, string> = {
+  "brain-injury": "Recovery & Rebuilding",
+  "cognitive-optimization": "Performance Enhancement", 
+  caregiver: "Support & Self-Care",
+  wellness: "Holistic Wellness",
+  "medical-professional": "Professional Development",
+  colleague: "Growth & Learning",
+  empowerment: "Leadership & Impact",
+  "brain-health": "Preventive Wellness"
+};
+
+const focusAreaStrengths: Record<UserType, string> = {
+  "brain-injury": "Your resilience and determination in recovery show incredible strength",
+  "cognitive-optimization": "Your analytical mind and drive for improvement are powerful assets",
+  caregiver: "Your compassion and dedication to helping others is truly inspiring", 
+  wellness: "Your commitment to holistic health creates a strong foundation for growth",
+  "medical-professional": "Your expertise and desire to help others makes you a valuable leader",
+  colleague: "Your collaborative spirit and growth mindset are key strengths",
+  empowerment: "Your natural leadership abilities and vision for positive change are remarkable",
+  "brain-health": "Your proactive approach to brain wellness demonstrates wisdom and foresight"
+};
+
+const focusAreaChallenges: Record<UserType, string> = {
+  "brain-injury": "Navigating cognitive changes while maintaining hope and progress",
+  "cognitive-optimization": "Balancing high performance with sustainable wellness practices",
+  caregiver: "Managing your own needs while caring for others with compassion",
+  wellness: "Integrating multiple wellness practices into a cohesive lifestyle",
+  "medical-professional": "Staying current with best practices while managing professional demands", 
+  colleague: "Developing leadership skills while maintaining collaborative relationships",
+  empowerment: "Channeling your leadership energy effectively without burnout",
+  "brain-health": "Maintaining consistent brain-healthy habits in a busy lifestyle"
+};
+
+const focusAreaOpportunities: Record<UserType, string> = {
+  "brain-injury": "Building new neural pathways and discovering unexpected capabilities",
+  "cognitive-optimization": "Unlocking peak performance through targeted cognitive training",
+  caregiver: "Developing self-care practices that enhance your caregiving abilities",
+  wellness: "Creating a personalized wellness system that fits your unique needs",
+  "medical-professional": "Leveraging your expertise to create innovative patient care approaches",
+  colleague: "Becoming a mentor and leader within your professional community", 
+  empowerment: "Expanding your influence to create positive change at scale",
+  "brain-health": "Becoming a model for others seeking to optimize their cognitive wellness"
+};
+
+const focusAreaRecommendations: Record<UserType, string> = {
+  "brain-injury": "Focus on small, consistent wins while building your support network",
+  "cognitive-optimization": "Implement structured training routines with regular progress tracking",
+  caregiver: "Establish boundaries and self-care rituals to sustain your caring capacity",
+  wellness: "Start with foundational practices and gradually build your wellness toolkit",
+  "medical-professional": "Connect with peers and continue learning through professional development",
+  colleague: "Seek mentorship opportunities and share your knowledge with others",
+  empowerment: "Develop strategic plans for your vision while building coalition support",
+  "brain-health": "Create consistent daily practices supported by regular health monitoring"
 };

@@ -1,15 +1,11 @@
+import React, { ForwardRefExoticComponent, RefAttributes } from "react";
+import { LucideProps, Brain, Heart, Users, Target, Calendar as CalendarIcon, TrendingUp, Stethoscope, UserCheck } from "lucide-react";
 import { UserType } from "@/types/user";
-import { 
-  Brain, 
-  Heart, 
-  Zap, 
-  Target, 
-  Users, 
-  Shield,
-  TrendingUp,
-  Lightbulb
-} from "lucide-react";
-import { ForwardRefExoticComponent } from "react";
+
+export interface Question {
+  id: string;
+  text: string;
+}
 
 export interface Section {
   id: number;
@@ -17,462 +13,258 @@ export interface Section {
   phase: string;
   phaseDescription: string;
   narrative: string;
-  questions: {
-    id: string;
-    text: string;
-  }[];
-  icon: ForwardRefExoticComponent<any>;
+  questions: Question[];
+  icon: ForwardRefExoticComponent<LucideProps & RefAttributes<SVGSVGElement>>;
   gradient: string;
 }
 
-export interface AssessmentResponses {
-  [questionId: string]: any;
-}
-
-export const responseOptions = [
-  { label: 'Not at all', value: 1 },
-  { label: 'Slightly', value: 2 },
-  { label: 'Moderately', value: 3 },
-  { label: 'Quite a bit', value: 4 },
-  { label: 'Very much', value: 5 },
-];
+export const scaleLabels = {
+  1: "Never/Not at all",
+  2: "Rarely/A little",
+  3: "Sometimes/Moderately", 
+  4: "Often/Quite a bit",
+  5: "Always/Extremely"
+};
 
 export const assessmentSections: Record<UserType, Section[]> = {
   "brain-injury": [
     {
       id: 1,
       title: "Cognitive Foundation",
-      phase: "Rebuilding",
-      phaseDescription: "Establishing basic cognitive functions",
-      narrative: "Let's start by assessing your current cognitive abilities and identifying areas for improvement.",
+      phase: "Recovery & Rebuilding",
+      phaseDescription: "Assessing core cognitive functions after brain injury",
+      narrative: "Your recovery journey begins with understanding your current cognitive abilities.",
       questions: [
-        {
-          id: "bi_memory",
-          text: "How would you rate your short-term memory?"
-        },
-        {
-          id: "bi_focus",
-          text: "How well can you concentrate on tasks?"
-        },
-        {
-          id: "bi_problem_solving",
-          text: "How easily can you solve simple problems?"
-        }
+        { id: "bi_1_1", text: "I can remember important details from recent conversations" },
+        { id: "bi_1_2", text: "I can focus on tasks without getting easily distracted" },
+        { id: "bi_1_3", text: "I can plan and organize my daily activities effectively" }
       ],
       icon: Brain,
-      gradient: "from-blue-500 to-indigo-600"
+      gradient: "from-blue-500 to-indigo-500"
     },
     {
       id: 2,
       title: "Emotional Resilience",
-      phase: "Regulation",
-      phaseDescription: "Developing emotional coping strategies",
-      narrative: "Emotional regulation is key to recovery. Let's explore your emotional wellbeing.",
+      phase: "Emotional Regulation",
+      phaseDescription: "Building emotional strength and coping mechanisms",
+      narrative: "Emotional resilience is key to navigating the challenges of brain injury recovery.",
       questions: [
-        {
-          id: "bi_mood",
-          text: "How often do you experience mood swings?"
-        },
-        {
-          id: "bi_anxiety",
-          text: "How frequently do you feel anxious or stressed?"
-        },
-        {
-          id: "bi_frustration",
-          text: "How easily do you get frustrated?"
-        }
+        { id: "bi_2_1", text: "I feel emotionally stable and balanced throughout the day" },
+        { id: "bi_2_2", text: "I can manage feelings of frustration or sadness effectively" },
+        { id: "bi_2_3", text: "I maintain a positive outlook despite challenges" }
       ],
       icon: Heart,
-      gradient: "from-purple-500 to-pink-600"
-    },
-    {
-      id: 3,
-      title: "Physical Wellbeing",
-      phase: "Rehabilitation",
-      phaseDescription: "Integrating physical activity for cognitive benefits",
-      narrative: "Physical health supports cognitive recovery. Let's assess your physical activity levels.",
-      questions: [
-        {
-          id: "bi_exercise",
-          text: "How often do you engage in physical exercise?"
-        },
-        {
-          id: "bi_fatigue",
-          text: "How often do you feel fatigued?"
-        },
-        {
-          id: "bi_sleep",
-          text: "How would you rate your sleep quality?"
-        }
-      ],
-      icon: Zap,
-      gradient: "from-green-500 to-emerald-600"
+      gradient: "from-purple-500 to-pink-500"
     }
   ],
-  
   "cognitive-optimization": [
     {
       id: 1,
       title: "Cognitive Performance",
-      phase: "Assessment",
-      phaseDescription: "Evaluating current cognitive strengths",
-      narrative: "Let's assess your cognitive performance and identify areas for optimization.",
+      phase: "Performance Enhancement",
+      phaseDescription: "Assessing cognitive strengths and areas for improvement",
+      narrative: "Your journey to peak cognitive performance starts with understanding your current abilities.",
       questions: [
-        {
-          id: "cp_focus",
-          text: "How well can you maintain focus during tasks?"
-        },
-        {
-          id: "cp_memory",
-          text: "How would you rate your memory recall?"
-        },
-        {
-          id: "cp_problem_solving",
-          text: "How effective are you at solving complex problems?"
-        }
+        { id: "co_1_1", text: "I can quickly process and analyze complex information" },
+        { id: "co_1_2", text: "I can easily adapt to new situations and challenges" },
+        { id: "co_1_3", text: "I can maintain focus and concentration for extended periods" }
       ],
       icon: Brain,
-      gradient: "from-blue-500 to-indigo-600"
+      gradient: "from-green-500 to-teal-500"
     },
     {
       id: 2,
-      title: "Lifestyle Integration",
-      phase: "Optimization",
-      phaseDescription: "Integrating habits for cognitive enhancement",
-      narrative: "Your lifestyle choices impact your cognitive abilities. Let's explore your daily habits.",
+      title: "Strategic Thinking",
+      phase: "Strategic Planning",
+      phaseDescription: "Developing strategic thinking and problem-solving skills",
+      narrative: "Strategic thinking is essential for achieving your cognitive goals.",
       questions: [
-        {
-          id: "cp_sleep",
-          text: "How consistently do you get quality sleep?"
-        },
-        {
-          id: "cp_nutrition",
-          text: "How healthy is your diet?"
-        },
-        {
-          id: "cp_stress",
-          text: "How well do you manage stress?"
-        }
+        { id: "co_2_1", text: "I can effectively plan and execute complex projects" },
+        { id: "co_2_2", text: "I can identify and solve problems creatively" },
+        { id: "co_2_3", text: "I can make informed decisions under pressure" }
       ],
-      icon: Heart,
-      gradient: "from-purple-500 to-pink-600"
-    },
-    {
-      id: 3,
-      title: "Strategic Planning",
-      phase: "Enhancement",
-      phaseDescription: "Developing strategies for cognitive growth",
-      narrative: "Strategic planning can enhance cognitive performance. Let's assess your planning skills.",
-      questions: [
-        {
-          id: "cp_goal_setting",
-          text: "How effectively do you set and achieve goals?"
-        },
-        {
-          id: "cp_time_management",
-          text: "How well do you manage your time?"
-        },
-        {
-          id: "cp_learning",
-          text: "How open are you to learning new things?"
-        }
-      ],
-      icon: TrendingUp,
-      gradient: "from-orange-500 to-red-600"
+      icon: Target,
+      gradient: "from-orange-500 to-red-500"
     }
   ],
-  
   "empowerment": [
     {
       id: 1,
       title: "Personal Empowerment Foundation",
       phase: "Self-Discovery",
-      phaseDescription: "Understanding your inner strength and potential",
-      narrative: "Let's explore your natural leadership qualities and personal power.",
+      phaseDescription: "Understanding your unique strengths and empowerment style",
+      narrative: "Your empowerment journey begins with understanding your natural strengths and leadership style.",
       questions: [
-        {
-          id: "emp_confidence",
-          text: "How confident do you feel in making important decisions for yourself?"
-        },
-        {
-          id: "emp_advocacy",
-          text: "How comfortable are you advocating for your needs and beliefs?"
-        },
-        {
-          id: "emp_leadership",
-          text: "How often do others look to you for guidance or leadership?"
-        }
+        { id: "emp_1_1", text: "I feel confident making decisions that affect my daily life" },
+        { id: "emp_1_2", text: "I believe I have valuable insights to share with others" },
+        { id: "emp_1_3", text: "I take initiative when I see opportunities for improvement" }
       ],
-      icon: Lightbulb,
-      gradient: "from-yellow-500 to-orange-600"
+      icon: Target,
+      gradient: "from-purple-500 to-pink-500"
     },
     {
       id: 2,
-      title: "Goal Achievement & Vision",
-      phase: "Vision Building",
-      phaseDescription: "Creating and pursuing meaningful goals",
-      narrative: "Your ability to set and achieve meaningful goals shapes your empowered life.",
+      title: "Community Leadership",
+      phase: "Connection Building",
+      phaseDescription: "Developing your ability to inspire and lead others",
+      narrative: "True empowerment grows when we lift others up alongside ourselves.",
       questions: [
-        {
-          id: "emp_goals",
-          text: "How clear are you about your long-term personal goals?"
-        },
-        {
-          id: "emp_action",
-          text: "How consistently do you take action toward your important goals?"
-        },
-        {
-          id: "emp_obstacles",
-          text: "How effectively do you overcome obstacles and setbacks?"
-        }
+        { id: "emp_2_1", text: "I enjoy helping others discover their potential" },
+        { id: "emp_2_2", text: "People often come to me for advice or support" },
+        { id: "emp_2_3", text: "I can effectively communicate my vision to others" }
       ],
-      icon: Target,
-      gradient: "from-orange-500 to-red-600"
+      icon: Users,
+      gradient: "from-blue-500 to-purple-500"
     }
   ],
-  
   "brain-health": [
     {
       id: 1,
       title: "Cognitive Wellness Foundation",
       phase: "Brain Health Assessment",
-      phaseDescription: "Understanding your cognitive wellness baseline",
-      narrative: "Let's assess your current cognitive health and identify areas for optimization.",
+      phaseDescription: "Understanding your current cognitive health and wellness patterns",
+      narrative: "Your brain health journey starts with understanding your cognitive patterns and wellness habits.",
       questions: [
-        {
-          id: "bh_memory",
-          text: "How would you rate your day-to-day memory function?"
-        },
-        {
-          id: "bh_focus",
-          text: "How well can you maintain focus during important tasks?"
-        },
-        {
-          id: "bh_mental_energy",
-          text: "How consistent is your mental energy throughout the day?"
-        }
+        { id: "bh_1_1", text: "I maintain consistent sleep patterns that support my cognitive health" },
+        { id: "bh_1_2", text: "I engage in activities that challenge my brain regularly" },
+        { id: "bh_1_3", text: "I feel mentally sharp and focused most days" }
       ],
       icon: Brain,
-      gradient: "from-blue-500 to-indigo-600"
+      gradient: "from-green-500 to-teal-500"
     },
     {
       id: 2,
-      title: "Lifestyle & Brain Health",
-      phase: "Wellness Integration",
-      phaseDescription: "Connecting lifestyle choices to cognitive wellness",
-      narrative: "Your daily habits significantly impact your brain health and cognitive performance.",
+      title: "Lifestyle Integration",
+      phase: "Holistic Wellness",
+      phaseDescription: "Integrating brain-healthy practices into daily life",
+      narrative: "Sustainable brain health comes from consistent, integrated wellness practices.",
       questions: [
-        {
-          id: "bh_sleep",
-          text: "How consistently do you get quality, restorative sleep?"
-        },
-        {
-          id: "bh_exercise",
-          text: "How regularly do you engage in physical exercise or movement?"
-        },
-        {
-          id: "bh_stress",
-          text: "How well do you manage daily stress and maintain mental calm?"
-        }
+        { id: "bh_2_1", text: "I incorporate physical exercise that benefits my brain health" },
+        { id: "bh_2_2", text: "I practice stress management techniques regularly" },
+        { id: "bh_2_3", text: "I maintain social connections that support my mental wellness" }
       ],
       icon: Heart,
-      gradient: "from-green-500 to-emerald-600"
+      gradient: "from-teal-500 to-blue-500"
     }
   ],
-  
-  "caregiver": [
+  caregiver: [
     {
       id: 1,
-      title: "Emotional Support",
-      phase: "Self-Care",
-      phaseDescription: "Assessing your emotional wellbeing as a caregiver",
-      narrative: "Let's explore your emotional state and coping mechanisms.",
+      title: "Caregiver Wellbeing",
+      phase: "Support & Self-Care",
+      phaseDescription: "Assessing your wellbeing as a caregiver",
+      narrative: "Your wellbeing is essential to providing effective care.",
       questions: [
-        {
-          id: "cg_stress",
-          text: "How often do you feel overwhelmed by caregiving responsibilities?"
-        },
-        {
-          id: "cg_burnout",
-          text: "How frequently do you experience burnout?"
-        },
-        {
-          id: "cg_support",
-          text: "How supported do you feel by others?"
-        }
+        { id: "cg_1_1", text: "I feel supported in my role as a caregiver" },
+        { id: "cg_1_2", text: "I have time for my own needs and interests" },
+        { id: "cg_1_3", text: "I can manage stress and prevent burnout" }
       ],
       icon: Heart,
-      gradient: "from-purple-500 to-pink-600"
+      gradient: "from-pink-500 to-purple-500"
     },
     {
       id: 2,
-      title: "Time Management",
-      phase: "Balance",
-      phaseDescription: "Balancing caregiving with personal needs",
-      narrative: "Effective time management is crucial for caregivers. Let's assess your time management skills.",
+      title: "Effective Communication",
+      phase: "Communication Strategies",
+      phaseDescription: "Improving communication with the person you care for",
+      narrative: "Effective communication is key to providing quality care.",
       questions: [
-        {
-          id: "cg_time",
-          text: "How well do you manage your time?"
-        },
-        {
-          id: "cg_breaks",
-          text: "How often do you take breaks from caregiving?"
-        },
-        {
-          id: "cg_priorities",
-          text: "How easily can you prioritize tasks?"
-        }
+        { id: "cg_2_1", text: "I can communicate effectively with the person I care for" },
+        { id: "cg_2_2", text: "I can understand and respond to their needs" },
+        { id: "cg_2_3", text: "I can resolve conflicts peacefully" }
       ],
-      icon: Calendar,
-      gradient: "from-orange-500 to-red-600"
+      icon: Users,
+      gradient: "from-teal-500 to-green-500"
     }
   ],
-  
-  "wellness": [
+  wellness: [
     {
       id: 1,
-      title: "Lifestyle Assessment",
-      phase: "Evaluation",
-      phaseDescription: "Evaluating current lifestyle habits",
-      narrative: "Let's assess your current lifestyle and identify areas for improvement.",
+      title: "Holistic Wellness",
+      phase: "Holistic Wellness",
+      phaseDescription: "Assessing your overall wellness and lifestyle",
+      narrative: "Your overall wellness is key to a fulfilling life.",
       questions: [
-        {
-          id: "wl_nutrition",
-          text: "How healthy is your diet?"
-        },
-        {
-          id: "wl_exercise",
-          text: "How often do you exercise?"
-        },
-        {
-          id: "wl_sleep",
-          text: "How would you rate your sleep quality?"
-        }
+        { id: "w_1_1", text: "I maintain a healthy diet and exercise regularly" },
+        { id: "w_1_2", text: "I get enough sleep and manage stress effectively" },
+        { id: "w_1_3", text: "I have strong social connections and support networks" }
       ],
-      icon: Zap,
-      gradient: "from-green-500 to-emerald-600"
+      icon: Heart,
+      gradient: "from-pink-500 to-purple-500"
     },
     {
       id: 2,
-      title: "Mindfulness Practices",
-      phase: "Integration",
-      phaseDescription: "Integrating mindfulness into daily life",
-      narrative: "Mindfulness can enhance overall wellbeing. Let's explore your mindfulness practices.",
+      title: "Mindfulness & Reflection",
+      phase: "Mindfulness Practices",
+      phaseDescription: "Practicing mindfulness and self-reflection",
+      narrative: "Mindfulness and self-reflection are essential for personal growth.",
       questions: [
-        {
-          id: "wl_meditation",
-          text: "How often do you meditate?"
-        },
-        {
-          id: "wl_stress",
-          text: "How well do you manage stress?"
-        },
-        {
-          id: "wl_relaxation",
-          text: "How often do you engage in relaxation techniques?"
-        }
+        { id: "w_2_1", text: "I practice mindfulness and meditation regularly" },
+        { id: "w_2_2", text: "I reflect on my experiences and learn from them" },
+        { id: "w_2_3", text: "I set meaningful goals and work towards them" }
       ],
-      icon: Heart,
-      gradient: "from-purple-500 to-pink-600"
+      icon: TrendingUp,
+      gradient: "from-teal-500 to-green-500"
     }
   ],
-  
   "medical-professional": [
     {
       id: 1,
-      title: "Work-Life Balance",
-      phase: "Assessment",
-      phaseDescription: "Evaluating work-life balance",
-      narrative: "Let's assess your work-life balance and identify areas for improvement.",
+      title: "Professional Development",
+      phase: "Professional Development",
+      phaseDescription: "Assessing your professional development and expertise",
+      narrative: "Your professional development is key to providing quality care.",
       questions: [
-        {
-          id: "mp_workload",
-          text: "How manageable is your workload?"
-        },
-        {
-          id: "mp_stress",
-          text: "How often do you feel stressed at work?"
-        },
-        {
-          id: "mp_breaks",
-          text: "How often do you take breaks during work?"
-        }
+        { id: "mp_1_1", text: "I stay up-to-date with the latest medical research" },
+        { id: "mp_1_2", text: "I attend conferences and workshops regularly" },
+        { id: "mp_1_3", text: "I seek mentorship and guidance from experienced colleagues" }
       ],
-      icon: Shield,
-      gradient: "from-teal-500 to-cyan-600"
+      icon: Stethoscope,
+      gradient: "from-blue-500 to-indigo-500"
     },
     {
       id: 2,
-      title: "Cognitive Demands",
-      phase: "Optimization",
-      phaseDescription: "Optimizing cognitive performance in clinical settings",
-      narrative: "Your cognitive abilities are crucial in clinical settings. Let's explore your cognitive demands.",
+      title: "Patient Care",
+      phase: "Patient Care Strategies",
+      phaseDescription: "Improving patient care and communication",
+      narrative: "Effective patient care is essential to your practice.",
       questions: [
-        {
-          id: "mp_focus",
-          text: "How well can you maintain focus during complex tasks?"
-        },
-        {
-          id: "mp_memory",
-          text: "How reliable is your memory recall?"
-        },
-        {
-          id: "mp_decision_making",
-          text: "How effective are you at making quick decisions?"
-        }
+        { id: "mp_2_1", text: "I communicate effectively with my patients" },
+        { id: "mp_2_2", text: "I understand and respond to their needs" },
+        { id: "mp_2_3", text: "I provide compassionate and empathetic care" }
       ],
-      icon: Brain,
-      gradient: "from-blue-500 to-indigo-600"
+      icon: UserCheck,
+      gradient: "from-green-500 to-teal-500"
     }
   ],
-  
-  "colleague": [
+  colleague: [
     {
       id: 1,
-      title: "Team Collaboration",
-      phase: "Assessment",
-      phaseDescription: "Evaluating team collaboration skills",
-      narrative: "Let's assess your team collaboration skills and identify areas for improvement.",
+      title: "Collaboration & Teamwork",
+      phase: "Growth & Learning",
+      phaseDescription: "Assessing your collaboration and teamwork skills",
+      narrative: "Your collaboration and teamwork skills are essential to your success.",
       questions: [
-        {
-          id: "cl_communication",
-          text: "How effectively do you communicate with team members?"
-        },
-        {
-          id: "cl_conflict_resolution",
-          text: "How well do you resolve conflicts within the team?"
-        },
-        {
-          id: "cl_support",
-          text: "How supportive are you of your colleagues?"
-        }
+        { id: "c_1_1", text: "I collaborate effectively with my colleagues" },
+        { id: "c_1_2", text: "I contribute to a positive team environment" },
+        { id: "c_1_3", text: "I communicate effectively with my team members" }
       ],
       icon: Users,
-      gradient: "from-teal-500 to-cyan-600"
+      gradient: "from-blue-500 to-indigo-500"
     },
     {
       id: 2,
-      title: "Innovation & Creativity",
-      phase: "Enhancement",
-      phaseDescription: "Enhancing innovation and creativity in the workplace",
-      narrative: "Innovation and creativity are crucial for workplace success. Let's explore your creative abilities.",
+      title: "Personal Growth",
+      phase: "Personal Development",
+      phaseDescription: "Assessing your personal growth and development",
+      narrative: "Your personal growth is key to your success.",
       questions: [
-        {
-          id: "cl_ideas",
-          text: "How often do you generate new ideas?"
-        },
-        {
-          id: "cl_problem_solving",
-          text: "How creative are you at solving problems?"
-        },
-        {
-          id: "cl_openness",
-          text: "How open are you to new perspectives?"
-        }
+        { id: "c_2_1", text: "I seek opportunities for personal growth and development" },
+        { id: "c_2_2", text: "I learn from my mistakes and challenges" },
+        { id: "c_2_3", text: "I set meaningful goals and work towards them" }
       ],
       icon: TrendingUp,
-      gradient: "from-orange-500 to-red-600"
+      gradient: "from-green-500 to-teal-500"
     }
   ]
 };
