@@ -19,11 +19,13 @@ import { toast } from 'sonner';
 interface SeniorRecordingControlsProps {
   onRecordingComplete: (audioBlob: Blob) => void;
   onSavedRecording?: (recording: any) => void;
+  onInControlExtracted?: (items: any[]) => void;
 }
 
 export function SeniorRecordingControls({ 
   onRecordingComplete, 
-  onSavedRecording 
+  onSavedRecording,
+  onInControlExtracted 
 }: SeniorRecordingControlsProps) {
   const {
     isRecording,

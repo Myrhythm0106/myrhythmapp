@@ -284,7 +284,21 @@ export function SeniorMemoryBridge() {
                   Complete Life Management System
                 </p>
                 
-                <SeniorRecordingControls onRecordingComplete={handleRecordingComplete} onSavedRecording={handleSavedRecording} />
+                <SeniorRecordingControls 
+                  onRecordingComplete={handleRecordingComplete} 
+                  onSavedRecording={handleSavedRecording}
+                  onInControlExtracted={(items) => {
+                    setActiveTab('incontrol');
+                    toast.success(`🎉 ${items.length} InControl items added to your log!`, {
+                      duration: 6000,
+                      style: {
+                        fontSize: `${fontSize}px`,
+                        background: 'linear-gradient(135deg, hsl(var(--brain-health)), hsl(var(--clarity-teal)))',
+                        color: 'white'
+                      }
+                    });
+                  }}
+                />
               </div>
             </CardContent>
           </Card>}

@@ -59,30 +59,33 @@ serve(async (req) => {
     // Step 2: Extract actions and context using GPT-4o
     console.log('Starting action extraction...');
     
-    const systemPrompt = `You are a Memory Bridge AI specialized in helping people with memory challenges. Analyze this conversation transcript and extract:
+    const systemPrompt = `You are an InControl Life Management AI specialized in helping people with memory challenges organize their conversations. Analyze this conversation transcript and extract items using the InControl framework:
 
-1. **Commitments & Promises**: Any agreements, commitments, or promises made
-2. **Action Items**: Tasks or things that need to be done
-3. **Follow-ups**: Things to check on or revisit later
-4. **Relationship Context**: Emotional stakes, why things matter, relationship dynamics
-5. **Intent Behind**: The underlying motivations and reasons
+**I - Intentions**: What is the primary purpose or goal of the conversation or meeting?
+**N - Next Steps**: What actions need to be taken as a result of the discussion?
+**C - Commitments**: Who is responsible for what? Clear assignments and accountability.
+**O - Outcomes**: What was the result or conclusion? What decisions were made?
+**N - Notes**: Any other relevant details, context, or observations.
+**T - Timelines**: What are the deadlines or timeframes for next steps and commitments?
+**R - Resources**: What tools, people, or information are needed to complete next steps?
+**O - Obstacles**: What potential challenges or roadblocks were identified?
+**L - Learning**: What did you learn from the conversation?
 
-For each item found, provide:
+For each InControl item found, provide:
+- Clear categorization (intentions, next_steps, commitments, outcomes, notes, timelines, resources, obstacles, learning)
 - The exact text from conversation
-- Who is responsible
-- When it should happen (if mentioned)
-- Why it matters emotionally/relationally
+- Who is responsible (if applicable)
 - Priority level (1-5)
 - Confidence score (0-1)
 
 Return response as JSON with this structure:
 {
-  "actions": [
+  "incontrol_items": [
     {
-      "action_text": "exact commitment or task",
-      "action_type": "commitment|promise|task|reminder|follow_up",
-      "assigned_to": "who is responsible",
-      "due_context": "when this should happen",
+      "item_text": "exact text from conversation",
+      "incontrol_type": "intentions|next_steps|commitments|outcomes|notes|timelines|resources|obstacles|learning",
+      "assigned_to": "who is responsible (if applicable)",
+      "due_context": "when this should happen (if mentioned)",
       "priority_level": 1-5,
       "confidence_score": 0.0-1.0,
       "relationship_impact": "how this affects relationships",
@@ -93,7 +96,7 @@ Return response as JSON with this structure:
     }
   ],
   "conversation_summary": "overall summary focusing on relationship dynamics and emotional context",
-  "key_insights": "important patterns or themes for memory assistance"
+  "key_insights": "important patterns or themes for life management"
 }`;
 
     const analysisResponse = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -127,25 +130,35 @@ Return response as JSON with this structure:
       extractedData = { actions: [], conversation_summary: analysis.choices[0].message.content, key_insights: "" };
     }
 
-    console.log('Extracted actions:', extractedData.actions?.length || 0);
+    console.log('Extracted InControl items:', extractedData.incontrol_items?.length || 0);
 
-    // Step 3: Store extracted actions in database
-    if (extractedData.actions && extractedData.actions.length > 0) {
-      const actionsToInsert = extractedData.actions.map((action: any) => ({
+    // Step 3: Store extracted InControl items in database
+    if (extractedData.incontrol_items && extractedData.incontrol_items.length > 0) {
+      const actionsToInsert = extractedData.incontrol_items.map((item: any) => ({
         user_id: userId,
         meeting_recording_id: meetingId,
-        action_text: action.action_text,
-        action_type: action.action_type || 'commitment',
-        assigned_to: action.assigned_to,
-        due_context: action.due_context,
-        priority_level: action.priority_level || 3,
-        confidence_score: action.confidence_score || 0.5,
-        relationship_impact: action.relationship_impact,
-        emotional_stakes: action.emotional_stakes,
-        intent_behind: action.intent_behind,
-        transcript_excerpt: action.transcript_excerpt,
-        timestamp_in_recording: action.timestamp_seconds || 0,
-        status: 'pending'
+        action_text: item.item_text,
+        action_type: item.incontrol_type || 'notes',
+        assigned_to: item.assigned_to,
+        due_context: item.due_context,
+        priority_level: item.priority_level || 3,
+        confidence_score: item.confidence_score || 0.5,
+        relationship_impact: item.relationship_impact,
+        emotional_stakes: item.emotional_stakes,
+        intent_behind: item.intent_behind,
+        transcript_excerpt: item.transcript_excerpt,
+        timestamp_in_recording: item.timestamp_seconds || 0,
+        status: 'pending',
+        // InControl specific fields
+        intentions: item.incontrol_type === 'intentions' ? item.item_text : null,
+        next_steps: item.incontrol_type === 'next_steps' ? item.item_text : null,
+        commitments: item.incontrol_type === 'commitments' ? item.item_text : null,
+        outcomes: item.incontrol_type === 'outcomes' ? item.item_text : null,
+        notes: item.incontrol_type === 'notes' ? item.item_text : null,
+        timelines: item.incontrol_type === 'timelines' ? item.item_text : null,
+        resources: item.incontrol_type === 'resources' ? item.item_text : null,
+        obstacles: item.incontrol_type === 'obstacles' ? item.item_text : null,
+        learning: item.incontrol_type === 'learning' ? item.item_text : null
       }));
 
       const { error: insertError } = await supabase
@@ -176,7 +189,7 @@ Return response as JSON with this structure:
     return new Response(JSON.stringify({
       success: true,
       transcript: transcription.text,
-      actions_found: extractedData.actions?.length || 0,
+      incontrol_items_found: extractedData.incontrol_items?.length || 0,
       summary: extractedData.conversation_summary,
       insights: extractedData.key_insights
     }), {

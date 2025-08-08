@@ -7,16 +7,20 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Mic, Square, Save, Loader2 } from 'lucide-react';
+import { Mic, Square, Save, Loader2, Brain, Target } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
+import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { InControlExtractionDialog } from './InControlExtractionDialog';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface VoiceRecorderProps {
   defaultCategory?: string;
   onSaved?: (recording: any) => void;
+  onInControlExtracted?: (items: any[]) => void;
 }
 
-export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRecorderProps) {
+export function VoiceRecorder({ defaultCategory = 'general', onSaved, onInControlExtracted }: VoiceRecorderProps) {
   const {
     isRecording,
     isProcessing,
@@ -25,12 +29,22 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
     saveRecording
   } = useVoiceRecorder();
 
+  const {
+    extractedActions,
+    startMeetingRecording,
+    stopMeetingRecording
+  } = useMemoryBridge();
+
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState<string>(defaultCategory);
   const [shareWithHealthcare, setShareWithHealthcare] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
+  const [savedRecording, setSavedRecording] = useState<any>(null);
+  const [showExtractionDialog, setShowExtractionDialog] = useState(false);
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractionStage, setExtractionStage] = useState<'transcribing' | 'analyzing' | 'extracting' | 'categorizing' | 'complete'>('transcribing');
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -68,13 +82,69 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
     );
 
     if (result) {
-      // Reset form
-      setAudioBlob(null);
-      setTitle('');
-      setDescription('');
-      setShareWithHealthcare(false);
+      setSavedRecording(result);
       onSaved?.(result);
+      
+      toast.success('Recording saved successfully!', {
+        description: 'You can now extract InControl items from this recording.',
+        action: {
+          label: 'Extract Now',
+          onClick: () => handleExtractInControl()
+        }
+      });
     }
+  };
+
+  const handleExtractInControl = async () => {
+    if (!audioBlob || !savedRecording) return;
+
+    setIsExtracting(true);
+    setShowExtractionDialog(true);
+    setExtractionStage('transcribing');
+
+    try {
+      // Create a meeting setup for extraction
+      const setupData = {
+        title: title || 'InControl Recording',
+        participants: [{ name: 'Me', relationship: 'self' }],
+        meetingType: 'informal' as const
+      };
+
+      // Start meeting recording
+      const meetingRecord = await startMeetingRecording(setupData, savedRecording.id);
+      
+      if (meetingRecord) {
+        setExtractionStage('analyzing');
+        
+        // Process the recording
+        await stopMeetingRecording(audioBlob);
+        
+        setExtractionStage('complete');
+        setIsExtracting(false);
+        
+        toast.success('InControl items extracted successfully!');
+      }
+    } catch (error) {
+      console.error('Error extracting InControl items:', error);
+      setIsExtracting(false);
+      toast.error('Failed to extract InControl items. Please try again.');
+    }
+  };
+
+  const handleConfirmExtraction = () => {
+    setShowExtractionDialog(false);
+    onInControlExtracted?.(extractedActions);
+    
+    // Reset form after successful extraction
+    setAudioBlob(null);
+    setTitle('');
+    setDescription('');
+    setShareWithHealthcare(false);
+    setSavedRecording(null);
+    
+    toast.success('InControl items added to your log!', {
+      description: `Added ${extractedActions.length} items to your InControl Log.`
+    });
   };
 
   const formatDuration = (seconds: number) => {
@@ -194,25 +264,56 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
               </Label>
             </div>
 
-            <Button
-              onClick={handleSave}
-              disabled={!title.trim() || isProcessing}
-              className="w-full"
-            >
-              {isProcessing ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Recording
-                </>
+            <div className="space-y-3">
+              <Button
+                onClick={handleSave}
+                disabled={!title.trim() || isProcessing}
+                className="w-full"
+              >
+                {isProcessing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Recording
+                  </>
+                )}
+              </Button>
+              
+              {savedRecording && (
+                <Button
+                  onClick={handleExtractInControl}
+                  disabled={isExtracting}
+                  className="w-full bg-[hsl(var(--brain-health))] hover:bg-[hsl(var(--brain-health))]/90"
+                >
+                  {isExtracting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Extracting...
+                    </>
+                  ) : (
+                    <>
+                      <Brain className="mr-2 h-4 w-4" />
+                      Extract InControl Items
+                    </>
+                  )}
+                </Button>
               )}
-            </Button>
+            </div>
           </div>
         )}
+
+        <InControlExtractionDialog
+          open={showExtractionDialog}
+          onOpenChange={setShowExtractionDialog}
+          isProcessing={isExtracting}
+          extractedItems={extractedActions}
+          onConfirm={handleConfirmExtraction}
+          processingStage={extractionStage}
+        />
       </CardContent>
     </Card>
   );
