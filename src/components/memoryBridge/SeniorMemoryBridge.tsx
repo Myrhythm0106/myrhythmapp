@@ -6,7 +6,8 @@ import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { SeniorRecordingControls } from './SeniorRecordingControls';
 import { MyRecordings } from './MyRecordings';
-import { Mic, Play, Pause, Volume2, Heart, Clock, CheckCircle, Star, Phone, ZoomIn, ZoomOut, Sun, Moon, FolderOpen, Archive } from 'lucide-react';
+import { InControlLogTable } from './InControlLogTable';
+import { Mic, Play, Pause, Volume2, Heart, Clock, CheckCircle, Star, Phone, ZoomIn, ZoomOut, Sun, Moon, FolderOpen, Archive, Target } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
 import { toast } from 'sonner';
 export function SeniorMemoryBridge() {
@@ -30,7 +31,7 @@ export function SeniorMemoryBridge() {
   const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null);
   const [fontSize, setFontSize] = useState(20); // Default 20px
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [activeTab, setActiveTab] = useState<'record' | 'recordings'>('record');
+  const [activeTab, setActiveTab] = useState<'record' | 'recordings' | 'incontrol'>('record');
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -44,7 +45,7 @@ export function SeniorMemoryBridge() {
     setAudioBlob(blob);
     try {
       const setupData: MeetingSetupData = {
-        title: 'P.A.C.T. Recording',
+        title: 'InControl Recording',
         participants: [{
           name: 'Me',
           relationship: 'self'
@@ -56,7 +57,7 @@ export function SeniorMemoryBridge() {
       const meetingRecord = await startMeetingRecording(setupData, null);
       if (meetingRecord) {
         await stopMeetingRecording(blob);
-        toast.success('✨ Recording processed! Looking for your P.A.C.T. items...', {
+        toast.success('✨ Recording processed! Looking for your InControl items...', {
           duration: 5000,
           style: {
             fontSize: `${fontSize}px`
@@ -130,7 +131,7 @@ export function SeniorMemoryBridge() {
       await confirmAction(actionId, isConfirmed ? 'confirmed' : 'rejected');
       if (isConfirmed) {
         // Show celebration
-        toast.success('🎉 Promise confirmed! You\'re building amazing trust!', {
+        toast.success('🎉 Item confirmed! You\'re in complete control!', {
           duration: 6000,
           style: {
             fontSize: `${fontSize}px`,
@@ -139,14 +140,14 @@ export function SeniorMemoryBridge() {
           }
         });
       } else {
-        toast.success('Promise removed. No worries!', {
+        toast.success('Item removed. No worries!', {
           style: {
             fontSize: `${fontSize}px`
           }
         });
       }
     } catch (error) {
-      toast.error('Could not update promise', {
+      toast.error('Could not update item', {
         style: {
           fontSize: `${fontSize}px`
         }
@@ -165,9 +166,9 @@ export function SeniorMemoryBridge() {
   };
 
   // Calculate simple stats
-  const totalPromises = extractedActions.length;
-  const keptPromises = extractedActions.filter(a => a.status === 'confirmed' || a.status === 'completed').length;
-  const trustStars = Math.min(5, Math.ceil(keptPromises / Math.max(totalPromises, 1) * 5));
+  const totalItems = extractedActions.length;
+  const keptItems = extractedActions.filter(a => a.status === 'confirmed' || a.status === 'completed').length;
+  const controlStars = Math.min(5, Math.ceil(keptItems / Math.max(totalItems, 1) * 5));
 
   // Style classes for font sizing
   const textClasses = {
@@ -221,33 +222,52 @@ export function SeniorMemoryBridge() {
         <div className="flex justify-center">
           <div className="bg-white rounded-lg p-2 shadow-sm border">
             <div className="flex gap-2">
-              <Button onClick={() => setActiveTab('record')} variant={activeTab === 'record' ? 'default' : 'ghost'} size="lg" className="text-xl px-8 h-16">
-                <Mic className="h-6 w-6 mr-3" />
+              <Button 
+                onClick={() => setActiveTab('record')} 
+                variant={activeTab === 'record' ? 'default' : 'ghost'} 
+                size="lg" 
+                className="text-lg px-6 h-16 whitespace-nowrap"
+              >
+                <Mic className="h-6 w-6 mr-2" />
                 Record
               </Button>
-              <Button onClick={() => setActiveTab('recordings')} variant={activeTab === 'recordings' ? 'default' : 'ghost'} size="lg" className="text-xl px-8 h-16">
-                <FolderOpen className="h-6 w-6 mr-3" />
+              <Button 
+                onClick={() => setActiveTab('recordings')} 
+                variant={activeTab === 'recordings' ? 'default' : 'ghost'} 
+                size="lg" 
+                className="text-lg px-6 h-16 whitespace-nowrap"
+              >
+                <FolderOpen className="h-6 w-6 mr-2" />
                 My Recordings
+              </Button>
+              <Button 
+                onClick={() => setActiveTab('incontrol')} 
+                variant={activeTab === 'incontrol' ? 'default' : 'ghost'} 
+                size="lg" 
+                className="text-lg px-6 h-16 whitespace-nowrap"
+              >
+                <Target className="h-6 w-6 mr-2" />
+                InControl Log
               </Button>
             </div>
           </div>
         </div>
 
-        {/* Trust Score Display */}
-        {totalPromises > 0 && <Card className="border-4 border-green-200 bg-green-50">
+        {/* Control Score Display */}
+        {totalItems > 0 && <Card className="border-4 border-green-200 bg-green-50">
             <CardContent className="text-center py-8">
               <div className="space-y-4">
                 <div className="text-6xl font-bold text-green-600">
-                  {keptPromises}
+                  {keptItems}
                 </div>
                 <p className="text-2xl font-semibold text-green-800">
-                  Promises Kept
+                  Items Completed
                 </p>
                 <div className="flex justify-center gap-2">
-                  {[...Array(5)].map((_, i) => <Star key={i} className={`h-12 w-12 ${i < trustStars ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />)}
+                  {[...Array(5)].map((_, i) => <Star key={i} className={`h-12 w-12 ${i < controlStars ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />)}
                 </div>
                 <p className="text-xl text-green-700 font-medium">
-                  Your family feels proud! 
+                  You're in complete control! 
                 </p>
               </div>
             </CardContent>
@@ -258,10 +278,10 @@ export function SeniorMemoryBridge() {
             <CardContent className="py-12">
               <div className="text-center space-y-8">
                 <h2 className="text-3xl font-bold text-blue-800">
-                  Record Your P.A.C.T.
+                  InControl Recording
                 </h2>
                 <p className="text-xl text-blue-600">
-                  Promises, Actions, Commitments and Tasks
+                  Complete Life Management System
                 </p>
                 
                 <SeniorRecordingControls onRecordingComplete={handleRecordingComplete} onSavedRecording={handleSavedRecording} />
@@ -287,22 +307,43 @@ export function SeniorMemoryBridge() {
             </CardContent>
           </Card>}
 
-        {/* Your Promises */}
+        {activeTab === 'incontrol' && <Card className="border-4 border-[hsl(var(--brain-health))]/30 bg-[hsl(var(--brain-health))]/5">
+            <CardContent className="py-8">
+              <div className="space-y-6">
+                <h2 className="text-3xl font-bold text-center text-[hsl(var(--brain-health))]">
+                  InControl Log
+                </h2>
+                <InControlLogTable 
+                  items={extractedActions}
+                  onUpdateItem={(itemId, updates) => {
+                    console.log('Update item:', itemId, updates);
+                    toast.success('Item updated successfully', {
+                      style: {
+                        fontSize: `${fontSize}px`
+                      }
+                    });
+                  }}
+                />
+              </div>
+            </CardContent>
+          </Card>}
+
+        {/* Your InControl Items */}
         <div className="space-y-6">
-          <h2 className="text-4xl font-bold text-center">Your Promises</h2>
+          <h2 className="text-4xl font-bold text-center">Your InControl Items</h2>
           
           {extractedActions.length === 0 ? <Card className="border-4 border-gray-200">
               <CardContent className="text-center py-12">
                 <Heart className="h-24 w-24 mx-auto mb-6 text-gray-400" />
                 <p className="text-2xl text-gray-600">
-                  No promises yet. Start recording to see them here!
+                  No InControl items yet. Start recording to see them here!
                 </p>
               </CardContent>
             </Card> : <div className="space-y-6">
               {extractedActions.map(action => <Card key={action.id} className="border-4 border-purple-200 bg-purple-50">
                   <CardContent className="py-8">
                     <div className="space-y-6">
-                      {/* Promise Text */}
+                      {/* Item Text */}
                       <div className="text-center">
                         <p className="text-2xl font-semibold text-purple-900 leading-relaxed">
                           {action.action_text}
@@ -337,12 +378,12 @@ export function SeniorMemoryBridge() {
                       {/* Confirmation Buttons */}
                       {action.status === 'pending' && <div className="space-y-4">
                           <p className="text-2xl text-center text-purple-800 font-medium">
-                            Is this promise correct?
+                            Is this InControl item correct?
                           </p>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Button onClick={() => handleConfirmPromise(action.id, true)} size="lg" className="h-20 bg-green-500 hover:bg-green-600 text-white text-2xl">
                               <CheckCircle className="h-8 w-8 mr-4" />
-                              Yes, I Promise This
+                              Yes, Confirm This
                             </Button>
                             <Button onClick={() => handleConfirmPromise(action.id, false)} size="lg" variant="outline" className="h-20 text-red-600 border-red-300 hover:bg-red-50 text-2xl">
                               Not Right
@@ -353,7 +394,7 @@ export function SeniorMemoryBridge() {
                       {/* Success Message */}
                       {action.status === 'confirmed' && <div className="text-center p-6 bg-green-100 rounded-lg">
                           <p className="text-2xl text-green-800 font-semibold">
-                            ✨ Promise confirmed! Your family trusts you more each day!
+                            ✨ Item confirmed! You're in control of your life!
                           </p>
                         </div>}
                     </div>
@@ -363,14 +404,14 @@ export function SeniorMemoryBridge() {
         </div>
 
         {/* Daily Encouragement */}
-        {keptPromises > 0 && <Card className="border-4 border-yellow-200 bg-yellow-50">
+        {keptItems > 0 && <Card className="border-4 border-yellow-200 bg-yellow-50">
             <CardContent className="text-center py-8">
               <Star className="h-16 w-16 mx-auto mb-4 text-yellow-500" />
               <p className="text-3xl font-bold text-yellow-800 mb-2">
                 Amazing Work!
               </p>
               <p className="text-2xl text-yellow-700">
-                You've kept {keptPromises} {keptPromises === 1 ? 'promise' : 'promises'}. 
+                You've kept {keptItems} {keptItems === 1 ? 'commitment' : 'commitments'}. 
                 Your family feels so supported!
               </p>
             </CardContent>
