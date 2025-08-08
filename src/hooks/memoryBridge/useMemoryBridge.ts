@@ -21,72 +21,66 @@ export function useMemoryBridge() {
   const extractedActions = demoMode ? demoData.extractedActions : realExtractedActions;
   const setExtractedActions = demoMode ? demoData.setExtractedActions : setRealExtractedActions;
 
-  const startMeetingRecording = useCallback(async (setupData: MeetingSetupData, voiceRecordingId: string | null): Promise<any | null> => {
+  const startMeetingRecording = useCallback(async (setupData: MeetingSetupData, voiceRecordingId: string): Promise<any | null> => {
     if (demoMode) {
       console.log('🎯 useMemoryBridge: Demo mode - simulating meeting recording start');
       setIsRecording(true);
-      const mockMeeting: MeetingRecording = {
-        id: 'demo-meeting-' + Date.now(),
-        user_id: user?.id || 'demo-user',
-        recording_id: null,
-        meeting_title: setupData.title,
-        participants: setupData.participants,
-        meeting_type: setupData.meetingType,
-        meeting_context: setupData.context || '',
-        location: setupData.location || '',
-        emotional_context: setupData.emotionalContext || '',
-        energy_level: setupData.energyLevel || 5,
-        relationship_context: {},
-        is_active: true,
-        started_at: new Date().toISOString(),
-        ended_at: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
-      setCurrentMeeting(mockMeeting);
-      toast.success('Demo: PACT recording started!');
-      return mockMeeting;
+      toast.success('Demo: Meeting recording started!');
+      return { id: 'demo-meeting', title: setupData.title };
     }
 
     if (!user) {
       console.log('🔍 useMemoryBridge: No user found, cannot start recording');
-      toast.error('Please sign in to start PACT recording');
+      toast.error('Please sign in to start meeting recording');
       return null;
     }
 
     try {
-      console.log('🔍 useMemoryBridge: Starting PACT recording for user:', user.id);
+      console.log('🔍 useMemoryBridge: Starting meeting recording for user:', user.id);
       setIsProcessing(true);
 
-      // Create meeting recording immediately (voice recording will be added later)
+      // Create voice recording first
+      const { data: voiceRecording, error: voiceError } = await supabase
+        .from('voice_recordings')
+        .insert({
+          user_id: user.id,
+          title: setupData.title,
+          category: 'meeting',
+          file_path: voiceRecordingId,
+          file_size_bytes: 0,
+          transcription: 'Recording in progress...'
+        })
+        .select()
+        .single();
+
+      if (voiceError) throw voiceError;
+
+      // Create meeting recording
       const { data: meetingRecord, error: meetingError } = await supabase
         .from('meeting_recordings')
         .insert({
           user_id: user.id,
-          recording_id: voiceRecordingId, // Will be null initially, updated when audio is saved
+          recording_id: voiceRecording.id,
           meeting_title: setupData.title,
           meeting_type: setupData.meetingType || 'general',
-          meeting_context: setupData.context || '',
-          location: setupData.location || '',
-          emotional_context: setupData.emotionalContext || '',
-          energy_level: setupData.energyLevel || 5,
+          meeting_context: setupData.title || '',
           participants: setupData.participants.map(p => ({ name: p.name, relationship: p.relationship })),
-          is_active: true,
-          started_at: new Date().toISOString()
+          is_active: true
         })
         .select()
         .single();
 
       if (meetingError) throw meetingError;
 
-      console.log('✅ useMemoryBridge: PACT recording created:', meetingRecord.id);
-      setCurrentMeeting(meetingRecord as unknown as MeetingRecording);
+      console.log('✅ useMemoryBridge: Meeting recording created:', meetingRecord.id);
+      setCurrentMeeting(meetingRecord as MeetingRecording);
       setIsRecording(true);
+      toast.success('Meeting recording started');
       return meetingRecord;
 
     } catch (error) {
-      console.error('❌ useMemoryBridge: Error starting PACT recording:', error);
-      toast.error('Failed to start PACT recording');
+      console.error('❌ useMemoryBridge: Error starting meeting recording:', error);
+      toast.error('Failed to start meeting recording');
       return null;
     } finally {
       setIsProcessing(false);
@@ -97,71 +91,20 @@ export function useMemoryBridge() {
     if (demoMode) {
       console.log('🎯 useMemoryBridge: Demo mode - simulating meeting stop');
       setIsRecording(false);
-      setCurrentMeeting(null);
-      toast.success('Demo: PACT processing completed! Found 3 actions to review');
+      toast.success('Demo: Meeting processing completed! Found 3 actions to review');
       return { actions_found: 3 };
     }
 
     if (!currentMeeting || !user) {
-      toast.error('No active PACT recording to stop');
+      toast.error('No active meeting to stop');
       return;
     }
 
     try {
-      console.log('🔍 useMemoryBridge: Stopping PACT recording and processing audio...');
       setIsProcessing(true);
       setIsRecording(false);
 
-      // Step 1: Save audio to Supabase Storage
-      const fileName = `pact-recording-${currentMeeting.id}-${Date.now()}.wav`;
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('voice-recordings')
-        .upload(fileName, audioBlob);
-
-      if (uploadError) {
-        console.error('Error uploading audio:', uploadError);
-        throw new Error('Failed to save audio recording');
-      }
-
-      console.log('✅ Audio uploaded successfully:', uploadData.path);
-
-      // Step 2: Create voice recording entry
-      const { data: voiceData, error: voiceError } = await supabase
-        .from('voice_recordings')
-        .insert({
-          user_id: user.id,
-          title: currentMeeting.meeting_title,
-          category: 'memory_bridge',
-          description: `PACT recording: ${currentMeeting.meeting_title}`,
-          file_path: uploadData.path,
-          file_size_bytes: audioBlob.size,
-          duration_seconds: Math.floor(audioBlob.size / 16000), // Rough estimate
-          access_level: 'private'
-        })
-        .select()
-        .single();
-
-      if (voiceError) {
-        console.error('Error creating voice recording:', voiceError);
-        throw new Error('Failed to create voice recording entry');
-      }
-
-      console.log('✅ Voice recording created:', voiceData.id);
-
-      // Step 3: Update meeting recording with voice recording ID
-      const { error: updateError } = await supabase
-        .from('meeting_recordings')
-        .update({ 
-          recording_id: voiceData.id,
-          ended_at: new Date().toISOString()
-        })
-        .eq('id', currentMeeting.id);
-
-      if (updateError) {
-        console.error('Error updating meeting:', updateError);
-      }
-
-      // Step 4: Convert audio blob to base64 and process
+      // Convert audio blob to base64
       const reader = new FileReader();
       const audioDataPromise = new Promise<string>((resolve) => {
         reader.onloadend = () => {
@@ -173,10 +116,7 @@ export function useMemoryBridge() {
       
       const audioData = await audioDataPromise;
 
-      console.log('🔍 Processing audio with OpenAI...');
-      toast.info('Transcribing and analyzing for PACT items...');
-
-      // Step 5: Process the audio through our edge function
+      // Process the audio through our edge function
       const { data, error } = await supabase.functions.invoke('process-meeting-audio', {
         body: {
           audioData,
@@ -185,33 +125,19 @@ export function useMemoryBridge() {
         }
       });
 
-      if (error) {
-        console.error('Error processing audio:', error);
-        throw new Error('Failed to process conversation. Please try again.');
-      }
+      if (error) throw error;
 
-      console.log('✅ PACT processing result:', data);
-
-      if (data?.success) {
-        const count = data.actions_found || 0;
-        if (count > 0) {
-          toast.success(`🎉 Captured ${count} PACT item${count > 1 ? 's' : ''}! Check Review Actions.`);
-        } else {
-          toast.info('Recording saved, but no clear PACT items were detected in this conversation.');
-        }
-        
-        // Refresh extracted actions
-        fetchExtractedActions();
-      } else {
-        toast.error('Failed to analyze conversation content');
-      }
+      toast.success(`Meeting processed! Found ${data.actions_found} actions to review`);
+      
+      // Fetch the extracted actions
+      await fetchExtractedActions(currentMeeting.id);
       
       setCurrentMeeting(null);
       return data;
 
     } catch (error) {
-      console.error('❌ Error processing PACT recording:', error);
-      toast.error('Failed to process recording. Please try again.');
+      console.error('Error processing meeting:', error);
+      toast.error('Failed to process meeting recording');
     } finally {
       setIsProcessing(false);
     }
@@ -254,7 +180,7 @@ export function useMemoryBridge() {
       console.error('❌ useMemoryBridge: Unexpected error fetching extracted actions:', error);
       toast.error('Failed to fetch extracted actions');
     }
-  }, [user, demoMode, setExtractedActions]);
+  }, [user, demoMode]);
 
   const confirmAction = useCallback(async (
     actionId: string, 
@@ -294,7 +220,7 @@ export function useMemoryBridge() {
       if (confirmError) throw confirmError;
 
       // Refresh the actions list
-      fetchExtractedActions();
+      await fetchExtractedActions();
       
       toast.success(`Action ${status}`);
 
@@ -303,87 +229,6 @@ export function useMemoryBridge() {
       toast.error('Failed to confirm action');
     }
   }, [user, fetchExtractedActions, demoMode]);
-
-  const scheduleAction = useCallback(async (actionId: string, scheduleData: any) => {
-    if (!user) {
-      console.log('⚠️ useMemoryBridge: No user for scheduling action');
-      return;
-    }
-
-    if (demoMode) {
-      console.log('📋 useMemoryBridge: Demo mode - simulating action scheduling');
-      toast.success('Demo: Action scheduled successfully!');
-      return;
-    }
-
-    try {
-      console.log('📅 useMemoryBridge: Scheduling action:', actionId);
-      
-      // Create calendar event
-      const { data: eventData, error: eventError } = await supabase
-        .from('calendar_events')
-        .insert({
-          user_id: user.id,
-          title: scheduleData.title,
-          description: scheduleData.description,
-          date: scheduleData.date,
-          time: scheduleData.time,
-          type: 'scheduled_action',
-          category: 'pact'
-        })
-        .select()
-        .single();
-
-      if (eventError) {
-        console.error('❌ useMemoryBridge: Error creating calendar event:', eventError);
-        throw eventError;
-      }
-
-      // Create daily action
-      const { data: actionData, error: actionError } = await supabase
-        .from('daily_actions')
-        .insert({
-          user_id: user.id,
-          title: scheduleData.title,
-          description: scheduleData.description,
-          date: scheduleData.date,
-          start_time: scheduleData.time,
-          calendar_event_id: eventData.id,
-          action_type: 'scheduled',
-          status: 'pending'
-        })
-        .select()
-        .single();
-
-      if (actionError) {
-        console.error('❌ useMemoryBridge: Error creating daily action:', actionError);
-        throw actionError;
-      }
-
-      // Update extracted action status
-      const { error: updateError } = await supabase
-        .from('extracted_actions')
-        .update({ 
-          status: 'confirmed',
-          user_notes: `Scheduled for ${scheduleData.date} at ${scheduleData.time}`
-        })
-        .eq('id', actionId)
-        .eq('user_id', user.id);
-
-      if (updateError) {
-        console.error('❌ useMemoryBridge: Error updating extracted action:', updateError);
-        throw updateError;
-      }
-
-      // Refresh extracted actions
-      await fetchExtractedActions();
-      
-      console.log('✅ useMemoryBridge: Action scheduled successfully');
-    } catch (error) {
-      console.error('❌ useMemoryBridge: Error scheduling action:', error);
-      throw error;
-    }
-  }, [user, demoMode, fetchExtractedActions]);
 
   const fetchMeetingHistory = useCallback(async (): Promise<MeetingRecording[]> => {
     if (demoMode) {
@@ -412,7 +257,7 @@ export function useMemoryBridge() {
       }
 
       console.log('✅ useMemoryBridge: Fetched meeting history:', meetings?.length || 0, 'meetings');
-      return (meetings || []) as unknown as MeetingRecording[];
+      return (meetings || []) as MeetingRecording[];
     } catch (error) {
       console.error('❌ useMemoryBridge: Unexpected error fetching meeting history:', error);
       toast.error('Failed to fetch meeting history');
@@ -429,7 +274,6 @@ export function useMemoryBridge() {
     stopMeetingRecording,
     fetchExtractedActions,
     confirmAction,
-    scheduleAction,
     fetchMeetingHistory
   };
 }

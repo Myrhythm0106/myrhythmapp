@@ -1,17 +1,11 @@
-
-export interface Participant {
-  name: string;
-  relationship: string;
-}
-
 export interface MeetingRecording {
   id: string;
   user_id: string;
   recording_id: string;
   meeting_title: string;
-  participants: Participant[];
+  participants: { name: string; relationship: string }[];
   meeting_context?: string;
-  meeting_type: 'formal' | 'informal' | 'family' | 'medical' | 'planning' | 'unplanned' | 'emergency';
+  meeting_type: 'formal' | 'informal' | 'family' | 'medical';
   location?: string;
   energy_level?: number;
   emotional_context?: string;
@@ -23,35 +17,19 @@ export interface MeetingRecording {
   updated_at: string;
 }
 
-export interface InControlItem {
+export interface ExtractedAction {
   id: string;
   user_id: string;
   meeting_recording_id: string;
-  
-  // InControl Framework Elements
-  intentions?: string;           // I - Primary purpose/goal of conversation
-  next_steps?: string;          // N - Actions to be taken
-  commitments?: string;         // C - Who is responsible for what
-  outcomes?: string;            // O - Results/conclusions/decisions
-  notes?: string;              // N - Other relevant details
-  timelines?: string;          // T - Deadlines and timeframes
-  resources?: string;          // R - Tools, people, info needed
-  obstacles?: string;          // O - Potential challenges identified
-  learning?: string;           // L - Insights gained from conversation
-  
-  // Legacy fields for compatibility
   action_text: string;
-  action_type: 'intention' | 'next_step' | 'commitment' | 'outcome' | 'note' | 'timeline' | 'resource' | 'obstacle' | 'learning' | 'promise' | 'task' | 'reminder' | 'follow_up';
+  action_type: 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up';
   assigned_to?: string;
   due_context?: string;
-  due_date?: string;
-  context?: string;
   priority_level: number;
   confidence_score: number;
   relationship_impact?: string;
   emotional_stakes?: string;
   intent_behind?: string;
-  support_circle?: string[];    // Support circle accountability
   transcript_excerpt?: string;
   timestamp_in_recording: number;
   status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified';
@@ -59,9 +37,6 @@ export interface InControlItem {
   created_at: string;
   updated_at: string;
 }
-
-// Legacy type alias for backward compatibility
-export type ExtractedAction = InControlItem;
 
 export interface ConversationContext {
   id: string;
@@ -104,8 +79,8 @@ export interface ActionConfirmation {
 
 export interface MeetingSetupData {
   title: string;
-  participants: Participant[];
-  meetingType: 'formal' | 'informal' | 'family' | 'medical' | 'planning' | 'unplanned' | 'emergency';
+  participants: { name: string; relationship: string }[];
+  meetingType: 'formal' | 'informal' | 'family' | 'medical';
   context?: string;
   location?: string;
   energyLevel?: number;

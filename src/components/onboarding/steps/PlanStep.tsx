@@ -24,14 +24,6 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
   const handlePlanSelect = (planId: PlanType) => {
     console.log("PlanStep: Plan selected:", planId);
     setSelected(planId);
-    
-    // For free assessment preview, skip payment entirely
-    if (planId === 'preview' as any) {
-      console.log("PlanStep: Free assessment selected, skipping payment");
-      onComplete(planId, 'monthly'); // Use 'monthly' as default billing period
-      return;
-    }
-    
     setShowPaymentForm(true);
   };
 

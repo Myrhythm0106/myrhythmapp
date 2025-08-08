@@ -1,418 +1,367 @@
 import { UserType } from "@/types/user";
-import { FocusArea } from "./rhythmAnalysis";
+import { AssessmentResponses, Section } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
+import { SectionScore, FocusArea } from "./rhythmAnalysis";
 
 export interface PersonalizedInsight {
-  type: 'strength' | 'challenge' | 'opportunity' | 'unique';
+  type: "strength" | "challenge" | "unique" | "opportunity";
   title: string;
   description: string;
-  actionable: boolean;
+  actionable?: string;
 }
 
-interface ProfileData {
-  primaryChallenge: string;
-  energyPeak: string;
-  supportStyle: string;
-  quickRecommendations: string[];
+export interface PersonalRhythmProfile {
+  uniqueCharacteristics: string[];
+  strengthAreas: string[];
+  growthOpportunities: string[];
+  personalizedMessage: string;
+  nextSteps: string[];
+  rhythmSignature: string;
 }
 
-// Helper function to generate a random item from an array
-function getRandomItem<T>(array: T[]): T {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  return array[randomIndex];
+export interface PersonalizedAssessmentData {
+  insights: PersonalizedInsight[];
+  personalProfile: PersonalRhythmProfile;
+  customDeterminationReason: string;
+  userTypeSpecificMessage: string;
+  uniqueScoreStory: string;
 }
 
-// Helper function to generate personalized insights
-export function generatePersonalizedInsights(userType: UserType): ProfileData {
-  const rhythmSignature = rhythmSignatures[userType];
-  const primaryChallenge = primaryChallenges[userType];
-  const energyPeak = energyPeaks[userType];
-  const supportStyle = supportStyles[userType];
-  const quickWin = quickWins[userType];
-  
+export function generatePersonalizedInsights(
+  responses: AssessmentResponses,
+  sectionScores: SectionScore[],
+  focusArea: FocusArea,
+  overallScore: number,
+  userType?: UserType
+): PersonalizedAssessmentData {
+  const insights = analyzeResponsePatterns(responses, sectionScores, userType);
+  const personalProfile = createPersonalRhythmProfile(sectionScores, focusArea, userType);
+  const customDeterminationReason = generateCustomDeterminationReason(sectionScores, focusArea, responses, userType);
+  const userTypeSpecificMessage = generateUserTypeMessage(focusArea, overallScore, userType);
+  const uniqueScoreStory = generateUniqueScoreStory(sectionScores, overallScore, userType);
+
   return {
-    primaryChallenge,
-    energyPeak,
-    supportStyle,
-    quickRecommendations: [
-      `Embrace your rhythm signature: ${rhythmSignature}`,
-      `Address your primary challenge with focused strategies`,
-      `Optimize your energy peak for maximum productivity`,
-      `Seek support that aligns with your preferred style`,
-      `Achieve a quick win by ${quickWin}`
-    ]
+    insights,
+    personalProfile,
+    customDeterminationReason,
+    userTypeSpecificMessage,
+    uniqueScoreStory
   };
 }
 
-const rhythmSignatures: Record<UserType, string> = {
-  'brain-injury': 'The Resilient Rebuilder',
-  'cognitive-optimization': 'The Strategic Optimizer',
-  'empowerment': 'The Empowered Leader',
-  'brain-health': 'The Wellness Champion',
-  'caregiver': 'The Compassionate Guide',
-  'wellness': 'The Balanced Achiever',
-  'medical-professional': 'The Clinical Expert',
-  'colleague': 'The Collaborative Innovator'
-};
+function analyzeResponsePatterns(
+  responses: AssessmentResponses,
+  sectionScores: SectionScore[],
+  userType?: UserType
+): PersonalizedInsight[] {
+  const insights: PersonalizedInsight[] = [];
+  
+  // Find highest and lowest scoring sections
+  const sortedSections = [...sectionScores].sort((a, b) => b.average - a.average);
+  const strongest = sortedSections[0];
+  const weakest = sortedSections[sortedSections.length - 1];
+  
+  // Analyze score variance
+  const scoreVariance = calculateVariance(sectionScores.map(s => s.average));
+  const isBalanced = scoreVariance < 0.3;
+  const isExtreme = scoreVariance > 0.8;
 
-const challengeStatements: Record<FocusArea, string[]> = {
-  memory: [
-    'You sometimes struggle to recall important details.',
-    'Remembering names and faces can be challenging for you.',
-    'You occasionally misplace items or forget appointments.'
-  ],
-  structure: [
-    'You find it difficult to maintain a consistent daily routine.',
-    'Staying organized and managing tasks can be overwhelming.',
-    'You sometimes struggle to prioritize effectively.'
-  ],
-  emotional: [
-    'You occasionally experience mood swings or emotional ups and downs.',
-    'Managing stress and anxiety can be challenging for you.',
-    'You sometimes struggle to regulate your emotions effectively.'
-  ],
-  achievement: [
-    'You sometimes struggle to stay motivated and focused on your goals.',
-    'Achieving a sense of accomplishment can be challenging for you.',
-    'You occasionally feel stuck or stagnant in your personal growth.'
-  ],
-  community: [
-    'You sometimes feel isolated or disconnected from others.',
-    'Building and maintaining meaningful relationships can be challenging.',
-    'You occasionally struggle to find a sense of belonging.'
-  ],
-  growth: [
-    'You sometimes struggle to embrace new challenges and experiences.',
-    'Stepping outside of your comfort zone can be difficult for you.',
-    'You occasionally feel resistant to change or personal growth.'
-  ]
-};
+  // Strength insight
+  if (strongest.average >= 2.3) {
+    insights.push({
+      type: "strength",
+      title: `Strong ${strongest.title} Foundation`,
+      description: `Your responses show exceptional strength in ${strongest.title.toLowerCase()}, scoring ${strongest.average.toFixed(1)}/3.0. This suggests you have natural resilience in this area.`,
+      actionable: `Leverage this strength as an anchor while building other areas.`
+    });
+  }
 
-const strengthStatements: Record<FocusArea, string[]> = {
-  memory: [
-    'You have a strong ability to learn and retain new information.',
-    'Your memory skills allow you to excel in academic pursuits.',
-    'You are adept at recalling past experiences and events.'
-  ],
-  structure: [
-    'You thrive in structured environments and routines.',
-    'Your organizational skills help you stay on top of tasks and responsibilities.',
-    'You are adept at creating and maintaining effective systems.'
-  ],
-  emotional: [
-    'You possess a high degree of emotional intelligence and empathy.',
-    'Your emotional resilience allows you to navigate challenges with grace.',
-    'You are adept at understanding and managing your emotions.'
-  ],
-  achievement: [
-    'You are highly motivated and driven to achieve your goals.',
-    'Your determination and perseverance lead to success in your endeavors.',
-    'You are adept at setting and accomplishing meaningful objectives.'
-  ],
-  community: [
-    'You are a natural connector and enjoy building relationships with others.',
-    'Your social skills make you a valuable member of any community.',
-    'You are adept at fostering a sense of belonging and connection.'
-  ],
-  growth: [
-    'You have a strong desire to learn and grow as an individual.',
-    'Your open-mindedness allows you to embrace new experiences and perspectives.',
-    'You are adept at adapting to change and seeking personal development.'
-  ]
-};
+  // Challenge insight
+  if (weakest.average <= 1.7) {
+    const userTypeContext = getUserTypeContext(userType);
+    insights.push({
+      type: "challenge",
+      title: `Growth Opportunity in ${weakest.title}`,
+      description: `Your ${weakest.title.toLowerCase()} responses (${weakest.average.toFixed(1)}/3.0) indicate this as a key growth area${userTypeContext ? ` for ${userTypeContext}` : ''}.`,
+      actionable: `Small, consistent steps in this area could yield significant improvements.`
+    });
+  }
 
-const opportunityStatements: Record<FocusArea, string[]> = {
-  memory: [
-    'Enhance your memory skills through targeted exercises and techniques.',
-    'Explore strategies for improving focus and concentration.',
-    'Develop habits that support long-term memory retention.'
-  ],
-  structure: [
-    'Create a daily routine that aligns with your natural rhythms and preferences.',
-    'Implement organizational systems to streamline tasks and responsibilities.',
-    'Prioritize activities that contribute to your overall well-being.'
-  ],
-  emotional: [
-    'Practice mindfulness and meditation to cultivate emotional awareness.',
-    'Develop healthy coping mechanisms for managing stress and anxiety.',
-    'Seek support from trusted friends, family, or professionals.'
-  ],
-  achievement: [
-    'Set clear, achievable goals that align with your values and aspirations.',
-    'Break down larger tasks into smaller, manageable steps.',
-    'Celebrate your accomplishments and acknowledge your progress.'
-  ],
-  community: [
-    'Join social groups or organizations that align with your interests.',
-    'Attend community events and engage with your neighbors.',
-    'Volunteer your time to support causes you care about.'
-  ],
-  growth: [
-    'Embrace new challenges and step outside of your comfort zone.',
-    'Seek out opportunities for learning and personal development.',
-    'Cultivate a growth mindset and embrace change as a catalyst for growth.'
-  ]
-};
+  // Unique pattern insight
+  if (isBalanced) {
+    insights.push({
+      type: "unique",
+      title: "Remarkably Balanced Pattern",
+      description: "Your responses show consistent scores across all areas, indicating a well-rounded approach to life management.",
+      actionable: "Consider focusing on one area at a time to create breakthrough momentum."
+    });
+  } else if (isExtreme) {
+    insights.push({
+      type: "unique",
+      title: "Distinctive Strength-Growth Pattern",
+      description: "Your assessment reveals a unique pattern with clear areas of strength alongside specific growth opportunities.",
+      actionable: "Use your strengths to support development in growth areas."
+    });
+  }
 
-const personalizedMessages: Record<FocusArea, string[]> = {
-  memory: [
-    'Your memory skills are a valuable asset that can be further enhanced through targeted training and practice.',
-    'By implementing effective memory strategies, you can unlock your full cognitive potential.',
-    'Embrace the journey of memory enhancement and discover the power of your mind.'
-  ],
-  structure: [
-    'Creating a structured environment can provide a sense of stability and control in your life.',
-    'By establishing routines and systems, you can optimize your productivity and well-being.',
-    'Embrace the power of structure and create a life that supports your goals and aspirations.'
-  ],
-  emotional: [
-    'Your emotional intelligence is a strength that can be further developed through self-awareness and practice.',
-    'By cultivating emotional resilience, you can navigate challenges with grace and equanimity.',
-    'Embrace the journey of emotional growth and discover the power of your inner peace.'
-  ],
-  achievement: [
-    'Your drive and determination are valuable assets that can lead to great success in your endeavors.',
-    'By setting clear goals and taking consistent action, you can achieve your dreams and aspirations.',
-    'Embrace the journey of achievement and discover the power of your potential.'
-  ],
-  community: [
-    'Your ability to connect with others is a gift that can enrich your life and the lives of those around you.',
-    'By building meaningful relationships, you can create a strong support system and sense of belonging.',
-    'Embrace the power of community and discover the joy of connection and collaboration.'
-  ],
-  growth: [
-    'Your desire to learn and grow is a valuable asset that can lead to personal fulfillment and success.',
-    'By embracing new challenges and seeking out opportunities for development, you can unlock your full potential.',
-    'Embrace the journey of growth and discover the power of your evolving self.'
-  ]
-};
+  // Response-specific insights
+  const specificInsights = analyzeSpecificResponses(responses, userType);
+  insights.push(...specificInsights);
 
-const nextSteps: Record<FocusArea, string[]> = {
-  memory: [
-    'Begin a daily memory training program to sharpen your cognitive skills.',
-    'Practice mindfulness techniques to improve focus and concentration.',
-    'Incorporate memory-enhancing foods into your diet.'
-  ],
-  structure: [
-    'Create a daily routine that aligns with your natural rhythms and preferences.',
-    'Implement organizational systems to streamline tasks and responsibilities.',
-    'Prioritize activities that contribute to your overall well-being.'
-  ],
-  emotional: [
-    'Practice mindfulness and meditation to cultivate emotional awareness.',
-    'Develop healthy coping mechanisms for managing stress and anxiety.',
-    'Seek support from trusted friends, family, or professionals.'
-  ],
-  achievement: [
-    'Set clear, achievable goals that align with your values and aspirations.',
-    'Break down larger tasks into smaller, manageable steps.',
-    'Celebrate your accomplishments and acknowledge your progress.'
-  ],
-  community: [
-    'Join social groups or organizations that align with your interests.',
-    'Attend community events and engage with your neighbors.',
-    'Volunteer your time to support causes you care about.'
-  ],
-  growth: [
-    'Embrace new challenges and step outside of your comfort zone.',
-    'Seek out opportunities for learning and personal development.',
-    'Cultivate a growth mindset and embrace change as a catalyst for growth.'
-  ]
-};
+  return insights.slice(0, 4); // Limit to most relevant insights
+}
 
-const uniqueCharacteristics: Record<FocusArea, string[]> = {
-  memory: [
-    'Analytical Mindset',
-    'Strategic Thinking',
-    'Detail-Oriented'
-  ],
-  structure: [
-    'Organized Approach',
-    'Systematic Planning',
-    'Efficient Execution'
-  ],
-  emotional: [
-    'Empathetic Nature',
-    'Compassionate Heart',
-    'Resilient Spirit'
-  ],
-  achievement: [
-    'Driven Personality',
-    'Ambitious Goals',
-    'Persistent Effort'
-  ],
-  community: [
-    'Collaborative Spirit',
-    'Supportive Nature',
-    'Inclusive Mindset'
-  ],
-  growth: [
-    'Curious Mind',
-    'Open Heart',
-    'Adaptive Nature'
-  ]
-};
+function analyzeSpecificResponses(responses: AssessmentResponses, userType?: UserType): PersonalizedInsight[] {
+  const insights: PersonalizedInsight[] = [];
+  
+  // Analyze extreme responses (1s and 3s)
+  let highConfidenceResponses = 0;
+  let lowConfidenceResponses = 0;
+  
+  Object.values(responses).forEach(sectionResponses => {
+    Object.values(sectionResponses).forEach(score => {
+      if (score === 3) highConfidenceResponses++;
+      if (score === 1) lowConfidenceResponses++;
+    });
+  });
 
-const strengths: Record<FocusArea, string[]> = {
-  memory: [
-    'Problem-Solving',
-    'Logical Reasoning',
-    'Pattern Recognition'
-  ],
-  structure: [
-    'Time Management',
-    'Task Prioritization',
-    'Resource Allocation'
-  ],
-  emotional: [
-    'Emotional Regulation',
-    'Conflict Resolution',
-    'Empathy'
-  ],
-  achievement: [
-    'Goal Setting',
-    'Action Planning',
-    'Progress Tracking'
-  ],
-  community: [
-    'Relationship Building',
-    'Team Collaboration',
-    'Community Engagement'
-  ],
-  growth: [
-    'Learning Agility',
-    'Adaptability',
-    'Innovation'
-  ]
-};
+  if (highConfidenceResponses >= 3) {
+    insights.push({
+      type: "strength",
+      title: "Strong Self-Awareness",
+      description: `You provided ${highConfidenceResponses} confident "completely true" responses, showing clear self-knowledge.`,
+      actionable: "Your self-awareness is a powerful tool for growth and goal achievement."
+    });
+  }
 
-const growthOpportunities: Record<FocusArea, string[]> = {
-  memory: [
-    'Sustained Attention',
-    'Working Memory',
-    'Processing Speed'
-  ],
-  structure: [
-    'Flexibility',
-    'Adaptability',
-    'Spontaneity'
-  ],
-  emotional: [
-    'Emotional Expression',
-    'Vulnerability',
-    'Self-Compassion'
-  ],
-  achievement: [
-    'Patience',
-    'Resilience',
-    'Self-Care'
-  ],
-  community: [
-    'Assertiveness',
-    'Boundary Setting',
-    'Self-Advocacy'
-  ],
-  growth: [
-    'Risk-Taking',
-    'Experimentation',
-    'Embracing Failure'
-  ]
-};
+  if (lowConfidenceResponses >= 3) {
+    const message = userType === "brain-injury" 
+      ? "This is common and completely normal in recovery - it shows honest self-reflection."
+      : "This honest self-assessment provides a clear foundation for targeted improvement.";
+    
+    insights.push({
+      type: "opportunity",
+      title: "Clear Development Areas",
+      description: `Your ${lowConfidenceResponses} "not true for me" responses identify specific areas for growth. ${message}`,
+      actionable: "These areas represent your biggest opportunities for positive change."
+    });
+  }
 
-const primaryChallenges: Record<UserType, string> = {
-  'brain-injury': 'Rebuilding cognitive confidence and establishing new patterns',
-  'cognitive-optimization': 'Maximizing mental performance while maintaining balance',
-  'empowerment': 'Translating personal vision into consistent action and leadership',
-  'brain-health': 'Maintaining optimal cognitive wellness through lifestyle integration',
-  'caregiver': 'Balancing care responsibilities with personal wellbeing',
-  'wellness': 'Creating sustainable habits that support long-term health goals',
-  'medical-professional': 'Managing clinical demands while maintaining personal cognitive health',
-  'colleague': 'Fostering innovation while supporting team cognitive wellness'
-};
+  return insights;
+}
 
-const energyPeaks: Record<UserType, string> = {
-  'brain-injury': 'Mid-morning after structured routine establishment',
-  'cognitive-optimization': 'Early morning during peak focus hours',
-  'empowerment': 'Throughout the day with consistent energy management',
-  'brain-health': 'Morning and early evening with proper lifestyle balance',
-  'caregiver': 'Early morning before care responsibilities begin',
-  'wellness': 'Flexible peaks based on optimized daily rhythms',
-  'medical-professional': 'During structured work periods with adequate recovery',
-  'colleague': 'Collaborative periods with team energy alignment'
-};
+function createPersonalRhythmProfile(
+  sectionScores: SectionScore[],
+  focusArea: FocusArea,
+  userType?: UserType
+): PersonalRhythmProfile {
+  const sortedSections = [...sectionScores].sort((a, b) => b.average - a.average);
+  const topTwo = sortedSections.slice(0, 2);
+  const bottomTwo = sortedSections.slice(-2);
 
-const supportStyles: Record<UserType, string> = {
-  'brain-injury': 'Structured guidance with celebration of small wins',
-  'cognitive-optimization': 'Data-driven insights with performance metrics',
-  'empowerment': 'Goal-oriented coaching with leadership development',
-  'brain-health': 'Holistic wellness approach with lifestyle integration',
-  'caregiver': 'Compassionate support with self-care reminders',
-  'wellness': 'Balanced approach with sustainable habit formation',
-  'medical-professional': 'Evidence-based strategies with clinical relevance',
-  'colleague': 'Collaborative learning with peer support networks'
-};
+  const uniqueCharacteristics = generateUniqueCharacteristics(sectionScores, userType);
+  const strengthAreas = topTwo.map(s => s.title);
+  const growthOpportunities = bottomTwo.map(s => s.title);
+  const personalizedMessage = generatePersonalizedMessage(focusArea, topTwo, userType);
+  const nextSteps = generatePersonalizedNextSteps(focusArea, sectionScores, userType);
+  const rhythmSignature = generateRhythmSignature(sectionScores, focusArea);
 
-const quickWins: Record<UserType, string> = {
-  'brain-injury': 'Complete one small cognitive exercise daily',
-  'cognitive-optimization': 'Implement a 10-minute morning focus routine',
-  'empowerment': 'Set and achieve one meaningful micro-goal daily',
-  'brain-health': 'Add one brain-healthy habit to your daily routine',
-  'caregiver': 'Schedule 15 minutes of personal time each day',
-  'wellness': 'Track one wellness metric consistently for a week',
-  'medical-professional': 'Use evidence-based cognitive breaks between patients',
-  'colleague': 'Share one cognitive wellness tip with a team member'
-};
+  return {
+    uniqueCharacteristics,
+    strengthAreas,
+    growthOpportunities,
+    personalizedMessage,
+    nextSteps,
+    rhythmSignature
+  };
+}
 
-const focusAreaPhases: Record<UserType, string> = {
-  "brain-injury": "Recovery & Rebuilding",
-  "cognitive-optimization": "Performance Enhancement", 
-  caregiver: "Support & Self-Care",
-  wellness: "Holistic Wellness",
-  "medical-professional": "Professional Development",
-  colleague: "Growth & Learning",
-  empowerment: "Leadership & Impact",
-  "brain-health": "Preventive Wellness"
-};
+function generateUniqueCharacteristics(sectionScores: SectionScore[], userType?: UserType): string[] {
+  const characteristics: string[] = [];
+  const scores = sectionScores.map(s => s.average);
+  const variance = calculateVariance(scores);
+  
+  if (variance < 0.3) {
+    characteristics.push("Consistent and balanced across all life areas");
+  } else if (variance > 0.8) {
+    characteristics.push("Dynamic range with distinct strengths and growth areas");
+  }
 
-const focusAreaStrengths: Record<UserType, string> = {
-  "brain-injury": "Your resilience and determination in recovery show incredible strength",
-  "cognitive-optimization": "Your analytical mind and drive for improvement are powerful assets",
-  caregiver: "Your compassion and dedication to helping others is truly inspiring", 
-  wellness: "Your commitment to holistic health creates a strong foundation for growth",
-  "medical-professional": "Your expertise and desire to help others makes you a valuable leader",
-  colleague: "Your collaborative spirit and growth mindset are key strengths",
-  empowerment: "Your natural leadership abilities and vision for positive change are remarkable",
-  "brain-health": "Your proactive approach to brain wellness demonstrates wisdom and foresight"
-};
+  const highScorer = sectionScores.find(s => s.average >= 2.5);
+  if (highScorer) {
+    characteristics.push(`Exceptional strength in ${highScorer.title.toLowerCase()}`);
+  }
 
-const focusAreaChallenges: Record<UserType, string> = {
-  "brain-injury": "Navigating cognitive changes while maintaining hope and progress",
-  "cognitive-optimization": "Balancing high performance with sustainable wellness practices",
-  caregiver: "Managing your own needs while caring for others with compassion",
-  wellness: "Integrating multiple wellness practices into a cohesive lifestyle",
-  "medical-professional": "Staying current with best practices while managing professional demands", 
-  colleague: "Developing leadership skills while maintaining collaborative relationships",
-  empowerment: "Channeling your leadership energy effectively without burnout",
-  "brain-health": "Maintaining consistent brain-healthy habits in a busy lifestyle"
-};
+  const userTypeChar = getUserTypeCharacteristic(userType);
+  if (userTypeChar) {
+    characteristics.push(userTypeChar);
+  }
 
-const focusAreaOpportunities: Record<UserType, string> = {
-  "brain-injury": "Building new neural pathways and discovering unexpected capabilities",
-  "cognitive-optimization": "Unlocking peak performance through targeted cognitive training",
-  caregiver: "Developing self-care practices that enhance your caregiving abilities",
-  wellness: "Creating a personalized wellness system that fits your unique needs",
-  "medical-professional": "Leveraging your expertise to create innovative patient care approaches",
-  colleague: "Becoming a mentor and leader within your professional community", 
-  empowerment: "Expanding your influence to create positive change at scale",
-  "brain-health": "Becoming a model for others seeking to optimize their cognitive wellness"
-};
+  return characteristics;
+}
 
-const focusAreaRecommendations: Record<UserType, string> = {
-  "brain-injury": "Focus on small, consistent wins while building your support network",
-  "cognitive-optimization": "Implement structured training routines with regular progress tracking",
-  caregiver: "Establish boundaries and self-care rituals to sustain your caring capacity",
-  wellness: "Start with foundational practices and gradually build your wellness toolkit",
-  "medical-professional": "Connect with peers and continue learning through professional development",
-  colleague: "Seek mentorship opportunities and share your knowledge with others",
-  empowerment: "Develop strategic plans for your vision while building coalition support",
-  "brain-health": "Create consistent daily practices supported by regular health monitoring"
-};
+function generatePersonalizedMessage(
+  focusArea: FocusArea,
+  topStrengths: SectionScore[],
+  userType?: UserType
+): string {
+  const strengthText = topStrengths.map(s => s.title.toLowerCase()).join(" and ");
+  const userContext = getUserTypePersonalMessage(userType);
+  
+  return `Your unique rhythm combines strong ${strengthText} with a natural inclination toward ${focusArea} focus. ${userContext} This combination positions you well for meaningful progress in your journey.`;
+}
+
+function generatePersonalizedNextSteps(
+  focusArea: FocusArea,
+  sectionScores: SectionScore[],
+  userType?: UserType
+): string[] {
+  const steps: string[] = [];
+  const weakest = sectionScores.reduce((min, current) => 
+    current.average < min.average ? current : min
+  );
+
+  // Focus area specific step
+  steps.push(`Begin with ${focusArea} activities that feel natural and comfortable`);
+  
+  // Strength-based step
+  const strongest = sectionScores.reduce((max, current) => 
+    current.average > max.average ? current : max
+  );
+  steps.push(`Use your ${strongest.title.toLowerCase()} strength as a foundation for other areas`);
+  
+  // Growth-focused step
+  steps.push(`Gently explore ${weakest.title.toLowerCase()} with small, manageable actions`);
+  
+  // User type specific step
+  const userTypeStep = getUserTypeSpecificStep(userType, focusArea);
+  if (userTypeStep) {
+    steps.push(userTypeStep);
+  }
+
+  return steps;
+}
+
+function generateRhythmSignature(sectionScores: SectionScore[], focusArea: FocusArea): string {
+  const pattern = sectionScores.map(s => {
+    if (s.average >= 2.3) return "High";
+    if (s.average >= 1.7) return "Moderate";
+    return "Developing";
+  }).join("-");
+  
+  return `${focusArea.charAt(0).toUpperCase() + focusArea.slice(1)}-Focused ${pattern} Rhythm`;
+}
+
+function generateCustomDeterminationReason(
+  sectionScores: SectionScore[],
+  focusArea: FocusArea,
+  responses: AssessmentResponses,
+  userType?: UserType
+): string {
+  const dominantSection = sectionScores.reduce((max, current) => 
+    current.average > max.average ? current : max
+  );
+  
+  const responseCount = Object.values(responses).reduce((total, section) => 
+    total + Object.keys(section).length, 0
+  );
+  
+  const userTypeContext = userType ? ` as someone focused on ${userType.replace(/-/g, ' ')}` : '';
+  
+  return `Your ${responseCount} assessment responses revealed a distinctive pattern where "${dominantSection.title}" emerged as your strongest area (${dominantSection.average.toFixed(1)}/3.0)${userTypeContext}. This personal combination, along with your unique response patterns across all areas, clearly indicates that ${focusArea} focus will serve you best right now. Your individual rhythm shows this is where you'll find the most natural momentum and meaningful progress.`;
+}
+
+function generateUserTypeMessage(
+  focusArea: FocusArea,
+  overallScore: number,
+  userType?: UserType
+): string {
+  if (!userType) return "";
+  
+  const contextMap: Record<UserType, string> = {
+    "brain-injury": `As someone on a recovery journey, your ${focusArea} focus aligns perfectly with rebuilding your rhythm at a pace that honors your healing process. Your assessment shows you're ready for this next step.`,
+    "cognitive-optimization": `For cognitive optimization, your ${focusArea} focus represents your most efficient path to enhanced mental performance. Your assessment indicates this area will yield the highest return on your optimization efforts.`,
+    "caregiver": `As a caregiver, your ${focusArea} focus will help you support others more effectively while maintaining your own well-being. Your assessment shows this balance is achievable and sustainable for you.`,
+    "wellness": `Your ${focusArea} focus perfectly aligns with building sustainable wellness and productivity systems. Your assessment indicates this foundation will support all your other life optimization goals.`,
+    "medical-professional": `As a healthcare professional, your ${focusArea} focus will enhance your clinical understanding and enable you to provide even better patient care. Your assessment indicates this knowledge will benefit both your practice and your patients.`,
+    "colleague": `As a supportive colleague, your ${focusArea} focus will help you create a more inclusive and understanding workplace while developing skills that benefit both you and your colleagues. Your assessment shows this collaborative approach will strengthen your professional relationships.`
+  };
+  
+  return contextMap[userType] || "";
+}
+
+function generateUniqueScoreStory(
+  sectionScores: SectionScore[],
+  overallScore: number,
+  userType?: UserType
+): string {
+  const highest = sectionScores.reduce((max, current) => 
+    current.average > max.average ? current : max
+  );
+  const lowest = sectionScores.reduce((min, current) => 
+    current.average < min.average ? current : min
+  );
+  
+  const spreadValue = highest.average - lowest.average;
+  const spreadDescription = spreadValue > 1.0 ? "significant variation" : 
+                           spreadValue > 0.5 ? "moderate variation" : "consistent pattern";
+  
+  return `Your overall score of ${overallScore.toFixed(1)}/3.0 tells a unique story: while ${highest.title.toLowerCase()} stands out as your strength (${highest.average.toFixed(1)}), ${lowest.title.toLowerCase()} presents your greatest opportunity (${lowest.average.toFixed(1)}). This ${spreadDescription} across areas creates your distinctive rhythm profile and explains why your personalized focus area was determined specifically for you.`;
+}
+
+// Helper functions
+function calculateVariance(numbers: number[]): number {
+  const mean = numbers.reduce((sum, num) => sum + num, 0) / numbers.length;
+  const squaredDiffs = numbers.map(num => Math.pow(num - mean, 2));
+  return squaredDiffs.reduce((sum, diff) => sum + diff, 0) / numbers.length;
+}
+
+function getUserTypeContext(userType?: UserType): string | null {
+  const contextMap: Record<UserType, string> = {
+    "brain-injury": "recovery journeys",
+    "cognitive-optimization": "performance optimization",
+    "caregiver": "caregiving roles",
+    "wellness": "wellness and productivity goals",
+    "medical-professional": "clinical practice and patient care",
+    "colleague": "workplace wellness and collaboration"
+  };
+  return userType ? contextMap[userType] : null;
+}
+
+function getUserTypeCharacteristic(userType?: UserType): string | null {
+  const charMap: Record<UserType, string> = {
+    "brain-injury": "Resilient and recovery-focused approach",
+    "cognitive-optimization": "Performance-driven mindset with optimization focus",
+    "caregiver": "Supportive nature with others-focused perspective",
+    "wellness": "Balanced approach to life optimization",
+    "medical-professional": "Evidence-based clinical approach with patient-centered focus",
+    "colleague": "Collaborative and workplace-supportive approach"
+  };
+  return userType ? charMap[userType] : null;
+}
+
+function getUserTypePersonalMessage(userType?: UserType): string {
+  const messageMap: Record<UserType, string> = {
+    "brain-injury": "Your journey shows remarkable self-awareness and readiness for positive growth.",
+    "cognitive-optimization": "Your systematic approach to self-assessment indicates strong optimization potential.",
+    "caregiver": "Your thoughtful responses show the same care you give others applied to your own growth.",
+    "wellness": "Your balanced perspective creates an ideal foundation for sustainable life optimization.",
+    "medical-professional": "Your clinical insight combined with personal reflection demonstrates exceptional professional growth potential.",
+    "colleague": "Your thoughtful approach to supporting colleagues shows strong collaborative leadership potential."
+  };
+  return userType ? messageMap[userType] : "Your thoughtful responses show strong self-awareness and growth potential.";
+}
+
+function getUserTypeSpecificStep(userType?: UserType, focusArea?: FocusArea): string | null {
+  if (!userType) return null;
+  
+  const stepMap: Record<UserType, string> = {
+    "brain-injury": "Connect with recovery-focused community resources and support",
+    "cognitive-optimization": "Track and measure your cognitive performance improvements",
+    "caregiver": "Include family/care network in your growth journey when appropriate",
+    "wellness": "Integrate wellness practices with your productivity systems",
+    "medical-professional": "Apply evidence-based assessment insights to enhance patient care protocols",
+    "colleague": "Build inclusive workplace practices and support colleague wellbeing initiatives"
+  };
+  
+  return stepMap[userType];
+}

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { DailyCheckin } from "../DailyCheckin";
 import { TodaysActions } from "../TodaysActions";
@@ -13,7 +14,7 @@ import { getCurrentFocusArea } from "@/utils/rhythmAnalysis";
 
 export function NeedToKnowNowView() {
   const userData = useUserData();
-  const currentFocusArea = getCurrentFocusArea(userData.userType);
+  const currentFocusArea = getCurrentFocusArea();
   const hasCompletedSetup = localStorage.getItem("myrhythm_initial_setup_complete") === "true";
   
   return (

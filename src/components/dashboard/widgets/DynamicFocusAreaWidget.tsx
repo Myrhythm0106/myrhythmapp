@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ const focusAreaIcons: Record<FocusArea, React.ComponentType<{ className?: string
 export function DynamicFocusAreaWidget() {
   const navigate = useNavigate();
   const userData = useUserData();
-  const currentFocusArea = getCurrentFocusArea(userData.userType);
+  const currentFocusArea = getCurrentFocusArea();
   const [isAssessmentDialogOpen, setIsAssessmentDialogOpen] = useState(false);
   
   const currentAssessment = getCurrentAssessmentResult();

@@ -1,194 +1,203 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { LogIn, Brain, ChevronDown, Users, Clock, Shield, Award, Heart, Calendar, Archive, Lightbulb, Star, TrendingUp } from "lucide-react";
+import { LogIn, Brain, ChevronDown } from "lucide-react";
 import { LoginModal } from "@/components/auth/LoginModal";
-import { Badge } from "@/components/ui/badge";
-import { NeuralNetworkBackground } from "@/components/ui/NeuralNetworkBackground";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 export function HeroSection() {
   const [showLoginModal, setShowLoginModal] = React.useState(false);
   const navigate = useNavigate();
 
-  const handleStartJourney = () => {
-    navigate("/onboarding");
+  // Function to scroll to MyRhythm Framework section
+  const scrollToFramework = () => {
+    const frameworkSection = document.getElementById('myrhythm-framework');
+    if (frameworkSection) {
+      frameworkSection.scrollIntoView({
+        behavior: 'smooth'
+      });
+    }
   };
 
-  const scrollToFeatures = () => {
-    const featuresSection = document.getElementById('features');
-    if (featuresSection) {
-      featuresSection.scrollIntoView({ behavior: 'smooth' });
+  const handleStartJourney = () => {
+    console.log("HeroSection: Start Journey button clicked");
+    console.log("HeroSection: About to navigate to /onboarding");
+    console.log("HeroSection: Current location:", window.location.href);
+    try {
+      navigate("/onboarding");
+      console.log("HeroSection: navigate() called successfully");
+    } catch (error) {
+      console.error("HeroSection: Navigation error:", error);
     }
   };
 
   return (
-    <section className="relative overflow-hidden min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-teal-900">
-      {/* Neural Network Background */}
-      <NeuralNetworkBackground opacity={0.12} />
-      
-      {/* Enhanced background layers with purple/teal integration */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/30 via-purple-600/20 to-teal-600/30"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.3),transparent)] opacity-80"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(20,184,166,0.3),transparent)] opacity-80"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(147,51,234,0.15),transparent)] opacity-60"></div>
-      </div>
+    <TooltipProvider>
+      <section className="relative overflow-hidden min-h-screen">
+        {/* Beautiful gradient background - purple-blue-teal dominant */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-100/60 via-blue-100/50 to-teal-100/60"></div>
+        
+        {/* Additional overlay for depth */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-50/30 via-blue-50/40 to-teal-50/30"></div>
 
-      {/* Enhanced floating elements with purple integration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-20 w-32 h-32 bg-emerald-400/40 rounded-full blur-2xl animate-pulse"></div>
-        <div className="absolute top-1/3 right-20 w-24 h-24 bg-teal-400/50 rounded-full blur-xl animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-1/2 left-1/4 w-20 h-20 bg-purple-400/35 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
-        <div className="absolute bottom-1/4 left-1/3 w-28 h-28 bg-emerald-300/45 rounded-full blur-xl animate-pulse" style={{animationDelay: '4s'}}></div>
-        <div className="absolute top-1/4 right-1/3 w-22 h-22 bg-purple-300/40 rounded-full blur-lg animate-pulse" style={{animationDelay: '3s'}}></div>
-        <div className="absolute bottom-20 right-20 w-36 h-36 bg-teal-300/35 rounded-full blur-3xl animate-pulse" style={{animationDelay: '6s'}}></div>
-      </div>
+        {/* Beautiful floating gradient elements - purple-blue-teal with tiny emerald touches */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-gradient-to-r from-purple-400 via-blue-400 to-teal-400 rounded-full animate-pulse opacity-60" style={{animationDelay: '0s', animationDuration: '6s'}}></div>
+          <div className="absolute top-1/3 right-1/3 w-3 h-3 bg-gradient-to-r from-blue-400 to-teal-400 rounded-full animate-pulse opacity-50" style={{animationDelay: '3s', animationDuration: '8s'}}></div>
+          <div className="absolute bottom-1/3 left-1/2 w-5 h-5 bg-gradient-to-r from-teal-400 via-purple-400 to-blue-400 rounded-full animate-pulse opacity-40" style={{animationDelay: '6s', animationDuration: '10s'}}></div>
+          {/* Subtle amber accent */}
+          <div className="absolute top-1/2 right-1/4 w-2 h-2 bg-gradient-to-r from-amber-300/60 to-yellow-300/40 rounded-full animate-pulse opacity-30" style={{animationDelay: '9s', animationDuration: '12s'}}></div>
+          {/* Tiny emerald therapeutic touch */}
+          <div className="absolute top-3/4 left-1/3 w-1.5 h-1.5 bg-emerald-400/40 rounded-full animate-pulse opacity-25" style={{animationDelay: '12s', animationDuration: '15s'}}></div>
+        </div>
 
-      {/* Top navigation */}
-      <div className="fixed top-4 right-4 md:top-6 md:right-6 z-50">
-        <Button 
-          variant="outline" 
-          className="bg-white/10 backdrop-blur-md text-white border-white/30 hover:bg-white/20 rounded-full px-6 py-2 font-medium" 
-          onClick={() => setShowLoginModal(true)}
-        >
-          <LogIn className="h-4 w-4 mr-2" />
-          Login
-        </Button>
-      </div>
+        {/* Fixed top navigation */}
+        <div className="fixed top-4 right-4 md:top-6 md:right-6 z-50">
+          <Button 
+            variant="ghost" 
+            className="bg-white/80 backdrop-blur-md text-purple-700 border border-purple-200/60 hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 rounded-full px-4 py-2 md:px-6 md:py-2 text-sm font-medium transition-all duration-300" 
+            onClick={() => setShowLoginModal(true)}
+          >
+            <LogIn className="h-4 w-4 mr-1 md:mr-2" />
+            <span className="hidden sm:inline">Login</span>
+          </Button>
+        </div>
 
-      <div className="relative z-10 container mx-auto px-6 max-w-7xl min-h-screen flex items-center">
-        <div className="text-center w-full space-y-16 pt-16">
-          
-          {/* Powerful opening */}
-          <div className="space-y-8">
-            <div className="inline-block px-8 py-3 bg-emerald-400/20 rounded-full border border-emerald-400/40 backdrop-blur-sm mb-6">
-              <span className="text-emerald-200 font-bold text-lg">🔥 By Survivors, For Survivors</span>
-            </div>
+        <div className="relative z-10 container mx-auto px-6 max-w-6xl min-h-screen flex items-center">
+          <div className="text-center w-full space-y-8 md:space-y-12 pt-16 md:pt-0">
             
-            <h1 className="text-6xl md:text-8xl font-black text-white leading-tight tracking-tight">
-              No One Walks
-              <br />
-              <span className="text-transparent bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text">
-                Alone
-              </span>
-            </h1>
-            
-            <p className="text-2xl md:text-3xl text-emerald-100 max-w-5xl mx-auto leading-relaxed font-light">
-              The Memory First MyRhythm Framework that turns your biggest challenges into your greatest victories
-            </p>
-          </div>
-
-          {/* Empowerment Success Stats - BOLD Impact */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-12">
-            <div className="bg-purple-500/20 backdrop-blur-md rounded-3xl p-10 border border-purple-400/30 hover:scale-105 transition-transform">
-              <div className="text-6xl font-black text-purple-400 mb-4">94%</div>
-              <div className="text-2xl text-white font-bold mb-2">Feel More Confident</div>
-              <div className="text-purple-200 text-lg">Within 30 days</div>
-            </div>
-            <div className="bg-emerald-500/20 backdrop-blur-md rounded-3xl p-10 border border-emerald-400/30 hover:scale-105 transition-transform">
-              <div className="text-6xl font-black text-emerald-400 mb-4">2,847</div>
-              <div className="text-2xl text-white font-bold mb-2">Survivors Thriving</div>
-              <div className="text-emerald-200 text-lg">And counting daily</div>
-            </div>
-            <div className="bg-teal-500/20 backdrop-blur-md rounded-3xl p-10 border border-teal-400/30 hover:scale-105 transition-transform">
-              <div className="text-6xl font-black text-teal-400 mb-4">91%</div>
-              <div className="text-2xl text-white font-bold mb-2">Report Sharper Memory</div>
-              <div className="text-teal-200 text-lg">Memory first results</div>
-            </div>
-          </div>
-
-          {/* Powerful Testimonial */}
-          <div className="bg-gradient-to-r from-emerald-600/25 to-teal-600/25 backdrop-blur-md rounded-3xl p-12 border border-white/20 max-w-5xl mx-auto">
-            <div className="flex items-center justify-center mb-6">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-8 w-8 text-yellow-400 fill-yellow-400" />
-              ))}
-            </div>
-            <div className="text-3xl md:text-4xl text-white font-light italic leading-relaxed mb-8">
-              "I went from writing everything on sticky notes to running my own business again. 
-              MyRhythm didn't just help me remember—it helped me believe in myself again."
-            </div>
-            <div className="text-emerald-300 font-bold text-xl">
-              — Sarah M., Brain Injury Survivor, 3 years post-empowerment
-            </div>
-          </div>
-
-          {/* Core Features - Survivor Focused */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-8">
-            <div className="bg-emerald-500/25 backdrop-blur-md rounded-2xl p-8 border border-emerald-400/30 hover:scale-105 transition-all group">
-              <div className="text-emerald-300 mb-4 group-hover:scale-110 transition-transform">
-                <Lightbulb className="h-10 w-10" />
+            {/* Brain icon with purple-blue-teal dominant, tiny emerald touch */}
+            <div className="space-y-6 md:space-y-8">
+              <div className="flex items-center justify-center gap-4 md:gap-6 mb-6 md:mb-8">
+                <div className="relative">
+                  {/* BRAIN ICON - purple-blue-teal dominant with tiny emerald therapeutic touch */}
+                  <div className="w-12 h-12 md:w-16 md:h-16 lg:w-24 lg:h-24 rounded-full bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 flex items-center justify-center shadow-2xl border border-emerald-200/20">
+                    <Brain className="h-6 w-6 md:h-8 md:w-8 lg:h-12 lg:w-12 text-white filter drop-shadow-md" />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-blue-400/30 to-teal-400/30 rounded-full blur-xl animate-pulse"></div>
+                </div>
+                {/* Title - purple-blue-teal dominant */}
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent tracking-wide drop-shadow-sm">
+                  MyRhythm
+                </h1>
               </div>
-              <h3 className="font-black text-white text-xl mb-3">Memory Bridge</h3>
-              <p className="text-emerald-100 text-lg">Smart reminders that actually understand your recovery journey</p>
-            </div>
-            <div className="bg-teal-500/25 backdrop-blur-md rounded-2xl p-8 border border-teal-400/30 hover:scale-105 transition-all group">
-              <div className="text-teal-300 mb-4 group-hover:scale-110 transition-transform">
-                <Heart className="h-10 w-10" />
-              </div>
-              <h3 className="font-black text-white text-xl mb-3">Empowerment Hub</h3>
-              <p className="text-teal-100 text-lg">Track wins, celebrate progress, build unstoppable momentum</p>
-            </div>
-            <div className="bg-emerald-500/25 backdrop-blur-md rounded-2xl p-8 border border-emerald-400/30 hover:scale-105 transition-all group">
-              <div className="text-emerald-300 mb-4 group-hover:scale-110 transition-transform">
-                <Calendar className="h-10 w-10" />
-              </div>
-              <h3 className="font-black text-white text-xl mb-3">Cognitive Calendar</h3>
-              <p className="text-emerald-100 text-lg">Visual planning that makes complex days feel manageable</p>
-            </div>
-            <div className="bg-teal-500/25 backdrop-blur-md rounded-2xl p-8 border border-teal-400/30 hover:scale-105 transition-all group">
-              <div className="text-teal-300 mb-4 group-hover:scale-110 transition-transform">
-                <Archive className="h-10 w-10" />
-              </div>
-              <h3 className="font-black text-white text-xl mb-3">Memory Bank</h3>
-              <p className="text-teal-100 text-lg">Secure vault for your most precious moments and milestones for you to keep safe and remember</p>
-            </div>
-          </div>
-
-          {/* Urgent CTA with Scarcity */}
-          <div className="space-y-8">
-            <div className="flex items-center justify-center gap-4 mb-6">
-              <div className="inline-block px-6 py-3 bg-orange-500/30 rounded-full border border-orange-400/50">
-                <span className="text-orange-200 font-bold text-lg">🚀 Limited Beta Access - Only 127 spots left</span>
-              </div>
-              <div className="flex items-center gap-2 text-orange-200">
-                <TrendingUp className="h-5 w-5" />
-                <span className="font-medium">Filling Fast!</span>
+              
+              {/* Value proposition */}
+              <div className="space-y-4 md:space-y-6">
+                <p className="text-lg md:text-xl lg:text-2xl max-w-4xl mx-auto leading-relaxed text-gray-700 font-light tracking-wide px-4">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent font-medium cursor-help border-b border-dotted border-purple-300/50 transition-all hover:border-purple-500/80">
+                        LEAP*
+                      </span>
+                    </TooltipTrigger>
+                    <TooltipContent className="bg-white/95 text-gray-700 backdrop-blur-sm border border-purple-200/60">
+                      <p className="text-sm">
+                        <strong>Your Personal Journey:</strong><br />
+                        <strong>L</strong>ive • <strong>E</strong>mpowered • <strong>A</strong>uthentic • <strong>P</strong>roductive
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                  {" "}to Align Memory, Focus, Habits and Momentum.
+                </p>
               </div>
             </div>
             
-            <div className="flex flex-col lg:flex-row gap-6 justify-center items-center">
-              <Button 
-                size="lg" 
-                className="text-2xl px-16 py-8 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-400 hover:to-teal-400 font-black shadow-2xl hover:scale-105 transition-all duration-300 border-2 border-white/20" 
-                onClick={handleStartJourney}
-              >
-                Join The Empowerment Revolution
-                <Badge className="ml-4 bg-white/30 text-white border-white/50 text-lg px-3 py-1">FREE ACCESS</Badge>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="text-xl px-12 py-8 rounded-2xl border-2 border-white/50 text-white hover:bg-white/10 font-bold backdrop-blur-sm" 
-                onClick={scrollToFeatures}
-              >
-                See How It Works
-              </Button>
+            {/* Memory Partner Promise - purple-blue-teal with tiny emerald therapeutic touch */}
+            <div className="max-w-5xl mx-auto">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="memory-promise" className="border-none">
+                  <div className="bg-gradient-to-r from-white/90 via-purple-50/60 to-blue-50/50 backdrop-blur-sm border border-purple-200/30 rounded-2xl shadow-xl border-l-2 border-l-emerald-300/30">
+                    <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center">
+                          <Brain className="h-4 w-4 text-white" />
+                          <div className="absolute w-1 h-1 bg-emerald-400/60 rounded-full -top-0.5 -right-0.5"></div>
+                        </div>
+                        <span className="text-lg font-medium bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Your Memory Partner Promise</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="px-6 pb-4">
+                      <p className="text-sm text-gray-600 leading-relaxed max-w-3xl mx-auto">
+                        Experience gentle memory improvement in just 7 days as you discover <strong className="bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">YOUR unique LEAP pattern</strong>, establish <strong className="bg-gradient-to-r from-blue-600 to-teal-600 bg-clip-text text-transparent">YOUR personal rhythm</strong>, and build <strong className="bg-gradient-to-r from-teal-600 to-purple-600 bg-clip-text text-transparent">YOUR unstoppable momentum</strong>.
+                      </p>
+                    </AccordionContent>
+                  </div>
+                </AccordionItem>
+              </Accordion>
             </div>
             
-            <div className="text-lg text-emerald-200 max-w-3xl mx-auto font-medium">
-              Join 2,847 survivors who've reclaimed their confidence. No credit card required. Your empowerment journey starts now.
+            {/* Call-to-action section - purple-blue-teal dominant */}
+            <div className="space-y-6 md:space-y-8 pt-6 md:pt-8">
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
+                <Button 
+                  size="lg" 
+                  className="text-base md:text-lg px-8 py-6 md:px-12 md:py-8 rounded-full bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 text-white hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 shadow-2xl hover:shadow-purple-200/50 transition-all duration-300 border-2 border-white/20 group relative overflow-hidden font-semibold w-full sm:w-auto max-w-sm" 
+                  onClick={handleStartJourney}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/10 via-transparent to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  <div className="relative flex items-center gap-2 md:gap-3">
+                    <span className="font-semibold tracking-wide">
+                      Start Your Journey
+                    </span>
+                    <div className="text-xs opacity-90 border-l border-white/30 pl-2 md:pl-3">
+                      7-Day Free Trial
+                    </div>
+                  </div>
+                </Button>
+                
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="text-base md:text-lg px-6 py-6 md:px-10 md:py-8 rounded-full border-2 border-purple-300/60 text-purple-700 bg-white/70 backdrop-blur-sm hover:bg-gradient-to-r hover:from-purple-50 hover:to-blue-50 hover:border-purple-400/80 transition-all duration-300 w-full sm:w-auto max-w-sm" 
+                  onClick={scrollToFramework}
+                >
+                  Learn The Framework
+                </Button>
+              </div>
+              
+              {/* Trust indicators - purple-blue-teal with tiny emerald therapeutic touches */}
+              <div className="flex flex-wrap items-center justify-center gap-6 md:gap-12 text-sm text-gray-600 pt-4">
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full animate-pulse"></div>
+                  <span className="font-light">7-Day Free Trial</span>
+                </div>
+                <div className="w-px h-4 bg-gradient-to-b from-purple-300 to-blue-300 hidden sm:block"></div>
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 bg-gradient-to-r from-blue-400 to-teal-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+                  <span className="font-light">Cancel Anytime</span>
+                </div>
+                <div className="w-px h-4 bg-gradient-to-b from-blue-300 to-teal-300 hidden sm:block"></div>
+                <div className="flex items-center gap-2">
+                  <div className="h-2 w-2 bg-gradient-to-r from-teal-400 to-purple-400 rounded-full animate-pulse" style={{animationDelay: '2s'}}></div>
+                  <span className="font-light">Start Immediately</span>
+                </div>
+                {/* Subtle amber-emerald accent */}
+                <div className="w-px h-4 bg-gradient-to-b from-teal-300 to-amber-200/60 hidden lg:block"></div>
+                <div className="flex items-center gap-2">
+                  <div className="h-1.5 w-1.5 bg-gradient-to-r from-amber-300/70 to-emerald-300/40 rounded-full animate-pulse" style={{animationDelay: '3s'}}></div>
+                  <span className="font-light text-amber-600/80">Premium Support</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
-        <ChevronDown className="h-8 w-8 text-emerald-400" />
-      </div>
+        {/* Scroll indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10">
+          <div className="flex flex-col items-center space-y-2">
+            <div className="text-purple-500/80 text-xs font-light tracking-wider">DISCOVER MORE</div>
+            <div className="animate-bounce">
+              <ChevronDown className="h-6 w-6 text-purple-500/70" />
+            </div>
+          </div>
+        </div>
 
-      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
-    </section>
+        {/* Login Modal */}
+        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      </section>
+    </TooltipProvider>
   );
 }

@@ -11,7 +11,6 @@ import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { MemoryBridgeFloatingButton } from './MemoryBridgeFloatingButton';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
-import { useNavigate } from 'react-router-dom';
 import { 
   Brain, 
   Users, 
@@ -30,7 +29,6 @@ export function MemoryBridgeMainDashboard() {
   const { extractedActions, currentMeeting, isRecording } = useMemoryBridge();
   const { hasFeature, tier } = useSubscription();
   const [activeTab, setActiveTab] = useState('actions');
-  const navigate = useNavigate();
   
   const hasMemoryBridgeAccess = hasFeature('processRecording') || tier === 'premium' || tier === 'family';
   
@@ -106,7 +104,6 @@ export function MemoryBridgeMainDashboard() {
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 text-lg"
-                  onClick={() => navigate('/in-app-purchase')}
                 >
                   <Crown className="h-5 w-5 mr-2" />
                   Upgrade to Memory Bridge Premium

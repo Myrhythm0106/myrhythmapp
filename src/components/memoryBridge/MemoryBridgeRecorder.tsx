@@ -3,13 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MeetingSetupDialog } from './MeetingSetupDialog';
-import { QuickRecordButton } from './QuickRecordButton';
-import { AmbientModeToggle } from './AmbientModeToggle';
-import { useMemoryBridge } from '@/hooks/useMemoryBridge';
+import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
-import { Heart, Users, Clock, StopCircle, Activity, Zap, Settings } from 'lucide-react';
+import { Heart, Users, Clock, StopCircle, Activity } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
-import { toast } from 'sonner';
 
 export function MemoryBridgeRecorder() {
   const { 
@@ -17,10 +14,7 @@ export function MemoryBridgeRecorder() {
     isProcessing, 
     currentMeeting, 
     startMeetingRecording, 
-    stopMeetingRecording,
-    showPACTFlow,
-    lastRecordingData,
-    completePACTGeneration
+    stopMeetingRecording 
   } = useMemoryBridge();
   
   const { 
@@ -35,37 +29,43 @@ export function MemoryBridgeRecorder() {
 
   const handleStartMeeting = async (setupData: MeetingSetupData) => {
     try {
-      console.log('Starting unified PACT recording with setup:', setupData);
-      
       // Start voice recording first
       await startVoiceRecording();
       
-      // Start the meeting recording
-      const meetingRecord = await startMeetingRecording(setupData, null);
-      
-      if (meetingRecord) {
-        const startTime = new Date();
-        setRecordingStartTime(startTime);
+      // Create a temporary voice recording entry
+      const tempBlob = new Blob(['temp'], { type: 'audio/wav' });
+      const voiceData = await saveRecording(
+        tempBlob, 
+        setupData.title, 
+        'memory_bridge',
+        `Memory Bridge recording for: ${setupData.title}`,
+        false
+      );
+
+      if (voiceData) {
+        // Start the meeting recording with the voice recording ID
+        const meetingRecord = await startMeetingRecording(setupData, voiceData.id);
         
-        // Start duration counter
-        intervalRef.current = setInterval(() => {
-          const duration = Math.floor((Date.now() - startTime.getTime()) / 1000);
-          setCurrentDuration(duration);
-        }, 1000);
-        
-        toast.success('Recording started! Your support circle has been notified.');
+        if (meetingRecord) {
+          setRecordingStartTime(new Date());
+          
+          // Start duration counter
+          intervalRef.current = setInterval(() => {
+            if (recordingStartTime) {
+              const duration = Math.floor((Date.now() - recordingStartTime.getTime()) / 1000);
+              setCurrentDuration(duration);
+            }
+          }, 1000);
+        }
       }
     } catch (error) {
       console.error('Error starting meeting:', error);
-      toast.error('Failed to start recording. Please check microphone permissions.');
     }
   };
 
   const handleStopMeeting = async () => {
     try {
-      console.log('Stopping unified PACT recording...');
-      
-      // Clear the duration timer
+      // Stop the timer
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
@@ -74,17 +74,15 @@ export function MemoryBridgeRecorder() {
       // Stop voice recording and get the audio blob
       const audioBlob = await stopVoiceRecording();
       
-      // Stop meeting recording with audio data
-      await stopMeetingRecording(audioBlob);
+      if (audioBlob && currentMeeting) {
+        // Process through Memory Bridge
+        await stopMeetingRecording(audioBlob);
+      }
       
-      // Reset state
       setRecordingStartTime(null);
       setCurrentDuration(0);
-      
-      toast.success('Recording saved! Ready to generate PACT report.');
     } catch (error) {
-      console.error('Error stopping PACT recording:', error);
-      toast.error('Failed to process recording. Please try again.');
+      console.error('Error stopping meeting:', error);
     }
   };
 
@@ -96,29 +94,22 @@ export function MemoryBridgeRecorder() {
 
   if (isRecording && currentMeeting) {
     return (
-      <Card className="w-full max-w-4xl mx-auto border-2 border-memory-emerald/30 shadow-glow bg-gradient-trust">
+      <Card className="w-full max-w-2xl mx-auto border-primary/20 shadow-elegant">
         <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-3 text-2xl">
-            <div className="w-4 h-4 bg-red-500 rounded-full animate-pulse shadow-glow"></div>
-            <span className="bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
-              Recording: {currentMeeting.meeting_title}
-            </span>
+          <CardTitle className="flex items-center justify-center gap-2 text-xl">
+            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+            Recording: {currentMeeting.meeting_title}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-8">
+        <CardContent className="space-y-6">
           {/* Recording Status */}
           <div className="flex justify-center">
-            <div className="bg-gradient-to-r from-red-500/20 to-pink-500/20 rounded-full px-8 py-4 border-2 border-red-300 dark:border-red-700 shadow-glow">
-              <div className="flex items-center gap-4">
-                <Activity className="h-6 w-6 text-red-500 animate-pulse" />
-                <span className="text-2xl font-mono font-bold text-red-600 dark:text-red-400">
+            <div className="bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-full px-6 py-3 border border-red-200 dark:border-red-800">
+              <div className="flex items-center gap-3">
+                <Activity className="h-5 w-5 text-red-500 animate-pulse" />
+                <span className="text-lg font-mono text-red-600 dark:text-red-400">
                   {formatDuration(currentDuration)}
                 </span>
-                <div className="flex gap-1">
-                  <div className="w-2 h-6 bg-red-500 animate-pulse rounded"></div>
-                  <div className="w-2 h-4 bg-red-400 animate-pulse rounded"></div>
-                  <div className="w-2 h-8 bg-red-500 animate-pulse rounded"></div>
-                </div>
               </div>
             </div>
           </div>
@@ -177,28 +168,15 @@ export function MemoryBridgeRecorder() {
   }
 
   return (
-    <Card className="w-full max-w-4xl mx-auto border-2 border-memory-emerald/30 shadow-glow bg-gradient-trust">
-      <CardHeader className="text-center space-y-6">
-        <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-memory shadow-glow mb-4 animate-pulse">
-          <Heart className="h-12 w-12 text-white" />
-        </div>
-        <CardTitle className="text-4xl font-bold bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent">
+    <Card className="w-full max-w-2xl mx-auto">
+      <CardHeader className="text-center">
+        <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+          <Heart className="h-6 w-6 text-primary" />
           Memory Bridge
         </CardTitle>
-        <div className="space-y-2">
-          <p className="text-2xl font-bold text-muted-foreground">
-            Never Forget. Never Let Anyone Down.
-          </p>
-          <p className="text-xl text-muted-foreground">
-            Your Personal Promise Keeper & Confidence Builder
-          </p>
-        </div>
-        <div className="bg-gradient-to-r from-memory-emerald/10 to-brain-health/10 rounded-lg p-6 border border-memory-emerald/20">
-          <p className="text-lg font-medium text-memory-emerald mb-2">✨ Transform Your Life Today</p>
-          <p className="text-base text-muted-foreground">
-            Remember every commitment, build unshakeable trust, and gain the confidence to live independently.
-          </p>
-        </div>
+        <p className="text-muted-foreground">
+          Capture conversations and never miss what matters to your relationships
+        </p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Key Features */}
@@ -207,9 +185,9 @@ export function MemoryBridgeRecorder() {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
               <Heart className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="font-medium">PACT Tracking</h3>
+            <h3 className="font-medium">Preserve Intent</h3>
             <p className="text-xs text-muted-foreground">
-              Promises, Actions, Commitments & Takeaways
+              Capture the 'why' behind commitments
             </p>
           </div>
           
@@ -217,9 +195,9 @@ export function MemoryBridgeRecorder() {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
               <Users className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="font-medium">Trust Building</h3>
+            <h3 className="font-medium">Relationship Context</h3>
             <p className="text-xs text-muted-foreground">
-              Strengthen relationships through reliability
+              Understand family dynamics
             </p>
           </div>
           
@@ -227,66 +205,29 @@ export function MemoryBridgeRecorder() {
             <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
               <Clock className="h-6 w-6 text-primary" />
             </div>
-            <h3 className="font-medium">Confidence Builder</h3>
+            <h3 className="font-medium">Memory Safety</h3>
             <p className="text-xs text-muted-foreground">
-              Your reliable second brain
+              Never forget what you promised
             </p>
           </div>
         </div>
 
-        {/* Giant Start Button - Senior Friendly */}
-        <div className="space-y-8">
-          <div className="flex justify-center">
-            <Button
-              onClick={() => handleStartMeeting({
-                title: 'Conversation Recording',
-                participants: [{ name: 'Me', relationship: 'self' }],
-                meetingType: 'informal'
-              })}
-              disabled={isProcessing}
-              className="h-24 text-2xl px-16 bg-gradient-to-r from-memory-emerald to-brain-health hover:scale-105 transition-all shadow-glow rounded-2xl"
-            >
-              <Activity className="w-8 h-8 mr-4" />
-              {isProcessing ? 'Starting...' : 'Start Recording'}
-            </Button>
-          </div>
-          
-          <div className="text-center">
-            <p className="text-lg text-muted-foreground mb-4">
-              One tap to capture all your promises and commitments
-            </p>
-            <div className="flex justify-center">
-              <MeetingSetupDialog 
-                onStartMeeting={handleStartMeeting}
-                isLoading={isProcessing}
-              />
-            </div>
-          </div>
+        {/* Start Recording */}
+        <div className="flex justify-center">
+          <MeetingSetupDialog 
+            onStartMeeting={handleStartMeeting}
+            isLoading={isProcessing}
+          />
         </div>
 
-        {/* Ambient Mode */}
-        <div className="border-t pt-6">
-          <AmbientModeToggle />
-        </div>
-
-        {/* Confidence Building Messages */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="text-center p-6 bg-gradient-to-r from-memory-emerald/10 to-memory-emerald/5 rounded-xl border border-memory-emerald/20">
-            <h3 className="text-xl font-bold text-memory-emerald mb-3">💪 Build Trust Daily</h3>
-            <div className="space-y-2 text-base text-muted-foreground">
-              <p>✓ Never forget a promise</p>
-              <p>✓ Remember medical appointments</p>
-              <p>✓ Keep family commitments</p>
-            </div>
-          </div>
-          
-          <div className="text-center p-6 bg-gradient-to-r from-brain-health/10 to-brain-health/5 rounded-xl border border-brain-health/20">
-            <h3 className="text-xl font-bold text-brain-health mb-3">🧠 Gain Confidence</h3>
-            <div className="space-y-2 text-base text-muted-foreground">
-              <p>✓ Live independently</p>
-              <p>✓ Feel empowered daily</p>
-              <p>✓ Strengthen relationships</p>
-            </div>
+        {/* Help Text */}
+        <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-lg p-4">
+          <p className="mb-2 font-medium">Perfect for:</p>
+          <div className="space-y-1">
+            <p>• Family conversations & planning</p>
+            <p>• Medical appointments</p>
+            <p>• Important discussions with loved ones</p>
+            <p>• Any conversation where commitments are made</p>
           </div>
         </div>
       </CardContent>

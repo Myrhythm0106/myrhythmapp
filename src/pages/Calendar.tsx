@@ -4,7 +4,7 @@ import { BrainHealthCalendarHeader } from "@/components/calendar/BrainHealthCale
 import { BrainHealthCalendarView } from "@/components/calendar/BrainHealthCalendarView";
 import { BrainHealthSidebar } from "@/components/calendar/BrainHealthSidebar";
 import { BrainFriendlyGoalCreator } from "@/components/goals/BrainFriendlyGoalCreator";
-import { EventForm } from "@/components/calendar/EventForm";
+import { GuidedActionWizard } from "@/components/calendar/forms/GuidedActionWizard";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
 import { EnhancedPomodoroTimer } from "@/components/pomodoro/EnhancedPomodoroTimer";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -26,7 +26,7 @@ import { Preview3Background } from "@/components/ui/Preview3Background";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const [view, setView] = useState<"day" | "week" | "month" | "year" | "goals">("day");
+  const [view, setView] = useState<"day" | "week" | "month" | "year" | "goals">("month");
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const [showQuickAction, setShowQuickAction] = useState(false);
   const [showNewGoal, setShowNewGoal] = useState(false);
@@ -34,7 +34,7 @@ const Calendar = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { createAction, createGoal } = useDailyActions();
-  const { updateTransferData, prefillForm, transferData } = useDataTransfer();
+  const { updateTransferData, prefillForm } = useDataTransfer();
 
   // Check URL parameters for different actions and update transfer data
   React.useEffect(() => {
@@ -220,16 +220,13 @@ const Calendar = () => {
                 Create Action
               </DialogTitle>
             </DialogHeader>
-            <EventForm 
-              defaultTime={transferData.selectedTime || prefillForm('action')?.time}
-              onSuccess={() => {
-                setShowQuickAction(false);
-                toast.success("🎯 Action Created!", {
-                  description: "Your action has been added to your calendar!",
-                  duration: 4000
-                });
-              }}
-            />
+            <ScrollArea className="max-h-[calc(90vh-120px)]">
+              <GuidedActionWizard 
+                onSuccess={handleQuickActionSave} 
+                onUpgradeClick={handleUpgradeClick}
+                preFilledData={prefillForm('action')}
+              />
+            </ScrollArea>
           </DialogContent>
         </Dialog>
 

@@ -8,9 +8,7 @@ import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import MemoryFirstIndex from "./pages/MemoryFirstIndex";
-import { OptimizedLanding } from "./pages/OptimizedLanding";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -21,9 +19,6 @@ import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import InAppPurchase from "./routes/InAppPurchase";
 import MemoryBank from "./routes/MemoryBank";
 import MemoryBridge from "./routes/MemoryBridge";
-import PACTs from "./routes/PACTs";
-import SupportCircle from "./routes/SupportCircle";
-import Watch from "./routes/Watch";
 import Calendar from "./pages/Calendar";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
@@ -40,13 +35,11 @@ function App() {
         <SubscriptionProvider>
           <PomodoroProvider>
             <DailyActionsProvider>
-              <SidebarProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <BrowserRouter>
-                   <Routes>
-                     <Route path="/" element={<OptimizedLanding />} />
-                     <Route path="/old-landing" element={<MemoryFirstIndex />} />
+              <TooltipProvider>
+                <Toaster />
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<MemoryFirstIndex />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
@@ -56,8 +49,6 @@ function App() {
                     <Route path="/in-app-purchase" element={<InAppPurchase />} />
                     <Route path="/memory-bank" element={<ProtectedRoute requireAuth={false}><MemoryBank /></ProtectedRoute>} />
                     <Route path="/memory-bridge" element={<ProtectedRoute requireAuth={false}><MemoryBridge /></ProtectedRoute>} />
-                    <Route path="/pacts" element={<ProtectedRoute requireAuth={false}><PACTs /></ProtectedRoute>} />
-                    <Route path="/watch" element={<ProtectedRoute requireAuth={false}><Watch /></ProtectedRoute>} />
                     <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><Calendar /></ProtectedRoute>} />
                     <Route path="/organizations" element={<ProtectedRoute requireAuth={false}><OrganizationsDirectory /></ProtectedRoute>} />
@@ -68,7 +59,7 @@ function App() {
                     <Route path="/brain-games" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/accountability" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/support" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/support-circle" element={<ProtectedRoute requireAuth={false}><SupportCircle /></ProtectedRoute>} />
+                    <Route path="/support-circle" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/profile" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/settings" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/testing" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
@@ -89,9 +80,8 @@ function App() {
                       }
                     />
                   </Routes>
-                  </BrowserRouter>
-                </TooltipProvider>
-              </SidebarProvider>
+                </BrowserRouter>
+              </TooltipProvider>
             </DailyActionsProvider>
           </PomodoroProvider>
         </SubscriptionProvider>

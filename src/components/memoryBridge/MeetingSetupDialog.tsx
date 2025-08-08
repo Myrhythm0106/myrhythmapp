@@ -85,14 +85,14 @@ export function MeetingSetupDialog({ onStartMeeting, onClose, isLoading }: Meeti
       <DialogTrigger asChild>
         <Button className="bg-gradient-to-r from-primary to-primary-glow text-white shadow-elegant hover:shadow-glow transition-all duration-300 flex items-center gap-2">
           <Mic className="h-5 w-5" />
-          Start PACT Recording
+          Start Memory Bridge
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
             <Heart className="h-6 w-6 text-primary" />
-            PACT Recording Setup
+            Memory Bridge Setup
           </DialogTitle>
         </DialogHeader>
 
@@ -104,7 +104,7 @@ export function MeetingSetupDialog({ onStartMeeting, onClose, isLoading }: Meeti
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Family planning meeting, Doctor visit with Mom, Promise to help John"
+              placeholder="e.g., Family dinner discussion, Doctor appointment, Weekly check-in"
               className="w-full"
             />
           </div>
@@ -219,24 +219,24 @@ export function MeetingSetupDialog({ onStartMeeting, onClose, isLoading }: Meeti
 
           {/* Context */}
           <div className="space-y-2">
-            <Label htmlFor="context">What promises or commitments might come up? (optional)</Label>
+            <Label htmlFor="context">What's this conversation about? (optional)</Label>
             <Textarea
               id="context"
               value={context}
               onChange={(e) => setContext(e.target.value)}
-              placeholder="What are you hoping to accomplish? What commitments might you make? Who is counting on you?"
+              placeholder="Brief context about what you're planning to discuss or why this conversation is happening..."
               rows={2}
             />
           </div>
 
           {/* Emotional Context */}
           <div className="space-y-2">
-            <Label htmlFor="emotional-context">Why This Matters (optional)</Label>
+            <Label htmlFor="emotional-context">Emotional Context (optional)</Label>
             <Textarea
               id="emotional-context"
               value={emotionalContext}
               onChange={(e) => setEmotionalContext(e.target.value)}
-              placeholder="Who is this important to? What relationships are at stake? How will keeping promises here impact your life?"
+              placeholder="How are you feeling? Any relationship dynamics to be aware of?"
               rows={2}
             />
           </div>
@@ -247,7 +247,7 @@ export function MeetingSetupDialog({ onStartMeeting, onClose, isLoading }: Meeti
             disabled={!title || isLoading}
             className="w-full bg-gradient-to-r from-primary to-primary-glow text-white"
           >
-            {isLoading ? 'Starting PACT Recording...' : 'Start Promise Keeper Recording'}
+            {isLoading ? 'Starting...' : 'Start Recording'}
           </Button>
         </div>
       </DialogContent>

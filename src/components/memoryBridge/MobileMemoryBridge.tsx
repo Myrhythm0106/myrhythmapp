@@ -13,7 +13,6 @@ import { MemoryBridgeFloatingButton } from './MemoryBridgeFloatingButton';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { useNavigate } from 'react-router-dom';
 import { 
   Brain, 
   Users, 
@@ -43,7 +42,6 @@ export function MobileMemoryBridge() {
   const { hasFeature, tier } = useSubscription();
   const isMobile = useIsMobile();
   const [currentSection, setCurrentSection] = useState(0);
-  const navigate = useNavigate();
   
   const hasMemoryBridgeAccess = hasFeature('processRecording') || tier === 'premium' || tier === 'family';
   
@@ -110,7 +108,6 @@ export function MobileMemoryBridge() {
                 <Button
                   size="lg"
                   className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white"
-                  onClick={() => navigate('/in-app-purchase')}
                 >
                   <Crown className="h-4 w-4 mr-2" />
                   Upgrade to Premium
@@ -209,21 +206,11 @@ export function MobileMemoryBridge() {
             </CardHeader>
             <CardContent className="space-y-2">
               <div className="grid grid-cols-2 gap-2">
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="text-xs"
-                  onClick={() => setCurrentSection(4)} // Navigate to Record section
-                >
+                <Button size="sm" variant="outline" className="text-xs">
                   <Mic className="h-3 w-3 mr-1" />
                   Start Recording
                 </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline" 
-                  className="text-xs"
-                  onClick={() => setCurrentSection(0)} // Navigate to Actions section
-                >
+                <Button size="sm" variant="outline" className="text-xs">
                   <List className="h-3 w-3 mr-1" />
                   Review Actions
                 </Button>

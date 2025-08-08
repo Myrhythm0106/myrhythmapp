@@ -20,10 +20,9 @@ import {
 interface LifeEmpowermentGuideProps {
   onComplete: () => void;
   userType?: string;
-  onSkip?: () => void;
 }
 
-export function LifeEmpowermentGuide({ onComplete, userType, onSkip }: LifeEmpowermentGuideProps) {
+export function LifeEmpowermentGuide({ onComplete, userType }: LifeEmpowermentGuideProps) {
   const [currentPhase, setCurrentPhase] = useState(0);
 
   const phases = [
@@ -134,17 +133,6 @@ export function LifeEmpowermentGuide({ onComplete, userType, onSkip }: LifeEmpow
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="text-center space-y-4">
-        <div className="flex items-center justify-between mb-4">
-          <div></div>
-          {onSkip && (
-            <button
-              onClick={onSkip}
-              className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium flex items-center gap-1"
-            >
-              Skip Timeline <ArrowRight className="h-3 w-3" />
-            </button>
-          )}
-        </div>
         <div className="flex items-center justify-center gap-2">
           <Brain className="h-6 w-6 text-primary" />
           <h1 className="text-2xl font-bold">Your Life Empowerment Timeline</h1>

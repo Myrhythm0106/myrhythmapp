@@ -14,15 +14,12 @@ export const plans: Plan[] = [
     icon: Shield,
     features: [
       "Your LEAP Assessment & Results",
-      "Personal Rhythm Discovery", 
+      "Personal Rhythm Discovery",
       "Basic Calendar & Goals",
       "Memory Enhancement Tools",
       "Brain Games & Exercises",
       "Daily Progress Tracking",
-      "Community Access",
-      "Capture: 2 recordings/month",
-      "Basic promise tracking",
-      "7-day recording retention"
+      "Community Access"
     ]
   },
   {
@@ -45,11 +42,7 @@ export const plans: Plan[] = [
       "Goal Achievement Coaching",
       "Premium Brain Training",
       "Detailed Progress Reports",
-      "Export & Share Features",
-      "Capture: 20 recordings/month",
-      "Advanced AI analysis & insights",
-      "30-day recording retention",
-      "Family sharing & alerts"
+      "Export & Share Features"
     ]
   },
   {
@@ -70,12 +63,7 @@ export const plans: Plan[] = [
       "Collaborative Goal Setting",
       "Family Support Resources",
       "Dedicated Family Coach",
-      "Emergency Contact System",
-      "Capture: Unlimited recordings",
-      "Professional-grade AI analysis",
-      "90-day recording retention",
-      "Healthcare provider reports",
-      "Trust & accountability metrics"
+      "Emergency Contact System"
     ]
   }
 ];

@@ -37,34 +37,29 @@
 
     --radius: 0.5rem;
 
-    /* TRUE EMERALD - Cooling & Calming Therapeutic */
-    --emerald-50: 160 85% 97%;
-    --emerald-100: 160 80% 94%;
-    --emerald-200: 160 75% 88%;
-    --emerald-300: 160 70% 78%;
-    --emerald-400: 160 65% 68%;
-    --emerald-500: 160 60% 58%;
-    --emerald-600: 160 65% 48%;
-    --emerald-700: 160 70% 38%;
-    --emerald-800: 160 75% 28%;
-    --emerald-900: 160 80% 20%;
+    /* Memory Emerald: Subtle therapeutic touches - VERY LIGHT for micro-accents only */
+    --memory-emerald-50: 156 25% 98%;
+    --memory-emerald-100: 149 20% 95%;
+    --memory-emerald-200: 152 22% 88%;
+    --memory-emerald-300: 156 24% 78%;
+    --memory-emerald-400: 158 26% 65%;
+    --memory-emerald-500: 160 28% 50%;
+    --memory-emerald-600: 161 30% 40%;
+    --memory-emerald-700: 163 32% 30%;
+    --memory-emerald-800: 163 34% 22%;
+    --memory-emerald-900: 164 36% 16%;
 
-    /* Memory-specific semantic tokens */
-    --memory-emerald: 160 60% 55%;
-    --memory-emerald-50: 160 85% 97%;
-    --memory-emerald-100: 160 80% 94%;
-
-    /* THERAPEUTIC TEAL - Calm, trustworthy, healing */
-    --brain-health-50: 180 70% 97%;
-    --brain-health-100: 180 65% 94%;
-    --brain-health-200: 180 70% 88%;
-    --brain-health-300: 180 75% 78%;
-    --brain-health-400: 180 80% 68%;
-    --brain-health-500: 180 85% 58%;
-    --brain-health-600: 180 90% 48%;
-    --brain-health-700: 180 95% 38%;
-    --brain-health-800: 180 100% 28%;
-    --brain-health-900: 180 100% 20%;
+    /* Brain Health: Professional teals - 45-55% saturation for prominence */
+    --brain-health-50: 166 50% 98%;
+    --brain-health-100: 167 48% 95%;
+    --brain-health-200: 168 46% 88%;
+    --brain-health-300: 171 48% 75%;
+    --brain-health-400: 172 50% 62%;
+    --brain-health-500: 173 52% 48%;
+    --brain-health-600: 175 54% 38%;
+    --brain-health-700: 175 56% 28%;
+    --brain-health-800: 176 58% 20%;
+    --brain-health-900: 176 60% 14%;
 
     /* Clarity Teal: Clear focus colors - 40-50% saturation */
     --clarity-teal-50: 180 45% 98%;
@@ -98,30 +93,6 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 42 30% 65%;
-
-    /* PACT Colors - Emerald & Teal Therapy */
-    --emerald-primary: 160 60% 55%;    /* True emerald - cooling & calming */
-    --emerald-dark: 160 65% 45%;
-    --emerald-light: 160 50% 85%;
-
-    --brain-health: 180 85% 50%;       /* Calming therapeutic teal */
-    --brain-health-dark: 180 90% 40%;
-    --brain-health-light: 180 75% 80%;
-    
-    /* PACT gradients */
-    --gradient-pact: linear-gradient(135deg, hsl(var(--emerald-primary)), hsl(var(--brain-health)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--emerald-primary) / 0.03));
-    --gradient-trust: linear-gradient(135deg, hsl(var(--emerald-primary) / 0.1), hsl(var(--brain-health) / 0.1));
-    --gradient-memory: linear-gradient(135deg, hsl(var(--memory-emerald)), hsl(var(--brain-health)));
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--brain-health)));
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--emerald-primary)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--clarity-teal-500)));
-    --gradient-tertiary: linear-gradient(135deg, hsl(var(--brain-health)), hsl(var(--clarity-teal-600)));
-    --gradient-success: linear-gradient(135deg, hsl(var(--emerald-500)), hsl(var(--memory-emerald)));
-    
-    /* PACT shadows */
-    --shadow-glow: 0 0 40px hsl(var(--emerald-primary) / 0.3);
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--emerald-primary) / 0.2);
   }
 
   .dark {
@@ -204,7 +175,7 @@
   
   /* Professional therapeutic UI elements - purple-blue-teal dominant with tiny emerald therapeutic touches */
   .premium-card {
-    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background via-purple-50 to-teal-50 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
+    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background via-purple-50/8 to-brain-health-50/12 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
   }
   
   .glass-card {
@@ -260,14 +231,7 @@
 
   /* Brain-Health Calendar Enhancements */
   .calendar-command-center {
-    background: linear-gradient(to bottom right, 
-      hsl(var(--brain-health-50) / 0.4), 
-      hsl(var(--clarity-teal-50) / 0.3), 
-      hsl(var(--memory-emerald-50) / 0.2)
-    );
-    border: 1px solid hsl(var(--brain-health-200) / 0.6);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(4px);
+    @apply bg-gradient-to-br from-brain-health-50/40 via-clarity-teal-50/30 to-memory-emerald-50/20 border border-brain-health-200/60 shadow-xl backdrop-blur-sm;
   }
   
   .neural-pathway-effect {
@@ -275,25 +239,19 @@
   }
   
   .brain-energy-high {
-    background: linear-gradient(to right, hsl(var(--memory-emerald-100)), hsl(var(--clarity-teal-100)));
-    border-color: hsl(var(--memory-emerald-300));
+    @apply bg-gradient-to-r from-memory-emerald-100 to-clarity-teal-100 border-memory-emerald-300;
   }
   
   .brain-energy-medium {
-    background: linear-gradient(to right, hsl(var(--brain-health-100)), hsl(var(--clarity-teal-100)));
-    border-color: hsl(var(--brain-health-300));
+    @apply bg-gradient-to-r from-brain-health-100 to-clarity-teal-100 border-brain-health-300;
   }
   
   .brain-energy-low {
-    background: linear-gradient(to right, hsl(var(--clarity-teal-100)), hsl(var(--brain-health-100)));
-    border-color: hsl(var(--clarity-teal-300));
+    @apply bg-gradient-to-r from-clarity-teal-100 to-brain-health-100 border-clarity-teal-300;
   }
   
   .cognitive-achievement {
-    background: linear-gradient(to bottom right, hsl(var(--memory-emerald-400)), hsl(var(--brain-health-400)), hsl(var(--clarity-teal-400)));
-    color: white;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    @apply bg-gradient-to-br from-memory-emerald-400 via-brain-health-400 to-clarity-teal-400 text-white shadow-lg animate-pulse;
   }
   
   .memory-anchor {
@@ -339,11 +297,7 @@
   }
 
   .focus-mode .calendar-command-center {
-    background: linear-gradient(to bottom right, 
-      hsl(var(--brain-health-50) / 0.6), 
-      hsl(var(--clarity-teal-50) / 0.4)
-    );
-    border-color: hsl(var(--brain-health-300) / 0.6);
+    @apply bg-gradient-to-br from-brain-health-50/60 to-clarity-teal-50/40 border-brain-health-300/60;
   }
 
   .focus-mode .neural-pathway-effect {

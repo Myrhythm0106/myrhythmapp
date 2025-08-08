@@ -9,16 +9,6 @@ export interface SubscriptionFeatures {
   communityAccess: boolean;
   maxCommunityMembers: number; // Free: 1, Premium: 10, Family: unlimited
   
-  // Memory Bridge Features
-  memoryBridgeAccess: boolean;
-  monthlyRecordings: number; // Align: 5, Flow: 20, Thrive: unlimited
-  recordingRetentionDays: number; // Align: 7, Flow: 30, Thrive: 90
-  recordingQuality: 'standard' | 'high' | 'clinical';
-  aiAnalysisType: 'basic' | 'advanced' | 'professional';
-  familySharing: boolean;
-  caregiverAlerts: boolean;
-  professionalReports: boolean;
-  
   // Premium Features
   advancedSymptomTracking: boolean;
   fullCalendarManagement: boolean;
@@ -77,20 +67,10 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
     communityAccess: false,
     maxCommunityMembers: 0,
     
-    // Memory Bridge Features
-    memoryBridgeAccess: false,
-    monthlyRecordings: 0,
-    recordingRetentionDays: 7,
-    recordingQuality: 'standard',
-    aiAnalysisType: 'basic',
-    familySharing: false,
-    caregiverAlerts: false,
-    professionalReports: false,
-    
-    // Premium Features
-    advancedSymptomTracking: false,
-    fullCalendarManagement: false,
-    personalizedInsights: false, // Only available for paid tiers
+  // Premium Features
+  advancedSymptomTracking: false,
+  fullCalendarManagement: false,
+  personalizedInsights: false, // Only available for paid tiers
     prioritySupport: false,
     smartInterventionAlerts: false,
     enhancedSafetyReminders: false,
@@ -121,11 +101,6 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         basicCalendar: true,
         communityAccess: true,
         maxCommunityMembers: 1, // Free tier limited to 1 community member
-        memoryBridgeAccess: true,
-        monthlyRecordings: 2, // Very limited for free tier
-        recordingRetentionDays: 7,
-        recordingQuality: 'standard',
-        aiAnalysisType: 'basic',
       };
       
     case 'premium':
@@ -137,15 +112,6 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         basicCalendar: true,
         communityAccess: true,
         maxCommunityMembers: 10, // Premium tier gets 10 community members
-        
-        // Memory Bridge Features
-        memoryBridgeAccess: true,
-        monthlyRecordings: 20,
-        recordingRetentionDays: 30,
-        recordingQuality: 'high',
-        aiAnalysisType: 'advanced',
-        familySharing: true,
-        caregiverAlerts: true,
         
         // Premium Features
         advancedSymptomTracking: true,
@@ -171,17 +137,6 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         basicCalendar: true,
         communityAccess: true,
         maxCommunityMembers: -1, // Family tier gets unlimited community members
-        
-        // Memory Bridge Features
-        memoryBridgeAccess: true,
-        monthlyRecordings: -1, // Unlimited
-        recordingRetentionDays: 90,
-        recordingQuality: 'clinical',
-        aiAnalysisType: 'professional',
-        familySharing: true,
-        caregiverAlerts: true,
-        professionalReports: true,
-        
         advancedSymptomTracking: true,
         fullCalendarManagement: true,
         personalizedInsights: true,
@@ -218,10 +173,10 @@ interface SubscriptionProviderProps {
 
 export function SubscriptionProvider({ 
   children, 
-  tier: initialTier = 'premium' // Default to premium tier for demo
+  tier: initialTier = 'free' // Default to free tier for demo
 }: SubscriptionProviderProps) {
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>(initialTier);
-  const [demoMode, setDemoMode] = useState(true); // Enable demo mode by default
+  const [demoMode, setDemoMode] = useState(false);
   const features = getFeaturesByTier(demoMode ? 'premium' : currentTier);
   
   // Mock subscription data for demo

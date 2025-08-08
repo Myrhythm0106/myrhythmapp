@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardHeader } from "./DashboardHeader";
 import { HeroSection } from "./unified/HeroSection";
-import { ActivityFlowLayout } from "./unified/ActivityFlowLayout";
+import { CommandCenterLayout } from "./unified/CommandCenterLayout";
 import { QuickActionZone } from "./unified/QuickActionZone";
 import { TodayFocus } from "./TodayFocus";
 import { UpcomingToday } from "./UpcomingToday";
@@ -27,19 +27,17 @@ import { UserGuideIntegration } from "@/components/onboarding/UserGuideIntegrati
 import { WelcomeToApp } from "@/components/onboarding/WelcomeToApp";
 import { FloatingGuideButton } from "@/components/guide/FloatingGuideButton";
 import { NeverLostSystem } from "@/components/navigation/NeverLostSystem";
-import { PersonalEmpowermentHub } from "./PersonalEmpowermentHub";
+import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
 import { Badge } from "@/components/ui/badge";
 import { Zap, Target, Star } from "lucide-react";
 import { useUserData } from "@/hooks/use-user-data";
 import { CalendarDashboardIntegration } from "@/components/calendar/CalendarDashboardIntegration";
-import { WelcomeScreen } from "./WelcomeScreen";
 
 export function DashboardContent() {
   const [searchParams] = useSearchParams();
   const [showMorningRitual, setShowMorningRitual] = useState(false);
   const [energyLevel, setEnergyLevel] = useState<number | null>(null);
   const [dailyIntention, setDailyIntention] = useState('');
-  const [showWelcomeScreen, setShowWelcomeScreen] = useState(false);
   // Removed dashboard view toggle - now unified experience
   const { metrics, getNextUnlock } = useUserProgress();
   const userData = useUserData();
@@ -67,23 +65,14 @@ export function DashboardContent() {
       toast.success("🚀 Your 7-day free trial has started! Explore all features.");
     }
 
-    // Check if welcome screen should be shown (first time today)
-    const today = new Date().toDateString();
-    const welcomeComplete = localStorage.getItem(`welcome_complete_${today}`);
-    const hour = new Date().getHours();
-    
-    // Show welcome screen first thing in the morning if not completed today
-    if (!welcomeComplete && hour >= 6 && hour <= 11) {
-      setShowWelcomeScreen(true);
-      return; // Exit early to show welcome screen first
-    }
-
     // Check if morning ritual is completed today
+    const today = new Date().toDateString();
     const morningRitual = localStorage.getItem(`morning_ritual_${today}`);
     
     if (!morningRitual) {
-      // Show morning ritual if welcome is complete but ritual isn't
-      if (welcomeComplete && hour >= 6 && hour <= 11) {
+      const hour = new Date().getHours();
+      // Show morning ritual if it's morning and not completed
+      if (hour >= 6 && hour <= 11) {
         setShowMorningRitual(true);
       }
     } else {
@@ -135,20 +124,11 @@ export function DashboardContent() {
     return welcomeMessages[userData.userType] || welcomeMessages['wellness'];
   };
 
-  // Show welcome screen first if not completed today
-  if (showWelcomeScreen) {
-    return (
-      <WelcomeScreen 
-        onProceedToDashboard={() => setShowWelcomeScreen(false)}
-        userType={userData?.userType}
-      />
-    );
-  }
-
   // If morning ritual not completed and it's morning time, show morning ritual
   if (showMorningRitual) {
     return (
       <div className="space-y-6">
+        <ReadingProgressBar sections={[{ id: 'morning-ritual', title: 'Morning Ritual' }]} />
         <div id="morning-ritual" className="pt-4">
           <MorningRitualView />
         </div>
@@ -163,21 +143,29 @@ export function DashboardContent() {
   const roleWelcome = getRoleSpecificWelcome();
 
   return (
-    <div className="space-y-6 pb-20">
-      {/* PersonalEmpowermentHub - Priority Position */}
-      <div id="empowerment-hub">
-        <PersonalEmpowermentHub />
-      </div>
+    <div className="space-y-8 pb-20">
+      {/* Hero Section - Commanding Headlines */}
+      <HeroSection 
+        onUpgradeClick={handleUpgradeClick} 
+        userType={userData?.userType} 
+      />
 
-      {/* Daily #IChoose Statement - Compact */}
-      <div id="ichoose" className="space-y-4">
-        <DailyIChooseWidget onUpgradeClick={handleUpgradeClick} userType={userData?.userType} />
-      </div>
-
-      {/* Monthly Theme */}
-      <div id="monthly-theme" className="space-y-4">
-        <MonthlyTheme />
-      </div>
+      <ReadingProgressBar sections={dashboardSections} />
+      
+      {/* Role-Specific Welcome Message */}
+      {userData.userType && (
+        <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">{roleWelcome.icon}</div>
+              <div>
+                <h3 className="font-semibold text-purple-800">{roleWelcome.title}</h3>
+                <p className="text-sm text-purple-700">{roleWelcome.message}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
       
       {/* Assessment Upgrade Reminder */}
       <AssessmentUpgradeReminder />
@@ -217,8 +205,11 @@ export function DashboardContent() {
         </Card>
       )}
       
-      {/* Activity Flow Layout - Today → Week → Month → Year */}
-      <ActivityFlowLayout />
+      {/* Calendar-Dashboard Integration */}
+      <CalendarDashboardIntegration />
+      
+      {/* Command Center Layout - Unified Four-Quadrant View */}
+      <CommandCenterLayout />
       
       {/* Quick Action Zone */}
       <QuickActionZone />

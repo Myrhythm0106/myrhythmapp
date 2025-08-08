@@ -1,12 +1,12 @@
 import React from 'react';
-import { MemoryBridgeHub } from '@/components/memoryBridge/MemoryBridgeHub';
+import { MemoryBridgeMainDashboard } from '@/components/memoryBridge/MemoryBridgeMainDashboard';
+import { MobileMemoryBridge } from '@/components/memoryBridge/MobileMemoryBridge';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const MemoryBridge = () => {
-  return (
-    <div className="container mx-auto p-6">
-      <MemoryBridgeHub />
-    </div>
-  );
+  const isMobile = useIsMobile();
+  
+  return isMobile ? <MobileMemoryBridge /> : <MemoryBridgeMainDashboard />;
 };
 
 export default MemoryBridge;

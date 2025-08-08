@@ -170,7 +170,6 @@ export type Database = {
           title: string
           type: string
           user_id: string
-          watchers: string[] | null
         }
         Insert: {
           category?: string | null
@@ -184,7 +183,6 @@ export type Database = {
           title: string
           type?: string
           user_id: string
-          watchers?: string[] | null
         }
         Update: {
           category?: string | null
@@ -198,7 +196,6 @@ export type Database = {
           title?: string
           type?: string
           user_id?: string
-          watchers?: string[] | null
         }
         Relationships: []
       }
@@ -255,39 +252,6 @@ export type Database = {
           relationship_type?: string
           shared_commitments?: Json | null
           updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      cross_device_notifications: {
-        Row: {
-          created_at: string
-          data: Json
-          device_source: string
-          expires_at: string | null
-          id: string
-          is_read: boolean
-          notification_type: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          data?: Json
-          device_source: string
-          expires_at?: string | null
-          id?: string
-          is_read?: boolean
-          notification_type: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          data?: Json
-          device_source?: string
-          expires_at?: string | null
-          id?: string
-          is_read?: boolean
-          notification_type?: string
           user_id?: string
         }
         Relationships: []
@@ -613,7 +577,7 @@ export type Database = {
           meeting_title: string
           meeting_type: string
           participants: Json
-          recording_id: string | null
+          recording_id: string
           relationship_context: Json | null
           started_at: string
           updated_at: string
@@ -631,7 +595,7 @@ export type Database = {
           meeting_title: string
           meeting_type?: string
           participants?: Json
-          recording_id?: string | null
+          recording_id: string
           relationship_context?: Json | null
           started_at?: string
           updated_at?: string
@@ -649,7 +613,7 @@ export type Database = {
           meeting_title?: string
           meeting_type?: string
           participants?: Json
-          recording_id?: string | null
+          recording_id?: string
           relationship_context?: Json | null
           started_at?: string
           updated_at?: string
@@ -1586,14 +1550,6 @@ export type Database = {
       }
       revoke_invitation: {
         Args: { p_member_id: string; p_user_id: string }
-        Returns: boolean
-      }
-      user_can_access_memory: {
-        Args: { memory_uuid: string }
-        Returns: boolean
-      }
-      user_owns_memory: {
-        Args: { memory_uuid: string }
         Returns: boolean
       }
       verify_backup_code: {

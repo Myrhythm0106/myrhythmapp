@@ -11,14 +11,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { NavLink, useLocation } from "react-router-dom";
-import { Brain, Calendar, Target, Heart, BarChart3, Gamepad2, Users, User, Settings, HelpCircle, Camera, TestTube, CheckCircle } from "lucide-react";
+import { Brain, Calendar, Target, Heart, BarChart3, Gamepad2, Users, User, Settings, HelpCircle, Camera, TestTube } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DevelopmentNavigation } from "@/components/demo/DevelopmentNavigation";
-import { DemoModeToggle } from "@/components/demo/DemoModeToggle";
 
 const mainNavItems = [
   { title: "Dashboard", url: "/dashboard", icon: Brain },
-  { title: "PACTs", url: "/pacts", icon: CheckCircle },
   { title: "Calendar", url: "/calendar", icon: Calendar },
   { title: "Memory Bank", url: "/memory-bank", icon: Camera },
   { title: "Goals", url: "/goals", icon: Target },
@@ -124,13 +122,6 @@ export function DynamicSidebar({ isCollapsed }: DynamicSidebarProps) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
-        {/* Demo Mode Toggle */}
-        {!isCollapsed && (
-          <div className="mt-6">
-            <DemoModeToggle />
-          </div>
-        )}
 
         {/* Development Navigation - Only visible in development */}
         {!isCollapsed && <DevelopmentNavigation />}

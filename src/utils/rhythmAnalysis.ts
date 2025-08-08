@@ -1,68 +1,18 @@
-
 import { UserType } from "@/types/user";
+import { AssessmentResponses, getSectionsForUserType } from "@/components/onboarding/steps/rhythm/rhythmAssessmentData";
+import { generatePersonalizedInsights, PersonalizedAssessmentData } from "./personalizedInsights";
 
-export interface AssessmentResult {
-  id?: string;
-  userType: UserType;
-  focusArea: string;
-  overallScore: number;
-  primaryRhythm: string;
-  keyInsights: string[];
-  primaryFocus: string;
-  
-  // Basic results available to all users
-  primaryStrength: string;
-  basicInsight: string;
-  quickWin: string;
-  planType?: 'preview' | 'premium' | 'full';
-  
-  // Premium features
-  detailedInsights?: Array<{
-    title: string;
-    description: string;
-    actionItem: string;
-  }>;
-  
-  actionPlan?: Array<{
-    focus: string;
-    tasks: string[];
-  }>;
-  
-  // Additional properties for compatibility
-  completedAt?: string;
-  version?: string;
-  personalizedData?: {
-    insights: Array<{
-      type: 'strength' | 'challenge' | 'opportunity' | 'unique';
-      title: string;
-      description: string;
-      actionable: boolean;
-    }>;
-    personalProfile: {
-      uniqueCharacteristics: string[];
-      strengths: string[];
-      growthOpportunities: string[];
-      personalizedMessage: string;
-      nextSteps: string[];
-      rhythmSignature: string;
-    };
-  };
-  
-  // Section scores for detailed analysis
-  sectionScores?: Array<{
-    id: number;
-    title: string;
-    average: number;
-    responses: Record<string, number>;
-    phase: string;
-  }>;
-  
-  determinationReason?: string;
-  secondaryInsights?: Array<{
-    questionId: string;
-    secondary: string[];
-    context: string;
-  }>;
+export type FocusArea = "memory" | "structure" | "emotional" | "achievement" | "community" | "growth";
+
+export interface FocusAreaInfo {
+  id: FocusArea;
+  title: string;
+  phase: string;
+  description: string;
+  keyFeatures: string[];
+  primaryActions: string[];
+  color: string;
+  gradient: string;
 }
 
 export interface SectionScore {
@@ -73,319 +23,430 @@ export interface SectionScore {
   phase: string;
 }
 
-export type FocusArea = 'memory' | 'structure' | 'emotional' | 'achievement' | 'community' | 'growth';
-
-export interface FocusAreaConfig {
-  id: FocusArea;
-  title: string;
-  description: string;
-  color: string;
-  icon: string;
-  gradient: string;
-  phase: string;
-  keyFeatures: string[];
-  primaryActions: string[];
-}
-
-export interface FocusAreaInfo {
-  current: FocusAreaConfig;
-  evolution: Array<{
-    phase: string;
-    focus: string;
-    description: string;
+export interface AssessmentResult {
+  id: string;
+  completedAt: string;
+  focusArea: FocusArea;
+  sectionScores: SectionScore[];
+  overallScore: number;
+  determinationReason: string;
+  version: string;
+  nextReviewDate: string;
+  userType?: UserType;
+  personalizedData?: PersonalizedAssessmentData;
+  secondaryInsights?: Array<{
+    questionId: string;
+    secondary: string[];
+    context: string;
   }>;
-  recommendations: string[];
-  // Include all properties from FocusAreaConfig for direct access
-  title: string;
-  description: string;
-  gradient: string;
-  phase: string;
-  keyFeatures: string[];
 }
 
-export const focusAreas: Record<FocusArea, FocusAreaConfig> = {
+export interface PrimarySecondaryResponse {
+  primary: string;
+  secondary: string[];
+}
+
+export const extractPrimaryValue = (response: any): string => {
+  if (typeof response === 'string') {
+    try {
+      const parsed = JSON.parse(response);
+      return parsed.primary || response;
+    } catch {
+      return response;
+    }
+  }
+  return response || '';
+};
+
+export const extractSecondaryValues = (response: any): string[] => {
+  if (typeof response === 'string') {
+    try {
+      const parsed = JSON.parse(response);
+      return parsed.secondary || [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+};
+
+// Memory-enhanced focus areas for the MyRhythm framework
+export const focusAreas: Record<FocusArea, FocusAreaInfo> = {
   memory: {
-    id: 'memory',
-    title: 'Memory Enhancement',
-    description: 'Strengthen memory patterns and cognitive recall through targeted exercises and daily practices.',
-    color: 'from-blue-500 to-indigo-600',
-    icon: 'Brain',
-    gradient: 'from-blue-500 to-indigo-600',
-    phase: 'Foundation Building',
-    keyFeatures: ['Daily memory logging', 'Cognitive exercises', 'Pattern recognition', 'Memory support tools'],
-    primaryActions: ['Log 3 important moments daily', 'Complete memory exercises', 'Review weekly patterns']
+    id: "memory",
+    title: "Memory & Cognitive Wellness Focus",
+    phase: "M - Memory Foundation",
+    description: "Strengthening memory, cognitive function, and mental clarity as your foundation for everything else.",
+    keyFeatures: ["Memory exercises", "Cognitive training", "Important moment logging", "Memory pattern tracking"],
+    primaryActions: ["Log important moments daily", "Practice memory exercises", "Track cognitive patterns"],
+    color: "indigo",
+    gradient: "from-indigo-500 to-purple-500"
   },
   structure: {
-    id: 'structure',
-    title: 'Structure & Routine',
-    description: 'Build consistent daily routines and organizational systems for stability and growth.',
-    color: 'from-green-500 to-emerald-600',
-    icon: 'Calendar',
-    gradient: 'from-green-500 to-emerald-600',
-    phase: 'Routine Building',
-    keyFeatures: ['Morning routines', 'Medication tracking', 'Appointment management', 'Daily structure'],
-    primaryActions: ['Follow morning routine', 'Take medications on time', 'Check daily schedule']
+    id: "structure",
+    title: "Structure & Routine Focus",
+    phase: "M - Moment of Impact / Multiply",
+    description: "Building consistent routines and structures that support your memory and daily rhythm.",
+    keyFeatures: ["Memory-supportive routines", "Calendar management", "Habit building", "Structure development"],
+    primaryActions: ["Set up memory-friendly routines", "Schedule important tasks", "Track habit formation"],
+    color: "red",
+    gradient: "from-red-500 to-orange-500"
   },
   emotional: {
-    id: 'emotional',
-    title: 'Emotional Wellbeing',
-    description: 'Develop emotional resilience and healthy coping strategies for mental wellness.',
-    color: 'from-purple-500 to-pink-600',
-    icon: 'Heart',
-    gradient: 'from-purple-500 to-pink-600',
-    phase: 'Emotional Regulation',
-    keyFeatures: ['Mood tracking', 'Gratitude practice', 'Stress management', 'Emotional awareness'],
-    primaryActions: ['Check in with mood', 'Practice gratitude', 'Use stress management techniques']
+    id: "emotional",
+    title: "Emotional Wellbeing Focus",
+    phase: "Y - Yield to the Fog",
+    description: "Focusing on emotional wellness and mental clarity that supports memory and cognitive health.",
+    keyFeatures: ["Mood tracking", "Memory-emotion connection", "Mindfulness exercises", "Stress management"],
+    primaryActions: ["Track daily mood and memory", "Practice mindfulness", "Access wellness resources"],
+    color: "blue",
+    gradient: "from-blue-500 to-indigo-500"
   },
   achievement: {
-    id: 'achievement',
-    title: 'Achievement & Growth',
-    description: 'Build confidence through meaningful accomplishments and skill development.',
-    color: 'from-orange-500 to-red-600',
-    icon: 'Target',
-    gradient: 'from-orange-500 to-red-600',
-    phase: 'Skill Building',
-    keyFeatures: ['Independence goals', 'Skill rebuilding', 'Confidence building', 'Progress tracking'],
-    primaryActions: ['Work on independence tasks', 'Practice daily skills', 'Celebrate small wins']
+    id: "achievement",
+    title: "Goal Achievement Focus",
+    phase: "R - Reckon with Reality / T - Take Back Control",
+    description: "Setting and achieving meaningful goals while building memory confidence and momentum.",
+    keyFeatures: ["Memory-informed goal setting", "Progress tracking", "Action planning", "Achievement celebration"],
+    primaryActions: ["Create memory-supportive goals", "Break down into memorable steps", "Track progress"],
+    color: "purple",
+    gradient: "from-purple-500 to-pink-500"
   },
   community: {
-    id: 'community',
-    title: 'Community Connection',
-    description: 'Build meaningful relationships and support networks for social wellness.',
-    color: 'from-teal-500 to-cyan-600',
-    icon: 'Users',
-    gradient: 'from-teal-500 to-cyan-600',
-    phase: 'Connection Building',
-    keyFeatures: ['Support networks', 'Family connections', 'Community involvement', 'Social skills'],
-    primaryActions: ['Connect with support group', 'Reach out to family', 'Engage in community']
+    id: "community",
+    title: "Community & Purpose Focus",
+    phase: "H - Harness Support / M - Multiply the Mission",
+    description: "Building connections and finding purpose through community, sharing your memory journey with others.",
+    keyFeatures: ["Memory support circles", "Community participation", "Sharing experiences", "Memory advocacy"],
+    primaryActions: ["Connect with memory support groups", "Share your memory story", "Support others' memory journeys"],
+    color: "green",
+    gradient: "from-green-500 to-teal-500"
   },
   growth: {
-    id: 'growth',
-    title: 'Personal Growth',
-    description: 'Continuous learning and self-improvement through new challenges and experiences.',
-    color: 'from-indigo-500 to-purple-600',
-    icon: 'TrendingUp',
-    gradient: 'from-indigo-500 to-purple-600',
-    phase: 'Growth & Development',
-    keyFeatures: ['Cognitive training', 'New skills', 'Self-reflection', 'Continuous learning'],
-    primaryActions: ['Complete brain training', 'Practice new skills', 'Reflect on progress']
+    id: "growth",
+    title: "Personal Growth Focus",
+    phase: "H - Heal Forward",
+    description: "Embracing personal development and continuous improvement in memory and life skills.",
+    keyFeatures: ["Memory skill development", "Cognitive growth", "Continuous learning", "Memory mastery"],
+    primaryActions: ["Practice new memory techniques", "Learn continuously", "Reflect on memory progress"],
+    color: "amber",
+    gradient: "from-amber-500 to-yellow-500"
   }
 };
 
-// Helper function to create a preview result
-export function createPreviewResult(baseResult: Partial<AssessmentResult>): AssessmentResult {
-  return {
-    userType: baseResult.userType || 'cognitive-optimization',
-    focusArea: baseResult.focusArea || 'memory',
-    overallScore: baseResult.overallScore || 2.1,
-    primaryRhythm: baseResult.primaryRhythm || 'Balanced Performer',
-    keyInsights: baseResult.keyInsights || ['Strong analytical thinking', 'Good problem-solving skills'],
-    primaryFocus: baseResult.primaryFocus || 'Memory Enhancement',
-    primaryStrength: baseResult.primaryStrength || 'Analytical Thinking',
-    basicInsight: baseResult.basicInsight || 'Your analytical mind is your greatest asset. You excel at breaking down complex problems into manageable steps.',
-    quickWin: baseResult.quickWin || 'Focus on one small task at a time and celebrate each completion.',
-    planType: 'preview',
-    completedAt: new Date().toISOString(),
-    version: '2.0',
-    ...baseResult
-  };
-}
-
-// Helper function to create full premium result
-export function createPremiumResult(baseResult: Partial<AssessmentResult>): AssessmentResult {
-  const preview = createPreviewResult(baseResult);
+// Optimized focus area determination by user type
+const getUserTypeFocusPreference = (userType?: UserType): FocusArea => {
+  const preferences = {
+    'brain-injury': 'memory',
+    'caregiver': 'structure',
+    'cognitive-optimization': 'achievement',
+    'wellness': 'emotional'
+  } as const;
   
-  return {
-    ...preview,
-    planType: 'premium',
-    detailedInsights: baseResult.detailedInsights || [
-      {
-        title: 'Cognitive Strengths',
-        description: 'Your assessment reveals strong analytical and processing capabilities.',
-        actionItem: 'Build on these strengths with advanced cognitive challenges.'
-      },
-      {
-        title: 'Growth Opportunities',
-        description: 'Areas identified for enhancement include working memory and attention span.',
-        actionItem: 'Practice focused attention exercises for 10 minutes daily.'
-      },
-      {
-        title: 'Personalized Strategy',
-        description: 'Your unique cognitive profile suggests a structured, goal-oriented approach.',
-        actionItem: 'Use the Pomodoro technique with 25-minute focused sessions.'
-      }
-    ],
-    actionPlan: baseResult.actionPlan || [
-      {
-        focus: 'Foundation Building',
-        tasks: ['Complete daily cognitive warm-up', 'Establish morning routine', 'Track progress metrics']
-      },
-      {
-        focus: 'Skill Development',
-        tasks: ['Advanced memory exercises', 'Attention training games', 'Problem-solving challenges']
-      },
-      {
-        focus: 'Integration',
-        tasks: ['Apply skills to daily tasks', 'Teach techniques to others', 'Mentor newcomers']
-      },
-      {
-        focus: 'Mastery',
-        tasks: ['Create personal protocols', 'Optimize based on results', 'Share success stories']
-      }
-    ],
-    personalizedData: {
-      insights: [
-        {
-          type: 'strength',
-          title: 'Natural Problem Solver',
-          description: 'You excel at breaking down complex challenges into manageable steps.',
-          actionable: true
-        },
-        {
-          type: 'opportunity',
-          title: 'Enhanced Focus Training',
-          description: 'Regular attention exercises could significantly boost your cognitive performance.',
-          actionable: true
-        }
-      ],
-      personalProfile: {
-        uniqueCharacteristics: ['Analytical mindset', 'Strategic thinking', 'Detail-oriented'],
-        strengths: ['Problem-solving', 'Logical reasoning', 'Pattern recognition'],
-        growthOpportunities: ['Sustained attention', 'Working memory', 'Processing speed'],
-        personalizedMessage: 'Your cognitive profile shows exceptional analytical capabilities with room for enhanced focus training.',
-        nextSteps: ['Begin daily focus exercises', 'Track cognitive metrics', 'Apply techniques to real-world challenges'],
-        rhythmSignature: 'The Analytical Optimizer'
-      }
-    }
-  };
-}
+  return preferences[userType as keyof typeof preferences] || 'memory';
+};
 
-// Generate sample assessment result for demos
-export function generateSampleAssessmentResult(userType: UserType): AssessmentResult {
-  const baseResults = {
-    'cognitive-optimization': {
-      overallScore: 78,
-      primaryRhythm: 'Analytical Optimizer',
-      keyInsights: [
-        'Peak cognitive performance in morning hours',
-        'Strong pattern recognition abilities',
-        'Benefits from structured problem-solving approaches'
-      ],
-      primaryFocus: 'Memory Enhancement',
-      focusArea: 'memory'
-    },
-    'empowerment': {
-      overallScore: 82,
-      primaryRhythm: 'Empowered Leader',
-      keyInsights: [
-        'Natural leadership qualities emerge under pressure',
-        'High emotional intelligence in group settings',
-        'Thrives with autonomy and clear goals'
-      ],
-      primaryFocus: 'Community Connection',
-      focusArea: 'community'
-    },
-    'brain-health': {
-      overallScore: 75,
-      primaryRhythm: 'Wellness Optimizer',
-      keyInsights: [
-        'Strong mind-body connection awareness',
-        'Responds well to holistic approaches',
-        'Benefits from routine and consistency'
-      ],
-      primaryFocus: 'Structure & Routine',
-      focusArea: 'structure'
+export function analyzeRhythmAssessment(responses: AssessmentResponses, userType?: UserType): {
+  focusArea: FocusArea;
+  sectionScores: SectionScore[];
+  overallScore: number;
+  determinationReason: string;
+  personalizedData: PersonalizedAssessmentData;
+} {
+  console.log("Starting rhythm analysis for user type:", userType);
+  
+  // Get user-type-specific sections
+  const sections = getSectionsForUserType(userType);
+  
+  // Early optimization: For simple cases, use user type preference
+  if (!sections || sections.length === 0) {
+    console.log("No sections found, using user type preference");
+    const focusArea = getUserTypeFocusPreference(userType);
+    const personalizedData = generatePersonalizedInsights(
+      responses,
+      [],
+      focusArea,
+      50,
+      userType
+    );
+    
+    return {
+      focusArea,
+      sectionScores: [],
+      overallScore: 50,
+      determinationReason: `Based on your ${userType?.replace('-', ' ')} profile, we've selected ${focusAreas[focusArea].title} as your optimal starting point.`,
+      personalizedData
+    };
+  }
+  
+  // Calculate scores for each section (optimized)
+  const sectionScores: SectionScore[] = [];
+  let totalScore = 0;
+  let responsesCount = 0;
+  
+  // Pre-calculate response totals for efficiency
+  const responseTotals = new Map<string, { sum: number; count: number }>();
+  
+  Object.entries(responses).forEach(([sectionId, sectionResponses]) => {
+    const scores = Object.values(sectionResponses);
+    if (scores.length > 0) {
+      const sum = scores.reduce((acc, score) => acc + score, 0);
+      responseTotals.set(sectionId, { sum, count: scores.length });
+      totalScore += sum;
+      responsesCount += scores.length;
     }
-  };
-
-  return createPremiumResult({
-    userType,
-    ...baseResults[userType]
   });
-}
+  
+  // Build section scores efficiently
+  sections.forEach((section, index) => {
+    const sectionId = section.id.toString();
+    const totals = responseTotals.get(sectionId);
+    
+    if (totals) {
+      const average = totals.sum / totals.count;
+      sectionScores.push({
+        id: section.id,
+        title: section.title,
+        average: Number(average.toFixed(2)),
+        responses: { ...responses[sectionId] },
+        phase: section.phase
+      });
+    }
+  });
+  
+  // Calculate overall score
+  const overallScore = responsesCount > 0 
+    ? Number((totalScore / responsesCount).toFixed(2))
+    : 50;
+  
+  console.log("Calculated overall score:", overallScore, "for", responsesCount, "responses");
+  
+  // Optimized focus area determination
+  let focusArea: FocusArea;
+  
+  // Use user type preference as starting point for efficiency
+  const preferredFocus = getUserTypeFocusPreference(userType);
+  
+  if (sectionScores.length === 0) {
+    focusArea = preferredFocus;
+  } else {
+    // Find highest scoring section
+    const highestSection = sectionScores.reduce((max, section) => 
+      section.average > max.average ? section : max
+    );
+    
+    // Enhanced mapping that considers memory needs first
+    const sectionToFocusArea: Record<string, FocusArea> = {
+      "1": "memory", // M - Moment of Impact (memory baseline)
+      "2": "memory", // Y - Yield to the Fog (memory fog)
+      "3": "emotional", // R - Reckon with Reality
+      "4": "structure", // H - Harness Support
+      "5": "growth", // Y - Yield Again (memory progress)
+      "6": "achievement", // T - Take Back Control
+      "7": "growth", // H - Heal Forward
+      "8": "community" // M - Multiply the Mission
+    };
 
-// Get current focus area for user
-export function getCurrentFocusArea(userType?: UserType): FocusArea | null {
-  if (!userType) {
-    const storedUserData = localStorage.getItem('myrhythm_user_data');
-    if (storedUserData) {
-      const userData = JSON.parse(storedUserData);
-      userType = userData.userType;
+    // Determine focus area with optimized logic
+    if (overallScore < 2.0) {
+      // Low scores suggest significant memory/cognitive challenges
+      focusArea = "memory";
+    } else if (overallScore > 2.5) {
+      // Higher scores allow for other focus areas
+      focusArea = sectionToFocusArea[highestSection.id.toString()] || preferredFocus;
+    } else {
+      // Medium scores use user type preference with section influence
+      const sectionSuggestion = sectionToFocusArea[highestSection.id.toString()];
+      focusArea = sectionSuggestion || preferredFocus;
+    }
+    
+    // Final user type adjustments
+    if (userType === "cognitive-optimization" && focusArea === "emotional") {
+      focusArea = "achievement"; // Better fit for optimization users
+    }
+    
+    if (userType === "brain-injury" && focusArea !== "memory" && overallScore < 2.2) {
+      focusArea = "memory"; // Always prioritize memory for brain injury recovery
     }
   }
   
-  if (!userType) return null;
+  console.log("Determined focus area:", focusArea);
   
-  const focusMap: Record<UserType, FocusArea> = {
-    'cognitive-optimization': 'memory',
-    'empowerment': 'community',
-    'brain-health': 'structure',
-    'brain-injury': 'memory',
-    'caregiver': 'emotional',
-    'wellness': 'structure',
-    'medical-professional': 'community',
-    'colleague': 'growth'
+  // Generate personalized insights (optimized call)
+  const personalizedData = generatePersonalizedInsights(
+    responses,
+    sectionScores,
+    focusArea,
+    overallScore,
+    userType
+  );
+
+  // Generate optimized determination reason
+  const userTypeContext = userType ? ` designed for ${userType.replace(/-/g, ' ')} users` : '';
+  const memoryContext = focusArea === "memory" 
+    ? "Your assessment indicates that strengthening memory and cognitive wellness is your ideal starting point. " 
+    : `Your personalized analysis shows that ${focusAreas[focusArea].title} will best support your cognitive wellness journey right now. `;
+  
+  const determinationReason = `${memoryContext}This MyRhythm recommendation${userTypeContext} corresponds to the ${focusAreas[focusArea].phase} phase of our proven framework. Your journey is designed to build a strong foundation while addressing your specific ${focusAreas[focusArea].title.toLowerCase()} needs.`;
+
+  console.log("Analysis completed successfully");
+
+  return { 
+    focusArea, 
+    sectionScores,
+    overallScore,
+    determinationReason,
+    personalizedData
+  };
+}
+
+export function storeFocusArea(
+  focusArea: FocusArea, 
+  assessmentResult: AssessmentResult
+) {
+  const focusAreaData = {
+    currentFocus: focusArea,
+    determinedAt: assessmentResult.completedAt,
+    assessmentId: assessmentResult.id,
+    nextReviewDate: assessmentResult.nextReviewDate,
+    userType: assessmentResult.userType
   };
   
-  return focusMap[userType] || 'memory';
-}
-
-// Get current assessment result (mock for now)
-export function getCurrentAssessmentResult(): AssessmentResult | null {
-  // In a real app, this would fetch from local storage or API
-  const storedResult = localStorage.getItem('myrhythm_assessment_result');
-  return storedResult ? JSON.parse(storedResult) : null;
-}
-
-// Get assessment history (mock for now)
-export function getAssessmentHistory(): AssessmentResult[] {
-  // In a real app, this would fetch from API
-  const storedHistory = localStorage.getItem('myrhythm_assessment_history');
-  return storedHistory ? JSON.parse(storedHistory) : [];
-}
-
-// Get focus area evolution
-export function getFocusAreaEvolution(focusAreaId?: string): FocusAreaInfo | null {
-  if (!focusAreaId) return null;
+  localStorage.setItem("myrhythm_focus_area", JSON.stringify(focusAreaData));
   
-  const focusArea = focusAreas[focusAreaId as FocusArea];
-  if (!focusArea) return null;
+  // Also store in focus area history for tracking evolution
+  const focusHistory = JSON.parse(localStorage.getItem("myrhythm_focus_history") || "[]");
+  focusHistory.push(focusAreaData);
+  localStorage.setItem("myrhythm_focus_history", JSON.stringify(focusHistory));
+}
+
+export function storeAssessmentResult(assessmentResult: AssessmentResult) {
+  // Store the full current assessment result
+  localStorage.setItem("myrhythm_current_assessment", JSON.stringify(assessmentResult));
+  
+  // Update assessment history, keeping only the last 4 assessments
+  const assessmentHistory = JSON.parse(localStorage.getItem("myrhythm_assessment_history") || "[]");
+  
+  // Add new assessment at the beginning
+  assessmentHistory.unshift(assessmentResult);
+  
+  // Keep only the most recent 4 assessments
+  const limitedHistory = assessmentHistory.slice(0, 4);
+  
+  localStorage.setItem("myrhythm_assessment_history", JSON.stringify(limitedHistory));
+}
+
+export function getCurrentAssessmentResult(): AssessmentResult | null {
+  const assessmentData = localStorage.getItem("myrhythm_current_assessment");
+  if (!assessmentData) return null;
+  
+  try {
+    return JSON.parse(assessmentData);
+  } catch {
+    return null;
+  }
+}
+
+export function getAssessmentHistory(): AssessmentResult[] {
+  const assessmentHistory = localStorage.getItem("myrhythm_assessment_history");
+  if (!assessmentHistory) return [];
+  
+  try {
+    return JSON.parse(assessmentHistory);
+  } catch {
+    return [];
+  }
+}
+
+export function getCurrentFocusArea(): FocusArea | null {
+  const focusAreaData = localStorage.getItem("myrhythm_focus_area");
+  if (!focusAreaData) return null;
+  
+  try {
+    const parsed = JSON.parse(focusAreaData);
+    return parsed.currentFocus;
+  } catch {
+    return null;
+  }
+}
+
+export function getFocusAreaEvolution(): any[] {
+  const focusHistory = localStorage.getItem("myrhythm_focus_history");
+  if (!focusHistory) return [];
+  
+  try {
+    return JSON.parse(focusHistory);
+  } catch {
+    return [];
+  }
+}
+
+// Generate a compelling sample assessment result for the payment gate
+export function generateSampleAssessmentResult(userType: UserType = 'cognitive-optimization'): any {
+  const sampleInsights = [
+    "Your cognitive peak occurs between 9-11 AM, making this ideal for complex tasks",
+    "You show strong focus patterns but benefit from 15-minute breaks every 90 minutes",
+    "Your attention span increases by 40% when you use structured environment cues",
+    "Evening reflection time significantly improves your next-day performance",
+    "You have natural energy dips at 2-4 PM - perfect timing for lighter, creative tasks",
+    "Your memory consolidation is strongest with 7-8 hours of consistent sleep",
+    "Background ambient sounds boost your concentration by up to 25%",
+    "You perform best with 3 main focus blocks rather than scattered work sessions",
+    "Physical movement every 2 hours enhances your cognitive flexibility",
+    "You show exceptional problem-solving skills during your morning peak hours"
+  ];
+
+  const focusAreaMap: Record<UserType, FocusArea> = {
+    'brain-injury': 'memory',
+    'cognitive-optimization': 'achievement',
+    'caregiver': 'community',
+    'wellness': 'emotional',
+    'medical-professional': 'growth',
+    'colleague': 'structure'
+  };
+
+  const primaryRhythms = [
+    "Morning Achiever",
+    "Balanced Powerhouse", 
+    "Evening Creator",
+    "Steady Performer",
+    "Peak Flow Master"
+  ];
 
   return {
-    current: focusArea,
-    evolution: [
-      {
-        phase: 'Foundation',
-        focus: 'Building core habits',
-        description: 'Establish baseline routines and awareness'
-      },
-      {
-        phase: 'Development',
-        focus: 'Skill enhancement',
-        description: 'Targeted improvement in key areas'
-      },
-      {
-        phase: 'Integration',
-        focus: 'Lifestyle integration',
-        description: 'Seamless application to daily life'
-      },
-      {
-        phase: 'Mastery',
-        focus: 'Optimization and teaching',
-        description: 'Peak performance and helping others'
-      }
+    id: `sample-${Date.now()}`,
+    completedAt: new Date().toISOString(),
+    overallScore: Math.floor(Math.random() * 20) + 75, // 75-95%
+    primaryRhythm: primaryRhythms[Math.floor(Math.random() * primaryRhythms.length)],
+    focusArea: focusAreaMap[userType],
+    keyInsights: sampleInsights.slice(0, 3 + Math.floor(Math.random() * 4)), // 3-6 insights
+    allInsights: sampleInsights, // For full version
+    primaryFocus: userType === 'brain-injury' 
+      ? "Optimizing memory consolidation and cognitive recovery patterns"
+      : userType === 'cognitive-optimization'
+      ? "Maximizing peak performance windows and flow states"
+      : userType === 'caregiver'
+      ? "Creating sustainable support routines while maintaining personal wellness"
+      : userType === 'wellness'
+      ? "Building holistic wellness practices that enhance daily rhythm"
+      : userType === 'medical-professional'
+      ? "Integrating evidence-based cognitive optimization into practice"
+      : "Creating structured workflows that support team cognitive performance",
+    strengthAreas: [
+      "Strong morning focus capability",
+      "Excellent pattern recognition",
+      "High task completion rates"
     ],
-    recommendations: [
-      'Start with foundational practices',
-      'Track progress consistently',
-      'Gradually increase complexity',
-      'Share knowledge with others'
+    improvementAreas: [
+      "Energy management in afternoon hours",
+      "Transition time between tasks",
+      "Evening wind-down routine optimization"
     ],
-    // Include properties for direct access
-    title: focusArea.title,
-    description: focusArea.description,
-    gradient: focusArea.gradient,
-    phase: focusArea.phase,
-    keyFeatures: focusArea.keyFeatures
+    personalizedRecommendations: [
+      "Implement the 90-minute focus protocol",
+      "Create environmental cues for deep work",
+      "Establish consistent sleep-wake rhythms",
+      "Design optimal break sequences"
+    ]
   };
 }
