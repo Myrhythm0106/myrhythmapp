@@ -26,10 +26,10 @@ export function ExtractedActionsReview() {
           <p className="text-base text-muted-foreground mb-6 max-w-md mx-auto">
             Start recording conversations and never let anyone down again. Memory Bridge finds every commitment that matters to your relationships.
           </p>
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-6 max-w-lg mx-auto">
-            <p className="text-sm text-purple-700">
-              💜 <strong>Your Promise Keeper Journey starts here:</strong><br/>
-              Every conversation holds commitments that build trust. Let us help you honor them all.
+          <div className="bg-gradient-to-r from-brain-health/10 to-memory-emerald/10 rounded-lg p-6 max-w-lg mx-auto border border-brain-health/20">
+            <p className="text-sm text-brain-health">
+              <strong>Clinical Action Registry</strong><br/>
+              Every conversation contains important commitments. We help you track and honor them all.
             </p>
           </div>
         </CardContent>
@@ -45,8 +45,8 @@ export function ExtractedActionsReview() {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-purple-900 mb-2">Memory Bridge - Your Promise Keeper</h2>
-        <p className="text-muted-foreground mb-6">Building trust, one promise at a time</p>
+        <h2 className="text-2xl font-bold text-brain-health mb-2">P.A.C.T Clinical Actions</h2>
+        <p className="text-muted-foreground mb-6">Promises • Agreements • Commitments • Tasks</p>
         
         {totalPromises > 0 && (
           <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 max-w-2xl mx-auto">
@@ -60,8 +60,8 @@ export function ExtractedActionsReview() {
                 <div className="text-sm text-muted-foreground">Awaiting Review</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">{Math.round((keptPromises / totalPromises) * 100)}%</div>
-                <div className="text-sm text-muted-foreground">Trust Score</div>
+                <div className="text-2xl font-bold text-memory-emerald">{Math.round((keptPromises / totalPromises) * 100)}%</div>
+                <div className="text-sm text-muted-foreground">Compliance Rate</div>
               </div>
             </div>
             {keptPromises > 0 && (

@@ -15,6 +15,7 @@ import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { InteractivePACTReports } from './InteractivePACTReports';
 import { CodeWordSettings } from './CodeWordSettings';
 import { ProfessionalPactReport } from './ProfessionalPactReport';
+import { PACTLensTable } from './PACTLensTable';
 import { ScheduleActionDialog, ScheduleData } from './ScheduleActionDialog';
 import { useMemoryBridge } from '@/hooks/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
@@ -123,91 +124,93 @@ export function MemoryBridgeHub() {
   const renderDashboard = () => (
     <div className="space-y-6">
       {/* Hero Section */}
-      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-memory-emerald/40 via-brain-health/30 to-memory-emerald/50 shadow-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald/60 via-transparent to-brain-health/60" />
-        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+      <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-brain-health via-clarity-teal to-memory-emerald shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-sunrise-amber/20 via-transparent to-memory-emerald/30" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent" />
         <CardContent className="relative pt-8 pb-8">
           <div className="text-center space-y-4">
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-memory-emerald via-brain-health to-memory-emerald shadow-2xl mb-4 animate-pulse">
-              <Brain className="h-12 w-12 text-white drop-shadow-lg" />
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 shadow-xl mb-4">
+              <Brain className="h-10 w-10 text-white drop-shadow-lg" />
             </div>
             
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-memory-emerald-100 to-white bg-clip-text text-transparent drop-shadow-lg">
-                Capture Command Center
+              <h1 className="text-4xl font-bold text-white drop-shadow-lg">
+                P.A.C.T Clinical Registry
               </h1>
               <p className="text-xl text-white/90 mt-2 font-medium drop-shadow">
-                Remember Everything - Your Trust Builder
+                Promises • Agreements • Commitments • Tasks
               </p>
             </div>
 
-            {/* Trust Score */}
-            <div className="inline-flex items-center gap-4 bg-white/20 backdrop-blur-sm rounded-full px-8 py-4 border border-white/30 shadow-lg">
-              <Trophy className="h-6 w-6 text-yellow-300 drop-shadow" />
-              <span className="font-bold text-white text-lg drop-shadow">Trust Score: {trustScore}%</span>
-              <Flame className="h-6 w-6 text-orange-300 drop-shadow" />
-              <span className="font-bold text-white text-lg drop-shadow">{currentStreak} day streak</span>
+            {/* Compliance Metrics */}
+            <div className="inline-flex items-center gap-6 bg-white/15 backdrop-blur-sm rounded-xl px-8 py-4 border border-white/20 shadow-lg">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-memory-emerald-300" />
+                <span className="font-semibold text-white text-lg">Compliance: {trustScore}%</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Target className="h-5 w-5 text-clarity-teal-300" />
+                <span className="font-semibold text-white text-lg">{currentStreak} day streak</span>
+              </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Quick Actions */}
-      <Card className="border-2 border-memory-emerald/40 bg-gradient-to-r from-white via-memory-emerald/10 to-brain-health/10 dark:from-gray-900 dark:via-memory-emerald/20 dark:to-brain-health/20 shadow-xl">
+      {/* Clinical Actions */}
+      <Card className="border border-gray-200 bg-white shadow-sm">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-2xl">
-            <Zap className="h-6 w-6 text-memory-emerald" />
-            <span className="bg-gradient-to-r from-memory-emerald to-brain-health bg-clip-text text-transparent font-bold">
-              Quick Actions
-            </span>
+          <CardTitle className="flex items-center gap-2 text-xl font-semibold text-brain-health">
+            <Target className="h-5 w-5 text-brain-health" />
+            Clinical Actions
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <Button 
               size="lg" 
-              className="h-24 bg-gradient-to-br from-brain-health via-emerald-500 to-clarity-teal-500 hover:from-brain-health/80 hover:via-emerald-500/80 hover:to-clarity-teal-500/80 text-white font-bold shadow-lg transform hover:scale-105 transition-all duration-200"
+              className="h-20 bg-brain-health hover:bg-brain-health/90 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-200"
               onClick={() => setActiveTab('record')}
             >
-              <div className="flex flex-col items-center gap-3">
-                <Mic className="h-8 w-8 drop-shadow" />
-                <span className="text-lg">Start Recording</span>
+              <div className="flex flex-col items-center gap-2">
+                <Mic className="h-6 w-6" />
+                <span className="text-sm">Record Session</span>
               </div>
             </Button>
             
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-24 border-3 border-memory-emerald/60 hover:bg-gradient-to-br hover:from-memory-emerald/20 hover:to-memory-emerald/30 hover:border-memory-emerald transform hover:scale-105 transition-all duration-200"
+              className="h-20 border-2 border-memory-emerald hover:bg-memory-emerald/10 text-memory-emerald font-semibold transition-all duration-200"
               onClick={() => setActiveTab('calendar')}
             >
-              <div className="flex flex-col items-center gap-3">
-                <Calendar className="h-8 w-8 text-memory-emerald" />
-                <span className="text-lg font-semibold text-memory-emerald">Calendar</span>
+              <div className="flex flex-col items-center gap-2">
+                <Calendar className="h-6 w-6" />
+                <span className="text-sm">Schedule</span>
               </div>
             </Button>
             
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-24 border-3 border-brain-health/60 hover:bg-gradient-to-br hover:from-brain-health/20 hover:to-brain-health/30 hover:border-brain-health transform hover:scale-105 transition-all duration-200"
+              className="h-20 border-2 border-clarity-teal hover:bg-clarity-teal/10 text-clarity-teal font-semibold transition-all duration-200"
               onClick={() => setActiveTab('pact-reports')}
             >
-              <div className="flex flex-col items-center gap-3">
-                <Target className="h-8 w-8 text-brain-health" />
-                <span className="text-lg font-semibold text-brain-health">PACT Reports</span>
+              <div className="flex flex-col items-center gap-2">
+                <Target className="h-6 w-6" />
+                <span className="text-sm">P.A.C.T Lens</span>
               </div>
             </Button>
 
             <Button 
               size="lg" 
               variant="outline" 
-              className="h-24 border-3 border-purple-500/60 hover:bg-gradient-to-br hover:from-purple-500/20 hover:to-purple-500/30 hover:border-purple-500 transform hover:scale-105 transition-all duration-200"
+              className="h-20 border-2 border-sunrise-amber hover:bg-sunrise-amber/10 text-sunrise-amber font-semibold transition-all duration-200"
               onClick={() => setActiveTab('support-circle')}
             >
-              <div className="flex flex-col items-center gap-3">
-                <Users className="h-8 w-8 text-purple-500" />
-                <span className="text-lg font-semibold text-purple-500">Support Circle</span>
+              <div className="flex flex-col items-center gap-2">
+                <Users className="h-6 w-6" />
+                <span className="text-sm">Care Team</span>
               </div>
             </Button>
           </div>
@@ -217,69 +220,72 @@ export function MemoryBridgeHub() {
       {/* Recording Usage Tracker */}
       <RecordingUsageTracker />
 
-      {/* Performance Metrics */}
+      {/* Clinical Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="border-2 border-brain-health/50 bg-gradient-to-br from-brain-health/30 to-brain-health/40 shadow-lg transform hover:scale-105 transition-all duration-200">
+        <Card className="border border-brain-health/20 bg-white shadow-sm">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-4xl font-bold text-white drop-shadow-lg">{totalPromises}</div>
-              <p className="text-sm text-white/90 font-medium">Total Promises</p>
-              <TrendingUp className="h-5 w-5 mx-auto mt-2 text-white drop-shadow" />
+              <div className="text-3xl font-bold text-brain-health">{totalPromises}</div>
+              <p className="text-sm text-muted-foreground font-medium">Total P.A.C.T Items</p>
+              <Target className="h-4 w-4 mx-auto mt-2 text-brain-health" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border-2 border-emerald/50 bg-gradient-to-br from-emerald/30 to-emerald/40 shadow-lg transform hover:scale-105 transition-all duration-200">
+        <Card className="border border-memory-emerald/20 bg-white shadow-sm">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-4xl font-bold text-white drop-shadow-lg">{keptPromises}</div>
-              <p className="text-sm text-white/90 font-medium">Kept</p>
-              <CheckCircle className="h-5 w-5 mx-auto mt-2 text-white drop-shadow" />
+              <div className="text-3xl font-bold text-memory-emerald">{keptPromises}</div>
+              <p className="text-sm text-muted-foreground font-medium">Completed</p>
+              <CheckCircle className="h-4 w-4 mx-auto mt-2 text-memory-emerald" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border border-orange-400/20 bg-gradient-to-br from-orange-100/50 to-orange-200/50 dark:from-orange-900/20 dark:to-orange-800/20">
+        <Card className="border border-sunrise-amber/20 bg-white shadow-sm">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600">{pendingPromises}</div>
-              <p className="text-sm text-muted-foreground">Pending</p>
-              <Clock className="h-4 w-4 mx-auto mt-1 text-orange-600" />
+              <div className="text-3xl font-bold text-sunrise-amber">{pendingPromises}</div>
+              <p className="text-sm text-muted-foreground font-medium">In Progress</p>
+              <Clock className="h-4 w-4 mx-auto mt-2 text-sunrise-amber" />
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border border-purple-400/20 bg-gradient-to-br from-purple-100/50 to-purple-200/50 dark:from-purple-900/20 dark:to-purple-800/20">
+        <Card className="border border-clarity-teal/20 bg-white shadow-sm">
           <CardContent className="pt-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">{meetingRecordings.length}</div>
-              <p className="text-sm text-muted-foreground">Recordings</p>
-              <Mic className="h-4 w-4 mx-auto mt-1 text-purple-600" />
+              <div className="text-3xl font-bold text-clarity-teal">{meetingRecordings.length}</div>
+              <p className="text-sm text-muted-foreground font-medium">Sessions</p>
+              <Mic className="h-4 w-4 mx-auto mt-2 text-clarity-teal" />
             </div>
           </CardContent>
         </Card>
       </div>
 
       {/* Recent Activity */}
-      <Card>
+      <Card className="border border-brain-health/20">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Star className="h-5 w-5 text-memory-emerald" />
-            Recent Activity
+          <CardTitle className="flex items-center gap-2 text-brain-health">
+            <CheckCircle className="h-5 w-5" />
+            Recent Clinical Actions
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {extractedActions.slice(0, 3).map((action) => (
-              <div key={action.id} className="flex items-center justify-between p-3 rounded-lg border border-memory-emerald/10 bg-memory-emerald/5">
+              <div key={action.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-200 bg-white">
                 <div className="flex items-center gap-3">
-                  <div className={`w-2 h-2 rounded-full ${
-                    action.status === 'completed' ? 'bg-brain-health' : 
-                    action.status === 'pending' ? 'bg-orange-500' : 'bg-gray-400'
+                  <div className={`w-3 h-3 rounded-full ${
+                    action.status === 'completed' ? 'bg-memory-emerald' : 
+                    action.status === 'pending' ? 'bg-sunrise-amber' : 'bg-gray-400'
                   }`} />
-                  <span className="font-medium">{action.action_text}</span>
+                  <span className="font-medium text-gray-900">{action.action_text}</span>
                 </div>
-                <Badge variant={action.status === 'completed' ? 'default' : 'secondary'}>
+                <Badge 
+                  variant={action.status === 'completed' ? 'default' : 'secondary'}
+                  className={action.status === 'completed' ? 'bg-memory-emerald text-white' : ''}
+                >
                   {action.status}
                 </Badge>
               </div>
@@ -287,8 +293,9 @@ export function MemoryBridgeHub() {
             
             {extractedActions.length === 0 && (
               <div className="text-center py-8 text-muted-foreground">
-                <Brain className="h-12 w-12 mx-auto mb-4 text-memory-emerald/50" />
-                <p>Start recording conversations to see your promises here!</p>
+                <Target className="h-12 w-12 mx-auto mb-4 text-brain-health/50" />
+                <p className="font-medium">Begin recording sessions to track clinical actions</p>
+                <p className="text-sm mt-1">All P.A.C.T items will appear here for review</p>
               </div>
             )}
           </div>
@@ -298,12 +305,12 @@ export function MemoryBridgeHub() {
   );
 
   const renderPactReport = () => (
-    <ProfessionalPactReport
+    <PACTLensTable
       actions={extractedActions}
-      meetingTitle={activeMeeting?.meeting_title || "Recent Meetings"}
-      meetingDate={activeMeeting?.created_at}
-      onScheduleAction={handleScheduleAction}
-      onExportPDF={handleExportPDF}
+      onUpdateAction={(actionId, updates) => {
+        // Handle action updates if needed
+        console.log('Updating action:', actionId, updates);
+      }}
     />
   );
 
@@ -589,7 +596,7 @@ export function MemoryBridgeHub() {
               <Brain className="h-4 w-4" />
               <span className="hidden sm:inline">Dashboard</span>
             </TabsTrigger>
-            <TabsTrigger value="record" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+            <TabsTrigger value="record" className="flex items-center gap-2 data-[state=active]:bg-brain-health data-[state=active]:text-white">
               <Mic className="h-4 w-4" />
               <span className="hidden sm:inline">Record</span>
             </TabsTrigger>
@@ -601,17 +608,17 @@ export function MemoryBridgeHub() {
               <Target className="h-4 w-4" />
               <span className="hidden sm:inline">Actions</span>
             </TabsTrigger>
-            <TabsTrigger value="pact-reports" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+            <TabsTrigger value="pact-reports" className="flex items-center gap-2 data-[state=active]:bg-brain-health data-[state=active]:text-white">
               <Target className="h-4 w-4" />
-              <span className="hidden sm:inline">PACT Reports</span>
+              <span className="hidden sm:inline">P.A.C.T Lens</span>
             </TabsTrigger>
-            <TabsTrigger value="support-circle" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
+            <TabsTrigger value="support-circle" className="flex items-center gap-2 data-[state=active]:bg-sunrise-amber data-[state=active]:text-white">
               <Users className="h-4 w-4" />
-              <span className="hidden sm:inline">Support</span>
+              <span className="hidden sm:inline">Care Team</span>
             </TabsTrigger>
             <TabsTrigger value="recordings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Archive className="h-4 w-4" />
-              <span className="hidden sm:inline">History</span>
+              <span className="hidden sm:inline">My Recordings</span>
             </TabsTrigger>
             <TabsTrigger value="settings" className="flex items-center gap-2 data-[state=active]:bg-memory-emerald data-[state=active]:text-white">
               <Settings className="h-4 w-4" />
@@ -636,7 +643,7 @@ export function MemoryBridgeHub() {
           </TabsContent>
 
           <TabsContent value="pact-reports" className="mt-6">
-            <InteractivePACTReports />
+            {renderPactReport()}
           </TabsContent>
 
           <TabsContent value="support-circle" className="mt-6">

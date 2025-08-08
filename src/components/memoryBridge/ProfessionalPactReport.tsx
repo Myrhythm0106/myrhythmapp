@@ -114,8 +114,8 @@ export const ProfessionalPactReport: React.FC<ProfessionalPactReportProps> = ({
               <div className="text-sm text-muted-foreground">Completed</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{trustScore}%</div>
-              <div className="text-sm text-muted-foreground">Trust Score</div>
+              <div className="text-2xl font-bold text-memory-emerald">{trustScore}%</div>
+              <div className="text-sm text-muted-foreground">Compliance Rate</div>
             </div>
           </div>
         </CardContent>
