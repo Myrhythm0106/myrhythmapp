@@ -51,7 +51,6 @@ export function MemoryBridgeFloatingButton({ className }: MemoryBridgeFloatingBu
             setShowSetup(false);
             setShowRecorder(true);
           }}
-          onClose={() => setShowSetup(false)}
         />
       )}
 

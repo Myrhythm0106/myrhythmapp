@@ -448,7 +448,7 @@ export function CrisisPreventionSystem() {
               <p className="text-sm font-medium mb-2">Stress Indicators:</p>
               <div className="flex flex-wrap gap-1">
                 {cognitiveLoad.stressIndicators.map((indicator, index) => (
-                  <Badge key={index} variant="secondary" size="sm">
+                  <Badge key={index} variant="secondary">
                     {indicator}
                   </Badge>
                 ))}
@@ -485,7 +485,7 @@ export function CrisisPreventionSystem() {
                       {risk.riskLevel} risk
                     </Badge>
                     {risk.urgency > 2 && (
-                      <Badge variant="destructive" size="sm">
+                      <Badge variant="destructive">
                         <Clock className="h-3 w-3 mr-1" />
                         Urgent
                       </Badge>

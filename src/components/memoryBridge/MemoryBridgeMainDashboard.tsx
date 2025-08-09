@@ -30,7 +30,7 @@ export function MemoryBridgeMainDashboard() {
   const { hasFeature, tier } = useSubscription();
   const [activeTab, setActiveTab] = useState('actions');
   
-  const hasMemoryBridgeAccess = hasFeature('memory_bridge_premium') || tier === 'premium' || tier === 'family';
+  const hasMemoryBridgeAccess = tier === 'premium' || tier === 'family';
   
   const stats = {
     totalCommitments: extractedActions.length,
