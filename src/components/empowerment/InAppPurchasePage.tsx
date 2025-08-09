@@ -1,55 +1,16 @@
 
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Crown, Star, Zap, Check, Shield, Heart, Brain, Target, Sparkles, MapPin, Camera, MessageCircle, BookOpen, AlertTriangle, Activity, Lightbulb, Calendar } from "lucide-react";
-import { useSubscription } from "@/contexts/SubscriptionContext";
-import { toast } from "sonner";
 
 interface InAppPurchasePageProps {
   onBack: () => void;
 }
 
 export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
-  const navigate = useNavigate();
-  const { updateSubscription, setDemoMode } = useSubscription();
-
-  const handlePurchase = (featureId: string, featureName: string) => {
-    if (featureId === 'memory-bridge-premium' || featureId === 'memory-bridge-pro') {
-      // Upgrade to premium and navigate to Memory Bridge
-      updateSubscription('premium');
-      setDemoMode(true); // Enable demo mode for testing
-      toast.success(`🎉 ${featureName} activated! Redirecting to Memory Bridge...`);
-      setTimeout(() => {
-        navigate('/memory-bridge');
-      }, 1500);
-    } else {
-      // Handle other purchases
-      toast.success(`🎉 ${featureName} activated!`);
-    }
-  };
   const individualFeatures = [
-    {
-      id: 'memory-bridge-premium',
-      name: 'Memory Bridge Premium',
-      price: '£19.99',
-      period: '/month',
-      icon: Brain,
-      description: 'Never forget a promise again - preserve your relationships',
-      features: [
-        'Unlimited meeting recordings',
-        'AI-powered commitment extraction',
-        'Family integration & alerts',
-        'Crisis prevention system',
-        'Conversation lifelines',
-        'Relationship impact analysis'
-      ],
-      popular: true,
-      tier: 'premium',
-      highlight: true
-    },
     {
       id: 'calendar-integration',
       name: 'Calendar Integration',
@@ -63,6 +24,7 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
         'Multi-calendar support',
         'Offline capability'
       ],
+      popular: true,
       tier: 'free'
     },
     {
@@ -140,18 +102,6 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
 
   const featureBundles = [
     {
-      id: 'memory-relationship-suite',
-      name: 'Memory & Relationship Suite',
-      price: '£29.99',
-      period: '/month',
-      originalPrice: '£47.96',
-      description: 'Complete relationship preservation and memory enhancement',
-      features: ['Memory Bridge Premium', 'Conversation Notes', 'Family Dashboard', 'Crisis Prevention'],
-      savings: 'Save £17.97/month',
-      popular: true,
-      highlight: true
-    },
-    {
       id: 'calendar-pro',
       name: 'Calendar Pro Bundle',
       price: '£9.99',
@@ -159,7 +109,8 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
       originalPrice: '£12.97',
       description: 'Complete calendar management with AI optimization',
       features: ['Calendar Integration', 'Smart AI Scheduling', 'Custom Reminders'],
-      savings: 'Save £2.98/month'
+      savings: 'Save £2.98/month',
+      popular: true
     },
     {
       id: 'cognitive-support',
@@ -187,52 +138,47 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
     {
       id: 'starter',
       name: 'Starter',
-      price: '£7.99',
+      price: '$7.99',
       period: '/month',
       description: 'Perfect for getting started',
       features: [
         'Basic empowerment statements',
         'Daily #IChoose statements',
         'Progress tracking',
-        'Basic calendar features',
-        '1 Memory Bridge session/month'
+        'Basic calendar features'
       ]
     },
     {
-      id: 'memory-bridge-pro',
-      name: 'Memory Bridge Pro',
-      price: '£19.99',
+      id: 'pro',
+      name: 'Pro',
+      price: '$9.99',
       period: '/month',
-      description: 'Transform your relationship preservation',
+      description: 'Most popular choice',
       popular: true,
-      highlight: true,
       features: [
         'All Starter features',
-        'Unlimited Memory Bridge recordings',
-        'AI commitment extraction',
-        'Family integration dashboard',
-        'Conversation lifelines',
-        'Crisis prevention system',
-        'Real-time relationship insights',
-        'Priority family support'
+        'Premium empowerment statements',
+        'Advanced planning tools',
+        'Goal tracking & analytics',
+        'Customizable brain training',
+        'Priority support'
       ]
     },
     {
       id: 'family',
-      name: 'Care Team Ultimate',
-      price: '£29.99',
+      name: 'Care Team',
+      price: '$15.99',
       period: '/month',
-      description: 'Complete family & medical integration',
+      description: 'For families and care teams',
       features: [
-        'All Memory Bridge Pro features',
+        'All Pro features',
         'Memory Bank - Capture & preserve memories',
         'Care team collaboration',
-        'Medical professional dashboard',
         'Watcher collaboration on memories',
-        'Emergency alert protocols',
-        'Clinical reporting tools',
-        'Healthcare provider sync',
-        'Crisis intervention protocols'
+        'Family member access',
+        'Shared progress tracking',
+        'Emergency alerts',
+        'Medical report generation'
       ]
     }
   ];
@@ -315,22 +261,12 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
               <Card 
                 key={feature.id}
                 className={`relative transition-all duration-300 hover:scale-105 ${
-                  feature.highlight 
-                    ? 'border-2 border-gradient-to-r from-purple-500 to-blue-500 shadow-2xl bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50' 
-                    : feature.popular 
-                      ? 'border-2 border-purple-300 shadow-xl bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30' 
-                      : 'border border-gray-200 shadow-lg bg-gradient-to-br from-white to-gray-50/30 hover:shadow-xl'
+                  feature.popular 
+                    ? 'border-2 border-purple-300 shadow-xl bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30' 
+                    : 'border border-gray-200 shadow-lg bg-gradient-to-br from-white to-gray-50/30 hover:shadow-xl'
                 }`}
               >
-                {feature.highlight && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="px-3 py-1 text-xs bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                      <Brain className="h-3 w-3 mr-1" />
-                      Killer Feature
-                    </Badge>
-                  </div>
-                )}
-                {feature.popular && !feature.highlight && (
+                {feature.popular && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                     <Badge variant="premium" className="px-3 py-1 text-xs">
                       <Star className="h-3 w-3 mr-1" />
@@ -365,18 +301,13 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
                     ))}
                   </ul>
                   
-                   <Button 
-                     variant={feature.highlight ? "default" : feature.popular ? "premium" : "default"}
-                     className={`w-full text-sm py-2 ${
-                       feature.highlight 
-                         ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
-                         : ''
-                     }`}
-                     onClick={() => handlePurchase(feature.id, feature.name)}
-                   >
-                     {feature.highlight ? <Brain className="h-3 w-3 mr-2" /> : <Zap className="h-3 w-3 mr-2" />}
-                     {feature.highlight ? 'Transform Relationships' : 'Add Feature'}
-                   </Button>
+                  <Button 
+                    variant={feature.popular ? "premium" : "default"}
+                    className="w-full text-sm py-2"
+                  >
+                    <Zap className="h-3 w-3 mr-2" />
+                    Add Feature
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -389,11 +320,7 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
             </h3>
             <div className="grid md:grid-cols-2 gap-6">
               {featureBundles.map((bundle) => (
-                <Card key={bundle.id} className={`border-2 shadow-lg hover:shadow-xl transition-all duration-300 ${
-                  bundle.highlight 
-                    ? 'border-purple-300 bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50'
-                    : 'border-green-200 bg-gradient-to-br from-green-50/30 to-emerald-50/30'
-                }`}>
+                <Card key={bundle.id} className="border-2 border-green-200 bg-gradient-to-br from-green-50/30 to-emerald-50/30 shadow-lg hover:shadow-xl transition-all duration-300">
                   <CardHeader className="text-center pb-4">
                     <div className="inline-flex items-center gap-2 mb-2">
                       <Badge variant="secondary" className="bg-green-100 text-green-800">
@@ -423,18 +350,13 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
                       ))}
                     </ul>
                     
-                     <Button 
-                       variant="default"
-                       className={`w-full text-sm py-2 ${
-                         bundle.highlight
-                           ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700'
-                           : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700'
-                       }`}
-                       onClick={() => handlePurchase(bundle.id, bundle.name)}
-                     >
-                       {bundle.highlight ? <Brain className="h-3 w-3 mr-2" /> : <Sparkles className="h-3 w-3 mr-2" />}
-                       {bundle.highlight ? 'Transform Your Life' : 'Get Bundle'}
-                     </Button>
+                    <Button 
+                      variant="default"
+                      className="w-full text-sm py-2 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700"
+                    >
+                      <Sparkles className="h-3 w-3 mr-2" />
+                      Get Bundle
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -475,22 +397,12 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
             <Card 
               key={plan.id}
               className={`relative transition-all duration-300 hover:scale-105 ${
-                plan.highlight
-                  ? 'border-2 border-gradient-to-r from-purple-500 to-blue-500 shadow-2xl bg-gradient-to-br from-purple-50 via-blue-50 to-teal-50'
-                  : plan.popular 
-                    ? 'border-2 border-purple-300 shadow-2xl bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30' 
-                    : 'border border-gray-200 shadow-lg bg-gradient-to-br from-white to-gray-50/30 hover:shadow-xl'
+                plan.popular 
+                  ? 'border-2 border-purple-300 shadow-2xl bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30' 
+                  : 'border border-gray-200 shadow-lg bg-gradient-to-br from-white to-gray-50/30 hover:shadow-xl'
               }`}
             >
-              {plan.highlight && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="px-4 py-1 text-sm bg-gradient-to-r from-purple-600 to-blue-600 text-white">
-                    <Brain className="h-3 w-3 mr-1" />
-                    Relationship Game-Changer
-                  </Badge>
-                </div>
-              )}
-              {plan.popular && !plan.highlight && (
+              {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <Badge variant="premium" className="px-4 py-1 text-sm">
                     <Star className="h-3 w-3 mr-1" />
@@ -520,18 +432,13 @@ export function InAppPurchasePage({ onBack }: InAppPurchasePageProps) {
                   ))}
                 </ul>
                 
-                 <Button 
-                   variant={plan.highlight ? "default" : plan.popular ? "premium" : "default"}
-                   className={`w-full text-base py-3 ${
-                     plan.highlight
-                       ? 'bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white'
-                       : ''
-                   }`}
-                   onClick={() => handlePurchase(plan.id, plan.name)}
-                 >
-                   {plan.highlight ? <Brain className="h-4 w-4 mr-2" /> : <Zap className="h-4 w-4 mr-2" />}
-                   {plan.highlight ? 'Start Transforming' : `Choose ${plan.name}`}
-                 </Button>
+                <Button 
+                  variant={plan.popular ? "premium" : "default"}
+                  className="w-full text-base py-3"
+                >
+                  <Zap className="h-4 w-4 mr-2" />
+                  Choose {plan.name}
+                </Button>
               </CardContent>
             </Card>
           ))}

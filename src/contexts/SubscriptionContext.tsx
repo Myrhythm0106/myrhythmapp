@@ -52,8 +52,6 @@ interface SubscriptionContextType {
   upgradeRequired: (feature: keyof SubscriptionFeatures) => boolean;
   openCustomerPortal: () => Promise<string>;
   updateSubscription: (newTier: SubscriptionTier) => void;
-  demoMode: boolean;
-  setDemoMode: (enabled: boolean) => void;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextType | undefined>(undefined);
@@ -176,15 +174,14 @@ export function SubscriptionProvider({
   tier: initialTier = 'free' // Default to free tier for demo
 }: SubscriptionProviderProps) {
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>(initialTier);
-  const [demoMode, setDemoMode] = useState(false);
-  const features = getFeaturesByTier(demoMode ? 'premium' : currentTier);
+  const features = getFeaturesByTier(currentTier);
   
   // Mock subscription data for demo
   const subscriptionData: SubscriptionData = {
-    subscribed: currentTier !== 'free' || demoMode,
-    trial_active: currentTier === 'free' && !demoMode,
-    trial_days_left: (currentTier === 'free' && !demoMode) ? 7 : 0,
-    subscription_tier: demoMode ? 'premium' : currentTier
+    subscribed: currentTier !== 'free',
+    trial_active: currentTier === 'free',
+    trial_days_left: currentTier === 'free' ? 7 : 0,
+    subscription_tier: currentTier
   };
   
   const updateSubscription = (newTier: SubscriptionTier) => {
@@ -193,7 +190,6 @@ export function SubscriptionProvider({
   };
   
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
-    if (demoMode) return true; // Demo mode grants all features
     if (feature === 'maxCommunityMembers') {
       return features[feature] > 0 || features[feature] === -1; // -1 means unlimited
     }
@@ -218,9 +214,7 @@ export function SubscriptionProvider({
       hasFeature,
       upgradeRequired,
       openCustomerPortal,
-      updateSubscription,
-      demoMode,
-      setDemoMode
+      updateSubscription
     }}>
       {children}
     </SubscriptionContext.Provider>
