@@ -10,6 +10,7 @@ export interface MeetingRecording {
   energy_level?: number;
   emotional_context?: string;
   relationship_context: Record<string, any>;
+  watchers?: string[]; // Support Circle member IDs
   is_active: boolean;
   started_at: string;
   ended_at?: string;
@@ -85,4 +86,61 @@ export interface MeetingSetupData {
   location?: string;
   energyLevel?: number;
   emotionalContext?: string;
+  watchers?: string[]; // Support Circle member IDs
 }
+
+export interface MemoryBridgeComment {
+  id: string;
+  user_id: string;
+  meeting_recording_id: string;
+  commenter_member_id: string;
+  comment_text: string;
+  is_read: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RecordingUsageTracking {
+  id: string;
+  user_id: string;
+  recording_count: number;
+  recording_duration_minutes: number;
+  comment_count: number;
+  period_start: string;
+  period_end: string;
+  subscription_tier: 'free' | 'premium' | 'family';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface SubscriptionLimits {
+  recordingCount: number;
+  recordingDurationMinutes: number;
+  commentCount: number;
+  hasWatchers: boolean;
+  retentionDays: number;
+}
+
+export const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
+  free: {
+    recordingCount: 3,
+    recordingDurationMinutes: 20,
+    commentCount: 1,
+    hasWatchers: false,
+    retentionDays: 7
+  },
+  premium: {
+    recordingCount: -1, // unlimited
+    recordingDurationMinutes: 60,
+    commentCount: 7,
+    hasWatchers: true,
+    retentionDays: -1 // permanent
+  },
+  family: {
+    recordingCount: -1, // unlimited
+    recordingDurationMinutes: -1, // unlimited
+    commentCount: -1, // unlimited
+    hasWatchers: true,
+    retentionDays: -1 // permanent
+  }
+};

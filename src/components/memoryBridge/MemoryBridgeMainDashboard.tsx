@@ -266,8 +266,8 @@ export function MemoryBridgeMainDashboard() {
             <CrisisPreventionSystem />
           </TabsContent>
 
-          <TabsContent value="record" className="space-y-6">
-            <MemoryBridgeRecorder />
+           <TabsContent value="record" className="space-y-6">
+            <MemoryBridgeRecorder onRecordingComplete={(result) => console.log('Recording completed:', result)} />
           </TabsContent>
         </Tabs>
       </div>

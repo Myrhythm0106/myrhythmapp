@@ -29,6 +29,7 @@ export async function createMeetingRecording(
         energy_level: setupData.energyLevel || null,
         emotional_context: setupData.emotionalContext || null,
         relationship_context: {},
+        watchers: setupData.watchers || [],
         is_active: true,
         started_at: new Date().toISOString()
       })

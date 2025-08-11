@@ -12,8 +12,11 @@ import { toast } from 'sonner';
 import { Heart, Users, Clock, StopCircle, Activity, Save, Trash2, Share2, ArrowUp, ArrowDown } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
 
-export function MemoryBridgeRecorder() {
-  const isMobile = useIsMobile();
+interface MemoryBridgeRecorderProps {
+  onRecordingComplete?: (result: any) => void;
+}
+
+export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecorderProps) {
   const { 
     isRecording, 
     isProcessing, 
@@ -21,6 +24,9 @@ export function MemoryBridgeRecorder() {
     startMeetingRecording, 
     stopMeetingRecording 
   } = useMemoryBridge();
+  // const { canRecord, updateUsage } = useRecordingLimits();
+  const isMobile = useIsMobile();
+  const [selectedWatchers, setSelectedWatchers] = useState<string[]>([]);
   
   const { 
     startRecording: startVoiceRecording, 
@@ -53,6 +59,12 @@ export function MemoryBridgeRecorder() {
   };
 
   const handleStartMeeting = async (setupData: MeetingSetupData) => {
+    // Limit checking temporarily disabled
+    // if (!canRecord()) {
+    //   toast.error('Recording limit reached. Upgrade to continue recording!');
+    //   return;
+    // }
+
     try {
       // Start voice recording first
       await startVoiceRecording();
@@ -68,8 +80,9 @@ export function MemoryBridgeRecorder() {
       );
 
       if (voiceData) {
-        // Start the meeting recording with the voice recording ID
-        const meetingRecord = await startMeetingRecording(setupData, voiceData.id);
+        // Start the meeting recording with watchers
+        const setupWithWatchers = { ...setupData, watchers: selectedWatchers };
+        const meetingRecord = await startMeetingRecording(setupWithWatchers, voiceData.id);
         
         if (meetingRecord) {
           setRecordingStartTime(new Date());
@@ -101,7 +114,15 @@ export function MemoryBridgeRecorder() {
       
       if (audioBlob && currentMeeting) {
         // Process through Memory Bridge
-        await stopMeetingRecording(audioBlob);
+        const result = await stopMeetingRecording(audioBlob);
+        
+        // Update usage tracking temporarily disabled
+        // await updateUsage({
+        //   recording_count: 1,
+        //   recording_duration_minutes: Math.ceil(currentDuration / 60)
+        // });
+        
+        onRecordingComplete?.(result);
       }
       
       setRecordingStartTime(null);
@@ -226,90 +247,102 @@ export function MemoryBridgeRecorder() {
   }
 
   return (
-    <SwipeableContainer
-      enableHorizontalSwipe={isMobile}
-      onSwipeLeft={{
-        label: "Quick Start",
-        icon: <ArrowUp className="h-4 w-4" />,
-        color: "#22c55e",
-        action: () => toast.success("Swipe up to start recording!")
-      }}
-      className="w-full max-w-2xl mx-auto"
-    >
-      <Card>
-        <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-            <Heart className="h-6 w-6 text-primary" />
-            Memory Bridge
-          </CardTitle>
-          <p className="text-muted-foreground">
-            Capture conversations and never miss what matters to your relationships
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-6">
-        {/* Key Features */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+    <div className="space-y-6">
+      {/* <RecordingLimitsWarning /> */}
+      
+      <SwipeableContainer
+        enableHorizontalSwipe={isMobile}
+        onSwipeLeft={{
+          label: "Quick Start",
+          icon: <Heart className="h-4 w-4" />,
+          color: "#22c55e",
+          action: () => toast.success("Swipe up to start recording!")
+        }}
+        className="w-full max-w-2xl mx-auto"
+      >
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2 text-2xl">
               <Heart className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="font-medium">Preserve Intent</h3>
-            <p className="text-xs text-muted-foreground">
-              Capture the 'why' behind commitments
+              Memory Bridge
+            </CardTitle>
+            <p className="text-muted-foreground">
+              Capture conversations and never miss what matters to your relationships
             </p>
-          </div>
-          
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-              <Users className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="font-medium">Relationship Context</h3>
-            <p className="text-xs text-muted-foreground">
-              Understand family dynamics
-            </p>
-          </div>
-          
-          <div className="text-center space-y-2">
-            <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
-              <Clock className="h-6 w-6 text-primary" />
-            </div>
-            <h3 className="font-medium">Memory Safety</h3>
-            <p className="text-xs text-muted-foreground">
-              Never forget what you promised
-            </p>
-          </div>
-        </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Family Watchers Section - Coming Soon */}
+            {/* {!isRecording && !isProcessing && (
+              <MemoryBridgeWatchersField 
+                selectedWatchers={selectedWatchers}
+                onWatchersChange={setSelectedWatchers}
+              />
+            )} */}
 
-        {/* Start Recording */}
-        <div className="flex justify-center">
-          <MeetingSetupDialog 
-            onStartMeeting={handleStartMeeting}
-            isLoading={isProcessing}
-          />
-        </div>
-
-          {/* Help Text */}
-          <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-lg p-4">
-            <p className="mb-2 font-medium">Perfect for:</p>
-            <div className="space-y-1">
-              <p>• Family conversations & planning</p>
-              <p>• Medical appointments</p>
-              <p>• Important discussions with loved ones</p>
-              <p>• Any conversation where commitments are made</p>
+            {/* Key Features */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <Heart className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-medium">Preserve Intent</h3>
+                <p className="text-xs text-muted-foreground">
+                  Capture the 'why' behind commitments
+                </p>
+              </div>
+              
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-medium">Relationship Context</h3>
+                <p className="text-xs text-muted-foreground">
+                  Understand family dynamics
+                </p>
+              </div>
+              
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                  <Clock className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-medium">Memory Safety</h3>
+                <p className="text-xs text-muted-foreground">
+                  Never forget what you promised
+                </p>
+              </div>
             </div>
-          </div>
 
-          {/* Mobile Swipe Instructions */}
-          {isMobile && (
-            <div className="text-center">
-              <SwipeHint isMobile={true} />
-              <p className="text-xs text-muted-foreground mt-1">
-                Swipe left for quick recording setup
-              </p>
+            {/* Start Recording */}
+            <div className="flex justify-center">
+              <MeetingSetupDialog 
+                onStartMeeting={handleStartMeeting}
+                isLoading={isProcessing}
+              />
             </div>
-          )}
-        </CardContent>
-      </Card>
-    </SwipeableContainer>
+
+            {/* Help Text */}
+            <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-lg p-4">
+              <p className="mb-2 font-medium">Perfect for:</p>
+              <div className="space-y-1">
+                <p>• Family conversations & planning</p>
+                <p>• Medical appointments</p>
+                <p>• Important discussions with loved ones</p>
+                <p>• Any conversation where commitments are made</p>
+              </div>
+            </div>
+
+            {/* Mobile Swipe Instructions */}
+            {isMobile && (
+              <div className="text-center">
+                <SwipeHint isMobile={true} />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Swipe left for quick recording setup
+                </p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </SwipeableContainer>
+    </div>
   );
 }

@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SwipeableContainer } from '@/components/ui/SwipeableContainer';
+import { MemoryBridgeCommentsSection } from './MemoryBridgeCommentsSection';
 import { SwipeHint } from '@/components/gratitude/journal/components/SwipeHint';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
@@ -125,6 +126,13 @@ export function ExtractedActionsReview({ meetingId, actions, onActionConfirm, on
           <p className="text-xs text-muted-foreground mt-2">
             ← Swipe left to confirm • → Swipe right to share with family
           </p>
+        </div>
+      )}
+      
+      {/* Family Comments Section */}
+      {meetingId && (
+        <div className="mt-6">
+          <MemoryBridgeCommentsSection recordingId={meetingId} />
         </div>
       )}
     </div>
