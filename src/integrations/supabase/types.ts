@@ -116,6 +116,47 @@ export type Database = {
         }
         Relationships: []
       }
+      action_confirmations: {
+        Row: {
+          confirmation_note: string | null
+          confirmation_status: string
+          confirmed_at: string | null
+          created_at: string
+          extracted_action_id: string
+          id: string
+          user_id: string
+          user_modifications: Json | null
+        }
+        Insert: {
+          confirmation_note?: string | null
+          confirmation_status: string
+          confirmed_at?: string | null
+          created_at?: string
+          extracted_action_id: string
+          id?: string
+          user_id: string
+          user_modifications?: Json | null
+        }
+        Update: {
+          confirmation_note?: string | null
+          confirmation_status?: string
+          confirmed_at?: string | null
+          created_at?: string
+          extracted_action_id?: string
+          id?: string
+          user_id?: string
+          user_modifications?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "action_confirmations_extracted_action_id_fkey"
+            columns: ["extracted_action_id"]
+            isOneToOne: false
+            referencedRelation: "extracted_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       calendar_events: {
         Row: {
           category: string | null
@@ -129,6 +170,7 @@ export type Database = {
           title: string
           type: string
           user_id: string
+          watchers: string[] | null
         }
         Insert: {
           category?: string | null
@@ -142,6 +184,7 @@ export type Database = {
           title: string
           type?: string
           user_id: string
+          watchers?: string[] | null
         }
         Update: {
           category?: string | null
@@ -154,6 +197,97 @@ export type Database = {
           time?: string
           title?: string
           type?: string
+          user_id?: string
+          watchers?: string[] | null
+        }
+        Relationships: []
+      }
+      conversation_contexts: {
+        Row: {
+          communication_preferences: string | null
+          conflict_resolution_style: string | null
+          conversation_history: Json | null
+          created_at: string
+          emotional_patterns: Json | null
+          energy_compatibility: number | null
+          id: string
+          important_topics: Json | null
+          last_conversation_date: string | null
+          memory_triggers: string | null
+          participant_name: string
+          relationship_dynamics: string | null
+          relationship_type: string
+          shared_commitments: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          communication_preferences?: string | null
+          conflict_resolution_style?: string | null
+          conversation_history?: Json | null
+          created_at?: string
+          emotional_patterns?: Json | null
+          energy_compatibility?: number | null
+          id?: string
+          important_topics?: Json | null
+          last_conversation_date?: string | null
+          memory_triggers?: string | null
+          participant_name: string
+          relationship_dynamics?: string | null
+          relationship_type: string
+          shared_commitments?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          communication_preferences?: string | null
+          conflict_resolution_style?: string | null
+          conversation_history?: Json | null
+          created_at?: string
+          emotional_patterns?: Json | null
+          energy_compatibility?: number | null
+          id?: string
+          important_topics?: Json | null
+          last_conversation_date?: string | null
+          memory_triggers?: string | null
+          participant_name?: string
+          relationship_dynamics?: string | null
+          relationship_type?: string
+          shared_commitments?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      cross_device_notifications: {
+        Row: {
+          created_at: string
+          data: Json
+          device_source: string
+          expires_at: string | null
+          id: string
+          is_read: boolean
+          notification_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          device_source: string
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          notification_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          device_source?: string
+          expires_at?: string | null
+          id?: string
+          is_read?: boolean
+          notification_type?: string
           user_id?: string
         }
         Relationships: []
@@ -323,6 +457,77 @@ export type Database = {
         }
         Relationships: []
       }
+      extracted_actions: {
+        Row: {
+          action_text: string
+          action_type: string
+          assigned_to: string | null
+          confidence_score: number | null
+          created_at: string
+          due_context: string | null
+          emotional_stakes: string | null
+          id: string
+          intent_behind: string | null
+          meeting_recording_id: string
+          priority_level: number | null
+          relationship_impact: string | null
+          status: string
+          timestamp_in_recording: number | null
+          transcript_excerpt: string | null
+          updated_at: string
+          user_id: string
+          user_notes: string | null
+        }
+        Insert: {
+          action_text: string
+          action_type?: string
+          assigned_to?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          due_context?: string | null
+          emotional_stakes?: string | null
+          id?: string
+          intent_behind?: string | null
+          meeting_recording_id: string
+          priority_level?: number | null
+          relationship_impact?: string | null
+          status?: string
+          timestamp_in_recording?: number | null
+          transcript_excerpt?: string | null
+          updated_at?: string
+          user_id: string
+          user_notes?: string | null
+        }
+        Update: {
+          action_text?: string
+          action_type?: string
+          assigned_to?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          due_context?: string | null
+          emotional_stakes?: string | null
+          id?: string
+          intent_behind?: string | null
+          meeting_recording_id?: string
+          priority_level?: number | null
+          relationship_impact?: string | null
+          status?: string
+          timestamp_in_recording?: number | null
+          transcript_excerpt?: string | null
+          updated_at?: string
+          user_id?: string
+          user_notes?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "extracted_actions_meeting_recording_id_fkey"
+            columns: ["meeting_recording_id"]
+            isOneToOne: false
+            referencedRelation: "meeting_recordings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       goals: {
         Row: {
           category: string | null
@@ -394,6 +599,115 @@ export type Database = {
           why_grateful?: string | null
         }
         Relationships: []
+      }
+      meeting_recordings: {
+        Row: {
+          created_at: string
+          emotional_context: string | null
+          ended_at: string | null
+          energy_level: number | null
+          id: string
+          is_active: boolean
+          location: string | null
+          meeting_context: string | null
+          meeting_title: string
+          meeting_type: string
+          participants: Json
+          recording_id: string | null
+          relationship_context: Json | null
+          started_at: string
+          updated_at: string
+          user_id: string
+          watchers: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          emotional_context?: string | null
+          ended_at?: string | null
+          energy_level?: number | null
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          meeting_context?: string | null
+          meeting_title: string
+          meeting_type?: string
+          participants?: Json
+          recording_id?: string | null
+          relationship_context?: Json | null
+          started_at?: string
+          updated_at?: string
+          user_id: string
+          watchers?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          emotional_context?: string | null
+          ended_at?: string | null
+          energy_level?: number | null
+          id?: string
+          is_active?: boolean
+          location?: string | null
+          meeting_context?: string | null
+          meeting_title?: string
+          meeting_type?: string
+          participants?: Json
+          recording_id?: string | null
+          relationship_context?: Json | null
+          started_at?: string
+          updated_at?: string
+          user_id?: string
+          watchers?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meeting_recordings_recording_id_fkey"
+            columns: ["recording_id"]
+            isOneToOne: false
+            referencedRelation: "voice_recordings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      memory_bridge_comments: {
+        Row: {
+          comment_text: string
+          commenter_member_id: string
+          created_at: string
+          id: string
+          is_read: boolean
+          meeting_recording_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment_text: string
+          commenter_member_id: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          meeting_recording_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment_text?: string
+          commenter_member_id?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          meeting_recording_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memory_bridge_comments_meeting_recording_id_fkey"
+            columns: ["meeting_recording_id"]
+            isOneToOne: false
+            referencedRelation: "meeting_recordings"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       memory_comments: {
         Row: {
@@ -747,6 +1061,45 @@ export type Database = {
           phone_verified?: boolean | null
           require_mfa_for_sensitive_actions?: boolean | null
           updated_at?: string
+        }
+        Relationships: []
+      }
+      recording_usage_tracking: {
+        Row: {
+          comment_count: number
+          created_at: string
+          id: string
+          period_end: string
+          period_start: string
+          recording_count: number
+          recording_duration_minutes: number
+          subscription_tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comment_count?: number
+          created_at?: string
+          id?: string
+          period_end: string
+          period_start: string
+          recording_count?: number
+          recording_duration_minutes?: number
+          subscription_tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comment_count?: number
+          created_at?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          recording_count?: number
+          recording_duration_minutes?: number
+          subscription_tier?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -1316,6 +1669,14 @@ export type Database = {
       }
       revoke_invitation: {
         Args: { p_member_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      user_can_access_memory: {
+        Args: { memory_uuid: string }
+        Returns: boolean
+      }
+      user_owns_memory: {
+        Args: { memory_uuid: string }
         Returns: boolean
       }
       verify_backup_code: {
