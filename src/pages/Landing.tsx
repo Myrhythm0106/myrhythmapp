@@ -8,6 +8,8 @@ import { WhyItHelpsSection } from "@/components/landing/WhyItHelpsSection";
 import { PersonalJourneySection } from "@/components/landing/PersonalJourneySection";
 import { CallToAction } from "@/components/landing/CallToAction";
 import { HeroSection } from "@/components/landing/HeroSection";
+import { StatisticsSection } from "@/components/landing/StatisticsSection";
+import { InteractiveDemo } from "@/components/landing/InteractiveDemo";
 import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
 import LandingFooter from "@/components/landing/LandingFooter";
 
@@ -45,6 +47,8 @@ const Landing = () => {
     <div className="min-h-screen bg-gradient-to-b from-white to-memory-emerald-50/20">
       <ScrollArea className="h-screen">
         <HeroSection />
+        <StatisticsSection />
+        <InteractiveDemo />
         <MyRhythmIntro />
         <WhyItHelpsSection />
         <PersonalJourneySection />
