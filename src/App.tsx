@@ -8,7 +8,8 @@ import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
-import MemoryFirstIndex from "./pages/MemoryFirstIndex";
+import Landing from "./pages/Landing";
+import MemoryBridge from "./routes/MemoryBridge";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import { OnboardingPage } from "./pages/OnboardingPage";
@@ -38,7 +39,8 @@ function App() {
                 <Toaster />
                 <BrowserRouter>
                   <Routes>
-                    <Route path="/" element={<MemoryFirstIndex />} />
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/memory-bridge" element={<ProtectedRoute><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />

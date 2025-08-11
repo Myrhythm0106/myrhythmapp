@@ -23,10 +23,10 @@ export function HeroSection() {
 
   const handleStartJourney = () => {
     console.log("HeroSection: Start Journey button clicked");
-    console.log("HeroSection: About to navigate to /onboarding");
+    console.log("HeroSection: About to navigate to /auth");
     console.log("HeroSection: Current location:", window.location.href);
     try {
-      navigate("/onboarding");
+      navigate("/auth");
       console.log("HeroSection: navigate() called successfully");
     } catch (error) {
       console.error("HeroSection: Navigation error:", error);

@@ -15,16 +15,16 @@ const Landing = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   
-  // Only redirect authenticated users to dashboard
+  // Redirect authenticated users to Memory Bridge (Apple/Nike level instant access)
   useEffect(() => {
     if (user && !loading) {
-      console.log('Landing: Redirecting authenticated user to dashboard');
-      navigate("/dashboard", { replace: true });
+      console.log('Landing: Redirecting authenticated user to Memory Bridge');
+      navigate("/memory-bridge", { replace: true });
     }
   }, [user, loading, navigate]);
 
   const handleGetStarted = () => {
-    navigate("/onboarding");
+    navigate("/auth");
   };
 
   // Don't show loading for unauthenticated users - just show the landing page
