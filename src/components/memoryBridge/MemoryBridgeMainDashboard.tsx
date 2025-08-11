@@ -212,7 +212,46 @@ export function MemoryBridgeMainDashboard() {
           </TabsList>
 
           <TabsContent value="actions" className="space-y-6">
-            <ExtractedActionsReview />
+            <ExtractedActionsReview 
+              meetingId="sample-meeting"
+              actions={[
+                {
+                  id: '1',
+                  type: 'awareness',
+                  title: 'Family Communication',
+                  content: 'I need to be more present during family conversations',
+                  priority: 'high',
+                  category: 'family',
+                  emotionalWeight: 4,
+                  status: 'pending'
+                },
+                {
+                  id: '2', 
+                  type: 'change',
+                  title: 'Weekly Check-ins',
+                  content: 'Start calling Mom every Sunday evening',
+                  priority: 'high',
+                  category: 'family',
+                  deadline: 'This Sunday',
+                  emotionalWeight: 5,
+                  status: 'pending'
+                },
+                {
+                  id: '3',
+                  type: 'action',
+                  title: 'Doctor Appointment',
+                  content: 'Schedule follow-up appointment by Friday',
+                  priority: 'high',
+                  category: 'medical',
+                  deadline: 'Friday',
+                  emotionalWeight: 3,
+                  status: 'pending'
+                }
+              ]}
+              onActionConfirm={(actionId, status) => console.log('Action confirmed:', actionId, status)}
+              onShareWithFamily={(actionId) => console.log('Share with family:', actionId)}
+              tier="free"
+            />
           </TabsContent>
 
           <TabsContent value="family" className="space-y-6">

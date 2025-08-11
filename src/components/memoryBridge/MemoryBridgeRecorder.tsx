@@ -2,13 +2,18 @@ import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { SwipeableContainer } from '@/components/ui/SwipeableContainer';
+import { SwipeHint } from '@/components/gratitude/journal/components/SwipeHint';
 import { MeetingSetupDialog } from './MeetingSetupDialog';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
-import { Heart, Users, Clock, StopCircle, Activity } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { toast } from 'sonner';
+import { Heart, Users, Clock, StopCircle, Activity, Save, Trash2, Share2, ArrowUp, ArrowDown } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
 
 export function MemoryBridgeRecorder() {
+  const isMobile = useIsMobile();
   const { 
     isRecording, 
     isProcessing, 
@@ -26,6 +31,26 @@ export function MemoryBridgeRecorder() {
   const [recordingStartTime, setRecordingStartTime] = useState<Date | null>(null);
   const [currentDuration, setCurrentDuration] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleSwipeSave = () => {
+    handleStopMeeting();
+    toast.success("Recording saved and processing...");
+  };
+
+  const handleSwipeDiscard = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    stopVoiceRecording();
+    setRecordingStartTime(null);
+    setCurrentDuration(0);
+    toast.error("Recording discarded");
+  };
+
+  const handleSwipeShare = () => {
+    toast.info("Share with Support Circle after processing completes!");
+  };
 
   const handleStartMeeting = async (setupData: MeetingSetupData) => {
     try {
@@ -94,25 +119,43 @@ export function MemoryBridgeRecorder() {
 
   if (isRecording && currentMeeting) {
     return (
-      <Card className="w-full max-w-2xl mx-auto border-primary/20 shadow-elegant">
-        <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-xl">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-            Recording: {currentMeeting.meeting_title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Recording Status */}
-          <div className="flex justify-center">
-            <div className="bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-full px-6 py-3 border border-red-200 dark:border-red-800">
-              <div className="flex items-center gap-3">
-                <Activity className="h-5 w-5 text-red-500 animate-pulse" />
-                <span className="text-lg font-mono text-red-600 dark:text-red-400">
-                  {formatDuration(currentDuration)}
-                </span>
+      <SwipeableContainer
+        enableHorizontalSwipe={isMobile}
+        onSwipeLeft={{
+          label: "Save & Process",
+          icon: <Save className="h-4 w-4" />,
+          color: "#22c55e",
+          action: handleSwipeSave
+        }}
+        onSwipeRight={{
+          label: "Share with Family",
+          icon: <Share2 className="h-4 w-4" />,
+          color: "#3b82f6",
+          action: handleSwipeShare
+        }}
+        onPullToRefresh={handleSwipeDiscard}
+        enablePullToRefresh={isMobile}
+        className="w-full max-w-2xl mx-auto"
+      >
+        <Card className="border-primary/20 shadow-elegant">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-2 text-xl">
+              <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              Recording: {currentMeeting.meeting_title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Recording Status */}
+            <div className="flex justify-center">
+              <div className="bg-gradient-to-r from-red-500/10 to-pink-500/10 rounded-full px-6 py-3 border border-red-200 dark:border-red-800">
+                <div className="flex items-center gap-3">
+                  <Activity className="h-5 w-5 text-red-500 animate-pulse" />
+                  <span className="text-lg font-mono text-red-600 dark:text-red-400">
+                    {formatDuration(currentDuration)}
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Meeting Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,34 +194,59 @@ export function MemoryBridgeRecorder() {
             </div>
           )}
 
-          {/* Stop Button */}
-          <div className="flex justify-center pt-4">
-            <Button
-              onClick={handleStopMeeting}
-              disabled={isProcessing}
-              className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-3 text-lg"
-            >
-              <StopCircle className="h-5 w-5 mr-2" />
-              {isProcessing ? 'Processing...' : 'Stop & Process Meeting'}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+            {/* Stop Button */}
+            <div className="flex justify-center pt-4 space-y-2">
+              <div className="space-y-3 text-center">
+                <Button
+                  onClick={handleStopMeeting}
+                  disabled={isProcessing}
+                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-3 text-lg"
+                >
+                  <StopCircle className="h-5 w-5 mr-2" />
+                  {isProcessing ? 'Processing...' : 'Stop & Process Meeting'}
+                </Button>
+                
+                {/* Swipe Instructions */}
+                {isMobile && (
+                  <div className="space-y-1">
+                    <SwipeHint isMobile={true} />
+                    <div className="text-xs text-muted-foreground space-y-1">
+                      <p>↑ Pull down to discard</p>
+                      <p>← Swipe left to save</p>
+                      <p>→ Swipe right to share</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </SwipeableContainer>
     );
   }
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-          <Heart className="h-6 w-6 text-primary" />
-          Memory Bridge
-        </CardTitle>
-        <p className="text-muted-foreground">
-          Capture conversations and never miss what matters to your relationships
-        </p>
-      </CardHeader>
-      <CardContent className="space-y-6">
+    <SwipeableContainer
+      enableHorizontalSwipe={isMobile}
+      onSwipeLeft={{
+        label: "Quick Start",
+        icon: <ArrowUp className="h-4 w-4" />,
+        color: "#22c55e",
+        action: () => toast.success("Swipe up to start recording!")
+      }}
+      className="w-full max-w-2xl mx-auto"
+    >
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+            <Heart className="h-6 w-6 text-primary" />
+            Memory Bridge
+          </CardTitle>
+          <p className="text-muted-foreground">
+            Capture conversations and never miss what matters to your relationships
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-6">
         {/* Key Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center space-y-2">
@@ -220,17 +288,28 @@ export function MemoryBridgeRecorder() {
           />
         </div>
 
-        {/* Help Text */}
-        <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-lg p-4">
-          <p className="mb-2 font-medium">Perfect for:</p>
-          <div className="space-y-1">
-            <p>• Family conversations & planning</p>
-            <p>• Medical appointments</p>
-            <p>• Important discussions with loved ones</p>
-            <p>• Any conversation where commitments are made</p>
+          {/* Help Text */}
+          <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-lg p-4">
+            <p className="mb-2 font-medium">Perfect for:</p>
+            <div className="space-y-1">
+              <p>• Family conversations & planning</p>
+              <p>• Medical appointments</p>
+              <p>• Important discussions with loved ones</p>
+              <p>• Any conversation where commitments are made</p>
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+
+          {/* Mobile Swipe Instructions */}
+          {isMobile && (
+            <div className="text-center">
+              <SwipeHint isMobile={true} />
+              <p className="text-xs text-muted-foreground mt-1">
+                Swipe left for quick recording setup
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </SwipeableContainer>
   );
 }
