@@ -74,13 +74,13 @@ export function AppleHeroSection() {
             {/* Headline */}
             <div className="space-y-6">
               <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
-                <span className="block text-gray-900">Unlock Your</span>
+                <span className="block text-gray-900">Empower Your</span>
                 <span className="block bg-gradient-to-r from-purple-600 via-blue-600 to-brain-health-600 bg-clip-text text-transparent">
-                  Memory Potential
+                  Memory Journey
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Transform cognitive challenges into confidence with the world's most personalized memory assessment and enhancement system.
+                You have the power to transform challenges into confidence. Take control of your cognitive journey with personalized empowerment.
               </p>
             </div>
 
@@ -91,7 +91,7 @@ export function AppleHeroSection() {
                 size="lg"
                 className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-purple-600 to-brain-health-600 hover:from-purple-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full"
               >
-                Start Your Journey
+                Empower Yourself Today
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               
@@ -102,7 +102,7 @@ export function AppleHeroSection() {
                 className="px-8 py-4 text-lg font-semibold border-2 border-gray-300 hover:border-brain-health-400 hover:bg-brain-health-50 transition-all duration-300 rounded-full group"
               >
                 <Play className="mr-2 h-5 w-5 group-hover:text-brain-health-600" />
-                Try Quick Assessment
+                Experience Your Power
               </Button>
             </div>
 
@@ -213,17 +213,17 @@ export function AppleHeroSection() {
           <div className="text-center mt-20">
             <div className="space-y-6">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-                Ready to unlock your memory potential?
+                Ready to empower your memory journey?
               </h2>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                Join thousands who've transformed their cognitive confidence with MyRhythm
+                Join thousands who've taken control of their cognitive confidence with MyRhythm
               </p>
               <Button 
                 onClick={handleGetStarted}
                 size="lg"
                 className="px-10 py-5 text-xl font-semibold bg-gradient-to-r from-purple-600 to-brain-health-600 hover:from-purple-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full group"
               >
-                Start Free Assessment
+                Take Control Today
                 <Sparkles className="ml-3 h-6 w-6 group-hover:animate-pulse" />
               </Button>
             </div>

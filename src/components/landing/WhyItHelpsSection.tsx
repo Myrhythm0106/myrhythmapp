@@ -26,23 +26,23 @@ export function WhyItHelpsSection() {
   const benefits: BenefitProps[] = [
     {
       icon: <Shield className="h-6 w-6 text-primary" />,
-      title: "Clarity Over Chaos",
-      description: "Transform overwhelming challenges into manageable, empowering steps."
+      title: "You Have the Power",
+      description: "Take control of your cognitive journey with personalized strategies that work."
     },
     {
       icon: <Award className="h-6 w-6 text-primary" />,
-      title: "Build Confidence",
-      description: "Every success reinforces your incredible ability to grow and thrive."
+      title: "You're Making Progress",
+      description: "Celebrate every win and build unstoppable momentum toward your goals."
     },
     {
       icon: <Layout className="h-6 w-6 text-primary" />,
-      title: "Create Structure",
-      description: "Develop a personalized rhythm that brings peace and momentum to your day."
+      title: "You Can Trust Yourself",
+      description: "Develop systems that support your unique rhythm and cognitive strengths."
     },
     {
       icon: <Heart className="h-6 w-6 text-primary" />,
-      title: "Find Your Flow",
-      description: "Discover the rhythm that enhances your life satisfaction and inner strength."
+      title: "You Are Enough",
+      description: "Embrace your journey exactly where you are and watch yourself flourish."
     }
   ];
 
@@ -51,10 +51,10 @@ export function WhyItHelpsSection() {
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-            Why MYRHYTHM Transforms Lives
+            Why MyRhythm Transforms Lives
           </h2>
           <p className="text-lg text-gray-700 max-w-2xl mx-auto font-medium">
-            Discover how our empowering approach helps you flourish and thrive beyond what you thought possible
+            Instead of judgment and frustration, you'll experience empowerment and confidence every day
           </p>
         </div>
 

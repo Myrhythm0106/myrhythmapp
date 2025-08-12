@@ -12,6 +12,8 @@ import { StatisticsSection } from "@/components/landing/StatisticsSection";
 import { InteractiveDemo } from "@/components/landing/InteractiveDemo";
 import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
 import LandingFooter from "@/components/landing/LandingFooter";
+import { BreakingTheCycleSection } from "@/components/landing/BreakingTheCycleSection";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const Landing = () => {
   const navigate = useNavigate();
@@ -44,21 +46,24 @@ const Landing = () => {
 
   // For unauthenticated users or when loading is complete, show the landing page
   return (
-    <div className="min-h-screen">
-      <ScrollArea className="h-screen">
-        <AppleHeroSection />
-        <StatisticsSection />
-        <InteractiveDemo />
-        <MyRhythmIntro />
-        <WhyItHelpsSection />
-        <PersonalJourneySection />
-        <CallToAction onGetStarted={handleGetStarted} />
-        <LandingFooter />
-      </ScrollArea>
-      
-      {/* Show floating button until user completes registration */}
-      <FloatingRegisterButton />
-    </div>
+    <ErrorBoundary>
+      <div className="min-h-screen">
+        <ScrollArea className="h-screen">
+          <AppleHeroSection />
+          <BreakingTheCycleSection />
+          <WhyItHelpsSection />
+          <StatisticsSection />
+          <InteractiveDemo />
+          <MyRhythmIntro />
+          <PersonalJourneySection />
+          <CallToAction onGetStarted={handleGetStarted} />
+          <LandingFooter />
+        </ScrollArea>
+        
+        {/* Show floating button until user completes registration */}
+        <FloatingRegisterButton />
+      </div>
+    </ErrorBoundary>
   );
 };
 
