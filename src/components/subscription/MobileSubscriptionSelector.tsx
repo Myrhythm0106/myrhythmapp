@@ -9,71 +9,74 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
 interface MobileSubscriptionSelectorProps {
-  onSelectPlan: (planType: 'basic' | 'premium' | 'family') => void;
+  onSelectPlan: (planType: 'starter' | 'smart_pro' | 'family_smart') => void;
   onContinueFree: () => void;
 }
 
 export function MobileSubscriptionSelector({ onSelectPlan, onContinueFree }: MobileSubscriptionSelectorProps) {
-  const [selectedPlan, setSelectedPlan] = useState<'basic' | 'premium' | 'family' | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<'starter' | 'smart_pro' | 'family_smart' | null>(null);
   const [isYearly, setIsYearly] = useState(false);
 
   const plans = [
     {
-      id: 'basic' as const,
-      name: 'MyRhythm Align',
-      monthlyPrice: '£5.99',
-      yearlyPrice: '£59.99',
+      id: 'starter' as const,
+      name: 'Starter',
+      monthlyPrice: '£7.99',
+      yearlyPrice: '£79.99',
       description: 'Perfect for getting started',
       icon: Star,
       color: 'text-teal-600',
       gradient: 'from-teal-500 to-emerald-600',
       features: [
-        'Basic rhythm assessment',
-        'Daily action planning',
-        'Progress tracking',
-        'Community support'
+        'Unlimited Memory Bridge recordings',
+        'Full ACT reports',
+        'Complete assessments',
+        'Up to 3 support circle members',
+        'Basic calendar integration'
       ]
     },
     {
-      id: 'premium' as const,
-      name: 'MyRhythm Flow',
-      monthlyPrice: '£9.99',
-      yearlyPrice: '£99.99',
-      description: 'Most popular choice',
+      id: 'smart_pro' as const,
+      name: 'SMART Pro',
+      monthlyPrice: '£14.99',
+      yearlyPrice: '£149.99',
+      description: 'AI-powered scheduling & optimization',
       icon: Crown,
       color: 'text-teal-600',
       gradient: 'from-teal-600 to-emerald-700',
-      badge: 'Popular',
+      badge: 'Most Popular',
       features: [
-        'Everything in Align',
-        'Advanced insights',
-        'Personal coaching tips',
-        'Goal achievement tools',
-        'Calendar integration',
-        'Mood & energy tracking'
+        'Everything in Starter',
+        'SMART Scheduling Engine',
+        'External calendar sync',
+        'Schedule optimization',
+        'Advanced analytics',
+        'Up to 5 support circle members',
+        'Priority support'
       ]
     },
     {
-      id: 'family' as const,
-      name: 'MyRhythm Thrive',
-      monthlyPrice: '£19.99',
-      yearlyPrice: '£199.99',
-      description: 'Perfect for families',
+      id: 'family_smart' as const,
+      name: 'Family SMART',
+      monthlyPrice: '£24.99',
+      yearlyPrice: '£249.99',
+      description: 'Complete family coordination',
       icon: Users,
       color: 'text-teal-600',
       gradient: 'from-teal-700 to-emerald-800',
       features: [
-        'Everything in Flow',
-        'Up to 6 family members',
+        'Everything in SMART Pro',
+        'Up to 6 family accounts',
         'Shared family calendar',
         'Family progress dashboard',
-        'Parental insights',
-        'Priority support'
+        'Care coordination tools',
+        'Unlimited support circle',
+        'Family insights & reports'
       ]
     }
   ];
 
-  const handleSelectPlan = (planType: 'basic' | 'premium' | 'family') => {
+  const handleSelectPlan = (planType: 'starter' | 'smart_pro' | 'family_smart') => {
     setSelectedPlan(planType);
     const planName = plans.find(p => p.id === planType)?.name;
     const billingPeriod = isYearly ? 'yearly' : 'monthly';
@@ -125,7 +128,7 @@ export function MobileSubscriptionSelector({ onSelectPlan, onContinueFree }: Mob
         </div>
       </div>
 
-      {plans.map((plan) => {
+        {plans.map((plan) => {
         const Icon = plan.icon;
         const isSelected = selectedPlan === plan.id;
         const currentPrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
@@ -138,7 +141,7 @@ export function MobileSubscriptionSelector({ onSelectPlan, onContinueFree }: Mob
               isSelected 
                 ? 'ring-2 ring-teal-500 shadow-lg border-teal-300' 
                 : 'hover:shadow-md border-teal-200'
-            } ${plan.id === 'premium' ? 'bg-gradient-to-br from-teal-50 to-emerald-50' : 'bg-white'}`}
+            } ${plan.id === 'smart_pro' ? 'bg-gradient-to-br from-teal-50 to-emerald-50' : 'bg-white'}`}
           >
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -173,7 +176,7 @@ export function MobileSubscriptionSelector({ onSelectPlan, onContinueFree }: Mob
                 onClick={() => handleSelectPlan(plan.id)}
                 disabled={selectedPlan === plan.id}
                 className={`w-full shadow-md ${
-                  plan.id === 'premium' 
+                  plan.id === 'smart_pro' 
                     ? `bg-gradient-to-r ${plan.gradient} hover:shadow-lg` 
                     : `bg-gradient-to-r ${plan.gradient}`
                 } text-white`}

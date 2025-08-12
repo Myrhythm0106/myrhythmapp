@@ -2,36 +2,40 @@
 import React, { createContext, useContext, ReactNode, useState } from 'react';
 
 export interface SubscriptionFeatures {
-  // Basic Features (Free tier)
-  basicAssessments: boolean;
-  simpleMoodTracking: boolean;
+  // Memory Bridge Features
+  memoryBridgeRecordings: number; // Free: 3/month, Starter: unlimited
+  basicACTReports: boolean;
+  fullACTReports: boolean;
+  
+  // Assessment Features
+  briefAssessment: boolean;
+  fullAssessment: boolean;
+  cognitiveInsights: boolean;
+  
+  // Support Circle Features
+  maxSupportCircleMembers: number; // Free: 1, Starter: 3, SMART Pro: 5, Family: unlimited
+  basicSupportNotifications: boolean;
+  advancedSupportNotifications: boolean;
+  
+  // Calendar & Scheduling Features
   basicCalendar: boolean;
-  communityAccess: boolean;
-  maxCommunityMembers: number; // Free: 1, Premium: 10, Family: unlimited
+  smartScheduling: boolean; // SMART Pro feature
+  externalCalendarSync: boolean; // SMART Pro feature
+  scheduleOptimization: boolean; // SMART Pro feature
+  conflictDetection: boolean; // SMART Pro feature
   
-  // Premium Features
-  advancedSymptomTracking: boolean;
-  fullCalendarManagement: boolean;
-  personalizedInsights: boolean;
-  prioritySupport: boolean;
-  smartInterventionAlerts: boolean;
-  enhancedSafetyReminders: boolean;
-  objectLocationTracker: boolean;
-  medicationPhotoVerification: boolean;
-  conversationNotes: boolean;
-  readingSupport: boolean;
-  financialSafetyAlerts: boolean;
-  smartScheduling: boolean;
+  // Analytics & Progress Features
+  basicProgressTracking: boolean;
+  advancedAnalytics: boolean; // SMART Pro feature
+  cognitiveProgressReports: boolean; // SMART Pro feature
+  familyProgressDashboard: boolean; // Family feature
   
-  // Family Plan Features
-  multipleAccounts: boolean;
-  sharedCalendars: boolean;
-  caregiverResources: boolean;
-  familySupportGroup: boolean;
-  dedicatedCaseManager: boolean;
-  emergencySupport: boolean;
-  patternRecognition: boolean;
-  processRecording: boolean;
+  // Family Features
+  multipleAccounts: boolean; // Family feature
+  sharedFamilyCalendar: boolean; // Family feature
+  careCoordination: boolean; // Family feature
+  familyInsights: boolean; // Family feature
+  prioritySupport: boolean; // SMART Pro & Family feature
 }
 
 export interface SubscriptionData {
@@ -41,7 +45,7 @@ export interface SubscriptionData {
   subscription_tier: string;
 }
 
-export type SubscriptionTier = 'free' | 'premium' | 'family';
+export type SubscriptionTier = 'free' | 'starter' | 'smart_pro' | 'family_smart';
 
 interface SubscriptionContextType {
   tier: SubscriptionTier;
@@ -58,105 +62,119 @@ const SubscriptionContext = createContext<SubscriptionContextType | undefined>(u
 
 const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
   const baseFeatures: SubscriptionFeatures = {
-    // Basic Features
-    basicAssessments: false,
-    simpleMoodTracking: false,
+    // Memory Bridge Features
+    memoryBridgeRecordings: 0,
+    basicACTReports: false,
+    fullACTReports: false,
+    
+    // Assessment Features
+    briefAssessment: false,
+    fullAssessment: false,
+    cognitiveInsights: false,
+    
+    // Support Circle Features
+    maxSupportCircleMembers: 0,
+    basicSupportNotifications: false,
+    advancedSupportNotifications: false,
+    
+    // Calendar & Scheduling Features
     basicCalendar: false,
-    communityAccess: false,
-    maxCommunityMembers: 0,
-    
-  // Premium Features
-  advancedSymptomTracking: false,
-  fullCalendarManagement: false,
-  personalizedInsights: false, // Only available for paid tiers
-    prioritySupport: false,
-    smartInterventionAlerts: false,
-    enhancedSafetyReminders: false,
-    objectLocationTracker: false,
-    medicationPhotoVerification: false,
-    conversationNotes: false,
-    readingSupport: false,
-    financialSafetyAlerts: false,
     smartScheduling: false,
+    externalCalendarSync: false,
+    scheduleOptimization: false,
+    conflictDetection: false,
     
-    // Family Plan Features
+    // Analytics & Progress Features
+    basicProgressTracking: false,
+    advancedAnalytics: false,
+    cognitiveProgressReports: false,
+    familyProgressDashboard: false,
+    
+    // Family Features
     multipleAccounts: false,
-    sharedCalendars: false,
-    caregiverResources: false,
-    familySupportGroup: false,
-    dedicatedCaseManager: false,
-    emergencySupport: false,
-    patternRecognition: false,
-    processRecording: false,
+    sharedFamilyCalendar: false,
+    careCoordination: false,
+    familyInsights: false,
+    prioritySupport: false,
   };
 
   switch (tier) {
     case 'free':
       return {
         ...baseFeatures,
-        basicAssessments: true,
-        simpleMoodTracking: true,
+        memoryBridgeRecordings: 3, // 3 recordings per month
+        basicACTReports: true,
+        briefAssessment: true,
+        maxSupportCircleMembers: 1,
         basicCalendar: true,
-        communityAccess: true,
-        maxCommunityMembers: 1, // Free tier limited to 1 community member
+        basicProgressTracking: true,
+        basicSupportNotifications: true,
       };
       
-    case 'premium':
+    case 'starter':
       return {
         ...baseFeatures,
-        // Basic Features
-        basicAssessments: true,
-        simpleMoodTracking: true,
+        memoryBridgeRecordings: -1, // Unlimited recordings
+        basicACTReports: true,
+        fullACTReports: true,
+        briefAssessment: true,
+        fullAssessment: true,
+        maxSupportCircleMembers: 3,
         basicCalendar: true,
-        communityAccess: true,
-        maxCommunityMembers: 10, // Premium tier gets 10 community members
-        
-        // Premium Features
-        advancedSymptomTracking: true,
-        fullCalendarManagement: true,
-        personalizedInsights: true,
-        prioritySupport: true,
-        smartInterventionAlerts: true,
-        enhancedSafetyReminders: true,
-        objectLocationTracker: true,
-        medicationPhotoVerification: true,
-        conversationNotes: true,
-        readingSupport: true,
-        financialSafetyAlerts: true,
-        smartScheduling: true,
+        basicProgressTracking: true,
+        basicSupportNotifications: true,
+        cognitiveInsights: true,
       };
       
-    case 'family':
+    case 'smart_pro':
       return {
         ...baseFeatures,
-        // All Basic and Premium Features
-        basicAssessments: true,
-        simpleMoodTracking: true,
+        memoryBridgeRecordings: -1, // Unlimited recordings
+        basicACTReports: true,
+        fullACTReports: true,
+        briefAssessment: true,
+        fullAssessment: true,
+        cognitiveInsights: true,
+        maxSupportCircleMembers: 5,
+        basicSupportNotifications: true,
+        advancedSupportNotifications: true,
         basicCalendar: true,
-        communityAccess: true,
-        maxCommunityMembers: -1, // Family tier gets unlimited community members
-        advancedSymptomTracking: true,
-        fullCalendarManagement: true,
-        personalizedInsights: true,
+        smartScheduling: true, // KEY DIFFERENTIATOR
+        externalCalendarSync: true,
+        scheduleOptimization: true,
+        conflictDetection: true,
+        basicProgressTracking: true,
+        advancedAnalytics: true,
+        cognitiveProgressReports: true,
         prioritySupport: true,
-        smartInterventionAlerts: true,
-        enhancedSafetyReminders: true,
-        objectLocationTracker: true,
-        medicationPhotoVerification: true,
-        conversationNotes: true,
-        readingSupport: true,
-        financialSafetyAlerts: true,
+      };
+      
+    case 'family_smart':
+      return {
+        ...baseFeatures,
+        memoryBridgeRecordings: -1, // Unlimited recordings
+        basicACTReports: true,
+        fullACTReports: true,
+        briefAssessment: true,
+        fullAssessment: true,
+        cognitiveInsights: true,
+        maxSupportCircleMembers: -1, // Unlimited family members
+        basicSupportNotifications: true,
+        advancedSupportNotifications: true,
+        basicCalendar: true,
         smartScheduling: true,
-        
-        // Family Plan Features
+        externalCalendarSync: true,
+        scheduleOptimization: true,
+        conflictDetection: true,
+        basicProgressTracking: true,
+        advancedAnalytics: true,
+        cognitiveProgressReports: true,
+        familyProgressDashboard: true,
         multipleAccounts: true,
-        sharedCalendars: true,
-        caregiverResources: true,
-        familySupportGroup: true,
-        dedicatedCaseManager: true,
-        emergencySupport: true,
-        patternRecognition: true,
-        processRecording: true,
+        sharedFamilyCalendar: true,
+        careCoordination: true,
+        familyInsights: true,
+        prioritySupport: true,
       };
       
     default:
@@ -190,7 +208,7 @@ export function SubscriptionProvider({
   };
   
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
-    if (feature === 'maxCommunityMembers') {
+    if (feature === 'maxSupportCircleMembers' || feature === 'memoryBridgeRecordings') {
       return features[feature] > 0 || features[feature] === -1; // -1 means unlimited
     }
     return Boolean(features[feature]);
