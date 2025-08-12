@@ -46,7 +46,7 @@ export function useUsageTracking() {
   const incrementUsage = (feature: keyof UsageData) => {
     setUsage(prev => ({
       ...prev,
-      [feature]: prev[feature] + 1
+      [feature]: (prev[feature] as number) + 1
     }));
   };
 

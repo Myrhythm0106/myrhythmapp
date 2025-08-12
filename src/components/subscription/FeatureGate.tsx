@@ -34,28 +34,26 @@ export function FeatureGate({
   }
 
   const getRequiredTier = (feature: keyof SubscriptionFeatures): string => {
-    const premiumFeatures: (keyof SubscriptionFeatures)[] = [
-      'advancedSymptomTracking', 'fullCalendarManagement', 'personalizedInsights',
-      'prioritySupport', 'smartInterventionAlerts', 'enhancedSafetyReminders',
-      'objectLocationTracker', 'medicationPhotoVerification', 'conversationNotes',
-      'readingSupport', 'financialSafetyAlerts'
+    const smartProFeatures: (keyof SubscriptionFeatures)[] = [
+      'smartScheduling', 'externalCalendarSync', 'scheduleOptimization', 
+      'conflictDetection', 'advancedAnalytics', 'cognitiveProgressReports', 
+      'prioritySupport'
     ];
     
     const familyFeatures: (keyof SubscriptionFeatures)[] = [
-      'multipleAccounts', 'sharedCalendars', 'caregiverResources',
-      'familySupportGroup', 'dedicatedCaseManager', 'emergencySupport',
-      'patternRecognition', 'processRecording'
+      'multipleAccounts', 'sharedFamilyCalendar', 'careCoordination',
+      'familyInsights', 'familyProgressDashboard'
     ];
 
-    if (familyFeatures.includes(feature)) return 'family';
-    if (premiumFeatures.includes(feature)) return 'premium';
-    return 'basic';
+    if (familyFeatures.includes(feature)) return 'family_smart';
+    if (smartProFeatures.includes(feature)) return 'smart_pro';
+    return 'starter';
   };
 
   const requiredTier = getRequiredTier(feature);
   const tierInfo = {
-    premium: { icon: Crown, name: 'Premium', color: 'bg-yellow-100 text-yellow-800' },
-    family: { icon: Users, name: 'Family', color: 'bg-purple-100 text-purple-800' }
+    smart_pro: { icon: Crown, name: 'SMART Pro', color: 'bg-yellow-100 text-yellow-800' },
+    family_smart: { icon: Users, name: 'Family SMART', color: 'bg-purple-100 text-purple-800' }
   };
 
   const info = tierInfo[requiredTier as keyof typeof tierInfo];

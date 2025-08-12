@@ -18,7 +18,7 @@ export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: Per
   const { hasFeature } = useSubscription();
   
   // Only show personalized results for paid users
-  if (!hasFeature('personalizedInsights')) {
+  if (!hasFeature('cognitiveInsights')) {
     return (
       <div className="text-center py-8">
         <div className="max-w-md mx-auto">

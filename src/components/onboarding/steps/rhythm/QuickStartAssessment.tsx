@@ -41,7 +41,7 @@ export function QuickStartAssessment({ userType, onComplete }: QuickStartAssessm
       setShowInsight(false);
     } else {
       // Complete quick assessment - create appropriate result based on subscription
-      const hasPersonalizedInsights = hasFeature('personalizedInsights');
+      const hasPersonalizedInsights = hasFeature('cognitiveInsights');
       
       const basicResult: BasicAssessmentResult = {
         id: `quick-${Date.now()}`,

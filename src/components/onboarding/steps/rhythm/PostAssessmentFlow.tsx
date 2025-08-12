@@ -26,11 +26,11 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onP
     console.log("PostAssessmentFlow: Checking subscription status", { 
       tier, 
       subscribed: subscriptionData.subscribed,
-      hasPremiumFeatures: hasFeature('personalizedInsights')
+      hasPremiumFeatures: hasFeature('cognitiveInsights')
     });
     
     // If user has premium features or is subscribed, skip payment gate
-    if (tier !== 'free' || subscriptionData.subscribed || hasFeature('personalizedInsights')) {
+    if (tier !== 'free' || subscriptionData.subscribed || hasFeature('cognitiveInsights')) {
       console.log("PostAssessmentFlow: User has premium access, skipping payment gate");
       return "results";
     }
@@ -45,7 +45,7 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onP
   const [showHelp, setShowHelp] = useState(false);
   const [setupProgress, setSetupProgress] = useState(0);
 
-  const showFullResults = hasFeature('personalizedInsights');
+  const showFullResults = hasFeature('cognitiveInsights');
 
   const handleStepComplete = (data?: any) => {
     if (activeStep === "payment-gate") {

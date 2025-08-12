@@ -94,18 +94,19 @@ const PersonalCommunity = () => {
 
   // Check if user can add more members based on their subscription
   const canAddMoreMembers = () => {
-    if (features.maxCommunityMembers === -1) return true; // Unlimited
-    return communityMembers.length < features.maxCommunityMembers;
+    if (features.maxSupportCircleMembers === -1) return true; // Unlimited
+    return communityMembers.length < features.maxSupportCircleMembers;
   };
 
   const getMemberLimitMessage = () => {
-    if (features.maxCommunityMembers === -1) return "Unlimited members";
-    return `${communityMembers.length}/${features.maxCommunityMembers} members`;
+    if (features.maxSupportCircleMembers === -1) return "Unlimited members";
+    return `${communityMembers.length}/${features.maxSupportCircleMembers} members`;
   };
 
   const getUpgradeMessage = () => {
-    if (tier === 'free') return "Upgrade to Premium for 10 members";
-    if (tier === 'premium') return "Upgrade to Family for unlimited members";
+    if (tier === 'free') return "Upgrade to Starter for 3 members";
+    if (tier === 'starter') return "Upgrade to SMART Pro for 5 members";
+    if (tier === 'smart_pro') return "Upgrade to Family SMART for unlimited members";
     return "";
   };
 
@@ -119,10 +120,10 @@ const PersonalCommunity = () => {
           <div className="flex flex-col sm:flex-row gap-2">
             {/* Member limit indicator */}
             <div className="flex items-center gap-2">
-              <Badge variant={tier === 'free' ? 'secondary' : tier === 'premium' ? 'default' : 'premium'}>
+              <Badge variant={tier === 'free' ? 'secondary' : tier === 'starter' ? 'default' : 'premium'}>
                 {tier === 'free' && <Users className="h-3 w-3 mr-1" />}
-                {tier === 'premium' && <Crown className="h-3 w-3 mr-1" />}
-                {tier === 'family' && <Crown className="h-3 w-3 mr-1" />}
+                {(tier === 'starter' || tier === 'smart_pro') && <Crown className="h-3 w-3 mr-1" />}
+                {tier === 'family_smart' && <Crown className="h-3 w-3 mr-1" />}
                 {getMemberLimitMessage()}
               </Badge>
             </div>
@@ -148,7 +149,7 @@ const PersonalCommunity = () => {
                   <Lock className="mr-1 h-4 w-4" />
                   Member Limit Reached
                 </Button>
-                {tier !== 'family' && (
+                {tier !== 'family_smart' && (
                   <p className="text-xs text-muted-foreground text-center">
                     {getUpgradeMessage()}
                   </p>
@@ -191,13 +192,13 @@ const PersonalCommunity = () => {
                 <CommunityMembers />
                 
                 {/* Show upgrade message if at limit */}
-                {!canAddMoreMembers() && tier !== 'family' && (
+                {!canAddMoreMembers() && tier !== 'family_smart' && (
                   <div className="mt-6 p-4 bg-muted/50 rounded-lg border-2 border-dashed">
                     <div className="text-center space-y-2">
                       <Lock className="h-8 w-8 mx-auto text-muted-foreground" />
                       <h3 className="font-medium">Support Circle Full</h3>
                       <p className="text-sm text-muted-foreground">
-                        You've reached your {features.maxCommunityMembers} member limit for the {tier} plan.
+                        You've reached your {features.maxSupportCircleMembers} member limit for the {tier} plan.
                       </p>
                       <Button variant="outline" size="sm">
                         {getUpgradeMessage()}

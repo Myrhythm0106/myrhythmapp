@@ -42,7 +42,7 @@ export function UsageLimitCard({ currentUsage, feature, onUpgrade }: UsageLimitC
 
   const getVariant = () => {
     if (isAtLimit) return 'destructive';
-    if (isNearLimit) return 'warning';
+    if (isNearLimit) return 'secondary';
     return 'default';
   };
 

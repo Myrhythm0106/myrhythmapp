@@ -36,7 +36,7 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     
     // Update subscription status based on selected plan
     if (selected) {
-      const subscriptionTier = selected === 'basic' ? 'premium' : selected === 'premium' ? 'premium' : 'family';
+      const subscriptionTier = selected === 'basic' ? 'starter' : selected === 'premium' ? 'smart_pro' : 'family_smart';
       console.log("PlanStep: Updating subscription to tier:", subscriptionTier);
       updateSubscription(subscriptionTier);
     }
