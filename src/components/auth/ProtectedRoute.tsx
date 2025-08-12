@@ -48,8 +48,8 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     return <Navigate to="/support-member-dashboard" replace />;
   }
 
-  // Check if user needs onboarding (for all protected routes except onboarding routes and support members)
-  if (requireAuth && user && !isSupportMember && !location.pathname.includes('onboarding')) {
+  // Check if user needs onboarding (for all protected routes except onboarding routes, memory bridge, and support members)
+  if (requireAuth && user && !isSupportMember && !location.pathname.includes('onboarding') && !location.pathname.includes('/memory-bridge')) {
     const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete') === 'true';
     console.log('Checking onboarding status:', { onboardingComplete, currentPath: location.pathname });
     if (!onboardingComplete) {

@@ -176,8 +176,16 @@ const WebOnboarding = () => {
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold">MyRhythm Business Onboarding</h1>
-              <div className="text-sm text-muted-foreground">
-                Step {currentStep} of {TOTAL_STEPS}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => window.location.href = '/memory-bridge'}
+                  className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+                >
+                  Skip to Memory Bridge
+                </button>
+                <div className="text-sm text-muted-foreground">
+                  Step {currentStep} of {TOTAL_STEPS}
+                </div>
               </div>
             </div>
           </div>
