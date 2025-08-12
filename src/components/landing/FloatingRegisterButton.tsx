@@ -50,16 +50,7 @@ export function FloatingRegisterButton({
   const handleRegister = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("FloatingRegisterButton: Register Here button clicked, variant:", variant);
-    console.log("FloatingRegisterButton: About to navigate to /onboarding");
-    console.log("FloatingRegisterButton: Current location:", window.location.href);
-    
-    try {
-      navigate("/onboarding");
-      console.log("FloatingRegisterButton: navigate() called successfully");
-    } catch (error) {
-      console.error("FloatingRegisterButton: Navigation error:", error);
-    }
+    navigate("/auth");
   };
 
   const getButtonConfig = () => {

@@ -25,6 +25,10 @@ import SymptomTracking from "./pages/SymptomTracking";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import SupportMemberDashboard from "./pages/SupportMemberDashboard";
 import DemoLanding from "./pages/DemoLanding";
+import Assessment from "./pages/Assessment";
+import QuickAssessment from "./pages/QuickAssessment";
+import BrainInjuryAssessment from "./pages/BrainInjuryAssessment";
+import CognitivePerformanceAssessment from "./pages/CognitivePerformanceAssessment";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +46,14 @@ function App() {
                   <Routes>
                     <Route path="/" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
+                    
+                    {/* Assessment Routes */}
+                    <Route path="/assessment" element={<Assessment />} />
+                    <Route path="/quick-assessment" element={<QuickAssessment />} />
+                    <Route path="/comprehensive-assessment" element={<Assessment />} />
+                    <Route path="/brain-injury-assessment" element={<BrainInjuryAssessment />} />
+                    <Route path="/cognitive-performance-assessment" element={<CognitivePerformanceAssessment />} />
+                    
                     <Route path="/memory-bridge" element={<ProtectedRoute><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
