@@ -29,6 +29,8 @@ import Assessment from "./pages/Assessment";
 import QuickAssessment from "./pages/QuickAssessment";
 import BrainInjuryAssessment from "./pages/BrainInjuryAssessment";
 import CognitivePerformanceAssessment from "./pages/CognitivePerformanceAssessment";
+import MVPDashboardPage from "./pages/MVPDashboardPage";
+import MVPAssessmentPage from "./pages/MVPAssessmentPage";
 
 const queryClient = new QueryClient();
 
@@ -48,7 +50,7 @@ function App() {
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
                     {/* Assessment Routes */}
-                    <Route path="/assessment" element={<Assessment />} />
+                    <Route path="/assessment-old" element={<Assessment />} />
                     <Route path="/quick-assessment" element={<QuickAssessment />} />
                     <Route path="/comprehensive-assessment" element={<Assessment />} />
                     <Route path="/brain-injury-assessment" element={<BrainInjuryAssessment />} />
@@ -93,6 +95,9 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
+                    <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
+                    <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
+                    <Route path="/assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                   </Routes>
                 </BrowserRouter>
               </TooltipProvider>
