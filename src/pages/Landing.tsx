@@ -13,6 +13,7 @@ import { InteractiveDemo } from "@/components/landing/InteractiveDemo";
 import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
 import LandingFooter from "@/components/landing/LandingFooter";
 import { BreakingTheCycleSection } from "@/components/landing/BreakingTheCycleSection";
+import { MemoryBridgeSection } from "@/components/landing/MemoryBridgeSection";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const Landing = () => {
@@ -51,6 +52,7 @@ const Landing = () => {
         <ScrollArea className="h-screen">
           <AppleHeroSection />
           <BreakingTheCycleSection />
+          <MemoryBridgeSection />
           <WhyItHelpsSection />
           <StatisticsSection />
           <InteractiveDemo />

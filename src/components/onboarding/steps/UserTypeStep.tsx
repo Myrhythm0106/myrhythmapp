@@ -12,42 +12,42 @@ const userTypes = [
   {
     id: "brain-injury" as const,
     title: "Brain Injury Recovery",
-    description: "Strengthen your mind after a challenging experience and reclaim your cognitive abilities with personalized recovery tools",
+    description: "Take control of your recovery with Memory Bridge conversation capture and personalized cognitive tools that empower your journey",
     icon: Brain,
     color: "bg-blue-500",
   },
   {
     id: "caregiver" as const,
     title: "Caregiver Support", 
-    description: "Build resilience and prevent burnout while caring for others with evidence-based wellness strategies",
+    description: "You have the power to capture important care conversations with Memory Bridge and build resilience with evidence-based wellness strategies",
     icon: Heart,
     color: "bg-rose-500",
   },
   {
     id: "cognitive-optimization" as const,
     title: "Cognitive Optimization",
-    description: "Unlock your brain's full potential and achieve peak mental performance with advanced cognitive training",
+    description: "Accelerate your progress with Memory Bridge for important conversations and advanced cognitive training to unlock your brain's full potential",
     icon: Sparkles,
     color: "bg-purple-500",
   },
   {
     id: "wellness" as const,
     title: "General Wellness",
-    description: "Build proactive mental resilience and create sustainable wellness habits for life's challenges",
+    description: "You have the power to build mental resilience with Memory Bridge conversation insights and sustainable wellness habits for life's challenges",
     icon: Users,
     color: "bg-green-500",
   },
   {
     id: "medical-professional" as const,
     title: "Medical Professional",
-    description: "Enhance your clinical toolkit with evidence-based cognitive wellness resources for better patient outcomes",
+    description: "Take control of patient interactions with Memory Bridge conversation recording and evidence-based cognitive wellness resources for better outcomes",
     icon: Stethoscope,
     color: "bg-teal-500",
   },
   {
     id: "colleague" as const,
     title: "Workplace Wellness",
-    description: "Create a supportive workplace environment and help colleagues thrive with cognitive wellness tools",
+    description: "Empower your workplace with Memory Bridge for team meetings and cognitive wellness tools that help colleagues thrive",
     icon: Users,
     color: "bg-indigo-500",
   }
@@ -77,10 +77,10 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
       {/* Header */}
       <div className="text-center space-y-3">
         <h2 className="text-3xl font-bold text-foreground">
-          Choose Your Journey
+          Take Control of Your Cognitive Wellness Journey
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Select the path that resonates with your current situation and goals. We'll create a personalized experience just for you.
+          You have the power to choose your path. Select what resonates with your goals and unlock Memory Bridge's transformative features.
         </p>
       </div>
 

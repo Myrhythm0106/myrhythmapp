@@ -161,7 +161,11 @@ export function useOnboardingHandlers(props: UseOnboardingHandlersProps) {
         throw onboardingError;
       }
 
-      toast.success('Onboarding complete!');
+      // Store when the user completed onboarding for roadmap tracking
+      localStorage.setItem('myrhythm-roadmap-start', new Date().toISOString());
+      localStorage.setItem('myrhythm_onboarding_complete', 'true');
+      
+      toast.success('You have the power to transform your cognitive wellness! Welcome to MyRhythm.');
       navigate('/dashboard');
       return true;
     } catch (error: any) {
