@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
+import { MemoryBridgeResultsModal } from './MemoryBridgeResultsModal';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +23,10 @@ export function MemoryBridgeStarterDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showFirstRecording, setShowFirstRecording] = useState(false);
+  const [showResults, setShowResults] = useState(false);
+  const [lastMeetingId, setLastMeetingId] = useState<string>('');
+  const [lastActionsCount, setLastActionsCount] = useState(0);
+  const [lastSummary, setLastSummary] = useState<string>('');
   
   const hasCompletedFirstRecording = extractedActions.length > 0;
   const recordingCount = extractedActions.length;
@@ -32,7 +37,12 @@ export function MemoryBridgeStarterDashboard() {
   
   const handleRecordingComplete = (result: any) => {
     setShowFirstRecording(false);
-    // Show celebration modal or immediate results
+    if (result && result.meetingId) {
+      setLastMeetingId(result.meetingId);
+      setLastActionsCount(result.actions_found || 0);
+      setLastSummary(result.summary || '');
+      setShowResults(true);
+    }
   };
   
   const handleUnlockCalendar = () => {
@@ -191,6 +201,15 @@ export function MemoryBridgeStarterDashboard() {
             )}
           </div>
         )}
+
+        {/* Results Modal */}
+        <MemoryBridgeResultsModal
+          isOpen={showResults}
+          onClose={() => setShowResults(false)}
+          meetingId={lastMeetingId}
+          actionsFound={lastActionsCount}
+          summary={lastSummary}
+        />
       </div>
     </div>
   );

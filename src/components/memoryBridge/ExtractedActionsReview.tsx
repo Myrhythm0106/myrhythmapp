@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,39 +6,69 @@ import { SwipeableContainer } from '@/components/ui/SwipeableContainer';
 import { MemoryBridgeCommentsSection } from './MemoryBridgeCommentsSection';
 import { SwipeHint } from '@/components/gratitude/journal/components/SwipeHint';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { ExtractedAction } from '@/types/memoryBridge';
+import { convertActionToCalendarEvent, scheduleConfirmedActions } from '@/utils/calendarIntegration';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle } from 'lucide-react';
 
-interface ExtractedAction {
-  id: string;
-  type: 'awareness' | 'change' | 'action';
-  title: string;
-  content: string;
-  priority: 'high' | 'medium' | 'low';
-  category: 'family' | 'medical' | 'personal' | 'work';
-  deadline?: string;
-  participants?: string[];
-  emotionalWeight: number;
-  status: 'pending' | 'confirmed' | 'completed' | 'rejected';
-}
-
 interface ExtractedActionsReviewProps {
   meetingId: string;
-  actions: ExtractedAction[];
-  onActionConfirm: (actionId: string, status: 'confirmed' | 'modified' | 'rejected') => void;
-  onShareWithFamily: (actionId: string) => void;
-  tier: 'free' | 'taste-see' | 'pro';
+  onActionConfirm?: (actionId: string, status: 'confirmed' | 'modified' | 'rejected') => void;
+  onShareWithFamily?: (actionId: string) => void;
+  tier?: 'free' | 'taste-see' | 'pro';
 }
 
-export function ExtractedActionsReview({ meetingId, actions, onActionConfirm, onShareWithFamily, tier }: ExtractedActionsReviewProps) {
+export function ExtractedActionsReview({ 
+  meetingId, 
+  onActionConfirm, 
+  onShareWithFamily, 
+  tier = 'free' 
+}: ExtractedActionsReviewProps) {
   const isMobile = useIsMobile();
+  const { user } = useAuth();
+  const { fetchExtractedActions, confirmAction } = useMemoryBridge();
+  const [actions, setActions] = useState<ExtractedAction[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
 
   const commentLimits = { free: 1, 'taste-see': 7, pro: Infinity };
 
-  const handleSwipeComplete = (actionId: string) => {
-    onActionConfirm(actionId, 'confirmed');
-    toast.success("Commitment confirmed and tracked!");
+  useEffect(() => {
+    if (meetingId) {
+      loadActions();
+    }
+  }, [meetingId]);
+
+  const loadActions = async () => {
+    try {
+      setIsLoading(true);
+      const extractedActions = await fetchExtractedActions(meetingId);
+      setActions(extractedActions || []);
+    } catch (error) {
+      console.error('Failed to load actions:', error);
+      toast.error('Failed to load actions');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSwipeComplete = async (actionId: string) => {
+    try {
+      await confirmAction(actionId, 'confirmed');
+      setActions(prev => 
+        prev.map(action => 
+          action.id === actionId 
+            ? { ...action, status: 'confirmed' as const }
+            : action
+        )
+      );
+      if (onActionConfirm) onActionConfirm(actionId, 'confirmed');
+      toast.success("Commitment confirmed and tracked!");
+    } catch (error) {
+      toast.error("Failed to confirm action");
+    }
   };
 
   const handleSwipeShare = (actionId: string) => {
@@ -50,10 +80,72 @@ export function ExtractedActionsReview({ meetingId, actions, onActionConfirm, on
       return;
     }
     
-    onShareWithFamily(actionId);
+    if (onShareWithFamily) onShareWithFamily(actionId);
     setCommentCounts(prev => ({ ...prev, [actionId]: currentComments + 1 }));
     toast.success("Shared with Support Circle!");
   };
+
+  const handleScheduleAction = async (actionId: string) => {
+    if (!user) return;
+    
+    try {
+      const action = actions.find(a => a.id === actionId);
+      if (!action) return;
+
+      await convertActionToCalendarEvent(action, user.id);
+      setActions(prev => 
+        prev.map(a => 
+          a.id === actionId 
+            ? { ...a, status: 'scheduled' as const }
+            : a
+        )
+      );
+      toast.success("Action scheduled to calendar!");
+    } catch (error) {
+      toast.error("Failed to schedule action");
+    }
+  };
+
+  const handleScheduleAllConfirmed = async () => {
+    if (!user) return;
+    await scheduleConfirmedActions(user.id);
+  };
+
+  const categorizeActions = (actions: ExtractedAction[]) => {
+    return {
+      awareness: actions.filter(a => 
+        a.action_type === 'reminder' || 
+        a.action_text.toLowerCase().includes('remember') ||
+        a.action_text.toLowerCase().includes('aware')
+      ),
+      change: actions.filter(a => 
+        a.action_type === 'commitment' || 
+        a.action_text.toLowerCase().includes('change') ||
+        a.action_text.toLowerCase().includes('improve')
+      ),
+      action: actions.filter(a => 
+        a.action_type === 'task' || 
+        a.action_type === 'follow_up' ||
+        a.action_text.toLowerCase().includes('do') ||
+        a.action_text.toLowerCase().includes('call') ||
+        a.action_text.toLowerCase().includes('schedule')
+      )
+    };
+  };
+
+  const categorizedActions = categorizeActions(actions);
+  const confirmedCount = actions.filter(a => a.status === 'confirmed').length;
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto p-6">
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
+          <p className="text-muted-foreground mt-2">Loading your actions...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto p-6">
@@ -61,6 +153,14 @@ export function ExtractedActionsReview({ meetingId, actions, onActionConfirm, on
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Professional ACT Framework Results</CardTitle>
           <p className="text-muted-foreground">Your conversation organized into actionable commitments</p>
+          {confirmedCount > 0 && (
+            <div className="flex justify-center mt-4">
+              <Button onClick={handleScheduleAllConfirmed} className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Schedule {confirmedCount} Confirmed Actions
+              </Button>
+            </div>
+          )}
         </CardHeader>
       </Card>
 
@@ -80,7 +180,7 @@ export function ExtractedActionsReview({ meetingId, actions, onActionConfirm, on
               </h3>
             </div>
             
-            {actions.filter(action => action.type === type).map(action => (
+            {categorizedActions[type as keyof typeof categorizedActions].map(action => (
               <SwipeableContainer
                 key={action.id}
                 enableHorizontalSwipe={isMobile}
@@ -99,19 +199,39 @@ export function ExtractedActionsReview({ meetingId, actions, onActionConfirm, on
               >
                 <Card className="bg-gradient-to-br from-white to-gray-50">
                   <CardContent className="p-4">
-                    <h4 className="font-medium text-sm mb-1">{action.title}</h4>
-                    <p className="text-xs text-muted-foreground">{action.content}</p>
+                    <h4 className="font-medium text-sm mb-1">{action.action_text}</h4>
+                    <p className="text-xs text-muted-foreground">{action.relationship_impact || action.emotional_stakes}</p>
                     <div className="flex justify-between items-center mt-2">
-                      <Badge variant="outline" className="text-xs">{action.priority}</Badge>
+                      <Badge variant="outline" className="text-xs">Priority {action.priority_level}</Badge>
                       <div className="flex gap-1">
-                        <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => handleSwipeComplete(action.id)}>
-                          <CheckCircle className="h-3 w-3 text-green-600" />
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => handleSwipeComplete(action.id)}
+                          disabled={action.status === 'confirmed'}
+                        >
+                          <CheckCircle className={`h-3 w-3 ${action.status === 'confirmed' ? 'text-green-600' : 'text-gray-400'}`} />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="h-6 w-6 p-0" 
+                          onClick={() => handleScheduleAction(action.id)}
+                        >
+                          <Calendar className="h-3 w-3 text-blue-600" />
                         </Button>
                         <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => handleSwipeShare(action.id)}>
-                          <MessageCircle className="h-3 w-3 text-blue-600" />
+                          <MessageCircle className="h-3 w-3 text-purple-600" />
                         </Button>
                       </div>
                     </div>
+                    {action.status === 'confirmed' && (
+                      <Badge className="mt-2 text-xs bg-green-100 text-green-800">Confirmed</Badge>
+                    )}
+                    {action.status === 'scheduled' && (
+                      <Badge className="mt-2 text-xs bg-blue-100 text-blue-800">Scheduled</Badge>
+                    )}
                   </CardContent>
                 </Card>
               </SwipeableContainer>

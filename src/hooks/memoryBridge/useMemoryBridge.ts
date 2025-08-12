@@ -76,7 +76,12 @@ export function useMemoryBridge() {
       await fetchExtractedActions(currentMeeting.id);
       
       setCurrentMeeting(null);
-      return data;
+      
+      // Return enhanced data for results display
+      return {
+        ...data,
+        meetingId: currentMeeting.id
+      };
 
     } catch (error) {
       console.error('Error processing meeting:', error);
@@ -87,15 +92,18 @@ export function useMemoryBridge() {
   }, [currentMeeting, user]);
 
   const fetchExtractedActions = useCallback(async (meetingId?: string) => {
-    if (!user) return;
+    if (!user) return [];
 
     try {
       const data = await memoryBridgeApi.fetchExtractedActions(user.id, meetingId);
-      setExtractedActions(data as ExtractedAction[]);
+      const typedData = data as ExtractedAction[];
+      setExtractedActions(typedData);
+      return typedData;
 
     } catch (error) {
       console.error('Error fetching extracted actions:', error);
       toast.error('Failed to load extracted actions');
+      return [];
     }
   }, [user]);
 

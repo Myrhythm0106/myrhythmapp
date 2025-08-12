@@ -33,7 +33,7 @@ export interface ExtractedAction {
   intent_behind?: string;
   transcript_excerpt?: string;
   timestamp_in_recording: number;
-  status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified';
+  status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified' | 'scheduled';
   user_notes?: string;
   created_at: string;
   updated_at: string;
