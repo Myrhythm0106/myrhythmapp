@@ -120,6 +120,8 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
     }
 
     if (question.type === 'multiple_select') {
+      const currentValues = Array.isArray(value) ? value : (typeof value === 'string' && value ? value.split(',').filter(Boolean) : []);
+      
       return (
         <div className="space-y-3">
           {question.options?.map((option) => (
@@ -127,9 +129,8 @@ export function RhythmQuestionCard({ question, value, onValueChange }: RhythmQue
               <input
                 type="checkbox"
                 value={option.value}
-                checked={Array.isArray(value) ? value.includes(option.value) : false}
+                checked={currentValues.includes(option.value)}
                 onChange={(e) => {
-                  const currentValues = Array.isArray(value) ? value : (typeof value === 'string' && value ? value.split(',') : []);
                   const newValues = e.target.checked
                     ? [...currentValues, option.value]
                     : currentValues.filter((v: string) => v !== option.value);

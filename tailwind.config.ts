@@ -105,6 +105,19 @@ const config: Config = {
           800: "hsl(var(--sunrise-amber-800))",
           900: "hsl(var(--sunrise-amber-900))",
         },
+        // Beacon: Premium brand colors for key UI elements
+        "beacon": {
+          50: "hsl(var(--beacon-50))",
+          100: "hsl(var(--beacon-100))",
+          200: "hsl(var(--beacon-200))",
+          300: "hsl(var(--beacon-300))",
+          400: "hsl(var(--beacon-400))",
+          500: "hsl(var(--beacon-500))",
+          600: "hsl(var(--beacon-600))",
+          700: "hsl(var(--beacon-700))",
+          800: "hsl(var(--beacon-800))",
+          900: "hsl(var(--beacon-900))",
+        },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",

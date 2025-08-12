@@ -7,7 +7,7 @@ import { MyRhythmIntro } from "@/components/landing/MyRhythmIntro";
 import { WhyItHelpsSection } from "@/components/landing/WhyItHelpsSection";
 import { PersonalJourneySection } from "@/components/landing/PersonalJourneySection";
 import { CallToAction } from "@/components/landing/CallToAction";
-import { HeroSection } from "@/components/landing/HeroSection";
+import { AppleHeroSection } from "@/components/landing/AppleHeroSection";
 import { StatisticsSection } from "@/components/landing/StatisticsSection";
 import { InteractiveDemo } from "@/components/landing/InteractiveDemo";
 import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterButton";
@@ -44,9 +44,9 @@ const Landing = () => {
 
   // For unauthenticated users or when loading is complete, show the landing page
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-memory-emerald-50/20">
+    <div className="min-h-screen">
       <ScrollArea className="h-screen">
-        <HeroSection />
+        <AppleHeroSection />
         <StatisticsSection />
         <InteractiveDemo />
         <MyRhythmIntro />

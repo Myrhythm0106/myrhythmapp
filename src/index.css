@@ -85,6 +85,18 @@
     --sunrise-amber-800: 22 62% 25%;
     --sunrise-amber-900: 22 60% 18%;
 
+    /* Beacon: Premium brand colors - modern, sophisticated */
+    --beacon-50: 251 95% 99%;
+    --beacon-100: 252 90% 96%;
+    --beacon-200: 252 85% 88%;
+    --beacon-300: 252 80% 75%;
+    --beacon-400: 252 75% 62%;
+    --beacon-500: 252 70% 48%;
+    --beacon-600: 252 75% 38%;
+    --beacon-700: 252 80% 28%;
+    --beacon-800: 252 85% 20%;
+    --beacon-900: 252 90% 14%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 42 30% 65%;
