@@ -24,6 +24,7 @@ import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import SupportMemberDashboard from "./pages/SupportMemberDashboard";
+import DemoLanding from "./pages/DemoLanding";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ function App() {
                 <BrowserRouter>
                   <Routes>
                     <Route path="/" element={<Landing />} />
+                    <Route path="/demo-landing" element={<DemoLanding />} />
                     <Route path="/memory-bridge" element={<ProtectedRoute><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
