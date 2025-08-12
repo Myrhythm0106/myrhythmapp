@@ -117,6 +117,15 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
   };
 
   const handleNext = () => {
+    console.log("ComprehensiveAssessment: handleNext called", {
+      currentCluster,
+      currentQuestion,
+      totalClusters: clusters.length,
+      totalQuestionsInCluster: currentClusterQuestions.length,
+      hasResponse: !!responses[currentQuestionData.id],
+      questionId: currentQuestionData.id
+    });
+    
     if (currentQuestion < currentClusterQuestions.length - 1) {
       // Next question in current cluster
       setCurrentQuestion(currentQuestion + 1);
@@ -133,6 +142,7 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
       }, 2000);
     } else {
       // Complete assessment
+      console.log("ComprehensiveAssessment: Completing assessment with responses:", responses);
       const assessmentResult = {
         userType,
         assessmentType: 'comprehensive',
@@ -141,6 +151,7 @@ export function ComprehensiveAssessment({ userType, onComplete }: ComprehensiveA
         completedAt: new Date().toISOString(),
         deepProfile: generateDeepProfile(responses, taskCompletionData)
       };
+      console.log("ComprehensiveAssessment: Calling onComplete with result:", assessmentResult);
       onComplete(assessmentResult);
     }
   };

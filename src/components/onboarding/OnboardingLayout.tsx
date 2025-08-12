@@ -54,6 +54,8 @@ export const OnboardingLayout = ({
     Math.round((currentStep - 1) / (totalSteps - 1) * 100);
 
   const handleBackClick = () => {
+    console.log("OnboardingLayout: Back button clicked, current step:", currentStep);
+    
     // If we're on step 1, go to dashboard; otherwise go to previous step
     if (currentStep === 1) {
       // Going back to dashboard from step 1, show warning if unsaved data
@@ -65,12 +67,13 @@ export const OnboardingLayout = ({
       }
     } else {
       // Going to previous onboarding step
-      const isAssessmentStep = currentStep === 5;
+      const isAssessmentStep = currentStep === 6; // Assessment is step 6, not 5
       const shouldWarn = hasUnsavedData || isAssessmentStep;
       
       if (shouldWarn) {
         setShowBackWarning(true);
       } else {
+        console.log("OnboardingLayout: Calling onBack()");
         onBack();
       }
     }

@@ -27,6 +27,8 @@ const WebOnboarding = () => {
   const { user, loading } = useAuth();
   const [authenticationComplete, setAuthenticationComplete] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
+  const [showAssessmentPreview, setShowAssessmentPreview] = useState(false);
+  const [previewAssessmentResult, setPreviewAssessmentResult] = useState(null);
   
   useEffect(() => {
     if (user && !loading) {
@@ -93,7 +95,32 @@ const WebOnboarding = () => {
   const handleAssessmentTypeSelected = (type: 'brief' | 'comprehensive') => {
     console.log("WebOnboarding: Assessment type selected:", type);
     setAssessmentType(type);
+    
+    // If this is a preview plan, automatically show preview after assessment
+    if (selectedPlan === 'preview') {
+      setShowAssessmentPreview(true);
+    }
+    
     handlers.goToNextStep();
+  };
+
+  const handleUpgradeFromPreview = () => {
+    console.log("WebOnboarding: Upgrade from preview requested");
+    setShowAssessmentPreview(false);
+    handlers.goToStep(3); // Go back to plan selection
+  };
+
+  const handleRhythmAssessmentCompleteWithPreview = (data: any) => {
+    console.log("WebOnboarding: Assessment completed, plan:", selectedPlan);
+    
+    if (selectedPlan === 'preview') {
+      // Store assessment result and show preview
+      setPreviewAssessmentResult(data);
+      setShowAssessmentPreview(true);
+    } else {
+      // Normal completion flow
+      handlers.handleRhythmAssessmentComplete();
+    }
   };
 
   const handleSaveProgress = () => {
@@ -185,7 +212,10 @@ const WebOnboarding = () => {
             onPlanSelected={handlers.handlePlanSelected}
             onPreAssessmentComplete={handlers.handlePreAssessmentComplete}
             onAssessmentTypeSelected={handleAssessmentTypeSelected}
-            onRhythmAssessmentComplete={handlers.handleRhythmAssessmentComplete}
+            onRhythmAssessmentComplete={handleRhythmAssessmentCompleteWithPreview}
+            showAssessmentPreview={showAssessmentPreview}
+            assessmentResult={previewAssessmentResult}
+            onUpgradeFromPreview={handleUpgradeFromPreview}
           />
         </OnboardingLayout>
       </div>

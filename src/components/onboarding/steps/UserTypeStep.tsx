@@ -12,42 +12,42 @@ const userTypes = [
   {
     id: "brain-injury" as const,
     title: "Brain Injury Recovery",
-    description: "...you want to strengthen your mind after a challenging experience, or you're currently feeling like your cognitive abilities aren't what they used to be and you're searching for a way back to feeling like yourself again",
+    description: "Strengthen your mind after a challenging experience and reclaim your cognitive abilities with personalized recovery tools",
     icon: Brain,
     color: "bg-blue-500",
   },
   {
     id: "caregiver" as const,
     title: "Caregiver Support", 
-    description: "...you want to build resilience and prevent burnout while supporting someone you love, or you're currently exhausted from holding it all together and need support too",
+    description: "Build resilience and prevent burnout while caring for others with evidence-based wellness strategies",
     icon: Heart,
     color: "bg-rose-500",
   },
   {
     id: "cognitive-optimization" as const,
     title: "Cognitive Optimization",
-    description: "...you want to build on your existing mental strengths and reach new levels of performance, or you know there's more potential locked inside your mind and you're ready to unlock peak mental performance",
+    description: "Unlock your brain's full potential and achieve peak mental performance with advanced cognitive training",
     icon: Sparkles,
     color: "bg-purple-500",
   },
   {
     id: "wellness" as const,
     title: "General Wellness",
-    description: "...you want to proactively build mental resilience for life's challenges, or you're currently feeling scattered and want to create sustainable mental wellness",
+    description: "Build proactive mental resilience and create sustainable wellness habits for life's challenges",
     icon: Users,
     color: "bg-green-500",
   },
   {
     id: "medical-professional" as const,
     title: "Medical Professional",
-    description: "...you want to enhance your toolkit with evidence-based cognitive wellness resources, or you see the gaps in traditional care and want better tools to truly help your patients thrive",
+    description: "Enhance your clinical toolkit with evidence-based cognitive wellness resources for better patient outcomes",
     icon: Stethoscope,
     color: "bg-teal-500",
   },
   {
     id: "colleague" as const,
-    title: "Colleague",
-    description: "...you want to create a more supportive workplace environment for cognitive wellness, or you've witnessed how cognitive challenges impact your workplace family and want to create real change",
+    title: "Workplace Wellness",
+    description: "Create a supportive workplace environment and help colleagues thrive with cognitive wellness tools",
     icon: Users,
     color: "bg-indigo-500",
   }
@@ -77,10 +77,10 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
       {/* Header */}
       <div className="text-center space-y-3">
         <h2 className="text-3xl font-bold text-foreground">
-          This is for you if...
+          Choose Your Journey
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Choose the path that speaks to your heart. We'll create a personalized journey that honors your unique story.
+          Select the path that resonates with your current situation and goals. We'll create a personalized experience just for you.
         </p>
       </div>
 

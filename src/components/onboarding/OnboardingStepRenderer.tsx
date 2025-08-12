@@ -8,6 +8,7 @@ import { AssessmentTypeSelection } from "./steps/rhythm/AssessmentTypeSelection"
 import { BriefAssessmentView } from "./steps/rhythm/BriefAssessmentView";
 import { RhythmAssessmentView } from "./steps/rhythm/RhythmAssessmentView";
 import { RhythmSummaryView } from "./steps/rhythm/RhythmSummaryView";
+import { AssessmentPreview } from "./steps/rhythm/AssessmentPreview";
 import { BackButton } from "@/components/ui/BackButton";
 import { UserType } from "@/types/user";
 import { PersonalInfoFormValues } from "./steps/PersonalInfoStep";
@@ -34,6 +35,8 @@ interface OnboardingStepRendererProps {
   onSkipPayment?: () => void;
   onAssessmentTypeSelected: (type: 'brief' | 'comprehensive') => void;
   onRhythmAssessmentComplete: (data: any) => void;
+  showAssessmentPreview?: boolean;
+  onUpgradeFromPreview?: () => void;
   onGoBack?: () => void;
   onComplete?: () => void;
 }
@@ -59,6 +62,8 @@ export const OnboardingStepRenderer = ({
   onSkipPayment,
   onAssessmentTypeSelected,
   onRhythmAssessmentComplete,
+  showAssessmentPreview = false,
+  onUpgradeFromPreview,
   onGoBack,
   onComplete,
 }: OnboardingStepRendererProps) => {
@@ -132,7 +137,19 @@ export const OnboardingStepRenderer = ({
   }
   
   if (currentStep === 6) {
-    console.log("OnboardingStepRenderer: Rendering Assessment with type:", assessmentType, "userType:", userType);
+    console.log("OnboardingStepRenderer: Rendering Assessment with type:", assessmentType, "showPreview:", showAssessmentPreview);
+    
+    // Show assessment preview if we have results and preview mode
+    if (showAssessmentPreview && assessmentResult) {
+      return renderStepWithBackButton(
+        <AssessmentPreview
+          assessmentResult={assessmentResult}
+          onUpgrade={onUpgradeFromPreview || (() => {})}
+          onContinueWithPreview={onRhythmAssessmentComplete}
+        />
+      );
+    }
+    
     if (assessmentType === 'brief') {
       return renderStepWithBackButton(
         <BriefAssessmentView

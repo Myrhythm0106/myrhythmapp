@@ -24,6 +24,13 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
   const handlePlanSelect = (planId: PlanType) => {
     console.log("PlanStep: Plan selected:", planId);
     setSelected(planId);
+    
+    // If 'preview' was selected, skip payment and go directly to assessment
+    if (planId === 'preview') {
+      onComplete(planId, 'monthly');
+      return;
+    }
+    
     setShowPaymentForm(true);
   };
 
@@ -126,10 +133,10 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
             <strong>Assessment First, Payment Later:</strong> Complete your personalized MYRHYTHM assessment and see preview results before choosing a subscription plan.
           </p>
           <button 
-            onClick={() => handlePlanSelect('preview' as PlanType)}
+            onClick={() => handlePlanSelect('preview')}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            Start Free Assessment Preview
+            Experience First - Free Assessment
           </button>
         </div>
       </div>
