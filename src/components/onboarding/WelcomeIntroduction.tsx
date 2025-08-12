@@ -2,14 +2,13 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, Heart, Target, Users, Brain } from "lucide-react";
-
 interface WelcomeIntroductionProps {
   onGetStarted: () => void;
 }
-
-export function WelcomeIntroduction({ onGetStarted }: WelcomeIntroductionProps) {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
+export function WelcomeIntroduction({
+  onGetStarted
+}: WelcomeIntroductionProps) {
+  return <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
@@ -32,10 +31,8 @@ export function WelcomeIntroduction({ onGetStarted }: WelcomeIntroductionProps) 
               <div className="w-12 h-12 mx-auto bg-gradient-to-br from-beacon-500 to-beacon-600 rounded-lg flex items-center justify-center">
                 <Target className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-800">Personalized Goals</h3>
-              <p className="text-gray-600 text-sm">
-                Set and track goals that matter to your recovery and personal growth journey.
-              </p>
+              <h3 className="text-lg font-semibold text-gray-800">Personalised Goals</h3>
+              <p className="text-gray-600 text-sm">Set and track goals that matter for your growth journey.</p>
             </CardContent>
           </Card>
 
@@ -45,9 +42,7 @@ export function WelcomeIntroduction({ onGetStarted }: WelcomeIntroductionProps) 
                 <Brain className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-gray-800">Brain Health Tools</h3>
-              <p className="text-gray-600 text-sm">
-                Access evidence-based tools and exercises designed to support cognitive wellness.
-              </p>
+              <p className="text-gray-600 text-sm">Access tools and exercises designed to support cognitive wellness.</p>
             </CardContent>
           </Card>
 
@@ -95,11 +90,7 @@ export function WelcomeIntroduction({ onGetStarted }: WelcomeIntroductionProps) 
 
         {/* Call to Action */}
         <div className="text-center">
-          <Button 
-            onClick={onGetStarted}
-            size="lg"
-            className="px-8 py-4 text-lg bg-gradient-to-r from-beacon-600 to-beacon-800 hover:from-beacon-700 hover:to-beacon-900 transition-all duration-300 transform hover:scale-105"
-          >
+          <Button onClick={onGetStarted} size="lg" className="px-8 py-4 text-lg bg-gradient-to-r from-beacon-600 to-beacon-800 hover:from-beacon-700 hover:to-beacon-900 transition-all duration-300 transform hover:scale-105">
             Start My Journey
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
@@ -108,6 +99,5 @@ export function WelcomeIntroduction({ onGetStarted }: WelcomeIntroductionProps) 
           </p>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
