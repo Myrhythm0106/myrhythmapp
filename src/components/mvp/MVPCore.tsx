@@ -3,10 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Input } from "@/components/ui/input";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useNavigate } from "react-router-dom";
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { FeatureGate } from '@/components/subscription/FeatureGate';
-import { Brain, Target, Heart, Calendar, Moon, TrendingUp, Sparkles, Lock, Crown, ArrowRight, CheckCircle, Star, Zap } from "lucide-react";
+import { Brain, Target, Heart, Calendar, Moon, TrendingUp, Sparkles, Lock, Crown, ArrowRight, CheckCircle, Star, Zap, Search, ChevronDown, Users, Shield, AlertTriangle, Phone, BookOpen } from "lucide-react";
 interface MVPFeature {
   id: string;
   title: string;
@@ -25,7 +27,7 @@ interface MVPFeature {
 const MVP_FEATURES: MVPFeature[] = [{
   id: 'memory-bridge',
   title: 'Memory Bridge',
-  description: 'Reconstruct and strengthen your memories through guided audio sessions.',
+  description: 'Struggling to remember conversations? Memory Bridge captures key details automatically so you never lose important information.',
   cognitiveExplanation: 'Memory reconstruction activates the hippocampus and strengthens neural pathways, improving both episodic and working memory. Each session helps rebuild damaged memory networks.',
   letter: 'M',
   fullWord: 'Memory',
@@ -39,7 +41,7 @@ const MVP_FEATURES: MVPFeature[] = [{
 }, {
   id: 'cognitive-training',
   title: 'Your Cognitive Training',
-  description: 'Personalized brain games designed for your specific cognitive profile.',
+  description: 'Finding it hard to focus? Personalized brain exercises adapt to your needs, rebuilding attention and processing speed.',
   cognitiveExplanation: 'Targeted cognitive exercises enhance neuroplasticity and improve executive function. Games adapt to your recovery needs, focusing on attention, processing speed, and problem-solving.',
   letter: 'Y',
   fullWord: 'Your',
@@ -52,7 +54,7 @@ const MVP_FEATURES: MVPFeature[] = [{
 }, {
   id: 'resilience-building',
   title: 'Resilience Building',
-  description: 'Evidence-based gratitude and resilience practices for emotional recovery.',
+  description: 'Feeling overwhelmed emotionally? Evidence-based practices help you build emotional strength and cope with challenges.',
   cognitiveExplanation: 'Gratitude practices stimulate the prefrontal cortex and anterior cingulate, reducing stress hormones while promoting emotional regulation and cognitive flexibility.',
   letter: 'R',
   fullWord: 'Resilience',
@@ -65,7 +67,7 @@ const MVP_FEATURES: MVPFeature[] = [{
 }, {
   id: 'habits-structure',
   title: 'Habits & Structure',
-  description: 'Smart calendar and goal management designed for cognitive recovery.',
+  description: 'Chaos in your daily routine? Smart planning tools help you organize tasks and take control of your day.',
   cognitiveExplanation: 'Structured routines support executive function recovery by reducing cognitive load and creating predictable patterns that help rebuild damaged frontal lobe networks.',
   letter: 'H',
   fullWord: 'Habits',
@@ -78,10 +80,10 @@ const MVP_FEATURES: MVPFeature[] = [{
 }, {
   id: 'daily-rhythm',
   title: 'Your Daily Rhythm',
-  description: 'Circadian rhythm optimization and sleep recovery for brain health.',
+  description: 'Energy levels all over the place? Optimize your natural rhythms to maximize cognitive performance throughout the day.',
   cognitiveExplanation: 'Quality sleep is essential for memory consolidation and brain repair. Circadian optimization supports glymphatic system function, clearing brain toxins and strengthening neural connections.',
   letter: 'Y',
-  fullWord: 'Your (rhythm)',
+  fullWord: 'Your (Daily)',
   icon: Moon,
   route: '/mvp/daily-rhythm',
   color: 'sunrise-amber',
@@ -91,7 +93,7 @@ const MVP_FEATURES: MVPFeature[] = [{
 }, {
   id: 'tracking-progress',
   title: 'Tracking Progress',
-  description: 'Comprehensive cognitive progress monitoring and insights.',
+  description: 'Not sure if you\'re improving? Visual progress tracking shows your cognitive gains and motivates continued growth.',
   cognitiveExplanation: 'Regular progress tracking provides neuroplasticity feedback and motivation. Data visualization helps identify recovery patterns and optimizes intervention timing.',
   letter: 'T',
   fullWord: 'Tracking',
@@ -102,17 +104,30 @@ const MVP_FEATURES: MVPFeature[] = [{
   completionRate: 55,
   isPremium: true
 }, {
-  id: 'mindfulness-memory',
-  title: 'Mindfulness & Memory',
-  description: 'Meditation and mindfulness practices specifically for memory enhancement.',
-  cognitiveExplanation: 'Mindfulness meditation increases cortical thickness in the hippocampus and prefrontal cortex, directly supporting memory formation and attention control.',
-  letter: 'M',
-  fullWord: 'Mindset',
-  icon: Sparkles,
-  route: '/mvp/mindfulness',
+  id: 'healing-mindfulness',
+  title: 'Healing & Mindfulness',
+  description: 'Stress and anxiety overwhelming you? Gentle mindfulness practices reduce cognitive fatigue and promote healing.',
+  cognitiveExplanation: 'Mindfulness meditation increases cortical thickness in the hippocampus and prefrontal cortex, directly supporting memory formation and attention control while reducing stress-related cognitive interference.',
+  letter: 'H',
+  fullWord: 'Healing',
+  icon: Shield,
+  route: '/mvp/healing',
   color: 'clarity-teal',
   gradientClasses: 'from-clarity-teal-500 to-memory-emerald-500',
   completionRate: 35,
+  isPremium: true
+}, {
+  id: 'mindset-mastery',
+  title: 'Mindset & Mastery',
+  description: 'Lost confidence in your abilities? Rebuild cognitive confidence through proven brain science and personal empowerment.',
+  cognitiveExplanation: 'Cognitive confidence training activates the prefrontal cortex and strengthens self-efficacy pathways. Understanding your brain\'s recovery process builds resilience and accelerates neuroplasticity.',
+  letter: 'M',
+  fullWord: 'Mindset',
+  icon: Sparkles,
+  route: '/mvp/mindset',
+  color: 'sunrise-amber',
+  gradientClasses: 'from-sunrise-amber-500 to-memory-emerald-500',
+  completionRate: 45,
   isPremium: true
 }];
 export function MVPCore() {
@@ -122,6 +137,8 @@ export function MVPCore() {
     tier
   } = useSubscription();
   const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [expandedBrainScience, setExpandedBrainScience] = useState<string | null>(null);
   const handleFeatureClick = (feature: MVPFeature) => {
     if (feature.isPremium && !hasFeature('fullAssessment')) {
       // Show upgrade prompt and navigate to dashboard with feature context
@@ -159,23 +176,59 @@ export function MVPCore() {
     if (hasFeature('fullAssessment')) return 'full';
     return 'locked';
   };
+
+  const filteredFeatures = MVP_FEATURES.filter(feature =>
+    feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    feature.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
-      {/* Hero Section */}
+      {/* Pain Point Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 border-b border-brain-health-200/50">
         <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald-100/20 via-brain-health-100/20 to-clarity-teal-100/20" />
         <div className="relative max-w-7xl mx-auto px-6 py-12">
           <div className="text-center space-y-6">
             <Badge className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white border-0 px-4 py-2">
               <Crown className="h-4 w-4 mr-2" />
-              MyRhythm Core Edition
+              MYRHYTHM Core Edition
             </Badge>
             
+            {/* Pain Points Recognition */}
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-brain-health-600 via-clarity-teal-600 to-memory-emerald-600 bg-clip-text text-transparent">Your Complete Cognitive Enhancement Journey</h1>
+              <div className="flex items-center justify-center gap-2 text-orange-600 mb-2">
+                <AlertTriangle className="h-5 w-5" />
+                <span className="text-sm font-medium">You're not alone in these struggles</span>
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-brain-health-700">
+                Forgetting important conversations?<br />
+                <span className="text-orange-600">Feeling overwhelmed by simple tasks?</span><br />
+                <span className="text-clarity-teal-600">Struggling to stay organized?</span>
+              </h1>
               <p className="text-xl text-brain-health-700 max-w-3xl mx-auto leading-relaxed">
-                Seven evidence-based features that work together to rebuild your cognitive strength. 
+                MYRHYTHM understands your journey. Eight evidence-based features that directly address your cognitive challenges.
                 <span className="font-semibold text-memory-emerald-600"> You're not alone in this journey.</span>
               </p>
+              
+              {/* Testimonial */}
+              <div className="bg-gradient-to-r from-memory-emerald-50/80 to-brain-health-50/80 rounded-lg p-4 max-w-2xl mx-auto border border-memory-emerald-200/50">
+                <p className="text-sm italic text-brain-health-600">
+                  "After my TBI, everything felt impossible. MYRHYTHM gave me back control of my day and confidence in my abilities."
+                </p>
+                <p className="text-xs text-brain-health-500 mt-1">- Sarah, TBI survivor</p>
+              </div>
+            </div>
+
+            {/* Search Bar */}
+            <div className="max-w-md mx-auto">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-brain-health-400 h-4 w-4" />
+                <Input
+                  placeholder="Search features (e.g., memory, planning, stress...)"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 border-brain-health-200 focus:border-memory-emerald-400"
+                />
+              </div>
             </div>
 
             {/* Assessment Buttons */}
@@ -201,11 +254,11 @@ export function MVPCore() {
               The MYRHYTHM Framework
             </CardTitle>
             <p className="text-brain-health-600 mt-2">
-              Seven interconnected pillars designed by cognitive recovery experts
+              Eight interconnected pillars designed by cognitive recovery experts
             </p>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
               {MVP_FEATURES.map((feature, index) => <div key={feature.id} className="text-center space-y-2">
                   <div className={`w-12 h-12 mx-auto rounded-full bg-gradient-to-r ${feature.gradientClasses} text-white flex items-center justify-center font-bold text-lg`}>
                     {feature.letter}
@@ -216,6 +269,11 @@ export function MVPCore() {
                   </div>
                 </div>)}
             </div>
+            <div className="text-center mt-6">
+              <p className="text-sm text-brain-health-600">
+                <strong>M-Y-R-H-Y-T-H-M</strong> - Each letter represents a crucial aspect of cognitive wellness and empowerment
+              </p>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -223,7 +281,7 @@ export function MVPCore() {
       {/* Features Grid */}
       <div className="max-w-7xl mx-auto px-6 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MVP_FEATURES.map(feature => {
+          {filteredFeatures.map(feature => {
           const Icon = feature.icon;
           const accessStatus = getFeatureAccessStatus(feature);
           return <Card key={feature.id} className={`premium-card border-brain-health-200/60 transition-all duration-300 cursor-pointer ${hoveredFeature === feature.id ? 'shadow-lg scale-105' : ''}`} onMouseEnter={() => setHoveredFeature(feature.id)} onMouseLeave={() => setHoveredFeature(null)}>
@@ -255,17 +313,35 @@ export function MVPCore() {
                 </CardHeader>
                 
                 <CardContent className="space-y-4">
-                  <p className="text-brain-health-600 leading-relaxed">
-                    {feature.description}
-                  </p>
-                  
-                  {/* Cognitive Explanation */}
-                  <div className="bg-gradient-to-r from-memory-emerald-50/50 to-brain-health-50/50 rounded-lg p-3 border border-memory-emerald-200/50">
-                    <p className="text-xs text-brain-health-600 leading-relaxed">
-                      <Zap className="h-3 w-3 inline mr-1 text-memory-emerald-500" />
-                      <span className="font-semibold">Brain Science:</span> {feature.cognitiveExplanation}
+                  <div className="space-y-3">
+                    {/* Pain → Solution → Result Format */}
+                    <p className="text-brain-health-600 leading-relaxed">
+                      {feature.description}
                     </p>
                   </div>
+                  
+                  {/* Collapsible Brain Science */}
+                  <Collapsible open={expandedBrainScience === feature.id} onOpenChange={(open) => setExpandedBrainScience(open ? feature.id : null)}>
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" className="w-full p-3 h-auto bg-gradient-to-r from-memory-emerald-50/50 to-brain-health-50/50 rounded-lg border border-memory-emerald-200/50 hover:bg-memory-emerald-50">
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center gap-2">
+                            <Brain className="h-4 w-4 text-memory-emerald-500" />
+                            <span className="text-xs font-semibold text-brain-health-700">Brain Science</span>
+                          </div>
+                          <ChevronDown className={`h-4 w-4 text-brain-health-500 transition-transform ${expandedBrainScience === feature.id ? 'rotate-180' : ''}`} />
+                        </div>
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-2">
+                      <div className="bg-gradient-to-r from-memory-emerald-50/50 to-brain-health-50/50 rounded-lg p-3 border border-memory-emerald-200/50">
+                        <p className="text-xs text-brain-health-600 leading-relaxed">
+                          <Zap className="h-3 w-3 inline mr-1 text-memory-emerald-500" />
+                          {feature.cognitiveExplanation}
+                        </p>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
 
                   {accessStatus === 'locked' ? <FeatureGate feature="fullAssessment" showUpgrade={true}>
                       <Button onClick={() => handleFeatureClick(feature)} className={`w-full bg-gradient-to-r ${feature.gradientClasses} hover:opacity-90 text-white`}>
@@ -280,9 +356,16 @@ export function MVPCore() {
               </Card>;
         })}
         </div>
+        
+        {/* Search Results Message */}
+        {searchQuery && filteredFeatures.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-brain-health-600">No features found matching "{searchQuery}". Try searching for memory, focus, planning, or stress.</p>
+          </div>
+        )}
       </div>
 
-      {/* Empowerment Section */}
+      {/* Empowerment Section with Continuous Guidance */}
       <div className="max-w-7xl mx-auto px-6 pb-12">
         <Card className="premium-card border-sunrise-amber-200/60 bg-gradient-to-r from-sunrise-amber-50/50 to-memory-emerald-50/50">
           <CardContent className="p-8 text-center space-y-4">
@@ -292,16 +375,47 @@ export function MVPCore() {
               </div>
             </div>
             <h3 className="text-2xl font-bold bg-gradient-to-r from-sunrise-amber-600 to-memory-emerald-600 bg-clip-text text-transparent">
-              Today's Empowerment Focus
+              You're Never Alone in This Journey
             </h3>
             <p className="text-brain-health-700 text-lg leading-relaxed max-w-2xl mx-auto">
               Every small step rebuilds your neural pathways. Your brain is remarkably adaptable, 
-              and each interaction with MyRhythm strengthens your cognitive recovery. 
+              and each interaction with MYRHYTHM strengthens your cognitive recovery. 
               <span className="font-semibold text-memory-emerald-600">You are making progress, even when it's not visible.</span>
             </p>
-            <div className="flex justify-center space-x-2 pt-4">
-              <CheckCircle className="h-5 w-5 text-memory-emerald-500" />
-              <span className="text-sm text-brain-health-600">Evidence-based recovery methods</span>
+            
+            {/* Next Steps Guidance */}
+            <div className="bg-gradient-to-r from-brain-health-50/80 to-clarity-teal-50/80 rounded-lg p-4 max-w-lg mx-auto border border-brain-health-200/50">
+              <p className="text-sm font-medium text-brain-health-700 mb-2">What happens next:</p>
+              <div className="space-y-2 text-xs text-brain-health-600">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-3 w-3 text-memory-emerald-500" />
+                  <span>Take a quick assessment to understand your needs</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-3 w-3 text-memory-emerald-500" />
+                  <span>Get personalized feature recommendations</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-3 w-3 text-memory-emerald-500" />
+                  <span>Begin your journey with gentle, guided support</span>
+                </div>
+              </div>
+            </div>
+            
+            {/* Help Access */}
+            <div className="flex justify-center items-center space-x-6 pt-4">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-4 w-4 text-memory-emerald-500" />
+                <span className="text-sm text-brain-health-600">Evidence-based methods</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Users className="h-4 w-4 text-clarity-teal-500" />
+                <span className="text-sm text-brain-health-600">Peer support available</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Phone className="h-4 w-4 text-sunrise-amber-500" />
+                <span className="text-sm text-brain-health-600">Help always accessible</span>
+              </div>
             </div>
           </CardContent>
         </Card>

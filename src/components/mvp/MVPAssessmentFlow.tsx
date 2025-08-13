@@ -20,6 +20,7 @@ import {
   Heart
 } from "lucide-react";
 import { toast } from "sonner";
+import { ContinuousGuidance } from "@/components/guidance/ContinuousGuidance";
 
 interface AssessmentQuestion {
   id: string;
@@ -31,62 +32,62 @@ interface AssessmentQuestion {
 const BRIEF_QUESTIONS: AssessmentQuestion[] = [
   {
     id: 'memory_1',
-    question: 'How often do you have difficulty remembering recent conversations?',
+    question: 'How often do you forget important details from conversations?',
     category: 'memory',
     options: [
-      { value: 'never', label: 'Never', score: 0 },
-      { value: 'rarely', label: 'Rarely', score: 1 },
-      { value: 'sometimes', label: 'Sometimes', score: 2 },
-      { value: 'often', label: 'Often', score: 3 },
-      { value: 'always', label: 'Always', score: 4 }
+      { value: 'never', label: 'Never - I remember conversations clearly', score: 0 },
+      { value: 'rarely', label: 'Rarely - Only very complex discussions', score: 1 },
+      { value: 'sometimes', label: 'Sometimes - I miss key points', score: 2 },
+      { value: 'often', label: 'Often - I struggle to remember details', score: 3 },
+      { value: 'always', label: 'Always - Conversations feel overwhelming', score: 4 }
     ]
   },
   {
     id: 'attention_1',
-    question: 'How easily can you focus on tasks for 30 minutes?',
+    question: 'How easily can you maintain focus throughout your day?',
     category: 'attention',
     options: [
-      { value: 'very_easy', label: 'Very Easy', score: 0 },
-      { value: 'easy', label: 'Somewhat Easy', score: 1 },
-      { value: 'moderate', label: 'Moderate Difficulty', score: 2 },
-      { value: 'difficult', label: 'Very Difficult', score: 3 },
-      { value: 'impossible', label: 'Nearly Impossible', score: 4 }
+      { value: 'very_easy', label: 'Very Easy - I stay focused naturally', score: 0 },
+      { value: 'easy', label: 'Mostly Easy - Minor distractions', score: 1 },
+      { value: 'moderate', label: 'Moderate Difficulty - Requires effort', score: 2 },
+      { value: 'difficult', label: 'Very Difficult - Constantly distracted', score: 3 },
+      { value: 'impossible', label: 'Nearly Impossible - Cannot concentrate', score: 4 }
     ]
   },
   {
-    id: 'executive_1',
-    question: 'How challenging is it to plan and organize daily activities?',
+    id: 'planning_1',
+    question: 'How well can you organize and plan your daily activities?',
     category: 'executive',
     options: [
-      { value: 'not_challenging', label: 'Not Challenging', score: 0 },
-      { value: 'slightly', label: 'Slightly Challenging', score: 1 },
-      { value: 'moderately', label: 'Moderately Challenging', score: 2 },
-      { value: 'very', label: 'Very Challenging', score: 3 },
-      { value: 'extremely', label: 'Extremely Challenging', score: 4 }
+      { value: 'excellent', label: 'Excellent - I feel in control of my day', score: 0 },
+      { value: 'good', label: 'Good - Minor organizational challenges', score: 1 },
+      { value: 'fair', label: 'Fair - Need help staying organized', score: 2 },
+      { value: 'poor', label: 'Poor - Daily chaos overwhelms me', score: 3 },
+      { value: 'very_poor', label: 'Very Poor - Cannot manage tasks', score: 4 }
     ]
   },
   {
-    id: 'mood_1',
-    question: 'How would you describe your overall emotional state?',
-    category: 'mood',
-    options: [
-      { value: 'excellent', label: 'Excellent', score: 0 },
-      { value: 'good', label: 'Good', score: 1 },
-      { value: 'fair', label: 'Fair', score: 2 },
-      { value: 'poor', label: 'Poor', score: 3 },
-      { value: 'very_poor', label: 'Very Poor', score: 4 }
-    ]
-  },
-  {
-    id: 'daily_1',
-    question: 'How much do cognitive difficulties impact your daily life?',
+    id: 'rhythm_1',
+    question: 'How consistent is your daily energy throughout the day?',
     category: 'daily_function',
     options: [
-      { value: 'no_impact', label: 'No Impact', score: 0 },
-      { value: 'minimal', label: 'Minimal Impact', score: 1 },
-      { value: 'moderate', label: 'Moderate Impact', score: 2 },
-      { value: 'significant', label: 'Significant Impact', score: 3 },
-      { value: 'severe', label: 'Severe Impact', score: 4 }
+      { value: 'very_consistent', label: 'Very Consistent - Good energy flow', score: 0 },
+      { value: 'mostly_consistent', label: 'Mostly Consistent - Predictable patterns', score: 1 },
+      { value: 'variable', label: 'Variable - Some good and bad periods', score: 2 },
+      { value: 'unpredictable', label: 'Unpredictable - Energy all over the place', score: 3 },
+      { value: 'exhausted', label: 'Exhausted - Constantly drained', score: 4 }
+    ]
+  },
+  {
+    id: 'healing_1',
+    question: 'How often do stress and anxiety interfere with your thinking?',
+    category: 'mood',
+    options: [
+      { value: 'never', label: 'Never - I feel calm and clear', score: 0 },
+      { value: 'rarely', label: 'Rarely - Only during major stress', score: 1 },
+      { value: 'sometimes', label: 'Sometimes - Manageable but noticeable', score: 2 },
+      { value: 'often', label: 'Often - Stress affects my cognition', score: 3 },
+      { value: 'constantly', label: 'Constantly - Overwhelmed and anxious', score: 4 }
     ]
   }
 ];
@@ -240,15 +241,27 @@ export function MVPAssessmentFlow() {
   const generateRecommendations = (categoryScores: Record<string, number>, riskLevel: string): string[] => {
     const recommendations: string[] = [];
     
-    // Free insights (always visible)
+    // MYRHYTHM-aligned recommendations
     if (categoryScores.memory > 50) {
-      recommendations.push("Memory Bridge sessions will help strengthen your memory networks");
+      recommendations.push("Memory Bridge will help you capture and organize important information automatically");
     }
     if (categoryScores.attention > 50) {
-      recommendations.push("Cognitive Training games can improve your focus and attention");
+      recommendations.push("Your Cognitive Training provides personalized exercises to rebuild focus and attention");
+    }
+    if (categoryScores.executive > 50) {
+      recommendations.push("Habits & Structure will help you take control of your daily planning and organization");
+    }
+    if (categoryScores.daily_function > 50) {
+      recommendations.push("Your Daily Rhythm optimization will help stabilize your energy patterns");
+    }
+    if (categoryScores.mood > 50) {
+      recommendations.push("Healing & Mindfulness practices will reduce stress and promote cognitive calm");
     }
     
-    return recommendations;
+    // Add tracking for progress monitoring
+    recommendations.push("Tracking Progress will show your improvements and keep you motivated");
+    
+    return recommendations.slice(0, 3); // Limit to top 3 recommendations
   };
 
   const generateLockedInsights = (categoryScores: Record<string, number>, riskLevel: string): string[] => {
@@ -542,6 +555,14 @@ export function MVPAssessmentFlow() {
             </p>
           </CardContent>
         </Card>
+        
+        {/* Continuous Guidance */}
+        <ContinuousGuidance
+          currentStep="Assessment"
+          nextStep="Personalized Results"
+          progress={progress}
+          encouragementMessage="Every answer helps us understand how to support you better. You're taking control of your cognitive wellness."
+        />
       </div>
     </div>
   );
