@@ -11,7 +11,8 @@ import { ExtractedAction } from '@/types/memoryBridge';
 import { convertActionToCalendarEvent, scheduleConfirmedActions } from '@/utils/calendarIntegration';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle } from 'lucide-react';
+import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle, Crown, Lock, TrendingUp, Sparkles } from 'lucide-react';
+import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 
 interface ExtractedActionsReviewProps {
   meetingId: string;
@@ -32,6 +33,8 @@ export function ExtractedActionsReview({
   const [actions, setActions] = useState<ExtractedAction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
+  const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+  const [actionToReject, setActionToReject] = useState<string | null>(null);
 
   const commentLimits = { free: 1, 'taste-see': 7, pro: Infinity };
 
@@ -65,7 +68,9 @@ export function ExtractedActionsReview({
         )
       );
       if (onActionConfirm) onActionConfirm(actionId, 'confirmed');
-      toast.success("Commitment confirmed and tracked!");
+      toast.success("Empowered commitment confirmed! 💪", {
+        description: "You're building stronger relationships with every promise kept"
+      });
     } catch (error) {
       toast.error("Failed to confirm action");
     }
@@ -82,7 +87,9 @@ export function ExtractedActionsReview({
     
     if (onShareWithFamily) onShareWithFamily(actionId);
     setCommentCounts(prev => ({ ...prev, [actionId]: currentComments + 1 }));
-    toast.success("Shared with Support Circle!");
+    toast.success("Shared with your Support Circle! 💜", {
+      description: "No one walks alone - your circle is here to support you"
+    });
   };
 
   const handleScheduleAction = async (actionId: string) => {
@@ -100,7 +107,9 @@ export function ExtractedActionsReview({
             : a
         )
       );
-      toast.success("Action scheduled to calendar!");
+      toast.success("Action scheduled - you're taking control! 📅", {
+        description: "Every scheduled action is a step toward stronger relationships"
+      });
     } catch (error) {
       toast.error("Failed to schedule action");
     }
@@ -109,6 +118,37 @@ export function ExtractedActionsReview({
   const handleScheduleAllConfirmed = async () => {
     if (!user) return;
     await scheduleConfirmedActions(user.id);
+    toast.success("All confirmed actions scheduled! 🚀", {
+      description: "You're empowered and organized - every commitment matters"
+    });
+  };
+
+  const handleRejectAction = (actionId: string) => {
+    setActionToReject(actionId);
+    setShowRejectConfirm(true);
+  };
+
+  const confirmRejectAction = async () => {
+    if (!actionToReject) return;
+    
+    try {
+      await confirmAction(actionToReject, 'rejected');
+      setActions(prev => 
+        prev.map(action => 
+          action.id === actionToReject 
+            ? { ...action, status: 'rejected' as const }
+            : action
+        )
+      );
+      toast.info("Action respectfully declined", {
+        description: "It's okay to set boundaries - you know what's best for you"
+      });
+    } catch (error) {
+      toast.error("Failed to reject action");
+    } finally {
+      setShowRejectConfirm(false);
+      setActionToReject(null);
+    }
   };
 
   const categorizeActions = (actions: ExtractedAction[]) => {
@@ -149,15 +189,45 @@ export function ExtractedActionsReview({
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto p-6">
-      <Card className="border-2 border-primary/20 bg-gradient-to-br from-purple-50/50 to-blue-50/50">
+      {/* Premium Upgrade Banner */}
+      <Card className="border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Crown className="h-8 w-8 text-amber-600" />
+              <div>
+                <h3 className="text-lg font-bold text-amber-900">Unlock Premium ACTS Features</h3>
+                <p className="text-sm text-amber-700">Advanced categorization, unlimited family sharing, and smart scheduling</p>
+              </div>
+            </div>
+            <Button className="bg-gradient-to-r from-amber-500 to-yellow-500 text-white hover:from-amber-600 hover:to-yellow-600">
+              <Crown className="h-4 w-4 mr-2" />
+              Upgrade Now
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-secondary/5">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Professional ACT Framework Results</CardTitle>
-          <p className="text-muted-foreground">Your conversation organized into actionable commitments</p>
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Your SMART ACTS Framework
+            </CardTitle>
+            <Sparkles className="h-6 w-6 text-primary animate-pulse" />
+          </div>
+          <p className="text-muted-foreground">Empowering your conversations into actionable progress</p>
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <Heart className="h-4 w-4 text-primary" />
+            <span className="text-sm text-primary font-medium">No One Walks Alone</span>
+            <Heart className="h-4 w-4 text-primary" />
+          </div>
           {confirmedCount > 0 && (
             <div className="flex justify-center mt-4">
-              <Button onClick={handleScheduleAllConfirmed} className="flex items-center gap-2">
+              <Button onClick={handleScheduleAllConfirmed} className="flex items-center gap-2 bg-gradient-to-r from-primary to-secondary">
                 <Calendar className="h-4 w-4" />
-                Schedule {confirmedCount} Confirmed Actions
+                Schedule {confirmedCount} Empowered Actions
               </Button>
             </div>
           )}
@@ -191,47 +261,69 @@ export function ExtractedActionsReview({
                   action: () => handleSwipeComplete(action.id)
                 }}
                 onSwipeRight={{
-                  label: "Share",
+                  label: "Share Circle",
                   icon: <Share2 className="h-4 w-4" />,
                   color: "#3b82f6", 
                   action: () => handleSwipeShare(action.id)
                 }}
+                onPullToRefresh={() => handleRejectAction(action.id)}
+                enablePullToRefresh={isMobile}
               >
-                <Card className="bg-gradient-to-br from-white to-gray-50">
+                <Card className="bg-gradient-to-br from-white to-gray-50 hover:shadow-md transition-shadow border border-gray-200">
                   <CardContent className="p-4">
                     <h4 className="font-medium text-sm mb-1">{action.action_text}</h4>
-                    <p className="text-xs text-muted-foreground">{action.relationship_impact || action.emotional_stakes}</p>
+                    {action.relationship_impact && (
+                      <p className="text-xs text-muted-foreground mb-2 italic">
+                        💜 {action.relationship_impact}
+                      </p>
+                    )}
                     <div className="flex justify-between items-center mt-2">
-                      <Badge variant="outline" className="text-xs">Priority {action.priority_level}</Badge>
+                      <div className="flex gap-1">
+                        <Badge variant="outline" className="text-xs">Priority {action.priority_level}</Badge>
+                        <Badge variant="secondary" className="text-xs">{action.action_type}</Badge>
+                      </div>
                       <div className="flex gap-1">
                         <Button 
                           size="sm" 
                           variant="ghost" 
-                          className="h-6 w-6 p-0" 
+                          className="h-6 w-6 p-0 hover:bg-green-100" 
                           onClick={() => handleSwipeComplete(action.id)}
                           disabled={action.status === 'confirmed'}
+                          title="Confirm commitment"
                         >
                           <CheckCircle className={`h-3 w-3 ${action.status === 'confirmed' ? 'text-green-600' : 'text-gray-400'}`} />
                         </Button>
                         <Button 
                           size="sm" 
                           variant="ghost" 
-                          className="h-6 w-6 p-0" 
+                          className="h-6 w-6 p-0 hover:bg-blue-100" 
                           onClick={() => handleScheduleAction(action.id)}
+                          title="Schedule action"
                         >
                           <Calendar className="h-3 w-3 text-blue-600" />
                         </Button>
-                        <Button size="sm" variant="ghost" className="h-6 w-6 p-0" onClick={() => handleSwipeShare(action.id)}>
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          className="h-6 w-6 p-0 hover:bg-purple-100" 
+                          onClick={() => handleSwipeShare(action.id)}
+                          title="Share with circle"
+                        >
                           <MessageCircle className="h-3 w-3 text-purple-600" />
                         </Button>
                       </div>
                     </div>
-                    {action.status === 'confirmed' && (
-                      <Badge className="mt-2 text-xs bg-green-100 text-green-800">Confirmed</Badge>
-                    )}
-                    {action.status === 'scheduled' && (
-                      <Badge className="mt-2 text-xs bg-blue-100 text-blue-800">Scheduled</Badge>
-                    )}
+                    <div className="flex gap-1 mt-2 flex-wrap">
+                      {action.status === 'confirmed' && (
+                        <Badge className="text-xs bg-green-100 text-green-800">✓ Confirmed</Badge>
+                      )}
+                      {action.status === 'scheduled' && (
+                        <Badge className="text-xs bg-blue-100 text-blue-800">📅 Scheduled</Badge>
+                      )}
+                      {action.status === 'rejected' && (
+                        <Badge className="text-xs bg-gray-100 text-gray-800">❌ Declined</Badge>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </SwipeableContainer>
@@ -241,13 +333,48 @@ export function ExtractedActionsReview({
       </div>
 
       {isMobile && (
-        <div className="text-center bg-muted/30 rounded-lg p-4">
+        <div className="text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-4 border border-primary/20">
           <SwipeHint isMobile={true} />
           <p className="text-xs text-muted-foreground mt-2">
-            ← Swipe left to confirm • → Swipe right to share with family
+            ← Swipe left to confirm • → Swipe right to share with circle • ↑ Pull to decline respectfully
+          </p>
+          <p className="text-xs text-primary mt-1 font-medium">
+            Remember: You're empowered to choose what works for you 💜
           </p>
         </div>
       )}
+
+      {/* Empowerment Message */}
+      <Card className="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/20">
+        <CardContent className="p-4 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <TrendingUp className="h-5 w-5 text-primary" />
+            <span className="font-medium text-primary">Building Stronger Relationships</span>
+            <TrendingUp className="h-5 w-5 text-primary" />
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Every action you take strengthens the bonds with those you care about
+          </p>
+          <p className="text-xs text-primary mt-2 italic">
+            "Progress over perfection - you're never alone on this journey"
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        isOpen={showRejectConfirm}
+        onConfirm={confirmRejectAction}
+        onCancel={() => {
+          setShowRejectConfirm(false);
+          setActionToReject(null);
+        }}
+        title="Decline this action?"
+        description="It's completely okay to set boundaries and choose what works best for you. You're empowered to make decisions that support your wellbeing."
+        confirmText="Yes, decline respectfully"
+        cancelText="Keep action"
+        variant="default"
+      />
       
       {/* Family Comments Section */}
       {meetingId && (

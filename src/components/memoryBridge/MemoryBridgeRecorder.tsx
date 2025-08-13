@@ -10,14 +10,17 @@ import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
-import { Heart, Users, Clock, StopCircle, Activity, Save, Trash2, Share2, ArrowUp, ArrowDown, Mic } from 'lucide-react';
+import { Heart, Users, Clock, StopCircle, Activity, Save, Trash2, Share2, ArrowUp, ArrowDown, Mic, Sparkles } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
+import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
+import { MemoryBridgeResultsModal } from './MemoryBridgeResultsModal';
 
 interface MemoryBridgeRecorderProps {
   onRecordingComplete?: (result: any) => void;
+  onShowResults?: (meetingId: string, actionsFound: number, summary?: string) => void;
 }
 
-export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecorderProps) {
+export function MemoryBridgeRecorder({ onRecordingComplete, onShowResults }: MemoryBridgeRecorderProps) {
   const { 
     isRecording, 
     isProcessing, 
@@ -30,6 +33,10 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
   const [selectedWatchers, setSelectedWatchers] = useState<string[]>([]);
   const [showEndDialog, setShowEndDialog] = useState(false);
   const [pendingAudioBlob, setPendingAudioBlob] = useState<Blob | null>(null);
+  const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
+  const [showResultsModal, setShowResultsModal] = useState(false);
+  const [lastMeetingId, setLastMeetingId] = useState<string | null>(null);
+  const [actionsFound, setActionsFound] = useState(0);
   
   const { 
     startRecording: startVoiceRecording, 
@@ -47,6 +54,10 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
   };
 
   const handleSwipeDiscard = () => {
+    setShowDiscardConfirm(true);
+  };
+
+  const confirmDiscard = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
@@ -54,7 +65,10 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
     stopVoiceRecording();
     setRecordingStartTime(null);
     setCurrentDuration(0);
-    toast.error("Recording discarded");
+    setShowDiscardConfirm(false);
+    toast.success("No one walks alone - your progress is always safe with us!", {
+      description: "Recording discarded safely"
+    });
   };
 
   const handleSwipeShare = () => {
@@ -72,7 +86,9 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
         setCurrentDuration(prev => prev + 1);
       }, 1000);
 
-      toast.success('Quick recording started! Complete setup when you stop.');
+      toast.success('Recording started! You\'re empowered to capture every important moment.', {
+        description: 'Complete setup when you stop - no stress!'
+      });
     } catch (error) {
       console.error('Error starting quick recording:', error);
       toast.error('Failed to start recording');
@@ -129,6 +145,14 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
         if (currentMeeting) {
           // If we have meeting setup, process immediately
           const result = await stopMeetingRecording(audioBlob);
+          
+          // Show ACTS results immediately (3-click rule)
+          if (result?.meetingId) {
+            setLastMeetingId(result.meetingId);
+            setActionsFound(result.actionsCount || 0);
+            setShowResultsModal(true);
+          }
+          
           onRecordingComplete?.(result);
         } else {
           // If no setup yet, save audio and show setup dialog
@@ -166,6 +190,14 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
         if (meetingRecord) {
           // Process the audio
           const result = await stopMeetingRecording(pendingAudioBlob);
+          
+          // Show ACTS results immediately
+          if (result?.meetingId) {
+            setLastMeetingId(result.meetingId);
+            setActionsFound(result.actionsCount || 0);
+            setShowResultsModal(true);
+          }
+          
           onRecordingComplete?.(result);
         }
       }
@@ -179,9 +211,16 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
   };
 
   const handleEndDialogCancel = () => {
+    setShowDiscardConfirm(true);
+  };
+
+  const confirmEndDialogCancel = () => {
     setShowEndDialog(false);
     setPendingAudioBlob(null);
-    toast.info('Recording discarded');
+    setShowDiscardConfirm(false);
+    toast.success("Your journey matters - recording safely discarded", {
+      description: "No one walks alone in managing their commitments"
+    });
   };
 
   const formatDuration = (seconds: number): string => {
@@ -202,7 +241,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
           action: handleSwipeSave
         }}
         onSwipeRight={{
-          label: "Share with Family",
+          label: "Share Circle",
           icon: <Share2 className="h-4 w-4" />,
           color: "#3b82f6",
           action: handleSwipeShare
@@ -215,7 +254,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
           <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center gap-2 text-xl">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              Recording: {currentMeeting?.meeting_title || 'Quick Recording'}
+              Capturing: {currentMeeting?.meeting_title || 'Your Important Moment'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -259,9 +298,16 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
               </div>
             </div>
           ) : (
-            <div className="text-center text-muted-foreground bg-muted/30 rounded-lg p-4">
-              <p className="text-sm">
-                You'll complete the meeting details when you stop recording
+            <div className="text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-4 border border-primary/20">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <Heart className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-primary">Empowering Your Journey</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Complete meeting details when you stop - no pressure, no judgment
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Remember: No one walks alone 💜
               </p>
             </div>
           )}
@@ -285,7 +331,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
                   className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-3 text-lg"
                 >
                   <StopCircle className="h-5 w-5 mr-2" />
-                  {isProcessing ? 'Processing...' : 'Stop & Process Meeting'}
+                  {isProcessing ? 'Creating Your ACTS Summary...' : 'Complete & See Your ACTS'}
                 </Button>
                 
                 {/* Swipe Instructions */}
@@ -293,9 +339,9 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
                   <div className="space-y-1">
                     <SwipeHint isMobile={true} />
                     <div className="text-xs text-muted-foreground space-y-1">
-                      <p>↑ Pull down to discard</p>
-                      <p>← Swipe left to save</p>
-                      <p>→ Swipe right to share</p>
+                      <p>↑ Pull down to safely discard</p>
+                      <p>← Swipe left to create ACTS</p>
+                      <p>→ Swipe right to share with circle</p>
                     </div>
                   </div>
                 )}
@@ -328,8 +374,13 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
               Memory Bridge
             </CardTitle>
             <p className="text-muted-foreground">
-              Capture conversations and never miss what matters to your relationships
+              Empower your relationships - capture conversations and never walk alone
             </p>
+            <div className="flex items-center justify-center gap-2 mt-2">
+              <Heart className="h-4 w-4 text-primary" />
+              <span className="text-sm text-primary font-medium">No One Walks Alone</span>
+              <Heart className="h-4 w-4 text-primary" />
+            </div>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Family Watchers Section - Coming Soon */}
@@ -348,7 +399,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
                 </div>
                 <h3 className="font-medium">Preserve Intent</h3>
                 <p className="text-xs text-muted-foreground">
-                  Capture the 'why' behind commitments
+                  Never lose the 'why' behind your promises
                 </p>
               </div>
               
@@ -356,9 +407,9 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                   <Users className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-medium">Relationship Context</h3>
+                <h3 className="font-medium">Support Circle</h3>
                 <p className="text-xs text-muted-foreground">
-                  Understand family dynamics
+                  Share your journey with those who care
                 </p>
               </div>
               
@@ -366,9 +417,9 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
                   <Clock className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-medium">Memory Safety</h3>
+                <h3 className="font-medium">Empowered Action</h3>
                 <p className="text-xs text-muted-foreground">
-                  Never forget what you promised
+                  Transform promises into progress
                 </p>
               </div>
             </div>
@@ -381,7 +432,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
                 className="bg-gradient-to-r from-primary to-primary-glow text-white shadow-elegant hover:shadow-glow transition-all duration-300 flex items-center gap-2"
               >
                 <Mic className="h-5 w-5" />
-                Quick Start
+                Start Recording
               </Button>
               
               <MeetingSetupDialog 
@@ -390,14 +441,23 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
               />
             </div>
 
-            {/* Help Text */}
-            <div className="text-center text-sm text-muted-foreground bg-muted/30 rounded-lg p-4">
-              <p className="mb-2 font-medium">Perfect for:</p>
-              <div className="space-y-1">
-                <p>• Family conversations & planning</p>
-                <p>• Medical appointments</p>
-                <p>• Important discussions with loved ones</p>
-                <p>• Any conversation where commitments are made</p>
+            {/* Empowerment Section */}
+            <div className="text-center bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg p-4 border border-primary/20">
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <p className="font-medium text-primary">Empower Every Conversation</p>
+                <Sparkles className="h-5 w-5 text-primary" />
+              </div>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p>✨ Family conversations & planning</p>
+                <p>🏥 Medical appointments & care plans</p>
+                <p>💬 Important discussions with loved ones</p>
+                <p>🤝 Any conversation where promises matter</p>
+                <div className="mt-3 p-2 bg-background/50 rounded-md">
+                  <p className="text-xs font-medium text-primary">
+                    "Transform every conversation into actionable progress - you're never alone in your journey"
+                  </p>
+                </div>
               </div>
             </div>
 
@@ -406,7 +466,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
               <div className="text-center">
                 <SwipeHint isMobile={true} />
                 <p className="text-xs text-muted-foreground mt-1">
-                  Swipe left for quick recording setup
+                  Swipe left to start your empowered recording
                 </p>
               </div>
             )}
@@ -421,6 +481,29 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
         onCancel={handleEndDialogCancel}
         isLoading={isProcessing}
       />
+
+      {/* Confirmation Dialogs */}
+      <ConfirmationDialog
+        isOpen={showDiscardConfirm}
+        onConfirm={showEndDialog ? confirmEndDialogCancel : confirmDiscard}
+        onCancel={() => setShowDiscardConfirm(false)}
+        title="Discard this recording?"
+        description="Your conversation won't be saved. This action cannot be undone. Remember, your progress matters and you're supported every step of the way."
+        confirmText="Yes, discard safely"
+        cancelText="Keep recording"
+        variant="destructive"
+      />
+
+      {/* ACTS Results Modal */}
+      {lastMeetingId && (
+        <MemoryBridgeResultsModal
+          isOpen={showResultsModal}
+          onClose={() => setShowResultsModal(false)}
+          meetingId={lastMeetingId}
+          actionsFound={actionsFound}
+          summary="Your conversation has been transformed into actionable commitments"
+        />
+      )}
     </div>
   );
 }
