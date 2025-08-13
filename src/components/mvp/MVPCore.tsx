@@ -130,7 +130,7 @@ const MVP_FEATURES: MVPFeature[] = [
     description: 'Meditation and mindfulness practices specifically for memory enhancement.',
     cognitiveExplanation: 'Mindfulness meditation increases cortical thickness in the hippocampus and prefrontal cortex, directly supporting memory formation and attention control.',
     letter: 'M',
-    fullWord: 'Mindfulness',
+    fullWord: 'Mindset',
     icon: Sparkles,
     route: '/mvp/mindfulness',
     color: 'clarity-teal',
