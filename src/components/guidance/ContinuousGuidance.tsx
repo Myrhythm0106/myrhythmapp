@@ -11,7 +11,9 @@ import {
   Users,
   Phone,
   HelpCircle,
-  Compass
+  Compass,
+  ChevronUp,
+  ChevronDown
 } from "lucide-react";
 
 interface ContinuousGuidanceProps {
@@ -29,6 +31,7 @@ export function ContinuousGuidance({
   encouragementMessage,
   showHelp = true 
 }: ContinuousGuidanceProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
   const [showHelpDetails, setShowHelpDetails] = useState(false);
 
   const getStepMessage = (step: string) => {
@@ -43,99 +46,129 @@ export function ContinuousGuidance({
   };
 
   return (
-    <div className="fixed bottom-4 right-4 max-w-sm z-50">
-      <Card className="premium-card border-memory-emerald-200/60 bg-gradient-to-r from-memory-emerald-50/95 to-brain-health-50/95 backdrop-blur-sm">
-        <CardContent className="p-4 space-y-3">
-          {/* Current Location */}
-          <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-memory-emerald-500" />
-            <Badge variant="outline" className="border-memory-emerald-300 text-memory-emerald-700 text-xs">
-              You are here: {currentStep}
-            </Badge>
-          </div>
-
-          {/* Progress Bar */}
+    <div className="fixed bottom-20 right-4 z-40">
+      {!isExpanded ? (
+        // Collapsed State - Small indicator button
+        <Button
+          onClick={() => setIsExpanded(true)}
+          variant="outline"
+          size="sm"
+          className="border-memory-emerald-300 bg-memory-emerald-50/95 text-memory-emerald-700 hover:bg-memory-emerald-100 backdrop-blur-sm shadow-lg"
+        >
+          <MapPin className="h-3 w-3 mr-2" />
+          <span className="text-xs">{currentStep}</span>
           {progress > 0 && (
-            <div className="space-y-1">
-              <div className="flex justify-between text-xs text-brain-health-600">
-                <span>Progress</span>
-                <span>{progress}%</span>
-              </div>
-              <div className="w-full bg-brain-health-100 rounded-full h-1.5">
-                <div 
-                  className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 h-1.5 rounded-full transition-all duration-500"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-            </div>
+            <Badge variant="secondary" className="ml-2 text-xs px-1 py-0">
+              {progress}%
+            </Badge>
           )}
-
-          {/* Encouragement Message */}
-          <div className="space-y-2">
-            <p className="text-sm text-brain-health-700 leading-relaxed">
-              {encouragementMessage || getStepMessage(currentStep)}
-            </p>
-            
-            {nextStep && (
-              <div className="flex items-center gap-2 text-xs text-brain-health-600">
-                <Clock className="h-3 w-3" />
-                <span>Coming next: {nextStep}</span>
+          <ChevronUp className="h-3 w-3 ml-2" />
+        </Button>
+      ) : (
+        // Expanded State - Full guidance card
+        <Card className="max-w-sm premium-card border-memory-emerald-200/60 bg-gradient-to-r from-memory-emerald-50/95 to-brain-health-50/95 backdrop-blur-sm shadow-lg animate-scale-in">
+          <CardContent className="p-4 space-y-3">
+            {/* Header with collapse button */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-memory-emerald-500" />
+                <Badge variant="outline" className="border-memory-emerald-300 text-memory-emerald-700 text-xs">
+                  You are here: {currentStep}
+                </Badge>
               </div>
-            )}
-          </div>
-
-          {/* Help Section */}
-          {showHelp && (
-            <div className="space-y-2">
               <Button
+                onClick={() => setIsExpanded(false)}
                 variant="ghost"
                 size="sm"
-                onClick={() => setShowHelpDetails(!showHelpDetails)}
-                className="w-full justify-start text-xs h-8 text-brain-health-600 hover:text-brain-health-700"
+                className="h-6 w-6 p-0 text-brain-health-500 hover:text-brain-health-700"
               >
-                <HelpCircle className="h-3 w-3 mr-2" />
-                Need help or feeling unsure?
+                <ChevronDown className="h-3 w-3" />
               </Button>
+            </div>
+
+            {/* Progress Bar */}
+            {progress > 0 && (
+              <div className="space-y-1">
+                <div className="flex justify-between text-xs text-brain-health-600">
+                  <span>Progress</span>
+                  <span>{progress}%</span>
+                </div>
+                <div className="w-full bg-brain-health-100 rounded-full h-1.5">
+                  <div 
+                    className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 h-1.5 rounded-full transition-all duration-500"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Encouragement Message */}
+            <div className="space-y-2">
+              <p className="text-sm text-brain-health-700 leading-relaxed">
+                {encouragementMessage || getStepMessage(currentStep)}
+              </p>
               
-              {showHelpDetails && (
-                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-memory-emerald-200">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="flex-col h-auto p-2 text-xs"
-                  >
-                    <Users className="h-3 w-3 mb-1 text-clarity-teal-500" />
-                    <span>Community</span>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="flex-col h-auto p-2 text-xs"
-                  >
-                    <Phone className="h-3 w-3 mb-1 text-sunrise-amber-500" />
-                    <span>Support</span>
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="flex-col h-auto p-2 text-xs"
-                  >
-                    <Compass className="h-3 w-3 mb-1 text-memory-emerald-500" />
-                    <span>Guide</span>
-                  </Button>
+              {nextStep && (
+                <div className="flex items-center gap-2 text-xs text-brain-health-600">
+                  <Clock className="h-3 w-3" />
+                  <span>Coming next: {nextStep}</span>
                 </div>
               )}
             </div>
-          )}
 
-          {/* Accompaniment Messages */}
-          <div className="flex items-center justify-center gap-2 pt-2 border-t border-memory-emerald-200">
-            <Heart className="h-3 w-3 text-memory-emerald-500" />
-            <span className="text-xs text-brain-health-600">You're not alone in this</span>
-            <CheckCircle className="h-3 w-3 text-memory-emerald-500" />
-          </div>
-        </CardContent>
-      </Card>
+            {/* Help Section */}
+            {showHelp && (
+              <div className="space-y-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowHelpDetails(!showHelpDetails)}
+                  className="w-full justify-start text-xs h-8 text-brain-health-600 hover:text-brain-health-700"
+                >
+                  <HelpCircle className="h-3 w-3 mr-2" />
+                  Need help or feeling unsure?
+                </Button>
+                
+                {showHelpDetails && (
+                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-memory-emerald-200">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex-col h-auto p-2 text-xs"
+                    >
+                      <Users className="h-3 w-3 mb-1 text-clarity-teal-500" />
+                      <span>Community</span>
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex-col h-auto p-2 text-xs"
+                    >
+                      <Phone className="h-3 w-3 mb-1 text-sunrise-amber-500" />
+                      <span>Support</span>
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="flex-col h-auto p-2 text-xs"
+                    >
+                      <Compass className="h-3 w-3 mb-1 text-memory-emerald-500" />
+                      <span>Guide</span>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Accompaniment Messages */}
+            <div className="flex items-center justify-center gap-2 pt-2 border-t border-memory-emerald-200">
+              <Heart className="h-3 w-3 text-memory-emerald-500" />
+              <span className="text-xs text-brain-health-600">You're not alone in this</span>
+              <CheckCircle className="h-3 w-3 text-memory-emerald-500" />
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
