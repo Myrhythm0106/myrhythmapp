@@ -31,6 +31,8 @@ import BrainInjuryAssessment from "./pages/BrainInjuryAssessment";
 import CognitivePerformanceAssessment from "./pages/CognitivePerformanceAssessment";
 import MVPDashboardPage from "./pages/MVPDashboardPage";
 import MVPAssessmentPage from "./pages/MVPAssessmentPage";
+import MVPCorePage from "./pages/MVPCorePage";
+import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
 
 const queryClient = new QueryClient();
 
@@ -98,6 +100,8 @@ function App() {
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
+                    <Route path="/mvp" element={<ProtectedRoute requireAuth={false}><MVPCorePage /></ProtectedRoute>} />
+                    <Route path="/mvp/assessment" element={<ProtectedRoute requireAuth={false}><MVPAssessmentFlowPage /></ProtectedRoute>} />
                   </Routes>
                 </BrowserRouter>
               </TooltipProvider>
