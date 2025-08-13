@@ -5,11 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { SwipeableContainer } from '@/components/ui/SwipeableContainer';
 import { SwipeHint } from '@/components/gratitude/journal/components/SwipeHint';
 import { MeetingSetupDialog } from './MeetingSetupDialog';
+import { MeetingEndDialog } from './MeetingEndDialog';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { toast } from 'sonner';
-import { Heart, Users, Clock, StopCircle, Activity, Save, Trash2, Share2, ArrowUp, ArrowDown } from 'lucide-react';
+import { Heart, Users, Clock, StopCircle, Activity, Save, Trash2, Share2, ArrowUp, ArrowDown, Mic } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
 
 interface MemoryBridgeRecorderProps {
@@ -27,6 +28,8 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
   // const { canRecord, updateUsage } = useRecordingLimits();
   const isMobile = useIsMobile();
   const [selectedWatchers, setSelectedWatchers] = useState<string[]>([]);
+  const [showEndDialog, setShowEndDialog] = useState(false);
+  const [pendingAudioBlob, setPendingAudioBlob] = useState<Blob | null>(null);
   
   const { 
     startRecording: startVoiceRecording, 
@@ -58,13 +61,25 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
     toast.info("Share with Support Circle after processing completes!");
   };
 
-  const handleStartMeeting = async (setupData: MeetingSetupData) => {
-    // Limit checking temporarily disabled
-    // if (!canRecord()) {
-    //   toast.error('Recording limit reached. Upgrade to continue recording!');
-    //   return;
-    // }
+  const handleQuickStart = async () => {
+    try {
+      // Start voice recording immediately without setup
+      await startVoiceRecording();
+      setRecordingStartTime(new Date());
+      
+      // Start duration counter
+      intervalRef.current = setInterval(() => {
+        setCurrentDuration(prev => prev + 1);
+      }, 1000);
 
+      toast.success('Quick recording started! Complete setup when you stop.');
+    } catch (error) {
+      console.error('Error starting quick recording:', error);
+      toast.error('Failed to start recording');
+    }
+  };
+
+  const handleStartMeeting = async (setupData: MeetingSetupData) => {
     try {
       // Start voice recording first
       await startVoiceRecording();
@@ -89,15 +104,13 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
           
           // Start duration counter
           intervalRef.current = setInterval(() => {
-            if (recordingStartTime) {
-              const duration = Math.floor((Date.now() - recordingStartTime.getTime()) / 1000);
-              setCurrentDuration(duration);
-            }
+            setCurrentDuration(prev => prev + 1);
           }, 1000);
         }
       }
     } catch (error) {
       console.error('Error starting meeting:', error);
+      toast.error('Failed to start meeting recording');
     }
   };
 
@@ -112,24 +125,63 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
       // Stop voice recording and get the audio blob
       const audioBlob = await stopVoiceRecording();
       
-      if (audioBlob && currentMeeting) {
-        // Process through Memory Bridge
-        const result = await stopMeetingRecording(audioBlob);
-        
-        // Update usage tracking temporarily disabled
-        // await updateUsage({
-        //   recording_count: 1,
-        //   recording_duration_minutes: Math.ceil(currentDuration / 60)
-        // });
-        
-        onRecordingComplete?.(result);
+      if (audioBlob) {
+        if (currentMeeting) {
+          // If we have meeting setup, process immediately
+          const result = await stopMeetingRecording(audioBlob);
+          onRecordingComplete?.(result);
+        } else {
+          // If no setup yet, save audio and show setup dialog
+          setPendingAudioBlob(audioBlob);
+          setShowEndDialog(true);
+        }
       }
       
       setRecordingStartTime(null);
       setCurrentDuration(0);
     } catch (error) {
       console.error('Error stopping meeting:', error);
+      toast.error('Failed to stop recording');
     }
+  };
+
+  const handleEndDialogSave = async (setupData: MeetingSetupData) => {
+    if (!pendingAudioBlob) return;
+
+    try {
+      // Create voice recording entry
+      const voiceData = await saveRecording(
+        pendingAudioBlob,
+        setupData.title,
+        'memory_bridge',
+        `Memory Bridge recording for: ${setupData.title}`,
+        false
+      );
+
+      if (voiceData) {
+        // Start meeting recording
+        const setupWithWatchers = { ...setupData, watchers: selectedWatchers };
+        const meetingRecord = await startMeetingRecording(setupWithWatchers, voiceData.id);
+        
+        if (meetingRecord) {
+          // Process the audio
+          const result = await stopMeetingRecording(pendingAudioBlob);
+          onRecordingComplete?.(result);
+        }
+      }
+
+      setShowEndDialog(false);
+      setPendingAudioBlob(null);
+    } catch (error) {
+      console.error('Error saving meeting:', error);
+      toast.error('Failed to save meeting');
+    }
+  };
+
+  const handleEndDialogCancel = () => {
+    setShowEndDialog(false);
+    setPendingAudioBlob(null);
+    toast.info('Recording discarded');
   };
 
   const formatDuration = (seconds: number): string => {
@@ -138,7 +190,8 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  if (isRecording && currentMeeting) {
+  // Show recording UI if we're recording (with or without meeting setup)
+  if (isRecording || recordingStartTime) {
     return (
       <SwipeableContainer
         enableHorizontalSwipe={isMobile}
@@ -162,7 +215,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
           <CardHeader className="text-center">
             <CardTitle className="flex items-center justify-center gap-2 text-xl">
               <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-              Recording: {currentMeeting.meeting_title}
+              Recording: {currentMeeting?.meeting_title || 'Quick Recording'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -179,34 +232,42 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
             </div>
 
           {/* Meeting Info */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="h-4 w-4" />
-                <span>Participants:</span>
+          {currentMeeting ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Users className="h-4 w-4" />
+                  <span>Participants:</span>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {currentMeeting.participants.map((participant, index) => (
+                    <Badge key={index} variant="outline" className="text-xs">
+                      {participant.name}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-1">
-                {currentMeeting.participants.map((participant, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
-                    {participant.name}
-                  </Badge>
-                ))}
-              </div>
-            </div>
 
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Heart className="h-4 w-4" />
-                <span>Type:</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Heart className="h-4 w-4" />
+                  <span>Type:</span>
+                </div>
+                <Badge variant="secondary">
+                  {currentMeeting.meeting_type}
+                </Badge>
               </div>
-              <Badge variant="secondary">
-                {currentMeeting.meeting_type}
-              </Badge>
             </div>
-          </div>
+          ) : (
+            <div className="text-center text-muted-foreground bg-muted/30 rounded-lg p-4">
+              <p className="text-sm">
+                You'll complete the meeting details when you stop recording
+              </p>
+            </div>
+          )}
 
           {/* Context */}
-          {currentMeeting.meeting_context && (
+          {currentMeeting?.meeting_context && (
             <div className="space-y-2">
               <p className="text-sm text-muted-foreground">Context:</p>
               <p className="text-sm bg-muted/50 rounded-lg p-3">
@@ -313,7 +374,16 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
             </div>
 
             {/* Start Recording */}
-            <div className="flex justify-center">
+            <div className="flex justify-center gap-4">
+              <Button
+                onClick={handleQuickStart}
+                disabled={isProcessing}
+                className="bg-gradient-to-r from-primary to-primary-glow text-white shadow-elegant hover:shadow-glow transition-all duration-300 flex items-center gap-2"
+              >
+                <Mic className="h-5 w-5" />
+                Quick Start
+              </Button>
+              
               <MeetingSetupDialog 
                 onStartMeeting={handleStartMeeting}
                 isLoading={isProcessing}
@@ -343,6 +413,14 @@ export function MemoryBridgeRecorder({ onRecordingComplete }: MemoryBridgeRecord
           </CardContent>
         </Card>
       </SwipeableContainer>
+
+      {/* Meeting End Dialog */}
+      <MeetingEndDialog
+        isOpen={showEndDialog}
+        onSave={handleEndDialogSave}
+        onCancel={handleEndDialogCancel}
+        isLoading={isProcessing}
+      />
     </div>
   );
 }

@@ -40,8 +40,13 @@ export async function createMeetingRecording(
     throw new Error('Failed to create meeting recording');
   }
 
-  const data = await response.json();
-  return data[0]; // Supabase returns array
+  const responseText = await response.text();
+  if (!responseText) {
+    throw new Error('Empty response from server');
+  }
+
+  const data = JSON.parse(responseText);
+  return Array.isArray(data) ? data[0] : data;
 }
 
 export async function fetchExtractedActions(userId: string, meetingId?: string) {

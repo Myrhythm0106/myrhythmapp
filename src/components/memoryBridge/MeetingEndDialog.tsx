@@ -4,7 +4,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,16 +18,17 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { Mic, Users, MapPin, Heart, Battery } from 'lucide-react';
+import { Users, MapPin, Heart, Battery, Save } from 'lucide-react';
 import { MeetingSetupData } from '@/types/memoryBridge';
 
-interface MeetingSetupDialogProps {
-  onStartMeeting: (setupData: MeetingSetupData) => void;
+interface MeetingEndDialogProps {
+  isOpen: boolean;
+  onSave: (setupData: MeetingSetupData) => void;
+  onCancel: () => void;
   isLoading?: boolean;
 }
 
-export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export function MeetingEndDialog({ isOpen, onSave, onCancel, isLoading }: MeetingEndDialogProps) {
   const [title, setTitle] = useState('');
   const [participants, setParticipants] = useState<{ name: string; relationship: string }[]>([]);
   const [newParticipant, setNewParticipant] = useState({ name: '', relationship: '' });
@@ -54,7 +54,7 @@ export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDi
     setParticipants(participants.filter((_, i) => i !== index));
   };
 
-  const handleStartMeeting = () => {
+  const handleSave = () => {
     if (!title) return;
 
     const setupData: MeetingSetupData = {
@@ -67,8 +67,7 @@ export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDi
       emotionalContext: emotionalContext || undefined,
     };
 
-    onStartMeeting(setupData);
-    setIsOpen(false);
+    onSave(setupData);
     
     // Reset form
     setTitle('');
@@ -80,19 +79,16 @@ export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDi
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-primary to-primary-glow text-white shadow-elegant hover:shadow-glow transition-all duration-300 flex items-center gap-2">
-          <Mic className="h-5 w-5" />
-          Start Memory Bridge
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={() => !isLoading && onCancel()}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-xl">
-            <Heart className="h-6 w-6 text-primary" />
-            Memory Bridge Setup
+            <Save className="h-6 w-6 text-primary" />
+            Complete Your Memory Bridge
           </DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            Please provide details about your conversation to save it properly.
+          </p>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -129,7 +125,7 @@ export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDi
           <div className="space-y-3">
             <Label className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Who's Participating?
+              Who participated?
             </Label>
             
             <Card>
@@ -219,12 +215,12 @@ export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDi
 
           {/* Context */}
           <div className="space-y-2">
-            <Label htmlFor="context">What's this conversation about? (optional)</Label>
+            <Label htmlFor="context">What was this conversation about? (optional)</Label>
             <Textarea
               id="context"
               value={context}
               onChange={(e) => setContext(e.target.value)}
-              placeholder="Brief context about what you're planning to discuss or why this conversation is happening..."
+              placeholder="Brief context about what was discussed..."
               rows={2}
             />
           </div>
@@ -236,19 +232,29 @@ export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDi
               id="emotional-context"
               value={emotionalContext}
               onChange={(e) => setEmotionalContext(e.target.value)}
-              placeholder="How are you feeling? Any relationship dynamics to be aware of?"
+              placeholder="How did the conversation feel? Any important relationship dynamics?"
               rows={2}
             />
           </div>
 
-          {/* Start Button */}
-          <Button
-            onClick={handleStartMeeting}
-            disabled={!title || isLoading}
-            className="w-full bg-gradient-to-r from-primary to-primary-glow text-white"
-          >
-            {isLoading ? 'Starting...' : 'Start Recording'}
-          </Button>
+          {/* Action Buttons */}
+          <div className="flex gap-3">
+            <Button
+              onClick={onCancel}
+              variant="outline"
+              disabled={isLoading}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={!title || isLoading}
+              className="flex-1 bg-gradient-to-r from-primary to-primary-glow text-white"
+            >
+              {isLoading ? 'Saving...' : 'Save Memory Bridge'}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

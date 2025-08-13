@@ -81,7 +81,7 @@ export interface ActionConfirmation {
 export interface MeetingSetupData {
   title: string;
   participants: { name: string; relationship: string }[];
-  meetingType: 'formal' | 'informal' | 'family' | 'medical';
+  meetingType: 'formal' | 'informal' | 'family' | 'medical' | 'work';
   context?: string;
   location?: string;
   energyLevel?: number;
