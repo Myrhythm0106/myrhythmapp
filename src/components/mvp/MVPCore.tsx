@@ -183,11 +183,27 @@ export function MVPCore() {
     feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase())
   );
   return <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
-      {/* Pain Point Hero Section */}
+      {/* Empowering Hero Statement */}
       <div className="relative overflow-hidden bg-gradient-to-r from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 border-b border-brain-health-200/50">
         <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald-100/20 via-brain-health-100/20 to-clarity-teal-100/20" />
         <div className="relative max-w-7xl mx-auto px-6 py-12">
           <div className="text-center space-y-6">
+            {/* Catchy Empowering Statement */}
+            <div className="space-y-4 mb-8">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black">
+                <span className="bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+                  EMPOWER YOUR BRAIN.
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-clarity-teal-600 via-sunrise-amber-500 to-memory-emerald-600 bg-clip-text text-transparent">
+                  RECLAIM YOUR POWER.
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-brain-health-700 font-semibold max-w-4xl mx-auto">
+                Transform cognitive challenges into unstoppable strength with science-backed tools designed for your journey.
+              </p>
+            </div>
+            
             <Badge className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white border-0 px-4 py-2">
               <Crown className="h-4 w-4 mr-2" />
               MYRHYTHM Core Edition
