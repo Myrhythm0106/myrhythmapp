@@ -1,182 +1,128 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Crown, 
-  Search, 
-  Brain, 
-  Heart, 
-  Users, 
-  Calendar, 
-  BookOpen, 
-  Zap, 
-  Shield, 
-  Target,
-  CheckCircle,
-  ArrowRight,
-  Star,
-  Trophy,
-  Clock,
-  Lightbulb,
-  MessageCircle,
-  BarChart3,
-  Smartphone,
-  Headphones,
-  Activity,
-  TrendingUp,
-  Lock,
-  UserCheck,
-  Globe,
-  Award,
-  Sparkles
-} from 'lucide-react';
-import { ContinuousGuidance } from '@/components/guidance/ContinuousGuidance';
+import { Separator } from '@/components/ui/separator';
+import { Brain, Crown, Heart, Search, Shield, Sparkles, Star, Users, Zap, CheckCircle, Clock, Target, Calendar, BookOpen, Award, TrendingUp, Activity } from 'lucide-react';
+import { FoundersStorySection } from '@/components/founders-story/FoundersStorySection';
+import { YourRhythmSection } from '@/components/founders-story/YourRhythmSection';
 import { PainPointImageCard } from './PainPointImageCard';
 
-interface FeatureCard {
-  icon: React.ReactNode;
+interface Feature {
+  id: number;
   title: string;
   description: string;
-  category: 'memory' | 'executive' | 'wellness' | 'social';
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  category: string;
   fullWord: string;
 }
 
-const FeatureCard = ({ icon, title, description, category }: FeatureCard) => {
-  const categoryColors = {
-    memory: 'from-memory-emerald-500/20 to-memory-emerald-600/30 border-memory-emerald-400/50',
-    executive: 'from-brain-health-500/20 to-brain-health-600/30 border-brain-health-400/50',
-    wellness: 'from-clarity-teal-500/20 to-clarity-teal-600/30 border-clarity-teal-400/50',
-    social: 'from-sunrise-amber-500/20 to-sunrise-amber-600/30 border-sunrise-amber-400/50'
-  };
-
-  return (
-    <Card className={`group hover:shadow-xl transition-all duration-300 border-2 bg-gradient-to-br ${categoryColors[category]} hover:scale-105`}>
-      <CardHeader className="pb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-white/80 group-hover:bg-white transition-colors">
-            {icon}
-          </div>
-          <CardTitle className="text-lg font-bold text-brain-health-800">{title}</CardTitle>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <CardDescription className="text-brain-health-700 leading-relaxed">
-          {description}
-        </CardDescription>
-      </CardContent>
-    </Card>
-  );
-};
-
-const testimonials = [
+const features: Feature[] = [
   {
-    name: "Sarah M.",
-    role: "TBI Survivor",
-    content: "MYRHYTHM helped me regain confidence in my daily tasks. The personalized approach made all the difference.",
-    rating: 5
-  },
-  {
-    name: "Dr. Jennifer L.",
-    role: "Neuropsychologist",
-    content: "Finally, a platform that bridges the gap between clinical care and daily life management for my patients.",
-    rating: 5
-  },
-  {
-    name: "Michael R.",
-    role: "Family Caregiver",
-    content: "The family features keep us all connected in my wife's recovery journey. Invaluable support.",
-    rating: 5
-  }
-];
-
-const features: FeatureCard[] = [
-  {
-    icon: <Brain className="h-6 w-6 text-memory-emerald-600" />,
-    title: "Smart Memory Training",
-    description: "Adaptive exercises that strengthen memory pathways through personalized cognitive challenges.",
+    id: 1,
+    title: 'Memory Lane',
+    description: 'Relive precious moments with our interactive memory journal.',
+    icon: BookOpen,
     category: 'memory',
-    fullWord: 'memory training cognitive exercises adaptive personalized challenges pathways brain'
+    fullWord: 'memory'
   },
   {
-    icon: <Target className="h-6 w-6 text-brain-health-600" />,
-    title: "Executive Function Support",
-    description: "Task management tools designed specifically for planning, organization, and decision-making challenges.",
-    category: 'executive',
-    fullWord: 'executive function planning organization decision making task management tools'
+    id: 2,
+    title: 'Focus Flow',
+    description: 'Sharpen your concentration with personalized focus exercises.',
+    icon: Brain,
+    category: 'focus',
+    fullWord: 'focus'
   },
   {
-    icon: <Heart className="h-6 w-6 text-clarity-teal-600" />,
-    title: "Emotional Wellness Hub",
-    description: "Mood tracking, stress management, and emotional regulation tools for comprehensive well-being.",
-    category: 'wellness',
-    fullWord: 'emotional wellness mood tracking stress management regulation well-being mental health'
+    id: 3,
+    title: 'Energy Surge',
+    description: 'Boost your vitality with revitalizing activities and routines.',
+    icon: Zap,
+    category: 'energy',
+    fullWord: 'energy'
   },
   {
-    icon: <Users className="h-6 w-6 text-sunrise-amber-600" />,
-    title: "Family Care Team",
-    description: "Seamless collaboration between users, families, and healthcare providers for holistic support.",
-    category: 'social',
-    fullWord: 'family care team collaboration healthcare providers support social connection'
+    id: 4,
+    title: 'Clarity Zone',
+    description: 'Find mental clarity through guided mindfulness and meditation.',
+    icon: Activity,
+    category: 'clarity',
+    fullWord: 'clarity'
   },
   {
-    icon: <Calendar className="h-6 w-6 text-memory-emerald-600" />,
-    title: "Intelligent Scheduling",
-    description: "AI-powered calendar that adapts to your energy levels and cognitive patterns throughout the day.",
-    category: 'executive',
-    fullWord: 'intelligent scheduling ai calendar energy levels cognitive patterns planning time management'
+    id: 5,
+    title: 'Rhythm Calendar',
+    description: 'Plan your days around your peak performance times.',
+    icon: Calendar,
+    category: 'rhythm',
+    fullWord: 'rhythm'
   },
   {
-    icon: <BookOpen className="h-6 w-6 text-brain-health-600" />,
-    title: "Progress Journaling",
-    description: "Reflective tools that help track improvements and identify patterns in your cognitive journey.",
-    category: 'wellness',
-    fullWord: 'progress journaling reflective tools tracking improvements patterns cognitive journey recovery'
+    id: 6,
+    title: 'Goal Mastery',
+    description: 'Achieve your ambitions with structured goal-setting tools.',
+    icon: Target,
+    category: 'goals',
+    fullWord: 'goals'
   },
   {
-    icon: <Zap className="h-6 w-6 text-clarity-teal-600" />,
-    title: "Energy Management",
-    description: "Smart pacing tools that help optimize your daily activities based on your unique energy patterns.",
-    category: 'wellness',
-    fullWord: 'energy management pacing tools optimize daily activities patterns fatigue cognitive load'
+    id: 7,
+    title: 'Triumph Tracker',
+    description: 'Celebrate your successes and track your progress over time.',
+    icon: Award,
+    category: 'progress',
+    fullWord: 'progress'
   },
   {
-    icon: <MessageCircle className="h-6 w-6 text-sunrise-amber-600" />,
-    title: "Communication Support",
-    description: "Tools to improve conversation skills and manage communication challenges with confidence.",
-    category: 'social',
-    fullWord: 'communication support conversation skills challenges confidence social interaction speech'
+    id: 8,
+    title: 'Social Spark',
+    description: 'Connect with a supportive community and share your journey.',
+    icon: Users,
+    category: 'community',
+    fullWord: 'community'
+  },
+  {
+    id: 9,
+    title: 'Mood Lifter',
+    description: 'Elevate your spirits with uplifting content and activities.',
+    icon: Heart,
+    category: 'mood',
+    fullWord: 'mood'
+  },
+  {
+    id: 10,
+    title: 'Confidence Shield',
+    description: 'Build resilience and self-assurance with proven techniques.',
+    icon: Shield,
+    category: 'confidence',
+    fullWord: 'confidence'
+  },
+  {
+    id: 11,
+    title: 'Habit Hero',
+    description: 'Form positive habits and break free from negative patterns.',
+    icon: TrendingUp,
+    category: 'habits',
+    fullWord: 'habits'
+  },
+  {
+    id: 12,
+    title: 'Sparkle Sanctuary',
+    description: 'Indulge in moments of joy and creativity to ignite your passion.',
+    icon: Sparkles,
+    category: 'joy',
+    fullWord: 'joy'
   }
 ];
 
-export const MVPCore = () => {
+export function MVPCore() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<'all' | 'memory' | 'executive' | 'wellness' | 'social'>('all');
+  const [activeFeatureFilter, setActiveFeatureFilter] = useState('all');
 
-  const filteredFeatures = useMemo(() => {
-    let filtered = features;
-    
-    if (activeCategory !== 'all') {
-      filtered = filtered.filter(feature => feature.category === activeCategory);
-    }
-    
-    if (searchQuery) {
-      filtered = filtered.filter(feature => 
-        feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        feature.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-    
-    return filtered;
-  }, [searchQuery, activeCategory]);
-  
-  const filteredBySearch = features.filter(feature => 
+  const filteredFeatures = features.filter(feature =>
     feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    feature.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
     feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -207,130 +153,119 @@ export const MVPCore = () => {
               <Crown className="h-4 w-4 mr-2" />
               MYRHYTHM Core Edition
             </Badge>
-            
-            {/* Pain Point Image Cards */}
+
+            {/* Pain Points with Professional Images */}
             <div className="grid md:grid-cols-3 gap-6 mt-12">
               <PainPointImageCard
                 title="Forgetting important conversations?"
-                description="Memory challenges don't define you. Discover personalized tools that strengthen recall and build confidence in every interaction."
-                imageUrl="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80"
-                imageAlt="Person looking thoughtful and concerned about forgetting conversations"
+                imageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&crop=face"
+                description="Missing precious moments and connections"
               />
               <PainPointImageCard
                 title="Feeling overwhelmed by simple tasks?"
-                description="Transform daily overwhelm into manageable steps. Smart tools that adapt to your pace and celebrate every achievement."
-                imageUrl="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                imageAlt="Person surrounded by tasks feeling overwhelmed"
+                imageUrl="https://images.unsplash.com/photo-1584824486509-112e4181ff6b?w=500&h=300&fit=crop"
+                description="When everyday activities feel impossible"
               />
               <PainPointImageCard
                 title="Struggling to stay organized?"
-                description="Turn chaos into clarity with intelligent organization systems designed specifically for your cognitive needs and lifestyle."
-                imageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80"
-                imageAlt="Person looking at scattered papers and calendar trying to organize"
+                imageUrl="https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=500&h=300&fit=crop"
+                description="Losing track of what matters most"
               />
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                Start Your Journey <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-2 border-brain-health-400 text-brain-health-700 hover:bg-brain-health-50 px-8 py-3 text-lg font-semibold"
-              >
-                See How It Works
+            <div className="flex flex-col items-center space-y-6 mt-8">
+              <div className="text-center space-y-2">
+                <h2 className="text-3xl md:text-4xl font-bold text-brain-health-800">
+                  You're Not Broken. You're <span className="bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">Rebuilding</span>.
+                </h2>
+                <p className="font-semibold text-sm text-brain-health-700">
+                  Your Rhythm
+                </p>
+              </div>
+              <Button size="lg" className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200">
+                <Sparkles className="h-5 w-5 mr-2" />
+                Start Your Journey
               </Button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent mb-4">
-            Comprehensive Cognitive Support
+      {/* Core Features Section */}
+      <section className="py-16">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold text-brain-health-900 mb-8">
+            Core Features to Supercharge Your Mind
           </h2>
-          <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
-            Every feature designed with your unique needs in mind, backed by neuroscience research and real-world experience.
-          </p>
-        </div>
 
-        {/* Search and Filter */}
-        <div className="mb-8 space-y-4">
-          <div className="relative max-w-md mx-auto">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-brain-health-400 h-4 w-4" />
-            <Input
-              placeholder="Search features..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 border-brain-health-200 focus:border-brain-health-400"
-            />
-          </div>
-          
-          <Tabs value={activeCategory} onValueChange={(value) => setActiveCategory(value as any)} className="w-full">
-            <TabsList className="grid w-full grid-cols-5 max-w-2xl mx-auto">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="memory">Memory</TabsTrigger>
-              <TabsTrigger value="executive">Executive</TabsTrigger>
-              <TabsTrigger value="wellness">Wellness</TabsTrigger>
-              <TabsTrigger value="social">Social</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+          {/* Search and Filter */}
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 px-6">
+            <div className="w-full md:w-1/2 mb-4 md:mb-0">
+              <Input
+                type="search"
+                placeholder="Search features..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 rounded-md border-gray-300 shadow-sm focus:border-brain-health-500 focus:ring focus:ring-brain-health-200 focus:ring-opacity-50"
+              />
+            </div>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredFeatures.map((feature, index) => (
-            <FeatureCard key={index} {...feature} />
-          ))}
-        </div>
-
-        {filteredFeatures.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-brain-health-600 text-lg">No features found matching your search.</p>
-          </div>
-        )}
-      </div>
-
-      {/* Testimonials Section */}
-      <div className="bg-gradient-to-r from-memory-emerald-50/50 via-brain-health-50/50 to-clarity-teal-50/50 py-16">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent mb-4">
-              Real Stories, Real Impact
-            </h2>
-            <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
-              Join thousands who have transformed their cognitive wellness journey with MYRHYTHM.
-            </p>
+            <div className="space-x-2">
+              <Button
+                variant={activeFeatureFilter === 'all' ? 'default' : 'outline'}
+                onClick={() => setActiveFeatureFilter('all')}
+              >
+                All Features
+              </Button>
+              <Button
+                variant={activeFeatureFilter === 'memory' ? 'default' : 'outline'}
+                onClick={() => setActiveFeatureFilter('memory')}
+              >
+                Memory
+              </Button>
+              <Button
+                variant={activeFeatureFilter === 'focus' ? 'default' : 'outline'}
+                onClick={() => setActiveFeatureFilter('focus')}
+              >
+                Focus
+              </Button>
+              {/* Add more filter buttons as needed */}
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="bg-white/80 backdrop-blur-sm border-brain-health-200/50 hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-sunrise-amber-400 text-sunrise-amber-400" />
-                    ))}
-                  </div>
-                  <p className="text-brain-health-700 mb-4 italic">"{testimonial.content}"</p>
-                  <div>
-                    <p className="font-semibold text-brain-health-800">{testimonial.name}</p>
-                    <p className="text-sm text-brain-health-600">{testimonial.role}</p>
-                  </div>
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
+            {filteredFeatures.map((feature) => (
+              <Card key={feature.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                  <CardTitle className="text-sm font-medium">{feature.title}</CardTitle>
+                  <feature.icon className="h-4 w-4 text-gray-500" />
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 text-sm">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
-      </div>
-      
-      <ContinuousGuidance />
+      </section>
+
+      {/* Founders Story Section */}
+      <FoundersStorySection />
+
+      {/* Your Rhythm Section */}
+      <YourRhythmSection />
+
+      {/* Call to Action Footer */}
+      <section className="bg-gray-100 py-12">
+        <div className="container mx-auto text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Ready to Transform Your Cognitive Wellness?</h2>
+          <p className="text-gray-600 mb-6">Start your personalized journey with MyRhythm today.</p>
+          <Button className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg">
+            Get Started Now
+          </Button>
+        </div>
+      </section>
     </div>
   );
-};
+}
