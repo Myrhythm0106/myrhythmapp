@@ -99,7 +99,7 @@ const MVP_FEATURES: MVPFeature[] = [
   {
     id: 'daily-rhythm',
     title: 'Your Daily Rhythm',
-    description: 'Circadian rhythm optimization and sleep recovery for brain healing.',
+    description: 'Circadian rhythm optimization and sleep recovery for brain health.',
     cognitiveExplanation: 'Quality sleep is essential for memory consolidation and brain repair. Circadian optimization supports glymphatic system function, clearing brain toxins and strengthening neural connections.',
     letter: 'Y',
     fullWord: 'Your (rhythm)',
