@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -5,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { Brain, Crown, Heart, Search, Shield, Sparkles, Star, Users, Zap, CheckCircle, Clock, Target, Calendar, BookOpen, Award, TrendingUp, Activity } from 'lucide-react';
-import { FoundersStorySection } from '@/components/founders-story/FoundersStorySection';
+import { FounderStorySection } from '@/components/memory-first/sections/FounderStorySection';
 import { YourRhythmSection } from '@/components/founders-story/YourRhythmSection';
 import { PainPointImageCard } from './PainPointImageCard';
 
@@ -159,16 +160,19 @@ export function MVPCore() {
               <PainPointImageCard
                 title="Forgetting important conversations?"
                 imageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&crop=face"
+                imageAlt="Person looking concerned about memory loss during conversation"
                 description="Missing precious moments and connections"
               />
               <PainPointImageCard
                 title="Feeling overwhelmed by simple tasks?"
                 imageUrl="https://images.unsplash.com/photo-1584824486509-112e4181ff6b?w=500&h=300&fit=crop"
+                imageAlt="Person feeling overwhelmed by everyday tasks and responsibilities"
                 description="When everyday activities feel impossible"
               />
               <PainPointImageCard
                 title="Struggling to stay organized?"
                 imageUrl="https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=500&h=300&fit=crop"
+                imageAlt="Disorganized workspace showing difficulty with organization"
                 description="Losing track of what matters most"
               />
             </div>
@@ -251,7 +255,7 @@ export function MVPCore() {
       </section>
 
       {/* Founders Story Section */}
-      <FoundersStorySection />
+      <FounderStorySection />
 
       {/* Your Rhythm Section */}
       <YourRhythmSection />
