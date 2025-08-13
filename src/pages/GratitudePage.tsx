@@ -6,8 +6,8 @@ import { GratitudeDashboard } from '@/components/gratitude/GratitudeDashboard';
 export default function GratitudePage() {
   return (
     <PageLayout 
-      title="Gratitude Practice" 
-      description="Cultivate appreciation and positive mindset through daily gratitude"
+      title="Gratitude for Brain Health" 
+      description="Strengthen neural pathways through evidence-based gratitude practice with deep 'why' reflection"
     >
       <GratitudeDashboard />
     </PageLayout>

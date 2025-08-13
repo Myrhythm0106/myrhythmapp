@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DashboardHeader } from "./DashboardHeader";
+import { DashboardWelcome } from "./DashboardWelcome";
 import { HeroSection } from "./unified/HeroSection";
 import { CommandCenterLayout } from "./unified/CommandCenterLayout";
 import { QuickActionZone } from "./unified/QuickActionZone";
@@ -41,6 +42,11 @@ export function DashboardContent() {
   // Removed dashboard view toggle - now unified experience
   const { metrics, getNextUnlock } = useUserProgress();
   const userData = useUserData();
+  
+  // Get user name for personalized experience
+  const getUserName = () => {
+    return userData?.name || userData?.email?.split('@')[0] || "Champion";
+  };
 
   // Define sections for reading progress
   const dashboardSections = [
@@ -143,12 +149,9 @@ export function DashboardContent() {
   const roleWelcome = getRoleSpecificWelcome();
 
   return (
-    <div className="space-y-8 pb-20">
-      {/* Hero Section - Commanding Headlines */}
-      <HeroSection 
-        onUpgradeClick={handleUpgradeClick} 
-        userType={userData?.userType} 
-      />
+    <div className="space-y-6 pb-20">
+      {/* Dashboard-First Welcome Experience */}
+      <DashboardWelcome userName={getUserName()} />
 
       <ReadingProgressBar sections={dashboardSections} />
       

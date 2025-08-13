@@ -6,7 +6,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { HeartHandshake, BarChart2, Book, Plus, Brain, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { GratitudeDashboard } from "@/components/gratitude/GratitudeDashboard";
-import { GratitudePrompt } from "@/components/gratitude/GratitudePrompt";
+import { EnhancedGratitudePrompt } from "@/components/gratitude/EnhancedGratitudePrompt";
 import { GratitudeJournal } from "@/components/gratitude/GratitudeJournal";
 import { useGratitude } from "@/hooks/use-gratitude";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -245,10 +245,10 @@ const Gratitude = () => {
           </TabsContent>
         </Tabs>
         
-        {/* Traditional Gratitude Prompt Dialog */}
+        {/* Enhanced Gratitude Prompt Dialog */}
         <Dialog open={isPromptOpen} onOpenChange={setIsPromptOpen}>
-          <DialogContent className="max-w-lg">
-            <GratitudePrompt 
+          <DialogContent className="max-w-4xl">
+            <EnhancedGratitudePrompt 
               promptType={promptType}
               onSave={handleSaveGratitude}
               onClose={() => setIsPromptOpen(false)}

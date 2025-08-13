@@ -147,10 +147,19 @@ export function MVPCore() {
 
   const handleFeatureClick = (feature: MVPFeature) => {
     if (feature.isPremium && !hasFeature('fullAssessment')) {
-      // Show upgrade prompt
+      // Show upgrade prompt and navigate to dashboard with feature context
+      navigate('/dashboard', { state: { requestedFeature: feature.id, showUpgrade: true } });
       return;
     }
-    navigate(feature.route);
+    
+    // For resilience building, redirect to enhanced gratitude
+    if (feature.id === 'resilience-building') {
+      navigate('/gratitude');
+      return;
+    }
+    
+    // For other features, navigate to dashboard with context
+    navigate('/dashboard', { state: { activeFeature: feature.id } });
   };
 
   const handleAssessment = (type: 'brief' | 'comprehensive') => {

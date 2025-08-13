@@ -48,8 +48,12 @@ function App() {
                 <Toaster />
                 <BrowserRouter>
                   <Routes>
-                    <Route path="/" element={<Landing />} />
+                    {/* Landing and Discovery Routes */}
+                    <Route path="/landing" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
+                    
+                    {/* Dashboard-First Experience - Default Route */}
+                    <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     
                     {/* Assessment Routes */}
                     <Route path="/assessment-old" element={<Assessment />} />
@@ -97,6 +101,8 @@ function App() {
                         </ProtectedRoute>
                       }
                     />
+                    
+                    {/* MVP Routes */}
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
