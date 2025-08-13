@@ -170,24 +170,24 @@
 
 @layer components {
   .card-gradient {
-    @apply bg-gradient-to-br from-card via-beacon-50/10 to-brain-health-50/20;
+    @apply bg-gradient-to-br from-card via-slate-50/10 to-brain-health-50/20;
   }
   
   .beacon-card {
-    @apply rounded-2xl border-brain-health-200/60 p-6 shadow-sm transition-all hover:shadow-md bg-gradient-to-br from-white via-beacon-50/10 to-brain-health-50/15;
+    @apply rounded-2xl border-brain-health-200/60 p-6 shadow-sm transition-all hover:shadow-md bg-gradient-to-br from-white via-slate-50/10 to-brain-health-50/15;
   }
   
   .nav-item {
-    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-foreground transition-all hover:bg-gradient-to-r hover:from-beacon-50/30 hover:via-clarity-teal-50/20 hover:to-brain-health-50/25 hover:text-brain-health-700;
+    @apply flex items-center gap-2 rounded-lg px-3 py-2 text-foreground transition-all hover:bg-gradient-to-r hover:from-slate-50/30 hover:via-clarity-teal-50/20 hover:to-brain-health-50/25 hover:text-brain-health-700;
   }
   
   .nav-item-active {
-    @apply bg-gradient-to-r from-beacon-100/40 via-clarity-teal-100/30 to-brain-health-100/35 text-brain-health-700 font-medium;
+    @apply bg-gradient-to-r from-slate-100/40 via-clarity-teal-100/30 to-brain-health-100/35 text-brain-health-700 font-medium;
   }
   
-  /* Professional therapeutic UI elements - beacon-brain-health-teal dominant with tiny emerald therapeutic touches */
+  /* Professional therapeutic UI elements - brain-health-teal dominant with tiny emerald therapeutic touches */
   .premium-card {
-    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background via-beacon-50/8 to-brain-health-50/12 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
+    @apply rounded-xl border border-border/50 bg-gradient-to-br from-background via-slate-50/8 to-brain-health-50/12 shadow-sm backdrop-blur-sm transition-all hover:shadow-md;
   }
   
   .glass-card {
@@ -195,50 +195,50 @@
   }
   
   .premium-button {
-    @apply bg-gradient-to-r from-beacon-500/90 via-brain-health-500/90 to-clarity-teal-500/80 text-white font-medium shadow-sm hover:shadow transition-all;
+    @apply bg-gradient-to-r from-brain-health-500/90 via-clarity-teal-500/90 to-memory-emerald-500/80 text-white font-medium shadow-sm hover:shadow transition-all;
   }
   
   .premium-input {
-    @apply border-0 bg-gradient-to-br from-beacon-50/20 via-clarity-teal-50/15 to-brain-health-50/18 focus:ring-2 focus:ring-brain-health-400/40 shadow-inner;
+    @apply border-0 bg-gradient-to-br from-slate-50/20 via-clarity-teal-50/15 to-brain-health-50/18 focus:ring-2 focus:ring-brain-health-400/40 shadow-inner;
   }
 
-  /* Professional therapeutic color combinations - beacon-brain-health-teal dominant with tiny emerald healing touches */
+  /* Professional therapeutic color combinations - brain-health-teal dominant with tiny emerald healing touches */
   .healing-gradient {
-    @apply bg-gradient-to-r from-beacon-50/40 via-clarity-teal-50/35 via-background to-brain-health-50/30;
+    @apply bg-gradient-to-r from-slate-50/40 via-clarity-teal-50/35 via-background to-brain-health-50/30;
   }
 
   .focus-gradient {
-    @apply bg-gradient-to-r from-beacon-50/50 via-clarity-teal-50/40 via-clarity-teal-50/45 to-brain-health-50/35;
+    @apply bg-gradient-to-r from-slate-50/50 via-clarity-teal-50/40 via-clarity-teal-50/45 to-brain-health-50/35;
   }
 
   .calm-gradient {
-    @apply bg-gradient-to-br from-beacon-50/30 via-clarity-teal-50/25 to-clarity-teal-50/28;
+    @apply bg-gradient-to-br from-slate-50/30 via-clarity-teal-50/25 to-clarity-teal-50/28;
   }
 
-  /* Professional therapeutic accent colors - beacon-brain-health-teal dominant with tiny emerald therapeutic touches */
+  /* Professional therapeutic accent colors - brain-health-teal dominant with tiny emerald therapeutic touches */
   .therapeutic-accent {
-    @apply bg-gradient-to-r from-beacon-600 via-brain-health-600 to-brain-health-600 bg-clip-text text-transparent font-medium;
+    @apply bg-gradient-to-r from-brain-health-600 via-clarity-teal-600 to-memory-emerald-600 bg-clip-text text-transparent font-medium;
   }
 
   .healing-accent {
-    @apply bg-gradient-to-r from-beacon-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent font-medium;
+    @apply bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent font-medium;
   }
 
   .clarity-accent {
-    @apply bg-gradient-to-r from-clarity-teal-600 via-brain-health-600 to-beacon-600 bg-clip-text text-transparent font-medium;
+    @apply bg-gradient-to-r from-clarity-teal-600 via-brain-health-600 to-memory-emerald-600 bg-clip-text text-transparent font-medium;
   }
 
-  /* Brain health specific gradients - beacon-brain-health-teal dominant */
+  /* Brain health specific gradients - brain-health-teal dominant */
   .brain-wellness-gradient {
-    @apply bg-gradient-to-r from-beacon-500/90 via-brain-health-500/90 to-clarity-teal-500/80;
+    @apply bg-gradient-to-r from-brain-health-500/90 via-clarity-teal-500/90 to-memory-emerald-500/80;
   }
 
   .memory-enhancement-gradient {
-    @apply bg-gradient-to-br from-beacon-400/60 via-brain-health-400/70 to-clarity-teal-400/60;
+    @apply bg-gradient-to-br from-brain-health-400/60 via-clarity-teal-400/70 to-memory-emerald-400/60;
   }
 
   .cognitive-focus-gradient {
-    @apply bg-gradient-to-r from-beacon-500/80 via-brain-health-500/75 to-clarity-teal-500/70;
+    @apply bg-gradient-to-r from-brain-health-500/80 via-clarity-teal-500/75 to-memory-emerald-500/70;
   }
 
   /* Brain-Health Calendar Enhancements */
