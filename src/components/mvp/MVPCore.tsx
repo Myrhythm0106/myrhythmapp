@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Brain, Crown, Heart, Search, Shield, Sparkles, Star, Users, Zap, CheckCircle, Clock, Target, Calendar, BookOpen, Award, TrendingUp, Activity } from 'lucide-react';
+import { Brain, Crown, Heart, Search, Shield, Sparkles, Star, Users, Zap, CheckCircle, Clock, Target, Calendar, BookOpen, Award, TrendingUp, Activity, ArrowRight } from 'lucide-react';
 import { FounderStorySection } from '@/components/memory-first/sections/FounderStorySection';
 import { YourRhythmSection } from '@/components/founders-story/YourRhythmSection';
 import { PainPointImageCard } from './PainPointImageCard';
@@ -159,8 +159,8 @@ export function MVPCore() {
             <div className="grid md:grid-cols-3 gap-6 mt-12">
               <PainPointImageCard
                 title="Forgetting important conversations?"
-                imageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop&crop=face"
-                imageAlt="Person looking concerned about memory loss during conversation"
+                imageUrl="https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=500&h=300&fit=crop"
+                imageAlt="Person with hand to forehead looking frustrated about memory loss"
                 description="Missing precious moments and connections"
               />
               <PainPointImageCard
@@ -171,10 +171,23 @@ export function MVPCore() {
               />
               <PainPointImageCard
                 title="Struggling to stay organized?"
-                imageUrl="https://images.unsplash.com/photo-1606092195730-5d7b9af1efc5?w=500&h=300&fit=crop"
-                imageAlt="Disorganized workspace showing difficulty with organization"
+                imageUrl="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500&h=300&fit=crop"
+                imageAlt="Cluttered desk with scattered papers showing disorganization"
                 description="Losing track of what matters most"
               />
+            </div>
+
+            {/* Memory-First Design Highlight */}
+            <div className="mt-8 mb-4 max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-memory-emerald-50/80 via-brain-health-50/60 to-clarity-teal-50/80 border border-memory-emerald-200/50 rounded-2xl p-6 text-center">
+                <Badge className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white border-0 mb-3">
+                  <Brain className="h-4 w-4 mr-2" />
+                  Memory-First Design
+                </Badge>
+                <p className="text-brain-health-800 font-medium">
+                  The Only App Built <span className="font-bold">BY</span> and <span className="font-bold">FOR</span> People with Memory Challenges
+                </p>
+              </div>
             </div>
 
             <div className="flex flex-col items-center space-y-6 mt-8">
@@ -186,7 +199,11 @@ export function MVPCore() {
                   Your Rhythm
                 </p>
               </div>
-              <Button size="lg" className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                onClick={() => window.location.href = '/dashboard'}
+              >
                 <Sparkles className="h-5 w-5 mr-2" />
                 Start Your Journey
               </Button>
@@ -195,11 +212,103 @@ export function MVPCore() {
         </div>
       </div>
 
-      {/* Core Features Section */}
+      {/* Core Solution Features Section */}
+      <section className="py-16 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
+        <div className="container mx-auto text-center">
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
+              Three Core Solutions for Your Journey
+            </h2>
+            <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
+              Designed specifically for cognitive wellness and memory empowerment
+            </p>
+          </div>
+
+          {/* Solution Features Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mb-16 px-6">
+            {/* Feature 1: Capture */}
+            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-memory-emerald-50/50 border-memory-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 flex items-center justify-center">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-brain-health-900">
+                  Capture - Your Memory Bridge
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <p className="text-brain-health-700 mb-6">
+                  Never lose precious moments. Intelligent capture system for conversations, appointments, and memories.
+                </p>
+                <Button 
+                  className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white"
+                  onClick={() => window.location.href = '/memory-bridge'}
+                >
+                  Explore Capture
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </CardContent>
+              <div className="absolute inset-0 bg-gradient-to-br from-memory-emerald-500/10 to-brain-health-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </Card>
+
+            {/* Feature 2: MyRhythm Calendar */}
+            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-brain-health-50/50 border-brain-health-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 flex items-center justify-center">
+                  <Calendar className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-brain-health-900">
+                  MyRhythm Calendar - Smart Organization
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <p className="text-brain-health-700 mb-6">
+                  Transform overwhelm into organized action. Adapts to your energy and cognitive patterns.
+                </p>
+                <Button 
+                  className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white"
+                  onClick={() => window.location.href = '/calendar'}
+                >
+                  Explore Calendar
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </CardContent>
+              <div className="absolute inset-0 bg-gradient-to-br from-brain-health-500/10 to-clarity-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </Card>
+
+            {/* Feature 3: Memory Bank & Gratitude */}
+            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-clarity-teal-50/50 border-clarity-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 flex items-center justify-center">
+                  <Heart className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-brain-health-900">
+                  Memory Bank & Gratitude - Confidence Builder
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <p className="text-brain-health-700 mb-6">
+                  Build unshakeable confidence. Track progress, store wins, cultivate gratitude.
+                </p>
+                <Button 
+                  className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white"
+                  onClick={() => window.location.href = '/gratitude'}
+                >
+                  Explore Gratitude
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </CardContent>
+              <div className="absolute inset-0 bg-gradient-to-br from-clarity-teal-500/10 to-sunrise-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* All Features Section */}
       <section className="py-16">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold text-brain-health-900 mb-8">
-            Core Features to Supercharge Your Mind
+            All Features to Supercharge Your Mind
           </h2>
 
           {/* Search and Filter */}
@@ -265,7 +374,10 @@ export function MVPCore() {
         <div className="container mx-auto text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Ready to Transform Your Cognitive Wellness?</h2>
           <p className="text-gray-600 mb-6">Start your personalized journey with MyRhythm today.</p>
-          <Button className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg">
+          <Button 
+            className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg"
+            onClick={() => window.location.href = '/dashboard'}
+          >
             Get Started Now
           </Button>
         </div>

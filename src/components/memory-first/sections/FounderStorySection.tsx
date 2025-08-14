@@ -72,15 +72,15 @@ export function FounderStorySection() {
                 Why This App Is Different from Anything Else:
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Brain className="h-4 w-4 text-purple-600" />
-                    <span className="text-sm font-medium">Memory-First Design</span>
-                  </div>
-                  <p className="text-sm text-purple-700 pl-6">
-                    Every feature tested by people with actual memory challenges
-                  </p>
-                </div>
+                 <div className="space-y-2">
+                   <div className="flex items-center gap-2">
+                     <Brain className="h-4 w-4 text-purple-600" />
+                     <span className="text-sm font-medium">🧠 Memory-First Design</span>
+                   </div>
+                   <p className="text-sm text-purple-700 pl-6">
+                     <strong>The Only App Built BY and FOR People with Memory Challenges</strong> - Every feature tested by real survivors
+                   </p>
+                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-purple-600" />

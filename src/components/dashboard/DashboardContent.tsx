@@ -157,13 +157,13 @@ export function DashboardContent() {
       
       {/* Role-Specific Welcome Message */}
       {userData.userType && (
-        <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+        <Card className="bg-gradient-to-r from-memory-emerald-50 to-brain-health-50 border-brain-health-200">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
               <div className="text-2xl">{roleWelcome.icon}</div>
               <div>
-                <h3 className="font-semibold text-purple-800">{roleWelcome.title}</h3>
-                <p className="text-sm text-purple-700">{roleWelcome.message}</p>
+                <h3 className="font-semibold text-brain-health-800">{roleWelcome.title}</h3>
+                <p className="text-sm text-brain-health-700">{roleWelcome.message}</p>
               </div>
             </div>
           </CardContent>
@@ -175,22 +175,22 @@ export function DashboardContent() {
       
       {/* Progress & Unlock Status */}
       {metrics.engagementLevel !== 'advanced' && (
-        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+        <Card className="bg-gradient-to-r from-brain-health-50 to-clarity-teal-50 border-brain-health-200">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-blue-600" />
-                  <span className="font-medium text-blue-800">Your Progress</span>
+                  <Zap className="h-5 w-5 text-brain-health-600" />
+                  <span className="font-medium text-brain-health-800">Your Progress</span>
                 </div>
-                <Badge className="bg-blue-100 text-blue-700">
+                <Badge className="bg-brain-health-100 text-brain-health-700">
                   {metrics.readinessScore}/100 points
                 </Badge>
               </div>
               
               {nextUnlock && (
                 <div className="text-right">
-                  <div className="flex items-center gap-2 text-sm text-blue-600">
+                  <div className="flex items-center gap-2 text-sm text-brain-health-600">
                     <Target className="h-4 w-4" />
                     <span>Next: {nextUnlock.description}</span>
                   </div>
@@ -198,9 +198,9 @@ export function DashboardContent() {
               )}
             </div>
             
-            <div className="w-full bg-blue-200 rounded-full h-2 mt-3">
+            <div className="w-full bg-brain-health-200 rounded-full h-2 mt-3">
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${metrics.readinessScore}%` }}
               />
             </div>
