@@ -22,7 +22,7 @@ export function QuickActionZone() {
   const quickActions = [
     {
       id: "calendar",
-      title: "Today's Actions",
+      title: "Daily Planning",
       description: "Plan & track your day",
       icon: Calendar,
       color: "blue",
@@ -49,7 +49,7 @@ export function QuickActionZone() {
     },
     {
       id: "gratitude",
-      title: "Gratitude",
+      title: "Daily Gratitude",
       description: "Daily reflection",
       icon: Heart,
       color: "rose",
@@ -57,22 +57,22 @@ export function QuickActionZone() {
       badge: "Today's entry"
     },
     {
-      id: "decisions",
-      title: "Decision Journal",
-      description: "Log decision moments",
+      id: "capture",
+      title: "Capture",
+      description: "Never forget anything",
       icon: FileText,
       color: "indigo",
-      action: () => navigate("/decisions"),
-      badge: "Capture wisdom"
+      action: () => navigate("/memory-bridge"),
+      badge: "Instant save"
     },
     {
-      id: "analytics",
-      title: "Analytics",
-      description: "View your progress",
+      id: "memory-bank",
+      title: "Memory Bank",
+      description: "Store your wins",
       icon: TrendingUp,
       color: "green",
-      action: () => navigate("/analytics"),
-      badge: "New insights"
+      action: () => navigate("/gratitude"),
+      badge: "Build confidence"
     },
     {
       id: "quick-add",

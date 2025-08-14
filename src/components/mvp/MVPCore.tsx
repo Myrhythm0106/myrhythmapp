@@ -159,19 +159,19 @@ export function MVPCore() {
             <div className="grid md:grid-cols-3 gap-6 mt-12">
               <PainPointImageCard
                 title="Forgetting important conversations?"
-                imageUrl="https://images.unsplash.com/photo-1582053433976-25c00369fc93?w=500&h=300&fit=crop"
+                imageUrl="/lovable-uploads/a723e44e-7594-46b3-bf08-21e3654851e1.png"
                 imageAlt="Person with hand to forehead looking frustrated about memory loss"
                 description="Missing precious moments and connections"
               />
               <PainPointImageCard
                 title="Feeling overwhelmed by simple tasks?"
-                imageUrl="https://images.unsplash.com/photo-1584824486509-112e4181ff6b?w=500&h=300&fit=crop"
+                imageUrl="/lovable-uploads/289df1d5-0f58-44ba-9253-7c73206ce0f7.png"
                 imageAlt="Person feeling overwhelmed by everyday tasks and responsibilities"
                 description="When everyday activities feel impossible"
               />
               <PainPointImageCard
                 title="Struggling to stay organized?"
-                imageUrl="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500&h=300&fit=crop"
+                imageUrl="/lovable-uploads/50ca03a0-e692-4e72-b443-bd020a6ae7a7.png"
                 imageAlt="Cluttered desk with scattered papers showing disorganization"
                 description="Losing track of what matters most"
               />
@@ -202,7 +202,7 @@ export function MVPCore() {
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
-                onClick={() => window.location.href = '/dashboard'}
+                onClick={() => window.location.href = '/auth'}
               >
                 <Sparkles className="h-5 w-5 mr-2" />
                 Start Your Journey
@@ -376,7 +376,7 @@ export function MVPCore() {
           <p className="text-gray-600 mb-6">Start your personalized journey with MyRhythm today.</p>
           <Button 
             className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg"
-            onClick={() => window.location.href = '/dashboard'}
+            onClick={() => window.location.href = '/auth'}
           >
             Get Started Now
           </Button>

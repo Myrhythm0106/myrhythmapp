@@ -79,7 +79,7 @@ export function FoundersMemoryStoryContent() {
         </Button>
 
         <div className="text-center space-y-4">
-          <Badge className="bg-purple-600 text-white">
+          <Badge className="bg-gradient-to-r from-brain-health-500 to-memory-emerald-500 text-white border-0">
             <Brain className="h-3 w-3 mr-1" />
             Founder's Full Story
           </Badge>
@@ -99,11 +99,11 @@ export function FoundersMemoryStoryContent() {
       {/* Main Content */}
       <main className="accessibility-text space-y-8">
         {/* Personal Introduction */}
-        <Card className="border-l-4 border-l-purple-300">
+        <Card className="border-l-4 border-l-brain-health-300 bg-gradient-to-r from-memory-emerald-50/60 via-brain-health-50/60 to-clarity-teal-50/60">
         <CardContent className="p-8">
           <div className="flex items-start gap-6">
-            <div className="bg-purple-100 p-4 rounded-full">
-              <Brain className="h-12 w-12 text-purple-600" />
+            <div className="bg-gradient-to-r from-brain-health-100 to-memory-emerald-100 p-4 rounded-full">
+              <Brain className="h-12 w-12 text-brain-health-600" />
             </div>
             <div className="space-y-4">
               <h2 className="text-2xl font-semibold">Bella's Personal Message</h2>
@@ -127,18 +127,18 @@ export function FoundersMemoryStoryContent() {
               <CardContent className="p-6">
                 <div className="flex items-start gap-6">
                   <div className="flex flex-col items-center">
-                    <div className="bg-purple-100 p-3 rounded-full">
-                      <event.icon className="h-6 w-6 text-purple-600" />
+                    <div className="bg-gradient-to-r from-brain-health-100 to-memory-emerald-100 p-3 rounded-full">
+                      <event.icon className="h-6 w-6 text-brain-health-600" />
                     </div>
                     {index < timeline.length - 1 && (
-                      <div className="w-px h-16 bg-purple-200 mt-4" />
+                      <div className="w-px h-16 bg-gradient-to-b from-brain-health-200 to-memory-emerald-200 mt-4" />
                     )}
                   </div>
                   
                   <div className="flex-1 space-y-3">
                     <div>
                       <h3 className="text-xl font-semibold">{event.title}</h3>
-                      <Badge variant="outline" className="text-purple-600 border-purple-300">
+                      <Badge variant="outline" className="text-brain-health-600 border-brain-health-300 bg-brain-health-50/50">
                         {event.date}
                       </Badge>
                     </div>
@@ -154,44 +154,44 @@ export function FoundersMemoryStoryContent() {
       </div>
 
       {/* What Makes This Different */}
-      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+      <Card className="bg-gradient-to-r from-memory-emerald-50/60 via-brain-health-50/60 to-clarity-teal-50/60 border-brain-health-200">
         <CardContent className="p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-center">
+          <h2 className="text-2xl font-bold text-center text-brain-health-800">
             Why MyRhythm Is Different from Every Other App
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h3 className="font-semibold text-purple-800">Built by Lived Experience</h3>
+              <h3 className="font-semibold text-brain-health-800">Built by Lived Experience</h3>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-purple-500 mt-2" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-brain-health-500 mt-2" />
                   <span>Every feature tested by someone with actual memory challenges</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-purple-500 mt-2" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-brain-health-500 mt-2" />
                   <span>Designed for brains that work differently, not broken brains</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-purple-500 mt-2" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-brain-health-500 mt-2" />
                   <span>Founder uses the app daily for her own recovery</span>
                 </li>
               </ul>
             </div>
             
             <div className="space-y-4">
-              <h3 className="font-semibold text-purple-800">Memory-First Philosophy</h3>
+              <h3 className="font-semibold text-brain-health-800">Memory-First Philosophy</h3>
               <ul className="space-y-2 text-sm">
                 <li className="flex items-start gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-purple-500 mt-2" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-brain-health-500 mt-2" />
                   <span>Visual cues over complex text instructions</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-purple-500 mt-2" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-brain-health-500 mt-2" />
                   <span>Family integration that preserves independence</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <div className="h-1.5 w-1.5 rounded-full bg-purple-500 mt-2" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-brain-health-500 mt-2" />
                   <span>Progress tracking that celebrates small wins</span>
                 </li>
               </ul>
@@ -201,9 +201,9 @@ export function FoundersMemoryStoryContent() {
       </Card>
 
       {/* Current Mission */}
-      <Card className="border-l-4 border-l-green-300">
+      <Card className="border-l-4 border-l-memory-emerald-300 bg-gradient-to-r from-memory-emerald-50/40 to-clarity-teal-50/40">
         <CardContent className="p-8 space-y-6">
-          <h2 className="text-2xl font-bold">Our Mission Today</h2>
+          <h2 className="text-2xl font-bold text-brain-health-800">Our Mission Today</h2>
           
           <div className="space-y-4">
             <p className="text-lg text-muted-foreground leading-relaxed">
@@ -213,30 +213,30 @@ export function FoundersMemoryStoryContent() {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center space-y-2">
-                <div className="bg-green-100 p-4 rounded-full w-fit mx-auto">
-                  <Users className="h-8 w-8 text-green-600" />
+                <div className="bg-gradient-to-r from-memory-emerald-100 to-brain-health-100 p-4 rounded-full w-fit mx-auto">
+                  <Users className="h-8 w-8 text-memory-emerald-600" />
                 </div>
-                <h3 className="font-semibold">Community Building</h3>
+                <h3 className="font-semibold text-brain-health-800">Community Building</h3>
                 <p className="text-sm text-muted-foreground">
                   Creating safe spaces for memory-challenged individuals and families
                 </p>
               </div>
               
               <div className="text-center space-y-2">
-                <div className="bg-green-100 p-4 rounded-full w-fit mx-auto">
-                  <Award className="h-8 w-8 text-green-600" />
+                <div className="bg-gradient-to-r from-brain-health-100 to-clarity-teal-100 p-4 rounded-full w-fit mx-auto">
+                  <Award className="h-8 w-8 text-brain-health-600" />
                 </div>
-                <h3 className="font-semibold">Clinical Integration</h3>
+                <h3 className="font-semibold text-brain-health-800">Clinical Integration</h3>
                 <p className="text-sm text-muted-foreground">
                   Working with healthcare providers to improve patient outcomes
                 </p>
               </div>
               
               <div className="text-center space-y-2">
-                <div className="bg-green-100 p-4 rounded-full w-fit mx-auto">
-                  <Sparkles className="h-8 w-8 text-green-600" />
+                <div className="bg-gradient-to-r from-clarity-teal-100 to-sunrise-amber-100 p-4 rounded-full w-fit mx-auto">
+                  <Sparkles className="h-8 w-8 text-clarity-teal-600" />
                 </div>
-                <h3 className="font-semibold">Hope Restoration</h3>
+                <h3 className="font-semibold text-brain-health-800">Hope Restoration</h3>
                 <p className="text-sm text-muted-foreground">
                   Proving that memory challenges don't define your potential
                 </p>
@@ -247,7 +247,7 @@ export function FoundersMemoryStoryContent() {
       </Card>
 
       {/* Personal Invitation */}
-      <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <Card className="bg-gradient-to-r from-brain-health-600 via-memory-emerald-600 to-clarity-teal-600 text-white">
         <CardContent className="p-8 text-center space-y-6">
           <h2 className="text-3xl font-bold">
             Join Me on This Journey
@@ -261,8 +261,8 @@ export function FoundersMemoryStoryContent() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
             <Button 
               size="lg" 
-              onClick={() => navigate("/onboarding")}
-              className="bg-white text-primary hover:bg-white/90 text-lg px-8 py-6"
+              onClick={() => navigate("/auth")}
+              className="bg-white text-brain-health-600 hover:bg-white/90 text-lg px-8 py-6 font-semibold"
             >
               Start My Memory-First Journey
             </Button>

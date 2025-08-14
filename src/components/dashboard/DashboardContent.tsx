@@ -153,7 +153,7 @@ export function DashboardContent() {
       {/* Dashboard-First Welcome Experience */}
       <DashboardWelcome userName={getUserName()} />
 
-      <ReadingProgressBar sections={dashboardSections} />
+      
       
       {/* Role-Specific Welcome Message */}
       {userData.userType && (
