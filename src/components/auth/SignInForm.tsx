@@ -10,9 +10,10 @@ import { PasswordInput } from './PasswordInput';
 
 interface SignInFormProps {
   onForgotPassword?: () => void;
+  onSignInSuccess?: () => void;
 }
 
-export default function SignInForm({ onForgotPassword }: SignInFormProps) {
+export default function SignInForm({ onForgotPassword, onSignInSuccess }: SignInFormProps) {
   const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -50,6 +51,10 @@ export default function SignInForm({ onForgotPassword }: SignInFormProps) {
       console.log('SignInForm: Sign in successful');
       // Clear form on success
       setFormData({ email: '', password: '' });
+      // Call success callback if provided
+      if (onSignInSuccess) {
+        onSignInSuccess();
+      }
     }
     
     setIsLoading(false);

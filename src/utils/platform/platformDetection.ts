@@ -24,7 +24,7 @@ export function isPlatform(platform: PlatformType): boolean {
 }
 
 export function getOnboardingRoute(): string {
-  return isPlatform('mobile') ? '/onboarding' : '/web-onboarding';
+  return '/onboarding';
 }
 
 export function getDashboardRoute(): string {

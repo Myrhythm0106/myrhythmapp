@@ -5,10 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { Brain, Crown, Heart, Search, Shield, Sparkles, Star, Users, Zap, CheckCircle, Clock, Target, Calendar, BookOpen, Award, TrendingUp, Activity, ArrowRight } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Brain, Crown, Heart, Search, Shield, Sparkles, Star, Users, Zap, CheckCircle, Clock, Target, Calendar, BookOpen, Award, TrendingUp, Activity, ArrowRight, LogIn } from 'lucide-react';
 import { FounderStorySection } from '@/components/memory-first/sections/FounderStorySection';
 import { YourRhythmSection } from '@/components/founders-story/YourRhythmSection';
 import { PainPointImageCard } from './PainPointImageCard';
+import { AuthTabs } from '@/components/auth/AuthTabs';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface Feature {
   id: number;
@@ -121,14 +125,64 @@ const features: Feature[] = [
 export function MVPCore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFeatureFilter, setActiveFeatureFilter] = useState('all');
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const filteredFeatures = features.filter(feature =>
     feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleAuthSuccess = () => {
+    setShowLoginModal(false);
+    navigate('/dashboard');
+  };
+
+  const handleGetStarted = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      setShowLoginModal(true);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+      {/* Navigation Header */}
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <Brain className="h-8 w-8 text-memory-emerald-600" />
+              <span className="text-2xl font-bold text-brain-health-900">MyRhythm</span>
+            </div>
+            
+            {/* Navigation Actions */}
+            <div className="flex items-center space-x-4">
+              {user ? (
+                <Button 
+                  onClick={() => navigate('/dashboard')}
+                  className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white"
+                >
+                  Go to Dashboard
+                </Button>
+              ) : (
+                <Button 
+                  variant="ghost" 
+                  className="flex items-center gap-2 hover:bg-memory-emerald-50" 
+                  onClick={() => setShowLoginModal(true)}
+                >
+                  <LogIn className="h-4 w-4" />
+                  Log In
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Empowering Hero Statement */}
       <div className="relative overflow-hidden bg-gradient-to-r from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 border-b border-brain-health-200/50">
         <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald-100/20 via-brain-health-100/20 to-clarity-teal-100/20" />
@@ -202,7 +256,7 @@ export function MVPCore() {
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
-                onClick={() => window.location.href = '/auth'}
+                onClick={handleGetStarted}
               >
                 <Sparkles className="h-5 w-5 mr-2" />
                 Start Your Journey
@@ -242,7 +296,7 @@ export function MVPCore() {
                 </p>
                 <Button 
                   className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white"
-                  onClick={() => window.location.href = '/memory-bridge'}
+                  onClick={handleGetStarted}
                 >
                   Explore Capture
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -267,7 +321,7 @@ export function MVPCore() {
                 </p>
                 <Button 
                   className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white"
-                  onClick={() => window.location.href = '/calendar'}
+                  onClick={handleGetStarted}
                 >
                   Explore Calendar
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -292,7 +346,7 @@ export function MVPCore() {
                 </p>
                 <Button 
                   className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white"
-                  onClick={() => window.location.href = '/gratitude'}
+                  onClick={handleGetStarted}
                 >
                   Explore Gratitude
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -376,12 +430,40 @@ export function MVPCore() {
           <p className="text-gray-600 mb-6">Start your personalized journey with MyRhythm today.</p>
           <Button 
             className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg"
-            onClick={() => window.location.href = '/auth'}
+            onClick={handleGetStarted}
           >
             Get Started Now
           </Button>
         </div>
       </section>
+
+      {/* Login Modal */}
+      <Dialog open={showLoginModal} onOpenChange={setShowLoginModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <div className="w-10 h-10 bg-gradient-to-br from-memory-emerald-500 to-brain-health-500 rounded-full flex items-center justify-center shadow-lg">
+                <Brain className="h-5 w-5 text-white" />
+              </div>
+              <DialogTitle className="text-xl bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 bg-clip-text text-transparent">
+                Welcome to MyRhythm
+              </DialogTitle>
+            </div>
+          </DialogHeader>
+          <AuthTabs 
+            onForgotPassword={() => {
+              setShowLoginModal(false);
+              navigate('/auth');
+            }}
+            onResendVerification={() => {}}
+            onSignInSuccess={handleAuthSuccess}
+            onSignUpSuccess={() => {
+              setShowLoginModal(false);
+              navigate('/onboarding');
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
