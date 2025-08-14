@@ -165,8 +165,8 @@ export function MVPCore() {
               />
               <PainPointImageCard
                 title="Feeling overwhelmed by simple tasks?"
-                imageUrl="/lovable-uploads/790b2a93-b73e-4680-89fe-4bb15957af91.png"
-                imageAlt="Person overwhelmed with head down on desk showing exhaustion and defeat"
+                imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png"
+                imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace"
                 description="When everyday activities feel impossible"
               />
               <PainPointImageCard
