@@ -42,8 +42,13 @@ export function FloatingRegisterButton({
     checkAuthState();
   }, []);
 
-  // Don't show if user is actually authenticated
-  if (!forceShow && (isAuthenticated || isLoading)) {
+  // Don't show if user is actually authenticated (unless forced)
+  if (!forceShow && isAuthenticated) {
+    return null;
+  }
+
+  // Don't show during loading unless forced
+  if (!forceShow && isLoading) {
     return null;
   }
 
@@ -101,7 +106,7 @@ export function FloatingRegisterButton({
         variant={config.buttonVariant}
         className={cn(
           "rounded-full text-base font-medium flex items-center gap-3 hover:scale-105 border-2 border-white/30 backdrop-blur-sm group relative overflow-hidden shadow-lg hover:shadow-purple-300/30 bg-gradient-to-r from-purple-400 via-blue-400 to-teal-400 hover:from-purple-500 hover:via-blue-500 hover:to-teal-500 pulse",
-          isMobile ? "px-6 py-4" : "px-8 py-6"
+          "px-6 py-3"
         )}
       >
         {/* Premium shimmer effect */}

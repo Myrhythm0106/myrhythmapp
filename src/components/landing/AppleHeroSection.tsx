@@ -58,8 +58,30 @@ export function AppleHeroSection() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-purple-50/30 to-brain-health-50/20 relative overflow-hidden">
+      {/* Navigation Header */}
+      <nav className="absolute top-0 left-0 right-0 z-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-brain-health-600 bg-clip-text text-transparent">
+                MyRhythm
+              </h1>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button 
+                onClick={() => navigate("/auth")}
+                variant="outline"
+                className="px-6 py-2 font-medium border-purple-300 text-purple-700 hover:bg-purple-50"
+              >
+                Log In
+              </Button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Content */}
-      <div className="relative z-10 pt-20 pb-32">
+      <div className="relative z-10 pt-32 pb-32">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           {/* Main Hero */}
           <div className="text-center space-y-12 max-w-5xl mx-auto">

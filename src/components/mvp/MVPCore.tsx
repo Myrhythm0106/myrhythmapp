@@ -13,6 +13,8 @@ import { PainPointImageCard } from './PainPointImageCard';
 import { AuthTabs } from '@/components/auth/AuthTabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { SupportCircleFeature } from './SupportCircleFeature';
+import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
 
 interface Feature {
   id: number;
@@ -423,6 +425,9 @@ export function MVPCore() {
       {/* Your Rhythm Section */}
       <YourRhythmSection />
 
+      {/* Support Circle Feature */}
+      <SupportCircleFeature />
+
       {/* Call to Action Footer */}
       <section className="bg-gray-100 py-12">
         <div className="container mx-auto text-center">
@@ -464,6 +469,9 @@ export function MVPCore() {
           />
         </DialogContent>
       </Dialog>
+
+      {/* Persistent Register Button */}
+      <FloatingRegisterButton />
     </div>
   );
 }

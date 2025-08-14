@@ -20,16 +20,19 @@ export function PersonalJourneySection() {
                     <Heart className="h-8 w-8 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent" />
                   </div>
                   <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
-                    How MYRHYTHM Changed My Life
+                    Beyond Survival
                   </h2>
                   <ChevronDown 
                     className={`h-6 w-6 text-purple-600 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
                   />
                 </div>
-                <p className="text-lg text-gray-700 font-semibold">
-                  A personal story of transformation, resilience, and finding unstoppable rhythm after brain aneurysm
+                <p className="text-lg bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent font-bold mb-2">
+                  From tragedy to triumph...
                 </p>
-                <p className="text-sm text-purple-600 mt-2 font-medium">
+                <p className="text-base text-gray-700 font-medium">
+                  Discover how MYRHYTHM transformed despair into unstoppable empowerment after brain aneurysm
+                </p>
+                <p className="text-sm text-purple-600 mt-3 font-medium">
                   Click to read this inspiring journey of triumph →
                 </p>
               </CardContent>
@@ -37,11 +40,11 @@ export function PersonalJourneySection() {
           </CollapsibleTrigger>
           
           <CollapsibleContent>
-            <Card className="mt-4 border-cyan-200">
+            <Card className="mt-4 border-purple-200/60 bg-gradient-to-br from-white via-purple-50/20 to-blue-50/10">
               <CardContent className="p-8 space-y-6">
                 <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6">
-                  <div className="bg-gradient-to-r from-cyan-100 to-teal-100 p-6 rounded-lg border-l-4 border-cyan-400">
-                    <p className="text-lg font-medium text-cyan-900 mb-3">
+                  <div className="bg-gradient-to-r from-purple-100/80 via-blue-100/60 to-teal-100/80 p-6 rounded-lg border-l-4 border-purple-400">
+                    <p className="text-lg font-medium bg-gradient-to-r from-purple-800 via-blue-800 to-teal-800 bg-clip-text text-transparent mb-3">
                       🌟 "When everything I knew about my life changed in an instant, MyRhythm became the bridge between who I was and who I was becoming."
                     </p>
                   </div>
