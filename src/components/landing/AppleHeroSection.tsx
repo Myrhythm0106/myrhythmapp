@@ -71,7 +71,7 @@ export function AppleHeroSection() {
               <Button 
                 onClick={() => navigate("/auth")}
                 variant="outline"
-                className="px-6 py-2 font-medium border-purple-300 text-purple-700 hover:bg-purple-50"
+                className="px-6 py-2 font-medium border-memory-emerald-300 text-memory-emerald-700 hover:bg-memory-emerald-50 hover:border-memory-emerald-400 transition-all duration-300"
               >
                 Log In
               </Button>

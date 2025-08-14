@@ -360,6 +360,9 @@ export function MVPCore() {
         </div>
       </section>
 
+      {/* Floating Register Button - Force show for testing */}
+      <FloatingRegisterButton forceShow={true} variant="trial" />
+
       {/* All Features Section */}
       <section className="py-16">
         <div className="container mx-auto text-center">
