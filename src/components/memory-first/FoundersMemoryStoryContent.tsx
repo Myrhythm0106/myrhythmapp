@@ -12,51 +12,57 @@ export function FoundersMemoryStoryContent() {
   const timeline = [
     {
       title: "The Day Everything Changed",
-      date: "March 15, 2020",
+      date: "April 1st, 2010",
       icon: Brain,
-      content: "At 34, I was at the peak of my career. Sharp memory, quick thinking, managing complex projects effortlessly. Then, during a routine morning, I felt the worst headache of my life. Brain aneurysm. Emergency surgery. Everything I thought I knew about myself was about to change."
+      content: "April Fools' Day—but there was nothing funny about the worst headache of my life. Brain aneurysm rupture. Emergency surgery. Doctors said I'd die. That I'd never work again. That motherhood would wait at least five years. But here's the thing about rock bottom—it gives you a solid foundation to rebuild on."
     },
     {
-      title: "The Fog Descends",
-      date: "Recovery Phase 1",
+      title: "When Faith Became My Anchor",
+      date: "Recovery Phase 1", 
       icon: Heart,
-      content: "Simple words disappeared from my vocabulary. I'd forget conversations minutes after having them. My husband David became my external brain—tracking medications, appointments, even reminding me to eat. Our home turned into a sticky note maze, and both of us were drowning."
+      content: "When words disappeared and memories vanished minutes after making them, I had two choices: despair or lean into something bigger than myself. As a believer, I knew God wasn't finished with my story. In my darkest moments, His presence became my unshakeable anchor. Faith didn't fix my brain—it gave me strength to rebuild."
     },
     {
-      title: "The Breaking Point",
-      date: "6 Months Post-Surgery",
+      title: "Aaron: My Unshakeable Support",
+      date: "Early Recovery",
       icon: Users,
-      content: "David was burning out. I felt like a burden. Our relationship was strained to the breaking point. I tried every app, every system—but they all assumed I had normal memory function. The tools designed to help me only made me feel more broken."
+      content: "Aaron became my external brain—tracking medications, appointments, even reminding me to eat. Our home turned into a sticky note maze. He was burning out, and I felt like a burden. But Aaron never gave up on us. His unwavering love and practical support became the bedrock of my recovery. Together, we learned that love adapts."
     },
     {
-      title: "The First Breakthrough",
-      date: "8 Months Post-Surgery",
+      title: "Friends Who Spoke Life",
+      date: "6 Months Post-Surgery",
       icon: Lightbulb,
-      content: "In occupational therapy, I met Sarah, another aneurysm survivor. She shared a simple insight: 'Stop trying to remember everything. Start building systems that remember for you.' That night, David and I sketched the first version of what would become MyRhythm."
+      content: "When I wanted to quit, dear friends spoke truth over me: 'Bella, this isn't the end of your story—it's a plot twist.' 'Your brain may be different, but your heart is the same.' 'Stop trying to go back—move forward.' In occupational therapy, Sarah, another survivor, said: 'Stop trying to remember everything. Start building systems that remember for you.'"
     },
     {
-      title: "Building for Our Reality",
-      date: "Year 1-2",
+      title: "#IChoose to Rise",
+      date: "8 Months Post-Surgery",
       icon: Target,
-      content: "We didn't build an app first—we built a life system. Visual cues instead of text lists. Family integration without dependency. Gentle progress tracking that celebrated forgetting to take vitamins but remembering to call mom. Every feature tested on our own daily struggles."
+      content: "This became my daily declaration: #IChoose to rise. Not because it was easy, but because giving up wasn't an option. #IChoose hope over despair. #IChoose growth over stagnation. #IChoose to believe my best days weren't behind me. That night, Aaron and I sketched the first version of what would become MyRhythm."
     },
     {
-      title: "The Community Emerges", 
+      title: "Building Our Rhythm",
+      date: "Year 1-2",
+      icon: Sparkles,
+      content: "We didn't build an app first—we built a life system that honored how my brain worked now. Visual cues instead of complex text. Family integration without dependency. Progress tracking that celebrated forgetting vitamins but remembering to call mom. Every feature battle-tested on our daily reality."
+    },
+    {
+      title: "The Movement Grows", 
       date: "Year 2-3",
       icon: Users,
-      content: "Word spread in brain injury support groups. Other survivors and families wanted what we'd built. Each person we helped taught us something new about memory challenges. The app evolved from our personal tool into a community-driven solution."
+      content: "Word spread in brain injury support groups. Other survivors and families wanted what we'd built. Each person we helped taught us something new. The app evolved from our personal survival tool into a community-driven solution. #IChoose was becoming more than my tagline—it was becoming our rallying cry."
     },
     {
-      title: "Clinical Validation",
+      title: "Clinical Recognition",
       date: "Year 3-4",
       icon: Award,
-      content: "Neurologists began noticing patterns in their patients who used our system. Dr. Martinez at the Brain Injury Center started recommending it. We formalized our approach into the 8-Step Memory-First Framework, backed by clinical observation and real-world results."
+      content: "Neurologists began recommending our approach. Dr. Martinez at the Brain Injury Center started seeing remarkable patterns in patients using our system. We formalized the 8-Step Memory-First Framework—not just clinical theory, but lived experience validated by medical professionals."
     },
     {
-      title: "Today: Living Proof",
+      title: "Today: Thriving Beyond Survival",
       date: "Present Day",
       icon: Sparkles,
-      content: "My memory will never be what it was, but my life is richer than ever. David and I aren't patient and caregiver—we're partners in a shared rhythm. I use this app daily, not as a crutch, but as a tool that honors how my brain works now. Every user's success reminds me why we started this journey."
+      content: "My memory will never be what it was, but my life is richer than I ever imagined. Aaron and I aren't patient and caregiver—we're partners in a rhythm that honors both our strengths. I use this app daily, not as a crutch, but as a tool that celebrates how beautifully different brains can thrive. Every user's success reminds me: #IChoose was the right choice."
     }
   ];
 
@@ -81,17 +87,17 @@ export function FoundersMemoryStoryContent() {
         <div className="text-center space-y-4">
           <Badge className="bg-gradient-to-r from-brain-health-500 to-memory-emerald-500 text-white border-0">
             <Brain className="h-3 w-3 mr-1" />
-            Founder's Full Story
+            Inspirational Speaker & Survivor
           </Badge>
           
-          <h1 className="text-4xl md:text-5xl font-bold">
-            From Brain Aneurysm to<br />
-            Memory-First Pioneer
+          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-brain-health-600 via-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
+            Beyond Survival: How Brain<br />
+            Aneurysm Crisis Sparked a Movement
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            The complete journey of how a life-changing brain injury became the foundation 
-            for the world's first memory-first life empowerment platform.
+            The intimate story of how one woman's darkest moment illuminated a path to empowerment 
+            for thousands navigating memory challenges worldwide.
           </p>
         </div>
       </div>
@@ -106,11 +112,13 @@ export function FoundersMemoryStoryContent() {
               <Brain className="h-12 w-12 text-brain-health-600" />
             </div>
             <div className="space-y-4">
-              <h2 className="text-2xl font-semibold">Bella's Personal Message</h2>
+              <h2 className="text-2xl font-semibold">From Tragedy to Triumph: Why I Share This Story</h2>
               <p className="text-muted-foreground leading-relaxed">
-                "I'm sharing this story not for sympathy, but for hope. If you're reading this because you 
-                or someone you love is struggling with memory challenges, I want you to know: your best days 
-                are not behind you. They're different than you planned, but they can be beautiful."
+                "I'm not sharing this story for sympathy—I'm sharing it because it proves that tragedy doesn't get the final word. 
+                When a brain aneurysm tried to end my story on April Fools' Day 2010, I had two choices: surrender to the prognosis 
+                or fight for something different. With God as my anchor, Aaron as my champion, and friends who spoke life over death, 
+                I chose to thrive. <strong>#IChoose</strong> became more than my personal tagline—it became a movement. If you're 
+                reading this in your own dark moment, know this: your comeback story starts with a choice."
               </p>
             </div>
           </div>
@@ -277,8 +285,8 @@ export function FoundersMemoryStoryContent() {
           </div>
           
           <p className="text-sm opacity-75 italic">
-            "Every person who joins our community reminds me why David and I started this journey. 
-            Your courage to rebuild inspires us to keep building."
+            "Every person who joins our community reminds me why Aaron and I started this journey. 
+            Your courage to rebuild inspires us to keep building. #IChoose to keep fighting for every brain that works differently."
           </p>
         </CardContent>
         </Card>

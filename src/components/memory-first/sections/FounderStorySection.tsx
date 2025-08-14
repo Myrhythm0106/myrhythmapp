@@ -16,9 +16,9 @@ export function FounderStorySection() {
           Built by Someone Who Understands
         </Badge>
         
-        <h2 className="text-3xl md:text-4xl font-bold">
-          From Brain Aneurysm Survivor<br />
-          to Memory-First Pioneer
+        <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-purple-800 bg-clip-text text-transparent">
+          Beyond Survival: How Brain<br />
+          Aneurysm Crisis Sparked a Movement
         </h2>
       </div>
 
@@ -44,24 +44,24 @@ export function FounderStorySection() {
           <CardContent className="md:w-2/3 p-8 space-y-6">
             <div className="space-y-4">
               <h3 className="text-2xl font-semibold text-purple-800">
-                "I Lived Your Frustration. I Found Our Solution."
+                "From Tragedy to Triumph: #IChoose to Thrive"
               </h3>
               
               <div className="space-y-4 text-muted-foreground leading-relaxed">
                 <p>
-                  <strong className="text-foreground">Before my brain aneurysm:</strong> I was a high-performing professional who prided myself on my sharp memory. I remembered everything—birthdays, appointments, conversations from months ago.
+                  <strong className="text-foreground">April Fools' Day 2010:</strong> The worst headache of my life. Brain aneurysm rupture. Doctors said I'd die, never work again, that motherhood would wait five years. But they underestimated the power of choice.
                 </p>
                 
                 <p>
-                  <strong className="text-foreground">After the aneurysm:</strong> Simple words escaped me. I'd forget conversations minutes after having them. Our home became a maze of sticky notes, alarms, and constant anxiety.
+                  <strong className="text-foreground">Rock bottom became my foundation:</strong> When words disappeared and memories vanished, I had God as my anchor, Aaron as my unwavering support, and friends who spoke life over my circumstances. <strong>#IChoose</strong> became my daily declaration.
                 </p>
                 
                 <p>
-                  <strong className="text-foreground">The lowest point:</strong> My husband became my external brain—tracking my medications, reminding me of appointments, essentially living my life for me. We were both exhausted, frustrated, and scared.
+                  <strong className="text-foreground">The turning point:</strong> I stopped trying to get my old brain back and started building systems for the brain I have now. Aaron and I didn't just survive—we created a framework that helps thousands thrive.
                 </p>
                 
                 <p>
-                  <strong className="text-foreground">The breakthrough:</strong> We realized the problem wasn't my broken memory—it was that every tool available assumed I still had perfect recall. We needed something built for brains like mine.
+                  <strong className="text-foreground">Today's reality:</strong> I speak internationally about resilience, coach brain injury survivors, and use MyRhythm daily. My memory may be different, but my impact is greater than ever. Tragedy tried to end my story—instead, it started a movement.
                 </p>
               </div>
             </div>
@@ -114,8 +114,9 @@ export function FounderStorySection() {
             {/* Personal Mission */}
             <div className="border-l-4 border-l-purple-300 pl-6">
               <p className="text-lg italic text-purple-800 leading-relaxed">
-                "My memory may never be what it was, but my life is richer than ever. 
-                If this app can give even one family their rhythm back, every struggle was worth it."
+                "I went from doctors saying I'd never work again to speaking on international stages about resilience. 
+                From being a burden to my husband to being his partner in building a movement. #IChoose proved that 
+                your comeback story starts with a choice. And MyRhythm? It's not just how I survived—it's how I learned to thrive."
               </p>
             </div>
             
@@ -125,7 +126,7 @@ export function FounderStorySection() {
                 className="bg-purple-600 hover:bg-purple-700 flex-1"
                 size="lg"
               >
-                Start My Journey with Bella's Framework
+                #IChoose to Start My Journey
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button 
@@ -134,7 +135,7 @@ export function FounderStorySection() {
                 className="border-purple-300 text-purple-600 hover:bg-purple-50"
                 size="lg"
               >
-                Read Full Story
+                Hear Bella's Full Story
               </Button>
             </div>
           </CardContent>
@@ -159,7 +160,7 @@ export function FounderStorySection() {
           <div>
             <h4 className="font-semibold text-purple-800">Ongoing Commitment</h4>
             <p className="text-sm text-purple-600 mt-1">
-              Bella continues her recovery journey and uses feedback to improve the app
+              Bella speaks internationally and continues using MyRhythm daily in her own journey
             </p>
           </div>
         </div>
