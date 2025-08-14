@@ -171,8 +171,8 @@ export function MVPCore() {
               />
               <PainPointImageCard
                 title="Struggling to stay organized?"
-                imageUrl="/lovable-uploads/50ca03a0-e692-4e72-b443-bd020a6ae7a7.png"
-                imageAlt="Cluttered desk with scattered papers showing disorganization"
+                imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png"
+                imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace"
                 description="Losing track of what matters most"
               />
             </div>
