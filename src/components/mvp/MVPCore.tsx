@@ -159,14 +159,14 @@ export function MVPCore() {
             <div className="grid md:grid-cols-3 gap-6 mt-12">
               <PainPointImageCard
                 title="Forgetting important conversations?"
-                imageUrl="/lovable-uploads/a723e44e-7594-46b3-bf08-21e3654851e1.png"
-                imageAlt="Person with hand to forehead looking frustrated about memory loss"
+                imageUrl="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png"
+                imageAlt="Woman touching her forehead looking thoughtful and concerned about memory issues"
                 description="Missing precious moments and connections"
               />
               <PainPointImageCard
                 title="Feeling overwhelmed by simple tasks?"
-                imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png"
-                imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace"
+                imageUrl="/lovable-uploads/f435bac1-8fc3-474b-add2-1f378bd3ebab.png"
+                imageAlt="Person with head down on desk showing exhaustion and overwhelm"
                 description="When everyday activities feel impossible"
               />
               <PainPointImageCard
