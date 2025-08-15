@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Heart, MoreVertical } from "lucide-react";
 import { Message } from "./types/messageTypes";
+import { XSSProtection } from "@/utils/security/xssProtection";
 
 interface MessageItemProps {
   message: Message;
@@ -66,7 +67,9 @@ export function MessageItem({ message, onLike, onDelete }: MessageItemProps) {
         {isVoiceNote ? (
           <div className="flex flex-col">
             <span className="text-sm mb-2">Voice Note:</span>
-            <div dangerouslySetInnerHTML={{ __html: message.content }} />
+            <div dangerouslySetInnerHTML={{ 
+              __html: XSSProtection.sanitizeAudioContent(message.content) 
+            }} />
           </div>
         ) : (
           <p className={message.type === 'encouragement' ? 'italic text-primary' : ''}>

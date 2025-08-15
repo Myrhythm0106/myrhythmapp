@@ -4,8 +4,8 @@ project_id = "bomjibcivwxbcwfmkrnv"
 enabled = true
 
 [auth.email]
-# Set OTP expiry to 5 minutes (300 seconds) for better security
-otp_expiry = 300
+# Set OTP expiry to 1 minute (60 seconds) for better security
+otp_expiry = 60
 
 [auth.password]
 # Enable password breach detection

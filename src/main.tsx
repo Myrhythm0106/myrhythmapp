@@ -1,6 +1,10 @@
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { SecurityHeaders } from './utils/security/securityHeaders'
+
+// Apply security headers early
+SecurityHeaders.applySecurityHeaders();
 
 console.log('🚀 main.tsx: Starting app render');
 const rootElement = document.getElementById("root");
