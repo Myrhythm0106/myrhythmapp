@@ -432,7 +432,7 @@ export function MemoryBridgeRecorder({ onRecordingComplete, onShowResults }: Mem
                 className="bg-gradient-to-r from-primary to-primary-glow text-white shadow-elegant hover:shadow-glow transition-all duration-300 flex items-center gap-2"
               >
                 <Mic className="h-5 w-5" />
-                Start Recording
+                Quick Recording
               </Button>
               
               <MeetingSetupDialog 
