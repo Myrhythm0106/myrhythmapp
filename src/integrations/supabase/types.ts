@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -1622,17 +1622,17 @@ export type Database = {
         Returns: undefined
       }
       create_trial_subscription: {
-        Args: { user_uuid: string; stripe_customer_id?: string }
+        Args: { stripe_customer_id?: string; user_uuid: string }
         Returns: string
       }
       generate_accountability_alert: {
         Args: {
-          p_user_id: string
           p_alert_type: string
-          p_related_id?: string
-          p_title?: string
           p_message?: string
+          p_related_id?: string
           p_severity?: string
+          p_title?: string
+          p_user_id: string
         }
         Returns: string
       }
@@ -1650,20 +1650,20 @@ export type Database = {
       }
       log_security_event: {
         Args: {
-          p_user_id: string
-          p_event_type: string
           p_event_data?: Json
+          p_event_type: string
           p_ip_address?: unknown
           p_user_agent?: string
+          p_user_id: string
         }
         Returns: string
       }
       notify_watchers_of_action_completion: {
         Args: {
           p_action_id: string
-          p_user_id: string
           p_action_title: string
           p_completion_status: string
+          p_user_id: string
         }
         Returns: string
       }
@@ -1680,7 +1680,7 @@ export type Database = {
         Returns: boolean
       }
       verify_backup_code: {
-        Args: { p_user_id: string; p_code: string }
+        Args: { p_code: string; p_user_id: string }
         Returns: boolean
       }
     }
