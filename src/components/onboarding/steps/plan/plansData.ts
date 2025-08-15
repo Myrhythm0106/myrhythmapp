@@ -4,15 +4,16 @@ import { Plan } from "./types";
 
 export const plans: Plan[] = [
   {
-    id: "basic",
-    name: "MyRhythm Align",
-    description: "Foundation for aligning memory, focus, and daily rhythm",
-    price: "£5.99/month",
-    annualPrice: "£57.50/year",
-    monthlySavings: "Save £14.38",
+    id: "starter",
+    name: "MyStarter",
+    description: "Perfect start to build your rhythm with support circle",
+    price: "£7.00/month",
+    annualPrice: "£70.00/year",
+    monthlySavings: "Save £14.00",
     trialDays: 7,
     icon: Shield,
     features: [
+      "✨ 3 Free Support Circle Members",
       "Your LEAP Assessment & Results",
       "Personal Rhythm Discovery",
       "Basic Calendar & Goals",
@@ -23,18 +24,19 @@ export const plans: Plan[] = [
     ]
   },
   {
-    id: "premium",
-    name: "MyRhythm Flow",
-    description: "Complete flow experience with advanced momentum building",
-    price: "£9.99/month",
-    annualPrice: "£95.90/year",
-    monthlySavings: "Save £23.98",
+    id: "stretch",
+    name: "MyStretch",
+    description: "Enhanced experience with advanced momentum building",
+    price: "£7.00/month",
+    annualPrice: "£70.00/year",
+    monthlySavings: "Save £14.00",
     trialDays: 7,
     popular: true,
     icon: Crown,
     highlight: "Most Popular",
     features: [
-      "Everything in MyRhythm Align",
+      "✨ 3 Free Support Circle Members",
+      "Everything in MyStarter",
       "Advanced LEAP Analytics",
       "Personalized Momentum Insights",
       "Priority Customer Support",
@@ -46,24 +48,26 @@ export const plans: Plan[] = [
     ]
   },
   {
-    id: "family",
-    name: "MyRhythm Thrive",
-    description: "Complete family wellness journey to help everyone thrive",
-    price: "£19.99/month",
-    annualPrice: "£191.90/year",
-    monthlySavings: "Save £47.98",
+    id: "leap",
+    name: "MyLeap",
+    description: "Complete family wellness journey with unlimited support",
+    price: "£7.00/month",
+    annualPrice: "£70.00/year",
+    monthlySavings: "Save £14.00",
     trialDays: 7,
     icon: Users,
     features: [
-      "Everything in MyRhythm Flow",
-      "Up to 4 Family Members",
+      "✨ 3 Free Support Circle Members",
+      "Everything in MyStretch",
+      "Up to 6 Family Members",
       "Shared Family Calendar",
       "Caregiver Dashboard Access",
       "Family Progress Tracking",
       "Collaborative Goal Setting",
       "Family Support Resources",
       "Dedicated Family Coach",
-      "Emergency Contact System"
+      "Emergency Contact System",
+      "Unlimited Support Circle Growth"
     ]
   }
 ];

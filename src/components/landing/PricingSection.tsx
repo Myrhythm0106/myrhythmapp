@@ -20,15 +20,16 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           <PlanCard
-            title="MyRhythm Align"
-            description="Foundation for aligning memory, focus, and daily rhythm"
+            title="MyStarter"
+            description="Perfect start with your support circle included"
             price={
               <>
-                <div className="text-3xl font-bold">7 Days Free</div>
-                <div className="text-sm text-muted-foreground">Then £5.99/month</div>
+                <div className="text-3xl font-bold">£7</div>
+                <div className="text-sm text-muted-foreground">Introductory Rate</div>
               </>
             }
             features={[
+              "✨ 3 Free Support Circle Members",
               "Your LEAP Assessment & Results",
               "Personal Rhythm Discovery",
               "Basic Calendar & Goals",
@@ -37,69 +38,70 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "Brain Games & Exercises",
               "Daily Progress Tracking"
             ]}
-            buttonText="Start with Align"
+            buttonText="Start with MyStarter"
             onSelectPlan={onSelectPlan}
           />
 
           <PlanCard
-            title="MyRhythm Flow"
-            description="Complete flow experience with advanced momentum building"
+            title="MyStretch"
+            description="Enhanced experience with connected care network"
             price={
               <>
-                <div className="text-3xl font-bold">7 Days Free</div>
-                <div className="text-sm text-muted-foreground">Then £9.99/month</div>
+                <div className="text-3xl font-bold">£7</div>
+                <div className="text-sm text-muted-foreground">Introductory Rate</div>
               </>
             }
             features={[
-              "Everything in MyRhythm Align",
+              "✨ 3 Free Support Circle Members",
+              "Everything in MyStarter",
               "Advanced LEAP Analytics",
               "Personalized Momentum Insights", 
               "Priority Customer Support",
               "Advanced Calendar Management",
               "Goal Achievement Coaching",
               "Premium Brain Training",
-              "Smart Break Scheduling",
               "Detailed Progress Reports"
             ]}
-            buttonText="Start with Flow"
+            buttonText="Start with MyStretch"
             isPopular={true}
             onSelectPlan={onSelectPlan}
           />
 
           <PlanCard
-            title="MyRhythm Thrive"
-            description="Complete family wellness journey to help everyone thrive"
+            title="MyLeap"
+            description="Complete family wellness with unlimited support"
             price={
               <>
-                <div className="text-3xl font-bold">7 Days Free</div>
-                <div className="text-sm text-muted-foreground">Then £19.99/month</div>
+                <div className="text-3xl font-bold">£7</div>
+                <div className="text-sm text-muted-foreground">Introductory Rate</div>
               </>
             }
             features={[
-              "Everything in MyRhythm Flow",
-              "Up to 4 Family Members",
+              "✨ 3 Free Support Circle Members",
+              "Everything in MyStretch",
+              "Up to 6 Family Members",
               "Shared Family Calendar",
               "Family Time Scheduling",
               "Family Progress Tracking", 
               "Collaborative Goal Setting",
               "Family Support Resources",
               "Dedicated Family Coach",
-              "Emergency Contact System"
+              "Unlimited Support Circle Growth"
             ]}
-            buttonText="Start with Thrive"
+            buttonText="Start with MyLeap"
             buttonVariant="outline"
             onSelectPlan={onSelectPlan}
           />
         </div>
 
-        <div className="text-center bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
-          <h3 className="font-semibold text-blue-900 mb-2">
-            🧠 Your 7-Day MyRhythm Experience
+        <div className="text-center bg-gradient-to-r from-teal-50 to-emerald-50 p-6 rounded-lg border border-teal-200">
+          <h3 className="font-semibold text-teal-900 mb-2">
+            🤝 Connected Care Experience - Starting at £7
           </h3>
-          <p className="text-sm text-blue-800 max-w-3xl mx-auto">
-            Every trial includes: LEAP Assessment & Results • Personal Rhythm Discovery • Memory Enhancement Tools • 
+          <p className="text-sm text-teal-800 max-w-3xl mx-auto">
+            Every plan includes: <strong>3 Free Support Circle Members</strong> • LEAP Assessment & Results • Personal Rhythm Discovery • Memory Enhancement Tools • 
             Goal Setting & Progress Tracking • Brain Training • Community Access • Momentum Building Insights. 
-            <strong>Discover your unique LEAP pattern in just 7 days!</strong>
+            <strong>Build your connected care network from day one!</strong>
           </p>
         </div>
       </div>

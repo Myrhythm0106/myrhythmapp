@@ -27,58 +27,59 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
   const plans = [
     {
       id: 'starter' as const,
-      name: 'Starter',
-      monthlyPrice: 7.99,
-      yearlyPrice: 79.99,
-      description: 'Unlimited recordings & full reports',
+      name: 'MyStarter',
+      monthlyPrice: 7.00,
+      yearlyPrice: 70.00,
+      description: '✨ 3 Free Support Circle Members included',
       icon: Star,
       color: 'text-teal-600',
       gradient: 'from-teal-500 to-emerald-600',
       features: [
+        '✨ 3 Free Support Circle Members',
         'Unlimited Memory Bridge recordings',
         'Full ACT reports with calendar scheduling',
         'Complete cognitive assessments',
-        'Up to 3 support circle members',
         'Progress tracking & insights'
       ]
     },
     {
       id: 'smart_pro' as const,
-      name: 'SMART Pro',
-      monthlyPrice: 14.99,
-      yearlyPrice: 149.99,
-      description: 'AI-powered scheduling optimization',
+      name: 'MyStretch',
+      monthlyPrice: 7.00,
+      yearlyPrice: 70.00,
+      description: 'Enhanced experience with connected care',
       icon: Brain,
       color: 'text-teal-600',
       gradient: 'from-teal-600 to-emerald-700',
       badge: 'Most Popular',
       popular: true,
       features: [
-        'Everything in Starter',
+        '✨ 3 Free Support Circle Members',
+        'Everything in MyStarter',
         'SMART Scheduling Engine',
         'External calendar sync (Google, Apple, Outlook)',
         'Schedule optimization & conflict detection',
         'Advanced progress analytics',
-        'Up to 5 support circle members',
         'Priority support'
       ]
     },
     {
       id: 'family_smart' as const,
-      name: 'Family SMART',
-      monthlyPrice: 24.99,
-      yearlyPrice: 249.99,
-      description: 'Complete family coordination system',
+      name: 'MyLeap',
+      monthlyPrice: 7.00,
+      yearlyPrice: 70.00,
+      description: 'Complete family coordination with unlimited support',
       icon: Users,
       color: 'text-teal-600',
       gradient: 'from-teal-700 to-emerald-800',
       features: [
-        'Everything in SMART Pro',
+        '✨ 3 Free Support Circle Members',
+        'Everything in MyStretch',
         'Up to 6 family member accounts',
         'Shared family calendar & coordination',
         'Family progress dashboard',
         'Care coordination tools',
-        'Unlimited support circle members',
+        'Unlimited Support Circle Growth',
         'Family insights & reports'
       ]
     }

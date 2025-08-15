@@ -1,7 +1,7 @@
 
 import { LucideIcon } from "lucide-react";
 
-export type PlanType = "basic" | "premium" | "family" | "preview";
+export type PlanType = "basic" | "premium" | "family" | "preview" | "starter" | "stretch" | "leap";
 
 export interface Plan {
   id: PlanType;

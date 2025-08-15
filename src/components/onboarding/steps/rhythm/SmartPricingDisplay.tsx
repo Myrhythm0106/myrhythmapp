@@ -25,32 +25,34 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
 
   const plans = [
     {
-      id: 'basic',
-      name: 'MyRhythm Align',
-      price: '£5.99',
+      id: 'starter',
+      name: 'MyStarter',
+      price: '£7.00',
       period: '/month',
-      description: 'Perfect for getting started',
+      description: 'Perfect start with support circle',
       icon: Star,
       gradient: 'from-teal-500 to-emerald-600',
       features: [
-        'Basic assessment results',
+        '✨ 3 Free Support Circle Members',
+        'Complete assessment results',
         'Daily action planning',
         'Progress tracking',
         'Community support'
       ]
     },
     {
-      id: 'premium',
-      name: 'MyRhythm Flow',
-      price: '£9.99',
+      id: 'stretch',
+      name: 'MyStretch',
+      price: '£7.00',
       period: '/month',
-      description: 'Most popular choice',
+      description: 'Enhanced experience with connected care',
       icon: Crown,
       gradient: 'from-teal-600 to-emerald-700',
       badge: 'Recommended',
       popular: true,
       features: [
-        'Complete assessment results',
+        '✨ 3 Free Support Circle Members',
+        'Everything in MyStarter',
         'Personalized action plans',
         'Advanced progress insights',
         'Goal achievement tools',
@@ -59,20 +61,21 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
       ]
     },
     {
-      id: 'family',
-      name: 'MyRhythm Thrive',
-      price: '£19.99',
+      id: 'leap',
+      name: 'MyLeap',
+      price: '£7.00',
       period: '/month',
-      description: 'Perfect for families',
+      description: 'Complete family experience with unlimited support',
       icon: Users,
       gradient: 'from-teal-700 to-emerald-800',
       features: [
-        'Everything in Flow',
+        '✨ 3 Free Support Circle Members',
+        'Everything in MyStretch',
         'Up to 6 family members',
         'Shared family insights',
         'Caregiver coordination',
         'Family progress dashboard',
-        'Premium support'
+        'Unlimited Support Circle Growth'
       ]
     }
   ];
@@ -158,6 +161,7 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
 
           <div className="text-center text-xs text-slate-500 space-y-1 pt-4 border-t border-teal-200">
             <p>• 7-day free trial for all plans • Cancel anytime • No charges during trial</p>
+            <p>• <strong>3 Free Support Circle Members</strong> included in every plan</p>
             <p>• All plans include your complete {getUserTypeDisplay()} assessment results</p>
           </div>
         </CardContent>
