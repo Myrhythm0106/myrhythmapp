@@ -107,7 +107,7 @@ function App() {
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
-                    <Route path="/mvp" element={<ProtectedRoute requireAuth={false}><MVPCorePage /></ProtectedRoute>} />
+                    <Route path="/mvp" element={<MVPCorePage />} />
                     <Route path="/mvp/assessment" element={<ProtectedRoute requireAuth={false}><MVPAssessmentFlowPage /></ProtectedRoute>} />
                     <Route path="/congrats" element={<CongratsPage />} />
                   </Routes>
