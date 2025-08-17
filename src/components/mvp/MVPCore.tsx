@@ -14,7 +14,7 @@ import { AuthTabs } from '@/components/auth/AuthTabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { SupportCircleFeature } from './SupportCircleFeature';
-import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
+
 
 interface Feature {
   id: number;
@@ -261,7 +261,7 @@ export function MVPCore() {
                 onClick={handleGetStarted}
               >
                 <Sparkles className="h-5 w-5 mr-2" />
-                Register Now
+                Start your journey
               </Button>
             </div>
           </div>
@@ -360,8 +360,6 @@ export function MVPCore() {
         </div>
       </section>
 
-      {/* Floating Register Button - Force show for testing */}
-      <FloatingRegisterButton forceShow={true} variant="trial" />
 
       {/* All Features Section */}
       <section className="py-16">
@@ -473,8 +471,6 @@ export function MVPCore() {
         </DialogContent>
       </Dialog>
 
-      {/* Persistent Register Button */}
-      <FloatingRegisterButton />
     </div>
   );
 }
