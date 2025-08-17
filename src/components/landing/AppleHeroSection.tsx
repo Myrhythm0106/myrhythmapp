@@ -111,9 +111,9 @@ export function AppleHeroSection() {
               <Button 
                 onClick={handleGetStarted}
                 size="lg"
-                className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-purple-600 to-brain-health-600 hover:from-purple-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full"
+                className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full"
               >
-                Empower Yourself Today
+                Register Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               
@@ -243,9 +243,9 @@ export function AppleHeroSection() {
               <Button 
                 onClick={handleGetStarted}
                 size="lg"
-                className="px-10 py-5 text-xl font-semibold bg-gradient-to-r from-purple-600 to-brain-health-600 hover:from-purple-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full group"
+                className="px-10 py-5 text-xl font-semibold bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full group"
               >
-                Take Control Today
+                Register Now
                 <Sparkles className="ml-3 h-6 w-6 group-hover:animate-pulse" />
               </Button>
             </div>

@@ -107,7 +107,7 @@ export const OnboardingLayout = ({
   }, [currentStep, hasUnsavedData, onSaveProgress]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50/50 via-purple-50/30 to-teal-50/50 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-memory-emerald-50/30 via-clarity-teal-50/20 to-brain-health-50/20 p-4">
       <div className="w-full max-w-4xl space-y-6">
         {/* Header with Brain Logo */}
         <div className="flex justify-between items-center">
@@ -121,18 +121,25 @@ export const OnboardingLayout = ({
           </Button>
           
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-lg">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-memory-emerald-600 to-brain-health-600 flex items-center justify-center shadow-lg">
               <Brain className="h-7 w-7 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 bg-clip-text text-transparent">
                 MyRhythm
               </h1>
               <p className="text-sm text-muted-foreground">Setup & Personalization</p>
             </div>
           </div>
           
-          <div className="w-20" /> {/* Spacer for balance */}
+          <div className="flex items-center gap-2">
+            <div className="text-right">
+              <p className="text-xs text-muted-foreground">Your Plan</p>
+              <div className="px-2 py-1 bg-gradient-to-r from-memory-emerald-100 to-brain-health-100 text-memory-emerald-700 text-xs font-medium rounded border border-memory-emerald-200">
+                Starter
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Interactive Progress Bar - More Prominent */}
@@ -144,14 +151,14 @@ export const OnboardingLayout = ({
         
         {/* Progress indicator for assessment */}
         {currentStep === 5 && calculatedCompletionPercentage > 0 && (
-          <Card className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+          <Card className="p-3 bg-gradient-to-r from-memory-emerald-50 to-brain-health-50 border-memory-emerald-200">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-blue-700">Assessment Progress</span>
-              <span className="text-blue-600">{calculatedCompletionPercentage}% Complete</span>
+              <span className="font-medium text-memory-emerald-700">Assessment Progress</span>
+              <span className="text-brain-health-600">{calculatedCompletionPercentage}% Complete</span>
             </div>
-            <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
+            <div className="w-full bg-memory-emerald-200 rounded-full h-2 mt-2">
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-500"
+                className="bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 h-2 rounded-full transition-all duration-500"
                 style={{ width: `${calculatedCompletionPercentage}%` }}
               />
             </div>
@@ -187,7 +194,7 @@ export const OnboardingLayout = ({
           <p>✨ You're in complete control of your brain health journey</p>
           <p>Your progress is automatically saved • Navigate freely between completed steps</p>
           {currentStep === 5 && (
-            <p className="text-blue-600 font-medium">
+            <p className="text-brain-health-600 font-medium">
               💾 Assessment responses are auto-saved every 30 seconds
             </p>
           )}

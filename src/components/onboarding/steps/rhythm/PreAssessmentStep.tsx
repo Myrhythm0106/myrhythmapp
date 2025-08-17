@@ -3,8 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Brain, Clock, Target, TrendingUp, ArrowRight, CheckCircle, Sparkles, Gift } from "lucide-react";
+import { Brain, Clock, Target, TrendingUp, ArrowRight, CheckCircle, Sparkles, Gift, SkipForward } from "lucide-react";
 import { UserType } from "@/types/user";
+import { ConsentDialog } from "../../ConsentDialog";
 
 interface PreAssessmentStepProps {
   onComplete: (data: any) => void;
@@ -15,6 +16,8 @@ interface PreAssessmentStepProps {
 export function PreAssessmentStep({ onComplete, onSkipPayment, userType }: PreAssessmentStepProps) {
   const [progress, setProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [showConsentDialog, setShowConsentDialog] = useState(false);
+  const [pendingAction, setPendingAction] = useState<'full' | 'skip' | null>(null);
 
   useEffect(() => {
     // Simulate loading and data processing
@@ -33,19 +36,34 @@ export function PreAssessmentStep({ onComplete, onSkipPayment, userType }: PreAs
   }, []);
 
   const handleContinue = () => {
-    // Proceed to payment gate then assessment
-    const assessmentData = {
-      userType: userType,
-      paymentPath: 'full'
-    };
-    onComplete(assessmentData);
+    setPendingAction('full');
+    setShowConsentDialog(true);
   };
 
   const handleSkipPayment = () => {
-    // Skip payment and go directly to brief assessment
-    if (onSkipPayment) {
+    setPendingAction('skip');
+    setShowConsentDialog(true);
+  };
+
+  const handleConsentAccept = () => {
+    setShowConsentDialog(false);
+    
+    if (pendingAction === 'full') {
+      const assessmentData = {
+        userType: userType,
+        paymentPath: 'full'
+      };
+      onComplete(assessmentData);
+    } else if (pendingAction === 'skip' && onSkipPayment) {
       onSkipPayment();
     }
+    
+    setPendingAction(null);
+  };
+
+  const handleConsentDecline = () => {
+    setShowConsentDialog(false);
+    setPendingAction(null);
   };
 
   return (
@@ -105,8 +123,8 @@ export function PreAssessmentStep({ onComplete, onSkipPayment, userType }: PreAs
 
               <div className="bg-muted/30 p-4 rounded-lg border border-dashed border-muted-foreground/30">
                 <div className="flex items-center gap-2 mb-2">
-                  <Gift className="h-4 w-4 text-muted-foreground" />
-                  <p className="font-medium text-foreground">Experience First</p>
+                  <SkipForward className="h-4 w-4 text-muted-foreground" />
+                  <p className="font-medium text-foreground">Skip This for Now</p>
                 </div>
                 <p className="text-sm text-muted-foreground mb-3">
                   Try our brief assessment to get a preview of your personalized insights, then decide on your plan based on the value you experience.
@@ -117,7 +135,7 @@ export function PreAssessmentStep({ onComplete, onSkipPayment, userType }: PreAs
                   variant="outline"
                   className="w-full"
                 >
-                  Try Assessment Preview
+                  Skip This for Now
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -125,6 +143,12 @@ export function PreAssessmentStep({ onComplete, onSkipPayment, userType }: PreAs
           </div>
         )}
       </CardContent>
+      
+      <ConsentDialog
+        open={showConsentDialog}
+        onAccept={handleConsentAccept}
+        onDecline={handleConsentDecline}
+      />
     </Card>
   );
 }

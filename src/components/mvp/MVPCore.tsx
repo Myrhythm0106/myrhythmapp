@@ -261,7 +261,7 @@ export function MVPCore() {
                 onClick={handleGetStarted}
               >
                 <Sparkles className="h-5 w-5 mr-2" />
-                Start Your Journey
+                Register Now
               </Button>
             </div>
           </div>

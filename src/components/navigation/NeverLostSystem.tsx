@@ -95,7 +95,7 @@ export function NeverLostSystem({ className }: NeverLostSystemProps) {
       title: 'Unknown Location',
       description: 'You seem to be in an unknown area of the app',
       section: 'Unknown',
-      nextSteps: ['Go to Dashboard', 'Contact support if needed']
+      nextSteps: ['Log In', 'Contact support if needed']
     };
   };
 
@@ -257,7 +257,7 @@ export function NeverLostSystem({ className }: NeverLostSystemProps) {
                     className="flex-1"
                   >
                     <Home className="h-4 w-4 mr-2" />
-                    Go to Dashboard
+                    Log In
                   </Button>
                   <Button
                     onClick={() => {

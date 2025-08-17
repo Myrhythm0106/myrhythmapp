@@ -33,6 +33,7 @@ import MVPDashboardPage from "./pages/MVPDashboardPage";
 import MVPAssessmentPage from "./pages/MVPAssessmentPage";
 import MVPCorePage from "./pages/MVPCorePage";
 import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
+import CongratsPage from "./pages/CongratsPage";
 
 const queryClient = new QueryClient();
 
@@ -108,6 +109,7 @@ function App() {
                     <Route path="/assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/mvp" element={<ProtectedRoute requireAuth={false}><MVPCorePage /></ProtectedRoute>} />
                     <Route path="/mvp/assessment" element={<ProtectedRoute requireAuth={false}><MVPAssessmentFlowPage /></ProtectedRoute>} />
+                    <Route path="/congrats" element={<CongratsPage />} />
                   </Routes>
                 </BrowserRouter>
               </TooltipProvider>

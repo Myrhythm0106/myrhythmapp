@@ -60,7 +60,7 @@ export function NextStepsWidget({
           title: 'Setup Complete! Start Living MYRHYTHM',
           description: 'Access your dashboard and begin your daily routine',
           icon: Target,
-          actionText: 'Go to Dashboard',
+          actionText: 'Log In',
           nextSteps: ['Daily actions', 'Goal setting', 'Progress tracking']
         };
       default:
