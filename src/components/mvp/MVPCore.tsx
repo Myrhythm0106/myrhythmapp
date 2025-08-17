@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -14,8 +13,6 @@ import { AuthTabs } from '@/components/auth/AuthTabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { SupportCircleFeature } from './SupportCircleFeature';
-
-
 interface Feature {
   id: number;
   title: string;
@@ -24,123 +21,104 @@ interface Feature {
   category: string;
   fullWord: string;
 }
-
-const features: Feature[] = [
-  {
-    id: 1,
-    title: 'Memory Lane',
-    description: 'Relive precious moments with our interactive memory journal.',
-    icon: BookOpen,
-    category: 'memory',
-    fullWord: 'memory'
-  },
-  {
-    id: 2,
-    title: 'Focus Flow',
-    description: 'Sharpen your concentration with personalized focus exercises.',
-    icon: Brain,
-    category: 'focus',
-    fullWord: 'focus'
-  },
-  {
-    id: 3,
-    title: 'Energy Surge',
-    description: 'Boost your vitality with revitalizing activities and routines.',
-    icon: Zap,
-    category: 'energy',
-    fullWord: 'energy'
-  },
-  {
-    id: 4,
-    title: 'Clarity Zone',
-    description: 'Find mental clarity through guided mindfulness and meditation.',
-    icon: Activity,
-    category: 'clarity',
-    fullWord: 'clarity'
-  },
-  {
-    id: 5,
-    title: 'Rhythm Calendar',
-    description: 'Plan your days around your peak performance times.',
-    icon: Calendar,
-    category: 'rhythm',
-    fullWord: 'rhythm'
-  },
-  {
-    id: 6,
-    title: 'Goal Mastery',
-    description: 'Achieve your ambitions with structured goal-setting tools.',
-    icon: Target,
-    category: 'goals',
-    fullWord: 'goals'
-  },
-  {
-    id: 7,
-    title: 'Triumph Tracker',
-    description: 'Celebrate your successes and track your progress over time.',
-    icon: Award,
-    category: 'progress',
-    fullWord: 'progress'
-  },
-  {
-    id: 8,
-    title: 'Social Spark',
-    description: 'Connect with a supportive community and share your journey.',
-    icon: Users,
-    category: 'community',
-    fullWord: 'community'
-  },
-  {
-    id: 9,
-    title: 'Mood Lifter',
-    description: 'Elevate your spirits with uplifting content and activities.',
-    icon: Heart,
-    category: 'mood',
-    fullWord: 'mood'
-  },
-  {
-    id: 10,
-    title: 'Confidence Shield',
-    description: 'Build resilience and self-assurance with proven techniques.',
-    icon: Shield,
-    category: 'confidence',
-    fullWord: 'confidence'
-  },
-  {
-    id: 11,
-    title: 'Habit Hero',
-    description: 'Form positive habits and break free from negative patterns.',
-    icon: TrendingUp,
-    category: 'habits',
-    fullWord: 'habits'
-  },
-  {
-    id: 12,
-    title: 'Sparkle Sanctuary',
-    description: 'Indulge in moments of joy and creativity to ignite your passion.',
-    icon: Sparkles,
-    category: 'joy',
-    fullWord: 'joy'
-  }
-];
-
+const features: Feature[] = [{
+  id: 1,
+  title: 'Memory Lane',
+  description: 'Relive precious moments with our interactive memory journal.',
+  icon: BookOpen,
+  category: 'memory',
+  fullWord: 'memory'
+}, {
+  id: 2,
+  title: 'Focus Flow',
+  description: 'Sharpen your concentration with personalized focus exercises.',
+  icon: Brain,
+  category: 'focus',
+  fullWord: 'focus'
+}, {
+  id: 3,
+  title: 'Energy Surge',
+  description: 'Boost your vitality with revitalizing activities and routines.',
+  icon: Zap,
+  category: 'energy',
+  fullWord: 'energy'
+}, {
+  id: 4,
+  title: 'Clarity Zone',
+  description: 'Find mental clarity through guided mindfulness and meditation.',
+  icon: Activity,
+  category: 'clarity',
+  fullWord: 'clarity'
+}, {
+  id: 5,
+  title: 'Rhythm Calendar',
+  description: 'Plan your days around your peak performance times.',
+  icon: Calendar,
+  category: 'rhythm',
+  fullWord: 'rhythm'
+}, {
+  id: 6,
+  title: 'Goal Mastery',
+  description: 'Achieve your ambitions with structured goal-setting tools.',
+  icon: Target,
+  category: 'goals',
+  fullWord: 'goals'
+}, {
+  id: 7,
+  title: 'Triumph Tracker',
+  description: 'Celebrate your successes and track your progress over time.',
+  icon: Award,
+  category: 'progress',
+  fullWord: 'progress'
+}, {
+  id: 8,
+  title: 'Social Spark',
+  description: 'Connect with a supportive community and share your journey.',
+  icon: Users,
+  category: 'community',
+  fullWord: 'community'
+}, {
+  id: 9,
+  title: 'Mood Lifter',
+  description: 'Elevate your spirits with uplifting content and activities.',
+  icon: Heart,
+  category: 'mood',
+  fullWord: 'mood'
+}, {
+  id: 10,
+  title: 'Confidence Shield',
+  description: 'Build resilience and self-assurance with proven techniques.',
+  icon: Shield,
+  category: 'confidence',
+  fullWord: 'confidence'
+}, {
+  id: 11,
+  title: 'Habit Hero',
+  description: 'Form positive habits and break free from negative patterns.',
+  icon: TrendingUp,
+  category: 'habits',
+  fullWord: 'habits'
+}, {
+  id: 12,
+  title: 'Sparkle Sanctuary',
+  description: 'Indulge in moments of joy and creativity to ignite your passion.',
+  icon: Sparkles,
+  category: 'joy',
+  fullWord: 'joy'
+}];
 export function MVPCore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFeatureFilter, setActiveFeatureFilter] = useState('all');
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const navigate = useNavigate();
-
-  const filteredFeatures = features.filter(feature =>
-    feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
+  const filteredFeatures = features.filter(feature => feature.title.toLowerCase().includes(searchQuery.toLowerCase()) || feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase()));
   const handleAuthSuccess = () => {
     setShowLoginModal(false);
     navigate('/dashboard');
   };
-
   const handleGetStarted = () => {
     if (user) {
       navigate('/dashboard');
@@ -148,9 +126,7 @@ export function MVPCore() {
       setShowLoginModal(true);
     }
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+  return <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
       {/* Navigation Header */}
       <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="container mx-auto px-4 max-w-6xl">
@@ -163,23 +139,12 @@ export function MVPCore() {
             
             {/* Navigation Actions */}
             <div className="flex items-center space-x-4">
-              {user ? (
-                <Button 
-                  onClick={() => navigate('/dashboard')}
-                  className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white"
-                >
+              {user ? <Button onClick={() => navigate('/dashboard')} className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white">
                   Go to Dashboard
-                </Button>
-              ) : (
-                <Button 
-                  variant="ghost" 
-                  className="flex items-center gap-2 hover:bg-memory-emerald-50" 
-                  onClick={() => setShowLoginModal(true)}
-                >
+                </Button> : <Button variant="ghost" className="flex items-center gap-2 hover:bg-memory-emerald-50" onClick={() => setShowLoginModal(true)}>
                   <LogIn className="h-4 w-4" />
                   Log In
-                </Button>
-              )}
+                </Button>}
             </div>
           </div>
         </div>
@@ -213,24 +178,9 @@ export function MVPCore() {
 
             {/* Pain Points with Professional Images */}
             <div className="grid md:grid-cols-3 gap-6 mt-12">
-              <PainPointImageCard
-                title="Forgetting important conversations?"
-                imageUrl="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png"
-                imageAlt="Woman touching her forehead looking thoughtful and concerned about memory issues"
-                description="Missing precious moments and connections"
-              />
-              <PainPointImageCard
-                title="Feeling overwhelmed by simple tasks?"
-                imageUrl="/lovable-uploads/f435bac1-8fc3-474b-add2-1f378bd3ebab.png"
-                imageAlt="Person with head down on desk showing exhaustion and overwhelm"
-                description="When everyday activities feel impossible"
-              />
-              <PainPointImageCard
-                title="Struggling to stay organized?"
-                imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png"
-                imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace"
-                description="Losing track of what matters most"
-              />
+              <PainPointImageCard title="Forgetting important conversations?" imageUrl="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png" imageAlt="Woman touching her forehead looking thoughtful and concerned about memory issues" description="Missing precious moments and connections" />
+              <PainPointImageCard title="Feeling overwhelmed by simple tasks?" imageUrl="/lovable-uploads/f435bac1-8fc3-474b-add2-1f378bd3ebab.png" imageAlt="Person with head down on desk showing exhaustion and overwhelm" description="When everyday activities feel impossible" />
+              <PainPointImageCard title="Struggling to stay organized?" imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png" imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace" description="Losing track of what matters most" />
             </div>
 
             {/* Memory-First Design Highlight */}
@@ -255,11 +205,7 @@ export function MVPCore() {
                   Your Rhythm
                 </p>
               </div>
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
-                onClick={handleGetStarted}
-              >
+              <Button size="lg" className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" onClick={handleGetStarted}>
                 <Sparkles className="h-5 w-5 mr-2" />
                 Start your journey
               </Button>
@@ -296,10 +242,7 @@ export function MVPCore() {
                 <p className="text-brain-health-700 mb-6">
                   Never lose precious moments. Intelligent capture system for conversations, appointments, and memories.
                 </p>
-                <Button 
-                  className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white"
-                  onClick={handleGetStarted}
-                >
+                <Button className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" onClick={handleGetStarted}>
                   Explore Capture
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -313,18 +256,13 @@ export function MVPCore() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 flex items-center justify-center">
                   <Calendar className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold text-brain-health-900">
-                  MyRhythm Calendar - Smart Organization
-                </CardTitle>
+                <CardTitle className="text-xl font-bold text-brain-health-900">Commit - Your MyRhythm Calendar Organization</CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
                 <p className="text-brain-health-700 mb-6">
                   Transform overwhelm into organized action. Adapts to your energy and cognitive patterns.
                 </p>
-                <Button 
-                  className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white"
-                  onClick={handleGetStarted}
-                >
+                <Button className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white" onClick={handleGetStarted}>
                   Explore Calendar
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -338,18 +276,13 @@ export function MVPCore() {
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 flex items-center justify-center">
                   <Heart className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold text-brain-health-900">
-                  Memory Bank & Gratitude - Confidence Builder
-                </CardTitle>
+                <CardTitle className="font-bold text-brain-health-900 text-sm">Celebrate - Memory Bank & Gratitude (Confidence Builder)</CardTitle>
               </CardHeader>
               <CardContent className="relative z-10">
                 <p className="text-brain-health-700 mb-6">
                   Build unshakeable confidence. Track progress, store wins, cultivate gratitude.
                 </p>
-                <Button 
-                  className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white"
-                  onClick={handleGetStarted}
-                >
+                <Button className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white" onClick={handleGetStarted}>
                   Explore Gratitude
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -371,32 +304,17 @@ export function MVPCore() {
           {/* Search and Filter */}
           <div className="flex flex-col md:flex-row justify-between items-center mb-8 px-6">
             <div className="w-full md:w-1/2 mb-4 md:mb-0">
-              <Input
-                type="search"
-                placeholder="Search features..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 rounded-md border-gray-300 shadow-sm focus:border-brain-health-500 focus:ring focus:ring-brain-health-200 focus:ring-opacity-50"
-              />
+              <Input type="search" placeholder="Search features..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="w-full px-4 py-3 rounded-md border-gray-300 shadow-sm focus:border-brain-health-500 focus:ring focus:ring-brain-health-200 focus:ring-opacity-50" />
             </div>
 
             <div className="space-x-2">
-              <Button
-                variant={activeFeatureFilter === 'all' ? 'default' : 'outline'}
-                onClick={() => setActiveFeatureFilter('all')}
-              >
+              <Button variant={activeFeatureFilter === 'all' ? 'default' : 'outline'} onClick={() => setActiveFeatureFilter('all')}>
                 All Features
               </Button>
-              <Button
-                variant={activeFeatureFilter === 'memory' ? 'default' : 'outline'}
-                onClick={() => setActiveFeatureFilter('memory')}
-              >
+              <Button variant={activeFeatureFilter === 'memory' ? 'default' : 'outline'} onClick={() => setActiveFeatureFilter('memory')}>
                 Memory
               </Button>
-              <Button
-                variant={activeFeatureFilter === 'focus' ? 'default' : 'outline'}
-                onClick={() => setActiveFeatureFilter('focus')}
-              >
+              <Button variant={activeFeatureFilter === 'focus' ? 'default' : 'outline'} onClick={() => setActiveFeatureFilter('focus')}>
                 Focus
               </Button>
               {/* Add more filter buttons as needed */}
@@ -405,8 +323,7 @@ export function MVPCore() {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
-            {filteredFeatures.map((feature) => (
-              <Card key={feature.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+            {filteredFeatures.map(feature => <Card key={feature.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
                 <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                   <CardTitle className="text-sm font-medium">{feature.title}</CardTitle>
                   <feature.icon className="h-4 w-4 text-gray-500" />
@@ -414,8 +331,7 @@ export function MVPCore() {
                 <CardContent>
                   <p className="text-gray-600 text-sm">{feature.description}</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -434,10 +350,7 @@ export function MVPCore() {
         <div className="container mx-auto text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Ready to Transform Your Cognitive Wellness?</h2>
           <p className="text-gray-600 mb-6">Start your personalized journey with MyRhythm today.</p>
-          <Button 
-            className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg"
-            onClick={handleGetStarted}
-          >
+          <Button className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg" onClick={handleGetStarted}>
             Get Started Now
           </Button>
         </div>
@@ -456,21 +369,15 @@ export function MVPCore() {
               </DialogTitle>
             </div>
           </DialogHeader>
-          <AuthTabs 
-            onForgotPassword={() => {
-              setShowLoginModal(false);
-              navigate('/auth');
-            }}
-            onResendVerification={() => {}}
-            onSignInSuccess={handleAuthSuccess}
-            onSignUpSuccess={() => {
-              setShowLoginModal(false);
-              navigate('/onboarding');
-            }}
-          />
+          <AuthTabs onForgotPassword={() => {
+          setShowLoginModal(false);
+          navigate('/auth');
+        }} onResendVerification={() => {}} onSignInSuccess={handleAuthSuccess} onSignUpSuccess={() => {
+          setShowLoginModal(false);
+          navigate('/onboarding');
+        }} />
         </DialogContent>
       </Dialog>
 
-    </div>
-  );
+    </div>;
 }
