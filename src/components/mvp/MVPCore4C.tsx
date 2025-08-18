@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { PainPointImageCard } from './PainPointImageCard';
 
 export function MVPCore4C() {
   const navigate = useNavigate();
@@ -67,35 +68,62 @@ export function MVPCore4C() {
         </div>
       </div>
 
-      {/* 4 Core C's Section */}
+      {/* Pain Points with Professional Images */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto max-w-7xl px-6">
+          <div className="grid md:grid-cols-3 gap-6">
+            <PainPointImageCard 
+              title="Forgetting important conversations?" 
+              imageUrl="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png" 
+              imageAlt="Woman touching her forehead looking thoughtful and concerned about memory issues" 
+              description="Missing precious moments and connections" 
+            />
+            <PainPointImageCard 
+              title="Feeling overwhelmed by simple tasks?" 
+              imageUrl="/lovable-uploads/f435bac1-8fc3-474b-add2-1f378bd3ebab.png" 
+              imageAlt="Person with head down on desk showing exhaustion and overwhelm" 
+              description="When everyday activities feel impossible" 
+            />
+            <PainPointImageCard 
+              title="Struggling to stay organized?" 
+              imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png" 
+              imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace" 
+              description="Losing track of what matters most" 
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Four Core Solutions Section */}
       <section className="py-20 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
         <div className="container mx-auto max-w-7xl px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
-              Four Core C's for Your Journey
+              Four Core Solutions for Your Journey
             </h2>
             <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
               A complete system designed specifically for cognitive wellness and memory empowerment
             </p>
           </div>
 
-          {/* 2x2 Grid for 4 C's */}
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {/* Compact 4-card grid - MVP style */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {/* Capture */}
             <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-memory-emerald-50/50 border-memory-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader className="relative z-10 pb-4">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 flex items-center justify-center">
-                  <Brain className="h-8 w-8 text-white" />
+                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 flex items-center justify-center">
+                  <Brain className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold text-brain-health-900 text-center">
+                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
                   Capture — Your Memory Bridge
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-6 text-center">
+                <p className="text-brain-health-700 mb-4 text-center text-sm">
                   Never lose precious moments. Intelligent capture system for conversations, appointments, and memories.
                 </p>
                 <Button 
+                  size="sm"
                   className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" 
                   onClick={handleGetStarted}
                 >
@@ -109,18 +137,19 @@ export function MVPCore4C() {
             {/* Commit */}
             <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-brain-health-50/50 border-brain-health-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader className="relative z-10 pb-4">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 flex items-center justify-center">
-                  <Calendar className="h-8 w-8 text-white" />
+                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 flex items-center justify-center">
+                  <Calendar className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold text-brain-health-900 text-center">
+                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
                   Commit — Your MyRhythm Calendar
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-6 text-center">
+                <p className="text-brain-health-700 mb-4 text-center text-sm">
                   Transform overwhelm into organized action. Adapts to your energy and cognitive patterns.
                 </p>
                 <Button 
+                  size="sm"
                   className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white" 
                   onClick={handleGetStarted}
                 >
@@ -134,18 +163,19 @@ export function MVPCore4C() {
             {/* Calibrate */}
             <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-clarity-teal-50/50 border-clarity-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader className="relative z-10 pb-4">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 flex items-center justify-center">
-                  <Activity className="h-8 w-8 text-white" />
+                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 flex items-center justify-center">
+                  <Activity className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold text-brain-health-900 text-center">
+                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
                   Calibrate — Mood & Energy Check-ins
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-6 text-center">
+                <p className="text-brain-health-700 mb-4 text-center text-sm">
                   Track your emotional landscape and energy levels. Understand patterns to optimize your rhythm.
                 </p>
                 <Button 
+                  size="sm"
                   className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white" 
                   onClick={handleGetStarted}
                 >
@@ -159,22 +189,23 @@ export function MVPCore4C() {
             {/* Celebrate */}
             <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-sunrise-amber-50/50 border-sunrise-amber-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
               <CardHeader className="relative z-10 pb-4">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 flex items-center justify-center">
-                  <Heart className="h-8 w-8 text-white" />
+                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 flex items-center justify-center">
+                  <Heart className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold text-brain-health-900 text-center">
-                  Celebrate — Memory Bank & Gratitude
+                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
+                  Celebrate — Support Community
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-6 text-center">
-                  Build unshakeable confidence. Track progress, store wins, cultivate gratitude.
+                <p className="text-brain-health-700 mb-4 text-center text-sm">
+                  Find strength together. Share wins, ask questions, and get encouragement — you're not walking alone.
                 </p>
                 <Button 
+                  size="sm"
                   className="w-full bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 hover:from-sunrise-amber-600 hover:to-memory-emerald-600 text-white" 
                   onClick={handleGetStarted}
                 >
-                  Explore Gratitude
+                  Explore Community
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>
@@ -185,7 +216,7 @@ export function MVPCore4C() {
           {/* Supporting Text */}
           <div className="text-center mt-12">
             <p className="text-brain-health-600 font-medium max-w-2xl mx-auto">
-              The complete MyRhythm system — <span className="font-bold">Capture</span> memories, <span className="font-bold">Commit</span> to your rhythm, <span className="font-bold">Calibrate</span> your wellbeing, and <span className="font-bold">Celebrate</span> with support.
+              The complete MyRhythm system — <span className="font-bold">Capture</span> memories, <span className="font-bold">Commit</span> to your rhythm, <span className="font-bold">Calibrate</span> your wellbeing, and <span className="font-bold">Celebrate</span> with community.
             </p>
           </div>
         </div>
