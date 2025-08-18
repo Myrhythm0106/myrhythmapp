@@ -163,18 +163,18 @@ export function MVPCore4C() {
                   <Heart className="h-8 w-8 text-white" />
                 </div>
                 <CardTitle className="text-xl font-bold text-brain-health-900 text-center">
-                  Celebrate — Support Community
+                  Celebrate — Memory Bank & Gratitude
                 </CardTitle>
               </CardHeader>
               <CardContent className="relative z-10 pt-0">
                 <p className="text-brain-health-700 mb-6 text-center">
-                  Connect with caring support circle. Share wins, get encouragement, you're not walking alone.
+                  Build unshakeable confidence. Track progress, store wins, cultivate gratitude.
                 </p>
                 <Button 
                   className="w-full bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 hover:from-sunrise-amber-600 hover:to-memory-emerald-600 text-white" 
                   onClick={handleGetStarted}
                 >
-                  Explore Community
+                  Explore Gratitude
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>
