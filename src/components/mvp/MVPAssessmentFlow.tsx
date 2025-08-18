@@ -21,6 +21,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { ContinuousGuidance } from "@/components/guidance/ContinuousGuidance";
+import { useAnalytics } from '@/hooks/useAnalytics';
+import { BasicAssessmentResult } from '@/types/assessmentTypes';
 
 interface AssessmentQuestion {
   id: string;
@@ -144,6 +146,7 @@ export function MVPAssessmentFlow() {
   const navigate = useNavigate();
   const location = useLocation();
   const { hasFeature, tier } = useSubscription();
+  const { trackEvent } = useAnalytics();
   
   const assessmentType = location.state?.assessmentType || 'brief';
   const isComprehensive = assessmentType === 'comprehensive';
@@ -154,6 +157,7 @@ export function MVPAssessmentFlow() {
   const [showResults, setShowResults] = useState(false);
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [showPaymentGate, setShowPaymentGate] = useState(false);
+  const [isPreview, setIsPreview] = useState(true);
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const currentQ = questions[currentQuestion];
@@ -163,6 +167,16 @@ export function MVPAssessmentFlow() {
       ...prev,
       [currentQ.id]: value
     }));
+
+    // Track question response
+    trackEvent({
+      eventType: 'assessment_question_answered',
+      eventData: {
+        questionIndex: currentQuestion,
+        questionId: currentQ.id,
+        response: value
+      }
+    });
   };
 
   const handleNext = () => {
@@ -186,6 +200,17 @@ export function MVPAssessmentFlow() {
   };
 
   const calculateResults = () => {
+    // Track assessment completion
+    trackEvent({
+      eventType: 'assessment_completed',
+      eventData: {
+        totalQuestions: questions.length,
+        answeredQuestions: Object.keys(answers).length,
+        responses: answers,
+        isPreview
+      }
+    });
+
     const categoryScores: Record<string, number> = {};
     const categoryCounts: Record<string, number> = {};
     
@@ -284,17 +309,44 @@ export function MVPAssessmentFlow() {
   };
 
   const handleUpgrade = () => {
-    // Navigate to payment/upgrade flow
-    navigate('/subscription', { 
-      state: { 
-        from: 'assessment',
-        assessmentData: assessmentResult 
-      }
+    trackEvent({
+      eventType: 'upgrade_clicked',
+      eventData: { source: 'assessment_results' }
     });
+    navigate('/in-app-purchase');
   };
 
   const handleViewMyrhythm = () => {
     navigate('/mvp');
+  };
+
+  const generatePreviewResults = (): BasicAssessmentResult => {
+    const totalScore = Object.values(answers).reduce((sum, answerValue) => {
+      const question = questions.find(q => answers[q.id] === answerValue);
+      const option = question?.options.find(opt => opt.value === answerValue);
+      return sum + (option?.score || 0);
+    }, 0);
+    const averageScore = Math.round((totalScore / questions.length) * 20);
+    
+    return {
+      id: 'preview-' + Date.now(),
+      userType: 'preview' as any, // Using preview as a temporary type
+      assessmentType: 'brief',
+      completedAt: new Date().toISOString(),
+      responses: answers,
+      overallScore: averageScore,
+      primaryRhythm: averageScore >= 70 ? 'Steady Rhythm' : averageScore >= 50 ? 'Building Rhythm' : 'Finding Rhythm',
+      keyInsights: [
+        'Your memory patterns show potential for improvement',
+        'Focus on establishing consistent daily routines',
+        'Consider implementing structured memory aids'
+      ],
+      primaryFocus: averageScore >= 70 
+        ? 'Optimizing your existing strengths' 
+        : averageScore >= 50 
+        ? 'Building sustainable cognitive habits'
+        : 'Establishing foundational memory support systems'
+    };
   };
 
   if (showResults && assessmentResult) {
