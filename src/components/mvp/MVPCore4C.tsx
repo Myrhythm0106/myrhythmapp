@@ -4,6 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { PainPointImageCard } from './PainPointImageCard';
+import preciousMomentsImg from '@/assets/precious-moments.jpg';
+import organizedActionImg from '@/assets/organized-action.jpg';
+import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
+import strengthTogetherImg from '@/assets/strength-together.jpg';
 
 export function MVPCore4C() {
   const navigate = useNavigate();
@@ -218,6 +222,136 @@ export function MVPCore4C() {
             <p className="text-brain-health-600 font-medium max-w-2xl mx-auto">
               The complete MyRhythm system — <span className="font-bold">Capture</span> memories, <span className="font-bold">Commit</span> to your rhythm, <span className="font-bold">Calibrate</span> your wellbeing, and <span className="font-bold">Celebrate</span> with community.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Feel the Difference Section */}
+      <section className="py-20 bg-gradient-to-br from-white via-brain-health-50/10 to-memory-emerald-50/10">
+        <div className="container mx-auto max-w-7xl px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
+              Feel the Difference
+            </h2>
+            <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
+              Experience the transformation when technology truly understands your journey
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Precious Moments */}
+            <div 
+              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+              onClick={handleGetStarted}
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
+                style={{ backgroundImage: `url(${preciousMomentsImg})` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-memory-emerald-900/80 via-memory-emerald-600/40 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
+                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Brain className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
+                    Never lose precious moments
+                  </h3>
+                  <p className="text-lg opacity-90 leading-relaxed">
+                    Every conversation matters. Every memory is treasured.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Organized Action */}
+            <div 
+              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+              onClick={handleGetStarted}
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
+                style={{ backgroundImage: `url(${organizedActionImg})` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-brain-health-900/80 via-brain-health-600/40 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
+                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Calendar className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
+                    Transform overwhelm into clarity
+                  </h3>
+                  <p className="text-lg opacity-90 leading-relaxed">
+                    Feel the calm confidence of being truly organized.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Emotional Landscape */}
+            <div 
+              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+              onClick={handleGetStarted}
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
+                style={{ backgroundImage: `url(${emotionalLandscapeImg})` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-clarity-teal-900/80 via-clarity-teal-600/40 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
+                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Activity className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
+                    Understand your inner rhythm
+                  </h3>
+                  <p className="text-lg opacity-90 leading-relaxed">
+                    Discover patterns. Find peace. Optimize your wellbeing.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Strength Together */}
+            <div 
+              className="relative group overflow-hidden rounded-2xl aspect-[4/3] cursor-pointer transition-all duration-500 hover:scale-105 hover:shadow-2xl"
+              onClick={handleGetStarted}
+            >
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-700 group-hover:scale-110"
+                style={{ backgroundImage: `url(${strengthTogetherImg})` }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-sunrise-amber-900/80 via-sunrise-amber-600/40 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+                <div className="transform transition-all duration-500 group-hover:translate-y-0 translate-y-2">
+                  <div className="w-12 h-12 mb-4 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                    <Heart className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-3 leading-tight">
+                    You're never walking alone
+                  </h3>
+                  <p className="text-lg opacity-90 leading-relaxed">
+                    Find your tribe. Share your journey. Celebrate together.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="text-center mt-16">
+            <p className="text-brain-health-600 font-medium text-lg max-w-3xl mx-auto mb-8">
+              This isn't just another app. It's a companion designed for your unique cognitive journey.
+            </p>
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-10 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
+              onClick={handleGetStarted}
+            >
+              <Sparkles className="h-5 w-5 mr-2" />
+              Experience the Difference
+            </Button>
           </div>
         </div>
       </section>
