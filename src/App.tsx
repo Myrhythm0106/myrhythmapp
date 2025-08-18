@@ -32,6 +32,7 @@ import CognitivePerformanceAssessment from "./pages/CognitivePerformanceAssessme
 import MVPDashboardPage from "./pages/MVPDashboardPage";
 import MVPAssessmentPage from "./pages/MVPAssessmentPage";
 import MVPCorePage from "./pages/MVPCorePage";
+import MVPCore4CPage from "./pages/MVPCore4CPage";
 import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
 import CongratsPage from "./pages/CongratsPage";
 
@@ -108,6 +109,7 @@ function App() {
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/mvp" element={<MVPCorePage />} />
+                    <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
                     <Route path="/mvp/assessment" element={<ProtectedRoute requireAuth={false}><MVPAssessmentFlowPage /></ProtectedRoute>} />
                     <Route path="/congrats" element={<CongratsPage />} />
                   </Routes>
