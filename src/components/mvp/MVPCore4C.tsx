@@ -20,7 +20,7 @@ export function MVPCore4C() {
     <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
       {/* Navigation Header */}
       <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
-        <div className="container mx-auto px-4 max-w-6xl">
+        <div className="container mx-auto px-6 max-w-6xl">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               <Brain className="h-8 w-8 text-memory-emerald-600" />
@@ -33,7 +33,7 @@ export function MVPCore4C() {
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 border-b border-brain-health-200/50">
         <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald-100/20 via-brain-health-100/20 to-clarity-teal-100/20" />
-        <div className="relative max-w-7xl mx-auto px-6 py-12">
+        <div className="relative max-w-6xl mx-auto px-6 py-20">
           <div className="text-center space-y-6">
             <div className="space-y-4 mb-8">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black">
@@ -73,8 +73,8 @@ export function MVPCore4C() {
       </div>
 
       {/* Pain Points with Professional Images */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto max-w-7xl px-6">
+      <section className="py-20 bg-white">
+        <div className="container mx-auto max-w-6xl px-6">
           <div className="grid md:grid-cols-3 gap-6">
             <PainPointImageCard 
               title="Forgetting important conversations?" 
@@ -100,7 +100,7 @@ export function MVPCore4C() {
 
       {/* Four Core Solutions Section */}
       <section className="py-20 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
-        <div className="container mx-auto max-w-7xl px-6">
+        <div className="container mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
               Four Core Solutions for Your Journey
@@ -228,7 +228,7 @@ export function MVPCore4C() {
 
       {/* Feel the Difference Section */}
       <section className="py-20 bg-gradient-to-br from-white via-brain-health-50/10 to-memory-emerald-50/10">
-        <div className="container mx-auto max-w-7xl px-6">
+        <div className="container mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
               Feel the Difference
@@ -357,8 +357,8 @@ export function MVPCore4C() {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-gradient-to-r from-brain-health-50/50 to-clarity-teal-50/50 py-16">
-        <div className="container mx-auto text-center">
+      <section className="bg-gradient-to-r from-brain-health-50/50 to-clarity-teal-50/50 py-20">
+        <div className="container mx-auto max-w-6xl px-6 text-center">
           <h2 className="text-3xl font-bold text-brain-health-900 mb-4">Ready to Begin Your Journey?</h2>
           <p className="text-xl text-brain-health-700 mb-8 max-w-2xl mx-auto">
             Start with our personalized assessment to discover your unique rhythm
