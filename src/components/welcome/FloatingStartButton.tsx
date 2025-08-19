@@ -8,15 +8,20 @@ export function FloatingStartButton() {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    // Check if profile is complete
-    const profileComplete = localStorage.getItem("myrhythm_profile_complete");
+    // Check if warm onboarding is complete
+    const onboardingCompleted = localStorage.getItem("myrhythm_onboarding_completed");
     
-    if (profileComplete === "true") {
-      // If profile is complete, go to calendar
-      navigate("/calendar");
+    if (onboardingCompleted === "true") {
+      // If onboarding is complete, check profile and go to appropriate destination
+      const profileComplete = localStorage.getItem("myrhythm_profile_complete");
+      if (profileComplete === "true") {
+        navigate("/calendar");
+      } else {
+        navigate("/profile?from=onboarding");
+      }
     } else {
-      // If profile not complete, go to profile first
-      navigate("/profile?from=onboarding");
+      // If onboarding not complete, go to warm onboarding flow
+      navigate("/start");
     }
   };
 

@@ -1,0 +1,182 @@
+import React, { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Sparkles, Calendar, BarChart3, Users, ArrowRight } from 'lucide-react';
+import organizedActionImage from '@/assets/onboarding/organized-action-african-american.jpg';
+
+interface Step2FeelDifferenceChoosePathProps {
+  persona: string;
+  intent: string;
+  onComplete: (path: 'guided' | 'explorer') => void;
+}
+
+export function Step2FeelDifferenceChoosePath({ persona, intent, onComplete }: Step2FeelDifferenceChoosePathProps) {
+  const [selectedPath, setSelectedPath] = useState<'guided' | 'explorer' | null>(null);
+
+  const getPersonalizedText = (baseText: string) => {
+    const personaText = persona === 'me' ? 'your' : persona === 'loved-one' ? 'their' : 'your client\'s';
+    const intentContext = intent.toLowerCase();
+    return `${baseText} for ${intentContext}`;
+  };
+
+  const differenceCards = [
+    {
+      title: "Never lose precious moments",
+      subtitle: "Capture",
+      description: getPersonalizedText("Record conversations and important moments"),
+      icon: Sparkles,
+      gradient: "from-memory-emerald-500 to-memory-emerald-600",
+      bgGradient: "from-memory-emerald-50 to-memory-emerald-100"
+    },
+    {
+      title: "Transform overwhelm into organized action",
+      subtitle: "Calibrate", 
+      description: getPersonalizedText("Turn chaos into clear, manageable steps"),
+      icon: Calendar,
+      gradient: "from-brain-health-500 to-brain-health-600",
+      bgGradient: "from-brain-health-50 to-brain-health-100",
+      image: organizedActionImage
+    },
+    {
+      title: "Understand your inner rhythm",
+      subtitle: "Check-in + Insights",
+      description: getPersonalizedText("Track patterns and build sustainable routines"),
+      icon: BarChart3,
+      gradient: "from-clarity-teal-500 to-clarity-teal-600", 
+      bgGradient: "from-clarity-teal-50 to-clarity-teal-100"
+    },
+    {
+      title: "You're never walking alone",
+      subtitle: "Support & Community",
+      description: getPersonalizedText("Connect with others who understand the journey"),
+      icon: Users,
+      gradient: "from-emotional-balance-500 to-emotional-balance-600",
+      bgGradient: "from-emotional-balance-50 to-emotional-balance-100"
+    }
+  ];
+
+  const pathOptions = [
+    {
+      id: 'guided' as const,
+      title: 'Guided',
+      subtitle: 'Recommended',
+      description: 'Step-by-step support with personalized guidance',
+      recommended: true
+    },
+    {
+      id: 'explorer' as const,
+      title: 'Explorer', 
+      subtitle: 'I prefer to discover',
+      description: 'Freedom to explore features at your own pace',
+      recommended: false
+    }
+  ];
+
+  return (
+    <div className="max-w-6xl mx-auto space-y-8">
+      <div className="text-center space-y-4">
+        <h1 className="text-4xl md:text-5xl font-bold text-brain-health-900">
+          Feel the Difference
+        </h1>
+        <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
+          Experience how MyRhythm transforms your daily cognitive wellness journey through our four core solutions.
+        </p>
+      </div>
+
+      {/* Four Core Solutions */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {differenceCards.map((card, index) => {
+          const IconComponent = card.icon;
+          return (
+            <Card key={index} className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-0">
+                <div className={`bg-gradient-to-br ${card.bgGradient} p-6 relative overflow-hidden`}>
+                  {card.image ? (
+                    <div className="absolute inset-0">
+                      <img 
+                        src={card.image} 
+                        alt={card.title}
+                        className="w-full h-full object-cover opacity-30"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-brain-health-500/20 to-brain-health-600/30" />
+                    </div>
+                  ) : null}
+                  <div className="relative z-10">
+                    <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${card.gradient} text-white mb-4`}>
+                      <IconComponent className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-brain-health-900 mb-2">
+                      {card.title}
+                    </h3>
+                    <p className="text-brain-health-700 mb-3 font-medium">
+                      {card.description}
+                    </p>
+                    <Badge variant="secondary" className="bg-white/80 text-brain-health-800">
+                      {card.subtitle}
+                    </Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
+
+      {/* Choose Your Path */}
+      <Card className="border-0 shadow-xl bg-white">
+        <CardContent className="p-8 space-y-6">
+          <div className="text-center space-y-2">
+            <h3 className="text-2xl font-bold text-brain-health-900">
+              Choose your path
+            </h3>
+            <p className="text-brain-health-700">
+              How would you like to experience MyRhythm?
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            {pathOptions.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => setSelectedPath(option.id)}
+                className={`p-6 rounded-xl border-2 transition-all duration-200 text-left relative ${
+                  selectedPath === option.id
+                    ? 'border-brain-health-300 bg-brain-health-50'
+                    : 'border-gray-200 bg-white hover:bg-gray-50'
+                }`}
+              >
+                {option.recommended && (
+                  <Badge className="absolute -top-2 left-4 bg-brain-health-500 text-white">
+                    Recommended
+                  </Badge>
+                )}
+                <h4 className="text-xl font-bold text-brain-health-900 mb-1">
+                  {option.title}
+                </h4>
+                <p className="text-sm text-brain-health-600 mb-2 font-medium">
+                  {option.subtitle}
+                </p>
+                <p className="text-brain-health-700">
+                  {option.description}
+                </p>
+              </button>
+            ))}
+          </div>
+
+          <div className="flex justify-center pt-4">
+            <Button
+              onClick={() => selectedPath && onComplete(selectedPath)}
+              disabled={!selectedPath}
+              size="lg"
+              className="px-8 py-3 text-lg font-semibold"
+            >
+              Do my 60-second check‑in
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}

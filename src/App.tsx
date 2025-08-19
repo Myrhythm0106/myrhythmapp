@@ -35,6 +35,8 @@ import MVPCorePage from "./pages/MVPCorePage";
 import MVPCore4CPage from "./pages/MVPCore4CPage";
 import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
 import CongratsPage from "./pages/CongratsPage";
+import StartPage from "./pages/StartPage";
+import { RedirectToStart } from "./components/redirects/RedirectToStart";
 
 const queryClient = new QueryClient();
 
@@ -104,13 +106,19 @@ function App() {
                       }
                     />
                     
+                    {/* Warm Onboarding Flow */}
+                    <Route path="/start" element={<StartPage />} />
+                    
+                    {/* Redirect assessment routes to /start for new users */}
+                    <Route path="/mvp/assessment" element={<RedirectToStart />} />
+                    <Route path="/assessment" element={<RedirectToStart />} />
+                    
                     {/* MVP Routes */}
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
-                    <Route path="/assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
+                    <Route path="/assessment-protected" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/mvp" element={<MVPCore4CPage />} />
                     <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
-                    <Route path="/mvp/assessment" element={<ProtectedRoute requireAuth={false}><MVPAssessmentFlowPage /></ProtectedRoute>} />
                     <Route path="/congrats" element={<CongratsPage />} />
                   </Routes>
                 </BrowserRouter>
