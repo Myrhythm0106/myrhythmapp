@@ -1,6 +1,6 @@
 import React from "react";
 import { UserType } from "@/types/user";
-import { ComprehensiveAssessment } from "./ComprehensiveAssessment";
+import { EnhancedComprehensiveAssessment } from "./EnhancedComprehensiveAssessment";
 
 interface RhythmAssessmentViewProps {
   userType: UserType;
@@ -9,7 +9,7 @@ interface RhythmAssessmentViewProps {
 
 export function RhythmAssessmentView({ userType, onComplete }: RhythmAssessmentViewProps) {
   return (
-    <ComprehensiveAssessment 
+    <EnhancedComprehensiveAssessment 
       userType={userType} 
       onComplete={onComplete} 
     />

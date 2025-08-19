@@ -1,7 +1,7 @@
 
 import React from "react";
 import { UserType } from "@/types/user";
-import { QuickStartAssessment } from "./QuickStartAssessment";
+import { EnhancedQuickStartAssessment } from "./EnhancedQuickStartAssessment";
 
 interface BriefAssessmentViewProps {
   userType: UserType;
@@ -10,7 +10,7 @@ interface BriefAssessmentViewProps {
 
 export function BriefAssessmentView({ userType, onComplete }: BriefAssessmentViewProps) {
   return (
-    <QuickStartAssessment 
+    <EnhancedQuickStartAssessment 
       userType={userType} 
       onComplete={onComplete} 
     />

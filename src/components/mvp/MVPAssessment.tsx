@@ -284,33 +284,79 @@ export function MVPAssessment() {
               </div>
 
               <div className="space-y-4">
-                {recommendations.map((feature, index) => (
-                  <Card 
-                    key={feature}
-                    className={`border-${getFeatureColor(feature)}-200 bg-gradient-to-r from-${getFeatureColor(feature)}-50/50 to-white`}
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Badge className={`bg-${getFeatureColor(feature)}-100 text-${getFeatureColor(feature)}-700`}>
-                            #{index + 1} Priority
-                          </Badge>
-                          <h3 className={`font-semibold text-${getFeatureColor(feature)}-800`}>
-                            {feature}
-                          </h3>
+                {recommendations.map((feature, index) => {
+                  const getFeatureStyles = (feature: string) => {
+                    const styleMap = {
+                      'Memory Bridge': {
+                        card: 'border-memory-emerald-200 bg-gradient-to-r from-memory-emerald-50/50 to-white',
+                        badge: 'bg-memory-emerald-100 text-memory-emerald-700',
+                        title: 'text-memory-emerald-800',
+                        button: 'bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600'
+                      },
+                      'Brain Games': {
+                        card: 'border-brain-health-200 bg-gradient-to-r from-brain-health-50/50 to-white',
+                        badge: 'bg-brain-health-100 text-brain-health-700',
+                        title: 'text-brain-health-800',
+                        button: 'bg-gradient-to-r from-brain-health-500 to-brain-health-600'
+                      },
+                      'Gratitude': {
+                        card: 'border-clarity-teal-200 bg-gradient-to-r from-clarity-teal-50/50 to-white',
+                        badge: 'bg-clarity-teal-100 text-clarity-teal-700',
+                        title: 'text-clarity-teal-800',
+                        button: 'bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600'
+                      },
+                      'Calendar': {
+                        card: 'border-sunrise-amber-200 bg-gradient-to-r from-sunrise-amber-50/50 to-white',
+                        badge: 'bg-sunrise-amber-100 text-sunrise-amber-700',
+                        title: 'text-sunrise-amber-800',
+                        button: 'bg-gradient-to-r from-sunrise-amber-500 to-sunrise-amber-600'
+                      },
+                      'Daily Actions': {
+                        card: 'border-memory-emerald-200 bg-gradient-to-r from-memory-emerald-50/50 to-white',
+                        badge: 'bg-memory-emerald-100 text-memory-emerald-700',
+                        title: 'text-memory-emerald-800',
+                        button: 'bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600'
+                      },
+                      'Support Network': {
+                        card: 'border-brain-health-200 bg-gradient-to-r from-brain-health-50/50 to-white',
+                        badge: 'bg-brain-health-100 text-brain-health-700',
+                        title: 'text-brain-health-800',
+                        button: 'bg-gradient-to-r from-brain-health-500 to-brain-health-600'
+                      }
+                    };
+                    return styleMap[feature as keyof typeof styleMap] || styleMap['Memory Bridge'];
+                  };
+
+                  const styles = getFeatureStyles(feature);
+
+                  return (
+                    <Card 
+                      key={feature}
+                      className={styles.card}
+                    >
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Badge className={styles.badge}>
+                              #{index + 1} Priority
+                            </Badge>
+                            <h3 className={`font-semibold ${styles.title}`}>
+                              {feature}
+                            </h3>
+                          </div>
+                          <Button
+                            size="sm"
+                            onClick={() => navigate(getFeatureRoute(feature))}
+                            className={styles.button}
+                          >
+                            Start Now
+                            <ArrowRight className="h-4 w-4 ml-1" />
+                          </Button>
                         </div>
-                        <Button
-                          size="sm"
-                          onClick={() => navigate(getFeatureRoute(feature))}
-                          className={`bg-gradient-to-r from-${getFeatureColor(feature)}-500 to-${getFeatureColor(feature)}-600`}
-                        >
-                          Start Now
-                          <ArrowRight className="h-4 w-4 ml-1" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
 
               <div className="text-center space-y-4">

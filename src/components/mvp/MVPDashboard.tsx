@@ -180,66 +180,128 @@ export function MVPDashboard() {
 
         {/* MVP Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {MVP_FEATURES.map((feature) => (
-            <Card 
-              key={feature.id}
-              className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl border-${feature.color}-200 bg-gradient-to-br from-${feature.color}-50/50 to-white group`}
-              onClick={() => handleFeatureClick(feature)}
-            >
-              <CardHeader className="pb-3">
-                <div className="flex items-start justify-between">
-                  <div className={`p-3 rounded-lg bg-${feature.color}-100 group-hover:bg-${feature.color}-200 transition-colors`}>
-                    <feature.icon className={`h-6 w-6 text-${feature.color}-600`} />
+          {MVP_FEATURES.map((feature) => {
+            const getColorClasses = (color: string) => {
+              const colorMap = {
+                'memory-emerald': {
+                  card: 'border-memory-emerald-200 bg-gradient-to-br from-memory-emerald-50/50 to-white',
+                  icon: 'bg-memory-emerald-100 group-hover:bg-memory-emerald-200',
+                  iconText: 'text-memory-emerald-600',
+                  badge: 'border-memory-emerald-300 text-memory-emerald-700 bg-memory-emerald-50',
+                  title: 'text-memory-emerald-800 group-hover:text-memory-emerald-900',
+                  benefit: 'bg-memory-emerald-50 border-memory-emerald-100',
+                  benefitTitle: 'text-memory-emerald-700',
+                  benefitText: 'text-memory-emerald-600',
+                  progress: 'text-memory-emerald-600',
+                  progressBg: 'bg-memory-emerald-100',
+                  button: 'bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 hover:from-memory-emerald-600 hover:to-memory-emerald-700'
+                },
+                'brain-health': {
+                  card: 'border-brain-health-200 bg-gradient-to-br from-brain-health-50/50 to-white',
+                  icon: 'bg-brain-health-100 group-hover:bg-brain-health-200',
+                  iconText: 'text-brain-health-600',
+                  badge: 'border-brain-health-300 text-brain-health-700 bg-brain-health-50',
+                  title: 'text-brain-health-800 group-hover:text-brain-health-900',
+                  benefit: 'bg-brain-health-50 border-brain-health-100',
+                  benefitTitle: 'text-brain-health-700',
+                  benefitText: 'text-brain-health-600',
+                  progress: 'text-brain-health-600',
+                  progressBg: 'bg-brain-health-100',
+                  button: 'bg-gradient-to-r from-brain-health-500 to-brain-health-600 hover:from-brain-health-600 hover:to-brain-health-700'
+                },
+                'clarity-teal': {
+                  card: 'border-clarity-teal-200 bg-gradient-to-br from-clarity-teal-50/50 to-white',
+                  icon: 'bg-clarity-teal-100 group-hover:bg-clarity-teal-200',
+                  iconText: 'text-clarity-teal-600',
+                  badge: 'border-clarity-teal-300 text-clarity-teal-700 bg-clarity-teal-50',
+                  title: 'text-clarity-teal-800 group-hover:text-clarity-teal-900',
+                  benefit: 'bg-clarity-teal-50 border-clarity-teal-100',
+                  benefitTitle: 'text-clarity-teal-700',
+                  benefitText: 'text-clarity-teal-600',
+                  progress: 'text-clarity-teal-600',
+                  progressBg: 'bg-clarity-teal-100',
+                  button: 'bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 hover:from-clarity-teal-600 hover:to-clarity-teal-700'
+                },
+                'sunrise-amber': {
+                  card: 'border-sunrise-amber-200 bg-gradient-to-br from-sunrise-amber-50/50 to-white',
+                  icon: 'bg-sunrise-amber-100 group-hover:bg-sunrise-amber-200',
+                  iconText: 'text-sunrise-amber-600',
+                  badge: 'border-sunrise-amber-300 text-sunrise-amber-700 bg-sunrise-amber-50',
+                  title: 'text-sunrise-amber-800 group-hover:text-sunrise-amber-900',
+                  benefit: 'bg-sunrise-amber-50 border-sunrise-amber-100',
+                  benefitTitle: 'text-sunrise-amber-700',
+                  benefitText: 'text-sunrise-amber-600',
+                  progress: 'text-sunrise-amber-600',
+                  progressBg: 'bg-sunrise-amber-100',
+                  button: 'bg-gradient-to-r from-sunrise-amber-500 to-sunrise-amber-600 hover:from-sunrise-amber-600 hover:to-sunrise-amber-700'
+                }
+              };
+              return colorMap[color as keyof typeof colorMap] || colorMap['memory-emerald'];
+            };
+
+            const colors = getColorClasses(feature.color);
+
+            return (
+              <Card 
+                key={feature.id}
+                className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl ${colors.card} group`}
+                onClick={() => handleFeatureClick(feature)}
+              >
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between">
+                    <div className={`p-3 rounded-lg ${colors.icon} transition-colors`}>
+                      <feature.icon className={`h-6 w-6 ${colors.iconText}`} />
+                    </div>
+                    <Badge 
+                      variant="outline" 
+                      className={colors.badge}
+                    >
+                      {feature.myrhythmPhase}
+                    </Badge>
                   </div>
-                  <Badge 
-                    variant="outline" 
-                    className={`border-${feature.color}-300 text-${feature.color}-700 bg-${feature.color}-50`}
+                  <CardTitle className={colors.title}>
+                    {feature.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <p className="text-muted-foreground text-sm">
+                    {feature.description}
+                  </p>
+                  
+                  {/* Cognitive Benefit Highlight */}
+                  <div className={`p-3 rounded-lg ${colors.benefit} border`}>
+                    <p className={`text-xs font-medium ${colors.benefitTitle} mb-1`}>
+                      🧠 Cognitive Benefit:
+                    </p>
+                    <p className={`text-xs ${colors.benefitText}`}>
+                      {feature.cognitiveBenefit}
+                    </p>
+                  </div>
+
+                  {/* Progress indicator */}
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-muted-foreground">Progress</span>
+                      <span className={`${colors.progress} font-medium`}>
+                        {feature.completionRate}%
+                      </span>
+                    </div>
+                    <Progress 
+                      value={feature.completionRate} 
+                      className={`h-2 ${colors.progressBg}`}
+                    />
+                  </div>
+
+                  <Button 
+                    className={`w-full ${colors.button}`}
+                    size="sm"
                   >
-                    {feature.myrhythmPhase}
-                  </Badge>
-                </div>
-                <CardTitle className={`text-${feature.color}-800 group-hover:text-${feature.color}-900`}>
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-muted-foreground text-sm">
-                  {feature.description}
-                </p>
-                
-                {/* Cognitive Benefit Highlight */}
-                <div className={`p-3 rounded-lg bg-${feature.color}-50 border border-${feature.color}-100`}>
-                  <p className={`text-xs font-medium text-${feature.color}-700 mb-1`}>
-                    🧠 Cognitive Benefit:
-                  </p>
-                  <p className={`text-xs text-${feature.color}-600`}>
-                    {feature.cognitiveBenefit}
-                  </p>
-                </div>
-
-                {/* Progress indicator */}
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-muted-foreground">Progress</span>
-                    <span className={`text-${feature.color}-600 font-medium`}>
-                      {feature.completionRate}%
-                    </span>
-                  </div>
-                  <Progress 
-                    value={feature.completionRate} 
-                    className={`h-2 bg-${feature.color}-100`}
-                  />
-                </div>
-
-                <Button 
-                  className={`w-full bg-gradient-to-r from-${feature.color}-500 to-${feature.color}-600 hover:from-${feature.color}-600 hover:to-${feature.color}-700`}
-                  size="sm"
-                >
-                  Begin {feature.title}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+                    Begin {feature.title}
+                  </Button>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Daily Empowerment Section */}
