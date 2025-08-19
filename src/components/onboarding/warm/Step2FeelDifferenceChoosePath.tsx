@@ -3,20 +3,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Calendar, BarChart3, Users, ArrowRight } from 'lucide-react';
-import organizedActionImage from '@/assets/onboarding/organized-action-african-american.jpg';
+import organizedActionImage from '@/assets/onboarding/organized-professional-african-american.jpg';
 
 interface Step2FeelDifferenceChoosePathProps {
   persona: string;
-  intent: string;
-  onComplete: (path: 'guided' | 'explorer') => void;
+  intents: string[];
+  onComplete: () => void;
 }
 
-export function Step2FeelDifferenceChoosePath({ persona, intent, onComplete }: Step2FeelDifferenceChoosePathProps) {
-  const [selectedPath, setSelectedPath] = useState<'guided' | 'explorer' | null>(null);
-
+export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete }: Step2FeelDifferenceChoosePathProps) {
   const getPersonalizedText = (baseText: string) => {
     const personaText = persona === 'me' ? 'your' : persona === 'loved-one' ? 'their' : 'your client\'s';
-    const intentContext = intent.toLowerCase();
+    const intentContext = intents.length > 1 ? 'your needs' : intents[0]?.toLowerCase() || 'your goals';
     return `${baseText} for ${intentContext}`;
   };
 
@@ -123,60 +121,17 @@ export function Step2FeelDifferenceChoosePath({ persona, intent, onComplete }: S
         })}
       </div>
 
-      {/* Choose Your Path */}
-      <Card className="border-0 shadow-xl bg-white">
-        <CardContent className="p-8 space-y-6">
-          <div className="text-center space-y-2">
-            <h3 className="text-2xl font-bold text-brain-health-900">
-              Choose your path
-            </h3>
-            <p className="text-brain-health-700">
-              How would you like to experience MyRhythm?
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-            {pathOptions.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => setSelectedPath(option.id)}
-                className={`p-6 rounded-xl border-2 transition-all duration-200 text-left relative ${
-                  selectedPath === option.id
-                    ? 'border-brain-health-300 bg-brain-health-50'
-                    : 'border-gray-200 bg-white hover:bg-gray-50'
-                }`}
-              >
-                {option.recommended && (
-                  <Badge className="absolute -top-2 left-4 bg-brain-health-500 text-white">
-                    Recommended
-                  </Badge>
-                )}
-                <h4 className="text-xl font-bold text-brain-health-900 mb-1">
-                  {option.title}
-                </h4>
-                <p className="text-sm text-brain-health-600 mb-2 font-medium">
-                  {option.subtitle}
-                </p>
-                <p className="text-brain-health-700">
-                  {option.description}
-                </p>
-              </button>
-            ))}
-          </div>
-
-          <div className="flex justify-center pt-4">
-            <Button
-              onClick={() => selectedPath && onComplete(selectedPath)}
-              disabled={!selectedPath}
-              size="lg"
-              className="px-8 py-3 text-lg font-semibold"
-            >
-              Do my 60-second check‑in
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Continue Button */}
+      <div className="flex justify-center pt-8">
+        <Button
+          onClick={onComplete}
+          size="lg"
+          className="px-8 py-3 text-lg font-semibold"
+        >
+          Do my 60-second check‑in
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </Button>
+      </div>
     </div>
   );
 }

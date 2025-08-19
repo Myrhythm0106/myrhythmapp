@@ -27,19 +27,19 @@ export function ThreeStepWarmOnboarding() {
     }
   }, []);
 
-  const handleStep1Complete = (persona: string, intent: string, additionalInfo: string) => {
-    setPersonaAndIntent(persona, intent, additionalInfo);
+  const handleStep1Complete = (persona: string, intents: string[], additionalInfo: string) => {
+    setPersonaAndIntent(persona, intents.join(', '), additionalInfo);
     nextStep();
   };
 
-  const handleStep2Complete = (path: 'guided' | 'explorer') => {
-    setPath(path);
+  const handleStep2Complete = () => {
     nextStep();
   };
 
-  const handleStep3Complete = (checkInData: any, selectedPackage: 'starter' | 'plus' | 'pro') => {
+  const handleStep3Complete = (checkInData: any, selectedPackage: 'starter' | 'plus' | 'pro', selectedPath: 'guided' | 'explorer') => {
     setCheckIn(checkInData);
     setPackage(selectedPackage);
+    setPath(selectedPath);
     completeOnboarding();
   };
 
@@ -89,16 +89,15 @@ export function ThreeStepWarmOnboarding() {
         {state.step === 2 && state.persona && state.intent && (
           <Step2FeelDifferenceChoosePath
             persona={state.persona}
-            intent={state.intent}
+            intents={state.intent.split(', ')}
             onComplete={handleStep2Complete}
           />
         )}
         
-        {state.step === 3 && state.persona && state.intent && state.selectedPath && (
+        {state.step === 3 && state.persona && state.intent && (
           <Step3CheckinPlanPackages
             persona={state.persona}
-            intent={state.intent}
-            selectedPath={state.selectedPath}
+            intents={state.intent.split(', ')}
             onComplete={handleStep3Complete}
           />
         )}

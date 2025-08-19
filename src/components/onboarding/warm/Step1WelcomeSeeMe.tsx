@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Heart, Users, UserCheck, Briefcase } from 'lucide-react';
 
 interface Step1WelcomeSeeMeProps {
-  onComplete: (persona: string, intent: string, additionalInfo: string) => void;
+  onComplete: (persona: string, intents: string[], additionalInfo: string) => void;
 }
 
 const personas = [
@@ -28,16 +28,24 @@ const intents = [
 
 export function Step1WelcomeSeeMe({ onComplete }: Step1WelcomeSeeMeProps) {
   const [selectedPersona, setSelectedPersona] = useState<string>('');
-  const [selectedIntent, setSelectedIntent] = useState<string>('');
+  const [selectedIntents, setSelectedIntents] = useState<string[]>([]);
   const [additionalInfo, setAdditionalInfo] = useState<string>('');
 
+  const toggleIntent = (intent: string) => {
+    setSelectedIntents(prev => 
+      prev.includes(intent) 
+        ? prev.filter(i => i !== intent)
+        : [...prev, intent]
+    );
+  };
+
   const handleContinue = () => {
-    if (selectedPersona && selectedIntent) {
-      onComplete(selectedPersona, selectedIntent, additionalInfo);
+    if (selectedPersona && selectedIntents.length > 0) {
+      onComplete(selectedPersona, selectedIntents, additionalInfo);
     }
   };
 
-  const canContinue = selectedPersona && selectedIntent;
+  const canContinue = selectedPersona && selectedIntents.length > 0;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -81,15 +89,15 @@ export function Step1WelcomeSeeMe({ onComplete }: Step1WelcomeSeeMeProps) {
           {/* What brought you here? */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-brain-health-900">
-              What brought you here?
+              What brought you here? <span className="text-sm text-gray-500 font-normal">(select all that apply)</span>
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {intents.map((intent) => (
                 <button
                   key={intent}
-                  onClick={() => setSelectedIntent(intent)}
+                  onClick={() => toggleIntent(intent)}
                   className={`p-3 rounded-lg border-2 transition-all duration-200 text-sm font-medium ${
-                    selectedIntent === intent
+                    selectedIntents.includes(intent)
                       ? 'bg-brain-health-100 border-brain-health-300 text-brain-health-700'
                       : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
                   }`}
@@ -98,6 +106,11 @@ export function Step1WelcomeSeeMe({ onComplete }: Step1WelcomeSeeMeProps) {
                 </button>
               ))}
             </div>
+            {selectedIntents.length > 0 && (
+              <p className="text-sm text-brain-health-600">
+                Selected: {selectedIntents.join(', ')}
+              </p>
+            )}
           </div>
 
           {/* Additional info */}

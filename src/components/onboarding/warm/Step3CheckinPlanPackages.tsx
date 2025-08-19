@@ -15,12 +15,11 @@ interface CheckInData {
 
 interface Step3CheckinPlanPackagesProps {
   persona: string;
-  intent: string;
-  selectedPath: 'guided' | 'explorer';
-  onComplete: (checkIn: CheckInData, selectedPackage: 'starter' | 'plus' | 'pro') => void;
+  intents: string[];
+  onComplete: (checkIn: CheckInData, selectedPackage: 'starter' | 'plus' | 'pro', selectedPath: 'guided' | 'explorer') => void;
 }
 
-export function Step3CheckinPlanPackages({ persona, intent, selectedPath, onComplete }: Step3CheckinPlanPackagesProps) {
+export function Step3CheckinPlanPackages({ persona, intents, onComplete }: Step3CheckinPlanPackagesProps) {
   const [checkIn, setCheckIn] = useState<CheckInData>({
     energy: 5,
     stress: 5,
@@ -31,6 +30,7 @@ export function Step3CheckinPlanPackages({ persona, intent, selectedPath, onComp
   
   const [showResults, setShowResults] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<'starter' | 'plus' | 'pro'>('starter');
+  const [selectedPath, setSelectedPath] = useState<'guided' | 'explorer' | null>(null);
 
   const checkInItems = [
     { key: 'energy' as keyof CheckInData, label: 'Energy level', lowLabel: 'Exhausted', highLabel: 'Energized' },
@@ -305,9 +305,67 @@ export function Step3CheckinPlanPackages({ persona, intent, selectedPath, onComp
           })}
         </div>
 
+        {/* Choose Your Path */}
+        <Card className="border-0 shadow-xl bg-white">
+          <CardContent className="p-8 space-y-6">
+            <div className="text-center space-y-2">
+              <h3 className="text-2xl font-bold text-brain-health-900">
+                Choose your path
+              </h3>
+              <p className="text-brain-health-700">
+                How would you like to experience MyRhythm?
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <button
+                onClick={() => setSelectedPath('guided')}
+                className={`p-6 rounded-xl border-2 transition-all duration-200 text-left relative ${
+                  selectedPath === 'guided'
+                    ? 'border-brain-health-300 bg-brain-health-50'
+                    : 'border-gray-200 bg-white hover:bg-gray-50'
+                }`}
+              >
+                <Badge className="absolute -top-2 left-4 bg-brain-health-500 text-white">
+                  Recommended
+                </Badge>
+                <h4 className="text-xl font-bold text-brain-health-900 mb-1">
+                  Guided
+                </h4>
+                <p className="text-sm text-brain-health-600 mb-2 font-medium">
+                  Recommended
+                </p>
+                <p className="text-brain-health-700">
+                  Step-by-step support with personalized guidance
+                </p>
+              </button>
+              
+              <button
+                onClick={() => setSelectedPath('explorer')}
+                className={`p-6 rounded-xl border-2 transition-all duration-200 text-left ${
+                  selectedPath === 'explorer'
+                    ? 'border-brain-health-300 bg-brain-health-50'
+                    : 'border-gray-200 bg-white hover:bg-gray-50'
+                }`}
+              >
+                <h4 className="text-xl font-bold text-brain-health-900 mb-1">
+                  Explorer
+                </h4>
+                <p className="text-sm text-brain-health-600 mb-2 font-medium">
+                  I prefer to discover
+                </p>
+                <p className="text-brain-health-700">
+                  Freedom to explore features at your own pace
+                </p>
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="flex justify-center pt-4">
           <Button
-            onClick={() => onComplete(checkIn, selectedPackage)}
+            onClick={() => selectedPath && onComplete(checkIn, selectedPackage, selectedPath)}
+            disabled={!selectedPath}
             size="lg"
             className="px-12 py-4 text-xl font-semibold"
           >
