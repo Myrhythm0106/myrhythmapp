@@ -12,7 +12,7 @@ const personas = [
   { id: 'me', label: 'Me', icon: Heart, color: 'bg-memory-emerald-100 hover:bg-memory-emerald-200 text-memory-emerald-700' },
   { id: 'loved-one', label: 'Loved one', icon: Users, color: 'bg-brain-health-100 hover:bg-brain-health-200 text-brain-health-700' },
   { id: 'patient', label: 'Patient', icon: UserCheck, color: 'bg-clarity-teal-100 hover:bg-clarity-teal-200 text-clarity-teal-700' },
-  { id: 'client', label: 'Client', icon: Briefcase, color: 'bg-emotional-balance-100 hover:bg-emotional-balance-200 text-emotional-balance-700' }
+  { id: 'colleague', label: 'Colleague', icon: Briefcase, color: 'bg-emotional-balance-100 hover:bg-emotional-balance-200 text-emotional-balance-700' }
 ];
 
 const intents = [
