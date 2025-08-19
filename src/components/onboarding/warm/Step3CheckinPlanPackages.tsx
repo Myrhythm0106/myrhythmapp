@@ -17,9 +17,10 @@ interface Step3CheckinPlanPackagesProps {
   persona: string;
   intents: string[];
   onComplete: (checkIn: CheckInData, selectedPackage: 'starter' | 'plus' | 'pro', selectedPath: 'guided' | 'explorer') => void;
+  variant?: 'default' | 'mvp';
 }
 
-export function Step3CheckinPlanPackages({ persona, intents, onComplete }: Step3CheckinPlanPackagesProps) {
+export function Step3CheckinPlanPackages({ persona, intents, onComplete, variant = 'default' }: Step3CheckinPlanPackagesProps) {
   const [checkIn, setCheckIn] = useState<CheckInData>({
     energy: 5,
     stress: 5,
@@ -154,7 +155,7 @@ export function Step3CheckinPlanPackages({ persona, intents, onComplete }: Step3
           </p>
         </div>
 
-        <Card className="border-0 shadow-xl bg-white">
+        <Card className={`border-0 shadow-xl ${variant === 'mvp' ? 'bg-gradient-to-br from-white to-brain-health-50/50 border-brain-health-200/50' : 'bg-white'}`}>
           <CardContent className="p-8 space-y-8">
             {checkInItems.map((item) => (
               <div key={item.key} className="space-y-4">
@@ -187,7 +188,7 @@ export function Step3CheckinPlanPackages({ persona, intents, onComplete }: Step3
               <Button
                 onClick={handleSubmitCheckIn}
                 size="lg"
-                className="px-8 py-3 text-lg font-semibold"
+                className={`px-8 py-3 text-lg font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
               >
                 See my personalized plan
               </Button>
@@ -306,7 +307,7 @@ export function Step3CheckinPlanPackages({ persona, intents, onComplete }: Step3
         </div>
 
         {/* Choose Your Path */}
-        <Card className="border-0 shadow-xl bg-white">
+        <Card className={`border-0 shadow-xl ${variant === 'mvp' ? 'bg-gradient-to-br from-white to-brain-health-50 border-brain-health-200/50' : 'bg-white'}`}>
           <CardContent className="p-8 space-y-6">
             <div className="text-center space-y-2">
               <h3 className="text-2xl font-bold text-brain-health-900">
@@ -367,7 +368,7 @@ export function Step3CheckinPlanPackages({ persona, intents, onComplete }: Step3
             onClick={() => selectedPath && onComplete(checkIn, selectedPackage, selectedPath)}
             disabled={!selectedPath}
             size="lg"
-            className="px-12 py-4 text-xl font-semibold"
+            className={`px-12 py-4 text-xl font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
           >
             {selectedPackage === 'starter' ? 'Start with Starter (free)' : `Try ${packages.find(p => p.id === selectedPackage)?.name}`}
           </Button>

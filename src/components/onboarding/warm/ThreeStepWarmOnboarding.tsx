@@ -7,7 +7,7 @@ import { Step2FeelDifferenceChoosePath } from './Step2FeelDifferenceChoosePath';
 import { Step3CheckinPlanPackages } from './Step3CheckinPlanPackages';
 import { useWarmOnboarding } from '@/hooks/useWarmOnboarding';
 
-export function ThreeStepWarmOnboarding() {
+export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'default' | 'mvp' }) {
   const {
     state,
     nextStep,
@@ -83,7 +83,10 @@ export function ThreeStepWarmOnboarding() {
       {/* Content */}
       <div className="container mx-auto px-6 py-12 max-w-6xl">
         {state.step === 1 && (
-          <Step1WelcomeSeeMe onComplete={handleStep1Complete} />
+          <Step1WelcomeSeeMe 
+            onComplete={handleStep1Complete}
+            variant={variant}
+          />
         )}
         
         {state.step === 2 && state.persona && state.intent && (
@@ -91,6 +94,7 @@ export function ThreeStepWarmOnboarding() {
             persona={state.persona}
             intents={state.intent.split(', ')}
             onComplete={handleStep2Complete}
+            variant={variant}
           />
         )}
         
@@ -99,6 +103,7 @@ export function ThreeStepWarmOnboarding() {
             persona={state.persona}
             intents={state.intent.split(', ')}
             onComplete={handleStep3Complete}
+            variant={variant}
           />
         )}
       </div>

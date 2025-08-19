@@ -9,9 +9,10 @@ interface Step2FeelDifferenceChoosePathProps {
   persona: string;
   intents: string[];
   onComplete: () => void;
+  variant?: 'default' | 'mvp';
 }
 
-export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete }: Step2FeelDifferenceChoosePathProps) {
+export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, variant = 'default' }: Step2FeelDifferenceChoosePathProps) {
   const getPersonalizedText = (baseText: string) => {
     const personaText = persona === 'me' ? 'your' : persona === 'loved-one' ? 'their' : 'your client\'s';
     const intentContext = intents.length > 1 ? 'your needs' : intents[0]?.toLowerCase() || 'your goals';
@@ -49,8 +50,8 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete }: 
       subtitle: "Support & Community",
       description: getPersonalizedText("Connect with others who understand the journey"),
       icon: Users,
-      gradient: "from-emotional-balance-500 to-emotional-balance-600",
-      bgGradient: "from-emotional-balance-50 to-emotional-balance-100"
+      gradient: "from-sunrise-amber-500 to-sunrise-amber-600",
+      bgGradient: "from-sunrise-amber-50 to-sunrise-amber-100"
     }
   ];
 
@@ -126,7 +127,7 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete }: 
         <Button
           onClick={onComplete}
           size="lg"
-          className="px-8 py-3 text-lg font-semibold"
+          className={`px-8 py-3 text-lg font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
         >
           Do my 60-second check‑in
           <ArrowRight className="ml-2 h-5 w-5" />

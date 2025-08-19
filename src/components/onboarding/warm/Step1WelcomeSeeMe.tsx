@@ -6,13 +6,14 @@ import { Heart, Users, UserCheck, Briefcase } from 'lucide-react';
 
 interface Step1WelcomeSeeMeProps {
   onComplete: (persona: string, intents: string[], additionalInfo: string) => void;
+  variant?: 'default' | 'mvp';
 }
 
 const personas = [
   { id: 'me', label: 'Me', icon: Heart, color: 'bg-memory-emerald-100 hover:bg-memory-emerald-200 text-memory-emerald-700' },
   { id: 'loved-one', label: 'Loved one', icon: Users, color: 'bg-brain-health-100 hover:bg-brain-health-200 text-brain-health-700' },
   { id: 'patient', label: 'Patient', icon: UserCheck, color: 'bg-clarity-teal-100 hover:bg-clarity-teal-200 text-clarity-teal-700' },
-  { id: 'colleague', label: 'Colleague', icon: Briefcase, color: 'bg-emotional-balance-100 hover:bg-emotional-balance-200 text-emotional-balance-700' }
+  { id: 'colleague', label: 'Colleague', icon: Briefcase, color: 'bg-sunrise-amber-100 hover:bg-sunrise-amber-200 text-sunrise-amber-700' }
 ];
 
 const intents = [
@@ -26,7 +27,7 @@ const intents = [
   'Cognitive wellness'
 ];
 
-export function Step1WelcomeSeeMe({ onComplete }: Step1WelcomeSeeMeProps) {
+export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1WelcomeSeeMeProps) {
   const [selectedPersona, setSelectedPersona] = useState<string>('');
   const [selectedIntents, setSelectedIntents] = useState<string[]>([]);
   const [additionalInfo, setAdditionalInfo] = useState<string>('');
@@ -58,7 +59,7 @@ export function Step1WelcomeSeeMe({ onComplete }: Step1WelcomeSeeMeProps) {
         </p>
       </div>
 
-      <Card className="border-0 shadow-xl bg-white">
+      <Card className={`border-0 shadow-xl ${variant === 'mvp' ? 'bg-gradient-to-br from-white to-brain-health-50/50 border-brain-health-200/50' : 'bg-white'}`}>
         <CardContent className="p-8 space-y-8">
           {/* Who are you here for? */}
           <div className="space-y-4">
@@ -132,7 +133,7 @@ export function Step1WelcomeSeeMe({ onComplete }: Step1WelcomeSeeMeProps) {
               onClick={handleContinue}
               disabled={!canContinue}
               size="lg"
-              className="px-8 py-3 text-lg font-semibold"
+              className={`px-8 py-3 text-lg font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
             >
               Show me how MyRhythm will support me
             </Button>

@@ -109,9 +109,9 @@ function App() {
                     {/* Warm Onboarding Flow */}
                     <Route path="/start" element={<StartPage />} />
                     
-                    {/* Redirect assessment routes to /start for new users */}
-                    <Route path="/mvp/assessment" element={<RedirectToStart />} />
-                    <Route path="/assessment" element={<RedirectToStart />} />
+                     {/* Redirect assessment routes to /start for new users - but keep /mvp/assessment directing to MVPCore4C */}
+                     <Route path="/mvp/assessment" element={<MVPCore4CPage />} />
+                     <Route path="/assessment" element={<RedirectToStart />} />
                     
                     {/* MVP Routes */}
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />

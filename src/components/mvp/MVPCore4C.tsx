@@ -1,19 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { PainPointImageCard } from './PainPointImageCard';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
 import organizedActionImg from '@/assets/organized-action.jpg';
 import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
 import strengthTogetherImg from '@/assets/strength-together.jpg';
+import { MVPOnboardingModal } from './MVPOnboardingModal';
+import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
 
 export function MVPCore4C() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  
+  // Check if we should auto-open the modal on mount
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (location.pathname === '/mvp/assessment' || params.get('open') === 'onboarding') {
+      setIsOnboardingOpen(true);
+    }
+  }, [location]);
   
   const handleGetStarted = () => {
-    navigate('/mvp/assessment');
+    setIsOnboardingOpen(true);
   };
 
   return (
@@ -363,16 +375,22 @@ export function MVPCore4C() {
           <p className="text-xl text-brain-health-700 mb-8 max-w-2xl mx-auto">
             Start with our personalized assessment to discover your unique rhythm
           </p>
-          <Button 
-            size="lg"
-            className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
-            onClick={handleGetStarted}
-          >
-            <Sparkles className="h-5 w-5 mr-2" />
-            Start Your Assessment
-          </Button>
-        </div>
-      </section>
-    </div>
-  );
-}
+           <Button 
+             size="lg"
+             className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
+             onClick={handleGetStarted}
+           >
+             <Sparkles className="h-5 w-5 mr-2" />
+             Start Your Assessment
+           </Button>
+         </div>
+       </section>
+
+       {/* Onboarding Modal */}
+       <MVPOnboardingModal isOpen={isOnboardingOpen} onOpenChange={setIsOnboardingOpen} />
+       
+       {/* Floating Register Button - only show when modal is closed */}
+       {!isOnboardingOpen && <FloatingRegisterButton />}
+     </div>
+   );
+ }
