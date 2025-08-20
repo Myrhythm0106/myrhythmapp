@@ -42,7 +42,7 @@ export function Step2AccountSetup({ selectedPackage, onSetupComplete }: Step2Acc
           return;
         }
 
-        await signUp(formData.email, formData.password);
+        await signUp(formData.email, formData.password, `${formData.firstName} ${formData.lastName}`);
         
         toast.success('Account created successfully!');
       } else {

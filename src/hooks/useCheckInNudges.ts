@@ -44,7 +44,7 @@ interface NudgeSettings {
 export function useCheckInNudges() {
   const { user } = useAuth();
   const { hasFeature } = useSubscription();
-  const subscribed = hasFeature('basicAccess');
+  const subscribed = hasFeature('basicProgressTracking');
   const [showNudge, setShowNudge] = useState(false);
   const [currentNudge, setCurrentNudge] = useState<CheckInNudge | null>(null);
 
