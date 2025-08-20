@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { BackButton } from '@/components/ui/BackButton';
 import { PainPointImageCard } from './PainPointImageCard';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
 import organizedActionImg from '@/assets/organized-action.jpg';
@@ -31,10 +32,15 @@ export function MVPCore4C() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
       {/* Navigation Header */}
-      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-brain-health-200/50 sticky top-0 z-50">
         <div className="container mx-auto px-6 max-w-6xl">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
+              <BackButton 
+                variant="ghost" 
+                size="sm" 
+                className="text-brain-health-600 hover:bg-brain-health-50"
+              />
               <Brain className="h-8 w-8 text-memory-emerald-600" />
               <span className="text-2xl font-bold text-brain-health-900">MyRhythm</span>
             </div>

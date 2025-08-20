@@ -48,8 +48,7 @@ export function AccountabilityDashboard() {
   }
 
   return (
-    <ScrollArea className="h-[calc(100vh-8rem)] w-full">
-      <div className="space-y-6 p-1">
+    <div className="space-y-6 p-1">
         <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Accountability Hub</h1>
@@ -272,7 +271,6 @@ export function AccountabilityDashboard() {
           <AlertsPanel />
         </TabsContent>
       </Tabs>
-      </div>
-    </ScrollArea>
+    </div>
   );
 }

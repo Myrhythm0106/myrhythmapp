@@ -11,7 +11,8 @@ import { EnhancedGlobalSearch } from "@/components/navigation/EnhancedGlobalSear
 import { DynamicSidebar } from "./DynamicSidebar";
 import { useSidebar } from "./Sidebar/SidebarContext";
 import { useUserProgress } from "@/hooks/useUserProgress";
-import { Brain, Menu, User, LogOut, Crown, ArrowLeft } from "lucide-react";
+import { Brain, Menu, User, LogOut, Crown } from "lucide-react";
+import { BackButton } from "@/components/ui/BackButton";
 import { useUserData } from "@/hooks/use-user-data";
 import { Badge } from "@/components/ui/badge";
 
@@ -75,8 +76,8 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-gradient-to-br from-emerald-50 via-white to-teal-50 p-2">
-      <div className="min-h-[calc(100vh-16px)] w-full border border-border/20 rounded-lg bg-background/50 backdrop-blur-sm">
+    <div className="min-h-screen flex w-full bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/20 to-clarity-teal-50/15 p-2">
+      <div className="min-h-[calc(100vh-16px)] w-full border border-brain-health-200/20 rounded-lg bg-background/50 backdrop-blur-sm">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
           <DynamicSidebar isCollapsed={isCollapsed} />
@@ -95,7 +96,7 @@ export function MainLayout({ children }: MainLayoutProps) {
           isCollapsed ? "lg:ml-16" : "lg:ml-64"
         )}>
         {/* Header */}
-        <header className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-purple-200/50 shadow-sm">
+        <header className="flex items-center justify-between p-4 bg-white/80 backdrop-blur-sm border-b border-brain-health-200/50 shadow-sm">
           <div className="flex items-center gap-4">
             <Sheet>
               <SheetTrigger asChild>
@@ -109,21 +110,17 @@ export function MainLayout({ children }: MainLayoutProps) {
             </Sheet>
             
             {/* Back Navigation */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBackToWelcome}
-              className="flex items-center gap-2 text-purple-600 hover:bg-purple-50"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="hidden sm:inline">Back to Welcome</span>
-            </Button>
+            <BackButton 
+              variant="ghost" 
+              size="sm" 
+              className="text-brain-health-600 hover:bg-brain-health-50"
+            />
             
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-md flex items-center justify-center lg:hidden">
+              <div className="w-6 h-6 bg-gradient-to-br from-memory-emerald-500 via-brain-health-500 to-clarity-teal-500 rounded-md flex items-center justify-center lg:hidden">
                 <Brain className="h-3 w-3 text-white" />
               </div>
-              <h1 className="text-lg font-semibold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+              <h1 className="text-lg font-semibold bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
                 MyRhythm
               </h1>
             </div>
@@ -149,7 +146,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={user?.user_metadata?.avatar_url} />
-                    <AvatarFallback className="bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 text-white">
+                    <AvatarFallback className="bg-gradient-to-br from-memory-emerald-500 via-brain-health-500 to-clarity-teal-500 text-white">
                       {user?.email?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
