@@ -233,7 +233,12 @@ export function MemoryBridgeMainDashboard() {
           </TabsContent>
 
            <TabsContent value="record" className="space-y-6">
-            <MemoryBridgeRecorder onRecordingComplete={(result) => console.log('Recording completed:', result)} />
+            <MemoryBridgeRecorder 
+              open={true}
+              onClose={() => {}}
+              meetingData={{}}
+              onComplete={() => console.log('Recording completed')} 
+            />
           </TabsContent>
         </Tabs>
       </div>

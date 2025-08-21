@@ -35,14 +35,10 @@ export function MemoryBridgeStarterDashboard() {
     setShowFirstRecording(true);
   };
   
-  const handleRecordingComplete = (result: any) => {
+  const handleRecordingComplete = () => {
     setShowFirstRecording(false);
-    if (result && result.meetingId) {
-      setLastMeetingId(result.meetingId);
-      setLastActionsCount(result.actions_found || 0);
-      setLastSummary(result.summary || '');
-      setShowResults(true);
-    }
+    // Results will be handled by the Memory Bridge hook automatically
+    // We just close the recording interface
   };
   
   const handleUnlockCalendar = () => {
@@ -158,7 +154,12 @@ export function MemoryBridgeStarterDashboard() {
               <CardTitle className="text-center">Your First Memory Bridge Recording</CardTitle>
             </CardHeader>
             <CardContent>
-              <MemoryBridgeRecorder onComplete={handleRecordingComplete} />
+              <MemoryBridgeRecorder 
+                open={true}
+                onClose={() => setShowFirstRecording(false)}
+                meetingData={{}}
+                onComplete={handleRecordingComplete} 
+              />
             </CardContent>
           </Card>
         )}

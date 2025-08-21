@@ -14,6 +14,7 @@ export function MemoryBridgeFloatingButton({ className }: MemoryBridgeFloatingBu
   const { isRecording, currentMeeting } = useMemoryBridge();
   const [showSetup, setShowSetup] = useState(false);
   const [showRecorder, setShowRecorder] = useState(false);
+  const [meetingSetupData, setMeetingSetupData] = useState(null);
 
   const handleQuickStart = () => {
     if (isRecording) {
@@ -47,7 +48,10 @@ export function MemoryBridgeFloatingButton({ className }: MemoryBridgeFloatingBu
 
       {showSetup && (
         <MeetingSetupDialog
-          onStartMeeting={(setupData) => {
+          open={showSetup}
+          onClose={() => setShowSetup(false)}
+          onStart={(setupData) => {
+            setMeetingSetupData(setupData);
             setShowSetup(false);
             setShowRecorder(true);
           }}
@@ -60,10 +64,10 @@ export function MemoryBridgeFloatingButton({ className }: MemoryBridgeFloatingBu
         <MemoryBridgeRecorder 
           open={showRecorder}
           onClose={() => setShowRecorder(false)}
-          meetingData={currentMeeting}
+          meetingData={meetingSetupData || currentMeeting}
           onComplete={() => {
             setShowRecorder(false);
-            setCurrentMeeting(null);
+            setMeetingSetupData(null);
           }}
         />
             <div className="p-4 border-t">
