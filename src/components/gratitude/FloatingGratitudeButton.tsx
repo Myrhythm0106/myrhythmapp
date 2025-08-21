@@ -20,8 +20,8 @@ export function FloatingGratitudeButton({ className }: FloatingGratitudeButtonPr
         size="lg"
         className={cn(
           "fixed bottom-6 right-6 z-50 h-16 w-16 rounded-full shadow-xl",
-          "bg-gradient-to-r from-blue-500 via-purple-500 to-rose-500",
-          "hover:from-blue-600 hover:via-purple-600 hover:to-rose-600",
+          "bg-gradient-to-r from-memory-emerald-500 via-brain-health-500 to-clarity-teal-500",
+          "hover:from-memory-emerald-600 hover:via-brain-health-600 hover:to-clarity-teal-600",
           "text-white border-0 transition-all duration-300",
           "hover:scale-110 hover:shadow-2xl",
           "focus:ring-4 focus:ring-purple-200",

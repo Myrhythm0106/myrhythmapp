@@ -22,7 +22,12 @@ import { UnifiedActionDropdown } from "@/components/calendar/UnifiedActionDropdo
 import { FloatingNextButton } from "@/components/navigation/FloatingNextButton";
 import { useDataTransfer } from "@/hooks/useDataTransfer";
 import { FloatingActionDropdown } from "@/components/ui/FloatingActionDropdown";
-import { Preview3Background } from "@/components/ui/Preview3Background";
+import { MVPThemeWrapper } from "@/components/theme/MVPThemeWrapper";
+import { MVPTopNav } from "@/components/mvp/MVPTopNav";
+import { MVPPageHeader } from "@/components/mvp/MVPPageHeader";
+import { WeeklyGoalRibbon } from "@/components/goals/WeeklyGoalRibbon";
+import { TodaysFocusBanner } from "@/components/calendar/TodaysFocusBanner";
+import { WeeklyGoalProvider } from "@/contexts/WeeklyGoalContext";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -129,24 +134,25 @@ const Calendar = () => {
   }
 
   return (
-    <PomodoroProvider>
-      <Preview3Background>
-        <div className="min-h-screen">{/* Remove duplicate background */}
-        <ScrollArea className="h-[calc(100vh-64px)]">
-          <div className="container mx-auto px-4 py-6 space-y-6">
-            
-            {/* Enhanced Navigation Header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-              <div className="flex flex-col gap-2">
-                <BreadcrumbNav />
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                  My Daily Rhythm
-                </h1>
-              </div>
-              <div className="flex items-center gap-3">
-                <OverviewMenu />
-              </div>
-            </div>
+    <WeeklyGoalProvider>
+      <PomodoroProvider>
+        <MVPThemeWrapper>
+          <MVPTopNav />
+          <div className="min-h-screen">
+            <ScrollArea className="h-[calc(100vh-64px)]">
+              <div className="container mx-auto px-4 py-6 space-y-6">
+                
+                {/* MVP Page Header */}
+                <MVPPageHeader 
+                  title="My Daily Rhythm"
+                  subtitle="Transform your day with brain-friendly scheduling and mindful action planning"
+                />
+
+                {/* Weekly Goal Context */}
+                <WeeklyGoalRibbon />
+
+                {/* Today's Focus Banner */}
+                <TodaysFocusBanner />
 
             {/* Unified Action Center */}
             <div className="flex justify-center items-center">
@@ -277,10 +283,11 @@ const Calendar = () => {
             setShowQuickAction(true);
           }}
         />
-        </div>
-      </Preview3Background>
-    </PomodoroProvider>
-  );
+      </div>
+    </MVPThemeWrapper>
+  </PomodoroProvider>
+</WeeklyGoalProvider>
+);
 };
 
 export default Calendar;

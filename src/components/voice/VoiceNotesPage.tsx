@@ -5,14 +5,19 @@ import { VoiceRecorder } from './VoiceRecorder';
 import { VoiceRecordingsList } from './VoiceRecordingsList';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Mic, List } from 'lucide-react';
+import { MVPThemeWrapper } from '@/components/theme/MVPThemeWrapper';
+import { MVPTopNav } from '@/components/mvp/MVPTopNav';
+import { MVPPageHeader } from '@/components/mvp/MVPPageHeader';
 
 export function VoiceNotesPage() {
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <PageHeader
-        title="Voice Notes"
-        subtitle="Record, organize, and manage your voice notes with healthcare professional access"
-      />
+    <MVPThemeWrapper>
+      <MVPTopNav />
+      <div className="container mx-auto p-4 space-y-6">
+        <MVPPageHeader
+          title="Voice Notes"
+          subtitle="Record, organize, and manage your voice notes with healthcare professional access"
+        />
       
       <Tabs defaultValue="record" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
@@ -35,5 +40,6 @@ export function VoiceNotesPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </MVPThemeWrapper>
   );
 }
