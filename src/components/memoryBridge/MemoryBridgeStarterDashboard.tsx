@@ -158,7 +158,7 @@ export function MemoryBridgeStarterDashboard() {
               <CardTitle className="text-center">Your First Memory Bridge Recording</CardTitle>
             </CardHeader>
             <CardContent>
-              <MemoryBridgeRecorder onRecordingComplete={handleRecordingComplete} />
+              <MemoryBridgeRecorder onComplete={handleRecordingComplete} />
             </CardContent>
           </Card>
         )}

@@ -1,253 +1,224 @@
 import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
-import { Mic, Users, MapPin, Heart, Battery } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
 import { MeetingSetupData } from '@/types/memoryBridge';
+import { X, Plus, Users, MapPin, Heart, Clock } from 'lucide-react';
 
 interface MeetingSetupDialogProps {
-  onStartMeeting: (setupData: MeetingSetupData) => void;
-  isLoading?: boolean;
+  open: boolean;
+  onClose: () => void;
+  onStart: (setupData: MeetingSetupData) => void;
 }
 
-export function MeetingSetupDialog({ onStartMeeting, isLoading }: MeetingSetupDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [participants, setParticipants] = useState<{ name: string; relationship: string }[]>([]);
-  const [newParticipant, setNewParticipant] = useState({ name: '', relationship: '' });
-  const [meetingType, setMeetingType] = useState<'formal' | 'informal' | 'family' | 'medical' | 'work'>('informal');
-  const [context, setContext] = useState('');
-  const [location, setLocation] = useState('');
-  const [energyLevel, setEnergyLevel] = useState<number>(3);
-  const [emotionalContext, setEmotionalContext] = useState('');
+export function MeetingSetupDialog({ open, onClose, onStart }: MeetingSetupDialogProps) {
+  const [setupData, setSetupData] = useState<MeetingSetupData>({
+    title: '',
+    participants: [],
+    meetingType: 'informal',
+    context: '',
+    location: '',
+    energyLevel: 5,
+    emotionalContext: ''
+  });
 
-  const relationshipTypes = [
-    'spouse', 'child', 'parent', 'sibling', 'friend', 'colleague', 
-    'healthcare', 'neighbor', 'family_friend', 'other'
-  ];
+  const [newParticipant, setNewParticipant] = useState({ name: '', relationship: '' });
 
   const addParticipant = () => {
     if (newParticipant.name && newParticipant.relationship) {
-      setParticipants([...participants, newParticipant]);
+      setSetupData(prev => ({
+        ...prev,
+        participants: [...prev.participants, newParticipant]
+      }));
       setNewParticipant({ name: '', relationship: '' });
     }
   };
 
   const removeParticipant = (index: number) => {
-    setParticipants(participants.filter((_, i) => i !== index));
+    setSetupData(prev => ({
+      ...prev,
+      participants: prev.participants.filter((_, i) => i !== index)
+    }));
   };
 
-  const handleStartMeeting = () => {
-    if (!title) return;
-
-    const setupData: MeetingSetupData = {
-      title,
-      participants,
-      meetingType,
-      context: context || undefined,
-      location: location || undefined,
-      energyLevel: energyLevel || undefined,
-      emotionalContext: emotionalContext || undefined,
-    };
-
-    onStartMeeting(setupData);
-    setIsOpen(false);
-    
-    // Reset form
-    setTitle('');
-    setParticipants([]);
-    setContext('');
-    setLocation('');
-    setEnergyLevel(3);
-    setEmotionalContext('');
+  const handleStart = () => {
+    if (setupData.title.trim()) {
+      onStart(setupData);
+      onClose();
+      // Reset form
+      setSetupData({
+        title: '',
+        participants: [],
+        meetingType: 'informal',
+        context: '',
+        location: '',
+        energyLevel: 5,
+        emotionalContext: ''
+      });
+    }
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button className="bg-gradient-to-r from-primary to-primary-glow text-white shadow-elegant hover:shadow-glow transition-all duration-300 flex items-center gap-2">
-          <Mic className="h-5 w-5" />
-          Start Memory Bridge
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+    <Dialog open={open} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Heart className="h-6 w-6 text-primary" />
+          <DialogTitle className="flex items-center gap-2">
+            <Users className="h-5 w-5" />
             Memory Bridge Setup
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-6 py-4">
           {/* Meeting Title */}
           <div className="space-y-2">
             <Label htmlFor="title">Meeting Title *</Label>
             <Input
               id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Family dinner discussion, Doctor appointment, Weekly check-in"
-              className="w-full"
+              placeholder="e.g., Family Check-in, Doctor Visit, Team Sync"
+              value={setupData.title}
+              onChange={(e) => setSetupData(prev => ({ ...prev, title: e.target.value }))}
             />
           </div>
 
           {/* Meeting Type */}
           <div className="space-y-2">
             <Label>Meeting Type</Label>
-            <Select value={meetingType} onValueChange={(value) => setMeetingType(value as any)}>
+            <Select 
+              value={setupData.meetingType} 
+              onValueChange={(value: any) => setSetupData(prev => ({ ...prev, meetingType: value }))}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="informal">Informal (casual conversation)</SelectItem>
-                <SelectItem value="family">Family (family discussion)</SelectItem>
-                <SelectItem value="work">Work (business meeting)</SelectItem>
-                <SelectItem value="formal">Formal (structured meeting)</SelectItem>
-                <SelectItem value="medical">Medical (healthcare appointment)</SelectItem>
+                <SelectItem value="informal">Informal</SelectItem>
+                <SelectItem value="formal">Formal</SelectItem>
+                <SelectItem value="family">Family</SelectItem>
+                <SelectItem value="medical">Medical</SelectItem>
+                <SelectItem value="work">Work</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           {/* Participants */}
           <div className="space-y-3">
-            <Label className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Who's Participating?
-            </Label>
+            <Label>Participants</Label>
             
-            <Card>
-              <CardContent className="p-4 space-y-3">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-                  <Input
-                    placeholder="Name"
-                    value={newParticipant.name}
-                    onChange={(e) => setNewParticipant({ ...newParticipant, name: e.target.value })}
-                  />
-                  <Select
-                    value={newParticipant.relationship}
-                    onValueChange={(value) => setNewParticipant({ ...newParticipant, relationship: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Relationship" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {relationshipTypes.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type.replace('_', ' ')}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button 
-                    onClick={addParticipant} 
-                    variant="outline" 
-                    disabled={!newParticipant.name || !newParticipant.relationship}
-                  >
-                    Add
-                  </Button>
-                </div>
-
-                {participants.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {participants.map((participant, index) => (
-                      <Badge
-                        key={index}
-                        variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground"
-                        onClick={() => removeParticipant(index)}
-                      >
-                        {participant.name} ({participant.relationship})
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Context & Location */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="location" className="flex items-center gap-2">
-                <MapPin className="h-4 w-4" />
-                Location (optional)
-              </Label>
+            <div className="flex gap-2">
               <Input
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Home, restaurant, office..."
+                placeholder="Name"
+                value={newParticipant.name}
+                onChange={(e) => setNewParticipant(prev => ({ ...prev, name: e.target.value }))}
+                className="flex-1"
               />
+              <Input
+                placeholder="Relationship"
+                value={newParticipant.relationship}
+                onChange={(e) => setNewParticipant(prev => ({ ...prev, relationship: e.target.value }))}
+                className="flex-1"
+              />
+              <Button onClick={addParticipant} size="sm">
+                <Plus className="h-4 w-4" />
+              </Button>
             </div>
 
-            <div className="space-y-2">
-              <Label className="flex items-center gap-2">
-                <Battery className="h-4 w-4" />
-                Energy Level
-              </Label>
-              <Select value={energyLevel.toString()} onValueChange={(value) => setEnergyLevel(parseInt(value))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 - Very Low</SelectItem>
-                  <SelectItem value="2">2 - Low</SelectItem>
-                  <SelectItem value="3">3 - Medium</SelectItem>
-                  <SelectItem value="4">4 - High</SelectItem>
-                  <SelectItem value="5">5 - Very High</SelectItem>
-                </SelectContent>
-              </Select>
+            {setupData.participants.length > 0 && (
+              <div className="space-y-2">
+                {setupData.participants.map((participant, index) => (
+                  <div key={index} className="flex items-center justify-between p-2 bg-muted rounded">
+                    <span className="text-sm">
+                      {participant.name} ({participant.relationship})
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => removeParticipant(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Location */}
+          <div className="space-y-2">
+            <Label htmlFor="location" className="flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              Location (Optional)
+            </Label>
+            <Input
+              id="location"
+              placeholder="Where is this meeting taking place?"
+              value={setupData.location}
+              onChange={(e) => setSetupData(prev => ({ ...prev, location: e.target.value }))}
+            />
+          </div>
+
+          {/* Energy Level */}
+          <div className="space-y-3">
+            <Label className="flex items-center gap-2">
+              <Heart className="h-4 w-4" />
+              Current Energy Level
+            </Label>
+            <div className="px-3">
+              <Slider
+                value={[setupData.energyLevel || 5]}
+                onValueChange={([value]) => setSetupData(prev => ({ ...prev, energyLevel: value }))}
+                max={10}
+                min={1}
+                step={1}
+                className="w-full"
+              />
+              <div className="flex justify-between text-sm text-muted-foreground mt-1">
+                <span>Low</span>
+                <span>{setupData.energyLevel}/10</span>
+                <span>High</span>
+              </div>
             </div>
           </div>
 
           {/* Context */}
           <div className="space-y-2">
-            <Label htmlFor="context">What's this conversation about? (optional)</Label>
+            <Label htmlFor="context">Meeting Context (Optional)</Label>
             <Textarea
               id="context"
-              value={context}
-              onChange={(e) => setContext(e.target.value)}
-              placeholder="Brief context about what you're planning to discuss or why this conversation is happening..."
-              rows={2}
+              placeholder="What's the purpose or background of this meeting?"
+              value={setupData.context}
+              onChange={(e) => setSetupData(prev => ({ ...prev, context: e.target.value }))}
+              rows={3}
             />
           </div>
 
           {/* Emotional Context */}
           <div className="space-y-2">
-            <Label htmlFor="emotional-context">Emotional Context (optional)</Label>
+            <Label htmlFor="emotionalContext">Emotional Context (Optional)</Label>
             <Textarea
-              id="emotional-context"
-              value={emotionalContext}
-              onChange={(e) => setEmotionalContext(e.target.value)}
-              placeholder="How are you feeling? Any relationship dynamics to be aware of?"
+              id="emotionalContext"
+              placeholder="How are you feeling about this meeting? Any concerns or expectations?"
+              value={setupData.emotionalContext}
+              onChange={(e) => setSetupData(prev => ({ ...prev, emotionalContext: e.target.value }))}
               rows={2}
             />
           </div>
+        </div>
 
-          {/* Start Button */}
-          <Button
-            onClick={handleStartMeeting}
-            disabled={!title || isLoading}
-            className="w-full bg-gradient-to-r from-primary to-primary-glow text-white"
+        <div className="flex gap-3 pt-4">
+          <Button variant="outline" onClick={onClose} className="flex-1">
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleStart} 
+            disabled={!setupData.title.trim()}
+            className="flex-1"
           >
-            {isLoading ? 'Starting...' : 'Start Recording'}
+            <Clock className="h-4 w-4 mr-2" />
+            Start Recording
           </Button>
         </div>
       </DialogContent>
