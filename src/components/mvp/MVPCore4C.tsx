@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles } from 'lucide-react';
+import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { BackButton } from '@/components/ui/BackButton';
 import { PainPointImageCard } from './PainPointImageCard';
@@ -11,11 +11,13 @@ import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
 import strengthTogetherImg from '@/assets/strength-together.jpg';
 import { MVPOnboardingModal } from './MVPOnboardingModal';
 import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function MVPCore4C() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const { user } = useAuth();
   
   // Check if we should auto-open the modal on mount
   useEffect(() => {
@@ -27,6 +29,14 @@ export function MVPCore4C() {
   
   const handleGetStarted = () => {
     setIsOnboardingOpen(true);
+  };
+
+  const handleAuthAction = () => {
+    if (user) {
+      navigate('/dashboard');
+    } else {
+      navigate('/auth');
+    }
   };
 
   return (
@@ -44,6 +54,15 @@ export function MVPCore4C() {
               <Brain className="h-8 w-8 text-memory-emerald-600" />
               <span className="text-2xl font-bold text-brain-health-900">MyRhythm</span>
             </div>
+            <Button
+              onClick={handleAuthAction}
+              variant="outline"
+              size="sm"
+              className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
+            >
+              <User className="h-4 w-4 mr-2" />
+              {user ? 'Go to Dashboard' : 'Log In'}
+            </Button>
           </div>
         </div>
       </nav>
