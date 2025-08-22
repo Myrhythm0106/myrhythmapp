@@ -5,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
-import { useMemoryBridge } from '@/hooks/useMemoryBridge';
+import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { toast } from 'sonner';
 
@@ -34,7 +34,7 @@ export function MemoryBridgeRecorder({
     formatDuration 
   } = useVoiceRecorder();
   
-  const { stopMeetingRecording, isProcessing } = useMemoryBridge();
+  const { startMeetingRecording, stopMeetingRecording, isProcessing } = useMemoryBridge();
   const { getLimits } = useSubscription();
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
@@ -66,11 +66,11 @@ export function MemoryBridgeRecorder({
   };
 
   const handlePause = () => {
-    if (isPaused) {
-      resumeRecording();
-    } else {
-      pauseRecording();
-    }
+    pauseRecording();
+  };
+
+  const handleResume = () => {
+    resumeRecording();
   };
 
   const handleStop = async () => {
@@ -84,7 +84,7 @@ export function MemoryBridgeRecorder({
     if (!audioBlob || !meetingData) return;
 
     try {
-      // Save the voice recording first
+      // Save the voice recording without processing
       const voiceRecording = await saveRecording(
         audioBlob,
         meetingData.meeting_title || meetingData.title,
@@ -93,14 +93,46 @@ export function MemoryBridgeRecorder({
       );
 
       if (voiceRecording) {
-        // Process the meeting and extract actions
-        await stopMeetingRecording(audioBlob);
+        toast.success('Recording saved successfully!');
         onComplete();
         onClose();
       }
     } catch (error) {
       console.error('Error saving recording:', error);
       toast.error('Failed to save recording');
+    }
+  };
+
+  const handleSaveAndProcess = async () => {
+    if (!audioBlob || !meetingData) return;
+
+    try {
+      // First save the voice recording
+      const voiceRecording = await saveRecording(
+        audioBlob,
+        meetingData.meeting_title || meetingData.title,
+        'meeting',
+        `Meeting with ${meetingData.participants?.map((p: any) => p.name).join(', ') || 'participants'}`
+      );
+
+      if (voiceRecording) {
+        // Start the meeting recording to get a meeting ID
+        const meetingRecord = await startMeetingRecording({
+          title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
+          participants: meetingData.participants || [],
+          meetingType: 'informal'
+        }, voiceRecording.id);
+
+        if (meetingRecord) {
+          // Process the meeting and extract actions
+          await stopMeetingRecording(audioBlob);
+          onComplete();
+          onClose();
+        }
+      }
+    } catch (error) {
+      console.error('Error processing recording:', error);
+      toast.error('Failed to process recording');
     }
   };
 
@@ -203,18 +235,27 @@ export function MemoryBridgeRecorder({
                     </Button>
                   ) : (
                     <>
-                      <Button
-                        onClick={handlePause}
-                        variant="outline"
-                        size="lg"
-                        className="gap-2"
-                      >
-                        {isPaused ? (
-                          <><Play className="h-4 w-4" /> Resume</>
-                        ) : (
-                          <><Pause className="h-4 w-4" /> Pause</>
-                        )}
-                      </Button>
+                      {!isPaused ? (
+                        <Button
+                          onClick={handlePause}
+                          variant="outline"
+                          size="lg"
+                          className="gap-2"
+                        >
+                          <Pause className="h-4 w-4" />
+                          Pause
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={handleResume}
+                          variant="outline"
+                          size="lg"
+                          className="gap-2"
+                        >
+                          <Play className="h-4 w-4" />
+                          Continue
+                        </Button>
+                      )}
                       <Button
                         onClick={handleStop}
                         variant="destructive"
@@ -232,17 +273,26 @@ export function MemoryBridgeRecorder({
               {/* Recording Complete Actions */}
               {audioBlob && (
                 <div className="space-y-4">
-                  <div className="text-center">
+                  {/* Audio Preview */}
+                  <div className="text-center space-y-2">
                     <p className="text-sm text-muted-foreground">
-                      Recording complete! Save to process and extract ACTs.
+                      Recording complete! Preview and choose your next step.
                     </p>
+                    <audio 
+                      controls 
+                      src={URL.createObjectURL(audioBlob)}
+                      className="w-full max-w-xs mx-auto"
+                    />
                   </div>
                   
-                  <div className="flex gap-3">
+                  <div className="flex gap-2">
                     <Button onClick={handleDiscard} variant="outline" className="flex-1">
                       Discard
                     </Button>
-                    <Button onClick={handleSave} className="flex-1">
+                    <Button onClick={handleSave} variant="secondary" className="flex-1">
+                      Save
+                    </Button>
+                    <Button onClick={handleSaveAndProcess} className="flex-1">
                       Save & Process
                     </Button>
                   </div>

@@ -15,7 +15,7 @@ import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangl
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 
 interface ExtractedActionsReviewProps {
-  meetingId: string;
+  meetingId?: string;
   onActionConfirm?: (actionId: string, status: 'confirmed' | 'modified' | 'rejected') => void;
   onShareWithFamily?: (actionId: string) => void;
   tier?: 'free' | 'taste-see' | 'pro';
@@ -39,9 +39,7 @@ export function ExtractedActionsReview({
   const commentLimits = { free: 1, 'taste-see': 7, pro: Infinity };
 
   useEffect(() => {
-    if (meetingId) {
-      loadActions();
-    }
+    loadActions();
   }, [meetingId]);
 
   const loadActions = async () => {
