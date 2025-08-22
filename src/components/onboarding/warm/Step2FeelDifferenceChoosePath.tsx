@@ -125,11 +125,14 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
       {/* Continue Button */}
       <div className="flex justify-center pt-8">
         <Button
-          onClick={onComplete}
+          onClick={() => {
+            // Route to subscription instead of check-in
+            window.location.href = '/subscribe';
+          }}
           size="lg"
           className={`px-8 py-3 text-lg font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
         >
-          Do my 60-second check‑in
+          Choose your plan
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>

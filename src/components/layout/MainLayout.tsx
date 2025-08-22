@@ -76,8 +76,8 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex w-full bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/20 to-clarity-teal-50/15 p-2">
-      <div className="min-h-[calc(100vh-16px)] w-full border border-brain-health-200/20 rounded-lg bg-background/50 backdrop-blur-sm">
+    <div className="h-full flex w-full bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/20 to-clarity-teal-50/15 p-2">
+      <div className="h-[calc(100vh-16px)] w-full border border-brain-health-200/20 rounded-lg bg-background/50 backdrop-blur-sm flex">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
           <DynamicSidebar isCollapsed={isCollapsed} />
@@ -92,7 +92,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
         {/* Main Content */}
         <main className={cn(
-          "flex-1 flex flex-col overflow-hidden transition-all duration-300",
+          "flex-1 flex flex-col h-full overflow-hidden transition-all duration-300",
           isCollapsed ? "lg:ml-16" : "lg:ml-64"
         )}>
         {/* Header */}

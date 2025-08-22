@@ -3,6 +3,12 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Global Scroll Fix - Eliminate double scrollbars */
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
 /* Global scrollbar visibility - always visible, high contrast */
 * {
   scrollbar-width: thin;

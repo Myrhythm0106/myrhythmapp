@@ -37,6 +37,9 @@ import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
 import CongratsPage from "./pages/CongratsPage";
 import StartPage from "./pages/StartPage";
 import { RedirectToStart } from "./components/redirects/RedirectToStart";
+import SubscribePage from "./pages/SubscribePage";
+import SubscribeSuccess from "./pages/SubscribeSuccess";
+import SubscribeCancel from "./pages/SubscribeCancel";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +58,11 @@ function App() {
                     {/* Landing and Discovery Routes */}
                     <Route path="/landing" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
+                    
+                    {/* Subscription Routes */}
+                    <Route path="/subscribe" element={<ProtectedRoute requireAuth={false}><SubscribePage /></ProtectedRoute>} />
+                    <Route path="/subscribe/success" element={<ProtectedRoute requireAuth={false}><SubscribeSuccess /></ProtectedRoute>} />
+                    <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
                     
                     {/* Dashboard-First Experience - Default Route */}
                     <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
@@ -100,7 +108,7 @@ function App() {
                     <Route
                       path="/web-onboarding"
                       element={
-                        <ProtectedRoute requireAuth={true}>
+                        <ProtectedRoute requireAuth={false}>
                           <WebOnboarding />
                         </ProtectedRoute>
                       }

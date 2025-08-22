@@ -1,9 +1,12 @@
 
-import React from "react";
-import { useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
+import { FirstTimeUserExperience } from "@/components/onboarding/FirstTimeUserExperience";
+import { useSessionTracking } from "@/hooks/useSessionTracking";
+import { useAuth } from "@/contexts/AuthContext";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { BackButton } from "@/components/ui/BackButton";
 import CalendarPage from "./CalendarPage";
@@ -22,6 +25,23 @@ import DecisionsPage from "./DecisionsPage";
 
 const Dashboard = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { resetSession } = useSessionTracking();
+
+  // Check if this is the first time user
+  useEffect(() => {
+    if (user && location.pathname === '/') {
+      const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete');
+      const welcomeSeen = localStorage.getItem('myrhythm_welcome_seen');
+      
+      // If user hasn't completed onboarding and hasn't seen welcome, redirect to web-onboarding
+      if (!onboardingComplete && !welcomeSeen) {
+        navigate('/web-onboarding');
+        return;
+      }
+    }
+  }, [user, location.pathname, navigate]);
   
   const renderContent = () => {
     const showBackButton = location.pathname !== '/' && location.pathname !== '/dashboard';
@@ -79,6 +99,7 @@ const Dashboard = () => {
     <SidebarProvider>
       <DailyActionsProvider>
         <MainLayout>
+          <FirstTimeUserExperience showOnMount={location.pathname === '/'} />
           {renderContent()}
         </MainLayout>
       </DailyActionsProvider>
