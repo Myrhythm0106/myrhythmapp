@@ -40,7 +40,7 @@ export function MVPCore4C() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+    <div className="public-page min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
       {/* Navigation Header */}
       <nav className="bg-white/95 backdrop-blur-sm border-b border-brain-health-200/50 sticky top-0 z-50">
         <div className="container mx-auto px-6 max-w-6xl">
@@ -49,6 +49,7 @@ export function MVPCore4C() {
               <BackButton 
                 variant="ghost" 
                 size="sm" 
+                fallbackPath="/mvp"
                 className="text-brain-health-600 hover:bg-brain-health-50"
               />
               <Brain className="h-8 w-8 text-memory-emerald-600" />

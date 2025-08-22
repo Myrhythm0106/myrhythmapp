@@ -8,13 +8,15 @@ interface BackButtonProps {
   variant?: "default" | "outline" | "ghost";
   size?: "default" | "sm" | "lg";
   onClick?: () => void;
+  fallbackPath?: string;
 }
 
 export function BackButton({ 
   className, 
   variant = "ghost", 
   size = "sm",
-  onClick 
+  onClick,
+  fallbackPath = "/"
 }: BackButtonProps) {
   const navigate = useNavigate();
 
@@ -22,7 +24,12 @@ export function BackButton({
     if (onClick) {
       onClick();
     } else {
-      navigate(-1);
+      // Try to go back in history, if not possible go to fallbackPath
+      if (window.history.length > 1) {
+        navigate(-1);
+      } else {
+        navigate(fallbackPath);
+      }
     }
   };
 

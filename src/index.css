@@ -3,10 +3,25 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Global Scroll Fix - Eliminate double scrollbars */
-html, body, #root {
+/* Scrolling behavior - different for landing pages vs app pages */
+html, body {
   height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+/* Enable natural scrolling for public/landing pages */
+.public-page {
+  overflow-y: auto;
+  height: 100vh;
+}
+
+/* Controlled scrolling for app pages using MainLayout */
+.app-page {
   overflow: hidden;
+  height: 100%;
 }
 
 /* Global scrollbar visibility - always visible, high contrast */

@@ -1,12 +1,23 @@
 
 import React from "react";
 import PlanCard from "./PlanCard";
+import { useNavigate } from "react-router-dom";
 
 interface PricingSectionProps {
-  onSelectPlan: (plan: string) => void;
+  onSelectPlan?: (plan: string) => void;
 }
 
 const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
+  const navigate = useNavigate();
+  
+  const handleSelectPlan = (plan: string) => {
+    if (onSelectPlan) {
+      onSelectPlan(plan);
+    } else {
+      navigate('/subscribe');
+    }
+  };
+
   return (
     <section className="py-16 bg-muted/40">
       <div className="container mx-auto px-4 max-w-6xl">
@@ -39,7 +50,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               "Daily Progress Tracking"
             ]}
             buttonText="Start with MyStarter"
-            onSelectPlan={onSelectPlan}
+            onSelectPlan={() => handleSelectPlan('starter')}
           />
 
           <PlanCard
@@ -64,7 +75,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
             ]}
             buttonText="Start with MyStretch"
             isPopular={true}
-            onSelectPlan={onSelectPlan}
+            onSelectPlan={() => handleSelectPlan('smart_pro')}
           />
 
           <PlanCard
@@ -90,7 +101,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
             ]}
             buttonText="Start with MyLeap"
             buttonVariant="outline"
-            onSelectPlan={onSelectPlan}
+            onSelectPlan={() => handleSelectPlan('family_smart')}
           />
         </div>
 

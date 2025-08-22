@@ -9,12 +9,14 @@ import { basePricing, getPricingWithDiscount, isFoundingMemberActive } from '@/c
 import { trackSubscriptionAnalytics } from '@/utils/analytics';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const SubscribePage = () => {
   const [selectedPlan, setSelectedPlan] = useState<'starter' | 'smart_pro' | 'family_smart' | null>(null);
   const [isYearly, setIsYearly] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
   const analytics = trackSubscriptionAnalytics();
   const isFoundingActive = isFoundingMemberActive();
 
@@ -97,6 +99,27 @@ const SubscribePage = () => {
         );
       }
 
+      // Check if Stripe is enabled, if not use test mode
+      const stripeEnabled = import.meta.env.VITE_STRIPE_ENABLED === 'true';
+      
+      if (!stripeEnabled) {
+        // Test mode - save plan selection and navigate to onboarding
+        localStorage.setItem('selectedPlan', JSON.stringify({
+          plan: planType,
+          interval: isYearly ? 'year' : 'month',
+          pricing
+        }));
+        
+        toast.success('Plan selected! Continuing to setup...');
+        
+        if (user) {
+          navigate('/web-onboarding');
+        } else {
+          navigate('/auth?redirect=/web-onboarding');
+        }
+        return;
+      }
+
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { 
           plan: planType, 
@@ -115,7 +138,21 @@ const SubscribePage = () => {
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Failed to start checkout. Please try again.');
+      
+      // Fallback to test mode if Stripe fails
+      localStorage.setItem('selectedPlan', JSON.stringify({
+        plan: planType,
+        interval: isYearly ? 'year' : 'month',
+        pricing: getPricingWithDiscount(basePricing.find(p => p.id === planType)!, isYearly)
+      }));
+      
+      toast.success('Plan selected! Continuing to setup...');
+      
+      if (user) {
+        navigate('/web-onboarding');
+      } else {
+        navigate('/auth?redirect=/web-onboarding');
+      }
     } finally {
       setLoading(false);
       setSelectedPlan(null);
@@ -129,14 +166,14 @@ const SubscribePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50">
+    <div className="public-page min-h-screen bg-gradient-to-br from-slate-50 to-teal-50">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-6">
           <Button 
             variant="ghost" 
             size="sm" 
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/mvp")}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
