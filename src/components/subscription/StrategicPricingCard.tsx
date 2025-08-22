@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Star, Crown, Users, Zap, Calendar, Brain, TrendingUp } from "lucide-react";
+import { CheckCircle, Star, Crown, Users, Zap, Calendar, Brain, TrendingUp, Gift } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { basePricing, getPricingWithDiscount, isFoundingMemberActive } from "@/config/pricing";
+import { trackSubscriptionAnalytics } from "@/utils/analytics";
 
 interface StrategicPricingCardProps {
   onSelectPlan: (planType: 'starter' | 'smart_pro' | 'family_smart') => void;
@@ -28,8 +30,6 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
     {
       id: 'starter' as const,
       name: 'MyStarter',
-      monthlyPrice: 7.00,
-      yearlyPrice: 70.00,
       description: '✨ 3 Free Support Circle Members included',
       icon: Star,
       color: 'text-teal-600',
@@ -45,8 +45,6 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
     {
       id: 'smart_pro' as const,
       name: 'MyStretch',
-      monthlyPrice: 7.00,
-      yearlyPrice: 70.00,
       description: 'Enhanced experience with connected care',
       icon: Brain,
       color: 'text-teal-600',
@@ -66,8 +64,6 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
     {
       id: 'family_smart' as const,
       name: 'MyLeap',
-      monthlyPrice: 7.00,
-      yearlyPrice: 70.00,
       description: 'Complete family coordination with unlimited support',
       icon: Users,
       color: 'text-teal-600',
@@ -85,10 +81,26 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
     }
   ];
 
+  const analytics = trackSubscriptionAnalytics();
+  const isFoundingActive = isFoundingMemberActive();
+
+  useEffect(() => {
+    // Track plan view analytics
+    plans.forEach(plan => {
+      const pricing = getPricingWithDiscount(basePricing.find(p => p.id === plan.id)!, isYearly);
+      analytics.planViewed(plan.id, isYearly ? 'yearly' : 'monthly', pricing.hasDiscount);
+    });
+  }, [isYearly]);
+
   const handleSelectPlan = (planType: 'starter' | 'smart_pro' | 'family_smart') => {
     setSelectedPlan(planType);
     const planName = plans.find(p => p.id === planType)?.name;
     const billingPeriod = isYearly ? 'yearly' : 'monthly';
+    const pricing = getPricingWithDiscount(basePricing.find(p => p.id === planType)!, isYearly);
+    
+    // Track analytics
+    analytics.planSelected(planType, isYearly ? 'yearly' : 'monthly', pricing.hasDiscount);
+    
     toast.success(`${planName} (${billingPeriod}) selected!`);
     
     setTimeout(() => {
@@ -177,9 +189,10 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
         {plans.map((plan) => {
           const Icon = plan.icon;
           const isSelected = selectedPlan === plan.id;
-          const currentPrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
+          const basePlan = basePricing.find(p => p.id === plan.id)!;
+          const pricing = getPricingWithDiscount(basePlan, isYearly);
           const period = isYearly ? '/year' : '/month';
-          const savings = isYearly ? calculateSavings(plan.monthlyPrice, plan.yearlyPrice) : 0;
+          const savings = isYearly ? calculateSavings(basePlan.monthlyPrice, basePlan.yearlyPrice) : 0;
           
           return (
             <Card 
@@ -192,7 +205,18 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
                 plan.popular ? 'bg-gradient-to-br from-teal-50 to-emerald-50 border-teal-300' : 'bg-white'
               )}
             >
-              {plan.badge && (
+              {/* Founding Member Badge */}
+              {pricing.hasDiscount && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-1 flex items-center gap-1">
+                    <Gift className="h-3 w-3" />
+                    {pricing.badge}
+                  </Badge>
+                </div>
+              )}
+              
+              {/* Popular Badge (only if not founding member) */}
+              {plan.badge && !pricing.hasDiscount && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                   <Badge className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-3 py-1">
                     {plan.badge}
@@ -206,10 +230,23 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
                   <CardTitle className="text-xl text-slate-800">{plan.name}</CardTitle>
                 </div>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-bold text-slate-800">£{currentPrice}</span>
-                  <span className="text-sm text-slate-600">{period}</span>
+                  {pricing.hasDiscount ? (
+                    <div className="flex flex-col">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg text-slate-500 line-through">£{pricing.originalPrice}</span>
+                        <span className="text-3xl font-bold text-amber-600">£{pricing.discountedPrice}</span>
+                        <span className="text-sm text-slate-600">{period}</span>
+                      </div>
+                      <p className="text-xs text-amber-600 font-medium">Save {pricing.discountPercent}% with Founding Member</p>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="text-3xl font-bold text-slate-800">£{pricing.originalPrice}</span>
+                      <span className="text-sm text-slate-600">{period}</span>
+                    </>
+                  )}
                 </div>
-                {isYearly && savings > 0 && (
+                {isYearly && savings > 0 && !pricing.hasDiscount && (
                   <p className="text-xs text-teal-600 font-medium">Save £{savings}/year</p>
                 )}
                 <p className="text-sm text-slate-600">{plan.description}</p>
