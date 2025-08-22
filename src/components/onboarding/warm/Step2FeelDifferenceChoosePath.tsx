@@ -31,7 +31,7 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
     {
       title: "Transform overwhelm into organized action",
       subtitle: "Calibrate", 
-      description: getPersonalizedText("Turn chaos into clear, manageable steps and actions automatically, for your needs"),
+      description: getPersonalizedText("Turn chaos into clear, manageable and planned steps for your needs"),
       icon: Calendar,
       gradient: "from-brain-health-500 to-brain-health-600",
       bgGradient: "from-brain-health-50 to-brain-health-100",
