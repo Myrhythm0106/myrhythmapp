@@ -28,6 +28,7 @@ import { MVPPageHeader } from "@/components/mvp/MVPPageHeader";
 import { WeeklyGoalRibbon } from "@/components/goals/WeeklyGoalRibbon";
 import { TodaysFocusBanner } from "@/components/calendar/TodaysFocusBanner";
 import { CommandCenterStrip } from "@/components/calendar/CommandCenterStrip";
+import { WeeklyGoalProvider } from "@/contexts/WeeklyGoalContext";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -155,7 +156,7 @@ const Calendar = () => {
                     setShowQuickAction(true);
                   }}
                   onViewAll={(type) => {
-                    if (type === 'schedule') onViewChange("day");
+                    if (type === 'schedule') setView("day");
                     else if (type === 'priorities') navigate("/goals");
                   }}
                 />
