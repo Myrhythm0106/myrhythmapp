@@ -1,38 +1,28 @@
 
 import React, { useState } from "react";
-import { BrainHealthCalendarHeader } from "@/components/calendar/BrainHealthCalendarHeader";
-import { BrainHealthCalendarView } from "@/components/calendar/BrainHealthCalendarView";
-import { BrainHealthSidebar } from "@/components/calendar/BrainHealthSidebar";
 import { BrainFriendlyGoalCreator } from "@/components/goals/BrainFriendlyGoalCreator";
 import { GuidedActionWizard } from "@/components/calendar/forms/GuidedActionWizard";
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
 import { EnhancedPomodoroTimer } from "@/components/pomodoro/EnhancedPomodoroTimer";
+import { CommandCenterHeader } from "@/components/calendar/CommandCenterHeader";
+import { TodayTimeline } from "@/components/calendar/TodayTimeline";
+import { WeeklyPrioritiesPanel } from "@/components/calendar/WeeklyPrioritiesPanel";
+import { UpcomingRemindersPanel } from "@/components/calendar/UpcomingRemindersPanel";
+import { FocusTimerMini } from "@/components/calendar/FocusTimerMini";
+import { MonthOverview } from "@/components/calendar/MonthOverview";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
+import { WeeklyGoalProvider } from "@/contexts/WeeklyGoalContext";
+import { EmpowermentProvider } from "@/contexts/EmpowermentContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
-import { Timer, Coffee, Users, Target } from "lucide-react";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
-import { BreadcrumbNav } from "@/components/navigation/BreadcrumbNav";
-import { ContextualNextButton } from "@/components/navigation/ContextualNextButton";
-import { OverviewMenu } from "@/components/navigation/OverviewMenu";
-import { UnifiedActionDropdown } from "@/components/calendar/UnifiedActionDropdown";
-import { FloatingNextButton } from "@/components/navigation/FloatingNextButton";
 import { useDataTransfer } from "@/hooks/useDataTransfer";
-import { FloatingActionDropdown } from "@/components/ui/FloatingActionDropdown";
-import { MVPThemeWrapper } from "@/components/theme/MVPThemeWrapper";
-import { MVPTopNav } from "@/components/mvp/MVPTopNav";
-import { MVPPageHeader } from "@/components/mvp/MVPPageHeader";
-import { WeeklyGoalRibbon } from "@/components/goals/WeeklyGoalRibbon";
-import { TodaysFocusBanner } from "@/components/calendar/TodaysFocusBanner";
-import { CommandCenterStrip } from "@/components/calendar/CommandCenterStrip";
-import { WeeklyGoalProvider } from "@/contexts/WeeklyGoalContext";
 
 const Calendar = () => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [view, setView] = useState<"day" | "week" | "month" | "year" | "goals">("month");
+  const [date, setDate] = useState<Date>(new Date());
+  const [view, setView] = useState<"day" | "week" | "month" | "year">("month");
   const [showPlanMyDreams, setShowPlanMyDreams] = useState(false);
   const [showQuickAction, setShowQuickAction] = useState(false);
   const [showNewGoal, setShowNewGoal] = useState(false);
@@ -60,14 +50,14 @@ const Calendar = () => {
       setShowNewGoal(true);
     }
     if (searchParams.get('view') === 'goals') {
-      setView('goals');
+      navigate("/goals");
     }
   }, [searchParams, date, updateTransferData]);
 
   const handleSaveDreamPlan = (dreamPlan: any) => {
     console.log("Dream plan saved:", dreamPlan);
     setShowPlanMyDreams(false);
-    navigate("/calendar?view=goals");
+    navigate("/goals");
   };
 
   const handleQuickActionSave = async (actionData: any) => {
@@ -106,7 +96,7 @@ const Calendar = () => {
         progress_percentage: 0
       });
       setShowNewGoal(false);
-      setView("goals");
+      navigate("/goals");
       
       toast.success("🧠 Goal Created Successfully!", {
         description: "Your new goal is ready and saved to your dashboard!",
@@ -135,101 +125,84 @@ const Calendar = () => {
   }
 
   return (
-    <WeeklyGoalProvider>
-      <PomodoroProvider>
-        <MVPThemeWrapper>
-          <MVPTopNav />
-          <div className="min-h-screen">
-            <ScrollArea className="h-[calc(100vh-64px)]">
-              <div className="container mx-auto px-4 py-6 space-y-6">
+    <EmpowermentProvider>
+      <WeeklyGoalProvider>
+        <PomodoroProvider>
+          <div className="min-h-screen bg-background">
+            
+            {/* Unified Command Center Header */}
+            <CommandCenterHeader
+              selectedDate={date}
+              onDateChange={setDate}
+              currentView={view}
+              onViewChange={setView}
+              onActionClick={() => {
+                const now = new Date();
+                updateTransferData({ 
+                  selectedDate: date,
+                  selectedTime: now.toTimeString().slice(0, 5)
+                });
+                setShowQuickAction(true);
+              }}
+            />
+
+            <ScrollArea className="h-[calc(100vh-140px)]">
+              <div className="container mx-auto px-4 py-6 space-y-8">
                 
-                {/* Command Center Strip */}
-                <CommandCenterStrip 
-                  selectedDate={date}
-                  onImplementPlan={() => navigate("/goals")}
-                  onTakeAction={() => {
-                    const now = new Date();
-                    updateTransferData({ 
-                      selectedDate: date,
-                      selectedTime: now.toTimeString().slice(0, 5)
-                    });
-                    setShowQuickAction(true);
-                  }}
-                  onViewAll={(type) => {
-                    if (type === 'schedule') setView("day");
-                    else if (type === 'priorities') navigate("/goals");
-                  }}
-                />
+                {/* Today & Focus Section */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[500px]">
+                  
+                  {/* Today's Timeline - Left Column */}
+                  <div className="lg:col-span-2">
+                    <TodayTimeline
+                      selectedDate={date}
+                      onAddAction={() => {
+                        const now = new Date();
+                        updateTransferData({ 
+                          selectedDate: date,
+                          selectedTime: now.toTimeString().slice(0, 5)
+                        });
+                        setShowQuickAction(true);
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Right Column - 3 Panels */}
+                  <div className="flex flex-col gap-4">
+                    
+                    {/* Weekly Priorities */}
+                    <div className="flex-1">
+                      <WeeklyPrioritiesPanel
+                        onImplementPlan={() => navigate("/goals")}
+                      />
+                    </div>
+                    
+                    {/* Upcoming Reminders */}
+                    <div className="flex-1">
+                      <UpcomingRemindersPanel
+                        selectedDate={date}
+                      />
+                    </div>
+                    
+                    {/* Focus Timer Mini */}
+                    <div className="flex-1">
+                      <FocusTimerMini
+                        onOpenFullTimer={() => setShowEnhancedPomodoro(true)}
+                      />
+                    </div>
+                  </div>
+                </div>
 
-                {/* MVP Page Header */}
-                <MVPPageHeader
-                  title="My Daily Rhythm"
-                  subtitle="Transform your day with brain-friendly scheduling and mindful action planning"
-                />
-
-                {/* Weekly Goal Context */}
-                <WeeklyGoalRibbon />
-
-                {/* Today's Focus Banner */}
-                <TodaysFocusBanner />
-
-            {/* Unified Action Center */}
-            <div className="flex justify-center items-center">
-              <UnifiedActionDropdown
-                onQuickAction={() => {
-                  const now = new Date();
-                  updateTransferData({ 
-                    selectedDate: date, // Use the actually selected date
-                    selectedTime: now.toTimeString().slice(0, 5)
-                  });
-                  setShowQuickAction(true);
-                }}
-                onNewGoal={() => setShowNewGoal(true)}
-                onPlanDreams={() => setShowPlanMyDreams(true)}
-                onFocusTimer={() => setShowEnhancedPomodoro(true)}
-                onScheduleFamily={() => {
-                  const now = new Date();
-                  updateTransferData({ 
-                    actionType: 'family',
-                    selectedDate: date, // Use the actually selected date
-                    selectedTime: now.toTimeString().slice(0, 5)
-                  });
-                  setShowQuickAction(true);
-                }}
-                onPlanBreak={() => {
-                  const now = new Date();
-                  updateTransferData({ 
-                    actionType: 'break',
-                    selectedDate: date, // Use the actually selected date
-                    selectedTime: now.toTimeString().slice(0, 5)
-                  });
-                  setShowQuickAction(true);
-                }}
-                selectedDate={date}
-              />
-            </div>
-
-            {/* Main Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              
-              {/* Calendar View */}
-              <div className="lg:col-span-2">
-                <BrainHealthCalendarView
-                  view={view}
-                  onViewChange={setView}
-                  date={date}
-                  onDateSelect={setDate}
-                  onNewGoal={() => setShowNewGoal(true)}
-                />
+                {/* Month Overview Section */}
+                <div className="h-[600px]">
+                  <MonthOverview
+                    selectedDate={date}
+                    onDateSelect={setDate}
+                    onDateChange={setDate}
+                  />
+                </div>
               </div>
-              
-              {/* Enhanced Brain-Health Sidebar with Break & Family Features */}
-              <div className="lg:col-span-1">
-                <BrainHealthSidebar date={date} />
-              </div>
-            </div>
-          </div>
-        </ScrollArea>
+            </ScrollArea>
 
         {/* Dialogs */}
         <BrainFriendlyGoalCreator
@@ -271,43 +244,11 @@ const Calendar = () => {
           </DialogContent>
         </Dialog>
 
-        {/* Floating Action Dropdown */}
-        <FloatingActionDropdown
-          onQuickAction={() => {
-            const now = new Date();
-            updateTransferData({ 
-              selectedDate: date, // Use the actually selected date
-              selectedTime: now.toTimeString().slice(0, 5)
-            });
-            setShowQuickAction(true);
-          }}
-          onNewGoal={() => setShowNewGoal(true)}
-          onPlanDreams={() => setShowPlanMyDreams(true)}
-          onFocusTimer={() => setShowEnhancedPomodoro(true)}
-          onScheduleFamily={() => {
-            const now = new Date();
-            updateTransferData({ 
-              actionType: 'family',
-              selectedDate: date, // Use the actually selected date
-              selectedTime: now.toTimeString().slice(0, 5)
-            });
-            setShowQuickAction(true);
-          }}
-          onPlanBreak={() => {
-            const now = new Date();
-            updateTransferData({ 
-              actionType: 'break',
-              selectedDate: date, // Use the actually selected date
-              selectedTime: now.toTimeString().slice(0, 5)
-            });
-            setShowQuickAction(true);
-          }}
-        />
-      </div>
-    </MVPThemeWrapper>
-  </PomodoroProvider>
-</WeeklyGoalProvider>
-);
+          </div>
+        </PomodoroProvider>
+      </WeeklyGoalProvider>
+    </EmpowermentProvider>
+  );
 };
 
 export default Calendar;
