@@ -177,6 +177,10 @@ const config: Config = {
             boxShadow: "0 0 0 0 hsl(var(--brain-health-400) / 0)"
           }
         },
+        "shimmer": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" }
+        },
         "achievement-celebration": {
           "0%": { transform: "scale(1) rotate(0deg)" },
           "25%": { transform: "scale(1.1) rotate(5deg)" },
@@ -204,6 +208,7 @@ const config: Config = {
         "neural-pulse": "neural-pulse 2s infinite",
         "achievement-celebration": "achievement-celebration 0.6s ease-out",
         "cognitive-flow": "cognitive-flow 3s ease-in-out infinite",
+        "shimmer": "shimmer 1.5s ease-in-out infinite",
       },
     },
   },

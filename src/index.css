@@ -312,7 +312,7 @@ html, body {
 
   /* Empowering Panel Styles */
   .empowerment-gradient {
-    @apply bg-gradient-to-br from-beacon-50 via-brain-health-50 to-clarity-teal-50;
+    @apply bg-gradient-to-br from-beacon-50/80 via-brain-health-50/60 to-clarity-teal-50/40 backdrop-blur-sm;
   }
 
   .victory-celebration {
@@ -349,6 +349,23 @@ html, body {
   
   .memory-anchor {
     @apply relative after:absolute after:top-1 after:right-1 after:w-2 after:h-2 after:bg-gradient-to-br after:from-memory-emerald-400 after:to-brain-health-400 after:rounded-full after:animate-pulse;
+  }
+
+  /* Enhanced Panel Aesthetics */
+  .panel-micro-visual {
+    @apply relative before:absolute before:top-0 before:left-0 before:w-1 before:h-full before:bg-gradient-to-b before:from-brain-health-400 before:to-clarity-teal-400 before:rounded-r;
+  }
+
+  .gradient-text-brand {
+    @apply bg-gradient-to-r from-brain-health-600 via-clarity-teal-600 to-memory-emerald-600 bg-clip-text text-transparent font-bold;
+  }
+
+  .shimmer-effect {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent hover:before:animate-[shimmer_1.5s_ease-in-out] before:transition-transform;
+  }
+
+  .floating-glow {
+    @apply relative after:absolute after:inset-0 after:bg-gradient-to-r after:from-brain-health-400/20 after:via-clarity-teal-400/20 after:to-memory-emerald-400/20 after:rounded-lg after:blur-xl after:-z-10 after:animate-pulse;
   }
 
   /* Accessibility Features */
