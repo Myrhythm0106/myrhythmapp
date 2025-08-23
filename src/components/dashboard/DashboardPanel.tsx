@@ -4,6 +4,9 @@ import { SurfaceCard } from '@/components/ui/SurfaceCard';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronRight, Maximize2, Minimize2, Eye, EyeOff } from 'lucide-react';
 import { useDashboard } from '@/contexts/DashboardContext';
+import { usePanelSummaries } from '@/hooks/usePanelSummaries';
+import { PanelSummary } from '@/components/dashboard/summaries/PanelSummary';
+import { EmpoweringHeader } from '@/components/dashboard/summaries/EmpoweringHeader';
 
 interface DashboardPanelProps {
   id: string;
@@ -21,6 +24,7 @@ export function DashboardPanel({
   headerActions 
 }: DashboardPanelProps) {
   const { panels, updatePanel } = useDashboard();
+  const summaries = usePanelSummaries();
   const panel = panels.find(p => p.id === id);
 
   if (!panel || !panel.isVisible) return null;
@@ -52,13 +56,13 @@ export function DashboardPanel({
       )}
     >
       {/* Panel Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border/30 bg-gradient-to-r from-brain-health-50/40 to-clarity-teal-50/20">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between p-4 border-b border-border/30 bg-gradient-to-r from-brain-health-50/40 to-clarity-teal-50/20 neural-pathway-effect">
+        <div className="flex items-center gap-3 flex-1 min-w-0">
           <Button
             variant="ghost"
             size="sm"
             onClick={toggleCollapsed}
-            className="h-6 w-6 p-0 hover:bg-brain-health-100"
+            className="h-7 w-7 p-0 hover:bg-brain-health-100 neural-pulse rounded-full shrink-0"
           >
             {panel.isCollapsed ? (
               <ChevronRight className="h-4 w-4" />
@@ -67,9 +71,11 @@ export function DashboardPanel({
             )}
           </Button>
           
-          <h3 className="font-semibold text-foreground group-hover:text-brain-health-700 transition-colors">
-            {panel.title}
-          </h3>
+          <EmpoweringHeader 
+            title={panel.title} 
+            isCollapsed={panel.isCollapsed}
+            className="flex-1 min-w-0"
+          />
         </div>
 
         <div className="flex items-center gap-2">
@@ -96,12 +102,14 @@ export function DashboardPanel({
         </div>
       </div>
 
-      {/* Collapsed Preview */}
+      {/* Collapsed Preview - Glanceable Summary */}
       {panel.isCollapsed && (
-        <div className="px-4 pb-2">
-          <div className="text-sm text-muted-foreground line-clamp-2">
-            {panel.title} - Click to expand and interact
-          </div>
+        <div className="px-4 pb-3 animate-fade-in">
+          <PanelSummary 
+            summaries={summaries[id as keyof typeof summaries] || []}
+            layout="horizontal"
+            className="justify-center"
+          />
         </div>
       )}
     </SurfaceCard>

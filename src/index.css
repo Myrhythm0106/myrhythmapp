@@ -303,7 +303,32 @@ html, body {
   }
   
   .neural-pathway-effect {
-    @apply relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-brain-health-400/20 before:via-clarity-teal-400/20 before:to-memory-emerald-400/20 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-300 before:rounded-lg;
+    @apply relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-brain-health-400/20 before:via-clarity-teal-400/20 before:to-memory-emerald-400/20 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-500 before:rounded-lg;
+  }
+
+  .neural-pulse {
+    @apply hover:animate-neural-pulse;
+  }
+
+  /* Empowering Panel Styles */
+  .empowerment-gradient {
+    @apply bg-gradient-to-br from-beacon-50 via-brain-health-50 to-clarity-teal-50;
+  }
+
+  .victory-celebration {
+    @apply animate-achievement-celebration;
+  }
+
+  .cognitive-enhancement {
+    @apply bg-gradient-to-r from-brain-health-400 to-clarity-teal-400 text-white shadow-lg;
+  }
+
+  .success-glow {
+    @apply shadow-[0_0_20px_rgba(34,197,94,0.3)] border-memory-emerald-300;
+  }
+
+  .focus-pulse {
+    @apply animate-pulse bg-gradient-to-r from-clarity-teal-100 to-brain-health-100;
   }
   
   .brain-energy-high {

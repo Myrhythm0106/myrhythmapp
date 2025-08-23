@@ -64,15 +64,16 @@ export function CalendarPanel() {
                 key={day.toISOString()}
                 onClick={() => syncDate(day)}
                 className={cn(
-                  "aspect-square rounded-md p-1 text-xs transition-all relative",
+                  "aspect-square rounded-md p-1 text-xs transition-all relative neural-pathway-effect",
                   "hover:bg-brain-health-50",
-                  isSelected && "bg-brain-health-100 text-brain-health-700 font-medium",
-                  isToday && "ring-2 ring-brain-health-300"
+                  isSelected && "cognitive-enhancement text-white font-medium",
+                  isToday && "success-glow",
+                  dayActions.length > 0 && "memory-anchor"
                 )}
               >
                 {format(day, 'd')}
                 {dayActions.length > 0 && (
-                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-clarity-teal-500 rounded-full" />
+                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-clarity-teal-500 rounded-full animate-pulse" />
                 )}
               </button>
             );
@@ -88,57 +89,84 @@ export function CalendarPanel() {
 
     return (
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h4 className="font-medium">
-              {format(filters.selectedDate, 'EEEE, MMMM d')}
-            </h4>
-            <p className="text-sm text-muted-foreground">
-              {todayActions.length} actions • {completedCount} completed
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" onClick={() => navigateDate('prev')}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="sm" onClick={() => navigateDate('next')}>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-
-        <div className="space-y-2 max-h-48 overflow-y-auto">
-          {todayActions.length > 0 ? (
-            todayActions.map((action) => (
-              <div
-                key={action.id}
-                className={cn(
-                  "p-3 rounded-lg border border-border/30 bg-gradient-to-r transition-all",
-                  action.status === 'completed' 
-                    ? "from-memory-emerald-50 to-brain-health-50 border-memory-emerald-200"
-                    : "from-brain-health-50 to-clarity-teal-50 border-brain-health-200"
-                )}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h5 className="font-medium text-sm">{action.title}</h5>
-                    <p className="text-xs text-muted-foreground">
-                      {action.start_time} • {action.focus_area}
-                    </p>
-                  </div>
-                  <div className={cn(
-                    "w-2 h-2 rounded-full",
-                    action.status === 'completed' ? "bg-memory-emerald-500" : "bg-brain-health-400"
-                  )} />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <Calendar className="h-8 w-8 mx-auto mb-2 opacity-50" />
-              <p className="text-sm">No actions scheduled</p>
+        <div className="empowerment-gradient rounded-xl p-4 border border-brain-health-200/60">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h4 className="font-bold therapeutic-accent">
+                {format(filters.selectedDate, 'EEEE, MMMM d')}
+              </h4>
+              <p className="text-sm text-muted-foreground">
+                {todayActions.length > 0 
+                  ? `${completedCount}/${todayActions.length} completed • You're building momentum!`
+                  : "A fresh canvas awaits your masterpiece"
+                }
+              </p>
             </div>
-          )}
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => navigateDate('prev')}
+                className="neural-pulse h-8 w-8 p-0"
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => navigateDate('next')}
+                className="neural-pulse h-8 w-8 p-0"
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {todayActions.length > 0 ? (
+              todayActions.map((action) => (
+                <div
+                  key={action.id}
+                  className={cn(
+                    "p-3 rounded-lg border transition-all neural-pathway-effect",
+                    action.status === 'completed' 
+                      ? "success-glow bg-memory-emerald-50 border-memory-emerald-200"
+                      : "bg-background border-border/50 hover:border-brain-health-200"
+                  )}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <h5 className={cn(
+                        "font-medium text-sm",
+                        action.status === 'completed' && "text-memory-emerald-700"
+                      )}>
+                        {action.title}
+                      </h5>
+                      <p className="text-xs text-muted-foreground">
+                        {action.start_time} • {action.focus_area}
+                      </p>
+                    </div>
+                    <div className={cn(
+                      "w-3 h-3 rounded-full",
+                      action.status === 'completed' 
+                        ? "bg-memory-emerald-500 victory-celebration" 
+                        : "bg-brain-health-400"
+                    )} />
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 space-y-2">
+                <div className="text-4xl mb-2">🌟</div>
+                <p className="text-sm text-muted-foreground">
+                  Ready to create something amazing?
+                </p>
+                <p className="text-xs text-muted-foreground italic">
+                  Every journey begins with a single step
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -155,7 +183,10 @@ export function CalendarPanel() {
             variant={localView === 'mini' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setLocalView('mini')}
-            className="text-xs"
+            className={cn(
+              "text-xs",
+              localView === 'mini' && "premium-button text-white"
+            )}
           >
             Week
           </Button>
@@ -163,7 +194,10 @@ export function CalendarPanel() {
             variant={localView === 'day' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setLocalView('day')}
-            className="text-xs"
+            className={cn(
+              "text-xs",
+              localView === 'day' && "premium-button text-white"
+            )}
           >
             Today
           </Button>
