@@ -15,6 +15,8 @@ import { Brain, Menu, User, LogOut, Crown } from "lucide-react";
 import { BackButton } from "@/components/ui/BackButton";
 import { useUserData } from "@/hooks/use-user-data";
 import { Badge } from "@/components/ui/badge";
+import { EmpowermentProvider } from '@/contexts/EmpowermentContext';
+import { EmpowermentNugget } from '@/components/empowerment/EmpowermentNugget';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -76,7 +78,8 @@ export function MainLayout({ children }: MainLayoutProps) {
   };
 
   return (
-    <div className="h-full flex w-full bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/20 to-clarity-teal-50/15 p-2">
+    <EmpowermentProvider>
+      <div className="h-full flex w-full bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/20 to-clarity-teal-50/15 p-2">
       <div className="h-[calc(100vh-16px)] w-full border border-brain-health-200/20 rounded-lg bg-background/50 backdrop-blur-sm flex">
         {/* Desktop Sidebar */}
         <div className="hidden lg:block">
@@ -137,9 +140,12 @@ export function MainLayout({ children }: MainLayoutProps) {
               </Badge>
             )}
             
-            {/* Single Search Component */}
-            <EnhancedGlobalSearch variant="input" size="sm" className="hidden md:flex max-w-xs" />
-            <EnhancedGlobalSearch variant="icon" className="md:hidden" />
+            {/* Single Search Component and Empowerment Nugget */}
+            <div className="flex items-center gap-4">
+              <EmpowermentNugget className="hidden lg:flex" variant="compact" />
+              <EnhancedGlobalSearch variant="input" size="sm" className="hidden md:flex max-w-xs" />
+              <EnhancedGlobalSearch variant="icon" className="md:hidden" />
+            </div>
             
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -193,6 +199,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         </main>
       </div>
     </div>
+    </EmpowermentProvider>
   );
 }
 

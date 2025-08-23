@@ -24,12 +24,14 @@ interface GuidedActionWizardProps {
     time?: string;
     watchers?: string[];
   };
+  onClose?: () => void;
 }
 
 export function GuidedActionWizard({ 
   onSuccess, 
   onUpgradeClick,
-  preFilledData 
+  preFilledData,
+  onClose 
 }: GuidedActionWizardProps) {
   const { createAction, loading } = useDailyActions();
   const { transferData } = useDataTransfer();
@@ -287,23 +289,40 @@ export function GuidedActionWizard({
         </Card>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">
-        <Button 
-          type="submit" 
-          className="w-full sm:flex-1 bg-gradient-to-r from-brain-purple-600 to-clarity-teal-600 hover:from-brain-purple-700 hover:to-clarity-teal-700 min-h-[44px] text-white" 
-          disabled={loading}
-        >
-          <Target className="h-4 w-4 mr-2" />
-          {loading ? "Creating your action..." : "Create Action"}
-        </Button>
-        <Button 
-          type="button" 
-          variant="outline" 
-          onClick={() => form.reset()}
-          className="w-full sm:w-auto min-h-[44px] text-foreground"
-        >
-          Clear Form
-        </Button>
+        <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">
+          <Button 
+            type="submit" 
+            className="w-full sm:flex-1 bg-gradient-to-r from-brain-purple-600 to-clarity-teal-600 hover:from-brain-purple-700 hover:to-clarity-teal-700 min-h-[44px] text-white" 
+            disabled={loading}
+          >
+            <Target className="h-4 w-4 mr-2" />
+            {loading ? "Creating your action..." : "Save"}
+          </Button>
+          
+          {onClose && (
+            <Button 
+              type="button" 
+              onClick={async () => {
+                const formData = form.getValues();
+                await handleSubmit(formData);
+                onClose();
+              }}
+              className="w-full sm:flex-1 bg-gradient-to-r from-clarity-teal-600 to-memory-emerald-600 hover:from-clarity-teal-700 hover:to-memory-emerald-700 min-h-[44px] text-white" 
+              disabled={loading}
+            >
+              <Target className="h-4 w-4 mr-2" />
+              {loading ? "Creating..." : "Save & Close"}
+            </Button>
+          )}
+          
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={() => form.reset()}
+            className="w-full sm:w-auto min-h-[44px] text-foreground"
+          >
+            Clear Form
+          </Button>
         </div>
       </form>
     </FormProvider>

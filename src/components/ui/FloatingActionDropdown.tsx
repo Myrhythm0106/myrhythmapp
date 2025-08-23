@@ -43,7 +43,7 @@ export function FloatingActionDropdown({
             className="rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700"
           >
             <Zap className="mr-2 h-5 w-5" />
-            Actions
+            Action
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent 

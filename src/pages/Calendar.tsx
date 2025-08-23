@@ -27,7 +27,7 @@ import { MVPTopNav } from "@/components/mvp/MVPTopNav";
 import { MVPPageHeader } from "@/components/mvp/MVPPageHeader";
 import { WeeklyGoalRibbon } from "@/components/goals/WeeklyGoalRibbon";
 import { TodaysFocusBanner } from "@/components/calendar/TodaysFocusBanner";
-import { WeeklyGoalProvider } from "@/contexts/WeeklyGoalContext";
+import { CommandCenterStrip } from "@/components/calendar/CommandCenterStrip";
 
 const Calendar = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -142,8 +142,26 @@ const Calendar = () => {
             <ScrollArea className="h-[calc(100vh-64px)]">
               <div className="container mx-auto px-4 py-6 space-y-6">
                 
+                {/* Command Center Strip */}
+                <CommandCenterStrip 
+                  selectedDate={date}
+                  onImplementPlan={() => navigate("/goals")}
+                  onTakeAction={() => {
+                    const now = new Date();
+                    updateTransferData({ 
+                      selectedDate: date,
+                      selectedTime: now.toTimeString().slice(0, 5)
+                    });
+                    setShowQuickAction(true);
+                  }}
+                  onViewAll={(type) => {
+                    if (type === 'schedule') onViewChange("day");
+                    else if (type === 'priorities') navigate("/goals");
+                  }}
+                />
+
                 {/* MVP Page Header */}
-                <MVPPageHeader 
+                <MVPPageHeader
                   title="My Daily Rhythm"
                   subtitle="Transform your day with brain-friendly scheduling and mindful action planning"
                 />
@@ -219,22 +237,23 @@ const Calendar = () => {
           onGoalCreated={handleNewGoalSave}
         />
 
-        <Dialog open={showQuickAction} onOpenChange={setShowQuickAction}>
-          <DialogContent className="sm:max-w-[700px] max-h-[90vh]">
-            <DialogHeader>
-              <DialogTitle className="text-xl bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                Create Action
-              </DialogTitle>
-            </DialogHeader>
-            <ScrollArea className="max-h-[calc(90vh-120px)]">
-              <GuidedActionWizard 
-                onSuccess={handleQuickActionSave} 
-                onUpgradeClick={handleUpgradeClick}
-                preFilledData={prefillForm('action')}
-              />
-            </ScrollArea>
-          </DialogContent>
-        </Dialog>
+            <Dialog open={showQuickAction} onOpenChange={setShowQuickAction}>
+              <DialogContent className="sm:max-w-[700px] max-h-[90vh]">
+                <DialogHeader>
+                  <DialogTitle className="text-xl bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
+                    Create Action
+                  </DialogTitle>
+                </DialogHeader>
+                <ScrollArea className="max-h-[calc(90vh-120px)]">
+                  <GuidedActionWizard 
+                    onSuccess={handleQuickActionSave} 
+                    onUpgradeClick={handleUpgradeClick}
+                    preFilledData={prefillForm('action')}
+                    onClose={() => setShowQuickAction(false)}
+                  />
+                </ScrollArea>
+              </DialogContent>
+            </Dialog>
 
         <Dialog open={showEnhancedPomodoro} onOpenChange={setShowEnhancedPomodoro}>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh]">
