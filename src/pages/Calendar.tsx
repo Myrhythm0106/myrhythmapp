@@ -5,11 +5,8 @@ import { GuidedActionWizard } from "@/components/calendar/forms/GuidedActionWiza
 import { PlanMyDreams } from "@/components/plan-dreams/PlanMyDreams";
 import { EnhancedPomodoroTimer } from "@/components/pomodoro/EnhancedPomodoroTimer";
 import { CommandCenterHeader } from "@/components/calendar/CommandCenterHeader";
-import { TodayTimeline } from "@/components/calendar/TodayTimeline";
-import { WeeklyPrioritiesPanel } from "@/components/calendar/WeeklyPrioritiesPanel";
-import { UpcomingRemindersPanel } from "@/components/calendar/UpcomingRemindersPanel";
-import { FocusTimerMini } from "@/components/calendar/FocusTimerMini";
-import { MonthOverview } from "@/components/calendar/MonthOverview";
+import { DashboardProvider } from "@/contexts/DashboardContext";
+import { DashboardGrid } from "@/components/dashboard/DashboardGrid";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PomodoroProvider } from "@/components/pomodoro/PomodoroContext";
@@ -128,81 +125,30 @@ const Calendar = () => {
     <EmpowermentProvider>
       <WeeklyGoalProvider>
         <PomodoroProvider>
-          <div className="min-h-screen bg-background">
-            
-            {/* Unified Command Center Header */}
-            <CommandCenterHeader
-              selectedDate={date}
-              onDateChange={setDate}
-              currentView={view}
-              onViewChange={setView}
-              onActionClick={() => {
-                const now = new Date();
-                updateTransferData({ 
-                  selectedDate: date,
-                  selectedTime: now.toTimeString().slice(0, 5)
-                });
-                setShowQuickAction(true);
-              }}
-            />
+          <DashboardProvider>
+            <div className="min-h-screen bg-background">
+              
+              {/* Unified Command Center Header */}
+              <CommandCenterHeader
+                selectedDate={date}
+                onDateChange={setDate}
+                currentView={view}
+                onViewChange={setView}
+                onActionClick={() => {
+                  const now = new Date();
+                  updateTransferData({ 
+                    selectedDate: date,
+                    selectedTime: now.toTimeString().slice(0, 5)
+                  });
+                  setShowQuickAction(true);
+                }}
+              />
 
-            <ScrollArea className="h-[calc(100vh-140px)]">
-              <div className="container mx-auto px-4 py-6 space-y-8">
-                
-                {/* Today & Focus Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[500px]">
-                  
-                  {/* Today's Timeline - Left Column */}
-                  <div className="lg:col-span-2">
-                    <TodayTimeline
-                      selectedDate={date}
-                      onAddAction={() => {
-                        const now = new Date();
-                        updateTransferData({ 
-                          selectedDate: date,
-                          selectedTime: now.toTimeString().slice(0, 5)
-                        });
-                        setShowQuickAction(true);
-                      }}
-                    />
-                  </div>
-                  
-                  {/* Right Column - 3 Panels */}
-                  <div className="flex flex-col gap-4">
-                    
-                    {/* Weekly Priorities */}
-                    <div className="flex-1">
-                      <WeeklyPrioritiesPanel
-                        onImplementPlan={() => navigate("/goals")}
-                      />
-                    </div>
-                    
-                    {/* Upcoming Reminders */}
-                    <div className="flex-1">
-                      <UpcomingRemindersPanel
-                        selectedDate={date}
-                      />
-                    </div>
-                    
-                    {/* Focus Timer Mini */}
-                    <div className="flex-1">
-                      <FocusTimerMini
-                        onOpenFullTimer={() => setShowEnhancedPomodoro(true)}
-                      />
-                    </div>
-                  </div>
+              <ScrollArea className="h-[calc(100vh-140px)]">
+                <div className="container mx-auto px-4 py-6">
+                  <DashboardGrid />
                 </div>
-
-                {/* Month Overview Section */}
-                <div className="h-[600px]">
-                  <MonthOverview
-                    selectedDate={date}
-                    onDateSelect={setDate}
-                    onDateChange={setDate}
-                  />
-                </div>
-              </div>
-            </ScrollArea>
+              </ScrollArea>
 
         {/* Dialogs */}
         <BrainFriendlyGoalCreator
@@ -244,7 +190,8 @@ const Calendar = () => {
           </DialogContent>
         </Dialog>
 
-          </div>
+            </div>
+          </DashboardProvider>
         </PomodoroProvider>
       </WeeklyGoalProvider>
     </EmpowermentProvider>
