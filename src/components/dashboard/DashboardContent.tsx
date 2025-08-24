@@ -1,241 +1,146 @@
-
 import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DashboardHeader } from "./DashboardHeader";
-import { DashboardWelcome } from "./DashboardWelcome";
-import { HeroSection } from "./unified/HeroSection";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { WelcomeToApp } from "@/components/onboarding/WelcomeToApp";
+import { UserGuideIntegration } from "@/components/onboarding/UserGuideIntegration";
 import { CommandCenterLayout } from "./unified/CommandCenterLayout";
 import { QuickActionZone } from "./unified/QuickActionZone";
-import { TodayFocus } from "./TodayFocus";
-import { UpcomingToday } from "./UpcomingToday";
-import { RecentWins } from "./RecentWins";
-import { TopPriorities } from "./TopPriorities";
-import { MoodEnergySnapshot } from "./MoodEnergySnapshot";
-import { BrainGameQuickStart } from "./BrainGameQuickStart";
-import { TrialStatusCard } from "./TrialStatusCard";
-import { MorningRitualView } from "./views/MorningRitualView";
-import { DailyIChooseWidget } from "./DailyIChooseWidget";
-import { MonthlyTheme } from "./MonthlyTheme";
-import { SmartNotificationEngine } from "./SmartNotificationEngine";
-import { AssessmentUpgradeReminder } from "./AssessmentUpgradeReminder";
-import { useSearchParams } from "react-router-dom";
-import { toast } from "sonner";
-import { useUserProgress } from "@/hooks/useUserProgress";
-import { QuickActionsToProgress } from "@/components/layout/QuickActionsToProgress";
-import { QuickAccessWidget } from "@/components/guide/QuickAccessWidget";
-import { FloatingGratitudeButton } from "@/components/gratitude/FloatingGratitudeButton";
-import { UserGuideIntegration } from "@/components/onboarding/UserGuideIntegration";
-import { WelcomeToApp } from "@/components/onboarding/WelcomeToApp";
-import { FloatingGuideButton } from "@/components/guide/FloatingGuideButton";
-import { NeverLostSystem } from "@/components/navigation/NeverLostSystem";
-import { ReadingProgressBar } from "@/components/ui/reading-progress-bar";
-import { Badge } from "@/components/ui/badge";
-import { Zap, Target, Star } from "lucide-react";
-import { useUserData } from "@/hooks/use-user-data";
 import { CalendarDashboardIntegration } from "@/components/calendar/CalendarDashboardIntegration";
+import { DashboardWelcome } from "./DashboardWelcome";
+import { MemoryCoreStrip } from "./MemoryCoreStrip";
+import { DashboardProvider, useDashboard } from "@/contexts/DashboardContext";
+import { useUserProgress } from "@/hooks/useUserProgress";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
-export function DashboardContent() {
+function DashboardContentInner() {
+  const [energyLevel, setEnergyLevel] = useState<number>(7);
+  const [dailyIntention, setDailyIntention] = useState<string>("");
+  const { metrics } = useUserProgress();
+  const { user } = useAuth();
+  const { interactionMode, setInteractionMode } = useDashboard();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [showMorningRitual, setShowMorningRitual] = useState(false);
-  const [energyLevel, setEnergyLevel] = useState<number | null>(null);
-  const [dailyIntention, setDailyIntention] = useState('');
-  // Removed dashboard view toggle - now unified experience
-  const { metrics, getNextUnlock } = useUserProgress();
-  const userData = useUserData();
-  
-  // Get user name for personalized experience
-  const getUserName = () => {
-    return userData?.name || userData?.email?.split('@')[0] || "Champion";
-  };
-
-  // Define sections for reading progress
-  const dashboardSections = [
-    { id: 'header', title: 'Header & Overview' },
-    { id: 'ichoose', title: 'Daily #IChoose' },
-    { id: 'focus', title: 'Today Focus' },
-    { id: 'mood', title: 'Mood & Energy' },
-    { id: 'activities', title: 'Quick Actions' }
-  ];
-
-  const [showWelcome, setShowWelcome] = useState(false);
-
-  useEffect(() => {
-    // Check for onboarding completion
-    if (searchParams.get('onboarding_complete') === 'true') {
-      setShowWelcome(true);
-      toast.success("🎉 Welcome to MyRhythm! Your personalized journey begins now.");
-    }
-    
-    // Check for trial started
-    if (searchParams.get('trial_started') === 'true') {
-      toast.success("🚀 Your 7-day free trial has started! Explore all features.");
-    }
-
-    // Check if morning ritual is completed today
-    const today = new Date().toDateString();
-    const morningRitual = localStorage.getItem(`morning_ritual_${today}`);
-    
-    if (!morningRitual) {
-      const hour = new Date().getHours();
-      // Show morning ritual if it's morning and not completed
-      if (hour >= 6 && hour <= 11) {
-        setShowMorningRitual(true);
-      }
-    } else {
-      const ritualData = JSON.parse(morningRitual);
-      setEnergyLevel(ritualData.energyLevel);
-      setDailyIntention(ritualData.intention);
-    }
-
-    // Set up section elements for progress tracking
-    setTimeout(() => {
-      const sectionsWithElements = dashboardSections.map(section => {
-        const element = document.getElementById(section.id);
-        return { ...section, element };
-      });
-      // Update sections if needed for progress tracking
-    }, 100);
-  }, [searchParams]);
 
   const handleUpgradeClick = () => {
-    toast.success("Upgrade to Premium for unlimited #IChoose statements! 🚀");
+    toast.success("Upgrade to Premium for unlimited features! 🚀");
   };
 
-  const nextUnlock = getNextUnlock();
+  const getNextUnlock = () => {
+    // Mock unlock data - replace with actual logic
+    return { feature: "Advanced Analytics", points: 1000 };
+  };
 
   const getRoleSpecificWelcome = () => {
-    const welcomeMessages = {
-      'brain-injury': {
-        title: 'Your Brain Recovery Journey',
-        message: 'Every step forward is progress. Your brain is healing and growing stronger.',
-        icon: '🧠'
-      },
-      'caregiver': {
-        title: 'Supporting Your Loved One',
-        message: 'Your care and dedication make a meaningful difference every day.',
-        icon: '❤️'
-      },
-      'cognitive-optimization': {
-        title: 'Peak Performance Mode',
-        message: 'Optimize your cognitive abilities and achieve your highest potential.',
-        icon: '🚀'
-      },
-      'wellness': {
-        title: 'Your Wellness Journey',
-        message: 'Building habits and mindsets for lasting well-being and growth.',
-        icon: '🌟'
-      }
+    if (!user?.role) return null;
+    
+    const messages = {
+      'brain-injury': 'Every step forward is progress. Your brain is healing and growing stronger.',
+      'caregiver': 'Your care and dedication make a meaningful difference every day.',
+      'cognitive-optimization': 'Optimize your cognitive abilities and achieve your highest potential.',
+      'basic_user': 'Building habits and mindsets for lasting well-being and growth.'
     };
     
-    return welcomeMessages[userData.userType] || welcomeMessages['wellness'];
+    return messages[user.role] || messages['basic_user'];
   };
 
-  // If morning ritual not completed and it's morning time, show morning ritual
-  if (showMorningRitual) {
-    return (
-      <div className="space-y-6">
-        <ReadingProgressBar sections={[{ id: 'morning-ritual', title: 'Morning Ritual' }]} />
-        <div id="morning-ritual" className="pt-4">
-          <MorningRitualView />
-        </div>
-        <SmartNotificationEngine 
-          energyLevel={energyLevel || undefined}
-          dailyIntention={dailyIntention}
-        />
-      </div>
-    );
-  }
-
-  const roleWelcome = getRoleSpecificWelcome();
-
   return (
-    <div className="space-y-6 pb-20">
-      {/* Dashboard-First Welcome Experience */}
-      <DashboardWelcome userName={getUserName()} />
-
-      
-      
-      {/* Role-Specific Welcome Message */}
-      {userData.userType && (
-        <Card className="bg-gradient-to-r from-memory-emerald-50 to-brain-health-50 border-brain-health-200">
-          <CardContent className="p-4">
-            <div className="flex items-center gap-3">
-              <div className="text-2xl">{roleWelcome.icon}</div>
-              <div>
-                <h3 className="font-semibold text-brain-health-800">{roleWelcome.title}</h3>
-                <p className="text-sm text-brain-health-700">{roleWelcome.message}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-      
-      {/* Assessment Upgrade Reminder */}
-      <AssessmentUpgradeReminder />
-      
-      {/* Progress & Unlock Status */}
-      {metrics.engagementLevel !== 'advanced' && (
-        <Card className="bg-gradient-to-r from-brain-health-50 to-clarity-teal-50 border-brain-health-200">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-brain-health-600" />
-                  <span className="font-medium text-brain-health-800">Your Progress</span>
-                </div>
-                <Badge className="bg-brain-health-100 text-brain-health-700">
-                  {metrics.readinessScore}/100 points
-                </Badge>
-              </div>
-              
-              {nextUnlock && (
-                <div className="text-right">
-                  <div className="flex items-center gap-2 text-sm text-brain-health-600">
-                    <Target className="h-4 w-4" />
-                    <span>Next: {nextUnlock.description}</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="w-full bg-brain-health-200 rounded-full h-2 mt-3">
-              <div 
-                className="bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${metrics.readinessScore}%` }}
-              />
-            </div>
-          </CardContent>
-        </Card>
-      )}
-      
-      {/* Calendar-Dashboard Integration */}
-      <CalendarDashboardIntegration />
-      
-      {/* Command Center Layout - Unified Four-Quadrant View */}
-      <CommandCenterLayout />
-      
-      {/* Quick Action Zone */}
-      <QuickActionZone />
-      
-      {/* Trial Status */}
-      <TrialStatusCard />
-      
-      {/* Smart Notification Engine */}
-      <SmartNotificationEngine 
-        energyLevel={energyLevel || undefined}
-        dailyIntention={dailyIntention}
+    <div className="space-y-8">
+      {/* Memory Core Strip - Memory First! */}
+      <MemoryCoreStrip 
+        interactionMode={interactionMode}
+        onInteractionModeChange={setInteractionMode}
       />
+
+      {/* Welcome Section */}
+      <DashboardWelcome />
       
-      
-      {/* Welcome to App - Show for new users */}
-      <WelcomeToApp showOnMount={showWelcome} onClose={() => setShowWelcome(false)} />
-      
-      {/* Bottom Support Section */}
-      <div className="mt-12 pt-8 border-t border-border/20 space-y-4">
-        <UserGuideIntegration showOnMount={false} />
-        <FloatingGuideButton />
-        <NeverLostSystem />
-      </div>
+      {/* Role-specific welcome message */}
+      {getRoleSpecificWelcome() && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+              <span className="text-blue-600 text-sm">👋</span>
+            </div>
+            <div>
+              <h3 className="font-semibold text-blue-900 mb-2">Welcome to your personalized dashboard!</h3>
+              <p className="text-blue-800 text-sm leading-relaxed">
+                {getRoleSpecificWelcome()}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Assessment upgrade reminder */}
+      {user?.role === 'basic_user' && (
+        <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-6">
+          <div className="flex items-start gap-4">
+            <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-purple-600 text-sm">🎯</span>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-purple-900 mb-2">Get Your Complete Assessment</h3>
+              <p className="text-purple-800 text-sm mb-3">
+                Unlock personalized insights and recommendations with our comprehensive memory and cognitive assessment.
+              </p>
+              <button 
+                onClick={handleUpgradeClick}
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-purple-700 transition-colors"
+              >
+                Take Full Assessment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Progress Section */}
+      {metrics && (
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-green-900">Your Progress Journey</h2>
+            <div className="text-green-700 text-sm">
+              Level {metrics.engagementLevel} • {metrics.readinessScore} points
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div className="text-center p-3 bg-white rounded-lg border border-green-200">
+              <div className="text-2xl font-bold text-green-600">{metrics.dailyStreak || 0}</div>
+              <div className="text-xs text-green-500">Daily Streak</div>
+            </div>
+            <div className="text-center p-3 bg-white rounded-lg border border-green-200">
+              <div className="text-2xl font-bold text-green-600">{metrics.weeklyGoals || 0}</div>
+              <div className="text-xs text-green-500">Goals This Week</div>
+            </div>
+            <div className="text-center p-3 bg-white rounded-lg border border-green-200">
+              <div className="text-2xl font-bold text-green-600">{metrics.totalActions || 0}</div>
+              <div className="text-xs text-green-500">Total Actions</div>
+            </div>
+          </div>
+          {getNextUnlock() && (
+            <div className="text-sm text-green-700 bg-green-100 rounded-lg p-3">
+              <strong>Next unlock:</strong> {getNextUnlock()?.feature} at {getNextUnlock()?.points} points
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Main Dashboard Layout */}
+      <CalendarDashboardIntegration />
+      <CommandCenterLayout />
+      <QuickActionZone />
+
+      {/* Support Components */}
+      <WelcomeToApp showOnMount={false} />
+      <UserGuideIntegration />
     </div>
+  );
+}
+
+export function DashboardContent() {
+  return (
+    <DashboardProvider>
+      <DashboardContentInner />
+    </DashboardProvider>
   );
 }

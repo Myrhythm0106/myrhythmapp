@@ -27,6 +27,8 @@ export interface DashboardContextType {
   reorderPanels: (panelIds: string[]) => void;
   syncDate: (date: Date) => void;
   syncTimeFrame: (timeFrame: TimeFrame) => void;
+  interactionMode: 'guided' | 'discovery';
+  setInteractionMode: (mode: 'guided' | 'discovery') => void;
 }
 
 const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
@@ -50,6 +52,12 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   });
 
   const [panels, setPanels] = useState<PanelState[]>(defaultPanels);
+  
+  // Interaction mode state with localStorage persistence
+  const [interactionMode, setInteractionModeState] = useState<'guided' | 'discovery'>(() => {
+    const saved = localStorage.getItem('dashboard_interaction_mode');
+    return (saved as 'guided' | 'discovery') || 'guided';
+  });
 
   const updateFilters = useCallback((newFilters: Partial<DashboardFilters>) => {
     setFilters(prev => ({ ...prev, ...newFilters }));
@@ -82,6 +90,11 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     updateFilters({ timeFrame });
   }, [updateFilters]);
 
+  const setInteractionMode = useCallback((mode: 'guided' | 'discovery') => {
+    setInteractionModeState(mode);
+    localStorage.setItem('dashboard_interaction_mode', mode);
+  }, []);
+
   const value = {
     filters,
     updateFilters,
@@ -89,7 +102,9 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     updatePanel,
     reorderPanels,
     syncDate,
-    syncTimeFrame
+    syncTimeFrame,
+    interactionMode,
+    setInteractionMode
   };
 
   return (

@@ -3,8 +3,10 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { MemoryEffectsContainer } from "@/components/ui/memory-effects";
-import { Target } from "lucide-react";
+import { Target, SkipForward } from "lucide-react";
 import { toast } from "sonner";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { GoalTypeSelector, GoalType, GOAL_TYPES } from "./components/GoalTypeSelector";
@@ -30,6 +32,9 @@ export function BrainFriendlyGoalCreator({
   const [goalWhy, setGoalWhy] = useState("");
   const [goalMeasurement, setGoalMeasurement] = useState("");
   const [goalTimeframe, setGoalTimeframe] = useState("");
+  const [skipGuidance, setSkipGuidance] = useState(() => {
+    return localStorage.getItem('goals_skip_guidance') === 'true';
+  });
   const { createGoal } = useDailyActions();
 
   const handleReset = () => {
@@ -48,7 +53,19 @@ export function BrainFriendlyGoalCreator({
 
   const handleTypeSelect = (type: GoalType) => {
     setGoalType(type);
-    setStep(2);
+    setStep(skipGuidance ? 3 : 2); // Skip to quick entry if guidance is disabled
+  };
+
+  const toggleSkipGuidance = () => {
+    const newValue = !skipGuidance;
+    setSkipGuidance(newValue);
+    localStorage.setItem('goals_skip_guidance', newValue.toString());
+    
+    if (newValue && step === 2) {
+      setStep(3); // Move to quick entry
+    } else if (!newValue && step === 3) {
+      setStep(2); // Move back to guided
+    }
   };
 
   const handleCreateGoal = async () => {
@@ -119,6 +136,19 @@ export function BrainFriendlyGoalCreator({
                   <p className="text-brain-sm text-gray-600">{goalType.description}</p>
                 </div>
 
+                {/* Skip Guidance Option */}
+                <div className="flex justify-center">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={toggleSkipGuidance}
+                    className="flex items-center gap-2 text-xs"
+                  >
+                    <SkipForward className="h-3 w-3" />
+                    Skip Guidance & Quick Entry
+                  </Button>
+                </div>
+
                 {/* Goal Definition Guidance */}
                 <GoalDefinitionGuide />
 
@@ -141,6 +171,92 @@ export function BrainFriendlyGoalCreator({
                   <p className="text-xs text-muted-foreground">
                     Add people from your support circle to help you stay accountable and celebrate progress.
                   </p>
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setStep(1)}
+                    className="w-full sm:flex-1 min-h-[44px]"
+                  >
+                    Back
+                  </Button>
+                  <Button 
+                    onClick={handleCreateGoal}
+                    disabled={!goalTitle.trim() || !goalMeasurement.trim()}
+                    className="w-full sm:flex-1 bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 min-h-[44px]"
+                  >
+                    Create Goal
+                  </Button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Quick Entry Mode */}
+            {step === 3 && goalType && (
+              <div className="space-y-6">
+                <div className="text-center">
+                  <div className={`w-12 h-12 bg-gradient-to-br ${goalType.color} rounded-full flex items-center justify-center mx-auto mb-3 text-white`}>
+                    {goalType.icon}
+                  </div>
+                  <h3 className="text-brain-lg font-semibold">Quick Goal Entry</h3>
+                  <p className="text-brain-sm text-gray-600">Fast track your {goalType.title.toLowerCase()} goal creation</p>
+                </div>
+
+                {/* Quick Entry Form */}
+                <div className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium text-foreground">Goal Title *</Label>
+                    <Input
+                      placeholder="What do you want to achieve?"
+                      value={goalTitle}
+                      onChange={(e) => setGoalTitle(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium text-foreground">Success Measurement *</Label>
+                    <Input
+                      placeholder="How will you know you've achieved it?"
+                      value={goalMeasurement}
+                      onChange={(e) => setGoalMeasurement(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium text-foreground">Target Date (Optional)</Label>
+                    <Input
+                      type="date"
+                      value={goalTimeframe}
+                      onChange={(e) => setGoalTimeframe(e.target.value)}
+                      className="mt-1"
+                    />
+                  </div>
+
+                  <div>
+                    <Label className="text-sm font-medium text-foreground">Personal Why (Optional)</Label>
+                    <Textarea
+                      placeholder="Why is this goal important to you?"
+                      value={goalWhy}
+                      onChange={(e) => setGoalWhy(e.target.value)}
+                      className="mt-1"
+                      rows={2}
+                    />
+                  </div>
+                </div>
+
+                {/* Use Full Guidance Link */}
+                <div className="text-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleSkipGuidance}
+                    className="text-xs text-gray-600 hover:text-gray-800"
+                  >
+                    Use full guidance instead
+                  </Button>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">

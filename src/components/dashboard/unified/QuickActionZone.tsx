@@ -15,28 +15,72 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useDashboard } from "@/contexts/DashboardContext";
+import { useQuickActionStats } from "@/hooks/useQuickActionStats";
 
 export function QuickActionZone() {
   const navigate = useNavigate();
+  const { interactionMode } = useDashboard();
+  const stats = useQuickActionStats();
+
+  const getActionRoute = (id: string, defaultRoute: string) => {
+    if (interactionMode === 'discovery') return defaultRoute;
+    
+    // Guided mode routes
+    switch (id) {
+      case 'calendar': return '/calendar?guided=true';
+      case 'goals': return '/goals?guided=true';
+      case 'capture': return '/memory-bridge?guided=true';
+      default: return defaultRoute;
+    }
+  };
 
   const quickActions = [
+    // Memory-first ordering: Capture and Memory Bank first
+    {
+      id: "capture",
+      title: "Capture",
+      description: "Never forget anything",
+      icon: FileText,
+      color: "indigo",
+      action: () => navigate(getActionRoute("capture", "/memory-bridge")),
+      badge: stats.capture.badge
+    },
+    {
+      id: "memory-bank", 
+      title: "Memory Bank",
+      description: "Store your wins",
+      icon: TrendingUp,
+      color: "green",
+      action: () => navigate("/memory-bank"),
+      badge: stats.memoryBank.badge
+    },
     {
       id: "calendar",
-      title: "Daily Planning",
+      title: "Daily Planning", 
       description: "Plan & track your day",
       icon: Calendar,
       color: "blue",
-      action: () => navigate("/calendar"),
-      badge: "3 pending"
+      action: () => navigate(getActionRoute("calendar", "/calendar")),
+      badge: stats.calendar.badge
     },
     {
       id: "goals",
       title: "Goals & Dreams",
-      description: "Track your progress",
+      description: "Track your progress", 
       icon: Target,
       color: "purple",
-      action: () => navigate("/goals"),
-      badge: "2 active"
+      action: () => navigate(getActionRoute("goals", "/goals")),
+      badge: stats.goals.badge
+    },
+    {
+      id: "gratitude",
+      title: "Daily Gratitude",
+      description: "Daily reflection",
+      icon: Heart,
+      color: "rose", 
+      action: () => navigate("/gratitude"),
+      badge: stats.gratitude.badge
     },
     {
       id: "brain-games",
@@ -45,45 +89,7 @@ export function QuickActionZone() {
       icon: Brain,
       color: "teal",
       action: () => navigate("/brain-games"),
-      badge: "New session"
-    },
-    {
-      id: "gratitude",
-      title: "Daily Gratitude",
-      description: "Daily reflection",
-      icon: Heart,
-      color: "rose",
-      action: () => navigate("/gratitude"),
-      badge: "Today's entry"
-    },
-    {
-      id: "capture",
-      title: "Capture",
-      description: "Never forget anything",
-      icon: FileText,
-      color: "indigo",
-      action: () => navigate("/memory-bridge"),
-      badge: "Instant save"
-    },
-    {
-      id: "memory-bank",
-      title: "Memory Bank",
-      description: "Store your wins",
-      icon: TrendingUp,
-      color: "green",
-      action: () => navigate("/gratitude"),
-      badge: "Build confidence"
-    },
-    {
-      id: "quick-add",
-      title: "Quick Add",
-      description: "Add new action",
-      icon: Plus,
-      color: "amber",
-      action: () => {
-        toast.success("Quick add feature coming soon!");
-      },
-      badge: "Fast"
+      badge: stats.brainGames.badge
     }
   ];
 
