@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { MemoryBridgeResultsModal } from './MemoryBridgeResultsModal';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
+import { RecordingsTab } from './RecordingsTab';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -105,10 +106,14 @@ export function MemoryBridgeStarterDashboard() {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue={hasCompletedFirstRecording ? "actions" : "recording"} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="recording" className="flex items-center gap-2">
               <Mic className="h-4 w-4" />
               Recording
+            </TabsTrigger>
+            <TabsTrigger value="recordings" className="flex items-center gap-2">
+              <Play className="h-4 w-4" />
+              Recordings
             </TabsTrigger>
             <TabsTrigger value="actions" className="flex items-center gap-2">
               <CheckSquare className="h-4 w-4" />
@@ -179,6 +184,16 @@ export function MemoryBridgeStarterDashboard() {
                 </CardContent>
               </Card>
             )}
+          </TabsContent>
+
+          <TabsContent value="recordings" className="space-y-4">
+            <RecordingsTab 
+              onProcessComplete={(meetingId, actionsCount) => {
+                setLastMeetingId(meetingId);
+                setLastActionsCount(actionsCount);
+                setShowResults(true);
+              }}
+            />
           </TabsContent>
 
           <TabsContent value="actions" className="space-y-4">

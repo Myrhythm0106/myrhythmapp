@@ -59,18 +59,33 @@ export function useMemoryBridge() {
       
       const audioData = await audioDataPromise;
 
+      // Update meeting record as ended
+      await supabase
+        .from('meeting_recordings')
+        .update({ 
+          is_active: false,
+          ended_at: new Date().toISOString()
+        })
+        .eq('id', currentMeeting.id);
+
       // Process the audio through our edge function
       const { data, error } = await supabase.functions.invoke('process-meeting-audio', {
         body: {
-          audioData,
+          audio: audioData,
           meetingId: currentMeeting.id,
-          userId: user.id
+          meetingData: {
+            title: currentMeeting.meeting_title,
+            type: currentMeeting.meeting_type,
+            participants: currentMeeting.participants,
+            context: currentMeeting.meeting_context,
+            recording_id: currentMeeting.recording_id
+          }
         }
       });
 
       if (error) throw error;
 
-      toast.success(`Meeting processed! Found ${data.actions_found} actions to review`);
+      toast.success(`Meeting processed! Found ${data.actionsExtracted} actions to review`);
       
       // Fetch the extracted actions
       await fetchExtractedActions(currentMeeting.id);
@@ -80,7 +95,8 @@ export function useMemoryBridge() {
       // Return enhanced data for results display
       return {
         ...data,
-        meetingId: currentMeeting.id
+        meetingId: currentMeeting.id,
+        actions_found: data.actionsExtracted
       };
 
     } catch (error) {

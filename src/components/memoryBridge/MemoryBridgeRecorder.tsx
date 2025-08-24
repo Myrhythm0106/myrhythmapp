@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
-import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle } from 'lucide-react';
+import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle, Brain } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -77,6 +77,8 @@ export function MemoryBridgeRecorder({
     const blob = await stopRecording();
     if (blob) {
       setAudioBlob(blob);
+      // Auto-process the recording seamlessly
+      setTimeout(() => handleSaveAndProcess(), 500);
     }
   };
 
@@ -107,6 +109,8 @@ export function MemoryBridgeRecorder({
     if (!audioBlob || !meetingData) return;
 
     try {
+      toast.info('Processing recording...', { duration: 1000 });
+      
       // First save the voice recording
       const voiceRecording = await saveRecording(
         audioBlob,
@@ -125,7 +129,10 @@ export function MemoryBridgeRecorder({
 
         if (meetingRecord) {
           // Process the meeting and extract actions
-          await stopMeetingRecording(audioBlob);
+          const result = await stopMeetingRecording(audioBlob);
+          if (result?.actions_found > 0) {
+            toast.success('Recording processed! Check the Actions tab.');
+          }
           onComplete();
           onClose();
         }
@@ -270,32 +277,14 @@ export function MemoryBridgeRecorder({
                 </div>
               )}
 
-              {/* Recording Complete Actions */}
-              {audioBlob && (
-                <div className="space-y-4">
-                  {/* Audio Preview */}
-                  <div className="text-center space-y-2">
-                    <p className="text-sm text-muted-foreground">
-                      Recording complete! Preview and choose your next step.
-                    </p>
-                    <audio 
-                      controls 
-                      src={URL.createObjectURL(audioBlob)}
-                      className="w-full max-w-xs mx-auto"
-                    />
+              {/* Auto-processing message */}
+              {audioBlob && !isProcessing && (
+                <div className="text-center space-y-4">
+                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                    <Brain className="h-4 w-4 animate-pulse text-primary" />
+                    Processing your recording into ACTs...
                   </div>
-                  
-                  <div className="flex gap-2">
-                    <Button onClick={handleDiscard} variant="outline" className="flex-1">
-                      Discard
-                    </Button>
-                    <Button onClick={handleSave} variant="secondary" className="flex-1">
-                      Save
-                    </Button>
-                    <Button onClick={handleSaveAndProcess} className="flex-1">
-                      Save & Process
-                    </Button>
-                  </div>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
                 </div>
               )}
             </div>
