@@ -373,6 +373,50 @@ html, body {
     font-size: var(--accessibility-text-size, 1rem);
   }
 
+  /* Calm Mode Styles - Brain-friendly design */
+  .calm-mode {
+    --calm-bg: hsl(var(--brain-health-50));
+    --calm-text: hsl(var(--brain-health-800));
+    --calm-border: hsl(var(--brain-health-200));
+    --calm-accent: hsl(var(--brain-health-400));
+  }
+
+  .calm-mode * {
+    animation-duration: 0.2s !important;
+    animation-delay: 0s !important;
+  }
+
+  .calm-mode .gradient,
+  .calm-mode [class*="gradient"] {
+    background: hsl(var(--background)) !important;
+  }
+
+  .calm-mode .shadow-xl,
+  .calm-mode .shadow-lg,
+  .calm-mode .shadow-md,
+  .calm-mode .shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .calm-mode [class*="border-2"],
+  .calm-mode [class*="border-"] {
+    border: 1px solid hsl(var(--calm-border)) !important;
+  }
+
+  .calm-mode .premium-card {
+    background: hsl(var(--calm-bg)) !important;
+    border: 1px solid hsl(var(--calm-border)) !important;
+  }
+
+  .calm-mode [class*="hover:scale"],
+  .calm-mode [class*="transform"] {
+    transform: none !important;
+  }
+
+  .calm-mode [class*="hover:scale"]:hover {
+    transform: scale(1.02) !important;
+  }
+
   /* Simple Mode Styles */
   .simple-mode {
     /* Reduce visual complexity */

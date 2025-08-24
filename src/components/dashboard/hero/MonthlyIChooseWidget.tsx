@@ -1,0 +1,95 @@
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { RefreshCw, Heart, Sparkles, Target } from "lucide-react";
+import { getRandomIChooseStatement } from "@/data/premiumAffirmations";
+
+interface MonthlyIChooseWidgetProps {
+  onUpgradeClick?: () => void;
+  userType?: string;
+  monthlyTheme?: string;
+}
+
+export function MonthlyIChooseWidget({ 
+  onUpgradeClick, 
+  userType = "recovery", 
+  monthlyTheme 
+}: MonthlyIChooseWidgetProps) {
+  const [currentStatement, setCurrentStatement] = useState(() =>
+    getRandomIChooseStatement(userType, false, 'great', [], monthlyTheme)
+  );
+
+  const refreshStatement = () => {
+    const newStatement = getRandomIChooseStatement(
+      userType, 
+      false, 
+      'great', 
+      currentStatement ? [currentStatement.id] : [],
+      monthlyTheme
+    );
+    setCurrentStatement(newStatement);
+  };
+
+  if (!currentStatement) {
+    return null;
+  }
+
+  const getThemeIcon = () => {
+    if (currentStatement.category === 'confidence') return Target;
+    if (currentStatement.category === 'strength') return Heart;
+    return Sparkles;
+  };
+
+  const ThemeIcon = getThemeIcon();
+
+  return (
+    <Card className="premium-card border-0 bg-gradient-to-br from-brain-health-400/10 via-clarity-teal-400/10 to-memory-emerald-400/10 backdrop-blur-sm">
+      <CardContent className="p-6">
+        <div className="space-y-4">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 text-white">
+                <ThemeIcon className="h-4 w-4" />
+              </div>
+              <h3 className="text-sm font-semibold gradient-text-brand">
+                Today's #IChoose
+              </h3>
+            </div>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={refreshStatement}
+              className="h-8 w-8 p-0 hover:bg-brain-health-100"
+            >
+              <RefreshCw className="h-4 w-4 text-brain-health-600" />
+            </Button>
+          </div>
+
+          {/* Statement */}
+          <div className="text-center py-4">
+            <blockquote className="text-lg font-medium text-brain-health-700 leading-relaxed">
+              "{currentStatement.text}"
+            </blockquote>
+            
+            <div className="mt-3 flex items-center justify-center gap-2 text-xs text-brain-health-600">
+              <div className="w-1 h-1 bg-brain-health-400 rounded-full"></div>
+              <span className="uppercase tracking-wide font-medium">
+                {currentStatement.theme} • {currentStatement.category}
+              </span>
+              <div className="w-1 h-1 bg-brain-health-400 rounded-full"></div>
+            </div>
+          </div>
+
+          {/* Action */}
+          <div className="text-center">
+            <p className="text-xs text-brain-health-600 mb-2">
+              Speak it. Believe it. Live it.
+            </p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
