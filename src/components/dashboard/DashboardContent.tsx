@@ -15,7 +15,7 @@ import { toast } from "sonner";
 function DashboardContentInner() {
   const [energyLevel, setEnergyLevel] = useState<number>(7);
   const [dailyIntention, setDailyIntention] = useState<string>("");
-  const { metrics } = useUserProgress();
+  const { metrics, getNextUnlock } = useUserProgress();
   const { user } = useAuth();
   const { interactionMode, setInteractionMode } = useDashboard();
   const navigate = useNavigate();
@@ -23,11 +23,6 @@ function DashboardContentInner() {
 
   const handleUpgradeClick = () => {
     toast.success("Upgrade to Premium for unlimited features! 🚀");
-  };
-
-  const getNextUnlock = () => {
-    // Mock unlock data - replace with actual logic
-    return { feature: "Advanced Analytics", points: 1000 };
   };
 
   const getRoleSpecificWelcome = () => {
@@ -105,21 +100,21 @@ function DashboardContentInner() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div className="text-center p-3 bg-white rounded-lg border border-green-200">
-              <div className="text-2xl font-bold text-green-600">{metrics.dailyStreak || 0}</div>
-              <div className="text-xs text-green-500">Daily Streak</div>
+              <div className="text-2xl font-bold text-green-600">{metrics.sessionsCount}</div>
+              <div className="text-xs text-green-500">Active Sessions</div>
             </div>
             <div className="text-center p-3 bg-white rounded-lg border border-green-200">
-              <div className="text-2xl font-bold text-green-600">{metrics.weeklyGoals || 0}</div>
-              <div className="text-xs text-green-500">Goals This Week</div>
+              <div className="text-2xl font-bold text-green-600">{metrics.featuresUsed.length}</div>
+              <div className="text-xs text-green-500">Features Used</div>
             </div>
             <div className="text-center p-3 bg-white rounded-lg border border-green-200">
-              <div className="text-2xl font-bold text-green-600">{metrics.totalActions || 0}</div>
-              <div className="text-xs text-green-500">Total Actions</div>
+              <div className="text-2xl font-bold text-green-600">{metrics.completedActions}</div>
+              <div className="text-xs text-green-500">Actions Completed</div>
             </div>
           </div>
           {getNextUnlock() && (
             <div className="text-sm text-green-700 bg-green-100 rounded-lg p-3">
-              <strong>Next unlock:</strong> {getNextUnlock()?.feature} at {getNextUnlock()?.points} points
+              <strong>Next unlock:</strong> {getNextUnlock()?.description}
             </div>
           )}
         </div>
