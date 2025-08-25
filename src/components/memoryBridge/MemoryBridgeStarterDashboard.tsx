@@ -26,7 +26,7 @@ import { MVPTopNav } from '@/components/mvp/MVPTopNav';
 import { MVPPageHeader } from '@/components/mvp/MVPPageHeader';
 
 export function MemoryBridgeStarterDashboard() {
-  const { extractedActions, isRecording } = useMemoryBridge();
+  const { extractedActions, isRecording, fetchExtractedActions } = useMemoryBridge();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showFirstRecording, setShowFirstRecording] = useState(false);
@@ -37,6 +37,13 @@ export function MemoryBridgeStarterDashboard() {
   
   const hasCompletedFirstRecording = extractedActions.length > 0;
   const recordingCount = extractedActions.length;
+
+  // Load actions on component mount
+  React.useEffect(() => {
+    if (user) {
+      fetchExtractedActions().catch(console.error);
+    }
+  }, [user]);
   
   const handleStartFirstRecording = () => {
     setShowFirstRecording(true);

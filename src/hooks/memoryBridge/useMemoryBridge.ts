@@ -25,6 +25,7 @@ export function useMemoryBridge() {
       
       setCurrentMeeting(meetingRecord as MeetingRecording);
       setIsRecording(true);
+      
       toast.success('Meeting recording started');
       return meetingRecord;
 

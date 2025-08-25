@@ -31,18 +31,30 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
   }, [fetchRecordings]);
 
   useEffect(() => {
-    // Check which recordings have been processed by looking for meeting_recordings
+    // Check which recordings have been processed by looking for meeting_recordings with actual actions
     const checkProcessedRecordings = async () => {
       if (!user) return;
       
-      const { data } = await supabase
+      const { data: meetingRecordings } = await supabase
         .from('meeting_recordings')
-        .select('recording_id')
+        .select('recording_id, id')
         .eq('user_id', user.id)
         .not('recording_id', 'is', null);
       
-      if (data) {
-        setProcessedRecordings(new Set(data.map(r => r.recording_id)));
+      if (meetingRecordings && meetingRecordings.length > 0) {
+        // Check which ones actually have extracted actions
+        const { data: actionsData } = await supabase
+          .from('extracted_actions')
+          .select('meeting_recording_id')
+          .in('meeting_recording_id', meetingRecordings.map(mr => mr.id));
+        
+        const meetingsWithActions = new Set(actionsData?.map(a => a.meeting_recording_id) || []);
+        const processedIds = new Set(
+          meetingRecordings
+            .filter(mr => meetingsWithActions.has(mr.id))
+            .map(mr => mr.recording_id)
+        );
+        setProcessedRecordings(processedIds);
       }
     };
 

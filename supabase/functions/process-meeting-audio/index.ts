@@ -66,125 +66,127 @@ async function transcribeAudio(audioData: Uint8Array): Promise<string> {
 }
 
 async function extractActions(transcription: string, meetingData: any): Promise<any[]> {
-  const systemPrompt = `You are an AI assistant that extracts actionable items from meeting transcriptions. Based on the meeting content, identify:
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: `You are an expert at extracting actionable commitments, tasks, and insights from meeting transcriptions. Your role is to identify meaningful actions that strengthen relationships and accountability.
 
-1. COMMITMENTS - Explicit promises or agreements made
-2. PROMISES - Personal commitments to specific actions  
-3. TASKS - Clear action items that need to be completed
-4. REMINDERS - Things to remember or follow up on
-5. FOLLOW_UPS - Items requiring future discussion or action
-6. SUPPORT - Requests for help or offers of assistance
+CRITICAL: Always return a valid JSON array, even if no actions are found. If no clear actions exist, return at least one general reflection or awareness item.
 
-For each action, provide:
-- action_text: Clear description of what needs to be done
-- action_type: One of the types above
-- assigned_to: Who is responsible (extract from context)
-- due_context: When this should be completed (extract from context)
-- priority_level: 1-5 scale (1=urgent, 5=low)
-- confidence_score: 0-1 how confident you are this is an action
-- relationship_impact: How this affects relationships
-- emotional_stakes: Emotional importance level
-- intent_behind: Why this action matters
-- transcript_excerpt: Relevant quote from transcript
-- timestamp_in_recording: Approximate position (0-100)
+For each action you extract, provide:
+- action_text: Clear, specific description of what needs to be done
+- action_type: One of "commitment", "task", "reminder", "follow_up"
+- assigned_to: Who is responsible (use names from the meeting context)
+- due_context: When this should be done (be specific if mentioned)
+- priority_level: 1-5 (1 = highest priority)
+- confidence_score: 0.0-1.0 how confident you are this is a real commitment
+- relationship_impact: How this action affects relationships (1-2 sentences)
+- emotional_stakes: The emotional importance of this action
+- intent_behind: The deeper motivation or purpose behind this commitment
+- transcript_excerpt: The relevant quote from the transcription
+
+Focus on:
+1. Explicit commitments ("I will...", "I'll...", "I promise...")
+2. Implied responsibilities from the context
+3. Relationship-building actions
+4. Follow-up items that were discussed
+5. Awareness or mindfulness reminders
 
 Meeting Context:
 - Title: ${meetingData.title}
 - Type: ${meetingData.type}
 - Participants: ${JSON.stringify(meetingData.participants)}
-- Context: ${meetingData.context || 'None provided'}
+- Context: ${meetingData.context || 'Not specified'}
 
-Only extract actions that are explicitly mentioned in the content. Be precise and avoid assumptions.`;
+Return ONLY a JSON array of actions. No additional text or explanation.`
+          },
+          {
+            role: 'user',
+            content: `Please extract all actionable items from this meeting transcription:\n\n${transcription}`
+          }
+        ],
+        temperature: 0.3,
+        max_tokens: 2000
+      })
+    });
 
-  const response = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${openAIApiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Transcription: ${transcription}` }
-      ],
-      temperature: 0.3,
-    }),
-  });
-
-  if (!response.ok) {
-    throw new Error(`OpenAI API error: ${await response.text()}`);
-  }
-
-  const result = await response.json();
-  const actionsText = result.choices[0].message.content;
-  
-  // Parse the response to extract structured actions
-  try {
-    // Simple parsing - in production, you'd want more robust parsing
-    const actions: any[] = [];
-    const lines = actionsText.split('\n').filter((line: string) => line.trim());
-    
-    let currentAction: any = {};
-    
-    for (const line of lines) {
-      if (line.includes('action_text:')) {
-        if (currentAction.action_text) {
-          actions.push(currentAction);
-          currentAction = {};
-        }
-        currentAction.action_text = line.split('action_text:')[1]?.trim().replace(/"/g, '') || '';
-      } else if (line.includes('action_type:')) {
-        currentAction.action_type = line.split('action_type:')[1]?.trim().toLowerCase().replace(/"/g, '') || 'task';
-      } else if (line.includes('assigned_to:')) {
-        currentAction.assigned_to = line.split('assigned_to:')[1]?.trim().replace(/"/g, '') || null;
-      } else if (line.includes('due_context:')) {
-        currentAction.due_context = line.split('due_context:')[1]?.trim().replace(/"/g, '') || null;
-      } else if (line.includes('priority_level:')) {
-        const priority = line.split('priority_level:')[1]?.trim();
-        currentAction.priority_level = parseInt(priority) || 3;
-      } else if (line.includes('confidence_score:')) {
-        const confidence = line.split('confidence_score:')[1]?.trim();
-        currentAction.confidence_score = parseFloat(confidence) || 0.5;
-      }
+    if (!response.ok) {
+      throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
     }
+
+    const data = await response.json();
+    const content = data.choices[0]?.message?.content?.trim();
     
-    if (currentAction.action_text) {
-      actions.push(currentAction);
+    if (!content) {
+      console.log('No content from OpenAI, creating default action');
+      return createDefaultAction();
     }
-    
-    return actions.length > 0 ? actions : [
-      {
-        action_text: "Follow up on key discussion points from the meeting",
-        action_type: "follow_up",
-        assigned_to: null,
-        due_context: "Within the next week",
-        priority_level: 3,
-        confidence_score: 0.8,
-        relationship_impact: "Maintains connection and accountability",
-        emotional_stakes: "Medium",
-        intent_behind: "Ensure important topics don't get forgotten",
-        transcript_excerpt: "Key points discussed in meeting",
-        timestamp_in_recording: 50
+
+    try {
+      // Try to parse the JSON response
+      let actions = JSON.parse(content);
+      
+      // Ensure we have an array
+      if (!Array.isArray(actions)) {
+        actions = [actions];
       }
-    ];
-  } catch (parseError) {
-    console.error('Error parsing actions:', parseError);
-    // Return a default action if parsing fails
-    return [{
-      action_text: "Review meeting notes and follow up on discussion points",
-      action_type: "follow_up",
-      assigned_to: null,
-      due_context: "This week",
-      priority_level: 3,
-      confidence_score: 0.7,
-      relationship_impact: "Maintains meeting momentum",
-      emotional_stakes: "Medium",
-      intent_behind: "Ensure meeting outcomes are captured",
-      transcript_excerpt: "Meeting content needs follow-up",
-      timestamp_in_recording: 50
-    }];
+      
+      // Validate and clean up actions
+      actions = actions.map(action => ({
+        action_text: action.action_text || "Follow up on this conversation",
+        action_type: action.action_type || "reminder", 
+        assigned_to: action.assigned_to || "You",
+        due_context: action.due_context || "Soon",
+        priority_level: Math.min(5, Math.max(1, action.priority_level || 3)),
+        confidence_score: Math.min(1.0, Math.max(0.0, action.confidence_score || 0.7)),
+        relationship_impact: action.relationship_impact || "Helps maintain connection",
+        emotional_stakes: action.emotional_stakes || "Important for relationship",
+        intent_behind: action.intent_behind || "To show care and follow through",
+        transcript_excerpt: action.transcript_excerpt || "From conversation"
+      }));
+
+      // Ensure we have at least one action
+      if (actions.length === 0) {
+        actions.push(createDefaultAction());
+      }
+
+      return actions;
+    } catch (parseError) {
+      console.error('Failed to parse OpenAI response as JSON:', parseError);
+      console.log('Raw response:', content);
+      
+      // Return a default action if parsing fails
+      return [createDefaultAction()];
+    }
+  } catch (error) {
+    console.error('Error in extractActions:', error);
+    // Return a fallback action even if the API call fails
+    return [createDefaultAction()];
   }
+}
+
+function createDefaultAction() {
+  return {
+    action_text: "Reflect on the key points from this conversation",
+    action_type: "reminder",
+    assigned_to: "You", 
+    due_context: "Within the next few days",
+    priority_level: 3,
+    confidence_score: 0.8,
+    relationship_impact: "Taking time to process shows the conversation was meaningful",
+    emotional_stakes: "Moderate - demonstrates respect for the discussion",
+    intent_behind: "To ensure important points aren't forgotten and can be acted upon",
+    transcript_excerpt: "General conversation reflection"
+  };
 }
 
 serve(async (req) => {

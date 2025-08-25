@@ -10,13 +10,14 @@ export async function createMeetingRecording(
   setupData: MeetingSetupData
 ) {
   const response = await fetch(
-    `https://bomjibcivwxbcwfmkrnv.supabase.co/rest/v1/meeting_recordings`,
+    `https://bomjibcivwxbcwfmkrnv.supabase.co/rest/v1/meeting_recordings?select=*`,
     {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
         'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvbWppYmNpdnd4YmN3Zm1rcm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzMTg0OTksImV4cCI6MjA2Mzg5NDQ5OX0.gSaHvq6iGHHeqCcKOzKfuDd7T5LC5EXmDvJY8s48T7g',
+        'Prefer': 'return=representation'
       },
       body: JSON.stringify({
         user_id: userId,
