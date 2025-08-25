@@ -1407,6 +1407,54 @@ export type Database = {
         }
         Relationships: []
       }
+      transcription_jobs: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          error_message: string | null
+          id: string
+          job_id: string | null
+          meeting_id: string
+          metadata: Json | null
+          provider: string
+          recording_id: string
+          status: string
+          transcript_text: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_id?: string | null
+          meeting_id: string
+          metadata?: Json | null
+          provider?: string
+          recording_id: string
+          status?: string
+          transcript_text?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_id?: string | null
+          meeting_id?: string
+          metadata?: Json | null
+          provider?: string
+          recording_id?: string
+          status?: string
+          transcript_text?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trusted_devices: {
         Row: {
           created_at: string
