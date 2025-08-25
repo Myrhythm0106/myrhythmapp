@@ -49,21 +49,21 @@ const SUBSCRIPTION_FEATURES: Record<string, SubscriptionFeatures> = {
 const SUBSCRIPTION_LIMITS: Record<string, SubscriptionLimits> = {
   free: {
     recordingCount: 3,
-    recordingDurationMinutes: 20,
+    recordingDurationMinutes: 30,
     commentCount: 1,
     hasWatchers: false,
     retentionDays: 7
   },
   premium: {
     recordingCount: -1, // unlimited
-    recordingDurationMinutes: 60,
+    recordingDurationMinutes: 180, // 3 hours
     commentCount: 7,
     hasWatchers: true,
     retentionDays: -1 // permanent
   },
   family: {
     recordingCount: -1, // unlimited
-    recordingDurationMinutes: -1, // unlimited
+    recordingDurationMinutes: 180, // 3 hours
     commentCount: -1, // unlimited
     hasWatchers: true,
     retentionDays: -1 // permanent
