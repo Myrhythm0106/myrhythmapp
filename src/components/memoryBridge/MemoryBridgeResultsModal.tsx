@@ -5,6 +5,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { ActionSchedulingModal } from './ActionSchedulingModal';
+import { useSchedulePreferences } from '@/hooks/useSchedulePreferences';
 import { 
   CheckCircle, 
   Calendar, 
@@ -13,7 +15,9 @@ import {
   Heart, 
   Target,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Clock,
+  Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -34,7 +38,9 @@ export function MemoryBridgeResultsModal({
 }: MemoryBridgeResultsModalProps) {
   const [extractedActions, setExtractedActions] = useState<ExtractedAction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showScheduling, setShowScheduling] = useState(false);
   const { fetchExtractedActions, confirmAction } = useMemoryBridge();
+  const { suggestOptimalTime } = useSchedulePreferences();
 
   useEffect(() => {
     if (isOpen && meetingId) {
@@ -46,7 +52,18 @@ export function MemoryBridgeResultsModal({
     try {
       setIsLoading(true);
       const actions = await fetchExtractedActions(meetingId);
-      setExtractedActions(actions || []);
+      
+      // Add proposed scheduling times based on user preferences
+      const actionsWithSuggestions = (actions || []).map(action => {
+        const suggestion = suggestOptimalTime(action.priority_level);
+        return {
+          ...action,
+          proposed_date: suggestion?.date,
+          proposed_time: suggestion?.time
+        };
+      });
+      
+      setExtractedActions(actionsWithSuggestions);
     } catch (error) {
       console.error('Failed to load actions:', error);
       toast.error('Failed to load extracted actions');
@@ -72,9 +89,13 @@ export function MemoryBridgeResultsModal({
   };
 
   const handleScheduleAction = (action: ExtractedAction) => {
-    // TODO: Navigate to calendar with pre-filled action
-    toast.success('Action ready for scheduling!');
-    onClose();
+    setShowScheduling(true);
+  };
+
+  const handleScheduleComplete = (scheduledActions: ExtractedAction[]) => {
+    toast.success(`Successfully scheduled ${scheduledActions.length} actions!`);
+    // Here we would update the database with scheduled dates/times
+    setShowScheduling(false);
   };
 
   const categorizeActions = (actions: ExtractedAction[]) => {
@@ -221,6 +242,14 @@ export function MemoryBridgeResultsModal({
                       categorizedActions.action.map(action => (
                         <div key={action.id} className="bg-white p-3 rounded border">
                           <p className="text-sm font-medium mb-1">{action.action_text}</p>
+                          {action.proposed_date && (
+                            <div className="flex items-center gap-1 mb-2">
+                              <Clock className="h-3 w-3 text-blue-500" />
+                              <span className="text-xs text-blue-600">
+                                Suggested: {action.proposed_date} at {action.proposed_time}
+                              </span>
+                            </div>
+                          )}
                           <div className="flex justify-between items-center">
                             <Badge variant="outline" className="text-xs">
                               Priority {action.priority_level}
@@ -263,7 +292,11 @@ export function MemoryBridgeResultsModal({
                   <Share2 className="h-4 w-4" />
                   Share with Circle
                 </Button>
-                <Button className="flex items-center gap-2 bg-primary">
+                <Button 
+                  className="flex items-center gap-2 bg-primary"
+                  onClick={() => setShowScheduling(true)}
+                  disabled={extractedActions.length === 0}
+                >
                   <Calendar className="h-4 w-4" />
                   Schedule Actions
                   <ArrowRight className="h-4 w-4" />
@@ -272,6 +305,14 @@ export function MemoryBridgeResultsModal({
             </div>
           </div>
         )}
+
+        {/* Action Scheduling Modal */}
+        <ActionSchedulingModal
+          isOpen={showScheduling}
+          onClose={() => setShowScheduling(false)}
+          actions={extractedActions}
+          onScheduleComplete={handleScheduleComplete}
+        />
       </DialogContent>
     </Dialog>
   );

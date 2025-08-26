@@ -79,7 +79,7 @@ export function useQuickActionStats(): QuickActionStats {
     // Gratitude: check today's entry
     const today = new Date();
     const todayEntries = entries.filter(entry => {
-      const entryDate = new Date(entry.created_at);
+      const entryDate = new Date(entry.date);
       return entryDate.toDateString() === today.toDateString();
     });
 

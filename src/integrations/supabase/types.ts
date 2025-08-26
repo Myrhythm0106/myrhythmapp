@@ -495,6 +495,8 @@ export type Database = {
           action_text: string
           action_type: string
           assigned_to: string | null
+          assigned_watchers: string[] | null
+          calendar_event_id: string | null
           confidence_score: number | null
           created_at: string
           due_context: string | null
@@ -503,7 +505,11 @@ export type Database = {
           intent_behind: string | null
           meeting_recording_id: string
           priority_level: number | null
+          proposed_date: string | null
+          proposed_time: string | null
           relationship_impact: string | null
+          scheduled_date: string | null
+          scheduled_time: string | null
           status: string
           timestamp_in_recording: number | null
           transcript_excerpt: string | null
@@ -515,6 +521,8 @@ export type Database = {
           action_text: string
           action_type?: string
           assigned_to?: string | null
+          assigned_watchers?: string[] | null
+          calendar_event_id?: string | null
           confidence_score?: number | null
           created_at?: string
           due_context?: string | null
@@ -523,7 +531,11 @@ export type Database = {
           intent_behind?: string | null
           meeting_recording_id: string
           priority_level?: number | null
+          proposed_date?: string | null
+          proposed_time?: string | null
           relationship_impact?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           status?: string
           timestamp_in_recording?: number | null
           transcript_excerpt?: string | null
@@ -535,6 +547,8 @@ export type Database = {
           action_text?: string
           action_type?: string
           assigned_to?: string | null
+          assigned_watchers?: string[] | null
+          calendar_event_id?: string | null
           confidence_score?: number | null
           created_at?: string
           due_context?: string | null
@@ -543,7 +557,11 @@ export type Database = {
           intent_behind?: string | null
           meeting_recording_id?: string
           priority_level?: number | null
+          proposed_date?: string | null
+          proposed_time?: string | null
           relationship_impact?: string | null
+          scheduled_date?: string | null
+          scheduled_time?: string | null
           status?: string
           timestamp_in_recording?: number | null
           transcript_excerpt?: string | null
@@ -646,6 +664,9 @@ export type Database = {
           meeting_title: string
           meeting_type: string
           participants: Json
+          processing_error: string | null
+          processing_status: string | null
+          proposed_schedule: Json | null
           recording_id: string | null
           relationship_context: Json | null
           started_at: string
@@ -665,6 +686,9 @@ export type Database = {
           meeting_title: string
           meeting_type?: string
           participants?: Json
+          processing_error?: string | null
+          processing_status?: string | null
+          proposed_schedule?: Json | null
           recording_id?: string | null
           relationship_context?: Json | null
           started_at?: string
@@ -684,6 +708,9 @@ export type Database = {
           meeting_title?: string
           meeting_type?: string
           participants?: Json
+          processing_error?: string | null
+          processing_status?: string | null
+          proposed_schedule?: Json | null
           recording_id?: string | null
           relationship_context?: Json | null
           started_at?: string
@@ -1513,6 +1540,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_schedule_preferences: {
+        Row: {
+          created_at: string
+          energy_level: number | null
+          id: string
+          notes: string | null
+          preference_type: string
+          time_slots: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          energy_level?: number | null
+          id?: string
+          notes?: string | null
+          preference_type: string
+          time_slots?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          energy_level?: number | null
+          id?: string
+          notes?: string | null
+          preference_type?: string
+          time_slots?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_statement_history: {
         Row: {

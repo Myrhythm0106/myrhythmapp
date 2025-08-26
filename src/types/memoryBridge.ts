@@ -37,6 +37,13 @@ export interface ExtractedAction {
   user_notes?: string;
   created_at: string;
   updated_at: string;
+  // New scheduling properties
+  proposed_date?: string;
+  proposed_time?: string;
+  scheduled_date?: string;
+  scheduled_time?: string;
+  calendar_event_id?: string;
+  assigned_watchers?: string[];
 }
 
 export interface ConversationContext {
