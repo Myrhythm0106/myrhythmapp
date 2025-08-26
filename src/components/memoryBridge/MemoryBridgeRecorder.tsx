@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -7,6 +7,8 @@ import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle, Brain } from 'lu
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useRealtimeTranscription } from '@/hooks/memoryBridge/useRealtimeTranscription';
+import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -17,73 +19,68 @@ interface MemoryBridgeRecorderProps {
   onComplete: () => void;
 }
 
-export function MemoryBridgeRecorder({ 
-  open, 
-  onClose, 
-  meetingData, 
-  onComplete 
-}: MemoryBridgeRecorderProps) {
-  const { 
-    isRecording, 
-    isPaused, 
-    duration, 
-    startRecording, 
-    pauseRecording, 
-    resumeRecording, 
-    stopRecording,
-    saveRecording,
-    formatDuration 
-  } = useVoiceRecorder();
-  
-  const { startMeetingRecording, stopMeetingRecording, isProcessing } = useMemoryBridge();
-  const { getLimits } = useSubscription();
+const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: MemoryBridgeRecorderProps) => {
+  const { startMeetingRecording, stopMeetingRecording, isRecording, isProcessing, currentMeeting } = useMemoryBridge();
+  const { isRecording: isVoiceRecording, isPaused, duration, startRecording, pauseRecording, resumeRecording, stopRecording, saveRecording, formatDuration } = useVoiceRecorder();
+  const { subscription } = useSubscription();
+  const { transcript, isTranscribing, startTranscription, stopTranscription, resetTranscript } = useRealtimeTranscription();
+  const { acts, isExtracting, extractACTs, clearACTs } = useRealtimeACTs(currentMeeting?.id);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
-  
-  const limits = getLimits();
-  const maxDuration = limits.recordingDurationMinutes * 60; // Convert to seconds
-  const isNearLimit = duration > maxDuration * 0.8; // 80% of limit
+  const [showLiveACTs, setShowLiveACTs] = useState(false);
+
+  // Get subscription limits
+  const maxDurationMinutes = subscription?.plan_type === 'premium' ? 60 : 5;
+  const maxDuration = maxDurationMinutes * 60; // Convert to seconds
+  const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
+  // Show warning when approaching limit
   useEffect(() => {
     if (isNearLimit && !showLimitWarning) {
       setShowLimitWarning(true);
-      toast.warning(`Approaching ${limits.recordingDurationMinutes} minute limit`);
+      toast.warning(`Approaching ${maxDurationMinutes} minute limit`);
     }
-  }, [isNearLimit, showLimitWarning, limits.recordingDurationMinutes]);
+  }, [isNearLimit, showLimitWarning, maxDurationMinutes]);
 
+  // Auto-stop when limit reached
   useEffect(() => {
-    if (isOverLimit && isRecording) {
+    if (isOverLimit && isVoiceRecording) {
       handleStop();
       toast.error('Recording stopped: Duration limit reached');
     }
-  }, [isOverLimit, isRecording]);
+  }, [isOverLimit, isVoiceRecording]);
 
-  const handleStart = async () => {
+  const handleStart = useCallback(async () => {
     const success = await startRecording();
-    if (!success) {
-      toast.error('Failed to start recording. Please check microphone permissions.');
+    if (success) {
+      console.log('Voice recording started successfully');
+      // Start realtime transcription for SMART ACTs
+      await startTranscription();
+      setShowLiveACTs(true);
+      resetTranscript();
+      clearACTs();
     }
-  };
+  }, [startRecording, startTranscription, resetTranscript, clearACTs]);
 
-  const handlePause = () => {
+  const handlePause = useCallback(() => {
     pauseRecording();
-  };
+  }, [pauseRecording]);
 
-  const handleResume = () => {
+  const handleResume = useCallback(() => {
     resumeRecording();
-  };
+  }, [resumeRecording]);
 
-  const handleStop = async () => {
-    const blob = await stopRecording();
-    if (blob) {
-      setAudioBlob(blob);
-      // Auto-process the recording seamlessly
-      setTimeout(() => handleSaveAndProcess(), 500);
+  const handleStop = useCallback(async () => {
+    const audioBlob = await stopRecording();
+    stopTranscription();
+    setAudioBlob(audioBlob);
+    if (audioBlob) {
+      await handleSaveAndProcess(audioBlob);
     }
-  };
+  }, [stopRecording, stopTranscription]);
 
-  const handleSave = async () => {
+  const handleSave = useCallback(async () => {
     if (!audioBlob || !meetingData) return;
 
     try {
@@ -104,17 +101,18 @@ export function MemoryBridgeRecorder({
       console.error('Error saving recording:', error);
       toast.error('Failed to save recording');
     }
-  };
+  }, [audioBlob, meetingData, saveRecording, onComplete, onClose]);
 
-  const handleSaveAndProcess = async () => {
-    if (!audioBlob || !meetingData) return;
+  const handleSaveAndProcess = useCallback(async (audioBlob?: Blob) => {
+    const blobToProcess = audioBlob || audioBlob;
+    if (!blobToProcess || !meetingData) return;
 
     try {
       toast.info('Processing recording...', { duration: 1000 });
       
       // First save the voice recording
       const voiceRecording = await saveRecording(
-        audioBlob,
+        blobToProcess,
         meetingData.meeting_title || meetingData.title,
         'meeting',
         `Meeting with ${meetingData.participants?.map((p: any) => p.name).join(', ') || 'participants'}`
@@ -153,23 +151,42 @@ export function MemoryBridgeRecorder({
       console.error('Error processing recording:', error);
       toast.error('Failed to process recording');
     }
-  };
+  }, [meetingData, saveRecording, startMeetingRecording, onComplete, onClose]);
 
-  const handleDiscard = () => {
+  const handleDiscard = useCallback(() => {
     setAudioBlob(null);
+    stopTranscription();
+    setShowLiveACTs(false);
+    resetTranscript();
+    clearACTs();
     onClose();
-  };
+  }, [onClose, stopTranscription, resetTranscript, clearACTs]);
 
   const getProgressValue = () => {
-    if (maxDuration === -1) return 0; // Unlimited
     return (duration / maxDuration) * 100;
   };
 
   const getProgressColor = () => {
-    if (isOverLimit) return 'bg-destructive';
-    if (isNearLimit) return 'bg-orange-500';
-    return 'bg-primary';
+    if (!subscription) return 'hsl(var(--destructive))';
+    
+    const limit = subscription.plan_type === 'premium' ? 60 : 5;
+    const minutes = duration / 60;
+    
+    if (minutes >= limit * 0.9) return 'hsl(var(--destructive))';
+    if (minutes >= limit * 0.7) return 'hsl(var(--warning))';
+    return 'hsl(var(--primary))';
   };
+
+  // Extract ACTs every 10 seconds during transcription
+  useEffect(() => {
+    if (transcript && isTranscribing && transcript.length > 50) {
+      const timeoutId = setTimeout(() => {
+        extractACTs(transcript);
+      }, 2000); // Debounce by 2 seconds
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [transcript, isTranscribing, extractACTs]);
 
   if (isProcessing) {
     return (
@@ -191,7 +208,7 @@ export function MemoryBridgeRecorder({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Mic className="h-5 w-5" />
@@ -221,33 +238,29 @@ export function MemoryBridgeRecorder({
                   <span className="text-2xl font-mono">
                     {formatDuration(duration)}
                   </span>
-                  {maxDuration !== -1 && (
-                    <span className="text-sm text-muted-foreground">
-                      / {formatDuration(maxDuration)}
-                    </span>
-                  )}
+                  <span className="text-sm text-muted-foreground">
+                    / {formatDuration(maxDuration)}
+                  </span>
                 </div>
                 
-                {maxDuration !== -1 && (
-                  <div className="space-y-1">
-                    <Progress 
-                      value={getProgressValue()} 
-                      className="h-2"
-                    />
-                    {isNearLimit && (
-                      <div className="flex items-center justify-center gap-1 text-sm text-orange-600">
-                        <AlertTriangle className="h-3 w-3" />
-                        Approaching duration limit
-                      </div>
-                    )}
-                  </div>
-                )}
+                <div className="space-y-1">
+                  <Progress 
+                    value={getProgressValue()} 
+                    className="h-2"
+                  />
+                  {isNearLimit && (
+                    <div className="flex items-center justify-center gap-1 text-sm text-orange-600">
+                      <AlertTriangle className="h-3 w-3" />
+                      Approaching duration limit
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Control Buttons */}
               {!audioBlob && (
                 <div className="flex justify-center gap-3">
-                  {!isRecording ? (
+                  {!isVoiceRecording ? (
                     <Button onClick={handleStart} size="lg" className="gap-2">
                       <Mic className="h-4 w-4" />
                       Start Recording
@@ -289,6 +302,67 @@ export function MemoryBridgeRecorder({
                 </div>
               )}
 
+              {/* Recording Status */}
+              {isVoiceRecording && (
+                <div className="text-center">
+                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse" />
+                      <span>Recording...</span>
+                      {isTranscribing && (
+                        <div className="flex items-center gap-1 text-primary">
+                          <div className="h-1.5 w-1.5 bg-primary rounded-full animate-pulse" />
+                          <span className="text-xs">Live ACTs</span>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      {Math.floor(duration / 60)}:{(duration % 60).toString().padStart(2, '0')}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Live SMART ACTs Display */}
+              {showLiveACTs && (
+                <div className="space-y-4">
+                  <div className="border-t pt-4">
+                    <div className="flex items-center gap-2 mb-3">
+                      <div className="h-2 w-2 bg-primary rounded-full animate-pulse" />
+                      <h3 className="font-medium text-sm">Live SMART ACTs</h3>
+                      {isExtracting && (
+                        <div className="text-xs text-muted-foreground">(Processing...)</div>
+                      )}
+                    </div>
+                    
+                    {acts.length > 0 ? (
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {acts.map((act, index) => (
+                          <div key={index} className="bg-muted/50 rounded-lg p-2 text-sm">
+                            <div className="font-medium text-primary">{act.action}</div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              <span className="mr-3">👤 {act.assignee}</span>
+                              <span className="mr-3">📅 {act.deadline}</span>
+                              <span className={`px-1 py-0.5 rounded text-xs ${
+                                act.priority === 'high' ? 'bg-red-100 text-red-700' :
+                                act.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-green-100 text-green-700'
+                              }`}>
+                                {act.priority}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-xs text-muted-foreground italic">
+                        No actionable items detected yet...
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* Auto-processing message */}
               {audioBlob && !isProcessing && (
                 <div className="text-center space-y-4">
@@ -300,19 +374,11 @@ export function MemoryBridgeRecorder({
                 </div>
               )}
             </div>
-
-            {/* Recording Status */}
-            {isRecording && (
-              <div className="mt-4 text-center">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                  {isPaused ? 'Paused' : 'Recording...'}
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       </DialogContent>
     </Dialog>
   );
-}
+};
+
+export { MemoryBridgeRecorder };

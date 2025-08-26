@@ -63,3 +63,9 @@ verify_jwt = true
 
 [functions.send-invitation-email]
 verify_jwt = false
+
+[functions.assemblyai-token]
+verify_jwt = true
+
+[functions.extract-acts-incremental]
+verify_jwt = true
