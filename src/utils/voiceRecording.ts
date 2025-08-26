@@ -13,7 +13,7 @@ export const uploadVoiceRecording = async (
   shareWithHealthcare: boolean = false
 ) => {
   const recordingId = uuidv4();
-  const fileName = `${userId}/${recordingId}.wav`;
+  const fileName = `${userId}/${recordingId}.webm`;
   
   // Upload to Supabase Storage
   const { error: uploadError } = await supabase.storage

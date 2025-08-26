@@ -8,6 +8,7 @@ import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface MemoryBridgeRecorderProps {
   open: boolean;
@@ -128,11 +129,22 @@ export function MemoryBridgeRecorder({
         }, voiceRecording.id);
 
         if (meetingRecord) {
-          // Process the meeting and extract actions
-          const result = await stopMeetingRecording(audioBlob);
-          if (result?.actions_found > 0) {
-            toast.success('Recording processed! Check the Actions tab.');
-          }
+          // Trigger background processing using stored file (fast path)
+          await supabase.functions.invoke('process-meeting-audio', {
+            body: {
+              filePath: voiceRecording.file_path,
+              meetingId: meetingRecord.id,
+              meetingData: {
+                title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
+                type: 'informal',
+                participants: meetingData.participants || [],
+                context: meetingData.context || '',
+                recording_id: voiceRecording.id
+              }
+            }
+          });
+
+          toast.success('Processing started! ACTs will appear shortly.');
           onComplete();
           onClose();
         }

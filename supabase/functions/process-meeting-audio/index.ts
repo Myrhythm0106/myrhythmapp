@@ -74,7 +74,7 @@ async function extractActions(transcription: string, meetingData: any): Promise<
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-5-mini-2025-08-07',
         messages: [
           {
             role: 'system',
@@ -114,8 +114,7 @@ Return ONLY a JSON array of actions. No additional text or explanation.`
             content: `Please extract all actionable items from this meeting transcription:\n\n${transcription}`
           }
         ],
-        temperature: 0.3,
-        max_tokens: 1000
+        max_completion_tokens: 600
       })
     });
 
@@ -280,8 +279,17 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Lightweight warmup/ping support
+  if (req.method === 'GET') {
+    return new Response(JSON.stringify({ status: 'ok' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+
   try {
-    const { filePath, meetingId, meetingData } = await req.json();
+    const { filePath, meetingId, meetingData, warmup } = await req.json();
+    
+    if (warmup) {
+      return new Response(JSON.stringify({ status: 'warm', message: 'Function is warm' }), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
     
     if (!filePath || !meetingId) {
       throw new Error('File path and meeting ID are required');
