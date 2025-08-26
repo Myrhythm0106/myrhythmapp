@@ -115,7 +115,7 @@ Return ONLY a JSON array of actions. No additional text or explanation.`
           }
         ],
         temperature: 0.3,
-        max_tokens: 2000
+        max_tokens: 1000
       })
     });
 
@@ -189,30 +189,31 @@ function createDefaultAction() {
   };
 }
 
-serve(async (req) => {
-  // Handle CORS preflight requests
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
+// Background processing function
+async function processAudioInBackground(filePath: string, meetingId: string, meetingData: any) {
+  const startTime = Date.now();
+  console.log(`[${meetingId}] Starting background processing for file: ${filePath}`);
+  
   try {
-    const { audio, meetingId, meetingData } = await req.json();
+    // Download audio file from Supabase Storage
+    console.log(`[${meetingId}] Downloading audio file...`);
+    const { data: fileData, error: downloadError } = await supabase.storage
+      .from('voice-recordings')
+      .download(filePath);
     
-    if (!audio || !meetingId) {
-      throw new Error('Audio data and meeting ID are required');
-    }
-
-    console.log('Processing meeting audio for meeting:', meetingId);
+    if (downloadError) throw downloadError;
     
-    // Process audio in chunks
-    const binaryAudio = processBase64Chunks(audio);
+    // Convert to Uint8Array for OpenAI processing
+    const arrayBuffer = await fileData.arrayBuffer();
+    const binaryAudio = new Uint8Array(arrayBuffer);
     
-    // Transcribe audio
-    console.log('Transcribing audio...');
+    // Transcribe audio (fast step)
+    console.log(`[${meetingId}] Transcribing audio...`);
     const transcription = await transcribeAudio(binaryAudio);
+    console.log(`[${meetingId}] Transcription completed in ${Date.now() - startTime}ms`);
     
-    // Extract actions from transcription
-    console.log('Extracting actions from transcription...');
+    // Extract actions from transcription (optimized for speed)
+    console.log(`[${meetingId}] Extracting actions from transcription...`);
     const extractedActions = await extractActions(transcription, meetingData);
     
     // Get user ID from meeting
@@ -225,7 +226,7 @@ serve(async (req) => {
     if (meetingError) throw meetingError;
     
     // Save extracted actions to database
-    console.log(`Saving ${extractedActions.length} actions to database...`);
+    console.log(`[${meetingId}] Saving ${extractedActions.length} actions to database...`);
     const actionsToInsert = extractedActions.map(action => ({
       user_id: meeting.user_id,
       meeting_recording_id: meetingId,
@@ -256,19 +257,65 @@ serve(async (req) => {
         .eq('id', meetingData.recording_id);
     }
     
-    console.log('Meeting processing completed successfully');
+    const totalTime = Date.now() - startTime;
+    console.log(`[${meetingId}] Processing completed successfully in ${totalTime}ms (${extractedActions.length} actions extracted)`);
     
+  } catch (error) {
+    console.error(`[${meetingId}] Background processing error:`, error);
+    
+    // Mark the meeting as failed
+    await supabase
+      .from('meeting_recordings')
+      .update({ 
+        processing_status: 'failed',
+        processing_error: error.message 
+      })
+      .eq('id', meetingId);
+  }
+}
+
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { filePath, meetingId, meetingData } = await req.json();
+    
+    if (!filePath || !meetingId) {
+      throw new Error('File path and meeting ID are required');
+    }
+
+    console.log(`[${meetingId}] Starting processing for file: ${filePath}`);
+    
+    // Mark meeting as processing
+    await supabase
+      .from('meeting_recordings')
+      .update({ processing_status: 'processing' })
+      .eq('id', meetingId);
+    
+    // Start background processing without blocking
+    const backgroundProcess = processAudioInBackground(filePath, meetingId, meetingData);
+    EdgeRuntime.waitUntil(backgroundProcess);
+    
+    console.log(`[${meetingId}] Background processing started, returning immediate response`);
+    
+    // Return immediate 202 response
     return new Response(
       JSON.stringify({ 
-        success: true, 
-        transcription,
-        actionsExtracted: extractedActions.length
+        status: 'processing',
+        message: 'Audio processing started in background',
+        meetingId 
       }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { 
+        status: 202,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+      }
     );
 
   } catch (error) {
-    console.error('Error in process-meeting-audio function:', error);
+    console.error('Error starting audio processing:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       {

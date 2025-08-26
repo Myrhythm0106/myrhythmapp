@@ -17,28 +17,6 @@ export async function processSavedRecording(
     if (recordingError) throw recordingError;
     if (!recording) throw new Error('Recording not found');
 
-    // Get the audio file URL
-    const { data: urlData } = await supabase.storage
-      .from('voice-recordings')
-      .createSignedUrl(recording.file_path, 3600);
-
-    if (!urlData?.signedUrl) throw new Error('Could not access recording file');
-
-    // Download the audio file
-    const audioResponse = await fetch(urlData.signedUrl);
-    const audioBlob = await audioResponse.blob();
-
-    // Convert to base64
-    const reader = new FileReader();
-    const audioDataPromise = new Promise<string>((resolve) => {
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        resolve(base64.split(',')[1]); // Remove data prefix
-      };
-    });
-    reader.readAsDataURL(audioBlob);
-    const audioData = await audioDataPromise;
-
     // Create meeting recording record
     const { data: meetingRecord, error: meetingError } = await supabase
       .from('meeting_recordings')
@@ -50,17 +28,18 @@ export async function processSavedRecording(
         participants: [],
         is_active: false,
         started_at: recording.created_at,
-        ended_at: new Date().toISOString()
+        ended_at: new Date().toISOString(),
+        processing_status: 'pending'
       })
       .select()
       .single();
 
     if (meetingError) throw meetingError;
 
-    // Process through edge function
+    // Start background processing with file path (no large payloads)
     const { data, error: processError } = await supabase.functions.invoke('process-meeting-audio', {
       body: {
-        audio: audioData,
+        filePath: recording.file_path,
         meetingId: meetingRecord.id,
         meetingData: {
           title: recording.title,
@@ -74,11 +53,15 @@ export async function processSavedRecording(
 
     if (processError) throw processError;
 
-    toast.success(`Processing complete! Found ${data.actionsExtracted} actions`);
+    // Show immediate feedback for background processing
+    toast.success('Processing started! We\'ll extract ACTs in the background.');
 
+    // Start polling for completion
+    const result = await pollForCompletion(meetingRecord.id);
+    
     return {
-      success: true,
-      actionsCount: data.actionsExtracted,
+      success: result.success,
+      actionsCount: result.actionsCount,
       meetingId: meetingRecord.id
     };
 
@@ -87,4 +70,52 @@ export async function processSavedRecording(
     toast.error('Failed to process recording');
     return { success: false };
   }
+}
+
+// Poll for processing completion
+async function pollForCompletion(meetingId: string): Promise<{ success: boolean; actionsCount?: number }> {
+  const maxAttempts = 60; // 2 minutes max
+  let attempts = 0;
+  
+  while (attempts < maxAttempts) {
+    try {
+      // Check if actions have been extracted
+      const { data: actions, error: actionsError } = await supabase
+        .from('extracted_actions')
+        .select('id')
+        .eq('meeting_recording_id', meetingId);
+
+      if (actionsError) throw actionsError;
+
+      // Check processing status
+      const { data: meeting, error: meetingError } = await supabase
+        .from('meeting_recordings')
+        .select('processing_status, processing_error')
+        .eq('id', meetingId)
+        .single();
+
+      if (meetingError) throw meetingError;
+
+      if (meeting.processing_status === 'failed') {
+        toast.error(`Processing failed: ${meeting.processing_error}`);
+        return { success: false };
+      }
+
+      if (actions && actions.length > 0) {
+        toast.success(`ACTs ready! Found ${actions.length} actionable items.`);
+        return { success: true, actionsCount: actions.length };
+      }
+
+      // Wait 2 seconds before checking again
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      attempts++;
+      
+    } catch (error) {
+      console.error('Polling error:', error);
+      break;
+    }
+  }
+
+  toast.error('Processing is taking longer than expected. Please check back later.');
+  return { success: false };
 }
