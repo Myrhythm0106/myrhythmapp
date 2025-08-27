@@ -10,7 +10,9 @@ import {
   CheckCircle2, 
   AlertTriangle,
   Brain,
-  Zap
+  Zap,
+  Pause,
+  Play
 } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
@@ -28,8 +30,11 @@ type RecordingState = 'ready' | 'recording' | 'processing' | 'complete';
 export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecorderProps) {
   const { 
     isRecording: isVoiceRecording, 
+    isPaused,
     duration, 
     startRecording, 
+    pauseRecording,
+    resumeRecording,
     stopRecording, 
     saveRecording, 
     formatDuration 
@@ -180,47 +185,55 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   }, [onCancel]);
 
   const getButtonText = () => {
-    switch (recordingState) {
-      case 'ready':
-        return 'Start Quick Capture';
-      case 'recording':
-        return 'Stop Recording';
-      case 'processing':
-        return 'Processing...';
-      case 'complete':
-        return 'View Results';
-      default:
-        return 'Start Quick Capture';
+    if (recordingState === 'ready') {
+      return 'Start Quick Capture';
     }
+    if (recordingState === 'recording') {
+      return isPaused ? 'Resume Recording' : 'Pause Recording';
+    }
+    if (recordingState === 'processing') {
+      return 'Processing...';
+    }
+    if (recordingState === 'complete') {
+      return 'View Results';
+    }
+    return 'Start Quick Capture';
   };
 
   const getButtonIcon = () => {
-    switch (recordingState) {
-      case 'ready':
-        return <Mic className="h-5 w-5" />;
-      case 'recording':
-        return <Square className="h-5 w-5" />;
-      case 'processing':
-        return <Brain className="h-5 w-5 animate-pulse" />;
-      case 'complete':
-        return <CheckCircle2 className="h-5 w-5" />;
-      default:
-        return <Mic className="h-5 w-5" />;
+    if (recordingState === 'ready') {
+      return <Mic className="h-5 w-5" />;
     }
+    if (recordingState === 'recording') {
+      return isPaused ? <Play className="h-5 w-5" /> : <Pause className="h-5 w-5" />;
+    }
+    if (recordingState === 'processing') {
+      return <Brain className="h-5 w-5 animate-pulse" />;
+    }
+    if (recordingState === 'complete') {
+      return <CheckCircle2 className="h-5 w-5" />;
+    }
+    return <Mic className="h-5 w-5" />;
   };
 
   const handleMainAction = () => {
-    switch (recordingState) {
-      case 'ready':
-        handleFirstTap();
-        break;
-      case 'recording':
-        handleSecondTap();
-        break;
-      case 'complete':
-        handleThirdTap();
-        break;
+    if (recordingState === 'ready') {
+      handleFirstTap();
+    } else if (recordingState === 'recording') {
+      if (isPaused) {
+        resumeRecording();
+        toast.success('Recording resumed! 🎤');
+      } else {
+        pauseRecording();
+        toast.success('Recording paused ⏸️');
+      }
+    } else if (recordingState === 'complete') {
+      handleThirdTap();
     }
+  };
+
+  const handleStopRecording = () => {
+    handleSecondTap();
   };
 
   const getProgressValue = () => {
@@ -247,7 +260,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
               <h3 className="text-lg font-semibold text-brain-health-900">Quick Capture</h3>
             </div>
             <p className="text-sm text-brain-health-600">
-              3-tap recording: Start → Stop → View Results
+              Start → {isPaused ? 'Resume' : 'Pause'} → Stop → Results
             </p>
           </div>
 
@@ -275,7 +288,9 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
           {recordingState === 'recording' && (
             <div className="text-center space-y-2">
               <div className="flex items-center justify-center gap-2">
-                <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse" />
+                <div className={`h-2 w-2 rounded-full ${
+                  isPaused ? 'bg-orange-500' : 'bg-red-500 animate-pulse'
+                }`} />
                 <Clock className="h-4 w-4" />
                 <span className="text-lg font-mono text-brain-health-900">
                   {formatDuration(duration)}
@@ -283,6 +298,11 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
                 <span className="text-sm text-brain-health-600">
                   / {formatDuration(maxDuration)}
                 </span>
+                {isPaused && (
+                  <Badge variant="outline" className="text-orange-600 border-orange-300">
+                    Paused
+                  </Badge>
+                )}
               </div>
               
               <Progress 
@@ -330,20 +350,33 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
           )}
 
           {/* Main Action Button */}
-          <div className="text-center">
+          <div className="flex flex-col items-center gap-3">
             <Button
               onClick={handleMainAction}
               disabled={recordingState === 'processing'}
               size="lg"
               className={`px-8 py-4 text-lg gap-2 ${
-                recordingState === 'recording' 
-                  ? 'bg-red-600 hover:bg-red-700' 
+                recordingState === 'recording' && !isPaused
+                  ? 'bg-orange-600 hover:bg-orange-700' 
                   : 'bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700'
               } text-white`}
             >
               {getButtonIcon()}
               {getButtonText()}
             </Button>
+
+            {/* Stop Button - appears during recording or pause */}
+            {recordingState === 'recording' && (
+              <Button
+                onClick={handleStopRecording}
+                variant="outline"
+                size="lg"
+                className="px-6 py-3 gap-2 border-red-300 text-red-600 hover:bg-red-50"
+              >
+                <Square className="h-4 w-4" />
+                Stop Recording
+              </Button>
+            )}
           </div>
 
           {/* Cancel Button */}
