@@ -51,7 +51,8 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onP
     if (activeStep === "payment-gate") {
       setActiveStep("results");
     } else if (activeStep === "results") {
-      setActiveStep("welcome");
+      // After viewing results, navigate to guided journey
+      window.location.href = '/guided-journey';
     } else if (activeStep === "welcome") {
       setActiveStep("setup");
       setSetupProgress(25);

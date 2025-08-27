@@ -91,7 +91,7 @@ export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: Per
         </div>
         
         <Button onClick={onContinue} className="bg-gradient-to-r from-primary to-accent hover:shadow-lg w-full">
-          <Crown className="h-4 w-4 mr-2" />
+          <Sparkles className="h-4 w-4 mr-2" />
           Unlock Your Complete MyRhythm Foundation
         </Button>
       </div>
@@ -289,10 +289,11 @@ export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: Per
          </CardContent>
        </Card>
 
-      {/* Continue button */}
+      {/* Start Guided Journey button */}
       <div className="flex justify-center pt-6">
-        <Button onClick={onContinue} size="lg" className="bg-gradient-to-r from-primary to-primary/80">
-          Continue to Your Personalized Journey
+        <Button onClick={onContinue} size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg">
+          <Sparkles className="mr-2 h-5 w-5" />
+          Start Your Guided Journey
           <ArrowRight className="ml-2 h-4 w-4" />
         </Button>
       </div>

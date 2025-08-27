@@ -10,6 +10,7 @@ import { SimplifiedQuickActions } from "./actions/SimplifiedQuickActions";
 import { TodayStrip } from "./calendar/TodayStrip";
 import { FloatingCaptureButton } from "./floating/FloatingCaptureButton";
 import { ReportsWidget } from "./widgets/ReportsWidget";
+import { JourneyProgressWidget } from "./widgets/JourneyProgressWidget";
 
 function DashboardContentInner() {
   const { user } = useAuth();
@@ -31,6 +32,9 @@ function DashboardContentInner() {
       
       {/* Today Strip - Compact calendar integration */}
       <TodayStrip />
+      
+      {/* Journey Progress Widget - Guided setup tracking */}
+      <JourneyProgressWidget />
       
       {/* Reports Widget - Assessment results and progress */}
       <ReportsWidget />

@@ -44,6 +44,7 @@ import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
 import SubscribeSuccess from "./pages/SubscribeSuccess";
 import SubscribeCancel from "./pages/SubscribeCancel";
+import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 
 const queryClient = new QueryClient();
 
@@ -127,6 +128,7 @@ function App() {
          <Route path="/mvp-assessment-results" element={<MVPAssessmentResults />} />
                      <Route path="/setup-wizard" element={<SetupWizard />} />
                      <Route path="/life-empowerment-guide" element={<LifeEmpowermentGuidePage />} />
+                     <Route path="/guided-journey" element={<GuidedJourneyPage />} />
                      
                       {/* Redirect assessment routes to /start for new users - but keep /mvp/assessment directing to MVPCore4C */}
                       <Route path="/mvp/assessment" element={<MVPCore4CPage />} />
