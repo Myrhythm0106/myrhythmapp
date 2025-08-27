@@ -7,6 +7,11 @@ import { Download, FileText } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 
 interface ShareSummaryProps {
+  title?: string;
+  data?: any;
+  className?: string;
+  variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+  triggerContent?: React.ReactNode;
   userData?: {
     name?: string;
     routines?: Array<{ name: string; status: string }>;
@@ -16,29 +21,48 @@ interface ShareSummaryProps {
   };
 }
 
-export function ShareSummary({ userData }: ShareSummaryProps) {
+export function ShareSummary({ 
+  title = "MyRhythm Summary",
+  data,
+  className = "",
+  variant = "outline",
+  triggerContent,
+  userData 
+}: ShareSummaryProps) {
   const summaryRef = React.useRef<HTMLDivElement>(null);
   
   const handlePrint = useReactToPrint({
     contentRef: summaryRef,
-    documentTitle: "MyRhythm Summary",
+    documentTitle: title,
   });
 
   const defaultData = {
     name: userData?.name || "User",
-    routines: userData?.routines || [
-      { name: "Morning routine", status: "Active" },
-      { name: "Evening wind-down", status: "In progress" }
-    ],
+    routines: userData?.routines || (data?.recommendations ? 
+      data.recommendations.map((rec: string, index: number) => ({ 
+        name: rec, 
+        status: "Recommended" 
+      })) : [
+        { name: "Morning routine", status: "Active" },
+        { name: "Evening wind-down", status: "In progress" }
+      ]),
     recentWins: userData?.recentWins || [
-      { text: "Completed all daily tasks", date: "Today" },
-      { text: "Remembered family call", date: "Yesterday" }
+      { text: "Completed assessment", date: "Today" },
+      { text: data?.primaryRhythm ? `Identified as ${data.primaryRhythm}` : "Building awareness", date: "Today" }
     ],
     notes: userData?.notes || [
-      { content: "Feeling more organized with daily structure", date: "This week" }
+      { content: data?.overallScore ? `Assessment score: ${data.overallScore}/100` : "Starting MyRhythm journey", date: "This week" }
     ],
-    lastAssessment: userData?.lastAssessment || "Last week"
+    lastAssessment: userData?.lastAssessment || (data?.completedAt || "Today")
   };
+
+  if (triggerContent) {
+    return (
+      <Button onClick={() => handlePrint()} variant={variant} className={className}>
+        {triggerContent}
+      </Button>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -61,7 +85,7 @@ export function ShareSummary({ userData }: ShareSummaryProps) {
         <Card className="border-none shadow-none print:shadow-none">
           <CardHeader className="text-center">
             <div className="mb-4">
-              <h1 className="text-2xl font-bold">MyRhythm Summary</h1>
+              <h1 className="text-2xl font-bold">{title}</h1>
               <p className="text-sm text-muted-foreground">
                 Generated on {new Date().toLocaleDateString()}
               </p>

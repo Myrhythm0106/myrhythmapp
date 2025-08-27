@@ -8,6 +8,7 @@ import { FirstTimeUserExperience } from "@/components/onboarding/FirstTimeUserEx
 import { useSessionTracking } from "@/hooks/useSessionTracking";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
+import { ReportsWidget } from "@/components/dashboard/widgets/ReportsWidget";
 import { BackButton } from "@/components/ui/BackButton";
 import CalendarPage from "./CalendarPage";
 import GoalsPage from "./GoalsPage";

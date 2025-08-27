@@ -99,24 +99,21 @@ const SubscribePage = () => {
         );
       }
 
-      // Check if Stripe is enabled, if not use test mode
+      // Check if Stripe is enabled, if not simulate success page
       const stripeEnabled = import.meta.env.VITE_STRIPE_ENABLED === 'true';
       
       if (!stripeEnabled) {
-        // Test mode - save plan selection and navigate to onboarding
+        // Test mode - simulate successful payment and go to success page
         localStorage.setItem('selectedPlan', JSON.stringify({
           plan: planType,
           interval: isYearly ? 'year' : 'month',
           pricing
         }));
         
-        toast.success('Plan selected! Continuing to setup...');
+        toast.success('Payment processed! Welcome to MyRhythm!');
         
-        if (user) {
-          navigate('/web-onboarding');
-        } else {
-          navigate('/auth?redirect=/web-onboarding');
-        }
+        // Navigate to success page with simulated session
+        navigate('/subscribe/success?session_id=test_session&fm=' + (pricing.hasDiscount ? '1' : '0'));
         return;
       }
 
@@ -146,13 +143,11 @@ const SubscribePage = () => {
         pricing: getPricingWithDiscount(basePricing.find(p => p.id === planType)!, isYearly)
       }));
       
-      toast.success('Plan selected! Continuing to setup...');
+      toast.success('Payment processed! Welcome to MyRhythm!');
       
-      if (user) {
-        navigate('/web-onboarding');
-      } else {
-        navigate('/auth?redirect=/web-onboarding');
-      }
+      // Navigate to success page with simulated session
+      const pricing = getPricingWithDiscount(basePricing.find(p => p.id === planType)!, isYearly);
+      navigate('/subscribe/success?session_id=test_session&fm=' + (pricing.hasDiscount ? '1' : '0'));
     } finally {
       setLoading(false);
       setSelectedPlan(null);

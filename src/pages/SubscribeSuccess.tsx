@@ -64,8 +64,8 @@ const SubscribeSuccess = () => {
   }, [sessionId, isFoundingMember]);
 
   const handleStartAssessment = () => {
-    // Navigate to assessment with selected parameters
-    navigate(`/mvp/assessment-flow?type=${selectedAssessment}&path=${selectedPath}&flow=post-payment`);
+    // Navigate directly to assessment with immediate start
+    navigate(`/mvp-assessment?type=${selectedAssessment}&autostart=true&paid=true`);
   };
 
   const handleContinueToDashboard = () => {

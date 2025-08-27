@@ -9,7 +9,7 @@ import { HeroStack } from "./hero/HeroStack";
 import { SimplifiedQuickActions } from "./actions/SimplifiedQuickActions";
 import { TodayStrip } from "./calendar/TodayStrip";
 import { FloatingCaptureButton } from "./floating/FloatingCaptureButton";
-import { CalmModeToggle } from "./settings/CalmModeToggle";
+import { ReportsWidget } from "./widgets/ReportsWidget";
 
 function DashboardContentInner() {
   const { user } = useAuth();
@@ -32,11 +32,11 @@ function DashboardContentInner() {
       {/* Today Strip - Compact calendar integration */}
       <TodayStrip />
       
+      {/* Reports Widget - Assessment results and progress */}
+      <ReportsWidget />
+      
       {/* Simplified Quick Actions - 6 clean cards */}
       <SimplifiedQuickActions />
-      
-      {/* Calm Mode Toggle */}
-      <CalmModeToggle />
       
       {/* Floating Capture Button */}
       <FloatingCaptureButton />

@@ -35,6 +35,7 @@ import MVPAssessmentPage from "./pages/MVPAssessmentPage";
 import MVPCorePage from "./pages/MVPCorePage";
 import MVPCore4CPage from "./pages/MVPCore4CPage";
 import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
+import MVPAssessmentResults from "./pages/MVPAssessmentResults";
 import CongratsPage from "./pages/CongratsPage";
 import StartPage from "./pages/StartPage";
 import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
@@ -122,7 +123,8 @@ function App() {
                      <Route path="/start" element={<StartPage />} />
                      
                      {/* New Assessment and Setup Flow */}
-                     <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />
+         <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />
+         <Route path="/mvp-assessment-results" element={<MVPAssessmentResults />} />
                      <Route path="/setup-wizard" element={<SetupWizard />} />
                      <Route path="/life-empowerment-guide" element={<LifeEmpowermentGuidePage />} />
                      

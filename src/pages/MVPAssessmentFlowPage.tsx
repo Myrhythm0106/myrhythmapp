@@ -47,8 +47,13 @@ export default function MVPAssessmentFlowPage() {
   };
 
   const handleAssessmentComplete = () => {
-    // Navigate to setup wizard after assessment
-    navigate('/setup-wizard?from=assessment');
+    if (flow === 'post-payment') {
+      // Go to setup wizard for paid users
+      navigate('/setup-wizard?from=assessment');
+    } else {
+      // Show results immediately
+      navigate('/mvp-assessment-results');
+    }
   };
 
   if (!consentGiven) {

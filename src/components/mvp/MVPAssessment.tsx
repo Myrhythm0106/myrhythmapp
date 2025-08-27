@@ -196,11 +196,14 @@ export function MVPAssessment() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const assessmentType = searchParams.get('type') || 'brief';
+  const autostart = searchParams.get('autostart') === 'true';
+  const isPaid = searchParams.get('paid') === 'true';
   
   const [currentQuestion, setCurrentQuestion] = React.useState(0);
   const [answers, setAnswers] = React.useState<Record<string, string>>({});
   const [isComplete, setIsComplete] = React.useState(false);
   const [recommendations, setRecommendations] = React.useState<string[]>([]);
+  const [showIntro, setShowIntro] = React.useState(!autostart);
 
   const questions = assessmentType === 'comprehensive' ? COMPREHENSIVE_QUESTIONS : BRIEF_QUESTIONS;
   const progress = ((currentQuestion + 1) / questions.length) * 100;
@@ -237,6 +240,16 @@ export function MVPAssessment() {
       .slice(0, 3);
 
     setRecommendations(sortedFeatures);
+    
+    // Save results for later viewing
+    const results = {
+      answers: finalAnswers,
+      recommendations: sortedFeatures,
+      assessmentType,
+      isPaid,
+      completedAt: new Date().toISOString()
+    };
+    localStorage.setItem('lastAssessmentResults', JSON.stringify(results));
   };
 
   const getFeatureRoute = (feature: string): string => {
@@ -262,6 +275,58 @@ export function MVPAssessment() {
     };
     return colors[feature] || 'memory-emerald';
   };
+
+  // Intro screen for non-autostart assessments
+  if (showIntro) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/25 to-clarity-teal-50/30 p-6 flex items-center justify-center">
+        <Card className="w-full max-w-2xl border-memory-emerald-200 bg-gradient-to-br from-memory-emerald-50/50 to-white">
+          <CardHeader className="text-center">
+            <div className="flex justify-center mb-4">
+              <Brain className="h-16 w-16 text-brain-health-600" />
+            </div>
+            <CardTitle className="text-3xl text-brain-health-800 mb-2">
+              {assessmentType === 'comprehensive' ? 'Comprehensive' : 'Brief'} Assessment
+            </CardTitle>
+            <p className="text-brain-health-600 text-lg">
+              {assessmentType === 'comprehensive' 
+                ? 'A detailed 15-20 minute assessment for comprehensive insights'
+                : 'A quick 5-10 minute assessment for immediate guidance'
+              }
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="text-center p-4 bg-memory-emerald-50 rounded-lg">
+                <Clock className="h-8 w-8 text-memory-emerald-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-memory-emerald-800">Duration</h3>
+                <p className="text-sm text-memory-emerald-600">
+                  {assessmentType === 'comprehensive' ? '15-20 minutes' : '5-10 minutes'}
+                </p>
+              </div>
+              <div className="text-center p-4 bg-brain-health-50 rounded-lg">
+                <Target className="h-8 w-8 text-brain-health-600 mx-auto mb-2" />
+                <h3 className="font-semibold text-brain-health-800">Questions</h3>
+                <p className="text-sm text-brain-health-600">
+                  {questions.length} personalized questions
+                </p>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <Button
+                onClick={() => setShowIntro(false)}
+                className="bg-gradient-to-r from-brain-health-500 to-memory-emerald-500 text-white px-8 py-3 text-lg"
+              >
+                Start Assessment
+                <ArrowRight className="h-5 w-5 ml-2" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (isComplete) {
     return (
@@ -380,10 +445,10 @@ export function MVPAssessment() {
                     View All Features
                   </Button>
                   <Button
-                    onClick={() => navigate(getFeatureRoute(recommendations[0]))}
+                    onClick={() => navigate(`/mvp-assessment-results?type=${assessmentType}&paid=${isPaid}`)}
                     className="bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500"
                   >
-                    Begin Your Journey
+                    View Full Results
                   </Button>
                 </div>
               </div>
