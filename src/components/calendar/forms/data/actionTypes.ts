@@ -27,8 +27,8 @@ export const actionTypes = [
     value: 'appointment', 
     label: 'Appointment', 
     icon: Calendar, 
-    description: 'Scheduled meetings with healthcare providers',
-    examples: ['Doctor visit', 'Therapy session', 'Check-up']
+    description: 'Scheduled commitments and care visits (optional)',
+    examples: ['Care visit', 'Therapy session', 'Health check-up']
   },
   { 
     value: 'gym', 
@@ -46,10 +46,10 @@ export const actionTypes = [
   },
   { 
     value: 'therapy', 
-    label: 'Therapy/Medical', 
+    label: 'Therapy/Health', 
     icon: HeartPulse, 
     description: 'Healthcare and therapeutic activities',
-    examples: ['Physical therapy', 'Counseling', 'Medical treatment']
+    examples: ['Physical therapy', 'Counseling', 'Health visit']
   },
   { 
     value: 'meeting', 

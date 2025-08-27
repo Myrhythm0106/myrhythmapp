@@ -15,7 +15,7 @@ export function ClinicalViewToggle({
   onToggle, 
   userRole = 'consumer' 
 }: ClinicalViewToggleProps) {
-  // Only show for clinical/medical users
+  // Only show for clinical/medical users - hidden for consumers by default
   if (userRole === 'consumer') return null;
 
   return (

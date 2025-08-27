@@ -158,7 +158,7 @@ export function SupportCircleManager() {
                       <SelectItem value="family">Family Member</SelectItem>
                       <SelectItem value="friend">Friend</SelectItem>
                       <SelectItem value="caregiver">Caregiver</SelectItem>
-                      <SelectItem value="healthcare">Healthcare Provider</SelectItem>
+                      <SelectItem value="care-team">Care Team (optional)</SelectItem>
                       <SelectItem value="therapist">Therapist</SelectItem>
                       <SelectItem value="social-worker">Social Worker</SelectItem>
                     </SelectContent>
@@ -202,7 +202,7 @@ export function SupportCircleManager() {
                     <SelectItem value="viewer">Viewer</SelectItem>
                     <SelectItem value="supporter">Supporter</SelectItem>
                     <SelectItem value="caregiver">Caregiver</SelectItem>
-                    <SelectItem value="medical">Medical Professional</SelectItem>
+                    <SelectItem value="professional">Care Team (read-only)</SelectItem>
                     <SelectItem value="colleague">Colleague</SelectItem>
                   </SelectContent>
                 </Select>
@@ -285,7 +285,7 @@ export function SupportCircleManager() {
                 <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No support circle members yet</h3>
                 <p className="text-muted-foreground mb-4">
-                  Add family, friends, or healthcare providers to your support network
+                  Add family, friends, or care team (optional)
                 </p>
                 <Button onClick={() => setIsAddDialogOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />

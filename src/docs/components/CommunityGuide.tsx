@@ -22,10 +22,10 @@ export function CommunityGuide() {
         
         <Card>
           <CardHeader>
-            <CardTitle className="text-foreground">Expert Q&A</CardTitle>
+            <CardTitle className="text-foreground">Coach & Community Q&A (Non-medical)</CardTitle>
           </CardHeader>
           <CardContent className="text-foreground">
-            <p>Access to healthcare professionals who can answer questions and provide guidance.</p>
+            <p>Peer and coach guidance (non-medical) to support your journey.</p>
           </CardContent>
         </Card>
         

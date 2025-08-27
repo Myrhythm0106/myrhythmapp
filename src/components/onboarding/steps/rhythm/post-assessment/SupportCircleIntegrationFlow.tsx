@@ -34,9 +34,9 @@ export function SupportCircleIntegrationFlow({ userType, assessmentResult, onCom
           </div>
           
           <div className="p-4 border rounded-lg">
-            <h4 className="font-medium mb-2">Healthcare Team</h4>
+            <h4 className="font-medium mb-2">Care Team (optional)</h4>
             <p className="text-sm text-muted-foreground">
-              Keep your medical professionals informed of your progress.
+              Share updates if you choose—no medical validation required.
             </p>
           </div>
         </div>

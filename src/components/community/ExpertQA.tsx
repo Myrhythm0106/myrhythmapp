@@ -23,8 +23,8 @@ export function ExpertQA() {
     {
       id: "1",
       expert: {
-        name: "Dr. Sarah Chen",
-        title: "Neurologist, Dallas Medical Center",
+        name: "Sarah Chen",
+        title: "Brain Health Coach",
         avatar: undefined,
       },
       topic: "Understanding Post-TBI Headaches",
@@ -35,8 +35,8 @@ export function ExpertQA() {
     {
       id: "2",
       expert: {
-        name: "Dr. Michael Rivera",
-        title: "Rehabilitation Specialist",
+        name: "Michael Rivera",
+        title: "Rehab Coach",
         avatar: undefined,
       },
       topic: "Cognitive Exercises for TBI Recovery",
@@ -47,8 +47,8 @@ export function ExpertQA() {
     {
       id: "3",
       expert: {
-        name: "Dr. Lisa Johnson",
-        title: "Psychiatrist, Mental Health Institute",
+        name: "Lisa Johnson",
+        title: "Mental Health Coach",
         avatar: undefined,
       },
       topic: "Managing Depression After Brain Injury",
@@ -74,9 +74,9 @@ export function ExpertQA() {
   return (
     <div className="space-y-6">
       <div className="mb-4">
-        <h3 className="text-lg font-medium">Expert Q&A Sessions</h3>
+        <h3 className="text-lg font-medium">Coach & Community Q&A</h3>
         <p className="text-sm text-muted-foreground">
-          Join live sessions with healthcare professionals and ask questions
+          Community and coach-led sessions. Not medical advice.
         </p>
       </div>
 

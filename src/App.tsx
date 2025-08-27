@@ -15,6 +15,7 @@ import Auth from "./pages/Auth";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import WebOnboarding from "./pages/WebOnboarding";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import { Disclaimer } from "./pages/legal/Disclaimer";
 import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import InAppPurchase from "./routes/InAppPurchase";
@@ -80,7 +81,8 @@ function App() {
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
-                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                     <Route path="/legal/disclaimer" element={<ProtectedRoute requireAuth={false}><Disclaimer /></ProtectedRoute>} />
+                     <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/terms" element={<TermsOfService />} />
                     <Route path="/founders-story" element={<FoundersMemoryStory />} />
                     <Route path="/in-app-purchase" element={<InAppPurchase />} />

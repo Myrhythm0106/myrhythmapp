@@ -16,9 +16,9 @@ export function MembersList() {
     },
     {
       id: "2",
-      name: "Dr. Michael Smith",
-      email: "dr.smith@example.com",
-      role: "healthcare",
+      name: "Michael Smith, Care Team",
+      email: "smith@example.com",
+      role: "caregiver",
       status: "active",
     },
     {

@@ -6,17 +6,17 @@ import { Badge } from "@/components/ui/badge";
 import { Users, MessageCircle, Heart, Bell, Shield } from "lucide-react";
 
 export function SupportHeroesWidget() {
-  // Professional support team data - would come from context in production
+  // Support team data - would come from context in production
   const supportTeam = [
     { 
       id: 1, 
-      name: "Dr. Sarah Chen", 
-      role: "Lead Physician", 
-      avatar: "👩‍⚕️", 
-      lastMessage: "Excellent progress this week",
+      name: "Sarah Chen", 
+      role: "Care Team", 
+      avatar: "👩‍💼", 
+      lastMessage: "Great progress this week",
       unreadCount: 1,
       online: true,
-      specialty: "Neurology"
+      specialty: "Care Support"
     },
     { 
       id: 2, 
@@ -60,7 +60,7 @@ export function SupportHeroesWidget() {
             <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
               <Users className="h-5 w-5 text-white" />
             </div>
-            Professional Support Network
+            Your Support Circle
           </CardTitle>
           {totalUnread > 0 && (
             <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold px-3 py-1">
@@ -74,11 +74,11 @@ export function SupportHeroesWidget() {
           <div className="flex items-center justify-center gap-2 mb-2">
             <Shield className="h-5 w-5 text-indigo-600" />
             <p className="font-semibold text-indigo-800">
-              {supportTeam.length} Professionals Actively Supporting You
+              {supportTeam.length} Support Members Connected
             </p>
           </div>
           <p className="text-sm text-indigo-600">
-            Enterprise-grade care coordination and support
+            Optional. Share only what you choose. Not medical advice.
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export function SupportHeroesWidget() {
 
         <div className="text-center pt-2">
           <p className="text-sm text-slate-500">
-            Professional care coordination platform
+            Support network coordination (optional)
           </p>
         </div>
       </CardContent>

@@ -36,9 +36,9 @@ const TermsOfService = () => {
                 Service Description
               </h2>
               <div className="space-y-2 text-sm">
-                <p>MyRhythm is a cognitive wellness platform designed to support individuals in their personal development and brain health journey.</p>
-                <p>Our services include mood tracking, gratitude practices, daily action planning, and personalized assessments.</p>
-                <p>The platform is intended for personal wellness use and is not a substitute for professional medical advice.</p>
+                <p>MyRhythm is a support app designed to help individuals build structure, remember important tasks, and connect with their support network.</p>
+                <p>Our services include routine building, memory support, daily task planning, and community connection features.</p>
+                <p>The platform is intended for personal support use and is not a medical device or substitute for professional medical advice.</p>
               </div>
             </section>
 
@@ -49,10 +49,20 @@ const TermsOfService = () => {
               </h2>
               <div className="space-y-2 text-sm">
                 <p><strong>Important:</strong> MyRhythm is not a medical device or treatment.</p>
-                <p>• Our tools are for wellness and self-improvement purposes only</p>
+                <p>• Our tools are for structure and support purposes only</p>
                 <p>• Always consult healthcare professionals for medical advice</p>
                 <p>• Do not use our platform to diagnose or treat medical conditions</p>
-                <p>• In case of mental health emergencies, contact emergency services immediately</p>
+                <p>• In case of emergencies, contact emergency services immediately</p>
+                <p className="mt-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => navigate("/legal/disclaimer")}
+                    className="text-blue-600"
+                  >
+                    Read Full Disclaimer
+                  </Button>
+                </p>
               </div>
             </section>
 

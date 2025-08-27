@@ -40,9 +40,9 @@ export function CommunityCTASection() {
               <Button 
                 variant="outline" 
                 className="border-2 border-blue-300 bg-white hover:bg-blue-50"
-                onClick={() => navigate("/onboarding?type=medical")}
+                onClick={() => navigate("/onboarding?type=pro")}
               >
-                ✅ Medical Professional
+                ✅ Professional/Coach
               </Button>
             </div>
             

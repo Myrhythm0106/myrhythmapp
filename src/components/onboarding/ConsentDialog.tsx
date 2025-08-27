@@ -15,8 +15,9 @@ export function ConsentDialog({ open, onAccept, onDecline }: ConsentDialogProps)
   const [dataConsent, setDataConsent] = useState(false);
   const [privacyConsent, setPrivacyConsent] = useState(false);
   const [termsConsent, setTermsConsent] = useState(false);
+  const [nonMedicalConsent, setNonMedicalConsent] = useState(false);
 
-  const allConsentsGiven = dataConsent && privacyConsent && termsConsent;
+  const allConsentsGiven = dataConsent && privacyConsent && termsConsent && nonMedicalConsent;
 
   const handleAccept = () => {
     if (allConsentsGiven) {
@@ -100,8 +101,8 @@ export function ConsentDialog({ open, onAccept, onDecline }: ConsentDialogProps)
                 <div className="space-y-3 flex-1">
                   <h3 className="font-semibold text-clarity-teal-800">Terms of Service</h3>
                   <p className="text-sm text-clarity-teal-700">
-                    By proceeding, you agree to our Terms of Service and acknowledge that MyRhythm is a cognitive empowerment tool, 
-                    not a medical device. Always consult healthcare professionals for medical advice.
+                    By proceeding, you agree to our Terms of Service and acknowledge that MyRhythm is a support tool 
+                    for building structure and connections, not a medical device.
                   </p>
                   <div className="flex items-center space-x-2">
                     <Checkbox 
@@ -111,6 +112,30 @@ export function ConsentDialog({ open, onAccept, onDecline }: ConsentDialogProps)
                     />
                     <label htmlFor="terms-consent" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                       I agree to the Terms of Service
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Non-Medical Acknowledgment */}
+            <div className="border border-amber-200 rounded-lg p-4 bg-amber-50/30">
+              <div className="flex items-start gap-3">
+                <Shield className="h-5 w-5 text-amber-600 mt-1 flex-shrink-0" />
+                <div className="space-y-3 flex-1">
+                  <h3 className="font-semibold text-amber-800">Non-Medical Support Tool</h3>
+                  <p className="text-sm text-amber-700">
+                    MyRhythm is a support app and not a medical device. We do not provide medical advice, 
+                    diagnosis, or treatment. Always consult healthcare professionals for medical questions.
+                  </p>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox 
+                      id="non-medical-consent" 
+                      checked={nonMedicalConsent}
+                      onCheckedChange={(checked) => setNonMedicalConsent(checked === true)}
+                    />
+                    <label htmlFor="non-medical-consent" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      I understand MyRhythm is not a medical device and does not provide medical advice
                     </label>
                   </div>
                 </div>

@@ -62,15 +62,15 @@ export function WhyMyRhythmSection() {
                 <div className="bg-green-50 p-3 rounded-lg inline-flex">
                   <HeartHandshake className="h-6 w-6 text-green-500" />
                 </div>
-                <h3 className="text-lg font-medium">For Medical Professionals</h3>
+                <h3 className="text-lg font-medium">For Professionals</h3>
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-500 mt-1" />
-                    <span>Monitor Without Hovering: See patient engagement patterns</span>
+                    <span>See engagement patterns users choose to share</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle2 className="h-4 w-4 text-green-500 mt-1" />
-                    <span>Promote Holistic Healing: Align goals and recovery practices</span>
+                    <span>Support holistic wellness approaches</span>
                   </li>
                 </ul>
               </div>
