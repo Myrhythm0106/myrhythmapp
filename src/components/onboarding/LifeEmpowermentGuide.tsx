@@ -185,10 +185,18 @@ export function LifeEmpowermentGuide({
           Previous
         </Button>
         
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <p className="text-sm text-muted-foreground">
             {currentPhase + 1} of {phases.length}
           </p>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={onComplete}
+            className="text-muted-foreground hover:text-foreground"
+          >
+            Skip Timeline
+          </Button>
         </div>
 
         <Button onClick={handleNext} className="gap-2">

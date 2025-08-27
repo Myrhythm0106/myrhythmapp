@@ -11,12 +11,14 @@ import { Badge } from "@/components/ui/badge";
 import { PaymentDetailsForm } from "@/components/payment/PaymentDetailsForm";
 import { LifeEmpowermentGuide } from "../LifeEmpowermentGuide";
 import { useSubscription } from "@/contexts/SubscriptionContext";
+import { SmartPricingDisplay } from "../steps/rhythm/SmartPricingDisplay";
 
 export type { PlanType };
 
 export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps) => {
+  const [showSmartPricing, setShowSmartPricing] = useState(true);
   const [selected, setSelected] = useState<PlanType | null>(null);
-  const [isAnnual, setIsAnnual] = useState(true); // Default to annual for savings
+  const [isAnnual, setIsAnnual] = useState(true);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const isMobile = useIsMobile();
   const { updateSubscription } = useSubscription();
@@ -32,6 +34,16 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     }
     
     setShowPaymentForm(true);
+  };
+
+  const handleSmartPricingSubscribe = () => {
+    // Default to premium plan when subscribing from smart pricing
+    handlePlanSelect('premium');
+  };
+
+  const handleSmartPricingClose = () => {
+    // Show try before you buy option
+    setShowSmartPricing(false);
   };
 
   const handleBillingChange = (annual: boolean) => {
@@ -91,9 +103,29 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     );
   }
 
+  // Show SmartPricingDisplay first
+  if (showSmartPricing) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto px-4">
+        <SmartPricingDisplay
+          userType="brain-injury"
+          onClose={handleSmartPricingClose}
+          onSubscribe={handleSmartPricingSubscribe}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8 max-w-6xl mx-auto px-4">
-      <PlanHeader />
+      <div className="text-center space-y-4">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+          Try Before You Subscribe
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Experience MyRhythm first, then choose your plan based on your results.
+        </p>
+      </div>
 
       {/* Billing Toggle - Centered and Prominent */}
       <div className="flex items-center justify-center">

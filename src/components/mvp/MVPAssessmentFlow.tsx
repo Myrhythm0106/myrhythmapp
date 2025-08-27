@@ -525,7 +525,7 @@ export function MVPAssessmentFlow() {
             {isComprehensive ? 'Comprehensive' : 'Brief'} Assessment
           </Badge>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
-            Understanding Your Cognitive Wellness
+            Understanding Your Rhythm - {isComprehensive ? 'Full Experience' : 'Brief Assessment'}
           </h1>
           <p className="text-brain-health-600 mt-2">
             This assessment helps us create your personalized recovery plan. 

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Brain, Clock, Target } from 'lucide-react';
+import { ArrowLeft, Brain, Clock, Target, Info } from 'lucide-react';
 import { MVPAssessmentFlow } from '@/components/mvp/MVPAssessmentFlow';
 import { useAuth } from '@/contexts/AuthContext';
 import { ConsentDialog } from '@/components/onboarding/ConsentDialog';
+import { toast } from 'sonner';
 
 export default function MVPAssessmentFlowPage() {
   const [searchParams] = useSearchParams();
@@ -99,31 +100,55 @@ export default function MVPAssessmentFlowPage() {
           </Button>
         </div>
 
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Brain className="h-8 w-8 text-teal-600" />
-            <h1 className="text-3xl font-bold text-slate-800">
-              {assessmentType === 'brief' ? 'Brief' : 'Comprehensive'} Assessment
-            </h1>
-          </div>
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Brain className="h-8 w-8 text-teal-600" />
+              <h1 className="text-3xl font-bold text-slate-800">
+                {assessmentType === 'brief' ? 'Brief' : 'Comprehensive'} Assessment
+              </h1>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="ml-2 text-slate-500 hover:text-slate-700"
+                onClick={() => toast.info('This is your MyRhythm Foundation assessment - designed to understand your unique cognitive patterns and daily rhythms to create your personalized support plan.')}
+              >
+                <Info className="h-4 w-4" />
+              </Button>
+            </div>
           
-          <div className="flex items-center justify-center gap-6 mb-4">
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Clock className="h-4 w-4" />
-              <span>{assessmentType === 'brief' ? '5-10 minutes' : '15-20 minutes'}</span>
+            <div className="flex items-center justify-center gap-6 mb-4">
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Clock className="h-4 w-4" />
+                <span>{assessmentType === 'brief' ? '5-10 minutes' : '15-20 minutes'}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="ml-1 text-slate-400 hover:text-slate-600"
+                  onClick={() => toast.info(`${assessmentType === 'brief' ? 'Brief Assessment: Quick cognitive wellness check focusing on key areas like memory, focus, and daily rhythms.' : 'Comprehensive Assessment: In-depth analysis covering all aspects of cognitive function, emotional well-being, and personalized recovery planning.'}`)}
+                >
+                  <Info className="h-3 w-3" />
+                </Button>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <Target className="h-4 w-4" />
+                <span>{selectedPath === 'guided' ? 'Guided Approach' : 'Explorer Mode'}</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="ml-1 text-slate-400 hover:text-slate-600"
+                  onClick={() => toast.info(`${selectedPath === 'guided' ? 'Guided Approach: Step-by-step support with detailed explanations and personalized guidance throughout your journey.' : 'Explorer Mode: Freedom to navigate features at your own pace, perfect for those who prefer self-directed discovery.'}`)}
+                >
+                  <Info className="h-3 w-3" />
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-slate-600">
-              <Target className="h-4 w-4" />
-              <span>{selectedPath === 'guided' ? 'Guided Approach' : 'Explorer Mode'}</span>
-            </div>
-          </div>
 
-          <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-            {assessmentType === 'brief' 
-              ? 'Quick insights into your cognitive patterns and daily rhythms'
-              : 'Comprehensive analysis of your cognitive wellness and personalized recommendations'
-            }
-          </p>
+            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+              {assessmentType === 'brief' 
+                ? 'Quick insights into your cognitive patterns and daily rhythms - your MyRhythm Foundation'
+                : 'Comprehensive analysis of your cognitive wellness and personalized recommendations - your complete MyRhythm Foundation'
+              }
+            </p>
         </div>
 
         {/* Assessment Component */}

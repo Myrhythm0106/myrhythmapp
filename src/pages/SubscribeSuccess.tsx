@@ -117,19 +117,22 @@ const SubscribeSuccess = () => {
           {/* Path Selection */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-slate-800 text-center">Choose Your Journey</h3>
+            <p className="text-sm text-slate-600 text-center mb-4">
+              ✅ <strong>Pre-selected:</strong> {selectedPath === 'guided' ? 'Guided approach' : 'Explorer mode'} (recommended for Brain Injury Recovery)
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <button
                 onClick={() => setSelectedPath('guided')}
                 className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
                   selectedPath === 'guided'
-                    ? 'bg-teal-50 border-teal-300 text-teal-700'
+                    ? 'bg-teal-50 border-teal-300 text-teal-700 ring-2 ring-teal-400'
                     : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <User className="h-5 w-5" />
                   <span className="font-medium">Guided</span>
-                  <Badge variant="secondary" className="text-xs">Recommended</Badge>
+                  {selectedPath === 'guided' && <Badge className="bg-teal-600 text-white text-xs">Selected</Badge>}
                 </div>
                 <p className="text-sm">Step-by-step support with personalized guidance</p>
               </button>
@@ -138,13 +141,14 @@ const SubscribeSuccess = () => {
                 onClick={() => setSelectedPath('explorer')}
                 className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
                   selectedPath === 'explorer'
-                    ? 'bg-teal-50 border-teal-300 text-teal-700'
+                    ? 'bg-teal-50 border-teal-300 text-teal-700 ring-2 ring-teal-400'
                     : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Compass className="h-5 w-5" />
                   <span className="font-medium">Explorer</span>
+                  {selectedPath === 'explorer' && <Badge className="bg-teal-600 text-white text-xs">Selected</Badge>}
                 </div>
                 <p className="text-sm">Freedom to discover features at your own pace</p>
               </button>
@@ -154,18 +158,22 @@ const SubscribeSuccess = () => {
           {/* Assessment Selection */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-slate-800 text-center">Start Your Assessment</h3>
+            <p className="text-sm text-slate-600 text-center mb-4">
+              ✅ <strong>Pre-selected:</strong> {selectedAssessment === 'brief' ? 'Brief Assessment' : 'Comprehensive Assessment'} (optimized for your needs)
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <button
                 onClick={() => setSelectedAssessment('brief')}
                 className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
                   selectedAssessment === 'brief'
-                    ? 'bg-blue-50 border-blue-300 text-blue-700'
+                    ? 'bg-blue-50 border-blue-300 text-blue-700 ring-2 ring-blue-400'
                     : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Clock className="h-5 w-5" />
                   <span className="font-medium">Brief Assessment</span>
+                  {selectedAssessment === 'brief' && <Badge className="bg-blue-600 text-white text-xs">Selected</Badge>}
                 </div>
                 <p className="text-sm">5-10 minutes • Quick insights</p>
               </button>
@@ -174,13 +182,14 @@ const SubscribeSuccess = () => {
                 onClick={() => setSelectedAssessment('comprehensive')}
                 className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
                   selectedAssessment === 'comprehensive'
-                    ? 'bg-blue-50 border-blue-300 text-blue-700'
+                    ? 'bg-blue-50 border-blue-300 text-blue-700 ring-2 ring-blue-400'
                     : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
                 }`}
               >
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="h-5 w-5" />
                   <span className="font-medium">Comprehensive</span>
+                  {selectedAssessment === 'comprehensive' && <Badge className="bg-blue-600 text-white text-xs">Selected</Badge>}
                 </div>
                 <p className="text-sm">15-20 minutes • Detailed analysis</p>
               </button>

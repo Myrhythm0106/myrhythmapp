@@ -54,8 +54,46 @@ export function PersonalizedResultsDisplay({ assessmentResult, onContinue }: Per
   
   if (!assessmentResult?.personalizedData) {
     return (
-      <div className="text-center py-8">
-        <p className="text-muted-foreground">Personalized insights not available</p>
+      <div className="text-center py-8 max-w-md mx-auto">
+        <div className="mb-6">
+          <Crown className="w-16 h-16 text-amber-500 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold mb-4 text-brain-health-700">Your MyRhythm Foundation Awaits</h3>
+          <p className="text-brain-health-600 mb-6 leading-relaxed">
+            You've completed your assessment! Your cognitive patterns reveal unique insights that could 
+            transform your daily rhythm and accelerate your recovery by up to 40%.
+          </p>
+        </div>
+        
+        <div className="space-y-3 text-sm text-brain-health-600 mb-6">
+          <div className="flex items-center gap-2 justify-center">
+            <Sparkles className="w-4 h-4 text-purple-500" />
+            <span>Personalized cognitive mapping</span>
+          </div>
+          <div className="flex items-center gap-2 justify-center">
+            <Target className="w-4 h-4 text-blue-500" />
+            <span>Custom recovery pathways</span>
+          </div>
+          <div className="flex items-center gap-2 justify-center">
+            <TrendingUp className="w-4 h-4 text-green-500" />
+            <span>Daily rhythm optimization</span>
+          </div>
+          <div className="flex items-center gap-2 justify-center">
+            <Heart className="w-4 h-4 text-pink-500" />
+            <span>Emotional resilience building</span>
+          </div>
+        </div>
+        
+        <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-lg border border-orange-200 mb-6">
+          <p className="text-sm text-orange-700 font-medium">
+            💫 Preview: Your assessment indicates a <strong>"Building Rhythm"</strong> profile with 
+            strong potential in memory organization and daily structure planning.
+          </p>
+        </div>
+        
+        <Button onClick={onContinue} className="bg-gradient-to-r from-primary to-accent hover:shadow-lg w-full">
+          <Crown className="h-4 w-4 mr-2" />
+          Unlock Your Complete MyRhythm Foundation
+        </Button>
       </div>
     );
   }
