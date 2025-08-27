@@ -9,7 +9,8 @@ interface WarmOnboardingState {
   
   // Step 1: Welcome & See Me
   persona: string | null;
-  intent: string | null;
+  primaryCondition: string | null;
+  challenges: string[];
   additionalInfo: string;
   
   // Step 2: Feel the Difference + Choose Path
@@ -46,7 +47,8 @@ export function useWarmOnboarding() {
       step: 1,
       sessionId: crypto.randomUUID(),
       persona: null,
-      intent: null,
+      primaryCondition: null,
+      challenges: [],
       additionalInfo: '',
       selectedPath: null,
       checkIn: null,
@@ -86,9 +88,14 @@ export function useWarmOnboarding() {
     setState(prev => ({ ...prev, step: Math.max(1, prev.step - 1) }));
   };
 
-  const setPersonaAndIntent = (persona: string, intent: string, additionalInfo: string = '') => {
-    setState(prev => ({ ...prev, persona, intent, additionalInfo }));
-    trackEvent('persona_selected', { persona, intent, has_additional_info: additionalInfo.length > 0 });
+  const setPersonaAndConditions = (persona: string, primaryCondition: string, challenges: string[], additionalInfo: string = '') => {
+    setState(prev => ({ ...prev, persona, primaryCondition, challenges, additionalInfo }));
+    trackEvent('persona_selected', { 
+      persona, 
+      primaryCondition, 
+      challenges, 
+      has_additional_info: additionalInfo.length > 0 
+    });
   };
 
   const setPath = (path: 'guided' | 'explorer') => {
@@ -124,7 +131,8 @@ export function useWarmOnboarding() {
           content: JSON.stringify({
             sessionId: state.sessionId,
             persona: state.persona,
-            intent: state.intent,
+            primaryCondition: state.primaryCondition,
+            challenges: state.challenges,
             additionalInfo: state.additionalInfo,
             selectedPath: state.selectedPath,
             checkIn: state.checkIn,
@@ -142,7 +150,8 @@ export function useWarmOnboarding() {
         package: state.selectedPackage,
         path: state.selectedPath,
         persona: state.persona,
-        intent: state.intent
+        primaryCondition: state.primaryCondition,
+        challenges: state.challenges
       });
 
       // Navigate based on their path choice
@@ -172,7 +181,7 @@ export function useWarmOnboarding() {
     state,
     nextStep,
     prevStep,
-    setPersonaAndIntent,
+    setPersonaAndConditions,
     setPath,
     setCheckIn,
     setPackage,

@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Heart, Users, UserCheck, Briefcase } from 'lucide-react';
 
 interface Step1WelcomeSeeMeProps {
-  onComplete: (persona: string, intents: string[], additionalInfo: string) => void;
+  onComplete: (persona: string, primaryCondition: string, challenges: string[], additionalInfo: string) => void;
   variant?: 'default' | 'mvp';
 }
 
@@ -16,37 +16,55 @@ const personas = [
   { id: 'colleague', label: 'Colleague', icon: Briefcase, color: 'bg-sunrise-amber-100 hover:bg-sunrise-amber-200 text-sunrise-amber-700' }
 ];
 
-const intents = [
-  'Memory challenges',
+const primaryConditions = [
   'Brain injury recovery',
-  'Focus & fatigue', 
-  'ADHD support',
   'Long COVID',
+  'ADHD support',
+  'General cognitive wellness',
+  'Professional/Rehab center'
+];
+
+const challenges = [
+  'Memory challenges',
+  'Focus & concentration',
+  'Mental fatigue', 
   'Emotional balance',
+  'Sleep difficulties',
   'Caregiver stress',
-  'Cognitive wellness'
+  'Daily routine management',
+  'Social reconnection'
 ];
 
 export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1WelcomeSeeMeProps) {
   const [selectedPersona, setSelectedPersona] = useState<string>('');
-  const [selectedIntents, setSelectedIntents] = useState<string[]>([]);
+  const [selectedCondition, setSelectedCondition] = useState<string>('');
+  const [selectedChallenges, setSelectedChallenges] = useState<string[]>([]);
   const [additionalInfo, setAdditionalInfo] = useState<string>('');
 
-  const toggleIntent = (intent: string) => {
-    setSelectedIntents(prev => 
-      prev.includes(intent) 
-        ? prev.filter(i => i !== intent)
-        : [...prev, intent]
+  const handleConditionSelect = (condition: string) => {
+    setSelectedCondition(condition);
+    
+    // Auto-select "Memory challenges" if "Brain injury recovery" is selected
+    if (condition === 'Brain injury recovery' && !selectedChallenges.includes('Memory challenges')) {
+      setSelectedChallenges(prev => [...prev, 'Memory challenges']);
+    }
+  };
+
+  const toggleChallenge = (challenge: string) => {
+    setSelectedChallenges(prev => 
+      prev.includes(challenge) 
+        ? prev.filter(c => c !== challenge)
+        : [...prev, challenge]
     );
   };
 
   const handleContinue = () => {
-    if (selectedPersona && selectedIntents.length > 0) {
-      onComplete(selectedPersona, selectedIntents, additionalInfo);
+    if (selectedPersona && selectedCondition && selectedChallenges.length > 0) {
+      onComplete(selectedPersona, selectedCondition, selectedChallenges, additionalInfo);
     }
   };
 
-  const canContinue = selectedPersona && selectedIntents.length > 0;
+  const canContinue = selectedPersona && selectedCondition && selectedChallenges.length > 0;
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
@@ -87,29 +105,51 @@ export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1Welc
             </div>
           </div>
 
-          {/* What brought you here? */}
+          {/* Primary condition */}
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-brain-health-900">
-              What brought you here? <span className="text-sm text-gray-500 font-normal">(select all that apply)</span>
+              What's your primary situation?
             </h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {intents.map((intent) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {primaryConditions.map((condition) => (
                 <button
-                  key={intent}
-                  onClick={() => toggleIntent(intent)}
-                  className={`p-3 rounded-lg border-2 transition-all duration-200 text-sm font-medium ${
-                    selectedIntents.includes(intent)
+                  key={condition}
+                  onClick={() => handleConditionSelect(condition)}
+                  className={`p-4 rounded-lg border-2 transition-all duration-200 text-sm font-medium text-left ${
+                    selectedCondition === condition
                       ? 'bg-brain-health-100 border-brain-health-300 text-brain-health-700'
                       : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
                   }`}
                 >
-                  {intent}
+                  {condition}
                 </button>
               ))}
             </div>
-            {selectedIntents.length > 0 && (
+          </div>
+
+          {/* Challenges */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold text-brain-health-900">
+              What challenges are you facing? <span className="text-sm text-gray-500 font-normal">(select all that apply)</span>
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {challenges.map((challenge) => (
+                <button
+                  key={challenge}
+                  onClick={() => toggleChallenge(challenge)}
+                  className={`p-3 rounded-lg border-2 transition-all duration-200 text-sm font-medium ${
+                    selectedChallenges.includes(challenge)
+                      ? 'bg-memory-emerald-100 border-memory-emerald-300 text-memory-emerald-700'
+                      : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
+                  }`}
+                >
+                  {challenge}
+                </button>
+              ))}
+            </div>
+            {selectedChallenges.length > 0 && (
               <p className="text-sm text-brain-health-600">
-                Selected: {selectedIntents.join(', ')}
+                Selected challenges: {selectedChallenges.join(', ')}
               </p>
             )}
           </div>

@@ -12,7 +12,7 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
     state,
     nextStep,
     prevStep,
-    setPersonaAndIntent,
+    setPersonaAndConditions,
     setPath,
     setCheckIn,
     setPackage,
@@ -27,8 +27,8 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
     }
   }, []);
 
-  const handleStep1Complete = (persona: string, intents: string[], additionalInfo: string) => {
-    setPersonaAndIntent(persona, intents.join(', '), additionalInfo);
+  const handleStep1Complete = (persona: string, primaryCondition: string, challenges: string[], additionalInfo: string) => {
+    setPersonaAndConditions(persona, primaryCondition, challenges, additionalInfo);
     nextStep();
   };
 
@@ -89,19 +89,19 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
           />
         )}
         
-        {state.step === 2 && state.persona && state.intent && (
+        {state.step === 2 && state.persona && state.primaryCondition && (
           <Step2FeelDifferenceChoosePath
             persona={state.persona}
-            intents={state.intent.split(', ')}
+            intents={state.challenges}
             onComplete={handleStep2Complete}
             variant={variant}
           />
         )}
         
-        {state.step === 3 && state.persona && state.intent && (
+        {state.step === 3 && state.persona && state.primaryCondition && (
           <Step3CheckinPlanPackages
             persona={state.persona}
-            intents={state.intent.split(', ')}
+            intents={state.challenges}
             onComplete={handleStep3Complete}
             variant={variant}
           />
