@@ -45,6 +45,7 @@ import SubscribePage from "./pages/SubscribePage";
 import SubscribeSuccess from "./pages/SubscribeSuccess";
 import SubscribeCancel from "./pages/SubscribeCancel";
 import GuidedJourneyPage from "./pages/GuidedJourneyPage";
+import QuickCapture from "./pages/QuickCapture";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,7 @@ function App() {
                     <Route path="/cognitive-performance-assessment" element={<CognitivePerformanceAssessment />} />
                     
                     <Route path="/memory-bridge" element={<ProtectedRoute><MemoryBridge /></ProtectedRoute>} />
+                    <Route path="/quick-capture" element={<ProtectedRoute><QuickCapture /></ProtectedRoute>} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />

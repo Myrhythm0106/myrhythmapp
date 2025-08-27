@@ -9,22 +9,13 @@ max_rows = 1000
 
 [db]
 port = 54322
-
-[db.pooler]
-enabled = false
-port = 54329
-pool_mode = "transaction"
-default_pool_size = 20
-max_client_conn = 100
-
-[realtime]
-enabled = true
-ip_version = "ipv4"
+shadow_port = 54320
+major_version = 15
 
 [studio]
 enabled = true
 port = 54323
-api_url = "http://127.0.0.1:54321"
+api_url = "http://localhost:54321"
 
 [inbucket]
 enabled = true
@@ -34,35 +25,16 @@ pop3_port = 54326
 
 [storage]
 enabled = true
+port = 54327
 file_size_limit = "50MiB"
-buckets = []
+image_transformation = { enabled = true }
 
-[auth]
+[edge_runtime]
 enabled = true
-additional_redirect_urls = ["https://bomjibcivwxbcwfmkrnv.supabase.co/auth/v1/callback"]
-jwt_expiry = 3600
-enable_signup = true
-enable_confirmations = false
+port = 54328
 
-[auth.email]
-# Set OTP expiry to 1 minute (60 seconds) for better security
-otp_expiry = 60
-
-[auth.password]
-# Enable password breach detection
-breach_detection = true
-
-[functions.create-checkout]
-verify_jwt = false
-
-[functions.check-subscription]
+[functions.process-meeting-audio]
 verify_jwt = true
-
-[functions.customer-portal]
-verify_jwt = true
-
-[functions.send-invitation-email]
-verify_jwt = false
 
 [functions.assemblyai-token]
 verify_jwt = true

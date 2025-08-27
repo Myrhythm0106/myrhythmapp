@@ -7,6 +7,7 @@ import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { MemoryBridgeResultsModal } from './MemoryBridgeResultsModal';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { RecordingsTab } from './RecordingsTab';
+import { QuickCaptureRecorder } from './QuickCaptureRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -129,67 +130,35 @@ export function MemoryBridgeStarterDashboard() {
           </TabsList>
 
           <TabsContent value="recording" className="space-y-4">
-            {/* Main Action Card */}
-            {!hasCompletedFirstRecording && !showFirstRecording && (
-              <Card className="border-2 border-memory-emerald-200 bg-gradient-to-br from-white via-memory-emerald-50/50 to-brain-health-50/30">
-                <CardHeader>
-                  <CardTitle className="text-center text-2xl text-brain-health-900">Ready for Your First Recording?</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div className="text-center p-4 border rounded-lg bg-gradient-to-br from-memory-emerald-50 to-brain-health-50">
-                      <Heart className="h-8 w-8 mx-auto mb-2 text-memory-emerald-600" />
-                      <h3 className="font-semibold text-memory-emerald-900">Capture Commitments</h3>
-                      <p className="text-sm text-memory-emerald-700">AI captures every promise you make</p>
-                    </div>
-                    <div className="text-center p-4 border rounded-lg bg-gradient-to-br from-brain-health-50 to-clarity-teal-50">
-                      <Target className="h-8 w-8 mx-auto mb-2 text-brain-health-600" />
-                      <h3 className="font-semibold text-brain-health-900">Track Progress</h3>
-                      <p className="text-sm text-brain-health-700">See immediate ACT results</p>
-                    </div>
-                    <div className="text-center p-4 border rounded-lg bg-gradient-to-br from-clarity-teal-50 to-sunrise-amber-50">
-                      <Zap className="h-8 w-8 mx-auto mb-2 text-clarity-teal-600" />
-                      <h3 className="font-semibold text-clarity-teal-900">Build Trust</h3>
-                      <p className="text-sm text-clarity-teal-700">Show others you keep your word</p>
-                    </div>
-                  </div>
-                  
-                  <div className="text-center">
-                    <Button
-                      onClick={handleStartFirstRecording}
-                      size="lg"
-                      className="bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 text-white px-8 py-4 text-lg"
-                    >
-                      <Play className="h-5 w-5 mr-2" />
-                      Start Your First Recording
-                      <ArrowRight className="h-5 w-5 ml-2" />
-                    </Button>
-                    <p className="text-sm text-brain-health-600 mt-2">
-                      Takes just 2-3 minutes • Immediate results
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Start New Recording Card for users who have completed first recording */}
-            {hasCompletedFirstRecording && !showFirstRecording && (
-              <Card className="border-2 border-memory-emerald-200 bg-gradient-to-br from-white via-memory-emerald-50/50 to-brain-health-50/30">
-                <CardHeader>
-                  <CardTitle className="text-center text-xl text-brain-health-900">Ready for Another Recording?</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center space-y-4">
-                  <p className="text-brain-health-700">Continue building your commitment tracker</p>
-                  <Button
-                    onClick={handleStartFirstRecording}
-                    size="lg"
-                    className="bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 text-white px-8 py-4"
-                  >
-                    <Play className="h-5 w-5 mr-2" />
-                    Start New Recording
-                  </Button>
-                </CardContent>
-              </Card>
+            {/* Quick Capture Interface */}
+            <QuickCaptureRecorder 
+              onComplete={(data) => {
+                setLastMeetingId(data.meetingId);
+                setLastActionsCount(data.actionsCount);
+                setShowResults(true);
+                fetchExtractedActions(); // Refresh actions
+              }}
+            />
+            
+            {/* Benefits Cards - Only show for first-time users */}
+            {!hasCompletedFirstRecording && (
+              <div className="grid md:grid-cols-3 gap-4 mt-6">
+                <div className="text-center p-4 border rounded-lg bg-gradient-to-br from-memory-emerald-50 to-brain-health-50">
+                  <Heart className="h-6 w-6 mx-auto mb-2 text-memory-emerald-600" />
+                  <h3 className="font-medium text-memory-emerald-900">Capture Commitments</h3>
+                  <p className="text-xs text-memory-emerald-700">AI captures every promise you make</p>
+                </div>
+                <div className="text-center p-4 border rounded-lg bg-gradient-to-br from-brain-health-50 to-clarity-teal-50">
+                  <Target className="h-6 w-6 mx-auto mb-2 text-brain-health-600" />
+                  <h3 className="font-medium text-brain-health-900">Track Progress</h3>
+                  <p className="text-xs text-brain-health-700">See immediate ACT results</p>
+                </div>
+                <div className="text-center p-4 border rounded-lg bg-gradient-to-br from-clarity-teal-50 to-sunrise-amber-50">
+                  <Zap className="h-6 w-6 mx-auto mb-2 text-clarity-teal-600" />
+                  <h3 className="font-medium text-clarity-teal-900">Build Trust</h3>
+                  <p className="text-xs text-clarity-teal-700">Show others you keep your word</p>
+                </div>
+              </div>
             )}
           </TabsContent>
 
@@ -218,16 +187,18 @@ export function MemoryBridgeStarterDashboard() {
           </TabsContent>
         </Tabs>
 
-        {/* Recording Interface */}
-        <MemoryBridgeRecorder 
-          open={showFirstRecording}
-          onClose={() => setShowFirstRecording(false)}
-          meetingData={{
-            meeting_title: hasCompletedFirstRecording ? 'Memory Bridge Recording' : 'Your First Memory Bridge Recording',
-            participants: []
-          }}
-          onComplete={handleRecordingComplete} 
-        />
+        {/* Legacy Recording Interface - Hidden for streamlined experience */}
+        {showFirstRecording && (
+          <MemoryBridgeRecorder 
+            open={showFirstRecording}
+            onClose={() => setShowFirstRecording(false)}
+            meetingData={{
+              meeting_title: hasCompletedFirstRecording ? 'Memory Bridge Recording' : 'Your First Memory Bridge Recording',
+              participants: []
+            }}
+            onComplete={handleRecordingComplete} 
+          />
+        )}
 
         {/* Progressive Unlock Cards */}
         {hasCompletedFirstRecording && (
