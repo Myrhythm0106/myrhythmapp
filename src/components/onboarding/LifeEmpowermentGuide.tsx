@@ -159,14 +159,14 @@ export function LifeEmpowermentGuide({ onComplete, userType }: LifeEmpowermentGu
       </div>
 
       {/* Main Phase Card */}
-      <Card className={`border-2 border-${currentPhaseData.color}-200 bg-gradient-to-br from-${currentPhaseData.color}-50 to-${currentPhaseData.color}-100`}>
+      <Card className="border-2 border-teal-200 bg-gradient-to-br from-teal-50 to-emerald-100 shadow-lg">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <div className={`p-3 rounded-full bg-${currentPhaseData.color}-200`}>
-              <currentPhaseData.icon className={`h-8 w-8 text-${currentPhaseData.color}-700`} />
+            <div className="p-3 rounded-full bg-teal-200">
+              <currentPhaseData.icon className="h-8 w-8 text-teal-700" />
             </div>
             <div>
-              <Badge className={`bg-${currentPhaseData.color}-600 text-white`}>
+              <Badge className="bg-teal-600 text-white">
                 {currentPhaseData.timeframe}
               </Badge>
             </div>
@@ -194,7 +194,7 @@ export function LifeEmpowermentGuide({ onComplete, userType }: LifeEmpowermentGu
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {currentPhaseData.goals.map((goal, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm">
-                  <CheckCircle className={`h-4 w-4 text-${currentPhaseData.color}-600`} />
+                  <CheckCircle className="h-4 w-4 text-teal-600" />
                   <span>{goal}</span>
                 </div>
               ))}
@@ -202,9 +202,9 @@ export function LifeEmpowermentGuide({ onComplete, userType }: LifeEmpowermentGu
           </div>
 
           {/* Achievement Badge */}
-          <div className={`bg-${currentPhaseData.color}-200 p-4 rounded-lg text-center`}>
+          <div className="bg-teal-200 p-4 rounded-lg text-center">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Star className={`h-5 w-5 text-${currentPhaseData.color}-700`} />
+              <Star className="h-5 w-5 text-teal-700" />
               <span className="font-semibold">Unlock: {currentPhaseData.achievement}</span>
             </div>
           </div>

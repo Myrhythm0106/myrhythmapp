@@ -162,7 +162,7 @@ const SubscribePage = () => {
   const calculateSavings = (monthly: number, yearly: number) => {
     const monthlyCost = monthly * 12;
     const savings = monthlyCost - yearly;
-    return savings;
+    return Math.round(savings); // Round to nearest whole number
   };
 
   return (
@@ -183,10 +183,13 @@ const SubscribePage = () => {
 
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-slate-800 mb-4">
-            Choose Your MyRhythm Plan
+            Choose MyRhythm Plan
           </h1>
-          <p className="text-slate-600 text-lg mb-6 max-w-2xl mx-auto">
+          <p className="text-slate-600 text-lg mb-4 max-w-2xl mx-auto">
             Transform promises into scheduled reality with AI-powered commitment fulfillment
+          </p>
+          <p className="text-sm text-teal-600 font-medium mb-6">
+            Try before you subscribe - 7-day free trial on all plans
           </p>
           
           {/* Founding Member Banner */}
@@ -221,7 +224,7 @@ const SubscribePage = () => {
               )}
             >
               Annual
-              <Badge className="bg-teal-100 text-teal-800 text-xs">Save up to £64</Badge>
+              <Badge className="bg-teal-100 text-teal-800 text-xs">Save up to £60</Badge>
             </button>
           </div>
         </div>
@@ -290,9 +293,9 @@ const SubscribePage = () => {
                     )}
                   </div>
                   
-                  {isYearly && savings > 0 && !pricing.hasDiscount && (
-                    <p className="text-xs text-teal-600 font-medium">Save £{savings}/year</p>
-                  )}
+                   {isYearly && savings > 0 && !pricing.hasDiscount && (
+                     <p className="text-xs text-teal-600 font-medium">Save £{Math.round(savings)}/year</p>
+                   )}
                   
                   <p className="text-sm text-slate-600">{plan.description}</p>
                 </CardHeader>

@@ -36,6 +36,8 @@ import MVPCore4CPage from "./pages/MVPCore4CPage";
 import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
 import CongratsPage from "./pages/CongratsPage";
 import StartPage from "./pages/StartPage";
+import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
+import SetupWizard from "./pages/SetupWizard";
 import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
 import SubscribeSuccess from "./pages/SubscribeSuccess";
@@ -114,12 +116,17 @@ function App() {
                       }
                     />
                     
-                    {/* Warm Onboarding Flow */}
-                    <Route path="/start" element={<StartPage />} />
-                    
-                     {/* Redirect assessment routes to /start for new users - but keep /mvp/assessment directing to MVPCore4C */}
-                     <Route path="/mvp/assessment" element={<MVPCore4CPage />} />
-                     <Route path="/assessment" element={<RedirectToStart />} />
+                     {/* Warm Onboarding Flow */}
+                     <Route path="/start" element={<StartPage />} />
+                     
+                     {/* New Assessment and Setup Flow */}
+                     <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />
+                     <Route path="/setup-wizard" element={<SetupWizard />} />
+                     <Route path="/life-empowerment-guide" element={<LifeEmpowermentGuidePage />} />
+                     
+                      {/* Redirect assessment routes to /start for new users - but keep /mvp/assessment directing to MVPCore4C */}
+                      <Route path="/mvp/assessment" element={<MVPCore4CPage />} />
+                      <Route path="/assessment" element={<RedirectToStart />} />
                     
                     {/* MVP Routes */}
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />

@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Gift, Loader2, ArrowRight } from 'lucide-react';
+import { CheckCircle, Gift, Loader2, ArrowRight, Target, User, Compass, Clock, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { trackSubscriptionAnalytics } from '@/utils/analytics';
@@ -11,6 +11,8 @@ import { trackSubscriptionAnalytics } from '@/utils/analytics';
 const SubscribeSuccess = () => {
   const [loading, setLoading] = useState(true);
   const [subscriptionData, setSubscriptionData] = useState<any>(null);
+  const [selectedPath, setSelectedPath] = useState<'guided' | 'explorer'>('guided');
+  const [selectedAssessment, setSelectedAssessment] = useState<'brief' | 'comprehensive'>('brief');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const analytics = trackSubscriptionAnalytics();
@@ -34,7 +36,7 @@ const SubscribeSuccess = () => {
           if (data) {
             analytics.checkoutSuccess(
               data.subscription_tier || 'unknown',
-              'yearly', // We'll assume yearly for now, could be enhanced
+              'yearly',
               isFoundingMember,
               isFoundingMember ? 20 : 0
             );
@@ -61,8 +63,17 @@ const SubscribeSuccess = () => {
     }
   }, [sessionId, isFoundingMember]);
 
-  const handleContinue = () => {
+  const handleStartAssessment = () => {
+    // Navigate to assessment with selected parameters
+    navigate(`/mvp/assessment-flow?type=${selectedAssessment}&path=${selectedPath}&flow=post-payment`);
+  };
+
+  const handleContinueToDashboard = () => {
     navigate('/dashboard');
+  };
+
+  const handleViewLifeTimeline = () => {
+    navigate('/life-empowerment-guide');
   };
 
   if (loading) {
@@ -82,72 +93,162 @@ const SubscribeSuccess = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50 flex items-center justify-center">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-2xl">
         <CardHeader className="text-center pb-4">
           <div className="mx-auto mb-4 w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <CardTitle className="text-2xl text-slate-800">
-            {isFoundingMember ? 'Welcome, Founding Member!' : 'Subscription Activated!'}
+          <CardTitle className="text-3xl text-slate-800">
+            🎉 Congratulations!
           </CardTitle>
+          <p className="text-lg text-slate-600 mt-2">
+            {isFoundingMember ? 'Welcome, Founding Member!' : 'Your MyRhythm subscription is now active!'}
+          </p>
           {isFoundingMember && (
             <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white px-3 py-1 mx-auto mt-2 flex items-center gap-1 w-fit">
               <Gift className="h-3 w-3" />
-              Founding Member
+              Founding Member - 20% Savings
             </Badge>
           )}
         </CardHeader>
         
-        <CardContent className="space-y-4">
-          <div className="text-center">
-            <h3 className="text-lg font-semibold text-slate-800 mb-2">
-              Your MyRhythm journey starts now!
-            </h3>
-            <p className="text-sm text-slate-600 mb-4">
-              {isFoundingMember 
-                ? 'Thank you for being an early supporter. You\'ve unlocked exclusive Founding Member benefits and 20% savings!'
-                : 'Your subscription has been activated and you now have access to all premium features.'
-              }
-            </p>
+        <CardContent className="space-y-6">
+          {/* Path Selection */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-800 text-center">Choose Your Journey</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button
+                onClick={() => setSelectedPath('guided')}
+                className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+                  selectedPath === 'guided'
+                    ? 'bg-teal-50 border-teal-300 text-teal-700'
+                    : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <User className="h-5 w-5" />
+                  <span className="font-medium">Guided</span>
+                  <Badge variant="secondary" className="text-xs">Recommended</Badge>
+                </div>
+                <p className="text-sm">Step-by-step support with personalized guidance</p>
+              </button>
+              
+              <button
+                onClick={() => setSelectedPath('explorer')}
+                className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+                  selectedPath === 'explorer'
+                    ? 'bg-teal-50 border-teal-300 text-teal-700'
+                    : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Compass className="h-5 w-5" />
+                  <span className="font-medium">Explorer</span>
+                </div>
+                <p className="text-sm">Freedom to discover features at your own pace</p>
+              </button>
+            </div>
           </div>
 
+          {/* Assessment Selection */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-800 text-center">Start Your Assessment</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <button
+                onClick={() => setSelectedAssessment('brief')}
+                className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+                  selectedAssessment === 'brief'
+                    ? 'bg-blue-50 border-blue-300 text-blue-700'
+                    : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Clock className="h-5 w-5" />
+                  <span className="font-medium">Brief Assessment</span>
+                </div>
+                <p className="text-sm">5-10 minutes • Quick insights</p>
+              </button>
+              
+              <button
+                onClick={() => setSelectedAssessment('comprehensive')}
+                className={`p-4 rounded-lg border-2 transition-all duration-200 text-left ${
+                  selectedAssessment === 'comprehensive'
+                    ? 'bg-blue-50 border-blue-300 text-blue-700'
+                    : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
+                }`}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Target className="h-5 w-5" />
+                  <span className="font-medium">Comprehensive</span>
+                </div>
+                <p className="text-sm">15-20 minutes • Detailed analysis</p>
+              </button>
+            </div>
+          </div>
+
+          {/* Next Steps Preview */}
           <div className="bg-slate-50 rounded-lg p-4">
-            <h4 className="font-medium text-slate-800 mb-2">What's next?</h4>
-            <ul className="space-y-2 text-sm text-slate-600">
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                Complete your LEAP assessment
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                Set up your Support Circle (3 members included)
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                Explore Memory Bridge and goal setting
-              </li>
-              <li className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" />
-                Start building your daily rhythm
-              </li>
-            </ul>
+            <h4 className="font-medium text-slate-800 mb-3 flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              What happens next?
+            </h4>
+            <div className="space-y-2 text-sm text-slate-600">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-teal-500 rounded-full"></div>
+                <span>Complete your {selectedAssessment} assessment ({selectedPath} approach)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-teal-500 rounded-full"></div>
+                <span>Set up your personalized dashboard</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-teal-500 rounded-full"></div>
+                <span>Connect with your support community (3 members included)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 bg-teal-500 rounded-full"></div>
+                <span>Start building your daily rhythm</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            <Button 
+              onClick={handleStartAssessment}
+              className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white hover:shadow-lg text-lg py-3"
+            >
+              Start {selectedAssessment === 'brief' ? 'Brief' : 'Comprehensive'} Assessment
+              <ArrowRight className="h-5 w-5 ml-2" />
+            </Button>
+            
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleViewLifeTimeline}
+                variant="outline"
+                className="flex-1"
+              >
+                View Life Timeline
+              </Button>
+              
+              <Button 
+                onClick={handleContinueToDashboard}
+                variant="ghost"
+                className="flex-1"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                Continue to Dashboard
+              </Button>
+            </div>
           </div>
 
           {subscriptionData && (
-            <div className="text-center text-sm text-slate-500">
+            <div className="text-center text-sm text-slate-500 pt-4 border-t">
               Plan: {subscriptionData.subscription_tier || 'Premium'} • 
               Status: {subscriptionData.subscribed ? 'Active' : 'Pending'}
             </div>
           )}
-
-          <Button 
-            onClick={handleContinue}
-            className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white hover:shadow-lg"
-          >
-            Continue to Dashboard
-            <ArrowRight className="h-4 w-4 ml-2" />
-          </Button>
         </CardContent>
       </Card>
     </div>

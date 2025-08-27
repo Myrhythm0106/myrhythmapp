@@ -130,18 +130,27 @@ export function ConsentDialog({ open, onAccept, onDecline }: ConsentDialogProps)
           </div>
         </ScrollArea>
 
-        <DialogFooter className="gap-2">
+        <DialogFooter className="gap-2 flex-col sm:flex-row">
+          {!allConsentsGiven && (
+            <div className="text-xs text-amber-600 mb-2 text-center">
+              Please check all boxes above to continue
+            </div>
+          )}
           <Button 
             variant="outline" 
             onClick={onDecline}
-            className="border-gray-300 text-gray-600 hover:bg-gray-50"
+            className="border-gray-300 text-gray-600 hover:bg-gray-50 w-full sm:w-auto"
           >
             Decline
           </Button>
           <Button 
             onClick={handleAccept}
             disabled={!allConsentsGiven}
-            className="bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 text-white"
+            className={`w-full sm:w-auto ${
+              allConsentsGiven 
+                ? 'bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 text-white' 
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
           >
             Accept & Continue
           </Button>

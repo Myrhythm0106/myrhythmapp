@@ -17,9 +17,9 @@ const personas = [
 ];
 
 const intents = [
-  'Memory slips',
-  'Focus & fatigue', 
+  'Memory challenges',
   'Brain injury recovery',
+  'Focus & fatigue', 
   'ADHD support',
   'Long COVID',
   'Emotional balance',
@@ -128,7 +128,7 @@ export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1Welc
             />
           </div>
 
-          <div className="flex justify-center pt-4">
+          <div className="flex flex-col items-center space-y-4 pt-4">
             <Button
               onClick={handleContinue}
               disabled={!canContinue}
@@ -136,6 +136,15 @@ export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1Welc
               className={`px-8 py-3 text-lg font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
             >
               Show me how MyRhythm will support me
+            </Button>
+            
+            <Button
+              onClick={() => window.location.href = '/subscribe'}
+              variant="ghost"
+              size="sm"
+              className="text-brain-health-600 hover:text-brain-health-700 underline"
+            >
+              Skip to choose plan
             </Button>
           </div>
         </CardContent>
