@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 export async function processSavedRecording(
   recordingId: string,
   userId: string
-): Promise<{ success: boolean; actionsCount?: number; meetingId?: string }> {
+): Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }> {
   try {
     // Get the recording details
     const { data: recording, error: recordingError } = await supabase
@@ -56,13 +56,14 @@ export async function processSavedRecording(
     // Show immediate feedback for background processing
     toast.success('Processing started! We\'ll extract ACTs in the background.');
 
-    // Start polling for completion
+    // Poll for completion
     const result = await pollForCompletion(meetingRecord.id);
     
     return {
       success: result.success,
       actionsCount: result.actionsCount,
-      meetingId: meetingRecord.id
+      meetingId: meetingRecord.id,
+      hasTranscript: result.hasTranscript || false
     };
 
   } catch (error) {
@@ -73,54 +74,71 @@ export async function processSavedRecording(
 }
 
 // Poll for processing completion
-async function pollForCompletion(meetingId: string): Promise<{ success: boolean; actionsCount?: number }> {
+async function pollForCompletion(meetingId: string): Promise<{ success: boolean; actionsCount?: number; hasTranscript?: boolean }> {
   const maxAttempts = 60; // 2 minutes max
   let attempts = 0;
   
+  // Check for completion every 2 seconds, up to 2 minutes
   while (attempts < maxAttempts) {
-    try {
-      // Check if actions have been extracted
-      const { data: actions, error: actionsError } = await supabase
-        .from('extracted_actions')
-        .select('id')
-        .eq('meeting_recording_id', meetingId);
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Check if actions have been extracted
+    const { data: actions } = await supabase
+      .from('extracted_actions')
+      .select('id')
+      .eq('meeting_recording_id', meetingId);
 
-      if (actionsError) throw actionsError;
+    // Check meeting status
+    const { data: meeting } = await supabase
+      .from('meeting_recordings')
+      .select('processing_status, processing_error, transcript')
+      .eq('id', meetingId)
+      .single();
 
-      // Check processing status
-      const { data: meeting, error: meetingError } = await supabase
-        .from('meeting_recordings')
-        .select('processing_status, processing_error')
-        .eq('id', meetingId)
-        .single();
-
-      if (meetingError) throw meetingError;
-
-      if (meeting.processing_status === 'failed') {
-        const errorMsg = meeting.processing_error || 'Unknown error';
-        if (errorMsg.includes('insufficient_quota') || errorMsg.includes('quota')) {
-          toast.error('AI quota exceeded. Please try again later or contact support.');
-        } else {
-          toast.error(`Processing failed: ${errorMsg}`);
-        }
-        return { success: false };
-      }
-
-      if (actions && actions.length > 0) {
-        toast.success(`ACTs ready! Found ${actions.length} actionable items.`);
-        return { success: true, actionsCount: actions.length };
-      }
-
-      // Wait 2 seconds before checking again
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      attempts++;
+    if (meeting?.processing_status === 'completed') {
+      const actionsCount = actions?.length || 0;
+      const hasTranscript = !!meeting.transcript;
       
-    } catch (error) {
-      console.error('Polling error:', error);
-      break;
+      if (actionsCount > 0) {
+        toast.success(`Processing complete! ${actionsCount} actions extracted.`);
+      } else if (hasTranscript) {
+        toast.success("Transcript saved successfully! No actionable items found.");
+      } else {
+        toast.success("Processing complete!");
+      }
+      
+      return { success: true, actionsCount, hasTranscript };
     }
+    
+    if (meeting?.processing_status === 'failed') {
+      const hasTranscript = !!meeting.transcript;
+      
+      if (meeting.processing_error?.includes('OpenAI API key') || meeting.processing_error?.includes('not configured')) {
+        if (hasTranscript) {
+          toast.success("Transcript saved successfully! Action extraction unavailable due to API configuration.");
+        } else {
+          toast.error("Processing failed due to API configuration issues.");
+        }
+      } else if (meeting.processing_error?.includes('quota')) {
+        if (hasTranscript) {
+          toast.success("Transcript saved! Action extraction failed due to API quota limits.");
+        } else {
+          toast.error("Processing failed due to API quota limits. Please try again later.");
+        }
+      } else {
+        if (hasTranscript) {
+          toast.success("Transcript saved! Action extraction encountered an error.");
+        } else {
+          toast.error("Processing failed. Please try again.");
+        }
+      }
+      
+      return { success: hasTranscript, actionsCount: 0, hasTranscript };
+    }
+    
+    attempts++;
   }
-
-  toast.error('Processing is taking longer than expected. Please check back later.');
-  return { success: false };
+  
+  toast.error("Processing is taking longer than expected. Check back later.");
+  return { success: false, actionsCount: 0, hasTranscript: false };
 }

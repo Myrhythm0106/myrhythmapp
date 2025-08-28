@@ -24,9 +24,11 @@ serve(async (req) => {
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const openaiApiKey = Deno.env.get('OPENAI_API_KEY');
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     console.log(`📁 Processing file: ${filePath} for meeting: ${meetingId}`);
+    console.log('🔑 OpenAI API Key:', openaiApiKey ? 'Present' : 'Missing');
 
     // Get the audio file from storage
     const { data: audioData, error: downloadError } = await supabase.storage
@@ -133,21 +135,26 @@ serve(async (req) => {
       throw new Error('Transcription timeout after 5 minutes');
     }
 
-    // Extract SMART ACTions using OpenAI
-    console.log('🧠 Extracting SMART ACTs...');
+    // Extract SMART ACTions using OpenAI (if API key is available)
+    let extractedActions = [];
+    let extractionSuccess = true;
+    let extractionError = null;
 
-    const extractionResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: `You are a SMART ACTS extraction AI. Extract actionable items from the transcript.
+    if (openaiApiKey) {
+      console.log('🧠 Extracting SMART ACTs...');
+
+      const extractionResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openaiApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: `You are a SMART ACTS extraction AI. Extract actionable items from the transcript.
 
 SMART ACTS format:
 - **S**pecific: Clear, unambiguous action
@@ -174,53 +181,55 @@ For suggested_date:
 - Low urgency: suggest within 2-4 weeks
 
 Return empty array [] if no clear actions found.`
-          },
-          {
-            role: 'user',
-            content: `Extract SMART ACTS from this transcript:\n\n${transcript}`
-          }
-        ],
-        max_tokens: 700,
-        temperature: 0.1
-      }),
-    });
+            },
+            {
+              role: 'user',
+              content: `Extract SMART ACTS from this transcript:\n\n${transcript}`
+            }
+          ],
+          max_tokens: 700,
+          temperature: 0.1
+        }),
+      });
 
-    let extractedActions = [];
-    let extractionSuccess = true;
-    let extractionError = null;
-
-    if (!extractionResponse.ok) {
-      const errorText = await extractionResponse.text();
-      console.error('❌ ACT extraction error:', errorText);
-      extractionError = errorText;
-      extractionSuccess = false;
-    } else {
-      try {
-        const extractionResult = await extractionResponse.json();
-        const content = extractionResult.choices[0]?.message?.content?.trim();
-        if (content && content !== '[]') {
-          extractedActions = JSON.parse(content);
-        }
-      } catch (parseError) {
-        console.error('Error parsing OpenAI response:', parseError);
-        extractionError = 'Failed to parse AI response';
+      if (!extractionResponse.ok) {
+        const errorText = await extractionResponse.text();
+        console.error('❌ ACT extraction error:', errorText);
+        extractionError = errorText;
         extractionSuccess = false;
+      } else {
+        try {
+          const extractionResult = await extractionResponse.json();
+          const content = extractionResult.choices[0]?.message?.content?.trim();
+          if (content && content !== '[]') {
+            extractedActions = JSON.parse(content);
+          }
+        } catch (parseError) {
+          console.error('Error parsing OpenAI response:', parseError);
+          extractionError = 'Failed to parse AI response';
+          extractionSuccess = false;
+        }
       }
+    } else {
+      console.log('⚠️ No OpenAI API key configured - skipping ACT extraction');
+      extractionSuccess = false;
+      extractionError = 'OpenAI API key not configured';
     }
 
     console.log(`${extractionSuccess ? '✅' : '⚠️'} Extracted ${extractedActions.length} SMART ACTs`);
 
-    // Always save transcript, update status based on extraction success
+    // Always save transcript - mark as completed if we have transcript, even without ACTs
     const updateData: any = {
       transcript,
-      processing_completed_at: new Date().toISOString()
+      processing_completed_at: new Date().toISOString(),
+      processing_status: 'completed' // Transcript saved successfully
     };
 
-    if (extractionSuccess) {
-      updateData.processing_status = 'completed';
-    } else {
-      updateData.processing_status = 'failed';
-      updateData.processing_error = extractionError || 'ACT extraction failed';
+    // Only mark as failed if we couldn't get transcript at all
+    if (extractionError && !openaiApiKey) {
+      updateData.processing_error = 'OpenAI API key not configured - ACT extraction unavailable';
+    } else if (extractionError) {
+      updateData.processing_error = `ACT extraction failed: ${extractionError}`;
     }
 
     const { error: meetingUpdateError } = await supabase
