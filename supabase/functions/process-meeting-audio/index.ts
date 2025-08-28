@@ -40,11 +40,10 @@ serve(async (req) => {
 
     console.log('✅ Audio file downloaded successfully');
 
-    // Convert to base64 for OpenAI API
+    // Convert audio to base64 for AssemblyAI
     const arrayBuffer = await audioData.arrayBuffer();
     const bytes = new Uint8Array(arrayBuffer);
     
-    // Process in chunks to avoid memory issues
     let binaryString = '';
     const chunkSize = 32768;
     for (let i = 0; i < bytes.length; i += chunkSize) {
@@ -53,33 +52,86 @@ serve(async (req) => {
     }
     const base64Audio = btoa(binaryString);
 
-    console.log('🔄 Transcribing audio with OpenAI...');
+    console.log('🔄 Transcribing audio with AssemblyAI...');
 
-    // Transcribe with OpenAI
-    const formData = new FormData();
-    const audioBlob = new Blob([bytes], { type: 'audio/webm' });
-    formData.append('file', audioBlob, 'audio.webm');
-    formData.append('model', 'whisper-1');
-    formData.append('response_format', 'json');
-
-    const transcriptionResponse = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+    // Upload audio to AssemblyAI
+    const uploadResponse = await fetch('https://api.assemblyai.com/v2/upload', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
+        'Authorization': Deno.env.get('ASSEMBLYAI_API_KEY')!,
+        'Content-Type': 'application/octet-stream',
       },
-      body: formData,
+      body: bytes,
     });
 
-    if (!transcriptionResponse.ok) {
-      const errorText = await transcriptionResponse.text();
-      console.error('❌ OpenAI transcription error:', errorText);
-      throw new Error(`Transcription failed: ${errorText}`);
+    if (!uploadResponse.ok) {
+      console.error('❌ AssemblyAI upload error:', await uploadResponse.text());
+      throw new Error('Failed to upload audio to AssemblyAI');
     }
 
-    const transcriptionResult = await transcriptionResponse.json();
-    const transcript = transcriptionResult.text;
+    const uploadResult = await uploadResponse.json();
+    const audioUrl = uploadResult.upload_url;
 
-    console.log('✅ Transcription completed:', transcript.substring(0, 100) + '...');
+    console.log('📤 Audio uploaded to AssemblyAI, starting transcription...');
+
+    // Start transcription
+    const transcriptResponse = await fetch('https://api.assemblyai.com/v2/transcript', {
+      method: 'POST',
+      headers: {
+        'Authorization': Deno.env.get('ASSEMBLYAI_API_KEY')!,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        audio_url: audioUrl,
+        speaker_labels: true,
+        auto_chapters: false,
+      }),
+    });
+
+    if (!transcriptResponse.ok) {
+      console.error('❌ AssemblyAI transcription error:', await transcriptResponse.text());
+      throw new Error('Failed to start transcription');
+    }
+
+    const transcriptJob = await transcriptResponse.json();
+    const transcriptId = transcriptJob.id;
+
+    console.log('⏳ Polling for transcription completion...');
+
+    // Poll for completion
+    let transcript = '';
+    let attempts = 0;
+    const maxAttempts = 60; // 5 minutes max
+
+    while (attempts < maxAttempts) {
+      const statusResponse = await fetch(`https://api.assemblyai.com/v2/transcript/${transcriptId}`, {
+        headers: {
+          'Authorization': Deno.env.get('ASSEMBLYAI_API_KEY')!,
+        },
+      });
+
+      if (!statusResponse.ok) {
+        throw new Error('Failed to check transcription status');
+      }
+
+      const status = await statusResponse.json();
+
+      if (status.status === 'completed') {
+        transcript = status.text;
+        console.log('✅ Transcription completed:', transcript.substring(0, 100) + '...');
+        break;
+      } else if (status.status === 'error') {
+        throw new Error(`Transcription failed: ${status.error}`);
+      }
+
+      // Wait 5 seconds before next check
+      await new Promise(resolve => setTimeout(resolve, 5000));
+      attempts++;
+    }
+
+    if (!transcript) {
+      throw new Error('Transcription timeout after 5 minutes');
+    }
 
     // Extract SMART ACTions using OpenAI
     console.log('🧠 Extracting SMART ACTs...');
@@ -91,7 +143,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-2025-08-07',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           {
             role: 'system',
@@ -102,6 +154,7 @@ Extract concrete, actionable commitments that were made during the conversation.
 - Clear assignees (who will do it)
 - Deadlines or timeframes mentioned
 - Measurable outcomes
+- Suggest realistic completion dates based on urgency and complexity
 
 Return a JSON array of actions with this structure:
 {
@@ -110,13 +163,22 @@ Return a JSON array of actions with this structure:
       "action": "Clear, specific task description",
       "assignee": "Name or role of person responsible", 
       "deadline": "Specific date/time or relative timeframe",
-      "priority": "high|medium|low",
+      "suggested_date": "YYYY-MM-DD format for suggested completion",
+      "priority": 3,
       "context": "Relevant context or background",
       "is_commitment": true,
-      "category": "work|personal|health|family|other"
+      "category": "work|personal|health|family|other",
+      "emotional_stakes": "Why this matters emotionally"
     }
   ]
 }
+
+For suggested_date: 
+- Use YYYY-MM-DD format
+- Consider today's date as reference
+- High priority items: suggest within 1-3 days
+- Medium priority: suggest within 1-2 weeks  
+- Low priority: suggest within 2-4 weeks
 
 Only extract genuine commitments and action items. Don't create generic or vague actions.`
           },
@@ -125,12 +187,13 @@ Only extract genuine commitments and action items. Don't create generic or vague
             content: `Meeting Title: ${meetingData?.title || 'Recording'}
 Meeting Context: Recording captured via MyRhythm app
 Participants: ${meetingData?.participants?.map((p: any) => p.name).join(', ') || 'User'}
+Today's Date: ${new Date().toISOString().split('T')[0]}
 
 Transcript:
 ${transcript}`
           }
         ],
-        max_completion_tokens: 2000,
+        max_tokens: 2000,
         temperature: 0.1
       }),
     });
@@ -169,19 +232,29 @@ ${transcript}`
       console.error('❌ Error updating meeting record:', meetingUpdateError);
     }
 
+    // Get user ID from meeting record
+    const { data: meetingRecord } = await supabase
+      .from('meeting_recordings')
+      .select('user_id')
+      .eq('id', meetingId)
+      .single();
+
+    const userId = meetingRecord?.user_id;
+    
     // Save extracted actions to database
-    if (extractedActions.length > 0) {
+    if (extractedActions.length > 0 && userId) {
       const actionsToInsert = extractedActions.map((action: any) => ({
-        meeting_id: meetingId,
-        action: action.action,
-        assignee: action.assignee,
-        deadline: action.deadline,
-        priority: action.priority || 'medium',
-        context: action.context || '',
-        category: action.category || 'other',
-        is_commitment: action.is_commitment || true,
-        status: 'pending',
-        is_realtime: false
+        meeting_recording_id: meetingId,
+        user_id: userId,
+        action_text: action.action,
+        assigned_to: action.assignee || 'self',
+        due_context: action.deadline,
+        proposed_date: action.suggested_date,
+        priority_level: typeof action.priority === 'number' ? action.priority : 3,
+        relationship_impact: action.context || '',
+        emotional_stakes: action.emotional_stakes || '',
+        action_type: 'commitment',
+        status: 'pending'
       }));
 
       const { error: actionsInsertError } = await supabase
@@ -190,6 +263,7 @@ ${transcript}`
 
       if (actionsInsertError) {
         console.error('❌ Error saving extracted actions:', actionsInsertError);
+        console.error('Schema mismatch details:', actionsInsertError);
       } else {
         console.log(`✅ Saved ${actionsToInsert.length} actions to database`);
       }

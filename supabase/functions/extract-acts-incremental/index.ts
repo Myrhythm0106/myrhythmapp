@@ -39,7 +39,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-mini-2025-08-07',
+        model: 'gpt-4.1-2025-04-14',
         messages: [
           {
             role: 'system',
@@ -57,9 +57,17 @@ Return ONLY a JSON array of objects with this structure:
   "action": "specific action description",
   "assignee": "person responsible or 'self' if unclear",
   "deadline": "YYYY-MM-DD or relative like 'next week'",
-  "priority": "high|medium|low",
-  "context": "relevant meeting context"
+  "suggested_date": "YYYY-MM-DD format for suggested completion",
+  "priority": 3,
+  "context": "relevant meeting context",
+  "emotional_stakes": "why this matters"
 }
+
+For suggested_date:
+- Use today's date: ${new Date().toISOString().split('T')[0]} as reference
+- High urgency: suggest within 1-3 days
+- Medium urgency: suggest within 1-2 weeks
+- Low urgency: suggest within 2-4 weeks
 
 Return empty array [] if no clear actions found.`
           },
@@ -68,7 +76,8 @@ Return empty array [] if no clear actions found.`
             content: `Extract SMART ACTS from this transcript:\n\n${transcript}`
           }
         ],
-        max_completion_tokens: 600
+        max_tokens: 600,
+        temperature: 0.1
       })
     });
 
@@ -96,16 +105,17 @@ Return empty array [] if no clear actions found.`
 
     // Store the extracted actions
     const actionsToInsert = extractedActions.map((action: any) => ({
-      meeting_id: meetingId,
+      meeting_recording_id: meetingId,
       user_id: userId,
       action_text: action.action,
-      assignee: action.assignee,
-      deadline: action.deadline,
-      priority: action.priority,
-      context: action.context,
-      status: 'pending',
-      is_realtime: true,
-      created_at: new Date().toISOString()
+      assigned_to: action.assignee || 'self',
+      due_context: action.deadline,
+      proposed_date: action.suggested_date,
+      priority_level: typeof action.priority === 'number' ? action.priority : 3,
+      relationship_impact: action.context || '',
+      emotional_stakes: action.emotional_stakes || '',
+      action_type: 'commitment',
+      status: 'pending'
     }));
 
     if (actionsToInsert.length > 0) {
