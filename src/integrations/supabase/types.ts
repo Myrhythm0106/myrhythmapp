@@ -664,12 +664,14 @@ export type Database = {
           meeting_title: string
           meeting_type: string
           participants: Json
+          processing_completed_at: string | null
           processing_error: string | null
           processing_status: string | null
           proposed_schedule: Json | null
           recording_id: string | null
           relationship_context: Json | null
           started_at: string
+          transcript: string | null
           updated_at: string
           user_id: string
           watchers: string[] | null
@@ -686,12 +688,14 @@ export type Database = {
           meeting_title: string
           meeting_type?: string
           participants?: Json
+          processing_completed_at?: string | null
           processing_error?: string | null
           processing_status?: string | null
           proposed_schedule?: Json | null
           recording_id?: string | null
           relationship_context?: Json | null
           started_at?: string
+          transcript?: string | null
           updated_at?: string
           user_id: string
           watchers?: string[] | null
@@ -708,12 +712,14 @@ export type Database = {
           meeting_title?: string
           meeting_type?: string
           participants?: Json
+          processing_completed_at?: string | null
           processing_error?: string | null
           processing_status?: string | null
           proposed_schedule?: Json | null
           recording_id?: string | null
           relationship_context?: Json | null
           started_at?: string
+          transcript?: string | null
           updated_at?: string
           user_id?: string
           watchers?: string[] | null
