@@ -45,7 +45,7 @@ export function CommandCenterHeader({
               <div className="flex items-center gap-2">
                 <Calendar className="h-6 w-6 text-brain-health-600" />
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                  Command Center
+                  In-Command Center
                 </h1>
               </div>
               <Badge variant="secondary" className="hidden sm:inline-flex">
