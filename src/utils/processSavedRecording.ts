@@ -97,7 +97,12 @@ async function pollForCompletion(meetingId: string): Promise<{ success: boolean;
       if (meetingError) throw meetingError;
 
       if (meeting.processing_status === 'failed') {
-        toast.error(`Processing failed: ${meeting.processing_error}`);
+        const errorMsg = meeting.processing_error || 'Unknown error';
+        if (errorMsg.includes('insufficient_quota') || errorMsg.includes('quota')) {
+          toast.error('AI quota exceeded. Please try again later or contact support.');
+        } else {
+          toast.error(`Processing failed: ${errorMsg}`);
+        }
         return { success: false };
       }
 

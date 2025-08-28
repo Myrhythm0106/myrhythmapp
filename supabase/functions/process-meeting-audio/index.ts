@@ -143,89 +143,89 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
-            content: `You are an expert at extracting SMART (Specific, Measurable, Achievable, Relevant, Time-bound) action items from meeting transcripts. 
+            content: `You are a SMART ACTS extraction AI. Extract actionable items from the transcript.
 
-Extract concrete, actionable commitments that were made during the conversation. Focus on:
-- Specific tasks or deliverables someone committed to
-- Clear assignees (who will do it)
-- Deadlines or timeframes mentioned
-- Measurable outcomes
-- Suggest realistic completion dates based on urgency and complexity
+SMART ACTS format:
+- **S**pecific: Clear, unambiguous action
+- **M**easurable: Quantifiable outcome  
+- **A**ssignable: Clear ownership
+- **R**elevant: Contextually important
+- **T**ime-bound: Deadline or timeframe
 
-Return a JSON array of actions with this structure:
+Return ONLY a JSON array of objects with this structure:
 {
-  "actions": [
-    {
-      "action": "Clear, specific task description",
-      "assignee": "Name or role of person responsible", 
-      "deadline": "Specific date/time or relative timeframe",
-      "suggested_date": "YYYY-MM-DD format for suggested completion",
-      "priority": 3,
-      "context": "Relevant context or background",
-      "is_commitment": true,
-      "category": "work|personal|health|family|other",
-      "emotional_stakes": "Why this matters emotionally"
-    }
-  ]
+  "action": "specific action description",
+  "assignee": "person responsible or 'self' if unclear",
+  "deadline": "YYYY-MM-DD or relative like 'next week'",
+  "suggested_date": "YYYY-MM-DD format for suggested completion",
+  "priority": 3,
+  "context": "relevant meeting context",
+  "emotional_stakes": "why this matters"
 }
 
-For suggested_date: 
-- Use YYYY-MM-DD format
-- Consider today's date as reference
-- High priority items: suggest within 1-3 days
-- Medium priority: suggest within 1-2 weeks  
-- Low priority: suggest within 2-4 weeks
+For suggested_date:
+- Use today's date: ${new Date().toISOString().split('T')[0]} as reference
+- High urgency: suggest within 1-3 days
+- Medium urgency: suggest within 1-2 weeks
+- Low urgency: suggest within 2-4 weeks
 
-Only extract genuine commitments and action items. Don't create generic or vague actions.`
+Return empty array [] if no clear actions found.`
           },
           {
             role: 'user',
-            content: `Meeting Title: ${meetingData?.title || 'Recording'}
-Meeting Context: Recording captured via MyRhythm app
-Participants: ${meetingData?.participants?.map((p: any) => p.name).join(', ') || 'User'}
-Today's Date: ${new Date().toISOString().split('T')[0]}
-
-Transcript:
-${transcript}`
+            content: `Extract SMART ACTS from this transcript:\n\n${transcript}`
           }
         ],
-        max_tokens: 2000,
+        max_tokens: 700,
         temperature: 0.1
       }),
     });
 
+    let extractedActions = [];
+    let extractionSuccess = true;
+    let extractionError = null;
+
     if (!extractionResponse.ok) {
       const errorText = await extractionResponse.text();
       console.error('❌ ACT extraction error:', errorText);
-      throw new Error(`ACT extraction failed: ${errorText}`);
+      extractionError = errorText;
+      extractionSuccess = false;
+    } else {
+      try {
+        const extractionResult = await extractionResponse.json();
+        const content = extractionResult.choices[0]?.message?.content?.trim();
+        if (content && content !== '[]') {
+          extractedActions = JSON.parse(content);
+        }
+      } catch (parseError) {
+        console.error('Error parsing OpenAI response:', parseError);
+        extractionError = 'Failed to parse AI response';
+        extractionSuccess = false;
+      }
     }
 
-    const extractionResult = await extractionResponse.json();
-    let extractedActions = [];
+    console.log(`${extractionSuccess ? '✅' : '⚠️'} Extracted ${extractedActions.length} SMART ACTs`);
 
-    try {
-      const content = extractionResult.choices[0].message.content;
-      const parsed = JSON.parse(content);
-      extractedActions = parsed.actions || [];
-    } catch (parseError) {
-      console.warn('⚠️ Failed to parse ACT extraction result, trying fallback');
-      extractedActions = [];
+    // Always save transcript, update status based on extraction success
+    const updateData: any = {
+      transcript,
+      processing_completed_at: new Date().toISOString()
+    };
+
+    if (extractionSuccess) {
+      updateData.processing_status = 'completed';
+    } else {
+      updateData.processing_status = 'failed';
+      updateData.processing_error = extractionError || 'ACT extraction failed';
     }
 
-    console.log(`✅ Extracted ${extractedActions.length} SMART ACTs`);
-
-    // Update meeting record with transcript
     const { error: meetingUpdateError } = await supabase
       .from('meeting_recordings')
-      .update({
-        transcript,
-        status: 'completed',
-        processing_completed_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', meetingId);
 
     if (meetingUpdateError) {
@@ -286,6 +286,27 @@ ${transcript}`
 
   } catch (error) {
     console.error('❌ Error processing meeting audio:', error);
+    
+    // Try to update meeting status to failed
+    try {
+      const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+      const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      
+      const { meetingId } = await req.json().catch(() => ({}));
+      if (meetingId) {
+        await supabase
+          .from('meeting_recordings')
+          .update({
+            processing_status: 'failed',
+            processing_error: error.message
+          })
+          .eq('id', meetingId);
+      }
+    } catch (updateError) {
+      console.error('Failed to update meeting status:', updateError);
+    }
+
     return new Response(
       JSON.stringify({
         success: false,

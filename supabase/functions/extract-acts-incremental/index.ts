@@ -39,7 +39,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4.1-2025-04-14',
+        model: 'gpt-4o-mini',
         messages: [
           {
             role: 'system',
@@ -76,7 +76,7 @@ Return empty array [] if no clear actions found.`
             content: `Extract SMART ACTS from this transcript:\n\n${transcript}`
           }
         ],
-        max_tokens: 600,
+        max_tokens: 700,
         temperature: 0.1
       })
     });
