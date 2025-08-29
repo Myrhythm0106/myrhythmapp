@@ -258,7 +258,7 @@ export function MVPCore4C() {
           {/* Supporting Text */}
           <div className="text-center mt-12">
             <p className="text-brain-health-600 font-medium max-w-2xl mx-auto">
-              The complete MyRhythm system — <span className="font-bold">Capture</span> memories, <span className="font-bold">Commit</span> to your rhythm, <span className="font-bold">Calibrate</span> your wellbeing, and <span className="font-bold">Celebrate</span> with community.
+              The complete MyRhythm system - Capture memories and conversations, Commit to your rhythm and follow through, Calibrate your well being and Celebrate with your community.
             </p>
           </div>
         </div>
