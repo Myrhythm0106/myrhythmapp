@@ -42,7 +42,7 @@ import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
 import SetupWizard from "./pages/SetupWizard";
 import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
-import SubscribeSuccess from "./pages/SubscribeSuccess";
+import { SubscribeSuccess } from "./pages/SubscribeSuccess";
 import SubscribeCancel from "./pages/SubscribeCancel";
 import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
