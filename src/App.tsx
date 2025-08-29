@@ -73,12 +73,13 @@ function App() {
                     {/* Dashboard-First Experience - Default Route */}
                     <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     
-                    {/* Assessment Routes */}
-                    <Route path="/assessment-old" element={<Assessment />} />
-                    <Route path="/quick-assessment" element={<QuickAssessment />} />
-                    <Route path="/comprehensive-assessment" element={<Assessment />} />
-                    <Route path="/brain-injury-assessment" element={<BrainInjuryAssessment />} />
-                    <Route path="/cognitive-performance-assessment" element={<CognitivePerformanceAssessment />} />
+                     {/* Assessment Routes */}
+                     <Route path="/assessment-old" element={<Assessment />} />
+                     <Route path="/quick-assessment" element={<QuickAssessment />} />
+                     <Route path="/comprehensive-assessment" element={<Assessment />} />
+                     <Route path="/brain-injury-assessment" element={<BrainInjuryAssessment />} />
+                     <Route path="/cognitive-performance-assessment" element={<CognitivePerformanceAssessment />} />
+                     <Route path="/onboarding/assessment" element={<ProtectedRoute requireAuth={false}><Assessment /></ProtectedRoute>} />
                     
                     <Route path="/memory-bridge" element={<ProtectedRoute><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/quick-capture" element={<ProtectedRoute><QuickCapture /></ProtectedRoute>} />
