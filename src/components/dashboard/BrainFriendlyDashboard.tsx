@@ -27,7 +27,7 @@ export function BrainFriendlyDashboard() {
       {/* Header with #IChoose Statement */}
       <div className="text-center py-12 px-6">
         <h1 className="text-5xl font-bold text-foreground mb-4">
-          #IChoose {currentStatement.text}
+          #IChoose to focus my mental energy on what matters most
         </h1>
         <p className="text-xl text-muted-foreground">
           This month's theme is: <span className="font-medium text-brain-health-700">{monthlyTheme}</span>
