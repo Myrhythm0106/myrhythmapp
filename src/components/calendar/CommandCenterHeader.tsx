@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { EmpowermentNugget } from '@/components/empowerment/EmpowermentNugget';
-import { Calendar, ChevronLeft, ChevronRight, Zap } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Zap, Sparkles } from 'lucide-react';
 import { format, addDays, subDays } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { getRandomIChooseStatement } from '@/data/premiumAffirmations';
 
 interface CommandCenterHeaderProps {
   selectedDate: Date;
@@ -21,6 +22,27 @@ export function CommandCenterHeader({
   onViewChange,
   onActionClick
 }: CommandCenterHeaderProps) {
+  const [currentStatement, setCurrentStatement] = useState(() =>
+    getRandomIChooseStatement('recovery', false, 'great')
+  );
+  const [monthlyTheme, setMonthlyTheme] = useState<string>('');
+
+  useEffect(() => {
+    // Get monthly theme from localStorage or set default
+    const savedTheme = localStorage.getItem('monthlyTheme') || 'New Beginnings';
+    setMonthlyTheme(savedTheme);
+    
+    // Get a fresh statement that matches the theme
+    const newStatement = getRandomIChooseStatement(
+      'recovery', 
+      false, 
+      'great',
+      [],
+      savedTheme
+    );
+    setCurrentStatement(newStatement);
+  }, [selectedDate]);
+
   const views = [
     { key: 'day', label: 'Today' },
     { key: 'week', label: 'Week' },
@@ -81,10 +103,29 @@ export function CommandCenterHeader({
                 <ChevronLeft className="h-4 w-4" />
               </Button>
               
-              <div className="text-sm font-medium text-foreground/80 min-w-[120px] text-center">
-                {format(selectedDate, currentView === 'day' ? 'MMM d, yyyy' : 
-                        currentView === 'week' ? "'Week of' MMM d" :
-                        currentView === 'month' ? 'MMMM yyyy' : 'yyyy')}
+              <div className="flex flex-col items-center gap-1 min-w-[200px]">
+                <div className="text-sm font-medium text-foreground/80">
+                  {format(selectedDate, currentView === 'day' ? 'MMM d, yyyy' : 
+                          currentView === 'week' ? "'Week of' MMM d" :
+                          currentView === 'month' ? 'MMMM yyyy' : 'yyyy')}
+                </div>
+                
+                {currentView === 'day' && currentStatement ? (
+                  <div className="flex items-center gap-1 text-xs">
+                    <Sparkles className="h-3 w-3 text-brain-health-500" />
+                    <span className="bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent font-medium">
+                      #IChoose {currentStatement.text.length > 40 
+                        ? `${currentStatement.text.substring(0, 40)}...` 
+                        : currentStatement.text}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="text-xs text-muted-foreground">
+                    <span className="bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent font-medium">
+                      Theme: {monthlyTheme}
+                    </span>
+                  </div>
+                )}
               </div>
               
               <Button
