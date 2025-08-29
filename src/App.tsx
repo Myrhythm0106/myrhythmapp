@@ -46,6 +46,7 @@ import { SubscribeSuccess } from "./pages/SubscribeSuccess";
 import SubscribeCancel from "./pages/SubscribeCancel";
 import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
+import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDashboard";
 
 const queryClient = new QueryClient();
 
@@ -141,9 +142,10 @@ function App() {
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/assessment-protected" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
-                    <Route path="/mvp" element={<MVPCore4CPage />} />
-                    <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
-                    <Route path="/congrats" element={<CongratsPage />} />
+                     <Route path="/mvp" element={<MVPCore4CPage />} />
+                     <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
+                     <Route path="/brain-friendly-dashboard" element={<ProtectedRoute requireAuth={false}><BrainFriendlyDashboard /></ProtectedRoute>} />
+                     <Route path="/congrats" element={<CongratsPage />} />
                   </Routes>
                 </BrowserRouter>
               </TooltipProvider>
