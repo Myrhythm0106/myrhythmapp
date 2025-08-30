@@ -184,3 +184,4 @@ function SubscribeSuccess() {
 }
 
 export default SubscribeSuccess;
+export { SubscribeSuccess };
