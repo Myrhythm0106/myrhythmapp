@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Preview3Background } from "@/components/ui/Preview3Background";
 import { SurfaceCard } from "@/components/ui/SurfaceCard";
 
-export function SubscribeSuccess() {
+function SubscribeSuccess() {
   const navigate = useNavigate();
 
   const handleViewTimeline = () => {
@@ -181,3 +182,5 @@ export function SubscribeSuccess() {
     </Preview3Background>
   );
 }
+
+export default SubscribeSuccess;
