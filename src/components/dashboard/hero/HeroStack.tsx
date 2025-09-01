@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Sparkles, Heart } from "lucide-react";
 import { MonthlyIChooseWidget } from "./MonthlyIChooseWidget";
+import { MonthlyThemeCustomizer } from "./MonthlyThemeCustomizer";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface HeroStackProps {
   onUpgradeClick?: () => void;
@@ -13,6 +15,7 @@ interface HeroStackProps {
 export function HeroStack({ onUpgradeClick, userType }: HeroStackProps) {
   const { user } = useAuth();
   const userName = user?.user_metadata?.display_name || user?.email?.split('@')[0] || "Champion";
+  const [monthlyTheme, setMonthlyTheme] = useState<string>('');
 
   const getTimeBasedGreeting = () => {
     const hour = new Date().getHours();
@@ -38,7 +41,7 @@ export function HeroStack({ onUpgradeClick, userType }: HeroStackProps) {
     }
   };
 
-  const getCurrentMonthTheme = () => {
+  const getDefaultMonthTheme = () => {
     const month = new Date().getMonth();
     const themes = [
       "New Beginnings", "Heart & Connection", "Growth & Renewal", 
@@ -49,8 +52,46 @@ export function HeroStack({ onUpgradeClick, userType }: HeroStackProps) {
     return themes[month];
   };
 
+  // Load user's custom theme or use default
+  useEffect(() => {
+    const loadMonthlyTheme = async () => {
+      if (!user) return;
+
+      try {
+        const currentMonth = new Date().getMonth();
+        const currentYear = new Date().getFullYear();
+        
+        const { data, error } = await supabase
+          .from('notes')
+          .select('content')
+          .eq('user_id', user.id)
+          .eq('title', 'Monthly Theme Setting')
+          .order('created_at', { ascending: false })
+          .limit(1);
+
+        if (error) throw error;
+
+        if (data && data.length > 0) {
+          const themeData = JSON.parse(data[0].content);
+          // Use custom theme if it's for current month, otherwise use default
+          if (themeData.month === currentMonth && themeData.year === currentYear) {
+            setMonthlyTheme(themeData.theme);
+            return;
+          }
+        }
+        
+        setMonthlyTheme(getDefaultMonthTheme());
+      } catch (error) {
+        console.error('Error loading monthly theme:', error);
+        setMonthlyTheme(getDefaultMonthTheme());
+      }
+    };
+
+    loadMonthlyTheme();
+  }, [user]);
+
   const timeInfo = getTimeBasedGreeting();
-  const monthTheme = getCurrentMonthTheme();
+  const displayTheme = monthlyTheme || getDefaultMonthTheme();
 
   return (
     <div className="space-y-4">
@@ -91,12 +132,16 @@ export function HeroStack({ onUpgradeClick, userType }: HeroStackProps) {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-sunrise-amber-700 text-sm">
-                This Month: {monthTheme}
+                This Month: {displayTheme}
               </h3>
               <p className="text-xs text-sunrise-amber-600">
                 Focus on building strength, one day at a time
               </p>
             </div>
+            <MonthlyThemeCustomizer
+              currentTheme={displayTheme}
+              onThemeUpdate={setMonthlyTheme}
+            />
           </div>
         </CardContent>
       </Card>
@@ -105,7 +150,7 @@ export function HeroStack({ onUpgradeClick, userType }: HeroStackProps) {
       <MonthlyIChooseWidget 
         onUpgradeClick={onUpgradeClick}
         userType={userType}
-        monthlyTheme={monthTheme}
+        monthlyTheme={displayTheme}
       />
     </div>
   );

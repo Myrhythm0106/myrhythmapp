@@ -13,6 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle, Crown, Lock, TrendingUp, Sparkles } from 'lucide-react';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
+import { WatcherSelectionModal } from './WatcherSelectionModal';
 
 interface ExtractedActionsReviewProps {
   meetingId?: string;
@@ -35,6 +36,8 @@ export function ExtractedActionsReview({
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
   const [actionToReject, setActionToReject] = useState<string | null>(null);
+  const [showWatcherSelection, setShowWatcherSelection] = useState(false);
+  const [actionForWatchers, setActionForWatchers] = useState<string | null>(null);
 
   const commentLimits = { free: 1, 'taste-see': 7, pro: Infinity };
 
@@ -91,22 +94,34 @@ export function ExtractedActionsReview({
   };
 
   const handleScheduleAction = async (actionId: string) => {
+    setActionForWatchers(actionId);
+    setShowWatcherSelection(true);
+  };
+
+  const handleScheduleWithWatchers = async (actionId: string, watcherIds: string[], watcherNames: string[]) => {
     if (!user) return;
     
     try {
       const action = actions.find(a => a.id === actionId);
       if (!action) return;
 
-      await convertActionToCalendarEvent(action, user.id);
+      // Update action with watchers
+      const updatedAction = { ...action, assigned_watchers: watcherIds };
+      await convertActionToCalendarEvent(updatedAction, user.id, watcherNames);
+      
       setActions(prev => 
         prev.map(a => 
           a.id === actionId 
-            ? { ...a, status: 'scheduled' as const }
+            ? { ...a, status: 'scheduled' as const, assigned_watchers: watcherIds }
             : a
         )
       );
-      toast.success("Action scheduled - you're taking control! 📅", {
-        description: "Every scheduled action is a step toward stronger relationships"
+      
+      setShowWatcherSelection(false);
+      setActionForWatchers(null);
+      
+      toast.success("Action scheduled with Support Circle! 📅💜", {
+        description: `${watcherNames.length > 0 ? watcherNames.join(', ') + ' will' : 'Your circle will'} be notified of this commitment`
       });
     } catch (error) {
       toast.error("Failed to schedule action");
@@ -378,6 +393,21 @@ export function ExtractedActionsReview({
           </p>
         </CardContent>
       </Card>
+
+      {/* Watcher Selection Modal */}
+      <WatcherSelectionModal
+        isOpen={showWatcherSelection}
+        onClose={() => {
+          setShowWatcherSelection(false);
+          setActionForWatchers(null);
+        }}
+        actionIds={actionForWatchers ? [actionForWatchers] : []}
+        onComplete={(watcherIds, watcherNames) => {
+          if (actionForWatchers) {
+            handleScheduleWithWatchers(actionForWatchers, watcherIds, watcherNames);
+          }
+        }}
+      />
 
       {/* Confirmation Dialog */}
       <ConfirmationDialog

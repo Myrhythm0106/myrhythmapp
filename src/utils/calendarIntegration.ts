@@ -16,6 +16,7 @@ export interface CalendarEventFromAction {
 export async function convertActionToCalendarEvent(
   action: ExtractedAction, 
   userId: string,
+  watcherNames?: string[],
   selectedDate?: string,
   selectedTime?: string
 ): Promise<string | null> {
@@ -31,26 +32,34 @@ export async function convertActionToCalendarEvent(
     // Estimate duration based on action type
     const durationEstimate = estimateActionDuration(action);
     
+    // Create enriched description with Support Circle integration
+    let description = `${action.action_text}\n\nContext: ${action.relationship_impact || ''}\n\nEmotional Stakes: ${action.emotional_stakes || ''}\n\nIntent: ${action.intent_behind || ''}`;
+    
+    if (watcherNames && watcherNames.length > 0) {
+      description += `\n\n💜 Support Circle Watchers: ${watcherNames.join(', ')}\nYour circle will be notified of this commitment.`;
+    }
+
     // Create calendar event
     const { data, error } = await supabase
       .from('calendar_events')
       .insert({
         user_id: userId,
         title: `Memory Bridge: ${action.action_text}`,
-        description: `${action.action_text}\n\nContext: ${action.relationship_impact || ''}\n\nEmotional Stakes: ${action.emotional_stakes || ''}\n\nIntent: ${action.intent_behind || ''}`,
+        description,
         date: eventDate,
         time: eventTime,
         type: 'action_item',
         category: 'memory_bridge',
         requires_acceptance: false,
-        is_system_generated: true
+        is_system_generated: true,
+        watchers: action.assigned_watchers || []
       })
       .select()
       .single();
 
     if (error) throw error;
 
-    // Link action to daily actions for tracking
+    // Link action to daily actions for tracking with watchers
     await createDailyActionFromExtracted(action, userId, eventDate, eventTime, durationEstimate);
 
     return data.id;
@@ -80,7 +89,8 @@ async function createDailyActionFromExtracted(
         action_type: 'memory_bridge',
         status: 'pending',
         difficulty_level: Math.min(action.priority_level, 5),
-        focus_area: determineActionFocusArea(action)
+        focus_area: determineActionFocusArea(action),
+        watchers: action.assigned_watchers || []
       });
 
     if (error) throw error;
@@ -151,7 +161,7 @@ export async function scheduleConfirmedActions(userId: string): Promise<number> 
     
     for (const action of actions) {
       try {
-        const eventId = await convertActionToCalendarEvent(action as ExtractedAction, userId);
+        const eventId = await convertActionToCalendarEvent(action as ExtractedAction, userId, [], action.proposed_date, action.proposed_time);
         
         if (eventId) {
           // Update action with calendar event reference

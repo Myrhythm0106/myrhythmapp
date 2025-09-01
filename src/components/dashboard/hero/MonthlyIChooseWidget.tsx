@@ -43,20 +43,24 @@ export function MonthlyIChooseWidget({
   const ThemeIcon = getThemeIcon();
 
   return (
-    <Card className="premium-card border-0 bg-gradient-to-br from-brain-health-400/10 via-clarity-teal-400/10 to-memory-emerald-400/10 backdrop-blur-sm">
+    <Card className="premium-card border-2 border-primary/30 bg-gradient-to-br from-brain-health-400/15 via-clarity-teal-400/15 to-memory-emerald-400/15 backdrop-blur-sm shadow-lg">
       <CardContent className="p-6">
         <div className="space-y-4">
-          {/* Header */}
+          {/* Header with enhanced prominence */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-2 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 text-white">
-                <ThemeIcon className="h-4 w-4" />
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-full bg-gradient-to-r from-brain-health-500 to-memory-emerald-500 text-white shadow-lg">
+                <ThemeIcon className="h-5 w-5" />
               </div>
-              <h3 className="text-sm font-semibold gradient-text-brand">
-                Today's #IChoose
-              </h3>
+              <div>
+                <h2 className="text-xl font-bold gradient-text-brand">
+                  Today's #IChoose
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {monthlyTheme ? `Aligned with: ${monthlyTheme}` : 'Daily empowerment'}
+                </p>
+              </div>
             </div>
-            
             <Button
               variant="ghost"
               size="sm"
