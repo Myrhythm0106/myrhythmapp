@@ -6,7 +6,7 @@ import { MeetingSetupData } from '@/types/memoryBridge';
 
 export async function createMeetingRecording(
   userId: string,
-  voiceRecordingId: string,
+  voiceRecordingId: string | null,
   setupData: MeetingSetupData
 ) {
   const response = await fetch(
@@ -21,7 +21,7 @@ export async function createMeetingRecording(
       },
       body: JSON.stringify({
         user_id: userId,
-        recording_id: voiceRecordingId,
+        ...(voiceRecordingId && { recording_id: voiceRecordingId }), // Only include if not null
         meeting_title: setupData.title,
         participants: setupData.participants,
         meeting_context: setupData.context || null,

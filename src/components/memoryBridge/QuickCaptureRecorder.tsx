@@ -14,7 +14,7 @@ import {
   Pause,
   Play
 } from 'lucide-react';
-import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
+import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
@@ -61,83 +61,29 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
-  // Auto-stop when limit reached
-  useEffect(() => {
-    if (isOverLimit && isVoiceRecording) {
-      handleSecondTap();
-      toast.error('Recording stopped: Duration limit reached');
-    }
-  }, [isOverLimit, isVoiceRecording]);
-
-  // Handle the 3-tap flow with meeting creation at start
+  // Handle the 3-tap flow - simplified start
   const handleFirstTap = useCallback(async () => {
-    console.log('👆 Tap 1: Starting recording and creating meeting...');
+    console.log('👆 Tap 1: Starting recording...');
     setTapCount(1);
     setRecordingState('recording');
     
     try {
-      // Start recording first
-      const success = await startRecording();
-      if (!success) {
-        throw new Error('Failed to start recording');
-      }
-
-      // Create meeting record immediately for real-time extraction
-      const meetingRecord = await startMeetingRecording({
-        title: `Quick Capture - ${new Date().toLocaleString()}`,
-        participants: [],
-        meetingType: 'informal'
-      }, 'temp-recording-id'); // Temporary ID, will update later
-
-      if (!meetingRecord) {
-        throw new Error('Failed to create meeting record');
-      }
-
-      // Store meeting ID for real-time extraction
-      setCurrentMeetingId(meetingRecord.id);
-      
-      toast.success('Recording started! 🎤 Real-time ACT extraction enabled');
+      // Just start recording - no meeting creation yet
+      await startRecording();
+      toast.success('Recording started! 🎤');
     } catch (error) {
       console.error('Error starting recording:', error);
       setRecordingState('ready');
       setTapCount(0);
       toast.error('Failed to start recording');
     }
-  }, [startRecording, startMeetingRecording]);
-
-  const handleSecondTap = useCallback(async () => {
-    console.log('👆 Tap 2: Stopping recording...');
-    setTapCount(2);
-    setRecordingState('processing');
-    setProcessingMessage('Stopping recording...');
-
-    const blob = await stopRecording();
-    if (blob) {
-      setAudioBlob(blob);
-      toast.success('Recording complete! Processing...');
-      await processRecordingAutomatically(blob);
-    } else {
-      setRecordingState('ready');
-      setTapCount(0);
-      toast.error('Failed to stop recording');
-    }
-  }, [stopRecording]);
-
-  const handleThirdTap = useCallback(() => {
-    console.log('👆 Tap 3: Viewing results...');
-    setTapCount(3);
-    
-    if (finalResults) {
-      onComplete?.(finalResults);
-      toast.success('Quick Capture complete! 🎉');
-    }
-  }, [finalResults, onComplete]);
+  }, [startRecording]);
 
   const processRecordingAutomatically = useCallback(async (audioBlob: Blob) => {
     try {
       setProcessingMessage('Saving recording...');
       
-      // Save the voice recording
+      // Save the voice recording first
       const voiceRecording = await saveRecording(
         audioBlob,
         `Quick Capture - ${new Date().toLocaleString()}`,
@@ -149,17 +95,27 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
         throw new Error('Failed to save recording');
       }
 
-      setProcessingMessage('Updating meeting record...');
+      setProcessingMessage('Creating meeting record...');
 
-      // Update the existing meeting record with the actual recording ID
+      // Now create meeting record with real recording ID
+      const meetingRecord = await startMeetingRecording({
+        title: `Quick Capture - ${new Date().toLocaleString()}`,
+        participants: [],
+        meetingType: 'informal'
+      }, voiceRecording.id);
+
+      if (!meetingRecord) {
+        throw new Error('Failed to create meeting record');
+      }
+
+      // Update meeting to inactive state
       await supabase
         .from('meeting_recordings')
         .update({ 
-          recording_id: voiceRecording.id,
           is_active: false,
           ended_at: new Date().toISOString()
         })
-        .eq('id', currentMeetingId);
+        .eq('id', meetingRecord.id);
 
       setProcessingMessage('Transcribing & extracting ACTs...');
 
@@ -167,7 +123,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       const { data, error } = await supabase.functions.invoke('process-meeting-audio', {
         body: {
           filePath: voiceRecording.file_path,
-          meetingId: currentMeetingId,
+          meetingId: meetingRecord.id,
           meetingData: {
             title: `Quick Capture - ${new Date().toLocaleString()}`,
             type: 'informal',
@@ -186,7 +142,9 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       console.log('✅ Processing complete:', data);
       
       const actionsCount = data?.actionsCount || 0;
-      setFinalResults({ meetingId: currentMeetingId, actionsCount });
+      const finalMeetingId = meetingRecord.id;
+      setCurrentMeetingId(finalMeetingId);
+      setFinalResults({ meetingId: finalMeetingId, actionsCount });
       setRecordingState('complete');
       setProcessingMessage('');
       
@@ -198,7 +156,35 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       setTapCount(0);
       toast.error('Failed to process recording');
     }
-  }, [saveRecording, currentMeetingId]);
+  }, [saveRecording, startMeetingRecording]);
+
+  const handleSecondTap = useCallback(async () => {
+    console.log('👆 Tap 2: Stopping recording...');
+    setTapCount(2);
+    setRecordingState('processing');
+    setProcessingMessage('Stopping recording...');
+
+    const blob = await stopRecording();
+    if (blob) {
+      setAudioBlob(blob);
+      toast.success('Recording complete! Processing...');
+      await processRecordingAutomatically(blob);
+    } else {
+      setRecordingState('ready');
+      setTapCount(0);
+      toast.error('Failed to stop recording');
+    }
+  }, [stopRecording, processRecordingAutomatically]);
+
+  const handleThirdTap = useCallback(() => {
+    console.log('👆 Tap 3: Viewing results...');
+    setTapCount(3);
+    
+    if (finalResults) {
+      onComplete?.(finalResults);
+      toast.success('Quick Capture complete! 🎉');
+    }
+  }, [finalResults, onComplete]);
 
   const handleCancel = useCallback(() => {
     setRecordingState('ready');
@@ -273,6 +259,14 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     }
     return 0;
   };
+
+  // Auto-stop when limit reached - moved after all callback definitions
+  useEffect(() => {
+    if (isOverLimit && isVoiceRecording) {
+      handleSecondTap();
+      toast.error('Recording stopped: Duration limit reached');
+    }
+  }, [isOverLimit, isVoiceRecording, handleSecondTap]);
 
   return (
     <Card className="border-2 border-memory-emerald-200 bg-gradient-to-br from-white via-memory-emerald-50/50 to-brain-health-50/30">
