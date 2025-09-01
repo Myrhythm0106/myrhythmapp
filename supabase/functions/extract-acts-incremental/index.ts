@@ -53,33 +53,47 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are a SMART ACTS extraction AI. Extract actionable items from the transcript.
+            content: `You are a SMART ACTS extraction AI. Extract actions, decisions, and issues from the transcript.
 
 SMART ACTS format:
-- **S**pecific: Clear, unambiguous action
+- **S**pecific: Clear, unambiguous item
 - **M**easurable: Quantifiable outcome  
-- **A**ssignable: Clear ownership
-- **R**elevant: Contextually important
-- **T**ime-bound: Deadline or timeframe
+- **A**ssignable: Clear ownership (who)
+- **R**elevant: Contextually important (why)
+- **T**ime-bound: Deadline or timeframe (when)
 
-Return ONLY a JSON array of objects with this structure:
+Extract these types:
+1. **ACTIONS**: Tasks, commitments, follow-ups (Action: I will...)
+2. **DECISIONS**: Choices made, conclusions reached (Decision: We decided...)
+3. **ISSUES**: Problems, concerns, risks identified (Issue: The problem is...)
+
+Return ONLY a JSON array with this structure:
 {
-  "action": "specific action description",
+  "type": "action|decision|issue",
+  "action": "specific description starting with Action:/Decision:/Issue:",
   "assignee": "person responsible or 'self' if unclear",
   "deadline": "YYYY-MM-DD or relative like 'next week'",
   "suggested_date": "YYYY-MM-DD format for suggested completion",
   "priority": 3,
   "context": "relevant meeting context",
-  "emotional_stakes": "why this matters"
+  "emotional_stakes": "why this matters",
+  "severity": "high|medium|low" // for issues only
 }
 
-For suggested_date:
-- Use today's date: ${new Date().toISOString().split('T')[0]} as reference
-- High urgency: suggest within 1-3 days
-- Medium urgency: suggest within 1-2 weeks
-- Low urgency: suggest within 2-4 weeks
+EXTRACTION RULES:
+- ONLY extract items that start with "Action:", "Decision:", or "Issue:"
+- MUST have clear ownership (who will do it)
+- MUST have timeframe (when it will happen)
+- MUST be specific and actionable
+- Reject vague statements like "we should think about it"
+- Reject incomplete items missing who/when/what
 
-Return empty array [] if no clear actions found.`
+For suggested_date (today: ${new Date().toISOString().split('T')[0]}):
+- High priority: within 1-3 days
+- Medium priority: within 1-2 weeks  
+- Low priority: within 2-4 weeks
+
+Return [] if no properly formatted SMART items found.`
           },
           {
             role: 'user',
@@ -124,8 +138,9 @@ Return empty array [] if no clear actions found.`
       priority_level: typeof action.priority === 'number' ? action.priority : 3,
       relationship_impact: action.context || '',
       emotional_stakes: action.emotional_stakes || '',
-      action_type: 'commitment',
-      status: 'pending'
+      action_type: action.type || 'commitment',
+      status: 'pending',
+      is_realtime: true // Mark for realtime updates
     }));
 
     if (actionsToInsert.length > 0) {

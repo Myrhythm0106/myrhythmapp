@@ -17,6 +17,8 @@ import {
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
+import { VoiceCoach } from './VoiceCoach';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -42,12 +44,15 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   
   const { startMeetingRecording } = useMemoryBridge();
   const { subscription } = useSubscription();
+  const { extractACTs } = useRealtimeACTs();
   
   const [recordingState, setRecordingState] = useState<RecordingState>('ready');
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [processingMessage, setProcessingMessage] = useState('');
   const [tapCount, setTapCount] = useState(0);
   const [finalResults, setFinalResults] = useState<{ meetingId: string; actionsCount: number } | null>(null);
+  const [currentTranscript, setCurrentTranscript] = useState('');
+  const [currentMeetingId, setCurrentMeetingId] = useState<string>('');
 
   // Get subscription limits
   const maxDurationMinutes = subscription?.plan_type === 'premium' ? 60 : 5;
@@ -135,6 +140,9 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       if (!meetingRecord) {
         throw new Error('Failed to create meeting record');
       }
+
+      // Store meeting ID for real-time extraction
+      setCurrentMeetingId(meetingRecord.id);
 
       setProcessingMessage('Transcribing & extracting ACTs...');
 
@@ -253,6 +261,21 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     <Card className="border-2 border-memory-emerald-200 bg-gradient-to-br from-white via-memory-emerald-50/50 to-brain-health-50/30">
       <CardContent className="pt-6">
         <div className="space-y-6">
+          {/* Voice Coach - shown during ready or recording states */}
+          {(recordingState === 'ready' || recordingState === 'recording') && (
+            <VoiceCoach
+              isRecording={recordingState === 'recording'}
+              transcript={currentTranscript}
+              onInsertPhrase={(phrase) => {
+                setCurrentTranscript(prev => prev + (prev ? ' ' : '') + phrase);
+                // Trigger real-time extraction if we have a meeting
+                if (currentMeetingId && phrase.trim()) {
+                  extractACTs(phrase);
+                }
+              }}
+            />
+          )}
+
           {/* Header */}
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-2">

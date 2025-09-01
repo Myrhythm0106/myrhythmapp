@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle, Crown, Lock, TrendingUp, Sparkles } from 'lucide-react';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 import { WatcherSelectionModal } from './WatcherSelectionModal';
+import { EmptyACTsState } from './EmptyACTsState';
 
 interface ExtractedActionsReviewProps {
   meetingId?: string;
@@ -202,21 +203,11 @@ export function ExtractedActionsReview({
 
   if (actions.length === 0) {
     return (
-      <div className="space-y-6 max-w-4xl mx-auto p-6">
-        <Card>
-          <CardContent className="text-center py-12">
-            <CheckCircle className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
-            <h3 className="text-xl font-semibold mb-2">No Actions Yet</h3>
-            <p className="text-muted-foreground mb-4">
-              Complete a recording to see your extracted actions here.
-            </p>
-            <Button onClick={loadActions} variant="outline">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              Refresh Actions
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      <EmptyACTsState 
+        onRefresh={loadActions}
+        onStartRecording={() => window.location.hash = '#recording'}
+        isLoading={isLoading}
+      />
     );
   }
 
