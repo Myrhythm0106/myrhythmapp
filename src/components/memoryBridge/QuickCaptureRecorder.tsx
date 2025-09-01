@@ -260,7 +260,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     return 0;
   };
 
-  // Auto-stop when limit reached - moved after all callback definitions
+  // Auto-stop when limit reached - placed after all function definitions
   useEffect(() => {
     if (isOverLimit && isVoiceRecording) {
       handleSecondTap();
