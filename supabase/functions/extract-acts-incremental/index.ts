@@ -53,47 +53,58 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are a SMART ACTS extraction AI. Extract actions, decisions, and issues from the transcript.
+            content: `You are an expert ACT extraction AI for meetings. Extract Actions, Decisions, and Issues from conversation transcripts.
 
-SMART ACTS format:
-- **S**pecific: Clear, unambiguous item
-- **M**easurable: Quantifiable outcome  
-- **A**ssignable: Clear ownership (who)
-- **R**elevant: Contextually important (why)
-- **T**ime-bound: Deadline or timeframe (when)
+INTELLIGENT EXTRACTION RULES:
+1. **ACTIONS** - Tasks, commitments, follow-ups, things to do
+   - Look for: "I will", "we need to", "let's", "should", action verbs (call, send, schedule, meet, review, etc.)
+   - Extract even if not explicitly prefixed with "Action:"
+   - Include: WHO will do WHAT by WHEN and WHY
 
-Extract these types:
-1. **ACTIONS**: Tasks, commitments, follow-ups (Action: I will...)
-2. **DECISIONS**: Choices made, conclusions reached (Decision: We decided...)
-3. **ISSUES**: Problems, concerns, risks identified (Issue: The problem is...)
+2. **DECISIONS** - Choices made, conclusions reached, agreements
+   - Look for: "we decided", "I've chosen", "let's go with", "the plan is", "we agreed"
+   - Extract even if not explicitly prefixed with "Decision:"
+   - Include: WHAT was decided, WHO made it, WHY it matters
 
-Return ONLY a JSON array with this structure:
-{
-  "type": "action|decision|issue",
-  "action": "specific description starting with Action:/Decision:/Issue:",
-  "assignee": "person responsible or 'self' if unclear",
-  "deadline": "YYYY-MM-DD or relative like 'next week'",
-  "suggested_date": "YYYY-MM-DD format for suggested completion",
-  "priority": 3,
-  "context": "relevant meeting context",
-  "emotional_stakes": "why this matters",
-  "severity": "high|medium|low" // for issues only
-}
+3. **ISSUES** - Problems, concerns, risks, blockers identified
+   - Look for: "problem", "issue", "concern", "risk", "challenge", "blocker", "stuck"
+   - Extract even if not explicitly prefixed with "Issue:"
+   - Include: WHAT the problem is, WHO it affects, HOW SEVERE it is
 
-EXTRACTION RULES:
-- ONLY extract items that start with "Action:", "Decision:", or "Issue:"
-- MUST have clear ownership (who will do it)
-- MUST have timeframe (when it will happen)
-- MUST be specific and actionable
-- Reject vague statements like "we should think about it"
-- Reject incomplete items missing who/when/what
+SMART CRITERIA (flag if missing):
+- **Specific**: Clear, unambiguous description
+- **Measurable**: Quantifiable outcome or clear deliverable
+- **Assignable**: Clear ownership (who will do it)
+- **Relevant**: Context about why it matters
+- **Time-bound**: Deadline or timeframe
 
-For suggested_date (today: ${new Date().toISOString().split('T')[0]}):
-- High priority: within 1-3 days
-- Medium priority: within 1-2 weeks  
-- Low priority: within 2-4 weeks
+JSON RESPONSE FORMAT:
+[
+  {
+    "type": "action|decision|issue",
+    "action": "Clear description of what needs to happen",
+    "assignee": "person responsible (extract from context, use 'speaker' if unclear)",
+    "deadline": "extracted timeframe or 'unspecified'",
+    "suggested_date": "YYYY-MM-DD format",
+    "priority": 1-5 (1=urgent, 5=low),
+    "context": "why this matters/background",
+    "emotional_stakes": "relationship/emotional impact",
+    "confidence": 0.1-1.0 (how certain you are about this extraction),
+    "missing_smart_criteria": ["specific", "measurable"] // array of missing SMART elements
+  }
+]
 
-Return [] if no properly formatted SMART items found.`
+EXTRACTION STRATEGY:
+- Be GENEROUS in extraction - capture implied actions/decisions/issues
+- Look for conversational commitments: "I'll handle that", "let me check on this"
+- Extract follow-ups: "we should follow up on...", "need to circle back on..."
+- Flag uncertainty with lower confidence scores
+- Use context clues for assignee (who spoke, who was addressed)
+- Infer reasonable deadlines from urgency cues
+
+Today's date: ${new Date().toISOString().split('T')[0]}
+
+Return [] only if absolutely nothing actionable is found.`
           },
           {
             role: 'user',
@@ -127,20 +138,22 @@ Return [] if no properly formatted SMART items found.`
 
     console.log(`Extracted ${extractedActions.length} actions from transcript`);
 
-    // Store the extracted actions
+    // Store the extracted actions with enhanced data
     const actionsToInsert = extractedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
       action_text: action.action,
       assigned_to: action.assignee || 'self',
-      due_context: action.deadline,
+      due_context: action.deadline || 'unspecified',
       proposed_date: action.suggested_date,
       priority_level: typeof action.priority === 'number' ? action.priority : 3,
       relationship_impact: action.context || '',
       emotional_stakes: action.emotional_stakes || '',
       action_type: action.type || 'commitment',
       status: 'pending',
-      is_realtime: true // Mark for realtime updates
+      confidence_score: action.confidence || 0.8,
+      user_notes: action.missing_smart_criteria?.length > 0 ? 
+        `AI flagged missing: ${action.missing_smart_criteria.join(', ')}` : null
     }));
 
     if (actionsToInsert.length > 0) {

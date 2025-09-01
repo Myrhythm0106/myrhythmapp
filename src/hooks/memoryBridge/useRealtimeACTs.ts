@@ -69,7 +69,7 @@ export const useRealtimeACTs = (meetingId?: string) => {
           event: 'INSERT',
           schema: 'public',
           table: 'extracted_actions',
-          filter: `meeting_id=eq.${meetingId}`
+          filter: `meeting_recording_id=eq.${meetingId}`
         },
         (payload) => {
           const newAction = payload.new;

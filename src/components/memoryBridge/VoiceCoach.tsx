@@ -182,19 +182,24 @@ export function VoiceCoach({ isRecording, transcript, onInsertPhrase }: VoiceCoa
               {smartScore < 2 && (
                 <div className="flex items-center gap-2 text-amber-600">
                   <AlertTriangle className="h-3 w-3" />
-                  <span>Try starting with "Action:", "Decision:", or "Issue:"</span>
+                  <span>Try: "Action: I will [specific task] by [when] because [why]"</span>
                 </div>
               )}
               {smartScore >= 2 && smartScore < 4 && (
                 <div className="flex items-center gap-2 text-blue-600">
                   <Lightbulb className="h-3 w-3" />
-                  <span>Great start! Add who will do it and when</span>
+                  <span>Great! Add timeframe and context for maximum clarity</span>
                 </div>
               )}
               {smartScore >= 4 && (
                 <div className="flex items-center gap-2 text-primary">
                   <CheckCircle2 className="h-3 w-3" />
-                  <span>Excellent! This will create a strong ACT</span>
+                  <span>Perfect! This creates a SMART ACT ✨</span>
+                </div>
+              )}
+              {isRecording && transcript.length > 50 && (
+                <div className="mt-2 text-blue-600 text-xs">
+                  <span>💡 AI is actively extracting ACTs from your speech patterns</span>
                 </div>
               )}
             </div>

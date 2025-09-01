@@ -44,7 +44,6 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   
   const { startMeetingRecording } = useMemoryBridge();
   const { subscription } = useSubscription();
-  const { extractACTs } = useRealtimeACTs();
   
   const [recordingState, setRecordingState] = useState<RecordingState>('ready');
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -53,9 +52,11 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   const [finalResults, setFinalResults] = useState<{ meetingId: string; actionsCount: number } | null>(null);
   const [currentTranscript, setCurrentTranscript] = useState('');
   const [currentMeetingId, setCurrentMeetingId] = useState<string>('');
+  
+  const { extractACTs } = useRealtimeACTs(currentMeetingId);
 
-  // Get subscription limits
-  const maxDurationMinutes = subscription?.plan_type === 'premium' ? 60 : 5;
+  // Get subscription limits - remove 2-hour limit for premium, extend for all users
+  const maxDurationMinutes = subscription?.plan_type === 'premium' ? 240 : 30; // 4 hours premium, 30 min free
   const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
@@ -68,21 +69,41 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     }
   }, [isOverLimit, isVoiceRecording]);
 
-  // Handle the 3-tap flow
+  // Handle the 3-tap flow with meeting creation at start
   const handleFirstTap = useCallback(async () => {
-    console.log('👆 Tap 1: Starting recording...');
+    console.log('👆 Tap 1: Starting recording and creating meeting...');
     setTapCount(1);
     setRecordingState('recording');
     
-    const success = await startRecording();
-    if (success) {
-      toast.success('Recording started! 🎤');
-    } else {
+    try {
+      // Start recording first
+      const success = await startRecording();
+      if (!success) {
+        throw new Error('Failed to start recording');
+      }
+
+      // Create meeting record immediately for real-time extraction
+      const meetingRecord = await startMeetingRecording({
+        title: `Quick Capture - ${new Date().toLocaleString()}`,
+        participants: [],
+        meetingType: 'informal'
+      }, 'temp-recording-id'); // Temporary ID, will update later
+
+      if (!meetingRecord) {
+        throw new Error('Failed to create meeting record');
+      }
+
+      // Store meeting ID for real-time extraction
+      setCurrentMeetingId(meetingRecord.id);
+      
+      toast.success('Recording started! 🎤 Real-time ACT extraction enabled');
+    } catch (error) {
+      console.error('Error starting recording:', error);
       setRecordingState('ready');
       setTapCount(0);
       toast.error('Failed to start recording');
     }
-  }, [startRecording]);
+  }, [startRecording, startMeetingRecording]);
 
   const handleSecondTap = useCallback(async () => {
     console.log('👆 Tap 2: Stopping recording...');
@@ -128,21 +149,17 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
         throw new Error('Failed to save recording');
       }
 
-      setProcessingMessage('Creating meeting record...');
+      setProcessingMessage('Updating meeting record...');
 
-      // Create meeting record
-      const meetingRecord = await startMeetingRecording({
-        title: `Quick Capture - ${new Date().toLocaleString()}`,
-        participants: [],
-        meetingType: 'informal'
-      }, voiceRecording.id);
-
-      if (!meetingRecord) {
-        throw new Error('Failed to create meeting record');
-      }
-
-      // Store meeting ID for real-time extraction
-      setCurrentMeetingId(meetingRecord.id);
+      // Update the existing meeting record with the actual recording ID
+      await supabase
+        .from('meeting_recordings')
+        .update({ 
+          recording_id: voiceRecording.id,
+          is_active: false,
+          ended_at: new Date().toISOString()
+        })
+        .eq('id', currentMeetingId);
 
       setProcessingMessage('Transcribing & extracting ACTs...');
 
@@ -150,7 +167,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       const { data, error } = await supabase.functions.invoke('process-meeting-audio', {
         body: {
           filePath: voiceRecording.file_path,
-          meetingId: meetingRecord.id,
+          meetingId: currentMeetingId,
           meetingData: {
             title: `Quick Capture - ${new Date().toLocaleString()}`,
             type: 'informal',
@@ -169,7 +186,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       console.log('✅ Processing complete:', data);
       
       const actionsCount = data?.actionsCount || 0;
-      setFinalResults({ meetingId: meetingRecord.id, actionsCount });
+      setFinalResults({ meetingId: currentMeetingId, actionsCount });
       setRecordingState('complete');
       setProcessingMessage('');
       
@@ -181,7 +198,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       setTapCount(0);
       toast.error('Failed to process recording');
     }
-  }, [saveRecording, startMeetingRecording]);
+  }, [saveRecording, currentMeetingId]);
 
   const handleCancel = useCallback(() => {
     setRecordingState('ready');
