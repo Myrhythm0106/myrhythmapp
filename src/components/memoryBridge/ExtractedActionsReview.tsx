@@ -5,13 +5,18 @@ import { Badge } from '@/components/ui/badge';
 import { SwipeableContainer } from '@/components/ui/SwipeableContainer';
 import { MemoryBridgeCommentsSection } from './MemoryBridgeCommentsSection';
 import { SwipeHint } from '@/components/gratitude/journal/components/SwipeHint';
+import { PriorityPicker } from './PriorityPicker';
+import { TodaysPriorityBanner } from './TodaysPriorityBanner';
+import { ActionSchedulingModal } from './ActionSchedulingModal';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { convertActionToCalendarEvent, scheduleConfirmedActions } from '@/utils/calendarIntegration';
+import { smartScheduler } from '@/utils/smartScheduler';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle, Crown, Lock, TrendingUp, Sparkles } from 'lucide-react';
+import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle, Crown, Lock, TrendingUp, Sparkles, Edit3 } from 'lucide-react';
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 import { WatcherSelectionModal } from './WatcherSelectionModal';
 import { EmptyACTsState } from './EmptyACTsState';
@@ -39,6 +44,8 @@ export function ExtractedActionsReview({
   const [actionToReject, setActionToReject] = useState<string | null>(null);
   const [showWatcherSelection, setShowWatcherSelection] = useState(false);
   const [actionForWatchers, setActionForWatchers] = useState<string | null>(null);
+  const [showSmartScheduling, setShowSmartScheduling] = useState(false);
+  const [editingPriority, setEditingPriority] = useState<string | null>(null);
 
   const commentLimits = { free: 1, 'taste-see': 7, pro: Infinity };
 
@@ -99,16 +106,16 @@ export function ExtractedActionsReview({
     setShowWatcherSelection(true);
   };
 
-  const handleScheduleWithWatchers = async (actionId: string, watcherIds: string[], watcherNames: string[]) => {
+  const handleScheduleWithWatchers = async (actionId: string, watcherIds: string[], watcherNames: string[], selectedDate?: string, selectedTime?: string) => {
     if (!user) return;
     
     try {
       const action = actions.find(a => a.id === actionId);
       if (!action) return;
 
-      // Update action with watchers
+      // Update action with watchers and smart scheduling
       const updatedAction = { ...action, assigned_watchers: watcherIds };
-      await convertActionToCalendarEvent(updatedAction, user.id, watcherNames);
+      await convertActionToCalendarEvent(updatedAction, user.id, watcherNames, selectedDate, selectedTime);
       
       setActions(prev => 
         prev.map(a => 
@@ -119,10 +126,11 @@ export function ExtractedActionsReview({
       );
       
       setShowWatcherSelection(false);
+      setShowSmartScheduling(false);
       setActionForWatchers(null);
       
-      toast.success("Action scheduled with Support Circle! 📅💜", {
-        description: `${watcherNames.length > 0 ? watcherNames.join(', ') + ' will' : 'Your circle will'} be notified of this commitment`
+      toast.success("Action scheduled with SMART suggestions! 📅💜", {
+        description: `${watcherNames.length > 0 ? watcherNames.join(', ') + ' will' : 'Your circle will'} be notified of this empowering commitment`
       });
     } catch (error) {
       toast.error("Failed to schedule action");
@@ -135,6 +143,34 @@ export function ExtractedActionsReview({
     toast.success("All confirmed actions scheduled! 🚀", {
       description: "You're empowered and organized - every commitment matters"
     });
+  };
+
+  const handleUpdatePriority = async (actionId: string, newPriority: number) => {
+    try {
+      // Update in database
+      const { error } = await supabase
+        .from('extracted_actions')
+        .update({ priority_level: newPriority })
+        .eq('id', actionId);
+
+      if (error) throw error;
+
+      // Update local state
+      setActions(prev => 
+        prev.map(action => 
+          action.id === actionId 
+            ? { ...action, priority_level: newPriority }
+            : action
+        )
+      );
+      
+      setEditingPriority(null);
+      toast.success("Priority updated! 💪", {
+        description: "Your priorities reflect your empowered choices"
+      });
+    } catch (error) {
+      toast.error("Failed to update priority");
+    }
   };
 
   const handleRejectAction = (actionId: string) => {
@@ -213,6 +249,9 @@ export function ExtractedActionsReview({
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto p-6">
+      {/* Today's Priority Banner */}
+      <TodaysPriorityBanner />
+      
       {/* Premium Upgrade Banner */}
       <Card className="border-2 border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50">
         <CardContent className="p-6">
@@ -301,11 +340,42 @@ export function ExtractedActionsReview({
                         💜 {action.relationship_impact}
                       </p>
                     )}
+                    
+                    {/* Priority Section with Editing */}
+                    <div className="mb-2">
+                      {editingPriority === action.id ? (
+                        <div className="space-y-2">
+                          <PriorityPicker
+                            value={action.priority_level}
+                            onChange={(priority) => handleUpdatePriority(action.id, priority)}
+                            showLabel={false}
+                          />
+                          <div className="flex gap-1">
+                            <Button size="sm" variant="ghost" onClick={() => setEditingPriority(null)}>
+                              Cancel
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <Badge 
+                            variant="outline" 
+                            className={`text-xs cursor-pointer hover:bg-memory-emerald-50 ${
+                              action.priority_level >= 4 ? 'border-red-300 text-red-700' : 
+                              action.priority_level >= 3 ? 'border-orange-300 text-orange-700' :
+                              'border-blue-300 text-blue-700'
+                            }`}
+                            onClick={() => setEditingPriority(action.id)}
+                          >
+                            Priority {action.priority_level}
+                            <Edit3 className="h-2 w-2 ml-1" />
+                          </Badge>
+                          <Badge variant="secondary" className="text-xs">{action.action_type}</Badge>
+                        </div>
+                      )}
+                    </div>
+                    
                     <div className="flex justify-between items-center mt-2">
-                      <div className="flex gap-1">
-                        <Badge variant="outline" className="text-xs">Priority {action.priority_level}</Badge>
-                        <Badge variant="secondary" className="text-xs">{action.action_type}</Badge>
-                      </div>
                       <div className="flex gap-1">
                         <Button 
                           size="sm" 
@@ -321,8 +391,11 @@ export function ExtractedActionsReview({
                           size="sm" 
                           variant="ghost" 
                           className="h-6 w-6 p-0 hover:bg-blue-100" 
-                          onClick={() => handleScheduleAction(action.id)}
-                          title="Schedule action"
+                          onClick={() => {
+                            setActionForWatchers(action.id);
+                            setShowSmartScheduling(true);
+                          }}
+                          title="Smart schedule with circle"
                         >
                           <Calendar className="h-3 w-3 text-blue-600" />
                         </Button>
@@ -385,7 +458,31 @@ export function ExtractedActionsReview({
         </CardContent>
       </Card>
 
-      {/* Watcher Selection Modal */}
+      {/* Smart Scheduling Modal */}
+      {showSmartScheduling && actionForWatchers && (
+        <ActionSchedulingModal
+          isOpen={showSmartScheduling}
+          onClose={() => {
+            setShowSmartScheduling(false);
+            setActionForWatchers(null);
+          }}
+          actions={actions.filter(a => a.id === actionForWatchers)}
+          onScheduleComplete={(results) => {
+            if (results.length > 0 && actionForWatchers) {
+              const result = results[0];
+              handleScheduleWithWatchers(
+                actionForWatchers, 
+                result.watcherIds || [], 
+                result.watcherNames || [],
+                result.selectedDate,
+                result.selectedTime
+              );
+            }
+          }}
+        />
+      )}
+
+      {/* Legacy Watcher Selection Modal */}
       <WatcherSelectionModal
         isOpen={showWatcherSelection}
         onClose={() => {

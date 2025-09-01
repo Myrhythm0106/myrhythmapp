@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { ExtractedAction } from '@/types/memoryBridge';
+import { smartScheduler } from './smartScheduler';
 import { toast } from 'sonner';
 
 export interface CalendarEventFromAction {
@@ -21,33 +22,59 @@ export async function convertActionToCalendarEvent(
   selectedTime?: string
 ): Promise<string | null> {
   try {
-    // Parse due context for scheduling hints
-    const dueContext = action.due_context || '';
-    const isUrgent = action.priority_level >= 4;
+    let eventDate = selectedDate;
+    let eventTime = selectedTime;
     
-    // Default scheduling
-    const eventDate = selectedDate || new Date().toISOString().split('T')[0];
-    const eventTime = selectedTime || (isUrgent ? '09:00' : '14:00');
+    // Use smart scheduling if no manual date/time provided
+    if (!eventDate || !eventTime) {
+      const suggestions = await smartScheduler.generateSmartSuggestions(action, userId, watcherNames);
+      if (suggestions.length > 0) {
+        eventDate = eventDate || suggestions[0].date;
+        eventTime = eventTime || suggestions[0].time;
+        
+        toast.success("SMART scheduling applied! 🧠", {
+          description: suggestions[0].reason
+        });
+      }
+    }
+    
+    // Fallback to basic scheduling
+    const finalDate = eventDate || new Date().toISOString().split('T')[0];
+    const finalTime = eventTime || (action.priority_level >= 4 ? '09:00' : '14:00');
     
     // Estimate duration based on action type
     const durationEstimate = estimateActionDuration(action);
     
-    // Create enriched description with Support Circle integration
-    let description = `${action.action_text}\n\nContext: ${action.relationship_impact || ''}\n\nEmotional Stakes: ${action.emotional_stakes || ''}\n\nIntent: ${action.intent_behind || ''}`;
+    // Create empowering description with Support Circle integration
+    let description = `🎯 SMART Action: ${action.action_text}`;
+    
+    if (action.relationship_impact) {
+      description += `\n\n💜 Relationship Impact: ${action.relationship_impact}`;
+    }
+    
+    if (action.emotional_stakes) {
+      description += `\n\n❤️ Why This Matters: ${action.emotional_stakes}`;
+    }
+    
+    if (action.intent_behind) {
+      description += `\n\n🚀 Intent & Growth: ${action.intent_behind}`;
+    }
     
     if (watcherNames && watcherNames.length > 0) {
-      description += `\n\n💜 Support Circle Watchers: ${watcherNames.join(', ')}\nYour circle will be notified of this commitment.`;
+      description += `\n\n💜 Support Circle: ${watcherNames.join(', ')}\nYour circle celebrates every step forward with you! No one walks alone.`;
     }
+    
+    description += '\n\n✨ Remember: Progress over perfection. You are capable, worthy, and supported on this journey.';
 
     // Create calendar event
     const { data, error } = await supabase
       .from('calendar_events')
       .insert({
         user_id: userId,
-        title: `Memory Bridge: ${action.action_text}`,
+        title: `🌟 Life Priority: ${action.action_text}`,
         description,
-        date: eventDate,
-        time: eventTime,
+        date: finalDate,
+        time: finalTime,
         type: 'action_item',
         category: 'memory_bridge',
         requires_acceptance: false,
@@ -60,7 +87,7 @@ export async function convertActionToCalendarEvent(
     if (error) throw error;
 
     // Link action to daily actions for tracking with watchers
-    await createDailyActionFromExtracted(action, userId, eventDate, eventTime, durationEstimate);
+    await createDailyActionFromExtracted(action, userId, finalDate, finalTime, durationEstimate);
 
     return data.id;
   } catch (error) {
@@ -81,8 +108,8 @@ async function createDailyActionFromExtracted(
       .from('daily_actions')
       .insert({
         user_id: userId,
-        title: action.action_text,
-        description: `From Memory Bridge: ${action.relationship_impact || ''}`,
+        title: `🎯 ${action.action_text}`,
+        description: `Life-empowering action from Memory Bridge: ${action.relationship_impact || action.emotional_stakes || 'Building stronger connections through intentional action'}`,
         date,
         start_time: time,
         duration_minutes: duration,
@@ -94,6 +121,13 @@ async function createDailyActionFromExtracted(
       });
 
     if (error) throw error;
+    
+    // Send empowering notification for high-priority actions
+    if (action.priority_level >= 4) {
+      toast.success("High-impact action locked in! 💪", {
+        description: "This priority aligns with your growth journey"
+      });
+    }
   } catch (error) {
     console.error('Failed to create daily action:', error);
   }
