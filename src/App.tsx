@@ -48,6 +48,8 @@ import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
 import TestMemoryBridge from "./routes/TestMemoryBridge";
 import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDashboard";
+import Help from "./pages/Help";
+import HelpGettingStarted from "./pages/HelpGettingStarted";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +76,10 @@ function App() {
                     
                     {/* Dashboard-First Experience - Default Route */}
                     <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+                    
+                    {/* Help Routes */}
+                    <Route path="/help" element={<ProtectedRoute requireAuth={false}><Help /></ProtectedRoute>} />
+                    <Route path="/help/getting-started" element={<ProtectedRoute requireAuth={false}><HelpGettingStarted /></ProtectedRoute>} />
                     
                      {/* Assessment Routes */}
                      <Route path="/assessment-old" element={<Assessment />} />

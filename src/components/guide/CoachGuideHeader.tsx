@@ -70,7 +70,7 @@ export function CoachGuideHeader({ userProgress }: CoachGuideHeaderProps) {
               className="flex items-center gap-2"
             >
               <BookOpen className="w-4 h-4" />
-              Go to Dashboard
+              Dashboard
             </Button>
 
             <Button 

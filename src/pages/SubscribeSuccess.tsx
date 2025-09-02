@@ -10,12 +10,22 @@ import { SurfaceCard } from "@/components/ui/SurfaceCard";
 function SubscribeSuccess() {
   const navigate = useNavigate();
 
+  const handleGuidedExperience = () => {
+    localStorage.setItem('journey_mode', 'guided');
+    navigate("/onboarding/assessment");
+  };
+
+  const handleDiscoveryMode = () => {
+    localStorage.setItem('journey_mode', 'discovery');
+    navigate("/dashboard");
+  };
+
   const handleViewTimeline = () => {
     navigate("/onboarding/life-empowerment-guide");
   };
 
-  const handleStartAssessment = () => {
-    navigate("/onboarding/assessment");
+  const handleHowToGuide = () => {
+    navigate("/help/getting-started");
   };
 
   const handleGoDashboard = () => {
@@ -27,7 +37,7 @@ function SubscribeSuccess() {
   };
 
   const handleViewHelpCenter = () => {
-    navigate("/help-center");
+    navigate("/help");
   };
 
   return (
@@ -119,23 +129,45 @@ function SubscribeSuccess() {
                 </h3>
               </div>
               
-              <div className="grid sm:grid-cols-2 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Button 
+                  onClick={handleGuidedExperience}
+                  size="lg"
+                  className="group cognitive-enhancement hover:shadow-lg transition-all duration-300 flex-col h-auto py-4"
+                >
+                  <Target className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-semibold">Guided Experience</span>
+                  <span className="text-xs opacity-80">Step-by-step setup</span>
+                </Button>
+                <Button 
+                  onClick={handleDiscoveryMode}
+                  variant="outline" 
+                  size="lg"
+                  className="group border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400 transition-all duration-300 flex-col h-auto py-4"
+                >
+                  <Sparkles className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-semibold">Discovery Mode</span>
+                  <span className="text-xs opacity-80">Explore freely</span>
+                </Button>
+                <Button 
+                  onClick={handleHowToGuide}
+                  variant="outline" 
+                  size="lg"
+                  className="group border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400 transition-all duration-300 flex-col h-auto py-4"
+                >
+                  <BookOpen className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-semibold">How-to Guide</span>
+                  <span className="text-xs opacity-80">Learn the basics</span>
+                </Button>
                 <Button 
                   onClick={handleViewTimeline}
                   variant="outline" 
                   size="lg"
-                  className="group border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400 transition-all duration-300"
+                  className="group border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400 transition-all duration-300 flex-col h-auto py-4"
                 >
-                  <BookOpen className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />
-                  View MyRhythm Timeline
-                </Button>
-                <Button 
-                  onClick={handleStartAssessment}
-                  size="lg"
-                  className="group cognitive-enhancement hover:shadow-lg transition-all duration-300"
-                >
-                  <Target className="h-5 w-5 mr-3 group-hover:scale-110 transition-transform" />
-                  Start Assessment
+                  <TrendingUp className="h-6 w-6 mb-2 group-hover:scale-110 transition-transform" />
+                  <span className="text-sm font-semibold">View Timeline</span>
+                  <span className="text-xs opacity-80">See your journey</span>
                 </Button>
               </div>
               

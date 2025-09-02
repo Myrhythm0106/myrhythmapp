@@ -49,7 +49,7 @@ const Auth = () => {
                 onClick={() => navigate('/dashboard')}
                 className="w-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
               >
-                Go to Dashboard
+              Go to Dashboard
               </Button>
               <Button
                 onClick={signOut}

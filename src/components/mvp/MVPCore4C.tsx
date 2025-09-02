@@ -62,7 +62,7 @@ export function MVPCore4C() {
               className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
             >
               <User className="h-4 w-4 mr-2" />
-              {user ? 'Go to Dashboard' : 'Log In'}
+              {user ? 'Dashboard' : 'Log In'}
             </Button>
           </div>
         </div>

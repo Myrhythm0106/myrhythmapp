@@ -85,9 +85,8 @@ const SubscribePage = () => {
       });
       if (error) throw error;
       if (data?.url) {
-        // Open Stripe checkout in a new tab
-        window.open(data.url, '_blank');
-        toast.success('Checkout opened in new tab');
+        // Open Stripe checkout in same tab
+        window.location.href = data.url;
       } else {
         throw new Error('No checkout URL received');
       }

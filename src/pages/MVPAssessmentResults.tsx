@@ -265,7 +265,7 @@ export default function MVPAssessmentResults() {
             onClick={handleGoToDashboard}
             className="bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 text-white"
           >
-            Go to Dashboard
+            Log In
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
           
