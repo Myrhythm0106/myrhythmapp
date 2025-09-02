@@ -1,7 +1,9 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Info } from "lucide-react";
+import { Brain, Compass } from "lucide-react";
+import { JourneyHubModal } from "@/components/journey/JourneyHubModal";
+
 interface DashboardHeaderProps {
   onShowTutorial?: () => void;
   currentDate?: string;
@@ -18,6 +20,7 @@ export function DashboardHeader({
   }),
   userName 
 }: DashboardHeaderProps) {
+  const [isJourneyHubOpen, setIsJourneyHubOpen] = useState(false);
   return (
     <div className="bg-white/80 backdrop-blur-sm border-b border-purple-200/50 shadow-sm p-6 mb-6 rounded-lg">
       <div className="flex items-center justify-between">
@@ -31,14 +34,19 @@ export function DashboardHeader({
         <Button 
           variant="outline" 
           size="sm"
-          onClick={onShowTutorial}
-          className="flex items-center gap-2"
-          aria-label="View tutorial"
+          onClick={() => setIsJourneyHubOpen(true)}
+          className="flex items-center gap-2 bg-gradient-to-r from-brain-health-50 to-clarity-teal-50 border-brain-health-300 text-brain-health-700 hover:from-brain-health-100 hover:to-clarity-teal-100"
+          aria-label="Open journey hub"
         >
-          <Info className="h-4 w-4" />
-          Help
+          <Compass className="h-4 w-4" />
+          Journey Hub
         </Button>
       </div>
+      
+      <JourneyHubModal 
+        isOpen={isJourneyHubOpen} 
+        onClose={() => setIsJourneyHubOpen(false)} 
+      />
     </div>
   );
 }

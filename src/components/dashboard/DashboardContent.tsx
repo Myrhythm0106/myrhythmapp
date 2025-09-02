@@ -5,7 +5,8 @@ import { useUserProgress } from "@/hooks/useUserProgress";
 import { useDashboard } from "@/contexts/DashboardContext";
 import { DashboardProvider } from "@/contexts/DashboardContext";
 import { CalmModeProvider } from "@/contexts/CalmModeContext";
-import { HeroStack } from "./hero/HeroStack";
+import { EmpowermentHero } from "./hero/EmpowermentHero";
+import { DashboardPeriodView } from "./period/DashboardPeriodView";
 import { SimplifiedQuickActions } from "./actions/SimplifiedQuickActions";
 import { TodayStrip } from "./calendar/TodayStrip";
 import { FloatingCaptureButton } from "./floating/FloatingCaptureButton";
@@ -23,12 +24,15 @@ function DashboardContentInner() {
   const userType = user?.user_metadata?.user_type || "recovery";
 
   return (
-    <div className="space-y-6 p-4 max-w-2xl mx-auto min-h-screen">
-      {/* Hero Stack - Revolutionary empowering experience */}
-      <HeroStack 
+    <div className="space-y-8 p-4 max-w-6xl mx-auto min-h-screen">
+      {/* Empowerment Hero - Bold, inspiring header */}
+      <EmpowermentHero 
         onUpgradeClick={handleUpgradeClick}
         userType={userType}
       />
+      
+      {/* Dashboard Period View - Core metrics and insights */}
+      <DashboardPeriodView />
       
       {/* Today Strip - Compact calendar integration */}
       <TodayStrip />
