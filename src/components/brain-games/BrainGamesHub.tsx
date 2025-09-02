@@ -9,6 +9,9 @@ import { GameSelectionGrid } from "./components/GameSelectionGrid";
 import { UserProgressDashboard } from "./components/UserProgressDashboard";
 import { ActiveGameSession } from "./components/ActiveGameSession";
 import { useBrainGameProgress } from "./hooks/useBrainGameProgress";
+import { useBrainGamesAccess } from "@/hooks/useBrainGamesAccess";
+import { UpgradePrompt } from "./UpgradePrompt";
+import { Badge } from "@/components/ui/badge";
 
 export function BrainGamesHub() {
   const [activeTab, setActiveTab] = useState("daily");
@@ -23,8 +26,27 @@ export function BrainGamesHub() {
     streak,
     updateProgress 
   } = useBrainGameProgress();
+  
+  const {
+    canPlayGame,
+    getDailyGamesRemaining,
+    getAccessLevel
+  } = useBrainGamesAccess();
 
   const handleStartGame = (gameType: 'sequence' | 'matching' | 'spatial', level: number = 1) => {
+    // Check if user can play this game
+    if (!canPlayGame(gameType)) {
+      console.log(`Game ${gameType} requires upgrade`);
+      return;
+    }
+    
+    // Check daily limit
+    const remaining = getDailyGamesRemaining();
+    if (remaining === 0) {
+      console.log('Daily game limit reached');
+      return;
+    }
+    
     setActiveGame({ type: gameType, level });
   };
 
@@ -67,7 +89,18 @@ export function BrainGamesHub() {
           </div>
           <div className="text-right">
             <p className="text-sm text-muted-foreground">Today's Games</p>
-            <p className="text-2xl font-bold">{todayStats.gamesCompleted}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-2xl font-bold">{todayStats.gamesCompleted}</p>
+              {getDailyGamesRemaining() !== -1 && (
+                <Badge variant="outline" className="text-xs">
+                  {getDailyGamesRemaining()} left
+                </Badge>
+              )}
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-muted-foreground">Access Level</p>
+            <Badge className="capitalize">{getAccessLevel()}</Badge>
           </div>
         </div>
       </div>
@@ -93,6 +126,13 @@ export function BrainGamesHub() {
         </TabsContent>
 
         <TabsContent value="games" className="space-y-6">
+          {getDailyGamesRemaining() === 0 && (
+            <UpgradePrompt 
+              feature="daily_limit" 
+              requiredTier="starter"
+              className="mb-6"
+            />
+          )}
           <GameSelectionGrid 
             userProgress={userProgress}
             onStartGame={handleStartGame}

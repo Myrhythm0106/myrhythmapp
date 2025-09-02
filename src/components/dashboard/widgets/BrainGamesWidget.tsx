@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, ArrowRight, Target, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useBrainGamesAccess } from "@/hooks/useBrainGamesAccess";
 
 export function BrainGamesWidget() {
   const navigate = useNavigate();
+  const { getAccessLevel, getDailyGamesRemaining } = useBrainGamesAccess();
   
   // Mock data - in real app this would come from user progress
   const dailyChallenge = {

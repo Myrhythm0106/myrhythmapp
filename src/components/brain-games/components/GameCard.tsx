@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { WatchersDisplay } from "@/components/shared/WatchersDisplay";
 import { cn } from "@/lib/utils";
 import { GameType } from "../types/gameTypes";
-import { Play, Trophy, HelpCircle } from "lucide-react";
+import { Play, Trophy, HelpCircle, Lock } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useBrainGamesAccess } from "@/hooks/useBrainGamesAccess";
 
 interface GameCardProps {
   game: GameType;
@@ -17,6 +18,8 @@ interface GameCardProps {
 }
 
 export function GameCard({ game, isSelected, onSelect, onPlay }: GameCardProps) {
+  const { canPlayGame, canUseDifficulty, getRequiredTierForDifficulty } = useBrainGamesAccess();
+  const isGameLocked = !canPlayGame(game.id);
   return (
     <TooltipProvider>
       <Card 
@@ -47,9 +50,14 @@ export function GameCard({ game, isSelected, onSelect, onPlay }: GameCardProps) 
         
         <CardHeader className="pb-2 pt-8">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0">
-              {game.icon}
+        <div className="p-2.5 rounded-lg bg-primary/10 text-primary flex-shrink-0 relative">
+          {game.icon}
+          {isGameLocked && (
+            <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+              <Lock className="h-4 w-4 text-white" />
             </div>
+          )}
+        </div>
             <div className="flex items-start">
               <div className="flex-grow">
                 <CardTitle className="text-lg font-medium flex items-center">
@@ -82,24 +90,35 @@ export function GameCard({ game, isSelected, onSelect, onPlay }: GameCardProps) 
         <CardContent className="flex-grow pb-2">
           <div className="text-sm text-muted-foreground mb-3">Difficulty Levels:</div>
           <div className="flex flex-wrap gap-2">
-            {game.difficultyLevels.map((level) => (
-              <Badge 
-                key={level.level} 
-                variant="secondary"
-                className={cn(
-                  "bg-muted/50 cursor-pointer transition-all hover:bg-muted",
-                  level.level === "Low" && "border-green-400", 
-                  level.level === "Medium" && "border-amber-400",
-                  level.level === "High" && "border-red-400"
-                )}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onPlay(game.id, level.level);
-                }}
-              >
-                {level.level}
-              </Badge>
-            ))}
+            {game.difficultyLevels.map((level) => {
+              const isDifficultyLocked = !canUseDifficulty(level.level);
+              const requiredTier = getRequiredTierForDifficulty(level.level);
+              
+              return (
+                <Badge 
+                  key={level.level} 
+                  variant="secondary"
+                  className={cn(
+                    "cursor-pointer transition-all",
+                    isDifficultyLocked 
+                      ? "bg-muted/30 text-muted-foreground cursor-not-allowed" 
+                      : "bg-muted/50 hover:bg-muted",
+                    level.level === "Low" && !isDifficultyLocked && "border-green-400", 
+                    level.level === "Medium" && !isDifficultyLocked && "border-amber-400",
+                    level.level === "High" && !isDifficultyLocked && "border-red-400"
+                  )}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isDifficultyLocked && !isGameLocked) {
+                      onPlay(game.id, level.level);
+                    }
+                  }}
+                >
+                  {isDifficultyLocked && <Lock className="h-3 w-3 mr-1" />}
+                  {level.level}
+                </Badge>
+              );
+            })}
           </div>
           
           {game.watchers && (
@@ -115,15 +134,27 @@ export function GameCard({ game, isSelected, onSelect, onPlay }: GameCardProps) 
         
         <CardFooter>
           <Button 
-            variant="default" 
+            variant={isGameLocked ? "outline" : "default"}
             className="w-full flex items-center gap-2 bg-primary/90 hover:bg-primary group-hover:shadow-md transition-all"
             onClick={(e) => {
               e.stopPropagation();
-              onPlay(game.id, "Low");
+              if (!isGameLocked) {
+                onPlay(game.id, "Low");
+              }
             }}
+            disabled={isGameLocked}
           >
-            <Play className="h-4 w-4" />
-            Play Game
+            {isGameLocked ? (
+              <>
+                <Lock className="h-4 w-4" />
+                Upgrade Required
+              </>
+            ) : (
+              <>
+                <Play className="h-4 w-4" />
+                Play Game
+              </>
+            )}
           </Button>
         </CardFooter>
       </Card>

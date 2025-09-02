@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Brain, Target, Grid3X3, Zap, Star } from "lucide-react";
+import { Brain, Target, Grid3X3, Zap, Star, Lock } from "lucide-react";
+import { useBrainGamesAccess } from "@/hooks/useBrainGamesAccess";
+import { UpgradePrompt } from "../UpgradePrompt";
 
 interface GameSelectionGridProps {
   userProgress: any;
@@ -12,6 +14,7 @@ interface GameSelectionGridProps {
 }
 
 export function GameSelectionGrid({ userProgress, onStartGame }: GameSelectionGridProps) {
+  const { canPlayGame, getRequiredTierForGame } = useBrainGamesAccess();
   const gameTypes = [
     {
       type: 'sequence' as const,
@@ -63,14 +66,35 @@ export function GameSelectionGrid({ userProgress, onStartGame }: GameSelectionGr
         {gameTypes.map((game) => {
           const progress = getProgressForGame(game.type);
           const progressPercentage = (progress.completedLevels / game.maxLevels) * 100;
+          const isLocked = !canPlayGame(game.type);
+          const requiredTier = getRequiredTierForGame(game.type);
+
+          if (isLocked && requiredTier) {
+            return (
+              <UpgradePrompt
+                key={game.type}
+                feature="game"
+                gameId={game.type}
+                requiredTier={requiredTier}
+              />
+            );
+          }
 
           return (
             <Card key={game.type} className="hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${game.color} flex items-center justify-center text-white mb-3`}>
+                <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${game.color} flex items-center justify-center text-white mb-3 relative`}>
                   {game.icon}
+                  {isLocked && (
+                    <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+                      <Lock className="h-6 w-6 text-white" />
+                    </div>
+                  )}
                 </div>
-                <CardTitle className="text-lg">{game.title}</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  {game.title}
+                  {isLocked && <Lock className="h-4 w-4 text-muted-foreground" />}
+                </CardTitle>
                 <p className="text-sm text-muted-foreground">
                   {game.description}
                 </p>
@@ -99,15 +123,24 @@ export function GameSelectionGrid({ userProgress, onStartGame }: GameSelectionGr
                   <Button 
                     className="w-full"
                     onClick={() => onStartGame(game.type, progress.currentLevel)}
+                    disabled={isLocked}
                   >
-                    Continue Level {progress.currentLevel}
+                    {isLocked ? (
+                      <>
+                        <Lock className="h-4 w-4 mr-2" />
+                        Upgrade Required
+                      </>
+                    ) : (
+                      `Continue Level ${progress.currentLevel}`
+                    )}
                   </Button>
                   <Button 
                     variant="outline" 
                     className="w-full"
                     onClick={() => onStartGame(game.type, 1)}
+                    disabled={isLocked}
                   >
-                    Start from Level 1
+                    {isLocked ? 'Locked' : 'Start from Level 1'}
                   </Button>
                 </div>
               </CardContent>

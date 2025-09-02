@@ -3,7 +3,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Brain, Target, Zap, Trophy, Clock, BarChart3, Play, Star } from "lucide-react";
+import { Brain, Target, Zap, Trophy, Clock, BarChart3, Play, Star, Lock } from "lucide-react";
+import { useBrainGamesAccess } from "@/hooks/useBrainGamesAccess";
+import { UpgradePrompt } from "./UpgradePrompt";
 
 interface BrainGameProps {
   id: string;
@@ -18,6 +20,13 @@ interface BrainGameProps {
 }
 
 export function ImprovedBrainGames() {
+  const { 
+    canPlayGame, 
+    getDailyGamesRemaining, 
+    getAccessLevel,
+    getRequiredTierForGame 
+  } = useBrainGamesAccess();
+  
   const [userProgress, setUserProgress] = useState({
     memoryMatch: { level: 5, bestScore: 92, completed: 23 },
     attentionFocus: { level: 8, bestScore: 88, completed: 31 },
@@ -27,7 +36,7 @@ export function ImprovedBrainGames() {
 
   const brainGames: BrainGameProps[] = [
     {
-      id: "memory-match",
+      id: "sequence", // Updated to match our game types
       title: "Memory Match",
       description: "Enhance working memory and pattern recognition through strategic card matching",
       difficulty: "Progressive",
@@ -40,10 +49,10 @@ export function ImprovedBrainGames() {
         "Strengthens attention to detail",
         "Builds cognitive flexibility"
       ],
-      onStart: () => handleGameStart("memory-match")
+      onStart: () => handleGameStart("sequence")
     },
     {
-      id: "attention-focus",
+      id: "matching", // Updated to match our game types
       title: "Attention Training",
       description: "Develop sustained attention and selective focus through dynamic visual exercises",
       difficulty: "Adaptive",
@@ -56,10 +65,10 @@ export function ImprovedBrainGames() {
         "Reduces distractibility",
         "Enhances cognitive control"
       ],
-      onStart: () => handleGameStart("attention-focus")
+      onStart: () => handleGameStart("matching")
     },
     {
-      id: "processing-speed",
+      id: "spatial", // Updated to match our game types
       title: "Speed Training",
       description: "Accelerate cognitive processing speed with rapid decision-making challenges",
       difficulty: "Challenging",
@@ -72,7 +81,7 @@ export function ImprovedBrainGames() {
         "Improved reaction time",
         "Enhanced mental agility"
       ],
-      onStart: () => handleGameStart("processing-speed")
+      onStart: () => handleGameStart("spatial")
     },
     {
       id: "working-memory",
@@ -93,6 +102,19 @@ export function ImprovedBrainGames() {
   ];
 
   const handleGameStart = (gameId: string) => {
+    // Check if user can play this game
+    if (!canPlayGame(gameId)) {
+      console.log(`Game ${gameId} requires upgrade`);
+      return;
+    }
+    
+    // Check daily limit
+    const remaining = getDailyGamesRemaining();
+    if (remaining === 0) {
+      console.log('Daily game limit reached');
+      return;
+    }
+    
     // Implement game start logic
     console.log(`Starting game: ${gameId}`);
   };
@@ -118,7 +140,7 @@ export function ImprovedBrainGames() {
       {/* Quick Stats */}
       <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
         <CardContent className="p-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">96</div>
               <div className="text-sm text-muted-foreground">Games Completed</div>
@@ -135,26 +157,64 @@ export function ImprovedBrainGames() {
               <div className="text-3xl font-bold text-orange-600">5.8</div>
               <div className="text-sm text-muted-foreground">Avg Level</div>
             </div>
+            <div className="text-center">
+              <Badge className="capitalize text-sm">{getAccessLevel()}</Badge>
+              <div className="text-sm text-muted-foreground mt-1">Access Level</div>
+              {getDailyGamesRemaining() !== -1 && (
+                <div className="text-xs text-muted-foreground">
+                  {getDailyGamesRemaining()} games left today
+                </div>
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Games Grid */}
+      {getDailyGamesRemaining() === 0 && (
+        <UpgradePrompt 
+          feature="daily_limit" 
+          requiredTier="starter"
+          className="mb-6"
+        />
+      )}
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {brainGames.map((game) => {
           const IconComponent = game.icon;
           const progress = getProgressForGame(game.id);
+          const isLocked = !canPlayGame(game.id);
+          const requiredTier = getRequiredTierForGame(game.id);
+          
+          if (isLocked && requiredTier) {
+            return (
+              <UpgradePrompt
+                key={game.id}
+                feature="game"
+                gameId={game.id}
+                requiredTier={requiredTier}
+              />
+            );
+          }
           
           return (
             <Card key={game.id} className="hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-blue-50/50 to-blue-100/30">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
-                    <div className={`p-3 rounded-lg bg-gradient-to-br ${game.color} text-white`}>
+                    <div className={`p-3 rounded-lg bg-gradient-to-br ${game.color} text-white relative`}>
                       <IconComponent className="h-6 w-6" />
+                      {isLocked && (
+                        <div className="absolute inset-0 bg-black/50 rounded-lg flex items-center justify-center">
+                          <Lock className="h-4 w-4 text-white" />
+                        </div>
+                      )}
                     </div>
                     <div>
-                      <CardTitle className="text-xl">{game.title}</CardTitle>
+                      <CardTitle className="text-xl flex items-center gap-2">
+                        {game.title}
+                        {isLocked && <Lock className="h-4 w-4 text-muted-foreground" />}
+                      </CardTitle>
                       <div className="flex items-center space-x-4 text-sm text-muted-foreground mt-1">
                         <span className="flex items-center">
                           <BarChart3 className="h-4 w-4 mr-1" />
@@ -167,7 +227,7 @@ export function ImprovedBrainGames() {
                       </div>
                     </div>
                   </div>
-                  <Badge variant="secondary" className="flex items-center gap-1">
+                  <Badge variant="secondary" className={`flex items-center gap-1 ${isLocked ? 'opacity-50' : ''}`}>
                     <Star className="h-3 w-3" />
                     Level {progress.level}
                   </Badge>
@@ -178,7 +238,7 @@ export function ImprovedBrainGames() {
                 <p className="text-muted-foreground">{game.description}</p>
                 
                 {/* Progress Stats */}
-                <div className="grid grid-cols-2 gap-4 p-3 bg-muted/50 rounded-lg">
+                <div className={`grid grid-cols-2 gap-4 p-3 bg-muted/50 rounded-lg ${isLocked ? 'opacity-50' : ''}`}>
                   <div>
                     <div className="text-sm font-medium">Best Score</div>
                     <div className="text-lg font-bold text-primary">{progress.bestScore}%</div>
@@ -190,7 +250,7 @@ export function ImprovedBrainGames() {
                 </div>
 
                 {/* Level Progress */}
-                <div className="space-y-2">
+                <div className={`space-y-2 ${isLocked ? 'opacity-50' : ''}`}>
                   <div className="flex justify-between text-sm">
                     <span>Level Progress</span>
                     <span>{Math.round((progress.level % 1) * 100)}%</span>
@@ -216,11 +276,21 @@ export function ImprovedBrainGames() {
                   <Button 
                     onClick={game.onStart} 
                     className="flex-1"
+                    disabled={isLocked}
                   >
-                    <Play className="h-4 w-4 mr-2" />
-                    Start Training
+                    {isLocked ? (
+                      <>
+                        <Lock className="h-4 w-4 mr-2" />
+                        Upgrade Required
+                      </>
+                    ) : (
+                      <>
+                        <Play className="h-4 w-4 mr-2" />
+                        Start Training
+                      </>
+                    )}
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" disabled={isLocked}>
                     <BarChart3 className="h-4 w-4" />
                   </Button>
                 </div>

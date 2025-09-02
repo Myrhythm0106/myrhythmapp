@@ -30,6 +30,13 @@ export interface SubscriptionFeatures {
   cognitiveProgressReports: boolean; // SMART Pro feature
   familyProgressDashboard: boolean; // Family feature
   
+  // Brain Games Features
+  brainGamesAccess: 'none' | 'basic' | 'intermediate' | 'full'; // Free: basic, Starter: intermediate, SMART Pro+: full
+  maxDailyGames: number; // Free: 3/day, Starter: 10/day, SMART Pro+: unlimited
+  gameDifficultyLevels: ('Low' | 'Medium' | 'High')[]; // Free: Low only, Starter: Low+Medium, SMART Pro+: All
+  advancedGameAnalytics: boolean; // SMART Pro+ feature
+  personalizedTraining: boolean; // SMART Pro+ feature
+  
   // Family Features
   multipleAccounts: boolean; // Family feature
   sharedFamilyCalendar: boolean; // Family feature
@@ -90,6 +97,13 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
     cognitiveProgressReports: false,
     familyProgressDashboard: false,
     
+    // Brain Games Features
+    brainGamesAccess: 'none',
+    maxDailyGames: 0,
+    gameDifficultyLevels: [],
+    advancedGameAnalytics: false,
+    personalizedTraining: false,
+    
     // Family Features
     multipleAccounts: false,
     sharedFamilyCalendar: false,
@@ -109,6 +123,11 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         basicCalendar: true,
         basicProgressTracking: true,
         basicSupportNotifications: true,
+        brainGamesAccess: 'basic',
+        maxDailyGames: 3,
+        gameDifficultyLevels: ['Low'],
+        advancedGameAnalytics: false,
+        personalizedTraining: false,
       };
       
     case 'starter':
@@ -124,6 +143,11 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         basicProgressTracking: true,
         basicSupportNotifications: true,
         cognitiveInsights: true,
+        brainGamesAccess: 'intermediate',
+        maxDailyGames: 10,
+        gameDifficultyLevels: ['Low', 'Medium'],
+        advancedGameAnalytics: false,
+        personalizedTraining: false,
       };
       
     case 'smart_pro':
@@ -147,6 +171,11 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         advancedAnalytics: true,
         cognitiveProgressReports: true,
         prioritySupport: true,
+        brainGamesAccess: 'full',
+        maxDailyGames: -1, // Unlimited
+        gameDifficultyLevels: ['Low', 'Medium', 'High'],
+        advancedGameAnalytics: true,
+        personalizedTraining: true,
       };
       
     case 'family_smart':
@@ -175,6 +204,11 @@ const getFeaturesByTier = (tier: SubscriptionTier): SubscriptionFeatures => {
         careCoordination: true,
         familyInsights: true,
         prioritySupport: true,
+        brainGamesAccess: 'full',
+        maxDailyGames: -1, // Unlimited
+        gameDifficultyLevels: ['Low', 'Medium', 'High'],
+        advancedGameAnalytics: true,
+        personalizedTraining: true,
       };
       
     default:
@@ -208,8 +242,14 @@ export function SubscriptionProvider({
   };
   
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
-    if (feature === 'maxSupportCircleMembers' || feature === 'memoryBridgeRecordings') {
+    if (feature === 'maxSupportCircleMembers' || feature === 'memoryBridgeRecordings' || feature === 'maxDailyGames') {
       return features[feature] > 0 || features[feature] === -1; // -1 means unlimited
+    }
+    if (feature === 'brainGamesAccess') {
+      return features[feature] !== 'none';
+    }
+    if (feature === 'gameDifficultyLevels') {
+      return features[feature].length > 0;
     }
     return Boolean(features[feature]);
   };
