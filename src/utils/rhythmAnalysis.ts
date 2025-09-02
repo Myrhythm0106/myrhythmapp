@@ -402,7 +402,8 @@ export function generateSampleAssessmentResult(userType: UserType = 'cognitive-o
     'caregiver': 'community',
     'wellness': 'emotional',
     'medical-professional': 'growth',
-    'colleague': 'structure'
+    'colleague': 'structure',
+    'other': 'growth'
   };
 
   const primaryRhythms = [

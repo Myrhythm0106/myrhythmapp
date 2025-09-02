@@ -606,7 +606,9 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       icon: Heart,
       gradient: "from-green-500 to-teal-500"
     }
-  ]
+  ],
+  
+  "other": baseSections
 };
 
 export const getCurrentSections = (): Section[] => baseSections;

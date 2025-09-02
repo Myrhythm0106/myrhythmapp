@@ -1097,6 +1097,7 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
+          custom_user_type: string | null
           email: string
           id: string
           mfa_enabled: boolean | null
@@ -1105,9 +1106,11 @@ export type Database = {
           phone_verified: boolean | null
           require_mfa_for_sensitive_actions: boolean | null
           updated_at: string
+          user_type: string | null
         }
         Insert: {
           created_at?: string
+          custom_user_type?: string | null
           email: string
           id: string
           mfa_enabled?: boolean | null
@@ -1116,9 +1119,11 @@ export type Database = {
           phone_verified?: boolean | null
           require_mfa_for_sensitive_actions?: boolean | null
           updated_at?: string
+          user_type?: string | null
         }
         Update: {
           created_at?: string
+          custom_user_type?: string | null
           email?: string
           id?: string
           mfa_enabled?: boolean | null
@@ -1127,6 +1132,7 @@ export type Database = {
           phone_verified?: boolean | null
           require_mfa_for_sensitive_actions?: boolean | null
           updated_at?: string
+          user_type?: string | null
         }
         Relationships: []
       }
