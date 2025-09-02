@@ -472,10 +472,10 @@ export function ExtractedActionsReview({
               const result = results[0];
               handleScheduleWithWatchers(
                 actionForWatchers, 
-                result.watcherIds || [], 
-                result.watcherNames || [],
-                result.selectedDate,
-                result.selectedTime
+                result.assigned_watchers || [], 
+                result.assigned_watchers?.map(id => `Watcher ${id}`) || [],
+                result.scheduled_date || '',
+                result.scheduled_time || ''
               );
             }
           }}

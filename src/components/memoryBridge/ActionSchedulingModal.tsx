@@ -17,6 +17,8 @@ interface ExtractedAction {
   proposed_date?: string;
   proposed_time?: string;
   assigned_watchers?: string[];
+  scheduled_date?: string;
+  scheduled_time?: string;
 }
 
 interface ActionSchedulingModalProps {
