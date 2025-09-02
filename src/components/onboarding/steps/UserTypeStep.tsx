@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Heart, Users, Sparkles, Stethoscope } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Brain, Heart, Users, Sparkles, Stethoscope, Plus } from "lucide-react";
 import { UserType } from "@/types/user";
 
 interface UserTypeStepProps {
-  onComplete: (data: { type: UserType }) => void;
+  onComplete: (data: { type: UserType; customType?: string }) => void;
   initialValue?: UserType | null;
 }
 
@@ -50,11 +51,19 @@ const userTypes = [
     description: "Empower your workplace with Memory Bridge for team meetings and cognitive wellness tools that help colleagues thrive",
     icon: Users,
     color: "bg-indigo-500",
+  },
+  {
+    id: "other" as const,
+    title: "Other",
+    description: "Tell us about your unique situation and we'll personalize MyRhythm for your specific needs",
+    icon: Plus,
+    color: "bg-gray-500",
   }
 ];
 
 export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || null);
+  const [customTypeText, setCustomTypeText] = useState<string>('');
 
   console.log("UserTypeStep: Rendering with selectedType:", selectedType, "initialValue:", initialValue);
 
@@ -68,8 +77,17 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
   const handleSelection = (type: UserType) => {
     console.log("UserTypeStep: User selected type:", type);
     setSelectedType(type);
-    // Call onComplete immediately when user selects a type
-    onComplete({ type });
+    
+    // For non-other types, call onComplete immediately
+    if (type !== 'other') {
+      onComplete({ type });
+    }
+  };
+
+  const handleOtherComplete = () => {
+    if (selectedType === 'other' && customTypeText.trim()) {
+      onComplete({ type: 'other', customType: customTypeText.trim() });
+    }
   };
 
   return (
@@ -128,7 +146,25 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
                 </div>
               </CardHeader>
               
-              {isSelected && (
+              {isSelected && type.id === 'other' && (
+                <CardContent className="pt-0 pb-3 space-y-3">
+                  <Input
+                    placeholder="Please describe your situation..."
+                    value={customTypeText}
+                    onChange={(e) => setCustomTypeText(e.target.value)}
+                    className="w-full"
+                    autoFocus
+                  />
+                  {customTypeText.trim() && (
+                    <div className="flex items-center gap-2 text-primary">
+                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      <span className="text-sm font-medium">Ready to continue</span>
+                    </div>
+                  )}
+                </CardContent>
+              )}
+              
+              {isSelected && type.id !== 'other' && (
                 <CardContent className="pt-0 pb-3">
                   <div className="flex items-center gap-2 text-primary">
                     <div className="w-2 h-2 bg-primary rounded-full"></div>
@@ -145,11 +181,26 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
       {selectedType && (
         <div className="text-center p-4 bg-primary/10 rounded-lg border border-primary/20 max-w-2xl mx-auto">
           <p className="text-primary font-medium">
-            ✓ {userTypes.find(t => t.id === selectedType)?.title} Selected
+            ✓ {selectedType === 'other' ? customTypeText || 'Other' : userTypes.find(t => t.id === selectedType)?.title} Selected
           </p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Click "Continue" below to proceed to the next step
-          </p>
+          {selectedType === 'other' && !customTypeText.trim() ? (
+            <p className="text-sm text-muted-foreground mt-1">
+              Please describe your situation above to continue
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground mt-1">
+              Click "Continue" below to proceed to the next step
+            </p>
+          )}
+          
+          {selectedType === 'other' && customTypeText.trim() && (
+            <button
+              onClick={handleOtherComplete}
+              className="mt-2 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors text-sm font-medium"
+            >
+              Continue with "{customTypeText}"
+            </button>
+          )}
         </div>
       )}
     </div>
