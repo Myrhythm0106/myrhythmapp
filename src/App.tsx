@@ -48,6 +48,7 @@ import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
 import TestMemoryBridge from "./routes/TestMemoryBridge";
 import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDashboard";
+import { YourJourneyAwaitsPage } from "./pages/YourJourneyAwaitsPage";
 import Help from "./pages/Help";
 import HelpGettingStarted from "./pages/HelpGettingStarted";
 import Welcome from "./pages/Welcome";
@@ -157,7 +158,8 @@ function App() {
                      <Route path="/mvp" element={<MVPCore4CPage />} />
                      <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
                      <Route path="/brain-friendly-dashboard" element={<ProtectedRoute requireAuth={false}><BrainFriendlyDashboard /></ProtectedRoute>} />
-                     <Route path="/congrats" element={<CongratsPage />} />
+                      <Route path="/your-journey-awaits" element={<ProtectedRoute requireAuth={false}><YourJourneyAwaitsPage /></ProtectedRoute>} />
+                      <Route path="/congrats" element={<CongratsPage />} />
                   </Routes>
                 </BrowserRouter>
               </TooltipProvider>

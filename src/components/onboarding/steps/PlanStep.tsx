@@ -1,7 +1,11 @@
 
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { CheckCircle, Heart, Shield, Sparkles } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { PlanHeader } from "./plan/PlanHeader";
 import { EnhancedPlanCard } from "./plan/EnhancedPlanCard";
 import { plans } from "./plan/plansData";
@@ -36,13 +40,16 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     setShowPaymentForm(true);
   };
 
+  const handleSmartPricingTryBefore = () => {
+    toast.success("Welcome to your 7-day free trial! Explore all MyRhythm features.");
+    onComplete('basic', 'monthly');
+  };
+
   const handleSmartPricingSubscribe = () => {
-    // Default to premium plan when subscribing from smart pricing
     handlePlanSelect('premium');
   };
 
   const handleSmartPricingClose = () => {
-    // Show try before you buy option
     setShowSmartPricing(false);
   };
 
@@ -119,58 +126,62 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
   return (
     <div className="space-y-8 max-w-6xl mx-auto px-4">
       <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
-          Try Before You Subscribe
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Experience MyRhythm first, then choose your plan based on your results.
+        <h2 className="text-2xl md:text-3xl font-bold text-brain-health-900">
+          🌟 Try Before You Subscribe
+        </h2>
+        <p className="text-brain-health-700 max-w-2xl mx-auto">
+          Experience MyRhythm with a <strong>7-day free trial</strong> - no payment required to start.
         </p>
       </div>
 
-      {/* Billing Toggle - Centered and Prominent */}
-      <div className="flex items-center justify-center">
-        <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 shadow-sm">
-          <span className={cn(
-            "text-sm font-medium transition-colors",
-            !isAnnual ? "text-gray-900" : "text-gray-500"
-          )}>
-            Monthly
-          </span>
-          <Switch
-            checked={isAnnual}
-            onCheckedChange={handleBillingChange}
-            className="data-[state=checked]:bg-green-600"
-          />
-          <span className={cn(
-            "text-sm font-medium transition-colors",
-            isAnnual ? "text-gray-900" : "text-gray-500"
-          )}>
-            Annual
-          </span>
-          {isAnnual && (
-            <Badge className="bg-green-600 text-white font-medium px-2 py-1 text-xs ml-2">
-              Save up to £47.98/year
-            </Badge>
-          )}
-        </div>
-      </div>
+      <div className="max-w-4xl mx-auto">
+        <Card className="bg-gradient-to-r from-brain-health-50 to-memory-emerald-50 border-2 border-brain-health-200 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+              onClick={handleSmartPricingTryBefore}>
+          <CardContent className="p-8 space-y-6">
+            <div className="text-center">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 rounded-full flex items-center justify-center">
+                <Sparkles className="h-10 w-10 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-brain-health-900 mb-2">
+                Experience MyRhythm Risk-Free
+              </h3>
+              <p className="text-brain-health-700">
+                Start with a 7-day free trial and see how MyRhythm can transform your daily rhythm.
+              </p>
+            </div>
 
-      {/* Experience First Option */}
-      <div className="mb-8 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200">
-        <div className="text-center space-y-4">
-          <h3 className="text-xl font-semibold text-blue-900">
-            🌟 Try Before You Subscribe
-          </h3>
-          <p className="text-blue-700 max-w-2xl mx-auto">
-            <strong>Assessment First, Payment Later:</strong> Complete your personalized MYRHYTHM assessment and see preview results before choosing a subscription plan.
-          </p>
-          <button 
-            onClick={() => handlePlanSelect('preview')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-          >
-            Experience First - Free Assessment
-          </button>
-        </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="space-y-2">
+                <CheckCircle className="h-8 w-8 mx-auto text-memory-emerald-500" />
+                <p className="font-semibold text-brain-health-800">Full Access</p>
+                <p className="text-sm text-brain-health-600">All premium features included</p>
+              </div>
+              <div className="space-y-2">
+                <Heart className="h-8 w-8 mx-auto text-clarity-teal-500" />
+                <p className="font-semibold text-brain-health-800">No Commitment</p>
+                <p className="text-sm text-brain-health-600">Cancel anytime during trial</p>
+              </div>
+              <div className="space-y-2">
+                <Shield className="h-8 w-8 mx-auto text-sunrise-amber-500" />
+                <p className="font-semibold text-brain-health-800">No Card Required</p>
+                <p className="text-sm text-brain-health-600">Start immediately, pay later</p>
+              </div>
+            </div>
+
+            <div className="text-center">
+              <Button 
+                size="lg"
+                className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:opacity-90 text-white px-8 py-6 text-lg font-semibold w-full"
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Start 7-Day Free Trial
+              </Button>
+              <p className="text-sm text-brain-health-600 mt-2">
+                ✨ No payment required • Full access • Cancel anytime
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Plans Grid - Equal Height Cards with Perfect Alignment */}

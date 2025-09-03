@@ -77,10 +77,11 @@ export function Step3PostPaymentPreview({
       <div className="space-y-6">
         <div className="text-center">
           <h3 className="text-2xl font-bold text-brain-health-900 mb-2">
-            Choose Your Journey Style
+            How Would You Like to Begin?
           </h3>
-          <p className="text-brain-health-700">
-            How would you like to experience MyRhythm?
+          <p className="text-brain-health-700 max-w-3xl mx-auto">
+            Choose your preferred learning style. Both paths give you access to all MyRhythm features - 
+            the difference is in how much guidance you receive along the way.
           </p>
         </div>
 
@@ -100,9 +101,14 @@ export function Step3PostPaymentPreview({
             </CardHeader>
             
             <CardContent className="space-y-4">
-              <p className="text-center text-brain-health-700 text-sm">
-                Let our AI coach guide you step-by-step. Perfect for those who want structured support and gentle guidance.
-              </p>
+              <div className="bg-memory-emerald-50 p-3 rounded-lg border border-memory-emerald-200">
+                <p className="text-center text-memory-emerald-800 font-semibold text-sm mb-1">
+                  🎯 Perfect if you want coaching & support
+                </p>
+                <p className="text-center text-brain-health-700 text-sm">
+                  Our AI coach guides you step-by-step, suggesting which features to use when and helping you build sustainable habits.
+                </p>
+              </div>
               
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-sm text-brain-health-600">
@@ -149,9 +155,14 @@ export function Step3PostPaymentPreview({
             </CardHeader>
             
             <CardContent className="space-y-4">
-              <p className="text-center text-brain-health-700 text-sm">
-                Explore all features at your own pace. Perfect for those who prefer independence and self-discovery.
-              </p>
+              <div className="bg-brain-health-50 p-3 rounded-lg border border-brain-health-200">
+                <p className="text-center text-brain-health-800 font-semibold text-sm mb-1">
+                  🎯 Perfect if you want independence & full control
+                </p>
+                <p className="text-center text-brain-health-700 text-sm">
+                  Jump straight into your full dashboard with all features available. Learn and explore at your own pace.
+                </p>
+              </div>
               
               <div className="space-y-2">
                 <div className="flex items-center space-x-2 text-sm text-brain-health-600">
