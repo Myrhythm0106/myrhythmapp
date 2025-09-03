@@ -1,14 +1,20 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Sparkles, ArrowRight, Brain, Calendar, Users, TrendingUp, BookOpen, Target, MessageCircle, HelpCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Preview3Background } from "@/components/ui/Preview3Background";
 import { SurfaceCard } from "@/components/ui/SurfaceCard";
+import { WelcomeCelebration } from "@/components/onboarding/WelcomeCelebration";
 
 function SubscribeSuccess() {
   const navigate = useNavigate();
+  const [showWelcome, setShowWelcome] = useState(true);
+
+  const handleWelcomeClose = () => {
+    setShowWelcome(false);
+  };
 
   const handleGuidedExperience = () => {
     localStorage.setItem('journey_mode', 'guided');
@@ -41,7 +47,9 @@ function SubscribeSuccess() {
   };
 
   return (
-    <Preview3Background className="flex items-center justify-center p-4">
+    <>
+      <WelcomeCelebration showOnMount={showWelcome} onClose={handleWelcomeClose} />
+      <Preview3Background className="flex items-center justify-center p-4">
       <SurfaceCard variant="glass" className="w-full max-w-4xl shadow-2xl border-0 animate-in fade-in-50 slide-in-from-bottom-10 duration-700">
         <CardHeader className="text-center space-y-6 pb-8">
           <div className="mx-auto w-24 h-24 bg-gradient-to-br from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500 rounded-full flex items-center justify-center shadow-xl shadow-brain-health-500/20 animate-pulse">
@@ -212,6 +220,7 @@ function SubscribeSuccess() {
         </CardContent>
       </SurfaceCard>
     </Preview3Background>
+    </>
   );
 }
 

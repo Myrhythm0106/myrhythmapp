@@ -50,6 +50,7 @@ import TestMemoryBridge from "./routes/TestMemoryBridge";
 import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDashboard";
 import Help from "./pages/Help";
 import HelpGettingStarted from "./pages/HelpGettingStarted";
+import Welcome from "./pages/Welcome";
 
 const queryClient = new QueryClient();
 
@@ -69,10 +70,13 @@ function App() {
                     <Route path="/landing" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
-                    {/* Subscription Routes */}
-                    <Route path="/subscribe" element={<ProtectedRoute requireAuth={false}><SubscribePage /></ProtectedRoute>} />
-                    <Route path="/subscribe/success" element={<ProtectedRoute requireAuth={false}><SubscribeSuccess /></ProtectedRoute>} />
-                    <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
+                     {/* Subscription Routes */}
+                     <Route path="/subscribe" element={<ProtectedRoute requireAuth={false}><SubscribePage /></ProtectedRoute>} />
+                     <Route path="/subscribe/success" element={<ProtectedRoute requireAuth={false}><SubscribeSuccess /></ProtectedRoute>} />
+                     <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
+                     
+                     {/* Welcome and Introduction Routes */}
+                     <Route path="/welcome" element={<ProtectedRoute requireAuth={false}><Welcome /></ProtectedRoute>} />
                     
                     {/* Dashboard-First Experience - Default Route */}
                     <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
