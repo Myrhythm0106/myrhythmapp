@@ -13,7 +13,6 @@ import { PlanType, PlanStepProps } from "./plan/types";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { PaymentDetailsForm } from "@/components/payment/PaymentDetailsForm";
-import { LifeEmpowermentGuide } from "../LifeEmpowermentGuide";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { SmartPricingDisplay } from "../steps/rhythm/SmartPricingDisplay";
 
@@ -41,8 +40,15 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
   };
 
   const handleSmartPricingTryBefore = () => {
-    toast.success("Welcome to your 7-day free trial! Explore all MyRhythm features.");
-    onComplete('basic', 'monthly');
+    // Set trial flags
+    localStorage.setItem('trial_started', 'true');
+    localStorage.setItem('selected_plan', 'basic');
+    localStorage.setItem('selected_billing', 'monthly');
+    
+    toast.success("Welcome to your 7-day free trial! Starting your assessment...");
+    
+    // Navigate directly to assessment with trial flag
+    window.location.href = '/mvp/assessment-flow?trial=1&flow=post-trial';
   };
 
   const handleSmartPricingSubscribe = () => {
@@ -67,30 +73,20 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
       updateSubscription(subscriptionTier);
     }
     
-    // Payment completed successfully - now show the Life Empowerment Guide
-    setShowLifeGuide(true);
-  };
-
-  const [showLifeGuide, setShowLifeGuide] = useState(false);
-
-  const handleLifeGuideComplete = () => {
-    setShowLifeGuide(false);
-    onComplete(selected!, isAnnual ? 'annual' : 'monthly');
+    // Set localStorage flags for progress tracking
+    localStorage.setItem('payment_success', 'true');
+    localStorage.setItem('selected_plan', selected || '');
+    localStorage.setItem('selected_billing', isAnnual ? 'annual' : 'monthly');
+    localStorage.setItem('onboarding_started', 'true');
+    
+    // Navigate to Your Journey Awaits page instead of showing guide inline
+    window.location.href = '/your-journey-awaits';
   };
 
   const handlePaymentCancel = () => {
     setShowPaymentForm(false);
     setSelected(null);
   };
-
-  // Show Life Empowerment Guide after payment
-  if (showLifeGuide) {
-    return (
-      <div className="space-y-6 max-w-4xl mx-auto px-4">
-        <LifeEmpowermentGuide onComplete={handleLifeGuideComplete} />
-      </div>
-    );
-  }
 
   // Show payment form if a plan is selected
   if (showPaymentForm && selected) {

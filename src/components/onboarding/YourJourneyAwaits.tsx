@@ -18,16 +18,17 @@ import {
 } from 'lucide-react';
 
 interface YourJourneyAwaitsProps {
-  selectedPackage: string;
   onBeginJourney: () => void;
   onExploreDashboard: () => void;
 }
 
 export function YourJourneyAwaits({ 
-  selectedPackage, 
   onBeginJourney, 
   onExploreDashboard 
 }: YourJourneyAwaitsProps) {
+  
+  // Get selected package from localStorage
+  const selectedPackage = localStorage.getItem('selected_plan') || 'starter';
   
   const packageColors = {
     starter: 'from-memory-emerald-500 to-brain-health-500',

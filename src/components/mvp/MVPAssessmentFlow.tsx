@@ -177,6 +177,17 @@ export function MVPAssessmentFlow() {
         response: value
       }
     });
+
+    // Show micro-insights after certain questions
+    setTimeout(() => {
+      if (currentQ.id === 'attention_1') {
+        toast.info("💡 Quick tip: Try 25-minute focus blocks to reduce distraction by 30-40%", { duration: 4000 });
+      } else if (currentQ.id === 'rhythm_1') {
+        toast.info("⚡ Insight: Align high-cognitive tasks with your peak energy windows for easier wins", { duration: 4000 });
+      } else if (currentQ.id === 'memory_1') {
+        toast.info("🧠 Memory aid: Write key points during conversations to improve retention by 60%", { duration: 4000 });
+      }
+    }, 800);
   };
 
   const handleNext = () => {

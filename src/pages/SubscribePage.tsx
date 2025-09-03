@@ -131,8 +131,14 @@ const SubscribePage = () => {
           <p className="text-slate-600 text-lg mb-4 max-w-2xl mx-auto">
             Transform promises into scheduled reality with AI-powered commitment fulfillment
           </p>
-          <p className="text-sm text-teal-600 font-medium mb-6">
-            Try before you subscribe - 7-day free trial on all plans
+          <p 
+            className="text-sm text-teal-600 font-medium mb-6 cursor-pointer hover:text-teal-700 hover:underline transition-colors"
+            onClick={() => {
+              localStorage.setItem('trial_started', 'true');
+              navigate('/mvp/assessment-flow?trial=1&flow=subscribe-page');
+            }}
+          >
+            Try before you subscribe - 7-day free trial on all plans ✨
           </p>
           
           {/* Founding Member Banner */}

@@ -1,11 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { YourJourneyAwaits } from '@/components/onboarding/YourJourneyAwaits';
 import { OnboardingProgress } from '@/components/onboarding/OnboardingProgress';
+import { useSetupProgress } from '@/contexts/SetupProgressContext';
+import { useAnalytics } from '@/hooks/useAnalytics';
 import { toast } from 'sonner';
 
 export function YourJourneyAwaitsPage() {
   const navigate = useNavigate();
+  const { setCompleted, setCurrentStep } = useSetupProgress();
+  const { trackEvent } = useAnalytics();
+
+  useEffect(() => {
+    // Mark payment and welcome steps as completed
+    setCompleted('payment');
+    setCompleted('plan');
+    setCurrentStep('welcome');
+    
+    // Track journey awaits page view
+    trackEvent({
+      eventType: 'journey_awaits_viewed',
+      eventData: {
+        timestamp: new Date().toISOString(),
+        paymentComplete: localStorage.getItem('payment_success') === 'true'
+      }
+    });
+  }, [setCompleted, setCurrentStep, trackEvent]);
   
   // Mock data - in real app this would come from context/props
   const selectedPackage = 'plus'; // This would come from payment context
@@ -19,14 +39,34 @@ export function YourJourneyAwaitsPage() {
   ];
 
   const handleBeginJourney = () => {
-    toast.success("Starting your guided journey! Let's begin with your assessment.");
-    // Navigate to guided assessment
-    navigate('/onboarding/assessment?type=guided');
+    // Track guided journey selection
+    trackEvent({
+      eventType: 'journey_mode_selected',
+      eventData: { mode: 'guided' }
+    });
+    
+    toast.success("Starting your personalized assessment - we'll guide you through every step!");
+    
+    // Set next progress step and navigate
+    setCurrentStep('assessment');
+    navigate('/mvp/assessment-flow?type=guided&flow=post-payment');
   };
 
   const handleExploreDashboard = () => {
-    toast.success("Welcome to your full MyRhythm dashboard!");
-    // Navigate to full dashboard
+    // Track explorer mode selection
+    trackEvent({
+      eventType: 'journey_mode_selected', 
+      eventData: { mode: 'explorer' }
+    });
+    
+    toast.success("Welcome to your MyRhythm dashboard!");
+    
+    // Mark onboarding as complete for explorer path
+    setCompleted('assessment');
+    setCompleted('setup');
+    setCompleted('ready');
+    localStorage.setItem('myrhythm_onboarding_complete', 'true');
+    
     navigate('/dashboard');
   };
 
@@ -48,7 +88,6 @@ export function YourJourneyAwaitsPage() {
           {/* Main Content */}
           <div className="lg:col-span-3">
             <YourJourneyAwaits 
-              selectedPackage={selectedPackage}
               onBeginJourney={handleBeginJourney}
               onExploreDashboard={handleExploreDashboard}
             />

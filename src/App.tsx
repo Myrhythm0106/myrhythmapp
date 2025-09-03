@@ -8,6 +8,8 @@ import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { SetupProgressProvider } from "@/contexts/SetupProgressContext";
+import { SetupProgressBar } from "@/components/progress/SetupProgressBar";
 import Landing from "./pages/Landing";
 import MemoryBridge from "./routes/MemoryBridge";
 import Dashboard from "./pages/Dashboard";
@@ -63,9 +65,11 @@ function App() {
         <SubscriptionProvider>
           <PomodoroProvider>
             <DailyActionsProvider>
-              <TooltipProvider>
-                <Toaster />
-                <BrowserRouter>
+              <SetupProgressProvider>
+                <TooltipProvider>
+                  <Toaster />
+                  <BrowserRouter>
+                    <SetupProgressBar />
                   <Routes>
                     {/* Landing and Discovery Routes */}
                     <Route path="/landing" element={<Landing />} />
@@ -163,10 +167,11 @@ function App() {
                   </Routes>
                 </BrowserRouter>
               </TooltipProvider>
-            </DailyActionsProvider>
-          </PomodoroProvider>
-        </SubscriptionProvider>
-      </AuthProvider>
+            </SetupProgressProvider>
+          </DailyActionsProvider>
+        </PomodoroProvider>
+      </SubscriptionProvider>
+    </AuthProvider>
   </QueryClientProvider>
   );
 }
