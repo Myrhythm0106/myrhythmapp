@@ -20,15 +20,15 @@ export function Memory8StepFrameworkSection() {
     },
     {
       letter: "Y",
-      word: "Reflect",
-      phase: "Acknowledge Your Reality",
+      word: "YES to Growth",
+      phase: "Yes to Your Reality",
       description: "Honor where you are in your recovery journey without judgment—this is your starting point for transformation.",
       memoryFocus: "Accept your current abilities while planning growth",
       icon: "🌟"
     },
     {
       letter: "R",
-      word: "Restore",
+      word: "RHYTHM",
       phase: "Rhythm-Based Energy",
       description: "Map your cognitive peaks and rest periods to work with your brain's natural energy patterns.",
       memoryFocus: "Work with your brain's natural energy patterns",
@@ -36,15 +36,15 @@ export function Memory8StepFrameworkSection() {
     },
     {
       letter: "H",
-      word: "Harness",
-      phase: "Hope Through Community",
+      word: "HARNESS Support",
+      phase: "Harness Community",
       description: "Build your circle of care and maintain independence—support systems that empower, not enable.",
       memoryFocus: "Support systems that empower, not enable",
       icon: "💪"
     },
     {
       letter: "Y",
-      word: "Celebrate",
+      word: "YOUR Victories",
       phase: "Your Victories Matter",
       description: "Celebrate every step forward, no matter how small—progress tracking that builds unstoppable confidence.",
       memoryFocus: "Progress tracking that builds confidence",
@@ -52,7 +52,7 @@ export function Memory8StepFrameworkSection() {
     },
     {
       letter: "T",
-      word: "Take",
+      word: "TRANSFORM",
       phase: "Transform Daily Experience",
       description: "Reclaim agency in your life through reliable memory anchors and external systems you can trust.",
       memoryFocus: "External memory systems you can trust",
@@ -60,7 +60,7 @@ export function Memory8StepFrameworkSection() {
     },
     {
       letter: "H",
-      word: "Heal",
+      word: "HEAL",
       phase: "Hope & Growth Forward",
       description: "Gentle brain exercises that build resilience and recovery-focused cognitive enhancement.",
       memoryFocus: "Recovery-focused cognitive enhancement",
@@ -68,7 +68,7 @@ export function Memory8StepFrameworkSection() {
     },
     {
       letter: "M",
-      word: "Multiply",
+      word: "MULTIPLY",
       phase: "Mission to Inspire",
       description: "Transform your experience into hope for others—become an advocate and share your inspiring journey.",
       memoryFocus: "Transform your experience into hope for others",

@@ -26,15 +26,15 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
     },
     { 
       letter: 'Y', 
-      word: 'Reflect', 
-      phase: 'Acknowledge Your Current Reality',
+      word: 'YES to Growth', 
+      phase: 'Yes to Your Current Reality',
       description: 'Honor where you are in your recovery journey without judgment—this is your starting point for transformation.',
       memoryFocus: 'Honor where you are without judgment',
       icon: '🌟'
     },
     { 
       letter: 'R', 
-      word: 'Restore', 
+      word: 'RHYTHM', 
       phase: 'Rhythm-Based Energy Management',
       description: 'Map your cognitive peaks and rest periods to work with your brain\'s natural energy patterns.',
       memoryFocus: 'Work with your brain\'s natural patterns',
@@ -42,15 +42,15 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
     },
     { 
       letter: 'H', 
-      word: 'Harness', 
-      phase: 'Hope Through Community Support',
+      word: 'HARNESS Support', 
+      phase: 'Harness Community Support',
       description: 'Build your circle of care and maintain independence—support systems that empower, not enable.',
       memoryFocus: 'Build your empowering support network',
       icon: '💪'
     },
     { 
       letter: 'Y', 
-      word: 'Celebrate', 
+      word: 'YOUR Victories', 
       phase: 'Your Small Victories Matter',
       description: 'Celebrate every step forward, no matter how small—progress tracking that builds unstoppable confidence.',
       memoryFocus: 'Celebrate every step of progress',
@@ -58,7 +58,7 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
     },
     { 
       letter: 'T', 
-      word: 'Take', 
+      word: 'TRANSFORM', 
       phase: 'Transform Your Daily Experience',
       description: 'Reclaim agency in your life through reliable memory anchors and external systems you can trust.',
       memoryFocus: 'Reclaim agency with memory anchors',
@@ -66,7 +66,7 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
     },
     { 
       letter: 'H', 
-      word: 'Heal', 
+      word: 'HEAL', 
       phase: 'Hope, Growth & Cognitive Strengthening',
       description: 'Gentle brain exercises that build resilience and recovery-focused cognitive enhancement.',
       memoryFocus: 'Gentle exercises that build resilience',
@@ -74,7 +74,7 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
     },
     { 
       letter: 'M', 
-      word: 'Multiply', 
+      word: 'MULTIPLY', 
       phase: 'Mission to Share & Inspire',
       description: 'Transform your experience into hope for others—become an advocate and share your inspiring journey.',
       memoryFocus: 'Become an advocate for your journey',
