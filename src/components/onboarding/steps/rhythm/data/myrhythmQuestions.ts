@@ -67,7 +67,7 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
   {
     id: 'overwhelm_handling',
     letter: 'Y',
-    letterName: 'YIELD & ACKNOWLEDGE',
+    letterName: 'REFLECT & ACCEPT',
     question: "How do you currently handle overwhelming moments?",
     type: 'primary_secondary',
     allowSecondaryAnswers: true,
@@ -177,7 +177,7 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
   {
     id: 'progress_celebration',
     letter: 'Y',
-    letterName: 'YIELD PROGRESS',
+    letterName: 'CELEBRATE PROGRESS',
     question: "How do you prefer to celebrate small wins?",
     type: 'multiple_choice',
     options: [
@@ -306,7 +306,7 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
 
 // Comprehensive Assessment Questions organized by MYRHYTHM clusters
 export const comprehensiveQuestions: MyrhythmQuestion[] = [
-  // CLUSTER 1: MINDSET + YIELD & ACKNOWLEDGE (Cognitive Patterns)
+  // CLUSTER 1: MINDSET + REFLECT & ACCEPT (Cognitive Patterns)
   {
     id: 'mindset_self_talk',
     letter: 'M',
@@ -326,17 +326,17 @@ export const comprehensiveQuestions: MyrhythmQuestion[] = [
     id: 'mindset_beliefs',
     letter: 'M',
     letterName: 'MINDSET',
-    question: "What do you believe about your brain's ability to change and improve?",
-    type: 'scale',
-    min: 1,
-    max: 5,
-    labels: {
-      1: 'My brain is fixed - I have to work with what I have',
-      3: 'Some improvement is possible with effort',
-      5: 'My brain can significantly change and improve with the right approach'
-    },
-    insight: "Your beliefs about neuroplasticity directly impact your potential for cognitive growth.",
-    nextStepPreview: "This mindset foundation influences everything else we'll build together..."
+    question: "When facing cognitive challenges, which best describes your mindset?",
+    type: 'multiple_choice',
+    options: [
+      { value: 'growth_minded', label: 'I believe my abilities can improve with practice and the right strategies' },
+      { value: 'learning_focused', label: 'I see challenges as opportunities to learn and grow stronger' },
+      { value: 'fixed_thinking', label: 'I think my cognitive abilities are mostly set and unchangeable' },
+      { value: 'effort_matters', label: 'I believe effort and persistence can overcome most limitations' },
+      { value: 'talent_based', label: 'I think cognitive success comes from natural talent more than effort' }
+    ],
+    insight: "Your mindset about learning and growth shapes how effectively you can recover and improve.",
+    nextStepPreview: "Understanding whether you have a growth or fixed mindset helps us design your optimal recovery path..."
   },
   
   // CLUSTER 2: TASK COMPLETION & MEMORY INTEGRATION
@@ -394,7 +394,7 @@ export const comprehensiveQuestions: MyrhythmQuestion[] = [
   {
     id: 'task_completion_percentage',
     letter: 'Y',
-    letterName: 'YIELD PROGRESS',
+    letterName: 'CELEBRATE PROGRESS',
     question: "What percentage of tasks do you typically complete once you start them?",
     type: 'multiple_choice',
     options: [
@@ -443,7 +443,7 @@ export const comprehensiveQuestions: MyrhythmQuestion[] = [
   {
     id: 'incomplete_task_impact',
     letter: 'Y',
-    letterName: 'YIELD & ACKNOWLEDGE',
+    letterName: 'REFLECT & ACCEPT',
     question: "How do incomplete tasks affect your mental energy and mood?",
     type: 'multiple_choice',
     options: [
@@ -513,7 +513,7 @@ export const preferenceQuestions: MyrhythmQuestion[] = [
   {
     id: 'completion_celebration_style',
     letter: 'Y',
-    letterName: 'YIELD PROGRESS',
+    letterName: 'CELEBRATE PROGRESS',
     question: "How do you prefer to acknowledge task completion?",
     type: 'multiple_choice',
     options: [

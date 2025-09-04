@@ -26,7 +26,7 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
     },
     { 
       letter: 'Y', 
-      word: 'Yield', 
+      word: 'Reflect', 
       phase: 'Acknowledge Your Current Reality',
       description: 'Honor where you are in your recovery journey without judgment—this is your starting point for transformation.',
       memoryFocus: 'Honor where you are without judgment',
@@ -50,7 +50,7 @@ export function MyRhythmFrameworkDisplay({ currentStepIndex }: MyRhythmFramework
     },
     { 
       letter: 'Y', 
-      word: 'Yield', 
+      word: 'Celebrate', 
       phase: 'Your Small Victories Matter',
       description: 'Celebrate every step forward, no matter how small—progress tracking that builds unstoppable confidence.',
       memoryFocus: 'Celebrate every step of progress',

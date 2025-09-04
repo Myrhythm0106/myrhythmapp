@@ -19,8 +19,8 @@ export function Memory8StepFrameworkSection() {
       icon: "🧠"
     },
     {
-      letter: "Y", 
-      word: "Yield",
+      letter: "Y",
+      word: "Reflect",
       phase: "Acknowledge Your Reality",
       description: "Honor where you are in your recovery journey without judgment—this is your starting point for transformation.",
       memoryFocus: "Accept your current abilities while planning growth",
@@ -44,7 +44,7 @@ export function Memory8StepFrameworkSection() {
     },
     {
       letter: "Y",
-      word: "Yield",
+      word: "Celebrate",
       phase: "Your Victories Matter",
       description: "Celebrate every step forward, no matter how small—progress tracking that builds unstoppable confidence.",
       memoryFocus: "Progress tracking that builds confidence",

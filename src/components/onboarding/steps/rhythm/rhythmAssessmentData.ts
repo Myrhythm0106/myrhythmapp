@@ -44,7 +44,7 @@ export const baseSections: Section[] = [
     id: 2,
     title: "Memory in the Fog",
     phase: "Y",
-    phaseDescription: "Yield to the Fog - Memory Challenges",
+    phaseDescription: "Reflect on the Fog - Memory Challenges",
     narrative: "Memory can feel cloudy after trauma. Like important moments are there—but just out of reach.",
     questions: [
       { id: "brain_fog", text: "Do you struggle to remember things because your brain feels tired or foggy?" },
@@ -89,7 +89,7 @@ export const baseSections: Section[] = [
     id: 5,
     title: "Memory Progress Recognition",
     phase: "Y",
-    phaseDescription: "Yield Again - Memory Improvement Tracking",
+    phaseDescription: "Accept Progress - Memory Improvement Tracking",
     narrative: "Memory healing isn't always linear. But awareness of small improvements is a sign of real growth.",
     questions: [
       { id: "recognizing_progress", text: "Are you recognizing progress, even small improvements, in your memory abilities?" },
@@ -172,7 +172,7 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       id: 2,
       title: "Cognitive Load & Mental Clarity",
       phase: "Y",
-      phaseDescription: "Yield to Analysis - Memory Performance Assessment",
+      phaseDescription: "Accept Analysis - Memory Performance Assessment",
       narrative: "Even top performers experience moments when their memory feels overwhelmed. Understanding your patterns is key to optimization.",
       questions: [
         { id: "information_overload", text: "Do you struggle to retain important information when managing multiple high-stakes projects?" },
@@ -219,7 +219,7 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       id: 5,
       title: "Memory Mastery Progress",
       phase: "Y",
-      phaseDescription: "Yield to Growth - Memory Enhancement Results",
+      phaseDescription: "Celebrate Growth - Memory Enhancement Results",
       narrative: "Memory optimization is an ongoing process. Recognizing progress while identifying next-level opportunities drives continuous improvement.",
       questions: [
         { id: "memory_performance_gains", text: "Are you seeing measurable improvements in your memory performance and information retention?" },
@@ -299,7 +299,7 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       id: 2,
       title: "Living in Memory Fog",
       phase: "Y",
-      phaseDescription: "Yield to Overwhelm - Caregiver Memory Exhaustion",
+      phaseDescription: "Accept Overwhelm - Caregiver Memory Exhaustion",
       narrative: "Caregiver stress creates its own kind of fog. When you're caring for someone's memory, your own can suffer from emotional and physical exhaustion.",
       questions: [
         { id: "caregiver_brain_fog", text: "Do you experience brain fog and forgetfulness due to the stress and exhaustion of caregiving?" },
@@ -346,7 +346,7 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       id: 5,
       title: "Caregiver Memory Progress",
       phase: "Y",
-      phaseDescription: "Yield to Growth - Finding Balance in Memory Management",
+      phaseDescription: "Celebrate Growth - Finding Balance in Memory Management",
       narrative: "Progress as a caregiver means finding ways to manage memory responsibilities without losing yourself in the process.",
       questions: [
         { id: "memory_balance_progress", text: "Are you finding better balance between managing their memory needs and preserving your own mental clarity?" },
@@ -424,7 +424,7 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       id: 2,
       title: "Memory & Productivity Struggles",
       phase: "Y",
-      phaseDescription: "Yield to Analysis - Current Memory Limitations",
+      phaseDescription: "Accept Analysis - Current Memory Limitations",
       narrative: "Recognizing where your current memory and organizational systems are failing helps identify the biggest opportunities for improvement.",
       questions: [
         { id: "task_memory_failure", text: "Do you frequently forget important tasks, deadlines, or commitments despite your best intentions?" },
@@ -469,7 +469,7 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       id: 5,
       title: "Memory & Life Optimization",
       phase: "Y",
-      phaseDescription: "Yield to Progress - Memory System Results",
+      phaseDescription: "Celebrate Progress - Memory System Results",
       narrative: "Progress in memory and productivity systems creates positive momentum that builds on itself, leading to greater life satisfaction.",
       questions: [
         { id: "memory_life_improvement", text: "Are you seeing tangible improvements in your life quality due to better memory and organizational systems?" },
@@ -580,7 +580,7 @@ const userTypeQuestions: Record<UserType, Section[]> = {
       id: 2,
       title: "Workplace Understanding Assessment",
       phase: "Y", 
-      phaseDescription: "Yield to Analysis - Current Workplace Dynamics",
+      phaseDescription: "Accept Analysis - Current Workplace Dynamics",
       narrative: "Understanding current workplace challenges helps identify opportunities to create more supportive and productive environments for everyone.",
       questions: [
         { id: "workplace_awareness", text: "Have you observed how cognitive challenges can impact workplace performance and team dynamics?" },

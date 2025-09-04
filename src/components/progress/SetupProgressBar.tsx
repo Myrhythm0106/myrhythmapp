@@ -64,7 +64,7 @@ export function SetupProgressBar() {
                   <span className={cn(
                     "text-xs font-medium",
                     step.isCompleted ? "text-memory-emerald-600" :
-                    step.isCurrent ? "text-brain-health-600" :
+                    step.isCurrent ? "text-brain-health-600 underline font-bold border-b-2 border-brain-health-500 pb-1" :
                     "text-brain-health-400"
                   )}>
                     {step.label}
