@@ -1,12 +1,51 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { PageLayout } from '@/components/shared/PageLayout';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Plus, CalendarDays } from 'lucide-react';
+import { Plus, CalendarDays, Filter } from 'lucide-react';
+import { CalendarViewSlider } from '@/components/calendar/CalendarViewSlider';
+import { TodaysFocusBanner } from '@/components/calendar/TodaysFocusBanner';
+import { UpcomingEvents } from '@/components/calendar/UpcomingEvents';
 
 export default function CalendarPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
+  // Parse URL parameters
+  useEffect(() => {
+    const view = searchParams.get('view');
+    const dateParam = searchParams.get('date');
+    const filter = searchParams.get('filter');
+
+    // Set date from URL parameter if provided
+    if (dateParam) {
+      try {
+        const parsedDate = new Date(dateParam);
+        if (!isNaN(parsedDate.getTime())) {
+          setDate(parsedDate);
+        }
+      } catch (error) {
+        console.error('Invalid date parameter:', dateParam);
+      }
+    }
+
+    // Log the deep link parameters for debugging
+    if (view || dateParam || filter) {
+      console.log('Calendar deep link params:', { view, date: dateParam, filter });
+    }
+  }, [searchParams]);
+
+  const currentView = (searchParams.get('view') as "day" | "week" | "month" | "year" | "goals") || "day";
+  const filterType = searchParams.get('filter');
+
+  const handleViewChange = (view: "day" | "week" | "month" | "year" | "goals") => {
+    const params = new URLSearchParams(searchParams);
+    params.set('view', view);
+    setSearchParams(params);
+  };
 
   return (
     <PageLayout 
@@ -14,16 +53,38 @@ export default function CalendarPage() {
       description="View and manage your daily schedule, events, and important dates"
     >
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-semibold">Your Schedule</h2>
+        
+        {/* Header with View Controls */}
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <CalendarDays className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-semibold">Your Schedule</h2>
+              {filterType && (
+                <div className="flex items-center gap-1 ml-4">
+                  <Filter className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground capitalize">
+                    Filtered: {filterType}
+                  </span>
+                </div>
+              )}
+            </div>
+            <Button className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Add Event
+            </Button>
           </div>
-          <Button className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Add Event
-          </Button>
+          
+          {/* View Toggle */}
+          <CalendarViewSlider 
+            view={currentView} 
+            onViewChange={handleViewChange}
+            className="self-center"
+          />
         </div>
+
+        {/* Today's Focus Banner */}
+        <TodaysFocusBanner />
 
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
@@ -42,23 +103,15 @@ export default function CalendarPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Today's Events</CardTitle>
+              <CardTitle>
+                {currentView === "day" ? "Today's" : 
+                 currentView === "week" ? "This Week's" : 
+                 currentView === "month" ? "This Month's" : "Upcoming"} Events
+                {filterType === "acts" && " (ACTs)"}
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="p-3 bg-muted rounded-lg">
-                  <p className="font-medium">Morning Routine</p>
-                  <p className="text-sm text-muted-foreground">8:00 AM - 9:00 AM</p>
-                </div>
-                <div className="p-3 bg-muted rounded-lg">
-                  <p className="font-medium">Focus Work Session</p>
-                  <p className="text-sm text-muted-foreground">10:00 AM - 12:00 PM</p>
-                </div>
-                <div className="p-3 bg-muted rounded-lg">
-                  <p className="font-medium">Brain Training</p>
-                  <p className="text-sm text-muted-foreground">3:00 PM - 3:30 PM</p>
-                </div>
-              </div>
+              <UpcomingEvents date={date} />
             </CardContent>
           </Card>
         </div>
