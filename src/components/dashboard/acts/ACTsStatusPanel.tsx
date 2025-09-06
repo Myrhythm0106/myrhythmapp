@@ -14,16 +14,28 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
+interface StatusDistribution {
+  open: number;
+  inProgress: number;
+  completed: number;
+}
+
 interface ACTsStats {
   raised: number;
   outstanding: number;
   completed: number;
+  statusDistribution: StatusDistribution;
 }
 
 export function ACTsStatusPanel() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [stats, setStats] = useState<ACTsStats>({ raised: 0, outstanding: 0, completed: 0 });
+  const [stats, setStats] = useState<ACTsStats>({ 
+    raised: 0, 
+    outstanding: 0, 
+    completed: 0,
+    statusDistribution: { open: 0, inProgress: 0, completed: 0 }
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -59,14 +71,44 @@ export function ACTsStatusPanel() {
           .gte('updated_at', firstOfMonth)
           .lt('updated_at', firstOfNextMonth);
 
+        // Get all actions for status distribution
+        const { data: allActions } = await supabase
+          .from('extracted_actions')
+          .select('status')
+          .eq('user_id', user.id)
+          .not('status', 'eq', 'rejected');
+
+        // Calculate status distribution
+        const statusCounts = { open: 0, inProgress: 0, completed: 0 };
+        allActions?.forEach(action => {
+          switch (action.status) {
+            case 'completed':
+              statusCounts.completed++;
+              break;
+            case 'in_progress':
+            case 'scheduled':
+              statusCounts.inProgress++;
+              break;
+            default:
+              statusCounts.open++;
+              break;
+          }
+        });
+
         setStats({
           raised: raised || 0,
           outstanding: outstanding || 0,
-          completed: completed || 0
+          completed: completed || 0,
+          statusDistribution: statusCounts
         });
       } catch (error) {
         console.error('Error fetching ACTs stats:', error);
-        setStats({ raised: 0, outstanding: 0, completed: 0 });
+        setStats({ 
+          raised: 0, 
+          outstanding: 0, 
+          completed: 0,
+          statusDistribution: { open: 0, inProgress: 0, completed: 0 }
+        });
       } finally {
         setIsLoading(false);
       }
@@ -128,14 +170,30 @@ export function ACTsStatusPanel() {
               </div>
             </div>
 
-            {/* Completion Rate */}
-            {total > 0 && (
+            {/* Status Distribution */}
+            {(stats.statusDistribution.open + stats.statusDistribution.inProgress + stats.statusDistribution.completed) > 0 && (
               <div className="p-3 bg-gradient-to-r from-brain-health-50 to-clarity-teal-50 rounded-lg border border-brain-health-200">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-brain-health-800">Completion Rate</span>
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-sm font-medium text-brain-health-800">Status Overview</span>
                   <span className="text-sm font-bold text-brain-health-900">{completionRate}%</span>
                 </div>
-                <div className="w-full bg-brain-health-100 rounded-full h-2">
+                
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-sunrise-amber-700">Open</span>
+                    <span className="font-medium">{stats.statusDistribution.open}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-clarity-teal-700">In Progress</span>
+                    <span className="font-medium">{stats.statusDistribution.inProgress}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-memory-emerald-700">Completed</span>
+                    <span className="font-medium">{stats.statusDistribution.completed}</span>
+                  </div>
+                </div>
+                
+                <div className="w-full bg-brain-health-100 rounded-full h-2 mt-3">
                   <div 
                     className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${completionRate}%` }}

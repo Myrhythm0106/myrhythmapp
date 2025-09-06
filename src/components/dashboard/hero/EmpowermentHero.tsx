@@ -133,6 +133,20 @@ export function EmpowermentHero({ onUpgradeClick, userType }: EmpowermentHeroPro
                 </p>
               </div>
 
+              {/* Time Control Messaging */}
+              <div className="mt-4 p-4 bg-white/40 rounded-xl border border-white/60 backdrop-blur-sm">
+                <p className="text-sm text-brain-health-700 font-medium">
+                  You control your <span className="font-bold text-memory-emerald-600">day</span>, 
+                  your <span className="font-bold text-brain-health-600">week</span>, 
+                  your <span className="font-bold text-clarity-teal-600">month</span>, 
+                  and your <span className="font-bold text-sunrise-amber-600">year</span>
+                </p>
+                <p className="text-xs text-brain-health-500 mt-1 italic">
+                  Every moment is a chance to build the life you envision
+                </p>
+              </div>
+            </div>
+
               {/* Monthly Theme Integration */}
               <div className="flex items-center justify-center gap-4 flex-wrap">
                 <Badge className={`bg-gradient-to-r ${timeInfo.gradient} text-white border-0 shadow-lg px-4 py-2 text-sm font-medium`}>
@@ -144,7 +158,6 @@ export function EmpowermentHero({ onUpgradeClick, userType }: EmpowermentHeroPro
                   onThemeUpdate={setMonthlyTheme}
                 />
               </div>
-            </div>
 
             {/* Integrated I Choose Widget */}
             <div className="max-w-2xl mx-auto">
