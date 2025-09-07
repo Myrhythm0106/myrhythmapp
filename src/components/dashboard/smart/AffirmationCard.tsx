@@ -19,18 +19,23 @@ export function AffirmationCard() {
   const todaysAffirmation = affirmations[dayOfYear % affirmations.length];
 
   return (
-    <Card className="bg-gradient-to-br from-memory-emerald-50 via-brain-health-50 to-clarity-teal-50 border-memory-emerald-200">
-      <CardContent className="p-4">
-        <div className="flex items-start gap-3">
-          <div className="p-2 rounded-full bg-gradient-to-br from-memory-emerald-500 to-brain-health-500 flex-shrink-0 mt-1">
-            <Sparkles className="h-4 w-4 text-white" />
+    <Card className="bg-gradient-to-br from-orange-100 via-amber-50 to-rose-100 border-0 shadow-lg rounded-3xl overflow-hidden">
+      <CardContent className="p-8">
+        <div className="space-y-6">
+          <div className="text-center">
+            <h1 className="text-4xl font-black text-gray-900 mb-2">BOLD</h1>
+            <h2 className="text-2xl font-bold text-orange-600 italic leading-tight">
+              #IChoose to be Bold<br />and Productive
+            </h2>
+            <p className="text-sm text-gray-600 mt-2 font-medium">Ephesians 3:20</p>
           </div>
-          <div className="space-y-2 flex-1">
-            <div className="flex items-center gap-2">
-              <Heart className="h-4 w-4 text-memory-emerald-600" />
-              <h3 className="text-sm font-medium text-brain-health-800">Today's Affirmation</h3>
+          
+          <div className="bg-white/70 backdrop-blur rounded-2xl p-6 border border-orange-200">
+            <div className="flex items-center gap-3 mb-3">
+              <Heart className="h-5 w-5 text-orange-600" />
+              <h3 className="text-lg font-bold text-gray-900">Today's Affirmation</h3>
             </div>
-            <p className="text-sm text-brain-health-700 leading-relaxed italic">
+            <p className="text-base text-gray-800 leading-relaxed italic font-medium">
               "{todaysAffirmation}"
             </p>
           </div>

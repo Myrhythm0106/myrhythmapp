@@ -42,46 +42,49 @@ export function PlannerBoard({ timeFrame }: PlannerBoardProps) {
   ];
 
   return (
-    <Card className="h-fit">
-      <CardHeader className="pb-4">
+    <Card className="h-fit bg-white shadow-lg border-0 rounded-3xl overflow-hidden">
+      <CardHeader className="pb-6 bg-gradient-to-r from-orange-50 to-amber-50">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg gradient-text-brand flex items-center gap-2">
-            <Target className="h-5 w-5" />
-            {label} Planner
-          </CardTitle>
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-orange-600 uppercase tracking-wider">
+              {label.toUpperCase()} FOCUS
+            </p>
+            <CardTitle className="text-xl font-bold text-gray-900">
+              Your Priorities & Schedule
+            </CardTitle>
+          </div>
           <Button
             variant="outline"
             size="sm"
             onClick={handleViewInCalendar}
-            className="text-brain-health-600 border-brain-health-200 hover:bg-brain-health-50"
+            className="text-orange-700 border-orange-200 hover:bg-orange-50 rounded-xl"
           >
-            <Calendar className="h-4 w-4 mr-1" />
+            <Calendar className="h-4 w-4 mr-2" />
             Edit in Calendar
           </Button>
         </div>
       </CardHeader>
       
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-8 p-8">
         {/* Priorities Section */}
-        <div className="space-y-3">
-          <h4 className="font-medium text-brain-health-800 flex items-center gap-2">
-            <Target className="h-4 w-4 text-memory-emerald-600" />
-            Top Priorities
+        <div className="space-y-4">
+          <h4 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+            <span className="text-orange-500 text-sm font-medium uppercase tracking-wider">TOP 3 PRIORITIES</span>
           </h4>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {priorities.map(priority => (
-              <div key={priority.id} className="flex items-center gap-3 p-2 rounded-lg bg-brain-health-50">
-                <div className={`w-4 h-4 rounded border-2 flex items-center justify-center ${
+              <div key={priority.id} className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors">
+                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
                   priority.completed 
-                    ? 'bg-memory-emerald-500 border-memory-emerald-500' 
-                    : 'border-brain-health-300'
+                    ? 'bg-orange-500 border-orange-500' 
+                    : 'border-gray-300'
                 }`}>
                   {priority.completed && <span className="text-white text-xs">✓</span>}
                 </div>
-                <span className={`text-sm ${
+                <span className={`text-base ${
                   priority.completed 
-                    ? 'text-brain-health-600 line-through' 
-                    : 'text-brain-health-800'
+                    ? 'text-gray-500 line-through' 
+                    : 'text-gray-900 font-medium'
                 }`}>
                   {priority.text}
                 </span>
@@ -91,24 +94,23 @@ export function PlannerBoard({ timeFrame }: PlannerBoardProps) {
         </div>
 
         {/* Schedule Section */}
-        <div className="space-y-3">
-          <h4 className="font-medium text-brain-health-800 flex items-center gap-2">
-            <Clock className="h-4 w-4 text-clarity-teal-600" />
-            {label} Schedule
+        <div className="space-y-4">
+          <h4 className="font-bold text-gray-900 text-lg">
+            <span className="text-orange-500 text-sm font-medium uppercase tracking-wider block">Hourly Schedule</span>
           </h4>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {scheduleItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-3 p-2 rounded-lg bg-clarity-teal-50">
-                <span className="text-xs font-medium text-clarity-teal-700 min-w-16">
+              <div key={index} className="flex items-center gap-6 p-4 rounded-2xl bg-orange-50 border border-orange-100">
+                <span className="text-sm font-bold text-gray-900 min-w-20 font-mono">
                   {item.time}
                 </span>
-                <span className="text-sm text-brain-health-800 flex-1">
+                <span className="text-base text-gray-800 flex-1 font-medium">
                   {item.title}
                 </span>
-                <div className={`px-2 py-1 text-xs rounded ${
-                  item.type === 'capture' ? 'bg-memory-emerald-100 text-memory-emerald-700' :
-                  item.type === 'review' ? 'bg-brain-health-100 text-brain-health-700' :
-                  'bg-sunrise-amber-100 text-sunrise-amber-700'
+                <div className={`px-3 py-1 text-xs rounded-full font-medium uppercase tracking-wide ${
+                  item.type === 'capture' ? 'bg-green-100 text-green-700' :
+                  item.type === 'review' ? 'bg-blue-100 text-blue-700' :
+                  'bg-amber-100 text-amber-700'
                 }`}>
                   {item.type}
                 </div>
@@ -118,15 +120,14 @@ export function PlannerBoard({ timeFrame }: PlannerBoardProps) {
         </div>
 
         {/* Notes Section */}
-        <div className="space-y-3">
-          <h4 className="font-medium text-brain-health-800 flex items-center gap-2">
-            <StickyNote className="h-4 w-4 text-sunrise-amber-600" />
-            Quick Notes
+        <div className="space-y-4">
+          <h4 className="font-bold text-gray-900 text-lg">
+            <span className="text-orange-500 text-sm font-medium uppercase tracking-wider block">Notes | To-Dos</span>
           </h4>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {notes.map((note, index) => (
-              <div key={index} className="p-2 rounded-lg bg-sunrise-amber-50 border-l-2 border-sunrise-amber-300">
-                <p className="text-sm text-brain-health-700">{note}</p>
+              <div key={index} className="p-4 rounded-2xl bg-amber-50 border-l-4 border-amber-400">
+                <p className="text-base text-gray-800 font-medium">{note}</p>
               </div>
             ))}
           </div>
@@ -134,16 +135,18 @@ export function PlannerBoard({ timeFrame }: PlannerBoardProps) {
 
         {/* Carry Over Section */}
         {carryOverItems.length > 0 && (
-          <div className="space-y-3">
-            <h4 className="font-medium text-brain-health-800 flex items-center gap-2">
-              <ArrowRight className="h-4 w-4 text-brain-health-500" />
-              Carry Over
+          <div className="space-y-4 pt-4 border-t border-gray-200">
+            <h4 className="font-bold text-gray-900 text-lg flex items-center gap-2">
+              <span className="text-orange-500 text-sm font-medium uppercase tracking-wider">CARRY OVER</span>
+              <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-bold">
+                +{carryOverItems.length}
+              </span>
             </h4>
-            <div className="space-y-2">
+            <div className="space-y-3">
               {carryOverItems.map((item, index) => (
-                <div key={index} className="flex items-center gap-3 p-2 rounded-lg bg-brain-health-100">
-                  <div className="w-2 h-2 rounded-full bg-brain-health-400"></div>
-                  <span className="text-sm text-brain-health-700">{item}</span>
+                <div key={index} className="flex items-center gap-4 p-4 rounded-2xl bg-rose-50 border border-rose-100">
+                  <div className="w-3 h-3 rounded-full bg-rose-400"></div>
+                  <span className="text-base text-gray-800 font-medium">{item}</span>
                 </div>
               ))}
             </div>

@@ -1,88 +1,53 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CheckCircle2, Circle, TrendingUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { CheckCircle2, Circle } from "lucide-react";
 
-interface Habit {
-  id: string;
-  name: string;
-  completed: boolean;
-  streak: number;
-}
+const habits = [
+  { id: 1, name: "Focus on brain health", completed: true },
+  { id: 2, name: "Mental clarity", completed: false },
+  { id: 3, name: "Productivity", completed: true }
+];
 
 export function HabitTrackerCard() {
-  const navigate = useNavigate();
-
-  // Mock data - in real implementation, this would come from your habits system
-  const habits: Habit[] = [
-    { id: "1", name: "Morning capture", completed: true, streak: 5 },
-    { id: "2", name: "Evening reflection", completed: false, streak: 3 },
-    { id: "3", name: "Gratitude practice", completed: true, streak: 7 }
-  ];
-
-  const completedToday = habits.filter(h => h.completed).length;
-  const totalHabits = habits.length;
-
-  const handleViewDetails = () => {
-    navigate('/calendar?focus=habits');
-  };
+  const completedCount = habits.filter(h => h.completed).length;
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-clarity-teal-600" />
-            Daily Habits
-          </CardTitle>
-          <span className="text-xs text-brain-health-600 bg-brain-health-100 px-2 py-1 rounded">
-            {completedToday}/{totalHabits}
+    <Card className="bg-white border-0 shadow-lg rounded-3xl overflow-hidden">
+      <CardHeader className="pb-4 bg-gradient-to-r from-orange-50 to-amber-50">
+        <CardTitle className="text-lg font-bold text-gray-900">
+          <span className="text-orange-500 text-sm font-medium uppercase tracking-wider block mb-1">
+            HABIT TRACKER
           </span>
-        </div>
+          Daily Focus Areas
+        </CardTitle>
       </CardHeader>
-      
-      <CardContent className="space-y-4">
+      <CardContent className="p-6 space-y-4">
         <div className="space-y-3">
           {habits.map(habit => (
-            <div key={habit.id} className="flex items-center gap-3">
+            <div key={habit.id} className="flex items-center gap-4 p-3 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors">
               {habit.completed ? (
-                <CheckCircle2 className="h-4 w-4 text-memory-emerald-600" />
+                <CheckCircle2 className="h-5 w-5 text-green-600" />
               ) : (
-                <Circle className="h-4 w-4 text-brain-health-300" />
+                <Circle className="h-5 w-5 text-gray-400" />
               )}
-              <div className="flex-1">
-                <span className={`text-sm ${
-                  habit.completed 
-                    ? 'text-brain-health-800 font-medium' 
-                    : 'text-brain-health-600'
-                }`}>
-                  {habit.name}
-                </span>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-brain-health-500">
-                    {habit.streak} day streak
-                  </span>
-                  {habit.streak >= 7 && (
-                    <span className="text-xs bg-memory-emerald-100 text-memory-emerald-700 px-1 rounded">
-                      🔥
-                    </span>
-                  )}
-                </div>
-              </div>
+              <span className={`text-base font-medium ${
+                habit.completed 
+                  ? 'text-gray-900' 
+                  : 'text-gray-600'
+              }`}>
+                {habit.name}
+              </span>
             </div>
           ))}
         </div>
-
-        <div className="pt-2 border-t border-brain-health-100">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleViewDetails}
-            className="w-full text-brain-health-600 border-brain-health-200 hover:bg-brain-health-50"
-          >
-            View in Calendar
-          </Button>
+        
+        <div className="pt-3 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-600">Today's Progress</span>
+            <span className="text-sm font-bold text-orange-600">
+              {completedCount}/{habits.length} Complete
+            </span>
+          </div>
         </div>
       </CardContent>
     </Card>
