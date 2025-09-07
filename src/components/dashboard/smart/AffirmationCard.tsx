@@ -1,44 +1,59 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Heart, Sparkles } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const affirmations = [
-  "Every small step forward is progress worth celebrating",
-  "Your mind is powerful and capable of amazing things", 
-  "Today brings new opportunities to grow and heal",
-  "You have the strength to navigate any challenge",
-  "Your journey matters and you're not walking it alone",
-  "Each moment of awareness is a gift to your future self",
-  "Progress, not perfection, is what truly counts",
-  "Your resilience grows stronger with every experience"
+const monthlyWords = [
+  "BOLD", "BRAVE", "FOCUSED", "STRONG", "CLEAR", "BRIGHT",
+  "CALM", "WISE", "READY", "CAPABLE", "FIERCE", "ALIVE"
+];
+
+const iChooseStatements = [
+  "I choose courage over comfort",
+  "I choose progress over perfection", 
+  "I choose growth over fear",
+  "I choose hope over doubt",
+  "I choose action over hesitation",
+  "I choose strength over struggle",
+  "I choose joy over worry",
+  "I choose peace over chaos",
+  "I choose love over fear",
+  "I choose today over yesterday"
 ];
 
 export function AffirmationCard() {
-  // Get affirmation based on day of year to ensure consistency throughout the day
+  // Get consistent monthly word and daily #IChoose
+  const currentMonth = new Date().getMonth();
+  const monthlyWord = monthlyWords[currentMonth];
+  
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
-  const todaysAffirmation = affirmations[dayOfYear % affirmations.length];
+  const todaysChoice = iChooseStatements[dayOfYear % iChooseStatements.length];
 
   return (
-    <Card className="bg-gradient-to-br from-orange-100 via-amber-50 to-rose-100 border-0 shadow-lg rounded-3xl overflow-hidden">
-      <CardContent className="p-8">
-        <div className="space-y-6">
-          <div className="text-center">
-            <h1 className="text-4xl font-black text-gray-900 mb-2">BOLD</h1>
-            <h2 className="text-2xl font-bold text-orange-600 italic leading-tight">
-              #IChoose to be Bold<br />and Productive
+    <Card className="bg-gradient-to-br from-brand-teal-100 via-brand-emerald-50 to-brand-blue-100 border-brand-teal-200/60 shadow-sm">
+      <CardHeader className="pb-4">
+        <div className="text-center space-y-3">
+          <div>
+            <p className="text-xs text-brand-orange-600 uppercase tracking-wider font-medium">
+              Word of the Month
+            </p>
+            <h2 className="text-4xl font-black text-brand-teal-800 tracking-tight">
+              {monthlyWord}
             </h2>
-            <p className="text-sm text-gray-600 mt-2 font-medium">Ephesians 3:20</p>
           </div>
-          
-          <div className="bg-white/70 backdrop-blur rounded-2xl p-6 border border-orange-200">
-            <div className="flex items-center gap-3 mb-3">
-              <Heart className="h-5 w-5 text-orange-600" />
-              <h3 className="text-lg font-bold text-gray-900">Today's Affirmation</h3>
-            </div>
-            <p className="text-base text-gray-800 leading-relaxed italic font-medium">
-              "{todaysAffirmation}"
+          <div className="border-t border-brand-teal-200/50 pt-3">
+            <p className="text-xs text-brand-teal-600 uppercase tracking-wider font-medium">
+              Today's Declaration
+            </p>
+            <p className="text-brand-orange-700 font-bold text-lg italic mt-1">
+              #{todaysChoice.replace("I choose ", "")}
             </p>
           </div>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0">
+        <div className="text-center">
+          <p className="text-brand-teal-600 text-sm">
+            "You've got this! Every choice builds your strength."
+          </p>
         </div>
       </CardContent>
     </Card>

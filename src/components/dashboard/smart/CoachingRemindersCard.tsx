@@ -1,62 +1,58 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, MessageSquare, Calendar } from "lucide-react";
+import { Plus, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const reminders = [
-  { id: 1, text: "Weekly check-in with support person", dueTime: "Tomorrow 2pm" },
-  { id: 2, text: "Complete brain training exercise", dueTime: "Today 6pm" },
-  { id: 3, text: "Review progress notes", dueTime: "Friday" }
+  { id: 1, text: "Celebrate today's progress", dueTime: "6:00 PM" },
+  { id: 2, text: "Set tomorrow's intention", dueTime: "8:00 PM" },
+  { id: 3, text: "Evening gratitude practice", dueTime: "9:00 PM" },
 ];
 
 export function CoachingRemindersCard() {
   const navigate = useNavigate();
 
   return (
-    <Card className="bg-white border-0 shadow-lg rounded-3xl overflow-hidden">
-      <CardHeader className="pb-4 bg-gradient-to-r from-orange-50 to-amber-50">
+    <Card className="bg-gradient-to-br from-white to-brand-teal-50/30 border-brand-teal-200/60 shadow-sm">
+      <CardHeader className="pb-4 bg-gradient-to-r from-brand-teal-500 to-brand-emerald-500 text-white rounded-t-lg">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-gray-900">
-            <span className="text-orange-500 text-sm font-medium uppercase tracking-wider block mb-1">
+          <div>
+            <CardTitle className="text-base font-bold">
+              Support Reminders
+            </CardTitle>
+            <p className="text-xs opacity-90 uppercase tracking-wider">
               FOR LIFE COACHING
-            </span>
-            Support Reminders
-          </CardTitle>
+            </p>
+          </div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
-            onClick={() => navigate("/calendar")}
-            className="h-8 w-8 p-0 text-orange-600 hover:bg-orange-100 rounded-xl"
+            onClick={() => navigate('/calendar')}
+            className="border-white/20 text-white hover:bg-white/10"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="w-3 h-3" />
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="p-6 space-y-4">
+      <CardContent className="space-y-4">
         <div className="space-y-3">
-          {reminders.map(reminder => (
-            <div key={reminder.id} className="p-4 rounded-2xl bg-orange-50 border border-orange-100 space-y-2">
-              <p className="text-base text-gray-800 font-medium leading-relaxed">
-                {reminder.text}
-              </p>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-orange-600" />
-                <span className="text-sm text-orange-700 font-medium">
-                  {reminder.dueTime}
-                </span>
+          {reminders.map((reminder) => (
+            <div key={reminder.id} className="flex items-center gap-3 p-2 rounded-md border border-brand-teal-100">
+              <Calendar className="w-4 h-4 text-brand-teal-500 flex-shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm text-gray-700">{reminder.text}</p>
+                <p className="text-xs text-gray-500">{reminder.dueTime}</p>
               </div>
             </div>
           ))}
         </div>
-        
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate("/calendar")}
-          className="w-full text-orange-700 border-orange-200 hover:bg-orange-50 mt-4 rounded-xl py-3 font-medium"
+          onClick={() => navigate('/calendar')}
+          className="w-full border-brand-teal-300 text-brand-teal-600 hover:bg-brand-teal-50"
         >
-          <Plus className="h-4 w-4 mr-2" />
           View All in Calendar
         </Button>
       </CardContent>

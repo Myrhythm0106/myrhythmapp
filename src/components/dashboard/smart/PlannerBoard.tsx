@@ -1,9 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Target, StickyNote, ArrowRight, Clock } from "lucide-react";
+import { Calendar, Target, StickyNote, ArrowRight, Clock, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { TimeFrame, useDateRanges } from "@/hooks/useDateRanges";
+import { cn } from "@/lib/utils";
 
 interface PlannerBoardProps {
   timeFrame: TimeFrame;
@@ -42,14 +43,14 @@ export function PlannerBoard({ timeFrame }: PlannerBoardProps) {
   ];
 
   return (
-    <Card className="h-fit bg-white shadow-lg border-0 rounded-3xl overflow-hidden">
-      <CardHeader className="pb-6 bg-gradient-to-r from-orange-50 to-amber-50">
+    <Card className="h-fit bg-gradient-to-br from-white to-brand-teal-50/30 border-brand-teal-200/60 shadow-sm">
+      <CardHeader className="pb-4 bg-gradient-to-r from-brand-teal-500 to-brand-emerald-500 text-white rounded-t-lg">
         <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-orange-600 uppercase tracking-wider">
+          <div>
+            <div className="text-xs uppercase tracking-wider opacity-90">
               {label.toUpperCase()} FOCUS
-            </p>
-            <CardTitle className="text-xl font-bold text-gray-900">
+            </div>
+            <CardTitle className="text-lg font-bold">
               Your Priorities & Schedule
             </CardTitle>
           </div>
@@ -57,35 +58,37 @@ export function PlannerBoard({ timeFrame }: PlannerBoardProps) {
             variant="outline"
             size="sm"
             onClick={handleViewInCalendar}
-            className="text-orange-700 border-orange-200 hover:bg-orange-50 rounded-xl"
+            className="border-white/20 text-white hover:bg-white/10"
           >
-            <Calendar className="h-4 w-4 mr-2" />
-            Edit in Calendar
+            View in Calendar
           </Button>
         </div>
       </CardHeader>
-      
-      <CardContent className="space-y-8 p-8">
-        {/* Priorities Section */}
-        <div className="space-y-4">
-          <h4 className="font-bold text-gray-900 text-lg flex items-center gap-2">
-            <span className="text-orange-500 text-sm font-medium uppercase tracking-wider">TOP 3 PRIORITIES</span>
-          </h4>
-          <div className="space-y-3">
-            {priorities.map(priority => (
-              <div key={priority.id} className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50 hover:bg-gray-100 transition-colors">
-                <div className={`w-5 h-5 rounded border-2 flex items-center justify-center ${
+      <CardContent className="space-y-6 p-6">
+        {/* TOP 3 PRIORITIES */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-brand-orange-600 uppercase tracking-wider">
+            TOP 3 PRIORITIES
+          </h3>
+          <div className="space-y-2">
+            {priorities.map((priority, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <div className={cn(
+                  "w-4 h-4 rounded-full border-2 flex-shrink-0",
                   priority.completed 
-                    ? 'bg-orange-500 border-orange-500' 
-                    : 'border-gray-300'
-                }`}>
-                  {priority.completed && <span className="text-white text-xs">✓</span>}
+                    ? "bg-brand-emerald-500 border-brand-emerald-500" 
+                    : "border-gray-300"
+                )}>
+                  {priority.completed && (
+                    <Check className="w-2.5 h-2.5 text-white m-0.5" />
+                  )}
                 </div>
-                <span className={`text-base ${
+                <span className={cn(
+                  "text-sm",
                   priority.completed 
-                    ? 'text-gray-500 line-through' 
-                    : 'text-gray-900 font-medium'
-                }`}>
+                    ? "line-through text-gray-500" 
+                    : "text-gray-700"
+                )}>
                   {priority.text}
                 </span>
               </div>
@@ -93,60 +96,60 @@ export function PlannerBoard({ timeFrame }: PlannerBoardProps) {
           </div>
         </div>
 
-        {/* Schedule Section */}
-        <div className="space-y-4">
-          <h4 className="font-bold text-gray-900 text-lg">
-            <span className="text-orange-500 text-sm font-medium uppercase tracking-wider block">Hourly Schedule</span>
-          </h4>
-          <div className="space-y-3">
+        {/* Hourly Schedule */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-brand-orange-600 uppercase tracking-wider">
+            Hourly Schedule
+          </h3>
+          <div className="space-y-2">
             {scheduleItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-6 p-4 rounded-2xl bg-orange-50 border border-orange-100">
-                <span className="text-sm font-bold text-gray-900 min-w-20 font-mono">
+              <div key={index} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 font-mono w-12 flex-shrink-0">
                   {item.time}
                 </span>
-                <span className="text-base text-gray-800 flex-1 font-medium">
-                  {item.title}
-                </span>
-                <div className={`px-3 py-1 text-xs rounded-full font-medium uppercase tracking-wide ${
-                  item.type === 'capture' ? 'bg-green-100 text-green-700' :
-                  item.type === 'review' ? 'bg-blue-100 text-blue-700' :
-                  'bg-amber-100 text-amber-700'
-                }`}>
-                  {item.type}
+                <div className="flex items-center gap-2">
+                  <div className={cn(
+                    "w-2 h-2 rounded-full",
+                    item.type === "capture" && "bg-brand-emerald-400",
+                    item.type === "review" && "bg-brand-teal-400",
+                    item.type === "reflection" && "bg-brand-blue-400"
+                  )} />
+                  <span className="text-sm text-gray-700">{item.title}</span>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Notes Section */}
-        <div className="space-y-4">
-          <h4 className="font-bold text-gray-900 text-lg">
-            <span className="text-orange-500 text-sm font-medium uppercase tracking-wider block">Notes | To-Dos</span>
-          </h4>
-          <div className="space-y-3">
+        {/* Notes | To-Dos */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-semibold text-brand-orange-600 uppercase tracking-wider">
+            Notes | To-Dos
+          </h3>
+          <div className="space-y-2">
             {notes.map((note, index) => (
-              <div key={index} className="p-4 rounded-2xl bg-amber-50 border-l-4 border-amber-400">
-                <p className="text-base text-gray-800 font-medium">{note}</p>
+              <div key={index} className="flex items-start gap-2">
+                <StickyNote className="w-3 h-3 text-brand-blue-500 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-700">{note}</span>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Carry Over Section */}
+        {/* CARRY OVER */}
         {carryOverItems.length > 0 && (
-          <div className="space-y-4 pt-4 border-t border-gray-200">
-            <h4 className="font-bold text-gray-900 text-lg flex items-center gap-2">
-              <span className="text-orange-500 text-sm font-medium uppercase tracking-wider">CARRY OVER</span>
-              <span className="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded-full font-bold">
-                +{carryOverItems.length}
+          <div className="space-y-3">
+            <h3 className="text-sm font-semibold text-brand-orange-600 uppercase tracking-wider flex items-center gap-2">
+              CARRY OVER
+              <span className="bg-brand-orange-100 text-brand-orange-700 text-xs px-2 py-0.5 rounded-full">
+                {carryOverItems.length}
               </span>
-            </h4>
-            <div className="space-y-3">
+            </h3>
+            <div className="space-y-2">
               {carryOverItems.map((item, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 rounded-2xl bg-rose-50 border border-rose-100">
-                  <div className="w-3 h-3 rounded-full bg-rose-400"></div>
-                  <span className="text-base text-gray-800 font-medium">{item}</span>
+                <div key={index} className="flex items-start gap-2 bg-brand-orange-50 p-2 rounded-md">
+                  <ArrowRight className="w-3 h-3 text-brand-orange-500 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-gray-700">{item}</span>
                 </div>
               ))}
             </div>
