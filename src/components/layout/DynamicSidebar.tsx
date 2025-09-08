@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 import { DevelopmentNavigation } from "@/components/demo/DevelopmentNavigation";
 
 const mainNavItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Brain },
+  { title: "Smart Dashboard", url: "/brain-friendly-dashboard", icon: Brain },
   { title: "Calendar", url: "/calendar", icon: Calendar },
   { title: "Memory Bank", url: "/memory-bank", icon: Camera },
   { title: "Goals", url: "/goals", icon: Target },
@@ -42,11 +42,17 @@ export function DynamicSidebar({ isCollapsed }: DynamicSidebarProps) {
   const location = useLocation();
   const currentPath = location.pathname;
 
-  const isActive = (path: string) => currentPath === path;
+  const isActive = (path: string) => {
+    // For Smart Dashboard, also match root and dashboard routes
+    if (path === "/brain-friendly-dashboard") {
+      return currentPath === "/" || currentPath === "/dashboard" || currentPath === "/brain-friendly-dashboard";
+    }
+    return currentPath === path;
+  };
 
   return (
     <Sidebar className={cn(
-      "bg-white/95 backdrop-blur-sm border-r border-purple-200/50",
+      "bg-white/95 backdrop-blur-sm border-r border-brand-teal-200/50",
       isCollapsed ? "w-16" : "w-64"
     )}>
       <SidebarContent className="p-4">
@@ -54,11 +60,11 @@ export function DynamicSidebar({ isCollapsed }: DynamicSidebarProps) {
         {!isCollapsed && (
           <div className="mb-6 px-2">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-lg flex items-center justify-center">
                 <Brain className="h-4 w-4 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                <h1 className="text-lg font-bold bg-gradient-to-r from-brand-teal-600 via-brand-emerald-600 to-brand-blue-600 bg-clip-text text-transparent">
                   MyRhythm
                 </h1>
                 <p className="text-xs text-gray-500">Memory-First Design</p>
@@ -80,8 +86,8 @@ export function DynamicSidebar({ isCollapsed }: DynamicSidebarProps) {
                     <NavLink
                       to={item.url}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors",
-                        isActive(item.url) && "bg-purple-100 text-purple-800 font-medium",
+                        "flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-colors",
+                        isActive(item.url) && "bg-brand-teal-100 text-brand-teal-800 font-medium",
                         isCollapsed && "justify-center"
                       )}
                     >
@@ -108,8 +114,8 @@ export function DynamicSidebar({ isCollapsed }: DynamicSidebarProps) {
                     <NavLink
                       to={item.url}
                       className={cn(
-                        "flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors",
-                        isActive(item.url) && "bg-purple-100 text-purple-800 font-medium",
+                        "flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-brand-teal-50 hover:text-brand-teal-700 transition-colors",
+                        isActive(item.url) && "bg-brand-teal-100 text-brand-teal-800 font-medium",
                         isCollapsed && "justify-center"
                       )}
                     >

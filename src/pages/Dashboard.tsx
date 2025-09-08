@@ -8,6 +8,7 @@ import { FirstTimeUserExperience } from "@/components/onboarding/FirstTimeUserEx
 import { useSessionTracking } from "@/hooks/useSessionTracking";
 import { useAuth } from "@/contexts/AuthContext";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
+import { BrainFriendlyDashboard } from "@/components/dashboard/BrainFriendlyDashboard";
 import { ReportsWidget } from "@/components/dashboard/widgets/ReportsWidget";
 import { BackButton } from "@/components/ui/BackButton";
 import CalendarPage from "./CalendarPage";
@@ -87,6 +88,9 @@ const Dashboard = () => {
                 return <TestingPage />;
               case '/decisions':
                 return <DecisionsPage />;
+              case '/':
+              case '/dashboard':
+                return <BrainFriendlyDashboard />;
               default:
                 return <DashboardContent />;
             }
