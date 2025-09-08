@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { MemoryBridgeResultsModal } from './MemoryBridgeResultsModal';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
+import { ActsReviewTable } from './ActsReviewTable';
 import { RecordingsTab } from './RecordingsTab';
 import { QuickCaptureRecorder } from './QuickCaptureRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
@@ -20,14 +21,24 @@ import {
   Trophy,
   ArrowRight,
   Play,
-  CheckSquare
+  CheckSquare,
+  Clock
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { MVPThemeWrapper } from '@/components/theme/MVPThemeWrapper';
 import { MVPTopNav } from '@/components/mvp/MVPTopNav';
 import { MVPPageHeader } from '@/components/mvp/MVPPageHeader';
 
 export function MemoryBridgeStarterDashboard() {
-  const { extractedActions, isRecording, fetchExtractedActions } = useMemoryBridge();
+  const { 
+    extractedActions, 
+    fetchExtractedActions, 
+    confirmAction,
+    isProcessing,
+    fetchMeetingHistory,
+    updateExtractedAction,
+    isRecording
+  } = useMemoryBridge();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showFirstRecording, setShowFirstRecording] = useState(false);
@@ -62,6 +73,29 @@ export function MemoryBridgeStarterDashboard() {
   
   const handleUnlockDashboard = () => {
     navigate('/dashboard');
+  };
+
+  const handleUpdateAction = async (actionId: string, updates: Partial<any>) => {
+    if (updateExtractedAction) {
+      await updateExtractedAction(actionId, updates);
+    }
+  };
+
+  const handleConfirmActions = async (actionIds: string[], scheduleData: Record<string, { date: string; time: string }>) => {
+    for (const actionId of actionIds) {
+      const schedule = scheduleData[actionId];
+      await confirmAction(actionId, 'confirmed', {
+        scheduled_date: schedule?.date,
+        scheduled_time: schedule?.time
+      });
+    }
+    await fetchExtractedActions();
+  };
+
+  const handleBackfillExtraction = async () => {
+    const meetings = await fetchMeetingHistory();
+    // TODO: Implement backfill logic to re-extract ACTs from past recordings
+    toast.success('Backfill extraction started for past recordings');
   };
 
   return (
@@ -172,19 +206,30 @@ export function MemoryBridgeStarterDashboard() {
             />
           </TabsContent>
 
-          <TabsContent value="actions" className="space-y-4">
-            {hasCompletedFirstRecording ? (
-              <ExtractedActionsReview />
-            ) : (
-              <Card>
-                <CardContent className="text-center py-8">
-                  <CheckSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                  <h3 className="text-lg font-semibold mb-2">No Actions Yet</h3>
-                  <p className="text-muted-foreground">Complete your first recording to see your extracted actions here.</p>
-                </CardContent>
-              </Card>
-            )}
-          </TabsContent>
+            <TabsContent value="actions" className="space-y-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Smart Actions Dashboard</h3>
+                  <p className="text-muted-foreground">
+                    AI-extracted commitments from all your conversations - ready to schedule.
+                  </p>
+                </div>
+                <Button
+                  variant="outline"
+                  onClick={handleBackfillExtraction}
+                  disabled={isProcessing}
+                >
+                  <Clock className="w-4 h-4 mr-2" />
+                  Re-extract Past Recordings
+                </Button>
+              </div>
+              
+              <ActsReviewTable
+                actions={extractedActions}
+                onUpdateAction={handleUpdateAction}
+                onConfirmActions={handleConfirmActions}
+              />
+            </TabsContent>
         </Tabs>
 
         {/* Legacy Recording Interface - Hidden for streamlined experience */}

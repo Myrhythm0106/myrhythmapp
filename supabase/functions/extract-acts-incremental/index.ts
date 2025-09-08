@@ -53,58 +53,41 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: `You are an expert ACT extraction AI for meetings. Extract Actions, Decisions, and Issues from conversation transcripts.
+            content: `You are an expert AI assistant that extracts actionable items from ANY type of conversation - whether it's professional meetings, casual family chats, medical discussions, personal visioning, brainstorming, or everyday conversations.
 
-INTELLIGENT EXTRACTION RULES:
-1. **ACTIONS** - Tasks, commitments, follow-ups, things to do
-   - Look for: "I will", "we need to", "let's", "should", action verbs (call, send, schedule, meet, review, etc.)
-   - Extract even if not explicitly prefixed with "Action:"
-   - Include: WHO will do WHAT by WHEN and WHY
+Your goal is to identify Actions, Commitments, and Tasks (ACTs) that create accountability and forward movement in someone's life. This includes:
 
-2. **DECISIONS** - Choices made, conclusions reached, agreements
-   - Look for: "we decided", "I've chosen", "let's go with", "the plan is", "we agreed"
-   - Extract even if not explicitly prefixed with "Decision:"
-   - Include: WHAT was decided, WHO made it, WHY it matters
+- PROFESSIONAL: Meeting follow-ups, project tasks, deadlines
+- PERSONAL: Health goals, family commitments, self-improvement  
+- CREATIVE: Art projects, learning goals, hobby commitments
+- SOCIAL: Plans with friends, event organization, relationship actions
+- WELLNESS: Medical appointments, fitness goals, mental health practices
+- FINANCIAL: Budget tasks, investment research, bill payments
+- HOUSEHOLD: Chores, maintenance, organization projects
 
-3. **ISSUES** - Problems, concerns, risks, blockers identified
-   - Look for: "problem", "issue", "concern", "risk", "challenge", "blocker", "stuck"
-   - Extract even if not explicitly prefixed with "Issue:"
-   - Include: WHAT the problem is, WHO it affects, HOW SEVERE it is
+Extract ACTs from the conversation with this structure:
+1. Action: Specific, actionable task (use active voice, be concrete)
+2. Assignee: Who will do it (names from conversation, "me", "I", or infer from context)
+3. Priority: high/medium/low based on urgency, impact, and emotional importance
+4. Due context: When it should happen (extract specific dates/times OR infer reasonable timeframes like "this week", "by Friday", "soon")
+5. Context: Relevant background that explains why this matters
+6. Confidence: 0.0-1.0 score of how certain you are this is a genuine commitment
+7. Reasoning: Brief explanation of why you identified this as an ACT
 
-SMART CRITERIA (flag if missing):
-- **Specific**: Clear, unambiguous description
-- **Measurable**: Quantifiable outcome or clear deliverable
-- **Assignable**: Clear ownership (who will do it)
-- **Relevant**: Context about why it matters
-- **Time-bound**: Deadline or timeframe
-
-JSON RESPONSE FORMAT:
+Return JSON array:
 [
   {
-    "type": "action|decision|issue",
-    "action": "Clear description of what needs to happen",
-    "assignee": "person responsible (extract from context, use 'speaker' if unclear)",
-    "deadline": "extracted timeframe or 'unspecified'",
-    "suggested_date": "YYYY-MM-DD format",
-    "priority": 1-5 (1=urgent, 5=low),
-    "context": "why this matters/background",
-    "emotional_stakes": "relationship/emotional impact",
-    "confidence": 0.1-1.0 (how certain you are about this extraction),
-    "missing_smart_criteria": ["specific", "measurable"] // array of missing SMART elements
+    "action": "string",
+    "assignee": "string", 
+    "priority": "high|medium|low",
+    "due_context": "string",
+    "context": "string", 
+    "confidence": 0.95,
+    "reasoning": "string"
   }
 ]
 
-EXTRACTION STRATEGY:
-- Be GENEROUS in extraction - capture implied actions/decisions/issues
-- Look for conversational commitments: "I'll handle that", "let me check on this"
-- Extract follow-ups: "we should follow up on...", "need to circle back on..."
-- Flag uncertainty with lower confidence scores
-- Use context clues for assignee (who spoke, who was addressed)
-- Infer reasonable deadlines from urgency cues
-
-Today's date: ${new Date().toISOString().split('T')[0]}
-
-Return [] only if absolutely nothing actionable is found.`
+IMPORTANT: Be confident in extracting ACTs from casual conversation. People make commitments in all contexts - capture them ALL to restore confidence in accountability.`
           },
           {
             role: 'user',
@@ -144,16 +127,12 @@ Return [] only if absolutely nothing actionable is found.`
       user_id: userId,
       action_text: action.action,
       assigned_to: action.assignee || 'self',
-      due_context: action.deadline || 'unspecified',
-      proposed_date: action.suggested_date,
-      priority_level: typeof action.priority === 'number' ? action.priority : 3,
+      due_context: action.due_context || 'unspecified',
+      priority_level: action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5,
       relationship_impact: action.context || '',
-      emotional_stakes: action.emotional_stakes || '',
-      action_type: action.type || 'commitment',
-      status: 'pending',
       confidence_score: action.confidence || 0.8,
-      user_notes: action.missing_smart_criteria?.length > 0 ? 
-        `AI flagged missing: ${action.missing_smart_criteria.join(', ')}` : null
+      user_notes: action.reasoning || '',
+      status: 'pending'
     }));
 
     if (actionsToInsert.length > 0) {

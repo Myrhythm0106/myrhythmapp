@@ -86,9 +86,11 @@ export const useRealtimeACTs = (meetingId?: string) => {
                   id: newAction.id,
                   action: newAction.action_text,
                   assignee: newAction.assignee,
-                  deadline: newAction.deadline,
+                  deadline: newAction.due_context,
                   priority: newAction.priority,
                   context: newAction.context,
+                  confidence_score: newAction.confidence_score || 0.5,
+                  reasoning: newAction.reasoning || '',
                   is_realtime: true
                 }];
               }

@@ -187,6 +187,29 @@ export function useMemoryBridge() {
     }
   }, [user]);
 
+  const updateExtractedAction = useCallback(async (
+    actionId: string,
+    updates: Partial<ExtractedAction>
+  ): Promise<void> => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('extracted_actions')
+        .update(updates)
+        .eq('id', actionId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      // Refresh actions
+      await fetchExtractedActions();
+    } catch (error) {
+      console.error('Error updating action:', error);
+      toast.error('Failed to update action');
+    }
+  }, [user, fetchExtractedActions]);
+
   return {
     isRecording,
     isProcessing,
@@ -196,6 +219,7 @@ export function useMemoryBridge() {
     stopMeetingRecording,
     fetchExtractedActions,
     confirmAction,
-    fetchMeetingHistory
+    fetchMeetingHistory,
+    updateExtractedAction
   };
 }
