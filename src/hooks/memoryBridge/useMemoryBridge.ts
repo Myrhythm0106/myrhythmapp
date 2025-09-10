@@ -74,6 +74,7 @@ export function useMemoryBridge() {
         body: {
           audio: audioData,
           meetingId: currentMeeting.id,
+          userId: user.id,
           meetingData: {
             title: currentMeeting.meeting_title,
             type: currentMeeting.meeting_type,

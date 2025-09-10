@@ -34,9 +34,28 @@ serve(async (req) => {
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    const { filePath, meetingId, meetingData, audio } = await req.json();
+    const { filePath, meetingId, meetingData, audio, userId } = await req.json();
 
     console.log('Processing meeting audio for meeting:', meetingId);
+
+    // Get userId - either from direct parameter or from meeting record
+    let resolvedUserId = userId || meetingData?.userId || meetingData?.user_id;
+    
+    if (!resolvedUserId) {
+      console.log('UserId not provided, fetching from meeting record...');
+      const { data: meetingRecord, error: meetingError } = await supabase
+        .from('meeting_recordings')
+        .select('user_id')
+        .eq('id', meetingId)
+        .single();
+      
+      if (meetingError) {
+        throw new Error(`Failed to fetch meeting record: ${meetingError.message}`);
+      }
+      
+      resolvedUserId = meetingRecord.user_id;
+      console.log('Retrieved userId from meeting record:', resolvedUserId);
+    }
 
     let audioBlob;
     let transcriptText = '';
@@ -175,17 +194,21 @@ serve(async (req) => {
       console.error('Error updating meeting record:', updateError);
     }
 
-    // Extract ACTs using the existing function
+    // Extract ACTs using the existing function with resolved userId
+    console.log('Extracting ACTs with userId:', resolvedUserId);
     const { data: extractionData, error: extractionError } = await supabase.functions.invoke('extract-acts-incremental', {
       body: {
         transcript: transcriptText,
         meetingId: meetingId,
-        userId: meetingData?.userId || meetingData?.user_id
+        userId: resolvedUserId
       }
     });
 
     if (extractionError) {
       console.error('Error extracting ACTs:', extractionError);
+      console.error('Extraction error details:', JSON.stringify(extractionError, null, 2));
+    } else {
+      console.log('ACT extraction successful, found:', extractionData?.actionsCount || 0, 'actions');
     }
 
     console.log('Processing completed successfully');
