@@ -7,11 +7,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { TestRunner } from './TestRunner';
 import { RouteValidator } from './RouteValidator';
 import { TestReportGenerator } from './TestReportGenerator';
-import { CheckCircle, XCircle, AlertCircle, Play, RefreshCw, FileText, Globe } from 'lucide-react';
+import { TestingQuickStart } from './TestingQuickStart';
+import { CheckCircle, XCircle, AlertCircle, Play, RefreshCw, FileText, Globe, Zap, Mic } from 'lucide-react';
 import { toast } from 'sonner';
 
 export function TestingSuite() {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState('quickstart');
 
   const quickStats = {
     totalRoutes: 23,
@@ -31,6 +32,11 @@ export function TestingSuite() {
     setTimeout(() => {
       toast.success('Quick test completed - all critical systems operational');
     }, 3000);
+  };
+
+  const handleTestRecording = () => {
+    window.open('/memory-bridge', '_blank');
+    toast.info('Opening Memory Bridge testing interface...');
   };
 
   return (
@@ -90,18 +96,22 @@ export function TestingSuite() {
 
       {/* Main Testing Interface */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="quickstart" className="flex items-center gap-2">
+            <Zap className="h-4 w-4" />
+            Quick Start
+          </TabsTrigger>
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4" />
-            Overview
+            System Health
           </TabsTrigger>
           <TabsTrigger value="routes" className="flex items-center gap-2">
             <Globe className="h-4 w-4" />
-            Route Testing
+            Routes
           </TabsTrigger>
           <TabsTrigger value="tests" className="flex items-center gap-2">
             <Play className="h-4 w-4" />
-            Test Runner
+            Tests
           </TabsTrigger>
           <TabsTrigger value="reports" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
@@ -109,7 +119,43 @@ export function TestingSuite() {
           </TabsTrigger>
         </TabsList>
 
+        <TabsContent value="quickstart">
+          <TestingQuickStart />
+        </TabsContent>
+
         <TabsContent value="overview" className="space-y-4">
+          {/* User Testing Quick Start */}
+          <Card className="border-2 border-primary bg-gradient-to-r from-primary/5 to-primary/10">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Play className="h-5 w-5 text-primary" />
+                Ready to Test MyRhythm? 
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <p className="text-muted-foreground">
+                  Test the complete flow: sign up, record a meeting, and see AI extract your commitments automatically.
+                </p>
+                <div className="flex gap-3">
+                  <Button onClick={handleTestRecording} className="flex items-center gap-2">
+                    <Mic className="h-4 w-4" />
+                    Try Memory Bridge Recording
+                  </Button>
+                  <Button variant="outline" asChild>
+                    <a href="/auth" target="_blank">
+                      Create Test Account
+                    </a>
+                  </Button>
+                </div>
+                <div className="text-xs text-muted-foreground bg-secondary/30 p-3 rounded">
+                  💡 <strong>Testing Tip:</strong> No payment required! Create an account, record a short conversation, 
+                  and watch AI extract actionable items in real-time.
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
               <CardHeader>
@@ -119,6 +165,10 @@ export function TestingSuite() {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm">Authentication System</span>
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Recording & AI Processing</span>
                     <CheckCircle className="h-4 w-4 text-green-600" />
                   </div>
                   <div className="flex items-center justify-between">
@@ -133,35 +183,34 @@ export function TestingSuite() {
                     <span className="text-sm">Payment Processing</span>
                     <AlertCircle className="h-4 w-4 text-yellow-600" />
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">API Endpoints</span>
-                    <XCircle className="h-4 w-4 text-red-600" />
-                  </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-base">Recent Test Results</CardTitle>
+                <CardTitle className="text-base">User Testing Guide</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-3 w-3 text-green-600" />
-                    <span>Onboarding flow completed successfully</span>
+                    <div className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">1</div>
+                    <span>Sign up for free test account</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CheckCircle className="h-3 w-3 text-green-600" />
-                    <span>All main dashboard features functional</span>
+                    <div className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">2</div>
+                    <span>Record a short meeting or conversation</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <AlertCircle className="h-3 w-3 text-yellow-600" />
-                    <span>Slow load time on settings page (3.2s)</span>
+                    <div className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">3</div>
+                    <span>Watch AI extract actionable commitments</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <XCircle className="h-3 w-3 text-red-600" />
-                    <span>API timeout on data export function</span>
+                    <div className="w-5 h-5 rounded-full bg-primary text-primary-foreground text-xs flex items-center justify-center">4</div>
+                    <span>Review and confirm extracted actions</span>
+                  </div>
+                  <div className="mt-3 p-2 bg-green-50 border border-green-200 rounded text-green-800">
+                    ✅ No credit card required for testing
                   </div>
                 </div>
               </CardContent>

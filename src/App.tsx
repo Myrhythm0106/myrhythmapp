@@ -48,6 +48,7 @@ import SubscribeSuccess from "./pages/SubscribeSuccess";
 import SubscribeCancel from "./pages/SubscribeCancel";
 import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
+import TestingSuitePage from "./pages/TestingSuitePage";
 import TestMemoryBridge from "./routes/TestMemoryBridge";
 import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDashboard";
 import { YourJourneyAwaitsPage } from "./pages/YourJourneyAwaitsPage";
@@ -100,6 +101,7 @@ function App() {
                     
                     <Route path="/memory-bridge" element={<ProtectedRoute><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/memory-bridge/test" element={<ProtectedRoute><TestMemoryBridge /></ProtectedRoute>} />
+                    <Route path="/testing-suite" element={<ProtectedRoute requireAuth={false}><TestingSuitePage /></ProtectedRoute>} />
                     <Route path="/quick-capture" element={<ProtectedRoute><QuickCapture /></ProtectedRoute>} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />

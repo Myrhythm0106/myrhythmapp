@@ -22,7 +22,9 @@ import {
   ArrowRight,
   Play,
   CheckSquare,
-  Clock
+  Clock,
+  CheckCircle,
+  FileText
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -128,13 +130,60 @@ export function MemoryBridgeStarterDashboard() {
       <MVPTopNav />
       <div className="min-h-screen">
         <div className="max-w-4xl mx-auto space-y-6 p-6">
+          {/* Authentication Check Banner */}
+          {!user && (
+            <Card className="border-2 border-red-200 bg-red-50">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-red-800">Sign In Required</h3>
+                    <p className="text-red-700">You need to sign in to test recordings and ACT extraction</p>
+                  </div>
+                  <Button onClick={() => navigate('/auth')} className="bg-red-600 hover:bg-red-700">
+                    Sign In / Sign Up
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Current User Info */}
+          {user && (
+            <Card className="border-green-200 bg-green-50">
+              <CardContent className="pt-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <span className="text-green-800">Signed in as: <strong>{user.email}</strong></span>
+                  </div>
+                  <Badge className="bg-green-100 text-green-800">Ready to Test</Badge>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* MVP Page Header */}
           <MVPPageHeader 
-            title="Welcome to MyRhythm"
-            subtitle="Let's start your journey with your first Memory Bridge recording"
+            title="Memory Bridge Testing"
+            subtitle={user ? "Record a conversation and watch AI extract actionable commitments" : "Sign in to start testing the complete Memory Bridge experience"}
           />
 
-        {/* Progress Indicator */}
+          {/* Testing Interface - Hidden from public but accessible for QA */}
+          {user && (
+            <div className="mt-4 text-center">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.open('/testing-suite', '_blank')}
+                className="text-xs"
+              >
+                <FileText className="h-3 w-3 mr-1" />
+                Open Testing Suite
+              </Button>
+            </div>
+          )}
+
+          {/* Progress Indicator */}
         <Card className="border-memory-emerald-200 bg-gradient-to-r from-white via-memory-emerald-50/30 to-brain-health-50/30">
           <CardContent className="pt-6">
             <div className="flex items-center justify-between">
