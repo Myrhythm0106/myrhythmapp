@@ -25,6 +25,7 @@ import {
   Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 import { MVPThemeWrapper } from '@/components/theme/MVPThemeWrapper';
 import { MVPTopNav } from '@/components/mvp/MVPTopNav';
 import { MVPPageHeader } from '@/components/mvp/MVPPageHeader';
@@ -93,9 +94,33 @@ export function MemoryBridgeStarterDashboard() {
   };
 
   const handleBackfillExtraction = async () => {
-    const meetings = await fetchMeetingHistory();
-    // TODO: Implement backfill logic to re-extract ACTs from past recordings
-    toast.success('Backfill extraction started for past recordings');
+    try {
+      const meetings = await fetchMeetingHistory();
+      let processedCount = 0;
+      
+      for (const meeting of meetings) {
+        if (meeting.transcript && !meeting.processing_completed_at) {
+          // Re-extract ACTs from existing transcripts
+          const { data, error } = await supabase.functions.invoke('extract-acts-incremental', {
+            body: {
+              transcript: meeting.transcript,
+              meetingId: meeting.id,
+              userId: user?.id
+            }
+          });
+          
+          if (!error) {
+            processedCount++;
+          }
+        }
+      }
+      
+      await fetchExtractedActions();
+      toast.success(`Re-extracted ACTs from ${processedCount} past recordings`);
+    } catch (error) {
+      console.error('Backfill extraction error:', error);
+      toast.error('Failed to re-extract past recordings');
+    }
   };
 
   return (

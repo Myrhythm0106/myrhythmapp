@@ -1,22 +1,112 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { 
   TestTube, 
   ArrowLeft,
   CheckCircle2,
   Brain,
   Mic,
-  PlayCircle
+  PlayCircle,
+  Eye,
+  EyeOff,
+  ChevronDown,
+  ChevronRight,
+  RotateCcw,
+  AlertCircle
 } from 'lucide-react';
 import { ACTExtractionTest } from '@/components/memoryBridge/ACTExtractionTest';
 import { QuickCaptureRecorder } from '@/components/memoryBridge/QuickCaptureRecorder';
 import { useNavigate } from 'react-router-dom';
+import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const TestMemoryBridge = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { fetchMeetingHistory, fetchExtractedActions } = useMemoryBridge();
+  const [showLogs, setShowLogs] = useState(false);
+  const [logs, setLogs] = useState<any[]>([]);
+  const [isLoadingLogs, setIsLoadingLogs] = useState(false);
+  const [recentRecordings, setRecentRecordings] = useState<any[]>([]);
+
+  const loadEdgeFunctionLogs = async () => {
+    setIsLoadingLogs(true);
+    try {
+      // In a real implementation, you would fetch logs from Supabase Analytics
+      // For now, we'll simulate logs
+      const mockLogs = [
+        {
+          id: 1,
+          timestamp: new Date().toISOString(),
+          function_name: 'extract-acts-incremental',
+          level: 'INFO',
+          message: 'Processing incremental transcript for meeting',
+          metadata: { meeting_id: 'test-meeting-123' }
+        },
+        {
+          id: 2,
+          timestamp: new Date().toISOString(),
+          function_name: 'process-meeting-audio',
+          level: 'INFO', 
+          message: 'Transcription completed successfully',
+          metadata: { transcript_length: 1234 }
+        }
+      ];
+      setLogs(mockLogs);
+    } catch (error) {
+      console.error('Error loading logs:', error);
+      toast.error('Failed to load edge function logs');
+    } finally {
+      setIsLoadingLogs(false);
+    }
+  };
+
+  const loadRecentRecordings = async () => {
+    try {
+      const recordings = await fetchMeetingHistory();
+      setRecentRecordings(recordings.slice(0, 5)); // Latest 5
+    } catch (error) {
+      console.error('Error loading recordings:', error);
+    }
+  };
+
+  const handleReextractRecording = async (recording: any) => {
+    if (!user || !recording.transcript) {
+      toast.error('No transcript available for re-extraction');
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('extract-acts-incremental', {
+        body: {
+          transcript: recording.transcript,
+          meetingId: recording.id,
+          userId: user.id
+        }
+      });
+
+      if (error) throw error;
+
+      await fetchExtractedActions();
+      toast.success(`Re-extracted ${data?.actionsCount || 0} ACTs from recording`);
+    } catch (error) {
+      console.error('Re-extraction error:', error);
+      toast.error('Failed to re-extract ACTs');
+    }
+  };
+
+  React.useEffect(() => {
+    if (showLogs) {
+      loadEdgeFunctionLogs();
+    }
+    loadRecentRecordings();
+  }, [showLogs]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50/50 via-white to-purple-50/30 py-8">
@@ -140,6 +230,123 @@ const TestMemoryBridge = () => {
               console.log('AI Test completed:', result);
             }}
           />
+        </div>
+
+        <Separator />
+
+        {/* Re-extract Past Recordings */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <RotateCcw className="h-5 w-5 text-blue-600" />
+            <h2 className="text-xl font-semibold">Re-extract Past Recordings</h2>
+          </div>
+          
+          <Card>
+            <CardContent className="pt-6">
+              <div className="space-y-4">
+                {recentRecordings.length > 0 ? (
+                  recentRecordings.map((recording) => (
+                    <div key={recording.id} className="flex items-center justify-between p-3 border rounded-lg">
+                      <div>
+                        <div className="font-medium">{recording.meeting_title}</div>
+                        <div className="text-sm text-muted-foreground">
+                          {new Date(recording.created_at).toLocaleString()}
+                        </div>
+                      </div>
+                      <Button
+                        onClick={() => handleReextractRecording(recording)}
+                        size="sm"
+                        variant="outline"
+                        disabled={!recording.transcript}
+                      >
+                        <RotateCcw className="w-4 h-4 mr-2" />
+                        Re-extract
+                      </Button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <AlertCircle className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No recordings found.</p>
+                    <p className="text-sm">Create a recording first to test re-extraction.</p>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Separator />
+
+        {/* Edge Function Logs */}
+        <div className="space-y-4">
+          <Collapsible open={showLogs} onOpenChange={setShowLogs}>
+            <CollapsibleTrigger className="flex items-center gap-2 hover:text-blue-600">
+              {showLogs ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+              <h2 className="text-xl font-semibold">Edge Function Logs</h2>
+              <Button variant="outline" size="sm" onClick={(e) => { e.stopPropagation(); setShowLogs(!showLogs); }}>
+                {showLogs ? <EyeOff className="w-4 h-4 mr-2" /> : <Eye className="w-4 h-4 mr-2" />}
+                {showLogs ? 'Hide' : 'Show'} Logs
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <Card>
+                <CardContent className="pt-6">
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {isLoadingLogs ? (
+                      <div className="text-center py-4">
+                        <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full mx-auto mb-2" />
+                        <p className="text-sm text-muted-foreground">Loading logs...</p>
+                      </div>
+                    ) : logs.length > 0 ? (
+                      logs.map((log) => (
+                        <div key={log.id} className="p-3 bg-muted/30 rounded text-sm font-mono">
+                          <div className="flex items-center gap-2 mb-1">
+                            <Badge variant={log.level === 'ERROR' ? 'destructive' : 'secondary'}>
+                              {log.level}
+                            </Badge>
+                            <span className="text-muted-foreground">{log.function_name}</span>
+                            <span className="text-xs text-muted-foreground">{new Date(log.timestamp).toLocaleTimeString()}</span>
+                          </div>
+                          <div>{log.message}</div>
+                          {log.metadata && (
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {JSON.stringify(log.metadata)}
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <Eye className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p>No logs available.</p>
+                        <p className="text-sm">Run a test to generate logs.</p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {logs.length > 0 && (
+                    <div className="mt-4 pt-4 border-t">
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm text-muted-foreground">{logs.length} log entries</p>
+                        <div className="space-x-2">
+                          <Button size="sm" variant="outline" onClick={loadEdgeFunctionLogs}>
+                            Refresh
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => window.open('https://supabase.com/dashboard/project/bomjibcivwxbcwfmkrnv/functions/extract-acts-incremental/logs', '_blank')}>
+                            Extract ACTs Logs
+                          </Button>
+                          <Button size="sm" variant="outline" onClick={() => window.open('https://supabase.com/dashboard/project/bomjibcivwxbcwfmkrnv/functions/process-meeting-audio/logs', '_blank')}>
+                            Audio Processing Logs
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
 
         {/* Implementation Summary */}

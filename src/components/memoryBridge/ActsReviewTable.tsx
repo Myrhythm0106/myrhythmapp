@@ -6,10 +6,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight, Calendar, Download, Check, Clock } from 'lucide-react';
+import { ChevronDown, ChevronRight, Calendar, Download, Check, Clock, ExternalLink } from 'lucide-react';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { useActsScheduling } from '@/hooks/memoryBridge/useActsScheduling';
-import { generateICS } from '@/utils/ics';
+import { generateICS, generateGoogleCalendarLink, generateCalendarLinks } from '@/utils/ics';
 import { toast } from 'sonner';
 
 interface ActsReviewTableProps {
@@ -140,6 +140,31 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
     toast.success('Calendar file downloaded');
   };
 
+  const handleAddToGoogleCalendar = async (actionIds: string[]) => {
+    const actionsToExport = actions.filter(a => actionIds.includes(a.id!));
+    
+    if (actionsToExport.length === 1) {
+      // Single action - open Google Calendar directly
+      const action = actionsToExport[0];
+      const suggestion = suggestions[action.id!]?.[0];
+      const event = {
+        title: action.action_text,
+        description: `Context: ${action.relationship_impact || ''}\n\nAssignee: ${action.assigned_to || ''}\nPriority: ${getPriorityText(action.priority_level)}`,
+        start: suggestion ? new Date(`${suggestion.date}T${suggestion.time}`) : new Date(),
+        end: suggestion ? new Date(`${suggestion.date}T${suggestion.time}`) : new Date(),
+        location: ''
+      };
+      
+      const googleUrl = generateGoogleCalendarLink(event);
+      window.open(googleUrl, '_blank');
+      toast.success('Opening Google Calendar');
+    } else {
+      // Multiple actions - download ICS and suggest import
+      await handleDownloadICS(actionIds);
+      toast.success('Calendar file downloaded. Import into Google Calendar.');
+    }
+  };
+
   const toggleRowExpansion = (actionId: string) => {
     const newExpanded = new Set(expandedRows);
     if (newExpanded.has(actionId)) {
@@ -213,10 +238,19 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
               <Button
                 variant="outline"
                 size="sm"
+                onClick={() => handleAddToGoogleCalendar(Array.from(selectedActions))}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Google Calendar
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => handleDownloadICS(Array.from(selectedActions))}
               >
                 <Calendar className="w-4 h-4 mr-2" />
-                Add to Calendar
+                Download ICS
               </Button>
             </>
           )}
