@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { MVPMainFlow } from './MVPMainFlow';
 import { X } from 'lucide-react';
 
@@ -12,6 +12,10 @@ export function MVPOnboardingModal({ isOpen, onOpenChange }: MVPOnboardingModalP
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="w-screen h-screen max-w-none max-h-none bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 border-0 p-0 overflow-y-auto">
+        <DialogHeader className="sr-only">
+          <DialogTitle>MyRhythm Onboarding</DialogTitle>
+          <DialogDescription>Begin your setup: payment, privacy, and assessment.</DialogDescription>
+        </DialogHeader>
         {/* Close button */}
         <button
           onClick={() => onOpenChange(false)}
