@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSubscription } from '@/contexts/SubscriptionContext';
+import { MVPProgressTracker } from './MVPProgressTracker';
 import { 
   Brain,
   Clock,
@@ -91,6 +92,43 @@ const BRIEF_QUESTIONS: AssessmentQuestion[] = [
       { value: 'often', label: 'Often - Stress affects my cognition', score: 3 },
       { value: 'constantly', label: 'Constantly - Overwhelmed and anxious', score: 4 }
     ]
+  },
+  // NEW: Optimal timing questions for meeting scheduling
+  {
+    id: 'optimal_timing_1',
+    question: 'When do you typically feel most mentally sharp and focused?',
+    category: 'daily_function',
+    options: [
+      { value: 'early_morning', label: 'Early Morning (6-9 AM) - I\'m sharpest first thing', score: 0 },
+      { value: 'mid_morning', label: 'Mid-Morning (9-11 AM) - After I\'ve warmed up', score: 0 },
+      { value: 'late_morning', label: 'Late Morning (11 AM-1 PM) - Just before lunch', score: 0 },
+      { value: 'afternoon', label: 'Afternoon (1-4 PM) - Post-lunch energy boost', score: 0 },
+      { value: 'evening', label: 'Evening (4-7 PM) - Second wind period', score: 0 }
+    ]
+  },
+  {
+    id: 'optimal_timing_2',
+    question: 'What time of day do you prefer for important conversations or meetings?',
+    category: 'daily_function',
+    options: [
+      { value: 'morning', label: 'Morning (8-11 AM) - When I\'m fresh and alert', score: 0 },
+      { value: 'late_morning', label: 'Late Morning (10 AM-12 PM) - After settling in', score: 0 },
+      { value: 'early_afternoon', label: 'Early Afternoon (12-2 PM) - Midday energy', score: 0 },
+      { value: 'mid_afternoon', label: 'Mid-Afternoon (2-4 PM) - Avoid post-lunch dip', score: 0 },
+      { value: 'flexible', label: 'I\'m flexible - No strong preference', score: 0 }
+    ]
+  },
+  {
+    id: 'optimal_timing_3',
+    question: 'When can you typically maintain focus for 30+ minutes without interruption?',
+    category: 'attention',
+    options: [
+      { value: 'very_early', label: 'Very Early Morning (6-8 AM) - Before the world wakes up', score: 0 },
+      { value: 'morning', label: 'Morning (8-11 AM) - Natural focus time', score: 0 },
+      { value: 'midday', label: 'Midday (11 AM-2 PM) - Peak performance hours', score: 0 },
+      { value: 'afternoon', label: 'Afternoon (2-5 PM) - Steady concentration', score: 0 },
+      { value: 'evening', label: 'Evening (5-8 PM) - Quiet focus time', score: 0 }
+    ]
   }
 ];
 
@@ -142,7 +180,12 @@ interface AssessmentResult {
   lockedInsights: string[];
 }
 
-export function MVPAssessmentFlow() {
+interface MVPAssessmentFlowProps {
+  onComplete?: (result: any) => void;
+  onBack?: () => void;
+}
+
+export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps = {}) {
   const navigate = useNavigate();
   const location = useLocation();
   const { hasFeature, tier } = useSubscription();
@@ -272,6 +315,11 @@ export function MVPAssessmentFlow() {
     if (!hasFeature('fullAssessment') && isComprehensive) {
       setShowPaymentGate(true);
     }
+
+    // Call onComplete callback if provided (for MVP flow)
+    if (onComplete) {
+      onComplete(result);
+    }
   };
 
   const generateRecommendations = (categoryScores: Record<string, number>, riskLevel: string): string[] => {
@@ -364,7 +412,9 @@ export function MVPAssessmentFlow() {
     const canSeeFullResults = hasFeature('fullAssessment') || !isComprehensive;
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15 py-8">
+      <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+        <MVPProgressTracker currentStep="results" />
+         <div className="py-8">
         <div className="max-w-4xl mx-auto px-6">
           <div className="text-center mb-8">
             <Badge className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white border-0 px-4 py-2 mb-4">
@@ -520,15 +570,18 @@ export function MVPAssessmentFlow() {
               Begin Your MYRHYTHM Journey
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-          </div>
+           </div>
+         </div>
         </div>
       </div>
-    );
-  }
+     );
+   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15 py-8">
-      <div className="max-w-2xl mx-auto px-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+      <MVPProgressTracker currentStep="assessment" />
+      <div className="py-8">
+        <div className="max-w-2xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-8">
           <Badge className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white border-0 px-4 py-2 mb-4">
@@ -626,7 +679,8 @@ export function MVPAssessmentFlow() {
           progress={progress}
           encouragementMessage="Every answer helps us understand how to support you better. You're taking control of your cognitive wellness."
         />
+        </div>
       </div>
     </div>
-  );
+   );
 }

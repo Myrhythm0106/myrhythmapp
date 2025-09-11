@@ -1,7 +1,6 @@
 import React from 'react';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ThreeStepWarmOnboarding } from '@/components/onboarding/warm/ThreeStepWarmOnboarding';
-import { BackButton } from '@/components/ui/BackButton';
+import { MVPMainFlow } from './MVPMainFlow';
 import { X } from 'lucide-react';
 
 interface MVPOnboardingModalProps {
@@ -21,7 +20,7 @@ export function MVPOnboardingModal({ isOpen, onOpenChange }: MVPOnboardingModalP
         >
           <X className="h-5 w-5" />
         </button>
-        <ThreeStepWarmOnboarding variant="mvp" />
+        <MVPMainFlow />
       </DialogContent>
     </Dialog>
   );
