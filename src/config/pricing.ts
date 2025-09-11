@@ -12,26 +12,26 @@ export const basePricing: PlanPricing[] = [
   {
     id: 'starter',
     name: 'MyStarter', 
-    monthlyPrice: 6.99,
-    yearlyPrice: 59.99,
-    monthlyPricePence: 699,
-    yearlyPricePence: 5999
+    monthlyPrice: 7.00,
+    yearlyPrice: 70.00,
+    monthlyPricePence: 700,
+    yearlyPricePence: 7000
   },
   {
     id: 'smart_pro',
     name: 'MyStretch',
-    monthlyPrice: 12.99,
-    yearlyPrice: 119.99,
-    monthlyPricePence: 1299,
-    yearlyPricePence: 11999
+    monthlyPrice: 13.00,
+    yearlyPrice: 130.00,
+    monthlyPricePence: 1300,
+    yearlyPricePence: 13000
   },
   {
     id: 'family_smart',
     name: 'MyLeap',
-    monthlyPrice: 19.99,
-    yearlyPrice: 179.99,
-    monthlyPricePence: 1999,
-    yearlyPricePence: 17999
+    monthlyPrice: 20.00,
+    yearlyPrice: 200.00,
+    monthlyPricePence: 2000,
+    yearlyPricePence: 20000
   }
 ];
 

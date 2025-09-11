@@ -35,7 +35,7 @@ export function WelcomeCelebration({ showOnMount = false, onClose }: WelcomeCele
       setIsOpen(true);
       // Auto-progress through steps
       const timer = setTimeout(() => {
-        if (currentStep < 2) {
+        if (currentStep < 1) {
           setCurrentStep(currentStep + 1);
         }
       }, 3000);
@@ -74,13 +74,6 @@ export function WelcomeCelebration({ showOnMount = false, onClose }: WelcomeCele
       subtitle: "Where transformation begins",
       description: "You're now part of an exclusive community dedicated to cognitive excellence and brain health.",
       gradient: "from-brain-health-500 to-memory-emerald-500"
-    },
-    {
-      icon: Zap,
-      title: "⚡ Your Journey Awaits",
-      subtitle: "Premium tools now at your fingertips",
-      description: "Access everything you need: advanced assessments, personalized training, and expert guidance.",
-      gradient: "from-memory-emerald-500 to-beacon-500"
     }
   ];
 

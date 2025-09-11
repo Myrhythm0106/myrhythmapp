@@ -23,6 +23,7 @@ import {
 import { toast } from "sonner";
 import { ContinuousGuidance } from "@/components/guidance/ContinuousGuidance";
 import { useAnalytics } from '@/hooks/useAnalytics';
+import { AssessmentTypeSelection } from './AssessmentTypeSelection';
 import { BasicAssessmentResult } from '@/types/assessmentTypes';
 
 interface AssessmentQuestion {
@@ -191,7 +192,10 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   const { hasFeature, tier } = useSubscription();
   const { trackEvent } = useAnalytics();
   
-  const assessmentType = location.state?.assessmentType || 'brief';
+  const [showAssessmentTypeSelection, setShowAssessmentTypeSelection] = useState(true);
+  const [selectedAssessmentType, setSelectedAssessmentType] = useState<'brief' | 'comprehensive'>('brief');
+  
+  const assessmentType = selectedAssessmentType;
   const isComprehensive = assessmentType === 'comprehensive';
   const questions = isComprehensive ? COMPREHENSIVE_QUESTIONS : BRIEF_QUESTIONS;
   
@@ -201,6 +205,28 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [showPaymentGate, setShowPaymentGate] = useState(false);
   const [isPreview, setIsPreview] = useState(true);
+
+  const handleAssessmentTypeSelect = (type: 'brief' | 'comprehensive') => {
+    setSelectedAssessmentType(type);
+    setShowAssessmentTypeSelection(false);
+  };
+
+  const handleBackToTypeSelection = () => {
+    setShowAssessmentTypeSelection(true);
+    setCurrentQuestion(0);
+    setAnswers({});
+    setShowResults(false);
+  };
+
+  // Show assessment type selection first
+  if (showAssessmentTypeSelection) {
+    return (
+      <AssessmentTypeSelection 
+        onSelectType={handleAssessmentTypeSelect}
+        onBack={onBack}
+      />
+    );
+  }
 
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const currentQ = questions[currentQuestion];

@@ -8,6 +8,7 @@ import { Brain, Crown, Heart, Sparkles, Calendar, BookOpen, Award, TrendingUp, A
 import { FounderStorySection } from '@/components/memory-first/sections/FounderStorySection';
 import { YourRhythmSection } from '@/components/founders-story/YourRhythmSection';
 import { PainPointImageCard } from './PainPointImageCard';
+import { FixedRegisterButton } from './FixedRegisterButton';
 import { useNavigate } from 'react-router-dom';
 
 interface Feature {
@@ -398,6 +399,9 @@ export function MVPCore() {
           </Button>
         </div>
       </section>
+
+      {/* Fixed Register Button */}
+      <FixedRegisterButton />
     </div>
   );
 }
