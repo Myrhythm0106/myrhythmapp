@@ -80,8 +80,8 @@ export function WelcomeCelebration({ showOnMount = false, onClose }: WelcomeCele
   const features = [
     {
       icon: Brain,
-      title: "Advanced Cognitive Training",
-      description: "AI-powered brain games adapted to your unique cognitive profile",
+      title: "Personalized Brain Health",
+      description: "Memory enhancement tools and cognitive wellness strategies tailored to you",
       color: "brain-health"
     },
     {
@@ -99,7 +99,7 @@ export function WelcomeCelebration({ showOnMount = false, onClose }: WelcomeCele
     {
       icon: TrendingUp,
       title: "Precision Progress Tracking",
-      description: "Advanced analytics to monitor your cognitive wellness journey",
+      description: "Monitor your cognitive wellness journey with detailed insights",
       color: "beacon"
     }
   ];

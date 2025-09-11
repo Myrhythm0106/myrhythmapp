@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Play, Trash2, Search, Calendar, FileText, Heart, Stethoscope, User } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
+import { useDeleteConfirmation } from '@/hooks/useDeleteConfirmation';
+import { DeleteConfirmationDialog } from '@/components/ui/DeleteConfirmationDialog';
 import { VoiceRecording } from '@/types/voiceRecording';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -22,6 +24,8 @@ export function VoiceRecordingsList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [playingAudio, setPlayingAudio] = useState<HTMLAudioElement | null>(null);
+  
+  const deleteConfirmation = useDeleteConfirmation();
 
   useEffect(() => {
     fetchRecordings();
@@ -74,6 +78,17 @@ export function VoiceRecordingsList() {
         setPlayingAudio(null);
       };
     }
+  };
+
+  const handleDeleteClick = (recording: VoiceRecording) => {
+    deleteConfirmation.confirmDelete(
+      {
+        id: recording.id,
+        name: recording.title,
+        type: 'recording'
+      },
+      () => handleDelete(recording.id)
+    );
   };
 
   const handleDelete = async (recordingId: string) => {
@@ -186,34 +201,14 @@ export function VoiceRecordingsList() {
                     </Button>
                     
                     {!recording.legal_retention_required && (
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Delete Recording</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to delete "{recording.title}"? This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => handleDelete(recording.id)}
-                              className="bg-red-600 hover:bg-red-700"
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <Button
+                        onClick={() => handleDeleteClick(recording)}
+                        size="sm"
+                        variant="outline"
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     )}
                   </div>
                 </div>
@@ -222,6 +217,15 @@ export function VoiceRecordingsList() {
           </div>
         )}
       </CardContent>
+      
+      <DeleteConfirmationDialog
+        isOpen={deleteConfirmation.isOpen}
+        onConfirm={deleteConfirmation.handleConfirm}
+        onCancel={deleteConfirmation.handleCancel}
+        title={deleteConfirmation.title}
+        description={deleteConfirmation.description}
+        itemName={deleteConfirmation.itemName}
+      />
     </Card>
   );
 }

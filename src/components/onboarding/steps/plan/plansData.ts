@@ -24,7 +24,7 @@ export const plans: Plan[] = [
     ]
   },
   {
-    id: "stretch",
+    id: "stretch", 
     name: "MyStretch",
     description: "Enhanced experience with advanced momentum building",
     price: "£13.00/month",
@@ -50,7 +50,7 @@ export const plans: Plan[] = [
   {
     id: "leap",
     name: "MyLeap",
-    description: "Complete family wellness journey with unlimited support",
+    description: "Complete family wellness journey with unlimited support", 
     price: "£20.00/month",
     annualPrice: "£200.00/year",
     monthlySavings: "Save £40.00",

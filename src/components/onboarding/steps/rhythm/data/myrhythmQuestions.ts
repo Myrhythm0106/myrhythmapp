@@ -136,6 +136,38 @@ export const quickStartQuestions: MyrhythmQuestion[] = [
     nextStepPreview: "Now let's identify what kind of support works best for you..."
   },
   {
+    id: 'optimal_work_time',
+    letter: 'R', 
+    letterName: 'RESTORE ENERGY',
+    question: "When do you prefer to tackle your most important work or activities?",
+    type: 'multiple_choice',
+    options: [
+      { 
+        value: 'early_morning_focus', 
+        label: 'Early morning (6-9 AM) - fresh mind',
+        insight: 'Morning clarity is your superpower - we\'ll suggest scheduling key tasks in this window.'
+      },
+      { 
+        value: 'mid_morning_focus', 
+        label: 'Mid-morning (9 AM-12 PM) - warmed up',
+        insight: 'You need time to get into flow - we\'ll build warm-up routines for peak performance.'
+      },
+      { 
+        value: 'afternoon_focus', 
+        label: 'Afternoon (1-4 PM) - post-lunch energy',
+        insight: 'You thrive in afternoon focus sessions - we\'ll optimize your schedule around this natural peak.'
+      },
+      { 
+        value: 'evening_focus', 
+        label: 'Evening (5-8 PM) - quiet concentration',
+        insight: 'Evening is your focused thinking time - we\'ll help protect and maximize these valuable hours.'
+      }
+    ],
+    quickStartQuestion: false,
+    insight: "Knowing your optimal focus time allows us to suggest the best scheduling for important activities like Memory Bridge sessions.",
+    nextStepPreview: "Perfect! This will help us recommend optimal times for your most important activities..."
+  },
+  {
     id: 'support_preference',
     letter: 'H',
     letterName: 'HARNESS SUPPORT',
