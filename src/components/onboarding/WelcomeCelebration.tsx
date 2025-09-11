@@ -50,7 +50,8 @@ export function WelcomeCelebration({ showOnMount = false, onClose }: WelcomeCele
 
   const handleBeginJourney = () => {
     handleClose();
-    navigate("/start");
+    // Go straight to MVP assessment flow after checkout
+    navigate("/mvp/assessment-flow?type=brief&path=guided&flow=post-payment");
     toast.success("Welcome to your transformative journey!");
   };
 

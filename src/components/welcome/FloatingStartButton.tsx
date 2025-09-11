@@ -8,10 +8,10 @@ export function FloatingStartButton() {
   const navigate = useNavigate();
 
   const handleGetStarted = () => {
-    // Check if warm onboarding is complete
-    const onboardingCompleted = localStorage.getItem("myrhythm_onboarding_completed");
+    // Unified check for completion
+    const completed = localStorage.getItem('myrhythm_onboarding_completed') === 'true' || localStorage.getItem('myrhythm_onboarding_complete') === 'true';
     
-    if (onboardingCompleted === "true") {
+    if (completed) {
       // If onboarding is complete, check profile and go to appropriate destination
       const profileComplete = localStorage.getItem("myrhythm_profile_complete");
       if (profileComplete === "true") {

@@ -28,8 +28,11 @@ const Welcome = () => {
 
   const handleGuidedExperience = () => {
     localStorage.setItem('journey_mode', 'guided');
+    // Mark both keys to avoid any redirect inconsistencies
     localStorage.setItem('myrhythm_onboarding_complete', 'true');
-    navigate("/mvp/assessment-flow?type=guided&flow=post-payment");
+    localStorage.setItem('myrhythm_onboarding_completed', 'true');
+    // Start with brief assessment in guided mode
+    navigate("/mvp/assessment-flow?type=brief&path=guided&flow=post-payment");
   };
 
   const handleDiscoveryMode = () => {

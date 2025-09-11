@@ -28,7 +28,7 @@ interface WarmOnboardingState {
 }
 
 const STORAGE_KEY = 'myrhythm_warm_onboarding';
-const COMPLETED_KEY = 'myrhythm_onboarding_completed';
+const COMPLETED_KEY = 'myrhythm_onboarding_completed'; // kept for backward reference
 
 export function useWarmOnboarding() {
   const navigate = useNavigate();
@@ -142,8 +142,9 @@ export function useWarmOnboarding() {
         });
       }
 
-      // Mark onboarding as completed
-      localStorage.setItem(COMPLETED_KEY, 'true');
+      // Mark onboarding as completed (write both keys for consistency)
+      localStorage.setItem('myrhythm_onboarding_completed', 'true');
+      localStorage.setItem('myrhythm_onboarding_complete', 'true');
       localStorage.removeItem(STORAGE_KEY);
       
       await trackEvent('onboarding_complete', {
@@ -170,7 +171,7 @@ export function useWarmOnboarding() {
   };
 
   const isOnboardingCompleted = () => {
-    return localStorage.getItem(COMPLETED_KEY) === 'true';
+    return localStorage.getItem('myrhythm_onboarding_completed') === 'true' || localStorage.getItem('myrhythm_onboarding_complete') === 'true';
   };
 
   const startOnboarding = () => {

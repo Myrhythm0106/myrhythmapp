@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { isOnboardingCompleted } from '@/utils/onboardingStatus';
 
 export function RedirectToStart() {
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    // Check if onboarding is completed
-    const onboardingCompleted = localStorage.getItem('myrhythm_onboarding_completed') === 'true';
+    // Unified check for onboarding completion (supports both legacy/new keys)
+    const onboardingCompleted = isOnboardingCompleted();
     
     if (!onboardingCompleted) {
       // Preserve any query parameters for analytics
