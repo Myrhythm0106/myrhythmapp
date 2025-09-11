@@ -207,10 +207,39 @@ Return ONLY a JSON array:
       }
     }
 
+    // Calculate confidence score based on processing method and results
+    let confidenceScore = 50; // Base score
+    let processingMethod = 'fallback';
+    
+    if (extractedActions.length > 0) {
+      // Higher confidence if we found actions
+      confidenceScore += 30;
+      
+      // Bonus for structured actions with clear commitments
+      const structuredActions = extractedActions.filter(action => 
+        action.action_text.includes('will') || 
+        action.action_text.includes('commit') ||
+        action.assigned_to
+      );
+      confidenceScore += Math.min(structuredActions.length * 5, 20);
+    }
+    
+    // Determine processing method used (for UI display)
+    if (transcript.length > 100) {
+      processingMethod = openaiApiKey ? 'openai' : 'rule_based';
+      if (processingMethod === 'openai') confidenceScore += 15;
+    }
+    
+    // Cap at 100
+    confidenceScore = Math.min(confidenceScore, 100);
+
     return new Response(JSON.stringify({ 
       success: true, 
       actionsCount: extractedActions.length,
-      actions: extractedActions
+      actions: extractedActions,
+      confidenceScore,
+      processingMethod,
+      transcriptLength: transcript.length
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

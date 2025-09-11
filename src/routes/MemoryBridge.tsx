@@ -1,13 +1,8 @@
 import React from 'react';
-import { MemoryBridgeStarterDashboard } from '@/components/memoryBridge/MemoryBridgeStarterDashboard';
-import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
+import { EnhancedMemoryBridgeDashboard } from '@/components/memoryBridge/EnhancedMemoryBridgeDashboard';
 
 const MemoryBridge = () => {
-  const { extractedActions } = useMemoryBridge();
-  
-  // For Apple/Nike level experience: start with simplified dashboard
-  // Users can unlock full features through engagement
-  return <MemoryBridgeStarterDashboard />;
+  return <EnhancedMemoryBridgeDashboard />;
 };
 
 export default MemoryBridge;
