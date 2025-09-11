@@ -106,7 +106,6 @@ export function SetupProgressProvider({ children }: SetupProgressProviderProps) 
   const currentPath = window.location.pathname;
   const isVisible = [
     '/subscribe',
-    '/your-journey-awaits',
     '/onboarding',
     '/mvp/assessment-flow',
     '/setup-wizard'

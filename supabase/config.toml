@@ -41,3 +41,6 @@ verify_jwt = true
 
 [functions.extract-acts-incremental]
 verify_jwt = true
+
+[functions.trial-reminder]
+verify_jwt = false

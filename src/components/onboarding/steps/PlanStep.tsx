@@ -78,9 +78,10 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     localStorage.setItem('selected_plan', selected || '');
     localStorage.setItem('selected_billing', isAnnual ? 'annual' : 'monthly');
     localStorage.setItem('onboarding_started', 'true');
+    localStorage.setItem('payment_success', 'true');
     
-    // Navigate to Your Journey Awaits page instead of showing guide inline
-    window.location.href = '/your-journey-awaits';
+    // Navigate directly to subscribe success page (skip journey awaits)
+    window.location.href = '/subscribe/success?trial=1';
   };
 
   const handlePaymentCancel = () => {

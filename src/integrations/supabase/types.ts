@@ -1494,6 +1494,45 @@ export type Database = {
         }
         Relationships: []
       }
+      trial_subscriptions: {
+        Row: {
+          created_at: string
+          id: string
+          plan_type: string
+          reminder_sent_day5: boolean | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          trial_end_date: string
+          trial_start_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          plan_type: string
+          reminder_sent_day5?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_end_date?: string
+          trial_start_date?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          plan_type?: string
+          reminder_sent_day5?: boolean | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          trial_end_date?: string
+          trial_start_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trusted_devices: {
         Row: {
           created_at: string

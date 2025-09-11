@@ -18,11 +18,15 @@ function SubscribeSuccess() {
 
   const handleGuidedExperience = () => {
     localStorage.setItem('journey_mode', 'guided');
-    navigate("/onboarding/assessment");
+    // Track guided journey selection
+    localStorage.setItem('myrhythm_onboarding_complete', 'true');
+    navigate("/mvp/assessment-flow?type=guided&flow=post-payment");
   };
 
   const handleDiscoveryMode = () => {
     localStorage.setItem('journey_mode', 'discovery');
+    // Mark onboarding as complete for explorer path
+    localStorage.setItem('myrhythm_onboarding_complete', 'true');
     navigate("/dashboard");
   };
 
