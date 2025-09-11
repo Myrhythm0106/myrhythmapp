@@ -44,7 +44,7 @@ import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
 import SetupWizard from "./pages/SetupWizard";
 import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
-import SubscribeSuccess from "./pages/SubscribeSuccess";
+
 import SubscribeCancel from "./pages/SubscribeCancel";
 import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
@@ -77,7 +77,7 @@ function App() {
                     
                      {/* Subscription Routes */}
                      <Route path="/subscribe" element={<ProtectedRoute requireAuth={false}><SubscribePage /></ProtectedRoute>} />
-                     <Route path="/subscribe/success" element={<ProtectedRoute requireAuth={false}><SubscribeSuccess /></ProtectedRoute>} />
+                     
                      <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
                      
                      {/* Welcome and Introduction Routes */}

@@ -80,8 +80,8 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     localStorage.setItem('onboarding_started', 'true');
     localStorage.setItem('payment_success', 'true');
     
-    // Navigate directly to subscribe success page (skip journey awaits)
-    window.location.href = '/subscribe/success?trial=1';
+    // Navigate directly to welcome page with postCheckout flag (skip journey awaits)
+    window.location.href = '/welcome?postCheckout=1&trial=1';
   };
 
   const handlePaymentCancel = () => {

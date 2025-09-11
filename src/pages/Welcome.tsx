@@ -1,16 +1,111 @@
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, ArrowRight, Sparkles, Trophy, Target, Users, TrendingUp, Star, Zap } from "lucide-react";
+import { Brain, ArrowRight, Sparkles, Trophy, Target, Users, TrendingUp, Star, Zap, CheckCircle } from "lucide-react";
+import { WelcomeCelebration } from "@/components/onboarding/WelcomeCelebration";
 
 const Welcome = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [showWelcome, setShowWelcome] = useState(false);
+  const isPostCheckout = searchParams.get('postCheckout') === '1';
+
+  useEffect(() => {
+    if (isPostCheckout) {
+      setShowWelcome(true);
+    }
+  }, [isPostCheckout]);
 
   const handleGetStarted = () => {
     navigate("/start");
   };
+
+  const handleWelcomeClose = () => {
+    setShowWelcome(false);
+  };
+
+  const handleGuidedExperience = () => {
+    localStorage.setItem('journey_mode', 'guided');
+    localStorage.setItem('myrhythm_onboarding_complete', 'true');
+    navigate("/mvp/assessment-flow?type=guided&flow=post-payment");
+  };
+
+  const handleDiscoveryMode = () => {
+    localStorage.setItem('journey_mode', 'discovery');
+    localStorage.setItem('myrhythm_onboarding_complete', 'true');
+    navigate("/dashboard");
+  };
+
+  // If post-checkout, show the choice screen
+  if (isPostCheckout) {
+    return (
+      <>
+        <WelcomeCelebration showOnMount={showWelcome} onClose={handleWelcomeClose} />
+        <div className="min-h-screen bg-gradient-to-br from-brain-health-50 via-clarity-teal-50 to-memory-emerald-50 relative overflow-hidden">
+          <div className="relative max-w-4xl mx-auto px-4 py-16">
+            <div className="text-center mb-16 space-y-8">
+              <div className="mx-auto w-24 h-24 bg-gradient-to-br from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500 rounded-full flex items-center justify-center shadow-xl shadow-brain-health-500/20 animate-pulse">
+                <CheckCircle className="h-12 w-12 text-white" />
+              </div>
+              <div className="space-y-4">
+                <h1 className="text-4xl font-bold gradient-text-brand mb-4">
+                  Welcome to MyRhythm!
+                </h1>
+                <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                  Your subscription is now active. Choose how you'd like to begin your transformative journey.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+              <Card className="premium-card group hover:shadow-xl transition-all duration-500 border-0">
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-brain-health-500 to-brain-health-600 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <Target className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold therapeutic-accent mb-4">Guided Experience</h3>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    Take a personalized assessment and get step-by-step guidance tailored to your cognitive wellness goals.
+                  </p>
+                  <Button 
+                    onClick={handleGuidedExperience}
+                    size="lg"
+                    className="premium-button w-full group"
+                  >
+                    Start Assessment
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="premium-card group hover:shadow-xl transition-all duration-500 border-0">
+                <CardContent className="p-8 text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-clarity-teal-500 to-clarity-teal-600 rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <Sparkles className="h-8 w-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold therapeutic-accent mb-4">Discovery Mode</h3>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    Explore MyRhythm at your own pace and discover tools as you need them on your wellness journey.
+                  </p>
+                  <Button 
+                    onClick={handleDiscoveryMode}
+                    variant="outline" 
+                    size="lg"
+                    className="w-full group border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400"
+                  >
+                    Explore Dashboard
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-brain-health-50 via-clarity-teal-50 to-memory-emerald-50 relative overflow-hidden">

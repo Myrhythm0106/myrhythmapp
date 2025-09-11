@@ -122,35 +122,37 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      subscription_data: {
+      subscription_data: interval === 'month' ? {
         trial_period_days: 7,
-      },
-      success_url: `${origin}/subscribe/success?session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=1`,
+      } : undefined,
+      success_url: `${origin}/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=1`,
       cancel_url: `${origin}/subscribe/cancel`,
       metadata: metadata
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
 
-    // Save trial information to database for reminders
-    const supabaseService = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-      { auth: { persistSession: false } }
-    );
+    // Save trial information to database for reminders (only for monthly plans)
+    if (interval === 'month') {
+      const supabaseService = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+        { auth: { persistSession: false } }
+      );
 
-    try {
-      await supabaseService.from("trial_subscriptions").insert({
-        user_id: user.id,
-        stripe_customer_id: customerId,
-        plan_type: plan,
-        trial_start_date: new Date().toISOString().split('T')[0],
-        trial_end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-      });
-      logStep("Trial subscription record created");
-    } catch (dbError) {
-      logStep("WARNING: Failed to save trial record", { error: dbError.message });
-      // Don't fail the checkout process if database save fails
+      try {
+        await supabaseService.from("trial_subscriptions").insert({
+          user_id: user.id,
+          stripe_customer_id: customerId,
+          plan_type: plan,
+          trial_start_date: new Date().toISOString().split('T')[0],
+          trial_end_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+        });
+        logStep("Trial subscription record created");
+      } catch (dbError) {
+        logStep("WARNING: Failed to save trial record", { error: dbError.message });
+        // Don't fail the checkout process if database save fails
+      }
     }
 
     return new Response(JSON.stringify({ url: session.url }), {

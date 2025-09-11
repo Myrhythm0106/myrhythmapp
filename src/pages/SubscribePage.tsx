@@ -70,8 +70,8 @@ const SubscribePage = () => {
         }));
         toast.success('Payment processed! Welcome to MyRhythm!');
 
-        // Navigate to success page with simulated session
-        navigate('/subscribe/success?session_id=test_session&fm=' + (pricing.hasDiscount ? '1' : '0'));
+        // Navigate to welcome page with postCheckout flag
+        navigate('/welcome?postCheckout=1&session_id=test_session&fm=' + (pricing.hasDiscount ? '1' : '0'));
         return;
       }
       const {
@@ -101,9 +101,9 @@ const SubscribePage = () => {
       }));
       toast.success('Payment processed! Welcome to MyRhythm!');
 
-      // Navigate to success page with simulated session
+      // Navigate to welcome page with postCheckout flag
       const pricing = getPricingWithDiscount(basePricing.find(p => p.id === planType)!, isYearly);
-      navigate('/subscribe/success?session_id=test_session&fm=' + (pricing.hasDiscount ? '1' : '0'));
+      navigate('/welcome?postCheckout=1&session_id=test_session&fm=' + (pricing.hasDiscount ? '1' : '0'));
     } finally {
       setLoading(false);
       setSelectedPlan(null);

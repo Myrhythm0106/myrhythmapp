@@ -36,12 +36,12 @@ export default function MVPAssessmentFlowPage() {
   };
 
   const handleConsentDecline = () => {
-    navigate('/subscribe/success');
+    navigate('/welcome?postCheckout=1');
   };
 
   const handleBack = () => {
     if (flow === 'post-payment') {
-      navigate('/subscribe/success');
+      navigate('/welcome?postCheckout=1');
     } else {
       navigate('/dashboard');
     }
