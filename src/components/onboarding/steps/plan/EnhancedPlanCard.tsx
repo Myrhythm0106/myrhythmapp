@@ -125,7 +125,7 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
             )}
             disabled={isSelected}
           >
-            {isSelected ? 'Selected' : `Choose ${plan.name.split(' ')[1]}`}
+            {isSelected ? 'Selected' : `Choose ${plan.name}`}
           </Button>
 
           {/* Additional Info */}

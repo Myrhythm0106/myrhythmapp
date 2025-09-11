@@ -7,7 +7,7 @@ export function FixedRegisterButton() {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate('/mvp/assessment');
+    navigate('/auth?redirect=/mvp?open=onboarding');
   };
 
   return (

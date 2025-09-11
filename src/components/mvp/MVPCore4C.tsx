@@ -90,14 +90,14 @@ export function MVPCore4C() {
                   Your Rhythm
                 </p>
               </div>
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
-                onClick={handleGetStarted}
-              >
-                <Sparkles className="h-5 w-5 mr-2" />
-                Register Now
-              </Button>
+                <Button 
+                  size="lg" 
+                  className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
+                  onClick={() => navigate('/auth?redirect=/mvp?open=onboarding')}
+                >
+                  <Sparkles className="h-5 w-5 mr-2" />
+                  Register Now
+                </Button>
             </div>
           </div>
         </div>

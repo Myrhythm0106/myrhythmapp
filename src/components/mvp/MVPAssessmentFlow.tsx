@@ -402,7 +402,8 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   };
 
   const handleViewMyrhythm = () => {
-    navigate('/mvp');
+    // Take users directly to Memory Bridge after assessment completion
+    navigate('/memory-bridge');
   };
 
   const generatePreviewResults = (): BasicAssessmentResult => {

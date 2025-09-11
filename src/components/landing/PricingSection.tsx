@@ -36,7 +36,7 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
             price={
               <>
                 <div className="text-3xl font-bold">£7</div>
-                <div className="text-sm text-muted-foreground">Introductory Rate</div>
+                <div className="text-sm text-muted-foreground">per month</div>
               </>
             }
             features={[
@@ -58,8 +58,8 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
             description="Enhanced experience with connected care network"
             price={
               <>
-                <div className="text-3xl font-bold">£7</div>
-                <div className="text-sm text-muted-foreground">Introductory Rate</div>
+                <div className="text-3xl font-bold">£13</div>
+                <div className="text-sm text-muted-foreground">per month</div>
               </>
             }
             features={[
@@ -83,8 +83,8 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
             description="Complete family wellness with unlimited support"
             price={
               <>
-                <div className="text-3xl font-bold">£7</div>
-                <div className="text-sm text-muted-foreground">Introductory Rate</div>
+                <div className="text-3xl font-bold">£20</div>
+<div className="text-sm text-muted-foreground">per month</div>
               </>
             }
             features={[
