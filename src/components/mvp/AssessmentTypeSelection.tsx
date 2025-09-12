@@ -40,7 +40,7 @@ export function AssessmentTypeSelection({ onSelectType, onBack }: AssessmentType
                     5 minutes
                   </Badge>
                 </div>
-                <CardTitle className="text-xl therapeutic-accent">Quick Assessment</CardTitle>
+                <CardTitle className="text-xl therapeutic-accent">Brief Assessment</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
