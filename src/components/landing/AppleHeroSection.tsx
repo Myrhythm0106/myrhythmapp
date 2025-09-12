@@ -49,7 +49,7 @@ export function AppleHeroSection() {
   }, []);
 
   const handleGetStarted = () => {
-    navigate("/mvp-payment");
+    navigate("/mvp/assessment-flow?type=brief&flow=register");
   };
 
   const handleTryAssessment = () => {

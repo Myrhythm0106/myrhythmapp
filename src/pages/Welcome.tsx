@@ -19,7 +19,7 @@ const Welcome = () => {
   }, [isPostCheckout]);
 
   const handleGetStarted = () => {
-    navigate("/start");
+    navigate("/mvp/assessment-flow?type=brief&flow=register");
   };
 
   const handleWelcomeClose = () => {

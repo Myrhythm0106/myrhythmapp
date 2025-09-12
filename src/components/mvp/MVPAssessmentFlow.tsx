@@ -25,6 +25,9 @@ import { ContinuousGuidance } from "@/components/guidance/ContinuousGuidance";
 import { useAnalytics } from '@/hooks/useAnalytics';
 import { AssessmentTypeSelection } from './AssessmentTypeSelection';
 import { BasicAssessmentResult } from '@/types/assessmentTypes';
+import { useAssessmentResults } from '@/hooks/useAssessmentResults';
+import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface AssessmentQuestion {
   id: string;
@@ -191,9 +194,13 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   const location = useLocation();
   const { hasFeature, tier } = useSubscription();
   const { trackEvent } = useAnalytics();
+  const { user } = useAuth();
+  const { saveAssessmentResult, updateAssessmentResult } = useAssessmentResults();
+  const { saveProgress, getCurrentStep } = useOnboardingProgress();
   
   const [showAssessmentTypeSelection, setShowAssessmentTypeSelection] = useState(true);
   const [selectedAssessmentType, setSelectedAssessmentType] = useState<'brief' | 'comprehensive'>('brief');
+  const [currentAssessmentId, setCurrentAssessmentId] = useState<string | null>(null);
   
   const assessmentType = selectedAssessmentType;
   const isComprehensive = assessmentType === 'comprehensive';
@@ -206,9 +213,22 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   const [showPaymentGate, setShowPaymentGate] = useState(false);
   const [isPreview, setIsPreview] = useState(true);
 
-  const handleAssessmentTypeSelect = (type: 'brief' | 'comprehensive') => {
+  const handleAssessmentTypeSelect = async (type: 'brief' | 'comprehensive') => {
     setSelectedAssessmentType(type);
     setShowAssessmentTypeSelection(false);
+
+    // Save initial assessment data if user is logged in
+    if (user) {
+      const result = await saveAssessmentResult(type, {}, {}, {}, 'in_progress');
+      if (result) {
+        setCurrentAssessmentId(result.id);
+        await saveProgress('assessment', { 
+          assessmentType: type,
+          currentQuestion: 0,
+          answers: {}
+        }, result.id);
+      }
+    }
   };
 
   const handleBackToTypeSelection = () => {
@@ -231,11 +251,27 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   const progress = ((currentQuestion + 1) / questions.length) * 100;
   const currentQ = questions[currentQuestion];
 
-  const handleAnswer = (value: string) => {
-    setAnswers(prev => ({
-      ...prev,
+  const handleAnswer = async (value: string) => {
+    const updatedAnswers = {
+      ...answers,
       [currentQ.id]: value
-    }));
+    };
+    
+    setAnswers(updatedAnswers);
+
+    // Save answer to database immediately if user is logged in
+    if (user && currentAssessmentId) {
+      await updateAssessmentResult(currentAssessmentId, {
+        responses: updatedAnswers
+      });
+      
+      // Also update progress
+      await saveProgress('assessment', {
+        assessmentType: selectedAssessmentType,
+        currentQuestion,
+        answers: updatedAnswers
+      }, currentAssessmentId);
+    }
 
     // Track question response
     trackEvent({
@@ -279,7 +315,7 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
     }
   };
 
-  const calculateResults = () => {
+  const calculateResults = async () => {
     // Track assessment completion
     trackEvent({
       eventType: 'assessment_completed',
@@ -336,6 +372,30 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
 
     setAssessmentResult(result);
     setShowResults(true);
+
+    // Save completed assessment to database
+    if (user && currentAssessmentId) {
+      await updateAssessmentResult(currentAssessmentId, {
+        responses: answers,
+        scores: categoryScores,
+        recommendations: { 
+          recommendations: result.recommendations,
+          lockedInsights: result.lockedInsights,
+          overallScore,
+          riskLevel
+        },
+        completion_status: 'completed'
+      });
+
+      // Update progress to results step
+      await saveProgress('results', {
+        assessmentType: selectedAssessmentType,
+        result,
+        completed: true
+      }, currentAssessmentId);
+
+      toast.success('Assessment results saved! You can access them anytime.');
+    }
 
     // Show payment gate if user is on free tier and wants full results
     if (!hasFeature('fullAssessment') && isComprehensive) {

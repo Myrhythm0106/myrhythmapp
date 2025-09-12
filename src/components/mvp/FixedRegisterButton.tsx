@@ -7,7 +7,7 @@ export function FixedRegisterButton() {
   const navigate = useNavigate();
 
   const handleRegisterClick = () => {
-    navigate('/mvp-payment');
+    navigate("/mvp/assessment-flow?type=brief&flow=register");
   };
 
   return (

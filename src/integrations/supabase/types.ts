@@ -190,6 +190,51 @@ export type Database = {
         }
         Relationships: []
       }
+      assessment_results: {
+        Row: {
+          assessment_type: string
+          completed_at: string | null
+          completion_status: string
+          created_at: string
+          id: string
+          payment_status: string
+          raw_assessment_data: Json | null
+          recommendations: Json | null
+          responses: Json
+          scores: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessment_type?: string
+          completed_at?: string | null
+          completion_status?: string
+          created_at?: string
+          id?: string
+          payment_status?: string
+          raw_assessment_data?: Json | null
+          recommendations?: Json | null
+          responses?: Json
+          scores?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessment_type?: string
+          completed_at?: string | null
+          completion_status?: string
+          created_at?: string
+          id?: string
+          payment_status?: string
+          raw_assessment_data?: Json | null
+          recommendations?: Json | null
+          responses?: Json
+          scores?: Json | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       calendar_events: {
         Row: {
           category: string | null
@@ -1102,6 +1147,7 @@ export type Database = {
           id: string
           mfa_enabled: boolean | null
           name: string
+          onboarding_completed: boolean | null
           phone_number: string | null
           phone_verified: boolean | null
           require_mfa_for_sensitive_actions: boolean | null
@@ -1115,6 +1161,7 @@ export type Database = {
           id: string
           mfa_enabled?: boolean | null
           name: string
+          onboarding_completed?: boolean | null
           phone_number?: string | null
           phone_verified?: boolean | null
           require_mfa_for_sensitive_actions?: boolean | null
@@ -1128,6 +1175,7 @@ export type Database = {
           id?: string
           mfa_enabled?: boolean | null
           name?: string
+          onboarding_completed?: boolean | null
           phone_number?: string | null
           phone_verified?: boolean | null
           require_mfa_for_sensitive_actions?: boolean | null
@@ -1588,6 +1636,44 @@ export type Database = {
             columns: ["statement_id"]
             isOneToOne: false
             referencedRelation: "empowerment_statements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_onboarding_progress: {
+        Row: {
+          assessment_id: string | null
+          created_at: string
+          current_step: string
+          id: string
+          step_data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          assessment_id?: string | null
+          created_at?: string
+          current_step?: string
+          id?: string
+          step_data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          assessment_id?: string | null
+          created_at?: string
+          current_step?: string
+          id?: string
+          step_data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_onboarding_progress_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessment_results"
             referencedColumns: ["id"]
           },
         ]
