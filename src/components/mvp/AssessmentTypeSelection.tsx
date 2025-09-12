@@ -91,7 +91,7 @@ export function AssessmentTypeSelection({ onSelectType, onBack }: AssessmentType
                     15 minutes
                   </Badge>
                 </div>
-                <CardTitle className="text-xl therapeutic-accent">Complete Assessment</CardTitle>
+                <CardTitle className="text-xl therapeutic-accent">Comprehensive Assessment</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <p className="text-muted-foreground">
