@@ -15,6 +15,7 @@ import MemoryBridge from "./routes/MemoryBridge";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import EmailVerification from "./pages/EmailVerification";
+import MVPPaymentPage from "./pages/MVPPaymentPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import WebOnboarding from "./pages/WebOnboarding";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -105,6 +106,7 @@ function App() {
                     <Route path="/quick-capture" element={<ProtectedRoute><QuickCapture /></ProtectedRoute>} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/email-verification" element={<EmailVerification />} />
+                     <Route path="/mvp-payment" element={<MVPPaymentPage />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
                      <Route path="/legal/disclaimer" element={<ProtectedRoute requireAuth={false}><Disclaimer /></ProtectedRoute>} />
