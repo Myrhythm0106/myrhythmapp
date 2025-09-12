@@ -14,7 +14,7 @@ interface SignInFormProps {
 }
 
 export default function SignInForm({ onForgotPassword, onSignInSuccess }: SignInFormProps) {
-  const { signIn } = useAuth();
+  const { signIn, resendVerification } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
@@ -46,7 +46,9 @@ export default function SignInForm({ onForgotPassword, onSignInSuccess }: SignIn
     
     if (error) {
       console.error('SignInForm: Sign in failed:', error);
-      setError('Sign in failed. Please check your email and password.');
+      // Show the actual error message for clarity
+      const message = (error as any)?.message || 'Sign in failed. Please check your email and password.';
+      setError(message);
     } else {
       console.log('SignInForm: Sign in successful');
       // Clear form on success
@@ -136,8 +138,53 @@ export default function SignInForm({ onForgotPassword, onSignInSuccess }: SignIn
           ) : (
             'Sign In'
           )}
-        </Button>
-      </form>
-    </div>
+         </Button>
+
+         {/* Magic link and resend verification helpers */}
+         <div className="space-y-3 pt-2">
+           <Button
+             type="button"
+             variant="outline"
+             className="w-full"
+             onClick={async () => {
+               if (!formData.email || !formData.email.includes('@')) {
+                 setError('Enter a valid email to receive a magic link.');
+                 return;
+               }
+               try {
+                 const { error } = await (await import('@/integrations/supabase/client')).supabase.auth.signInWithOtp({
+                   email: formData.email.trim(),
+                   options: { emailRedirectTo: `${window.location.origin}/auth` }
+                 });
+                 if (error) throw error;
+                 setError(null);
+                 console.log('Magic link sent');
+               } catch (e: any) {
+                 setError(e?.message || 'Failed to send magic link.');
+               }
+             }}
+             disabled={isLoading}
+           >
+             Send Magic Link
+           </Button>
+
+           {error && error.toLowerCase().includes('confirm') && (
+             <div className="text-sm text-muted-foreground text-center">
+               Didn’t get the verification email?
+               <Button
+                 type="button"
+                 variant="link"
+                 className="px-2"
+                 onClick={async () => {
+                   await resendVerification(formData.email.trim());
+                 }}
+               >
+                 Resend verification
+               </Button>
+             </div>
+           )}
+         </div>
+       </form>
+     </div>
   );
 }

@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           data: {
             name: name
           },
-          emailRedirectTo: `${window.location.origin}/auth`
+          emailRedirectTo: `${window.location.origin}/email-verification`
         }
       });
       
@@ -212,7 +212,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         type: 'signup',
         email: email,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth`
+          emailRedirectTo: `${window.location.origin}/email-verification`
         }
       });
       
