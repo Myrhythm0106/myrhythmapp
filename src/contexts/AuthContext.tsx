@@ -192,7 +192,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('AuthContext: Password reset error:', error);
         toast.error(error.message);
       } else {
-        toast.success('Password reset email sent! Check your inbox for instructions.');
+        toast.success('MyRhythm password reset email sent! Check your inbox for instructions.');
         console.log('Password reset email sent successfully to:', email);
       }
       

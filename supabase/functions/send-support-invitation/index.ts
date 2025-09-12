@@ -50,7 +50,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: "MyRhythm Support <no-reply@resend.dev>",
       to: [memberEmail],
-      subject: `${inviterName} has invited you to join their MyRhythm Support Circle`,
+      subject: `MyRhythm - ${inviterName} has invited you to join their Support Circle`,
       html: `
         <!DOCTYPE html>
         <html>

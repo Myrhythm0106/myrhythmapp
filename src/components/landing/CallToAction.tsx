@@ -11,7 +11,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
   
   const handleRegister = () => {
-    navigate("/auth");
+    navigate("/mvp-payment");
   };
   
   return (

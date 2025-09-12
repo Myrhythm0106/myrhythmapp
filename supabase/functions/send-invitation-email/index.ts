@@ -93,7 +93,7 @@ const handler = async (req: Request): Promise<Response> => {
       body: JSON.stringify({
         from: "MyRhythm <noreply@resend.dev>",
         to: [memberEmail],
-        subject: `${inviterName} invited you to their MyRhythm Support Circle`,
+        subject: `MyRhythm - ${inviterName} invited you to their Support Circle`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="text-align: center; margin-bottom: 30px;">

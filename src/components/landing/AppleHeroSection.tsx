@@ -49,7 +49,7 @@ export function AppleHeroSection() {
   }, []);
 
   const handleGetStarted = () => {
-    navigate("/auth");
+    navigate("/mvp-payment");
   };
 
   const handleTryAssessment = () => {

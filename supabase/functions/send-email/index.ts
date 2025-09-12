@@ -31,7 +31,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: "MyRhythm <onboarding@resend.dev>",
       to: [to],
-      subject: subject,
+      subject: `MyRhythm - ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="text-align: center; margin-bottom: 30px;">

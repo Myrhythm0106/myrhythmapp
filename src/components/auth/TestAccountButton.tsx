@@ -21,7 +21,7 @@ export const TestAccountButton = () => {
       localStorage.removeItem('myrhythm_web_onboarding_progress_saved');
       
       // Use permanent test credentials for consistent testing
-      const testEmail = 'annabelaaron@yahoo.com';
+  const testEmail = 'annabelaaron@yahoo.com';
       const testPassword = 'TestAccount123!';
       const testName = 'Test User';
 

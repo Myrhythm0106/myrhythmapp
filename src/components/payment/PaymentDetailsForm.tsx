@@ -63,7 +63,11 @@ export function PaymentDetailsForm({ selectedPlan, onSubmit, onCancel }: Payment
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       onSubmit(paymentDetails);
-      toast.success(selectedPlan.trialDays ? "Trial started successfully!" : "Payment processed successfully!");
+      toast.success(
+        selectedPlan.trialDays ? 
+          "Success! A confirmation email has been sent to your email address. Please check your inbox to complete your account setup." :
+          "Payment processed successfully! A confirmation email has been sent to your email address."
+      );
     } catch (error) {
       toast.error("Payment failed. Please try again.");
     } finally {

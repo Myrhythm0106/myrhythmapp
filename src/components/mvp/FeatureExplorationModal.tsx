@@ -86,7 +86,7 @@ export function FeatureExplorationModal({ isOpen, onOpenChange, feature }: Featu
 
   const handleRegisterNow = () => {
     onOpenChange(false);
-    navigate('/auth?redirect=/mvp?open=onboarding');
+    navigate('/mvp-payment');
   };
 
   return (
