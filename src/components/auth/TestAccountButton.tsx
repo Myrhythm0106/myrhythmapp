@@ -20,8 +20,9 @@ export const TestAccountButton = () => {
       localStorage.removeItem('myrhythm_web_onboarding_current_step');
       localStorage.removeItem('myrhythm_web_onboarding_progress_saved');
       
-      const testEmail = `test${Date.now()}@example.com`;
-      const testPassword = 'TestPassword123!';
+      // Use permanent test credentials for consistent testing
+      const testEmail = 'annabelaaron@yahoo.com';
+      const testPassword = 'TestAccount123!';
       const testName = 'Test User';
 
       console.log('🧪 Creating test account:', testEmail);
@@ -64,7 +65,7 @@ export const TestAccountButton = () => {
       disabled={isCreating}
       variant="outline"
       size="sm"
-      className="text-xs"
+      className="text-xs bg-white/90 backdrop-blur-sm shadow-md hover:shadow-lg transition-all duration-200"
     >
       <TestTube className="h-3 w-3 mr-1" />
       {isCreating ? 'Creating...' : 'Create Test Account'}

@@ -9,13 +9,16 @@ import organizedActionImg from '@/assets/organized-action.jpg';
 import emotionalLandscapeImg from '@/assets/emotional-landscape.jpg';
 import strengthTogetherImg from '@/assets/strength-together.jpg';
 import { MVPOnboardingModal } from './MVPOnboardingModal';
+import { FeatureExplorationModal } from './FeatureExplorationModal';
 import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
 import { useAuth } from '@/contexts/AuthContext';
+import { TestAccountButton } from '@/components/auth/TestAccountButton';
 
 export function MVPCore4C() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
+  const [activeFeatureModal, setActiveFeatureModal] = useState<'capture' | 'calendar' | 'calibrate' | 'community' | null>(null);
   const { user } = useAuth();
   
   // Check if we should auto-open the modal on mount
@@ -160,7 +163,7 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" 
-                  onClick={handleGetStarted}
+                  onClick={() => setActiveFeatureModal('capture')}
                 >
                   Explore Capture
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -186,7 +189,7 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white" 
-                  onClick={handleGetStarted}
+                  onClick={() => setActiveFeatureModal('calendar')}
                 >
                   Explore Calendar
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -212,7 +215,7 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white" 
-                  onClick={handleGetStarted}
+                  onClick={() => setActiveFeatureModal('calibrate')}
                 >
                   Explore Calibrate
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -238,7 +241,7 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 hover:from-sunrise-amber-600 hover:to-memory-emerald-600 text-white" 
-                  onClick={handleGetStarted}
+                  onClick={() => setActiveFeatureModal('community')}
                 >
                   Explore Community
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -405,11 +408,25 @@ export function MVPCore4C() {
          </div>
        </section>
 
-       {/* Onboarding Modal */}
-       <MVPOnboardingModal isOpen={isOnboardingOpen} onOpenChange={setIsOnboardingOpen} />
-       
-       {/* Floating Register Button - only show when modal is closed */}
-       {!isOnboardingOpen && <FloatingRegisterButton />}
-     </div>
-   );
- }
+        {/* Onboarding Modal */}
+        <MVPOnboardingModal isOpen={isOnboardingOpen} onOpenChange={setIsOnboardingOpen} />
+        
+        {/* Feature Exploration Modal */}
+        <FeatureExplorationModal
+          isOpen={activeFeatureModal !== null}
+          onOpenChange={(open) => !open && setActiveFeatureModal(null)}
+          feature={activeFeatureModal}
+        />
+        
+        {/* Floating Register Button - only show when modal is closed */}
+        {!isOnboardingOpen && <FloatingRegisterButton forceShow={!user} variant="trial" />}
+
+        {/* Developer Test Account - Bottom Left */}
+        {!user && (
+          <div className="fixed bottom-4 left-4 z-40">
+            <TestAccountButton />
+          </div>
+        )}
+      </div>
+    );
+  }

@@ -55,7 +55,7 @@ export function FloatingRegisterButton({
   const handleRegister = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate("/auth?redirect=/start");
+    navigate("/auth?redirect=/mvp?open=onboarding");
   };
 
   const getButtonConfig = () => {
@@ -96,7 +96,7 @@ export function FloatingRegisterButton({
 
   return (
     <div className={cn(
-      "fixed z-50 animate-fade-in transition-all duration-300",
+      "fixed z-50 animate-fade-in transition-all duration-300 animate-pulse",
       isMobile ? "bottom-6 right-6" : "bottom-8 right-8",
       className
     )}>
@@ -105,7 +105,7 @@ export function FloatingRegisterButton({
         size={isMobile ? "lg" : "lg"}
         variant={config.buttonVariant}
         className={cn(
-          "rounded-full text-base font-medium flex items-center gap-3 hover:scale-105 border-2 border-white/30 backdrop-blur-sm group relative overflow-hidden shadow-lg hover:shadow-purple-300/30 bg-gradient-to-r from-purple-400 via-blue-400 to-teal-400 hover:from-purple-500 hover:via-blue-500 hover:to-teal-500 pulse",
+          "rounded-full text-base font-medium flex items-center gap-3 hover:scale-105 border-2 border-white/30 backdrop-blur-sm group relative overflow-hidden shadow-lg hover:shadow-purple-300/30 bg-gradient-to-r from-purple-400 via-blue-400 to-teal-400 hover:from-purple-500 hover:via-blue-500 hover:to-teal-500",
           "px-6 py-3"
         )}
       >

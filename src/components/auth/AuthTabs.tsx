@@ -24,13 +24,8 @@ export const AuthTabs = ({
     <>
       <Card className="shadow-lg">
         <CardHeader className="text-center pb-4">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Shield className="h-5 w-5 text-primary" />
-            <CardTitle className="text-xl">Secure Access</CardTitle>
-          </div>
-          <div className="flex justify-center">
-            <TestAccountButton />
-          </div>
+          <CardTitle className="text-xl">Welcome to MyRhythm</CardTitle>
+          <p className="text-sm text-muted-foreground">Get started with your 7-day free trial</p>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="signin" className="space-y-6">
@@ -58,7 +53,6 @@ export const AuthTabs = ({
           </Tabs>
         </CardContent>
       </Card>
-      
       <div className="text-center mt-6 text-sm text-gray-600">
         <p>Secure authentication powered by Supabase</p>
       </div>

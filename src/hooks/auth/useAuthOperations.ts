@@ -90,6 +90,7 @@ export function useAuthOperations() {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/auth?confirmed=true`,
           data: {
             name: name
           }
