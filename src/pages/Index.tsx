@@ -36,7 +36,7 @@ Transform Your Life.</h1>
             "Your brain is neuroplastic - it can change, adapt, and grow stronger. We help you harness that power."
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button onClick={() => navigate("/mvp-payment")} size="lg" className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600">
+            <Button onClick={() => navigate("/mvp/user-type-selection")} size="lg" className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600">
               Start Your Transformation
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

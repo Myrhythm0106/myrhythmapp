@@ -55,7 +55,7 @@ export function FloatingRegisterButton({
   const handleRegister = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate("/mvp-payment");
+    navigate("/mvp/user-type-selection");
   };
 
   const getButtonConfig = () => {

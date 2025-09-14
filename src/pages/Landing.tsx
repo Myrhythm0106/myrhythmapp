@@ -29,7 +29,7 @@ const Landing = () => {
   }, [user, loading, navigate]);
 
   const handleGetStarted = () => {
-    navigate("/mvp-payment");
+    navigate("/mvp/user-type-selection");
   };
 
   // Don't show loading for unauthenticated users - just show the landing page

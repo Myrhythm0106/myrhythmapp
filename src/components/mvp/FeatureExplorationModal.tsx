@@ -86,7 +86,7 @@ export function FeatureExplorationModal({ isOpen, onOpenChange, feature }: Featu
 
   const handleRegisterNow = () => {
     onOpenChange(false);
-    navigate("/mvp/assessment-flow?type=brief&flow=register");
+    navigate("/mvp/user-type-selection");
   };
 
   return (

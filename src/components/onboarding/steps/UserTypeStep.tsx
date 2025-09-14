@@ -7,6 +7,7 @@ import { UserType } from "@/types/user";
 interface UserTypeStepProps {
   onComplete: (data: { type: UserType; customType?: string }) => void;
   initialValue?: UserType | null;
+  onBack?: () => void;
 }
 
 const userTypes = [
@@ -61,7 +62,7 @@ const userTypes = [
   }
 ];
 
-export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
+export function UserTypeStep({ onComplete, initialValue, onBack }: UserTypeStepProps) {
   const [selectedType, setSelectedType] = useState<UserType | null>(initialValue || null);
   const [customTypeText, setCustomTypeText] = useState<string>('');
 

@@ -15,9 +15,10 @@ import {
 interface MVPPaymentFlowProps {
   onPaymentComplete: () => void;
   onBack?: () => void;
+  userType?: string;
 }
 
-export function MVPPaymentFlow({ onPaymentComplete, onBack }: MVPPaymentFlowProps) {
+export function MVPPaymentFlow({ onPaymentComplete, onBack, userType }: MVPPaymentFlowProps) {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handlePlanComplete = (planData: any) => {

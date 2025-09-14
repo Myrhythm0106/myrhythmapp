@@ -1,9 +1,11 @@
 import React from 'react';
 import { MVPPaymentFlow } from '@/components/mvp/MVPPaymentFlow';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export default function MVPPaymentPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const userType = searchParams.get('userType') || 'general-wellness';
 
   const handlePaymentComplete = () => {
     // After payment completion, navigate to welcome or onboarding
@@ -19,6 +21,7 @@ export default function MVPPaymentPage() {
       <MVPPaymentFlow 
         onPaymentComplete={handlePaymentComplete}
         onBack={handleBack}
+        userType={userType}
       />
     </div>
   );
