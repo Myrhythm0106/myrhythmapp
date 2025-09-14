@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Brain, Heart, Users, Sparkles, Stethoscope, Plus } from "lucide-react";
+import { Brain, Heart, Users, Sparkles, Stethoscope, Plus, Target, Leaf, Building2 } from "lucide-react";
 import { UserType } from "@/types/user";
 
 interface UserTypeStepProps {
@@ -13,51 +13,51 @@ const userTypes = [
   {
     id: "brain-injury" as const,
     title: "Brain Injury Recovery",
-    description: "Take control of your recovery with Memory Bridge conversation capture and personalized cognitive tools that empower your journey",
+    description: "You are so much stronger than what happened to you. Let's rebuild your confidence, capture the conversations that matter, and create a rhythm that honors your unique healing journey.",
     icon: Brain,
-    color: "bg-blue-500",
+    color: "bg-gradient-to-br from-brain-health-500 to-brain-health-600 hover:from-brain-health-600 hover:to-brain-health-700",
   },
   {
     id: "caregiver" as const,
     title: "Caregiver Support", 
-    description: "You have the power to capture important care conversations with Memory Bridge and build resilience with evidence-based wellness strategies",
+    description: "Your love runs deep, but so does your exhaustion. You deserve tools that understand the weight you carry - capture important care moments and build resilience that sustains both you and your loved one.",
     icon: Heart,
-    color: "bg-rose-500",
+    color: "bg-gradient-to-br from-memory-emerald-500 to-memory-emerald-600 hover:from-memory-emerald-600 hover:to-memory-emerald-700",
   },
   {
     id: "cognitive-optimization" as const,
     title: "Cognitive Optimization",
-    description: "Accelerate your progress with Memory Bridge for important conversations and advanced cognitive training to unlock your brain's full potential",
-    icon: Sparkles,
-    color: "bg-purple-500",
+    description: "You know there's more inside you waiting to emerge. Memory Bridge captures your breakthrough moments while advanced training unlocks the brilliant mind you've always known you have.",
+    icon: Target,
+    color: "bg-gradient-to-br from-beacon-500 to-beacon-600 hover:from-beacon-600 hover:to-beacon-700",
   },
   {
     id: "wellness" as const,
     title: "General Wellness",
-    description: "You have the power to build mental resilience with Memory Bridge conversation insights and sustainable wellness habits for life's challenges",
-    icon: Users,
-    color: "bg-green-500",
+    description: "You have everything it takes to thrive. Build mental resilience with Memory Bridge conversation insights and sustainable wellness habits that honor your journey.",
+    icon: Leaf,
+    color: "bg-gradient-to-br from-memory-emerald-500 to-memory-emerald-600 hover:from-memory-emerald-600 hover:to-memory-emerald-700",
   },
   {
     id: "medical-professional" as const,
     title: "Medical Professional",
-    description: "Take control of patient interactions with Memory Bridge conversation recording and evidence-based cognitive wellness resources for better outcomes",
+    description: "Your expertise matters, your time is precious. Streamline patient interactions with Memory Bridge conversation recording and evidence-based cognitive wellness resources for better outcomes.",
     icon: Stethoscope,
-    color: "bg-teal-500",
+    color: "bg-gradient-to-br from-clarity-teal-500 to-clarity-teal-600 hover:from-clarity-teal-600 hover:to-clarity-teal-700",
   },
   {
     id: "colleague" as const,
     title: "Workplace Wellness",
-    description: "Empower your workplace with Memory Bridge for team meetings and cognitive wellness tools that help colleagues thrive",
-    icon: Users,
-    color: "bg-indigo-500",
+    description: "You deserve to flourish at work. Empower your workplace with Memory Bridge for team meetings and cognitive wellness tools that help you and your colleagues thrive together.",
+    icon: Building2,
+    color: "bg-gradient-to-br from-sunrise-amber-500 to-sunrise-amber-600 hover:from-sunrise-amber-600 hover:to-sunrise-amber-700",
   },
   {
     id: "other" as const,
     title: "Other",
     description: "Tell us about your unique situation and we'll personalize MyRhythm for your specific needs",
     icon: Plus,
-    color: "bg-gray-500",
+    color: "bg-gradient-to-br from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700",
   }
 ];
 
@@ -95,10 +95,10 @@ export function UserTypeStep({ onComplete, initialValue }: UserTypeStepProps) {
       {/* Header */}
       <div className="text-center space-y-3">
         <h2 className="text-3xl font-bold text-foreground">
-          Take Control of Your Cognitive Wellness Journey
+          Your Story Matters. Your Recovery is Real.
         </h2>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          You have the power to choose your path. Select what resonates with your goals and unlock Memory Bridge's transformative features.
+          Every breakthrough starts with someone who truly understands your journey. We see you, we believe in you, and we're here to help.
         </p>
       </div>
 
