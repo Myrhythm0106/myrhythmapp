@@ -16,7 +16,7 @@ import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import EmailVerification from "./pages/EmailVerification";
 import MVPPaymentPage from "./pages/MVPPaymentPage";
-import MVPUserTypeSelectionPage from "./pages/MVPUserTypeSelectionPage";
+import GetStartedPage from "./pages/GetStartedPage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import WebOnboarding from "./pages/WebOnboarding";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -84,8 +84,8 @@ function App() {
                      
                      <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
                      
-                     {/* Welcome and Introduction Routes */}
-                     <Route path="/welcome" element={<ProtectedRoute requireAuth={false}><Welcome /></ProtectedRoute>} />
+      {/* Restrict Welcome page to post-payment users only */}
+      <Route path="/welcome" element={<ProtectedRoute requireAuth={false}><Welcome /></ProtectedRoute>} />
                     
                     {/* Dashboard-First Experience - Default Route */}
                     <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
@@ -108,7 +108,8 @@ function App() {
                     <Route path="/quick-capture" element={<ProtectedRoute><QuickCapture /></ProtectedRoute>} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/email-verification" element={<EmailVerification />} />
-                     <Route path="/mvp/user-type-selection" element={<MVPUserTypeSelectionPage />} />
+                      <Route path="/get-started" element={<GetStartedPage />} />
+                      <Route path="/mvp/user-type-selection" element={<GetStartedPage />} />
                      <Route path="/mvp-payment" element={<MVPPaymentPage />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />

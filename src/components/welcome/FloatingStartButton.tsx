@@ -20,8 +20,8 @@ export function FloatingStartButton() {
         navigate("/profile?from=onboarding");
       }
     } else {
-      // If onboarding not complete, go to warm onboarding flow
-      navigate("/start");
+      // If onboarding not complete, go to streamlined get started flow
+      navigate("/get-started");
     }
   };
 

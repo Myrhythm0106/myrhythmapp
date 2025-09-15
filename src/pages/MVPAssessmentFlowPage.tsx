@@ -44,8 +44,21 @@ export default function MVPAssessmentFlowPage() {
     setConsentGiven(true);
     setShowConsent(false);
     
-    // After consent, check if we need personal info for register flow
-    if (flow === 'register' && !user) {
+    // For get-started flow, handle user context properly
+    if (flow === 'get-started') {
+      // User info should be in localStorage from get-started page
+      const userName = localStorage.getItem('userName');
+      const userEmail = localStorage.getItem('userEmail');
+      const userType = searchParams.get('userType') || localStorage.getItem('userType');
+      
+      if (!userName || !userEmail || !userType) {
+        toast.error('Missing user information. Please start over.');
+        navigate('/get-started');
+        return;
+      }
+      
+      setPersonalInfoCompleted(true);
+    } else if (flow === 'register' && !user) {
       setShowPersonalInfo(true);
     } else if (user) {
       setPersonalInfoCompleted(true);
