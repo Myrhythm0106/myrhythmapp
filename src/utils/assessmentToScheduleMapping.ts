@@ -1,4 +1,3 @@
-import { ExtractedAction } from './actionExtraction';
 import { UserSchedulePreference } from './smartScheduler';
 
 export interface AssessmentAnswers {
@@ -29,10 +28,9 @@ export interface ScheduleEvent {
 export function mapAssessmentToPreferences(answers: AssessmentAnswers): UserSchedulePreference {
   const energyLevel = answers['energy-level'];
   const supportPreference = answers['support-preference'];
-  const dailyStructure = answers['daily-structure'] || 'moderate';
   
   // Map energy levels to productive hours
-  const productiveHours = (() => {
+  const mostProductiveHours = (() => {
     switch (energyLevel) {
       case 'high':
         return ['07:00', '09:00', '10:00', '11:00', '14:00', '15:00', '16:00'];
@@ -49,38 +47,22 @@ export function mapAssessmentToPreferences(answers: AssessmentAnswers): UserSche
   const energyPeaks = (() => {
     switch (energyLevel) {
       case 'high':
-        return ['morning', 'afternoon'];
+        return 'morning';
       case 'moderate':
-        return ['morning'];
+        return 'morning';
       case 'low':
-        return ['afternoon'];
+        return 'afternoon';
       default:
-        return ['morning'];
+        return 'morning';
     }
-  })();
-
-  // Map support preference to session duration
-  const preferredDuration = (() => {
-    switch (supportPreference) {
-      case 'independent':
-        return 30;
-      case 'guided':
-        return 20;
-      case 'collaborative':
-        return 25;
-      default:
-        return 25;
-    }
-  })();
+  })() as 'morning' | 'afternoon' | 'evening';
 
   return {
-    productiveHours,
+    mostProductiveHours,
+    leastProductiveHours: ['12:00', '13:00', '17:00', '18:00'],
+    preferredMeetingTimes: mostProductiveHours.slice(1, 4),
     energyPeaks,
-    preferredDuration,
-    dailyStructure,
-    doNotDisturbTimes: ['12:00-13:00', '17:00-18:00'], // Standard meal times
-    focusBlocks: energyLevel === 'high' ? ['09:00-11:00', '14:00-16:00'] : ['10:00-11:00', '14:00-15:00'],
-    restPeriods: ['12:00-13:00', '16:00-16:30']
+    doNotDisturb: ['12:00', '13:00', '17:00', '18:00'] // Standard meal times
   };
 }
 
@@ -141,15 +123,15 @@ function getOptimalTimeForFeature(
   dayIndex: number
 ): string | null {
   const timeMap: Record<string, string[]> = {
-    'Memory Bridge': preferences.productiveHours.slice(0, 2),
-    'Brain Games': preferences.productiveHours.slice(1, 3),
+    'Memory Bridge': preferences.mostProductiveHours.slice(0, 2),
+    'Brain Games': preferences.mostProductiveHours.slice(1, 3),
     'Gratitude': ['07:30', '08:00'], // Early morning
-    'Calendar': preferences.productiveHours.slice(2, 4),
+    'Calendar': preferences.mostProductiveHours.slice(2, 4),
     'Daily Actions': ['07:00', '07:30'], // Very early morning
     'Support Network': ['16:00', '17:00'] // Late afternoon
   };
   
-  const availableTimes = timeMap[feature] || preferences.productiveHours.slice(0, 2);
+  const availableTimes = timeMap[feature] || preferences.mostProductiveHours.slice(0, 2);
   
   // Rotate times based on day to create variety
   const timeIndex = dayIndex % availableTimes.length;
@@ -252,19 +234,14 @@ function calculateEventConfidence(
   let confidence = 0.7; // Base confidence
   
   // Higher confidence for features that match energy patterns
-  if (preferences.energyPeaks.includes('morning') && 
+  if (preferences.energyPeaks === 'morning' && 
       ['Gratitude', 'Daily Actions'].includes(feature)) {
     confidence += 0.15;
   }
   
-  if (preferences.energyPeaks.includes('afternoon') && 
+  if (preferences.energyPeaks === 'afternoon' && 
       ['Brain Games', 'Memory Bridge'].includes(feature)) {
     confidence += 0.15;
-  }
-  
-  // Higher confidence for structured users with planning features
-  if (preferences.dailyStructure === 'very' && feature === 'Calendar') {
-    confidence += 0.1;
   }
   
   // Vary confidence by day to create realistic scheduling
@@ -306,27 +283,4 @@ function getActionType(feature: string): string {
   };
   
   return typeMap[feature] || 'general';
-}
-
-/**
- * Converts a schedule event to an ExtractedAction format
- */
-export function convertScheduleEventToAction(event: ScheduleEvent): ExtractedAction {
-  return {
-    id: event.id,
-    text: `${event.title} - ${event.description}`,
-    category: 'schedule' as const,
-    priority: event.priority,
-    actionType: event.actionType,
-    suggestedTime: event.time,
-    estimatedDuration: event.duration,
-    isTimeSpecific: true,
-    relationshipImpact: event.feature === 'Support Network' ? 'positive' : undefined,
-    emotionalStakes: event.priority === 'high' ? 'high' : 'medium',
-    intent: `Complete ${event.title.toLowerCase()}`,
-    context: `Generated from assessment recommendations focusing on ${event.feature}`,
-    confidence: event.confidence,
-    extractedAt: new Date().toISOString(),
-    status: 'confirmed'
-  };
 }

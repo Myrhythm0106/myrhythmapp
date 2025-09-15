@@ -354,6 +354,8 @@ export default function MVPAssessmentResults() {
           </CardContent>
         </Card>
 
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-4">
           <Button 
             onClick={handleStartJourney}
             size="lg"
@@ -362,16 +364,6 @@ export default function MVPAssessmentResults() {
             🎯 START MY TRANSFORMATION
           </Button>
           
-          {!isPaid && (
-            <Button 
-              onClick={handleUpgrade}
-              size="lg"
-              className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold shadow-xl animate-pulse"
-            >
-              <Crown className="h-5 w-5 mr-2" />
-              🎯 UNLOCK MY TRANSFORMATION
-            </Button>
-          )}
           {!isPaid && (
             <Button 
               onClick={handleUpgrade}
