@@ -247,6 +247,7 @@ const config: Config = {
           "100%": { 
             background: "linear-gradient(45deg, hsl(var(--memory-emerald-100)), hsl(var(--brain-health-100)))"
           }
+        },
         "slide-in-from-top": {
           "0%": { 
             transform: "translateY(-100px) translateX(-50%)",
