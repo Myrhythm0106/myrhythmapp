@@ -56,25 +56,31 @@ export function ShareSummary({
     lastAssessment: userData?.lastAssessment || (data?.completedAt || "Today")
   };
 
-  if (triggerContent) {
-    return (
-      <Button onClick={() => handlePrint()} variant={variant} className={className}>
-        {triggerContent}
-      </Button>
-    );
-  }
-
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Share Summary</h3>
-        <Button onClick={() => handlePrint()} variant="outline">
-          <Download className="h-4 w-4 mr-2" />
-          Download PDF
+      {/* Trigger Button when triggerContent is provided */}
+      {triggerContent && (
+        <Button onClick={() => handlePrint()} variant={variant} className={className}>
+          {triggerContent}
         </Button>
-      </div>
+      )}
 
-      <div ref={summaryRef} className="print:p-4">
+      {/* Header section - only show when not in trigger mode */}
+      {!triggerContent && (
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold">Share Summary</h3>
+          <Button onClick={() => handlePrint()} variant="outline">
+            <Download className="h-4 w-4 mr-2" />
+            Download PDF
+          </Button>
+        </div>
+      )}
+
+      {/* Printable content - always rendered but hidden when in trigger mode */}
+      <div 
+        ref={summaryRef} 
+        className={`print:p-4 ${triggerContent ? 'hidden' : 'block'}`}
+      >
         <style>{`
           @media print {
             body { -webkit-print-color-adjust: exact; }

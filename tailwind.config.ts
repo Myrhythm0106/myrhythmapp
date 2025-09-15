@@ -247,6 +247,15 @@ const config: Config = {
           "100%": { 
             background: "linear-gradient(45deg, hsl(var(--memory-emerald-100)), hsl(var(--brain-health-100)))"
           }
+        "slide-in-from-top": {
+          "0%": { 
+            transform: "translateY(-100px) translateX(-50%)",
+            opacity: "0"
+          },
+          "100%": { 
+            transform: "translateY(0) translateX(-50%)",
+            opacity: "1"
+          }
         },
       },
       animation: {
@@ -257,7 +266,7 @@ const config: Config = {
         "neural-pulse": "neural-pulse 2s infinite",
         "achievement-celebration": "achievement-celebration 0.6s ease-out",
         "cognitive-flow": "cognitive-flow 3s ease-in-out infinite",
-        "shimmer": "shimmer 1.5s ease-in-out infinite",
+        "slide-in-from-top": "slide-in-from-top 0.5s ease-out",
       },
     },
   },
