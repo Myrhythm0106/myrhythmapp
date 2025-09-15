@@ -5,14 +5,21 @@ import { PlannerBoard } from "./smart/PlannerBoard";
 import { HabitTrackerCard } from "./smart/HabitTrackerCard";
 import { CapturesActsCompact } from "./smart/CapturesActsCompact";
 import { CoachingRemindersCard } from "./smart/CoachingRemindersCard";
+import { EmpoweringDashboardCard } from "./EmpoweringDashboardCard";
+import { useNavigate } from "react-router-dom";
 
 type ViewType = "day" | "week" | "month" | "year";
 
 export function BrainFriendlyDashboard() {
   const [currentView, setCurrentView] = useState<ViewType>("day");
+  const navigate = useNavigate();
   
   const handleViewChange = (view: ViewType) => {
     setCurrentView(view);
+  };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
   };
 
   return (
@@ -47,8 +54,10 @@ export function BrainFriendlyDashboard() {
         <div className="max-w-6xl mx-auto">
           <div className="grid gap-8 lg:grid-cols-5 animate-fade-in">
             {/* Left: Planner Board (3 columns) */}
-            <div className="lg:col-span-3">
+            <div className="lg:col-span-3 space-y-6">
               <PlannerBoard timeFrame={currentView} />
+              {/* Add Empowering Dashboard Card */}
+              <EmpoweringDashboardCard timeFrame={currentView} onNavigate={handleNavigate} />
             </div>
             
             {/* Right: Stack of Cards (2 columns) */}
@@ -61,10 +70,13 @@ export function BrainFriendlyDashboard() {
         </div>
       </div>
 
-      {/* Bottom message */}
+      {/* Bottom message - Enhanced for brain-injury users */}
       <div className="text-center py-8 bg-gradient-to-br from-brand-teal-50 via-brand-emerald-50 to-brand-blue-50">
-        <p className="text-brand-teal-700 font-medium">
+        <p className="text-brand-teal-700 font-medium mb-2">
           Your Calendar is your command center. All updates happen there.
+        </p>
+        <p className="text-sm text-brand-teal-600">
+          Every click above takes you exactly where you need to go. You're making incredible progress! 🌟
         </p>
       </div>
     </div>

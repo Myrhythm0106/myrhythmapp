@@ -87,10 +87,13 @@ function App() {
       {/* Restrict Welcome page to post-payment users only */}
       <Route path="/welcome" element={<ProtectedRoute requireAuth={false}><Welcome /></ProtectedRoute>} />
                     
-                    {/* Dashboard-First Experience - Default Route */}
-                    <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    
-                    {/* Help Routes */}
+                     {/* Dashboard-First Experience - Default Route */}
+                     <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+                     
+                       {/* Legacy route redirects for brain-injury users - never lose progress */}
+                       <Route path="/mvp/user-type-selection" element={<GetStartedPage />} />
+                       
+                       {/* Help Routes */}
                     <Route path="/help" element={<ProtectedRoute requireAuth={false}><Help /></ProtectedRoute>} />
                     <Route path="/help/getting-started" element={<ProtectedRoute requireAuth={false}><HelpGettingStarted /></ProtectedRoute>} />
                     

@@ -11,12 +11,20 @@ const Welcome = () => {
   const [searchParams] = useSearchParams();
   const [showWelcome, setShowWelcome] = useState(false);
   const isPostCheckout = searchParams.get('postCheckout') === '1';
+  const userType = searchParams.get('userType');
 
   useEffect(() => {
+    // Handle brain-injury focused routing - never leave users lost
+    if (userType === 'undefined' || userType === null || userType === '') {
+      // Redirect to proper onboarding flow for brain-injured users
+      navigate('/get-started', { replace: true });
+      return;
+    }
+    
     if (isPostCheckout) {
       setShowWelcome(true);
     }
-  }, [isPostCheckout]);
+  }, [isPostCheckout, userType, navigate]);
 
   const handleGetStarted = () => {
     navigate("/mvp/assessment-flow?type=brief&flow=register");

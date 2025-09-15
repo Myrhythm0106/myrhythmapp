@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SupportCircleManager } from "@/components/accountability/SupportCircleManager";
+import { StreamlinedSupportCircleAdd } from "@/components/support-circle/StreamlinedSupportCircleAdd";
 import { SupportCircleMessages } from "@/components/personal-community/SupportCircleMessages";
 import { SupportCirclePermissions } from "@/components/personal-community/SupportCirclePermissions";
 import { useAccountabilitySystem } from "@/hooks/use-accountability-system";
@@ -23,6 +24,11 @@ const SupportCirclePage = () => {
   const activeMembers = supportCircle.filter(m => m.status === 'active');
   const pendingMembers = supportCircle.filter(m => m.status === 'pending');
 
+  const handleAddMember = (member: any) => {
+    // Handle the new member addition
+    console.log('New member added:', member);
+  };
+
   if (isLoading) {
     return (
       <div className="container mx-auto p-6">
@@ -38,13 +44,14 @@ const SupportCirclePage = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-8">
-      {/* Header */}
+      {/* Header - Enhanced for brain-injury users */}
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-brain-health-600 to-memory-emerald-600 bg-clip-text text-transparent">
           Your Support Circle
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Connect with family, friends, and caregivers who help you stay on track with your brain health journey.
+          Connect with people who care about your journey. Just email + role + notes + permissions - that's it! 
+          They'll receive clear invitations and can start supporting you immediately.
         </p>
       </div>
 
@@ -84,8 +91,12 @@ const SupportCirclePage = () => {
       </div>
 
       {/* Main Content */}
-      <Tabs defaultValue="members" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="add-member" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="add-member" className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Add Member
+          </TabsTrigger>
           <TabsTrigger value="members" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Members
@@ -103,6 +114,10 @@ const SupportCirclePage = () => {
             Settings
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="add-member" className="space-y-6">
+          <StreamlinedSupportCircleAdd onAdd={handleAddMember} />
+        </TabsContent>
 
         <TabsContent value="members" className="space-y-6">
           <SupportCircleManager />
