@@ -9,7 +9,8 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   emailVerificationStatus: 'verified' | 'pending' | 'unknown';
-  signUp: (email: string, password: string, name: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, name: string, isFreemium?: boolean) => Promise<{ error: any }>;
+  signUpFreemium: (email: string, name: string, age?: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any }>;
@@ -86,7 +87,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string, name: string) => {
+  const signUpFreemium = async (email: string, name: string, age?: string) => {
+    try {
+      console.log('AuthContext: Attempting freemium sign up for:', email);
+      
+      // Generate a secure temporary password for freemium users
+      const tempPassword = crypto.randomUUID() + '!A1';
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password: tempPassword,
+        options: {
+          data: {
+            name: name,
+            age: age,
+            is_freemium: true,
+            signup_type: 'freemium'
+          },
+          emailRedirectTo: `${window.location.origin}/welcome`
+        }
+      });
+      
+      if (error) {
+        SecureLogger.error('AuthContext: Freemium sign up error:', error);
+        toast.error(error.message);
+      } else {
+        console.log('AuthContext: Freemium sign up successful:', data);
+        toast.success('Welcome! Check your email to verify your account. You can start your assessment now.');
+        setEmailVerificationStatus('pending');
+      }
+      
+      return { error };
+    } catch (error) {
+      SecureLogger.error('AuthContext: Freemium sign up exception:', error);
+      toast.error('Sign up failed. Please try again.');
+      return { error };
+    }
+  };
+
+  const signUp = async (email: string, password: string, name: string, isFreemium: boolean = false) => {
     try {
       console.log('AuthContext: Attempting sign up for:', email);
       
@@ -95,9 +134,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         password,
         options: {
           data: {
-            name: name
+            name: name,
+            is_freemium: isFreemium,
+            signup_type: isFreemium ? 'freemium' : 'premium'
           },
-          emailRedirectTo: `${window.location.origin}/email-verification`
+          emailRedirectTo: isFreemium 
+            ? `${window.location.origin}/welcome`
+            : `${window.location.origin}/email-verification`
         }
       });
       
@@ -238,6 +281,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       emailVerificationStatus,
       signUp,
+      signUpFreemium,
       signIn,
       signOut,
       resetPassword,
