@@ -41,6 +41,7 @@ import MVPCorePage from "./pages/MVPCorePage";
 import MVPCore4CPage from "./pages/MVPCore4CPage";
 import MVPAssessmentFlowPage from "./pages/MVPAssessmentFlowPage";
 import MVPAssessmentResults from "./pages/MVPAssessmentResults";
+import AssessmentToCalendarPage from "./pages/AssessmentToCalendarPage";
 import CongratsPage from "./pages/CongratsPage";
 import StartPage from "./pages/StartPage";
 import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
@@ -154,6 +155,7 @@ function App() {
                      {/* New Assessment and Setup Flow */}
          <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />
          <Route path="/mvp-assessment-results" element={<MVPAssessmentResults />} />
+         <Route path="/assessment-to-calendar" element={<AssessmentToCalendarPage />} />
                      <Route path="/setup-wizard" element={<SetupWizard />} />
                      <Route path="/life-empowerment-guide" element={<LifeEmpowermentGuidePage />} />
                      <Route path="/guided-journey" element={<GuidedJourneyPage />} />

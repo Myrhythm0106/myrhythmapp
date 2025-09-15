@@ -74,6 +74,14 @@ export default function MVPAssessmentResults() {
     navigate('/dashboard');
   };
 
+  const handleStartJourney = () => {
+    if (assessmentResult) {
+      // Set flag to trigger assessment-to-calendar flow
+      localStorage.setItem('startAssessmentToCalendarFlow', 'true');
+      navigate('/assessment-to-calendar');
+    }
+  };
+
   if (!assessmentResult) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15 flex items-center justify-center">
@@ -346,16 +354,24 @@ export default function MVPAssessmentResults() {
           </CardContent>
         </Card>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button 
-            onClick={handleGoToDashboard}
-            className="bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 text-white"
+            onClick={handleStartJourney}
+            size="lg"
+            className="bg-gradient-to-r from-brain-health-500 to-memory-emerald-500 hover:from-brain-health-600 hover:to-memory-emerald-600 text-white font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            Log In
-            <ArrowRight className="h-4 w-4 ml-2" />
+            🎯 START MY TRANSFORMATION
           </Button>
           
+          {!isPaid && (
+            <Button 
+              onClick={handleUpgrade}
+              size="lg"
+              className="bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-white font-bold shadow-xl animate-pulse"
+            >
+              <Crown className="h-5 w-5 mr-2" />
+              🎯 UNLOCK MY TRANSFORMATION
+            </Button>
+          )}
           {!isPaid && (
             <Button 
               onClick={handleUpgrade}
