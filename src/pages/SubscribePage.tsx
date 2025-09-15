@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 const SubscribePage = () => {
-  const [selectedPlan, setSelectedPlan] = useState<'starter' | 'smart_pro' | 'family_smart' | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<'reconnect' | 'thrive' | 'family' | null>(null);
   const [isYearly, setIsYearly] = useState(true);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -21,33 +21,33 @@ const SubscribePage = () => {
   const analytics = trackSubscriptionAnalytics();
   const isFoundingActive = isFoundingMemberActive();
   const plans = [{
-    id: 'starter' as const,
-    name: 'MyStarter',
-    description: '✨ 3 Free Support Circle Members included',
+    id: 'reconnect' as const,
+    name: 'MyReconnect',
+    description: 'Unlimited recordings with support circle',
     icon: Star,
     color: 'text-teal-600',
     gradient: 'from-teal-500 to-emerald-600',
-    features: ['✨ 3 Free Support Circle Members', 'Unlimited Memory Bridge recordings', 'Full ACT reports with calendar scheduling', 'Complete cognitive assessments', 'Progress tracking & insights']
+    features: ['Unlimited conversation recordings', 'Advanced ACTS extraction & scheduling', 'Full calendar integration', 'Up to 3 support circle members', 'Basic progress reports']
   }, {
-    id: 'smart_pro' as const,
-    name: 'MyStretch',
-    description: 'Enhanced experience with connected care',
+    id: 'thrive' as const,
+    name: 'MyThrive',
+    description: 'Enhanced experience with medical integration',
     icon: Crown,
     color: 'text-teal-600',
     gradient: 'from-teal-600 to-emerald-700',
     badge: 'Most Popular',
     popular: true,
-    features: ['✨ 3 Free Support Circle Members', 'Everything in MyStarter', 'SMART Scheduling Engine', 'External calendar sync (Google, Apple, Outlook)', 'Schedule optimization & conflict detection', 'Advanced progress analytics', 'Priority support']
+    features: ['Everything in MyReconnect', 'Medical-grade progress reports', 'Healthcare team integration', 'Up to 5 support circle members', 'Priority support', 'Advanced analytics']
   }, {
-    id: 'family_smart' as const,
-    name: 'MyLeap',
+    id: 'family' as const,
+    name: 'MyFamily',
     description: 'Complete family coordination with unlimited support',
     icon: Users,
     color: 'text-teal-600',
     gradient: 'from-teal-700 to-emerald-800',
-    features: ['✨ 3 Free Support Circle Members', 'Everything in MyStretch', 'Up to 6 family member accounts', 'Shared family calendar & coordination', 'Family progress dashboard', 'Care coordination tools', 'Unlimited Support Circle Growth', 'Family insights & reports']
+    features: ['Everything in MyThrive', 'Family sharing & coordination', 'Unlimited support circle members', 'Multi-user dashboard', 'Family progress tracking', 'Caregiver peace-of-mind features']
   }];
-  const handleSelectPlan = async (planType: 'starter' | 'smart_pro' | 'family_smart') => {
+  const handleSelectPlan = async (planType: 'reconnect' | 'thrive' | 'family') => {
     setSelectedPlan(planType);
     setLoading(true);
     try {

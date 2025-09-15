@@ -60,15 +60,18 @@ serve(async (req) => {
     // Parse request body
     const { plan, interval } = await req.json();
     if (!plan || !interval) throw new Error("Plan and interval are required");
-    if (!['starter', 'smart_pro', 'family_smart'].includes(plan)) throw new Error("Invalid plan");
+    if (!['reconnect', 'thrive', 'family', 'clinic_starter', 'clinic_pro', 'clinic_enterprise'].includes(plan)) throw new Error("Invalid plan");
     if (!['month', 'year'].includes(interval)) throw new Error("Invalid interval");
     logStep("Request parsed", { plan, interval });
 
     // Base pricing in pence
     const basePricing = {
-      starter: { month: 699, year: 5999 },
-      smart_pro: { month: 1299, year: 11999 },
-      family_smart: { month: 1999, year: 17999 }
+      reconnect: { month: 1500, year: 15000 },
+      thrive: { month: 2500, year: 25000 },
+      family: { month: 4000, year: 40000 },
+      clinic_starter: { month: 20000, year: 200000 },
+      clinic_pro: { month: 50000, year: 500000 },
+      clinic_enterprise: { month: 100000, year: 1000000 }
     };
 
     const basePricePence = basePricing[plan][interval];
@@ -98,9 +101,12 @@ serve(async (req) => {
 
     // Plan names for display
     const planNames = {
-      starter: 'MyStarter',
-      smart_pro: 'MyStretch', 
-      family_smart: 'MyLeap'
+      reconnect: 'MyReconnect',
+      thrive: 'MyThrive',
+      family: 'MyFamily',
+      clinic_starter: 'Clinic Starter',
+      clinic_pro: 'Clinic Professional',
+      clinic_enterprise: 'Healthcare Enterprise'
     };
 
     const origin = req.headers.get("origin") || "http://localhost:3000";

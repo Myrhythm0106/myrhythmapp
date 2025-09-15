@@ -6,8 +6,8 @@ export default function MVPUserTypeSelectionPage() {
   const navigate = useNavigate();
 
   const handleUserTypeComplete = (data: any) => {
-    // Navigate to payment page with user type parameter
-    navigate(`/mvp-payment?userType=${data.type.id}`);
+    // Navigate directly to welcome page - no payment barrier
+    navigate(`/welcome?userType=${data.type.id}`);
   };
 
   const handleBack = () => {
