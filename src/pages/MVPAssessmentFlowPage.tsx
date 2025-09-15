@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowLeft, Brain, Clock, Target, Info } from 'lucide-react';
+import { ArrowLeft, Brain, Clock, Target, Info, User } from 'lucide-react';
 import { MVPAssessmentFlow } from '@/components/mvp/MVPAssessmentFlow';
 import { useAuth } from '@/contexts/AuthContext';
 import { ConsentDialog } from '@/components/onboarding/ConsentDialog';
+import { PersonalInfoStep, PersonalInfoFormValues } from '@/components/onboarding/steps/PersonalInfoStep';
 import { toast } from 'sonner';
 
 export default function MVPAssessmentFlowPage() {
@@ -14,10 +15,12 @@ export default function MVPAssessmentFlowPage() {
   const { user } = useAuth();
   const [showConsent, setShowConsent] = useState(false);
   const [consentGiven, setConsentGiven] = useState(false);
+  const [showPersonalInfo, setShowPersonalInfo] = useState(false);
+  const [personalInfoCompleted, setPersonalInfoCompleted] = useState(false);
   
   const assessmentType = searchParams.get('type') as 'brief' | 'comprehensive' || 'brief';
   const selectedPath = searchParams.get('path') as 'guided' | 'explorer' || 'guided';
-  const flow = searchParams.get('flow'); // 'post-payment' or null
+  const flow = searchParams.get('flow'); // 'post-payment', 'register', or null
 
   useEffect(() => {
     // Check if user has given consent
@@ -26,13 +29,27 @@ export default function MVPAssessmentFlowPage() {
       setShowConsent(true);
     } else {
       setConsentGiven(true);
+      
+      // For register flow, check if we need to collect personal info
+      if (flow === 'register' && !user) {
+        setShowPersonalInfo(true);
+      } else if (user) {
+        setPersonalInfoCompleted(true);
+      }
     }
-  }, []);
+  }, [flow, user]);
 
   const handleConsentAccept = () => {
     localStorage.setItem('myrhythm_consent', 'true');
     setConsentGiven(true);
     setShowConsent(false);
+    
+    // After consent, check if we need personal info for register flow
+    if (flow === 'register' && !user) {
+      setShowPersonalInfo(true);
+    } else if (user) {
+      setPersonalInfoCompleted(true);
+    }
   };
 
   const handleConsentDecline = () => {
@@ -45,6 +62,12 @@ export default function MVPAssessmentFlowPage() {
     } else {
       navigate('/dashboard');
     }
+  };
+
+  const handlePersonalInfoComplete = (values: PersonalInfoFormValues) => {
+    setPersonalInfoCompleted(true);
+    setShowPersonalInfo(false);
+    toast.success('Welcome! Let\'s start your assessment.');
   };
 
   const handleAssessmentComplete = () => {
@@ -81,6 +104,44 @@ export default function MVPAssessmentFlowPage() {
           onDecline={handleConsentDecline}
         />
       </>
+    );
+  }
+
+  // Show personal info collection for register flow
+  if (showPersonalInfo && !personalInfoCompleted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50">
+        <div className="container mx-auto px-4 py-8 max-w-2xl">
+          {/* Header */}
+          <div className="flex items-center gap-4 mb-6">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleBack}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          </div>
+
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <User className="h-8 w-8 text-teal-600" />
+              <h1 className="text-3xl font-bold text-slate-800">
+                Let's Get Started
+              </h1>
+            </div>
+            <p className="text-slate-600 text-lg max-w-xl mx-auto">
+              First, we need a few details to personalize your MyRhythm assessment experience.
+            </p>
+          </div>
+
+          <PersonalInfoStep 
+            onComplete={handlePersonalInfoComplete}
+          />
+        </div>
+      </div>
     );
   }
 
@@ -152,7 +213,7 @@ export default function MVPAssessmentFlowPage() {
         </div>
 
         {/* Assessment Component */}
-        <MVPAssessmentFlow />
+        <MVPAssessmentFlow onComplete={handleAssessmentComplete} />
       </div>
     </div>
   );
