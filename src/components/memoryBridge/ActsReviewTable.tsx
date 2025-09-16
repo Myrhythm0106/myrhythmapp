@@ -94,11 +94,14 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
 
   const handleExportCSV = () => {
     const csvContent = [
-      ['Action', 'Assignee', 'Priority', 'Due Context', 'Context', 'Confidence', 'Status'].join(','),
+      ['Action', 'Assignee', 'Priority', 'Start Date', 'Target Date', 'Deadline', 'Due Context', 'Context', 'Confidence', 'Status'].join(','),
       ...actions.map(action => [
         `"${action.action_text}"`,
         `"${action.assigned_to || ''}"`,
         getPriorityText(action.priority_level),
+        `"${action.start_date || ''}"`,
+        `"${action.completion_date || ''}"`,
+        `"${action.end_date || ''}"`,
         `"${action.due_context || ''}"`,
         `"${action.relationship_impact || ''}"`,
         action.confidence_score || 0,
@@ -281,6 +284,9 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
               <TableHead className="min-w-[200px]">Action</TableHead>
               <TableHead>Assignee</TableHead>
               <TableHead>Priority</TableHead>
+              <TableHead>Start Date</TableHead>
+              <TableHead>Target Date</TableHead>
+              <TableHead>Deadline</TableHead>
               <TableHead>Suggested Times</TableHead>
               <TableHead>Confidence</TableHead>
               <TableHead>Status</TableHead>
@@ -379,9 +385,82 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
                     </Select>
                   </TableCell>
                   <TableCell>
-                    <Badge className={getPriorityColor(action.priority_level)}>
-                      {getPriorityText(action.priority_level)}
-                    </Badge>
+                    {editingCell?.actionId === action.id && editingCell?.field === 'start_date' ? (
+                      <Input
+                        type="date"
+                        defaultValue={action.start_date || ''}
+                        onBlur={(e) => {
+                          onUpdateAction(action.id!, { start_date: e.target.value });
+                          setEditingCell(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            onUpdateAction(action.id!, { start_date: e.currentTarget.value });
+                            setEditingCell(null);
+                          }
+                        }}
+                        autoFocus
+                      />
+                    ) : (
+                      <div
+                        onClick={() => setEditingCell({ actionId: action.id!, field: 'start_date' })}
+                        className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
+                      >
+                        {action.start_date || 'Set date'}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingCell?.actionId === action.id && editingCell?.field === 'completion_date' ? (
+                      <Input
+                        type="date"
+                        defaultValue={action.completion_date || ''}
+                        onBlur={(e) => {
+                          onUpdateAction(action.id!, { completion_date: e.target.value });
+                          setEditingCell(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            onUpdateAction(action.id!, { completion_date: e.currentTarget.value });
+                            setEditingCell(null);
+                          }
+                        }}
+                        autoFocus
+                      />
+                    ) : (
+                      <div
+                        onClick={() => setEditingCell({ actionId: action.id!, field: 'completion_date' })}
+                        className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
+                      >
+                        {action.completion_date || 'Set date'}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {editingCell?.actionId === action.id && editingCell?.field === 'end_date' ? (
+                      <Input
+                        type="date"
+                        defaultValue={action.end_date || ''}
+                        onBlur={(e) => {
+                          onUpdateAction(action.id!, { end_date: e.target.value });
+                          setEditingCell(null);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            onUpdateAction(action.id!, { end_date: e.currentTarget.value });
+                            setEditingCell(null);
+                          }
+                        }}
+                        autoFocus
+                      />
+                    ) : (
+                      <div
+                        onClick={() => setEditingCell({ actionId: action.id!, field: 'end_date' })}
+                        className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
+                      >
+                        {action.end_date || 'Set date'}
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell>
                     <ScheduleSuggestionCell
@@ -411,8 +490,8 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
                 </TableRow>
                 
                 {expandedRows.has(action.id!) && (
-                  <TableRow>
-                    <TableCell colSpan={8} className="bg-muted/20">
+                <TableRow>
+                    <TableCell colSpan={11} className="bg-muted/20">
                       <div className="p-4 space-y-2">
                         <div>
                           <span className="font-medium text-sm">Context:</span>
