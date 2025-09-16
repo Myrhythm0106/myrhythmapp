@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/contexts/AuthContext';
 import { processSavedRecording } from '@/utils/processSavedRecording';
+import { RecordingDetailsView } from './RecordingDetailsView';
 import { 
   Mic, 
   Play, 
@@ -12,7 +13,8 @@ import {
   Clock,
   FileAudio,
   ChevronRight,
-  Loader2
+  Loader2,
+  Eye
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -25,6 +27,7 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
   const { user } = useAuth();
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [processedRecordings, setProcessedRecordings] = useState<Set<string>>(new Set());
+  const [viewingRecording, setViewingRecording] = useState<{ id: string; title: string } | null>(null);
 
   useEffect(() => {
     fetchRecordings();
@@ -83,6 +86,13 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
       const audio = new Audio(url);
       audio.play();
     }
+  };
+
+  const handleViewRecording = (recording: any) => {
+    setViewingRecording({
+      id: recording.id,
+      title: recording.title
+    });
   };
 
   const formatDuration = (seconds: number | undefined) => {
@@ -153,10 +163,21 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
 
                     <div className="flex items-center gap-2 ml-4">
                       {isProcessed ? (
-                        <Badge className="bg-green-100 text-green-800">
-                          <Brain className="h-3 w-3 mr-1" />
-                          Processed
-                        </Badge>
+                        <div className="flex items-center gap-2">
+                          <Badge className="bg-green-100 text-green-800">
+                            <Brain className="h-3 w-3 mr-1" />
+                            Processed
+                          </Badge>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleViewRecording(recording)}
+                            className="flex items-center gap-1"
+                          >
+                            <Eye className="h-3 w-3" />
+                            View
+                          </Button>
+                        </div>
                       ) : (
                         <div className="flex gap-2">
                           <Button
@@ -198,6 +219,22 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
           })}
         </CardContent>
       </Card>
+
+      {/* Recording Details Modal */}
+      {viewingRecording && (
+        <RecordingDetailsView
+          recordingId={viewingRecording.id}
+          meetingTitle={viewingRecording.title}
+          isOpen={!!viewingRecording}
+          onClose={() => setViewingRecording(null)}
+          onPlayRecording={() => {
+            const recording = meetingRecordings.find(r => r.id === viewingRecording.id);
+            if (recording) {
+              handlePlayRecording(recording);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }
