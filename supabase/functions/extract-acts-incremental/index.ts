@@ -118,7 +118,6 @@ Return ONLY a JSON array of action objects. No explanations.`
             }]
           })
         });
-        });
 
         if (openAIResponse.ok) {
           const openAIData = await openAIResponse.json();
