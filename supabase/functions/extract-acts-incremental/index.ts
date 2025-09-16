@@ -39,9 +39,10 @@ serve(async (req) => {
     // Extract ACTs from the current transcript with resilient fallbacks
     let extractedActions: any[] = [];
 
-    // Helper: simple deterministic fallback when external LLMs are unavailable
+    // Helper: COMPREHENSIVE fallback with ALL structured fields
     const localExtractActions = (text: string) => {
       try {
+        console.log('🔄 Using enhanced rule-based fallback extraction');
         const sentences = text
           .replace(/\n+/g, ' ')
           .split(/(?<=[.!?])\s+/)
@@ -53,50 +54,109 @@ serve(async (req) => {
           s.length > 10 && s.length < 200
         );
         
+        console.log(`🔍 Found ${candidates.length} candidate actions from ${sentences.length} sentences`);
+        
         const duePhrases = ['today', 'tomorrow', 'this week', 'next week', 'by', 'on', 'before', 'after', 'soon'];
         const currentDate = new Date();
         
-        const results = candidates.slice(0, 3).map(s => {
+        const results = candidates.slice(0, 3).map((s, index) => {
+          console.log(`🎯 Processing candidate ${index + 1}: "${s}"`);
+          
           const lower = s.toLowerCase();
           const due_context = duePhrases.find(p => lower.includes(p)) ? 
             s.match(/\b(by [^,.!?]+|tomorrow|today|this week|next week|on [^,.!?]+|before [^,.!?]+|soon)/i)?.[0] || 'unspecified' : 'unspecified';
           
-          // Convert to VERB-first format
+          // Convert to VERB-first format (CRITICAL FIX)
           let actionText = s.replace(/^\s*[-*•]\s*/, '').trim();
           if (actionText.match(/^I (will|need to|should|have to|must|plan to)/i)) {
             actionText = actionText.replace(/^I (will|need to|should|have to|must|plan to)\s*/i, '').trim();
-            actionText = actionText.charAt(0).toUpperCase() + actionText.slice(1);
           }
           
-          // Infer dates
+          // Extract the verb and make it VERB-first
+          const verbMatch = actionText.match(/^(call|contact|email|schedule|book|create|write|send|complete|finish|start|begin|review|prepare|organize|plan|discuss|meet|talk|visit|check|update|follow|confirm|arrange|set)/i);
+          if (verbMatch) {
+            actionText = verbMatch[0].toUpperCase() + ' ' + actionText.replace(/^[^a-z]+/i, '').trim();
+          } else {
+            // If no clear verb, add one based on context
+            if (lower.includes('call') || lower.includes('phone')) {
+              actionText = 'CALL ' + actionText.replace(/call|phone/gi, '').trim();
+            } else if (lower.includes('email') || lower.includes('send')) {
+              actionText = 'EMAIL ' + actionText.replace(/email|send/gi, '').trim();  
+            } else if (lower.includes('schedule') || lower.includes('book')) {
+              actionText = 'SCHEDULE ' + actionText.replace(/schedule|book/gi, '').trim();
+            } else {
+              actionText = 'COMPLETE ' + actionText;
+            }
+          }
+          
+          // Infer dates with better logic
+          let startDate = null;
           let completionDate = null;
+          let endDate = null;
+          
           if (due_context.includes('today')) {
             completionDate = currentDate.toISOString().split('T')[0];
+            startDate = currentDate.toISOString().split('T')[0];
           } else if (due_context.includes('tomorrow')) {
             const tomorrow = new Date(currentDate);
             tomorrow.setDate(tomorrow.getDate() + 1);
             completionDate = tomorrow.toISOString().split('T')[0];
+            startDate = currentDate.toISOString().split('T')[0];
           } else if (due_context.includes('this week')) {
             const endOfWeek = new Date(currentDate);
             endOfWeek.setDate(endOfWeek.getDate() + (7 - endOfWeek.getDay()));
             completionDate = endOfWeek.toISOString().split('T')[0];
+            startDate = currentDate.toISOString().split('T')[0];
+            endDate = endOfWeek.toISOString().split('T')[0];
+          } else if (due_context.includes('next week')) {
+            const nextWeekEnd = new Date(currentDate);
+            nextWeekEnd.setDate(nextWeekEnd.getDate() + 14);
+            completionDate = nextWeekEnd.toISOString().split('T')[0];
+            startDate = currentDate.toISOString().split('T')[0];
+          } else {
+            // Default: 3 days for simple tasks, 1 week for complex
+            const defaultDays = actionText.length > 50 ? 7 : 3;
+            const defaultTarget = new Date(currentDate);
+            defaultTarget.setDate(defaultTarget.getDate() + defaultDays);
+            completionDate = defaultTarget.toISOString().split('T')[0];
+            startDate = currentDate.toISOString().split('T')[0];
           }
           
-          return {
+          const actionObj = {
             action_text: actionText,
-            success_criteria: `You'll know you're done when ${actionText.toLowerCase()} is completed`,
-            motivation_statement: `This will help you follow through on your commitments`,
-            assigned_to: /\b(we|let's)\b/i.test(s) ? 'team' : 'me',
-            priority_level: /\b(urgent|asap|priority|critical)\b/i.test(s) ? 1 : 3,
+            success_criteria: `You'll know you're done when ${actionText.toLowerCase().replace(/^[A-Z]+\s/, '')} is completed successfully and confirmed`,
+            motivation_statement: `This will help you stay on track with your commitments and build momentum for your goals`,
+            what_outcome: `${actionText.replace(/^[A-Z]+\s/, '')} will be completed and you'll have a clear result`,
+            how_steps: [
+              'Identify specific requirements needed',
+              'Take the first concrete action step',  
+              'Follow through until complete'
+            ],
+            micro_tasks: [
+              { text: 'Review what needs to be done', completed: false },
+              { text: 'Take the first small step', completed: false }
+            ],
+            assigned_to: /\b(we|let's|team)\b/i.test(s) ? 'team' : 'me',
+            priority_level: /\b(urgent|asap|priority|critical|important)\b/i.test(s) ? 1 : /\b(soon|quickly)\b/i.test(s) ? 2 : 3,
             due_context,
+            start_date: startDate,
+            end_date: endDate,
             completion_date: completionDate,
-            confidence_score: 0.65,
-            reasoning: 'Extracted via improved rule-based fallback with VERB-first conversion'
+            relationship_impact: 'Following through shows commitment and builds trust with others',
+            emotional_stakes: 'Completing this will build confidence and reduce stress about unfinished commitments',
+            intent_behind: 'Taking concrete action toward stated goals and commitments',
+            confidence_score: 0.75,
+            reasoning: 'Enhanced rule-based extraction with full structured data and VERB-first formatting'
           };
+          
+          console.log(`✅ Created structured action: ${actionObj.action_text}`);
+          return actionObj;
         });
+        
+        console.log(`🎉 Rule-based extraction complete: ${results.length} structured actions created`);
         return results;
       } catch (err) {
-        console.error('Local extraction error:', err);
+        console.error('❌ Local extraction error:', err);
         return [];
       }
     };
@@ -197,18 +257,45 @@ Return ONLY a JSON array. No explanations or commentary.`
 
         if (openAIResponse.ok) {
           const openAIData = await openAIResponse.json();
-          console.log('OpenAI API response received:', JSON.stringify(openAIData, null, 2));
-          try {
-            const content = openAIData.choices?.[0]?.message?.content?.trim();
-            console.log('OpenAI extracted content:', content);
-            if (content && content !== '[]') {
-              extractedActions = JSON.parse(content);
-              console.log('ACTs extracted via OpenAI:', extractedActions.length, extractedActions);
-            } else {
-              console.log('OpenAI returned empty or no content');
+          console.log('✅ OpenAI API SUCCESS - Status:', openAIResponse.status);
+          console.log('✅ OpenAI full response:', JSON.stringify(openAIData, null, 2));
+          
+          const content = openAIData.choices?.[0]?.message?.content?.trim();
+          console.log('✅ Raw OpenAI content:', content);
+          
+          if (content && content !== '[]' && content !== '') {
+            try {
+              // Clean the content to ensure it's valid JSON
+              let cleanContent = content;
+              if (!cleanContent.startsWith('[')) {
+                // If it starts with text, try to find the JSON array
+                const arrayMatch = cleanContent.match(/\[[\s\S]*\]/);
+                if (arrayMatch) {
+                  cleanContent = arrayMatch[0];
+                } else {
+                  throw new Error('No JSON array found in content');
+                }
+              }
+              
+              extractedActions = JSON.parse(cleanContent);
+              console.log('✅ SUCCESS: Parsed', extractedActions.length, 'actions via OpenAI');
+              console.log('✅ First action sample:', JSON.stringify(extractedActions[0] || {}, null, 2));
+              
+              // Validate the structure
+              if (Array.isArray(extractedActions) && extractedActions.length > 0) {
+                console.log('✅ OpenAI extraction complete with', extractedActions.length, 'structured actions');
+              } else {
+                console.log('❌ OpenAI returned empty array, falling back');
+                extractedActions = [];
+              }
+            } catch (parseError) {
+              console.error('❌ PARSE ERROR - Failed to parse OpenAI JSON:', parseError);
+              console.error('❌ Raw content was:', JSON.stringify(content, null, 2));
+              extractedActions = [];
             }
-          } catch (parseError) {
-            console.error('Error parsing OpenAI response:', parseError, 'Content was:', content);
+          } else {
+            console.log('❌ OpenAI returned empty/null content');
+            extractedActions = [];
           }
         } else {
           const errorText = await openAIResponse.text();
