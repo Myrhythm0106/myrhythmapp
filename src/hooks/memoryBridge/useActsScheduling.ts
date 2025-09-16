@@ -20,7 +20,6 @@ export function useActsScheduling() {
     try {
       const actionSuggestions = await generateTierEnhancedSuggestions(
         action,
-        user.id,
         [] // watchers - could be passed from context if needed
       );
 
