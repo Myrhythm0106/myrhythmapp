@@ -76,9 +76,12 @@ serve(async (req) => {
             'Authorization': `Bearer ${OPENAI_API_KEY}`,
             'Content-Type': 'application/json',
           },
-  // Brain injury-optimized prompt for VERB-first, comprehensive action extraction
-  const prompt = `
-EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from this meeting transcript.
+          body: JSON.stringify({
+            model: 'gpt-5-mini-2025-08-07',
+            max_completion_tokens: 2000,
+            messages: [{
+              role: 'system',
+              content: `EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from meeting transcripts.
 
 CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured actions that inspire pride and follow-through.
 
@@ -108,10 +111,13 @@ For each action found, provide a JSON object with these fields:
 - priority_level: 1-5 (5=highest)
 - confidence_score: 0.0-1.0 how sure you are this is an action
 
-Return ONLY a JSON array of action objects. No explanations.
-
-TRANSCRIPT:
-${transcript}`;
+Return ONLY a JSON array of action objects. No explanations.`
+            }, {
+              role: 'user',
+              content: `TRANSCRIPT: ${transcript}`
+            }]
+          })
+        });
         });
 
         if (openAIResponse.ok) {
@@ -237,7 +243,7 @@ ${transcript}`;
     
     // Determine processing method used (for UI display)
     if (transcript.length > 100) {
-      processingMethod = openaiApiKey ? 'openai' : 'rule_based';
+      processingMethod = OPENAI_API_KEY ? 'openai' : 'rule_based';
       if (processingMethod === 'openai') confidenceScore += 15;
     }
     

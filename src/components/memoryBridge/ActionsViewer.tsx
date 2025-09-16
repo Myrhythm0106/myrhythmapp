@@ -122,9 +122,18 @@ export function ActionsViewer({
 
   const getStructuredActionText = (action: ExtractedAction) => {
     // Use new structured fields if available, otherwise fallback to parsing
-    const what = (action as any).what_outcome || action.action_text;
-    const howSteps = (action as any).how_steps || [];
-    const microTasks = (action as any).micro_tasks || [];
+    const what = action.what_outcome || action.action_text;
+    const howSteps = action.how_steps || [];
+    const microTasks = action.micro_tasks || [];
+    
+    // Normalize microTasks to ensure consistent structure
+    const normalizedMicroTasks = Array.isArray(microTasks) 
+      ? microTasks.map(task => 
+          typeof task === 'string' 
+            ? { text: task, completed: false }
+            : task
+        )
+      : [];
     
     // If we have structured steps, format them nicely
     let how = "";
@@ -141,7 +150,7 @@ export function ActionsViewer({
     return { 
       what, 
       how,
-      microTasks: Array.isArray(microTasks) ? microTasks : []
+      microTasks: normalizedMicroTasks
     };
   };
 
@@ -195,37 +204,37 @@ export function ActionsViewer({
                           </div>
 
                           {/* Success Criteria */}
-                          {(action as any).success_criteria && (
+                          {action.success_criteria && (
                             <div className="bg-green-500/10 rounded-md p-3 border border-green-500/20">
                               <div className="flex items-center gap-2 mb-1">
                                 <CheckCircle className="h-4 w-4 text-green-600" />
                                 <span className="font-semibold text-green-700 text-sm">YOU'LL KNOW YOU'RE DONE WHEN</span>
                               </div>
-                              <p className="text-foreground text-sm">{(action as any).success_criteria}</p>
+                              <p className="text-foreground text-sm">{action.success_criteria}</p>
                             </div>
                           )}
 
                           {/* Motivation Statement */}
-                          {(action as any).motivation_statement && (
+                          {action.motivation_statement && (
                             <div className="bg-yellow-500/10 rounded-md p-3 border border-yellow-500/20">
                               <div className="flex items-center gap-2 mb-1">
                                 <TrendingUp className="h-4 w-4 text-yellow-600" />
                                 <span className="font-semibold text-yellow-700 text-sm">THIS WILL HELP YOU</span>
                               </div>
-                              <p className="text-foreground text-sm font-medium">{(action as any).motivation_statement}</p>
+                              <p className="text-foreground text-sm font-medium">{action.motivation_statement}</p>
                             </div>
                           )}
 
                           {/* Completion Date */}
-                          {(action as any).completion_date && (
+                          {action.completion_date && (
                             <div className="bg-blue-500/10 rounded-md p-3 border border-blue-500/20">
                               <div className="flex items-center gap-2 mb-1">
                                 <Calendar className="h-4 w-4 text-blue-600" />
                                 <span className="font-semibold text-blue-700 text-sm">COMPLETE BY</span>
                               </div>
                               <p className="text-foreground text-sm font-bold">
-                                {new Date((action as any).completion_date).toLocaleDateString()}
-                                {!(action as any).calendar_checked && (
+                                {new Date(action.completion_date).toLocaleDateString()}
+                                {!action.calendar_checked && (
                                   <span className="ml-2 text-red-600 text-xs">(Calendar availability not verified)</span>
                                 )}
                               </p>
@@ -264,10 +273,10 @@ export function ActionsViewer({
                                 <span className="font-semibold text-green-700 text-sm">START WITH THESE TINY STEPS</span>
                               </div>
                               <div className="space-y-1">
-                                {structuredAction.microTasks.map((task: string, index: number) => (
+                                {structuredAction.microTasks.map((task: {text: string; completed: boolean}, index: number) => (
                                   <div key={index} className="flex items-center gap-2 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
                                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                                    {task}
+                                    {task.text}
                                   </div>
                                 ))}
                               </div>

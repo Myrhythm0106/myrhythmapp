@@ -33,7 +33,7 @@ export interface ExtractedAction {
   intent_behind?: string;
   transcript_excerpt?: string;
   timestamp_in_recording: number;
-  status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified' | 'scheduled';
+  status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified' | 'scheduled' | 'not_started';
   user_notes?: string;
   created_at: string;
   updated_at: string;
@@ -44,6 +44,15 @@ export interface ExtractedAction {
   scheduled_time?: string;
   calendar_event_id?: string;
   assigned_watchers?: string[];
+  // New comprehensive action fields
+  success_criteria?: string;
+  motivation_statement?: string;
+  what_outcome?: string;
+  how_steps?: string[];
+  micro_tasks?: Array<{text: string; completed: boolean}>;
+  calendar_checked?: boolean;
+  completion_date?: string;
+  support_circle_notified?: boolean;
 }
 
 export interface ConversationContext {
