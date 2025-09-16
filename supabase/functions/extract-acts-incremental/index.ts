@@ -34,7 +34,9 @@ serve(async (req) => {
       throw new Error('Missing required parameters: transcript, meetingId, userId');
     }
 
-    console.log('Processing incremental transcript for meeting:', meetingId);
+    console.log('🚀 PROCESSING TRANSCRIPT with OpenAI + Enhanced Fallback for meeting:', meetingId);
+    console.log('🔑 OpenAI API Key available:', !!OPENAI_API_KEY);
+    console.log('📝 Transcript length:', transcript.length);
 
     // Extract ACTs from the current transcript with resilient fallbacks
     let extractedActions: any[] = [];

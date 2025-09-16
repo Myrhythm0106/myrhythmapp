@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Extract Acts Function</title>
+</head>
+<body>
+    <h1>Test Extract Acts Edge Function</h1>
+    <button onclick="testFunction()">Test Extract Acts</button>
+    <div id="result"></div>
+
+    <script>
+        async function testFunction() {
+            const testTranscript = `I will call the doctor tomorrow to schedule my next appointment. We need to create a brand kit with templates and brand colors. I should also write a blog post about no more excuses this week.`;
+            
+            try {
+                console.log('🚀 Testing extract-acts-incremental function...');
+                const response = await fetch('https://bomjibcivwxbcwfmkrnv.supabase.co/functions/v1/extract-acts-incremental', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvbWppYmNpdnd4YmN3Zm1rcm52Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgzMTg0OTksImV4cCI6MjA2Mzg5NDQ5OX0.gSaHvq6iGHHeqCcKOzKfuDd7T5LC5EXmDvJY8s48T7g'
+                    },
+                    body: JSON.stringify({
+                        transcript: testTranscript,
+                        meetingId: 'test-meeting-123',
+                        userId: 'b15ca921-baee-4dd5-b0f9-f84fbf87c2fe'
+                    })
+                });
+                
+                const data = await response.json();
+                console.log('✅ Function response:', data);
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('❌ Test failed:', error);
+                document.getElementById('result').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>
