@@ -121,18 +121,27 @@ export function ActionsViewer({
   };
 
   const getStructuredActionText = (action: ExtractedAction) => {
-    // Extract "what" and "how" from action text
-    const text = action.action_text;
+    // Use new structured fields if available, otherwise fallback to parsing
+    const what = (action as any).what_outcome || action.action_text;
+    const howSteps = (action as any).how_steps || [];
+    const microTasks = (action as any).micro_tasks || [];
     
-    // Try to parse structured format, otherwise return as-is
-    if (text.includes('|')) {
-      const [what, how] = text.split('|').map(s => s.trim());
-      return { what, how };
+    // If we have structured steps, format them nicely
+    let how = "";
+    if (howSteps.length > 0) {
+      how = howSteps.map((step: string, index: number) => `${index + 1}. ${step}`).join(', ');
+    } else if (action.action_text.includes('|')) {
+      // Fallback to old format parsing
+      const [, howPart] = action.action_text.split('|').map(s => s.trim());
+      how = howPart || "Take it step by step, following your own pace and style.";
+    } else {
+      how = action.relationship_impact || "Break this down into manageable steps that work for you.";
     }
     
     return { 
-      what: text, 
-      how: action.relationship_impact || "Take it step by step, following your own pace and style."
+      what, 
+      how,
+      microTasks: Array.isArray(microTasks) ? microTasks : []
     };
   };
 
@@ -175,23 +184,44 @@ export function ActionsViewer({
                   <Card key={action.id || index} className="border-l-4 border-l-primary bg-gradient-to-r from-background to-muted/20">
                     <CardHeader>
                       <CardTitle className="flex items-start justify-between">
-                        <div className="space-y-2 flex-1">
-                          <div className="flex items-center gap-2">
-                            <Sparkles className="h-4 w-4 text-primary" />
-                            <span className="text-lg font-semibold">What needs to be done</span>
-                          </div>
-                          <p className="text-base font-medium text-foreground pl-6">{structuredAction.what}</p>
-                          
-                          {structuredAction.how && (
-                            <div className="pl-6 pt-2">
-                              <div className="flex items-center gap-2 mb-1">
-                                <Target className="h-3 w-3 text-muted-foreground" />
-                                <span className="text-sm font-medium text-muted-foreground">How to approach it</span>
-                              </div>
-                              <p className="text-sm text-muted-foreground italic">{structuredAction.how}</p>
-                            </div>
-                          )}
-                        </div>
+                        <div className="space-y-3 flex-1">
+                           <div className="flex items-center gap-2">
+                             <Sparkles className="h-4 w-4 text-primary" />
+                             <span className="text-lg font-semibold">What needs to be done</span>
+                           </div>
+                           <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border border-primary/20 ml-6">
+                             <p className="text-base font-semibold text-foreground">{structuredAction.what}</p>
+                           </div>
+                           
+                           {structuredAction.how && (
+                             <div className="pl-6 pt-2">
+                               <div className="flex items-center gap-2 mb-2">
+                                 <Target className="h-4 w-4 text-secondary-foreground" />
+                                 <span className="text-sm font-semibold text-secondary-foreground">How to approach it step-by-step</span>
+                               </div>
+                               <div className="bg-secondary/50 p-3 rounded-lg border border-secondary/30">
+                                 <p className="text-sm text-secondary-foreground leading-relaxed">{structuredAction.how}</p>
+                               </div>
+                             </div>
+                           )}
+                           
+                           {structuredAction.microTasks && structuredAction.microTasks.length > 0 && (
+                             <div className="pl-6 pt-2">
+                               <div className="flex items-center gap-2 mb-2">
+                                 <CheckCircle className="h-4 w-4 text-green-600" />
+                                 <span className="text-sm font-semibold text-green-700">Start with these tiny steps</span>
+                               </div>
+                               <div className="space-y-1">
+                                 {structuredAction.microTasks.map((task: string, index: number) => (
+                                   <div key={index} className="flex items-center gap-2 text-xs text-green-700 bg-green-50 px-2 py-1 rounded">
+                                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                                     {task}
+                                   </div>
+                                 ))}
+                               </div>
+                             </div>
+                           )}
+                         </div>
                         
                         <div className="flex gap-2">
                           <Badge variant="outline" className="text-xs">

@@ -76,37 +76,56 @@ serve(async (req) => {
             'Authorization': `Bearer ${OPENAI_API_KEY}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            model: 'gpt-4o-mini',
-            messages: [
-              {
-                role: 'system',
-                content: `You are an expert AI assistant that extracts actionable items from ANY type of conversation - whether it's professional meetings, casual family chats, medical discussions, personal visioning, brainstorming, or everyday conversations.
+            body: JSON.stringify({
+              model: 'gpt-4o-mini',
+              messages: [
+                {
+                  role: 'system',
+                  content: `You are an expert AI assistant specializing in brain injury support that extracts actionable items from conversations and formats them in a WHAT|HOW structure optimized for cognitive accessibility.
 
-Your goal is to identify Actions, Commitments, and Tasks (ACTs) that create accountability and forward movement in someone's life. This includes:
+BRAIN INJURY OPTIMIZATION PRINCIPLES:
+- Break complex actions into 2-3 manageable micro-steps
+- Use simple, direct language (avoid jargon)
+- Format each action as: "WHAT needs to be accomplished | HOW to do it step-by-step"
+- Make outcomes concrete and measurable
+- Include encouraging, empowering language
+
+EXTRACT FROM ALL CONVERSATION TYPES:
 - PROFESSIONAL: Meeting follow-ups, project tasks, deadlines
-- PERSONAL: Health goals, family commitments, self-improvement
+- PERSONAL: Health goals, family commitments, self-improvement  
 - CREATIVE: Art projects, learning goals, hobby commitments
 - SOCIAL: Plans with friends, event organization, relationship actions
 - WELLNESS: Medical appointments, fitness goals, mental health practices
 - FINANCIAL: Budget tasks, investment research, bill payments
 - HOUSEHOLD: Chores, maintenance, organization projects
 
-Extract ACTs from the conversation with this structure:
-1. Action: Specific, actionable task (use active voice, be concrete)
-2. Assignee: Who will do it (names from conversation, "me", "I", or infer from context)
-3. Priority: high/medium/low based on urgency, impact, and emotional importance
-4. Due context: When it should happen (extract specific dates/times OR infer reasonable timeframes like "this week", "by Friday", "soon")
-5. Context: Relevant background that explains why this matters
-6. Confidence: 0.0-1.0 score of certainty this is a genuine commitment
-7. Reasoning: Brief explanation of why this is an ACT
+FORMAT EACH ACTION AS STRUCTURED COMMITMENT:
+1. what_outcome: Clear, specific WHAT will be accomplished (outcome-focused)
+2. how_steps: Array of 2-3 simple HOW steps to achieve it
+3. micro_tasks: Array of tiny daily tasks that build momentum
+4. assignee: Who will do it (specific person names, not "me/team")
+5. priority: high/medium/low based on urgency and emotional importance
+6. due_context: When it should happen (specific dates OR reasonable timeframes)
+7. context: Why this matters and relationship impact
+8. confidence: 0.0-1.0 score of certainty this is a genuine commitment
+9. reasoning: Brief explanation of why this is an actionable commitment
 
-Return ONLY a JSON array:
-[
-  {"action":"string","assignee":"string","priority":"high|medium|low","due_context":"string","context":"string","confidence":0.95,"reasoning":"string"}
-]`
-              },
-              { role: 'user', content: `Extract SMART ACTS from this transcript and return JSON only.\n\n${transcript}` }
+EXAMPLE FORMAT:
+{
+  "what_outcome": "Complete September content calendar",
+  "how_steps": ["Create content schedule spreadsheet", "Write captions for each post", "Use scheduling tool to queue posts"],
+  "micro_tasks": ["Open spreadsheet app", "List 3 post ideas", "Write one caption"],
+  "assignee": "Sarah Johnson", 
+  "priority": "high",
+  "due_context": "by September 1st",
+  "context": "Essential for maintaining consistent social media presence",
+  "confidence": 0.92,
+  "reasoning": "Clear commitment with specific deliverable and deadline"
+}
+
+Return ONLY a JSON array with this exact structure.`
+                },
+                { role: 'user', content: `Extract brain injury-optimized WHAT|HOW actions from this transcript. Format each action with clear outcomes and step-by-step instructions. Return JSON only.\n\n${transcript}` }
             ],
             max_tokens: 700,
             temperature: 0.1
@@ -182,13 +201,16 @@ Return ONLY a JSON array:
     console.log(`Extracted ${extractedActions.length} actions from transcript`);
     console.log(`Extracted ${extractedActions.length} actions from transcript`);
 
-    // Store the extracted actions with enhanced data
+    // Store the extracted actions with enhanced brain injury-optimized data
     const actionsToInsert = extractedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
-      action_text: action.action,
-      assigned_to: action.assignee || 'self',
-      due_context: action.due_context || 'unspecified',
+      action_text: action.what_outcome || action.action || 'Action needs definition',
+      what_outcome: action.what_outcome || action.action || 'Action needs definition', 
+      how_steps: action.how_steps || [],
+      micro_tasks: action.micro_tasks || [],
+      assigned_to: action.assignee || 'You',
+      due_context: action.due_context || 'Set your timeline',
       priority_level: action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5,
       relationship_impact: action.context || '',
       confidence_score: action.confidence || 0.8,
