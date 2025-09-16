@@ -218,35 +218,18 @@ export function EnhancedMemoryBridgeDashboard() {
   return (
     <div className="min-h-screen">
       <div className="max-w-6xl mx-auto space-y-6 p-6">
-        {!user && (
-          <Card className="border-2 border-red-200 bg-red-50">
-            <CardContent className="pt-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-red-800">Sign In Required</h3>
-                  <p className="text-red-700">Sign in to access Memory Bridge</p>
-                </div>
-                <Button onClick={() => navigate('/auth')} className="bg-red-600 hover:bg-red-700">
-                  Sign In / Sign Up
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <>
+          {/* Micro-coaching */}
+          {coachingStage && (
+            <MicroCoaching 
+              stage={coachingStage}
+              actionsCount={lastExtractionData?.actionsCount || 0}
+              onDismiss={() => setCoachingStage(null)}
+            />
+          )}
 
-        {user && (
-          <>
-            {/* Micro-coaching */}
-            {coachingStage && (
-              <MicroCoaching 
-                stage={coachingStage}
-                actionsCount={lastExtractionData?.actionsCount || 0}
-                onDismiss={() => setCoachingStage(null)}
-              />
-            )}
-
-            {/* Main Content */}
-            {isReturningUser ? (
+          {/* Main Content */}
+          {isReturningUser ? (
               <Tabs defaultValue="brief" className="w-full">
                 <TabsList className="grid w-full grid-cols-4">
                   <TabsTrigger value="brief">Daily Brief</TabsTrigger>
@@ -345,7 +328,7 @@ export function EnhancedMemoryBridgeDashboard() {
               </Card>
             )}
           </>
-        )}
+        
       </div>
     </div>
   );

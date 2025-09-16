@@ -13,6 +13,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import MVPCorePage from "./pages/MVPCorePage";
+import MemoryBridge from "./routes/MemoryBridge";
 
 const queryClient = new QueryClient();
 
@@ -57,11 +58,7 @@ function AppMemoryFirst() {
                 />
                 <Route
                   path="/memory-bridge"
-                  element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  }
+                  element={<MemoryBridge />}
                 />
                 <Route
                   path="/onboarding"
