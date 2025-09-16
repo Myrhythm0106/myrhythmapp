@@ -23,17 +23,18 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 interface ACTsItem {
   id: string;
   action: string;
-  context: string;
-  timeframe: string;
-  support: string;
+  assigned: string; // A - Assign: Who is responsible for this task?
+  completionDate: string; // C - Complete: When is the deadline or due date?
+  tracking: string; // T - Track: How is progress being monitored? (encouraging)
+  status: 'planned' | 'in-progress' | 'on-hold' | 'completed' | 'archived'; // S - Status
   priority: 'high' | 'medium' | 'low';
-  status: 'pending' | 'in-progress' | 'completed' | 'archived';
   meetingId?: string;
   meetingTitle?: string;
   dueDate?: string;
   scheduledDate?: string;
   createdAt: string;
   completedAt?: string;
+  context?: string; // Additional context for reference
 }
 
 interface Meeting {
@@ -48,42 +49,45 @@ const mockACTs: ACTsItem[] = [
   {
     id: 'act-1',
     action: 'Schedule follow-up appointment with Dr. Smith',
-    context: 'Discussed new treatment options and need follow-up in 2 weeks',
-    timeframe: 'Within 2 weeks',
-    support: 'None required',
+    assigned: 'You (with family support for reminders)',
+    completionDate: 'September 5, 2024',
+    tracking: '✅ Set phone reminder for tomorrow morning. Your partner will gently check in with you. You\'ve got this - taking charge of your health!',
+    status: 'planned',
     priority: 'high',
-    status: 'pending',
     meetingId: 'meeting-1',
     meetingTitle: 'Dr. Smith Consultation',
     dueDate: '2024-09-05',
-    createdAt: '2024-08-22T10:30:00Z'
+    createdAt: '2024-08-22T10:30:00Z',
+    context: 'Discussed new treatment options and need follow-up in 2 weeks'
   },
   {
     id: 'act-2',
     action: 'Pick up new prescription',
-    context: 'New medication prescribed during appointment',
-    timeframe: 'Tomorrow',
-    support: 'Ask partner to drive if needed',
-    priority: 'medium',
+    assigned: 'You (with transportation support)',
+    completionDate: 'August 23, 2024',
+    tracking: '🌟 COMPLETED! You successfully followed through and picked up your medication. This shows your commitment to your health journey!',
     status: 'completed',
+    priority: 'medium',
     meetingId: 'meeting-1',
     meetingTitle: 'Dr. Smith Consultation',
     dueDate: '2024-08-23',
     completedAt: '2024-08-23T14:00:00Z',
-    createdAt: '2024-08-22T10:30:00Z'
+    createdAt: '2024-08-22T10:30:00Z',
+    context: 'New medication prescribed during appointment'
   },
   {
     id: 'act-3',
     action: 'Call insurance about coverage',
-    context: 'Need to verify coverage for new treatment',
-    timeframe: 'This week',
-    support: 'Have policy number ready',
-    priority: 'medium',
+    assigned: 'You (with support person nearby for encouragement)',
+    completionDate: 'August 30, 2024',
+    tracking: '💪 Making progress! You\'ve started this important task. Break it into small steps: 1) Find policy number, 2) Call during your high-energy time, 3) Celebrate the completion!',
     status: 'in-progress',
+    priority: 'medium',
     meetingId: 'meeting-2',
     meetingTitle: 'Weekly Planning Session',
     dueDate: '2024-08-30',
-    createdAt: '2024-08-20T09:00:00Z'
+    createdAt: '2024-08-20T09:00:00Z',
+    context: 'Need to verify coverage for new treatment'
   }
 ];
 
@@ -115,7 +119,9 @@ export function ACTsRepository() {
 
   const filteredACTs = acts.filter(act => {
     const matchesSearch = act.action.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         act.context.toLowerCase().includes(searchQuery.toLowerCase());
+                         act.assigned.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         act.tracking.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         (act.context && act.context.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesStatus = filterStatus === 'all' || act.status === filterStatus;
     const matchesPriority = filterPriority === 'all' || act.priority === filterPriority;
     
@@ -135,8 +141,11 @@ export function ACTsRepository() {
       act.id === actId 
         ? { 
             ...act, 
-            status: act.status === 'completed' ? 'pending' : 'completed',
-            completedAt: act.status === 'completed' ? undefined : new Date().toISOString()
+            status: act.status === 'completed' ? 'planned' : 'completed',
+            completedAt: act.status === 'completed' ? undefined : new Date().toISOString(),
+            tracking: act.status === 'completed' 
+              ? act.tracking.replace('🌟 COMPLETED!', '').trim() 
+              : `🌟 COMPLETED! Amazing follow-through! You've successfully completed this task. ${act.tracking}`
           }
         : act
     ));
@@ -155,7 +164,8 @@ export function ACTsRepository() {
     switch (status) {
       case 'completed': return 'text-memory-emerald-600 bg-memory-emerald-50 border-memory-emerald-200';
       case 'in-progress': return 'text-clarity-teal-600 bg-clarity-teal-50 border-clarity-teal-200';
-      case 'pending': return 'text-sunrise-amber-600 bg-sunrise-amber-50 border-sunrise-amber-200';
+      case 'planned': return 'text-sunrise-amber-600 bg-sunrise-amber-50 border-sunrise-amber-200';
+      case 'on-hold': return 'text-orange-600 bg-orange-50 border-orange-200';
       case 'archived': return 'text-gray-600 bg-gray-50 border-gray-200';
       default: return 'text-brain-health-600 bg-brain-health-50 border-brain-health-200';
     }
@@ -185,9 +195,11 @@ export function ACTsRepository() {
               </h4>
             </div>
             
-            <p className="text-sm text-brain-health-600 ml-7">
-              {act.context}
-            </p>
+            {act.context && (
+              <p className="text-sm text-brain-health-500 ml-7 italic">
+                Context: {act.context}
+              </p>
+            )}
           </div>
           
           <div className="flex flex-col space-y-1">
@@ -200,33 +212,54 @@ export function ACTsRepository() {
           </div>
         </div>
         
-        {/* Details */}
-        <div className="ml-7 space-y-2">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-            <div className="flex items-center space-x-2">
-              <Clock className="h-4 w-4 text-sunrise-amber-500" />
-              <span className="text-brain-health-600">
-                <strong>Timeframe:</strong> {act.timeframe}
-              </span>
+        {/* ACTS Details */}
+        <div className="ml-7 space-y-3">
+          <div className="space-y-3 text-sm">
+            {/* A - Assign */}
+            <div className="p-3 bg-gradient-to-r from-brain-health-50 to-clarity-teal-50 rounded-lg border border-brain-health-100">
+              <div className="flex items-start space-x-2">
+                <div className="flex-shrink-0 w-6 h-6 bg-brain-health-500 text-white rounded-full flex items-center justify-center text-xs font-bold">A</div>
+                <div>
+                  <span className="font-semibold text-brain-health-800">Assign:</span>
+                  <p className="text-brain-health-700 mt-1">{act.assigned}</p>
+                </div>
+              </div>
             </div>
             
-            {act.support && act.support !== 'None required' && (
-              <div className="flex items-center space-x-2">
-                <Users className="h-4 w-4 text-clarity-teal-500" />
-                <span className="text-brain-health-600">
-                  <strong>Support:</strong> {act.support}
-                </span>
+            {/* C - Complete */}
+            <div className="p-3 bg-gradient-to-r from-sunrise-amber-50 to-clarity-teal-50 rounded-lg border border-sunrise-amber-100">
+              <div className="flex items-start space-x-2">
+                <div className="flex-shrink-0 w-6 h-6 bg-sunrise-amber-500 text-white rounded-full flex items-center justify-center text-xs font-bold">C</div>
+                <div>
+                  <span className="font-semibold text-sunrise-amber-800">Complete by:</span>
+                  <p className="text-sunrise-amber-700 mt-1">{act.completionDate}</p>
+                </div>
               </div>
-            )}
+            </div>
             
-            {act.dueDate && (
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-brain-health-500" />
-                <span className="text-brain-health-600">
-                  <strong>Due:</strong> {new Date(act.dueDate).toLocaleDateString()}
-                </span>
+            {/* T - Track */}
+            <div className="p-3 bg-gradient-to-r from-memory-emerald-50 to-clarity-teal-50 rounded-lg border border-memory-emerald-100">
+              <div className="flex items-start space-x-2">
+                <div className="flex-shrink-0 w-6 h-6 bg-memory-emerald-500 text-white rounded-full flex items-center justify-center text-xs font-bold">T</div>
+                <div>
+                  <span className="font-semibold text-memory-emerald-800">Track Progress:</span>
+                  <p className="text-memory-emerald-700 mt-1 leading-relaxed">{act.tracking}</p>
+                </div>
               </div>
-            )}
+            </div>
+            
+            {/* S - Status */}
+            <div className="p-3 bg-gradient-to-r from-clarity-teal-50 to-brain-health-50 rounded-lg border border-clarity-teal-100">
+              <div className="flex items-start space-x-2">
+                <div className="flex-shrink-0 w-6 h-6 bg-clarity-teal-500 text-white rounded-full flex items-center justify-center text-xs font-bold">S</div>
+                <div>
+                  <span className="font-semibold text-clarity-teal-800">Status:</span>
+                  <Badge className={`ml-2 ${getStatusColor(act.status)}`}>
+                    {act.status.replace('-', ' ')}
+                  </Badge>
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* Quick Actions */}
@@ -258,7 +291,10 @@ export function ACTsRepository() {
         <div>
           <h2 className="text-2xl font-bold text-brain-health-900">ACTS Repository</h2>
           <p className="text-brain-health-600">
-            Your central hub for Actions, Context, Timeframe & Support tracking
+            Your empowering system for: <strong>A</strong>ssign • <strong>C</strong>omplete • <strong>T</strong>rack • <strong>S</strong>tatus
+          </p>
+          <p className="text-xs text-brain-health-500 mt-1">
+            Building follow-through, one action at a time 💪
           </p>
         </div>
         
@@ -288,8 +324,9 @@ export function ACTsRepository() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="planned">Planned</SelectItem>
                 <SelectItem value="in-progress">In Progress</SelectItem>
+                <SelectItem value="on-hold">On Hold</SelectItem>
                 <SelectItem value="completed">Completed</SelectItem>
                 <SelectItem value="archived">Archived</SelectItem>
               </SelectContent>
@@ -335,9 +372,9 @@ export function ACTsRepository() {
         <Card className="border-sunrise-amber-200 bg-gradient-to-r from-sunrise-amber-50/50 to-white">
           <CardContent className="p-4 text-center">
             <div className="text-2xl font-bold text-sunrise-amber-600">
-              {filteredACTs.filter(act => act.status === 'pending').length}
+              {filteredACTs.filter(act => act.status === 'planned').length}
             </div>
-            <div className="text-sm text-sunrise-amber-700">Pending</div>
+            <div className="text-sm text-sunrise-amber-700">Planned</div>
           </CardContent>
         </Card>
         
