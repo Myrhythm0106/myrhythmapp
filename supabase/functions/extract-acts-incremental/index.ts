@@ -45,24 +45,58 @@ serve(async (req) => {
         const sentences = text
           .replace(/\n+/g, ' ')
           .split(/(?<=[.!?])\s+/)
-          .slice(0, 30);
-        const candidates = sentences.filter(s => /\b(I will|I'll|let's|we need to|I need to|I'll try|remind|schedule|follow up|send|call|email|finish|complete|set up|book|prepare|review|share|draft|fix)\b/i.test(s));
-        const duePhrases = ['today', 'tomorrow', 'this week', 'next week', 'by', 'on'];
-        const results = candidates.slice(0, 5).map(s => {
+          .slice(0, 50);
+        
+        // Better pattern matching for actual commitments and actions
+        const candidates = sentences.filter(s => 
+          /\b(I will|I'll|I commit to|I need to|I should|I'm going to|let me|I plan to|I promise to|we need to|let's|we'll|we should|I have to|I must)\b/i.test(s) &&
+          s.length > 10 && s.length < 200
+        );
+        
+        const duePhrases = ['today', 'tomorrow', 'this week', 'next week', 'by', 'on', 'before', 'after', 'soon'];
+        const currentDate = new Date();
+        
+        const results = candidates.slice(0, 3).map(s => {
           const lower = s.toLowerCase();
-          const due_context = duePhrases.find(p => lower.includes(p)) ? s.match(/\b(by [^,.!?]+|tomorrow|today|this week|next week|on [^,.!?]+)/i)?.[0] || 'unspecified' : 'unspecified';
+          const due_context = duePhrases.find(p => lower.includes(p)) ? 
+            s.match(/\b(by [^,.!?]+|tomorrow|today|this week|next week|on [^,.!?]+|before [^,.!?]+|soon)/i)?.[0] || 'unspecified' : 'unspecified';
+          
+          // Convert to VERB-first format
+          let actionText = s.replace(/^\s*[-*•]\s*/, '').trim();
+          if (actionText.match(/^I (will|need to|should|have to|must|plan to)/i)) {
+            actionText = actionText.replace(/^I (will|need to|should|have to|must|plan to)\s*/i, '').trim();
+            actionText = actionText.charAt(0).toUpperCase() + actionText.slice(1);
+          }
+          
+          // Infer dates
+          let completionDate = null;
+          if (due_context.includes('today')) {
+            completionDate = currentDate.toISOString().split('T')[0];
+          } else if (due_context.includes('tomorrow')) {
+            const tomorrow = new Date(currentDate);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            completionDate = tomorrow.toISOString().split('T')[0];
+          } else if (due_context.includes('this week')) {
+            const endOfWeek = new Date(currentDate);
+            endOfWeek.setDate(endOfWeek.getDate() + (7 - endOfWeek.getDay()));
+            completionDate = endOfWeek.toISOString().split('T')[0];
+          }
+          
           return {
-            action: s.replace(/^\s*[-*•]\s*/, '').trim(),
-            assignee: /\b(we|let's)\b/i.test(s) ? 'team' : 'me',
-            priority: /\b(urgent|asap|priority|critical)\b/i.test(s) ? 'high' : 'medium',
+            action_text: actionText,
+            success_criteria: `You'll know you're done when ${actionText.toLowerCase()} is completed`,
+            motivation_statement: `This will help you follow through on your commitments`,
+            assigned_to: /\b(we|let's)\b/i.test(s) ? 'team' : 'me',
+            priority_level: /\b(urgent|asap|priority|critical)\b/i.test(s) ? 1 : 3,
             due_context,
-            context: 'Extracted via rule-based fallback',
-            confidence: 0.55,
-            reasoning: 'Matched common commitment/action patterns in the transcript'
+            completion_date: completionDate,
+            confidence_score: 0.65,
+            reasoning: 'Extracted via improved rule-based fallback with VERB-first conversion'
           };
         });
         return results;
-      } catch (_) {
+      } catch (err) {
+        console.error('Local extraction error:', err);
         return [];
       }
     };
@@ -77,8 +111,8 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
             body: JSON.stringify({
-              model: 'gpt-5-mini-2025-08-07',
-              max_completion_tokens: 3000,
+              model: 'gpt-4o-mini',
+              max_tokens: 3000,
               messages: [{
                 role: 'system',
                 content: `EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from meeting transcripts.
@@ -163,18 +197,22 @@ Return ONLY a JSON array. No explanations or commentary.`
 
         if (openAIResponse.ok) {
           const openAIData = await openAIResponse.json();
+          console.log('OpenAI API response received:', JSON.stringify(openAIData, null, 2));
           try {
             const content = openAIData.choices?.[0]?.message?.content?.trim();
+            console.log('OpenAI extracted content:', content);
             if (content && content !== '[]') {
               extractedActions = JSON.parse(content);
-              console.log('ACTs extracted via OpenAI:', extractedActions.length);
+              console.log('ACTs extracted via OpenAI:', extractedActions.length, extractedActions);
+            } else {
+              console.log('OpenAI returned empty or no content');
             }
           } catch (parseError) {
-            console.error('Error parsing OpenAI response:', parseError);
+            console.error('Error parsing OpenAI response:', parseError, 'Content was:', content);
           }
         } else {
           const errorText = await openAIResponse.text();
-          console.error('OpenAI API error:', errorText);
+          console.error('OpenAI API error - Status:', openAIResponse.status, 'Text:', errorText);
         }
       } catch (err) {
         console.error('OpenAI fetch failed:', err);
