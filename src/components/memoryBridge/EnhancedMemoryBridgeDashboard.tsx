@@ -7,6 +7,7 @@ import { DailyBrief } from './DailyBrief';
 import { QuickCaptureRecorder } from './QuickCaptureRecorder';
 import { ActsReviewTable } from './ActsReviewTable';
 import { RecordingsTab } from './RecordingsTab';
+import { TranscriptsTab } from './TranscriptsTab';
 import { ConfidenceScore } from './ConfidenceScore';
 import { MicroCoaching } from './MicroCoaching';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
@@ -231,12 +232,13 @@ export function EnhancedMemoryBridgeDashboard() {
           {/* Main Content */}
           {isReturningUser ? (
               <Tabs defaultValue="brief" className="w-full">
-                <TabsList className="grid w-full grid-cols-4">
+                <TabsList className="grid w-full grid-cols-5">
                   <TabsTrigger value="brief">Daily Brief</TabsTrigger>
                   <TabsTrigger value="recording">Record</TabsTrigger>
                   <TabsTrigger value="actions">
                     Actions ({extractedActions.length})
                   </TabsTrigger>
+                  <TabsTrigger value="transcripts">Transcripts</TabsTrigger>
                   <TabsTrigger value="recordings">History</TabsTrigger>
                 </TabsList>
 
@@ -270,6 +272,10 @@ export function EnhancedMemoryBridgeDashboard() {
                     onUpdateAction={updateExtractedAction}
                     onConfirmActions={handleConfirmActions}
                   />
+                </TabsContent>
+
+                <TabsContent value="transcripts" className="space-y-4">
+                  <TranscriptsTab />
                 </TabsContent>
 
                 <TabsContent value="recordings" className="space-y-4">

@@ -6,6 +6,8 @@ import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/contexts/AuthContext';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { RecordingDetailsView } from './RecordingDetailsView';
+import { TranscriptViewer } from './TranscriptViewer';
+import { ActionsViewer } from './ActionsViewer';
 import { 
   Mic, 
   Play, 
@@ -28,6 +30,8 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
   const [processingId, setProcessingId] = useState<string | null>(null);
   const [processedRecordings, setProcessedRecordings] = useState<Set<string>>(new Set());
   const [viewingRecording, setViewingRecording] = useState<{ id: string; title: string } | null>(null);
+  const [viewingTranscript, setViewingTranscript] = useState<{ recordingId: string; title: string } | null>(null);
+  const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
 
   useEffect(() => {
     fetchRecordings();
@@ -171,11 +175,26 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleViewRecording(recording)}
+                            onClick={() => setViewingTranscript({
+                              recordingId: recording.id,
+                              title: recording.title
+                            })}
                             className="flex items-center gap-1"
                           >
-                            <Eye className="h-3 w-3" />
-                            View
+                            <FileAudio className="h-3 w-3" />
+                            Transcript
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setViewingActions({
+                              recordingId: recording.id,
+                              title: recording.title
+                            })}
+                            className="flex items-center gap-1"
+                          >
+                            <Brain className="h-3 w-3" />
+                            ACTS
                           </Button>
                         </div>
                       ) : (
@@ -220,19 +239,23 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
         </CardContent>
       </Card>
 
-      {/* Recording Details Modal */}
-      {viewingRecording && (
-        <RecordingDetailsView
-          recordingId={viewingRecording.id}
-          meetingTitle={viewingRecording.title}
-          isOpen={!!viewingRecording}
-          onClose={() => setViewingRecording(null)}
-          onPlayRecording={() => {
-            const recording = meetingRecordings.find(r => r.id === viewingRecording.id);
-            if (recording) {
-              handlePlayRecording(recording);
-            }
-          }}
+      {/* Transcript Viewer Modal */}
+      {viewingTranscript && (
+        <TranscriptViewer
+          recordingId={viewingTranscript.recordingId}
+          meetingTitle={viewingTranscript.title}
+          isOpen={!!viewingTranscript}
+          onClose={() => setViewingTranscript(null)}
+        />
+      )}
+
+      {/* Actions Viewer Modal */}
+      {viewingActions && (
+        <ActionsViewer
+          recordingId={viewingActions.recordingId}
+          meetingTitle={viewingActions.title}
+          isOpen={!!viewingActions}
+          onClose={() => setViewingActions(null)}
         />
       )}
     </div>
