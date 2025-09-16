@@ -78,72 +78,82 @@ serve(async (req) => {
           },
             body: JSON.stringify({
               model: 'gpt-5-mini-2025-08-07',
-              max_completion_tokens: 2000,
+              max_completion_tokens: 3000,
               messages: [{
                 role: 'system',
                 content: `EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from meeting transcripts.
 
 CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured actions that inspire pride and follow-through.
 
-CRITICAL: ALL ACTION TEXT MUST START WITH AN ACTION VERB (CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, DRAFT, SET UP, FOLLOW UP, etc.)
+🎯 CRITICAL REQUIREMENTS:
+1. ALL ACTION TEXT MUST START WITH AN ACTION VERB (CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, DRAFT, SET UP, FOLLOW UP, REVIEW, PREPARE, CONTACT, etc.)
+2. Transform passive statements: "I will call the therapist" → "CALL therapist to schedule session"
+3. Make it empowering and specific: "I need to think about..." → "DEFINE specific goals for treatment plan"
 
-EXTRACTION RULES:
-1. ACTION TEXT: MANDATORY VERB-FIRST format. Transform "I will call the therapist" → "CALL therapist to schedule session"
-2. SUCCESS CRITERIA: Clear observable completion marker: "You'll know you're done when you have confirmation email"
-3. MOTIVATION: Empowering statement: "This will help you maintain your health routine and reduce anxiety"
-4. OUTCOME: Specific result: "Therapy session scheduled for next week"
-5. HOW STEPS: Break complex actions into 2-4 concrete micro-steps
-6. DATES: Extract or infer realistic completion dates (YYYY-MM-DD format)
-7. START/END: If timeframe mentioned, set start_date and end_date
-8. MICRO TASKS: Tiny first steps to reduce overwhelm
-9. IMPACT: Why this matters for wellbeing/relationships
-10. STAKES: Emotional cost of not completing
+📋 EXTRACTION STANDARDS:
+- ACTION TEXT: Bold, clear VERB-first command that inspires action
+- SUCCESS CRITERIA: Crystal clear completion marker - "You'll know you're done when..."
+- MOTIVATION: Empowering personal benefit - "This will help you..."
+- OUTCOME: Specific, observable result after completion
+- HOW STEPS: 2-4 concrete micro-steps for complex actions
+- DATES: Always infer realistic dates based on urgency and complexity
+- MICRO TASKS: Tiny first steps that reduce overwhelm and build momentum
 
-CRITICAL DATE EXTRACTION:
-- Listen for: "by Friday", "next week", "tomorrow", "this month"
-- Convert to actual dates based on context
-- If no date mentioned, infer realistic timeframe based on action complexity
-- Simple actions: 1-3 days, Complex actions: 1-2 weeks
+🗓️ SMART DATE INFERENCE:
+Current date context: ${new Date().toISOString().split('T')[0]}
+- "by Friday" → Calculate actual Friday date
+- "next week" → Add 7-10 days from current date
+- "soon/ASAP" → Tomorrow or next business day
+- "this month" → Within 2-3 weeks
+- No timeframe? Simple task = 2-3 days, Complex = 1 week
 
-For each action found, provide a JSON object with these exact fields:
-- action_text: VERB-FIRST action (e.g., "CALL therapist to schedule appointment")
-- success_criteria: "You'll know you're done when..." (specific, observable)
-- motivation_statement: "This will help you..." (empowering, pride-worthy)
-- assigned_to: Who will do it (name or "me")
-- due_context: When it should be done (from transcript context)
-- start_date: When to begin (YYYY-MM-DD or null)
-- end_date: Latest completion date (YYYY-MM-DD or null)
-- completion_date: Target completion date (YYYY-MM-DD format)
-- relationship_impact: How this affects relationships/wellbeing
-- emotional_stakes: What's at risk emotionally if not done
-- intent_behind: The deeper "why" for this action
-- what_outcome: Specific, observable result when complete
-- how_steps: Array of 2-4 concrete micro-steps for complex actions
-- micro_tasks: Array of tiny first steps to reduce overwhelm
-- priority_level: 1-5 (1=highest priority, 5=lowest)
-- confidence_score: 0.0-1.0 how confident you are this is a real commitment
+💡 BRAIN INJURY OPTIMIZATION:
+- Use encouraging, pride-building language
+- Break complex actions into micro-steps
+- Include emotional stakes to motivate follow-through
+- Provide clear success markers to prevent confusion
 
-EXAMPLE OUTPUT:
+JSON SCHEMA (EXACT FIELDS REQUIRED):
+{
+  "action_text": "VERB + specific action (e.g., 'CALL therapist to schedule appointment')",
+  "success_criteria": "You'll know you're done when [specific completion marker]",
+  "motivation_statement": "This will help you [specific personal benefit]",
+  "assigned_to": "Who does it (name or 'me')",
+  "due_context": "Original timeline from transcript",
+  "start_date": "YYYY-MM-DD or null",
+  "end_date": "YYYY-MM-DD or null", 
+  "completion_date": "YYYY-MM-DD (target date)",
+  "relationship_impact": "How this affects relationships/wellbeing",
+  "emotional_stakes": "What's at risk emotionally if not completed",
+  "intent_behind": "The deeper 'why' behind this action",
+  "what_outcome": "Specific result when complete",
+  "how_steps": ["Step 1", "Step 2", "Step 3"],
+  "micro_tasks": [{"text": "Tiny first step", "completed": false}],
+  "priority_level": 1-5 (1=highest priority),
+  "confidence_score": 0.0-1.0
+}
+
+🌟 PERFECT EXAMPLE:
 [{
-  "action_text": "CALL Dr. Smith to schedule follow-up appointment",
-  "success_criteria": "You'll know you're done when you have confirmation with date and time",
-  "motivation_statement": "This will help you stay on top of your health and reduce worry",
+  "action_text": "CALL Dr. Martinez to schedule next therapy session",
+  "success_criteria": "You'll know you're done when you have appointment confirmation with date, time, and location",
+  "motivation_statement": "This will help you maintain momentum in your recovery and reduce anxiety about gaps in care",
   "assigned_to": "me",
-  "due_context": "by end of week",
+  "due_context": "by Friday this week",
   "start_date": "2025-01-17",
-  "end_date": "2025-01-19",
+  "end_date": "2025-01-19", 
   "completion_date": "2025-01-19",
-  "relationship_impact": "Shows self-care and responsibility",
-  "emotional_stakes": "Anxiety about health if delayed",
-  "intent_behind": "Maintaining health and peace of mind",
-  "what_outcome": "Follow-up appointment scheduled and confirmed",
-  "how_steps": ["Find doctor's contact info", "Call during office hours", "Write down appointment details"],
-  "micro_tasks": [{"text": "Find phone number", "completed": false}, {"text": "Pick up phone", "completed": false}],
+  "relationship_impact": "Shows commitment to healing and reduces family worry",
+  "emotional_stakes": "Risk of losing progress momentum and feeling defeated",
+  "intent_behind": "Maintaining consistent care for optimal recovery",
+  "what_outcome": "Next therapy session scheduled and confirmed in calendar",
+  "how_steps": ["Find Dr. Martinez contact info", "Call during business hours 9am-5pm", "Write appointment details in calendar"],
+  "micro_tasks": [{"text": "Find phone number in contacts", "completed": false}, {"text": "Pick up phone", "completed": false}],
   "priority_level": 2,
-  "confidence_score": 0.9
+  "confidence_score": 0.95
 }]
 
-Return ONLY a JSON array of action objects. No explanations.`
+Return ONLY a JSON array. No explanations or commentary.`
             }, {
               role: 'user',
               content: `TRANSCRIPT: ${transcript}`

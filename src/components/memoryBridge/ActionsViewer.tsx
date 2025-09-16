@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Button } from '@/components/ui/button';
 import { 
   Brain, 
   CheckCircle, 
@@ -12,10 +13,13 @@ import {
   Calendar,
   Target,
   TrendingUp,
-  Sparkles
+  Sparkles,
+  Save
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { ExtractedAction } from '@/types/memoryBridge';
+import { EditableField } from './EditableField';
+import { toast } from 'sonner';
 
 interface ActionsViewerProps {
   recordingId: string;
@@ -32,6 +36,22 @@ export function ActionsViewer({
 }: ActionsViewerProps) {
   const [extractedActions, setExtractedActions] = useState<ExtractedAction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const statusOptions = [
+    { value: 'not_started', label: 'Not Started' },
+    { value: 'in_progress', label: 'In Progress' },
+    { value: 'completed', label: 'Completed' },
+    { value: 'on_hold', label: 'On Hold' },
+    { value: 'cancelled', label: 'Cancelled' }
+  ];
+
+  const priorityOptions = [
+    { value: '1', label: 'Highest Priority' },
+    { value: '2', label: 'High Priority' },
+    { value: '3', label: 'Medium Priority' },
+    { value: '4', label: 'Low Priority' },
+    { value: '5', label: 'Lowest Priority' }
+  ];
 
   useEffect(() => {
     if (!isOpen || !recordingId) return;
@@ -70,6 +90,28 @@ export function ActionsViewer({
     fetchActions();
   }, [recordingId, isOpen]);
 
+  const updateAction = async (actionId: string, updates: Partial<ExtractedAction>) => {
+    try {
+      const { error } = await supabase
+        .from('extracted_actions')
+        .update(updates)
+        .eq('id', actionId);
+
+      if (error) throw error;
+
+      setExtractedActions(actions => 
+        actions.map(action => 
+          action.id === actionId ? { ...action, ...updates } : action
+        )
+      );
+
+      toast.success('Action updated successfully');
+    } catch (error) {
+      console.error('Error updating action:', error);
+      toast.error('Failed to update action');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
@@ -78,8 +120,9 @@ export function ActionsViewer({
         return 'bg-blue-500/10 text-blue-700 border-blue-200';
       case 'on_hold':
         return 'bg-yellow-500/10 text-yellow-700 border-yellow-200';
-      case 'confirmed':
-      case 'pending':
+      case 'cancelled':
+        return 'bg-red-500/10 text-red-700 border-red-200';
+      case 'not_started':
       default:
         return 'bg-gray-500/10 text-gray-700 border-gray-200';
     }
@@ -205,66 +248,92 @@ export function ActionsViewer({
                     <CardHeader>
                       <CardTitle className="flex items-start justify-between">
                         <div className="space-y-4 flex-1">
-                          {/* VERB-FIRST ACTION TITLE */}
-                          <div className="bg-primary/10 rounded-lg p-4 border-l-4 border-primary">
-                            <div className="flex items-center gap-2 mb-2">
-                              <Sparkles className="h-5 w-5 text-primary" />
-                              <span className="font-bold text-primary uppercase text-sm">ACTION</span>
-                            </div>
-                            <h3 className="text-lg font-bold text-foreground mb-2">{action.action_text}</h3>
-                          </div>
-
-                          {/* Success Criteria */}
-                          {action.success_criteria && (
-                            <div className="bg-green-500/10 rounded-md p-3 border border-green-500/20">
-                              <div className="flex items-center gap-2 mb-1">
-                                <CheckCircle className="h-4 w-4 text-green-600" />
-                                <span className="font-semibold text-green-700 text-sm">YOU'LL KNOW YOU'RE DONE WHEN</span>
-                              </div>
-                              <p className="text-foreground text-sm">{action.success_criteria}</p>
-                            </div>
-                          )}
-
-                          {/* Motivation Statement */}
-                          {action.motivation_statement && (
-                            <div className="bg-yellow-500/10 rounded-md p-3 border border-yellow-500/20">
-                              <div className="flex items-center gap-2 mb-1">
-                                <TrendingUp className="h-4 w-4 text-yellow-600" />
-                                <span className="font-semibold text-yellow-700 text-sm">THIS WILL HELP YOU</span>
-                              </div>
-                              <p className="text-foreground text-sm font-medium">{action.motivation_statement}</p>
-                            </div>
-                          )}
-
-                           {/* Date Range */}
-                           {(action.start_date || action.end_date || action.completion_date) && (
-                             <div className="bg-blue-500/10 rounded-md p-3 border border-blue-500/20">
-                               <div className="flex items-center gap-2 mb-1">
-                                 <Calendar className="h-4 w-4 text-blue-600" />
-                                 <span className="font-semibold text-blue-700 text-sm">TIMELINE</span>
-                               </div>
-                               <div className="space-y-1">
-                                 {action.start_date && (
-                                   <p className="text-foreground text-sm">
-                                     <span className="font-medium">START:</span> {new Date(action.start_date).toLocaleDateString()}
-                                   </p>
-                                 )}
-                                 {action.completion_date && (
-                                   <p className="text-foreground text-sm font-bold">
-                                     <span className="font-medium">TARGET:</span> {new Date(action.completion_date).toLocaleDateString()}
-                                     {!action.calendar_checked && (
-                                       <span className="ml-2 text-red-600 text-xs">(Calendar not verified)</span>
-                                     )}
-                                   </p>
-                                 )}
-                                 {action.end_date && (
-                                   <p className="text-foreground text-sm">
-                                     <span className="font-medium">DEADLINE:</span> {new Date(action.end_date).toLocaleDateString()}
-                                   </p>
-                                 )}
-                               </div>
+                           {/* VERB-FIRST ACTION TITLE */}
+                           <div className="bg-primary/10 rounded-lg p-4 border-l-4 border-primary">
+                             <div className="flex items-center gap-2 mb-2">
+                               <Sparkles className="h-5 w-5 text-primary" />
+                               <span className="font-bold text-primary uppercase text-sm">ACTION</span>
                              </div>
-                           )}
+                             <EditableField
+                               value={action.action_text}
+                               onSave={(value) => updateAction(action.id!, { action_text: value })}
+                               type="textarea"
+                               placeholder="Enter action..."
+                               className="text-lg font-bold"
+                             />
+                           </div>
+
+                           {/* Success Criteria */}
+                           <div className="bg-green-500/10 rounded-md p-3 border border-green-500/20">
+                             <div className="flex items-center gap-2 mb-1">
+                               <CheckCircle className="h-4 w-4 text-green-600" />
+                               <span className="font-semibold text-green-700 text-sm">YOU'LL KNOW YOU'RE DONE WHEN</span>
+                             </div>
+                             <EditableField
+                               value={action.success_criteria || ''}
+                               onSave={(value) => updateAction(action.id!, { success_criteria: value })}
+                               type="textarea"
+                               placeholder="Define success criteria..."
+                               className="text-sm"
+                             />
+                           </div>
+
+                           {/* Motivation Statement */}
+                           <div className="bg-yellow-500/10 rounded-md p-3 border border-yellow-500/20">
+                             <div className="flex items-center gap-2 mb-1">
+                               <TrendingUp className="h-4 w-4 text-yellow-600" />
+                               <span className="font-semibold text-yellow-700 text-sm">THIS WILL HELP YOU</span>
+                             </div>
+                             <EditableField
+                               value={action.motivation_statement || ''}
+                               onSave={(value) => updateAction(action.id!, { motivation_statement: value })}
+                               type="textarea"
+                               placeholder="Why this matters to you..."
+                               className="text-sm font-medium"
+                             />
+                           </div>
+
+                            {/* Date Range */}
+                            <div className="bg-blue-500/10 rounded-md p-3 border border-blue-500/20">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Calendar className="h-4 w-4 text-blue-600" />
+                                <span className="font-semibold text-blue-700 text-sm">TIMELINE</span>
+                              </div>
+                              <div className="space-y-3">
+                                <div className="grid grid-cols-3 gap-3">
+                                  <EditableField
+                                    value={action.start_date}
+                                    onSave={(value) => updateAction(action.id!, { start_date: value })}
+                                    type="date"
+                                    label="START DATE"
+                                    placeholder="Set start date"
+                                    className="text-sm"
+                                  />
+                                  <EditableField
+                                    value={action.completion_date}
+                                    onSave={(value) => updateAction(action.id!, { completion_date: value })}
+                                    type="date"
+                                    label="TARGET DATE"
+                                    placeholder="Set target date"
+                                    className="text-sm font-bold"
+                                  />
+                                  <EditableField
+                                    value={action.end_date}
+                                    onSave={(value) => updateAction(action.id!, { end_date: value })}
+                                    type="date"
+                                    label="DEADLINE"
+                                    placeholder="Set deadline"
+                                    className="text-sm"
+                                  />
+                                </div>
+                                {!action.calendar_checked && action.completion_date && (
+                                  <div className="text-red-600 text-xs flex items-center gap-1">
+                                    <AlertCircle className="h-3 w-3" />
+                                    Calendar not verified
+                                  </div>
+                                )}
+                              </div>
+                            </div>
 
                           {/* Expected Outcome */}
                           {structuredAction.what && (
@@ -328,20 +397,29 @@ export function ActionsViewer({
                           </div>
                         </div>
                         
-                        <div className="flex gap-2 flex-col">
-                          <Badge variant="outline" className="text-xs">
-                            {action.priority_level <= 2 ? '🔥 High' : action.priority_level <= 3 ? '⚡ Medium' : '📋 Low'} Priority
-                          </Badge>
-                          <Badge variant="outline" className="text-xs">
-                            {Math.round((action.confidence_score || 0) * 100)}% Confidence
-                          </Badge>
-                          {!(action as any).calendar_checked && (action as any).completion_date && (
-                            <Badge variant="destructive" className="text-xs">
-                              <AlertCircle className="mr-1 h-3 w-3" />
-                              Calendar not verified
-                            </Badge>
-                          )}
-                        </div>
+                         <div className="flex gap-2 flex-col">
+                           <div className="space-y-2">
+                             <EditableField
+                               value={String(action.priority_level || 3)}
+                               onSave={(value) => updateAction(action.id!, { priority_level: Number(value) })}
+                               type="select"
+                               options={priorityOptions}
+                               label="PRIORITY"
+                               className="text-xs"
+                             />
+                             <EditableField
+                               value={action.status}
+                               onSave={(value) => updateAction(action.id!, { status: value as any })}
+                               type="select"
+                               options={statusOptions}
+                               label="STATUS"
+                               className="text-xs"
+                             />
+                           </div>
+                           <Badge variant="outline" className="text-xs">
+                             {Math.round((action.confidence_score || 0) * 100)}% Confidence
+                           </Badge>
+                         </div>
                       </CardTitle>
                     </CardHeader>
                     
