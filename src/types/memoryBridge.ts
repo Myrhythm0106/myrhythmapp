@@ -19,37 +19,39 @@ export interface MeetingRecording {
 }
 
 export interface ExtractedAction {
-  id: string;
+  id?: string;
   user_id: string;
   meeting_recording_id: string;
   action_text: string;
   action_type: 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up';
   assigned_to?: string;
   due_context?: string;
-  priority_level: number;
-  confidence_score: number;
+  priority_level?: number;
+  confidence_score?: number;
   relationship_impact?: string;
   emotional_stakes?: string;
   intent_behind?: string;
   transcript_excerpt?: string;
-  timestamp_in_recording: number;
-  status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified' | 'scheduled' | 'not_started';
+  timestamp_in_recording?: number;
+  status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified' | 'scheduled' | 'not_started' | 'in_progress' | 'on_hold' | 'cancelled';
   user_notes?: string;
   created_at: string;
   updated_at: string;
-  // New scheduling properties
+  // Scheduling properties
   proposed_date?: string;
   proposed_time?: string;
   scheduled_date?: string;
   scheduled_time?: string;
+  start_date?: string;
+  end_date?: string;
   calendar_event_id?: string;
   assigned_watchers?: string[];
-  // New comprehensive action fields
+  // Comprehensive action fields
   success_criteria?: string;
   motivation_statement?: string;
   what_outcome?: string;
   how_steps?: string[];
-  micro_tasks?: Array<{text: string; completed: boolean}>;
+  micro_tasks?: any; // Database returns Json type, we'll handle conversion in components
   calendar_checked?: boolean;
   completion_date?: string;
   support_circle_notified?: boolean;

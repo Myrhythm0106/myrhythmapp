@@ -548,6 +548,7 @@ export type Database = {
           created_at: string
           due_context: string | null
           emotional_stakes: string | null
+          end_date: string | null
           how_steps: string[] | null
           id: string
           intent_behind: string | null
@@ -560,6 +561,7 @@ export type Database = {
           relationship_impact: string | null
           scheduled_date: string | null
           scheduled_time: string | null
+          start_date: string | null
           status: string
           success_criteria: string | null
           support_circle_notified: boolean | null
@@ -582,6 +584,7 @@ export type Database = {
           created_at?: string
           due_context?: string | null
           emotional_stakes?: string | null
+          end_date?: string | null
           how_steps?: string[] | null
           id?: string
           intent_behind?: string | null
@@ -594,6 +597,7 @@ export type Database = {
           relationship_impact?: string | null
           scheduled_date?: string | null
           scheduled_time?: string | null
+          start_date?: string | null
           status?: string
           success_criteria?: string | null
           support_circle_notified?: boolean | null
@@ -616,6 +620,7 @@ export type Database = {
           created_at?: string
           due_context?: string | null
           emotional_stakes?: string | null
+          end_date?: string | null
           how_steps?: string[] | null
           id?: string
           intent_behind?: string | null
@@ -628,6 +633,7 @@ export type Database = {
           relationship_impact?: string | null
           scheduled_date?: string | null
           scheduled_time?: string | null
+          start_date?: string | null
           status?: string
           success_criteria?: string | null
           support_circle_notified?: boolean | null

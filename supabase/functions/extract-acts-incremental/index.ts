@@ -76,40 +76,72 @@ serve(async (req) => {
             'Authorization': `Bearer ${OPENAI_API_KEY}`,
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({
-            model: 'gpt-5-mini-2025-08-07',
-            max_completion_tokens: 2000,
-            messages: [{
-              role: 'system',
-              content: `EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from meeting transcripts.
+            body: JSON.stringify({
+              model: 'gpt-5-mini-2025-08-07',
+              max_completion_tokens: 2000,
+              messages: [{
+                role: 'system',
+                content: `EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from meeting transcripts.
 
 CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured actions that inspire pride and follow-through.
 
-EXTRACTION RULES:
-1. ACTION TEXT: Must start with an ACTION VERB (CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, etc.)
-2. SUCCESS CRITERIA: Clear "You'll know you're done when..." statement
-3. MOTIVATION: Pride-worthy statement "This will help you..."
-4. OUTCOME: What success looks like (observable/measurable)
-5. HOW: Break down into concrete micro-steps if complex
-6. COMPLETION DATE: Realistic date based on action complexity
-7. IMPACT: Why this matters for relationships/wellbeing
-8. STAKES: What happens if not done (emotional context)
-9. INTENT: The deeper purpose behind this action
+CRITICAL: ALL ACTION TEXT MUST START WITH AN ACTION VERB (CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, DRAFT, SET UP, FOLLOW UP, etc.)
 
-For each action found, provide a JSON object with these fields:
-- action_text: VERB-FIRST action (e.g., "CALL therapist to schedule session")
+EXTRACTION RULES:
+1. ACTION TEXT: MANDATORY VERB-FIRST format. Transform "I will call the therapist" → "CALL therapist to schedule session"
+2. SUCCESS CRITERIA: Clear observable completion marker: "You'll know you're done when you have confirmation email"
+3. MOTIVATION: Empowering statement: "This will help you maintain your health routine and reduce anxiety"
+4. OUTCOME: Specific result: "Therapy session scheduled for next week"
+5. HOW STEPS: Break complex actions into 2-4 concrete micro-steps
+6. DATES: Extract or infer realistic completion dates (YYYY-MM-DD format)
+7. START/END: If timeframe mentioned, set start_date and end_date
+8. MICRO TASKS: Tiny first steps to reduce overwhelm
+9. IMPACT: Why this matters for wellbeing/relationships
+10. STAKES: Emotional cost of not completing
+
+CRITICAL DATE EXTRACTION:
+- Listen for: "by Friday", "next week", "tomorrow", "this month"
+- Convert to actual dates based on context
+- If no date mentioned, infer realistic timeframe based on action complexity
+- Simple actions: 1-3 days, Complex actions: 1-2 weeks
+
+For each action found, provide a JSON object with these exact fields:
+- action_text: VERB-FIRST action (e.g., "CALL therapist to schedule appointment")
 - success_criteria: "You'll know you're done when..." (specific, observable)
 - motivation_statement: "This will help you..." (empowering, pride-worthy)
 - assigned_to: Who will do it (name or "me")
 - due_context: When it should be done (from transcript context)
-- completion_date: Realistic completion date (YYYY-MM-DD format)
-- relationship_impact: How this affects relationships
-- emotional_stakes: What's at risk emotionally
+- start_date: When to begin (YYYY-MM-DD or null)
+- end_date: Latest completion date (YYYY-MM-DD or null)
+- completion_date: Target completion date (YYYY-MM-DD format)
+- relationship_impact: How this affects relationships/wellbeing
+- emotional_stakes: What's at risk emotionally if not done
 - intent_behind: The deeper "why" for this action
 - what_outcome: Specific, observable result when complete
-- how_steps: Array of concrete micro-steps (if complex)
-- priority_level: 1-5 (5=highest)
-- confidence_score: 0.0-1.0 how sure you are this is an action
+- how_steps: Array of 2-4 concrete micro-steps for complex actions
+- micro_tasks: Array of tiny first steps to reduce overwhelm
+- priority_level: 1-5 (1=highest priority, 5=lowest)
+- confidence_score: 0.0-1.0 how confident you are this is a real commitment
+
+EXAMPLE OUTPUT:
+[{
+  "action_text": "CALL Dr. Smith to schedule follow-up appointment",
+  "success_criteria": "You'll know you're done when you have confirmation with date and time",
+  "motivation_statement": "This will help you stay on top of your health and reduce worry",
+  "assigned_to": "me",
+  "due_context": "by end of week",
+  "start_date": "2025-01-17",
+  "end_date": "2025-01-19",
+  "completion_date": "2025-01-19",
+  "relationship_impact": "Shows self-care and responsibility",
+  "emotional_stakes": "Anxiety about health if delayed",
+  "intent_behind": "Maintaining health and peace of mind",
+  "what_outcome": "Follow-up appointment scheduled and confirmed",
+  "how_steps": ["Find doctor's contact info", "Call during office hours", "Write down appointment details"],
+  "micro_tasks": [{"text": "Find phone number", "completed": false}, {"text": "Pick up phone", "completed": false}],
+  "priority_level": 2,
+  "confidence_score": 0.9
+}]
 
 Return ONLY a JSON array of action objects. No explanations.`
             }, {
@@ -188,24 +220,27 @@ Return ONLY a JSON array of action objects. No explanations.`
     console.log(`Extracted ${extractedActions.length} actions from transcript`);
     console.log(`Extracted ${extractedActions.length} actions from transcript`);
 
-    // Store the extracted actions with enhanced brain injury-optimized data
+    // Store the extracted actions preserving AI-structured data
     const actionsToInsert = extractedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
-      action_text: action.action_text || action.what_outcome || action.action || 'Action needs definition',
-      success_criteria: action.success_criteria || `You'll know you're done when ${action.what_outcome || action.action || 'the task is complete'}.`,
-      motivation_statement: action.motivation_statement || `This will help you ${action.context || 'achieve your goals'}.`,
-      what_outcome: action.what_outcome || action.action || 'Action needs definition', 
+      // Preserve AI-extracted data, only use fallbacks if truly missing
+      action_text: action.action_text || action.action || 'DEFINE action needed',
+      success_criteria: action.success_criteria || null,
+      motivation_statement: action.motivation_statement || null,
+      what_outcome: action.what_outcome || null,
       how_steps: action.how_steps || [],
       micro_tasks: action.micro_tasks || [],
-      assigned_to: action.assigned_to || action.assignee || 'You',
-      due_context: action.due_context || 'Set your timeline',
+      assigned_to: action.assigned_to || action.assignee || 'me',
+      due_context: action.due_context || null,
+      start_date: action.start_date || null,
+      end_date: action.end_date || null,
       completion_date: action.completion_date || null,
-      priority_level: action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : action.priority_level || 5,
-      relationship_impact: action.relationship_impact || action.context || '',
-      emotional_stakes: action.emotional_stakes || '',
-      intent_behind: action.intent_behind || '',
-      confidence_score: action.confidence_score || action.confidence || 0.8,
+      priority_level: action.priority_level || (action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5),
+      relationship_impact: action.relationship_impact || null,
+      emotional_stakes: action.emotional_stakes || null,
+      intent_behind: action.intent_behind || null,
+      confidence_score: action.confidence_score || action.confidence || 0.5,
       user_notes: action.reasoning || '',
       status: 'not_started',
       calendar_checked: false,

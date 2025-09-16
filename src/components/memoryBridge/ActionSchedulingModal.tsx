@@ -8,18 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar, Clock, Users, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
-
-interface ExtractedAction {
-  id: string;
-  action_text: string;
-  action_type: string;
-  priority_level: number;
-  proposed_date?: string;
-  proposed_time?: string;
-  assigned_watchers?: string[];
-  scheduled_date?: string;
-  scheduled_time?: string;
-}
+import { ExtractedAction } from '@/types/memoryBridge';
 
 interface ActionSchedulingModalProps {
   isOpen: boolean;

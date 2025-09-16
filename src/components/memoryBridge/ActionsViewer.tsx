@@ -54,7 +54,11 @@ export function ActionsViewer({
             .eq('meeting_recording_id', meetingRecording.id)
             .order('priority_level', { ascending: true });
 
-          setExtractedActions((actions || []) as ExtractedAction[]);
+        setExtractedActions((actions || []).map(action => ({ 
+          ...action, 
+          action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
+          status: action.status as 'completed' | 'in_progress' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled'
+        })));
         }
       } catch (error) {
         console.error('Error fetching actions:', error);
@@ -124,16 +128,23 @@ export function ActionsViewer({
     // Use new structured fields if available, otherwise fallback to parsing
     const what = action.what_outcome || action.action_text;
     const howSteps = action.how_steps || [];
-    const microTasks = action.micro_tasks || [];
     
-    // Normalize microTasks to ensure consistent structure
-    const normalizedMicroTasks = Array.isArray(microTasks) 
-      ? microTasks.map(task => 
-          typeof task === 'string' 
-            ? { text: task, completed: false }
-            : task
-        )
-      : [];
+    // Handle micro_tasks which comes as Json from database
+    let microTasks: Array<{text: string; completed: boolean}> = [];
+    try {
+      if (action.micro_tasks) {
+        if (Array.isArray(action.micro_tasks)) {
+          microTasks = (action.micro_tasks as any[]).map(task => 
+            typeof task === 'string' 
+              ? { text: task, completed: false }
+              : { text: task.text || '', completed: task.completed || false }
+          );
+        }
+      }
+    } catch (e) {
+      console.warn('Error parsing micro_tasks:', e);
+      microTasks = [];
+    }
     
     // If we have structured steps, format them nicely
     let how = "";
@@ -150,7 +161,7 @@ export function ActionsViewer({
     return { 
       what, 
       how,
-      microTasks: normalizedMicroTasks
+      microTasks
     };
   };
 
@@ -225,21 +236,35 @@ export function ActionsViewer({
                             </div>
                           )}
 
-                          {/* Completion Date */}
-                          {action.completion_date && (
-                            <div className="bg-blue-500/10 rounded-md p-3 border border-blue-500/20">
-                              <div className="flex items-center gap-2 mb-1">
-                                <Calendar className="h-4 w-4 text-blue-600" />
-                                <span className="font-semibold text-blue-700 text-sm">COMPLETE BY</span>
-                              </div>
-                              <p className="text-foreground text-sm font-bold">
-                                {new Date(action.completion_date).toLocaleDateString()}
-                                {!action.calendar_checked && (
-                                  <span className="ml-2 text-red-600 text-xs">(Calendar availability not verified)</span>
-                                )}
-                              </p>
-                            </div>
-                          )}
+                           {/* Date Range */}
+                           {(action.start_date || action.end_date || action.completion_date) && (
+                             <div className="bg-blue-500/10 rounded-md p-3 border border-blue-500/20">
+                               <div className="flex items-center gap-2 mb-1">
+                                 <Calendar className="h-4 w-4 text-blue-600" />
+                                 <span className="font-semibold text-blue-700 text-sm">TIMELINE</span>
+                               </div>
+                               <div className="space-y-1">
+                                 {action.start_date && (
+                                   <p className="text-foreground text-sm">
+                                     <span className="font-medium">START:</span> {new Date(action.start_date).toLocaleDateString()}
+                                   </p>
+                                 )}
+                                 {action.completion_date && (
+                                   <p className="text-foreground text-sm font-bold">
+                                     <span className="font-medium">TARGET:</span> {new Date(action.completion_date).toLocaleDateString()}
+                                     {!action.calendar_checked && (
+                                       <span className="ml-2 text-red-600 text-xs">(Calendar not verified)</span>
+                                     )}
+                                   </p>
+                                 )}
+                                 {action.end_date && (
+                                   <p className="text-foreground text-sm">
+                                     <span className="font-medium">DEADLINE:</span> {new Date(action.end_date).toLocaleDateString()}
+                                   </p>
+                                 )}
+                               </div>
+                             </div>
+                           )}
 
                           {/* Expected Outcome */}
                           {structuredAction.what && (
@@ -265,23 +290,23 @@ export function ActionsViewer({
                             </div>
                           )}
                           
-                          {/* Micro Tasks */}
-                          {structuredAction.microTasks && structuredAction.microTasks.length > 0 && (
-                            <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                              <div className="flex items-center gap-2 mb-2">
-                                <CheckCircle className="h-4 w-4 text-green-600" />
-                                <span className="font-semibold text-green-700 text-sm">START WITH THESE TINY STEPS</span>
-                              </div>
-                              <div className="space-y-1">
-                                {structuredAction.microTasks.map((task: {text: string; completed: boolean}, index: number) => (
-                                  <div key={index} className="flex items-center gap-2 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
-                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                                    {task.text}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
+                           {/* Micro Tasks */}
+                           {structuredAction.microTasks && structuredAction.microTasks.length > 0 && (
+                             <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                               <div className="flex items-center gap-2 mb-2">
+                                 <CheckCircle className="h-4 w-4 text-green-600" />
+                                 <span className="font-semibold text-green-700 text-sm">START WITH THESE TINY STEPS</span>
+                               </div>
+                               <div className="space-y-1">
+                                 {structuredAction.microTasks.map((task: {text: string; completed: boolean}, index: number) => (
+                                   <div key={index} className="flex items-center gap-2 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
+                                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                                     {task.text}
+                                   </div>
+                                 ))}
+                               </div>
+                             </div>
+                           )}
 
                           {/* Support Circle Status */}
                           <div className="bg-purple-500/5 rounded-lg p-3 border border-purple-500/20">
@@ -350,14 +375,16 @@ export function ActionsViewer({
                               <p className="text-xs text-orange-600">When is the deadline?</p>
                             </div>
                           </div>
-                          <div className="pl-11">
-                            <p className="font-medium text-foreground">
-                              {(action as any).completion_date 
-                                ? new Date((action as any).completion_date).toLocaleDateString()
-                                : actsData.complete
-                              }
-                            </p>
-                          </div>
+                           <div className="pl-11">
+                             <p className="font-medium text-foreground">
+                               {action.completion_date 
+                                 ? new Date(action.completion_date).toLocaleDateString()
+                                 : action.end_date
+                                 ? new Date(action.end_date).toLocaleDateString()
+                                 : actsData.complete
+                               }
+                             </p>
+                           </div>
                         </div>
 
                         {/* Track */}
