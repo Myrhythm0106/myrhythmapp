@@ -1,5 +1,8 @@
 
 import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 export interface SupportMember {
   id: string;
@@ -20,152 +23,178 @@ export interface SupportMessage {
 }
 
 export function useSupportCircle() {
-  // In a real app, these would be fetched from a database
+  const { user } = useAuth();
   const [members, setMembers] = useState<SupportMember[]>([]);
   const [messages, setMessages] = useState<SupportMessage[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading members from localStorage/database
-    const loadSupportCircle = () => {
-      try {
-        // Load members
-        const storedMembers = localStorage.getItem("supportMembers");
-        if (storedMembers) {
-          setMembers(JSON.parse(storedMembers));
-        } else {
-          // Initial sample data
-          const sampleMembers: SupportMember[] = [
-            { 
-              id: "1", 
-              name: "Sarah Johnson", 
-              permissions: { moodTracking: false, healthTracking: false }
-            },
-            { 
-              id: "2", 
-              name: "Michael Smith", 
-              permissions: { moodTracking: true, healthTracking: false }
-            },
-            { 
-              id: "3", 
-              name: "Dr. Smith", 
-              permissions: { moodTracking: true, healthTracking: true }
-            },
-            { 
-              id: "4", 
-              name: "Mom", 
-              permissions: { moodTracking: false, healthTracking: false }
-            },
-          ];
-          setMembers(sampleMembers);
-          localStorage.setItem("supportMembers", JSON.stringify(sampleMembers));
-        }
+    if (user) {
+      loadSupportCircle();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user]);
 
-        // Load messages
-        const storedMessages = localStorage.getItem("supportMessages");
-        if (storedMessages) {
-          setMessages(JSON.parse(storedMessages).map((msg: any) => ({
-            ...msg,
-            timestamp: new Date(msg.timestamp)
-          })));
-        } else {
-          // Initial sample data
-          const sampleMessages: SupportMessage[] = [
-            {
-              id: "1",
-              memberId: "1",
-              memberName: "Sarah Johnson",
-              message: "Hope you're feeling better today! Let me know if you need anything.",
-              timestamp: new Date(),
-              read: false
-            },
-            {
-              id: "2",
-              memberId: "3",
-              memberName: "Dr. Smith",
-              message: "I noticed your headaches have decreased this week. Great progress!",
-              timestamp: new Date(Date.now() - 86400000), // 1 day ago
-              read: true
-            }
-          ];
-          setMessages(sampleMessages);
-          localStorage.setItem("supportMessages", JSON.stringify(sampleMessages));
-        }
-      } catch (error) {
-        console.error("Failed to load support circle data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const loadSupportCircle = async () => {
+    if (!user) return;
     
-    loadSupportCircle();
-  }, []);
+    setIsLoading(true);
+    try {
+      // Load members from support_circle_members table
+      const { data: membersData, error: membersError } = await supabase
+        .from('support_circle_members')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('status', 'active');
+        
+      if (membersError) throw membersError;
+      
+      const formattedMembers: SupportMember[] = membersData?.map(member => ({
+        id: member.id,
+        name: member.member_name,
+        permissions: {
+          moodTracking: (member.permissions as any)?.mood || false,
+          healthTracking: (member.permissions as any)?.health || false
+        }
+      })) || [];
+      
+      setMembers(formattedMembers);
 
-  // Save data to localStorage whenever it changes
-  useEffect(() => {
-    if (!isLoading) {
-      try {
-        localStorage.setItem("supportMembers", JSON.stringify(members));
-      } catch (error) {
-        console.error("Failed to save support members:", error);
-      }
+      // Load messages from support_circle_messages table
+      const { data: messagesData, error: messagesError } = await supabase
+        .from('support_circle_messages')
+        .select('*, support_circle_members(member_name)')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(50);
+        
+      if (messagesError) throw messagesError;
+      
+      const formattedMessages: SupportMessage[] = messagesData?.map(msg => ({
+        id: msg.id,
+        memberId: msg.sender_member_id,
+        memberName: (msg.support_circle_members as any)?.member_name || 'Unknown Member',
+        message: msg.message_text,
+        timestamp: new Date(msg.created_at),
+        read: msg.is_read
+      })) || [];
+      
+      setMessages(formattedMessages);
+    } catch (error) {
+      console.error('Error loading support circle:', error);
+      toast.error('Failed to load support circle');
+    } finally {
+      setIsLoading(false);
     }
-  }, [members, isLoading]);
+  };
 
-  useEffect(() => {
-    if (!isLoading) {
-      try {
-        localStorage.setItem("supportMessages", JSON.stringify(messages));
-      } catch (error) {
-        console.error("Failed to save support messages:", error);
-      }
-    }
-  }, [messages, isLoading]);
+  // Database is now the source of truth - no localStorage needed
 
-  const updateMemberPermissions = (
+  const updateMemberPermissions = async (
     memberId: string, 
     permissions: { moodTracking?: boolean; healthTracking?: boolean }
   ) => {
-    setMembers(prev => 
-      prev.map(member => 
-        member.id === memberId 
-          ? { 
-              ...member, 
-              permissions: { 
-                ...member.permissions, 
-                ...permissions
+    if (!user) return;
+    
+    try {
+      const updatedPermissions = {
+        mood: permissions.moodTracking,
+        health: permissions.healthTracking
+      };
+
+      const { error } = await supabase
+        .from('support_circle_members')
+        .update({ permissions: updatedPermissions })
+        .eq('id', memberId)
+        .eq('user_id', user.id);
+        
+      if (error) throw error;
+      
+      // Update local state
+      setMembers(prev => 
+        prev.map(member => 
+          member.id === memberId 
+            ? { 
+                ...member, 
+                permissions: { 
+                  ...member.permissions, 
+                  ...permissions
+                } 
               } 
-            } 
-          : member
-      )
-    );
+            : member
+        )
+      );
+      
+      toast.success('Permissions updated');
+    } catch (error) {
+      console.error('Error updating permissions:', error);
+      toast.error('Failed to update permissions');
+    }
   };
 
-  const addMessage = (memberId: string, message: string) => {
+  const addMessage = async (memberId: string, message: string) => {
+    if (!user) return;
+    
     const member = members.find(m => m.id === memberId);
     if (!member) return;
 
-    const newMessage: SupportMessage = {
-      id: crypto.randomUUID(),
-      memberId,
-      memberName: member.name,
-      message,
-      timestamp: new Date(),
-      read: false
-    };
+    try {
+      const { data, error } = await supabase
+        .from('support_circle_messages')
+        .insert({
+          user_id: user.id,
+          recipient_user_id: user.id,
+          sender_member_id: memberId,
+          message_text: message,
+          message_type: 'encouragement',
+          is_read: false
+        })
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      const newMessage: SupportMessage = {
+        id: data.id,
+        memberId,
+        memberName: member.name,
+        message,
+        timestamp: new Date(data.created_at),
+        read: false
+      };
 
-    setMessages(prev => [newMessage, ...prev]);
-    return newMessage;
+      setMessages(prev => [newMessage, ...prev]);
+      return newMessage;
+    } catch (error) {
+      console.error('Error adding message:', error);
+      toast.error('Failed to send message');
+    }
   };
 
-  const markMessageAsRead = (messageId: string) => {
-    setMessages(prev => 
-      prev.map(message => 
-        message.id === messageId 
-          ? { ...message, read: true } 
-          : message
-      )
-    );
+  const markMessageAsRead = async (messageId: string) => {
+    if (!user) return;
+    
+    try {
+      const { error } = await supabase
+        .from('support_circle_messages')
+        .update({ is_read: true })
+        .eq('id', messageId)
+        .eq('user_id', user.id);
+        
+      if (error) throw error;
+      
+      setMessages(prev => 
+        prev.map(message => 
+          message.id === messageId 
+            ? { ...message, read: true } 
+            : message
+        )
+      );
+    } catch (error) {
+      console.error('Error marking message as read:', error);
+      toast.error('Failed to mark message as read');
+    }
   };
 
   const hasAccessToMoodTracking = (memberId: string) => {
