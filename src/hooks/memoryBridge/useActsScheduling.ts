@@ -2,12 +2,15 @@ import { useState, useCallback } from 'react';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { smartScheduler, SmartScheduleSuggestion } from '@/utils/smartScheduler';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTierEnhancedScheduling } from '@/hooks/useTierEnhancedScheduling';
 
 export function useActsScheduling() {
   const { user } = useAuth();
   const [suggestions, setSuggestions] = useState<Record<string, SmartScheduleSuggestion[]>>({});
   const [isLoading, setIsLoading] = useState<Record<string, boolean>>({});
   const [selectedTimes, setSelectedTimes] = useState<Record<string, { date: string; time: string }>>({});
+  
+  const { generateTierEnhancedSuggestions } = useTierEnhancedScheduling();
 
   const generateSuggestionsForAction = useCallback(async (action: ExtractedAction) => {
     if (!user?.id || !action.id) return;
@@ -15,7 +18,7 @@ export function useActsScheduling() {
     setIsLoading(prev => ({ ...prev, [action.id!]: true }));
 
     try {
-      const actionSuggestions = await smartScheduler.generateSmartSuggestions(
+      const actionSuggestions = await generateTierEnhancedSuggestions(
         action,
         user.id,
         [] // watchers - could be passed from context if needed

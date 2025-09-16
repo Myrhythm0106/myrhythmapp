@@ -72,9 +72,10 @@ export class SmartScheduler {
   }
 
   async generateSmartSuggestions(
-    action: ExtractedAction,
-    userId: string,
-    watcherNames: string[] = []
+    action: ExtractedAction, 
+    userId: string, 
+    watcherNames: string[] = [],
+    tier?: string
   ): Promise<SmartScheduleSuggestion[]> {
     const preferences = await this.getUserPreferences(userId);
     const suggestions: SmartScheduleSuggestion[] = [];
