@@ -184,52 +184,129 @@ export function ActionsViewer({
                   <Card key={action.id || index} className="border-l-4 border-l-primary bg-gradient-to-r from-background to-muted/20">
                     <CardHeader>
                       <CardTitle className="flex items-start justify-between">
-                        <div className="space-y-3 flex-1">
-                           <div className="flex items-center gap-2">
-                             <Sparkles className="h-4 w-4 text-primary" />
-                             <span className="text-lg font-semibold">What needs to be done</span>
-                           </div>
-                           <div className="bg-gradient-to-r from-primary/5 to-primary/10 p-4 rounded-lg border border-primary/20 ml-6">
-                             <p className="text-base font-semibold text-foreground">{structuredAction.what}</p>
-                           </div>
-                           
-                           {structuredAction.how && (
-                             <div className="pl-6 pt-2">
-                               <div className="flex items-center gap-2 mb-2">
-                                 <Target className="h-4 w-4 text-secondary-foreground" />
-                                 <span className="text-sm font-semibold text-secondary-foreground">How to approach it step-by-step</span>
-                               </div>
-                               <div className="bg-secondary/50 p-3 rounded-lg border border-secondary/30">
-                                 <p className="text-sm text-secondary-foreground leading-relaxed">{structuredAction.how}</p>
-                               </div>
-                             </div>
-                           )}
-                           
-                           {structuredAction.microTasks && structuredAction.microTasks.length > 0 && (
-                             <div className="pl-6 pt-2">
-                               <div className="flex items-center gap-2 mb-2">
-                                 <CheckCircle className="h-4 w-4 text-green-600" />
-                                 <span className="text-sm font-semibold text-green-700">Start with these tiny steps</span>
-                               </div>
-                               <div className="space-y-1">
-                                 {structuredAction.microTasks.map((task: string, index: number) => (
-                                   <div key={index} className="flex items-center gap-2 text-xs text-green-700 bg-green-50 px-2 py-1 rounded">
-                                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                                     {task}
-                                   </div>
-                                 ))}
-                               </div>
-                             </div>
-                           )}
-                         </div>
+                        <div className="space-y-4 flex-1">
+                          {/* VERB-FIRST ACTION TITLE */}
+                          <div className="bg-primary/10 rounded-lg p-4 border-l-4 border-primary">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Sparkles className="h-5 w-5 text-primary" />
+                              <span className="font-bold text-primary uppercase text-sm">ACTION</span>
+                            </div>
+                            <h3 className="text-lg font-bold text-foreground mb-2">{action.action_text}</h3>
+                          </div>
+
+                          {/* Success Criteria */}
+                          {(action as any).success_criteria && (
+                            <div className="bg-green-500/10 rounded-md p-3 border border-green-500/20">
+                              <div className="flex items-center gap-2 mb-1">
+                                <CheckCircle className="h-4 w-4 text-green-600" />
+                                <span className="font-semibold text-green-700 text-sm">YOU'LL KNOW YOU'RE DONE WHEN</span>
+                              </div>
+                              <p className="text-foreground text-sm">{(action as any).success_criteria}</p>
+                            </div>
+                          )}
+
+                          {/* Motivation Statement */}
+                          {(action as any).motivation_statement && (
+                            <div className="bg-yellow-500/10 rounded-md p-3 border border-yellow-500/20">
+                              <div className="flex items-center gap-2 mb-1">
+                                <TrendingUp className="h-4 w-4 text-yellow-600" />
+                                <span className="font-semibold text-yellow-700 text-sm">THIS WILL HELP YOU</span>
+                              </div>
+                              <p className="text-foreground text-sm font-medium">{(action as any).motivation_statement}</p>
+                            </div>
+                          )}
+
+                          {/* Completion Date */}
+                          {(action as any).completion_date && (
+                            <div className="bg-blue-500/10 rounded-md p-3 border border-blue-500/20">
+                              <div className="flex items-center gap-2 mb-1">
+                                <Calendar className="h-4 w-4 text-blue-600" />
+                                <span className="font-semibold text-blue-700 text-sm">COMPLETE BY</span>
+                              </div>
+                              <p className="text-foreground text-sm font-bold">
+                                {new Date((action as any).completion_date).toLocaleDateString()}
+                                {!(action as any).calendar_checked && (
+                                  <span className="ml-2 text-red-600 text-xs">(Calendar availability not verified)</span>
+                                )}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Expected Outcome */}
+                          {structuredAction.what && (
+                            <div className="bg-secondary/10 rounded-lg p-4 border-l-4 border-secondary">
+                              <div className="flex items-center gap-2 mb-2">
+                                <Target className="h-4 w-4 text-secondary" />
+                                <span className="font-semibold text-secondary">EXPECTED RESULT</span>
+                              </div>
+                              <p className="text-foreground font-medium">{structuredAction.what}</p>
+                            </div>
+                          )}
+                          
+                          {/* HOW Steps */}
+                          {structuredAction.how && (
+                            <div className="bg-secondary/5 rounded-lg p-4 border-l-2 border-secondary">
+                              <div className="flex items-center gap-2 mb-3">
+                                <Target className="h-4 w-4 text-secondary-foreground" />
+                                <span className="font-semibold text-secondary-foreground">HOW TO DO IT</span>
+                              </div>
+                              <div className="bg-secondary/50 p-3 rounded-lg border border-secondary/30">
+                                <p className="text-sm text-secondary-foreground leading-relaxed">{structuredAction.how}</p>
+                              </div>
+                            </div>
+                          )}
+                          
+                          {/* Micro Tasks */}
+                          {structuredAction.microTasks && structuredAction.microTasks.length > 0 && (
+                            <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                              <div className="flex items-center gap-2 mb-2">
+                                <CheckCircle className="h-4 w-4 text-green-600" />
+                                <span className="font-semibold text-green-700 text-sm">START WITH THESE TINY STEPS</span>
+                              </div>
+                              <div className="space-y-1">
+                                {structuredAction.microTasks.map((task: string, index: number) => (
+                                  <div key={index} className="flex items-center gap-2 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
+                                    <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                                    {task}
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Support Circle Status */}
+                          <div className="bg-purple-500/5 rounded-lg p-3 border border-purple-500/20">
+                            <div className="flex items-center gap-2 mb-2">
+                              <User className="h-4 w-4 text-purple-600" />
+                              <span className="font-medium text-purple-700 text-sm">SUPPORT CIRCLE</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-foreground">
+                                {action.assigned_watchers && action.assigned_watchers.length > 0 
+                                  ? `${action.assigned_watchers.length} watcher(s) assigned`
+                                  : 'No watchers assigned - add your support team!'
+                                }
+                              </span>
+                              <Badge variant={(action as any).support_circle_notified ? "default" : "secondary"} className="text-xs">
+                                {(action as any).support_circle_notified ? "Notified" : "Not notified"}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
                         
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 flex-col">
                           <Badge variant="outline" className="text-xs">
                             {action.priority_level <= 2 ? '🔥 High' : action.priority_level <= 3 ? '⚡ Medium' : '📋 Low'} Priority
                           </Badge>
                           <Badge variant="outline" className="text-xs">
                             {Math.round((action.confidence_score || 0) * 100)}% Confidence
                           </Badge>
+                          {!(action as any).calendar_checked && (action as any).completion_date && (
+                            <Badge variant="destructive" className="text-xs">
+                              <AlertCircle className="mr-1 h-3 w-3" />
+                              Calendar not verified
+                            </Badge>
+                          )}
                         </div>
                       </CardTitle>
                     </CardHeader>
@@ -265,7 +342,12 @@ export function ActionsViewer({
                             </div>
                           </div>
                           <div className="pl-11">
-                            <p className="font-medium text-foreground">{actsData.complete}</p>
+                            <p className="font-medium text-foreground">
+                              {(action as any).completion_date 
+                                ? new Date((action as any).completion_date).toLocaleDateString()
+                                : actsData.complete
+                              }
+                            </p>
                           </div>
                         </div>
 
@@ -312,12 +394,26 @@ export function ActionsViewer({
                       </div>
 
                       {/* Additional Context */}
-                      {action.relationship_impact && structuredAction.how !== action.relationship_impact && (
-                        <div className="pt-4 border-t border-muted">
-                          <h5 className="text-sm font-semibold text-muted-foreground mb-2">Relationship Impact</h5>
-                          <p className="text-sm text-muted-foreground">{action.relationship_impact}</p>
-                        </div>
-                      )}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-4 border-t border-muted">
+                        {(action as any).emotional_stakes && (
+                          <div className="flex items-start gap-2 text-muted-foreground">
+                            <AlertCircle className="h-3 w-3 mt-0.5" />
+                            <div>
+                              <span className="font-medium">Emotional Stakes:</span>
+                              <p className="mt-1">{(action as any).emotional_stakes}</p>
+                            </div>
+                          </div>
+                        )}
+                        {(action as any).intent_behind && (
+                          <div className="flex items-start gap-2 text-muted-foreground">
+                            <TrendingUp className="h-3 w-3 mt-0.5" />
+                            <div>
+                              <span className="font-medium">Intent:</span>
+                              <p className="mt-1">{(action as any).intent_behind}</p>
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 );

@@ -76,60 +76,42 @@ serve(async (req) => {
             'Authorization': `Bearer ${OPENAI_API_KEY}`,
             'Content-Type': 'application/json',
           },
-            body: JSON.stringify({
-              model: 'gpt-4o-mini',
-              messages: [
-                {
-                  role: 'system',
-                  content: `You are an expert AI assistant specializing in brain injury support that extracts actionable items from conversations and formats them in a WHAT|HOW structure optimized for cognitive accessibility.
+  // Brain injury-optimized prompt for VERB-first, comprehensive action extraction
+  const prompt = `
+EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from this meeting transcript.
 
-BRAIN INJURY OPTIMIZATION PRINCIPLES:
-- Break complex actions into 2-3 manageable micro-steps
-- Use simple, direct language (avoid jargon)
-- Format each action as: "WHAT needs to be accomplished | HOW to do it step-by-step"
-- Make outcomes concrete and measurable
-- Include encouraging, empowering language
+CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured actions that inspire pride and follow-through.
 
-EXTRACT FROM ALL CONVERSATION TYPES:
-- PROFESSIONAL: Meeting follow-ups, project tasks, deadlines
-- PERSONAL: Health goals, family commitments, self-improvement  
-- CREATIVE: Art projects, learning goals, hobby commitments
-- SOCIAL: Plans with friends, event organization, relationship actions
-- WELLNESS: Medical appointments, fitness goals, mental health practices
-- FINANCIAL: Budget tasks, investment research, bill payments
-- HOUSEHOLD: Chores, maintenance, organization projects
+EXTRACTION RULES:
+1. ACTION TEXT: Must start with an ACTION VERB (CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, etc.)
+2. SUCCESS CRITERIA: Clear "You'll know you're done when..." statement
+3. MOTIVATION: Pride-worthy statement "This will help you..."
+4. OUTCOME: What success looks like (observable/measurable)
+5. HOW: Break down into concrete micro-steps if complex
+6. COMPLETION DATE: Realistic date based on action complexity
+7. IMPACT: Why this matters for relationships/wellbeing
+8. STAKES: What happens if not done (emotional context)
+9. INTENT: The deeper purpose behind this action
 
-FORMAT EACH ACTION AS STRUCTURED COMMITMENT:
-1. what_outcome: Clear, specific WHAT will be accomplished (outcome-focused)
-2. how_steps: Array of 2-3 simple HOW steps to achieve it
-3. micro_tasks: Array of tiny daily tasks that build momentum
-4. assignee: Who will do it (specific person names, not "me/team")
-5. priority: high/medium/low based on urgency and emotional importance
-6. due_context: When it should happen (specific dates OR reasonable timeframes)
-7. context: Why this matters and relationship impact
-8. confidence: 0.0-1.0 score of certainty this is a genuine commitment
-9. reasoning: Brief explanation of why this is an actionable commitment
+For each action found, provide a JSON object with these fields:
+- action_text: VERB-FIRST action (e.g., "CALL therapist to schedule session")
+- success_criteria: "You'll know you're done when..." (specific, observable)
+- motivation_statement: "This will help you..." (empowering, pride-worthy)
+- assigned_to: Who will do it (name or "me")
+- due_context: When it should be done (from transcript context)
+- completion_date: Realistic completion date (YYYY-MM-DD format)
+- relationship_impact: How this affects relationships
+- emotional_stakes: What's at risk emotionally
+- intent_behind: The deeper "why" for this action
+- what_outcome: Specific, observable result when complete
+- how_steps: Array of concrete micro-steps (if complex)
+- priority_level: 1-5 (5=highest)
+- confidence_score: 0.0-1.0 how sure you are this is an action
 
-EXAMPLE FORMAT:
-{
-  "what_outcome": "Complete September content calendar",
-  "how_steps": ["Create content schedule spreadsheet", "Write captions for each post", "Use scheduling tool to queue posts"],
-  "micro_tasks": ["Open spreadsheet app", "List 3 post ideas", "Write one caption"],
-  "assignee": "Sarah Johnson", 
-  "priority": "high",
-  "due_context": "by September 1st",
-  "context": "Essential for maintaining consistent social media presence",
-  "confidence": 0.92,
-  "reasoning": "Clear commitment with specific deliverable and deadline"
-}
+Return ONLY a JSON array of action objects. No explanations.
 
-Return ONLY a JSON array with this exact structure.`
-                },
-                { role: 'user', content: `Extract brain injury-optimized WHAT|HOW actions from this transcript. Format each action with clear outcomes and step-by-step instructions. Return JSON only.\n\n${transcript}` }
-            ],
-            max_tokens: 700,
-            temperature: 0.1
-          })
+TRANSCRIPT:
+${transcript}`;
         });
 
         if (openAIResponse.ok) {
@@ -205,17 +187,24 @@ Return ONLY a JSON array with this exact structure.`
     const actionsToInsert = extractedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
-      action_text: action.what_outcome || action.action || 'Action needs definition',
+      action_text: action.action_text || action.what_outcome || action.action || 'Action needs definition',
+      success_criteria: action.success_criteria || `You'll know you're done when ${action.what_outcome || action.action || 'the task is complete'}.`,
+      motivation_statement: action.motivation_statement || `This will help you ${action.context || 'achieve your goals'}.`,
       what_outcome: action.what_outcome || action.action || 'Action needs definition', 
       how_steps: action.how_steps || [],
       micro_tasks: action.micro_tasks || [],
-      assigned_to: action.assignee || 'You',
+      assigned_to: action.assigned_to || action.assignee || 'You',
       due_context: action.due_context || 'Set your timeline',
-      priority_level: action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5,
-      relationship_impact: action.context || '',
-      confidence_score: action.confidence || 0.8,
+      completion_date: action.completion_date || null,
+      priority_level: action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : action.priority_level || 5,
+      relationship_impact: action.relationship_impact || action.context || '',
+      emotional_stakes: action.emotional_stakes || '',
+      intent_behind: action.intent_behind || '',
+      confidence_score: action.confidence_score || action.confidence || 0.8,
       user_notes: action.reasoning || '',
-      status: 'pending'
+      status: 'not_started',
+      calendar_checked: false,
+      support_circle_notified: false
     }));
 
     if (actionsToInsert.length > 0) {
