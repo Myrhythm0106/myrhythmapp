@@ -14,6 +14,8 @@ import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterBut
 import LandingFooter from "@/components/landing/LandingFooter";
 import { BreakingTheCycleSection } from "@/components/landing/BreakingTheCycleSection";
 import { MemoryBridgeSection } from "@/components/landing/MemoryBridgeSection";
+import { FoundingMemberBanner } from "@/components/landing/FoundingMemberBanner";
+import { FoundingMemberPricingCard } from "@/components/landing/FoundingMemberPricingCard";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 
 const Landing = () => {
@@ -49,8 +51,10 @@ const Landing = () => {
   return (
     <ErrorBoundary>
       <div className="min-h-screen">
+        <FoundingMemberBanner />
         <ScrollArea className="h-screen">
           <AppleHeroSection />
+          <FoundingMemberPricingCard onGetStarted={handleGetStarted} />
           <BreakingTheCycleSection />
           <MemoryBridgeSection />
           <WhyItHelpsSection />

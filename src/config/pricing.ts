@@ -44,11 +44,11 @@ export const basePricing: PlanPricing[] = [
   },
   {
     id: 'reconnect',
-    name: 'MyReconnect',
-    monthlyPrice: 15.00,
-    yearlyPrice: 150.00,
-    monthlyPricePence: 1500,
-    yearlyPricePence: 15000,
+    name: 'MyStarter',
+    monthlyPrice: 7.00,
+    yearlyPrice: 70.00,
+    monthlyPricePence: 700,
+    yearlyPricePence: 7000,
     category: 'individual',
     features: [
       'Detailed MYRHYTHM analysis',
@@ -68,11 +68,11 @@ export const basePricing: PlanPricing[] = [
   },
   {
     id: 'thrive',
-    name: 'MyThrive',
-    monthlyPrice: 25.00,
-    yearlyPrice: 250.00,
-    monthlyPricePence: 2500,
-    yearlyPricePence: 25000,
+    name: 'MyStretch',
+    monthlyPrice: 13.00,
+    yearlyPrice: 130.00,
+    monthlyPricePence: 1300,
+    yearlyPricePence: 13000,
     category: 'individual',
     features: [
       'Everything in MyReconnect',
@@ -92,11 +92,11 @@ export const basePricing: PlanPricing[] = [
   },
   {
     id: 'family',
-    name: 'MyFamily',
-    monthlyPrice: 40.00,
-    yearlyPrice: 400.00,
-    monthlyPricePence: 4000,
-    yearlyPricePence: 40000,
+    name: 'MyLeap',
+    monthlyPrice: 20.00,
+    yearlyPrice: 200.00,
+    monthlyPricePence: 2000,
+    yearlyPricePence: 20000,
     category: 'individual',
     features: [
       'Everything in MyThrive',
@@ -188,13 +188,19 @@ export const basePricing: PlanPricing[] = [
   }
 ];
 
-// Founding member configuration
+// Founding member configuration - ACTIVE by default for launch
 export const foundingMemberConfig = {
-  enabled: import.meta.env.VITE_FOUNDING_MEMBER_ENABLED === 'true' || false,
-  discountPercent: parseInt(import.meta.env.VITE_FOUNDING_MEMBER_DISCOUNT_PERCENT || '20'),
-  endDate: import.meta.env.VITE_FOUNDING_MEMBER_END_DATE || null, // format: YYYY-MM-DD
+  enabled: true, // Always enabled for launch
+  discountPercent: 0, // No additional discount - prices are already introductory
+  endDate: null, // No end date yet - will be set after 1,000 users
   badge: 'Founding Member',
-  tagline: 'Limited Time Offer'
+  tagline: 'Limited Time: First 1,000 Users Only',
+  maxUsers: 1000,
+  nextPricing: {
+    reconnect: { monthly: 39.00, yearly: 390.00 },
+    thrive: { monthly: 79.00, yearly: 790.00 },
+    family: { monthly: 199.00, yearly: 1990.00 }
+  }
 };
 
 export function getDiscountedPrice(basePrice: number, discountPercent: number): number {
