@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { MVPPaymentFlow } from './MVPPaymentFlow';
 import { MVPPrivacyConsent } from './MVPPrivacyConsent';
 import { AppStoryIntroduction } from './AppStoryIntroduction';
@@ -14,6 +16,7 @@ interface MVPMainFlowProps {
 }
 
 export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<MVPFlowStep>(initialStep);
   const [selectedPath, setSelectedPath] = useState<'guided' | 'explorer' | null>(null);
   const [assessmentResult, setAssessmentResult] = useState<any>(null);
@@ -134,10 +137,21 @@ export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
     
     case 'features':
       return (
-        <FourCoreFeaturesTour 
-          onFeatureSelect={handleFeatureSelect}
-          assessmentResult={assessmentResult}
-        />
+        <div className="space-y-4">
+          <FourCoreFeaturesTour 
+            onFeatureSelect={handleFeatureSelect}
+            assessmentResult={assessmentResult}
+          />
+          <div className="text-center">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/guided-journey')}
+              className="bg-gradient-to-r from-primary to-accent text-white"
+            >
+              Continue to Guided Setup
+            </Button>
+          </div>
+        </div>
       );
     
     default:

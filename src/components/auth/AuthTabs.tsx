@@ -7,6 +7,7 @@ import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import { TestAccountButton } from './TestAccountButton';
 import { AuthDebugHelper } from './AuthDebugHelper';
+import { AuthTestHelper } from './AuthTestHelper';
 
 interface AuthTabsProps {
   onForgotPassword: () => void;
@@ -54,7 +55,12 @@ export const AuthTabs = ({
           </Tabs>
           
           {/* Debug helper for development */}
-          {process.env.NODE_ENV === 'development' && <AuthDebugHelper />}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="space-y-4 mt-6">
+              <AuthDebugHelper />
+              <AuthTestHelper />
+            </div>
+          )}
         </CardContent>
       </Card>
       <div className="text-center mt-6 text-sm text-gray-600">

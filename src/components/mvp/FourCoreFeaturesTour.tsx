@@ -106,11 +106,14 @@ export function FourCoreFeaturesTour({ onFeatureSelect, assessmentResult }: Four
   };
 
   const handleTryFeature = (feature: typeof coreFeatures[0]) => {
-    navigate(feature.route);
+    // Store the selected feature and navigate
+    localStorage.setItem('mvp_first_feature', feature.id);
+    navigate(feature.route + '?fromTour=true');
   };
 
   const handleContinueGuided = () => {
-    navigate('/dashboard?guided=true');
+    // Navigate to guided journey with assessment result
+    navigate('/guided-journey');
   };
 
   return (
