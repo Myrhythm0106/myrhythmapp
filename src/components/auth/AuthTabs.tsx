@@ -6,6 +6,7 @@ import { Shield, UserPlus, LogIn } from 'lucide-react';
 import SignInForm from './SignInForm';
 import SignUpForm from './SignUpForm';
 import { TestAccountButton } from './TestAccountButton';
+import { AuthDebugHelper } from './AuthDebugHelper';
 
 interface AuthTabsProps {
   onForgotPassword: () => void;
@@ -51,6 +52,9 @@ export const AuthTabs = ({
               <SignUpForm onSignUpSuccess={onSignUpSuccess} />
             </TabsContent>
           </Tabs>
+          
+          {/* Debug helper for development */}
+          {process.env.NODE_ENV === 'development' && <AuthDebugHelper />}
         </CardContent>
       </Card>
       <div className="text-center mt-6 text-sm text-gray-600">

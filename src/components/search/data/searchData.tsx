@@ -114,34 +114,50 @@ export const memoryBridgeItems: SearchResult[] = [
   {
     id: "memory-bridge",
     title: "Memory Bridge",
-    category: "Memory Bridge",
+    category: "Core Features",
     description: "Record conversations and extract A.C.T.S (Actions, Contacts, Tasks, Schedule)",
     route: "/memory-bridge",
     icon: <Brain className="h-4 w-4 mr-2" />
   },
   {
     id: "record-conversation",
-    title: "Record Conversation",
+    title: "Record conversation", 
     category: "Memory Bridge",
     description: "Start recording an important conversation",
     route: "/memory-bridge?action=record",
     icon: <Mic className="h-4 w-4 mr-2" />
   },
   {
-    id: "extract-acts",
-    title: "Extract A.C.T.S",
-    category: "Memory Bridge",
+    id: "extract-actions",
+    title: "Extract actions",
+    category: "Memory Bridge", 
     description: "View extracted Actions, Contacts, Tasks, and Schedule items",
     route: "/memory-bridge?tab=extractions",
     icon: <Target className="h-4 w-4 mr-2" />
   },
   {
     id: "schedule-from-bridge",
-    title: "Schedule from Bridge",
+    title: "Schedule from bridge",
     category: "Memory Bridge",
-    description: "Add Memory Bridge items to your calendar",
+    description: "Add Memory Bridge items to your calendar", 
     route: "/memory-bridge?tab=schedule",
     icon: <Calendar className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "voice-recording",
+    title: "Voice recording",
+    category: "Memory Bridge",
+    description: "Record voice notes and conversations",
+    route: "/memory-bridge",
+    icon: <Mic className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "meeting-notes", 
+    title: "Meeting notes",
+    category: "Memory Bridge",
+    description: "Capture and organize meeting information",
+    route: "/memory-bridge",
+    icon: <MessageSquare className="h-4 w-4 mr-2" />
   }
 ];
 

@@ -10,6 +10,7 @@ import { useSubscription } from '@/contexts/SubscriptionContext';
 import { MVPProgressTracker } from './MVPProgressTracker';
 import { FloatingSearch } from '@/components/ui/floating-search';
 import { NavbarWithSearch } from '@/components/navigation/NavbarWithSearch';
+import { AIPresenceIndicator } from '@/components/shared/AIPresenceIndicator';
 import { 
   Brain,
   Clock,

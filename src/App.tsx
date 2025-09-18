@@ -105,7 +105,7 @@ function App() {
                      <Route path="/cognitive-performance-assessment" element={<CognitivePerformanceAssessment />} />
                      <Route path="/onboarding/assessment" element={<ProtectedRoute requireAuth={false}><Assessment /></ProtectedRoute>} />
                     
-                    <Route path="/memory-bridge" element={<ProtectedRoute><MemoryBridge /></ProtectedRoute>} />
+                    <Route path="/memory-bridge" element={<ProtectedRoute requireAuth={false}><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/memory-bridge/test" element={<ProtectedRoute><TestMemoryBridge /></ProtectedRoute>} />
                     <Route path="/testing-suite" element={<ProtectedRoute requireAuth={false}><TestingSuitePage /></ProtectedRoute>} />
                     <Route path="/quick-capture" element={<ProtectedRoute><QuickCapture /></ProtectedRoute>} />
