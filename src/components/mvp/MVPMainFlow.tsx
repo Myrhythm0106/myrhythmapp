@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { MVPPaymentFlow } from './MVPPaymentFlow';
 import { MVPPrivacyConsent } from './MVPPrivacyConsent';
+import { AppStoryIntroduction } from './AppStoryIntroduction';
+import { PathSelectionFlow } from './PathSelectionFlow';
+import { AssessmentPreview } from './AssessmentPreview';
 import { MVPAssessmentFlow } from './MVPAssessmentFlow';
 import { FourCoreFeaturesTour } from './FourCoreFeaturesTour';
 
-export type MVPFlowStep = 'payment' | 'privacy' | 'assessment' | 'features';
+export type MVPFlowStep = 'payment' | 'privacy' | 'app-story' | 'path-selection' | 'assessment-preview' | 'assessment' | 'features';
 
 interface MVPMainFlowProps {
   initialStep?: MVPFlowStep;
@@ -12,6 +15,7 @@ interface MVPMainFlowProps {
 
 export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
   const [currentStep, setCurrentStep] = useState<MVPFlowStep>(initialStep);
+  const [selectedPath, setSelectedPath] = useState<'guided' | 'explorer' | null>(null);
   const [assessmentResult, setAssessmentResult] = useState<any>(null);
 
   const handlePaymentComplete = () => {
@@ -22,6 +26,24 @@ export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
   };
 
   const handlePrivacyComplete = () => {
+    setCurrentStep('app-story');
+  };
+
+  const handleAppStoryComplete = () => {
+    setCurrentStep('path-selection');
+  };
+
+  const handlePathSelected = (path: 'guided' | 'explorer') => {
+    setSelectedPath(path);
+    if (path === 'guided') {
+      setCurrentStep('assessment-preview');
+    } else {
+      // For explorer mode, show assessment preview with skip option
+      setCurrentStep('assessment-preview');
+    }
+  };
+
+  const handleAssessmentPreviewComplete = () => {
     setCurrentStep('assessment');
   };
 
@@ -41,8 +63,17 @@ export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
       case 'privacy':
         setCurrentStep('payment');
         break;
-      case 'assessment':
+      case 'app-story':
         setCurrentStep('privacy');
+        break;
+      case 'path-selection':
+        setCurrentStep('app-story');
+        break;
+      case 'assessment-preview':
+        setCurrentStep('path-selection');
+        break;
+      case 'assessment':
+        setCurrentStep('assessment-preview');
         break;
       case 'features':
         setCurrentStep('assessment');
@@ -65,6 +96,31 @@ export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
         <MVPPrivacyConsent 
           onConsentComplete={handlePrivacyComplete}
           onBack={handleBack}
+        />
+      );
+
+    case 'app-story':
+      return (
+        <AppStoryIntroduction 
+          onComplete={handleAppStoryComplete}
+          onBack={handleBack}
+        />
+      );
+
+    case 'path-selection':
+      return (
+        <PathSelectionFlow 
+          onPathSelected={handlePathSelected}
+          onBack={handleBack}
+        />
+      );
+
+    case 'assessment-preview':
+      return (
+        <AssessmentPreview 
+          onStartAssessment={handleAssessmentPreviewComplete}
+          onBack={handleBack}
+          selectedPath={selectedPath || 'guided'}
         />
       );
     

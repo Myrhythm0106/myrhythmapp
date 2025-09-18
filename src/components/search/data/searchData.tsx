@@ -13,7 +13,16 @@ import {
   CheckSquare,
   Sparkles,
   GamepadIcon,
-  BookOpen
+  BookOpen,
+  Brain,
+  Mic,
+  Target,
+  PlayCircle,
+  HelpCircle,
+  Compass,
+  HandHeart,
+  MessageSquare,
+  Clock
 } from "lucide-react";
 
 // Main navigation items
@@ -100,11 +109,111 @@ export const navigationItems: SearchResult[] = [
   },
 ];
 
-// Features and functionalities (removed brain games references)
+// Memory Bridge and core features
+export const memoryBridgeItems: SearchResult[] = [
+  {
+    id: "memory-bridge",
+    title: "Memory Bridge",
+    category: "Memory Bridge",
+    description: "Record conversations and extract A.C.T.S (Actions, Contacts, Tasks, Schedule)",
+    route: "/memory-bridge",
+    icon: <Brain className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "record-conversation",
+    title: "Record Conversation",
+    category: "Memory Bridge",
+    description: "Start recording an important conversation",
+    route: "/memory-bridge?action=record",
+    icon: <Mic className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "extract-acts",
+    title: "Extract A.C.T.S",
+    category: "Memory Bridge",
+    description: "View extracted Actions, Contacts, Tasks, and Schedule items",
+    route: "/memory-bridge?tab=extractions",
+    icon: <Target className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "schedule-from-bridge",
+    title: "Schedule from Bridge",
+    category: "Memory Bridge",
+    description: "Add Memory Bridge items to your calendar",
+    route: "/memory-bridge?tab=schedule",
+    icon: <Calendar className="h-4 w-4 mr-2" />
+  }
+];
+
+// Assessment and onboarding
+export const assessmentItems: SearchResult[] = [
+  {
+    id: "rhythm-assessment", 
+    title: "Rhythm Assessment",
+    category: "Assessment",
+    description: "Take your personalized cognitive assessment",
+    route: "/mvp/assessment-flow",
+    icon: <Brain className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "brain-health-check",
+    title: "Brain Health Check", 
+    category: "Assessment",
+    description: "Quick brain health assessment",
+    route: "/mvp/assessment-flow?type=brief",
+    icon: <HeartPulse className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "assessment-results",
+    title: "Assessment Results",
+    category: "Assessment", 
+    description: "View your assessment results and recommendations",
+    route: "/dashboard?tab=assessments",
+    icon: <Target className="h-4 w-4 mr-2" />
+  }
+];
+
+// Onboarding and help
+export const onboardingItems: SearchResult[] = [
+  {
+    id: "get-started-guide",
+    title: "Get Started Guide",
+    category: "Help",
+    description: "Complete beginner's guide to MyRhythm",
+    route: "/onboarding",
+    icon: <PlayCircle className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "first-time-user-help",
+    title: "First Time User Help",
+    category: "Help", 
+    description: "Help for new users getting started",
+    route: "/tutorial",
+    icon: <HandHeart className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "guided-tour",
+    title: "Guided Tour",
+    category: "Help",
+    description: "Take a guided tour of MyRhythm features",
+    route: "/mvp/main-flow?step=features",
+    icon: <Compass className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "how-to-use",
+    title: "How to Use MyRhythm",
+    category: "Help",
+    description: "Learn how to use MyRhythm effectively",
+    route: "/useful-info?tab=howto",
+    icon: <HelpCircle className="h-4 w-4 mr-2" />
+  }
+];
+
+// Features and functionalities (enhanced)
 export const featuresItems: SearchResult[] = [
   {
     id: "goals-view",
-    title: "Goals & Tasks",
+    title: "Goals & Tasks", 
     category: "Features",
     description: "Manage your goals and tasks",
     route: "/calendar?view=goals",
@@ -214,6 +323,9 @@ export const resourcesItems: SearchResult[] = [
 
 // Sample search data - in a real app, this would be dynamic
 export const allSearchResults: SearchResult[] = [
+  ...memoryBridgeItems,
+  ...assessmentItems, 
+  ...onboardingItems,
   ...navigationItems,
   ...featuresItems,
   ...resourcesItems,

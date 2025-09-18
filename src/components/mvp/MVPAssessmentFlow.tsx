@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSubscription } from '@/contexts/SubscriptionContext';
 import { MVPProgressTracker } from './MVPProgressTracker';
+import { FloatingSearch } from '@/components/ui/floating-search';
+import { NavbarWithSearch } from '@/components/navigation/NavbarWithSearch';
 import { 
   Brain,
   Clock,
@@ -18,7 +20,9 @@ import {
   Star,
   AlertTriangle,
   Zap,
-  Heart
+  Heart,
+  ArrowLeft,
+  Search
 } from "lucide-react";
 import { toast } from "sonner";
 import { ContinuousGuidance } from "@/components/guidance/ContinuousGuidance";
@@ -500,6 +504,7 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
     
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+        <NavbarWithSearch showLogo={true} showMenu={false} />
         <MVPProgressTracker currentStep="results" />
          <div className="py-8">
         <div className="max-w-4xl mx-auto px-6">
@@ -666,6 +671,7 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+      <NavbarWithSearch showLogo={true} showMenu={false} />
       <MVPProgressTracker currentStep="assessment" />
       <div className="py-8">
         <div className="max-w-2xl mx-auto px-6">
@@ -682,6 +688,16 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
             This assessment helps us create your personalized recovery plan. 
             <span className="font-semibold text-memory-emerald-600"> Every answer helps us help you better.</span>
           </p>
+          
+          {/* Search hint */}
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center justify-center space-x-2">
+              <Search className="h-4 w-4 text-blue-600" />
+              <span className="text-sm text-blue-700">
+                Need help? Press <kbd className="px-2 py-1 bg-white rounded text-xs border">Ctrl+K</kbd> to search anything
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Progress */}
@@ -735,6 +751,7 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
             variant="outline"
             className="border-brain-health-300 text-brain-health-700"
           >
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Previous
           </Button>
           
@@ -768,6 +785,9 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
         />
         </div>
       </div>
+      
+      {/* Floating Search for Help */}
+      <FloatingSearch variant="help" />
     </div>
    );
 }
