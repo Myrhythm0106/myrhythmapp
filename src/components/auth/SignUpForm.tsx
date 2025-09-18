@@ -7,12 +7,15 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { User, Mail, Lock, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { PasswordInput } from './PasswordInput';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface SignUpFormProps {
   onSignUpSuccess: (email: string) => void;
 }
 
 export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
+  const navigate = useNavigate();
   const { signUp } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,7 +59,9 @@ export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
       }
     } else {
       console.log('SignUpForm: Sign up successful');
-      onSignUpSuccess(formData.email);
+      // For new users, go to path selection to choose their journey
+      navigate('/path-selection');
+      toast.success('Account created! Choose your journey.');
     }
     
     setIsLoading(false);

@@ -6,6 +6,7 @@ import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { Brain, ArrowLeft } from "lucide-react";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
+import { toast } from "sonner";
 
 const Auth = () => {
   const { user, loading, signOut } = useAuth();
@@ -65,7 +66,7 @@ const Auth = () => {
     );
   }
 
-  const handleSignUpSuccess = (email: string) => {
+  const handleSignUpEmailSuccess = (email: string) => {
     console.log('Auth page: Sign up successful for:', email);
     setSuccessEmail(email);
     setShowSuccessMessage(true);
@@ -92,8 +93,15 @@ const Auth = () => {
   };
 
   const handleSignInSuccess = () => {
-    console.log('Sign in successful, redirecting...');
-    navigate(from);
+    toast.success('Welcome back!');
+    // For returning users, go directly to dashboard
+    navigate('/dashboard');
+  };
+
+  const handleSignUpSuccess = () => {
+    toast.success('Account created successfully!');
+    // For new users, go to path selection to choose their journey
+    navigate('/path-selection');
   };
 
   // Show loading while checking authentication
@@ -214,7 +222,7 @@ const Auth = () => {
               onForgotPassword={handleForgotPassword}
               onResendVerification={handleResendVerification}
               onSignInSuccess={handleSignInSuccess}
-              onSignUpSuccess={handleSignUpSuccess}
+              onSignUpSuccess={() => handleSignUpEmailSuccess('')}
             />
           </CardContent>
         </Card>

@@ -58,6 +58,9 @@ import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDash
 import Help from "./pages/Help";
 import HelpGettingStarted from "./pages/HelpGettingStarted";
 import Welcome from "./pages/Welcome";
+import ExplorerPage from "./pages/ExplorerPage";
+import PathSelectionPage from "./pages/PathSelectionPage";
+import AssessmentResultsPage from "./pages/AssessmentResultsPage";
 
 const queryClient = new QueryClient();
 
@@ -104,6 +107,11 @@ function App() {
                      <Route path="/brain-injury-assessment" element={<BrainInjuryAssessment />} />
                      <Route path="/cognitive-performance-assessment" element={<CognitivePerformanceAssessment />} />
                      <Route path="/onboarding/assessment" element={<ProtectedRoute requireAuth={false}><Assessment /></ProtectedRoute>} />
+                     <Route path="/assessment-results" element={<ProtectedRoute requireAuth={false}><AssessmentResultsPage /></ProtectedRoute>} />
+                     
+                     {/* Path Selection & Explorer Routes */}
+                     <Route path="/path-selection" element={<ProtectedRoute requireAuth={false}><PathSelectionPage /></ProtectedRoute>} />
+                     <Route path="/explorer" element={<ProtectedRoute requireAuth={false}><ExplorerPage /></ProtectedRoute>} />
                     
                     <Route path="/memory-bridge" element={<ProtectedRoute requireAuth={false}><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/memory-bridge/test" element={<ProtectedRoute><TestMemoryBridge /></ProtectedRoute>} />

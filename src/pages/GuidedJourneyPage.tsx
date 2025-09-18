@@ -1,13 +1,15 @@
 import React from 'react';
 import { GuidedJourney } from '@/components/guided-journey/GuidedJourney';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AssessmentResult } from '@/utils/rhythmAnalysis';
 
 export default function GuidedJourneyPage() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Mock assessment result for now - in production, this would come from context or local storage
-  const mockAssessmentResult: AssessmentResult = {
+  // Try to get assessment result from state or use mock
+  const assessmentFromState = location.state?.assessmentResult;
+  const mockAssessmentResult: AssessmentResult = assessmentFromState || {
     id: 'mock-assessment-1',
     completedAt: new Date().toISOString(),
     overallScore: 2.4,

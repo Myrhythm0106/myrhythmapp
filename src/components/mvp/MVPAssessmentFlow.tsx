@@ -198,6 +198,11 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   const navigate = useNavigate();
   const location = useLocation();
   const { hasFeature, tier } = useSubscription();
+  
+  // Get URL parameters
+  const searchParams = new URLSearchParams(location.search);
+  const pathType = searchParams.get('path') as 'guided' | 'explorer' || 'guided';
+  const nextRoute = searchParams.get('next');
   const { trackEvent } = useAnalytics();
   const { user } = useAuth();
   const { saveAssessmentResult, updateAssessmentResult } = useAssessmentResults();
@@ -410,6 +415,15 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
     // Call onComplete callback if provided (for MVP flow)
     if (onComplete) {
       onComplete(result);
+    } else {
+        // Navigate based on path type and next route
+        if (nextRoute === 'guided-journey' && pathType === 'guided') {
+          navigate('/guided-journey', { state: { assessmentResult: result } });
+        } else if (pathType === 'explorer') {
+          navigate('/explorer?assessment=completed', { state: { assessmentResult: result } });
+        } else {
+          navigate('/assessment-results', { state: { assessmentResult: result } });
+        }
     }
   };
 
