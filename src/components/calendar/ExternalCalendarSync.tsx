@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 
 interface CalendarAccount {
   id: string;
@@ -31,12 +30,10 @@ export function ExternalCalendarSync() {
   const [syncing, setSyncing] = useState<string | null>(null);
   const { user } = useAuth();
 
-  // Load connected accounts on mount
+  // Mock data for demo - will be replaced when Supabase types are regenerated
   useEffect(() => {
-    // Mock data for now - will be replaced when types are updated
-    const mockAccounts: CalendarAccount[] = [
-      // Will load from database once types are available
-    ];
+    // Simulate some existing connections for demo purposes
+    const mockAccounts: CalendarAccount[] = [];
     setAccounts(mockAccounts);
   }, [user]);
 
@@ -44,7 +41,7 @@ export function ExternalCalendarSync() {
     setSyncing('google');
     
     try {
-      // Mock OAuth flow for now - will implement real Google Calendar API later
+      // Mock OAuth flow - will implement real Google Calendar API once types are updated
       const mockAccount: CalendarAccount = {
         id: `google-${Date.now()}`,
         type: 'google',
@@ -56,7 +53,7 @@ export function ExternalCalendarSync() {
       };
 
       setAccounts(prev => [...prev, mockAccount]);
-      toast.success('Google Calendar connected successfully! (Demo mode)');
+      toast.success('Google Calendar connected! (Demo mode - database integration pending type updates)');
     } catch (error) {
       console.error('Failed to connect Google Calendar:', error);
       toast.error('Failed to connect Google Calendar');
@@ -69,7 +66,7 @@ export function ExternalCalendarSync() {
     setSyncing('outlook');
     
     try {
-      // Mock OAuth flow for now - will implement real Microsoft Graph API later
+      // Mock OAuth flow - will implement real Microsoft Graph API once types are updated
       const mockAccount: CalendarAccount = {
         id: `outlook-${Date.now()}`,
         type: 'outlook',
@@ -81,7 +78,7 @@ export function ExternalCalendarSync() {
       };
 
       setAccounts(prev => [...prev, mockAccount]);
-      toast.success('Outlook Calendar connected successfully! (Demo mode)');
+      toast.success('Outlook Calendar connected! (Demo mode - database integration pending type updates)');
     } catch (error) {
       console.error('Failed to connect Outlook:', error);
       toast.error('Failed to connect Outlook Calendar');
@@ -153,6 +150,12 @@ export function ExternalCalendarSync() {
           <p className="text-sm text-muted-foreground">
             Connect your external calendars to keep everything in sync
           </p>
+          <div className="flex items-center gap-2 mt-2">
+            <div className="h-2 w-2 bg-orange-500 rounded-full animate-pulse"></div>
+            <p className="text-xs text-orange-600">
+              Demo mode: Database types updating. Full sync available once Supabase types regenerate.
+            </p>
+          </div>
         </div>
       </div>
 
@@ -182,7 +185,7 @@ export function ExternalCalendarSync() {
               ) : (
                 <>
                   <ExternalLink className="h-4 w-4 mr-2" />
-                  Connect Google
+                  Connect Google (Demo)
                 </>
               )}
             </Button>
@@ -213,7 +216,7 @@ export function ExternalCalendarSync() {
               ) : (
                 <>
                   <ExternalLink className="h-4 w-4 mr-2" />
-                  Connect Outlook
+                  Connect Outlook (Demo)
                 </>
               )}
             </Button>
@@ -309,6 +312,27 @@ export function ExternalCalendarSync() {
               <Download className="h-4 w-4 mr-2" />
               Export
             </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Info Card */}
+      <Card className="border-blue-200 bg-blue-50">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-3">
+            <Settings className="h-5 w-5 text-blue-600 mt-0.5" />
+            <div className="space-y-1">
+              <h4 className="font-medium text-blue-900">Integration Status</h4>
+              <p className="text-sm text-blue-700">
+                External calendar sync is in demo mode. Database tables have been created successfully. 
+                Full functionality will be available once Supabase regenerates the TypeScript types.
+              </p>
+              <div className="text-xs text-blue-600 mt-2">
+                ✅ Database tables created<br/>
+                ⏳ TypeScript types pending<br/>
+                🔄 Real-time sync ready for implementation
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

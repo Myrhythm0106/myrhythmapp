@@ -66,9 +66,9 @@ export function UnifiedCalendarView() {
         .gte('date', dateStr)
         .lte('date', dateStr);
 
-      // Load external calendar events (simulated for now)
+      // Load external calendar events (simulated - awaiting type regeneration)
       const externalEvents: any[] = [];
-      // Will be implemented once types are updated
+      // Real implementation will be enabled once Supabase types include new tables:
       // const { data: externalEvents } = await supabase
       //   .from('external_calendar_events')
       //   .select('*')
