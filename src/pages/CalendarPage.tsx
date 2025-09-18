@@ -8,6 +8,7 @@ import { Plus, CalendarDays, Filter } from 'lucide-react';
 import { CalendarViewSlider } from '@/components/calendar/CalendarViewSlider';
 import { TodaysFocusBanner } from '@/components/calendar/TodaysFocusBanner';
 import { UpcomingEvents } from '@/components/calendar/UpcomingEvents';
+import { UnifiedCalendarView } from '@/components/calendar/UnifiedCalendarView';
 
 export default function CalendarPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -86,35 +87,8 @@ export default function CalendarPage() {
         {/* Today's Focus Banner */}
         <TodaysFocusBanner />
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Calendar</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="rounded-md border"
-              />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>
-                {currentView === "day" ? "Today's" : 
-                 currentView === "week" ? "This Week's" : 
-                 currentView === "month" ? "This Month's" : "Upcoming"} Events
-                {filterType === "acts" && " (ACTs)"}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <UpcomingEvents date={date} />
-            </CardContent>
-          </Card>
-        </div>
+        {/* Unified Calendar View */}
+        <UnifiedCalendarView />
       </div>
     </PageLayout>
   );

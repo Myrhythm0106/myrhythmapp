@@ -11,6 +11,9 @@ import { ExtractedAction } from '@/types/memoryBridge';
 import { useActsScheduling } from '@/hooks/memoryBridge/useActsScheduling';
 import { generateICS, generateGoogleCalendarLink, generateCalendarLinks } from '@/utils/ics';
 import { toast } from 'sonner';
+import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface ActsReviewTableProps {
   actions: ExtractedAction[];
@@ -24,6 +27,8 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
   const [editingCell, setEditingCell] = useState<{ actionId: string; field: string } | null>(null);
   
   const { suggestions, isLoading, generateSuggestionsForAction } = useActsScheduling();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const highConfidenceActions = useMemo(() => 
     actions.filter(action => (action.confidence_score || 0) >= 0.8),
@@ -143,6 +148,54 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
     toast.success('Calendar file downloaded');
   };
 
+  const handleScheduleInApp = async (actionIds: string[]) => {
+    if (!user) {
+      toast.error('Please log in to schedule actions');
+      return;
+    }
+
+    const actionsToSchedule = actions.filter(a => actionIds.includes(a.id!));
+    let scheduledCount = 0;
+    
+    for (const action of actionsToSchedule) {
+      if (!suggestions[action.id!]) {
+        await generateSuggestionsForAction(action);
+      }
+      
+      const topSuggestion = suggestions[action.id!]?.[0];
+      if (topSuggestion) {
+        try {
+          const eventId = await convertActionToCalendarEvent(
+            action,
+            user.id,
+            [], // watchers
+            topSuggestion.date,
+            topSuggestion.time
+          );
+          
+          if (eventId) {
+            scheduledCount++;
+            // Update action status to scheduled
+            await onUpdateAction(action.id!, { 
+              status: 'scheduled',
+              scheduled_date: topSuggestion.date,
+              scheduled_time: topSuggestion.time
+            });
+          }
+        } catch (error) {
+          console.error('Failed to schedule action:', error);
+        }
+      }
+    }
+    
+    if (scheduledCount > 0) {
+      toast.success(`Successfully scheduled ${scheduledCount} action${scheduledCount > 1 ? 's' : ''} in your calendar!`);
+      navigate('/calendar?view=day');
+    } else {
+      toast.error('Failed to schedule actions. Please try again.');
+    }
+  };
+
   const handleAddToGoogleCalendar = async (actionIds: string[]) => {
     const actionsToExport = actions.filter(a => actionIds.includes(a.id!));
     
@@ -236,6 +289,16 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
               >
                 <Check className="w-4 h-4 mr-2" />
                 Accept Selected ({selectedActions.size})
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => handleScheduleInApp(Array.from(selectedActions))}
+                className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white hover:from-memory-emerald-600 hover:to-brain-health-600"
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Schedule in Calendar
               </Button>
               
               <Button
