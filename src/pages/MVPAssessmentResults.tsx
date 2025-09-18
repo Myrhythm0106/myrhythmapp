@@ -140,9 +140,8 @@ export default function MVPAssessmentResults() {
 
   const handleStartJourney = () => {
     if (assessmentResult) {
-      // Set flag to trigger assessment-to-calendar flow
-      localStorage.setItem('startAssessmentToCalendarFlow', 'true');
-      navigate('/assessment-to-calendar');
+      // Route directly to guided journey without sign-in barrier
+      navigate('/guided-journey', { state: { assessmentResult } });
     }
   };
 

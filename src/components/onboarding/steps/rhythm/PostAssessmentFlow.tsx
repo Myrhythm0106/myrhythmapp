@@ -10,6 +10,7 @@ import { PersonalizedResultsDisplay } from "./PersonalizedResultsDisplay";
 import { AssessmentResultsPreview } from "./AssessmentResultsPreview";
 import { AssessmentPaymentGate } from "./AssessmentPaymentGate";
 import { useSubscription } from "@/contexts/SubscriptionContext";
+import { useNavigate } from "react-router-dom";
 
 interface PostAssessmentFlowProps {
   userType: UserType;
@@ -20,6 +21,7 @@ interface PostAssessmentFlowProps {
 
 export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onPaymentRequired }: PostAssessmentFlowProps) {
   const { hasFeature, subscriptionData, tier } = useSubscription();
+  const navigate = useNavigate();
   
   // Determine initial step based on subscription status
   const getInitialStep = () => {
@@ -52,7 +54,7 @@ export function PostAssessmentFlow({ userType, assessmentResult, onComplete, onP
       setActiveStep("results");
     } else if (activeStep === "results") {
       // After viewing results, navigate to guided journey
-      window.location.href = '/guided-journey';
+      navigate('/guided-journey', { state: { assessmentResult } });
     } else if (activeStep === "welcome") {
       setActiveStep("setup");
       setSetupProgress(25);

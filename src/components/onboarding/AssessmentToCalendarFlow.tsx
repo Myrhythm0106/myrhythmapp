@@ -61,13 +61,8 @@ export function AssessmentToCalendarFlow({ assessmentResults, onComplete }: Asse
   }, [user, currentStep]);
 
   const handleSaveResults = () => {
-    if (user) {
-      // User is logged in, generate schedule directly
-      handleGenerateSchedule();
-    } else {
-      // Show registration step
-      setCurrentStep('register');
-    }
+    // Skip authentication barrier - generate schedule directly for all users
+    handleGenerateSchedule();
   };
 
   const handleRegister = async () => {

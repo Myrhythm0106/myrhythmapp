@@ -11,6 +11,7 @@ import { MVPProgressTracker } from './MVPProgressTracker';
 import { FloatingSearch } from '@/components/ui/floating-search';
 import { NavbarWithSearch } from '@/components/navigation/NavbarWithSearch';
 import { AIPresenceIndicator } from '@/components/shared/AIPresenceIndicator';
+import { AssessmentCompiling } from '@/components/onboarding/steps/rhythm/AssessmentCompiling';
 import { 
   Brain,
   Clock,
@@ -222,6 +223,7 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   const [assessmentResult, setAssessmentResult] = useState<AssessmentResult | null>(null);
   const [showPaymentGate, setShowPaymentGate] = useState(false);
   const [isPreview, setIsPreview] = useState(true);
+  const [isCompiling, setIsCompiling] = useState(false);
 
   const handleAssessmentTypeSelect = async (type: 'brief' | 'comprehensive') => {
     setSelectedAssessmentType(type);
@@ -326,6 +328,9 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
   };
 
   const calculateResults = async () => {
+    // Start compilation experience
+    setIsCompiling(true);
+
     // Track assessment completion
     trackEvent({
       eventType: 'assessment_completed',
@@ -381,7 +386,6 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
     };
 
     setAssessmentResult(result);
-    setShowResults(true);
 
     // Save completed assessment to database
     if (user && currentAssessmentId) {
@@ -411,18 +415,23 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
     if (!hasFeature('fullAssessment') && isComprehensive) {
       setShowPaymentGate(true);
     }
+  };
+
+  const handleCompilationComplete = () => {
+    setIsCompiling(false);
+    setShowResults(true);
 
     // Call onComplete callback if provided (for MVP flow)
     if (onComplete) {
-      onComplete(result);
+      onComplete(assessmentResult);
     } else {
         // Navigate based on path type and next route
         if (nextRoute === 'guided-journey' && pathType === 'guided') {
-          navigate('/guided-journey', { state: { assessmentResult: result } });
+          navigate('/guided-journey', { state: { assessmentResult } });
         } else if (pathType === 'explorer') {
-          navigate('/explorer?assessment=completed', { state: { assessmentResult: result } });
+          navigate('/explorer?assessment=completed', { state: { assessmentResult } });
         } else {
-          navigate('/assessment-results', { state: { assessmentResult: result } });
+          navigate('/assessment-results', { state: { assessmentResult } });
         }
     }
   };
@@ -513,6 +522,19 @@ export function MVPAssessmentFlow({ onComplete, onBack }: MVPAssessmentFlowProps
         : 'Establishing foundational memory support systems'
     };
   };
+
+  // Show compilation screen
+  if (isCompiling) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+        <NavbarWithSearch showLogo={true} showMenu={false} />
+        <AssessmentCompiling
+          onComplete={handleCompilationComplete}
+          error={null}
+        />
+      </div>
+    );
+  }
 
   if (showResults && assessmentResult) {
     const canSeeFullResults = hasFeature('fullAssessment') || !isComprehensive;
