@@ -280,6 +280,57 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_integrations: {
+        Row: {
+          access_token: string | null
+          account_email: string
+          account_name: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          last_sync: string | null
+          provider: string
+          refresh_token: string | null
+          sync_enabled: boolean
+          sync_settings: Json | null
+          token_expires_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          access_token?: string | null
+          account_email: string
+          account_name?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_sync?: string | null
+          provider: string
+          refresh_token?: string | null
+          sync_enabled?: boolean
+          sync_settings?: Json | null
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          access_token?: string | null
+          account_email?: string
+          account_name?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_sync?: string | null
+          provider?: string
+          refresh_token?: string | null
+          sync_enabled?: boolean
+          sync_settings?: Json | null
+          token_expires_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_contexts: {
         Row: {
           communication_preferences: string | null
@@ -534,6 +585,74 @@ export type Database = {
           user_type?: string
         }
         Relationships: []
+      }
+      external_calendar_events: {
+        Row: {
+          created_at: string
+          date: string
+          description: string | null
+          end_time: string | null
+          external_event_id: string
+          id: string
+          integration_id: string
+          is_all_day: boolean | null
+          last_synced: string | null
+          location: string | null
+          source: string
+          status: string | null
+          time: string | null
+          timezone: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          description?: string | null
+          end_time?: string | null
+          external_event_id: string
+          id?: string
+          integration_id: string
+          is_all_day?: boolean | null
+          last_synced?: string | null
+          location?: string | null
+          source: string
+          status?: string | null
+          time?: string | null
+          timezone?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          description?: string | null
+          end_time?: string | null
+          external_event_id?: string
+          id?: string
+          integration_id?: string
+          is_all_day?: boolean | null
+          last_synced?: string | null
+          location?: string | null
+          source?: string
+          status?: string | null
+          time?: string | null
+          timezone?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "external_calendar_events_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       extracted_actions: {
         Row: {

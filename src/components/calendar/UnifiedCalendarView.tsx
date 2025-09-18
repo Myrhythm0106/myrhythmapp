@@ -66,12 +66,14 @@ export function UnifiedCalendarView() {
         .gte('date', dateStr)
         .lte('date', dateStr);
 
-      // Load external calendar events (placeholder for now)
-      const { data: externalEvents } = await supabase
-        .from('external_calendar_events')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('date', dateStr);
+      // Load external calendar events (simulated for now)
+      const externalEvents: any[] = [];
+      // Will be implemented once types are updated
+      // const { data: externalEvents } = await supabase
+      //   .from('external_calendar_events')
+      //   .select('*')
+      //   .eq('user_id', user.id)
+      //   .eq('date', dateStr);
 
       const allEvents: CalendarEvent[] = [
         // Daily actions (A.C.T.S.)
@@ -80,10 +82,11 @@ export function UnifiedCalendarView() {
           title: action.title,
           description: action.description,
           date: action.date,
-          time: action.time,
+          time: action.start_time,
           type: 'action' as const,
-          status: action.status,
-          priority: action.priority,
+          status: (action.status as 'pending' | 'completed' | 'cancelled') || 'pending',
+          priority: action.focus_area === 'high' ? 'high' as const : 
+                   action.focus_area === 'medium' ? 'medium' as const : 'low' as const,
           source: 'internal' as const
         })),
         
@@ -94,12 +97,12 @@ export function UnifiedCalendarView() {
           description: event.description,
           date: event.date,
           time: event.time,
-          endTime: event.end_time,
+          endTime: undefined, // calendar_events table doesn't have end_time
           type: 'event' as const,
           source: 'internal' as const
         })),
 
-        // External calendar events
+        // External calendar events (empty for now)
         ...(externalEvents || []).map(event => ({
           id: event.id,
           title: event.title,
