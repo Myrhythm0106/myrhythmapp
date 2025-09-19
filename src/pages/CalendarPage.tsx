@@ -8,7 +8,7 @@ import { Plus, CalendarDays, Filter } from 'lucide-react';
 import { CalendarViewSlider } from '@/components/calendar/CalendarViewSlider';
 import { TodaysFocusBanner } from '@/components/calendar/TodaysFocusBanner';
 import { UpcomingEvents } from '@/components/calendar/UpcomingEvents';
-import { UnifiedCalendarView } from '@/components/calendar/UnifiedCalendarView';
+import { TBICalendarApp } from '@/components/calendar-tbi/TBICalendarApp';
 
 export default function CalendarPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
@@ -87,8 +87,8 @@ export default function CalendarPage() {
         {/* Today's Focus Banner */}
         <TodaysFocusBanner />
 
-        {/* Unified Calendar View */}
-        <UnifiedCalendarView />
+        {/* TBI Calendar View */}
+        <TBICalendarApp />
       </div>
     </PageLayout>
   );
