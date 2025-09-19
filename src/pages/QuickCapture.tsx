@@ -4,11 +4,14 @@ import { MVPThemeWrapper } from '@/components/theme/MVPThemeWrapper';
 import { MVPTopNav } from '@/components/mvp/MVPTopNav';
 import { MVPPageHeader } from '@/components/mvp/MVPPageHeader';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { ArrowLeft, User, AlertCircle, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 
 export default function QuickCapture() {
   const navigate = useNavigate();
+  const { user, loading, emailVerificationStatus } = useAuth();
 
   const handleComplete = (data: { meetingId: string; actionsCount: number }) => {
     // Navigate to actions view with the results
@@ -45,6 +48,29 @@ export default function QuickCapture() {
             title="Quick Capture"
             subtitle="3-tap recording: Start → Stop → View Results"
           />
+
+          {/* Authentication Status */}
+          <div className="flex items-center justify-center gap-2 py-2">
+            {loading ? (
+              <Badge variant="outline">
+                <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary mr-2"></div>
+                Checking authentication...
+              </Badge>
+            ) : user ? (
+              <Badge className="bg-green-50 text-green-700 border-green-200">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                Signed in as {user.email}
+                {emailVerificationStatus === 'pending' && (
+                  <span className="ml-2 text-orange-600">(Email verification pending)</span>
+                )}
+              </Badge>
+            ) : (
+              <Badge variant="destructive">
+                <AlertCircle className="h-3 w-3 mr-1" />
+                Not signed in - Please sign in to record
+              </Badge>
+            )}
+          </div>
 
           {/* Quick Capture Interface */}
           <QuickCaptureRecorder 

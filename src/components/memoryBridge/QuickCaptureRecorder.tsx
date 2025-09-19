@@ -18,6 +18,7 @@ import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
+import { useAuth } from '@/contexts/AuthContext';
 import { VoiceCoach } from './VoiceCoach';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -30,6 +31,7 @@ interface QuickCaptureRecorderProps {
 type RecordingState = 'ready' | 'recording' | 'processing' | 'complete';
 
 export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecorderProps) {
+  const { user, session, loading, emailVerificationStatus } = useAuth();
   const { 
     isRecording: isVoiceRecording, 
     isPaused,
@@ -61,26 +63,64 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
+  // Debug auth state
+  useEffect(() => {
+    console.log('🔐 QuickCaptureRecorder AUTH STATE:', {
+      user: !!user,
+      session: !!session,
+      loading,
+      emailVerificationStatus,
+      userId: user?.id,
+      userEmail: user?.email
+    });
+  }, [user, session, loading, emailVerificationStatus]);
+
   // Handle the 3-tap flow - simplified start
   const handleFirstTap = useCallback(async () => {
     console.log('👆 Tap 1: Starting recording...');
+    
+    // Check authentication first
+    if (!user || !session) {
+      console.error('❌ Authentication required for recording');
+      toast.error('Please sign in to start recording');
+      return;
+    }
+
+    if (emailVerificationStatus === 'pending') {
+      toast.error('Please verify your email address to start recording');
+      return;
+    }
+    
     setTapCount(1);
     setRecordingState('recording');
     
     try {
       // Just start recording - no meeting creation yet
-      await startRecording();
-      toast.success('Recording started! 🎤');
+      const success = await startRecording();
+      if (success) {
+        toast.success('Recording started! 🎤');
+      } else {
+        throw new Error('Failed to start recording');
+      }
     } catch (error) {
       console.error('Error starting recording:', error);
       setRecordingState('ready');
       setTapCount(0);
       toast.error('Failed to start recording');
     }
-  }, [startRecording]);
+  }, [startRecording, user, session, emailVerificationStatus]);
 
   const processRecordingAutomatically = useCallback(async (audioBlob: Blob) => {
     try {
+      // Double-check auth before processing
+      if (!user || !session) {
+        throw new Error('Authentication required. Please sign in and try again.');
+      }
+
+      if (emailVerificationStatus === 'pending') {
+        throw new Error('Email verification required. Please verify your email address.');
+      }
+
       setProcessingMessage('Saving recording...');
       
       // Save the voice recording first
@@ -91,8 +131,10 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
         'Quick captured conversation'
       );
 
+      console.log('📹 Voice recording result:', voiceRecording);
+
       if (!voiceRecording) {
-        throw new Error('Failed to save recording');
+        throw new Error('Failed to save recording - authentication may have expired');
       }
 
       setProcessingMessage('Creating meeting record...');
@@ -154,9 +196,11 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
       console.error('Error processing recording:', error);
       setRecordingState('ready');
       setTapCount(0);
-      toast.error('Failed to process recording');
+      
+      const errorMessage = error instanceof Error ? error.message : 'Failed to process recording';
+      toast.error(errorMessage);
     }
-  }, [saveRecording, startMeetingRecording]);
+  }, [saveRecording, startMeetingRecording, user, session, emailVerificationStatus]);
 
   const handleSecondTap = useCallback(async () => {
     console.log('👆 Tap 2: Stopping recording...');
@@ -272,6 +316,31 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     <Card className="border-2 border-memory-emerald-200 bg-gradient-to-br from-white via-memory-emerald-50/50 to-brain-health-50/30">
       <CardContent className="pt-6">
         <div className="space-y-6">
+          {/* Authentication Status Debug Info */}
+          {!user && !loading && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center gap-2 text-red-700">
+                <AlertTriangle className="h-4 w-4" />
+                <span className="font-medium">Authentication Required</span>
+              </div>
+              <p className="text-sm text-red-600 mt-1">
+                Please sign in to start recording. You appear to be signed out.
+              </p>
+            </div>
+          )}
+
+          {user && emailVerificationStatus === 'pending' && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center gap-2 text-orange-700">
+                <AlertTriangle className="h-4 w-4" />
+                <span className="font-medium">Email Verification Required</span>
+              </div>
+              <p className="text-sm text-orange-600 mt-1">
+                Please verify your email address to enable recording functionality.
+              </p>
+            </div>
+          )}
+
           {/* Voice Coach - shown during ready or recording states */}
           {(recordingState === 'ready' || recordingState === 'recording') && (
             <VoiceCoach
@@ -387,7 +456,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
           <div className="flex flex-col items-center gap-3">
             <Button
               onClick={handleMainAction}
-              disabled={recordingState === 'processing'}
+              disabled={recordingState === 'processing' || !user || emailVerificationStatus === 'pending'}
               size="lg"
               className={`px-8 py-4 text-lg gap-2 ${
                 recordingState === 'recording' && !isPaused
