@@ -40,6 +40,7 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
 
   // Check if auth is required and user is not authenticated
   if (requireAuth && !user) {
+    console.log('ProtectedRoute: Redirecting unauthenticated user to /auth from', location.pathname);
     return <Navigate to="/auth" state={{ from: location }} replace />;
   }
 

@@ -94,14 +94,17 @@ const Auth = () => {
 
   const handleSignInSuccess = () => {
     toast.success('Welcome back!');
-    // For returning users, go directly to dashboard
-    navigate('/dashboard');
+    // Redirect to the page they were trying to access, or dashboard
+    console.log('Auth page: Sign in successful, redirecting to:', from);
+    navigate(from, { replace: true });
   };
 
   const handleSignUpSuccess = () => {
     toast.success('Account created successfully!');
-    // For new users, go to path selection to choose their journey
-    navigate('/path-selection');
+    // After signup, redirect to their intended destination or path selection
+    const destination = from !== "/dashboard" ? from : '/path-selection';
+    console.log('Auth page: Sign up successful, redirecting to:', destination);
+    navigate(destination, { replace: true });
   };
 
   // Show loading while checking authentication
