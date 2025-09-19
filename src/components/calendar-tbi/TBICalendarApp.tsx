@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayViewTBI } from './views/DayViewTBI';
 import { WeekViewTBI } from './views/WeekViewTBI';
-import { MonthViewTBI } from './views/MonthViewTBI';
+import { YearViewTBI } from './views/YearViewTBI';
 import { DayDetailsModal } from './components/DayDetailsModal';
 import { TBIEvent, EnergyLevel, DayData, CalendarSettings } from './types/calendarTypes';
 import { toast } from 'sonner';
@@ -126,8 +126,8 @@ export function TBICalendarApp() {
               <TabsTrigger value="week" className="text-sm font-medium">
                 Week
               </TabsTrigger>
-              <TabsTrigger value="month" className="text-sm font-medium">
-                Month
+              <TabsTrigger value="year" className="text-sm font-medium">
+                Year
               </TabsTrigger>
               <TabsTrigger value="pomodoro" className="text-sm font-medium">
                 Pomodoro
@@ -156,8 +156,8 @@ export function TBICalendarApp() {
             />
           </TabsContent>
 
-          <TabsContent value="month" className="mt-0">
-            <MonthViewTBI
+          <TabsContent value="year" className="mt-0">
+            <YearViewTBI
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
