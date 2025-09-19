@@ -91,10 +91,71 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting freemium sign up for:', email);
       
-      // Generate a secure temporary password for freemium users
+      // First, check if user already exists by querying profiles table
+      const { data: existingProfile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, name, email')
+        .eq('email', email)
+        .maybeSingle();
+      
+      if (existingProfile) {
+        // User exists, try to sign them in with a dummy password to check verification status
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password: 'dummy_check_verification_status'
+        });
+        
+        // If sign in fails with "Invalid credentials", the user exists but needs verification
+        if (signInError?.message.includes('Invalid login credentials')) {
+          console.log('User exists but likely not verified, sending verification email');
+          const verificationToken = crypto.randomUUID();
+          
+          // Store verification token in database
+          const { error: tokenError } = await supabase
+            .from('email_verifications')
+            .insert({
+              email,
+              token: verificationToken,
+              user_id: existingProfile.id
+            });
+
+          if (tokenError) {
+            console.error('Error storing verification token:', tokenError);
+            toast.error('Account exists but verification email failed. Please try again.');
+            return { error: tokenError };
+          }
+
+          // Send verification email
+          const { error: emailError } = await supabase.functions.invoke('send-verification-email', {
+            body: {
+              email,
+              name: existingProfile.name || name,
+              token: verificationToken,
+              redirectUrl: `${window.location.origin}/email-verification`
+            }
+          });
+
+          if (emailError) {
+            console.error('Error sending verification email:', emailError);
+            toast.error('Account exists but verification email failed. Please try again.');
+            return { error: emailError };
+          }
+
+          toast.success('Account found! Check your email to verify your account.');
+          setEmailVerificationStatus('pending');
+          return { error: null };
+        } else if (!signInError) {
+          // User signed in successfully, they're already verified
+          toast.error('An account with this email already exists and is verified. Please sign in instead.');
+          // Sign them out since this was just a check
+          await supabase.auth.signOut();
+          return { error: new Error('User already exists and verified') };
+        }
+      }
+      
+      // User doesn't exist, create new account
       const tempPassword = crypto.randomUUID() + '!A1';
       
-      // Create user account with email_confirm: false (we'll handle verification manually)
       const { data, error } = await supabase.auth.signUp({
         email,
         password: tempPassword,
@@ -167,6 +228,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting sign up for:', email);
       
+      // First, check if user already exists by querying profiles table
+      const { data: existingProfile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, name, email')
+        .eq('email', email)
+        .maybeSingle();
+      
+      if (existingProfile) {
+        // User exists, try to sign them in to check verification status
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+        
+        if (!signInError && signInData.user) {
+          // User signed in successfully, they're already verified
+          toast.error('An account with this email already exists and is verified. You have been signed in.');
+          return { error: null }; // Allow the sign in to proceed
+        } else if (signInError?.message.includes('Invalid login credentials')) {
+          // Wrong password, but user exists - they should sign in with correct password
+          toast.error('An account with this email already exists. Please sign in with your existing password.');
+          return { error: new Error('User already exists') };
+        } else if (signInError?.message.includes('Email not confirmed')) {
+          // User exists but not verified
+          toast.error('An account with this email already exists but is not verified. Please check your email or use the "Resend Verification" option.');
+          setEmailVerificationStatus('pending');
+          return { error: new Error('User exists but not verified') };
+        }
+      }
+      
+      // User doesn't exist, create new account
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
