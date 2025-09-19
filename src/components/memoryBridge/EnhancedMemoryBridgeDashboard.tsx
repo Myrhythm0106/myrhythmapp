@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { DailyBrief } from './DailyBrief';
 import { QuickCaptureRecorder } from './QuickCaptureRecorder';
 import { ActsReviewTable } from './ActsReviewTable';
@@ -71,36 +72,57 @@ export function EnhancedMemoryBridgeDashboard() {
   // Load user data on mount
   useEffect(() => {
     if (user) {
+      console.log('EnhancedMemoryBridgeDashboard: Loading dashboard data for user:', user.id);
       loadUserDashboardData();
     }
   }, [user]);
 
   const loadUserDashboardData = async () => {
-    await fetchExtractedActions();
-    
-    // Get today's scheduled actions
-    const today = new Date().toISOString().split('T')[0];
-    const { data: dailyActions } = await supabase
-      .from('daily_actions')
-      .select('*')
-      .eq('user_id', user?.id)
-      .eq('date', today);
-    
-    if (dailyActions) {
-      setTodaysActions(dailyActions);
-      const completed = dailyActions.filter(a => a.status === 'completed').length;
-      setCompletedToday(completed);
-    }
+    try {
+      console.log('EnhancedMemoryBridgeDashboard: Starting dashboard data load');
+      
+      // Fetch extracted actions first
+      await fetchExtractedActions();
+      
+      // Get today's scheduled actions
+      const today = new Date().toISOString().split('T')[0];
+      console.log('EnhancedMemoryBridgeDashboard: Fetching daily actions for date:', today);
+      
+      const { data: dailyActions, error: dailyActionsError } = await supabase
+        .from('daily_actions')
+        .select('*')
+        .eq('user_id', user?.id)
+        .eq('date', today);
+      
+      if (dailyActionsError) {
+        console.error('EnhancedMemoryBridgeDashboard: Error fetching daily actions:', dailyActionsError);
+        toast.error('Failed to load today\'s actions');
+      } else if (dailyActions) {
+        console.log('EnhancedMemoryBridgeDashboard: Loaded daily actions count:', dailyActions.length);
+        setTodaysActions(dailyActions);
+        const completed = dailyActions.filter(a => a.status === 'completed').length;
+        setCompletedToday(completed);
+      }
 
-    // Get streak data
-    const { data: streakData } = await supabase
-      .from('daily_win_streaks')
-      .select('current_streak')
-      .eq('user_id', user?.id)
-      .single();
-    
-    if (streakData) {
-      setStreakCount(streakData.current_streak);
+      // Get streak data
+      console.log('EnhancedMemoryBridgeDashboard: Fetching streak data');
+      const { data: streakData, error: streakError } = await supabase
+        .from('daily_win_streaks')
+        .select('current_streak')
+        .eq('user_id', user?.id)
+        .maybeSingle();
+      
+      if (streakError) {
+        console.error('EnhancedMemoryBridgeDashboard: Error fetching streak data:', streakError);
+      } else if (streakData) {
+        console.log('EnhancedMemoryBridgeDashboard: Current streak:', streakData.current_streak);
+        setStreakCount(streakData.current_streak);
+      }
+      
+      console.log('EnhancedMemoryBridgeDashboard: Dashboard data load complete');
+    } catch (error) {
+      console.error('EnhancedMemoryBridgeDashboard: Error in loadUserDashboardData:', error);
+      toast.error('Failed to load dashboard data');
     }
   };
 
@@ -217,8 +239,9 @@ export function EnhancedMemoryBridgeDashboard() {
   );
 
   return (
-    <div className="min-h-screen">
-      <div className="max-w-6xl mx-auto space-y-6 p-6">
+    <ErrorBoundary>
+      <div className="min-h-screen">
+        <div className="max-w-6xl mx-auto space-y-6 p-6">
         <>
           {/* Micro-coaching */}
           {coachingStage && (
@@ -335,7 +358,8 @@ export function EnhancedMemoryBridgeDashboard() {
             )}
           </>
         
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }

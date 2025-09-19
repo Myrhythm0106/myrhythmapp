@@ -36,15 +36,28 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
+    console.error('Error stack:', error.stack);
+    console.error('Component stack:', errorInfo.componentStack);
+    
     this.props.onError?.(error, errorInfo);
     
-    // Auto-retry for CF errors
-    const isCFError = error.message?.includes('CF') || 
+    // More specific CF error detection
+    const isCFError = error.message?.includes('CF-RAY') || 
                      error.message?.includes('Cloudflare') ||
-                     error.message?.includes('Web server returned an unknown error');
+                     error.message?.includes('cf-ray') ||
+                     (error.message?.includes('Web server returned an unknown error') && 
+                      error.message?.includes('52'));
     
-    if (isCFError && this.state.retryCount < 3) {
+    // Only auto-retry once for network errors, not for code errors
+    if (isCFError && this.state.retryCount === 0) {
+      console.log('ErrorBoundary: Detected CF error, auto-retrying once');
       this.handleAutoRetry();
+    } else {
+      console.log('ErrorBoundary: Error will not auto-retry', {
+        isCFError,
+        retryCount: this.state.retryCount,
+        errorMessage: error.message
+      });
     }
   }
 
@@ -145,12 +158,20 @@ export class ErrorBoundary extends Component<Props, State> {
                 </Button>
               </div>
 
-              {isCFError && this.state.retryCount < 3 && (
+              {isCFError && this.state.retryCount === 0 && (
                 <div className="text-center">
                   <p className="text-sm text-gray-500">
                     Auto-retry in 3 seconds...
                   </p>
-                  {/* Auto-retry logic handled in separate effect */}
+                </div>
+              )}
+              
+              {this.state.retryCount > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                  <p className="text-sm text-yellow-800">
+                    <strong>Persistent Error:</strong> This error has occurred multiple times. 
+                    Please try refreshing the page or contact support if the issue continues.
+                  </p>
                 </div>
               )}
 
