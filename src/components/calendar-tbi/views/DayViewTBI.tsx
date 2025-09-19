@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { DayData, EnergyLevel } from '../types/calendarTypes';
 import { format } from 'date-fns';
+import { UnifiedHeader } from '../components/UnifiedHeader';
 
 interface DayViewTBIProps {
   dayData: DayData;
@@ -29,10 +30,10 @@ export function DayViewTBI({ dayData, userRole, onEventComplete, onEnergyLevelCh
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Today's Schedule</h1>
-        <p className="text-gray-600">{format(dayData.date, 'EEEE, MMMM d, yyyy')}</p>
-      </div>
+      <UnifiedHeader 
+        viewTitle="My Daily Schedule"
+        dateInfo={format(dayData.date, 'EEEE, MMMM d, yyyy')}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Schedule Grid */}

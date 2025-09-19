@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { TBIEvent } from '../types/calendarTypes';
 import { format, startOfYear, addMonths } from 'date-fns';
+import { UnifiedHeader } from '../components/UnifiedHeader';
 
 interface YearViewTBIProps {
   currentDate: Date;
@@ -16,10 +17,10 @@ export function YearViewTBI({ currentDate, events, onDayClick }: YearViewTBIProp
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Your Annual Compass</h1>
-        <p className="text-gray-600">{format(currentDate, 'yyyy')}</p>
-      </div>
+      <UnifiedHeader 
+        viewTitle="My Annual Compass"
+        dateInfo={format(currentDate, 'yyyy')}
+      />
 
       {/* Monthly Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

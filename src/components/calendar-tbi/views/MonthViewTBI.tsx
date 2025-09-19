@@ -14,6 +14,7 @@ import {
   isToday,
   isSameMonth 
 } from 'date-fns';
+import { UnifiedHeader } from '../components/UnifiedHeader';
 
 interface MonthViewTBIProps {
   currentDate: Date;
@@ -42,11 +43,10 @@ export function MonthViewTBI({ currentDate, events, onDayClick }: MonthViewTBIPr
 
   return (
     <div className="space-y-4">
-      <div className="text-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">
-          {format(currentDate, 'MMMM yyyy')}
-        </h2>
-      </div>
+      <UnifiedHeader 
+        viewTitle="My Monthly View"
+        dateInfo={format(currentDate, 'MMMM yyyy')}
+      />
 
       <Card className="p-4">
         {/* Week day headers */}

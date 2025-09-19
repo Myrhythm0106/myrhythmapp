@@ -3,6 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { TBIEvent } from '../types/calendarTypes';
 import { format, startOfWeek, addDays, isSameDay, isToday } from 'date-fns';
+import { UnifiedHeader } from '../components/UnifiedHeader';
 
 interface WeekViewTBIProps {
   currentDate: Date;
@@ -21,12 +22,10 @@ export function WeekViewTBI({ currentDate, events, onDayClick }: WeekViewTBIProp
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Your Week at a Glance</h1>
-        <p className="text-gray-600">
-          {format(weekStart, 'MMM d')} - {format(addDays(weekStart, 6), 'MMM d, yyyy')}
-        </p>
-      </div>
+      <UnifiedHeader 
+        viewTitle="My Week at a Glance"
+        dateInfo={`${format(weekStart, 'MMM d')} - ${format(addDays(weekStart, 6), 'MMM d, yyyy')}`}
+      />
 
       {/* Week Days Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">

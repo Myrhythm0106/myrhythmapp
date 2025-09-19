@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayViewTBI } from './views/DayViewTBI';
 import { WeekViewTBI } from './views/WeekViewTBI';
+import { MonthViewTBI } from './views/MonthViewTBI';
 import { YearViewTBI } from './views/YearViewTBI';
 import { DayDetailsModal } from './components/DayDetailsModal';
 import { TBIEvent, EnergyLevel, DayData, CalendarSettings } from './types/calendarTypes';
@@ -119,18 +120,21 @@ export function TBICalendarApp() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10">
           <div className="px-4 py-3">
-            <TabsList className="grid w-full grid-cols-4 max-w-xl mx-auto">
+            <TabsList className="grid w-full grid-cols-5 max-w-2xl mx-auto">
               <TabsTrigger value="day" className="text-sm font-medium">
                 Day
               </TabsTrigger>
               <TabsTrigger value="week" className="text-sm font-medium">
                 Week
               </TabsTrigger>
+              <TabsTrigger value="month" className="text-sm font-medium">
+                Month
+              </TabsTrigger>
               <TabsTrigger value="year" className="text-sm font-medium">
                 Year
               </TabsTrigger>
               <TabsTrigger value="pomodoro" className="text-sm font-medium">
-                Pomodoro
+                Focus
               </TabsTrigger>
             </TabsList>
           </div>
@@ -150,6 +154,14 @@ export function TBICalendarApp() {
 
           <TabsContent value="week" className="mt-0">
             <WeekViewTBI
+              currentDate={dayData.date}
+              events={dayData.events}
+              onDayClick={handleDayClick}
+            />
+          </TabsContent>
+
+          <TabsContent value="month" className="mt-0">
+            <MonthViewTBI
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
