@@ -17,7 +17,7 @@ import {
   Save
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { ExtractedAction } from '@/types/memoryBridge';
+import { NextStepsItem } from '@/types/memoryBridge';
 import { EditableField } from './EditableField';
 import { toast } from 'sonner';
 
@@ -34,7 +34,7 @@ export function ActionsViewer({
   isOpen, 
   onClose
 }: ActionsViewerProps) {
-  const [extractedActions, setExtractedActions] = useState<ExtractedAction[]>([]);
+  const [extractedActions, setExtractedActions] = useState<NextStepsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const statusOptions = [
@@ -76,6 +76,7 @@ export function ActionsViewer({
 
         setExtractedActions((actions || []).map(action => ({ 
           ...action, 
+          category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note', // Properly type category field
           action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
           status: action.status as 'completed' | 'in_progress' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled'
         })));
@@ -90,7 +91,7 @@ export function ActionsViewer({
     fetchActions();
   }, [recordingId, isOpen]);
 
-  const updateAction = async (actionId: string, updates: Partial<ExtractedAction>) => {
+  const updateAction = async (actionId: string, updates: Partial<NextStepsItem>) => {
     try {
       const { error } = await supabase
         .from('extracted_actions')
@@ -141,7 +142,7 @@ export function ActionsViewer({
     }
   };
 
-  const formatACTSAction = (action: ExtractedAction) => {
+  const formatACTSAction = (action: NextStepsItem) => {
     return {
       assign: action.assigned_to || 'You',
       complete: action.due_context || action.scheduled_date || 'Set your timeline',
@@ -150,7 +151,7 @@ export function ActionsViewer({
     };
   };
 
-  const generateTrackingMessage = (action: ExtractedAction) => {
+  const generateTrackingMessage = (action: NextStepsItem) => {
     const empoweringMessages = [
       "🌟 Your brain loves consistency - check in daily to build this neural pathway stronger!",
       "💪 Each small step rewires your brain for success. Track your wins to boost confidence!",
@@ -167,7 +168,7 @@ export function ActionsViewer({
     return empoweringMessages[messageIndex];
   };
 
-  const getStructuredActionText = (action: ExtractedAction) => {
+  const getStructuredActionText = (action: NextStepsItem) => {
     // Use new structured fields if available, otherwise fallback to parsing
     const what = action.what_outcome || action.action_text;
     const howSteps = action.how_steps || [];

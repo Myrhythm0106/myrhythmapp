@@ -662,9 +662,11 @@ export type Database = {
           assigned_watchers: string[] | null
           calendar_checked: boolean | null
           calendar_event_id: string | null
+          category: string
           completion_date: string | null
           confidence_score: number | null
           created_at: string
+          created_by: string | null
           due_context: string | null
           emotional_stakes: string | null
           end_date: string | null
@@ -674,6 +676,7 @@ export type Database = {
           meeting_recording_id: string
           micro_tasks: Json | null
           motivation_statement: string | null
+          owner: string | null
           priority_level: number | null
           proposed_date: string | null
           proposed_time: string | null
@@ -698,9 +701,11 @@ export type Database = {
           assigned_watchers?: string[] | null
           calendar_checked?: boolean | null
           calendar_event_id?: string | null
+          category?: string
           completion_date?: string | null
           confidence_score?: number | null
           created_at?: string
+          created_by?: string | null
           due_context?: string | null
           emotional_stakes?: string | null
           end_date?: string | null
@@ -710,6 +715,7 @@ export type Database = {
           meeting_recording_id: string
           micro_tasks?: Json | null
           motivation_statement?: string | null
+          owner?: string | null
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null
@@ -734,9 +740,11 @@ export type Database = {
           assigned_watchers?: string[] | null
           calendar_checked?: boolean | null
           calendar_event_id?: string | null
+          category?: string
           completion_date?: string | null
           confidence_score?: number | null
           created_at?: string
+          created_by?: string | null
           due_context?: string | null
           emotional_stakes?: string | null
           end_date?: string | null
@@ -746,6 +754,7 @@ export type Database = {
           meeting_recording_id?: string
           micro_tasks?: Json | null
           motivation_statement?: string | null
+          owner?: string | null
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null

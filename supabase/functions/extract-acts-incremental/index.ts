@@ -177,23 +177,21 @@ serve(async (req) => {
               max_tokens: 3000,
               messages: [{
                 role: 'system',
-                content: `EXTRACT ACTIONABLE CLOSING TASKS (ACTs) from meeting transcripts.
+                content: `EXTRACT NEXT STEPS from meeting transcripts using 4 empowering categories.
 
-CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured actions that inspire pride and follow-through.
+CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured next steps that inspire pride and follow-through.
 
-🎯 CRITICAL REQUIREMENTS:
-1. ALL ACTION TEXT MUST START WITH AN ACTION VERB (CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, DRAFT, SET UP, FOLLOW UP, REVIEW, PREPARE, CONTACT, etc.)
-2. Transform passive statements: "I will call the therapist" → "CALL therapist to schedule session"
-3. Make it empowering and specific: "I need to think about..." → "DEFINE specific goals for treatment plan"
+🎯 CRITICAL REQUIREMENTS - CATEGORIZE INTO 4 TYPES:
+1. ACTIONS ✅ - What I will do (verb-first: CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, etc.)
+2. WATCH-OUTS ⚠️ - Things to keep in mind, gentle reminders, awareness points
+3. DEPENDS ON 🔗 - What this relies on (people, events, timing, conditions, prerequisites)
+4. NOTES 📝 - Important details, context to remember, thoughts and reflections
 
-📋 EXTRACTION STANDARDS:
-- ACTION TEXT: Bold, clear VERB-first command that inspires action
-- SUCCESS CRITERIA: Crystal clear completion marker - "You'll know you're done when..."
-- MOTIVATION: Empowering personal benefit - "This will help you..."
-- OUTCOME: Specific, observable result after completion
-- HOW STEPS: 2-4 concrete micro-steps for complex actions
-- DATES: Always infer realistic dates based on urgency and complexity
-- MICRO TASKS: Tiny first steps that reduce overwhelm and build momentum
+📋 CATEGORIZATION RULES:
+- ACTIONS: Direct tasks with clear verbs - "CALL therapist", "SCHEDULE appointment", "COMPLETE form"
+- WATCH-OUTS: Cautionary items - "Watch for side effects", "Keep in mind budget limits", "Be aware of timing"
+- DEPENDS ON: Prerequisites/dependencies - "Depends on doctor approval", "Relies on Monday meeting", "Needs family input"
+- NOTES: Information items - "Important contact info", "Remember preference for morning appointments", "Context about previous discussion"
 
 🗓️ SMART DATE INFERENCE:
 Current date context: ${new Date().toISOString().split('T')[0]}
@@ -211,17 +209,19 @@ Current date context: ${new Date().toISOString().split('T')[0]}
 
 JSON SCHEMA (EXACT FIELDS REQUIRED):
 {
-  "action_text": "VERB + specific action (e.g., 'CALL therapist to schedule appointment')",
-  "success_criteria": "You'll know you're done when [specific completion marker]",
+  "action_text": "VERB + specific action OR descriptive statement based on category",
+  "category": "action|watch_out|depends_on|note",
+  "success_criteria": "Clear completion marker (for actions) or clarity marker (for others)",
   "motivation_statement": "This will help you [specific personal benefit]",
   "assigned_to": "Who does it (name or 'me')",
+  "owner": "Who is responsible (name or 'me')",
   "due_context": "Original timeline from transcript",
   "start_date": "YYYY-MM-DD or null",
   "end_date": "YYYY-MM-DD or null", 
   "completion_date": "YYYY-MM-DD (target date)",
   "relationship_impact": "How this affects relationships/wellbeing",
   "emotional_stakes": "What's at risk emotionally if not completed",
-  "intent_behind": "The deeper 'why' behind this action",
+  "intent_behind": "The deeper 'why' behind this next step",
   "what_outcome": "Specific result when complete",
   "how_steps": ["Step 1", "Step 2", "Step 3"],
   "micro_tasks": [{"text": "Tiny first step", "completed": false}],
@@ -229,12 +229,14 @@ JSON SCHEMA (EXACT FIELDS REQUIRED):
   "confidence_score": 0.0-1.0
 }
 
-🌟 PERFECT EXAMPLE:
+🌟 PERFECT EXAMPLES:
 [{
   "action_text": "CALL Dr. Martinez to schedule next therapy session",
+  "category": "action",
   "success_criteria": "You'll know you're done when you have appointment confirmation with date, time, and location",
   "motivation_statement": "This will help you maintain momentum in your recovery and reduce anxiety about gaps in care",
   "assigned_to": "me",
+  "owner": "me",
   "due_context": "by Friday this week",
   "start_date": "2025-01-17",
   "end_date": "2025-01-19", 
@@ -247,6 +249,25 @@ JSON SCHEMA (EXACT FIELDS REQUIRED):
   "micro_tasks": [{"text": "Find phone number in contacts", "completed": false}, {"text": "Pick up phone", "completed": false}],
   "priority_level": 2,
   "confidence_score": 0.95
+}, {
+  "action_text": "Watch for medication side effects during first week",
+  "category": "watch_out",
+  "success_criteria": "You'll know you're monitoring well when you notice and track any changes in energy or mood",
+  "motivation_statement": "This will help you stay safe and catch any issues early",
+  "assigned_to": "me",
+  "owner": "me",
+  "due_context": "first week of treatment",
+  "priority_level": 1,
+  "confidence_score": 0.90
+}, {
+  "action_text": "Depends on insurance approval for specialized therapy",
+  "category": "depends_on",
+  "success_criteria": "You'll know when insurance company provides written approval or denial",
+  "motivation_statement": "This will help you plan next steps once approval status is clear",
+  "assigned_to": "insurance company",
+  "owner": "insurance company",
+  "priority_level": 3,
+  "confidence_score": 0.85
 }]
 
 Return ONLY a JSON array. No explanations or commentary.`
@@ -357,18 +378,21 @@ Return ONLY a JSON array. No explanations or commentary.`
     console.log(`Extracted ${extractedActions.length} actions from transcript`);
     console.log(`Extracted ${extractedActions.length} actions from transcript`);
 
-    // Store the extracted actions preserving AI-structured data
+    // Store the extracted next steps preserving AI-structured data
     const actionsToInsert = extractedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
       // Preserve AI-extracted data, only use fallbacks if truly missing
-      action_text: action.action_text || action.action || 'DEFINE action needed',
+      action_text: action.action_text || action.action || 'DEFINE next step needed',
+      category: action.category || 'action', // New category field
       success_criteria: action.success_criteria || null,
       motivation_statement: action.motivation_statement || null,
       what_outcome: action.what_outcome || null,
       how_steps: action.how_steps || [],
       micro_tasks: action.micro_tasks || [],
       assigned_to: action.assigned_to || action.assignee || 'me',
+      owner: action.owner || action.assigned_to || action.assignee || 'me', // New owner field
+      created_by: userId, // New created_by field
       due_context: action.due_context || null,
       start_date: action.start_date || null,
       end_date: action.end_date || null,

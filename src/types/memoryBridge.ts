@@ -18,13 +18,16 @@ export interface MeetingRecording {
   updated_at: string;
 }
 
-export interface ExtractedAction {
+export interface NextStepsItem {
   id?: string;
   user_id: string;
   meeting_recording_id: string;
   action_text: string;
+  category: 'action' | 'watch_out' | 'depends_on' | 'note';
   action_type: 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up';
   assigned_to?: string;
+  owner?: string;
+  created_by?: string;
   due_context?: string;
   priority_level?: number;
   confidence_score?: number;
@@ -33,7 +36,7 @@ export interface ExtractedAction {
   intent_behind?: string;
   transcript_excerpt?: string;
   timestamp_in_recording?: number;
-  status: 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified' | 'scheduled' | 'not_started' | 'in_progress' | 'on_hold' | 'cancelled';
+  status: 'not_started' | 'doing' | 'done' | 'pending' | 'confirmed' | 'rejected' | 'completed' | 'modified' | 'scheduled' | 'in_progress' | 'on_hold' | 'cancelled';
   user_notes?: string;
   created_at: string;
   updated_at: string;
@@ -56,6 +59,9 @@ export interface ExtractedAction {
   completion_date?: string;
   support_circle_notified?: boolean;
 }
+
+// Maintain backward compatibility
+export interface ExtractedAction extends NextStepsItem {}
 
 export interface ConversationContext {
   id: string;
