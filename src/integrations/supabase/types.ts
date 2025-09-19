@@ -331,6 +331,47 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_shares: {
+        Row: {
+          calendar_event_id: string
+          created_at: string
+          creator_id: string
+          id: string
+          permission_level: string
+          shared_with_email: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          calendar_event_id: string
+          created_at?: string
+          creator_id: string
+          id?: string
+          permission_level?: string
+          shared_with_email: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          calendar_event_id?: string
+          created_at?: string
+          creator_id?: string
+          id?: string
+          permission_level?: string
+          shared_with_email?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_shares_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversation_contexts: {
         Row: {
           communication_preferences: string | null
@@ -618,6 +659,100 @@ export type Database = {
           user_type?: string
         }
         Relationships: []
+      }
+      event_invitations: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          invitee_email: string
+          invitee_name: string | null
+          inviter_id: string
+          message: string | null
+          response_date: string | null
+          response_message: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          invitee_email: string
+          invitee_name?: string | null
+          inviter_id: string
+          message?: string | null
+          response_date?: string | null
+          response_message?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          invitee_email?: string
+          invitee_name?: string | null
+          inviter_id?: string
+          message?: string | null
+          response_date?: string | null
+          response_message?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_invitations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_reminders: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          is_active: boolean
+          reminder_methods: string[] | null
+          reminder_time: string
+          sent_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          is_active?: boolean
+          reminder_methods?: string[] | null
+          reminder_time: string
+          sent_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          is_active?: boolean
+          reminder_methods?: string[] | null
+          reminder_time?: string
+          sent_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_reminders_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       external_calendar_events: {
         Row: {

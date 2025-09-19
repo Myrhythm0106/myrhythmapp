@@ -32,10 +32,8 @@ export function InvitationPanel({ trigger }: InvitationPanelProps) {
   const { invitations, shares, respondToInvitation } = useCollaborativeCalendar();
 
   const pendingInvitations = invitations.filter(inv => inv.status === 'pending');
-  const recentActivity = [
-    ...invitations.filter(inv => inv.status !== 'pending'),
-    ...shares
-  ].slice(0, 10);
+  const recentShares = shares.slice(0, 5);
+  const recentInvitations = invitations.filter(inv => inv.status !== 'pending').slice(0, 5);
 
   const handleResponse = async (invitationId: string, response: 'accepted' | 'declined' | 'maybe') => {
     await respondToInvitation(invitationId, response);
@@ -133,10 +131,10 @@ export function InvitationPanel({ trigger }: InvitationPanelProps) {
             </div>
           )}
 
-          {pendingInvitations.length > 0 && recentActivity.length > 0 && <Separator />}
+          {(pendingInvitations.length > 0 && (recentShares.length > 0 || recentInvitations.length > 0)) && <Separator />}
 
           {/* Recent Activity */}
-          {recentActivity.length > 0 && (
+          {(recentShares.length > 0 || recentInvitations.length > 0) && (
             <div className="space-y-3">
               <h3 className="text-sm font-medium flex items-center gap-2">
                 <Activity className="h-4 w-4" />
@@ -144,36 +142,63 @@ export function InvitationPanel({ trigger }: InvitationPanelProps) {
               </h3>
 
               <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                {recentActivity.map((item) => (
+                {/* Recent Shares */}
+                {recentShares.map((share) => (
                   <div
-                    key={item.id}
+                    key={share.id}
                     className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg"
                   >
                     <div className="p-1.5 bg-primary/10 rounded">
-                      {'status' in item ? <Mail className="h-3 w-3" /> : <Users className="h-3 w-3" />}
+                      <Users className="h-3 w-3" />
                     </div>
                     
                     <div className="flex-1 space-y-1">
                       <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium">
-                          {'status' in item ? 'Event Invitation' : 'Calendar Shared'}
-                        </p>
+                        <p className="text-sm font-medium">Calendar Shared</p>
                         <div className="flex items-center gap-1 text-xs text-muted-foreground">
                           <Clock className="h-3 w-3" />
-                          {format(new Date(item.created_at), 'MMM d, HH:mm')}
+                          {format(new Date(share.created_at), 'MMM d, HH:mm')}
                         </div>
                       </div>
                       
                       <p className="text-xs text-muted-foreground">
-                        {'invitee_email' in item ? item.invitee_email : item.shared_with_email}
+                        {share.shared_with_email}
                       </p>
                       
                       <div className="flex items-center gap-2">
-                        {'status' in item ? getStatusBadge(item.status) : (
-                          <Badge variant="outline" className="text-xs">
-                            {item.permission_level} access
-                          </Badge>
-                        )}
+                        <Badge variant="outline" className="text-xs">
+                          {share.permission_level} access
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Recent Invitations */}
+                {recentInvitations.map((invitation) => (
+                  <div
+                    key={invitation.id}
+                    className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg"
+                  >
+                    <div className="p-1.5 bg-primary/10 rounded">
+                      <Mail className="h-3 w-3" />
+                    </div>
+                    
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm font-medium">Event Invitation</p>
+                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          {format(new Date(invitation.created_at), 'MMM d, HH:mm')}
+                        </div>
+                      </div>
+                      
+                      <p className="text-xs text-muted-foreground">
+                        {invitation.invitee_email}
+                      </p>
+                      
+                      <div className="flex items-center gap-2">
+                        {getStatusBadge(invitation.status)}
                       </div>
                     </div>
                   </div>
@@ -183,7 +208,7 @@ export function InvitationPanel({ trigger }: InvitationPanelProps) {
           )}
 
           {/* Empty State */}
-          {pendingInvitations.length === 0 && recentActivity.length === 0 && (
+          {pendingInvitations.length === 0 && recentShares.length === 0 && recentInvitations.length === 0 && (
             <div className="text-center py-8 space-y-2">
               <Bell className="h-8 w-8 mx-auto text-muted-foreground opacity-50" />
               <p className="text-sm text-muted-foreground">No notifications yet</p>
