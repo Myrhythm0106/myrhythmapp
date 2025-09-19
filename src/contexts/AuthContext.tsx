@@ -4,6 +4,13 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { SecureLogger } from '@/utils/security/secureLogger';
 
+interface UserStatusResult {
+  exists: boolean;
+  verified: boolean;
+  user_id: string | null;
+  name: string | null;
+}
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
@@ -91,23 +98,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting freemium sign up for:', email);
       
-      // First, check if user already exists by querying profiles table
-      const { data: existingProfile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, name, email')
-        .eq('email', email)
-        .maybeSingle();
+      // Check user status using secure RPC function
+      const { data: userStatus, error: statusError } = await supabase.rpc('check_user_status', {
+        p_email: email
+      });
       
-      if (existingProfile) {
-        // User exists, try to sign them in with a dummy password to check verification status
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password: 'dummy_check_verification_status'
-        });
-        
-        // If sign in fails with "Invalid credentials", the user exists but needs verification
-        if (signInError?.message.includes('Invalid login credentials')) {
-          console.log('User exists but likely not verified, sending verification email');
+      if (statusError) {
+        console.error('Error checking user status:', statusError);
+        toast.error('Unable to check account status. Please try again.');
+        return { error: statusError };
+      }
+      
+      console.log('User status check result:', userStatus);
+      
+      const status = userStatus as unknown as UserStatusResult;
+      
+      if (status?.exists) {
+        if (status.verified) {
+          // User exists and is verified - redirect to sign in
+          toast.error('An account with this email already exists and is verified. Please sign in instead.');
+          return { error: new Error('User already exists and verified') };
+        } else {
+          // User exists but is not verified - resend verification
+          console.log('User exists but not verified, sending verification email');
           const verificationToken = crypto.randomUUID();
           
           // Store verification token in database
@@ -116,12 +129,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .insert({
               email,
               token: verificationToken,
-              user_id: existingProfile.id
+              user_id: status.user_id
             });
 
           if (tokenError) {
             console.error('Error storing verification token:', tokenError);
-            toast.error('Account exists but verification email failed. Please try again.');
+            toast.error('Account exists but verification email failed. Please try resending from the sign-in page.');
             return { error: tokenError };
           }
 
@@ -129,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const { error: emailError } = await supabase.functions.invoke('send-verification-email', {
             body: {
               email,
-              name: existingProfile.name || name,
+              name: status.name || name,
               token: verificationToken,
               redirectUrl: `${window.location.origin}/email-verification`
             }
@@ -137,19 +150,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (emailError) {
             console.error('Error sending verification email:', emailError);
-            toast.error('Account exists but verification email failed. Please try again.');
+            toast.error('Account exists but verification email failed. Please try resending from the sign-in page.');
             return { error: emailError };
           }
 
           toast.success('Account found! Check your email to verify your account.');
           setEmailVerificationStatus('pending');
           return { error: null };
-        } else if (!signInError) {
-          // User signed in successfully, they're already verified
-          toast.error('An account with this email already exists and is verified. Please sign in instead.');
-          // Sign them out since this was just a check
-          await supabase.auth.signOut();
-          return { error: new Error('User already exists and verified') };
         }
       }
       

@@ -2082,6 +2082,10 @@ export type Database = {
         Args: { p_token: string; p_user_email: string }
         Returns: Json
       }
+      check_user_status: {
+        Args: { p_email: string }
+        Returns: Json
+      }
       cleanup_expired_invitations: {
         Args: Record<PropertyKey, never>
         Returns: number
