@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Brain, Heart, Users, Target, Leaf, Building2, Stethoscope, Plus, ArrowRight, ArrowLeft } from "lucide-react";
+import { Brain, Heart, Users, Target, Leaf, Building2, Stethoscope, Plus, ArrowRight, ArrowLeft, Mail } from "lucide-react";
 import { UserType } from "@/types/user";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const userTypes = [
   {
@@ -61,11 +62,14 @@ const userTypes = [
 
 export default function GetStartedPage() {
   const navigate = useNavigate();
+  const { signUpFreemium, resendVerification, emailVerificationStatus } = useAuth();
   const [step, setStep] = useState<'user-type' | 'personal-info'>('user-type');
   const [selectedUserType, setSelectedUserType] = useState<UserType | null>(null);
   const [customType, setCustomType] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false);
+  const [accountCreated, setAccountCreated] = useState(false);
 
   const handleUserTypeSelect = (type: UserType) => {
     setSelectedUserType(type);
@@ -85,7 +89,7 @@ export default function GetStartedPage() {
     }
   };
 
-  const handlePersonalInfoComplete = () => {
+  const handlePersonalInfoComplete = async () => {
     // Validate required fields
     if (!name.trim() || !email.trim()) {
       toast.error('Please fill in both name and email');
@@ -99,13 +103,39 @@ export default function GetStartedPage() {
       return;
     }
 
-    // Store personal info
-    localStorage.setItem('userName', name.trim());
-    localStorage.setItem('userEmail', email.trim());
+    setIsCreatingAccount(true);
 
-    // Navigate directly to assessment flow with user context
-    const userTypeParam = selectedUserType === 'other' ? 'other' : selectedUserType;
-    navigate(`/mvp/assessment-flow?userType=${userTypeParam}&flow=get-started`);
+    try {
+      // Create the user account first
+      const { error } = await signUpFreemium(email.trim(), name.trim());
+      
+      if (error) {
+        setIsCreatingAccount(false);
+        return; // Error handling is done in signUpFreemium
+      }
+
+      // Store personal info for assessment flow
+      localStorage.setItem('userName', name.trim());
+      localStorage.setItem('userEmail', email.trim());
+      
+      setAccountCreated(true);
+      setIsCreatingAccount(false);
+
+      // Navigate directly to assessment flow with user context
+      const userTypeParam = selectedUserType === 'other' ? 'other' : selectedUserType;
+      navigate(`/mvp/assessment-flow?userType=${userTypeParam}&flow=get-started`);
+      
+    } catch (error) {
+      console.error('Account creation error:', error);
+      toast.error('Failed to create account. Please try again.');
+      setIsCreatingAccount(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (email) {
+      await resendVerification(email);
+    }
   };
 
   const handleBack = () => {
@@ -289,11 +319,40 @@ export default function GetStartedPage() {
                 <Button 
                   onClick={handlePersonalInfoComplete}
                   className="w-full gap-2 mt-6"
-                  disabled={!name.trim() || !email.trim()}
+                  disabled={!name.trim() || !email.trim() || isCreatingAccount}
                 >
-                  Start My Personalized Assessment
-                  <ArrowRight className="h-4 w-4" />
+                  {isCreatingAccount ? (
+                    <>Creating Your Account...</>
+                  ) : (
+                    <>
+                      Start My Personalized Assessment
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
                 </Button>
+
+                {/* Email verification status and resend button */}
+                {accountCreated && emailVerificationStatus === 'pending' && (
+                  <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-amber-800 mb-2">
+                      <Mail className="h-4 w-4" />
+                      <span className="font-medium">Check your email to verify your account</span>
+                    </div>
+                    <p className="text-sm text-amber-700 mb-3">
+                      We've sent a verification email to <strong>{email}</strong>. 
+                      Please check your inbox and click the link to unlock all features.
+                    </p>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleResendVerification}
+                      className="text-amber-700 border-amber-300 hover:bg-amber-100"
+                    >
+                      <Mail className="h-3 w-3 mr-1" />
+                      Resend Verification Email
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
