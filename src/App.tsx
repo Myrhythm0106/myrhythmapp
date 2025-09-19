@@ -46,6 +46,7 @@ import CongratsPage from "./pages/CongratsPage";
 import StartPage from "./pages/StartPage";
 import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
 import SetupWizard from "./pages/SetupWizard";
+import { IndividualSetupItem } from "./components/setup/IndividualSetupItem";
 import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
 
@@ -169,6 +170,8 @@ function App() {
          <Route path="/mvp-assessment-results" element={<MVPAssessmentResults />} />
          <Route path="/assessment-to-calendar" element={<AssessmentToCalendarPage />} />
                      <Route path="/setup-wizard" element={<SetupWizard />} />
+                     <Route path="/setup-hub" element={<SetupWizard />} />
+                     <Route path="/setup/:itemId" element={<IndividualSetupItem />} />
                      <Route path="/life-empowerment-guide" element={<LifeEmpowermentGuidePage />} />
                      <Route path="/guided-journey" element={<GuidedJourneyPage />} />
                      
