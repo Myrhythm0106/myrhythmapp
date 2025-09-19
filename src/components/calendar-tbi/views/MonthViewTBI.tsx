@@ -46,6 +46,8 @@ export function MonthViewTBI({ currentDate, events, onDayClick }: MonthViewTBIPr
       <UnifiedHeader 
         viewTitle="My Monthly View"
         dateInfo={format(currentDate, 'MMMM yyyy')}
+        viewType="month"
+        currentDate={currentDate}
       />
 
       <Card className="p-4">

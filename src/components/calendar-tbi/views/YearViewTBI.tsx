@@ -20,6 +20,8 @@ export function YearViewTBI({ currentDate, events, onDayClick }: YearViewTBIProp
       <UnifiedHeader 
         viewTitle="My Annual Compass"
         dateInfo={format(currentDate, 'yyyy')}
+        viewType="year"
+        currentDate={currentDate}
       />
 
       {/* Monthly Grid */}

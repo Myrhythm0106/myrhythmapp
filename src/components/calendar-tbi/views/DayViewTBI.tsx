@@ -33,6 +33,8 @@ export function DayViewTBI({ dayData, userRole, onEventComplete, onEnergyLevelCh
       <UnifiedHeader 
         viewTitle="My Daily Schedule"
         dateInfo={format(dayData.date, 'EEEE, MMMM d, yyyy')}
+        viewType="day"
+        currentDate={dayData.date}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

@@ -1,11 +1,9 @@
 import React from "react";
 import { format } from "date-fns";
 import { useAuth } from "@/contexts/AuthContext";
-
-const monthlyWords = [
-  "BOLD", "BRAVE", "FOCUSED", "STRONG", "CLEAR", "BRIGHT",
-  "CALM", "WISE", "READY", "CAPABLE", "FIERCE", "ALIVE"
-];
+import { ThemeHierarchyDisplay } from "@/components/theme/ThemeHierarchyDisplay";
+import { YearlyThemeCustomizer } from "@/components/theme/YearlyThemeCustomizer";
+import { EnhancedMonthlyThemeCustomizer } from "@/components/theme/EnhancedMonthlyThemeCustomizer";
 
 const iChooseStatements = [
   "I choose courage over comfort",
@@ -23,14 +21,13 @@ const iChooseStatements = [
 export function AffirmationHero() {
   const { user } = useAuth();
   
-  // Get consistent monthly word and daily #IChoose
-  const currentMonth = new Date().getMonth();
-  const monthlyWord = monthlyWords[currentMonth];
-  
+  // Get daily #IChoose based on day of year
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24));
   const todaysChoice = iChooseStatements[dayOfYear % iChooseStatements.length];
   
   const displayName = user?.user_metadata?.full_name?.split(' ')[0] || "Friend";
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
 
   return (
     <section className="relative py-16 px-6 bg-gradient-to-br from-brand-teal-50 via-brand-emerald-50 to-brand-blue-50 border-b border-brand-teal-200/30">
@@ -46,25 +43,24 @@ export function AffirmationHero() {
             </h1>
           </div>
           
-          {/* Word of the Month */}
-          <div className="space-y-4">
-            <div>
-              <p className="text-xs text-brand-orange-600 uppercase tracking-wider font-medium mb-2">
-                Word of the Month
-              </p>
-              <h2 className="text-6xl font-black text-brand-teal-800 tracking-tight">
-                {monthlyWord}
-              </h2>
-            </div>
-            
-            {/* Today's Declaration */}
-            <div className="pt-4 border-t border-brand-teal-200/50 max-w-2xl mx-auto">
-              <p className="text-xs text-brand-teal-600 uppercase tracking-wider font-medium mb-2">
-                Today's Declaration
-              </p>
-              <p className="text-brand-orange-700 font-bold text-2xl italic">
-                #{todaysChoice.replace("I choose ", "")}
-              </p>
+          {/* Theme Hierarchy */}
+          <div className="space-y-6">
+            <div className="max-w-3xl mx-auto">
+              <div className="flex items-start justify-between mb-4">
+                <ThemeHierarchyDisplay variant="full" />
+                <div className="flex gap-2">
+                  <YearlyThemeCustomizer currentYear={currentYear} />
+                  <EnhancedMonthlyThemeCustomizer currentMonth={currentMonth} currentYear={currentYear} />
+                </div>
+              </div>
+              
+              {/* Today's Declaration */}
+              <div className="pt-6 border-t border-brand-teal-200/50">
+                <p className="text-xs text-brand-teal-600 uppercase tracking-wider font-medium mb-2">
+                  Today, I choose to be...
+                </p>
+                <ThemeHierarchyDisplay variant="current" className="text-3xl" />
+              </div>
             </div>
           </div>
           

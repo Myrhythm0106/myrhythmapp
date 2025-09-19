@@ -25,6 +25,8 @@ export function WeekViewTBI({ currentDate, events, onDayClick }: WeekViewTBIProp
       <UnifiedHeader 
         viewTitle="My Week at a Glance"
         dateInfo={`${format(weekStart, 'MMM d')} - ${format(addDays(weekStart, 6), 'MMM d, yyyy')}`}
+        viewType="week"
+        currentDate={currentDate}
       />
 
       {/* Week Days Grid */}
