@@ -14,6 +14,8 @@ import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import MVPCorePage from "./pages/MVPCorePage";
 import MemoryBridge from "./routes/MemoryBridge";
+import CalendarPage from "./pages/CalendarPage";
+import CommandCenter from "./pages/CommandCenter";
 
 const queryClient = new QueryClient();
 
@@ -44,7 +46,15 @@ function AppMemoryFirst() {
                   path="/calendar"
                   element={
                     <ProtectedRoute>
-                      <Dashboard />
+                      <CalendarPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/command-center"
+                  element={
+                    <ProtectedRoute>
+                      <CommandCenter />
                     </ProtectedRoute>
                   }
                 />
