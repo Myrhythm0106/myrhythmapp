@@ -10,13 +10,18 @@ import {
   Users, 
   Plus,
   Filter,
-  Settings
+  Settings,
+  Share2,
+  Bell
 } from 'lucide-react';
 import { format, isToday, isTomorrow } from 'date-fns';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { ExternalCalendarSync } from './ExternalCalendarSync';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { EventSharingModal } from './collaborative/EventSharingModal';
+import { InvitationPanel } from './collaborative/InvitationPanel';
+import { CollaborativeCalendarProvider } from './collaborative/CollaborativeCalendarProvider';
 
 interface CalendarEvent {
   id: string;
@@ -29,6 +34,9 @@ interface CalendarEvent {
   status?: 'pending' | 'completed' | 'cancelled';
   priority?: 'high' | 'medium' | 'low';
   source?: 'internal' | 'google' | 'outlook' | 'apple';
+  collaborators?: number;
+  isShared?: boolean;
+  sharePermission?: 'view' | 'edit' | 'admin';
 }
 
 export function UnifiedCalendarView() {
@@ -36,6 +44,8 @@ export function UnifiedCalendarView() {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('calendar');
+  const [showSharingModal, setShowSharingModal] = useState(false);
+  const [selectedEventForSharing, setSelectedEventForSharing] = useState<CalendarEvent | null>(null);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -167,26 +177,40 @@ export function UnifiedCalendarView() {
     return event.date === format(selectedDate, 'yyyy-MM-dd');
   });
 
+  const handleShareEvent = (event: CalendarEvent) => {
+    setSelectedEventForSharing(event);
+    setShowSharingModal(true);
+  };
+
   return (
-    <div className="space-y-6">
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="flex items-center justify-between">
-          <TabsList>
-            <TabsTrigger value="calendar">Calendar View</TabsTrigger>
-            <TabsTrigger value="sync">External Sync</TabsTrigger>
-          </TabsList>
-          
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
-            </Button>
-            <Button variant="outline" size="sm">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
+    <CollaborativeCalendarProvider>
+      <div className="space-y-6">
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <div className="flex items-center justify-between">
+            <TabsList>
+              <TabsTrigger value="calendar">Calendar View</TabsTrigger>
+              <TabsTrigger value="sync">External Sync</TabsTrigger>
+            </TabsList>
+            
+            <div className="flex items-center gap-2">
+              <InvitationPanel
+                trigger={
+                  <Button variant="outline" size="sm">
+                    <Bell className="h-4 w-4 mr-2" />
+                    Notifications
+                  </Button>
+                }
+              />
+              <Button variant="outline" size="sm">
+                <Filter className="h-4 w-4 mr-2" />
+                Filter
+              </Button>
+              <Button variant="outline" size="sm">
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </Button>
+            </div>
           </div>
-        </div>
 
         <TabsContent value="calendar" className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2">
@@ -266,13 +290,29 @@ export function UnifiedCalendarView() {
                                 {event.endTime && ` - ${event.endTime}`}
                               </div>
                             )}
+                            {event.collaborators && event.collaborators > 0 && (
+                              <Badge variant="outline" className="text-xs">
+                                <Users className="h-3 w-3 mr-1" />
+                                {event.collaborators}
+                              </Badge>
+                            )}
                           </div>
                           
-                          {event.priority === 'high' && (
-                            <Badge variant="destructive" className="text-xs">
-                              High Priority
-                            </Badge>
-                          )}
+                          <div className="flex items-center gap-1">
+                            {event.priority === 'high' && (
+                              <Badge variant="destructive" className="text-xs">
+                                High Priority
+                              </Badge>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleShareEvent(event)}
+                              className="h-6 w-6 p-0"
+                            >
+                              <Share2 className="h-3 w-3" />
+                            </Button>
+                          </div>
                         </div>
                         
                         <h4 className="font-medium mb-1">{event.title}</h4>
@@ -340,6 +380,17 @@ export function UnifiedCalendarView() {
           <ExternalCalendarSync />
         </TabsContent>
       </Tabs>
+
+      {/* Event Sharing Modal */}
+      {selectedEventForSharing && (
+        <EventSharingModal
+          open={showSharingModal}
+          onOpenChange={setShowSharingModal}
+          eventId={selectedEventForSharing.id}
+          eventTitle={selectedEventForSharing.title}
+        />
+      )}
     </div>
+    </CollaborativeCalendarProvider>
   );
 }
