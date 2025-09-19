@@ -12,6 +12,7 @@ import { useActsScheduling } from '@/hooks/memoryBridge/useActsScheduling';
 import { generateICS, generateGoogleCalendarLink, generateCalendarLinks } from '@/utils/ics';
 import { toast } from 'sonner';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
+import { analyzeSMART, getSMARTColor, getSMARTLabel } from '@/utils/smartValidation';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -99,7 +100,7 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
 
   const handleExportCSV = () => {
     const csvContent = [
-      ['Action', 'Assignee', 'Priority', 'Start Date', 'Target Date', 'Deadline', 'Due Context', 'Context', 'Confidence', 'Status'].join(','),
+      ['What needs to happen', 'Who is responsible', 'How important', 'When to begin', 'When to complete', 'Must be done by', 'Due Context', 'Context', 'SMART Score', 'Status'].join(','),
       ...actions.map(action => [
         `"${action.action_text}"`,
         `"${action.assigned_to || ''}"`,
@@ -344,14 +345,14 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
                 />
               </TableHead>
               <TableHead className="w-12"></TableHead>
-              <TableHead className="min-w-[200px]">Action</TableHead>
-              <TableHead>Assignee</TableHead>
-              <TableHead>Priority</TableHead>
-              <TableHead>Start Date</TableHead>
-              <TableHead>Target Date</TableHead>
-              <TableHead>Deadline</TableHead>
+              <TableHead className="min-w-[200px]">What needs to happen</TableHead>
+              <TableHead>Who's responsible</TableHead>
+              <TableHead>How important</TableHead>
+              <TableHead>When to begin</TableHead>
+              <TableHead>When to complete</TableHead>
+              <TableHead>Must be done by</TableHead>
               <TableHead>Suggested Times</TableHead>
-              <TableHead>Confidence</TableHead>
+              <TableHead>SMART Score</TableHead>
               <TableHead>Status</TableHead>
             </TableRow>
           </TableHeader>
@@ -541,9 +542,40 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
                     />
                   </TableCell>
                   <TableCell>
-                    <Badge className={getConfidenceColor(action.confidence_score || 0)}>
-                      {Math.round((action.confidence_score || 0) * 100)}%
-                    </Badge>
+                    {(() => {
+                      const smartAnalysis = analyzeSMART({
+                        action_text: action.action_text,
+                        assigned_to: action.assigned_to,
+                        start_date: action.start_date,
+                        end_date: action.end_date,
+                        priority_level: action.priority_level,
+                        relationship_impact: action.relationship_impact
+                      });
+                      
+                      return (
+                        <div className="flex items-center gap-2">
+                          <Badge className={getSMARTColor(smartAnalysis.score)}>
+                            {smartAnalysis.score}% SMART
+                          </Badge>
+                          {smartAnalysis.score < 80 && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 text-xs"
+                              onClick={() => {
+                                // Show SMART suggestions - could expand to show in a popover
+                                const suggestion = smartAnalysis.suggestions[0];
+                                if (suggestion) {
+                                  toast.info(suggestion);
+                                }
+                              }}
+                            >
+                              Fix
+                            </Button>
+                          )}
+                        </div>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell>
                     <Badge variant={action.status === 'confirmed' ? 'default' : 'secondary'}>

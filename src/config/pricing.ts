@@ -30,7 +30,7 @@ export const basePricing: PlanPricing[] = [
     features: [
       'Basic MYRHYTHM assessment',
       '3 conversation recordings per month',
-      'Basic ACTS extraction',
+      'Basic Next Step Summary',
       'Personal calendar integration',
       '1 support circle member'
     ],
@@ -53,7 +53,7 @@ export const basePricing: PlanPricing[] = [
     features: [
       'Detailed MYRHYTHM analysis',
       'Unlimited conversation recordings',
-      'Advanced ACTS extraction & scheduling',
+      'Advanced Next Step Summary & scheduling',
       'Full calendar integration',
       'Up to 3 support circle members',
       'Basic progress reports'

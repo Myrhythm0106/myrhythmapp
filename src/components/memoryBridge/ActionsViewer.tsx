@@ -217,13 +217,13 @@ export function ActionsViewer({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Brain className="h-5 w-5 text-primary" />
-            ACTS Report: {meetingTitle}
+            Next Step Summary: {meetingTitle}
             <Badge variant="outline" className="ml-2">
               {extractedActions.length} actions
             </Badge>
           </DialogTitle>
           <p className="text-sm text-muted-foreground">
-            <strong>A</strong>ssign • <strong>C</strong>omplete • <strong>T</strong>rack • <strong>S</strong>tatus - Brain injury support optimized
+            Your personalized action plan with <strong>W</strong>hat needs to happen • <strong>W</strong>ho's responsible • <strong>W</strong>hen to complete - Brain-friendly and empowering
           </p>
         </DialogHeader>
 

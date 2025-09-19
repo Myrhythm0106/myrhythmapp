@@ -41,7 +41,7 @@ const SubscribeCancel = () => {
             <h4 className="font-medium text-slate-800 mb-2">Free plan includes:</h4>
             <ul className="space-y-1 text-sm text-slate-600">
               <li>• 3 Memory Bridge recordings per month</li>
-              <li>• Basic ACT reports</li>
+              <li>• Basic Next Step Summary</li>
               <li>• 1 support circle member</li>
               <li>• Basic calendar features</li>
             </ul>

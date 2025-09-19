@@ -27,7 +27,7 @@ const SubscribePage = () => {
     icon: Star,
     color: 'text-teal-600',
     gradient: 'from-teal-500 to-emerald-600',
-    features: ['Unlimited conversation recordings', 'Advanced ACTS extraction & scheduling', 'Full calendar integration', 'Up to 3 support circle members', 'Basic progress reports']
+    features: ['Unlimited conversation recordings', 'Advanced Next Step Summary & scheduling', 'Full calendar integration', 'Up to 3 support circle members', 'Basic progress reports']
   }, {
     id: 'thrive' as const,
     name: 'MyThrive',

@@ -217,10 +217,10 @@ export function RecordingDetailsView({
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Brain className="h-4 w-4 text-primary" />
-                  ACTS Report ({extractedActions.length} items)
+                  Next Step Summary ({extractedActions.length} items)
                 </CardTitle>
                 <p className="text-sm text-muted-foreground">
-                  Actionable Closing Tasks with empowering progress tracking
+                  Your personalized action plan with clear next steps and accountability
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">

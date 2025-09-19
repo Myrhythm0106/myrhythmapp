@@ -20,7 +20,7 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
 
   const freeFeatures = [
     '3 Memory Bridge recordings per month',
-    'Basic ACT reports',
+    'Basic Next Step Summary',
     'Brief assessment',
     '1 support circle member',
     'Basic calendar'
@@ -36,7 +36,7 @@ export function StrategicPricingCard({ onSelectPlan, onContinueFree, showFreeOpt
       gradient: 'from-teal-500 to-emerald-600',
       features: [
         'Unlimited conversation recordings',
-        'Advanced ACTS extraction & scheduling',
+        'Advanced Next Step Summary & scheduling',
         'Full calendar integration',
         'Up to 3 support circle members',
         'Basic progress reports'

@@ -29,7 +29,7 @@ export function MobileSubscriptionSelector({ onSelectPlan, onContinueFree }: Mob
       gradient: 'from-teal-500 to-emerald-600',
       features: [
         'Unlimited Memory Bridge recordings',
-        'Full ACT reports',
+        'Full Next Step Summary',
         'Complete assessments',
         'Up to 3 support circle members',
         'Basic calendar integration'
