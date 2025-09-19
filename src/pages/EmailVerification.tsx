@@ -3,52 +3,48 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle, Loader2, Heart, Brain } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { CheckCircle, XCircle, Loader2, Heart, Brain, Mail } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
 const EmailVerification = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
+  const { resendVerification } = useAuth();
+  const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'manual'>('loading');
   const [errorMessage, setErrorMessage] = useState('');
+  const [manualToken, setManualToken] = useState('');
+  const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const handleEmailVerification = async () => {
       try {
-        // Get the tokens from URL parameters
-        const token_hash = searchParams.get('token_hash');
-        const type = searchParams.get('type');
+        // Check for custom verification parameters first (our new system)
+        const token = searchParams.get('token');
+        const emailParam = searchParams.get('email');
         
-        if (!token_hash || type !== 'signup') {
-          setStatus('error');
-          setErrorMessage('Invalid verification link. Please check your email for the correct link.');
+        if (token && emailParam) {
+          setEmail(emailParam);
+          await verifyWithCustomToken(emailParam, token);
           return;
         }
 
-        // Verify the email with Supabase
-        const { data, error } = await supabase.auth.verifyOtp({
-          token_hash,
-          type: 'signup'
-        });
-
-        if (error) {
-          console.error('Email verification error:', error);
-          setStatus('error');
-          setErrorMessage(error.message || 'Failed to verify email address');
-          toast.error(error.message);
-        } else if (data.user) {
-          setStatus('success');
-          toast.success('Email verified successfully! Welcome to MyRhythm.');
-          
-          // Clear any pending verification email from localStorage
-          localStorage.removeItem('pendingVerificationEmail');
-          
-          // Auto-redirect to onboarding after 3 seconds
-          setTimeout(() => {
-            navigate('/onboarding', { replace: true });
-          }, 3000);
+        // Fall back to old Supabase verification for existing users
+        const token_hash = searchParams.get('token_hash');
+        const type = searchParams.get('type');
+        
+        if (token_hash && type === 'signup') {
+          await verifyWithSupabaseToken(token_hash);
+          return;
         }
+
+        // No valid parameters, show manual verification
+        setStatus('manual');
+        
       } catch (error) {
         console.error('Unexpected verification error:', error);
         setStatus('error');
@@ -57,29 +53,127 @@ const EmailVerification = () => {
     };
 
     handleEmailVerification();
-  }, [searchParams, navigate]);
+  }, [searchParams]);
 
-  const handleResendEmail = async () => {
-    const email = localStorage.getItem('pendingVerificationEmail');
-    if (!email) {
-      toast.error('No email found for resending verification. Please sign up again.');
-      navigate('/auth');
-      return;
-    }
-
+  const verifyWithCustomToken = async (userEmail: string, token: string) => {
     try {
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email
+      const { data, error } = await supabase.functions.invoke('verify-email-custom', {
+        body: {
+          email: userEmail,
+          token: token
+        }
       });
 
       if (error) {
-        toast.error(error.message);
-      } else {
-        toast.success('Verification email sent! Please check your inbox.');
+        console.error('Custom verification error:', error);
+        setStatus('error');
+        setErrorMessage('Invalid or expired verification link. Please try resending.');
+        return;
+      }
+
+      if (data?.success) {
+        setStatus('success');
+        toast.success('Email verified successfully! Welcome to MyRhythm.');
+        
+        // Refresh the auth session
+        await supabase.auth.refreshSession();
+        
+        // Auto-redirect after success
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 3000);
       }
     } catch (error) {
-      toast.error('Failed to resend verification email');
+      console.error('Custom verification exception:', error);
+      setStatus('error');
+      setErrorMessage('Verification failed. Please try again.');
+    }
+  };
+
+  const verifyWithSupabaseToken = async (token_hash: string) => {
+    try {
+      const { data, error } = await supabase.auth.verifyOtp({
+        token_hash,
+        type: 'signup'
+      });
+
+      if (error) {
+        console.error('Supabase verification error:', error);
+        setStatus('error');
+        setErrorMessage(error.message || 'Failed to verify email address');
+        toast.error(error.message);
+      } else if (data.user) {
+        setStatus('success');
+        toast.success('Email verified successfully! Welcome to MyRhythm.');
+        
+        // Clear any pending verification email from localStorage
+        localStorage.removeItem('pendingVerificationEmail');
+        
+        // Auto-redirect to onboarding after 3 seconds
+        setTimeout(() => {
+          navigate('/onboarding', { replace: true });
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Supabase verification exception:', error);
+      setStatus('error');
+      setErrorMessage('An unexpected error occurred during verification');
+    }
+  };
+
+  const handleManualVerification = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email || !manualToken) {
+      toast.error('Please enter both email and verification code.');
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-email-custom', {
+        body: {
+          email: email,
+          token: manualToken
+        }
+      });
+
+      if (error) {
+        console.error('Manual verification error:', error);
+        toast.error('Invalid verification code. Please check and try again.');
+        return;
+      }
+
+      if (data?.success) {
+        setStatus('success');
+        toast.success('Email verified successfully! Welcome to MyRhythm.');
+        
+        // Refresh the auth session
+        await supabase.auth.refreshSession();
+        
+        setTimeout(() => {
+          navigate('/dashboard', { replace: true });
+        }, 3000);
+      }
+    } catch (error) {
+      console.error('Manual verification exception:', error);
+      toast.error('Verification failed. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleResendEmail = async () => {
+    const emailToUse = email || localStorage.getItem('pendingVerificationEmail');
+    if (!emailToUse) {
+      toast.error('Please enter your email address first.');
+      return;
+    }
+
+    const { error } = await resendVerification(emailToUse);
+    if (!error) {
+      toast.success('Verification email sent! Check your inbox and spam folder.');
     }
   };
 
@@ -115,6 +209,73 @@ const EmailVerification = () => {
               </>
             )}
 
+            {status === 'manual' && (
+              <>
+                <Mail className="h-12 w-12 mx-auto text-primary" />
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold">Verify Your Email</h3>
+                    <p className="text-gray-600 text-sm">
+                      Enter your email and the verification code sent to you.
+                    </p>
+                  </div>
+                  
+                  <form onSubmit={handleManualVerification} className="space-y-4">
+                    <div className="text-left">
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="text-left">
+                      <Label htmlFor="token">Verification Code</Label>
+                      <Input
+                        id="token"
+                        type="text"
+                        placeholder="Enter verification code from email"
+                        value={manualToken}
+                        onChange={(e) => setManualToken(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <Button 
+                      type="submit" 
+                      className="w-full" 
+                      disabled={isSubmitting || !email || !manualToken}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          Verifying...
+                        </>
+                      ) : (
+                        'Verify Email'
+                      )}
+                    </Button>
+                  </form>
+                  
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500">Didn't receive the email?</p>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleResendEmail}
+                      disabled={!email}
+                      className="w-full"
+                    >
+                      Resend Verification Email
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
+
             {status === 'success' && (
               <>
                 <CheckCircle className="h-12 w-12 mx-auto text-green-600" />
@@ -124,14 +285,14 @@ const EmailVerification = () => {
                     Welcome to MyRhythm! Your account is now active and ready to use.
                   </p>
                   <p className="text-sm text-gray-600">
-                    You will be redirected to complete your setup in a few seconds...
+                    You will be redirected to your dashboard in a few seconds...
                   </p>
                 </div>
                 <Button 
-                  onClick={handleGoToOnboarding}
+                  onClick={() => navigate('/dashboard')}
                   className="w-full"
                 >
-                  Continue to Setup
+                  Continue to Dashboard
                 </Button>
               </>
             )}
@@ -146,10 +307,21 @@ const EmailVerification = () => {
                   </p>
                 </div>
                 <div className="space-y-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="resend-email">Email Address</Label>
+                    <Input
+                      id="resend-email"
+                      type="email"
+                      placeholder="Enter your email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
                   <Button 
                     onClick={handleResendEmail}
                     variant="outline"
                     className="w-full"
+                    disabled={!email}
                   >
                     Resend Verification Email
                   </Button>

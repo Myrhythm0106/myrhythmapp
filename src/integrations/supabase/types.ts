@@ -535,6 +535,39 @@ export type Database = {
         }
         Relationships: []
       }
+      email_verifications: {
+        Row: {
+          created_at: string
+          email: string
+          expires_at: string
+          id: string
+          token: string
+          used: boolean
+          user_id: string | null
+          verified_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expires_at?: string
+          id?: string
+          token: string
+          used?: boolean
+          user_id?: string | null
+          verified_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expires_at?: string
+          id?: string
+          token?: string
+          used?: boolean
+          user_id?: string | null
+          verified_at?: string | null
+        }
+        Relationships: []
+      }
       empowerment_statements: {
         Row: {
           category: string
@@ -2050,6 +2083,10 @@ export type Database = {
         Returns: Json
       }
       cleanup_expired_invitations: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      cleanup_expired_verification_tokens: {
         Args: Record<PropertyKey, never>
         Returns: number
       }

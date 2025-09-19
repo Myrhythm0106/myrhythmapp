@@ -94,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Generate a secure temporary password for freemium users
       const tempPassword = crypto.randomUUID() + '!A1';
       
+      // Create user account with email_confirm: false (we'll handle verification manually)
       const { data, error } = await supabase.auth.signUp({
         email,
         password: tempPassword,
@@ -104,16 +105,53 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             is_freemium: true,
             signup_type: 'freemium'
           },
-          emailRedirectTo: `${window.location.origin}/welcome`
+          emailRedirectTo: `${window.location.origin}/email-verification`
         }
       });
       
       if (error) {
         SecureLogger.error('AuthContext: Freemium sign up error:', error);
         toast.error(error.message);
-      } else {
-        console.log('AuthContext: Freemium sign up successful:', data);
-        toast.success('Welcome! Check your email to verify your account. You can start your assessment now.');
+        return { error };
+      }
+
+      if (data?.user?.id) {
+        // Generate verification token and send custom email
+        const verificationToken = crypto.randomUUID();
+        
+        // Store verification token in database
+        const { error: tokenError } = await supabase
+          .from('email_verifications')
+          .insert({
+            email,
+            token: verificationToken,
+            user_id: data.user.id
+          });
+
+        if (tokenError) {
+          console.error('Error storing verification token:', tokenError);
+          toast.error('Account created but verification email failed. Please try resending.');
+          return { error: tokenError };
+        }
+
+        // Send custom verification email
+        const { error: emailError } = await supabase.functions.invoke('send-verification-email', {
+          body: {
+            email,
+            name,
+            token: verificationToken,
+            redirectUrl: `${window.location.origin}/email-verification`
+          }
+        });
+
+        if (emailError) {
+          console.error('Error sending verification email:', emailError);
+          toast.error('Account created but verification email failed. Please check your email or try resending.');
+        } else {
+          console.log('Custom verification email sent successfully');
+          toast.success('Welcome! Check your email to verify your account and unlock all features.');
+        }
+        
         setEmailVerificationStatus('pending');
       }
       
@@ -251,22 +289,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       console.log('AuthContext: Attempting to resend verification for:', email);
       
-      const { error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email,
-        options: {
-          emailRedirectTo: `${window.location.origin}/email-verification`
+      // Check if user exists by querying profiles table
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, name')
+        .eq('email', email)
+        .single();
+      
+      if (profileError || !profileData) {
+        toast.error('User not found. Please sign up first.');
+        return { error: profileError };
+      }
+
+      // Generate new verification token
+      const verificationToken = crypto.randomUUID();
+      
+      // Delete any existing unused tokens for this email
+      await supabase
+        .from('email_verifications')
+        .delete()
+        .eq('email', email)
+        .eq('used', false);
+
+      // Store new verification token in database
+      const { error: tokenError } = await supabase
+        .from('email_verifications')
+        .insert({
+          email,
+          token: verificationToken,
+          user_id: profileData.id
+        });
+
+      if (tokenError) {
+        console.error('Error storing verification token:', tokenError);
+        toast.error('Failed to generate verification token. Please try again.');
+        return { error: tokenError };
+      }
+
+      // Send custom verification email
+      const { error: emailError } = await supabase.functions.invoke('send-verification-email', {
+        body: {
+          email,
+          name: profileData.name || 'User',
+          token: verificationToken,
+          redirectUrl: `${window.location.origin}/email-verification`
         }
       });
-      
-      if (error) {
-        console.error('AuthContext: Resend verification error:', error);
-        toast.error(error.message);
-      } else {
-        toast.success('Verification email sent! Check your inbox.');
+
+      if (emailError) {
+        console.error('Error sending verification email:', emailError);
+        toast.error('Failed to send verification email. Please try again.');
+        return { error: emailError };
       }
+
+      toast.success('Verification email sent! Check your inbox and spam folder.');
+      return { error: null };
       
-      return { error };
     } catch (error) {
       console.error('AuthContext: Resend verification exception:', error);
       toast.error('Failed to resend verification email. Please try again.');

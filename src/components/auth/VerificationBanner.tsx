@@ -18,7 +18,7 @@ export const VerificationBanner = () => {
         <Shield className="h-4 w-4 text-amber-600" />
         <AlertDescription className="flex items-center justify-between">
           <div className="text-amber-800">
-            <strong>Email verification pending.</strong> Check your inbox to unlock all features.
+            <strong>Email verification required.</strong> Check your inbox and spam folder to unlock all features.
           </div>
           <Button
             variant="outline"
