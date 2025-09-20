@@ -9,7 +9,8 @@ import {
   addDays, 
   isSameMonth, 
   isToday, 
-  isSameDay 
+  isSameDay,
+  isBefore 
 } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
 import { NavigationHeader } from '../components/NavigationHeader';
@@ -127,6 +128,7 @@ export function MonthViewTBI({ currentDate, events, onDayClick, priorities, upda
             const dayEvents = getEventsForDay(day);
             const isCurrentDay = isToday(day);
             const isCurrentMonth = isSameMonth(day, currentDate);
+            const isPastMonth = isBefore(startOfMonth(day), startOfMonth(new Date()));
             
             return (
               <div
@@ -135,12 +137,14 @@ export function MonthViewTBI({ currentDate, events, onDayClick, priorities, upda
                   aspect-square p-1 cursor-pointer transition-all hover:bg-gray-100 rounded
                   ${isCurrentDay ? 'bg-blue-100 border border-blue-300' : ''}
                   ${!isCurrentMonth ? 'opacity-30' : ''}
+                  ${isPastMonth && isCurrentMonth ? 'bg-gray-50 opacity-60' : ''}
                 `}
                 onClick={() => onDayClick(day)}
               >
                 <div className="h-full flex flex-col">
                   <div className={`text-xs text-center mb-1 ${
                     isCurrentDay ? 'font-bold text-blue-700' : 
+                    isPastMonth && isCurrentMonth ? 'text-gray-400' :
                     isCurrentMonth ? 'text-gray-700' : 'text-gray-400'
                   }`}>
                     {format(day, 'd')}
@@ -151,12 +155,12 @@ export function MonthViewTBI({ currentDate, events, onDayClick, priorities, upda
                       {dayEvents.slice(0, 3).map((event, index) => (
                         <div
                           key={index}
-                          className="w-1.5 h-1.5 rounded-full"
+                          className={`w-1.5 h-1.5 rounded-full ${isPastMonth && isCurrentMonth ? 'opacity-50' : ''}`}
                           style={{ backgroundColor: getEventTypeColor(event.type) }}
                         />
                       ))}
                       {dayEvents.length > 3 && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-gray-400" />
+                        <div className={`w-1.5 h-1.5 rounded-full bg-gray-400 ${isPastMonth && isCurrentMonth ? 'opacity-50' : ''}`} />
                       )}
                     </div>
                   )}
