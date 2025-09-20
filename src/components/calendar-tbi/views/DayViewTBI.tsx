@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { DayData, EnergyLevel, TBIEvent, EventType } from '../types/calendarTypes';
 import { format } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
+import { NavigationHeader } from '../components/NavigationHeader';
 import { Plus, X, Clock } from 'lucide-react';
 
 interface DayViewTBIProps {
@@ -19,6 +20,8 @@ interface DayViewTBIProps {
   updatePriorities: (field: 'p1' | 'p2' | 'p3', value: string) => void;
   scopeLabel: string;
   scopeGradient: string;
+  currentDate: Date;
+  onDateChange: (date: Date) => void;
 }
 
 interface TimeSlotEvent {
@@ -39,7 +42,9 @@ export function DayViewTBI({
   priorities,
   updatePriorities,
   scopeLabel,
-  scopeGradient
+  scopeGradient,
+  currentDate,
+  onDateChange
 }: DayViewTBIProps) {
   const [carryOver, setCarryOver] = useState('');
   const [notes, setNotes] = useState('');
@@ -103,9 +108,14 @@ export function DayViewTBI({
       {/* Header */}
       <UnifiedHeader 
         viewTitle="My Daily Schedule"
-        dateInfo={format(dayData.date, 'EEEE, MMMM d, yyyy')}
         viewType="day"
-        currentDate={dayData.date}
+        currentDate={currentDate}
+      />
+      
+      <NavigationHeader
+        currentDate={currentDate}
+        viewType="day"
+        onDateChange={onDateChange}
       />
 
       {/* Empowerment Banner - P1, P2, P3 Priorities */}

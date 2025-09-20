@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { TBIEvent } from '../types/calendarTypes';
 import { format, startOfWeek, addDays, isSameDay, isToday } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
+import { NavigationHeader } from '../components/NavigationHeader';
 
 interface WeekViewTBIProps {
   currentDate: Date;
@@ -14,9 +15,10 @@ interface WeekViewTBIProps {
   updatePriorities: (field: 'p1' | 'p2' | 'p3', value: string) => void;
   scopeLabel: string;
   scopeGradient: string;
+  onDateChange: (date: Date) => void;
 }
 
-export function WeekViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient }: WeekViewTBIProps) {
+export function WeekViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient, onDateChange }: WeekViewTBIProps) {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Start on Monday
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
@@ -29,9 +31,14 @@ export function WeekViewTBI({ currentDate, events, onDayClick, priorities, updat
       {/* Header */}
       <UnifiedHeader 
         viewTitle="My Week at a Glance"
-        dateInfo={`${format(weekStart, 'MMM d')} - ${format(addDays(weekStart, 6), 'MMM d, yyyy')}`}
         viewType="week"
         currentDate={currentDate}
+      />
+      
+      <NavigationHeader
+        currentDate={currentDate}
+        viewType="week"
+        onDateChange={onDateChange}
       />
 
       {/* Empowerment Banner - P1, P2, P3 Priorities */}

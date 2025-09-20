@@ -1,88 +1,122 @@
 import React from 'react';
-import { ThemeHierarchyDisplay } from '@/components/theme/ThemeHierarchyDisplay';
+import { format, startOfWeek, endOfWeek, addDays } from 'date-fns';
+import { Card, CardContent } from '@/components/ui/card';
 import { useThemeHierarchy } from '@/hooks/useThemeHierarchy';
 
 interface UnifiedHeaderProps {
   viewTitle: string;
-  dateInfo: string;
+  dateInfo?: string;
   viewType?: 'day' | 'week' | 'month' | 'year';
   currentDate?: Date;
 }
 
 export function UnifiedHeader({ viewTitle, dateInfo, viewType = 'day', currentDate = new Date() }: UnifiedHeaderProps) {
-  const { getThemeHierarchy } = useThemeHierarchy();
-  const hierarchy = getThemeHierarchy(currentDate);
+  const { getCurrentTheme } = useThemeHierarchy();
+  const currentTheme = getCurrentTheme(currentDate);
 
-  // Map themes to empowering sentence completions
-  const getEmpoweringCompletion = (theme: string) => {
-    const themeMap: Record<string, string> = {
-      'persistent': 'persistent in achieving my goals',
-      'persistence': 'persistent in achieving my goals',
-      'focused': 'focused on what matters most',
-      'focus': 'focused on what matters most',
-      'growth': 'committed to my personal growth',
-      'growing': 'committed to my personal growth',
-      'strong': 'strong in mind and body',
-      'strength': 'strong in mind and body',
-      'calm': 'calm and centered in all I do',
-      'peaceful': 'peaceful and present in this moment',
-      'confident': 'confident in my abilities',
-      'confidence': 'confident in my abilities',
-      'resilient': 'resilient through every challenge',
-      'resilience': 'resilient through every challenge',
-      'mindful': 'mindful and aware in each moment',
-      'mindfulness': 'mindful and aware in each moment',
-      'empowered': 'empowered to create positive change',
-      'empowerment': 'empowered to create positive change',
-      'balanced': 'balanced in all aspects of my life',
-      'balance': 'balanced in all aspects of my life'
+  // Helper function to generate empowering completions based on themes
+  const getEmpoweringCompletion = (theme: string): string => {
+    const themeCompletions: Record<string, string> = {
+      'growth': 'evolving into my strongest self',
+      'resilience': 'bouncing back with unwavering strength',
+      'clarity': 'seeing my path with crystal-clear vision',
+      'connection': 'building meaningful relationships that enrich my life',
+      'courage': 'facing challenges with bold determination',
+      'wisdom': 'learning and growing from every experience',
+      'balance': 'finding harmony in all aspects of my life',
+      'purpose': 'living with intentional meaning and direction',
+      'gratitude': 'appreciating the abundance that surrounds me',
+      'energy': 'radiating vitality and positive influence',
+      'focus': 'channeling my attention toward what truly matters',
+      'creativity': 'expressing my unique gifts and talents',
+      'peace': 'cultivating inner calm and external harmony',
+      'strength': 'tapping into my infinite inner power',
+      'joy': 'embracing happiness and sharing it with others',
+      'hope': 'believing in endless possibilities ahead',
+      'love': 'opening my heart to give and receive deeply',
+      'freedom': 'living authentically and without limitation',
+      'abundance': 'recognizing the wealth of opportunities around me',
+      'adventure': 'embracing new experiences with excitement',
+      'compassion': 'extending kindness to myself and others',
+      'mindfulness': 'present and aware in each precious moment',
+      'transformation': 'embracing positive change as my natural state',
+      'empowerment': 'stepping fully into my personal power',
+      'healing': 'nurturing my body, mind, and spirit back to wholeness'
     };
     
-    const lowerTheme = theme.toLowerCase();
-    return themeMap[lowerTheme] || `committed to being ${theme}`;
+    return themeCompletions[theme.toLowerCase()] || 'becoming the person I\'m meant to be';
   };
 
-  // Generate contextual "I choose" statement based on view
-  const getContextualStatement = () => {
-    const completion = getEmpoweringCompletion(hierarchy.current);
+  // Generate contextual empowering statement
+  const getContextualStatement = (): string => {
+    let relevantTheme = '';
+    switch (viewType) {
+      case 'day':
+        relevantTheme = currentTheme.daily;
+        break;
+      case 'week':
+        relevantTheme = currentTheme.weekly;
+        break;
+      case 'month':
+        relevantTheme = currentTheme.monthly;
+        break;
+      case 'year':
+        relevantTheme = currentTheme.yearly;
+        break;
+      default:
+        relevantTheme = currentTheme.current;
+    }
+    
+    const completion = getEmpoweringCompletion(relevantTheme);
+    
+    const timeContext = {
+      day: 'Today',
+      week: 'This week',
+      month: 'This month', 
+      year: 'This year'
+    }[viewType] || 'Today';
+    
+    return `${timeContext}, I choose to be ${completion}.`;
+  };
+
+  // Generate appropriate date info based on view type
+  const getDateInfo = (): string => {
+    if (dateInfo) return dateInfo;
     
     switch (viewType) {
       case 'day':
-        return `Today, I choose to be ${completion}`;
+        return format(currentDate, 'EEEE, MMMM d, yyyy');
       case 'week':
-        return `This week, I choose to be ${completion}`;
+        const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+        const weekEnd = addDays(weekStart, 6);
+        return `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d, yyyy')}`;
       case 'month':
-        return `This month, I choose to be ${getEmpoweringCompletion(hierarchy.monthly)}`;
+        return format(currentDate, 'MMMM yyyy');
       case 'year':
-        const yearlyTheme = hierarchy.yearly.split(': ')[1] || hierarchy.yearly;
-        return `This year, I choose to embrace ${yearlyTheme.toLowerCase()}`;
+        return format(currentDate, 'yyyy');
       default:
-        return `Today, I choose to be ${completion}`;
+        return format(currentDate, 'EEEE, MMMM d, yyyy');
     }
   };
 
   return (
-    <div className="text-center mb-6 space-y-4">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold text-primary mb-2">
-          {getContextualStatement()}
-        </h1>
-        <h2 className="text-lg font-semibold text-muted-foreground">
-          {viewTitle}
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          {dateInfo}
-        </p>
-      </div>
-      
-      {/* Theme breadcrumb for context */}
-      <div className="pt-2 border-t border-muted/30">
-        <ThemeHierarchyDisplay 
-          date={currentDate} 
-          variant="breadcrumb" 
-          className="justify-center"
-        />
-      </div>
-    </div>
+    <Card className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+      <CardContent className="pt-6">
+        <div className="text-center space-y-2">
+          <p className="text-lg font-semibold text-purple-700 italic">
+            {getContextualStatement()}
+          </p>
+          <h1 className="text-2xl font-bold text-gray-900">{viewTitle}</h1>
+          <p className="text-lg text-gray-600">{getDateInfo()}</p>
+        </div>
+        
+        {/* Simple Theme Display */}
+        <div className="mt-4 pt-4 border-t border-purple-200/50 flex justify-center">
+          <p className="text-sm text-purple-600">
+            Current Theme: {currentTheme.current}
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   );
 }

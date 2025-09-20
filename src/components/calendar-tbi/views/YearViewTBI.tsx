@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { TBIEvent } from '../types/calendarTypes';
 import { format, startOfYear, addMonths } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
+import { NavigationHeader } from '../components/NavigationHeader';
 
 interface YearViewTBIProps {
   currentDate: Date;
@@ -13,9 +14,10 @@ interface YearViewTBIProps {
   updatePriorities: (field: 'p1' | 'p2' | 'p3', value: string) => void;
   scopeLabel: string;
   scopeGradient: string;
+  onDateChange: (date: Date) => void;
 }
 
-export function YearViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient }: YearViewTBIProps) {
+export function YearViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient, onDateChange }: YearViewTBIProps) {
   const yearStart = startOfYear(currentDate);
   const months = Array.from({ length: 12 }, (_, i) => addMonths(yearStart, i));
 
@@ -24,9 +26,14 @@ export function YearViewTBI({ currentDate, events, onDayClick, priorities, updat
       {/* Header */}
       <UnifiedHeader 
         viewTitle="My Annual Compass"
-        dateInfo={format(currentDate, 'yyyy')}
         viewType="year"
         currentDate={currentDate}
+      />
+      
+      <NavigationHeader
+        currentDate={currentDate}
+        viewType="year"
+        onDateChange={onDateChange}
       />
 
       {/* Empowerment Banner - P1, P2, P3 Priorities */}

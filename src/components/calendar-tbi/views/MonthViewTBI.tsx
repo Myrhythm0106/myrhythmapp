@@ -1,9 +1,5 @@
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { TBIEvent } from '../types/calendarTypes';
-import { getEventTypeColor } from '../utils/eventUtils';
 import { 
   format, 
   startOfMonth, 
@@ -11,11 +7,16 @@ import {
   startOfWeek, 
   endOfWeek, 
   addDays, 
-  isSameDay, 
-  isToday,
-  isSameMonth 
+  isSameMonth, 
+  isToday, 
+  isSameDay 
 } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
+import { NavigationHeader } from '../components/NavigationHeader';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { TBIEvent } from '../types/calendarTypes';
+import { getEventTypeColor } from '../utils/eventUtils';
 
 interface MonthViewTBIProps {
   currentDate: Date;
@@ -25,9 +26,10 @@ interface MonthViewTBIProps {
   updatePriorities: (field: 'p1' | 'p2' | 'p3', value: string) => void;
   scopeLabel: string;
   scopeGradient: string;
+  onDateChange: (date: Date) => void;
 }
 
-export function MonthViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient }: MonthViewTBIProps) {
+export function MonthViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient, onDateChange }: MonthViewTBIProps) {
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
@@ -50,9 +52,14 @@ export function MonthViewTBI({ currentDate, events, onDayClick, priorities, upda
     <div className="space-y-4">
       <UnifiedHeader 
         viewTitle="My Monthly View"
-        dateInfo={format(currentDate, 'MMMM yyyy')}
         viewType="month"
         currentDate={currentDate}
+      />
+      
+      <NavigationHeader
+        currentDate={currentDate}
+        viewType="month"
+        onDateChange={onDateChange}
       />
 
       {/* Empowerment Banner - P1, P2, P3 Priorities */}

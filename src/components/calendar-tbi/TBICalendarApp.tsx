@@ -66,6 +66,12 @@ export function TBICalendarApp() {
     energyLevel: undefined
   });
 
+  // Separate date states for each view
+  const [dayViewDate, setDayViewDate] = useState(new Date());
+  const [weekViewDate, setWeekViewDate] = useState(new Date());
+  const [monthViewDate, setMonthViewDate] = useState(new Date());
+  const [yearViewDate, setYearViewDate] = useState(new Date());
+
   const [activeTab, setActiveTab] = useState('day');
   const [userRole] = useState<'individual' | 'caregiver'>('individual');
   const [showDayDetails, setShowDayDetails] = useState(false);
@@ -175,7 +181,7 @@ export function TBICalendarApp() {
         <div className="p-4">
           <TabsContent value="day" className="mt-0">
             <DayViewTBI
-              dayData={dayData}
+              dayData={{ ...dayData, date: dayViewDate }}
               userRole={userRole}
               onEventComplete={handleEventComplete}
               onEnergyLevelChange={handleEnergyLevelChange}
@@ -186,12 +192,14 @@ export function TBICalendarApp() {
               updatePriorities={updateDailyPriorities}
               scopeLabel="Daily"
               scopeGradient="from-emerald-600 to-green-600"
+              currentDate={dayViewDate}
+              onDateChange={setDayViewDate}
             />
           </TabsContent>
 
           <TabsContent value="week" className="mt-0">
             <WeekViewTBI
-              currentDate={dayData.date}
+              currentDate={weekViewDate}
               events={dayData.events}
               onDayClick={handleDayClick}
               priorities={weeklyPriorities.p1 || weeklyPriorities.p2 || weeklyPriorities.p3 ? 
@@ -199,12 +207,13 @@ export function TBICalendarApp() {
               updatePriorities={updateWeeklyPriorities}
               scopeLabel="Weekly"
               scopeGradient="from-blue-600 to-indigo-600"
+              onDateChange={setWeekViewDate}
             />
           </TabsContent>
 
           <TabsContent value="month" className="mt-0">
             <MonthViewTBI
-              currentDate={dayData.date}
+              currentDate={monthViewDate}
               events={dayData.events}
               onDayClick={handleDayClick}
               priorities={monthlyPriorities.p1 || monthlyPriorities.p2 || monthlyPriorities.p3 ? 
@@ -212,18 +221,20 @@ export function TBICalendarApp() {
               updatePriorities={updateMonthlyPriorities}
               scopeLabel="Monthly"
               scopeGradient="from-purple-600 to-pink-600"
+              onDateChange={setMonthViewDate}
             />
           </TabsContent>
 
           <TabsContent value="year" className="mt-0">
             <YearViewTBI
-              currentDate={dayData.date}
+              currentDate={yearViewDate}
               events={dayData.events}
               onDayClick={handleDayClick}
               priorities={yearlyPriorities}
               updatePriorities={updateYearlyPriorities}
               scopeLabel="Yearly"
               scopeGradient="from-yellow-600 to-orange-600"
+              onDateChange={setYearViewDate}
             />
           </TabsContent>
 
