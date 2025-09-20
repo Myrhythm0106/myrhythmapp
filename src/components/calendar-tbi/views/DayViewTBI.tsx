@@ -15,6 +15,12 @@ interface DayViewTBIProps {
   onEnergyLevelChange?: (level: EnergyLevel) => void;
   onOpenSettings?: () => void;
   onOpenCaregiver?: () => void;
+  p1Priority: string;
+  setP1Priority: (value: string) => void;
+  p2Priority: string;
+  setP2Priority: (value: string) => void;
+  p3Priority: string;
+  setP3Priority: (value: string) => void;
 }
 
 interface TimeSlotEvent {
@@ -25,10 +31,20 @@ interface TimeSlotEvent {
   time: string;
 }
 
-export function DayViewTBI({ dayData, userRole, onEventComplete, onEnergyLevelChange, onOpenSettings, onOpenCaregiver }: DayViewTBIProps) {
-  const [p1Priority, setP1Priority] = useState('');
-  const [p2Priority, setP2Priority] = useState('');
-  const [p3Priority, setP3Priority] = useState('');
+export function DayViewTBI({ 
+  dayData, 
+  userRole, 
+  onEventComplete, 
+  onEnergyLevelChange, 
+  onOpenSettings, 
+  onOpenCaregiver,
+  p1Priority,
+  setP1Priority,
+  p2Priority,
+  setP2Priority,
+  p3Priority,
+  setP3Priority
+}: DayViewTBIProps) {
   const [carryOver, setCarryOver] = useState('');
   const [notes, setNotes] = useState('');
   const [timeSlotEvents, setTimeSlotEvents] = useState<Record<string, TimeSlotEvent>>({});

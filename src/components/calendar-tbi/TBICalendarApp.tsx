@@ -71,6 +71,11 @@ export function TBICalendarApp() {
   const [showDayDetails, setShowDayDetails] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { isRunning, timeLeft, currentSession, startTimer, pauseTimer, resetTimer } = usePomodoro();
+  
+  // Shared priority state across all views
+  const [p1Priority, setP1Priority] = useState('');
+  const [p2Priority, setP2Priority] = useState('');
+  const [p3Priority, setP3Priority] = useState('');
 
   const handleEventComplete = (eventId: string) => {
     setDayData(prev => ({
@@ -149,6 +154,12 @@ export function TBICalendarApp() {
               onEnergyLevelChange={handleEnergyLevelChange}
               onOpenSettings={handleOpenSettings}
               onOpenCaregiver={handleOpenCaregiver}
+              p1Priority={p1Priority}
+              setP1Priority={setP1Priority}
+              p2Priority={p2Priority}
+              setP2Priority={setP2Priority}
+              p3Priority={p3Priority}
+              setP3Priority={setP3Priority}
             />
           </TabsContent>
 
@@ -157,6 +168,12 @@ export function TBICalendarApp() {
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
+              p1Priority={p1Priority}
+              setP1Priority={setP1Priority}
+              p2Priority={p2Priority}
+              setP2Priority={setP2Priority}
+              p3Priority={p3Priority}
+              setP3Priority={setP3Priority}
             />
           </TabsContent>
 
@@ -165,6 +182,12 @@ export function TBICalendarApp() {
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
+              p1Priority={p1Priority}
+              setP1Priority={setP1Priority}
+              p2Priority={p2Priority}
+              setP2Priority={setP2Priority}
+              p3Priority={p3Priority}
+              setP3Priority={setP3Priority}
             />
           </TabsContent>
 
@@ -173,6 +196,12 @@ export function TBICalendarApp() {
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
+              p1Priority={p1Priority}
+              setP1Priority={setP1Priority}
+              p2Priority={p2Priority}
+              setP2Priority={setP2Priority}
+              p3Priority={p3Priority}
+              setP3Priority={setP3Priority}
             />
           </TabsContent>
 
