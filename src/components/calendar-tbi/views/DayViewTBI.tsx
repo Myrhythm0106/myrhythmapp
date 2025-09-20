@@ -23,6 +23,7 @@ interface DayViewTBIProps {
   scopeGradient: string;
   currentDate: Date;
   onDateChange: (date: Date) => void;
+  onTimeSlotClick?: (date: Date, time: string) => void;
 }
 
 interface TimeSlotEvent {
@@ -45,7 +46,8 @@ export function DayViewTBI({
   scopeLabel,
   scopeGradient,
   currentDate,
-  onDateChange
+  onDateChange,
+  onTimeSlotClick
 }: DayViewTBIProps) {
   const { actions, completeAction } = useDailyActions();
   const [carryOver, setCarryOver] = useState('');
@@ -159,17 +161,22 @@ export function DayViewTBI({
             {/* Time Grid with Scroll */}
             <div className="max-h-[600px] overflow-y-auto divide-y divide-border">
               {timeSlots.map((time) => (
-                <div key={time} className="flex min-h-[80px] hover:bg-muted/50 transition-colors">
+                <div 
+                  key={time} 
+                  className="flex min-h-[80px] hover:bg-muted/50 transition-colors cursor-pointer group"
+                  onClick={() => onTimeSlotClick?.(currentDate, time)}
+                >
                   {/* Time Column */}
                   <div className="w-16 md:w-20 flex-shrink-0 p-2 md:p-3 bg-muted/30 border-r border-border flex items-start justify-center">
                     <div className="text-xs md:text-sm font-medium text-muted-foreground flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {time}
+                      <Plus className="h-3 w-3 opacity-0 group-hover:opacity-50 transition-opacity ml-1" />
                     </div>
                   </div>
                   
                   {/* Activity Column */}
-                  <div className="flex-1 p-2 md:p-3">
+                  <div className="flex-1 p-2 md:p-3 group-hover:bg-muted/20 transition-colors">
                     {/* Show activities for this time slot */}
                     {dayActions
                       .filter(action => {

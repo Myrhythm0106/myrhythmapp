@@ -28,9 +28,10 @@ interface DayDetailsModalProps {
   onClose: () => void;
   selectedDate: Date;
   events: any[];
+  prefilledTime?: string | null;
 }
 
-export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDetailsModalProps) {
+export function DayDetailsModal({ isOpen, onClose, selectedDate, events, prefilledTime }: DayDetailsModalProps) {
   const { members, addMessage } = useSupportCircle();
   const { createAction } = useDailyActions();
   const [activityTitle, setActivityTitle] = useState('');
@@ -39,6 +40,14 @@ export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDe
   const [activityType, setActivityType] = useState('');
   const [timeSpent, setTimeSpent] = useState('');
   const [feelings, setFeelings] = useState('');
+  const [startTime, setStartTime] = useState('');
+
+  // Set prefilled time when modal opens
+  React.useEffect(() => {
+    if (prefilledTime && isOpen) {
+      setStartTime(prefilledTime);
+    }
+  }, [prefilledTime, isOpen]);
 
   const handleSave = async () => {
     if (!activityTitle.trim()) {
@@ -59,6 +68,7 @@ export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDe
                    activityType === 'social' ? 'social' : 
                    activityType === 'rest' ? 'emotional' : 'cognitive',
         duration_minutes: timeSpent ? parseInt(timeSpent) : undefined,
+        start_time: startTime || undefined,
         status: 'pending'
       });
 
@@ -81,6 +91,7 @@ export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDe
       setActivityType('');
       setTimeSpent('');
       setFeelings('');
+      setStartTime('');
       onClose();
     } catch (error) {
       console.error('Error saving activity:', error);
@@ -165,6 +176,22 @@ export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDe
                     <SelectItem value="other">Other</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* Start Time */}
+              <div className="space-y-2">
+                <Label htmlFor="start-time">Start Time</Label>
+                <Input
+                  id="start-time"
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                />
+                {prefilledTime && (
+                  <p className="text-xs text-muted-foreground">
+                    Pre-filled from selected time slot: {prefilledTime}
+                  </p>
+                )}
               </div>
 
               {/* Time Spent */}

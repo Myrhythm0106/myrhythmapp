@@ -78,6 +78,7 @@ export function TBICalendarApp() {
   const [userRole] = useState<'individual' | 'caregiver'>('individual');
   const [showDayDetails, setShowDayDetails] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const { isRunning, timeLeft, currentSession, startTimer, pauseTimer, resetTimer } = usePomodoro();
   
   // Separate priority states for each time scope
@@ -151,8 +152,15 @@ export function TBICalendarApp() {
     setShowDayDetails(true);
   };
 
+  const handleTimeSlotClick = (date: Date, time: string) => {
+    setSelectedDate(date);
+    setSelectedTime(time);
+    setShowDayDetails(true);
+  };
+
   const handleDayDetailsClose = () => {
     setShowDayDetails(false);
+    setSelectedTime(null);
   };
 
   return (
@@ -196,6 +204,7 @@ export function TBICalendarApp() {
               scopeGradient="from-emerald-600 to-green-600"
               currentDate={dayViewDate}
               onDateChange={setDayViewDate}
+              onTimeSlotClick={handleTimeSlotClick}
             />
           </TabsContent>
 
@@ -316,6 +325,7 @@ export function TBICalendarApp() {
         onClose={handleDayDetailsClose}
         selectedDate={selectedDate}
         events={dayData.events}
+        prefilledTime={selectedTime}
       />
     </div>
   );
