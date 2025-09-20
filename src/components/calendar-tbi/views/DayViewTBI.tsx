@@ -4,10 +4,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { DayData, EnergyLevel, TBIEvent, EventType } from '../types/calendarTypes';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
 import { NavigationHeader } from '../components/NavigationHeader';
-import { Plus, X, Clock } from 'lucide-react';
+import { useDailyActions } from '@/contexts/DailyActionsContext';
+import { Plus, X, Clock, CheckCircle2 } from 'lucide-react';
 
 interface DayViewTBIProps {
   dayData: DayData;
@@ -46,13 +47,9 @@ export function DayViewTBI({
   currentDate,
   onDateChange
 }: DayViewTBIProps) {
+  const { actions, completeAction } = useDailyActions();
   const [carryOver, setCarryOver] = useState('');
   const [notes, setNotes] = useState('');
-  const [timeSlotEvents, setTimeSlotEvents] = useState<Record<string, TimeSlotEvent>>({});
-  const [editingSlot, setEditingSlot] = useState<string | null>(null);
-  const [eventTitle, setEventTitle] = useState('');
-  const [eventDescription, setEventDescription] = useState('');
-  const [eventType, setEventType] = useState<EventType>('personal');
 
   // Generate time slots from 05:00 to 23:00
   const timeSlots = Array.from({ length: 19 }, (_, i) => {
@@ -60,47 +57,35 @@ export function DayViewTBI({
     return `${hour.toString().padStart(2, '0')}:00`;
   });
 
-  const addEvent = (timeSlot: string) => {
-    if (!eventTitle.trim()) return;
-    
-    const newEvent: TimeSlotEvent = {
-      id: `${timeSlot}-${Date.now()}`,
-      title: eventTitle.trim(),
-      description: eventDescription.trim() || undefined,
-      type: eventType,
-      time: timeSlot
-    };
-    
-    setTimeSlotEvents(prev => ({
-      ...prev,
-      [timeSlot]: newEvent
-    }));
-    
-    // Reset form
-    setEventTitle('');
-    setEventDescription('');
-    setEventType('personal');
-    setEditingSlot(null);
+  // Get actions for the current day
+  const dayActions = actions.filter(action => 
+    action.date && isSameDay(new Date(action.date), currentDate)
+  );
+
+  const handleCompleteAction = async (actionId: string) => {
+    try {
+      await completeAction(actionId);
+    } catch (error) {
+      console.error('Error completing action:', error);
+    }
   };
 
-  const removeEvent = (timeSlot: string) => {
-    setTimeSlotEvents(prev => {
-      const updated = { ...prev };
-      delete updated[timeSlot];
-      return updated;
-    });
-  };
-
-  const getEventTypeColor = (type: EventType) => {
-    const colors = {
-      appointment: 'bg-brand-blue-100 text-brand-blue-700 border-brand-blue-200',
-      therapy: 'bg-brand-teal-100 text-brand-teal-700 border-brand-teal-200',
-      medication: 'bg-brand-orange-100 text-brand-orange-700 border-brand-orange-200',
-      rest: 'bg-memory-emerald-100 text-memory-emerald-700 border-memory-emerald-200',
-      personal: 'bg-beacon-100 text-beacon-700 border-beacon-200',
-      emergency: 'bg-red-100 text-red-700 border-red-200'
+  const getActionTypeColor = (focus_area: string, status: string) => {
+    const baseColors = {
+      'physical': 'bg-orange-100 text-orange-700 border-orange-200', 
+      'cognitive': 'bg-purple-100 text-purple-700 border-purple-200',
+      'social': 'bg-blue-100 text-blue-700 border-blue-200',
+      'emotional': 'bg-green-100 text-green-700 border-green-200',
+      'sleep': 'bg-indigo-100 text-indigo-700 border-indigo-200'
     };
-    return colors[type];
+    
+    const color = baseColors[focus_area as keyof typeof baseColors] || baseColors['cognitive'];
+    
+    if (status === 'completed') {
+      return color.replace('100', '200').replace('700', '800') + ' opacity-75';
+    }
+    
+    return color;
   };
 
   return (
@@ -183,100 +168,110 @@ export function DayViewTBI({
                     </div>
                   </div>
                   
-                  {/* Event Column */}
+                  {/* Activity Column */}
                   <div className="flex-1 p-2 md:p-3">
-                    {timeSlotEvents[time] ? (
-                      /* Existing Event */
-                      <div className={`p-3 rounded-lg border ${getEventTypeColor(timeSlotEvents[time].type)} group relative`}>
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-sm md:text-base truncate">
-                              {timeSlotEvents[time].title}
-                            </h4>
-                            {timeSlotEvents[time].description && (
-                              <p className="text-xs md:text-sm opacity-80 mt-1 line-clamp-2">
-                                {timeSlotEvents[time].description}
-                              </p>
+                    {/* Show activities for this time slot */}
+                    {dayActions
+                      .filter(action => {
+                        if (!action.start_time) return false;
+                        const actionHour = action.start_time.split(':')[0];
+                        const slotHour = time.split(':')[0];
+                        return actionHour === slotHour;
+                      })
+                      .map((action) => (
+                        <div
+                          key={action.id}
+                          className={`p-3 rounded-lg border mb-2 group relative ${getActionTypeColor(action.focus_area || 'cognitive', action.status)}`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <h4 className={`font-medium text-sm md:text-base truncate ${action.status === 'completed' ? 'line-through' : ''}`}>
+                                  {action.title}
+                                </h4>
+                                {action.status === 'completed' && (
+                                  <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
+                                )}
+                              </div>
+                              {action.description && (
+                                <p className="text-xs md:text-sm opacity-80 mt-1 line-clamp-2">
+                                  {action.description}
+                                </p>
+                              )}
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs uppercase font-medium tracking-wide opacity-70">
+                                  {action.focus_area || 'cognitive'}
+                                </span>
+                                {action.duration_minutes && (
+                                  <span className="text-xs opacity-70">
+                                    • {action.duration_minutes}min
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            {action.status !== 'completed' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCompleteAction(action.id)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 hover:bg-green-200 hover:text-green-700"
+                                title="Mark as complete"
+                              >
+                                <CheckCircle2 className="h-3 w-3" />
+                              </Button>
                             )}
-                            <span className="text-xs uppercase font-medium tracking-wide opacity-70 mt-1 block">
-                              {timeSlotEvents[time].type}
-                            </span>
                           </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removeEvent(time)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 hover:bg-destructive/20 hover:text-destructive"
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
                         </div>
-                      </div>
-                    ) : editingSlot === time ? (
-                      /* Add Event Form */
-                      <div className="space-y-3 p-3 bg-muted/20 rounded-lg border-2 border-dashed border-primary/30">
-                        <Input
-                          placeholder="Event title..."
-                          value={eventTitle}
-                          onChange={(e) => setEventTitle(e.target.value)}
-                          className="text-sm"
-                          autoFocus
-                        />
-                        <Textarea
-                          placeholder="Description (optional)..."
-                          value={eventDescription}
-                          onChange={(e) => setEventDescription(e.target.value)}
-                          className="text-sm min-h-[60px] resize-none"
-                        />
-                        <div className="flex flex-wrap gap-2">
-                          {(['personal', 'appointment', 'therapy', 'medication', 'rest'] as EventType[]).map((type) => (
-                            <button
-                              key={type}
-                              onClick={() => setEventType(type)}
-                              className={`px-2 py-1 text-xs rounded-md border transition-colors capitalize ${
-                                eventType === type 
-                                  ? getEventTypeColor(type)
-                                  : 'bg-background border-border text-muted-foreground hover:bg-muted/50'
-                              }`}
-                            >
-                              {type}
-                            </button>
-                          ))}
+                      ))}
+                    
+                    {/* Show activities without specific time */}
+                    {time === '05:00' && dayActions
+                      .filter(action => !action.start_time)
+                      .map((action) => (
+                        <div
+                          key={action.id}
+                          className={`p-3 rounded-lg border mb-2 group relative ${getActionTypeColor(action.focus_area || 'cognitive', action.status)}`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <h4 className={`font-medium text-sm md:text-base truncate ${action.status === 'completed' ? 'line-through' : ''}`}>
+                                  {action.title}
+                                </h4>
+                                {action.status === 'completed' && (
+                                  <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />
+                                )}
+                              </div>
+                              {action.description && (
+                                <p className="text-xs md:text-sm opacity-80 mt-1 line-clamp-2">
+                                  {action.description}
+                                </p>
+                              )}
+                              <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs uppercase font-medium tracking-wide opacity-70">
+                                  {action.focus_area || 'cognitive'} • No specific time
+                                </span>
+                                {action.duration_minutes && (
+                                  <span className="text-xs opacity-70">
+                                    • {action.duration_minutes}min
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            {action.status !== 'completed' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleCompleteAction(action.id)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6 p-0 hover:bg-green-200 hover:text-green-700"
+                                title="Mark as complete"
+                              >
+                                <CheckCircle2 className="h-3 w-3" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
-                        <div className="flex gap-2 pt-2">
-                          <Button
-                            size="sm"
-                            onClick={() => addEvent(time)}
-                            disabled={!eventTitle.trim()}
-                            className="flex-1 h-8 text-xs"
-                          >
-                            Add Event
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setEditingSlot(null);
-                              setEventTitle('');
-                              setEventDescription('');
-                              setEventType('personal');
-                            }}
-                            className="h-8 text-xs"
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      /* Add Event Button */
-                      <button
-                        onClick={() => setEditingSlot(time)}
-                        className="w-full h-full min-h-[40px] flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground hover:bg-muted/20 rounded-lg border-2 border-dashed border-transparent hover:border-muted transition-all group"
-                      >
-                        <Plus className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                        <span className="text-sm font-medium">Add event</span>
-                      </button>
-                    )}
+                      ))}
                   </div>
                 </div>
               ))}

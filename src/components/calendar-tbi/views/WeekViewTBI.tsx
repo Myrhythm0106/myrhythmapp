@@ -1,15 +1,18 @@
-
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { format, startOfWeek, addDays, isSameDay } from 'date-fns';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { TBIEvent } from '../types/calendarTypes';
-import { format, startOfWeek, addDays, isSameDay, isToday } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
 import { NavigationHeader } from '../components/NavigationHeader';
+import { TBIEvent } from '../types/calendarTypes';
+import { DailyAction } from '@/contexts/DailyActionsContext';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface WeekViewTBIProps {
   currentDate: Date;
   events: TBIEvent[];
+  actions: DailyAction[];
   onDayClick: (date: Date) => void;
   priorities: { p1: string; p2: string; p3: string };
   updatePriorities: (field: 'p1' | 'p2' | 'p3', value: string) => void;
@@ -18,12 +21,20 @@ interface WeekViewTBIProps {
   onDateChange: (date: Date) => void;
 }
 
-export function WeekViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient, onDateChange }: WeekViewTBIProps) {
+export function WeekViewTBI({ currentDate, events, actions, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient, onDateChange }: WeekViewTBIProps) {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 }); // Start on Monday
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   const getEventsForDay = (date: Date) => {
-    return events.filter(event => isSameDay(event.startTime, date));
+    return events.filter(event => 
+      isSameDay(event.startTime, date)
+    );
+  };
+
+  const getActionsForDay = (date: Date) => {
+    return actions.filter(action => 
+      action.date && isSameDay(new Date(action.date), date)
+    );
   };
 
   return (
@@ -92,42 +103,50 @@ export function WeekViewTBI({ currentDate, events, onDayClick, priorities, updat
 
       {/* Week Days Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-4">
-        {weekDays.map((day) => {
+        {weekDays.map((day, index) => {
           const dayEvents = getEventsForDay(day);
-          const isCurrentDay = isToday(day);
+          const dayActions = getActionsForDay(day);
+          const isToday = isSameDay(day, new Date());
           
           return (
-            <Card
-              key={day.toISOString()}
-              className={`p-4 cursor-pointer transition-all hover:shadow-md min-h-[120px] ${
-                isCurrentDay ? 'bg-blue-50 border-blue-300 shadow-md' : 'bg-white'
-              }`}
+            <Card 
+              key={index} 
+              className={`cursor-pointer transition-all hover:shadow-md ${isToday ? 'ring-2 ring-primary' : ''}`}
               onClick={() => onDayClick(day)}
             >
-              <div className="text-center">
-                <div className={`text-lg font-bold mb-1 ${
-                  isCurrentDay ? 'text-blue-700' : 'text-gray-900'
-                }`}>
-                  {format(day, 'd')}
-                </div>
-                <div className={`text-sm font-medium mb-2 ${
-                  isCurrentDay ? 'text-blue-600' : 'text-gray-600'
-                }`}>
-                  {format(day, 'EEE')}
-                </div>
-                
-                {dayEvents.length > 0 && (
-                  <div className="text-xs text-gray-500">
-                    {dayEvents.length} event{dayEvents.length !== 1 ? 's' : ''}
+              <CardContent className="p-4">
+                <div className="text-center">
+                  <div className="font-semibold text-lg">
+                    {format(day, 'EEE')}
                   </div>
-                )}
-                
-                {dayEvents.length === 0 && (
-                  <div className="text-xs text-gray-400">
-                    Free
+                  <div className={`text-2xl font-bold ${isToday ? 'text-primary' : ''}`}>
+                    {format(day, 'd')}
                   </div>
-                )}
-              </div>
+                  
+                  {/* Activity Headlines */}
+                  <div className="mt-3 space-y-1">
+                    {dayActions.slice(0, 2).map((action, actionIndex) => (
+                      <div
+                        key={actionIndex}
+                        className="text-xs px-2 py-1 bg-primary/10 text-primary rounded-full truncate"
+                        title={action.title}
+                      >
+                        • {action.title.length > 15 ? action.title.substring(0, 15) + '...' : action.title}
+                      </div>
+                    ))}
+                    {dayActions.length > 2 && (
+                      <div className="text-xs text-muted-foreground">
+                        +{dayActions.length - 2} more
+                      </div>
+                    )}
+                    {dayActions.length === 0 && dayEvents.length > 0 && (
+                      <div className="text-sm text-muted-foreground mt-2">
+                        {dayEvents.length} events
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
             </Card>
           );
         })}

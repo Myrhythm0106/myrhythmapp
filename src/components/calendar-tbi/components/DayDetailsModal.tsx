@@ -20,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { format } from 'date-fns';
 import { Calendar, Users, MessageSquare, Clock, Tag } from 'lucide-react';
 import { useSupportCircle } from '@/hooks/use-support-circle';
+import { useDailyActions } from '@/contexts/DailyActionsContext';
 import { toast } from 'sonner';
 
 interface DayDetailsModalProps {
@@ -31,47 +32,60 @@ interface DayDetailsModalProps {
 
 export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDetailsModalProps) {
   const { members, addMessage } = useSupportCircle();
+  const { createAction } = useDailyActions();
+  const [activityTitle, setActivityTitle] = useState('');
   const [activityDetails, setActivityDetails] = useState('');
   const [selectedMember, setSelectedMember] = useState<string>('');
   const [activityType, setActivityType] = useState('');
   const [timeSpent, setTimeSpent] = useState('');
   const [feelings, setFeelings] = useState('');
 
-  const handleSave = () => {
-    if (!activityDetails.trim()) {
-      toast.error('Please add some activity details');
+  const handleSave = async () => {
+    if (!activityTitle.trim()) {
+      toast.error('Please add an activity title');
       return;
     }
 
-    // Save activity details logic would go here
-    console.log('Saving activity details:', {
-      date: selectedDate,
-      details: activityDetails,
-      type: activityType,
-      timeSpent,
-      feelings,
-      sharedWith: selectedMember
-    });
+    try {
+      // Create the activity in the database
+      await createAction({
+        title: activityTitle.trim(),
+        description: activityDetails.trim() || undefined,
+        date: format(selectedDate, 'yyyy-MM-dd'),
+        action_type: 'regular',
+        focus_area: activityType === 'therapy' ? 'physical' :
+                   activityType === 'exercise' ? 'physical' :
+                   activityType === 'cognitive' ? 'cognitive' : 
+                   activityType === 'social' ? 'social' : 
+                   activityType === 'rest' ? 'emotional' : 'cognitive',
+        duration_minutes: timeSpent ? parseInt(timeSpent) : undefined,
+        status: 'pending'
+      });
 
-    // If sharing with support circle member
-    if (selectedMember && activityDetails.trim()) {
-      const member = members.find(m => m.id === selectedMember);
-      if (member) {
-        const message = `Daily activity update for ${format(selectedDate, 'MMM d, yyyy')}: ${activityDetails}`;
-        addMessage(selectedMember, message);
-        toast.success(`Activity shared with ${member.name}`);
+      // If sharing with support circle member
+      if (selectedMember && activityTitle.trim()) {
+        const member = members.find(m => m.id === selectedMember);
+        if (member) {
+          const message = `Daily activity update for ${format(selectedDate, 'MMM d, yyyy')}: ${activityTitle}${activityDetails ? ` - ${activityDetails}` : ''}`;
+          addMessage(selectedMember, message);
+          toast.success(`Activity shared with ${member.name}`);
+        }
       }
-    }
 
-    toast.success('Activity details saved successfully!');
-    
-    // Reset form
-    setActivityDetails('');
-    setSelectedMember('');
-    setActivityType('');
-    setTimeSpent('');
-    setFeelings('');
-    onClose();
+      toast.success('Activity saved successfully!');
+      
+      // Reset form
+      setActivityTitle('');
+      setActivityDetails('');
+      setSelectedMember('');
+      setActivityType('');
+      setTimeSpent('');
+      setFeelings('');
+      onClose();
+    } catch (error) {
+      console.error('Error saving activity:', error);
+      toast.error('Failed to save activity. Please try again.');
+    }
   };
 
   const dayEvents = events.filter(event => 
@@ -120,6 +134,19 @@ export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDe
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Activity Title */}
+              <div className="space-y-2">
+                <Label htmlFor="activity-title">Activity Title *</Label>
+                <Input
+                  id="activity-title"
+                  placeholder="Brief headline for your calendar (e.g., 'Physical Therapy', 'Team Meeting')"
+                  value={activityTitle}
+                  onChange={(e) => setActivityTitle(e.target.value)}
+                  className="font-medium"
+                />
+                <p className="text-xs text-muted-foreground">This will appear as the headline in your calendar views</p>
+              </div>
+
               {/* Activity Type */}
               <div className="space-y-2">
                 <Label htmlFor="activity-type">Activity Type</Label>
@@ -154,7 +181,7 @@ export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDe
 
               {/* Activity Details */}
               <div className="space-y-2">
-                <Label htmlFor="details">Activity Details</Label>
+                <Label htmlFor="details">Activity Details (Optional)</Label>
                 <Textarea
                   id="details"
                   placeholder="Describe what you did, how it went, any challenges or successes..."
@@ -162,6 +189,7 @@ export function DayDetailsModal({ isOpen, onClose, selectedDate, events }: DayDe
                   onChange={(e) => setActivityDetails(e.target.value)}
                   rows={4}
                 />
+                <p className="text-xs text-muted-foreground">Additional details for your personal tracking</p>
               </div>
 
               {/* How You're Feeling */}

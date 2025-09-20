@@ -9,6 +9,7 @@ import { DayDetailsModal } from './components/DayDetailsModal';
 import { TBIEvent, EnergyLevel, DayData, CalendarSettings } from './types/calendarTypes';
 import { toast } from 'sonner';
 import { usePomodoro } from '@/contexts/PomodoroContext';
+import { useDailyActions } from '@/contexts/DailyActionsContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Timer, Users, Target } from 'lucide-react';
@@ -60,6 +61,7 @@ const mockEvents: TBIEvent[] = [
 ];
 
 export function TBICalendarApp() {
+  const { actions } = useDailyActions();
   const [dayData, setDayData] = useState<DayData>({
     date: new Date(),
     events: mockEvents,
@@ -201,6 +203,7 @@ export function TBICalendarApp() {
             <WeekViewTBI
               currentDate={weekViewDate}
               events={dayData.events}
+              actions={actions}
               onDayClick={handleDayClick}
               priorities={weeklyPriorities.p1 || weeklyPriorities.p2 || weeklyPriorities.p3 ? 
                 weeklyPriorities : initializePriorities('weekly')}
