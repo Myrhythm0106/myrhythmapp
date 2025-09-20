@@ -15,7 +15,12 @@ export function UnifiedHeader({ viewTitle, dateInfo, viewType = 'day', currentDa
   const currentTheme = getCurrentTheme(currentDate);
 
   // Helper function to generate empowering completions based on themes
-  const getEmpoweringCompletion = (theme: string): string => {
+  const getEmpoweringCompletion = (theme: string | undefined): string => {
+    // Defensive check - ensure theme is a valid string
+    if (!theme || typeof theme !== 'string') {
+      return 'becoming the person I\'m meant to be';
+    }
+
     const themeCompletions: Record<string, string> = {
       'growth': 'evolving into my strongest self',
       'resilience': 'bouncing back with unwavering strength',
@@ -49,22 +54,26 @@ export function UnifiedHeader({ viewTitle, dateInfo, viewType = 'day', currentDa
 
   // Generate contextual empowering statement
   const getContextualStatement = (): string => {
-    let relevantTheme = '';
-    switch (viewType) {
-      case 'day':
-        relevantTheme = currentTheme.daily;
-        break;
-      case 'week':
-        relevantTheme = currentTheme.weekly;
-        break;
-      case 'month':
-        relevantTheme = currentTheme.monthly;
-        break;
-      case 'year':
-        relevantTheme = currentTheme.yearly;
-        break;
-      default:
-        relevantTheme = currentTheme.current;
+    // Defensive check - ensure currentTheme exists and has properties
+    let relevantTheme = 'growth'; // default fallback
+    
+    if (currentTheme) {
+      switch (viewType) {
+        case 'day':
+          relevantTheme = currentTheme.daily || 'growth';
+          break;
+        case 'week':
+          relevantTheme = currentTheme.weekly || 'focus';
+          break;
+        case 'month':
+          relevantTheme = currentTheme.monthly || 'balance';
+          break;
+        case 'year':
+          relevantTheme = currentTheme.yearly || 'transformation';
+          break;
+        default:
+          relevantTheme = currentTheme.current || 'growth';
+      }
     }
     
     const completion = getEmpoweringCompletion(relevantTheme);
@@ -113,7 +122,7 @@ export function UnifiedHeader({ viewTitle, dateInfo, viewType = 'day', currentDa
         {/* Simple Theme Display */}
         <div className="mt-4 pt-4 border-t border-purple-200/50 flex justify-center">
           <p className="text-sm text-purple-600">
-            Current Theme: {currentTheme.current}
+            Current Theme: {currentTheme?.current || 'Loading...'}
           </p>
         </div>
       </CardContent>
