@@ -9,15 +9,13 @@ interface YearViewTBIProps {
   currentDate: Date;
   events: TBIEvent[];
   onDayClick: (date: Date) => void;
-  p1Priority: string;
-  setP1Priority: (value: string) => void;
-  p2Priority: string;
-  setP2Priority: (value: string) => void;
-  p3Priority: string;
-  setP3Priority: (value: string) => void;
+  priorities: { p1: string; p2: string; p3: string };
+  updatePriorities: (field: 'p1' | 'p2' | 'p3', value: string) => void;
+  scopeLabel: string;
+  scopeGradient: string;
 }
 
-export function YearViewTBI({ currentDate, events, onDayClick, p1Priority, setP1Priority, p2Priority, setP2Priority, p3Priority, setP3Priority }: YearViewTBIProps) {
+export function YearViewTBI({ currentDate, events, onDayClick, priorities, updatePriorities, scopeLabel, scopeGradient }: YearViewTBIProps) {
   const yearStart = startOfYear(currentDate);
   const months = Array.from({ length: 12 }, (_, i) => addMonths(yearStart, i));
 
@@ -32,20 +30,25 @@ export function YearViewTBI({ currentDate, events, onDayClick, p1Priority, setP1
       />
 
       {/* Empowerment Banner - P1, P2, P3 Priorities */}
-      <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <Card className={`bg-gradient-to-r ${scopeGradient} text-white`}>
         <div className="p-6">
-          <h2 className="text-xl font-bold mb-4 text-center">
-            Today, I choose... I AM Empowered
-          </h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">
+              {scopeLabel} Focus - I AM Empowered
+            </h2>
+            <div className="text-sm opacity-90 font-medium">
+              {scopeLabel} • Your Annual Vision
+            </div>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* P1 Priority */}
             <div>
               <label className="block text-sm font-medium mb-2">P1 - Most Important</label>
               <Input
-                value={p1Priority}
-                onChange={(e) => setP1Priority(e.target.value)}
-                placeholder="Your top priority..."
+                value={priorities.p1}
+                onChange={(e) => updatePriorities('p1', e.target.value)}
+                placeholder="Your top yearly goal..."
                 className="bg-white/20 border-white/30 text-white placeholder-white/70"
               />
             </div>
@@ -54,9 +57,9 @@ export function YearViewTBI({ currentDate, events, onDayClick, p1Priority, setP1
             <div>
               <label className="block text-sm font-medium mb-2">P2 - Important</label>
               <Input
-                value={p2Priority}
-                onChange={(e) => setP2Priority(e.target.value)}
-                placeholder="Second priority..."
+                value={priorities.p2}
+                onChange={(e) => updatePriorities('p2', e.target.value)}
+                placeholder="Second yearly goal..."
                 className="bg-white/20 border-white/30 text-white placeholder-white/70"
               />
             </div>
@@ -65,9 +68,9 @@ export function YearViewTBI({ currentDate, events, onDayClick, p1Priority, setP1
             <div>
               <label className="block text-sm font-medium mb-2">P3 - Nice to Have</label>
               <Input
-                value={p3Priority}
-                onChange={(e) => setP3Priority(e.target.value)}
-                placeholder="Third priority..."
+                value={priorities.p3}
+                onChange={(e) => updatePriorities('p3', e.target.value)}
+                placeholder="Third yearly goal..."
                 className="bg-white/20 border-white/30 text-white placeholder-white/70"
               />
             </div>

@@ -72,10 +72,37 @@ export function TBICalendarApp() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const { isRunning, timeLeft, currentSession, startTimer, pauseTimer, resetTimer } = usePomodoro();
   
-  // Shared priority state across all views
-  const [p1Priority, setP1Priority] = useState('');
-  const [p2Priority, setP2Priority] = useState('');
-  const [p3Priority, setP3Priority] = useState('');
+  // Separate priority states for each time scope
+  const [dailyPriorities, setDailyPriorities] = useState({ p1: '', p2: '', p3: '' });
+  const [weeklyPriorities, setWeeklyPriorities] = useState({ p1: '', p2: '', p3: '' });
+  const [monthlyPriorities, setMonthlyPriorities] = useState({ p1: '', p2: '', p3: '' });
+  const [yearlyPriorities, setYearlyPriorities] = useState({ p1: '', p2: '', p3: '' });
+
+  // Smart initialization - cascade priorities from parent scopes when empty
+  const initializePriorities = (scope: 'daily' | 'weekly' | 'monthly') => {
+    const parentPriorities = scope === 'daily' ? weeklyPriorities :
+                            scope === 'weekly' ? monthlyPriorities :
+                            scope === 'monthly' ? yearlyPriorities : null;
+    
+    return parentPriorities || { p1: '', p2: '', p3: '' };
+  };
+
+  // Helper functions to update priorities
+  const updateDailyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
+    setDailyPriorities(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateWeeklyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
+    setWeeklyPriorities(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateMonthlyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
+    setMonthlyPriorities(prev => ({ ...prev, [field]: value }));
+  };
+
+  const updateYearlyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
+    setYearlyPriorities(prev => ({ ...prev, [field]: value }));
+  };
 
   const handleEventComplete = (eventId: string) => {
     setDayData(prev => ({
@@ -154,12 +181,11 @@ export function TBICalendarApp() {
               onEnergyLevelChange={handleEnergyLevelChange}
               onOpenSettings={handleOpenSettings}
               onOpenCaregiver={handleOpenCaregiver}
-              p1Priority={p1Priority}
-              setP1Priority={setP1Priority}
-              p2Priority={p2Priority}
-              setP2Priority={setP2Priority}
-              p3Priority={p3Priority}
-              setP3Priority={setP3Priority}
+              priorities={dailyPriorities.p1 || dailyPriorities.p2 || dailyPriorities.p3 ? 
+                dailyPriorities : initializePriorities('daily')}
+              updatePriorities={updateDailyPriorities}
+              scopeLabel="Daily"
+              scopeGradient="from-emerald-600 to-green-600"
             />
           </TabsContent>
 
@@ -168,12 +194,11 @@ export function TBICalendarApp() {
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
-              p1Priority={p1Priority}
-              setP1Priority={setP1Priority}
-              p2Priority={p2Priority}
-              setP2Priority={setP2Priority}
-              p3Priority={p3Priority}
-              setP3Priority={setP3Priority}
+              priorities={weeklyPriorities.p1 || weeklyPriorities.p2 || weeklyPriorities.p3 ? 
+                weeklyPriorities : initializePriorities('weekly')}
+              updatePriorities={updateWeeklyPriorities}
+              scopeLabel="Weekly"
+              scopeGradient="from-blue-600 to-indigo-600"
             />
           </TabsContent>
 
@@ -182,12 +207,11 @@ export function TBICalendarApp() {
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
-              p1Priority={p1Priority}
-              setP1Priority={setP1Priority}
-              p2Priority={p2Priority}
-              setP2Priority={setP2Priority}
-              p3Priority={p3Priority}
-              setP3Priority={setP3Priority}
+              priorities={monthlyPriorities.p1 || monthlyPriorities.p2 || monthlyPriorities.p3 ? 
+                monthlyPriorities : initializePriorities('monthly')}
+              updatePriorities={updateMonthlyPriorities}
+              scopeLabel="Monthly"
+              scopeGradient="from-purple-600 to-pink-600"
             />
           </TabsContent>
 
@@ -196,12 +220,10 @@ export function TBICalendarApp() {
               currentDate={dayData.date}
               events={dayData.events}
               onDayClick={handleDayClick}
-              p1Priority={p1Priority}
-              setP1Priority={setP1Priority}
-              p2Priority={p2Priority}
-              setP2Priority={setP2Priority}
-              p3Priority={p3Priority}
-              setP3Priority={setP3Priority}
+              priorities={yearlyPriorities}
+              updatePriorities={updateYearlyPriorities}
+              scopeLabel="Yearly"
+              scopeGradient="from-yellow-600 to-orange-600"
             />
           </TabsContent>
 
