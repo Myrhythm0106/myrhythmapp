@@ -6,6 +6,7 @@ import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { Brain, ArrowLeft } from "lucide-react";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
+import { PasswordRecoveryForm } from "@/components/auth/PasswordRecoveryForm";
 import { toast } from "sonner";
 
 const Auth = () => {
@@ -16,18 +17,29 @@ const Auth = () => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successEmail, setSuccessEmail] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showPasswordRecovery, setShowPasswordRecovery] = useState(false);
 
   const from = (location.state as any)?.from?.pathname || "/dashboard";
 
-  // Check for password recovery parameters
+  // Check for password recovery parameters in both search params and hash
   useEffect(() => {
     const type = searchParams.get('type');
     const accessToken = searchParams.get('access_token');
+    const hash = window.location.hash;
     
+    // Check hash for recovery tokens (Supabase sends tokens in hash fragments)
+    if (hash.includes('type=recovery') && hash.includes('access_token=')) {
+      console.log('Password recovery detected in URL hash');
+      setShowPasswordRecovery(true);
+      setShowForgotPassword(false);
+      setShowSuccessMessage(false);
+      return;
+    }
+    
+    // Fallback to search params
     if (type === 'recovery' && accessToken) {
       console.log('Password recovery detected in URL parameters');
-      // The auth state change will handle the recovery automatically
-      // Just show a message to the user
+      setShowPasswordRecovery(true);
       setShowForgotPassword(false);
       setShowSuccessMessage(false);
     }
@@ -107,6 +119,12 @@ const Auth = () => {
     navigate(destination, { replace: true });
   };
 
+  const handlePasswordRecoverySuccess = () => {
+    setShowPasswordRecovery(false);
+    toast.success('Password updated successfully!');
+    navigate('/dashboard', { replace: true });
+  };
+
   // Show loading while checking authentication
   if (loading) {
     return (
@@ -114,6 +132,37 @@ const Auth = () => {
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
           <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show password recovery form
+  if (showPasswordRecovery) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-6 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Button>
+
+          <div className="text-center mb-8">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+                <Brain className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                MyRhythm
+              </h1>
+            </div>
+          </div>
+
+          <PasswordRecoveryForm onSuccess={handlePasswordRecoverySuccess} />
         </div>
       </div>
     );
