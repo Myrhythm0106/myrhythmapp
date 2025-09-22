@@ -25,49 +25,87 @@ const Auth = () => {
 
   // Check for password recovery parameters in both search params and hash
   useEffect(() => {
-    const type = searchParams.get('type');
-    const accessToken = searchParams.get('access_token');
-    const hash = window.location.hash;
-    
-    // Check hash for error parameters first
-    if (hash.includes('error=')) {
-      const urlParams = new URLSearchParams(hash.substring(1));
-      const error = urlParams.get('error');
-      const errorCode = urlParams.get('error_code');
-      const errorDescription = urlParams.get('error_description');
+    const checkRecoveryToken = () => {
+      const type = searchParams.get('type');
+      const accessToken = searchParams.get('access_token');
+      const hash = window.location.hash;
       
-      if (error === 'access_denied' && errorCode === 'otp_expired') {
-        setErrorMessage('The password reset link has expired or has already been used. Please request a new one.');
-        setShowTokenError(true);
-        setShowPasswordRecovery(false);
+      console.log('Checking for recovery token. Hash:', hash);
+      console.log('Search params type:', type, 'accessToken:', accessToken);
+      
+      // Check hash for error parameters first
+      if (hash.includes('error=')) {
+        const urlParams = new URLSearchParams(hash.substring(1));
+        const error = urlParams.get('error');
+        const errorCode = urlParams.get('error_code');
+        const errorDescription = urlParams.get('error_description');
+        
+        console.log('Error detected in hash:', { error, errorCode, errorDescription });
+        
+        if (error === 'access_denied' && errorCode === 'otp_expired') {
+          setErrorMessage('The password reset link has expired or has already been used. Please request a new one.');
+          setShowTokenError(true);
+          setShowPasswordRecovery(false);
+          setShowForgotPassword(false);
+          setShowSuccessMessage(false);
+          
+          // Clean the URL
+          window.history.replaceState({}, '', window.location.pathname);
+          return;
+        }
+      }
+      
+      // Check hash for recovery tokens (Supabase sends tokens in hash fragments)
+      if (hash.includes('type=recovery') && hash.includes('access_token=')) {
+        console.log('Password recovery detected in URL hash - showing recovery form');
+        setShowPasswordRecovery(true);
         setShowForgotPassword(false);
         setShowSuccessMessage(false);
-        
-        // Clean the URL
-        window.history.replaceState({}, '', window.location.pathname);
+        setShowTokenError(false);
         return;
       }
-    }
-    
-    // Check hash for recovery tokens (Supabase sends tokens in hash fragments)
-    if (hash.includes('type=recovery') && hash.includes('access_token=')) {
-      console.log('Password recovery detected in URL hash');
-      setShowPasswordRecovery(true);
-      setShowForgotPassword(false);
-      setShowSuccessMessage(false);
-      setShowTokenError(false);
-      return;
-    }
-    
-    // Fallback to search params
-    if (type === 'recovery' && accessToken) {
-      console.log('Password recovery detected in URL parameters');
-      setShowPasswordRecovery(true);
-      setShowForgotPassword(false);
-      setShowSuccessMessage(false);
-      setShowTokenError(false);
-    }
+      
+      // Fallback to search params
+      if (type === 'recovery' && accessToken) {
+        console.log('Password recovery detected in URL parameters - showing recovery form');
+        setShowPasswordRecovery(true);
+        setShowForgotPassword(false);
+        setShowSuccessMessage(false);
+        setShowTokenError(false);
+        return;
+      }
+      
+      console.log('No recovery token detected');
+    };
+
+    checkRecoveryToken();
   }, [searchParams]);
+
+  // Separate effect to handle hash changes (for recovery tokens)
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      console.log('Hash changed:', hash);
+      
+      if (hash.includes('type=recovery') && hash.includes('access_token=')) {
+        console.log('Recovery token detected in hash change - showing recovery form');
+        setShowPasswordRecovery(true);
+        setShowForgotPassword(false);
+        setShowSuccessMessage(false);
+        setShowTokenError(false);
+      }
+    };
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    
+    // Also check immediately in case we missed it
+    handleHashChange();
+
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
 
   // If user is already logged in, show logout option instead of redirecting
   if (user && !loading) {
