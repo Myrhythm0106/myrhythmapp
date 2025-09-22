@@ -18,6 +18,8 @@ const Auth = () => {
   const [successEmail, setSuccessEmail] = useState('');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [showPasswordRecovery, setShowPasswordRecovery] = useState(false);
+  const [showTokenError, setShowTokenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const from = (location.state as any)?.from?.pathname || "/dashboard";
 
@@ -27,12 +29,33 @@ const Auth = () => {
     const accessToken = searchParams.get('access_token');
     const hash = window.location.hash;
     
+    // Check hash for error parameters first
+    if (hash.includes('error=')) {
+      const urlParams = new URLSearchParams(hash.substring(1));
+      const error = urlParams.get('error');
+      const errorCode = urlParams.get('error_code');
+      const errorDescription = urlParams.get('error_description');
+      
+      if (error === 'access_denied' && errorCode === 'otp_expired') {
+        setErrorMessage('The password reset link has expired or has already been used. Please request a new one.');
+        setShowTokenError(true);
+        setShowPasswordRecovery(false);
+        setShowForgotPassword(false);
+        setShowSuccessMessage(false);
+        
+        // Clean the URL
+        window.history.replaceState({}, '', window.location.pathname);
+        return;
+      }
+    }
+    
     // Check hash for recovery tokens (Supabase sends tokens in hash fragments)
     if (hash.includes('type=recovery') && hash.includes('access_token=')) {
       console.log('Password recovery detected in URL hash');
       setShowPasswordRecovery(true);
       setShowForgotPassword(false);
       setShowSuccessMessage(false);
+      setShowTokenError(false);
       return;
     }
     
@@ -42,6 +65,7 @@ const Auth = () => {
       setShowPasswordRecovery(true);
       setShowForgotPassword(false);
       setShowSuccessMessage(false);
+      setShowTokenError(false);
     }
   }, [searchParams]);
 
@@ -100,6 +124,17 @@ const Auth = () => {
     setShowForgotPassword(false);
   };
 
+  const handleBackFromTokenError = () => {
+    setShowTokenError(false);
+    setErrorMessage('');
+  };
+
+  const handleRequestNewReset = () => {
+    setShowTokenError(false);
+    setShowForgotPassword(true);
+    setErrorMessage('');
+  };
+
   const handleResendVerification = (email: string) => {
     console.log('Resend verification for:', email);
   };
@@ -132,6 +167,58 @@ const Auth = () => {
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500 mx-auto"></div>
           <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show token error message
+  if (showTokenError) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="mb-6 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Button>
+
+          <Card className="shadow-lg border-red-200/50">
+            <CardHeader className="text-center space-y-4">
+              <div className="flex items-center justify-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+                  MyRhythm
+                </h1>
+              </div>
+              <CardTitle className="text-xl text-red-600">Reset Link Expired</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-center text-gray-600">
+                {errorMessage}
+              </p>
+              <div className="space-y-2">
+                <Button
+                  onClick={handleRequestNewReset}
+                  className="w-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
+                >
+                  Request New Reset Link
+                </Button>
+                <Button
+                  onClick={handleBackFromTokenError}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Back to Sign In
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
