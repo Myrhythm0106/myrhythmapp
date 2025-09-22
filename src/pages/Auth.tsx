@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,6 +21,9 @@ const Auth = () => {
   const [showPasswordRecovery, setShowPasswordRecovery] = useState(false);
   const [showTokenError, setShowTokenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  
+  // Use a ref to track recovery session state - persists across re-renders and prevents race conditions
+  const isRecoverySession = useRef(false);
 
   const from = (location.state as any)?.from?.pathname || "/dashboard";
 
@@ -105,6 +108,9 @@ const Auth = () => {
       if (type === 'recovery' && accessToken && refreshToken) {
         console.log('🔒 AUTH DEBUG: Valid recovery token found - immediately showing recovery form');
         
+        // Set recovery session flag FIRST - this persists across re-renders
+        isRecoverySession.current = true;
+        
         // Immediately show the password recovery form to prevent race condition
         setShowPasswordRecovery(true);
         setShowForgotPassword(false);
@@ -163,8 +169,8 @@ const Auth = () => {
     processRecoveryToken();
   }, []); // Empty dependency array - run only once on mount
 
-  // If user is already logged in (but not in password recovery), show logout option instead of redirecting
-  if (user && !loading && !showPasswordRecovery) {
+  // If user is already logged in (but not in password recovery or recovery session), show logout option instead of redirecting
+  if (user && !loading && !showPasswordRecovery && !isRecoverySession.current) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
         <Card className="shadow-lg border-purple-200/50 w-full max-w-md">
@@ -249,6 +255,8 @@ const Auth = () => {
   };
 
   const handlePasswordRecoverySuccess = () => {
+    // Clear recovery session flag after successful password update
+    isRecoverySession.current = false;
     setShowPasswordRecovery(false);
     toast.success('Password updated successfully!');
     navigate('/dashboard', { replace: true });
