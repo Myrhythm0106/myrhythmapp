@@ -454,23 +454,57 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updatePassword = async (newPassword: string) => {
     try {
-      console.log('AuthContext: Attempting to update password');
+      console.log('🔑 AUTH CONTEXT DEBUG: Attempting to update password');
+      console.log('🔑 AUTH CONTEXT DEBUG: Current user:', user ? user.email : 'no user');
+      console.log('🔑 AUTH CONTEXT DEBUG: Current session:', session ? 'exists' : 'no session');
+      console.log('🔑 AUTH CONTEXT DEBUG: Password length:', newPassword?.length || 0);
+      
+      if (!session) {
+        console.error('🔑 AUTH CONTEXT DEBUG: No session available for password update');
+        const errorMsg = 'No active session. Please try the password reset process again.';
+        toast.error(errorMsg);
+        return { error: new Error(errorMsg) };
+      }
+      
+      if (!user) {
+        console.error('🔑 AUTH CONTEXT DEBUG: No user available for password update');
+        const errorMsg = 'No user authenticated. Please try the password reset process again.';
+        toast.error(errorMsg);
+        return { error: new Error(errorMsg) };
+      }
+      
+      console.log('🔑 AUTH CONTEXT DEBUG: Calling supabase.auth.updateUser');
       
       const { error } = await supabase.auth.updateUser({
         password: newPassword
       });
       
+      console.log('🔑 AUTH CONTEXT DEBUG: updateUser result:', {
+        success: !error,
+        error: error?.message,
+        errorCode: error?.status
+      });
+      
       if (error) {
-        console.error('AuthContext: Password update error:', error);
-        toast.error(error.message);
+        console.error('🔑 AUTH CONTEXT DEBUG: Password update error:', error);
+        let userMessage = error.message;
+        
+        // Provide more specific error messages
+        if (error.message?.includes('Invalid login credentials')) {
+          userMessage = 'Your session has expired. Please request a new password reset link.';
+        } else if (error.message?.includes('User not found')) {
+          userMessage = 'User session is invalid. Please request a new password reset link.';
+        }
+        
+        toast.error(userMessage);
       } else {
-        console.log('AuthContext: Password updated successfully');
+        console.log('🔑 AUTH CONTEXT DEBUG: Password updated successfully');
         toast.success('Password updated successfully!');
       }
       
       return { error };
     } catch (error) {
-      console.error('AuthContext: Password update exception:', error);
+      console.error('🔑 AUTH CONTEXT DEBUG: Password update exception:', error);
       toast.error('Password update failed. Please try again.');
       return { error };
     }

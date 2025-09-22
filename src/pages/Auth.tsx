@@ -27,14 +27,20 @@ const Auth = () => {
   // Check for password recovery parameters in hash
   useEffect(() => {
     const processRecoveryToken = async () => {
+      console.log('🔒 AUTH DEBUG: Starting recovery token processing');
+      console.log('🔒 AUTH DEBUG: Full URL:', window.location.href);
+      console.log('🔒 AUTH DEBUG: Hash:', window.location.hash);
+      console.log('🔒 AUTH DEBUG: Current user:', user ? 'logged in' : 'not logged in');
+      console.log('🔒 AUTH DEBUG: Current session:', !!user);
+      
       const hash = window.location.hash;
       
       if (!hash) {
-        console.log('No hash found');
+        console.log('🔒 AUTH DEBUG: No hash found - normal auth flow');
         return;
       }
 
-      console.log('Processing hash:', hash);
+      console.log('🔒 AUTH DEBUG: Processing hash:', hash);
       
       // Parse hash parameters
       const hashParams = new URLSearchParams(hash.substring(1));
@@ -42,16 +48,34 @@ const Auth = () => {
       const accessToken = hashParams.get('access_token');
       const refreshToken = hashParams.get('refresh_token');
       
-      console.log('Hash params:', { type, accessToken: accessToken ? 'present' : 'missing', refreshToken: refreshToken ? 'present' : 'missing' });
+      console.log('🔒 AUTH DEBUG: Hash params parsed:', { 
+        type, 
+        accessToken: accessToken ? `${accessToken.substring(0, 10)}...` : 'missing', 
+        refreshToken: refreshToken ? `${refreshToken.substring(0, 10)}...` : 'missing',
+        allParams: Object.fromEntries(hashParams.entries())
+      });
       
       // Check for errors first
       const error = hashParams.get('error');
       const errorCode = hashParams.get('error_code');
+      const errorDescription = hashParams.get('error_description');
       
       if (error) {
-        console.log('Error in hash:', { error, errorCode });
+        console.log('🔒 AUTH DEBUG: Error found in hash:', { error, errorCode, errorDescription });
         if (error === 'access_denied' && errorCode === 'otp_expired') {
+          console.log('🔒 AUTH DEBUG: OTP expired - showing error message');
           setErrorMessage('The password reset link has expired or has already been used. Please request a new one.');
+          setShowTokenError(true);
+          setShowPasswordRecovery(false);
+          setShowForgotPassword(false);
+          setShowSuccessMessage(false);
+          
+          // Clean the URL
+          window.history.replaceState({}, '', window.location.pathname);
+          return;
+        } else {
+          console.log('🔒 AUTH DEBUG: Other error - showing generic error');
+          setErrorMessage(`Authentication error: ${error} - ${errorDescription || 'Please try again'}`);
           setShowTokenError(true);
           setShowPasswordRecovery(false);
           setShowForgotPassword(false);
@@ -65,7 +89,8 @@ const Auth = () => {
       
       // Process recovery token
       if (type === 'recovery' && accessToken && refreshToken) {
-        console.log('Valid recovery token found - establishing session');
+        console.log('🔒 AUTH DEBUG: Valid recovery token found - establishing session');
+        console.log('🔒 AUTH DEBUG: About to call supabase.auth.setSession');
         
         try {
           // Set the session with the recovery tokens
@@ -74,34 +99,57 @@ const Auth = () => {
             refresh_token: refreshToken
           });
           
+          console.log('🔒 AUTH DEBUG: setSession result:', {
+            success: !error,
+            error: error?.message,
+            user: data?.user?.email,
+            session: !!data?.session
+          });
+          
           if (error) {
-            console.error('Failed to set session:', error);
-            setErrorMessage('Failed to process recovery token. Please try again.');
+            console.error('🔒 AUTH DEBUG: Failed to set session:', error);
+            setErrorMessage(`Failed to process recovery token: ${error.message}`);
             setShowTokenError(true);
             return;
           }
           
-          console.log('Session established successfully - showing recovery form');
-          
-          // Show password recovery form
-          setShowPasswordRecovery(true);
-          setShowForgotPassword(false);
-          setShowSuccessMessage(false);
-          setShowTokenError(false);
-          
-          // Clean the URL after processing
-          window.history.replaceState({}, '', window.location.pathname);
+          if (data?.session && data?.user) {
+            console.log('🔒 AUTH DEBUG: Session established successfully');
+            console.log('🔒 AUTH DEBUG: User data:', {
+              id: data.user.id,
+              email: data.user.email,
+              email_confirmed_at: data.user.email_confirmed_at
+            });
+            
+            // Show password recovery form
+            console.log('🔒 AUTH DEBUG: Setting showPasswordRecovery to true');
+            setShowPasswordRecovery(true);
+            setShowForgotPassword(false);
+            setShowSuccessMessage(false);
+            setShowTokenError(false);
+            
+            // Clean the URL after processing
+            window.history.replaceState({}, '', window.location.pathname);
+            console.log('🔒 AUTH DEBUG: URL cleaned, recovery form should be visible');
+          } else {
+            console.error('🔒 AUTH DEBUG: Session or user missing from response');
+            setErrorMessage('Failed to establish session. Please try again.');
+            setShowTokenError(true);
+          }
           
         } catch (error) {
-          console.error('Error processing recovery token:', error);
-          setErrorMessage('Failed to process recovery token. Please try again.');
+          console.error('🔒 AUTH DEBUG: Exception during recovery token processing:', error);
+          setErrorMessage(`Failed to process recovery token: ${error}`);
           setShowTokenError(true);
         }
+      } else {
+        console.log('🔒 AUTH DEBUG: Not a recovery token - missing required params');
+        console.log('🔒 AUTH DEBUG: type:', type, 'accessToken present:', !!accessToken, 'refreshToken present:', !!refreshToken);
       }
     };
 
     processRecoveryToken();
-  }, []);
+  }, [user]);
 
   // If user is already logged in, show logout option instead of redirecting
   if (user && !loading) {

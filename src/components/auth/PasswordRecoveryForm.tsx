@@ -24,30 +24,51 @@ export const PasswordRecoveryForm = ({ onSuccess }: PasswordRecoveryFormProps) =
     e.preventDefault();
     setError('');
     
+    console.log('🔐 PASSWORD RECOVERY DEBUG: Form submitted');
+    console.log('🔐 PASSWORD RECOVERY DEBUG: Password length:', password.length);
+    console.log('🔐 PASSWORD RECOVERY DEBUG: Passwords match:', password === confirmPassword);
+    
     if (!password || !confirmPassword) {
+      console.log('🔐 PASSWORD RECOVERY DEBUG: Missing password fields');
       setError('Both password fields are required');
       return;
     }
 
     if (password !== confirmPassword) {
+      console.log('🔐 PASSWORD RECOVERY DEBUG: Passwords do not match');
       setError('Passwords do not match');
       return;
     }
 
     if (password.length < 6) {
+      console.log('🔐 PASSWORD RECOVERY DEBUG: Password too short');
       setError('Password must be at least 6 characters long');
       return;
     }
 
+    console.log('🔐 PASSWORD RECOVERY DEBUG: Validation passed, calling updatePassword');
     setIsSubmitting(true);
-    const { error } = await updatePassword(password);
     
-    if (!error) {
-      setPassword('');
-      setConfirmPassword('');
-      onSuccess();
-    } else {
-      setError(error.message || 'Failed to update password');
+    try {
+      const { error } = await updatePassword(password);
+      
+      console.log('🔐 PASSWORD RECOVERY DEBUG: updatePassword result:', {
+        success: !error,
+        error: error?.message
+      });
+      
+      if (!error) {
+        console.log('🔐 PASSWORD RECOVERY DEBUG: Password updated successfully');
+        setPassword('');
+        setConfirmPassword('');
+        onSuccess();
+      } else {
+        console.error('🔐 PASSWORD RECOVERY DEBUG: Password update failed:', error);
+        setError(error.message || 'Failed to update password');
+      }
+    } catch (error) {
+      console.error('🔐 PASSWORD RECOVERY DEBUG: Exception during password update:', error);
+      setError('An unexpected error occurred. Please try again.');
     }
     
     setIsSubmitting(false);
