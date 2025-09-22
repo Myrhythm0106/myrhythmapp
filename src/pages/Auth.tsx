@@ -8,6 +8,7 @@ import { AuthTabs } from "@/components/auth/AuthTabs";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { PasswordRecoveryForm } from "@/components/auth/PasswordRecoveryForm";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
   const { user, loading, signOut } = useAuth();
@@ -23,25 +24,32 @@ const Auth = () => {
 
   const from = (location.state as any)?.from?.pathname || "/dashboard";
 
-  // Check for password recovery parameters in both search params and hash
+  // Check for password recovery parameters in hash
   useEffect(() => {
-    const checkRecoveryToken = () => {
-      const type = searchParams.get('type');
-      const accessToken = searchParams.get('access_token');
+    const processRecoveryToken = async () => {
       const hash = window.location.hash;
       
-      console.log('Checking for recovery token. Hash:', hash);
-      console.log('Search params type:', type, 'accessToken:', accessToken);
+      if (!hash) {
+        console.log('No hash found');
+        return;
+      }
+
+      console.log('Processing hash:', hash);
       
-      // Check hash for error parameters first
-      if (hash.includes('error=')) {
-        const urlParams = new URLSearchParams(hash.substring(1));
-        const error = urlParams.get('error');
-        const errorCode = urlParams.get('error_code');
-        const errorDescription = urlParams.get('error_description');
-        
-        console.log('Error detected in hash:', { error, errorCode, errorDescription });
-        
+      // Parse hash parameters
+      const hashParams = new URLSearchParams(hash.substring(1));
+      const type = hashParams.get('type');
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+      
+      console.log('Hash params:', { type, accessToken: accessToken ? 'present' : 'missing', refreshToken: refreshToken ? 'present' : 'missing' });
+      
+      // Check for errors first
+      const error = hashParams.get('error');
+      const errorCode = hashParams.get('error_code');
+      
+      if (error) {
+        console.log('Error in hash:', { error, errorCode });
         if (error === 'access_denied' && errorCode === 'otp_expired') {
           setErrorMessage('The password reset link has expired or has already been used. Please request a new one.');
           setShowTokenError(true);
@@ -55,56 +63,44 @@ const Auth = () => {
         }
       }
       
-      // Check hash for recovery tokens (Supabase sends tokens in hash fragments)
-      if (hash.includes('type=recovery') && hash.includes('access_token=')) {
-        console.log('Password recovery detected in URL hash - showing recovery form');
-        setShowPasswordRecovery(true);
-        setShowForgotPassword(false);
-        setShowSuccessMessage(false);
-        setShowTokenError(false);
-        return;
-      }
-      
-      // Fallback to search params
-      if (type === 'recovery' && accessToken) {
-        console.log('Password recovery detected in URL parameters - showing recovery form');
-        setShowPasswordRecovery(true);
-        setShowForgotPassword(false);
-        setShowSuccessMessage(false);
-        setShowTokenError(false);
-        return;
-      }
-      
-      console.log('No recovery token detected');
-    };
-
-    checkRecoveryToken();
-  }, [searchParams]);
-
-  // Separate effect to handle hash changes (for recovery tokens)
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      console.log('Hash changed:', hash);
-      
-      if (hash.includes('type=recovery') && hash.includes('access_token=')) {
-        console.log('Recovery token detected in hash change - showing recovery form');
-        setShowPasswordRecovery(true);
-        setShowForgotPassword(false);
-        setShowSuccessMessage(false);
-        setShowTokenError(false);
+      // Process recovery token
+      if (type === 'recovery' && accessToken && refreshToken) {
+        console.log('Valid recovery token found - establishing session');
+        
+        try {
+          // Set the session with the recovery tokens
+          const { data, error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          });
+          
+          if (error) {
+            console.error('Failed to set session:', error);
+            setErrorMessage('Failed to process recovery token. Please try again.');
+            setShowTokenError(true);
+            return;
+          }
+          
+          console.log('Session established successfully - showing recovery form');
+          
+          // Show password recovery form
+          setShowPasswordRecovery(true);
+          setShowForgotPassword(false);
+          setShowSuccessMessage(false);
+          setShowTokenError(false);
+          
+          // Clean the URL after processing
+          window.history.replaceState({}, '', window.location.pathname);
+          
+        } catch (error) {
+          console.error('Error processing recovery token:', error);
+          setErrorMessage('Failed to process recovery token. Please try again.');
+          setShowTokenError(true);
+        }
       }
     };
 
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashChange);
-    
-    // Also check immediately in case we missed it
-    handleHashChange();
-
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
+    processRecoveryToken();
   }, []);
 
   // If user is already logged in, show logout option instead of redirecting
