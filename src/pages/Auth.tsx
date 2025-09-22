@@ -40,40 +40,53 @@ const Auth = () => {
 
       console.log('🔒 AUTH DEBUG: Processing hash:', hash);
       
-      // Parse hash parameters
+      // Parse hash parameters more robustly
       const hashParams = new URLSearchParams(hash.substring(1));
       const type = hashParams.get('type');
       const accessToken = hashParams.get('access_token');
       const refreshToken = hashParams.get('refresh_token');
       
-      console.log('🔒 AUTH DEBUG: Hash params parsed:', { 
-        type, 
-        accessToken: accessToken ? `${accessToken.substring(0, 10)}...` : 'missing', 
-        refreshToken: refreshToken ? `${refreshToken.substring(0, 10)}...` : 'missing',
-        allParams: Object.fromEntries(hashParams.entries())
-      });
-      
-      // Check for errors first
+      // Check for errors first - this is critical for expired tokens
       const error = hashParams.get('error');
       const errorCode = hashParams.get('error_code');
       const errorDescription = hashParams.get('error_description');
       
+      console.log('🔒 AUTH DEBUG: All hash parameters:', {
+        type, 
+        accessToken: accessToken ? `${accessToken.substring(0, 10)}...` : 'missing', 
+        refreshToken: refreshToken ? `${refreshToken.substring(0, 10)}...` : 'missing',
+        error,
+        errorCode,
+        errorDescription,
+        allParams: Object.fromEntries(hashParams.entries())
+      });
+      
+      // Handle errors FIRST before any other processing
       if (error) {
-        console.log('🔒 AUTH DEBUG: Error found in hash:', { error, errorCode, errorDescription });
+        console.log('🔒 AUTH DEBUG: Error detected in URL hash:', { error, errorCode, errorDescription });
+        
+        // Handle expired OTP specifically
         if (error === 'access_denied' && errorCode === 'otp_expired') {
-          console.log('🔒 AUTH DEBUG: OTP expired - showing error message');
-          setErrorMessage('The password reset link has expired or has already been used. Please request a new one.');
+          console.log('🔒 AUTH DEBUG: OTP expired - showing specific error message');
+          setErrorMessage('Your password reset link has expired or has already been used. Password reset links are only valid for a short time for security reasons.');
           setShowTokenError(true);
           setShowPasswordRecovery(false);
           setShowForgotPassword(false);
           setShowSuccessMessage(false);
           
-          // Clean the URL
+          // Clean the URL immediately
           window.history.replaceState({}, '', window.location.pathname);
+          
+          // Show toast notification for better UX
+          toast.error('Password reset link expired');
           return;
-        } else {
-          console.log('🔒 AUTH DEBUG: Other error - showing generic error');
-          setErrorMessage(`Authentication error: ${error} - ${errorDescription || 'Please try again'}`);
+        } 
+        
+        // Handle other authentication errors
+        else {
+          console.log('🔒 AUTH DEBUG: Other authentication error detected');
+          const decodedDescription = errorDescription ? decodeURIComponent(errorDescription.replace(/\+/g, ' ')) : 'Please try again';
+          setErrorMessage(`Authentication error: ${error}. ${decodedDescription}`);
           setShowTokenError(true);
           setShowPasswordRecovery(false);
           setShowForgotPassword(false);
@@ -81,6 +94,9 @@ const Auth = () => {
           
           // Clean the URL
           window.history.replaceState({}, '', window.location.pathname);
+          
+          // Show toast notification
+          toast.error(`Authentication failed: ${error}`);
           return;
         }
       }
@@ -276,16 +292,21 @@ const Auth = () => {
               </div>
               <CardTitle className="text-xl text-red-600">Reset Link Expired</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-center text-gray-600">
-                {errorMessage}
-              </p>
-              <div className="space-y-2">
+            <CardContent className="space-y-6">
+              <div className="text-center space-y-2">
+                <p className="text-gray-700 font-medium">
+                  {errorMessage}
+                </p>
+                <p className="text-sm text-gray-500">
+                  For security reasons, password reset links expire after a short time (usually 1 hour).
+                </p>
+              </div>
+              <div className="space-y-3">
                 <Button
                   onClick={handleRequestNewReset}
                   className="w-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
                 >
-                  Request New Reset Link
+                  Get New Reset Link
                 </Button>
                 <Button
                   onClick={handleBackFromTokenError}
@@ -294,6 +315,11 @@ const Auth = () => {
                 >
                   Back to Sign In
                 </Button>
+              </div>
+              <div className="text-center">
+                <p className="text-xs text-gray-400">
+                  Need help? The new reset link will be sent to your email immediately.
+                </p>
               </div>
             </CardContent>
           </Card>
