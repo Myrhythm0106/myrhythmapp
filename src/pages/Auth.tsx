@@ -24,14 +24,12 @@ const Auth = () => {
 
   const from = (location.state as any)?.from?.pathname || "/dashboard";
 
-  // Check for password recovery parameters in hash
+  // Check for password recovery parameters in hash - run only once on mount
   useEffect(() => {
     const processRecoveryToken = async () => {
       console.log('🔒 AUTH DEBUG: Starting recovery token processing');
       console.log('🔒 AUTH DEBUG: Full URL:', window.location.href);
       console.log('🔒 AUTH DEBUG: Hash:', window.location.hash);
-      console.log('🔒 AUTH DEBUG: Current user:', user ? 'logged in' : 'not logged in');
-      console.log('🔒 AUTH DEBUG: Current session:', !!user);
       
       const hash = window.location.hash;
       
@@ -89,8 +87,15 @@ const Auth = () => {
       
       // Process recovery token
       if (type === 'recovery' && accessToken && refreshToken) {
-        console.log('🔒 AUTH DEBUG: Valid recovery token found - establishing session');
-        console.log('🔒 AUTH DEBUG: About to call supabase.auth.setSession');
+        console.log('🔒 AUTH DEBUG: Valid recovery token found - immediately showing recovery form');
+        
+        // Immediately show the password recovery form to prevent race condition
+        setShowPasswordRecovery(true);
+        setShowForgotPassword(false);
+        setShowSuccessMessage(false);
+        setShowTokenError(false);
+        
+        console.log('🔒 AUTH DEBUG: Establishing session with recovery tokens');
         
         try {
           // Set the session with the recovery tokens
@@ -110,37 +115,28 @@ const Auth = () => {
             console.error('🔒 AUTH DEBUG: Failed to set session:', error);
             setErrorMessage(`Failed to process recovery token: ${error.message}`);
             setShowTokenError(true);
+            setShowPasswordRecovery(false);
             return;
           }
           
           if (data?.session && data?.user) {
-            console.log('🔒 AUTH DEBUG: Session established successfully');
-            console.log('🔒 AUTH DEBUG: User data:', {
-              id: data.user.id,
-              email: data.user.email,
-              email_confirmed_at: data.user.email_confirmed_at
-            });
-            
-            // Show password recovery form
-            console.log('🔒 AUTH DEBUG: Setting showPasswordRecovery to true');
-            setShowPasswordRecovery(true);
-            setShowForgotPassword(false);
-            setShowSuccessMessage(false);
-            setShowTokenError(false);
+            console.log('🔒 AUTH DEBUG: Session established successfully, recovery form already visible');
             
             // Clean the URL after processing
             window.history.replaceState({}, '', window.location.pathname);
-            console.log('🔒 AUTH DEBUG: URL cleaned, recovery form should be visible');
+            console.log('🔒 AUTH DEBUG: URL cleaned, recovery form should remain visible');
           } else {
             console.error('🔒 AUTH DEBUG: Session or user missing from response');
             setErrorMessage('Failed to establish session. Please try again.');
             setShowTokenError(true);
+            setShowPasswordRecovery(false);
           }
           
         } catch (error) {
           console.error('🔒 AUTH DEBUG: Exception during recovery token processing:', error);
           setErrorMessage(`Failed to process recovery token: ${error}`);
           setShowTokenError(true);
+          setShowPasswordRecovery(false);
         }
       } else {
         console.log('🔒 AUTH DEBUG: Not a recovery token - missing required params');
@@ -149,7 +145,7 @@ const Auth = () => {
     };
 
     processRecoveryToken();
-  }, [user]);
+  }, []); // Empty dependency array - run only once on mount
 
   // If user is already logged in (but not in password recovery), show logout option instead of redirecting
   if (user && !loading && !showPasswordRecovery) {
