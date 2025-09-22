@@ -151,8 +151,8 @@ const Auth = () => {
     processRecoveryToken();
   }, [user]);
 
-  // If user is already logged in, show logout option instead of redirecting
-  if (user && !loading) {
+  // If user is already logged in (but not in password recovery), show logout option instead of redirecting
+  if (user && !loading && !showPasswordRecovery) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50/60 via-blue-50/50 to-teal-50/60 flex items-center justify-center p-4">
         <Card className="shadow-lg border-purple-200/50 w-full max-w-md">
