@@ -9,6 +9,7 @@ import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { PasswordRecoveryForm } from "@/components/auth/PasswordRecoveryForm";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { SecurityIncidentHandler } from "@/utils/security/securityIncidentHandler";
 
 const Auth = () => {
   const { user, loading, signOut } = useAuth();
@@ -106,7 +107,20 @@ const Auth = () => {
       
       // Process recovery token
       if (type === 'recovery' && accessToken && refreshToken) {
-        console.log('🔒 AUTH DEBUG: Valid recovery token found - immediately showing recovery form');
+        console.log('🔒 AUTH DEBUG: Valid recovery token found - SECURITY INCIDENT DETECTED');
+        
+        // IMMEDIATE SECURITY RESPONSE - Handle token leak incident
+        try {
+          // Get current user if available
+          const { data: { user } } = await supabase.auth.getUser();
+          
+          // Report the token leak incident
+          await SecurityIncidentHandler.handleTokenLeak(accessToken, user?.id);
+          
+          console.log('🔒 SECURITY: Token leak incident reported and handled');
+        } catch (securityError) {
+          console.error('🔒 SECURITY: Failed to handle token leak incident:', securityError);
+        }
         
         // Set recovery session flag FIRST - this persists across re-renders
         isRecoverySession.current = true;
@@ -144,7 +158,7 @@ const Auth = () => {
           if (data?.session && data?.user) {
             console.log('🔒 AUTH DEBUG: Session established successfully, recovery form already visible');
             
-            // Clean the URL after processing
+            // Clean the URL after processing - CRITICAL for security
             window.history.replaceState({}, '', window.location.pathname);
             console.log('🔒 AUTH DEBUG: URL cleaned, recovery form should remain visible');
           } else {
@@ -160,6 +174,20 @@ const Auth = () => {
           setShowTokenError(true);
           setShowPasswordRecovery(false);
         }
+      } else if (accessToken) {
+        // Any other access token in URL is a security incident
+        console.log('🔒 SECURITY: Access token found in URL - potential security incident');
+        
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          await SecurityIncidentHandler.handleTokenLeak(accessToken, user?.id);
+          console.log('🔒 SECURITY: Non-recovery token leak incident reported');
+        } catch (securityError) {
+          console.error('🔒 SECURITY: Failed to handle token leak incident:', securityError);
+        }
+        
+        // Clean the URL immediately
+        window.history.replaceState({}, '', window.location.pathname);
       } else {
         console.log('🔒 AUTH DEBUG: Not a recovery token - missing required params');
         console.log('🔒 AUTH DEBUG: type:', type, 'accessToken present:', !!accessToken, 'refreshToken present:', !!refreshToken);
