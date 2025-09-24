@@ -20,8 +20,8 @@ export const TestAccountButton = () => {
       localStorage.removeItem('myrhythm_web_onboarding_current_step');
       localStorage.removeItem('myrhythm_web_onboarding_progress_saved');
       
-      // Use NEW working test credentials
-      const testEmail = 'testuser@lovabletest.com';
+      // Use working test credentials with valid domain
+      const testEmail = 'testuser123@gmail.com';
       const testPassword = 'TestPassword123!';
       const testName = 'Test User';
 
