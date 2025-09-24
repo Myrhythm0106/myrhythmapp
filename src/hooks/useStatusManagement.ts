@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useAccountabilitySystem } from './use-accountability-system';
 import { useSubscription } from './useSubscription';
 import { supabase } from '@/integrations/supabase/client';

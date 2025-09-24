@@ -16,7 +16,7 @@ import { useSupportMemberRole } from '@/hooks/use-support-member-role';
 import { SupportMemberActions } from '@/components/support-member/SupportMemberActions';
 import { SupportMemberMessages } from '@/components/support-member/SupportMemberMessages';
 import { SupportCircleCheatSheet } from '@/components/support-member/SupportCircleCheatSheet';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function SupportMemberDashboard() {
   const { signOut } = useAuth();

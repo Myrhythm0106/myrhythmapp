@@ -6,7 +6,7 @@ import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { FirstTimeUserExperience } from "@/components/onboarding/FirstTimeUserExperience";
 import { useSessionTracking } from "@/hooks/useSessionTracking";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { BrainFriendlyDashboard } from "@/components/dashboard/BrainFriendlyDashboard";
 import { ReportsWidget } from "@/components/dashboard/widgets/ReportsWidget";

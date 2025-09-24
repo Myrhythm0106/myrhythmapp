@@ -9,7 +9,7 @@ import { basePricing, getPricingWithDiscount, isFoundingMemberActive } from '@/c
 import { trackSubscriptionAnalytics } from '@/utils/analytics';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 const SubscribePage = () => {
   const [selectedPlan, setSelectedPlan] = useState<'reconnect' | 'thrive' | 'family' | null>(null);
   const [isYearly, setIsYearly] = useState(true);
