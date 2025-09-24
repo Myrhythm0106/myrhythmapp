@@ -9,7 +9,7 @@ import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { PasswordRecoveryForm } from "@/components/auth/PasswordRecoveryForm";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { SecurityIncidentHandler } from "@/utils/security/securityIncidentHandler";
+import { SecurityIncidentHandler } from "@/utils/security";
 
 const Auth = () => {
   const { user, loading, signOut } = useAuth();

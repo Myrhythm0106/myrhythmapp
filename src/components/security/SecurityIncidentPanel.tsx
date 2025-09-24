@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Shield, AlertTriangle, CheckCircle, ExternalLink } from 'lucide-react';
-import { SecurityIncidentHandler } from '@/utils/security/securityIncidentHandler';
+import { SecurityIncidentHandler } from '@/utils/security';
 import { toast } from 'sonner';
 
 interface SecurityIncidentPanelProps {
