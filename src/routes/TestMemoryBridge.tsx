@@ -238,7 +238,7 @@ const TestMemoryBridge = () => {
           </div>
           
           <ACTExtractionTest 
-            meetingId="test-suite-meeting"
+            meetingId={crypto.randomUUID()}
             onTestComplete={(result) => {
               console.log('AI Test completed:', result);
             }}
