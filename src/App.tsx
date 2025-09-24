@@ -48,7 +48,6 @@ import StartPage from "./pages/StartPage";
 import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
 import SetupWizard from "./pages/SetupWizard";
 import { IndividualSetupItem } from "./components/setup/IndividualSetupItem";
-import RedirectToAuth from "./pages/RedirectToAuth";
 import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
 
@@ -123,7 +122,7 @@ function App() {
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/email-verification" element={<EmailVerification />} />
                       <Route path="/get-started" element={<GetStartedPage />} />
-                       <Route path="/mvp/user-type-selection" element={<RedirectToAuth />} />
+                       <Route path="/mvp/user-type-selection" element={<Auth />} />
                      <Route path="/mvp-payment" element={<MVPPaymentPage />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
