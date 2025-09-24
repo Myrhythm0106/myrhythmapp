@@ -4,7 +4,7 @@ import { MVPThemeWrapper } from '@/components/theme/MVPThemeWrapper';
 import { MVPTopNav } from '@/components/mvp/MVPTopNav';
 import { MVPPageHeader } from '@/components/mvp/MVPPageHeader';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { ArrowLeft, User, AlertCircle, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

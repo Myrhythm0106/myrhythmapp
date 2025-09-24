@@ -4,7 +4,7 @@ import { useTOTPSetup } from './mfa/useTOTPSetup';
 import { useSMSSetup } from './mfa/useSMSSetup';
 import { useBackupCodes } from './mfa/useBackupCodes';
 import { useMFALogging } from './mfa/useMFALogging';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { SecureLogger } from '@/utils/security/secureLogger';
 
 export function useMFA() {

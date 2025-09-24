@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Brain, Clock, Target, Info, User } from 'lucide-react';
 import { MVPAssessmentFlow } from '@/components/mvp/MVPAssessmentFlow';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { ConsentDialog } from '@/components/onboarding/ConsentDialog';
 import { PersonalInfoStep, PersonalInfoFormValues } from '@/components/onboarding/steps/PersonalInfoStep';
 import { toast } from 'sonner';
