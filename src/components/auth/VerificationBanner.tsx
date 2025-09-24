@@ -2,7 +2,7 @@
 import React from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Shield, Mail, CheckCircle } from 'lucide-react';
 
 export const VerificationBanner = () => {

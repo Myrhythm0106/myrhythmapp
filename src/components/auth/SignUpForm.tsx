@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { User, Mail, Lock, Loader2, AlertCircle, CheckCircle } from 'lucide-react';
 import { PasswordInput } from './PasswordInput';
 import { useNavigate } from 'react-router-dom';

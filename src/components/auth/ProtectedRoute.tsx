@@ -1,7 +1,7 @@
 
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useSupportMemberRole } from '@/hooks/use-support-member-role';
 import { getOnboardingRoute } from '@/utils/platform/platformDetection';
 

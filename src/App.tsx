@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { MockAuthWrapper } from "@/components/auth/MockAuthWrapper";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
@@ -70,7 +70,7 @@ function App() {
   console.log('🎯 App.tsx: App component rendering');
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+      <MockAuthWrapper>
         <SubscriptionProvider>
           <PomodoroProvider>
             <DailyActionsProvider>
@@ -195,8 +195,8 @@ function App() {
             </SetupProgressProvider>
           </DailyActionsProvider>
         </PomodoroProvider>
-      </SubscriptionProvider>
-    </AuthProvider>
+        </SubscriptionProvider>
+      </MockAuthWrapper>
   </QueryClientProvider>
   );
 }
