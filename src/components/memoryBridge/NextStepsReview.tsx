@@ -13,7 +13,7 @@ import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { convertActionToCalendarEvent, scheduleConfirmedActions } from '@/utils/calendarIntegration';
 import { smartScheduler } from '@/utils/smartScheduler';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangle, Star, MessageCircle, Crown, Lock, TrendingUp, Sparkles, Edit3, Target, Eye, Link } from 'lucide-react';

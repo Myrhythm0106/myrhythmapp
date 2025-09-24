@@ -13,7 +13,7 @@ import { generateICS, generateGoogleCalendarLink, generateCalendarLinks } from '
 import { toast } from 'sonner';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { analyzeSMART, getSMARTColor, getSMARTLabel } from '@/utils/smartValidation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 interface ActsReviewTableProps {

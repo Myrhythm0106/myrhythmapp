@@ -10,7 +10,7 @@ import { ActsReviewTable } from './ActsReviewTable';
 import { RecordingsTab } from './RecordingsTab';
 import { QuickCaptureRecorder } from './QuickCaptureRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { 
   Brain, 

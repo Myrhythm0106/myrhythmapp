@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { SwipeableContainer } from '@/components/ui/SwipeableContainer';
 import { useMemoryBridgeComments } from '@/hooks/memoryBridge/useMemoryBridgeComments';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { MessageCircle, Send, Heart, Users, Crown, Lock, Plus } from 'lucide-react';
 import { toast } from 'sonner';

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Brain, Heart, Users, Target, Leaf, Building2, Stethoscope, Plus, ArrowRight, ArrowLeft, Mail } from "lucide-react";
 import { UserType } from "@/types/user";
 import { toast } from "sonner";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 const userTypes = [
   {

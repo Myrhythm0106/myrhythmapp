@@ -13,7 +13,7 @@ import { ConfidenceScore } from './ConfidenceScore';
 import { MicroCoaching } from './MicroCoaching';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useEmpowerment } from '@/contexts/EmpowermentContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { 
   Brain, 

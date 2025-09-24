@@ -22,7 +22,7 @@ import { ACTExtractionTest } from '@/components/memoryBridge/ACTExtractionTest';
 import { QuickCaptureRecorder } from '@/components/memoryBridge/QuickCaptureRecorder';
 import { useNavigate } from 'react-router-dom';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 

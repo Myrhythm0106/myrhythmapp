@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { SecureStorage } from "@/utils/secureStorage";
 import { SecurityAudit as SecurityAuditService, SecurityAuditResult } from '@/utils/security/securityAudit';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { toast } from "sonner";
 
 export function SecurityAudit() {

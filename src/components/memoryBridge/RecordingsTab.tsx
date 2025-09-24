@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { RecordingDetailsView } from './RecordingDetailsView';
 import { TranscriptViewer } from './TranscriptViewer';

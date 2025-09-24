@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { smartScheduler, SmartScheduleSuggestion } from '@/utils/smartScheduler';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { useTierEnhancedScheduling } from '@/hooks/useTierEnhancedScheduling';
 
 export function useActsScheduling() {

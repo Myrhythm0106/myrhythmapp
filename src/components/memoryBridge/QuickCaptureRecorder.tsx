@@ -18,7 +18,7 @@ import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { VoiceCoach } from './VoiceCoach';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
