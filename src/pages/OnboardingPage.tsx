@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { AuthenticationGate } from "@/components/onboarding/AuthenticationGate";
 import { OnboardingStepRenderer } from "@/components/onboarding/OnboardingStepRenderer";
 import { SwipeableOnboarding } from "@/components/onboarding/SwipeableOnboarding";
