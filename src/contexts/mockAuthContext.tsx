@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Create a mock user and session
 const createMockUser = (email: string, name: string): User => ({
-  id: 'mock-user-id-' + Date.now(),
+  id: crypto.randomUUID(),
   app_metadata: {},
   user_metadata: { name, email },
   aud: 'authenticated',
@@ -46,7 +46,7 @@ const createMockUser = (email: string, name: string): User => ({
 });
 
 const createMockSession = (user: User): Session => ({
-  access_token: 'mock-access-token',
+  access_token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvbWppYmNpdnd4YmN3Zm1rcm52Iiwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJpYXQiOjE3NDgzMTg0OTksImV4cCI6MjA2Mzg5NDQ5OSwidXNlcl9pZCI6IiR7dXNlci5pZH0ifQ.mock-signature`,
   refresh_token: 'mock-refresh-token',
   expires_in: 3600,
   expires_at: Math.floor(Date.now() / 1000) + 3600,
