@@ -115,7 +115,8 @@ const Auth = () => {
           const { data: { user } } = await supabase.auth.getUser();
           
           // Report the token leak incident
-          await SecurityIncidentHandler.handleTokenLeak(accessToken, user?.id);
+          const handler = await SecurityIncidentHandler.getInstance();
+          await handler.handleTokenLeak(accessToken, user?.id);
           
           console.log('🔒 SECURITY: Token leak incident reported and handled');
         } catch (securityError) {
@@ -180,7 +181,8 @@ const Auth = () => {
         
         try {
           const { data: { user } } = await supabase.auth.getUser();
-          await SecurityIncidentHandler.handleTokenLeak(accessToken, user?.id);
+          const handler = await SecurityIncidentHandler.getInstance();
+          await handler.handleTokenLeak(accessToken, user?.id);
           console.log('🔒 SECURITY: Non-recovery token leak incident reported');
         } catch (securityError) {
           console.error('🔒 SECURITY: Failed to handle token leak incident:', securityError);

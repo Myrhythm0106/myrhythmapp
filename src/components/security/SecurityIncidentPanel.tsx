@@ -21,7 +21,8 @@ export function SecurityIncidentPanel({ userId }: SecurityIncidentPanelProps) {
 
     setIsProcessing(true);
     try {
-      await SecurityIncidentHandler.handleIncident({
+      const handler = await SecurityIncidentHandler.getInstance();
+      await handler.handleIncident({
         type: 'unauthorized_access',
         severity: 'critical',
         userId,
@@ -43,7 +44,8 @@ export function SecurityIncidentPanel({ userId }: SecurityIncidentPanelProps) {
   const handleAuditUser = async () => {
     setIsProcessing(true);
     try {
-      const auditData = await SecurityIncidentHandler.auditUserActivity(userId);
+      const handler = await SecurityIncidentHandler.getInstance();
+      const auditData = await handler.auditUserActivity(userId);
       setLastAudit(auditData);
       toast.success('User audit completed');
     } catch (error) {
@@ -53,8 +55,9 @@ export function SecurityIncidentPanel({ userId }: SecurityIncidentPanelProps) {
     }
   };
 
-  const handleClearClientData = () => {
-    SecurityIncidentHandler.clearClientSession();
+  const handleClearClientData = async () => {
+    const handler = await SecurityIncidentHandler.getInstance();
+    handler.clearClientSession();
     toast.success('Client session data cleared');
   };
 

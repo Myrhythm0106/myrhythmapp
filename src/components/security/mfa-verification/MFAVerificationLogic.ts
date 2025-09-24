@@ -15,16 +15,17 @@ export const verifyMFACode = async (
       return false;
     }
 
+    const mfa = await MFAVerification.getInstance();
     let result;
     switch (selectedFactor) {
       case 'totp':
-        result = await MFAVerification.verifyTOTP(verificationCode, user.id);
+        result = await mfa.verifyTOTP(verificationCode, user.id);
         break;
       case 'sms':
-        result = await MFAVerification.verifySMS(verificationCode, user.id);
+        result = await mfa.verifySMS(verificationCode, user.id);
         break;
       case 'backup_codes':
-        result = await MFAVerification.verifyBackupCode(verificationCode, user.id);
+        result = await mfa.verifyBackupCode(verificationCode, user.id);
         break;
       default:
         return false;
@@ -32,7 +33,8 @@ export const verifyMFACode = async (
 
     return result.success;
   } catch (error) {
-    SecureLogger.error('MFA verification failed', error, user?.id);
+    const logger = await SecureLogger.getInstance();
+    logger.error('MFA verification failed', error, user?.id);
     return false;
   }
 };
