@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { LoadingOverlay } from '@/components/ui/LoadingOverlay';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { Mail, Lock, User, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 

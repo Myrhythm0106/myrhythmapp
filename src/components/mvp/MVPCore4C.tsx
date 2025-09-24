@@ -11,7 +11,7 @@ import strengthTogetherImg from '@/assets/strength-together.jpg';
 import { MVPOnboardingModal } from './MVPOnboardingModal';
 import { FeatureExplorationModal } from './FeatureExplorationModal';
 import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { TestAccountButton } from '@/components/auth/TestAccountButton';
 
 export function MVPCore4C() {

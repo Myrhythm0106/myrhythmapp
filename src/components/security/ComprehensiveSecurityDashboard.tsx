@@ -16,7 +16,7 @@ import {
   Lock,
   Eye
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { DataProtectionCompliance } from '@/utils/security/dataProtectionCompliance';
 import { BreachDetection } from '@/utils/security/breachDetection';
 import { SecurityHeaders } from '@/utils/security/securityHeaders';

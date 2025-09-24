@@ -13,7 +13,7 @@ import {
   Settings
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CalendarAccount {
   id: string;

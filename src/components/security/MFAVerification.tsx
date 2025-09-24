@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { SecureLogger } from '@/utils/security/secureLogger';
 import { MFAVerificationHeader } from './mfa-verification/MFAVerificationHeader';
 import { MFAFactorSelector } from './mfa-verification/MFAFactorSelector';

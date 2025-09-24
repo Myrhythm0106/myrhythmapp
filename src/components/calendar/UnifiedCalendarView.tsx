@@ -15,7 +15,7 @@ import {
   Bell
 } from 'lucide-react';
 import { format, isToday, isTomorrow } from 'date-fns';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { ExternalCalendarSync } from './ExternalCalendarSync';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';

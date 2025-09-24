@@ -33,7 +33,7 @@ import { AssessmentTypeSelection } from './AssessmentTypeSelection';
 import { BasicAssessmentResult } from '@/types/assessmentTypes';
 import { useAssessmentResults } from '@/hooks/useAssessmentResults';
 import { useOnboardingProgress } from '@/hooks/useOnboardingProgress';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface AssessmentQuestion {
   id: string;

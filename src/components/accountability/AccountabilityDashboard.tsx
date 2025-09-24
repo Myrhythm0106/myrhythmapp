@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Users, Bell, Clock, AlertTriangle, Plus, Shield } from 'lucide-react';
 import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { SupportCircleManager } from './SupportCircleManager';
 import { ReminderCreator } from './ReminderCreator';
 import { AlertsPanel } from './AlertsPanel';
