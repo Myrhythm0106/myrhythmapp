@@ -183,7 +183,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
 
       console.log('✅ Processing complete:', data);
       
-      const actionsCount = data?.actionsCount || 0;
+      const actionsCount = data?.actionsExtracted || 0;
       const finalMeetingId = meetingRecord.id;
       setCurrentMeetingId(finalMeetingId);
       setFinalResults({ meetingId: finalMeetingId, actionsCount });
