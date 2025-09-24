@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSubscription } from './useSubscription';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { smartScheduler, SmartScheduleSuggestion } from '@/utils/smartScheduler';
 import { ExtractedAction } from '@/types/memoryBridge';

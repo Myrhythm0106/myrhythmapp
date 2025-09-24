@@ -1,7 +1,7 @@
 
 import { useEffect } from 'react';
 import { useAccountabilitySystem } from './use-accountability-system';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 
 export function useAccountabilityIntegration() {
