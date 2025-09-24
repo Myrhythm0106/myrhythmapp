@@ -75,6 +75,26 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     });
   }, [user, session, loading, emailVerificationStatus]);
 
+  // Check microphone permissions on component mount
+  useEffect(() => {
+    const checkMicrophonePermissions = async () => {
+      try {
+        if ('permissions' in navigator) {
+          const permission = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+          console.log('🎤 Microphone permission status:', permission.state);
+          
+          permission.addEventListener('change', () => {
+            console.log('🎤 Microphone permission changed to:', permission.state);
+          });
+        }
+      } catch (error) {
+        console.log('⚠️ Could not check microphone permissions:', error);
+      }
+    };
+    
+    checkMicrophonePermissions();
+  }, []);
+
   // Handle the 3-tap flow - simplified start
   const handleFirstTap = useCallback(async () => {
     console.log('👆 Tap 1: Starting recording...');

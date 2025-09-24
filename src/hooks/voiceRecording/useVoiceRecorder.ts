@@ -23,9 +23,43 @@ export function useVoiceRecorder() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const startRecording = useCallback(async () => {
+    console.log('🎤 Starting recording process...');
+    
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Check if mediaDevices is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('MediaDevices API not supported in this browser');
+      }
+
+      console.log('🔍 Requesting microphone access...');
+      
+      // Check existing permissions first
+      if ('permissions' in navigator) {
+        try {
+          const permission = await navigator.permissions.query({ name: 'microphone' as PermissionName });
+          console.log('🔒 Microphone permission status:', permission.state);
+          
+          if (permission.state === 'denied') {
+            throw new Error('Microphone access denied. Please enable microphone permissions in your browser settings.');
+          }
+        } catch (permError) {
+          console.log('⚠️ Could not check permissions:', permError);
+        }
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ 
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true
+        } 
+      });
+      
+      console.log('✅ Microphone access granted, setting up MediaRecorder...');
+      
       const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : undefined;
+      console.log('🎵 Using MIME type:', mimeType || 'default');
+      
       const mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
@@ -33,10 +67,17 @@ export function useVoiceRecorder() {
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
+          console.log('📊 Audio chunk received:', event.data.size, 'bytes');
         }
       };
 
+      mediaRecorder.onerror = (event) => {
+        console.error('❌ MediaRecorder error:', event);
+      };
+
       mediaRecorder.start();
+      console.log('🎬 MediaRecorder started');
+      
       setIsRecording(true);
       setIsPaused(false);
       setDuration(0);
@@ -49,11 +90,38 @@ export function useVoiceRecorder() {
         }
       }, 100);
 
-      toast.success('Recording started');
+      toast.success('Recording started successfully! 🎤');
+      console.log('✅ Recording started successfully');
       return true;
     } catch (error) {
-      console.error('Error starting recording:', error);
-      toast.error('Failed to start recording. Please check microphone permissions.');
+      console.error('❌ Error starting recording:', error);
+      
+      // Detailed error handling
+      let errorMessage = 'Failed to start recording';
+      
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          errorMessage = 'Microphone access denied. Please allow microphone permissions and try again.';
+        } else if (error.name === 'NotFoundError') {
+          errorMessage = 'No microphone found. Please connect a microphone and try again.';
+        } else if (error.name === 'NotReadableError') {
+          errorMessage = 'Microphone is already in use by another application.';
+        } else if (error.name === 'OverconstrainedError') {
+          errorMessage = 'Microphone constraints could not be satisfied.';
+        } else if (error.name === 'SecurityError') {
+          errorMessage = 'Recording blocked due to security restrictions.';
+        } else {
+          errorMessage = `Recording error: ${error.message}`;
+        }
+      }
+      
+      toast.error(errorMessage);
+      console.log('💡 Troubleshooting tips:');
+      console.log('1. Click the microphone icon in your browser address bar');
+      console.log('2. Ensure microphone permissions are set to "Allow"');
+      console.log('3. Try refreshing the page');
+      console.log('4. Check if another application is using your microphone');
+      
       return false;
     }
   }, [isPaused]);
