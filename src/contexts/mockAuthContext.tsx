@@ -45,14 +45,33 @@ const createMockUser = (email: string, name: string): User => ({
   factors: []
 });
 
-const createMockSession = (user: User): Session => ({
-  access_token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJvbWppYmNpdnd4YmN3Zm1rcm52Iiwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJpYXQiOjE3NDgzMTg0OTksImV4cCI6MjA2Mzg5NDQ5OSwidXNlcl9pZCI6IiR7dXNlci5pZH0ifQ.mock-signature`,
-  refresh_token: 'mock-refresh-token',
-  expires_in: 3600,
-  expires_at: Math.floor(Date.now() / 1000) + 3600,
-  token_type: 'bearer',
-  user: user
-});
+const createMockSession = (user: User): Session => {
+  // Create a proper JWT payload that Supabase can recognize
+  const payload = {
+    iss: 'supabase',
+    ref: 'bomjibcivwxbcwfmkrnv',
+    role: 'authenticated',
+    iat: Math.floor(Date.now() / 1000),
+    exp: Math.floor(Date.now() / 1000) + 3600,
+    user_id: user.id, // Use actual user.id instead of literal string
+    aud: 'authenticated',
+    email: user.email
+  };
+  
+  // Create a basic JWT structure (header.payload.signature)
+  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const encodedPayload = btoa(JSON.stringify(payload));
+  const mockToken = `${header}.${encodedPayload}.mock-signature`;
+  
+  return {
+    access_token: mockToken,
+    refresh_token: 'mock-refresh-token',
+    expires_in: 3600,
+    expires_at: Math.floor(Date.now() / 1000) + 3600,
+    token_type: 'bearer',
+    user: user
+  };
+};
 
 export function MockAuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
