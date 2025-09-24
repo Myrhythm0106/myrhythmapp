@@ -20,21 +20,33 @@ export const TestAccountButton = () => {
       localStorage.removeItem('myrhythm_web_onboarding_current_step');
       localStorage.removeItem('myrhythm_web_onboarding_progress_saved');
       
-      // Use permanent test credentials for consistent testing
-      const testEmail = 'annabelaaron@gmail.com';
-      const testPassword = 'TestAccount123!';
+      // Use NEW working test credentials
+      const testEmail = 'testuser@lovabletest.com';
+      const testPassword = 'TestPassword123!';
       const testName = 'Test User';
 
       console.log('🧪 Creating test account:', testEmail);
-      toast.info('Creating test account and clearing onboarding flags...');
+      toast.info('Creating test account...');
       
+      // Try to sign up first
       const { error: signUpError } = await signUp(testEmail, testPassword, testName);
       
       if (signUpError) {
-        console.error('Test account creation failed:', signUpError);
-        toast.error(`Test account creation failed: ${signUpError.message}`);
-        setIsCreating(false);
-        return;
+        console.log('Sign up failed, trying sign in (user might exist):', signUpError);
+        
+        // If signup fails, try signing in (user might already exist)
+        const { error: signInError } = await signIn(testEmail, testPassword);
+        
+        if (signInError) {
+          console.error('Both signup and signin failed:', signInError);
+          toast.error(`Failed to access test account: ${signInError.message}`);
+          setIsCreating(false);
+          return;
+        } else {
+          toast.success('Successfully signed in to existing test account!');
+          setIsCreating(false);
+          return;
+        }
       }
 
       toast.success('Test account created! Attempting auto-login...');
@@ -47,7 +59,7 @@ export const TestAccountButton = () => {
           console.error('Test account login failed:', signInError);
           toast.error(`Auto-login failed: ${signInError.message}. Try manual login with: ${testEmail}`);
         } else {
-          toast.success('Test account ready! You will go through the complete onboarding flow.');
+          toast.success('Test account ready! Recording functionality will work now.');
         }
         setIsCreating(false);
       }, 2000);
