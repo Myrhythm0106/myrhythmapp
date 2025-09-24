@@ -1,6 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { ThemeHierarchyDisplay } from "@/components/theme/ThemeHierarchyDisplay";
 import { YearlyThemeCustomizer } from "@/components/theme/YearlyThemeCustomizer";
 import { EnhancedMonthlyThemeCustomizer } from "@/components/theme/EnhancedMonthlyThemeCustomizer";
