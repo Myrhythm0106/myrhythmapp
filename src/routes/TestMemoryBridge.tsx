@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { ACTExtractionTest } from '@/components/memoryBridge/ACTExtractionTest';
 import { QuickCaptureRecorder } from '@/components/memoryBridge/QuickCaptureRecorder';
+import { TestAccountButton } from '@/components/auth/TestAccountButton';
 import { useNavigate } from 'react-router-dom';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useAuth } from '@/hooks/useAuth';
@@ -133,6 +134,18 @@ const TestMemoryBridge = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Test the complete end-to-end flow: Voice Recording → Transcription → ACT Extraction → Review
           </p>
+          
+          {/* Authentication Helper */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+            <div className="flex items-center gap-2 mb-2">
+              <AlertCircle className="h-4 w-4 text-blue-600" />
+              <span className="font-medium text-blue-900">Need Authentication?</span>
+            </div>
+            <p className="text-sm text-blue-800 mb-3">
+              For guaranteed full functionality, create a real test account:
+            </p>
+            <TestAccountButton />
+          </div>
         </div>
 
         {/* Test Status Overview */}
