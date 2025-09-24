@@ -11,6 +11,8 @@ import { RecordingsTab } from './RecordingsTab';
 import { TranscriptsTab } from './TranscriptsTab';
 import { ConfidenceScore } from './ConfidenceScore';
 import { MicroCoaching } from './MicroCoaching';
+import { MemoryBridgeActionReport } from '../memory-bridge/MemoryBridgeActionReport';
+import { MemoryBridgeSetupHub } from '../memory-bridge/MemoryBridgeSetupHub';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useEmpowerment } from '@/contexts/EmpowermentContext';
 import { useAuth } from '@/hooks/useAuth';
@@ -255,12 +257,14 @@ export function EnhancedMemoryBridgeDashboard() {
           {/* Main Content */}
           {isReturningUser ? (
               <Tabs defaultValue="brief" className="w-full">
-                <TabsList className="grid w-full grid-cols-5">
+                <TabsList className="grid w-full grid-cols-7">
                   <TabsTrigger value="brief">Daily Brief</TabsTrigger>
                   <TabsTrigger value="recording">Record</TabsTrigger>
                   <TabsTrigger value="actions">
                     Actions ({extractedActions.length})
                   </TabsTrigger>
+                  <TabsTrigger value="report">Action Report</TabsTrigger>
+                  <TabsTrigger value="setup">Setup Hub</TabsTrigger>
                   <TabsTrigger value="transcripts">Transcripts</TabsTrigger>
                   <TabsTrigger value="recordings">History</TabsTrigger>
                 </TabsList>
@@ -295,6 +299,14 @@ export function EnhancedMemoryBridgeDashboard() {
                     onUpdateAction={updateExtractedAction}
                     onConfirmActions={handleConfirmActions}
                   />
+                </TabsContent>
+
+                <TabsContent value="report" className="space-y-4">
+                  <MemoryBridgeActionReport />
+                </TabsContent>
+
+                <TabsContent value="setup" className="space-y-4">
+                  <MemoryBridgeSetupHub onComplete={() => setCoachingStage('post-extraction')} />
                 </TabsContent>
 
                 <TabsContent value="transcripts" className="space-y-4">
