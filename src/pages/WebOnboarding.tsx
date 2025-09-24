@@ -7,7 +7,7 @@ import { WelcomeIntroduction } from "@/components/onboarding/WelcomeIntroduction
 import { useAutoProgression } from "@/hooks/useAutoProgression";
 import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { Preview3Background } from "@/components/ui/Preview3Background";
 
 // Web-specific onboarding steps (preserves original functionality)

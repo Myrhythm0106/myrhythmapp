@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Sparkles, Heart, Crown, Zap, Share2, BookOpen, RefreshCw } from "lucide-react";
 import { useEmpowermentStatements } from "@/hooks/useEmpowermentStatements";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { useMobileGestures } from "@/hooks/use-mobile-gestures";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";

@@ -7,7 +7,7 @@ import { HeartHandshake, ArrowRight, Flame, Sparkles, ArrowDown, CheckCircle, Br
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { useAccountabilityIntegration } from "@/hooks/use-accountability-integration";
 
 export function GratitudePracticeWidget() {

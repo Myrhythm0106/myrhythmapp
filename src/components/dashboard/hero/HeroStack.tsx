@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Crown, Sparkles, Heart } from "lucide-react";
 import { MonthlyIChooseWidget } from "./MonthlyIChooseWidget";
 import { MonthlyThemeCustomizer } from "./MonthlyThemeCustomizer";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 
 interface HeroStackProps {

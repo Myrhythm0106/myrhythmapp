@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { Preview3HeroSection } from "@/components/landing/Preview3HeroSection";
 import { LEAPNeuralNetwork } from "@/components/landing/preview3/LEAPNeuralNetwork";
 import { BeforeAfterBrainStates } from "@/components/landing/preview3/BeforeAfterBrainStates";

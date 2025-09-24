@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Brain, Heart, Target, Calendar, TrendingUp, Award, Music, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useUserData } from "@/hooks/use-user-data";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { MemoryFirstMotivation } from "./MemoryFirstMotivation";
 import { LifeRhythmScore } from "./LifeRhythmScore";
 import { MemoryWinsShowcase } from "./MemoryWinsShowcase";

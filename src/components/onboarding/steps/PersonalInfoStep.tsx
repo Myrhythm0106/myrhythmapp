@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, Mail } from "lucide-react";
 import { Form } from "@/components/ui/form";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 import { personalInfoBaseSchema, personalInfoPremiumSchema, PersonalInfoFormValues } from "./personal-info/personalInfoSchema";
 import { PersonalInfoFormFields } from "./personal-info/PersonalInfoFormFields";
 import { AccountRecoveryInfo } from "./personal-info/AccountRecoveryInfo";

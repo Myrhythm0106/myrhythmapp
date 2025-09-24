@@ -14,7 +14,7 @@ import { InteractiveCalendarActions } from "./InteractiveCalendarActions";
 import { useDailyActions } from "@/contexts/DailyActionsContext";
 import { CalendarEvent } from "./types/calendarTypes";
 import { format } from "date-fns";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/hooks/useAuth";
 
 interface BrainHealthCalendarViewProps {
   view: "day" | "week" | "month" | "year" | "goals";
