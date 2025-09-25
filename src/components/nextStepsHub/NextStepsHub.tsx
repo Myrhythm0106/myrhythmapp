@@ -20,6 +20,7 @@ import {
   Plus
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import { fetchExtractedActions } from '@/utils/memoryBridgeApi';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { toast } from 'sonner';
@@ -27,6 +28,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function NextStepsHub() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [actions, setActions] = useState<NextStepsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -231,9 +233,12 @@ export function NextStepsHub() {
               }
             </p>
             {(!searchQuery && selectedFilter === 'all') && (
-              <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl">
+              <Button 
+                onClick={() => navigate('/quick-capture')}
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl"
+              >
                 <Plus className="w-5 h-5 mr-2" />
-                Make Your First Recording
+                Capture
               </Button>
             )}
           </motion.div>
