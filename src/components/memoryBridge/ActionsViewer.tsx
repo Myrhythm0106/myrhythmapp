@@ -38,19 +38,17 @@ export function ActionsViewer({
   const [isLoading, setIsLoading] = useState(true);
 
   const statusOptions = [
-    { value: 'not_started', label: 'Not Started' },
-    { value: 'in_progress', label: 'In Progress' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'on_hold', label: 'On Hold' },
-    { value: 'cancelled', label: 'Cancelled' }
+    { value: 'not_started', label: 'Ready to Begin' },
+    { value: 'doing', label: 'In My Flow' },
+    { value: 'done', label: 'Accomplished!' },
+    { value: 'on_hold', label: 'Paused Mindfully' },
+    { value: 'cancelled', label: 'Redirected Energy' }
   ];
 
   const priorityOptions = [
-    { value: '1', label: 'Highest Priority' },
-    { value: '2', label: 'High Priority' },
-    { value: '3', label: 'Medium Priority' },
-    { value: '4', label: 'Low Priority' },
-    { value: '5', label: 'Lowest Priority' }
+    { value: 'high', label: 'High Priority' },
+    { value: 'medium', label: 'Medium Priority' },
+    { value: 'low', label: 'Low Priority' }
   ];
 
   useEffect(() => {
@@ -78,7 +76,7 @@ export function ActionsViewer({
           ...action, 
           category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note', // Properly type category field
           action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
-          status: action.status as 'completed' | 'in_progress' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled'
+          status: action.status as 'done' | 'doing' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled'
         })));
         }
       } catch (error) {
@@ -115,25 +113,25 @@ export function ActionsViewer({
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed':
-        return 'bg-green-500/10 text-green-700 border-green-200';
-      case 'in_progress':
-        return 'bg-blue-500/10 text-blue-700 border-blue-200';
+      case 'done':
+        return 'bg-success/10 text-success border-success/20';
+      case 'doing':
+        return 'bg-primary/10 text-primary border-primary/20';
       case 'on_hold':
-        return 'bg-yellow-500/10 text-yellow-700 border-yellow-200';
+        return 'bg-warning/10 text-warning border-warning/20';
       case 'cancelled':
-        return 'bg-red-500/10 text-red-700 border-red-200';
+        return 'bg-destructive/10 text-destructive border-destructive/20';
       case 'not_started':
       default:
-        return 'bg-gray-500/10 text-gray-700 border-gray-200';
+        return 'bg-muted/10 text-muted-foreground border-muted/20';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed':
+      case 'done':
         return <CheckCircle className="h-4 w-4" />;
-      case 'in_progress':
+      case 'doing':
         return <Clock className="h-4 w-4" />;
       case 'on_hold':
         return <AlertCircle className="h-4 w-4" />;

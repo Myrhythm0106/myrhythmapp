@@ -38,38 +38,38 @@ interface StatusUpdateDialogProps {
 const statusOptions = [
   {
     value: 'not_started' as ActionStatus,
-    label: 'Not Started',
+    label: 'Ready to Begin',
     icon: Clock,
-    description: 'Ready to begin when you are',
-    color: 'text-gray-500'
+    description: 'When you\'re ready to start your journey',
+    color: 'text-muted-foreground'
   },
   {
-    value: 'in_progress' as ActionStatus,
-    label: 'In Progress',
+    value: 'doing' as ActionStatus,
+    label: 'In My Flow',
     icon: Play,
-    description: 'Currently working on this',
-    color: 'text-blue-500'
+    description: 'Currently in your element',
+    color: 'text-primary'
   },
   {
-    value: 'completed' as ActionStatus,
-    label: 'Completed',
+    value: 'done' as ActionStatus,
+    label: 'Accomplished!',
     icon: CheckCircle,
-    description: 'Successfully finished!',
-    color: 'text-green-500'
+    description: 'Successfully completed - celebrate!',
+    color: 'text-success'
   },
   {
     value: 'on_hold' as ActionStatus,
-    label: 'On Hold',
+    label: 'Paused Mindfully',
     icon: Pause,
-    description: 'Temporarily paused',
-    color: 'text-yellow-500'
+    description: 'Taking a thoughtful break',
+    color: 'text-warning'
   },
   {
     value: 'cancelled' as ActionStatus,
-    label: 'Cancelled',
+    label: 'Redirected Energy',
     icon: X,
-    description: 'No longer needed',
-    color: 'text-red-500'
+    description: 'Choosing a different path forward',
+    color: 'text-destructive'
   }
 ];
 

@@ -23,38 +23,38 @@ interface ActionStatusButtonProps {
 
 const statusConfig = {
   not_started: {
-    label: 'Not Started',
+    label: 'Ready to Begin',
     icon: Clock,
-    color: 'text-gray-500',
-    bgColor: 'bg-gray-100',
+    color: 'text-muted-foreground',
+    bgColor: 'bg-muted',
     variant: 'secondary' as const
   },
-  in_progress: {
-    label: 'In Progress',
+  doing: {
+    label: 'In My Flow',
     icon: Play,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-100',
+    color: 'text-primary',
+    bgColor: 'bg-primary/10',
     variant: 'default' as const
   },
-  completed: {
-    label: 'Completed',
+  done: {
+    label: 'Accomplished!',
     icon: CheckCircle,
-    color: 'text-green-500',
-    bgColor: 'bg-green-100',
+    color: 'text-success',
+    bgColor: 'bg-success/10',
     variant: 'default' as const
   },
   on_hold: {
-    label: 'On Hold',
+    label: 'Paused Mindfully',
     icon: Pause,
-    color: 'text-yellow-500',
-    bgColor: 'bg-yellow-100',
+    color: 'text-warning',
+    bgColor: 'bg-warning/10',
     variant: 'outline' as const
   },
   cancelled: {
-    label: 'Cancelled',
+    label: 'Redirected Energy',
     icon: X,
-    color: 'text-red-500',
-    bgColor: 'bg-red-100',
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10',
     variant: 'destructive' as const
   }
 };

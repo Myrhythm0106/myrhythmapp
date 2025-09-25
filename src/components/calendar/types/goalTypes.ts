@@ -28,7 +28,7 @@ export interface TinyAction {
   date: string;
   startTime: string;
   endTime?: string;
-  status: "completed" | "pending" | "in-progress" | "canceled";
+  status: "done" | "pending" | "doing" | "canceled" | "not_started" | "on_hold";
   location?: string;
   watchers?: string[];
   duration?: number; // in minutes
@@ -42,7 +42,7 @@ export interface Action {
   date: string;
   startTime: string;
   endTime?: string;
-  status: "completed" | "pending" | "in-progress" | "canceled";
+  status: "done" | "pending" | "doing" | "canceled" | "not_started" | "on_hold";
   goalId?: string;
   location?: string;
   watchers?: string[];

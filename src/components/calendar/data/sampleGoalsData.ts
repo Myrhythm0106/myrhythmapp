@@ -70,7 +70,7 @@ export const sampleActions: Action[] = [
     date: "2023-05-27",
     startTime: "11:15 AM",
     endTime: "12:30 PM",
-    status: "in-progress",
+    status: "doing",
     goalId: "g2"
   },
   {

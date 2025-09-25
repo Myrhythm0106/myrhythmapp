@@ -13,10 +13,12 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   
   return (
     <Badge variant="outline" className={badgeClasses}>
-      {status === "completed" && "Completed"}
+      {status === "done" && "Accomplished!"}
       {status === "pending" && "Pending"}
-      {status === "in-progress" && "In Progress"}
-      {status === "canceled" && "Canceled"}
+      {status === "doing" && "In My Flow"}
+      {status === "canceled" && "Redirected Energy"}
+      {status === "not_started" && "Ready to Begin"}
+      {status === "on_hold" && "Paused Mindfully"}
     </Badge>
   );
 };

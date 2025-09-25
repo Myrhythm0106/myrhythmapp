@@ -5,7 +5,7 @@ import { useSubscription } from './useSubscription';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-export type ActionStatus = 'not_started' | 'in_progress' | 'completed' | 'on_hold' | 'cancelled';
+export type ActionStatus = 'not_started' | 'doing' | 'done' | 'on_hold' | 'cancelled';
 
 interface StatusUpdate {
   actionId: string;
@@ -58,8 +58,8 @@ export function useStatusManagement() {
         updated_at: new Date().toISOString()
       };
 
-      // Set completion date if completed
-      if (newStatus === 'completed') {
+      // Set completion date if done
+      if (newStatus === 'done') {
         updateData.completion_date = new Date().toISOString().split('T')[0];
       }
 
@@ -87,8 +87,8 @@ export function useStatusManagement() {
         await notifySupportCircle(currentAction, previousStatus, newStatus, note);
       }
 
-      // Generate celebration for completed actions
-      if (newStatus === 'completed') {
+      // Generate celebration for done actions
+      if (newStatus === 'done') {
         toast.success(`🎉 Great job completing "${currentAction.action_text}"!`);
       }
 
@@ -110,16 +110,16 @@ export function useStatusManagement() {
   ) => {
     const getStatusMessage = (status: ActionStatus) => {
       switch (status) {
-        case 'completed': return '✅ Completed';
-        case 'in_progress': return '⏳ Started working on';
-        case 'on_hold': return '⏸️ Put on hold';
-        case 'cancelled': return '❌ Cancelled';
+        case 'done': return '✅ Accomplished!';
+        case 'doing': return '🚀 In My Flow';
+        case 'on_hold': return '⏸️ Paused Mindfully';
+        case 'cancelled': return '🔄 Redirected Energy';
         default: return status;
       }
     };
 
-    const alertType = newStatus === 'completed' ? 'task_completed' : 'task_missed';
-    const severity = newStatus === 'completed' ? 'info' : 
+    const alertType = newStatus === 'done' ? 'task_completed' : 'task_missed';
+    const severity = newStatus === 'done' ? 'info' : 
                     newStatus === 'cancelled' ? 'warning' : 'info';
 
     const message = `${getStatusMessage(newStatus)}: "${action.action_text}"${note ? `\n\nNote: ${note}` : ''}`;
@@ -157,16 +157,16 @@ export function useStatusManagement() {
         // Suggest status changes based on patterns
         if (action.status === 'not_started' && daysSinceCreated >= 2) {
           suggestions.push({
-            status: 'in_progress',
-            reason: `This action has been pending for ${daysSinceCreated} days. Consider starting to maintain momentum.`,
+            status: 'doing',
+            reason: `This action has been pending for ${daysSinceCreated} days. Ready to get in your flow?`,
             confidence: 75
           });
         }
 
-        if (action.status === 'in_progress' && daysSinceCreated >= 7) {
+        if (action.status === 'doing' && daysSinceCreated >= 7) {
           suggestions.push({
             status: 'on_hold',
-            reason: `This action has been in progress for a week. Consider if it needs to be put on hold or broken down further.`,
+            reason: `This action has been active for a week. Consider if it needs to be paused mindfully or broken down further.`,
             confidence: 60
           });
         }
@@ -176,7 +176,7 @@ export function useStatusManagement() {
           .from('extracted_actions')
           .select('*')
           .eq('user_id', user.id)
-          .eq('status', 'completed')
+          .eq('status', 'done')
           .ilike('action_text', `%${action.action_text.split(' ').slice(0, 2).join(' ')}%`)
           .limit(5);
 
@@ -189,8 +189,8 @@ export function useStatusManagement() {
 
           if (daysSinceCreated >= avgCompletionDays * 1.5) {
             suggestions.push({
-              status: 'in_progress',
-              reason: `Similar actions typically take ${Math.round(avgCompletionDays)} days. You might want to check progress.`,
+              status: 'doing',
+              reason: `Similar actions typically take ${Math.round(avgCompletionDays)} days. Time to get in your flow!`,
               confidence: 70
             });
           }
@@ -225,7 +225,7 @@ export function useStatusManagement() {
       }, {});
 
       const totalActions = actions.length;
-      const completedActions = statusCounts.completed || 0;
+      const completedActions = statusCounts.done || 0;
       const completionRate = totalActions > 0 ? (completedActions / totalActions) * 100 : 0;
 
       return {
