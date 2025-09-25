@@ -11,7 +11,7 @@ import { RecordingsTab } from './RecordingsTab';
 import { TranscriptsTab } from './TranscriptsTab';
 import { ConfidenceScore } from './ConfidenceScore';
 import { MicroCoaching } from './MicroCoaching';
-import { MemoryBridgeActionReport } from '../memory-bridge/MemoryBridgeActionReport';
+import { NextStepsHub } from '../nextStepsHub/NextStepsHub';
 import { MemoryBridgeSetupHub } from '../memory-bridge/MemoryBridgeSetupHub';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useEmpowerment } from '@/contexts/EmpowermentContext';
@@ -259,11 +259,11 @@ export function EnhancedMemoryBridgeDashboard() {
               <Tabs defaultValue="brief" className="w-full">
                 <TabsList className="grid w-full grid-cols-7">
                   <TabsTrigger value="brief">Daily Brief</TabsTrigger>
-                  <TabsTrigger value="recording">Record</TabsTrigger>
-                  <TabsTrigger value="actions">
-                    Actions ({extractedActions.length})
+                  <TabsTrigger value="nextsteps">
+                    🎯 Next Steps Hub ({extractedActions.length})
                   </TabsTrigger>
-                  <TabsTrigger value="report">Action Report</TabsTrigger>
+                  <TabsTrigger value="recording">Record</TabsTrigger>
+                  <TabsTrigger value="actions">Review Actions</TabsTrigger>
                   <TabsTrigger value="setup">Setup Hub</TabsTrigger>
                   <TabsTrigger value="transcripts">Transcripts</TabsTrigger>
                   <TabsTrigger value="recordings">History</TabsTrigger>
@@ -277,6 +277,10 @@ export function EnhancedMemoryBridgeDashboard() {
                     streakCount={streakCount}
                     onQuickCapture={handleStartRecording}
                   />
+                </TabsContent>
+
+                <TabsContent value="nextsteps" className="space-y-4">
+                  <NextStepsHub />
                 </TabsContent>
 
                 <TabsContent value="recording" className="space-y-4">
@@ -299,10 +303,6 @@ export function EnhancedMemoryBridgeDashboard() {
                     onUpdateAction={updateExtractedAction}
                     onConfirmActions={handleConfirmActions}
                   />
-                </TabsContent>
-
-                <TabsContent value="report" className="space-y-4">
-                  <MemoryBridgeActionReport />
                 </TabsContent>
 
                 <TabsContent value="setup" className="space-y-4">
