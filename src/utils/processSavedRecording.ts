@@ -6,6 +6,8 @@ export async function processSavedRecording(
   userId: string
 ): Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }> {
   try {
+    console.log('processSavedRecording: Starting processing for recording ID:', recordingId);
+    
     // Get the recording details
     const { data: recording, error: recordingError } = await supabase
       .from('voice_recordings')
@@ -13,11 +15,20 @@ export async function processSavedRecording(
       .eq('id', recordingId)
       .eq('user_id', userId)
       .single();
+      
+    console.log('processSavedRecording: Recording query result:', { recording, error: recordingError });
 
-    if (recordingError) throw recordingError;
-    if (!recording) throw new Error('Recording not found');
+    if (recordingError) {
+      console.error('processSavedRecording: Error fetching recording:', recordingError);
+      throw recordingError;
+    }
+    if (!recording) {
+      console.error('processSavedRecording: Recording not found');
+      throw new Error('Recording not found');
+    }
 
     // Create meeting recording record
+    console.log('processSavedRecording: Creating meeting record...');
     const { data: meetingRecord, error: meetingError } = await supabase
       .from('meeting_recordings')
       .insert({
@@ -33,14 +44,28 @@ export async function processSavedRecording(
       })
       .select()
       .single();
+      
+    console.log('processSavedRecording: Meeting record result:', { meetingRecord, error: meetingError });
 
-    if (meetingError) throw meetingError;
+    if (meetingError) {
+      console.error('processSavedRecording: Error creating meeting record:', meetingError);
+      throw meetingError;
+    }
 
     // Start background processing with file path (no large payloads)
+    console.log('processSavedRecording: Invoking process-meeting-audio function...');
+    console.log('processSavedRecording: Function params:', {
+      filePath: recording.file_path,
+      meetingId: meetingRecord.id,
+      userId: userId,
+      hasFilePath: !!recording.file_path
+    });
+    
     const { data, error: processError } = await supabase.functions.invoke('process-meeting-audio', {
       body: {
         filePath: recording.file_path,
         meetingId: meetingRecord.id,
+        userId: userId, // Explicitly include userId
         meetingData: {
           title: recording.title,
           type: 'informal',
@@ -50,14 +75,33 @@ export async function processSavedRecording(
         }
       }
     });
+    
+    console.log('processSavedRecording: Edge function response:', { data, error: processError });
 
-    if (processError) throw processError;
+    if (processError) {
+      console.error('processSavedRecording: Edge function error:', processError);
+      
+      // Update meeting record with error status
+      await supabase
+        .from('meeting_recordings')
+        .update({ 
+          processing_status: 'error',
+          processing_error: processError.message || 'Processing failed'
+        })
+        .eq('id', meetingRecord.id);
+      
+      throw processError;
+    }
 
+    console.log('processSavedRecording: Processing initiated successfully');
+    
     // Show immediate feedback for background processing
     toast.success('Processing started! We\'ll extract ACTs in the background.');
 
     // Poll for completion
     const result = await pollForCompletion(meetingRecord.id);
+    
+    console.log('processSavedRecording: Final result:', result);
     
     return {
       success: result.success,
@@ -67,8 +111,8 @@ export async function processSavedRecording(
     };
 
   } catch (error) {
-    console.error('Error processing saved recording:', error);
-    toast.error('Failed to process recording');
+    console.error('processSavedRecording: Error processing saved recording:', error);
+    toast.error(`Failed to process recording: ${error instanceof Error ? error.message : 'Unknown error'}`);
     return { success: false };
   }
 }

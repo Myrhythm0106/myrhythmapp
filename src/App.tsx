@@ -56,6 +56,7 @@ import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
 import TestingSuitePage from "./pages/TestingSuitePage";
 import TestMemoryBridge from "./routes/TestMemoryBridge";
+import { NextStepsDebugger } from "./components/debug/NextStepsDebugger";
 import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDashboard";
 import Help from "./pages/Help";
 import HelpGettingStarted from "./pages/HelpGettingStarted";
@@ -117,6 +118,13 @@ function App() {
                     
                     <Route path="/memory-bridge" element={<ProtectedRoute requireAuth={false}><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/memory-bridge/test" element={<ProtectedRoute><TestMemoryBridge /></ProtectedRoute>} />
+                    <Route path="/debug-next-steps" element={
+                      <ProtectedRoute requireAuth={false}>
+                        <div className="container mx-auto p-6">
+                          <NextStepsDebugger />
+                        </div>
+                      </ProtectedRoute>
+                    } />
                     <Route path="/testing-suite" element={<ProtectedRoute requireAuth={false}><TestingSuitePage /></ProtectedRoute>} />
                     <Route path="/quick-capture" element={<ProtectedRoute requireAuth={false}><QuickCapture /></ProtectedRoute>} />
                      <Route path="/auth" element={<Auth />} />
