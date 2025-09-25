@@ -262,7 +262,7 @@ export function EnhancedMemoryBridgeDashboard() {
                   <TabsTrigger value="nextsteps">
                     🎯 Next Steps Hub ({extractedActions.length})
                   </TabsTrigger>
-                  <TabsTrigger value="recording">Record</TabsTrigger>
+                  <TabsTrigger value="recording">Capture</TabsTrigger>
                   <TabsTrigger value="actions">Review Actions</TabsTrigger>
                   <TabsTrigger value="setup">Setup Hub</TabsTrigger>
                   <TabsTrigger value="transcripts">Transcripts</TabsTrigger>
