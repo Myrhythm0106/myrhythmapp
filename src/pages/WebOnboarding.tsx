@@ -9,6 +9,7 @@ import { useOnboardingLogic } from "@/hooks/useOnboardingLogic";
 import { useOnboardingHandlers } from "@/hooks/useOnboardingHandlers";
 import { useAuth } from "@/hooks/useAuth";
 import { Preview3Background } from "@/components/ui/Preview3Background";
+import { QuickCaptureButton } from "@/components/memoryBridge/QuickCaptureButton";
 
 // Web-specific onboarding steps (preserves original functionality)
 const WEB_ONBOARDING_STEPS = [
@@ -177,6 +178,7 @@ const WebOnboarding = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold">MyRhythm Business Onboarding</h1>
               <div className="flex items-center gap-4">
+                <QuickCaptureButton variant="compact" />
                 <button
                   onClick={() => window.location.href = '/memory-bridge'}
                   className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"

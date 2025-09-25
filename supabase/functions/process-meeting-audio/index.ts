@@ -119,7 +119,7 @@ serve(async (req) => {
       const uploadResponse = await fetch('https://api.assemblyai.com/v2/upload', {
         method: 'POST',
         headers: {
-          'Authorization': ASSEMBLYAI_API_KEY,
+          'Authorization': `Bearer ${ASSEMBLYAI_API_KEY}`,
           'Content-Type': 'application/octet-stream'
         },
         body: audioBlob
@@ -135,7 +135,7 @@ serve(async (req) => {
       const transcriptionResponse = await fetch('https://api.assemblyai.com/v2/transcript', {
         method: 'POST',
         headers: {
-          'Authorization': ASSEMBLYAI_API_KEY,
+          'Authorization': `Bearer ${ASSEMBLYAI_API_KEY}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
