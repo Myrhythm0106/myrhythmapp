@@ -181,17 +181,19 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
 
       setProcessingMessage('Transcribing & extracting ACTs...');
 
-      // Process with edge function
+      // Process with edge function - include userId for better processing
       const { data, error } = await supabase.functions.invoke('process-meeting-audio', {
         body: {
           filePath: voiceRecording.file_path,
           meetingId: meetingRecord.id,
+          userId: user.id, // ✅ Critical fix: Include userId explicitly
           meetingData: {
             title: `Quick Capture - ${new Date().toLocaleString()}`,
             type: 'informal',
             participants: [],
             context: 'Quick captured conversation',
-            recording_id: voiceRecording.id
+            recording_id: voiceRecording.id,
+            user_id: user.id // ✅ Also include in meetingData as backup
           }
         }
       });

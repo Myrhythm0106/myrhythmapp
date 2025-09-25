@@ -36,13 +36,20 @@ serve(async (req) => {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     const { filePath, meetingId, meetingData, audio, userId } = await req.json();
 
-    console.log('Processing meeting audio for meeting:', meetingId);
+    console.log('🎬 Processing meeting audio for meeting:', meetingId);
+    console.log('🔧 Parameters received:', { 
+      hasFilePath: !!filePath, 
+      hasMeetingId: !!meetingId, 
+      hasAudio: !!audio, 
+      hasUserId: !!userId,
+      meetingDataKeys: meetingData ? Object.keys(meetingData) : []
+    });
 
-    // Get userId - either from direct parameter or from meeting record
+    // Get userId - enhanced resolution with better error handling
     let resolvedUserId = userId || meetingData?.userId || meetingData?.user_id;
     
     if (!resolvedUserId) {
-      console.log('UserId not provided, fetching from meeting record...');
+      console.log('📋 UserId not provided, fetching from meeting record...');
       const { data: meetingRecord, error: meetingError } = await supabase
         .from('meeting_recordings')
         .select('user_id')
@@ -50,11 +57,14 @@ serve(async (req) => {
         .single();
       
       if (meetingError) {
+        console.error('❌ Failed to fetch meeting record:', meetingError);
         throw new Error(`Failed to fetch meeting record: ${meetingError.message}`);
       }
       
       resolvedUserId = meetingRecord.user_id;
-      console.log('Retrieved userId from meeting record:', resolvedUserId);
+      console.log('✅ Resolved userId from meeting record:', resolvedUserId);
+    } else {
+      console.log('✅ Using provided userId:', resolvedUserId);
     }
 
     let audioBlob;
@@ -63,21 +73,32 @@ serve(async (req) => {
     // Handle different input types
     if (filePath) {
       // File-based processing (preferred for large files)
-      console.log('Processing audio file:', filePath);
+      console.log('🎵 Processing audio file from storage:', filePath);
       
-      // Get the audio file from storage
-      const { data: fileData, error: downloadError } = await supabase.storage
-        .from('voice-recordings')
-        .download(filePath);
-      
-      if (downloadError) {
-        throw new Error(`Failed to download audio file: ${downloadError.message}`);
+      try {
+        // Get the audio file from storage with explicit bucket and path
+        const { data: fileData, error: downloadError } = await supabase.storage
+          .from('voice-recordings')
+          .download(filePath);
+        
+        if (downloadError) {
+          console.error('❌ Storage download error:', downloadError);
+          throw new Error(`Failed to download audio file: ${downloadError.message}`);
+        }
+        
+        if (!fileData) {
+          throw new Error('No audio file data received from storage');
+        }
+        
+        console.log('✅ Audio file downloaded successfully, size:', fileData.size, 'bytes');
+        audioBlob = fileData;
+      } catch (storageError) {
+        console.error('❌ Storage access failed:', storageError);
+        throw new Error(`Storage access error: ${storageError.message}`);
       }
-      
-      audioBlob = fileData;
     } else if (audio) {
       // Direct audio data (base64)
-      console.log('Processing direct audio data');
+      console.log('🎵 Processing direct audio data');
       
       // Convert base64 to blob
       const binaryString = atob(audio);
