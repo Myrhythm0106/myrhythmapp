@@ -255,9 +255,9 @@ export function EnhancedMemoryBridgeDashboard() {
           )}
 
           {/* Main Content */}
-          {isReturningUser ? (
-              <Tabs defaultValue="brief" className="w-full">
-                <TabsList className="grid w-full grid-cols-7">
+          <Tabs defaultValue={isReturningUser ? "brief" : "nextsteps"} className="w-full">
+                <TabsList className={`grid w-full ${!isReturningUser ? 'grid-cols-8' : 'grid-cols-7'}`}>
+                  {!isReturningUser && <TabsTrigger value="welcome">🎉 Welcome</TabsTrigger>}
                   <TabsTrigger value="brief">Daily Brief</TabsTrigger>
                   <TabsTrigger value="nextsteps">
                     🎯 Next Steps Hub ({extractedActions.length})
@@ -268,6 +268,12 @@ export function EnhancedMemoryBridgeDashboard() {
                   <TabsTrigger value="transcripts">Transcripts</TabsTrigger>
                   <TabsTrigger value="recordings">History</TabsTrigger>
                 </TabsList>
+
+                {!isReturningUser && (
+                  <TabsContent value="welcome" className="space-y-4">
+                    <FirstTimeWelcome />
+                  </TabsContent>
+                )}
 
                 <TabsContent value="brief" className="space-y-4">
                   <DailyBrief
@@ -325,9 +331,6 @@ export function EnhancedMemoryBridgeDashboard() {
                   />
                 </TabsContent>
               </Tabs>
-            ) : (
-              <FirstTimeWelcome />
-            )}
 
             {/* Quick Capture Modal */}
             {showQuickCapture && (
