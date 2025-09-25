@@ -50,7 +50,7 @@ const sampleGoalsData: Goal[] = [
             type: "activity",
             date: "2024-11-28",
             startTime: "10:00",
-            status: "completed",
+            status: "done",
             duration: 5
           }
         ]
@@ -216,7 +216,7 @@ export function EnhancedGoalsView() {
                               key={action.id} 
                               className={cn(
                                 "p-3 rounded border cursor-pointer transition-all hover:shadow-md",
-                                action.status === "completed" ? "bg-green-50 border-green-200" : "bg-white border-gray-200",
+                                action.status === "done" ? "bg-green-50 border-green-200" : "bg-white border-gray-200",
                                 action.isToday && "ring-2 ring-primary/20"
                               )}
                               onClick={() => handleActionClick(action)}
@@ -230,18 +230,18 @@ export function EnhancedGoalsView() {
                                     }}
                                     className={cn(
                                       "w-5 h-5 rounded border-2 flex items-center justify-center transition-colors",
-                                      action.status === "completed" 
+                                       action.status === "done" 
                                         ? "bg-green-500 border-green-500 text-white" 
                                         : "border-gray-300 hover:border-green-500"
                                     )}
                                   >
-                                    {action.status === "completed" && <CheckCircle2 className="h-3 w-3" />}
+                                    {action.status === "done" && <CheckCircle2 className="h-3 w-3" />}
                                   </button>
                                   
                                   <div className="flex-1">
                                     <p className={cn(
                                       "text-sm font-medium",
-                                      action.status === "completed" && "line-through text-muted-foreground"
+                                      action.status === "done" && "line-through text-muted-foreground"
                                     )}>
                                       → {action.title}
                                     </p>

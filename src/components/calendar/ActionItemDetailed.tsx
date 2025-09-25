@@ -22,7 +22,7 @@ interface ActionItemDetailedProps {
       title: string;
       type: "mobility" | "cognitive" | "health" | "other";
     };
-    status?: "completed" | "pending" | "in-progress" | "canceled";
+    status?: "done" | "pending" | "doing" | "canceled" | "not_started" | "on_hold";
   };
   showDetails?: boolean;
 }
@@ -35,12 +35,16 @@ export function ActionItemDetailed({
 
   const getActionStatusStyles = (status?: string) => {
     switch (status) {
-      case "completed":
+      case "done":
         return "bg-green-50 border-green-200";
-      case "in-progress":
+      case "doing":
         return "bg-blue-50 border-blue-200";
       case "canceled":
         return "bg-red-50 border-red-200";
+      case "on_hold":
+        return "bg-orange-50 border-orange-200";
+      case "not_started":
+        return "bg-gray-50 border-gray-200";
       default:
         return "bg-white border-gray-200";
     }

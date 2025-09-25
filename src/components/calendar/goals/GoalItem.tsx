@@ -28,7 +28,7 @@ export function GoalItem({ goal, actions, detailedActions = false }: GoalItemPro
     }
   };
 
-  const completedActions = actions.filter(action => action.status === "completed").length;
+  const completedActions = actions.filter(action => action.status === "done").length;
   const totalActions = actions.length;
   const completionPercentage = totalActions > 0 ? (completedActions / totalActions) * 100 : 0;
 
@@ -41,7 +41,7 @@ export function GoalItem({ goal, actions, detailedActions = false }: GoalItemPro
             <CardTitle className="text-lg">{goal.title}</CardTitle>
           </div>
           <div className="flex items-center gap-2">
-            <StatusBadge status={completedActions === totalActions && totalActions > 0 ? "completed" : "in-progress"} />
+            <StatusBadge status={completedActions === totalActions && totalActions > 0 ? "done" : "doing"} />
             <span className="text-sm text-muted-foreground">
               {completedActions}/{totalActions}
             </span>

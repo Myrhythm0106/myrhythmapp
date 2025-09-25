@@ -41,7 +41,7 @@ export const sampleActions: Action[] = [
     type: "activity",
     date: "2023-05-20",
     startTime: "10:00 AM",
-    status: "completed",
+    status: "done",
     goalId: "g1"
   },
   {
@@ -88,7 +88,7 @@ export const sampleActions: Action[] = [
     type: "activity",
     date: "2023-05-26",
     startTime: "07:30 AM",
-    status: "completed",
+    status: "done",
     goalId: "g3"
   },
   {
