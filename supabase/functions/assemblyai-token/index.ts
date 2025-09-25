@@ -101,9 +101,9 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('Unexpected error in assemblyai-token function:', {
-      error: error.message,
-      stack: error.stack,
-      userId: user?.id || 'unknown'
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+      userId: 'unknown' // user is not available in this catch scope
     });
     
     return new Response(

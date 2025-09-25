@@ -74,7 +74,10 @@ serve(async (req) => {
       clinic_enterprise: { month: 100000, year: 1000000 }
     };
 
-    const basePricePence = basePricing[plan][interval];
+    const basePricePence = (basePricing as any)[plan as string]?.[interval as string];
+    if (!basePricePence) {
+      throw new Error(`Invalid plan or interval: ${plan}, ${interval}`);
+    }
     let finalPricePence = basePricePence;
     let metadata: any = { plan, interval, user_id: user.id };
 
@@ -118,7 +121,7 @@ serve(async (req) => {
           price_data: {
             currency: "gbp",
             product_data: { 
-              name: `${planNames[plan]} - ${interval === 'month' ? 'Monthly' : 'Annual'} Plan`,
+              name: `${(planNames as any)[plan as string]} - ${interval === 'month' ? 'Monthly' : 'Annual'} Plan`,
               description: isFoundingActive ? `Founding Member Special - ${foundingMemberDiscountPercent}% off!` : undefined
             },
             unit_amount: finalPricePence,
@@ -156,7 +159,9 @@ serve(async (req) => {
         });
         logStep("Trial subscription record created");
       } catch (dbError) {
-        logStep("WARNING: Failed to save trial record", { error: dbError.message });
+        logStep("WARNING: Failed to save trial record", { 
+          error: dbError instanceof Error ? dbError.message : 'Unknown database error'
+        });
         // Don't fail the checkout process if database save fails
       }
     }

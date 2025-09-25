@@ -94,7 +94,7 @@ serve(async (req) => {
         audioBlob = fileData;
       } catch (storageError) {
         console.error('❌ Storage access failed:', storageError);
-        throw new Error(`Storage access error: ${storageError.message}`);
+        throw new Error(`Storage access error: ${storageError instanceof Error ? storageError.message : 'Unknown storage error'}`);
       }
     } else if (audio) {
       // Direct audio data (base64)
@@ -256,20 +256,22 @@ serve(async (req) => {
             Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
           );
           
-          await supabase
-            .from('meeting_recordings')
-            .update({ 
-              processing_status: 'error',
-              processing_error: error.message
-            })
-            .eq('id', body.meetingId);
+            await supabase
+              .from('meeting_recordings')
+              .update({ 
+                processing_status: 'error',
+                processing_error: error instanceof Error ? error.message : 'Unknown error occurred'
+              })
+              .eq('id', body.meetingId);
         }
       } catch (updateError) {
         console.error('Error updating meeting with error status:', updateError);
       }
     }
     
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error instanceof Error ? error.message : 'An unexpected error occurred'
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

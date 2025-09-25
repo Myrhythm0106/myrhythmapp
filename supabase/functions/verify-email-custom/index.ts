@@ -68,9 +68,14 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     // Update user's email_confirmed_at in auth.users using admin API
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
+    // Get users by email using proper method
+    const { data: userList, error: listError } = await supabase.auth.admin.listUsers();
+    if (listError) {
+      throw new Error(`Failed to list users: ${listError.message}`);
+    }
     
-    if (userError || !userData.user) {
+    const userData = userList.users.find(u => u.email === email);
+    if (!userData) {
       return new Response(
         JSON.stringify({ error: "User not found" }),
         { status: 404, headers: { "Content-Type": "application/json", ...corsHeaders } }
@@ -79,7 +84,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Confirm the user's email
     const { error: confirmError } = await supabase.auth.admin.updateUserById(
-      userData.user.id,
+      userData.id,
       { email_confirm: true }
     );
 
@@ -95,7 +100,7 @@ const handler = async (req: Request): Promise<Response> => {
       JSON.stringify({ 
         success: true, 
         message: "Email verified successfully",
-        user_id: userData.user.id 
+        user_id: userData.id 
       }),
       {
         status: 200,

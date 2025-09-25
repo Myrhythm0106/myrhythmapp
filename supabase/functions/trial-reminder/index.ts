@@ -75,7 +75,8 @@ serve(async (req) => {
 
     for (const trial of trialsToRemind) {
       try {
-        const userProfile = trial.profiles;
+        // Fix: extract the first profile from the array
+        const userProfile = Array.isArray(trial.profiles) ? trial.profiles[0] : trial.profiles;
         if (!userProfile?.email) {
           logStep("Skipping trial - no user email", { trialId: trial.id });
           continue;
@@ -143,7 +144,7 @@ serve(async (req) => {
         logStep("Trial reminder processed", { trialId: trial.id });
 
       } catch (error) {
-        const errorMsg = `Failed to process trial ${trial.id}: ${error.message}`;
+        const errorMsg = `Failed to process trial ${trial.id}: ${error instanceof Error ? error.message : 'Unknown error'}`;
         logStep("ERROR processing trial", { trialId: trial.id, error: errorMsg });
         errors.push(errorMsg);
       }
