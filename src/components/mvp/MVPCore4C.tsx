@@ -163,9 +163,9 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" 
-                  onClick={() => setActiveFeatureModal('capture')}
+                  onClick={() => navigate('/quick-capture')}
                 >
-                  Explore Capture
+                  Start Capture
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>

@@ -118,7 +118,7 @@ function App() {
                     <Route path="/memory-bridge" element={<ProtectedRoute requireAuth={false}><MemoryBridge /></ProtectedRoute>} />
                     <Route path="/memory-bridge/test" element={<ProtectedRoute><TestMemoryBridge /></ProtectedRoute>} />
                     <Route path="/testing-suite" element={<ProtectedRoute requireAuth={false}><TestingSuitePage /></ProtectedRoute>} />
-                    <Route path="/quick-capture" element={<ProtectedRoute><QuickCapture /></ProtectedRoute>} />
+                    <Route path="/quick-capture" element={<ProtectedRoute requireAuth={false}><QuickCapture /></ProtectedRoute>} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/email-verification" element={<EmailVerification />} />
                       <Route path="/get-started" element={<GetStartedPage />} />
