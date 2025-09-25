@@ -147,26 +147,43 @@ serve(async (req) => {
       console.log('🎤 Using AssemblyAI for transcription');
       
       try {
-        // Upload to AssemblyAI
+        // Test AssemblyAI API connection
+        console.log('🎤 Using AssemblyAI for transcription');
+        console.log('🔑 AssemblyAI Key format check:', {
+          keyLength: ASSEMBLYAI_API_KEY?.length || 0,
+          keyPrefix: ASSEMBLYAI_API_KEY?.substring(0, 10) || 'none',
+          keyType: typeof ASSEMBLYAI_API_KEY
+        });
+        
+        // Upload file to AssemblyAI
         console.log('📤 Uploading to AssemblyAI...');
         const uploadResponse = await fetch('https://api.assemblyai.com/v2/upload', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${ASSEMBLYAI_API_KEY}`,
+            'Authorization': ASSEMBLYAI_API_KEY,
             'Content-Type': 'application/octet-stream'
           },
           body: audioBlob
         });
-        
+
         console.log('📤 AssemblyAI upload response:', {
           status: uploadResponse.status,
           statusText: uploadResponse.statusText,
-          ok: uploadResponse.ok
+          ok: uploadResponse.ok,
+          headers: Object.fromEntries(uploadResponse.headers.entries())
         });
-        
+
         if (!uploadResponse.ok) {
           const errorText = await uploadResponse.text();
-          console.error('❌ AssemblyAI upload failed:', errorText);
+          console.log('❌ AssemblyAI upload failed:', errorText);
+          console.log('🔍 Debug info:', {
+            requestHeaders: {
+              'Authorization': `${ASSEMBLYAI_API_KEY?.substring(0, 10)}...`,
+              'Content-Type': 'application/octet-stream'
+            },
+            bodySize: audioBlob.size,
+            bodyType: audioBlob.type
+          });
           throw new Error(`AssemblyAI upload failed: ${uploadResponse.status} ${uploadResponse.statusText} - ${errorText}`);
         }
         
@@ -178,7 +195,7 @@ serve(async (req) => {
         const transcriptionResponse = await fetch('https://api.assemblyai.com/v2/transcript', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${ASSEMBLYAI_API_KEY}`,
+            'Authorization': ASSEMBLYAI_API_KEY,
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
@@ -213,7 +230,7 @@ serve(async (req) => {
           
           const statusResponse = await fetch(`https://api.assemblyai.com/v2/transcript/${transcriptId}`, {
             headers: { 
-              'Authorization': `Bearer ${ASSEMBLYAI_API_KEY}`
+              'Authorization': ASSEMBLYAI_API_KEY
             }
           });
           
