@@ -158,7 +158,7 @@ export default function GetStartedPage() {
       // Step 1: User Type Selection
       <div className="space-y-6">
             <div className="text-center space-y-3">
-              <h2 className="text-3xl font-bold text-foreground">You are seen.  Your Story Matters. </h2>
+              <h2 className="text-3xl font-bold text-foreground">You are seen.  You are heard. Your story matters. </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Every breakthrough starts with someone who truly understands your journey. We see you, we believe in you, and we're here to help.
               </p>
