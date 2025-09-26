@@ -31,6 +31,7 @@ import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import SupportMemberDashboard from "./pages/SupportMemberDashboard";
+import { SupportMemberDashboardPage } from "./pages/SupportMemberDashboardPage";
 import DemoLanding from "./pages/DemoLanding";
 import Assessment from "./pages/Assessment";
 import QuickAssessment from "./pages/QuickAssessment";
@@ -134,6 +135,7 @@ function App() {
                      <Route path="/mvp-payment" element={<MVPPaymentPage />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
+                    <Route path="/support-circle-dashboard" element={<ProtectedRoute><SupportMemberDashboardPage /></ProtectedRoute>} />
                      <Route path="/legal/disclaimer" element={<ProtectedRoute requireAuth={false}><Disclaimer /></ProtectedRoute>} />
                      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                     <Route path="/terms" element={<TermsOfService />} />

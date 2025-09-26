@@ -13,6 +13,7 @@ interface Member {
   permissions: {
     moodTracking: boolean;
     healthTracking: boolean;
+    actions: boolean;
   };
 }
 
@@ -22,26 +23,26 @@ export function SupportCirclePermissions() {
     { 
       id: "1", 
       name: "Sarah Johnson", 
-      permissions: { moodTracking: false, healthTracking: false }
+      permissions: { moodTracking: false, healthTracking: false, actions: false }
     },
     { 
       id: "2", 
       name: "Michael Smith", 
-      permissions: { moodTracking: true, healthTracking: false }
+      permissions: { moodTracking: true, healthTracking: false, actions: true }
     },
     { 
       id: "3", 
       name: "Dr. Smith", 
-      permissions: { moodTracking: true, healthTracking: true }
+      permissions: { moodTracking: true, healthTracking: true, actions: false }
     },
     { 
       id: "4", 
       name: "Mom", 
-      permissions: { moodTracking: false, healthTracking: false }
+      permissions: { moodTracking: false, healthTracking: false, actions: true }
     },
   ]);
 
-  const handlePermissionChange = (memberId: string, permission: 'moodTracking' | 'healthTracking', value: boolean) => {
+  const handlePermissionChange = (memberId: string, permission: 'moodTracking' | 'healthTracking' | 'actions', value: boolean) => {
     setMembers(members.map(member => 
       member.id === memberId 
         ? { 
@@ -109,6 +110,22 @@ export function SupportCirclePermissions() {
                     checked={member.permissions.healthTracking}
                     onCheckedChange={(checked) => 
                       handlePermissionChange(member.id, 'healthTracking', checked)
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor={`actions-${member.id}`} className="font-medium">Next Steps & Actions</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Full access to view and help with action items from recordings
+                    </p>
+                  </div>
+                  <Switch 
+                    id={`actions-${member.id}`}
+                    checked={member.permissions.actions}
+                    onCheckedChange={(checked) => 
+                      handlePermissionChange(member.id, 'actions', checked)
                     }
                   />
                 </div>

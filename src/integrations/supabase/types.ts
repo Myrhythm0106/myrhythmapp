@@ -1778,6 +1778,54 @@ export type Database = {
           },
         ]
       }
+      support_member_action_notes: {
+        Row: {
+          action_id: string
+          created_at: string | null
+          id: string
+          is_visible_to_user: boolean | null
+          note_text: string
+          note_type: string
+          support_member_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          action_id: string
+          created_at?: string | null
+          id?: string
+          is_visible_to_user?: boolean | null
+          note_text: string
+          note_type?: string
+          support_member_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          action_id?: string
+          created_at?: string | null
+          id?: string
+          is_visible_to_user?: boolean | null
+          note_text?: string
+          note_type?: string
+          support_member_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_member_action_notes_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "extracted_actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "support_member_action_notes_support_member_id_fkey"
+            columns: ["support_member_id"]
+            isOneToOne: false
+            referencedRelation: "support_circle_members"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       symptom_logs: {
         Row: {
           created_at: string
@@ -2281,6 +2329,14 @@ export type Database = {
       }
       revoke_invitation: {
         Args: { p_member_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      support_member_can_access_action: {
+        Args: { p_action_id: string; p_member_email: string }
+        Returns: boolean
+      }
+      support_member_can_access_actions: {
+        Args: { p_member_email: string; p_user_id: string }
         Returns: boolean
       }
       user_can_access_memory: {
