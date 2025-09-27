@@ -82,8 +82,11 @@ function App() {
                   <BrowserRouter>
                     <SetupProgressBar />
                   <Routes>
-                    {/* Landing and Discovery Routes */}
-                    <Route path="/landing" element={<Landing />} />
+                     {/* Landing and Discovery Routes */}
+                     <Route path="/" element={<Landing />} />
+                     <Route path="/auth" element={<Auth />} />
+                     <Route path="/dashboard" element={<Dashboard />} />
+                     <Route path="/landing" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
                      {/* Subscription Routes */}
@@ -94,11 +97,8 @@ function App() {
       {/* Restrict Welcome page to post-payment users only */}
       <Route path="/welcome" element={<ProtectedRoute requireAuth={false}><Welcome /></ProtectedRoute>} />
                     
-                     {/* Dashboard-First Experience - Default Route */}
-                     <Route path="/" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                     
-                       {/* Legacy route redirects for brain-injury users - never lose progress */}
-                       <Route path="/mvp/user-type-selection" element={<GetStartedPage />} />
+                     {/* Dashboard-First Experience - Remove default Dashboard redirect */}
+                     <Route path="/mvp/user-type-selection" element={<GetStartedPage />} />
                        
                        {/* Help Routes */}
                     <Route path="/help" element={<ProtectedRoute requireAuth={false}><Help /></ProtectedRoute>} />

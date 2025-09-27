@@ -30,8 +30,18 @@ const Landing = () => {
     }
   }, [user, loading, navigate]);
 
+  // For unauthenticated users, prioritize authentication
+  const handleAuthRedirect = () => {
+    navigate("/auth");
+  };
+
   const handleGetStarted = () => {
-    navigate("/mvp/user-type-selection");
+    // For unauthenticated users, go to auth first
+    if (!user) {
+      navigate("/auth");
+    } else {
+      navigate("/mvp/user-type-selection");
+    }
   };
 
   // Don't show loading for unauthenticated users - just show the landing page
@@ -54,6 +64,35 @@ const Landing = () => {
         <FoundingMemberBanner />
         <ScrollArea className="h-screen">
           <AppleHeroSection />
+          
+          {/* Auth-focused section for unauthenticated users */}
+          {!user && (
+            <div className="bg-gradient-to-b from-memory-emerald-50/30 to-clarity-teal-50/20 py-16">
+              <div className="max-w-4xl mx-auto px-6 text-center">
+                <h2 className="text-3xl font-bold text-brain-health-800 mb-6">
+                  Ready to Transform Your Life?
+                </h2>
+                <p className="text-lg text-brain-health-600 mb-8 max-w-2xl mx-auto">
+                  Join thousands who've discovered their rhythm. Start with a free assessment and personalized guidance.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={handleAuthRedirect}
+                    className="px-8 py-4 bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105"
+                  >
+                    Get Started Free
+                  </button>
+                  <button
+                    onClick={handleAuthRedirect}
+                    className="px-8 py-4 border-2 border-memory-emerald-500 text-memory-emerald-600 hover:bg-memory-emerald-50 font-semibold rounded-xl transition-all duration-200"
+                  >
+                    Sign In
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          
           <FoundingMemberPricingCard onGetStarted={handleGetStarted} />
           <BreakingTheCycleSection />
           <MemoryBridgeSection />

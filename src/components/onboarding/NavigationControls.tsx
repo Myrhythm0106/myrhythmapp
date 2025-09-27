@@ -15,6 +15,8 @@ interface NavigationControlsProps {
   previousLabel?: string;
   isLoading?: boolean;
   className?: string;
+  stepTitle?: string;
+  stepDescription?: string;
 }
 
 export function NavigationControls({
@@ -27,7 +29,9 @@ export function NavigationControls({
   nextLabel,
   previousLabel,
   isLoading = false,
-  className
+  className,
+  stepTitle,
+  stepDescription
 }: NavigationControlsProps) {
   console.log("NavigationControls: Step", currentStep, "canGoNext:", canGoNext, "canGoPrevious:", canGoPrevious);
   
@@ -54,18 +58,47 @@ export function NavigationControls({
 
   return (
     <div className={cn("pt-6 border-t border-border/50", className)}>
-      {/* Progress Status */}
-      <div className="text-center mb-4">
-        <p className="text-sm text-muted-foreground">
+      {/* Enhanced Progress indicator */}
+      <div className="text-center mb-4 space-y-3">
+        {stepTitle && (
+          <div className="space-y-1">
+            <h3 className="text-lg font-semibold text-foreground">{stepTitle}</h3>
+            {stepDescription && (
+              <p className="text-sm text-muted-foreground">{stepDescription}</p>
+            )}
+          </div>
+        )}
+        <div className="text-sm text-muted-foreground">
           Step {currentStep} of {totalSteps}
-        </p>
+        </div>
+        <div className="w-full bg-muted rounded-full h-2 max-w-sm mx-auto">
+          <div
+            className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+          />
+        </div>
+        {/* Step completion indicators */}
+        <div className="flex justify-center space-x-2">
+          {Array.from({ length: totalSteps }, (_, i) => (
+            <div
+              key={i}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                i < currentStep
+                  ? 'bg-memory-emerald-500'
+                  : i === currentStep - 1
+                  ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500'
+                  : 'bg-muted'
+              }`}
+            />
+          ))}
+        </div>
         {canGoNext && (
-          <p className="text-xs text-green-600 mt-1 font-medium">
+          <p className="text-xs text-green-600 font-medium">
             ✓ Ready to continue
           </p>
         )}
         {!canGoNext && (
-          <p className="text-xs text-amber-600 mt-1">
+          <p className="text-xs text-amber-600">
             {currentStep === 1 && "👆 Please select your user type above to continue"}
             {currentStep === 2 && "📍 Fill in your location or click 'Skip This Step'"}
             {currentStep === 3 && "💳 Please choose a plan above to continue"}

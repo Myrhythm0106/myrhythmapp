@@ -52,8 +52,8 @@ export default function AuthPage() {
                   </div>
                 </div>
                 <Button 
-                  className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                  onClick={() => navigate("/dashboard")}
+                  className="w-full bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 hover:from-memory-emerald-700 hover:to-clarity-teal-700"
+                  onClick={() => navigate("/memory-bridge")}
                 >
                   <LogIn className="w-4 h-4 mr-2" />
                   Continue Your Journey
@@ -76,8 +76,8 @@ export default function AuthPage() {
                   </div>
                 </div>
                 <Button 
-                  className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700"
-                  onClick={() => navigate("/onboarding")}
+                  className="w-full bg-gradient-to-r from-clarity-teal-600 to-memory-emerald-600 hover:from-clarity-teal-700 hover:to-memory-emerald-700"
+                  onClick={() => navigate("/mvp/user-type-selection")}
                 >
                   <UserPlus className="w-4 h-4 mr-2" />
                   Your Journey Starts Here

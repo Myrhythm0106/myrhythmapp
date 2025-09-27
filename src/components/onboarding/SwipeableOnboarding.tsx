@@ -49,42 +49,35 @@ export function SwipeableOnboarding({
 
   return (
     <div className="space-y-4">
-      {/* Progress indicator */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex-1">
-          {title && <h2 className="text-xl font-semibold mb-2">{title}</h2>}
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium">Step {currentStep} of {totalSteps}</span>
-            <div className="flex-1 bg-muted rounded-full h-2 max-w-xs">
-              <div 
-                className="bg-primary h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+        <div className="text-center mb-6">
+          <div className="w-full bg-muted rounded-full h-2 mb-4">
+            <div
+              className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 h-2 rounded-full transition-all duration-300"
+              style={{ width: `${(currentStep / totalSteps) * 100}%` }}
+            />
+          </div>
+          <div className="flex justify-center space-x-2">
+            {Array.from({ length: totalSteps }, (_, i) => (
+              <div
+                key={i}
+                className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                  i < currentStep
+                    ? 'bg-memory-emerald-500 transform scale-110'
+                    : i === currentStep
+                    ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 transform scale-110'
+                    : 'bg-muted'
+                }`}
               />
-            </div>
+            ))}
           </div>
+          {/* Encouraging step message */}
+          <p className="text-sm text-muted-foreground mt-3">
+            {currentStep === 1 && "Welcome! Let's get to know you better"}
+            {currentStep === 2 && "Great start! Now let's personalize your experience"}
+            {currentStep === 3 && "You're doing great! Almost there"}
+            {currentStep > 3 && "Excellent progress! Just a few more steps"}
+          </p>
         </div>
-        
-        {!isMobile && (
-          <div className="flex gap-2 ml-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handlePrevious}
-              disabled={!canGoPrevious || currentStep === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleNext}
-              disabled={!canGoNext || currentStep === totalSteps}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-      </div>
 
       {/* Swipeable content */}
       <SwipeableContainer
