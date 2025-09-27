@@ -109,11 +109,11 @@ export function AppleHeroSection() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Button 
-                onClick={handleGetStarted}
+                onClick={() => navigate("/auth")}
                 size="lg"
                 className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full"
               >
-                Register Now
+                Get Started Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               
@@ -241,11 +241,11 @@ export function AppleHeroSection() {
                 Join thousands who've taken control of their cognitive confidence with MyRhythm
               </p>
               <Button 
-                onClick={handleGetStarted}
+                onClick={() => navigate("/auth")}
                 size="lg"
                 className="px-10 py-5 text-xl font-semibold bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-full group"
               >
-                Register Now
+                Start Your Journey
                 <Sparkles className="ml-3 h-6 w-6 group-hover:animate-pulse" />
               </Button>
             </div>

@@ -127,11 +127,9 @@ function App() {
                       </ProtectedRoute>
                     } />
                     <Route path="/testing-suite" element={<ProtectedRoute requireAuth={false}><TestingSuitePage /></ProtectedRoute>} />
-                    <Route path="/quick-capture" element={<ProtectedRoute requireAuth={false}><QuickCapture /></ProtectedRoute>} />
-                     <Route path="/auth" element={<Auth />} />
-                     <Route path="/email-verification" element={<EmailVerification />} />
-                      <Route path="/get-started" element={<GetStartedPage />} />
-                       <Route path="/mvp/user-type-selection" element={<Auth />} />
+                     <Route path="/quick-capture" element={<ProtectedRoute requireAuth={false}><QuickCapture /></ProtectedRoute>} />
+                      <Route path="/email-verification" element={<EmailVerification />} />
+                       <Route path="/get-started" element={<GetStartedPage />} />
                      <Route path="/mvp-payment" element={<MVPPaymentPage />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />

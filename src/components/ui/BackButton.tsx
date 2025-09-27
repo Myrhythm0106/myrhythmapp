@@ -33,21 +33,24 @@ export function BackButton({
     if (onboardingMode) {
       const currentPath = location.pathname;
       
-      // Handle specific onboarding navigation
+      // Handle specific MVP onboarding navigation
       if (currentPath.includes('/mvp/')) {
         const steps = [
-          '/mvp/user-type-selection',
+          '/auth',
           '/mvp/privacy-setup', 
           '/mvp/assessment-introduction',
           '/mvp/assessment',
           '/mvp/results'
         ];
         
-        const currentIndex = steps.findIndex(step => currentPath.includes(step));
+        const currentIndex = steps.findIndex(step => currentPath.includes(step.replace('/mvp/', '').replace('/auth', 'auth')));
         if (currentIndex > 0) {
           navigate(steps[currentIndex - 1]);
           return;
         }
+        // If at first step, go back to auth
+        navigate('/auth');
+        return;
       }
       
       // Handle general onboarding steps
@@ -57,9 +60,12 @@ export function BackButton({
           navigate(-1);
           return;
         }
+        // Fallback to auth
+        navigate('/auth');
+        return;
       }
       
-      // Default onboarding fallback
+      // Default onboarding fallback - go to auth instead of just auth
       navigate('/auth');
       return;
     }
