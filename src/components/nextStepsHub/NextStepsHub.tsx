@@ -25,6 +25,11 @@ import { fetchExtractedActions } from '@/utils/memoryBridgeApi';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AuthRequiredMessage } from '@/components/ui/AuthRequiredMessage';
+import { DisclosureCard } from '@/components/ui/DisclosureCard';
+import { SmartSuggestionCard } from '@/components/ui/SmartSuggestionCard';
+import { useEnhancedSmartScheduling } from '@/hooks/useEnhancedSmartScheduling';
+import { EnhancedActionCard } from '@/components/nextStepsHub/EnhancedActionCard';
 
 export function NextStepsHub() {
   const { user } = useAuth();
@@ -34,11 +39,18 @@ export function NextStepsHub() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'action' | 'watch_out' | 'depends_on' | 'note'>('all');
   const [selectedAction, setSelectedAction] = useState<NextStepsItem | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const { generateSmartSuggestions, scheduleAction, isGenerating, isScheduling } = useEnhancedSmartScheduling();
 
   useEffect(() => {
-    if (user) {
-      loadActions();
-    }
+    const checkAuthAndLoadActions = async () => {
+      if (user) {
+        await loadActions();
+      }
+      setAuthChecked(true);
+    };
+    
+    checkAuthAndLoadActions();
   }, [user]);
 
   const loadActions = async () => {
@@ -55,6 +67,23 @@ export function NextStepsHub() {
       setLoading(false);
     }
   };
+
+  // Show auth required message if user is not authenticated
+  if (authChecked && !user) {
+    return (
+      <AuthRequiredMessage
+        title="Sign in to access your Next Steps Hub"
+        message="Your AI-powered personal assistant is ready to help you organize, prioritize, and schedule your actions with intelligent suggestions and conflict detection."
+        features={[
+          "Smart scheduling with calendar conflict detection",
+          "AI-powered action extraction from recordings",
+          "Personalized priority recommendations",
+          "Seamless calendar integration across devices",
+          "Empowering progress tracking and celebrations"
+        ]}
+      />
+    );
+  }
 
   const filteredActions = actions.filter(action => {
     const matchesSearch = searchQuery === '' || 
@@ -256,98 +285,17 @@ export function NextStepsHub() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ delay: index * 0.1 }}
-                    whileHover={{ y: -4 }}
-                    style={{ 
-                      filter: 'drop-shadow(0 20px 25px rgb(0 0 0 / 0.1))'
-                    }}
                     className="group"
                   >
-                    <Card className="h-full border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white/60 backdrop-blur-sm">
-                      <CardContent className="p-6">
-                        {/* Header */}
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex items-center space-x-3">
-                            <div className={`w-10 h-10 rounded-xl ${config.bgColor} flex items-center justify-center`}>
-                              <IconComponent className={`w-5 h-5 ${config.textColor}`} />
-                            </div>
-                            <div>
-                              <Badge variant="secondary" className={`text-xs ${config.textColor} ${config.bgColor} border-0`}>
-                                {config.label}
-                              </Badge>
-                            </div>
-                          </div>
-                          
-                          {action.priority_level && (
-                            <Badge className={`text-xs border ${getPriorityColor(action.priority_level)}`}>
-                              P{action.priority_level}
-                            </Badge>
-                          )}
-                        </div>
-
-                        {/* Action Text */}
-                        <h3 className="font-semibold text-gray-900 mb-3 line-clamp-2 leading-snug">
-                          {action.action_text}
-                        </h3>
-
-                        {/* Metadata */}
-                        <div className="space-y-3">
-                          {action.assigned_to && action.assigned_to !== 'me' && (
-                            <div className="flex items-center space-x-2">
-                              <Users className="w-4 h-4 text-gray-400" />
-                              <span className="text-sm text-gray-600">
-                                Assigned to: {action.assigned_to}
-                              </span>
-                            </div>
-                          )}
-                          
-                          {action.due_context && (
-                            <div className="flex items-center space-x-2">
-                              <Clock className="w-4 h-4 text-gray-400" />
-                              <span className="text-sm text-gray-600">
-                                {action.due_context}
-                              </span>
-                            </div>
-                          )}
-
-                          {action.completion_date && (
-                            <div className="flex items-center space-x-2">
-                              <Calendar className="w-4 h-4 text-gray-400" />
-                              <span className="text-sm text-gray-600">
-                                Target: {new Date(action.completion_date).toLocaleDateString()}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Status & Actions */}
-                        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
-                          <Badge className={`text-xs border ${getStatusColor(action.status || 'not_started')}`}>
-                            {action.status?.replace('_', ' ') || 'Not Started'}
-                          </Badge>
-                          
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => setSelectedAction(action)}
-                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            View Details
-                            <ArrowRight className="w-4 h-4 ml-1" />
-                          </Button>
-                        </div>
-
-                        {/* Progress Indicator for Actions */}
-                        {action.category === 'action' && action.status === 'completed' && (
-                          <motion.div 
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            className="absolute top-4 right-4"
-                          >
-                            <CheckCircle2 className="w-6 h-6 text-green-500" />
-                          </motion.div>
-                        )}
-                      </CardContent>
-                    </Card>
+                    <EnhancedActionCard
+                      action={action}
+                      onViewDetails={() => setSelectedAction(action)}
+                      onSchedule={async (suggestion) => {
+                        await scheduleAction(suggestion, action.id, action.action_text);
+                        await loadActions(); // Refresh actions
+                      }}
+                      isScheduling={isScheduling}
+                    />
                   </motion.div>
                 );
               })}

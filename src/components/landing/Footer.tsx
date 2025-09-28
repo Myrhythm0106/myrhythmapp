@@ -65,8 +65,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/dashboard" className="text-muted-foreground hover:text-beacon-600 transition-colors">
-                  Dashboard
+                <Link to="/auth" className="text-muted-foreground hover:text-beacon-600 transition-colors">
+                  Sign In
                 </Link>
               </li>
               <li>
