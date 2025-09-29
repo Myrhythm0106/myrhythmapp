@@ -11,7 +11,7 @@ export function MVPUserTypeSelection() {
   const userTypes = [
     {
       id: 'individual',
-      title: 'Cognitive Wellness',
+      title: 'Brain Health Optimisation',
       description: 'Personal cognitive wellness and brain health optimization',
       icon: Brain,
       color: 'from-purple-500 to-blue-500',
