@@ -32,6 +32,22 @@ export function MVPUserTypeSelection() {
       icon: Users,
       color: 'from-orange-500 to-red-500',
       path: '/start'
+    },
+    {
+      id: 'medical-professional',
+      title: 'Medical Professional',
+      description: 'Healthcare providers, therapists, and medical staff supporting cognitive health',
+      icon: Users,
+      color: 'from-blue-500 to-indigo-500',
+      path: '/start'
+    },
+    {
+      id: 'cognitive-support',
+      title: 'Cognitive Support',
+      description: 'For individuals with ADHD, memory challenges, or other cognitive considerations',
+      icon: Brain,
+      color: 'from-teal-500 to-cyan-500',
+      path: '/start'
     }
   ];
 
@@ -65,7 +81,7 @@ export function MVPUserTypeSelection() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {userTypes.map((type, index) => (
             <motion.div
               key={type.id}
