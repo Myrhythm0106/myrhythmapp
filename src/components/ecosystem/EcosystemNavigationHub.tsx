@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { FamilyAdoptionWizard } from './FamilyAdoptionWizard';
+import { DailyWorkflowShortcuts } from './DailyWorkflowShortcuts';
+import { supabase } from '@/integrations/supabase/client';
 import { 
   Brain, 
   Calendar, 
@@ -18,7 +21,8 @@ import {
   TrendingUp,
   Sparkles,
   Mic,
-  BookOpen
+  BookOpen,
+  Heart
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -47,6 +51,45 @@ export function EcosystemNavigationHub() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [selectedComponent, setSelectedComponent] = useState<string | null>(null);
+  const [showWizard, setShowWizard] = useState(false);
+  const [hasAnnualPriorities, setHasAnnualPriorities] = useState(false);
+  const [hasCompletedSetup, setHasCompletedSetup] = useState(false);
+
+  useEffect(() => {
+    checkSetupStatus();
+  }, [user]);
+
+  const checkSetupStatus = async () => {
+    if (!user) return;
+
+    try {
+      // Check if user has annual priorities
+      const { data: priorities } = await supabase
+        .from('annual_priorities')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+
+      // Check if user has support circle members
+      const { data: members } = await supabase
+        .from('support_circle_members')
+        .select('id')
+        .eq('user_id', user.id)
+        .limit(1);
+
+      setHasAnnualPriorities(!!priorities);
+      setHasCompletedSetup(!!priorities && !!members && members.length > 0);
+    } catch (error) {
+      console.error('Error checking setup status:', error);
+    }
+  };
+
+  const getTimeOfDay = (): 'morning' | 'afternoon' | 'evening' => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'morning';
+    if (hour < 17) return 'afternoon';
+    return 'evening';
+  };
 
   const ecosystemComponents: EcosystemComponent[] = [
     {
@@ -160,6 +203,18 @@ export function EcosystemNavigationHub() {
 
   const suggestedFlow = getSuggestedFlow();
 
+  if (showWizard) {
+    return (
+      <FamilyAdoptionWizard 
+        onComplete={() => {
+          setShowWizard(false);
+          setHasCompletedSetup(true);
+          checkSetupStatus();
+        }} 
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -180,13 +235,76 @@ export function EcosystemNavigationHub() {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Your integrated productivity ecosystem - where conversations become actions, actions become progress, and progress becomes transformation.
           </p>
+          
+          {/* Setup Status */}
+          {!hasCompletedSetup && (
+            <div className="flex justify-center mt-6">
+              <Button 
+                onClick={() => setShowWizard(true)}
+                className="bg-gradient-to-r from-primary to-memory-emerald-600 hover:from-primary/90 hover:to-memory-emerald-600/90"
+                size="lg"
+              >
+                <Sparkles className="mr-2 h-5 w-5" />
+                Start Family Setup (3 min)
+              </Button>
+            </div>
+          )}
+
+          {hasCompletedSetup && (
+            <div className="flex justify-center mt-6">
+              <Badge variant="outline" className="bg-memory-emerald-50 text-memory-emerald-700 border-memory-emerald-200 px-4 py-2">
+                <Heart className="mr-1 h-4 w-4" />
+                Family ecosystem active
+              </Badge>
+            </div>
+          )}
         </motion.div>
+
+        {/* Daily Workflow Section */}
+        {hasCompletedSetup && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="grid lg:grid-cols-3 gap-6"
+          >
+            <div className="lg:col-span-2">
+              <DailyWorkflowShortcuts timeOfDay={getTimeOfDay()} />
+            </div>
+            <Card className="border-primary/20">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Quick Stats
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="text-center p-4 bg-memory-emerald-50 rounded-lg">
+                  <div className="text-2xl font-bold text-memory-emerald-700">0</div>
+                  <div className="text-sm text-memory-emerald-600">Recordings This Week</div>
+                </div>
+                <div className="text-center p-4 bg-sunrise-amber-50 rounded-lg">
+                  <div className="text-2xl font-bold text-sunrise-amber-700">1</div>
+                  <div className="text-sm text-sunrise-amber-600">Support Circle Members</div>
+                </div>
+                <Button 
+                  onClick={() => navigate('/next-steps')}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <Target className="mr-2 h-4 w-4" />
+                  View All Actions
+                </Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Quick Actions */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          transition={{ delay: hasCompletedSetup ? 0.2 : 0.1 }}
         >
           <Card>
             <CardHeader>
@@ -222,7 +340,7 @@ export function EcosystemNavigationHub() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: hasCompletedSetup ? 0.3 : 0.2 }}
           className="grid md:grid-cols-2 gap-6"
         >
           {ecosystemComponents.map((component, index) => (
@@ -306,7 +424,7 @@ export function EcosystemNavigationHub() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: hasCompletedSetup ? 0.7 : 0.6 }}
         >
           <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
             <CardHeader>
