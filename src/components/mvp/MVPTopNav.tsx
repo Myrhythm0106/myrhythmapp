@@ -43,7 +43,7 @@ export function MVPTopNav({ showBack = true }: MVPTopNavProps) {
             className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
           >
             <User className="h-4 w-4 mr-2" />
-            {user ? 'My Journey' : 'Sign In'}
+            {user ? 'Next Steps' : 'Log In'}
           </Button>
         </div>
       </div>
