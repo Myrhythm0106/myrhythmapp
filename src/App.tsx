@@ -82,7 +82,7 @@ function App() {
                   <BrowserRouter>
                     <SetupProgressBar />
                   <Routes>
-                     {/* Landing and Discovery Routes */}
+     {/* Landing and Discovery Routes */}
                      <Route path="/" element={<Landing />} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/dashboard" element={<Dashboard />} />
