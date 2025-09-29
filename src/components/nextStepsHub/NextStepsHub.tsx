@@ -254,20 +254,21 @@ export function NextStepsHub() {
             <div className="w-24 h-24 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-6">
               <Target className="w-12 h-12 text-blue-500" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Ready to Get Started?</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">Your Action Journey Awaits</h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
               {searchQuery || selectedFilter !== 'all' 
-                ? "No actions match your current filters. Try adjusting your search." 
-                : "Start by making a recording to capture your next steps and commitments."
+                ? "No actions match your current filters. Try adjusting your search to discover more opportunities." 
+                : "Ready to transform your thoughts into action? Start by making a recording to capture your goals, commitments, and brilliant ideas."
               }
             </p>
             {(!searchQuery && selectedFilter === 'all') && (
               <Button 
                 onClick={() => navigate('/quick-capture')}
-                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl"
+                className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                Capture
+                Start Your First Recording
+                <ArrowRight className="w-4 w-4 ml-2" />
               </Button>
             )}
           </motion.div>

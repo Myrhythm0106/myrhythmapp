@@ -9,7 +9,8 @@ import {
   Download, 
   Clock, 
   AlertTriangle,
-  Calendar
+  Calendar,
+  Brain
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -109,11 +110,11 @@ export function TranscriptViewer({
             <AlertTriangle className={`h-4 w-4 ${hoursLeft < 24 ? "text-red-500" : "text-amber-500"}`} />
             <AlertDescription className={hoursLeft < 24 ? "text-red-700" : "text-amber-700"}>
               <div className="flex items-center justify-between">
-                <span>
-                  {hoursLeft > 0 
-                    ? `Transcript available for ${Math.round(hoursLeft)} more hours` 
-                    : "Transcript access has expired"
-                  }
+              <span>
+                {hoursLeft > 0 
+                  ? `Your transcript remains available for ${Math.round(hoursLeft)} more hours` 
+                  : "This transcript has completed its 48-hour availability window"
+                }
                 </span>
                 <div className="flex items-center gap-2 text-xs">
                   <Clock className="h-3 w-3" />
@@ -187,9 +188,16 @@ export function TranscriptViewer({
                   No transcript available for this recording.
                 </div>
               ) : hoursLeft <= 0 ? (
-                <div className="text-center py-8 text-red-600">
-                  <AlertTriangle className="h-8 w-8 mx-auto mb-2" />
-                  Transcript access has expired (48-hour limit)
+                <div className="text-center py-8 space-y-4">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+                    <Brain className="h-8 w-8 text-blue-500" />
+                  </div>
+                  <div className="space-y-2">
+                    <h3 className="text-lg font-semibold text-foreground">Transcript Archive Complete</h3>
+                    <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                      This recording has been successfully processed and archived. All extracted actions and insights remain available in your Next Steps Hub.
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <ScrollArea className="h-96 w-full rounded border p-4">
