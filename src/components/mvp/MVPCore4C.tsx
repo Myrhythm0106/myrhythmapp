@@ -35,7 +35,7 @@ export function MVPCore4C() {
 
   const handleAuthAction = () => {
     if (user) {
-      navigate('/dashboard');
+      navigate('/memory-bridge');
     } else {
       navigate('/auth');
     }
@@ -58,7 +58,7 @@ export function MVPCore4C() {
               className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
             >
               <User className="h-4 w-4 mr-2" />
-              {user ? 'Dashboard' : 'Log In'}
+              {user ? 'My Journey' : 'Sign In'}
             </Button>
           </div>
         </div>
