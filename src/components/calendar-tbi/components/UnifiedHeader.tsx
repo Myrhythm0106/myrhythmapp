@@ -1,6 +1,9 @@
 import React from 'react';
-import { format, startOfWeek, endOfWeek, addDays } from 'date-fns';
+import { format, startOfWeek, endOfWeek, addDays, startOfYear, endOfYear, differenceInDays, startOfMonth, endOfMonth } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Calendar, Clock, Target, Trophy } from 'lucide-react';
 import { useThemeHierarchy } from '@/hooks/useThemeHierarchy';
 
 interface UnifiedHeaderProps {
@@ -88,6 +91,63 @@ export function UnifiedHeader({ viewTitle, dateInfo, viewType = 'day', currentDa
     return `${timeContext}, I choose to be ${completion}.`;
   };
 
+  // Calculate days remaining for different periods
+  const getRemainingDaysInfo = () => {
+    const now = new Date();
+    
+    switch (viewType) {
+      case 'day':
+        const endOfToday = new Date(now);
+        endOfToday.setHours(23, 59, 59, 999);
+        return {
+          remaining: 1,
+          total: 1,
+          label: "Today",
+          percentage: 100
+        };
+      case 'week':
+        const weekStart = startOfWeek(now, { weekStartsOn: 1 });
+        const weekEnd = addDays(weekStart, 6);
+        weekEnd.setHours(23, 59, 59, 999);
+        const weekRemaining = Math.max(0, differenceInDays(weekEnd, now)) + 1;
+        return {
+          remaining: weekRemaining,
+          total: 7,
+          label: "This Week",
+          percentage: ((7 - weekRemaining + 1) / 7) * 100
+        };
+      case 'month':
+        const monthEnd = endOfMonth(now);
+        monthEnd.setHours(23, 59, 59, 999);
+        const monthRemaining = Math.max(0, differenceInDays(monthEnd, now)) + 1;
+        const monthTotal = differenceInDays(monthEnd, startOfMonth(now)) + 1;
+        return {
+          remaining: monthRemaining,
+          total: monthTotal,
+          label: "This Month",
+          percentage: ((monthTotal - monthRemaining + 1) / monthTotal) * 100
+        };
+      case 'year':
+        const yearEnd = endOfYear(now);
+        yearEnd.setHours(23, 59, 59, 999);
+        const yearRemaining = Math.max(0, differenceInDays(yearEnd, now)) + 1;
+        const yearTotal = differenceInDays(yearEnd, startOfYear(now)) + 1;
+        return {
+          remaining: yearRemaining,
+          total: yearTotal,
+          label: "This Year",
+          percentage: ((yearTotal - yearRemaining + 1) / yearTotal) * 100
+        };
+      default:
+        return {
+          remaining: 1,
+          total: 1,
+          label: "Today",
+          percentage: 100
+        };
+    }
+  };
+
   // Generate appropriate date info based on view type
   const getDateInfo = (): string => {
     if (dateInfo) return dateInfo;
@@ -108,22 +168,51 @@ export function UnifiedHeader({ viewTitle, dateInfo, viewType = 'day', currentDa
     }
   };
 
+  const remainingInfo = getRemainingDaysInfo();
+
   return (
     <Card className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
       <CardContent className="pt-6">
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-4">
           <p className="text-lg font-semibold text-purple-700 italic">
             {getContextualStatement()}
           </p>
           <h1 className="text-2xl font-bold text-gray-900">{viewTitle}</h1>
           <p className="text-lg text-gray-600">{getDateInfo()}</p>
+          
+          {/* Professional Days Remaining Counter */}
+          <div className="bg-white/50 rounded-xl p-4 max-w-md mx-auto">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Clock className="h-4 w-4 text-purple-600" />
+                <span className="text-sm font-medium text-purple-700">{remainingInfo.label}</span>
+              </div>
+              <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                {remainingInfo.remaining}/{remainingInfo.total} days
+              </Badge>
+            </div>
+            <Progress 
+              value={remainingInfo.percentage} 
+              className="h-2 bg-purple-100"
+            />
+            <p className="text-xs text-purple-600 mt-1 text-center">
+              {remainingInfo.remaining} days remaining • {Math.round(remainingInfo.percentage)}% complete
+            </p>
+          </div>
         </div>
         
-        {/* Simple Theme Display */}
+        {/* Enhanced Theme Display with Current Focus */}
         <div className="mt-4 pt-4 border-t border-purple-200/50 flex justify-center">
-          <p className="text-sm text-purple-600">
-            Current Theme: {currentTheme?.current || 'Loading...'}
-          </p>
+          <div className="flex items-center gap-4 text-sm">
+            <div className="flex items-center gap-1">
+              <Target className="h-3 w-3 text-purple-600" />
+              <span className="text-purple-600">Theme: {currentTheme?.current || 'Loading...'}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Trophy className="h-3 w-3 text-blue-600" />
+              <span className="text-blue-600">Making progress daily</span>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

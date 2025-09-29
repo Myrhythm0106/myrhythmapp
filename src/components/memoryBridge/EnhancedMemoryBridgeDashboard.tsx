@@ -13,6 +13,8 @@ import { ConfidenceScore } from './ConfidenceScore';
 import { MicroCoaching } from './MicroCoaching';
 import { NextStepsHub } from '../nextStepsHub/NextStepsHub';
 import { MemoryBridgeSetupHub } from '../memory-bridge/MemoryBridgeSetupHub';
+import { EcosystemFlowWidget } from '../ecosystem/EcosystemFlowWidget';
+import { AnnualCompassWidget } from '../ecosystem/AnnualCompassWidget';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useEmpowerment } from '@/contexts/EmpowermentContext';
 import { useAuth } from '@/hooks/useAuth';
@@ -283,6 +285,12 @@ export function EnhancedMemoryBridgeDashboard() {
                     streakCount={streakCount}
                     onQuickCapture={handleStartRecording}
                   />
+                  
+                  {/* Ecosystem Integration */}
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <EcosystemFlowWidget />
+                    <AnnualCompassWidget />
+                  </div>
                 </TabsContent>
 
                 <TabsContent value="nextsteps" className="space-y-4">
