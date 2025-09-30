@@ -17,7 +17,8 @@ interface EnhancedPlanCardProps {
 export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: EnhancedPlanCardProps) {
   const Icon = plan.icon;
   const currentPrice = isAnnual ? plan.annualPrice : plan.price;
-  const savings = isAnnual ? plan.monthlySavings : null;
+  const regularPrice = isAnnual ? plan.regularAnnualPrice : plan.regularPrice;
+  const savings = isAnnual ? plan.monthlySavings : plan.foundingSavings;
 
   return (
     <Card className={cn(
@@ -27,18 +28,25 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
     )}
     onClick={() => onSelect(plan.id)}
     >
-      {/* Popular Badge */}
+      {/* Founding Member Badge - Always visible */}
+      <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+        <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 font-medium shadow-lg">
+          <Crown className="h-3 w-3 mr-1" />
+          Founding Member
+        </Badge>
+      </div>
+
+      {/* Popular Badge - Secondary position */}
       {plan.popular && (
-        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-          <Badge className="bg-primary text-white px-3 py-1 font-medium shadow-lg">
-            <Crown className="h-3 w-3 mr-1" />
+        <div className="absolute top-2 right-2 z-10">
+          <Badge className="bg-primary text-white px-2 py-1 text-xs font-medium shadow-md">
             {plan.highlight}
           </Badge>
         </div>
       )}
 
-      {/* Annual Savings Badge */}
-      {isAnnual && savings && (
+      {/* Savings Badge */}
+      {savings && (
         <div className="absolute -top-2 -right-2 z-10">
           <Badge className="bg-green-600 text-white px-2 py-1 font-medium shadow-lg text-xs">
             <Sparkles className="h-3 w-3 mr-1" />
@@ -61,18 +69,39 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
           </div>
         </div>
         
-        <div className="space-y-2 pt-4">
-          <div className="flex items-baseline justify-center gap-1">
-            <span className="text-3xl font-bold text-primary">
-              {currentPrice?.split('/')[0]}
-            </span>
-            <span className="text-sm text-gray-500 font-medium">
-              /{isAnnual ? 'year' : 'month'}
-            </span>
+        <div className="space-y-3 pt-4">
+          {/* Founding Member Price */}
+          <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-200 rounded-lg p-3">
+            <div className="text-xs text-amber-900 font-semibold mb-1 text-center">
+              Your Founding Member Price
+            </div>
+            <div className="flex items-baseline justify-center gap-1">
+              <span className="text-3xl font-bold text-amber-600">
+                {currentPrice?.split('/')[0]}
+              </span>
+              <span className="text-sm text-amber-700 font-medium">
+                /{isAnnual ? 'year' : 'month'}
+              </span>
+            </div>
+            {isAnnual && (
+              <div className="text-xs text-amber-700 font-medium text-center mt-1">
+                Only £{(parseFloat(currentPrice?.replace(/[£,]/g, '') || '0') / 12).toFixed(2)}/month
+              </div>
+            )}
           </div>
-          {isAnnual && (
-            <div className="text-xs text-green-600 font-medium">
-              Only £{(parseFloat(currentPrice?.replace(/[£,]/g, '') || '0') / 12).toFixed(2)}/month
+
+          {/* Regular Price Comparison */}
+          {regularPrice && (
+            <div className="text-center space-y-1">
+              <div className="text-xs text-gray-500">
+                Regular Price (after 1,000 users)
+              </div>
+              <div className="text-lg font-semibold text-gray-400">
+                {regularPrice?.split('/')[0]}/{isAnnual ? 'year' : 'month'}
+              </div>
+              <div className="text-xs font-bold text-green-600">
+                🎉 Lock in this rate forever as a Founding Member!
+              </div>
             </div>
           )}
         </div>

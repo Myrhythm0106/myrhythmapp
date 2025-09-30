@@ -8,8 +8,11 @@ export interface Plan {
   name: string;
   description: string;
   price: string;
+  regularPrice?: string;
   annualPrice?: string;
+  regularAnnualPrice?: string;
   monthlySavings?: string;
+  foundingSavings?: string;
   trialDays?: number;
   popular?: boolean;
   icon: LucideIcon;
