@@ -15,7 +15,7 @@ export function MVPUserTypeSelection() {
       description: 'Personal cognitive wellness and brain health optimization',
       icon: Brain,
       color: 'from-purple-500 to-blue-500',
-      path: '/start'
+      path: '/subscribe?userType=individual'
     },
     {
       id: 'brain-injury',
@@ -23,7 +23,7 @@ export function MVPUserTypeSelection() {
       description: 'Specialized support for brain injury recovery and cognitive rehabilitation',
       icon: Heart,
       color: 'from-emerald-500 to-teal-500',
-      path: '/start'
+      path: '/subscribe?userType=brain-injury'
     },
     {
       id: 'caregiver',
@@ -31,7 +31,7 @@ export function MVPUserTypeSelection() {
       description: 'Tools for family members, caregivers, and support partners',
       icon: Users,
       color: 'from-orange-500 to-red-500',
-      path: '/start'
+      path: '/subscribe?userType=caregiver'
     },
     {
       id: 'medical-professional',
@@ -39,7 +39,7 @@ export function MVPUserTypeSelection() {
       description: 'Healthcare providers, therapists, and medical staff supporting cognitive health',
       icon: Users,
       color: 'from-blue-500 to-indigo-500',
-      path: '/start'
+      path: '/subscribe?userType=medical-professional'
     },
     {
       id: 'cognitive-support',
@@ -47,7 +47,7 @@ export function MVPUserTypeSelection() {
       description: 'For individuals with ADHD, memory challenges, or other cognitive considerations',
       icon: Brain,
       color: 'from-teal-500 to-cyan-500',
-      path: '/start'
+      path: '/subscribe?userType=cognitive-support'
     }
   ];
 
