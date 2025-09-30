@@ -174,15 +174,23 @@ serve(async (req) => {
           },
             body: JSON.stringify({
               model: 'gpt-4o-mini',
-              max_tokens: 3000,
+              max_tokens: 4000,
               messages: [{
                 role: 'system',
-                content: `EXTRACT NEXT STEPS from meeting transcripts using 4 empowering categories.
+                content: `EXTRACT NEXT STEPS from meeting transcripts with MAXIMUM CLARITY and FOLLOW-THROUGH OPTIMIZATION.
 
 CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured next steps that inspire pride and follow-through.
 
-🎯 CRITICAL REQUIREMENTS - CATEGORIZE INTO 4 TYPES:
-1. ACTIONS ✅ - What I will do (verb-first: CREATE, SCHEDULE, CALL, SEND, COMPLETE, BOOK, WRITE, etc.)
+🎯 MASTER VERB LIBRARY BY CONTEXT:
+**COMMUNICATION**: CALL, EMAIL, TEXT, DISCUSS, CONFIRM, FOLLOW UP, REACH OUT, CONTACT, NOTIFY, UPDATE, RESPOND, CONNECT
+**MEDICAL**: SCHEDULE, BOOK, TAKE, REFILL, PICK UP, ATTEND, FOLLOW UP, MONITOR, TRACK, RECORD
+**PLANNING**: CREATE, ORGANIZE, PREPARE, PLAN, ARRANGE, SET UP, RESEARCH, INVESTIGATE, REVIEW, OUTLINE
+**COMPLETION**: FINISH, COMPLETE, SUBMIT, DELIVER, SEND, UPLOAD, FILE, CLOSE, WRAP UP
+**DECISION**: DECIDE, CHOOSE, SELECT, DETERMINE, EVALUATE, ASSESS, CONSIDER, COMPARE
+**COORDINATION**: COORDINATE, ARRANGE, SYNC, ALIGN, SCHEDULE, SET, CONFIRM
+
+🎯 CATEGORIZE INTO 4 TYPES:
+1. ACTIONS ✅ - What I will do (verb-first from Master Verb Library)
 2. WATCH-OUTS ⚠️ - Things to keep in mind, gentle reminders, awareness points
 3. DEPENDS ON 🔗 - What this relies on (people, events, timing, conditions, prerequisites)
 4. NOTES 📝 - Important details, context to remember, thoughts and reflections
@@ -207,14 +215,16 @@ Current date context: ${new Date().toISOString().split('T')[0]}
 - Include emotional stakes to motivate follow-through
 - Provide clear success markers to prevent confusion
 
-JSON SCHEMA (EXACT FIELDS REQUIRED):
+JSON SCHEMA WITH ENHANCED FIELDS:
 {
-  "action_text": "VERB + specific action OR descriptive statement based on category",
+  "action_text": "VERB + specific WHO + WHAT + context (e.g., 'CALL Dr. Martinez to schedule next therapy session')",
+  "verb_category": "COMMUNICATION|MEDICAL|PLANNING|COMPLETION|DECISION|COORDINATION",
   "category": "action|watch_out|depends_on|note",
-  "success_criteria": "Clear completion marker (for actions) or clarity marker (for others)",
+  "success_criteria": "Clear completion marker",
+  "completion_criteria_specific": "Action-type specific completion (e.g., 'when you've spoken with [person] and noted their response')",
   "motivation_statement": "This will help you [specific personal benefit]",
-  "assigned_to": "Who does it (name or 'me')",
-  "owner": "Who is responsible (name or 'me')",
+  "assigned_to": "Who does it (specific name or 'me')",
+  "owner": "Who is responsible (specific name or 'me')",
   "due_context": "Original timeline from transcript",
   "start_date": "YYYY-MM-DD or null",
   "end_date": "YYYY-MM-DD or null", 
@@ -225,15 +235,26 @@ JSON SCHEMA (EXACT FIELDS REQUIRED):
   "what_outcome": "Specific result when complete",
   "how_steps": ["Step 1", "Step 2", "Step 3"],
   "micro_tasks": [{"text": "Tiny first step", "completed": false}],
-  "priority_level": 1-5 (1=highest priority),
-  "confidence_score": 0.0-1.0
+  "priority_level": 1-5 (1=highest),
+  "confidence_score": 0.0-1.0,
+  "momentum_builder": "Right after completing this, you could...",
+  "two_minute_starter": "Just [ultra-simple first step] - you don't have to [complete action] yet",
+  "celebration_trigger": "When done, [celebration action]",
+  "potential_barriers": ["barrier1", "barrier2"],
+  "if_stuck": "If you feel stuck, try this instead: [alternative]",
+  "best_time": "Optimal timing (e.g., 'Morning when energy is highest')",
+  "next_natural_steps": ["Next step 1", "Next step 2"],
+  "detail_level": "standard",
+  "alternative_phrasings": []
 }
 
 🌟 PERFECT EXAMPLES:
 [{
-  "action_text": "CALL Dr. Martinez to schedule next therapy session",
+  "action_text": "CALL Dr. Martinez (neurologist) to schedule next therapy session",
+  "verb_category": "MEDICAL",
   "category": "action",
-  "success_criteria": "You'll know you're done when you have appointment confirmation with date, time, and location",
+  "success_criteria": "Appointment scheduled and confirmed",
+  "completion_criteria_specific": "when you've spoken with Dr. Martinez's office and received confirmation with date, time, location, and any prep instructions",
   "motivation_statement": "This will help you maintain momentum in your recovery and reduce anxiety about gaps in care",
   "assigned_to": "me",
   "owner": "me",
@@ -245,29 +266,39 @@ JSON SCHEMA (EXACT FIELDS REQUIRED):
   "emotional_stakes": "Risk of losing progress momentum and feeling defeated",
   "intent_behind": "Maintaining consistent care for optimal recovery",
   "what_outcome": "Next therapy session scheduled and confirmed in calendar",
-  "how_steps": ["Find Dr. Martinez contact info", "Call during business hours 9am-5pm", "Write appointment details in calendar"],
-  "micro_tasks": [{"text": "Find phone number in contacts", "completed": false}, {"text": "Pick up phone", "completed": false}],
+  "how_steps": ["Find Dr. Martinez's direct number (check recent bill or patient portal)", "Call during business hours 9am-5pm", "Ask for next available appointment", "Confirm location and parking info", "Add to calendar with reminder"],
+  "micro_tasks": [{"text": "Open contacts and search for 'Dr. Martinez'", "completed": false}, {"text": "Just dial the number - you don't have to schedule yet", "completed": false}],
   "priority_level": 2,
-  "confidence_score": 0.95
+  "confidence_score": 0.95,
+  "momentum_builder": "Right after scheduling, you could text your support person to let them know the appointment date",
+  "two_minute_starter": "Just find the phone number in your contacts - you don't have to call yet",
+  "celebration_trigger": "When done, text someone you trust: 'Scheduled my therapy - proud of myself!'",
+  "potential_barriers": ["Phone anxiety", "Not remembering questions to ask", "Voicemail instead of person"],
+  "if_stuck": "If calling feels too hard, try the patient portal online to request an appointment instead",
+  "best_time": "Morning between 9-10am when office is less busy and your energy is higher",
+  "next_natural_steps": ["Add appointment to calendar with 30-minute reminder", "Prepare list of topics to discuss", "Arrange transportation if needed"],
+  "detail_level": "complete",
+  "alternative_phrasings": []
 }, {
   "action_text": "Watch for medication side effects during first week",
+  "verb_category": "MEDICAL",
   "category": "watch_out",
-  "success_criteria": "You'll know you're monitoring well when you notice and track any changes in energy or mood",
+  "success_criteria": "Actively monitoring and tracking any changes",
+  "completion_criteria_specific": "when you notice and track any changes in energy, mood, sleep, or appetite",
   "motivation_statement": "This will help you stay safe and catch any issues early",
   "assigned_to": "me",
   "owner": "me",
   "due_context": "first week of treatment",
   "priority_level": 1,
-  "confidence_score": 0.90
-}, {
-  "action_text": "Depends on insurance approval for specialized therapy",
-  "category": "depends_on",
-  "success_criteria": "You'll know when insurance company provides written approval or denial",
-  "motivation_statement": "This will help you plan next steps once approval status is clear",
-  "assigned_to": "insurance company",
-  "owner": "insurance company",
-  "priority_level": 3,
-  "confidence_score": 0.85
+  "confidence_score": 0.90,
+  "momentum_builder": "Keep a simple daily log - just 1-2 sentences about how you feel",
+  "two_minute_starter": "Just notice how you feel right now - no need to write anything yet",
+  "best_time": "Same time each evening before bed for consistency",
+  "potential_barriers": ["Forgetting to check in with yourself", "Not sure what counts as a side effect"],
+  "if_stuck": "If tracking feels overwhelming, just text yourself one word each day: Good, Okay, or Concerning",
+  "next_natural_steps": ["Call doctor if any concerning symptoms arise", "Continue monitoring through week 2"],
+  "detail_level": "standard",
+  "alternative_phrasings": []
 }]
 
 Return ONLY a JSON array. No explanations or commentary.`
@@ -384,15 +415,15 @@ Return ONLY a JSON array. No explanations or commentary.`
       user_id: userId,
       // Preserve AI-extracted data, only use fallbacks if truly missing
       action_text: action.action_text || action.action || 'DEFINE next step needed',
-      category: action.category || 'action', // New category field
+      category: action.category || 'action',
       success_criteria: action.success_criteria || null,
       motivation_statement: action.motivation_statement || null,
       what_outcome: action.what_outcome || null,
       how_steps: action.how_steps || [],
       micro_tasks: action.micro_tasks || [],
       assigned_to: action.assigned_to || action.assignee || 'me',
-      owner: action.owner || action.assigned_to || action.assignee || 'me', // New owner field
-      created_by: userId, // New created_by field
+      owner: action.owner || action.assigned_to || action.assignee || 'me',
+      created_by: userId,
       due_context: action.due_context || null,
       start_date: action.start_date || null,
       end_date: action.end_date || null,
@@ -405,7 +436,19 @@ Return ONLY a JSON array. No explanations or commentary.`
       user_notes: action.reasoning || '',
       status: 'not_started',
       calendar_checked: false,
-      support_circle_notified: false
+      support_circle_notified: false,
+      // Enhanced reliability fields
+      momentum_builder: action.momentum_builder || null,
+      two_minute_starter: action.two_minute_starter || null,
+      celebration_trigger: action.celebration_trigger || null,
+      potential_barriers: action.potential_barriers || [],
+      if_stuck: action.if_stuck || null,
+      best_time: action.best_time || null,
+      next_natural_steps: action.next_natural_steps || [],
+      detail_level: action.detail_level || 'standard',
+      alternative_phrasings: action.alternative_phrasings || [],
+      completion_criteria_specific: action.completion_criteria_specific || null,
+      verb_category: action.verb_category || null
     }));
 
     if (actionsToInsert.length > 0) {

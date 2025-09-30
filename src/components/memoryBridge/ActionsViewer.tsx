@@ -74,9 +74,13 @@ export function ActionsViewer({
 
         setExtractedActions((actions || []).map(action => ({ 
           ...action, 
-          category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note', // Properly type category field
+          category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note',
           action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
-          status: action.status as 'done' | 'doing' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled'
+          status: action.status as 'done' | 'doing' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled',
+          detail_level: (action.detail_level || 'standard') as 'minimal' | 'standard' | 'complete',
+          alternative_phrasings: Array.isArray(action.alternative_phrasings) 
+            ? (action.alternative_phrasings as Array<{ text: string; confidence: number }>)
+            : []
         })));
         }
       } catch (error) {

@@ -10,6 +10,8 @@ export interface SMARTAnalysis {
   score: number; // 0-100
   criteria: SMARTCriteria;
   suggestions: string[];
+  verbCategory?: string;
+  confidenceLevel?: 'high' | 'medium' | 'low';
 }
 
 export function analyzeSMART(action: {
@@ -19,6 +21,8 @@ export function analyzeSMART(action: {
   end_date?: string;
   priority_level?: number;
   relationship_impact?: string;
+  verb_category?: string;
+  completion_criteria_specific?: string;
 }): SMARTAnalysis {
   const criteria: SMARTCriteria = {
     specific: isSpecific(action.action_text),
@@ -30,8 +34,13 @@ export function analyzeSMART(action: {
 
   const score = Object.values(criteria).filter(Boolean).length * 20;
   const suggestions = generateSuggestions(criteria, action);
+  
+  // Determine confidence level based on score
+  let confidenceLevel: 'high' | 'medium' | 'low' = 'low';
+  if (score >= 80) confidenceLevel = 'high';
+  else if (score >= 60) confidenceLevel = 'medium';
 
-  return { score, criteria, suggestions };
+  return { score, criteria, suggestions, verbCategory: action.verb_category, confidenceLevel };
 }
 
 function isSpecific(actionText: string): boolean {
@@ -68,25 +77,52 @@ function isTimeBound(startDate?: string, endDate?: string): boolean {
 
 function generateSuggestions(criteria: SMARTCriteria, action: any): string[] {
   const suggestions: string[] = [];
+  const verbCategory = action.verb_category || '';
+  const actionText = action.action_text.toLowerCase();
 
   if (!criteria.specific) {
-    suggestions.push("Add more specific details about what exactly needs to be done");
+    // Provide verb-category specific suggestions
+    if (verbCategory === 'COMMUNICATION' || actionText.includes('call') || actionText.includes('email')) {
+      suggestions.push("Add specific contact details: Who exactly will you call/email? Include their full name, role, and phone/email if available.");
+    } else if (verbCategory === 'MEDICAL' || actionText.includes('doctor') || actionText.includes('appointment')) {
+      suggestions.push("Specify the healthcare provider's name, clinic/hospital, and what the appointment is for.");
+    } else if (verbCategory === 'PLANNING' || actionText.includes('create') || actionText.includes('prepare')) {
+      suggestions.push("Define exactly what you'll create/prepare: What format? How long? What sections?");
+    } else {
+      suggestions.push("Add more specific details: Who exactly is involved? What specific thing will you do?");
+    }
   }
-  
+
   if (!criteria.measurable) {
-    suggestions.push("Include how you'll know when it's complete (quantity, quality, or deadline)");
+    if (verbCategory === 'COMMUNICATION') {
+      suggestions.push("Define what a successful interaction looks like: e.g., 'when I've received their confirmation/response'");
+    } else if (verbCategory === 'COMPLETION') {
+      suggestions.push("Specify the final deliverable: What does 'complete' mean? What will exist when you're done?");
+    } else {
+      suggestions.push("Add a clear outcome: How will you know this is complete? What will be different?");
+    }
   }
-  
+
   if (!criteria.achievable) {
-    suggestions.push("Consider if this can realistically be accomplished with available resources");
+    if (action.priority_level === 1) {
+      suggestions.push("This is high priority - break it down into smaller steps to make it more manageable.");
+    } else {
+      suggestions.push("Consider: Do you have everything you need to complete this? Add 'If stuck' guidance.");
+    }
   }
-  
+
   if (!criteria.relevant) {
-    suggestions.push("Add context about why this matters or how it connects to your goals");
+    suggestions.push("Add context: Why is this important? How does it connect to your goals or wellbeing?");
   }
-  
+
   if (!criteria.timeBound) {
-    suggestions.push("Set a specific start date or deadline for this action");
+    if (actionText.includes('urgent') || actionText.includes('asap') || action.priority_level === 1) {
+      suggestions.push("High priority but no deadline! Add target date: 'by tomorrow' or 'within 24 hours'");
+    } else if (verbCategory === 'MEDICAL') {
+      suggestions.push("Medical actions need clear timing. Add: 'by [specific date]' or 'within [timeframe]'");
+    } else {
+      suggestions.push("Add a target date: When will you start? When should it be done?");
+    }
   }
 
   return suggestions;

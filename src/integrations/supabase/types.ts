@@ -856,25 +856,34 @@ export type Database = {
         Row: {
           action_text: string
           action_type: string
+          alternative_phrasings: Json | null
           assigned_to: string | null
           assigned_watchers: string[] | null
+          best_time: string | null
           calendar_checked: boolean | null
           calendar_event_id: string | null
           category: string
+          celebration_trigger: string | null
+          completion_criteria_specific: string | null
           completion_date: string | null
           confidence_score: number | null
           created_at: string
           created_by: string | null
+          detail_level: string | null
           due_context: string | null
           emotional_stakes: string | null
           end_date: string | null
           how_steps: string[] | null
           id: string
+          if_stuck: string | null
           intent_behind: string | null
           meeting_recording_id: string
           micro_tasks: Json | null
+          momentum_builder: string | null
           motivation_statement: string | null
+          next_natural_steps: string[] | null
           owner: string | null
+          potential_barriers: string[] | null
           priority_level: number | null
           proposed_date: string | null
           proposed_time: string | null
@@ -887,33 +896,44 @@ export type Database = {
           support_circle_notified: boolean | null
           timestamp_in_recording: number | null
           transcript_excerpt: string | null
+          two_minute_starter: string | null
           updated_at: string
           user_id: string
           user_notes: string | null
+          verb_category: string | null
           what_outcome: string | null
         }
         Insert: {
           action_text: string
           action_type?: string
+          alternative_phrasings?: Json | null
           assigned_to?: string | null
           assigned_watchers?: string[] | null
+          best_time?: string | null
           calendar_checked?: boolean | null
           calendar_event_id?: string | null
           category?: string
+          celebration_trigger?: string | null
+          completion_criteria_specific?: string | null
           completion_date?: string | null
           confidence_score?: number | null
           created_at?: string
           created_by?: string | null
+          detail_level?: string | null
           due_context?: string | null
           emotional_stakes?: string | null
           end_date?: string | null
           how_steps?: string[] | null
           id?: string
+          if_stuck?: string | null
           intent_behind?: string | null
           meeting_recording_id: string
           micro_tasks?: Json | null
+          momentum_builder?: string | null
           motivation_statement?: string | null
+          next_natural_steps?: string[] | null
           owner?: string | null
+          potential_barriers?: string[] | null
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null
@@ -926,33 +946,44 @@ export type Database = {
           support_circle_notified?: boolean | null
           timestamp_in_recording?: number | null
           transcript_excerpt?: string | null
+          two_minute_starter?: string | null
           updated_at?: string
           user_id: string
           user_notes?: string | null
+          verb_category?: string | null
           what_outcome?: string | null
         }
         Update: {
           action_text?: string
           action_type?: string
+          alternative_phrasings?: Json | null
           assigned_to?: string | null
           assigned_watchers?: string[] | null
+          best_time?: string | null
           calendar_checked?: boolean | null
           calendar_event_id?: string | null
           category?: string
+          celebration_trigger?: string | null
+          completion_criteria_specific?: string | null
           completion_date?: string | null
           confidence_score?: number | null
           created_at?: string
           created_by?: string | null
+          detail_level?: string | null
           due_context?: string | null
           emotional_stakes?: string | null
           end_date?: string | null
           how_steps?: string[] | null
           id?: string
+          if_stuck?: string | null
           intent_behind?: string | null
           meeting_recording_id?: string
           micro_tasks?: Json | null
+          momentum_builder?: string | null
           motivation_statement?: string | null
+          next_natural_steps?: string[] | null
           owner?: string | null
+          potential_barriers?: string[] | null
           priority_level?: number | null
           proposed_date?: string | null
           proposed_time?: string | null
@@ -965,9 +996,11 @@ export type Database = {
           support_circle_notified?: boolean | null
           timestamp_in_recording?: number | null
           transcript_excerpt?: string | null
+          two_minute_starter?: string | null
           updated_at?: string
           user_id?: string
           user_notes?: string | null
+          verb_category?: string | null
           what_outcome?: string | null
         }
         Relationships: [

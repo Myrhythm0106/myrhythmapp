@@ -58,6 +58,18 @@ export interface NextStepsItem {
   calendar_checked?: boolean;
   completion_date?: string;
   support_circle_notified?: boolean;
+  // Enhanced reliability fields (Phase 3: Follow-Through Optimization)
+  momentum_builder?: string;
+  two_minute_starter?: string;
+  celebration_trigger?: string;
+  potential_barriers?: string[];
+  if_stuck?: string;
+  best_time?: string;
+  next_natural_steps?: string[];
+  detail_level?: 'minimal' | 'standard' | 'complete';
+  alternative_phrasings?: Array<{ text: string; confidence: number }>;
+  completion_criteria_specific?: string;
+  verb_category?: string;
 }
 
 // Maintain backward compatibility
