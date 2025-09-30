@@ -230,6 +230,20 @@ export function getPricingWithDiscount(plan: PlanPricing, isYearly: boolean) {
   const basePrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
   const basePricePence = isYearly ? plan.yearlyPricePence : plan.monthlyPricePence;
   
+  // Get next pricing from config
+  let nextPrice = null;
+  let nextPricePence = null;
+  if (plan.id === 'reconnect' && foundingMemberConfig.nextPricing.reconnect) {
+    nextPrice = isYearly ? foundingMemberConfig.nextPricing.reconnect.yearly : foundingMemberConfig.nextPricing.reconnect.monthly;
+    nextPricePence = nextPrice * 100;
+  } else if (plan.id === 'thrive' && foundingMemberConfig.nextPricing.thrive) {
+    nextPrice = isYearly ? foundingMemberConfig.nextPricing.thrive.yearly : foundingMemberConfig.nextPricing.thrive.monthly;
+    nextPricePence = nextPrice * 100;
+  } else if (plan.id === 'family' && foundingMemberConfig.nextPricing.family) {
+    nextPrice = isYearly ? foundingMemberConfig.nextPricing.family.yearly : foundingMemberConfig.nextPricing.family.monthly;
+    nextPricePence = nextPrice * 100;
+  }
+  
   if (isFoundingActive) {
     return {
       originalPrice: basePrice,
@@ -238,7 +252,10 @@ export function getPricingWithDiscount(plan: PlanPricing, isYearly: boolean) {
       discountedPricePence: getDiscountedPricePence(basePricePence, discountPercent),
       hasDiscount: true,
       discountPercent,
-      badge: foundingMemberConfig.badge
+      badge: foundingMemberConfig.badge,
+      nextPrice,
+      nextPricePence,
+      savings: nextPrice ? nextPrice - getDiscountedPrice(basePrice, discountPercent) : 0
     };
   }
   
@@ -249,6 +266,9 @@ export function getPricingWithDiscount(plan: PlanPricing, isYearly: boolean) {
     discountedPricePence: basePricePence,
     hasDiscount: false,
     discountPercent: 0,
-    badge: null
+    badge: null,
+    nextPrice: null,
+    nextPricePence: null,
+    savings: 0
   };
 }

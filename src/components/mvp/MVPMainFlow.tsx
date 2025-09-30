@@ -8,18 +8,23 @@ import { PathSelectionFlow } from './PathSelectionFlow';
 import { AssessmentPreview } from './AssessmentPreview';
 import { MVPAssessmentFlow } from './MVPAssessmentFlow';
 import { FourCoreFeaturesTour } from './FourCoreFeaturesTour';
+import { BrainInjuryWelcome } from './BrainInjuryWelcome';
+import { CaregiverWelcome } from './CaregiverWelcome';
+import type { UserType } from '@/types/user';
 
-export type MVPFlowStep = 'payment' | 'privacy' | 'app-story' | 'path-selection' | 'assessment-preview' | 'assessment' | 'features';
+export type MVPFlowStep = 'payment' | 'privacy' | 'app-story' | 'path-selection' | 'assessment-preview' | 'assessment' | 'features' | 'user-welcome';
 
 interface MVPMainFlowProps {
   initialStep?: MVPFlowStep;
+  userType?: UserType;
 }
 
-export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
+export function MVPMainFlow({ initialStep = 'payment', userType }: MVPMainFlowProps) {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<MVPFlowStep>(initialStep);
   const [selectedPath, setSelectedPath] = useState<'guided' | 'explorer' | null>(null);
   const [assessmentResult, setAssessmentResult] = useState<any>(null);
+  const [currentUserType, setCurrentUserType] = useState<UserType | undefined>(userType);
 
   const handlePaymentComplete = () => {
     // Payment completed, trial started
@@ -29,6 +34,15 @@ export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
   };
 
   const handlePrivacyComplete = () => {
+    // Show user-specific welcome for brain injury or caregiver
+    if (currentUserType === 'brain-injury' || currentUserType === 'caregiver') {
+      setCurrentStep('user-welcome');
+    } else {
+      setCurrentStep('app-story');
+    }
+  };
+
+  const handleUserWelcomeComplete = () => {
     setCurrentStep('app-story');
   };
 
@@ -66,8 +80,15 @@ export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
       case 'privacy':
         setCurrentStep('payment');
         break;
-      case 'app-story':
+      case 'user-welcome':
         setCurrentStep('privacy');
+        break;
+      case 'app-story':
+        if (currentUserType === 'brain-injury' || currentUserType === 'caregiver') {
+          setCurrentStep('user-welcome');
+        } else {
+          setCurrentStep('privacy');
+        }
         break;
       case 'path-selection':
         setCurrentStep('app-story');
@@ -101,6 +122,22 @@ export function MVPMainFlow({ initialStep = 'payment' }: MVPMainFlowProps) {
           onBack={handleBack}
         />
       );
+
+    case 'user-welcome':
+      if (currentUserType === 'brain-injury') {
+        return (
+          <BrainInjuryWelcome 
+            onContinue={handleUserWelcomeComplete}
+          />
+        );
+      } else if (currentUserType === 'caregiver') {
+        return (
+          <CaregiverWelcome 
+            onContinue={handleUserWelcomeComplete}
+          />
+        );
+      }
+      return null;
 
     case 'app-story':
       return (

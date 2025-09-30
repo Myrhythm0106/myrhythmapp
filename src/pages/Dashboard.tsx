@@ -7,8 +7,12 @@ import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { FirstTimeUserExperience } from "@/components/onboarding/FirstTimeUserExperience";
 import { useSessionTracking } from "@/hooks/useSessionTracking";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { BrainFriendlyDashboard } from "@/components/dashboard/BrainFriendlyDashboard";
+import { BrainInjuryDashboard } from "@/components/dashboard/BrainInjuryDashboard";
+import { CaregiverDashboard } from "@/components/dashboard/CaregiverDashboard";
+import { ConnectionMoments } from "@/components/ecosystem/ConnectionMoments";
 import { ReportsWidget } from "@/components/dashboard/widgets/ReportsWidget";
 import { BackButton } from "@/components/ui/BackButton";
 import CalendarPage from "./CalendarPage";
@@ -29,6 +33,7 @@ const Dashboard = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { profile } = useProfile();
   const { resetSession } = useSessionTracking();
 
   // Check if this is the first time user
@@ -90,6 +95,11 @@ const Dashboard = () => {
                 return <DecisionsPage />;
               case '/':
               case '/dashboard':
+                if (profile?.user_type === 'brain-injury') {
+                  return <BrainInjuryDashboard userName={profile?.name} />;
+                } else if (profile?.user_type === 'caregiver') {
+                  return <CaregiverDashboard userName={profile?.name} />;
+                }
                 return <BrainFriendlyDashboard />;
               default:
                 return <DashboardContent />;
@@ -107,6 +117,7 @@ const Dashboard = () => {
           <FirstTimeUserExperience showOnMount={location.pathname === '/'} />
           {renderContent()}
         </MainLayout>
+        <ConnectionMoments />
       </DailyActionsProvider>
     </SidebarProvider>
   );
