@@ -20,8 +20,12 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
 import { useAuth } from '@/hooks/useAuth';
 import { VoiceCoach } from './VoiceCoach';
+import { ProcessingProgress } from './ProcessingProgress';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { getAudioDuration } from '@/utils/audioHelpers';
+import { processSavedRecording } from '@/utils/processSavedRecording';
+import type { ProcessingProgress as ProcessingProgressType } from '@/types/processing';
 
 interface QuickCaptureRecorderProps {
   onComplete?: (data: { meetingId: string; actionsCount: number }) => void;
@@ -54,6 +58,8 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   const [finalResults, setFinalResults] = useState<{ meetingId: string; actionsCount: number } | null>(null);
   const [currentTranscript, setCurrentTranscript] = useState('');
   const [currentMeetingId, setCurrentMeetingId] = useState<string>('');
+  const [audioDuration, setAudioDuration] = useState<number>(0);
+  const [processingProgress, setProcessingProgress] = useState<ProcessingProgressType | null>(null);
   
   const { extractACTs } = useRealtimeACTs(currentMeetingId);
 
@@ -141,6 +147,11 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
         throw new Error('Email verification required. Please verify your email address.');
       }
 
+      // Get audio duration
+      const duration = await getAudioDuration(audioBlob);
+      setAudioDuration(duration);
+      console.log('🎵 Audio duration:', duration, 'seconds');
+
       setProcessingMessage('Saving recording...');
       
       // Save the voice recording first
@@ -181,36 +192,26 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
 
       setProcessingMessage('Transcribing & extracting ACTs...');
 
-      // Process with edge function - include userId for better processing
-      const { data, error } = await supabase.functions.invoke('process-meeting-audio', {
-        body: {
-          filePath: voiceRecording.file_path,
-          meetingId: meetingRecord.id,
-          userId: user.id, // ✅ Critical fix: Include userId explicitly
-          meetingData: {
-            title: `Quick Capture - ${new Date().toLocaleString()}`,
-            type: 'informal',
-            participants: [],
-            context: 'Quick captured conversation',
-            recording_id: voiceRecording.id,
-            user_id: user.id // ✅ Also include in meetingData as backup
-          }
+      // Process with progress tracking
+      const result = await processSavedRecording(
+        voiceRecording.id,
+        user.id,
+        duration,
+        (progress) => {
+          console.log('📊 Processing progress:', progress);
+          setProcessingProgress(progress);
         }
-      });
+      );
 
-      if (error) {
-        console.error('Processing error:', error);
-        throw new Error(`Processing failed: ${error.message}`);
-      }
-
-      console.log('✅ Processing complete:', data);
+      console.log('✅ Processing complete:', result);
       
-      const actionsCount = data?.actionsExtracted || 0;
-      const finalMeetingId = meetingRecord.id;
+      const actionsCount = result.actionsCount || 0;
+      const finalMeetingId = result.meetingId || meetingRecord.id;
       setCurrentMeetingId(finalMeetingId);
       setFinalResults({ meetingId: finalMeetingId, actionsCount });
       setRecordingState('complete');
       setProcessingMessage('');
+      setProcessingProgress(null);
       
       toast.success(`Processing complete! Found ${actionsCount} SMART ACTs 🎯`);
 
@@ -258,6 +259,8 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     setAudioBlob(null);
     setFinalResults(null);
     setProcessingMessage('');
+    setProcessingProgress(null);
+    setAudioDuration(0);
     onCancel?.();
   }, [onCancel]);
 
@@ -446,14 +449,23 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
 
           {/* Processing Status */}
           {recordingState === 'processing' && (
-            <div className="text-center space-y-4">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-memory-emerald-600 mx-auto"></div>
-              <div>
-                <p className="text-brain-health-900 font-medium">Processing your recording...</p>
-                <p className="text-sm text-brain-health-600">{processingMessage}</p>
-              </div>
-              <Progress value={50} className="h-2" />
-            </div>
+            <>
+              {processingProgress && audioDuration > 0 ? (
+                <ProcessingProgress 
+                  audioDuration={audioDuration}
+                  progress={processingProgress}
+                />
+              ) : (
+                <div className="text-center space-y-4">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-memory-emerald-600 mx-auto"></div>
+                  <div>
+                    <p className="text-brain-health-900 font-medium">Processing your recording...</p>
+                    <p className="text-sm text-brain-health-600">{processingMessage}</p>
+                  </div>
+                  <Progress value={50} className="h-2" />
+                </div>
+              )}
+            </>
           )}
 
           {/* Complete Status */}

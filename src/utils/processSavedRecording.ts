@@ -1,12 +1,28 @@
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import type { ProcessingProgress } from '@/types/processing';
 
 export async function processSavedRecording(
   recordingId: string,
-  userId: string
+  userId: string,
+  audioDuration: number = 0,
+  onProgressUpdate?: (progress: ProcessingProgress) => void
 ): Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }> {
+  const startTime = Date.now();
+  const estimatedTotalTime = audioDuration > 0 ? Math.ceil(audioDuration * 0.5) : 60; // 50% of audio duration or 60s default
+  
   try {
     console.log('processSavedRecording: Starting processing for recording ID:', recordingId);
+    console.log('processSavedRecording: Audio duration:', audioDuration, 'Estimated time:', estimatedTotalTime);
+    
+    // Stage 1: Uploading (5%)
+    onProgressUpdate?.({
+      stage: 'uploading',
+      progress: 5,
+      elapsedTime: 0,
+      estimatedRemaining: estimatedTotalTime,
+      message: 'Preparing your recording...'
+    });
     
     // Get the recording details
     const { data: recording, error: recordingError } = await supabase
@@ -52,6 +68,16 @@ export async function processSavedRecording(
       throw meetingError;
     }
 
+    // Stage 2: Transcribing (10% - will update during polling)
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    onProgressUpdate?.({
+      stage: 'transcribing',
+      progress: 10,
+      elapsedTime: elapsed,
+      estimatedRemaining: Math.max(0, estimatedTotalTime - elapsed),
+      message: 'Starting transcription...'
+    });
+    
     // Start background processing with file path (no large payloads)
     console.log('processSavedRecording: Invoking process-meeting-audio function...');
     console.log('processSavedRecording: Function params:', {
@@ -95,11 +121,8 @@ export async function processSavedRecording(
 
     console.log('processSavedRecording: Processing initiated successfully');
     
-    // Show immediate feedback for background processing
-    toast.success('Processing started! We\'ll extract ACTs in the background.');
-
-    // Poll for completion
-    const result = await pollForCompletion(meetingRecord.id);
+    // Poll for completion with progress updates
+    const result = await pollForCompletion(meetingRecord.id, startTime, estimatedTotalTime, onProgressUpdate);
     
     console.log('processSavedRecording: Final result:', result);
     
@@ -118,13 +141,32 @@ export async function processSavedRecording(
 }
 
 // Poll for processing completion
-async function pollForCompletion(meetingId: string): Promise<{ success: boolean; actionsCount?: number; hasTranscript?: boolean }> {
+async function pollForCompletion(
+  meetingId: string, 
+  startTime: number, 
+  estimatedTotalTime: number,
+  onProgressUpdate?: (progress: ProcessingProgress) => void
+): Promise<{ success: boolean; actionsCount?: number; hasTranscript?: boolean }> {
   const maxAttempts = 60; // 2 minutes max
   let attempts = 0;
   
   // Check for completion every 2 seconds, up to 2 minutes
   while (attempts < maxAttempts) {
     await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    
+    // Calculate progress: transcription is 10-80% of total process
+    // Progress increases based on time elapsed vs estimated time
+    const transcriptionProgress = Math.min(80, 10 + (elapsed / estimatedTotalTime) * 70);
+    
+    onProgressUpdate?.({
+      stage: 'transcribing',
+      progress: Math.floor(transcriptionProgress),
+      elapsedTime: elapsed,
+      estimatedRemaining: Math.max(0, estimatedTotalTime - elapsed),
+      message: 'Transcribing your audio...'
+    });
     
     // Check if actions have been extracted
     const { data: actions } = await supabase
@@ -142,6 +184,16 @@ async function pollForCompletion(meetingId: string): Promise<{ success: boolean;
     if (meeting?.processing_status === 'completed') {
       const actionsCount = actions?.length || 0;
       const hasTranscript = !!meeting.transcript;
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      
+      // Stage 4: Complete (100%)
+      onProgressUpdate?.({
+        stage: 'complete',
+        progress: 100,
+        elapsedTime: elapsed,
+        estimatedRemaining: 0,
+        message: `Found ${actionsCount} SMART ACTs!`
+      });
       
       if (actionsCount > 0) {
         toast.success(`Processing complete! ${actionsCount} actions extracted.`);
@@ -156,6 +208,15 @@ async function pollForCompletion(meetingId: string): Promise<{ success: boolean;
     
     if (meeting?.processing_status === 'failed') {
       const hasTranscript = !!meeting.transcript;
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      
+      onProgressUpdate?.({
+        stage: 'failed',
+        progress: 0,
+        elapsedTime: elapsed,
+        estimatedRemaining: 0,
+        message: meeting.processing_error || 'Processing failed'
+      });
       
       if (meeting.processing_error?.includes('OpenAI API key') || meeting.processing_error?.includes('not configured')) {
         if (hasTranscript) {
