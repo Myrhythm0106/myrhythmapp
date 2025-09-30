@@ -59,9 +59,8 @@ export default function SignUpForm({ onSignUpSuccess }: SignUpFormProps) {
       }
     } else {
       console.log('SignUpForm: Sign up successful');
-      // For new users, go to path selection to choose their journey
-      navigate('/path-selection');
-      toast.success('Account created! Choose your journey.');
+      // For new users, redirect to assessment flow
+      onSignUpSuccess(formData.email);
     }
     
     setIsLoading(false);

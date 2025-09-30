@@ -100,6 +100,12 @@ const Dashboard = () => {
                 } else if (profile?.user_type === 'caregiver') {
                   return <CaregiverDashboard userName={profile?.name} />;
                 }
+                // Check if user has completed onboarding
+                const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete');
+                if (!onboardingComplete && user) {
+                  // Show welcome dashboard for new users
+                  return <BrainFriendlyDashboard />;
+                }
                 return <BrainFriendlyDashboard />;
               default:
                 return <DashboardContent />;

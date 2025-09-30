@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, Mail, Lock, UserPlus, LogIn } from "lucide-react";
+import { Brain, Mail, Lock, UserPlus, LogIn, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function AuthPage() {
@@ -15,6 +15,17 @@ export default function AuthPage() {
   return (
     <Preview3Background>
       <div className="min-h-screen flex items-center justify-center p-4">
+        {/* Back Button */}
+        <Button
+          onClick={() => navigate('/')}
+          variant="ghost"
+          size="sm"
+          className="absolute top-4 left-4 text-brain-health-700 hover:text-brain-health-900 hover:bg-brain-health-50"
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Back to Home
+        </Button>
+        
         <Card className="w-full max-w-md">
           <CardHeader className="text-center space-y-4">
             <div className="flex items-center justify-center gap-3">

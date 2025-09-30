@@ -11,11 +11,12 @@ interface MVPTopNavProps {
 
 export function MVPTopNav({ showBack = true }: MVPTopNavProps) {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
-  const handleAuthAction = () => {
+  const handleAuthAction = async () => {
     if (user) {
-      navigate('/next-steps');
+      await signOut();
+      navigate('/');
     } else {
       navigate('/auth');
     }
@@ -43,7 +44,7 @@ export function MVPTopNav({ showBack = true }: MVPTopNavProps) {
             className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
           >
             <User className="h-4 w-4 mr-2" />
-            {user ? 'Next Steps' : 'Log In'}
+            {user ? 'Sign Out' : 'Log In'}
           </Button>
         </div>
       </div>

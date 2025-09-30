@@ -33,9 +33,13 @@ export function MVPCore4C() {
     navigate("/mvp/user-type-selection");
   };
 
-  const handleAuthAction = () => {
+  const { signOut } = useAuth();
+  
+  const handleAuthAction = async () => {
     if (user) {
-      navigate('/memory-bridge');
+      // Sign out the user
+      await signOut();
+      navigate('/');
     } else {
       navigate('/auth');
     }
@@ -58,7 +62,7 @@ export function MVPCore4C() {
               className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
             >
               <User className="h-4 w-4 mr-2" />
-              {user ? 'My Journey' : 'Sign In'}
+              {user ? 'Sign Out' : 'Log In'}
             </Button>
           </div>
         </div>

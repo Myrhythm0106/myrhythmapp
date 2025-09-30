@@ -22,11 +22,11 @@ const Landing = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   
-  // Redirect authenticated users to Memory Bridge (Apple/Nike level instant access)
+  // Redirect authenticated users to Dashboard
   useEffect(() => {
     if (user && !loading) {
-      console.log('Landing: Redirecting authenticated user to Memory Bridge');
-      navigate("/memory-bridge", { replace: true });
+      console.log('Landing: Redirecting authenticated user to Dashboard');
+      navigate("/dashboard", { replace: true });
     }
   }, [user, loading, navigate]);
 

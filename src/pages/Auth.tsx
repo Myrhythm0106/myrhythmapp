@@ -271,17 +271,16 @@ const Auth = () => {
 
   const handleSignInSuccess = () => {
     toast.success('Welcome back!');
-    // Redirect to the page they were trying to access, or dashboard
-    console.log('Auth page: Sign in successful, redirecting to:', from);
-    navigate(from, { replace: true });
+    // Redirect authenticated users to dashboard
+    console.log('Auth page: Sign in successful, redirecting to dashboard');
+    navigate('/dashboard', { replace: true });
   };
 
   const handleSignUpSuccess = () => {
     toast.success('Account created successfully!');
-    // After signup, redirect to their intended destination or path selection
-    const destination = from !== "/dashboard" ? from : '/path-selection';
-    console.log('Auth page: Sign up successful, redirecting to:', destination);
-    navigate(destination, { replace: true });
+    // After signup, redirect new users to assessment flow
+    console.log('Auth page: Sign up successful, redirecting to assessment');
+    navigate('/mvp/assessment-flow?flow=register', { replace: true });
   };
 
   const handlePasswordRecoverySuccess = () => {
