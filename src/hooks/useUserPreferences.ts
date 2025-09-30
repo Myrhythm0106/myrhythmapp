@@ -4,12 +4,18 @@ export interface UserPreferences {
   dateFormat: "dd/mm/yyyy" | "mm/dd/yyyy";
   timeFormat: "12h" | "24h";
   timezone: string;
+  primaryActionView: "table" | "cards";
+  primaryContactMethod: "email" | "app" | "sms";
+  supportCircleAutoNotify: boolean;
 }
 
 const defaultPreferences: UserPreferences = {
   dateFormat: "dd/mm/yyyy",
   timeFormat: "12h",
-  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+  primaryActionView: "table",
+  primaryContactMethod: "app",
+  supportCircleAutoNotify: true
 };
 
 export function useUserPreferences() {

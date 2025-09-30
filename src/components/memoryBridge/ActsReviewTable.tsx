@@ -6,7 +6,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight, Calendar, Download, Check, Clock, ExternalLink } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChevronDown, ChevronRight, Calendar, Download, Check, Clock, ExternalLink, LayoutGrid, LayoutList } from 'lucide-react';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { useActsScheduling } from '@/hooks/memoryBridge/useActsScheduling';
 import { generateICS, generateGoogleCalendarLink, generateCalendarLinks } from '@/utils/ics';
@@ -15,6 +16,8 @@ import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { analyzeSMART, getSMARTColor, getSMARTLabel } from '@/utils/smartValidation';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { EnhancedActionCard } from './EnhancedActionCard';
+import { useUserPreferences } from '@/hooks/useUserPreferences';
 
 interface ActsReviewTableProps {
   actions: ExtractedAction[];
@@ -23,6 +26,8 @@ interface ActsReviewTableProps {
 }
 
 export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: ActsReviewTableProps) {
+  const { preferences } = useUserPreferences();
+  const [viewMode, setViewMode] = useState<"table" | "cards">(preferences.primaryActionView);
   const [selectedActions, setSelectedActions] = useState<Set<string>>(new Set());
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editingCell, setEditingCell] = useState<{ actionId: string; field: string } | null>(null);
@@ -72,7 +77,7 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
     }
     
     onConfirmActions(highConfidenceActions.map(a => a.id!), scheduleData);
-    toast.success(`Accepted ${highConfidenceActions.length} high-confidence actions`);
+    toast.success(`Accepted ${highConfidenceActions.length} high-confidence actions with assessment-optimized times`);
   };
 
   const handleAcceptSelected = async () => {
@@ -100,7 +105,7 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
 
   const handleExportCSV = () => {
     const csvContent = [
-      ['What needs to happen', 'Who is responsible', 'How important', 'When to begin', 'When to complete', 'Must be done by', 'Due Context', 'Context', 'SMART Score', 'Status'].join(','),
+      ['What needs to happen', 'Who is responsible', 'How important', 'When to begin', 'When to complete', 'Must be done by', 'Due Context', 'Context', 'Motivation', 'Emotional Stakes', 'Relationship Impact', 'What Outcome', 'Success Criteria', 'SMART Score', 'Status'].join(','),
       ...actions.map(action => [
         `"${action.action_text}"`,
         `"${action.assigned_to || ''}"`,
@@ -110,6 +115,11 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
         `"${action.end_date || ''}"`,
         `"${action.due_context || ''}"`,
         `"${action.relationship_impact || ''}"`,
+        `"${action.motivation_statement || ''}"`,
+        `"${action.emotional_stakes || ''}"`,
+        `"${action.relationship_impact || ''}"`,
+        `"${action.what_outcome || ''}"`,
+        `"${action.success_criteria || ''}"`,
         action.confidence_score || 0,
         action.status
       ].join(','))
@@ -119,9 +129,10 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'extracted-actions.csv';
+    a.download = 'extracted-actions-enhanced.csv';
     a.click();
     URL.revokeObjectURL(url);
+    toast.success('Enhanced CSV exported with all medical fields');
   };
 
   const handleDownloadICS = async (actionIds: string[]) => {
@@ -256,6 +267,23 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
 
   return (
     <div className="space-y-4">
+      {/* Header with View Toggle */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Actions Review ({actions.length})</h2>
+        <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as "table" | "cards")}>
+          <TabsList>
+            <TabsTrigger value="table" className="gap-2">
+              <LayoutList className="h-4 w-4" />
+              Table View
+            </TabsTrigger>
+            <TabsTrigger value="cards" className="gap-2">
+              <LayoutGrid className="h-4 w-4" />
+              Card View
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
       {/* Bulk Actions Bar */}
       <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border">
         <div className="flex items-center gap-4">
@@ -333,294 +361,319 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
         </div>
       </div>
 
-      {/* Main Table */}
-      <div className="border rounded-lg bg-background">
-        <Table>
-          <TableHeader>
-            <TableRow className="hover:bg-muted/50">
-              <TableHead className="w-12">
-                <Checkbox
-                  checked={selectedActions.size === actions.length && actions.length > 0}
-                  onCheckedChange={handleSelectAll}
-                />
-              </TableHead>
-              <TableHead className="w-12"></TableHead>
-              <TableHead className="min-w-[200px]">What needs to happen</TableHead>
-              <TableHead>Who's responsible</TableHead>
-              <TableHead>How important</TableHead>
-              <TableHead>When to begin</TableHead>
-              <TableHead>When to complete</TableHead>
-              <TableHead>Must be done by</TableHead>
-              <TableHead>Suggested Times</TableHead>
-              <TableHead>SMART Score</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {actions.map((action) => (
-              <React.Fragment key={action.id}>
-                <TableRow className="hover:bg-muted/50">
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedActions.has(action.id!)}
-                      onCheckedChange={(checked) => handleSelectAction(action.id!, checked as boolean)}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => toggleRowExpansion(action.id!)}
-                      className="p-1 h-auto"
-                    >
-                      {expandedRows.has(action.id!) ? (
-                        <ChevronDown className="w-4 h-4" />
+      {/* Conditional Display: Table or Card View */}
+      {viewMode === "table" ? (
+        <div className="border rounded-lg bg-background">
+          <Table>
+            <TableHeader>
+              <TableRow className="hover:bg-muted/50">
+                <TableHead className="w-12">
+                  <Checkbox
+                    checked={selectedActions.size === actions.length && actions.length > 0}
+                    onCheckedChange={handleSelectAll}
+                  />
+                </TableHead>
+                <TableHead className="w-12"></TableHead>
+                <TableHead className="min-w-[200px]">What needs to happen</TableHead>
+                <TableHead>Who's responsible</TableHead>
+                <TableHead>How important</TableHead>
+                <TableHead>When to begin</TableHead>
+                <TableHead>When to complete</TableHead>
+                <TableHead>Must be done by</TableHead>
+                <TableHead>Suggested Times</TableHead>
+                <TableHead>SMART Score</TableHead>
+                <TableHead>Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {actions.map((action) => (
+                <React.Fragment key={action.id}>
+                  <TableRow className="hover:bg-muted/50">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedActions.has(action.id!)}
+                        onCheckedChange={(checked) => handleSelectAction(action.id!, checked as boolean)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => toggleRowExpansion(action.id!)}
+                        className="p-1 h-auto"
+                      >
+                        {expandedRows.has(action.id!) ? (
+                          <ChevronDown className="w-4 h-4" />
+                        ) : (
+                          <ChevronRight className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </TableCell>
+                    <TableCell className="font-medium">
+                      {editingCell?.actionId === action.id && editingCell?.field === 'action' ? (
+                        <Input
+                          defaultValue={action.action_text}
+                          onBlur={(e) => {
+                            onUpdateAction(action.id!, { action_text: e.target.value });
+                            setEditingCell(null);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              onUpdateAction(action.id!, { action_text: e.currentTarget.value });
+                              setEditingCell(null);
+                            }
+                          }}
+                          autoFocus
+                        />
                       ) : (
-                        <ChevronRight className="w-4 h-4" />
+                        <div
+                          onClick={() => setEditingCell({ actionId: action.id!, field: 'action' })}
+                          className="cursor-text hover:bg-muted/50 p-1 rounded"
+                        >
+                          {action.action_text}
+                        </div>
                       )}
-                    </Button>
-                  </TableCell>
-                  <TableCell className="font-medium">
-                    {editingCell?.actionId === action.id && editingCell?.field === 'action' ? (
-                      <Input
-                        defaultValue={action.action_text}
-                        onBlur={(e) => {
-                          onUpdateAction(action.id!, { action_text: e.target.value });
-                          setEditingCell(null);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            onUpdateAction(action.id!, { action_text: e.currentTarget.value });
+                    </TableCell>
+                    <TableCell>
+                      {editingCell?.actionId === action.id && editingCell?.field === 'assignee' ? (
+                        <Input
+                          defaultValue={action.assigned_to || ''}
+                          onBlur={(e) => {
+                            onUpdateAction(action.id!, { assigned_to: e.target.value });
                             setEditingCell(null);
-                          }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              onUpdateAction(action.id!, { assigned_to: e.currentTarget.value });
+                              setEditingCell(null);
+                            }
+                          }}
+                          autoFocus
+                        />
+                      ) : (
+                        <div
+                          onClick={() => setEditingCell({ actionId: action.id!, field: 'assignee' })}
+                          className="cursor-text hover:bg-muted/50 p-1 rounded"
+                        >
+                          {action.assigned_to || ''}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Select
+                        value={getPriorityText(action.priority_level)}
+                        onValueChange={(value) => {
+                          const priorityLevel = value === 'high' ? 1 : value === 'medium' ? 3 : 5;
+                          onUpdateAction(action.id!, { priority_level: priorityLevel });
                         }}
-                        autoFocus
-                      />
-                    ) : (
-                      <div
-                        onClick={() => setEditingCell({ actionId: action.id!, field: 'action' })}
-                        className="cursor-text hover:bg-muted/50 p-1 rounded"
                       >
-                        {action.action_text}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editingCell?.actionId === action.id && editingCell?.field === 'assignee' ? (
-                      <Input
-                        defaultValue={action.assigned_to || ''}
-                        onBlur={(e) => {
-                          onUpdateAction(action.id!, { assigned_to: e.target.value });
-                          setEditingCell(null);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            onUpdateAction(action.id!, { assigned_to: e.currentTarget.value });
+                        <SelectTrigger className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="high">High</SelectItem>
+                          <SelectItem value="medium">Medium</SelectItem>
+                          <SelectItem value="low">Low</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </TableCell>
+                    <TableCell>
+                      {editingCell?.actionId === action.id && editingCell?.field === 'start_date' ? (
+                        <Input
+                          type="date"
+                          defaultValue={action.start_date || ''}
+                          onBlur={(e) => {
+                            onUpdateAction(action.id!, { start_date: e.target.value });
                             setEditingCell(null);
-                          }
-                        }}
-                        autoFocus
-                      />
-                    ) : (
-                      <div
-                        onClick={() => setEditingCell({ actionId: action.id!, field: 'assignee' })}
-                        className="cursor-text hover:bg-muted/50 p-1 rounded"
-                      >
-                        {action.assigned_to || ''}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      value={getPriorityText(action.priority_level)}
-                      onValueChange={(value) => {
-                        const priorityLevel = value === 'high' ? 1 : value === 'medium' ? 3 : 5;
-                        onUpdateAction(action.id!, { priority_level: priorityLevel });
-                      }}
-                    >
-                      <SelectTrigger className="w-full">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="high">High</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="low">Low</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </TableCell>
-                  <TableCell>
-                    {editingCell?.actionId === action.id && editingCell?.field === 'start_date' ? (
-                      <Input
-                        type="date"
-                        defaultValue={action.start_date || ''}
-                        onBlur={(e) => {
-                          onUpdateAction(action.id!, { start_date: e.target.value });
-                          setEditingCell(null);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            onUpdateAction(action.id!, { start_date: e.currentTarget.value });
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              onUpdateAction(action.id!, { start_date: e.currentTarget.value });
+                              setEditingCell(null);
+                            }
+                          }}
+                          autoFocus
+                        />
+                      ) : (
+                        <div
+                          onClick={() => setEditingCell({ actionId: action.id!, field: 'start_date' })}
+                          className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
+                        >
+                          {action.start_date || 'Set date'}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {editingCell?.actionId === action.id && editingCell?.field === 'completion_date' ? (
+                        <Input
+                          type="date"
+                          defaultValue={action.completion_date || ''}
+                          onBlur={(e) => {
+                            onUpdateAction(action.id!, { completion_date: e.target.value });
                             setEditingCell(null);
-                          }
-                        }}
-                        autoFocus
-                      />
-                    ) : (
-                      <div
-                        onClick={() => setEditingCell({ actionId: action.id!, field: 'start_date' })}
-                        className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
-                      >
-                        {action.start_date || 'Set date'}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editingCell?.actionId === action.id && editingCell?.field === 'completion_date' ? (
-                      <Input
-                        type="date"
-                        defaultValue={action.completion_date || ''}
-                        onBlur={(e) => {
-                          onUpdateAction(action.id!, { completion_date: e.target.value });
-                          setEditingCell(null);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            onUpdateAction(action.id!, { completion_date: e.currentTarget.value });
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              onUpdateAction(action.id!, { completion_date: e.currentTarget.value });
+                              setEditingCell(null);
+                            }
+                          }}
+                          autoFocus
+                        />
+                      ) : (
+                        <div
+                          onClick={() => setEditingCell({ actionId: action.id!, field: 'completion_date' })}
+                          className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
+                        >
+                          {action.completion_date || 'Set date'}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {editingCell?.actionId === action.id && editingCell?.field === 'end_date' ? (
+                        <Input
+                          type="date"
+                          defaultValue={action.end_date || ''}
+                          onBlur={(e) => {
+                            onUpdateAction(action.id!, { end_date: e.target.value });
                             setEditingCell(null);
-                          }
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              onUpdateAction(action.id!, { end_date: e.currentTarget.value });
+                              setEditingCell(null);
+                            }
+                          }}
+                          autoFocus
+                        />
+                      ) : (
+                        <div
+                          onClick={() => setEditingCell({ actionId: action.id!, field: 'end_date' })}
+                          className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
+                        >
+                          {action.end_date || 'Set date'}
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <ScheduleSuggestionCell
+                        action={action}
+                        suggestions={suggestions[action.id!]}
+                        isLoading={isLoading[action.id!]}
+                        onGenerateSuggestions={() => generateSuggestionsForAction(action)}
+                        onSelectTime={(date: string, time: string) => {
+                          onUpdateAction(action.id!, { 
+                            due_context: `${date} ${time}`,
+                            scheduled_date: date,
+                            scheduled_time: time
+                          });
                         }}
-                        autoFocus
                       />
-                    ) : (
-                      <div
-                        onClick={() => setEditingCell({ actionId: action.id!, field: 'completion_date' })}
-                        className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
-                      >
-                        {action.completion_date || 'Set date'}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editingCell?.actionId === action.id && editingCell?.field === 'end_date' ? (
-                      <Input
-                        type="date"
-                        defaultValue={action.end_date || ''}
-                        onBlur={(e) => {
-                          onUpdateAction(action.id!, { end_date: e.target.value });
-                          setEditingCell(null);
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            onUpdateAction(action.id!, { end_date: e.currentTarget.value });
-                            setEditingCell(null);
-                          }
-                        }}
-                        autoFocus
-                      />
-                    ) : (
-                      <div
-                        onClick={() => setEditingCell({ actionId: action.id!, field: 'end_date' })}
-                        className="cursor-text hover:bg-muted/50 p-1 rounded text-sm"
-                      >
-                        {action.end_date || 'Set date'}
-                      </div>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <ScheduleSuggestionCell
-                      action={action}
-                      suggestions={suggestions[action.id!]}
-                      isLoading={isLoading[action.id!]}
-                      onGenerateSuggestions={() => generateSuggestionsForAction(action)}
-                      onSelectTime={(date: string, time: string) => {
-                        onUpdateAction(action.id!, { 
-                          due_context: `${date} ${time}`,
-                          scheduled_date: date,
-                          scheduled_time: time
+                    </TableCell>
+                    <TableCell>
+                      {(() => {
+                        const smartAnalysis = analyzeSMART({
+                          action_text: action.action_text,
+                          assigned_to: action.assigned_to,
+                          start_date: action.start_date,
+                          end_date: action.end_date,
+                          priority_level: action.priority_level,
+                          relationship_impact: action.relationship_impact
                         });
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    {(() => {
-                      const smartAnalysis = analyzeSMART({
-                        action_text: action.action_text,
-                        assigned_to: action.assigned_to,
-                        start_date: action.start_date,
-                        end_date: action.end_date,
-                        priority_level: action.priority_level,
-                        relationship_impact: action.relationship_impact
-                      });
-                      
-                      return (
-                        <div className="flex items-center gap-2">
-                          <Badge className={getSMARTColor(smartAnalysis.score)}>
-                            {smartAnalysis.score}% SMART
-                          </Badge>
-                          {smartAnalysis.score < 80 && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 text-xs"
-                              onClick={() => {
-                                // Show SMART suggestions - could expand to show in a popover
-                                const suggestion = smartAnalysis.suggestions[0];
-                                if (suggestion) {
-                                  toast.info(suggestion);
-                                }
-                              }}
-                            >
-                              Fix
-                            </Button>
-                          )}
-                        </div>
-                      );
-                    })()}
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={action.status === 'confirmed' ? 'default' : 'secondary'}>
-                      {action.status === 'confirmed' ? 'Accepted' : 'New'}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-                
-                {expandedRows.has(action.id!) && (
-                <TableRow>
-                    <TableCell colSpan={11} className="bg-muted/20">
-                      <div className="p-4 space-y-2">
-                        <div>
-                          <span className="font-medium text-sm">Context:</span>
-                          <p className="text-sm text-muted-foreground mt-1">{action.relationship_impact || 'No context provided'}</p>
-                        </div>
-                        {action.user_notes && (
-                          <div>
-                            <span className="font-medium text-sm">AI Notes:</span>
-                            <p className="text-sm text-muted-foreground mt-1">{action.user_notes}</p>
+                        
+                        return (
+                          <div className="flex items-center gap-2">
+                            <Badge className={getSMARTColor(smartAnalysis.score)}>
+                              {smartAnalysis.score}% SMART
+                            </Badge>
+                            {smartAnalysis.score < 80 && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 text-xs"
+                                onClick={() => {
+                                  // Show SMART suggestions - could expand to show in a popover
+                                  const suggestion = smartAnalysis.suggestions[0];
+                                  if (suggestion) {
+                                    toast.info(suggestion);
+                                  }
+                                }}
+                              >
+                                Fix
+                              </Button>
+                            )}
                           </div>
-                        )}
-                        {action.due_context && (
-                          <div>
-                            <span className="font-medium text-sm">Due Context:</span>
-                            <p className="text-sm text-muted-foreground mt-1">{action.due_context}</p>
-                          </div>
-                        )}
-                      </div>
+                        );
+                      })()}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={action.status === 'confirmed' ? 'default' : 'secondary'}>
+                        {action.status === 'confirmed' ? 'Accepted' : 'New'}
+                      </Badge>
                     </TableCell>
                   </TableRow>
-                )}
-              </React.Fragment>
-            ))}
-          </TableBody>
-        </Table>
-        
-        {actions.length === 0 && (
-          <div className="p-8 text-center text-muted-foreground">
-            <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
-            <p>No actions extracted yet.</p>
-            <p className="text-sm">Start a recording to capture actionable items.</p>
-          </div>
-        )}
-      </div>
+                  
+                  {expandedRows.has(action.id!) && (
+                  <TableRow>
+                      <TableCell colSpan={11} className="bg-muted/20">
+                        <div className="p-4 space-y-2">
+                          <div>
+                            <span className="font-medium text-sm">Context:</span>
+                            <p className="text-sm text-muted-foreground mt-1">{action.relationship_impact || 'No context provided'}</p>
+                          </div>
+                          {action.user_notes && (
+                            <div>
+                              <span className="font-medium text-sm">AI Notes:</span>
+                              <p className="text-sm text-muted-foreground mt-1">{action.user_notes}</p>
+                            </div>
+                          )}
+                          {action.due_context && (
+                            <div>
+                              <span className="font-medium text-sm">Due Context:</span>
+                              <p className="text-sm text-muted-foreground mt-1">{action.due_context}</p>
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </React.Fragment>
+              ))}
+            </TableBody>
+          </Table>
+          
+          {actions.length === 0 && (
+            <div className="p-8 text-center text-muted-foreground">
+              <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>No actions extracted yet.</p>
+              <p className="text-sm">Start a recording to capture actionable items.</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {actions.map((action) => (
+            <div key={action.id} className="relative">
+              <Checkbox
+                checked={selectedActions.has(action.id!)}
+                onCheckedChange={(checked) => handleSelectAction(action.id!, checked as boolean)}
+                className="absolute top-4 right-4 z-10"
+              />
+              <EnhancedActionCard
+                action={action}
+                onUpdate={(updates) => onUpdateAction(action.id!, updates)}
+              />
+            </div>
+          ))}
+          {actions.length === 0 && (
+            <div className="col-span-full p-8 text-center text-muted-foreground border rounded-lg">
+              <Clock className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>No actions extracted yet.</p>
+              <p className="text-sm">Start a recording to capture actionable items.</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
