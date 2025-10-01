@@ -7,6 +7,7 @@ import { MockAuthWrapper } from "@/components/auth/MockAuthWrapper";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
+import { PriorityProvider } from "@/contexts/PriorityContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { SetupProgressProvider } from "@/contexts/SetupProgressContext";
 import { SetupProgressBar } from "@/components/progress/SetupProgressBar";
@@ -200,7 +201,13 @@ function App() {
                      <Route path="/mvp" element={<MVPCore4CPage />} />
                      <Route path="/mvp/user-selection" element={<GetStartedPage />} />
                      <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
-                      <Route path="/brain-friendly-dashboard" element={<ProtectedRoute requireAuth={false}><BrainFriendlyDashboard /></ProtectedRoute>} />
+                      <Route path="/brain-friendly-dashboard" element={
+                        <ProtectedRoute requireAuth={false}>
+                          <PriorityProvider>
+                            <BrainFriendlyDashboard />
+                          </PriorityProvider>
+                        </ProtectedRoute>
+                      } />
                        <Route path="/congrats" element={<CongratsPage />} />
                   </Routes>
                 </BrowserRouter>
