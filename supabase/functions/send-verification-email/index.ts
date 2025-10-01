@@ -38,7 +38,7 @@ const handler = async (req: Request): Promise<Response> => {
     const verificationLink = `${redirectUrl}?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
 
     const emailResponse = await resend.emails.send({
-      from: "MyRhythm <noreply@myrhythm.app>",
+      from: "MyRhythm <onboarding@resend.dev>",
       to: [email],
       subject: "Verify your MyRhythm account",
       html: `
