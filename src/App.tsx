@@ -144,7 +144,13 @@ function App() {
                     <Route path="/in-app-purchase" element={<InAppPurchase />} />
                     <Route path="/memory-bank" element={<ProtectedRoute requireAuth={false}><MemoryBank /></ProtectedRoute>} />
                     <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                     <Route path="/calendar" element={<ProtectedRoute requireAuth={false}><CalendarPage /></ProtectedRoute>} />
+                     <Route path="/calendar" element={
+                       <ProtectedRoute requireAuth={false}>
+                         <PriorityProvider>
+                           <CalendarPage />
+                         </PriorityProvider>
+                       </ProtectedRoute>
+                     } />
                      <Route path="/ecosystem" element={<ProtectedRoute requireAuth={false}><EcosystemPage /></ProtectedRoute>} />
                      <Route path="/next-steps" element={<ProtectedRoute requireAuth={false}><div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"><NextStepsHub /></div></ProtectedRoute>} />
                      <Route path="/command-center" element={<ProtectedRoute requireAuth={false}><CommandCenter /></ProtectedRoute>} />
