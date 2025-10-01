@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
+import { PriorityProvider } from "@/contexts/PriorityContext";
 import { FirstTimeUserExperience } from "@/components/onboarding/FirstTimeUserExperience";
 import { useSessionTracking } from "@/hooks/useSessionTracking";
 import { useAuth } from "@/hooks/useAuth";
@@ -117,15 +118,17 @@ const Dashboard = () => {
   };
 
   return (
-    <SidebarProvider>
-      <DailyActionsProvider>
-        <MainLayout>
-          <FirstTimeUserExperience showOnMount={location.pathname === '/'} />
-          {renderContent()}
-        </MainLayout>
-        <ConnectionMoments />
-      </DailyActionsProvider>
-    </SidebarProvider>
+    <PriorityProvider>
+      <SidebarProvider>
+        <DailyActionsProvider>
+          <MainLayout>
+            <FirstTimeUserExperience showOnMount={location.pathname === '/'} />
+            {renderContent()}
+          </MainLayout>
+          <ConnectionMoments />
+        </DailyActionsProvider>
+      </SidebarProvider>
+    </PriorityProvider>
   );
 };
 

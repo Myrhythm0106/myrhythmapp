@@ -5,10 +5,18 @@ import { MetricCard } from "./MetricCard";
 import { useDashboardInsights, TimeFrame } from "@/hooks/useDashboardInsights";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, AlertCircle, Brain } from "lucide-react";
+import { PriorityProgressTracker } from "../PriorityProgressTracker";
+import { PriorityAlignmentCard } from "../PriorityAlignmentCard";
+import { TimeScope } from "@/contexts/PriorityContext";
 
 export function DashboardPeriodView() {
   const [currentPeriod, setCurrentPeriod] = useState<TimeFrame>('month');
   const insights = useDashboardInsights(currentPeriod);
+  
+  // Convert TimeFrame to TimeScope for priority context
+  const currentScope: TimeScope = currentPeriod === 'day' ? 'daily' : 
+                                   currentPeriod === 'week' ? 'weekly' :
+                                   currentPeriod === 'month' ? 'monthly' : 'yearly';
 
   if (insights.isLoading) {
     return (
@@ -93,6 +101,9 @@ export function DashboardPeriodView() {
         </div>
       </div>
 
+      {/* Priority Progress Tracker - Full Width */}
+      <PriorityProgressTracker />
+
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
@@ -106,7 +117,9 @@ export function DashboardPeriodView() {
         <MetricColumn
           title="Connection & Wellbeing"
           metrics={connectionMetrics}
-        />
+        >
+          <PriorityAlignmentCard currentTimeframe={currentScope} />
+        </MetricColumn>
         
         {/* Progress & Growth Column */}
         <MetricColumn

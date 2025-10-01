@@ -13,6 +13,7 @@ import { useDailyActions } from '@/contexts/DailyActionsContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Timer, Users, Target } from 'lucide-react';
+import { usePriorities } from '@/contexts/PriorityContext';
 
 // Mock data for demonstration
 const mockEvents: TBIEvent[] = [
@@ -81,36 +82,23 @@ export function TBICalendarApp() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const { isRunning, timeLeft, currentSession, startTimer, pauseTimer, resetTimer } = usePomodoro();
   
-  // Separate priority states for each time scope
-  const [dailyPriorities, setDailyPriorities] = useState({ p1: '', p2: '', p3: '' });
-  const [weeklyPriorities, setWeeklyPriorities] = useState({ p1: '', p2: '', p3: '' });
-  const [monthlyPriorities, setMonthlyPriorities] = useState({ p1: '', p2: '', p3: '' });
-  const [yearlyPriorities, setYearlyPriorities] = useState({ p1: '', p2: '', p3: '' });
+  // Use priority context
+  const {
+    dailyPriorities,
+    weeklyPriorities,
+    monthlyPriorities,
+    yearlyPriorities,
+    updateDailyPriorities,
+    updateWeeklyPriorities,
+    updateMonthlyPriorities,
+    updateYearlyPriorities,
+    getParentPriorities,
+    hasAnyPriorities
+  } = usePriorities();
 
   // Smart initialization - cascade priorities from parent scopes when empty
   const initializePriorities = (scope: 'daily' | 'weekly' | 'monthly') => {
-    const parentPriorities = scope === 'daily' ? weeklyPriorities :
-                            scope === 'weekly' ? monthlyPriorities :
-                            scope === 'monthly' ? yearlyPriorities : null;
-    
-    return parentPriorities || { p1: '', p2: '', p3: '' };
-  };
-
-  // Helper functions to update priorities
-  const updateDailyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
-    setDailyPriorities(prev => ({ ...prev, [field]: value }));
-  };
-
-  const updateWeeklyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
-    setWeeklyPriorities(prev => ({ ...prev, [field]: value }));
-  };
-
-  const updateMonthlyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
-    setMonthlyPriorities(prev => ({ ...prev, [field]: value }));
-  };
-
-  const updateYearlyPriorities = (field: 'p1' | 'p2' | 'p3', value: string) => {
-    setYearlyPriorities(prev => ({ ...prev, [field]: value }));
+    return getParentPriorities(scope);
   };
 
   const handleEventComplete = (eventId: string) => {
@@ -197,7 +185,7 @@ export function TBICalendarApp() {
               onEnergyLevelChange={handleEnergyLevelChange}
               onOpenSettings={handleOpenSettings}
               onOpenCaregiver={handleOpenCaregiver}
-              priorities={dailyPriorities.p1 || dailyPriorities.p2 || dailyPriorities.p3 ? 
+              priorities={hasAnyPriorities(dailyPriorities) ? 
                 dailyPriorities : initializePriorities('daily')}
               updatePriorities={updateDailyPriorities}
               scopeLabel="Daily"
@@ -214,7 +202,7 @@ export function TBICalendarApp() {
               events={dayData.events}
               actions={actions}
               onDayClick={handleDayClick}
-              priorities={weeklyPriorities.p1 || weeklyPriorities.p2 || weeklyPriorities.p3 ? 
+              priorities={hasAnyPriorities(weeklyPriorities) ? 
                 weeklyPriorities : initializePriorities('weekly')}
               updatePriorities={updateWeeklyPriorities}
               scopeLabel="Weekly"
@@ -228,7 +216,7 @@ export function TBICalendarApp() {
               currentDate={monthViewDate}
               events={dayData.events}
               onDayClick={handleDayClick}
-              priorities={monthlyPriorities.p1 || monthlyPriorities.p2 || monthlyPriorities.p3 ? 
+              priorities={hasAnyPriorities(monthlyPriorities) ? 
                 monthlyPriorities : initializePriorities('monthly')}
               updatePriorities={updateMonthlyPriorities}
               scopeLabel="Monthly"
