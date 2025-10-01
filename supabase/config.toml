@@ -53,3 +53,9 @@ verify_jwt = false
 
 [functions.test-api-keys]
 verify_jwt = false
+
+[functions.send-verification-email]
+verify_jwt = false
+
+[functions.verify-email-custom]
+verify_jwt = false
