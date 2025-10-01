@@ -77,7 +77,8 @@ export function PriorityProvider({ children }: { children: ReactNode }) {
         daily: dailyPriorities,
         weekly: weeklyPriorities,
         monthly: monthlyPriorities,
-        yearly: yearlyPriorities
+        yearly: yearlyPriorities,
+        lastUpdated: Date.now()
       }));
     }
   }, [user, dailyPriorities, weeklyPriorities, monthlyPriorities, yearlyPriorities]);

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { usePriorities, TimeScope } from '@/contexts/PriorityContext';
-import { ArrowRight, Target, Calendar } from 'lucide-react';
+import { ArrowRight, Target, Calendar, RefreshCw, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { formatDistanceToNow } from 'date-fns';
 
 interface PriorityAlignmentCardProps {
   currentTimeframe: TimeScope;
@@ -14,15 +16,35 @@ interface PriorityAlignmentCardProps {
 
 export function PriorityAlignmentCard({ currentTimeframe, className }: PriorityAlignmentCardProps) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const {
     getPrioritiesByScope,
     yearlyPriorities,
     hasAnyPriorities
   } = usePriorities();
 
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
+
   const currentPriorities = getPrioritiesByScope(currentTimeframe);
   const hasCurrentPriorities = hasAnyPriorities(currentPriorities);
   const hasYearlyGoal = hasAnyPriorities(yearlyPriorities);
+
+  // Load last updated timestamp
+  useEffect(() => {
+    if (user) {
+      const storageKey = `priorities_${user.id}`;
+      const stored = localStorage.getItem(storageKey);
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          const timestamp = parsed.lastUpdated || parsed.timestamp || Date.now();
+          setLastUpdated(formatDistanceToNow(new Date(timestamp), { addSuffix: true }));
+        } catch (error) {
+          console.error('Error loading timestamp:', error);
+        }
+      }
+    }
+  }, [user, currentPriorities]);
 
   if (!hasCurrentPriorities && !hasYearlyGoal) {
     return null;
@@ -62,24 +84,46 @@ export function PriorityAlignmentCard({ currentTimeframe, className }: PriorityA
             <Target className="h-5 w-5 text-primary" />
             Priority Alignment
           </span>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => navigate('/calendar')}
-            className="text-xs"
-          >
-            <Calendar className="h-3 w-3 mr-1" />
-            View Calendar
-          </Button>
+          <div className="flex items-center gap-2">
+            {lastUpdated && (
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <RefreshCw className="h-3 w-3" />
+                {lastUpdated}
+              </span>
+            )}
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => navigate('/calendar')}
+              className="text-xs"
+            >
+              <Calendar className="h-3 w-3 mr-1" />
+              View Calendar
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Gentle info note about calendar sync */}
+        <div className="flex items-start gap-2 p-3 bg-muted/50 rounded-lg text-xs text-muted-foreground">
+          <Info className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+          <p>
+            💡 Dashboard shows your current focus. Update calendar when ready to plan ahead.
+          </p>
+        </div>
+
         {/* Current timeframe priority */}
         {hasCurrentPriorities && (
           <div className={cn("rounded-lg p-4 bg-gradient-to-br", config.bgGradient)}>
-            <Badge variant="secondary" className="mb-2">
-              {config.label}
-            </Badge>
+            <div className="flex items-center justify-between mb-2">
+              <Badge variant="secondary">
+                {config.label}
+              </Badge>
+              <span className="text-xs text-muted-foreground flex items-center gap-1">
+                <RefreshCw className="h-3 w-3" />
+                synced with calendar
+              </span>
+            </div>
             <div className="space-y-2">
               {currentPriorities.p1 && (
                 <div>

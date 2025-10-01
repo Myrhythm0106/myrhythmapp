@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Heart, Sparkles, Target } from "lucide-react";
+import { RefreshCw, Heart, Sparkles, Target, Brain } from "lucide-react";
 import { getRandomIChooseStatement } from "@/data/premiumAffirmations";
+import { useAffirmationTracker } from "@/hooks/useAffirmationTracker";
 
 interface MonthlyIChooseWidgetProps {
   onUpgradeClick?: () => void;
@@ -17,6 +18,10 @@ export function MonthlyIChooseWidget({
 }: MonthlyIChooseWidgetProps) {
   const [currentStatement, setCurrentStatement] = useState(() =>
     getRandomIChooseStatement(userType, false, 'great', [], monthlyTheme)
+  );
+
+  const { dayCount, showReinforcement, isRepeating } = useAffirmationTracker(
+    currentStatement?.text || ''
   );
 
   const refreshStatement = () => {
@@ -84,13 +89,26 @@ export function MonthlyIChooseWidget({
               </span>
               <div className="w-1 h-1 bg-brain-health-400 rounded-full"></div>
             </div>
+
+            {/* Subtle repetition indicator */}
+            {isRepeating && (
+              <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-brain-health-500">
+                <Brain className="h-3 w-3" />
+                <span>Day {dayCount} of building this neural pathway</span>
+              </div>
+            )}
           </div>
 
-          {/* Action */}
+          {/* Action with optional reinforcement message */}
           <div className="text-center">
             <p className="text-xs text-brain-health-600 mb-2">
               Speak it. Believe it. Live it.
             </p>
+            {showReinforcement && (
+              <p className="text-xs text-brain-health-500/80 italic mt-1">
+                Repetition builds neural pathways for success
+              </p>
+            )}
           </div>
         </div>
       </CardContent>
