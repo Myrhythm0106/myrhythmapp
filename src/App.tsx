@@ -68,6 +68,9 @@ import PathSelectionPage from "./pages/PathSelectionPage";
 import AssessmentResultsPage from "./pages/AssessmentResultsPage";
 import EcosystemPage from "./pages/EcosystemPage";
 import { NextStepsHub } from "./components/nextStepsHub/NextStepsHub";
+import PlanSelectionPage from "./pages/PlanSelectionPage";
+import { WelcomeCongratsPage } from "./components/mvp/WelcomeCongratsPage";
+import { UserGuideTimeline } from "./components/mvp/UserGuideTimeline";
 
 const queryClient = new QueryClient();
 
@@ -102,6 +105,9 @@ function App() {
                     
                      {/* Dashboard-First Experience - Remove default Dashboard redirect */}
                      <Route path="/mvp/user-type-selection" element={<GetStartedPage />} />
+                     <Route path="/mvp/plan-selection" element={<ProtectedRoute requireAuth={false}><PlanSelectionPage /></ProtectedRoute>} />
+                     <Route path="/mvp/welcome-congrats" element={<ProtectedRoute requireAuth={false}><WelcomeCongratsPage /></ProtectedRoute>} />
+                     <Route path="/mvp/user-guide" element={<ProtectedRoute requireAuth={false}><UserGuideTimeline /></ProtectedRoute>} />
                        
                        {/* Help Routes */}
                     <Route path="/help" element={<ProtectedRoute requireAuth={false}><Help /></ProtectedRoute>} />

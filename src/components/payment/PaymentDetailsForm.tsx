@@ -32,11 +32,14 @@ interface PaymentDetails {
 }
 
 export function PaymentDetailsForm({ selectedPlan, onSubmit, onCancel }: PaymentDetailsFormProps) {
+  // Get pre-filled data from registration
+  const registrationData = JSON.parse(localStorage.getItem('registration_data') || '{}');
+  
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
     cardNumber: "",
     expiryDate: "",
     cvv: "",
-    cardholderName: "",
+    cardholderName: registrationData.fullName || "",
     billingAddress: {
       street: "",
       city: "",
