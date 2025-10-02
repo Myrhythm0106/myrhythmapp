@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { EcosystemNavigationHub } from '@/components/ecosystem/EcosystemNavigationHub';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight, Search } from "lucide-react";
+import { GlobalSearch } from '@/components/search/GlobalSearch';
 
 export default function EcosystemPage() {
   const [showWelcome, setShowWelcome] = useState(false);
@@ -24,6 +25,16 @@ export default function EcosystemPage() {
 
   return (
     <>
+      <GlobalSearch />
+      
+      {/* Prominent Search Hint */}
+      <div className="fixed top-4 right-4 z-40 hidden md:flex items-center gap-2 bg-background/80 backdrop-blur-sm border border-border rounded-lg px-4 py-2 shadow-lg">
+        <Search className="h-4 w-4 text-muted-foreground" />
+        <span className="text-sm text-muted-foreground">
+          Press <kbd className="px-2 py-1 text-xs font-semibold bg-muted border border-border rounded">Ctrl+K</kbd> to search
+        </span>
+      </div>
+      
       <EcosystemNavigationHub />
       
       <Dialog open={showWelcome} onOpenChange={setShowWelcome}>

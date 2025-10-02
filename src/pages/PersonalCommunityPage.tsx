@@ -2,15 +2,27 @@
 import React from 'react';
 import { PageLayout } from '@/components/shared/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Heart, MessageCircle, Shield } from 'lucide-react';
+import { Users, Heart, MessageCircle, Shield, Search } from 'lucide-react';
+import { GlobalSearch } from '@/components/search/GlobalSearch';
 
 export default function PersonalCommunityPage() {
   return (
-    <PageLayout 
-      title="Support Circle" 
-      description="Manage your trusted network of family, friends, and caregivers"
-    >
-      <div className="grid gap-6 md:grid-cols-2">
+    <>
+      <GlobalSearch />
+      
+      <PageLayout 
+        title="Support Circle" 
+        description="Manage your trusted network of family, friends, and caregivers"
+      >
+        {/* Search Hint */}
+        <div className="mb-4 flex items-center gap-2 bg-muted/50 border border-border rounded-lg px-4 py-3">
+          <Search className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">
+            Lost? Press <kbd className="px-2 py-1 text-xs font-semibold bg-background border border-border rounded">Ctrl+K</kbd> to search anywhere
+          </span>
+        </div>
+        
+        <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -78,7 +90,8 @@ export default function PersonalCommunityPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
-    </PageLayout>
+        </div>
+      </PageLayout>
+    </>
   );
 }

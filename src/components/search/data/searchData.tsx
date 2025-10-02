@@ -68,6 +68,30 @@ export const navigationItems: SearchResult[] = [
     icon: <Heart className="h-4 w-4 mr-2" />
   },
   {
+    id: "ecosystem",
+    title: "Ecosystem Hub",
+    category: "Navigation",
+    description: "Your central command center - access all features",
+    route: "/ecosystem",
+    icon: <Compass className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "next-steps",
+    title: "Next Steps",
+    category: "Navigation",
+    description: "View and manage your action items and next steps",
+    route: "/next-steps",
+    icon: <CheckSquare className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "memory-bank",
+    title: "Memory Bank",
+    category: "Navigation",
+    description: "Store and retrieve important memories and moments",
+    route: "/memory-bank",
+    icon: <Brain className="h-4 w-4 mr-2" />
+  },
+  {
     id: "useful-info",
     title: "Useful Information",
     category: "Navigation",
@@ -200,6 +224,30 @@ export const onboardingItems: SearchResult[] = [
     icon: <PlayCircle className="h-4 w-4 mr-2" />
   },
   {
+    id: "plan-selection",
+    title: "Choose Your Plan",
+    category: "Onboarding",
+    description: "Select the MyRhythm plan that's right for you",
+    route: "/mvp/plan-selection",
+    icon: <Target className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "welcome-congrats",
+    title: "Welcome Celebration",
+    category: "Onboarding",
+    description: "Celebrate joining the MyRhythm community",
+    route: "/mvp/welcome-congrats",
+    icon: <Sparkles className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "user-guide",
+    title: "User Guide & Tutorial",
+    category: "Onboarding",
+    description: "Learn how to use MyRhythm features",
+    route: "/mvp/user-guide",
+    icon: <BookOpen className="h-4 w-4 mr-2" />
+  },
+  {
     id: "first-time-user-help",
     title: "First Time User Help",
     category: "Help", 
@@ -282,6 +330,22 @@ export const featuresItems: SearchResult[] = [
     description: "Connect with your personal support network",
     route: "/personal-community",
     icon: <Heart className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "quick-actions",
+    title: "Quick Actions",
+    category: "Features",
+    description: "Rapid access to common tasks and shortcuts",
+    route: "/ecosystem",
+    icon: <Clock className="h-4 w-4 mr-2" />
+  },
+  {
+    id: "schedule-actions",
+    title: "Schedule Actions",
+    category: "Features",
+    description: "Add extracted actions to your calendar",
+    route: "/next-steps",
+    icon: <Calendar className="h-4 w-4 mr-2" />
   },
 ];
 
