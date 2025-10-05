@@ -873,6 +873,7 @@ export type Database = {
           due_context: string | null
           emotional_stakes: string | null
           end_date: string | null
+          extraction_method: string | null
           how_steps: string[] | null
           id: string
           if_stuck: string | null
@@ -888,6 +889,7 @@ export type Database = {
           proposed_date: string | null
           proposed_time: string | null
           relationship_impact: string | null
+          requires_review: boolean | null
           scheduled_date: string | null
           scheduled_time: string | null
           start_date: string | null
@@ -900,6 +902,8 @@ export type Database = {
           updated_at: string
           user_id: string
           user_notes: string | null
+          validation_issues: Json | null
+          validation_score: number | null
           verb_category: string | null
           what_outcome: string | null
         }
@@ -923,6 +927,7 @@ export type Database = {
           due_context?: string | null
           emotional_stakes?: string | null
           end_date?: string | null
+          extraction_method?: string | null
           how_steps?: string[] | null
           id?: string
           if_stuck?: string | null
@@ -938,6 +943,7 @@ export type Database = {
           proposed_date?: string | null
           proposed_time?: string | null
           relationship_impact?: string | null
+          requires_review?: boolean | null
           scheduled_date?: string | null
           scheduled_time?: string | null
           start_date?: string | null
@@ -950,6 +956,8 @@ export type Database = {
           updated_at?: string
           user_id: string
           user_notes?: string | null
+          validation_issues?: Json | null
+          validation_score?: number | null
           verb_category?: string | null
           what_outcome?: string | null
         }
@@ -973,6 +981,7 @@ export type Database = {
           due_context?: string | null
           emotional_stakes?: string | null
           end_date?: string | null
+          extraction_method?: string | null
           how_steps?: string[] | null
           id?: string
           if_stuck?: string | null
@@ -988,6 +997,7 @@ export type Database = {
           proposed_date?: string | null
           proposed_time?: string | null
           relationship_impact?: string | null
+          requires_review?: boolean | null
           scheduled_date?: string | null
           scheduled_time?: string | null
           start_date?: string | null
@@ -1000,6 +1010,8 @@ export type Database = {
           updated_at?: string
           user_id?: string
           user_notes?: string | null
+          validation_issues?: Json | null
+          validation_score?: number | null
           verb_category?: string | null
           what_outcome?: string | null
         }
