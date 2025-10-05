@@ -199,6 +199,9 @@ export type Database = {
           priority_3: string | null
           updated_at: string
           user_id: string
+          vision_statement: string | null
+          year: number
+          yearly_theme: string | null
         }
         Insert: {
           created_at?: string
@@ -208,6 +211,9 @@ export type Database = {
           priority_3?: string | null
           updated_at?: string
           user_id: string
+          vision_statement?: string | null
+          year?: number
+          yearly_theme?: string | null
         }
         Update: {
           created_at?: string
@@ -217,6 +223,9 @@ export type Database = {
           priority_3?: string | null
           updated_at?: string
           user_id?: string
+          vision_statement?: string | null
+          year?: number
+          yearly_theme?: string | null
         }
         Relationships: []
       }
