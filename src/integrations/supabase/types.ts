@@ -2616,6 +2616,10 @@ export type Database = {
         Args: { memory_uuid: string }
         Returns: boolean
       }
+      user_owns_calendar_integration: {
+        Args: { p_integration_id: string }
+        Returns: boolean
+      }
       user_owns_memory: {
         Args: { memory_uuid: string }
         Returns: boolean
