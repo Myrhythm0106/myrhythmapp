@@ -411,6 +411,36 @@ export type Database = {
           },
         ]
       }
+      calendar_token_access_log: {
+        Row: {
+          access_type: string
+          accessed_at: string
+          id: string
+          integration_id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          access_type: string
+          accessed_at?: string
+          id?: string
+          integration_id: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          access_type?: string
+          accessed_at?: string
+          id?: string
+          integration_id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_contexts: {
         Row: {
           communication_preferences: string | null
@@ -857,6 +887,13 @@ export type Database = {
             columns: ["integration_id"]
             isOneToOne: false
             referencedRelation: "calendar_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "external_calendar_events_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_integrations_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -2423,7 +2460,57 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      calendar_integrations_safe: {
+        Row: {
+          account_email: string | null
+          account_name: string | null
+          created_at: string | null
+          has_access_token: boolean | null
+          has_refresh_token: boolean | null
+          id: string | null
+          is_active: boolean | null
+          last_sync: string | null
+          provider: string | null
+          sync_enabled: boolean | null
+          sync_settings: Json | null
+          token_expires_at: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          account_email?: string | null
+          account_name?: string | null
+          created_at?: string | null
+          has_access_token?: never
+          has_refresh_token?: never
+          id?: string | null
+          is_active?: boolean | null
+          last_sync?: string | null
+          provider?: string | null
+          sync_enabled?: boolean | null
+          sync_settings?: Json | null
+          token_expires_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          account_email?: string | null
+          account_name?: string | null
+          created_at?: string | null
+          has_access_token?: never
+          has_refresh_token?: never
+          id?: string | null
+          is_active?: boolean | null
+          last_sync?: string | null
+          provider?: string | null
+          sync_enabled?: boolean | null
+          sync_settings?: Json | null
+          token_expires_at?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_invitation: {
@@ -2469,6 +2556,14 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_calendar_integration_tokens: {
+        Args: { p_integration_id: string }
+        Returns: {
+          access_token: string
+          refresh_token: string
+          token_expires_at: string
+        }[]
+      }
       get_current_user_email: {
         Args: Record<PropertyKey, never>
         Returns: string
@@ -2506,6 +2601,15 @@ export type Database = {
       }
       support_member_can_access_actions: {
         Args: { p_member_email: string; p_user_id: string }
+        Returns: boolean
+      }
+      update_calendar_integration_tokens: {
+        Args: {
+          p_access_token: string
+          p_integration_id: string
+          p_refresh_token: string
+          p_token_expires_at: string
+        }
         Returns: boolean
       }
       user_can_access_memory: {
