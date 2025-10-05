@@ -37,6 +37,31 @@ export function EnhancedActionCard({
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { generateSmartSuggestions, isGenerating } = useEnhancedSmartScheduling();
 
+  // Get validation and quality indicators
+  const validationScore = (action as any).validation_score || 0;
+  const extractionMethod = (action as any).extraction_method || 'rule-based';
+  const requiresReview = (action as any).requires_review || false;
+  
+  const getQualityBadge = () => {
+    if (extractionMethod === 'openai') {
+      return <Badge variant="default" className="text-xs">🤖 AI-Extracted</Badge>;
+    } else if (extractionMethod === 'manual') {
+      return <Badge variant="secondary" className="text-xs">✅ Verified</Badge>;
+    }
+    return <Badge variant="outline" className="text-xs">⚙️ Auto-Extracted</Badge>;
+  };
+
+  const getValidationBadge = () => {
+    if (validationScore >= 90) {
+      return <Badge variant="default" className="text-xs bg-green-500">Quality: {validationScore}%</Badge>;
+    } else if (validationScore >= 70) {
+      return <Badge variant="secondary" className="text-xs">Quality: {validationScore}%</Badge>;
+    } else if (validationScore > 0) {
+      return <Badge variant="destructive" className="text-xs">Needs Review</Badge>;
+    }
+    return null;
+  };
+
   const getCategoryConfig = (category: string) => {
     switch (category) {
       case 'action':
@@ -141,6 +166,15 @@ export function EnhancedActionCard({
         </div>
         
         <div className="flex items-center space-x-2">
+          {/* Quality & Validation Badges */}
+          {getQualityBadge()}
+          {getValidationBadge()}
+          {requiresReview && (
+            <Badge variant="outline" className="text-xs border-amber-500 text-amber-700">
+              ⚠️ Review
+            </Badge>
+          )}
+          
           {action.priority_level && (
             <Badge className={`text-xs border ${getPriorityColor(action.priority_level)}`}>
               P{action.priority_level}

@@ -59,3 +59,22 @@ verify_jwt = false
 
 [functions.verify-email-custom]
 verify_jwt = false
+
+# Week 2: Google Calendar Integration
+[functions.calendar-google-auth]
+verify_jwt = false
+
+[functions.calendar-google-sync]
+verify_jwt = true
+
+# Week 2: Vision Framework
+[functions.generate-weekly-affirmation]
+verify_jwt = true
+
+# Week 2: Smart Scheduling
+[functions.optimize-schedule]
+verify_jwt = true
+
+# Week 3: AssemblyAI Webhook
+[functions.assemblyai-webhook]
+verify_jwt = false

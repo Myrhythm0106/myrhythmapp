@@ -36,10 +36,19 @@ serve(async (req) => {
 
     console.log('🚀 PROCESSING TRANSCRIPT with OpenAI + Enhanced Fallback for meeting:', meetingId);
     console.log('🔑 OpenAI API Key available:', !!OPENAI_API_KEY);
+    console.log('🔑 OpenAI Key length:', OPENAI_API_KEY?.length);
+    console.log('🔑 OpenAI Key starts with sk-:', OPENAI_API_KEY?.startsWith('sk-'));
     console.log('📝 Transcript length:', transcript.length);
+
+    // Update meeting status to extracting
+    await supabase
+      .from('meeting_recordings')
+      .update({ processing_status: 'extracting_actions' })
+      .eq('id', meetingId);
 
     // Extract ACTs from the current transcript with resilient fallbacks
     let extractedActions: any[] = [];
+    let extractionMethod = 'rule-based';
 
     // Helper: COMPREHENSIVE fallback with ALL structured fields
     const localExtractActions = (text: string) => {
@@ -406,15 +415,41 @@ Return ONLY a JSON array. No explanations or commentary.`
       console.log('ACTs extracted via local fallback:', extractedActions.length);
     }
 
-    console.log(`Extracted ${extractedActions.length} actions from transcript`);
-    console.log(`Extracted ${extractedActions.length} actions from transcript`);
+    console.log(`🎯 Pre-validation: ${extractedActions.length} actions extracted`);
 
-    // Store the extracted next steps preserving AI-structured data
-    const actionsToInsert = extractedActions.map((action: any) => ({
+    // Import validation module
+    const { validateExtractedAction } = await import('./validators.ts');
+
+    // Validate and filter actions
+    const validatedActions = [];
+    for (const action of extractedActions) {
+      const validation = validateExtractedAction(action);
+      
+      if (validation.isValid) {
+        validatedActions.push({
+          ...action,
+          extraction_method: extractionMethod,
+          validation_score: validation.score,
+          validation_issues: JSON.stringify(validation.issues),
+          requires_review: validation.score < 90
+        });
+        console.log(`✅ Action passed validation (score: ${validation.score}): "${action.action_text}"`);
+      } else {
+        console.log(`❌ Action rejected (score: ${validation.score}): "${action.action_text}" - ${validation.issues.join(', ')}`);
+      }
+    }
+
+    console.log(`✅ Post-validation: ${validatedActions.length}/${extractedActions.length} actions passed quality check`);
+
+    // Store the validated actions
+    const actionsToInsert = validatedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
-      // Preserve AI-extracted data, only use fallbacks if truly missing
       action_text: action.action_text || action.action || 'DEFINE next step needed',
+      extraction_method: action.extraction_method || extractionMethod,
+      validation_score: action.validation_score || 0,
+      validation_issues: action.validation_issues || '[]',
+      requires_review: action.requires_review || false,
       category: action.category || 'action',
       success_criteria: action.success_criteria || null,
       motivation_statement: action.motivation_statement || null,
