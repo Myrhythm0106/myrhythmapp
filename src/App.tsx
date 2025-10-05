@@ -71,6 +71,7 @@ import { NextStepsHub } from "./components/nextStepsHub/NextStepsHub";
 import PlanSelectionPage from "./pages/PlanSelectionPage";
 import { WelcomeCongratsPage } from "./components/mvp/WelcomeCongratsPage";
 import { UserGuideTimeline } from "./components/mvp/UserGuideTimeline";
+import VisionPage from "./pages/VisionPage";
 
 const queryClient = new QueryClient();
 
@@ -159,11 +160,7 @@ function App() {
                      } />
                      <Route path="/vision" element={
                        <ProtectedRoute requireAuth={false}>
-                         {/* @ts-ignore - Dynamic import for Vision page */}
-                         {(() => {
-                           const VisionPage = require('./pages/VisionPage').default;
-                           return <VisionPage />;
-                         })()}
+                         <VisionPage />
                        </ProtectedRoute>
                      } />
                      <Route path="/ecosystem" element={<ProtectedRoute requireAuth={false}><EcosystemPage /></ProtectedRoute>} />

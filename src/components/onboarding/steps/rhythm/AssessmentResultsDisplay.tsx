@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { AssessmentResult, SectionScore } from "@/utils/rhythmAnalysis";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from "recharts";
 import { ChevronDown, ChevronUp, Info, Download, Eye, EyeOff, FileText } from "lucide-react";
-import { scaleLabels } from "./rhythmAssessmentData";
+import { scaleLabels, baseSections } from "./rhythmAssessmentData";
 
 interface AssessmentResultsDisplayProps {
   assessmentResult: AssessmentResult;
@@ -354,11 +354,11 @@ export function AssessmentResultsDisplay({ assessmentResult }: AssessmentResults
                   {expandedSections.includes(section.id) && (
                     <div className="mt-4 space-y-4">
                       {Object.entries(section.responses).map(([questionId, score]) => {
-                        const sectionData = require("./rhythmAssessmentData").sections.find(
-                          (s: any) => s.id === section.id
+                        const sectionData = baseSections.find(
+                          (s) => s.id === section.id
                         );
                         const questionText = sectionData?.questions.find(
-                          (q: any) => q.id === questionId
+                          (q) => q.id === questionId
                         )?.text || "Question";
                         
                         return (
