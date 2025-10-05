@@ -1417,6 +1417,36 @@ export type Database = {
         }
         Relationships: []
       }
+      monthly_themes: {
+        Row: {
+          created_at: string
+          id: string
+          month: number
+          theme: string
+          updated_at: string
+          user_id: string
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          month: number
+          theme: string
+          updated_at?: string
+          user_id: string
+          year: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          month?: number
+          theme?: string
+          updated_at?: string
+          user_id?: string
+          year?: number
+        }
+        Relationships: []
+      }
       mood_entries: {
         Row: {
           context: string | null
@@ -2330,6 +2360,57 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      weekly_affirmations: {
+        Row: {
+          affirmation: string
+          annual_priority_id: string | null
+          created_at: string
+          id: string
+          monthly_theme_id: string | null
+          updated_at: string
+          user_id: string
+          week_number: number
+          year: number
+        }
+        Insert: {
+          affirmation: string
+          annual_priority_id?: string | null
+          created_at?: string
+          id?: string
+          monthly_theme_id?: string | null
+          updated_at?: string
+          user_id: string
+          week_number: number
+          year: number
+        }
+        Update: {
+          affirmation?: string
+          annual_priority_id?: string | null
+          created_at?: string
+          id?: string
+          monthly_theme_id?: string | null
+          updated_at?: string
+          user_id?: string
+          week_number?: number
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "weekly_affirmations_annual_priority_id_fkey"
+            columns: ["annual_priority_id"]
+            isOneToOne: false
+            referencedRelation: "annual_priorities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "weekly_affirmations_monthly_theme_id_fkey"
+            columns: ["monthly_theme_id"]
+            isOneToOne: false
+            referencedRelation: "monthly_themes"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
