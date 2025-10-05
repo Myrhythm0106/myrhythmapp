@@ -67,7 +67,7 @@ export interface NextStepsItem {
   best_time?: string;
   next_natural_steps?: string[];
   detail_level?: 'minimal' | 'standard' | 'complete';
-  alternative_phrasings?: Array<{ text: string; confidence: number }>;
+  alternative_phrasings?: any; // Json type from database - array of { text: string; confidence: number }
   completion_criteria_specific?: string;
   verb_category?: string;
 }

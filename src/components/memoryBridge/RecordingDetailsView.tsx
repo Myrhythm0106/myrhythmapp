@@ -71,7 +71,7 @@ export function RecordingDetailsView({
             .eq('meeting_recording_id', meetingRecording.id)
             .order('priority_level', { ascending: true });
 
-          setExtractedActions((actions || []) as ExtractedAction[]);
+          setExtractedActions((actions || []) as unknown as ExtractedAction[]);
         }
       } catch (error) {
         console.error('Error fetching recording details:', error);

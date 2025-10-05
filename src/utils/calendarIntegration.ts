@@ -195,7 +195,7 @@ export async function scheduleConfirmedActions(userId: string): Promise<number> 
     
     for (const action of actions) {
       try {
-        const eventId = await convertActionToCalendarEvent(action as ExtractedAction, userId, [], action.proposed_date, action.proposed_time);
+        const eventId = await convertActionToCalendarEvent(action as unknown as ExtractedAction, userId, [], action.proposed_date, action.proposed_time);
         
         if (eventId) {
           // Update action with calendar event reference

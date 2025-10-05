@@ -120,8 +120,8 @@ export function useMemoryBridge() {
 
       if (error) throw error;
 
-      setExtractedActions((data || []) as ExtractedAction[]);
-      return (data || []) as ExtractedAction[];
+      setExtractedActions((data || []) as unknown as ExtractedAction[]);
+      return (data || []) as unknown as ExtractedAction[];
     } catch (error) {
       console.error('Error fetching extracted actions:', error);
       return [];
