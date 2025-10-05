@@ -321,7 +321,6 @@ export type Database = {
       }
       calendar_integrations: {
         Row: {
-          access_token: string | null
           account_email: string
           account_name: string | null
           created_at: string
@@ -329,7 +328,6 @@ export type Database = {
           is_active: boolean
           last_sync: string | null
           provider: string
-          refresh_token: string | null
           sync_enabled: boolean
           sync_settings: Json | null
           token_expires_at: string | null
@@ -337,7 +335,6 @@ export type Database = {
           user_id: string
         }
         Insert: {
-          access_token?: string | null
           account_email: string
           account_name?: string | null
           created_at?: string
@@ -345,7 +342,6 @@ export type Database = {
           is_active?: boolean
           last_sync?: string | null
           provider: string
-          refresh_token?: string | null
           sync_enabled?: boolean
           sync_settings?: Json | null
           token_expires_at?: string | null
@@ -353,7 +349,6 @@ export type Database = {
           user_id: string
         }
         Update: {
-          access_token?: string | null
           account_email?: string
           account_name?: string | null
           created_at?: string
@@ -361,7 +356,6 @@ export type Database = {
           is_active?: boolean
           last_sync?: string | null
           provider?: string
-          refresh_token?: string | null
           sync_enabled?: boolean
           sync_settings?: Json | null
           token_expires_at?: string | null
@@ -2465,8 +2459,6 @@ export type Database = {
           account_email: string | null
           account_name: string | null
           created_at: string | null
-          has_access_token: boolean | null
-          has_refresh_token: boolean | null
           id: string | null
           is_active: boolean | null
           last_sync: string | null
@@ -2481,8 +2473,6 @@ export type Database = {
           account_email?: string | null
           account_name?: string | null
           created_at?: string | null
-          has_access_token?: never
-          has_refresh_token?: never
           id?: string | null
           is_active?: boolean | null
           last_sync?: string | null
@@ -2497,8 +2487,6 @@ export type Database = {
           account_email?: string | null
           account_name?: string | null
           created_at?: string | null
-          has_access_token?: never
-          has_refresh_token?: never
           id?: string | null
           is_active?: boolean | null
           last_sync?: string | null
