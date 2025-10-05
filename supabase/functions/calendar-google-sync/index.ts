@@ -32,10 +32,10 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    // Get user's Google calendar integration
+    // Get user's Google calendar integration (metadata only)
     const { data: integration, error: integrationError } = await supabase
       .from('calendar_integrations')
-      .select('*')
+      .select('id, user_id, provider, account_email, is_active, sync_enabled, last_sync')
       .eq('user_id', user.id)
       .eq('provider', 'google')
       .eq('is_active', true)
@@ -45,9 +45,21 @@ serve(async (req) => {
       throw new Error('Google Calendar not connected');
     }
 
+    // Retrieve tokens securely using security definer function
+    const { data: tokenData, error: tokenError } = await supabase
+      .rpc('get_calendar_integration_tokens', { 
+        p_integration_id: integration.id 
+      })
+      .single();
+
+    if (tokenError || !tokenData) {
+      console.error('Error retrieving tokens:', tokenError);
+      throw new Error('Failed to retrieve calendar tokens');
+    }
+
     // Check if token needs refresh
-    let accessToken = integration.access_token;
-    const tokenExpiresAt = new Date(integration.token_expires_at);
+    let accessToken = tokenData.access_token;
+    const tokenExpiresAt = new Date(tokenData.token_expires_at);
     
     if (tokenExpiresAt <= new Date()) {
       console.log('Token expired, refreshing...');
@@ -58,7 +70,7 @@ serve(async (req) => {
         body: new URLSearchParams({
           client_id: GOOGLE_CLIENT_ID!,
           client_secret: GOOGLE_CLIENT_SECRET!,
-          refresh_token: integration.refresh_token,
+          refresh_token: tokenData.refresh_token,
           grant_type: 'refresh_token'
         })
       });
@@ -72,13 +84,13 @@ serve(async (req) => {
       
       const newExpiresAt = new Date(Date.now() + (refreshData.expires_in * 1000));
       
-      await supabase
-        .from('calendar_integrations')
-        .update({
-          access_token: accessToken,
-          token_expires_at: newExpiresAt.toISOString()
-        })
-        .eq('id', integration.id);
+      // Update tokens securely using security definer function
+      await supabase.rpc('update_calendar_integration_tokens', {
+        p_integration_id: integration.id,
+        p_access_token: accessToken,
+        p_refresh_token: tokenData.refresh_token,
+        p_token_expires_at: newExpiresAt.toISOString()
+      });
     }
 
     // Fetch events from Google Calendar (next 30 days)

@@ -91,25 +91,38 @@ serve(async (req) => {
       });
       const userInfo = await userInfoResponse.json();
 
-      // Save to calendar_integrations table
+      // Save to calendar_integrations table (metadata only)
       const expiresAt = new Date(Date.now() + (tokens.expires_in * 1000));
       
-      const { error: dbError } = await supabase
+      // First upsert the integration without tokens
+      const { data: integration, error: dbError } = await supabase
         .from('calendar_integrations')
         .upsert({
           user_id: state,
           provider: 'google',
           account_email: userInfo.email,
           account_name: userInfo.name,
-          access_token: tokens.access_token,
-          refresh_token: tokens.refresh_token,
-          token_expires_at: expiresAt.toISOString(),
           is_active: true,
           sync_enabled: true,
           last_sync: new Date().toISOString()
         }, {
           onConflict: 'user_id,provider,account_email'
-        });
+        })
+        .select('id')
+        .single();
+
+      if (dbError || !integration) {
+        console.error('Database error:', dbError);
+        throw new Error('Failed to create calendar integration');
+      }
+
+      // Update tokens securely using service role and security definer function
+      const { error: tokenError } = await supabase.rpc('update_calendar_integration_tokens', {
+        p_integration_id: integration.id,
+        p_access_token: tokens.access_token,
+        p_refresh_token: tokens.refresh_token,
+        p_token_expires_at: expiresAt.toISOString()
+      });
 
       if (dbError) {
         console.error('Database error:', dbError);
