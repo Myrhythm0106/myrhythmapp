@@ -13,6 +13,7 @@ import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { BrainFriendlyDashboard } from "@/components/dashboard/BrainFriendlyDashboard";
 import { BrainInjuryDashboard } from "@/components/dashboard/BrainInjuryDashboard";
 import { CaregiverDashboard } from "@/components/dashboard/CaregiverDashboard";
+import { TodaysViewDashboard } from "@/components/dashboard/TodaysViewDashboard";
 import { ConnectionMoments } from "@/components/ecosystem/ConnectionMoments";
 import { ReportsWidget } from "@/components/dashboard/widgets/ReportsWidget";
 import { BackButton } from "@/components/ui/BackButton";
@@ -101,13 +102,8 @@ const Dashboard = () => {
                 } else if (profile?.user_type === 'caregiver') {
                   return <CaregiverDashboard userName={profile?.name} />;
                 }
-                // Check if user has completed onboarding
-                const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete');
-                if (!onboardingComplete && user) {
-                  // Show welcome dashboard for new users
-                  return <BrainFriendlyDashboard />;
-                }
-                return <BrainFriendlyDashboard />;
+                // Show unified Today's View as default
+                return <TodaysViewDashboard />;
               default:
                 return <DashboardContent />;
             }
