@@ -37,7 +37,7 @@ export function DailyEmpowermentStatement() {
   const streakDays = 1;
 
   return (
-    <Card className="p-10 bg-gradient-to-br from-sunrise-amber-50/40 via-white to-memory-emerald-50/30 border-2 border-sunrise-amber-200/50 hover:shadow-2xl hover:border-memory-emerald-300 transition-all duration-300">
+    <Card className="p-10 bg-gradient-to-br from-sunrise-amber-50/40 via-white to-memory-emerald-50/30 border-2 border-sunrise-amber-200/50 border-l-4 border-l-sunrise-amber-500 hover:shadow-2xl hover:border-memory-emerald-300 transition-all duration-300">
       {/* Monthly/Weekly Theme Badge */}
       <div className="flex items-center gap-3 mb-6">
         <Badge className="bg-brain-health-50 text-brain-health-700 border border-brain-health-300 text-lg px-4 py-2">

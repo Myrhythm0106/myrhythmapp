@@ -13,10 +13,12 @@ import {
   Mic,
   Sparkles,
   TrendingUp,
-  Award
+  Award,
+  HelpCircle
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DailyEmpowermentStatement } from '@/components/dashboard/DailyEmpowermentStatement';
+import { DashboardFooter } from '@/components/dashboard/DashboardFooter';
 
 interface MVPFeature {
   id: string;
@@ -123,7 +125,7 @@ export function MVPDashboard() {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Brain className="h-10 w-10 text-brain-health-600" />
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-memory-emerald-700 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-6xl font-bold font-serif bg-gradient-to-r from-memory-emerald-700 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
               MyRhythm Core Edition
             </h1>
             <Sparkles className="h-10 w-10 text-sunrise-amber-500" />
@@ -135,23 +137,33 @@ export function MVPDashboard() {
           
           {/* Assessment Cards */}
           <div className="flex gap-6 justify-center mt-8">
-            <Button 
-              onClick={() => handleAssessment('brief')}
-              variant="outline"
-              size="lg"
-              className="h-14 border-2 border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400 text-lg"
-            >
-              <TrendingUp className="h-5 w-5 mr-2" />
-              Quick Assessment (2 min)
-            </Button>
-            <Button 
-              onClick={() => handleAssessment('comprehensive')}
-              size="lg"
-              className="h-14 bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all text-lg"
-            >
-              <Award className="h-5 w-5 mr-2" />
-              Comprehensive Assessment (10 min)
-            </Button>
+            <div className="relative">
+              <Badge className="absolute -top-2 -right-2 bg-clarity-teal-500 text-white text-xs px-2 py-0.5 z-10">
+                NEW
+              </Badge>
+              <Button 
+                onClick={() => handleAssessment('brief')}
+                variant="outline"
+                size="lg"
+                className="h-14 border-2 border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400 text-lg transition-all duration-300"
+              >
+                <TrendingUp className="h-5 w-5 mr-2" />
+                Quick Assessment (2 min)
+              </Button>
+            </div>
+            <div className="relative">
+              <Badge className="absolute -top-2 -right-2 bg-sunrise-amber-500 text-white text-xs px-2 py-0.5 z-10">
+                RECOMMENDED
+              </Badge>
+              <Button 
+                onClick={() => handleAssessment('comprehensive')}
+                size="lg"
+                className="h-14 bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all duration-300 text-lg"
+              >
+                <Award className="h-5 w-5 mr-2" />
+                Comprehensive Assessment (10 min)
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -161,7 +173,7 @@ export function MVPDashboard() {
         </div>
 
         {/* MYRHYTHM Framework Overview */}
-        <Card className="mb-12 p-8 border-2 border-memory-emerald-200/50 bg-gradient-to-br from-memory-emerald-50/30 via-white to-brain-health-50/20 shadow-sm hover:shadow-md transition-all">
+        <Card className="mb-12 p-8 border-2 border-memory-emerald-200/50 bg-gradient-to-br from-memory-emerald-50/30 via-white to-brain-health-50/20 shadow-sm hover:shadow-md transition-all duration-300">
           <CardHeader className="pb-6">
             <CardTitle className="flex items-center gap-3 text-memory-emerald-800 text-3xl">
               <Brain className="h-8 w-8" />
@@ -277,27 +289,32 @@ export function MVPDashboard() {
                   
                   {/* Cognitive Benefit Highlight */}
                   <div className={`p-4 rounded-lg ${colors.benefit} border`}>
-                    <p className={`text-base font-medium ${colors.benefitTitle} mb-2`}>
-                      🧠 Cognitive Benefit:
-                    </p>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Brain className={`h-4 w-4 ${colors.benefitTitle}`} />
+                      <p className={`text-base font-medium ${colors.benefitTitle}`}>
+                        Cognitive Benefit:
+                      </p>
+                    </div>
                     <p className={`text-base ${colors.benefitText} leading-relaxed`}>
                       {feature.cognitiveBenefit}
                     </p>
                   </div>
 
-                  {/* Progress indicator */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-base">
-                      <span className="text-slate-600">Progress</span>
-                      <span className={`${colors.progress} font-medium`}>
-                        {feature.completionRate}%
-                      </span>
+                  {/* Progress indicator - only show if > 0 */}
+                  {feature.completionRate && feature.completionRate > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-base">
+                        <span className="text-slate-600">Progress</span>
+                        <span className={`${colors.progress} font-medium`}>
+                          {feature.completionRate}%
+                        </span>
+                      </div>
+                      <Progress 
+                        value={feature.completionRate} 
+                        className={`h-2 ${colors.progressBg}`}
+                      />
                     </div>
-                    <Progress 
-                      value={feature.completionRate} 
-                      className={`h-2 ${colors.progressBg}`}
-                    />
-                  </div>
+                  )}
 
                   <Button 
                     className={`w-full ${colors.button} shadow-lg hover:shadow-xl transition-all`}
@@ -310,6 +327,9 @@ export function MVPDashboard() {
             );
           })}
         </div>
+
+        {/* Footer */}
+        <DashboardFooter />
 
       </div>
     </div>
