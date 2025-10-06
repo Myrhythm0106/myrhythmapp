@@ -16,6 +16,7 @@ import {
   Award
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { DailyEmpowermentStatement } from '@/components/dashboard/DailyEmpowermentStatement';
 
 interface MVPFeature {
   id: string;
@@ -113,78 +114,84 @@ export function MVPDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/25 to-clarity-teal-50/30">
-      {/* Enhanced gradient foundation */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-sunrise-amber-50/20 via-transparent to-memory-emerald-50/15" />
-      <div className="absolute inset-0 bg-gradient-to-bl from-transparent via-brain-health-50/10 to-clarity-teal-50/20" />
+    <div className="min-h-screen bg-slate-50">
+      {/* Subtle brand overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-memory-emerald-50/20 via-white to-clarity-teal-50/15 pointer-events-none" />
       
-      <div className="relative z-10 container mx-auto px-4 py-8">
+      <div className="relative z-10 container mx-auto px-8 py-12">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Brain className="h-8 w-8 text-brain-health-600" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-memory-emerald-700 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+          <div className="flex items-center justify-center gap-3 mb-6">
+            <Brain className="h-10 w-10 text-brain-health-600" />
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-memory-emerald-700 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
               MyRhythm Core Edition
             </h1>
-            <Sparkles className="h-8 w-8 text-sunrise-amber-500" />
+            <Sparkles className="h-10 w-10 text-sunrise-amber-500" />
           </div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl md:text-2xl text-slate-700 max-w-3xl mx-auto leading-relaxed">
             Your cognitive wellness journey, scientifically designed to strengthen memory, 
             enhance focus, and empower daily living through the MYRHYTHM framework.
           </p>
           
           {/* Assessment Cards */}
-          <div className="flex gap-4 justify-center mt-6">
+          <div className="flex gap-6 justify-center mt-8">
             <Button 
               onClick={() => handleAssessment('brief')}
               variant="outline"
-              className="border-brain-health-200 hover:bg-brain-health-50"
+              size="lg"
+              className="h-14 border-2 border-brain-health-300 hover:bg-brain-health-50 hover:border-brain-health-400 text-lg"
             >
-              <TrendingUp className="h-4 w-4 mr-2" />
+              <TrendingUp className="h-5 w-5 mr-2" />
               Quick Assessment (2 min)
             </Button>
             <Button 
               onClick={() => handleAssessment('comprehensive')}
-              className="bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700"
+              size="lg"
+              className="h-14 bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-lg hover:shadow-xl transition-all text-lg"
             >
-              <Award className="h-4 w-4 mr-2" />
+              <Award className="h-5 w-5 mr-2" />
               Comprehensive Assessment (10 min)
             </Button>
           </div>
         </div>
 
+        {/* Daily Empowerment Statement - TOP PRIORITY */}
+        <div className="mb-12">
+          <DailyEmpowermentStatement />
+        </div>
+
         {/* MYRHYTHM Framework Overview */}
-        <Card className="mb-8 border-memory-emerald-200 bg-gradient-to-r from-memory-emerald-50/50 to-brain-health-50/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-memory-emerald-800">
-              <Brain className="h-5 w-5" />
+        <Card className="mb-12 p-8 border-2 border-memory-emerald-200/50 bg-gradient-to-br from-memory-emerald-50/30 via-white to-brain-health-50/20 shadow-sm hover:shadow-md transition-all">
+          <CardHeader className="pb-6">
+            <CardTitle className="flex items-center gap-3 text-memory-emerald-800 text-3xl">
+              <Brain className="h-8 w-8" />
               MYRHYTHM Framework - Your Cognitive Wellness Foundation
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
               {['Memory', 'Your Training', 'Resilience', 'Habits', 'Tracking', 'Healthy Mind'].map((phase, index) => (
                 <div key={phase} className="text-center">
-                  <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-br from-memory-emerald-500 to-brain-health-500 flex items-center justify-center text-white font-bold">
+                  <div className="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-br from-memory-emerald-500 to-brain-health-500 flex items-center justify-center text-white font-bold text-xl shadow-lg">
                     {phase[0]}
                   </div>
-                  <p className="text-sm font-medium text-memory-emerald-700">{phase}</p>
+                  <p className="text-base font-medium text-memory-emerald-700">{phase}</p>
                 </div>
               ))}
             </div>
-            <p className="text-center mt-4 text-muted-foreground">
+            <p className="text-center mt-6 text-slate-600 text-lg leading-relaxed">
               Each feature below maps to specific MYRHYTHM phases, providing targeted cognitive benefits
             </p>
           </CardContent>
         </Card>
 
         {/* MVP Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {MVP_FEATURES.map((feature) => {
             const getColorClasses = (color: string) => {
               const colorMap = {
                 'memory-emerald': {
-                  card: 'border-memory-emerald-200 bg-gradient-to-br from-memory-emerald-50/50 to-white',
+                  card: 'bg-white border-2 border-slate-200/80 hover:border-memory-emerald-400',
                   icon: 'bg-memory-emerald-100 group-hover:bg-memory-emerald-200',
                   iconText: 'text-memory-emerald-600',
                   badge: 'border-memory-emerald-300 text-memory-emerald-700 bg-memory-emerald-50',
@@ -194,10 +201,10 @@ export function MVPDashboard() {
                   benefitText: 'text-memory-emerald-600',
                   progress: 'text-memory-emerald-600',
                   progressBg: 'bg-memory-emerald-100',
-                  button: 'bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600 hover:from-memory-emerald-600 hover:to-memory-emerald-700'
+                  button: 'bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700'
                 },
                 'brain-health': {
-                  card: 'border-brain-health-200 bg-gradient-to-br from-brain-health-50/50 to-white',
+                  card: 'bg-white border-2 border-slate-200/80 hover:border-brain-health-400',
                   icon: 'bg-brain-health-100 group-hover:bg-brain-health-200',
                   iconText: 'text-brain-health-600',
                   badge: 'border-brain-health-300 text-brain-health-700 bg-brain-health-50',
@@ -207,10 +214,10 @@ export function MVPDashboard() {
                   benefitText: 'text-brain-health-600',
                   progress: 'text-brain-health-600',
                   progressBg: 'bg-brain-health-100',
-                  button: 'bg-gradient-to-r from-brain-health-500 to-brain-health-600 hover:from-brain-health-600 hover:to-brain-health-700'
+                  button: 'bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600'
                 },
                 'clarity-teal': {
-                  card: 'border-clarity-teal-200 bg-gradient-to-br from-clarity-teal-50/50 to-white',
+                  card: 'bg-white border-2 border-slate-200/80 hover:border-clarity-teal-400',
                   icon: 'bg-clarity-teal-100 group-hover:bg-clarity-teal-200',
                   iconText: 'text-clarity-teal-600',
                   badge: 'border-clarity-teal-300 text-clarity-teal-700 bg-clarity-teal-50',
@@ -220,10 +227,10 @@ export function MVPDashboard() {
                   benefitText: 'text-clarity-teal-600',
                   progress: 'text-clarity-teal-600',
                   progressBg: 'bg-clarity-teal-100',
-                  button: 'bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600 hover:from-clarity-teal-600 hover:to-clarity-teal-700'
+                  button: 'bg-gradient-to-r from-clarity-teal-500 to-brain-health-500 hover:from-clarity-teal-600 hover:to-brain-health-600'
                 },
                 'sunrise-amber': {
-                  card: 'border-sunrise-amber-200 bg-gradient-to-br from-sunrise-amber-50/50 to-white',
+                  card: 'bg-white border-2 border-slate-200/80 hover:border-sunrise-amber-400',
                   icon: 'bg-sunrise-amber-100 group-hover:bg-sunrise-amber-200',
                   iconText: 'text-sunrise-amber-600',
                   badge: 'border-sunrise-amber-300 text-sunrise-amber-700 bg-sunrise-amber-50',
@@ -233,7 +240,7 @@ export function MVPDashboard() {
                   benefitText: 'text-sunrise-amber-600',
                   progress: 'text-sunrise-amber-600',
                   progressBg: 'bg-sunrise-amber-100',
-                  button: 'bg-gradient-to-r from-sunrise-amber-500 to-sunrise-amber-600 hover:from-sunrise-amber-600 hover:to-sunrise-amber-700'
+                  button: 'bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 hover:from-sunrise-amber-600 hover:to-memory-emerald-600'
                 }
               };
               return colorMap[color as keyof typeof colorMap] || colorMap['memory-emerald'];
@@ -244,13 +251,13 @@ export function MVPDashboard() {
             return (
               <Card 
                 key={feature.id}
-                className={`cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl ${colors.card} group`}
+                className={`cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 ${colors.card} group p-8`}
                 onClick={() => handleFeatureClick(feature)}
               >
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-4 px-0">
                   <div className="flex items-start justify-between">
-                    <div className={`p-3 rounded-lg ${colors.icon} transition-colors`}>
-                      <feature.icon className={`h-6 w-6 ${colors.iconText}`} />
+                    <div className={`p-4 rounded-xl ${colors.icon} transition-colors`}>
+                      <feature.icon className={`h-8 w-8 ${colors.iconText}`} />
                     </div>
                     <Badge 
                       variant="outline" 
@@ -259,29 +266,29 @@ export function MVPDashboard() {
                       {feature.myrhythmPhase}
                     </Badge>
                   </div>
-                  <CardTitle className={colors.title}>
+                  <CardTitle className={`${colors.title} text-3xl font-bold`}>
                     {feature.title}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <p className="text-muted-foreground text-sm">
+                <CardContent className="space-y-4 px-0">
+                  <p className="text-slate-700 text-lg leading-relaxed">
                     {feature.description}
                   </p>
                   
                   {/* Cognitive Benefit Highlight */}
-                  <div className={`p-3 rounded-lg ${colors.benefit} border`}>
-                    <p className={`text-xs font-medium ${colors.benefitTitle} mb-1`}>
+                  <div className={`p-4 rounded-lg ${colors.benefit} border`}>
+                    <p className={`text-base font-medium ${colors.benefitTitle} mb-2`}>
                       🧠 Cognitive Benefit:
                     </p>
-                    <p className={`text-xs ${colors.benefitText}`}>
+                    <p className={`text-base ${colors.benefitText} leading-relaxed`}>
                       {feature.cognitiveBenefit}
                     </p>
                   </div>
 
                   {/* Progress indicator */}
                   <div className="space-y-2">
-                    <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Progress</span>
+                    <div className="flex justify-between text-base">
+                      <span className="text-slate-600">Progress</span>
                       <span className={`${colors.progress} font-medium`}>
                         {feature.completionRate}%
                       </span>
@@ -293,8 +300,8 @@ export function MVPDashboard() {
                   </div>
 
                   <Button 
-                    className={`w-full ${colors.button}`}
-                    size="sm"
+                    className={`w-full ${colors.button} shadow-lg hover:shadow-xl transition-all`}
+                    size="lg"
                   >
                     Begin {feature.title}
                   </Button>
@@ -304,32 +311,6 @@ export function MVPDashboard() {
           })}
         </div>
 
-        {/* Daily Empowerment Section */}
-        <Card className="mt-8 border-sunrise-amber-200 bg-gradient-to-r from-sunrise-amber-50/50 to-memory-emerald-50/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-sunrise-amber-800">
-              <Sparkles className="h-5 w-5" />
-              Today's Empowerment Focus
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center">
-              <p className="text-lg font-medium text-sunrise-amber-700 mb-2">
-                "Every small step strengthens your cognitive resilience"
-              </p>
-              <p className="text-muted-foreground">
-                Your brain is constantly adapting and growing. Each feature you engage with 
-                creates new neural pathways and strengthens existing ones.
-              </p>
-              <Button 
-                className="mt-4 bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 hover:from-sunrise-amber-600 hover:to-memory-emerald-600"
-                onClick={() => navigate('/assessment')}
-              >
-                Discover Your Optimal Daily Rhythm
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );
