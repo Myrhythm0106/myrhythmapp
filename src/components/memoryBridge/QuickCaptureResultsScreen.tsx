@@ -129,36 +129,36 @@ export function QuickCaptureResultsScreen({
         animate={{ opacity: 1, y: 0 }}
         className="text-center space-y-3"
       >
-        <div className="w-16 h-16 bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 rounded-full flex items-center justify-center mx-auto">
+        <div className="w-16 h-16 bg-brain-health-600 rounded-lg flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-8 h-8 text-white" />
         </div>
-        <h2 className="text-2xl font-bold text-foreground">Recording Complete! 🎉</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-display-md font-bold text-foreground">Recording Complete</h2>
+        <p className="text-body-lg text-muted-foreground">
           {actions.length} action{actions.length !== 1 ? 's' : ''} extracted with {totalSuggestions} smart scheduling suggestions
         </p>
       </motion.div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <Card className="border-memory-emerald-200 bg-gradient-to-br from-memory-emerald-50 to-brain-health-50">
+        <Card className="border-memory-emerald-200 bg-memory-emerald-50 shadow-sm">
           <CardContent className="pt-6 text-center">
-            <Target className="w-6 h-6 text-memory-emerald-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-memory-emerald-900">{actionableActions.length}</div>
-            <div className="text-xs text-memory-emerald-700">Actions</div>
+            <Target className="w-8 h-8 text-memory-emerald-600 mx-auto mb-2" />
+            <div className="text-display-md font-bold text-memory-emerald-900">{actionableActions.length}</div>
+            <div className="text-caption text-memory-emerald-700">Actions</div>
           </CardContent>
         </Card>
-        <Card className="border-brain-health-200 bg-gradient-to-br from-brain-health-50 to-clarity-teal-50">
+        <Card className="border-brain-health-200 bg-brain-health-50 shadow-sm">
           <CardContent className="pt-6 text-center">
-            <Sparkles className="w-6 h-6 text-brain-health-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-brain-health-900">{totalSuggestions}</div>
-            <div className="text-xs text-brain-health-700">AI Suggestions</div>
+            <Sparkles className="w-8 h-8 text-brain-health-600 mx-auto mb-2" />
+            <div className="text-display-md font-bold text-brain-health-900">{totalSuggestions}</div>
+            <div className="text-caption text-brain-health-700">AI Suggestions</div>
           </CardContent>
         </Card>
-        <Card className="border-clarity-teal-200 bg-gradient-to-br from-clarity-teal-50 to-memory-emerald-50">
+        <Card className="border-clarity-teal-200 bg-clarity-teal-50 shadow-sm">
           <CardContent className="pt-6 text-center">
-            <TrendingUp className="w-6 h-6 text-clarity-teal-600 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-clarity-teal-900">{selectedActions.size}</div>
-            <div className="text-xs text-clarity-teal-700">Selected</div>
+            <TrendingUp className="w-8 h-8 text-clarity-teal-600 mx-auto mb-2" />
+            <div className="text-display-md font-bold text-clarity-teal-900">{selectedActions.size}</div>
+            <div className="text-caption text-clarity-teal-700">Selected</div>
           </CardContent>
         </Card>
       </div>
@@ -319,7 +319,8 @@ export function QuickCaptureResultsScreen({
           size="lg"
           onClick={handleSchedule}
           disabled={selectedActions.size === 0 || isScheduling}
-          className="flex-1 bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700"
+          variant="premium"
+          className="flex-1"
         >
           {isScheduling ? (
             <>

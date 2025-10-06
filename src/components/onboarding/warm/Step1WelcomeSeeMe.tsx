@@ -69,19 +69,19 @@ export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1Welc
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div className="text-center space-y-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-brain-health-900">
-          Welcome, let's see you
+        <h1 className="text-display-md font-bold text-brain-health-900">
+          Welcome, Let's See You
         </h1>
-        <p className="text-xl text-brain-health-700 max-w-2xl mx-auto">
+        <p className="text-body-lg text-brain-health-700 max-w-2xl mx-auto">
           Help us understand your journey so we can support you in the best way possible.
         </p>
       </div>
 
-      <Card className={`border-0 shadow-xl ${variant === 'mvp' ? 'bg-gradient-to-br from-white to-brain-health-50/50 border-brain-health-200/50' : 'bg-white'}`}>
+      <Card className={`border-0 shadow-lg ${variant === 'mvp' ? 'bg-white border-brain-health-200' : 'bg-white'}`}>
         <CardContent className="p-8 space-y-8">
           {/* Who are you here for? */}
           <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-brain-health-900">
+            <h3 className="text-body-lg font-semibold text-brain-health-900">
               Who are you here for?
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -91,9 +91,9 @@ export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1Welc
                   <button
                     key={persona.id}
                     onClick={() => setSelectedPersona(persona.id)}
-                    className={`p-4 rounded-xl border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+                    className={`p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
                       selectedPersona === persona.id
-                        ? `${persona.color} border-current`
+                        ? 'bg-brain-health-50 border-brain-health-600 text-brain-health-700'
                         : 'bg-white hover:bg-gray-50 border-gray-200 text-gray-600'
                     }`}
                   >

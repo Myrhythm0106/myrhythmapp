@@ -14,6 +14,14 @@ const Welcome = () => {
   const userType = searchParams.get('userType');
 
   useEffect(() => {
+    const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete') === 'true';
+    
+    // If user completed warm onboarding, skip path selection and go to Memory Bridge
+    if (onboardingComplete && isPostCheckout) {
+      navigate('/memory-bridge?firstTime=true&tab=quick-capture', { replace: true });
+      return;
+    }
+    
     // Handle brain-injury focused routing - never leave users lost
     if (userType === 'undefined' || userType === null || userType === '') {
       // Redirect to proper onboarding flow for brain-injured users

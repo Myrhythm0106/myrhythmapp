@@ -22,6 +22,14 @@ const config: Config = {
       fontFamily: {
         'serif': ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       },
+      fontSize: {
+        'display-lg': ['3.5rem', { lineHeight: '1.2', fontWeight: '700' }],
+        'display-md': ['2.5rem', { lineHeight: '1.2', fontWeight: '700' }],
+        'title': ['1.75rem', { lineHeight: '1.3', fontWeight: '600' }],
+        'body-lg': ['1.125rem', { lineHeight: '1.6', fontWeight: '400' }],
+        'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
+        'caption': ['0.875rem', { lineHeight: '1.5', fontWeight: '500' }],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -182,9 +190,17 @@ const config: Config = {
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        'sm': '4px',
+        'md': '8px',
+        'lg': '12px',
+        'xl': '16px',
+        '2xl': '20px',
+      },
+      boxShadow: {
+        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        DEFAULT: '0 2px 4px 0 rgba(0, 0, 0, 0.08)',
+        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.12)',
       },
       keyframes: {
         "accordion-down": {

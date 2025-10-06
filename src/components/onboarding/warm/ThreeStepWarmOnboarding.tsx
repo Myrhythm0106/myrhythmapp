@@ -36,10 +36,14 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
     nextStep();
   };
 
-  const handleStep3Complete = (checkInData: any, selectedPackage: 'starter' | 'plus' | 'pro', selectedPath: 'guided' | 'explorer') => {
+  const handleStep3Complete = (checkInData: any, selectedPackage: 'starter' | 'plus' | 'pro') => {
     setCheckIn(checkInData);
     setPackage(selectedPackage);
-    setPath(selectedPath);
+    // Get path from localStorage (set in Step 2)
+    const savedPath = localStorage.getItem('selected_path') as 'guided' | 'explorer' | null;
+    if (savedPath) {
+      setPath(savedPath);
+    }
     completeOnboarding();
   };
 

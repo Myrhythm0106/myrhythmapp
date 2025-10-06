@@ -122,20 +122,51 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
         })}
       </div>
 
-      {/* Continue Button */}
-      <div className="flex justify-center pt-8">
-        <Button
-          onClick={() => {
-            // Route to subscription instead of check-in
-            window.location.href = '/subscribe';
-          }}
-          size="lg"
-          className={`px-8 py-3 text-lg font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
-        >
-          Choose your plan
-          <ArrowRight className="ml-2 h-5 w-5" />
-        </Button>
-      </div>
+      {/* Path Selection */}
+      <Card className="border-0 shadow-lg overflow-hidden">
+        <CardContent className="p-8 space-y-6">
+          <div className="text-center space-y-2">
+            <h3 className="text-title font-bold text-brain-health-900">
+              Choose your path
+            </h3>
+            <p className="text-body-lg text-brain-health-700">
+              How would you like to experience MyRhythm?
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
+            {pathOptions.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => {
+                  localStorage.setItem('selected_path', option.id);
+                  onComplete();
+                }}
+                className={`p-6 rounded-lg border-2 transition-all text-left relative ${
+                  option.recommended
+                    ? 'border-brain-health-600 bg-brain-health-50'
+                    : 'border-gray-200 bg-white hover:bg-gray-50'
+                }`}
+              >
+                {option.recommended && (
+                  <Badge className="absolute -top-2 left-4 bg-brain-health-600 text-white">
+                    Recommended
+                  </Badge>
+                )}
+                <h4 className="text-body-lg font-bold text-brain-health-900 mb-1">
+                  {option.title}
+                </h4>
+                <p className="text-caption text-brain-health-600 mb-2 font-medium">
+                  {option.subtitle}
+                </p>
+                <p className="text-body text-brain-health-700">
+                  {option.description}
+                </p>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

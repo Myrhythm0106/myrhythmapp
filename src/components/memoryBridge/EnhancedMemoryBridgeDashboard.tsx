@@ -47,8 +47,11 @@ export function EnhancedMemoryBridgeDashboard() {
   const { dailyStatement, refreshStatement } = useEmpowerment();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const isFirstTime = searchParams.get('firstTime') === 'true';
   
   const [showQuickCapture, setShowQuickCapture] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
   const [lastExtractionData, setLastExtractionData] = useState<{
     confidenceScore: number;
     actionsCount: number;
@@ -80,6 +83,14 @@ export function EnhancedMemoryBridgeDashboard() {
       loadUserDashboardData();
     }
   }, [user]);
+
+  // Show tutorial on first time
+  useEffect(() => {
+    if (isFirstTime) {
+      setShowQuickCapture(true);
+      setTimeout(() => setShowTutorial(true), 500);
+    }
+  }, [isFirstTime]);
 
   const loadUserDashboardData = async () => {
     try {

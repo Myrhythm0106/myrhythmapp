@@ -60,7 +60,17 @@ export default function QuickCapture() {
         setSuggestions(newSuggestions);
         setShowResults(true);
         
-        toast.success(`${actions.length} actions extracted with smart scheduling ready!`);
+        // Check if this is first capture
+        const isFirstCapture = localStorage.getItem('first_capture_complete') !== 'true';
+        
+        if (isFirstCapture) {
+          localStorage.setItem('first_capture_complete', 'true');
+          toast.success(`You did it! ${actions.length} actions extracted with smart scheduling ready!`, {
+            description: 'You\'re building momentum!'
+          });
+        } else {
+          toast.success(`${actions.length} actions extracted with smart scheduling ready!`);
+        }
       }
     } catch (error) {
       console.error('Error loading results:', error);

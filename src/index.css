@@ -260,7 +260,7 @@ html, body {
   
   /* Professional, therapeutic button styles */
   button, .button {
-    @apply font-medium transition-all duration-300;
+    @apply font-medium transition-all duration-200;
   }
   
   /* Professional form controls */  
@@ -351,17 +351,9 @@ html, body {
     @apply relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-brain-health-400/20 before:via-clarity-teal-400/20 before:to-memory-emerald-400/20 before:opacity-0 hover:before:opacity-100 before:transition-all before:duration-500 before:rounded-lg;
   }
 
-  .neural-pulse {
-    @apply hover:animate-neural-pulse;
-  }
-
   /* Empowering Panel Styles */
   .empowerment-gradient {
     @apply bg-gradient-to-br from-beacon-50/80 via-brain-health-50/60 to-clarity-teal-50/40 backdrop-blur-sm;
-  }
-
-  .victory-celebration {
-    @apply animate-achievement-celebration;
   }
 
   .cognitive-enhancement {
@@ -377,15 +369,15 @@ html, body {
   }
   
   .brain-energy-high {
-    @apply bg-gradient-to-r from-memory-emerald-100 to-clarity-teal-100 border-memory-emerald-300;
+    @apply bg-memory-emerald-50 border-memory-emerald-200;
   }
   
   .brain-energy-medium {
-    @apply bg-gradient-to-r from-brain-health-100 to-clarity-teal-100 border-brain-health-300;
+    @apply bg-brain-health-50 border-brain-health-200;
   }
   
   .brain-energy-low {
-    @apply bg-gradient-to-r from-clarity-teal-100 to-brain-health-100 border-clarity-teal-300;
+    @apply bg-clarity-teal-50 border-clarity-teal-200;
   }
   
   .cognitive-achievement {

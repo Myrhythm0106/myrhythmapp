@@ -25,6 +25,7 @@ interface WarmOnboardingState {
     sleepQuality: number;
   } | null;
   selectedPackage: 'starter' | 'plus' | 'pro' | null;
+  paymentChoice: 'premium' | 'free' | null;
 }
 
 const STORAGE_KEY = 'myrhythm_warm_onboarding';
@@ -53,6 +54,7 @@ export function useWarmOnboarding() {
       selectedPath: null,
       checkIn: null,
       selectedPackage: null,
+      paymentChoice: null,
     };
   });
 
@@ -147,22 +149,30 @@ export function useWarmOnboarding() {
       localStorage.setItem('myrhythm_onboarding_complete', 'true');
       localStorage.removeItem(STORAGE_KEY);
       
+      // Track payment choice
+      await trackEvent('assessment_preview_shown');
+      if (state.paymentChoice === 'premium') {
+        await trackEvent('unlock_clicked', { package: state.selectedPackage });
+      } else {
+        await trackEvent('free_trial_started');
+      }
+      
       await trackEvent('onboarding_complete', {
         package: state.selectedPackage,
         path: state.selectedPath,
         persona: state.persona,
         primaryCondition: state.primaryCondition,
-        challenges: state.challenges
+        challenges: state.challenges,
+        paymentChoice: state.paymentChoice
       });
 
-      // Navigate based on their path choice
-      if (state.selectedPath === 'guided') {
-        navigate('/dashboard');
-      } else {
-        navigate('/calendar');
-      }
+      // Navigate to Memory Bridge with first-time tutorial
+      toast.success('Welcome to MyRhythm! Your journey begins now.', {
+        description: 'Let\'s capture your first memory together',
+        duration: 5000
+      });
       
-      toast.success('Welcome to MyRhythm! Your journey begins now.');
+      navigate('/memory-bridge?firstTime=true&tab=quick-capture');
       
     } catch (error) {
       console.error('Onboarding completion failed:', error);
