@@ -139,7 +139,8 @@ export function useEnhancedSmartScheduling() {
     actionText: string,
     dueDate?: string,
     priority: number = 3,
-    estimatedDuration: number = 60
+    estimatedDuration: number = 60,
+    verbCategory?: string
   ): Promise<EnhancedSmartSuggestion[]> => {
     if (!user) return [];
 
@@ -150,6 +151,18 @@ export function useEnhancedSmartScheduling() {
       const startDate = new Date().toISOString().split('T')[0];
       const endDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
       await loadCalendarEvents(startDate, endDate);
+
+      // PHASE 2: Fetch assessment-based energy patterns
+      const { data: assessmentData } = await supabase
+        .from('assessment_results')
+        .select('responses, scores, raw_assessment_data')
+        .eq('user_id', user.id)
+        .eq('completion_status', 'completed')
+        .order('completed_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      const energyPatterns = assessmentData ? extractEnergyPatterns(assessmentData) : null;
 
       // Get user preferences
       const { data: preferences } = await supabase
@@ -164,7 +177,10 @@ export function useEnhancedSmartScheduling() {
       const suggestions: EnhancedSmartSuggestion[] = [];
       const today = new Date();
       
-      // Determine optimal times based on action type
+      // PHASE 2: Map action type to energy requirements
+      const energyRequirement = mapVerbCategoryToEnergy(verbCategory || '', actionText);
+      
+      // Determine optimal times based on action type AND assessment
       const isWorkRelated = actionText.toLowerCase().includes('work') || 
                            actionText.toLowerCase().includes('meeting') ||
                            actionText.toLowerCase().includes('call');
@@ -174,6 +190,12 @@ export function useEnhancedSmartScheduling() {
                          actionText.toLowerCase().includes('plan');
 
       const getOptimalTimes = () => {
+        // PHASE 2: Use assessment data if available
+        if (energyPatterns && energyRequirement) {
+          return getAssessmentBasedTimes(energyPatterns, energyRequirement);
+        }
+        
+        // Fallback to rule-based times
         if (isWorkRelated) {
           return ['09:00', '10:00', '14:00', '15:00'];
         } else if (isFocusTask) {
@@ -215,15 +237,24 @@ export function useEnhancedSmartScheduling() {
           else if (conflicts.level === 'low') confidence -= 15;
           else confidence += 10; // No conflicts bonus
           
-          // Energy match bonus
-          const energyMatch = isFocusTask ? 'High focus time' : 
-                             isWorkRelated ? 'Peak productivity' : 
-                             'Good energy level';
+          // PHASE 2: Energy match bonus with assessment data
+          let energyMatch = isFocusTask ? 'High focus time' : 
+                           isWorkRelated ? 'Peak productivity' : 
+                           'Good energy level';
           
-          if ((isFocusTask && ['08:00', '09:00', '19:00', '20:00'].includes(time)) ||
+          let energyBonus = 0;
+          if (energyPatterns && energyRequirement) {
+            const timeEnergy = getEnergyLevelForTime(energyPatterns, time);
+            if (timeEnergy >= energyRequirement) {
+              energyBonus = 15;
+              energyMatch = `🧠 Your assessment shows ${timeEnergy}% ${getEnergyDescription(timeEnergy)} during this time`;
+            }
+          } else if ((isFocusTask && ['08:00', '09:00', '19:00', '20:00'].includes(time)) ||
               (isWorkRelated && ['09:00', '10:00', '14:00', '15:00'].includes(time))) {
-            confidence += 10;
+            energyBonus = 10;
           }
+          
+          confidence += energyBonus;
           
           // Weekend preference adjustment
           if (!isWeekend && !isWorkRelated) confidence -= 5;
@@ -364,6 +395,132 @@ export function useEnhancedSmartScheduling() {
   };
 }
 
+// PHASE 2: Assessment-based energy functions
+interface EnergyPattern {
+  morningEnergy: number;
+  afternoonEnergy: number;
+  eveningEnergy: number;
+  peakFocusTime: 'morning' | 'afternoon' | 'evening';
+  lowEnergyPeriods: string[];
+}
+
+function extractEnergyPatterns(assessmentData: any): EnergyPattern | null {
+  try {
+    const responses = assessmentData.responses || {};
+    const scores = assessmentData.scores || {};
+    
+    // Extract energy levels from assessment responses
+    const morningEnergy = responses.energy_morning || scores.morning_focus || 70;
+    const afternoonEnergy = responses.energy_afternoon || scores.afternoon_focus || 60;
+    const eveningEnergy = responses.energy_evening || scores.evening_focus || 50;
+    
+    // Determine peak focus time
+    let peakFocusTime: 'morning' | 'afternoon' | 'evening' = 'morning';
+    if (afternoonEnergy > morningEnergy && afternoonEnergy > eveningEnergy) {
+      peakFocusTime = 'afternoon';
+    } else if (eveningEnergy > morningEnergy && eveningEnergy > afternoonEnergy) {
+      peakFocusTime = 'evening';
+    }
+    
+    // Identify low energy periods
+    const lowEnergyPeriods: string[] = [];
+    if (morningEnergy < 50) lowEnergyPeriods.push('morning');
+    if (afternoonEnergy < 50) lowEnergyPeriods.push('afternoon');
+    if (eveningEnergy < 50) lowEnergyPeriods.push('evening');
+    
+    return {
+      morningEnergy,
+      afternoonEnergy,
+      eveningEnergy,
+      peakFocusTime,
+      lowEnergyPeriods
+    };
+  } catch (error) {
+    console.error('Error extracting energy patterns:', error);
+    return null;
+  }
+}
+
+function mapVerbCategoryToEnergy(verbCategory: string, actionText: string): number {
+  // Map verb categories to energy requirements (0-100)
+  const categoryMap: Record<string, number> = {
+    'MEDICAL': 90,      // Medical tasks need peak focus
+    'PLANNING': 85,     // Planning requires high cognitive load
+    'COMMUNICATION': 70, // Communication needs good energy
+    'ADMIN': 60,        // Admin tasks need moderate energy
+    'RESEARCH': 85,     // Research needs high focus
+    'CREATIVE': 80,     // Creative work needs good energy
+    'PHYSICAL': 75      // Physical tasks need good energy
+  };
+  
+  // Check verb category first
+  if (verbCategory && categoryMap[verbCategory.toUpperCase()]) {
+    return categoryMap[verbCategory.toUpperCase()];
+  }
+  
+  // Fallback to text analysis
+  const text = actionText.toLowerCase();
+  if (text.includes('doctor') || text.includes('medical') || text.includes('appointment')) return 90;
+  if (text.includes('plan') || text.includes('strategy')) return 85;
+  if (text.includes('call') || text.includes('meeting') || text.includes('discuss')) return 70;
+  if (text.includes('email') || text.includes('schedule') || text.includes('book')) return 60;
+  
+  return 65; // Default moderate energy
+}
+
+function getAssessmentBasedTimes(patterns: EnergyPattern, requiredEnergy: number): string[] {
+  const times: string[] = [];
+  
+  // Morning times (6 AM - 12 PM)
+  if (patterns.morningEnergy >= requiredEnergy) {
+    times.push('08:00', '09:00', '10:00', '11:00');
+  }
+  
+  // Afternoon times (12 PM - 5 PM)
+  if (patterns.afternoonEnergy >= requiredEnergy) {
+    times.push('13:00', '14:00', '15:00', '16:00');
+  }
+  
+  // Evening times (5 PM - 9 PM)
+  if (patterns.eveningEnergy >= requiredEnergy) {
+    times.push('17:00', '18:00', '19:00', '20:00');
+  }
+  
+  // Always return at least some times
+  if (times.length === 0) {
+    // Use peak time even if energy is lower
+    if (patterns.peakFocusTime === 'morning') {
+      times.push('09:00', '10:00');
+    } else if (patterns.peakFocusTime === 'afternoon') {
+      times.push('14:00', '15:00');
+    } else {
+      times.push('19:00', '20:00');
+    }
+  }
+  
+  return times;
+}
+
+function getEnergyLevelForTime(patterns: EnergyPattern, time: string): number {
+  const hour = parseInt(time.split(':')[0]);
+  
+  if (hour >= 6 && hour < 12) {
+    return patterns.morningEnergy;
+  } else if (hour >= 12 && hour < 17) {
+    return patterns.afternoonEnergy;
+  } else {
+    return patterns.eveningEnergy;
+  }
+}
+
+function getEnergyDescription(energy: number): string {
+  if (energy >= 90) return 'peak focus';
+  if (energy >= 75) return 'high energy';
+  if (energy >= 60) return 'good energy';
+  if (energy >= 45) return 'moderate energy';
+  return 'lower energy';
+}
+
 function generateEmpoweringReason(
   actionText: string,
   date: string,
@@ -392,14 +549,18 @@ function generateEmpoweringReason(
   let reason = `${baseReason} this goal ${dayContext} ${timeOfDay}. `;
   
   if (conflictLevel === 'none') {
-    reason += "Your calendar is completely clear, giving you uninterrupted focus time.";
+    reason += "Your calendar is completely clear 🎯";
   } else if (conflictLevel === 'low') {
-    reason += "Minor scheduling considerations but still a productive time slot.";
+    reason += "Minor scheduling considerations but still productive";
   } else {
-    reason += "Alternative time to work around your existing commitments.";
+    reason += "Alternative time that works around your commitments";
   }
   
-  reason += ` ${energyMatch} makes this an empowering choice for your success.`;
+  if (energyMatch.includes('🧠')) {
+    reason += ` ${energyMatch}.`;
+  } else {
+    reason += ` ${energyMatch} makes this empowering.`;
+  }
   
   return reason;
 }
