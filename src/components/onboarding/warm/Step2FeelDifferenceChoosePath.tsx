@@ -25,16 +25,16 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
       subtitle: "Capture",
       description: getPersonalizedText("Record conversations and important moments"),
       icon: Sparkles,
-      gradient: "from-memory-emerald-500 to-memory-emerald-600",
-      bgGradient: "from-memory-emerald-50 to-memory-emerald-100"
+      gradient: "from-memory-emerald-600 to-memory-emerald-700",
+      bgColor: "bg-memory-emerald-50"
     },
     {
       title: "Transform overwhelm into organized action",
       subtitle: "Calibrate", 
       description: getPersonalizedText("Turn chaos into clear, manageable and planned steps for your needs"),
       icon: Calendar,
-      gradient: "from-brain-health-500 to-brain-health-600",
-      bgGradient: "from-brain-health-50 to-brain-health-100",
+      gradient: "from-brain-health-600 to-brain-health-700",
+      bgColor: "bg-brain-health-50",
       image: organizedActionImage
     },
     {
@@ -42,16 +42,16 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
       subtitle: "Check-in + Insights",
       description: getPersonalizedText("Track patterns and build sustainable routines"),
       icon: BarChart3,
-      gradient: "from-clarity-teal-500 to-clarity-teal-600", 
-      bgGradient: "from-clarity-teal-50 to-clarity-teal-100"
+      gradient: "from-clarity-teal-600 to-clarity-teal-700", 
+      bgColor: "bg-clarity-teal-50"
     },
     {
       title: "You're never walking alone",
       subtitle: "Support & Community",
       description: getPersonalizedText("Connect with others who understand the journey"),
       icon: Users,
-      gradient: "from-sunrise-amber-500 to-sunrise-amber-600",
-      bgGradient: "from-sunrise-amber-50 to-sunrise-amber-100"
+      gradient: "from-sunrise-amber-600 to-sunrise-amber-700",
+      bgColor: "bg-sunrise-amber-50"
     }
   ];
 
@@ -90,19 +90,19 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
           return (
             <Card key={index} className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
               <CardContent className="p-0">
-                <div className={`bg-gradient-to-br ${card.bgGradient} p-6 relative overflow-hidden`}>
+                <div className={`${card.bgColor} p-6 relative overflow-hidden`}>
                   {card.image ? (
                     <div className="absolute inset-0">
                       <img 
                         src={card.image} 
                         alt={card.title}
-                        className="w-full h-full object-cover opacity-30"
+                        className="w-full h-full object-cover opacity-20"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-br from-brain-health-500/20 to-brain-health-600/30" />
+                      <div className={`absolute inset-0 ${card.bgColor}`} />
                     </div>
                   ) : null}
                   <div className="relative z-10">
-                    <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${card.gradient} text-white mb-4`}>
+                    <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${card.gradient} text-white mb-4 shadow-sm`}>
                       <IconComponent className="h-6 w-6" />
                     </div>
                     <h3 className="text-2xl font-bold text-brain-health-900 mb-2">
@@ -111,7 +111,7 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
                     <p className="text-brain-health-700 mb-3 font-medium">
                       {card.description}
                     </p>
-                    <Badge variant="secondary" className="bg-white/80 text-brain-health-800">
+                    <Badge variant="secondary" className="bg-white text-brain-health-800 border border-brain-health-200">
                       {card.subtitle}
                     </Badge>
                   </div>

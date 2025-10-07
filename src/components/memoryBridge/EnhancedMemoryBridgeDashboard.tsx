@@ -15,6 +15,8 @@ import { NextStepsHub } from '../nextStepsHub/NextStepsHub';
 import { MemoryBridgeSetupHub } from '../memory-bridge/MemoryBridgeSetupHub';
 import { EcosystemFlowWidget } from '../ecosystem/EcosystemFlowWidget';
 import { AnnualCompassWidget } from '../ecosystem/AnnualCompassWidget';
+import { FirstTimeTutorialOverlay } from './FirstTimeTutorialOverlay';
+import { FirstCaptureSuccessModal } from './FirstCaptureSuccessModal';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useEmpowerment } from '@/contexts/EmpowermentContext';
 import { useAuth } from '@/hooks/useAuth';
@@ -52,6 +54,12 @@ export function EnhancedMemoryBridgeDashboard() {
   
   const [showQuickCapture, setShowQuickCapture] = useState(false);
   const [showTutorial, setShowTutorial] = useState(false);
+  const [showFirstCaptureModal, setShowFirstCaptureModal] = useState(false);
+  const [firstCaptureResults, setFirstCaptureResults] = useState<{
+    actionCount: number;
+    appointmentCount: number;
+    suggestionCount: number;
+  } | null>(null);
   const [lastExtractionData, setLastExtractionData] = useState<{
     confidenceScore: number;
     actionsCount: number;
@@ -159,6 +167,18 @@ export function EnhancedMemoryBridgeDashboard() {
     });
     setCoachingStage('post-extraction');
     fetchExtractedActions();
+    
+    // Check if this is first capture and show celebration modal
+    const hasHadFirstCapture = localStorage.getItem('myrhythm_first_capture_complete');
+    if (!hasHadFirstCapture && isFirstTime) {
+      setFirstCaptureResults({
+        actionCount: data.actionsCount || 0,
+        appointmentCount: Math.floor((data.actionsCount || 0) / 2), // Estimate
+        suggestionCount: data.actionsCount || 0
+      });
+      setShowFirstCaptureModal(true);
+      localStorage.setItem('myrhythm_first_capture_complete', 'true');
+    }
   };
 
   const handleConfirmActions = async (actionIds: string[], scheduleData: Record<string, { date: string; time: string }>) => {
@@ -213,9 +233,12 @@ export function EnhancedMemoryBridgeDashboard() {
 
       {/* Welcome Message */}
       <div className="max-w-2xl mx-auto">
-        <h2 className="text-3xl font-bold text-memory-emerald-900 mb-4">
-          Welcome to Memory Bridge! 🎉
-        </h2>
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <Sparkles className="h-8 w-8 text-memory-emerald-600" />
+          <h2 className="text-3xl font-bold text-memory-emerald-900">
+            Welcome to Memory Bridge!
+          </h2>
+        </div>
         <p className="text-lg text-muted-foreground mb-8">
           Your personal AI assistant for capturing commitments and turning them into scheduled actions.
           Start with a 30-second recording and watch the magic happen.
@@ -270,10 +293,16 @@ export function EnhancedMemoryBridgeDashboard() {
           {/* Main Content */}
           <Tabs defaultValue={isReturningUser ? "brief" : "nextsteps"} className="w-full">
                 <TabsList className={`grid w-full ${!isReturningUser ? 'grid-cols-8' : 'grid-cols-7'}`}>
-                  {!isReturningUser && <TabsTrigger value="welcome">🎉 Welcome</TabsTrigger>}
+                  {!isReturningUser && (
+                    <TabsTrigger value="welcome">
+                      <Sparkles className="h-4 w-4 mr-1" />
+                      Welcome
+                    </TabsTrigger>
+                  )}
                   <TabsTrigger value="brief">Daily Brief</TabsTrigger>
                   <TabsTrigger value="nextsteps">
-                    🎯 Next Steps Hub ({extractedActions.length})
+                    <Target className="h-4 w-4 mr-1" />
+                    Next Steps Hub ({extractedActions.length})
                   </TabsTrigger>
                   <TabsTrigger value="recording">Capture</TabsTrigger>
                   <TabsTrigger value="actions">Review Actions</TabsTrigger>
@@ -374,14 +403,40 @@ export function EnhancedMemoryBridgeDashboard() {
               </div>
             )}
 
+            {/* Tutorial Modal */}
+            {showTutorial && (
+              <FirstTimeTutorialOverlay 
+                onStart={() => {
+                  setShowTutorial(false);
+                  handleStartRecording();
+                }}
+                onSkip={() => setShowTutorial(false)}
+              />
+            )}
+
+            {/* First Capture Success Modal */}
+            {showFirstCaptureModal && firstCaptureResults && (
+              <FirstCaptureSuccessModal 
+                results={firstCaptureResults}
+                onViewSuggestions={() => {
+                  setShowFirstCaptureModal(false);
+                  // Navigate to next steps hub or actions tab
+                }}
+                onClose={() => setShowFirstCaptureModal(false)}
+              />
+            )}
+
             {/* Progressive Unlock Messages */}
-            {extractedActions.length === 1 && (
+            {extractedActions.length === 1 && !showFirstCaptureModal && (
               <Card className="border-2 border-memory-emerald-200 bg-gradient-to-r from-memory-emerald-50 to-brain-health-50">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-memory-emerald-800">🎉 First Action Captured!</h3>
-                      <p className="text-memory-emerald-700">Calendar integration unlocked - schedule your commitments</p>
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="h-6 w-6 text-memory-emerald-600" />
+                      <div>
+                        <h3 className="text-lg font-semibold text-memory-emerald-800">First Action Captured!</h3>
+                        <p className="text-memory-emerald-700">Calendar integration unlocked - schedule your commitments</p>
+                      </div>
                     </div>
                     <Button onClick={() => navigate('/calendar')} className="bg-memory-emerald-600 hover:bg-memory-emerald-700">
                       Open Calendar <ArrowRight className="h-4 w-4 ml-2" />
