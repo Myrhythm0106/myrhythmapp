@@ -64,20 +64,44 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Memory Emerald: Calming green tones for healing
-        "memory-emerald": {
-          50: "hsl(var(--memory-emerald-50))",
-          100: "hsl(var(--memory-emerald-100))",
-          200: "hsl(var(--memory-emerald-200))",
-          300: "hsl(var(--memory-emerald-300))",
-          400: "hsl(var(--memory-emerald-400))",
-          500: "hsl(var(--memory-emerald-500))",
-          600: "hsl(var(--memory-emerald-600))",
-          700: "hsl(var(--memory-emerald-700))",
-          800: "hsl(var(--memory-emerald-800))",
-          900: "hsl(var(--memory-emerald-900))",
+        // Neural Luxury: Purple-Indigo-Blue gradient (65-75% saturation)
+        "neural-purple": {
+          50: "hsl(var(--neural-purple-50))",
+          100: "hsl(var(--neural-purple-100))",
+          200: "hsl(var(--neural-purple-200))",
+          300: "hsl(var(--neural-purple-300))",
+          400: "hsl(var(--neural-purple-400))",
+          500: "hsl(var(--neural-purple-500))",
+          600: "hsl(var(--neural-purple-600))",
+          700: "hsl(var(--neural-purple-700))",
+          800: "hsl(var(--neural-purple-800))",
+          900: "hsl(var(--neural-purple-900))",
         },
-        // Brain Health: Teal tones for cognitive focus
+        "neural-indigo": {
+          50: "hsl(var(--neural-indigo-50))",
+          100: "hsl(var(--neural-indigo-100))",
+          200: "hsl(var(--neural-indigo-200))",
+          300: "hsl(var(--neural-indigo-300))",
+          400: "hsl(var(--neural-indigo-400))",
+          500: "hsl(var(--neural-indigo-500))",
+          600: "hsl(var(--neural-indigo-600))",
+          700: "hsl(var(--neural-indigo-700))",
+          800: "hsl(var(--neural-indigo-800))",
+          900: "hsl(var(--neural-indigo-900))",
+        },
+        "neural-blue": {
+          50: "hsl(var(--neural-blue-50))",
+          100: "hsl(var(--neural-blue-100))",
+          200: "hsl(var(--neural-blue-200))",
+          300: "hsl(var(--neural-blue-300))",
+          400: "hsl(var(--neural-blue-400))",
+          500: "hsl(var(--neural-blue-500))",
+          600: "hsl(var(--neural-blue-600))",
+          700: "hsl(var(--neural-blue-700))",
+          800: "hsl(var(--neural-blue-800))",
+          900: "hsl(var(--neural-blue-900))",
+        },
+        // Brain Health Spectrum: Unified emerald-teal-cyan (45-55% saturation)
         "brain-health": {
           50: "hsl(var(--brain-health-50))",
           100: "hsl(var(--brain-health-100))",
@@ -90,7 +114,19 @@ const config: Config = {
           800: "hsl(var(--brain-health-800))",
           900: "hsl(var(--brain-health-900))",
         },
-        // Clarity Teal: Clear mental focus colors
+        // Legacy compatibility - kept for existing components
+        "memory-emerald": {
+          50: "hsl(var(--memory-emerald-50))",
+          100: "hsl(var(--memory-emerald-100))",
+          200: "hsl(var(--memory-emerald-200))",
+          300: "hsl(var(--memory-emerald-300))",
+          400: "hsl(var(--memory-emerald-400))",
+          500: "hsl(var(--memory-emerald-500))",
+          600: "hsl(var(--memory-emerald-600))",
+          700: "hsl(var(--memory-emerald-700))",
+          800: "hsl(var(--memory-emerald-800))",
+          900: "hsl(var(--memory-emerald-900))",
+        },
         "clarity-teal": {
           50: "hsl(var(--clarity-teal-50))",
           100: "hsl(var(--clarity-teal-100))",
@@ -103,20 +139,7 @@ const config: Config = {
           800: "hsl(var(--clarity-teal-800))",
           900: "hsl(var(--clarity-teal-900))",
         },
-        // Sunrise Amber: Peaceful warmth for renewal moments
-        "sunrise-amber": {
-          50: "hsl(var(--sunrise-amber-50))",
-          100: "hsl(var(--sunrise-amber-100))",
-          200: "hsl(var(--sunrise-amber-200))",
-          300: "hsl(var(--sunrise-amber-300))",
-          400: "hsl(var(--sunrise-amber-400))",
-          500: "hsl(var(--sunrise-amber-500))",
-          600: "hsl(var(--sunrise-amber-600))",
-          700: "hsl(var(--sunrise-amber-700))",
-          800: "hsl(var(--sunrise-amber-800))",
-          900: "hsl(var(--sunrise-amber-900))",
-        },
-        // Beacon: Premium brand colors for key UI elements
+        // Beacon: Legacy compatibility - maps to neural-purple
         "beacon": {
           50: "hsl(var(--beacon-50))",
           100: "hsl(var(--beacon-100))",
