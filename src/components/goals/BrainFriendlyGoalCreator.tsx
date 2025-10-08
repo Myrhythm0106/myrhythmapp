@@ -13,7 +13,6 @@ import { GoalTypeSelector, GoalType, GOAL_TYPES } from "./components/GoalTypeSel
 import { GoalDefinitionGuide } from "./components/GoalDefinitionGuide";
 import { GoalFormFields } from "./components/GoalFormFields";
 import { StepIndicator } from "./components/StepIndicator";
-import { WatchersField } from "../calendar/forms/WatchersField";
 
 interface BrainFriendlyGoalCreatorProps {
   open: boolean;
@@ -163,15 +162,6 @@ export function BrainFriendlyGoalCreator({
                   goalWhy={goalWhy}
                   setGoalWhy={setGoalWhy}
                 />
-                
-                {/* Add Watchers Section */}
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium text-foreground">Support Circle (Optional)</Label>
-                  <WatchersField />
-                  <p className="text-xs text-muted-foreground">
-                    Add people from your support circle to help you stay accountable and celebrate progress.
-                  </p>
-                </div>
 
                 <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t mt-6">
                   <Button 
