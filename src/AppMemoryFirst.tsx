@@ -1,3 +1,6 @@
+// @version 0.1
+// MyRhythm App - Memory-First Architecture
+
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -28,12 +31,28 @@ function AppMemoryFirst() {
             <Toaster />
             <BrowserRouter>
               <Routes>
+                {/* ============= v0.1 PUBLIC ROUTES ============= */}
+                {/* Landing & Marketing */}
                 <Route path="/" element={<MemoryFirstIndex />} />
-                <Route path="/mvp" element={<MVPCorePage />} />
-                <Route path="/auth" element={<Auth />} />
+                <Route path="/founders-story" element={<FoundersMemoryStory />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/terms" element={<TermsOfService />} />
-                <Route path="/founders-story" element={<FoundersMemoryStory />} />
+                
+                {/* MVP Assessment Flow */}
+                <Route path="/mvp" element={<MVPCorePage />} />
+                
+                {/* Authentication */}
+                <Route path="/auth" element={<Auth />} />
+
+                {/* ============= v0.1 PROTECTED ROUTES ============= */}
+                
+                {/* @feature Memory Bridge - Voice recording & ACT extraction */}
+                <Route
+                  path="/memory-bridge"
+                  element={<MemoryBridge />}
+                />
+                
+                {/* @feature Next Steps Hub - ACT management with bulk scheduling */}
                 <Route
                   path="/dashboard"
                   element={
@@ -42,6 +61,8 @@ function AppMemoryFirst() {
                     </ProtectedRoute>
                   }
                 />
+                
+                {/* @feature Calendar - Schedule management */}
                 <Route
                   path="/calendar"
                   element={
@@ -50,6 +71,8 @@ function AppMemoryFirst() {
                     </ProtectedRoute>
                   }
                 />
+                
+                {/* @feature Support Circle - Family coordination */}
                 <Route
                   path="/command-center"
                   element={
@@ -58,6 +81,8 @@ function AppMemoryFirst() {
                     </ProtectedRoute>
                   }
                 />
+                
+                {/* @feature Mood Tracking - Gratitude journal */}
                 <Route
                   path="/gratitude"
                   element={
@@ -66,10 +91,8 @@ function AppMemoryFirst() {
                     </ProtectedRoute>
                   }
                 />
-                <Route
-                  path="/memory-bridge"
-                  element={<MemoryBridge />}
-                />
+                
+                {/* @feature Onboarding - User setup flow */}
                 <Route
                   path="/onboarding"
                   element={

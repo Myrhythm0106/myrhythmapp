@@ -22,15 +22,21 @@ import { useEnhancedSmartScheduling, EnhancedSmartSuggestion } from '@/hooks/use
 
 interface EnhancedActionCardProps {
   action: NextStepsItem;
-  onViewDetails: () => void;
-  onSchedule: (suggestion: EnhancedSmartSuggestion) => Promise<void>;
+  onClick?: () => void;
+  onSchedule: (action: NextStepsItem) => void;
+  showCheckbox?: boolean;
+  isSelected?: boolean;
+  onToggleSelect?: () => void;
   isScheduling?: boolean;
 }
 
 export function EnhancedActionCard({ 
-  action, 
-  onViewDetails, 
+  action,
+  onClick,
   onSchedule,
+  showCheckbox = false,
+  isSelected = false,
+  onToggleSelect,
   isScheduling = false 
 }: EnhancedActionCardProps) {
   const [suggestions, setSuggestions] = useState<EnhancedSmartSuggestion[]>([]);
@@ -152,8 +158,26 @@ export function EnhancedActionCard({
 
   const previewContent = (
     <div className="space-y-4">
+      {/* Checkbox for bulk selection */}
+      {showCheckbox && (
+        <div 
+          className="absolute top-4 left-4 z-10"
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleSelect?.();
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={() => {}}
+            className="w-5 h-5 rounded border-2 border-primary text-primary focus:ring-primary cursor-pointer"
+          />
+        </div>
+      )}
+      
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className={`flex items-start justify-between ${showCheckbox ? 'ml-8' : ''}`}>
         <div className="flex items-center space-x-3">
           <div className={`w-10 h-10 rounded-xl ${config.bgColor} flex items-center justify-center`}>
             <IconComponent className={`w-5 h-5 ${config.textColor}`} />
@@ -296,7 +320,7 @@ export function EnhancedActionCard({
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
-              onViewDetails();
+              onClick?.();
             }}
             className="text-muted-foreground hover:text-foreground hover:bg-muted/50 text-xs"
           >
@@ -323,7 +347,9 @@ export function EnhancedActionCard({
                 key={suggestion.id}
                 suggestion={suggestion}
                 alternatives={suggestions.slice(1)}
-                onSchedule={onSchedule}
+                onSchedule={async (sug) => {
+                  onSchedule(action);
+                }}
                 isScheduling={isScheduling}
                 showAlternatives={index === 0}
                 className="transform scale-95"
@@ -394,12 +420,19 @@ export function EnhancedActionCard({
   );
 
   return (
-    <DisclosureCard
-      className="hover:shadow-lg transition-all duration-300"
-      expandedContent={expandedContent}
-      showExpandIndicator={true}
+    <div 
+      onClick={onClick}
+      className={`relative cursor-pointer transition-all duration-200 ${
+        isSelected ? 'ring-2 ring-primary' : ''
+      }`}
     >
-      {previewContent}
-    </DisclosureCard>
+      <DisclosureCard
+        className="hover:shadow-lg transition-all duration-300"
+        expandedContent={expandedContent}
+        showExpandIndicator={true}
+      >
+        {previewContent}
+      </DisclosureCard>
+    </div>
   );
 }
