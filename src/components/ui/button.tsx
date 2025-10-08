@@ -10,16 +10,17 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-brain-health-600 text-white hover:bg-brain-health-700 shadow-sm hover:shadow-md",
+        default: "bg-neural-indigo-600 text-white hover:bg-neural-indigo-700 shadow-sm hover:shadow-md hover:scale-[1.02] transition-all",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 shadow-sm",
-        outline: "border-2 border-brain-health-600 bg-transparent text-brain-health-700 hover:bg-brain-health-50",
+        outline: "border-2 border-neural-indigo-600 bg-transparent text-neural-indigo-700 hover:bg-neural-indigo-50/50 backdrop-blur-sm",
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost: "hover:bg-brain-health-50 hover:text-brain-health-700",
-        link: "text-brain-health-600 underline-offset-4 hover:underline hover:text-brain-health-700",
-        premium: "bg-gradient-to-r from-brain-health-600 to-brain-health-700 text-white hover:from-brain-health-700 hover:to-brain-health-800 shadow-md hover:shadow-lg",
-        healing: "bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 text-white hover:from-memory-emerald-700 hover:to-brain-health-700 shadow-sm hover:shadow-md",
-        cognitive: "bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 text-white hover:from-brain-health-700 hover:to-clarity-teal-700 shadow-sm hover:shadow-md",
-        clarity: "bg-gradient-to-r from-clarity-teal-600 to-memory-emerald-600 text-white hover:from-clarity-teal-700 hover:to-memory-emerald-700 shadow-sm hover:shadow-md",
+        ghost: "hover:bg-neural-purple-50 hover:text-neural-purple-700",
+        link: "text-neural-indigo-600 underline-offset-4 hover:underline hover:text-neural-indigo-700",
+        premium: "bg-gradient-to-r from-neural-purple-600 via-neural-indigo-600 to-neural-blue-600 text-white hover:from-neural-purple-700 hover:via-neural-indigo-700 hover:to-neural-blue-700 shadow-md hover:shadow-lg hover:scale-[1.02]",
+        healing: "bg-gradient-to-r from-memory-emerald-500 to-brain-health-600 text-white hover:from-memory-emerald-600 hover:to-brain-health-700 shadow-sm hover:shadow-md hover:scale-[1.02]",
+        cognitive: "bg-gradient-to-r from-brain-health-600 to-clarity-teal-600 text-white hover:from-brain-health-700 hover:to-clarity-teal-700 shadow-sm hover:shadow-md hover:scale-[1.02]",
+        clarity: "bg-gradient-to-r from-clarity-teal-600 to-memory-emerald-600 text-white hover:from-clarity-teal-700 hover:to-memory-emerald-700 shadow-sm hover:shadow-md hover:scale-[1.02]",
+        action: "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white hover:from-brand-orange-600 hover:to-brand-orange-700 shadow-lg hover:shadow-xl hover:scale-[1.02]",
       },
       size: {
         default: "h-12 px-6 py-3",

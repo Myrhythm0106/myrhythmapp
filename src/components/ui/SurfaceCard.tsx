@@ -19,7 +19,7 @@ export function SurfaceCard({
   const variants = {
     default: "bg-card border border-border/50 shadow-sm",
     elevated: "bg-card border border-border/30 shadow-lg backdrop-blur-sm",
-    subtle: "bg-gradient-to-br from-brain-health-50/40 to-clarity-teal-50/20 border border-brain-health-200/30",
+    subtle: "bg-gradient-to-br from-neural-purple-50/30 to-neural-blue-50/20 border border-neural-indigo-200/30 backdrop-blur-sm",
     glass: "bg-card/80 backdrop-blur-md border border-border/20 shadow-xl"
   };
 

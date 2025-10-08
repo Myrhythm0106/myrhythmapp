@@ -19,21 +19,21 @@ export function LoadingOverlay({
     <div 
       className={cn(
         "fixed inset-0 z-50 flex items-center justify-center",
-        "bg-white/80 backdrop-blur-sm",
+        "bg-gradient-to-br from-neural-purple-50/95 via-white/95 to-neural-blue-50/95 backdrop-blur-md",
         className
       )}
       role="status"
       aria-live="polite"
       aria-label="Loading"
     >
-      <div className="flex flex-col items-center space-y-4 text-center">
+      <div className="relative">
         <div className="relative">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 animate-pulse" />
+          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-600 animate-pulse shadow-lg" />
           <Loader2 className="absolute inset-0 m-auto h-8 w-8 text-white animate-spin" />
         </div>
         
         <div className="space-y-2">
-          <p className="font-medium text-brain-health-700">
+          <p className="font-medium text-neural-indigo-700">
             {message}
           </p>
           <div className="flex space-x-1 justify-center">

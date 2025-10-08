@@ -19,25 +19,25 @@ export function Toaster() {
             <Toast 
               key={id} 
               {...props} 
-              className="bg-gradient-to-r from-purple-50 to-blue-50"
+              className="bg-gradient-to-r from-neural-purple-50 to-neural-blue-50 border border-neural-indigo-200/50"
               onOpenChange={(open) => {
                 if (!open) dismiss(id)
               }}
             >
             <div className="grid gap-1">
               {title && (
-                <ToastTitle className="text-purple-800 font-semibold">
+                <ToastTitle className="text-neural-purple-800 font-semibold">
                   {title}
                 </ToastTitle>
               )}
               {description && (
-                <ToastDescription className="text-purple-700">
+                <ToastDescription className="text-neural-indigo-700">
                   {description}
                 </ToastDescription>
               )}
             </div>
             {action}
-            <ToastClose className="text-purple-600 hover:text-purple-800" />
+            <ToastClose className="text-neural-purple-600 hover:text-neural-purple-800" />
           </Toast>
         )
       })}

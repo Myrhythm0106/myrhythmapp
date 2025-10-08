@@ -23,7 +23,7 @@ const Progress = React.forwardRef<
   >
     <ProgressPrimitive.Indicator
       className={cn(
-        "h-full w-full flex-1 bg-primary transition-all duration-500",
+        "h-full w-full flex-1 bg-gradient-to-r from-brain-health-500 to-clarity-teal-600 transition-all duration-500",
         showPulse && "animate-pulse",
         pulseColor,
         indicatorClassName
@@ -31,7 +31,7 @@ const Progress = React.forwardRef<
       style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
     />
     {showPulse && (
-      <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+      <div className="absolute inset-0 rounded-full bg-brain-health-400/20 animate-ping" />
     )}
   </ProgressPrimitive.Root>
 ));

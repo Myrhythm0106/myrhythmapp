@@ -7,10 +7,10 @@ interface MVPThemeWrapperProps {
 
 export function MVPThemeWrapper({ children, className = '' }: MVPThemeWrapperProps) {
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-slate-900 dark:to-slate-800 ${className}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-neural-purple-50 to-neural-blue-50 dark:from-neural-purple-900 dark:to-neural-blue-800 ${className}`}>
       <div className="relative">
         {/* Background gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/5 to-pink-500/10 dark:from-blue-400/20 dark:via-purple-400/10 dark:to-pink-400/20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-br from-neural-indigo-500/10 via-neural-purple-500/5 to-brain-health-500/10 dark:from-neural-indigo-400/20 dark:via-neural-purple-400/10 dark:to-brain-health-400/20 pointer-events-none" />
         
         {/* Content */}
         <div className="relative z-10">

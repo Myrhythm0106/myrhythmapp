@@ -8,7 +8,7 @@ export function HeroSection() {
   const navigate = useNavigate();
   
   return (
-    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600/60 via-blue-600/60 to-teal-600/60 text-white p-6 md:p-10 border-l border-emerald-300/30">
+    <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-neural-purple-600/60 via-neural-indigo-600/60 to-neural-blue-600/60 text-white p-6 md:p-10 border-l border-memory-emerald-500/30">
       <div className="absolute right-0 bottom-0 opacity-10">
         <Brain size={280} />
       </div>
@@ -32,7 +32,7 @@ export function HeroSection() {
         </div>
         
         <div className="pt-4">
-          <Button size="lg" onClick={() => navigate("/onboarding")} className="bg-white text-primary hover:bg-white/90 shadow-sm shadow-emerald-300/10">
+          <Button size="lg" onClick={() => navigate("/onboarding")} className="bg-white text-neural-purple-700 hover:bg-white/90 shadow-sm shadow-memory-emerald-500/20 hover:shadow-md transition-all duration-300">
             👉 Start Your Recovery Journey
           </Button>
         </div>

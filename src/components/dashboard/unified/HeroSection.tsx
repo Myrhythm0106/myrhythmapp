@@ -23,21 +23,21 @@ export function HeroSection({ onUpgradeClick, userType }: HeroSectionProps) {
   return (
     <div className="space-y-6 mb-8">
       {/* Personalized Commanding Headlines */}
-      <div className="text-center space-y-4 p-8 bg-gradient-to-br from-memory-emerald-50/80 via-brain-health-50/60 to-clarity-teal-50/80 rounded-2xl border-2 border-brain-health-200/50 shadow-xl">
+      <div className="text-center space-y-4 p-8 bg-gradient-to-br from-neural-purple-50/40 via-neural-indigo-50/30 to-neural-blue-50/40 rounded-2xl border-2 border-neural-indigo-200/50 shadow-xl backdrop-blur-sm">
         <div className="space-y-2">
-          <p className="text-lg text-brain-health-700 font-medium">
+          <p className="text-lg text-neural-indigo-700 font-medium">
             Hello {userType ? userType.charAt(0).toUpperCase() + userType.slice(1) : 'Champion'}, Today will be about
           </p>
-          <div className="text-xl text-clarity-teal-600 font-semibold mb-2">
+          <div className="text-xl text-brain-health-600 font-semibold mb-2">
             {getMonthlyFocus()}
           </div>
           <h1 className="text-4xl md:text-6xl font-black">
-            <span className="bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-neural-purple-600 via-neural-indigo-600 to-neural-blue-600 bg-clip-text text-transparent">
               YOUR COMMAND CENTER
             </span>
           </h1>
         </div>
-        <p className="text-lg md:text-xl text-brain-health-700 font-medium">
+        <p className="text-lg md:text-xl text-neural-indigo-700 font-medium">
           Everything you need to feel empowered, in control, and unstoppable
         </p>
       </div>

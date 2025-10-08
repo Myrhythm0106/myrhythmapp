@@ -17,7 +17,7 @@ export function Preview3HeroSection() {
       <NavigationHeader onShowLoginModal={() => setShowLoginModal(true)} />
 
       {/* Hero Section */}
-      <section id="hero-section" className="relative overflow-hidden min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+      <section id="hero-section" className="relative overflow-hidden min-h-screen bg-gradient-to-br from-neural-purple-50 via-white to-neural-blue-50">
         <BackgroundEffects />
         <HeroContent />
         <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />

@@ -14,7 +14,7 @@ export function PageLayout({ children, title, description, className = "" }: Pag
     <Preview3Background>
       <div className={`container mx-auto px-4 py-8 ${className}`}>
         <div className="mb-6">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent mb-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-neural-purple-600 via-neural-indigo-600 to-neural-blue-600 bg-clip-text text-transparent mb-2">
             {title}
           </h1>
           {description && (
