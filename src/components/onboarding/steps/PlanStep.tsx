@@ -15,11 +15,13 @@ import { Badge } from "@/components/ui/badge";
 import { PaymentDetailsForm } from "@/components/payment/PaymentDetailsForm";
 import { useSubscription } from "@/contexts/SubscriptionContext";
 import { SmartPricingDisplay } from "../steps/rhythm/SmartPricingDisplay";
+import { RhythmAssessmentView } from "../steps/rhythm/RhythmAssessmentView";
 
 export type { PlanType };
 
 export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps) => {
-  const [showSmartPricing, setShowSmartPricing] = useState(true);
+  const [showSmartPricing, setShowSmartPricing] = useState(false);
+  const [assessmentComplete, setAssessmentComplete] = useState(false);
   const [selected, setSelected] = useState<PlanType | null>(null);
   const [isAnnual, setIsAnnual] = useState(true);
   const [showPaymentForm, setShowPaymentForm] = useState(false);
@@ -89,6 +91,21 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     setSelected(null);
   };
 
+  // Assessment must come FIRST
+  if (!assessmentComplete) {
+    return (
+      <div className="space-y-6 max-w-4xl mx-auto px-4">
+        <RhythmAssessmentView 
+          userType="brain-injury"
+          onComplete={(data) => {
+            console.log("Assessment completed", data);
+            setAssessmentComplete(true);
+          }}
+        />
+      </div>
+    );
+  }
+
   // Show payment form if a plan is selected
   if (showPaymentForm && selected) {
     const selectedPlanData = plans.find(p => p.id === selected);
@@ -107,7 +124,7 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
     );
   }
 
-  // Show SmartPricingDisplay first
+  // Show SmartPricingDisplay after assessment
   if (showSmartPricing) {
     return (
       <div className="space-y-6 max-w-4xl mx-auto px-4">
@@ -132,11 +149,13 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
       </div>
 
       <div className="max-w-4xl mx-auto">
-        <Card className="bg-gradient-to-r from-brain-health-50 to-memory-emerald-50 border-2 border-brain-health-200 shadow-lg cursor-pointer hover:shadow-xl transition-all duration-300 hover:scale-[1.02]"
+        <Card className="border-0 shadow-xl bg-gradient-to-br from-neural-purple-50/30 via-neural-indigo-50/25 to-neural-blue-50/30 backdrop-blur-sm overflow-hidden cursor-pointer hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]"
               onClick={handleSmartPricingTryBefore}>
-          <CardContent className="p-8 space-y-6">
-            <div className="text-center">
-              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 rounded-full flex items-center justify-center">
+          <CardContent className="p-8 space-y-6 relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-neural-purple-500 to-neural-indigo-500 opacity-10 rounded-full blur-3xl" />
+            <div className="absolute bottom-4 left-4 w-3 h-3 bg-burnt-orange-600 rounded-full" />
+            <div className="text-center relative z-10">
+              <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-r from-neural-purple-500 to-neural-indigo-500 rounded-full flex items-center justify-center shadow-lg">
                 <Sparkles className="h-10 w-10 text-white" />
               </div>
               <h3 className="text-xl font-bold text-brain-health-900 mb-2">
@@ -147,28 +166,28 @@ export const PlanStep = ({ onComplete, selectedPlan = "premium" }: PlanStepProps
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center relative z-10">
               <div className="space-y-2">
                 <CheckCircle className="h-8 w-8 mx-auto text-memory-emerald-500" />
-                <p className="font-semibold text-brain-health-800">Full Access</p>
-                <p className="text-sm text-brain-health-600">All premium features included</p>
+                <p className="font-semibold text-neural-indigo-900">Full Access</p>
+                <p className="text-sm text-neural-indigo-700">All premium features included</p>
               </div>
               <div className="space-y-2">
-                <Heart className="h-8 w-8 mx-auto text-clarity-teal-500" />
-                <p className="font-semibold text-brain-health-800">No Commitment</p>
-                <p className="text-sm text-brain-health-600">Cancel anytime during trial</p>
+                <Heart className="h-8 w-8 mx-auto text-brain-health-500" />
+                <p className="font-semibold text-neural-indigo-900">No Commitment</p>
+                <p className="text-sm text-neural-indigo-700">Cancel anytime during trial</p>
               </div>
               <div className="space-y-2">
-                <Shield className="h-8 w-8 mx-auto text-sunrise-amber-500" />
-                <p className="font-semibold text-brain-health-800">No Card Required</p>
-                <p className="text-sm text-brain-health-600">Start immediately, pay later</p>
+                <Shield className="h-8 w-8 mx-auto text-burnt-orange-600" />
+                <p className="font-semibold text-neural-indigo-900">No Card Required</p>
+                <p className="text-sm text-neural-indigo-700">Start immediately, pay later</p>
               </div>
             </div>
 
-            <div className="text-center">
+            <div className="text-center relative z-10">
               <Button 
                 size="lg"
-                className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:opacity-90 text-white px-8 py-6 text-lg font-semibold w-full"
+                className="bg-gradient-to-r from-neural-purple-600 via-neural-indigo-600 to-neural-blue-600 hover:from-neural-purple-700 hover:via-neural-indigo-700 hover:to-neural-blue-700 text-white px-8 py-6 text-lg font-semibold w-full shadow-xl hover:shadow-2xl transition-all hover:scale-105"
               >
                 <Sparkles className="h-5 w-5 mr-2" />
                 Start 7-Day Free Trial

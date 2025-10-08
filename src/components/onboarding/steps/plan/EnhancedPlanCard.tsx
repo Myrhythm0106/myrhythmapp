@@ -22,15 +22,23 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
 
   return (
     <Card className={cn(
-      "relative border-2 transition-all duration-200 hover:shadow-lg cursor-pointer h-full flex flex-col",
-      isSelected ? "border-primary bg-primary/5 shadow-lg" : "border-gray-200 hover:border-primary/50",
-      plan.popular && "ring-2 ring-primary/20"
+      "relative overflow-hidden transition-all duration-300 hover:shadow-lg cursor-pointer h-full flex flex-col backdrop-blur-sm bg-white/95",
+      "hover:scale-[1.02]",
+      isSelected 
+        ? "ring-2 ring-neural-indigo-500 shadow-2xl border-neural-indigo-500/50" 
+        : "border border-neural-indigo-200 hover:border-neural-indigo-300"
     )}
     onClick={() => onSelect(plan.id)}
     >
+      {/* Accent splash */}
+      <div className="absolute top-4 right-4 w-2 h-2 bg-memory-emerald-500 rounded-full z-10" />
+      
+      {/* Background gradient effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-neural-purple-500/5 via-neural-indigo-500/5 to-neural-blue-500/5 opacity-50" />
+      
       {/* Founding Member Badge - Always visible */}
       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-        <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-3 py-1 font-medium shadow-lg">
+        <Badge className="bg-gradient-to-r from-burnt-orange-600 to-burnt-orange-700 text-white px-3 py-1 font-medium shadow-lg">
           <Crown className="h-3 w-3 mr-1" />
           Founding Member
         </Badge>
@@ -39,7 +47,7 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
       {/* Popular Badge - Secondary position */}
       {plan.popular && (
         <div className="absolute top-2 right-2 z-10">
-          <Badge className="bg-primary text-white px-2 py-1 text-xs font-medium shadow-md">
+          <Badge className="bg-gradient-to-r from-neural-purple-600 to-neural-indigo-600 text-white px-2 py-1 text-xs font-medium shadow-md">
             {plan.highlight}
           </Badge>
         </div>
@@ -55,9 +63,12 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
         </div>
       )}
 
-      <CardHeader className="text-center pb-4 flex-shrink-0">
-        <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
-          <Icon className="h-8 w-8 text-primary" />
+      <CardHeader className="text-center pb-4 flex-shrink-0 relative z-10">
+        <div className="w-16 h-16 mx-auto bg-gradient-to-br from-neural-purple-500/10 via-neural-indigo-500/10 to-neural-blue-500/10 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
+          <Icon className={cn(
+            "h-8 w-8 transition-colors duration-300",
+            isSelected ? "text-neural-indigo-600" : "text-neural-indigo-500"
+          )} />
         </div>
         
         <div className="space-y-2">
@@ -107,13 +118,16 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 flex-grow flex flex-col">
+      <CardContent className="space-y-4 flex-grow flex flex-col relative z-10">
         {/* Features List - Consistent Height */}
         <div className="flex-grow">
           <ul className="space-y-2">
             {plan.features.slice(0, 7).map((feature, index) => (
               <li key={index} className="flex items-start gap-2 text-sm">
-                <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                <Check className={cn(
+                  "h-4 w-4 mt-0.5 flex-shrink-0 transition-colors duration-200",
+                  isSelected ? "text-memory-emerald-500" : "text-memory-emerald-500"
+                )} />
                 <span className="text-gray-700 leading-relaxed">{feature}</span>
               </li>
             ))}
@@ -147,10 +161,10 @@ export function EnhancedPlanCard({ plan, isSelected, isAnnual, onSelect }: Enhan
         <div className="space-y-3 flex-shrink-0">
           <Button 
             className={cn(
-              "w-full font-medium transition-all",
+              "w-full font-semibold transition-all duration-300 shadow-md hover:shadow-xl hover:scale-105",
               isSelected 
-                ? "bg-primary hover:bg-primary/90" 
-                : "bg-gray-900 hover:bg-gray-800"
+                ? "bg-gradient-to-r from-neural-purple-600 via-neural-indigo-600 to-neural-blue-600 hover:from-neural-purple-700 hover:via-neural-indigo-700 hover:to-neural-blue-700 text-white" 
+                : "bg-gradient-to-r from-neural-purple-500 via-neural-indigo-500 to-neural-blue-500 hover:from-neural-purple-600 hover:via-neural-indigo-600 hover:to-neural-blue-600 text-white"
             )}
             disabled={isSelected}
           >

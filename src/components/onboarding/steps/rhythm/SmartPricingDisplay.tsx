@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Check, Crown, Sparkles, Users, Star, X, CheckCircle, Zap } from "lucide-react";
 import { UserType } from "@/types/user";
+import { cn } from "@/lib/utils";
 
 interface SmartPricingDisplayProps {
   userType?: UserType | null;
@@ -31,7 +32,7 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
       period: '/month',
       description: 'Perfect start with support circle',
       icon: Star,
-      gradient: 'from-teal-500 to-emerald-600',
+      gradient: 'from-neural-purple-500 via-neural-indigo-500 to-neural-blue-500',
       features: [
         '✨ 3 Free Support Circle Members',
         'Complete assessment results',
@@ -47,7 +48,7 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
       period: '/month',
       description: 'Enhanced experience with connected care',
       icon: Crown,
-      gradient: 'from-teal-600 to-emerald-700',
+      gradient: 'from-neural-purple-600 via-neural-indigo-600 to-neural-blue-600',
       badge: 'Recommended',
       popular: true,
       features: [
@@ -67,7 +68,7 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
       period: '/month',
       description: 'Complete family experience with unlimited support',
       icon: Users,
-      gradient: 'from-teal-700 to-emerald-800',
+      gradient: 'from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500',
       features: [
         '✨ 3 Free Support Circle Members',
         'Everything in MyStretch',
@@ -108,23 +109,39 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
               return (
                 <Card 
                   key={plan.id}
-                  className={`relative border-2 transition-all duration-200 ${
+                  className={cn(
+                    "relative overflow-hidden transition-all duration-300 hover:scale-105 cursor-pointer backdrop-blur-sm bg-white/95",
                     plan.popular 
-                      ? 'ring-2 ring-teal-500 shadow-lg border-teal-300 scale-105' 
-                      : 'hover:shadow-md border-teal-200'
-                  }`}
+                      ? "border-2 border-neural-indigo-300 shadow-xl shadow-neural-indigo-500/20" 
+                      : "border border-neural-indigo-200 hover:border-neural-indigo-300 hover:shadow-lg"
+                  )}
                 >
+                  {/* Accent splash */}
+                  <div className="absolute top-4 right-4 w-2 h-2 bg-memory-emerald-500 rounded-full" />
+                  
+                  {/* Background gradient */}
+                  <div className={cn(
+                    "absolute inset-0 bg-gradient-to-br opacity-5",
+                    plan.gradient
+                  )} />
+                  
                   {plan.badge && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white px-3 py-1">
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                      <Badge className="bg-gradient-to-r from-neural-purple-600 to-neural-indigo-600 text-white px-3 py-1 shadow-lg">
                         {plan.badge}
                       </Badge>
                     </div>
                   )}
                   
-                  <CardHeader className="text-center pb-3">
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <Icon className="h-6 w-6 text-teal-600" />
+                  <CardHeader className="text-center pb-3 relative z-10">
+                    {/* Icon */}
+                    <div className={cn(
+                      "w-12 h-12 rounded-xl flex items-center justify-center bg-gradient-to-br mb-4 mx-auto",
+                      plan.gradient
+                    )}>
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
                       <CardTitle className="text-lg">{plan.name}</CardTitle>
                     </div>
                     <div className="space-y-1">
@@ -136,19 +153,22 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
                     </div>
                   </CardHeader>
                   
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 relative z-10">
                     <ul className="space-y-3">
                       {plan.features.map((feature, index) => (
                         <li key={index} className="flex items-start gap-2 text-sm">
-                          <CheckCircle className="h-4 w-4 text-teal-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-slate-700">{feature}</span>
+                          <CheckCircle className="h-5 w-5 text-memory-emerald-500 flex-shrink-0 mt-0.5" />
+                          <span className="text-gray-700">{feature}</span>
                         </li>
                       ))}
                     </ul>
                     
                     <Button 
                       onClick={onSubscribe}
-                      className={`w-full shadow-md bg-gradient-to-r ${plan.gradient} text-white hover:shadow-lg`}
+                      className={cn(
+                        "w-full bg-gradient-to-r text-white font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105",
+                        plan.gradient
+                      )}
                     >
                       <Zap className="h-4 w-4 mr-2" />
                       Start 7-Day Free Trial
@@ -159,10 +179,24 @@ export function SmartPricingDisplay({ userType, onClose, onSubscribe }: SmartPri
             })}
           </div>
 
-          <div className="text-center text-xs text-slate-500 space-y-1 pt-4 border-t border-teal-200">
-            <p>• 7-day free trial for all plans • Cancel anytime • No charges during trial</p>
-            <p>• <strong>3 Free Support Circle Members</strong> included in every plan</p>
-            <p>• All plans include your complete {getUserTypeDisplay()} assessment results</p>
+          <div className="mt-8 pt-8 border-t border-neutral-warm-200">
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-memory-emerald-500" />
+                <span>7-day free trial</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-memory-emerald-500" />
+                <span>Cancel anytime</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-4 h-4 text-memory-emerald-500" />
+                <span>Secure payment</span>
+              </div>
+            </div>
+            <p className="text-center text-xs text-gray-600 mt-4">
+              <strong>3 Free Support Circle Members</strong> included • All plans include your complete {getUserTypeDisplay()} assessment
+            </p>
           </div>
         </CardContent>
       </Card>
