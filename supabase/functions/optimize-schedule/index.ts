@@ -36,6 +36,16 @@ serve(async (req) => {
 
     const { actionText, actionType, estimatedDuration } = await req.json();
 
+    // Get user's assessment data for personalized scheduling
+    const { data: assessmentData } = await supabase
+      .from('assessment_results')
+      .select('responses, scores, raw_assessment_data')
+      .eq('user_id', user.id)
+      .eq('completion_status', 'completed')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
     // Get user's calendar events for next 7 days
     const startDate = new Date();
     const endDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -74,6 +84,44 @@ serve(async (req) => {
       ? moodEntries.map(m => `${m.date}: Energy ${m.energy_level}/5`).join('\n')
       : 'No energy data available';
 
+    // Build assessment context for AI
+    let assessmentContext = '';
+    if (assessmentData) {
+      const responses = assessmentData.responses || {};
+      const energyPeakMap: Record<string, string> = {
+        'early_morning': '6-9 AM (early morning)',
+        'mid_morning': '9 AM-12 PM (mid-morning)',
+        'afternoon': '12-5 PM (afternoon)',
+        'evening': '5-8 PM (evening)',
+        'varies_daily': 'varies day to day'
+      };
+      
+      const optimalWorkMap: Record<string, string> = {
+        'early_morning_focus': '6-9 AM (fresh mind)',
+        'mid_morning_focus': '9 AM-12 PM (warmed up)',
+        'afternoon_focus': '1-4 PM (post-lunch energy)',
+        'evening_focus': '5-8 PM (quiet concentration)'
+      };
+      
+      const challengeMap: Record<string, string> = {
+        'attention_drift': 'staying focused on tasks',
+        'memory_gaps': 'remembering details',
+        'mental_fatigue': 'avoiding brain fog',
+        'task_switching': 'managing multiple priorities',
+        'professional_performance': 'optimizing cognitive performance',
+        'strategic_thinking': 'enhancing strategic thinking speed'
+      };
+      
+      assessmentContext = `
+User's Assessment Profile:
+- Energy Peak: ${energyPeakMap[responses.energy_peak] || 'Not specified'}
+- Optimal Work Time: ${optimalWorkMap[responses.optimal_work_time] || 'Not specified'}
+- Primary Challenge: ${challengeMap[responses.mindset_challenge] || 'Not specified'}
+- Support Preference: ${responses.support_preference || 'Not specified'}
+
+IMPORTANT: The user explicitly stated these preferences. Prioritize them over generic patterns.`;
+    }
+
     const prompt = `You are a smart scheduling assistant. Help schedule this action optimally.
 
 Action to Schedule:
@@ -86,8 +134,9 @@ ${calendarSummary || 'No events scheduled'}
 
 User's Recent Energy Patterns:
 ${energyPattern}
+${assessmentContext}
 
-Based on this data:
+Based on this data (PRIORITIZE the user's stated assessment preferences):
 1. Suggest the 3 BEST time slots in the next 7 days
 2. For each slot, provide:
    - date (YYYY-MM-DD format)
@@ -96,10 +145,12 @@ Based on this data:
    - confidence (0-100%)
 
 Consider:
+- **MOST IMPORTANT**: Honor the user's stated energy peak and optimal work time from their assessment
 - Avoid conflicts with existing events
-- Match task energy requirements (high-priority tasks → high-energy times)
+- Match task energy requirements (high-priority tasks → user's stated optimal work time)
 - Allow 15-min buffer before/after meetings
 - Suggest times when user historically has good energy
+- Reference their assessment preferences in your reasons (e.g., "because you indicated 'early morning' as your optimal work time")
 
 Return ONLY valid JSON array:
 [

@@ -8,6 +8,8 @@ export interface SmartScheduleSuggestion {
   reason: string;
   energyMatch?: string;
   conflictLevel: 'none' | 'low' | 'high';
+  duration?: number;
+  assessmentAligned?: boolean;
 }
 
 export interface UserSchedulePreference {

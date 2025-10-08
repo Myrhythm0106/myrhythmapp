@@ -34,12 +34,11 @@ export function useActsScheduling() {
     return data;
   }, [user]);
 
-  // Map action types to optimal times based on assessment
+  // Map action types to optimal times based on ASSESSMENT RESPONSES (energy_peak, optimal_work_time)
   const getOptimalTimeFromAssessment = useCallback((action: ExtractedAction, assessmentData: any) => {
     if (!assessmentData) return null;
     
-    const scores = assessmentData.scores || {};
-    const energyLevel = scores.energy_level || 5;
+    const responses = assessmentData.responses || {};
     
     // Map action verb categories to energy requirements
     const actionEnergyMap: Record<string, 'high' | 'medium' | 'low'> = {
@@ -52,23 +51,67 @@ export function useActsScheduling() {
     
     const requiredEnergy = actionEnergyMap[action.verb_category || 'routine'] || 'medium';
     
-    // Suggest times based on energy levels
-    if (energyLevel >= 7) {
-      // High energy users - morning tasks
-      if (requiredEnergy === 'high') return '09:00';
-      if (requiredEnergy === 'medium') return '10:30';
-      return '14:00';
-    } else if (energyLevel >= 4) {
-      // Medium energy users - spread throughout day
-      if (requiredEnergy === 'high') return '10:00';
-      if (requiredEnergy === 'medium') return '14:00';
-      return '11:00';
-    } else {
-      // Low energy users - lighter tasks early, avoid demanding tasks
-      if (requiredEnergy === 'high') return '11:00'; // Later morning
-      if (requiredEnergy === 'medium') return '10:00';
-      return '09:00';
+    // PRIORITY 1: Use user's stated optimal_work_time preference
+    const optimalWorkTime = responses.optimal_work_time;
+    if (optimalWorkTime) {
+      const workTimeMap: Record<string, string> = {
+        'early_morning_focus': requiredEnergy === 'high' ? '07:00' : '08:00',
+        'mid_morning_focus': requiredEnergy === 'high' ? '09:00' : '10:00',
+        'afternoon_focus': requiredEnergy === 'high' ? '14:00' : '15:00',
+        'evening_focus': requiredEnergy === 'high' ? '17:00' : '18:00'
+      };
+      
+      if (workTimeMap[optimalWorkTime]) {
+        return workTimeMap[optimalWorkTime];
+      }
     }
+    
+    // FALLBACK: Use energy_peak if optimal_work_time not available
+    const energyPeak = responses.energy_peak;
+    if (energyPeak) {
+      const energyPeakMap: Record<string, string> = {
+        'early_morning': requiredEnergy === 'high' ? '07:30' : '08:30',
+        'mid_morning': requiredEnergy === 'high' ? '09:30' : '10:30',
+        'afternoon': requiredEnergy === 'high' ? '14:30' : '15:30',
+        'evening': requiredEnergy === 'high' ? '17:30' : '18:30',
+        'varies_daily': '10:00' // Default to mid-morning
+      };
+      
+      if (energyPeakMap[energyPeak]) {
+        return energyPeakMap[energyPeak];
+      }
+    }
+    
+    // DEFAULT: Mid-morning
+    return '10:00';
+  }, []);
+
+  // Adjust scheduling based on cognitive challenge profile
+  const adjustForCognitiveProfile = useCallback((suggestion: any, assessmentData: any) => {
+    if (!assessmentData) return suggestion;
+    
+    const responses = assessmentData.responses || {};
+    const mindsetChallenge = responses.mindset_challenge;
+    
+    // Add personalized reasons based on user's stated challenges
+    const challengeInsights: Record<string, string> = {
+      'attention_drift': 'Scheduled during your focus window to minimize distractions',
+      'memory_gaps': 'Timed for optimal recall and retention',
+      'mental_fatigue': 'Aligned with your peak energy to avoid brain fog',
+      'task_switching': 'Positioned to reduce cognitive load from multitasking',
+      'professional_performance': 'Optimized for peak professional effectiveness',
+      'strategic_thinking': 'Scheduled for your best analytical clarity'
+    };
+    
+    if (mindsetChallenge && challengeInsights[mindsetChallenge]) {
+      return {
+        ...suggestion,
+        reason: `${suggestion.reason} - ${challengeInsights[mindsetChallenge]}`,
+        assessmentAligned: true
+      };
+    }
+    
+    return { ...suggestion, assessmentAligned: false };
   }, []);
 
   // Determine duration based on confidence score
@@ -100,22 +143,38 @@ export function useActsScheduling() {
         [] // watchers - could be passed from context if needed
       );
 
-      // Enhance suggestions with assessment-based intelligence
+      // Enhance suggestions with DEEP assessment-based intelligence
       if (assessmentData) {
         const optimalTime = getOptimalTimeFromAssessment(action, assessmentData);
         const duration = getConfidenceBasedDuration(action);
+        const responses = assessmentData.responses || {};
         
-        // If we have optimal time, boost that suggestion's confidence
+        // Build personalized reason referencing user's assessment
+        // Safely access energy_peak property
+        const energyPeakValue = (responses && typeof responses === 'object' && !Array.isArray(responses)) 
+          ? (responses as Record<string, any>).energy_peak 
+          : '';
+        const energyPeak = typeof energyPeakValue === 'string' ? energyPeakValue : '';
+        const energyPeakLabel = energyPeak === 'early_morning' ? 'early morning' :
+                                energyPeak === 'mid_morning' ? 'mid-morning' :
+                                energyPeak === 'afternoon' ? 'afternoon' :
+                                energyPeak === 'evening' ? 'evening' : 'your optimal';
+        
         const enhancedSuggestions = baseSuggestions.map(sug => {
+          let enhanced: SmartScheduleSuggestion = { ...sug, duration };
+          
+          // Boost confidence for times matching user's stated preferences
           if (optimalTime && sug.time === optimalTime) {
-            return {
-              ...sug,
-              confidence: Math.min((sug.confidence || 0.5) + 0.2, 1.0),
-              reason: `${sug.reason || ''} (Optimal for your energy level)`,
-              duration
+            enhanced = {
+              ...enhanced,
+              confidence: Math.min((sug.confidence || 0.5) + 0.3, 1.0),
+              reason: `Matches your ${energyPeakLabel} energy peak! ${sug.reason || ''}`,
+              assessmentAligned: true
             };
           }
-          return { ...sug, duration };
+          
+          // Apply cognitive profile adjustments
+          return adjustForCognitiveProfile(enhanced, assessmentData);
         });
         
         setSuggestions(prev => ({
