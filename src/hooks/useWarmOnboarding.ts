@@ -188,6 +188,10 @@ export function useWarmOnboarding() {
     trackEvent('onboarding_start');
   };
 
+  const updateState = (updates: Partial<WarmOnboardingState>) => {
+    setState(prev => ({ ...prev, ...updates }));
+  };
+
   return {
     state,
     nextStep,
@@ -199,5 +203,6 @@ export function useWarmOnboarding() {
     completeOnboarding,
     isOnboardingCompleted,
     startOnboarding,
+    updateState,
   };
 }

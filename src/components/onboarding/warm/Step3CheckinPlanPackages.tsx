@@ -16,7 +16,7 @@ interface CheckInData {
 interface Step3CheckinPlanPackagesProps {
   persona: string;
   intents: string[];
-  onComplete: (checkIn: CheckInData, selectedPackage: 'starter' | 'plus' | 'pro') => void;
+  onComplete: (checkIn: CheckInData, selectedPackage: 'starter' | 'plus' | 'pro', paymentChoice: 'premium' | 'free') => void;
   variant?: 'default' | 'mvp';
 }
 
@@ -110,7 +110,7 @@ export function Step3CheckinPlanPackages({ persona, intents, onComplete, variant
         onUnlock={() => setShowPaywall(true)}
         onFreeTrial={() => {
           setPaymentChoice('free');
-          onComplete(checkIn, 'starter');
+          onComplete(checkIn, 'starter', 'free');
         }}
       />
     );
@@ -122,7 +122,7 @@ export function Step3CheckinPlanPackages({ persona, intents, onComplete, variant
       checkIn={checkIn}
       onComplete={(pkg) => {
         setPaymentChoice('premium');
-        onComplete(checkIn, pkg);
+        onComplete(checkIn, pkg, 'premium');
       }}
       onBack={() => setShowPaywall(false)}
     />

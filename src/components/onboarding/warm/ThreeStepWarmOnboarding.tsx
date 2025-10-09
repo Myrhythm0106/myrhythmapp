@@ -18,6 +18,7 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
     setPackage,
     completeOnboarding,
     startOnboarding,
+    updateState,
   } = useWarmOnboarding();
 
   useEffect(() => {
@@ -36,14 +37,10 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
     nextStep();
   };
 
-  const handleStep3Complete = (checkInData: any, selectedPackage: 'starter' | 'plus' | 'pro') => {
+  const handleStep3Complete = (checkInData: any, selectedPackage: 'starter' | 'plus' | 'pro', paymentChoice: 'premium' | 'free') => {
     setCheckIn(checkInData);
     setPackage(selectedPackage);
-    // Get path from localStorage (set in Step 2)
-    const savedPath = localStorage.getItem('selected_path') as 'guided' | 'explorer' | null;
-    if (savedPath) {
-      setPath(savedPath);
-    }
+    updateState({ paymentChoice });
     completeOnboarding();
   };
 
@@ -98,6 +95,7 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
             persona={state.persona}
             intents={state.challenges}
             onComplete={handleStep2Complete}
+            setPath={setPath}
             variant={variant}
           />
         )}

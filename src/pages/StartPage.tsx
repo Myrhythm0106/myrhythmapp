@@ -1,3 +1,4 @@
+import React from 'react';
 import { isOnboardingCompleted } from '@/utils/onboardingStatus';
 import { ThreeStepWarmOnboarding } from '@/components/onboarding/warm/ThreeStepWarmOnboarding';
 import { AuthenticationGate } from '@/components/onboarding/AuthenticationGate';
@@ -31,6 +32,11 @@ export default function StartPage() {
   }
   
   // If user has completed onboarding, redirect to memory bridge
-  navigate('/memory-bridge');
+  React.useEffect(() => {
+    if (isOnboardingCompleted()) {
+      navigate('/memory-bridge', { replace: true });
+    }
+  }, [navigate]);
+  
   return null;
 }

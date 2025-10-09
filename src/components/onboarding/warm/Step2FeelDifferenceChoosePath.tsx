@@ -9,10 +9,11 @@ interface Step2FeelDifferenceChoosePathProps {
   persona: string;
   intents: string[];
   onComplete: () => void;
+  setPath: (path: 'guided' | 'explorer') => void;
   variant?: 'default' | 'mvp';
 }
 
-export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, variant = 'default' }: Step2FeelDifferenceChoosePathProps) {
+export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, setPath, variant = 'default' }: Step2FeelDifferenceChoosePathProps) {
   const getPersonalizedText = (baseText: string) => {
     const personaText = persona === 'me' ? 'your' : persona === 'loved-one' ? 'their' : 'your client\'s';
     const intentContext = intents.length > 1 ? 'your needs' : intents[0]?.toLowerCase() || 'your goals';
@@ -139,7 +140,7 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, va
               <button
                 key={option.id}
                 onClick={() => {
-                  localStorage.setItem('selected_path', option.id);
+                  setPath(option.id);
                   onComplete();
                 }}
                 className={`p-6 rounded-lg border-2 transition-all text-left relative ${
