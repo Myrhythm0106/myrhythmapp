@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Brain } from 'lucide-react';
 import { Step1WelcomeSeeMe } from './Step1WelcomeSeeMe';
 import { Step2FeelDifferenceChoosePath } from './Step2FeelDifferenceChoosePath';
-import { Step3CheckinPlanPackages } from './Step3CheckinPlanPackages';
+import { Step3AssessmentPlanPackages } from './Step3AssessmentPlanPackages';
 import { useWarmOnboarding } from '@/hooks/useWarmOnboarding';
 
 export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'default' | 'mvp' }) {
@@ -37,8 +37,8 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
     nextStep();
   };
 
-  const handleStep3Complete = (checkInData: any, selectedPackage: 'starter' | 'plus' | 'pro', paymentChoice: 'premium' | 'free') => {
-    setCheckIn(checkInData);
+  const handleStep3Complete = (assessmentResult: any, selectedPackage: 'starter' | 'plus' | 'pro', paymentChoice: 'premium' | 'free') => {
+    setCheckIn(assessmentResult); // Store assessment result in place of checkIn
     setPackage(selectedPackage);
     updateState({ paymentChoice });
     completeOnboarding();
@@ -101,7 +101,7 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
         )}
         
         {state.step === 3 && state.persona && state.primaryCondition && (
-          <Step3CheckinPlanPackages
+          <Step3AssessmentPlanPackages
             persona={state.persona}
             intents={state.challenges}
             onComplete={handleStep3Complete}

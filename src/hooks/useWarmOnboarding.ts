@@ -107,13 +107,25 @@ export function useWarmOnboarding() {
 
   const setCheckIn = (checkIn: WarmOnboardingState['checkIn']) => {
     setState(prev => ({ ...prev, checkIn }));
-    trackEvent('checkin_submitted', { 
-      energy: checkIn?.energy,
-      stress: checkIn?.stress,
-      focus: checkIn?.focus,
-      memory_confidence: checkIn?.memoryConfidence,
-      sleep_quality: checkIn?.sleepQuality
-    });
+    
+    // Check if this is assessment data or old check-in data
+    if (checkIn && 'assessmentType' in checkIn) {
+      // New assessment data
+      trackEvent('assessment_completed', { 
+        assessmentType: (checkIn as any).assessmentType || 'brief',
+        overallScore: (checkIn as any).overallScore || 0,
+        primaryRhythm: (checkIn as any).primaryRhythm || 'unknown'
+      });
+    } else if (checkIn) {
+      // Legacy check-in data
+      trackEvent('checkin_submitted', { 
+        energy: checkIn?.energy,
+        stress: checkIn?.stress,
+        focus: checkIn?.focus,
+        memory_confidence: checkIn?.memoryConfidence,
+        sleep_quality: checkIn?.sleepQuality
+      });
+    }
   };
 
   const setPackage = (pkg: 'starter' | 'plus' | 'pro') => {
