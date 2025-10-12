@@ -23,7 +23,7 @@ const Progress = React.forwardRef<
   >
     <ProgressPrimitive.Indicator
       className={cn(
-        "h-full w-full flex-1 bg-gradient-to-r from-brain-health-500 to-clarity-teal-600 transition-all duration-500",
+        "h-full w-full flex-1 bg-gradient-to-r from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500 transition-all duration-500",
         showPulse && "animate-pulse",
         pulseColor,
         indicatorClassName

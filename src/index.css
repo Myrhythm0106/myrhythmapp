@@ -93,51 +93,63 @@ html, body {
 
     --radius: 0.5rem;
 
-    /* Neural Luxury: Purple-Indigo-Blue gradient - 65-75% saturation for sophistication */
-    --neural-purple-50: 265 68% 97%;
-    --neural-purple-100: 265 68% 94%;
-    --neural-purple-200: 265 68% 88%;
-    --neural-purple-300: 265 70% 75%;
-    --neural-purple-400: 265 70% 62%;
-    --neural-purple-500: 265 70% 55%;
-    --neural-purple-600: 265 70% 48%;
-    --neural-purple-700: 265 72% 38%;
-    --neural-purple-800: 265 72% 28%;
-    --neural-purple-900: 265 75% 20%;
+    /* Neural Luxury: Purple-Indigo-Blue gradient - 82-92% saturation for empowerment */
+    --neural-purple-50: 270 88% 97%;
+    --neural-purple-100: 270 88% 94%;
+    --neural-purple-200: 270 88% 88%;
+    --neural-purple-300: 270 88% 75%;
+    --neural-purple-400: 270 88% 65%;
+    --neural-purple-500: 270 88% 58%;
+    --neural-purple-600: 270 88% 52%;
+    --neural-purple-700: 270 88% 42%;
+    --neural-purple-800: 270 88% 32%;
+    --neural-purple-900: 270 88% 24%;
 
-    --neural-indigo-50: 243 68% 97%;
-    --neural-indigo-100: 243 68% 94%;
-    --neural-indigo-200: 243 68% 88%;
-    --neural-indigo-300: 243 70% 75%;
-    --neural-indigo-400: 243 70% 62%;
-    --neural-indigo-500: 243 70% 58%;
-    --neural-indigo-600: 243 70% 52%;
-    --neural-indigo-700: 243 72% 42%;
-    --neural-indigo-800: 243 72% 32%;
-    --neural-indigo-900: 243 75% 24%;
+    --neural-indigo-50: 243 85% 97%;
+    --neural-indigo-100: 243 85% 94%;
+    --neural-indigo-200: 243 85% 88%;
+    --neural-indigo-300: 243 85% 75%;
+    --neural-indigo-400: 243 85% 65%;
+    --neural-indigo-500: 243 85% 58%;
+    --neural-indigo-600: 243 85% 52%;
+    --neural-indigo-700: 243 85% 42%;
+    --neural-indigo-800: 243 85% 32%;
+    --neural-indigo-900: 243 85% 24%;
 
-    --neural-blue-50: 217 68% 97%;
-    --neural-blue-100: 217 68% 94%;
-    --neural-blue-200: 217 68% 88%;
-    --neural-blue-300: 217 70% 75%;
-    --neural-blue-400: 217 70% 65%;
-    --neural-blue-500: 217 70% 60%;
-    --neural-blue-600: 217 70% 52%;
-    --neural-blue-700: 217 72% 42%;
-    --neural-blue-800: 217 72% 32%;
-    --neural-blue-900: 217 75% 24%;
+    --neural-blue-50: 220 88% 97%;
+    --neural-blue-100: 220 88% 94%;
+    --neural-blue-200: 220 88% 88%;
+    --neural-blue-300: 220 88% 75%;
+    --neural-blue-400: 220 88% 68%;
+    --neural-blue-500: 220 88% 62%;
+    --neural-blue-600: 220 88% 56%;
+    --neural-blue-700: 220 88% 46%;
+    --neural-blue-800: 220 88% 36%;
+    --neural-blue-900: 220 88% 28%;
 
-    /* Brain Health Spectrum: Emerald-Teal-Cyan gradient - 45-55% saturation for clinical credibility */
-    --brain-health-50: 166 48% 97%;
-    --brain-health-100: 166 48% 94%;
-    --brain-health-200: 168 48% 88%;
-    --brain-health-300: 168 50% 75%;
-    --brain-health-400: 170 50% 62%;
-    --brain-health-500: 173 52% 48%;
-    --brain-health-600: 175 52% 38%;
-    --brain-health-700: 178 54% 28%;
-    --brain-health-800: 180 54% 20%;
-    --brain-health-900: 183 55% 14%;
+    /* Neural Magenta: NEW vibrant passion color - 90-95% saturation for emotional energy */
+    --neural-magenta-50: 320 92% 97%;
+    --neural-magenta-100: 320 92% 94%;
+    --neural-magenta-200: 320 92% 88%;
+    --neural-magenta-300: 320 92% 75%;
+    --neural-magenta-400: 320 92% 65%;
+    --neural-magenta-500: 320 92% 58%;
+    --neural-magenta-600: 320 92% 52%;
+    --neural-magenta-700: 320 92% 42%;
+    --neural-magenta-800: 320 92% 32%;
+    --neural-magenta-900: 320 92% 24%;
+
+    /* Brain Health Spectrum: Emerald-Teal-Cyan gradient - 68-78% saturation for vibrant health */
+    --brain-health-50: 166 72% 97%;
+    --brain-health-100: 166 72% 94%;
+    --brain-health-200: 168 72% 88%;
+    --brain-health-300: 168 72% 75%;
+    --brain-health-400: 170 72% 62%;
+    --brain-health-500: 173 75% 52%;
+    --brain-health-600: 175 75% 42%;
+    --brain-health-700: 178 75% 32%;
+    --brain-health-800: 180 75% 24%;
+    --brain-health-900: 183 75% 18%;
 
     /* Legacy compatibility - map to brain health */
     --memory-emerald-50: 160 48% 97%;
@@ -151,16 +163,16 @@ html, body {
     --memory-emerald-800: 163 54% 22%;
     --memory-emerald-900: 164 54% 16%;
 
-    --clarity-teal-50: 180 48% 97%;
-    --clarity-teal-100: 180 48% 94%;
-    --clarity-teal-200: 180 48% 88%;
-    --clarity-teal-300: 180 50% 75%;
-    --clarity-teal-400: 180 50% 62%;
-    --clarity-teal-500: 180 52% 48%;
-    --clarity-teal-600: 181 52% 38%;
-    --clarity-teal-700: 182 52% 28%;
-    --clarity-teal-800: 183 54% 20%;
-    --clarity-teal-900: 184 54% 14%;
+    --clarity-teal-50: 180 75% 97%;
+    --clarity-teal-100: 180 75% 94%;
+    --clarity-teal-200: 180 75% 88%;
+    --clarity-teal-300: 180 75% 75%;
+    --clarity-teal-400: 180 75% 62%;
+    --clarity-teal-500: 180 75% 52%;
+    --clarity-teal-600: 181 75% 42%;
+    --clarity-teal-700: 182 75% 32%;
+    --clarity-teal-800: 183 75% 24%;
+    --clarity-teal-900: 184 75% 18%;
 
     /* Legacy compatibility - beacon maps to neural-purple */
     --beacon-50: 265 68% 97%;
@@ -197,17 +209,17 @@ html, body {
     --brand-emerald-800: 163 34% 22%;
     --brand-emerald-900: 164 36% 16%;
 
-    /* Burnt Orange: Luxury action trigger - 60-75% saturation for premium warmth */
-    --brand-orange-50: 18 65% 97%;
-    --brand-orange-100: 18 65% 94%;
-    --brand-orange-200: 18 65% 88%;
-    --brand-orange-300: 18 68% 75%;
-    --brand-orange-400: 18 68% 62%;
-    --brand-orange-500: 18 68% 54%;
-    --brand-orange-600: 18 68% 48%;
-    --brand-orange-700: 18 70% 42%;
-    --brand-orange-800: 18 72% 32%;
-    --brand-orange-900: 18 75% 24%;
+    /* Burnt Orange: Luxury action trigger - 85-90% saturation for premium warmth */
+    --brand-orange-50: 25 88% 97%;
+    --brand-orange-100: 25 88% 94%;
+    --brand-orange-200: 25 88% 88%;
+    --brand-orange-300: 25 88% 75%;
+    --brand-orange-400: 25 88% 65%;
+    --brand-orange-500: 25 88% 58%;
+    --brand-orange-600: 25 88% 52%;
+    --brand-orange-700: 25 88% 42%;
+    --brand-orange-800: 25 88% 32%;
+    --brand-orange-900: 25 88% 24%;
 
     --brand-blue-50: 204 100% 97%;
     --brand-blue-100: 204 94% 94%;

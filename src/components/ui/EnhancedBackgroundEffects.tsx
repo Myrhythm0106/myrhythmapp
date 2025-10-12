@@ -3,16 +3,17 @@ import React from "react";
 export function EnhancedBackgroundEffects() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Enhanced gradient overlay layers */}
-      <div className="absolute inset-0 bg-gradient-to-br from-neural-purple-50/20 via-neural-blue-50/15 to-clarity-teal-50/20" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-memory-emerald-50/10 to-transparent" />
+      {/* Enhanced gradient overlay layers - vibrant brain health colors */}
+      <div className="absolute inset-0 bg-gradient-to-br from-neural-purple-100/30 via-neural-magenta-50/25 to-clarity-teal-100/30" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-neural-blue-50/20 via-brain-health-50/15 to-brand-orange-50/20" />
       
-      {/* Professional floating orbs with brain health colors */}
-      <div className="absolute top-[15%] left-[20%] w-3 h-3 bg-gradient-to-br from-neural-purple-400/40 to-neural-indigo-400/40 rounded-full animate-pulse opacity-60" style={{animationDelay: '0s'}}></div>
-      <div className="absolute top-[25%] right-[25%] w-2 h-2 bg-gradient-to-br from-neural-blue-400/35 to-clarity-teal-400/35 rounded-full animate-pulse opacity-50" style={{animationDelay: '0.8s'}}></div>
-      <div className="absolute bottom-[30%] left-[30%] w-4 h-4 bg-gradient-to-br from-clarity-teal-400/30 to-memory-emerald-400/30 rounded-full animate-pulse opacity-45" style={{animationDelay: '1.2s'}}></div>
-      <div className="absolute top-[45%] right-[15%] w-2.5 h-2.5 bg-gradient-to-br from-memory-emerald-500/40 to-neural-purple-400/40 rounded-full animate-pulse opacity-55" style={{animationDelay: '1.8s'}}></div>
-      <div className="absolute bottom-[20%] right-[40%] w-3.5 h-3.5 bg-gradient-to-br from-neural-blue-300/25 to-clarity-teal-300/25 rounded-full animate-pulse opacity-40" style={{animationDelay: '2.4s'}}></div>
+      {/* Vibrant floating orbs with empowering brain health colors */}
+      <div className="absolute top-[15%] left-[20%] w-3 h-3 bg-gradient-to-br from-neural-purple-500/50 to-neural-magenta-500/50 rounded-full animate-pulse opacity-70" style={{animationDelay: '0s'}}></div>
+      <div className="absolute top-[25%] right-[25%] w-2 h-2 bg-gradient-to-br from-neural-magenta-400/45 to-brand-orange-400/45 rounded-full animate-pulse opacity-60" style={{animationDelay: '0.8s'}}></div>
+      <div className="absolute bottom-[30%] left-[30%] w-4 h-4 bg-gradient-to-br from-clarity-teal-500/40 to-neural-blue-500/40 rounded-full animate-pulse opacity-55" style={{animationDelay: '1.2s'}}></div>
+      <div className="absolute top-[45%] right-[15%] w-2.5 h-2.5 bg-gradient-to-br from-brain-health-500/50 to-neural-purple-500/50 rounded-full animate-pulse opacity-65" style={{animationDelay: '1.8s'}}></div>
+      <div className="absolute bottom-[20%] right-[40%] w-3.5 h-3.5 bg-gradient-to-br from-neural-blue-400/35 to-clarity-teal-400/35 rounded-full animate-pulse opacity-50" style={{animationDelay: '2.4s'}}></div>
+      <div className="absolute top-[60%] left-[15%] w-2 h-2 bg-gradient-to-br from-brand-orange-400/40 to-neural-magenta-400/40 rounded-full animate-pulse opacity-55" style={{animationDelay: '3s'}}></div>
       
       {/* Subtle neural network pathways */}
       <svg className="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
@@ -33,9 +34,10 @@ export function EnhancedBackgroundEffects() {
         <path d="M 15% 60% Q 40% 45% 65% 35%" stroke="url(#neuralPath1)" strokeWidth="1.2" fill="none" className="animate-pulse" style={{animationDelay: '2.1s'}} />
       </svg>
 
-      {/* Glass morphism light effects */}
-      <div className="absolute top-1/4 left-1/3 w-32 h-32 bg-gradient-to-br from-neural-blue-400/5 to-neural-purple-400/5 rounded-full blur-xl"></div>
-      <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-gradient-to-br from-clarity-teal-400/5 to-memory-emerald-500/5 rounded-full blur-xl"></div>
+      {/* Glass morphism light effects - vibrant accents */}
+      <div className="absolute top-1/4 left-1/3 w-32 h-32 bg-gradient-to-br from-neural-magenta-400/8 to-neural-purple-400/8 rounded-full blur-xl"></div>
+      <div className="absolute bottom-1/3 right-1/4 w-40 h-40 bg-gradient-to-br from-clarity-teal-400/8 to-brain-health-500/8 rounded-full blur-xl"></div>
+      <div className="absolute top-1/2 right-1/3 w-36 h-36 bg-gradient-to-br from-brand-orange-400/6 to-neural-blue-400/6 rounded-full blur-xl"></div>
     </div>
   );
 }

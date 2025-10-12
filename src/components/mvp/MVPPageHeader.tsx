@@ -12,7 +12,7 @@ export function MVPPageHeader({ title, subtitle, className, children }: MVPPageH
   return (
     <div className={cn("mb-8 space-y-4", className)}>
       <div className="text-center space-y-3">
-        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+        <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 bg-clip-text text-transparent">
           {title}
         </h1>
         {subtitle && (

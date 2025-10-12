@@ -101,6 +101,18 @@ const config: Config = {
           800: "hsl(var(--neural-blue-800))",
           900: "hsl(var(--neural-blue-900))",
         },
+        "neural-magenta": {
+          50: "hsl(var(--neural-magenta-50))",
+          100: "hsl(var(--neural-magenta-100))",
+          200: "hsl(var(--neural-magenta-200))",
+          300: "hsl(var(--neural-magenta-300))",
+          400: "hsl(var(--neural-magenta-400))",
+          500: "hsl(var(--neural-magenta-500))",
+          600: "hsl(var(--neural-magenta-600))",
+          700: "hsl(var(--neural-magenta-700))",
+          800: "hsl(var(--neural-magenta-800))",
+          900: "hsl(var(--neural-magenta-900))",
+        },
         // Brain Health Spectrum: Unified emerald-teal-cyan (45-55% saturation)
         "brain-health": {
           50: "hsl(var(--brain-health-50))",
