@@ -26,7 +26,7 @@ const Index = () => {
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-12">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">Rewire Your Mind. 
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 bg-clip-text text-transparent">Rewire Your Mind. 
 Transform Your Life.</h1>
           <p className="text-lg md:text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
             MyRhythm bridges consumer cognitive wellness with clinical-grade brain injury support, 
@@ -36,7 +36,7 @@ Transform Your Life.</h1>
             "Your brain is neuroplastic - it can change, adapt, and grow stronger. We help you harness that power."
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button onClick={() => navigate("/mvp/user-type-selection")} size="lg" className="bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600">
+            <Button onClick={() => navigate("/mvp/user-type-selection")} size="lg" className="bg-gradient-to-r from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500 hover:from-neural-magenta-600 hover:via-brand-orange-600 hover:to-clarity-teal-600 shadow-lg hover:shadow-xl">
               Start Your Transformation
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -52,7 +52,7 @@ Transform Your Life.</h1>
         {/* Mindset Transformation Section */}
         <div className="py-16 bg-white/70 backdrop-blur-sm rounded-lg shadow-lg border border-purple-100 max-w-6xl mx-auto mb-16">
           <div className="text-center mb-12 px-8">
-            <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 bg-clip-text text-transparent">
               From Scattered to Structured: Your Mindset Revolution
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">

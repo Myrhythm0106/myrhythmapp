@@ -1,73 +1,93 @@
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Sparkles, Brain, Zap, Target } from 'lucide-react';
+import { Sparkles, Brain, Zap, Target, Heart } from 'lucide-react';
 
 export function ColorSystemBible() {
   const colorSystem = {
     primary: {
-      name: "Neural Luxury",
-      description: "Premium brand gradient - Headers, navigation, brand moments",
-      gradient: "from-purple-600 via-indigo-600 to-blue-600",
-      accentColor: "emerald-500",
+      name: "Neural Empowerment",
+      description: "Vibrant brand gradient - Headers, navigation, empowerment moments",
+      gradient: "from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600",
+      accentColor: "clarity-teal-500",
       accentPosition: "top-right",
-      usage: ["Headers & Titles", "Navigation Active States", "Brand Moments", "Premium Features"],
+      usage: ["Hero Headers & Titles", "Navigation Active States", "Empowerment Moments", "Transformation Features"],
       hsl: {
-        purple: "265° 70% 55%",
-        indigo: "243° 70% 58%", 
-        blue: "217° 70% 60%"
+        purple: "270° 88% 52%",
+        magenta: "320° 92% 58%", 
+        orange: "25° 88% 52%"
       },
-      saturation: "65-75% (Reduced for sophistication)",
+      saturation: "85-92% (Vibrant empowerment)",
       icon: Sparkles,
       preview: [
-        { name: "Purple 600", className: "bg-gradient-to-r from-purple-600 to-purple-700" },
-        { name: "Indigo 600", className: "bg-gradient-to-r from-indigo-600 to-indigo-700" },
-        { name: "Blue 600", className: "bg-gradient-to-r from-blue-600 to-blue-700" }
+        { name: "Neural Purple 600", className: "bg-gradient-to-r from-neural-purple-600 to-neural-purple-700" },
+        { name: "Neural Magenta 500", className: "bg-gradient-to-r from-neural-magenta-500 to-neural-magenta-600" },
+        { name: "Brand Orange 600", className: "bg-gradient-to-r from-brand-orange-600 to-brand-orange-700" }
+      ]
+    },
+    magenta: {
+      name: "Neural Magenta - Passionate Empowerment",
+      description: "Vibrant magenta/pink for emotional connection and bold confidence",
+      gradient: "from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500",
+      accentColor: "brand-orange-500",
+      accentPosition: "bottom-left",
+      usage: ["Emotional Moments", "Passion Accents", "Celebration States", "Gradient Flows", "CTA Highlights"],
+      hsl: {
+        primary: "320° 92% 58%",
+        light: "320° 92% 75%",
+        dark: "320° 92% 42%"
+      },
+      saturation: "90-95% (Bold emotional energy)",
+      icon: Heart,
+      preview: [
+        { name: "Magenta 500", className: "bg-gradient-to-r from-neural-magenta-500 to-neural-magenta-600" },
+        { name: "Magenta 400", className: "bg-gradient-to-r from-neural-magenta-400 to-neural-magenta-500" },
+        { name: "Magenta 600", className: "bg-gradient-to-r from-neural-magenta-600 to-neural-magenta-700" }
       ]
     },
     accent: {
       name: "Brain Health Spectrum",
-      description: "Emerald-to-Teal gradient - Progress, health metrics, cognitive focus",
-      gradient: "from-emerald-500 via-teal-500 to-cyan-600",
-      accentColor: "orange-600",
+      description: "Vibrant health gradient - Progress, wellness metrics, cognitive focus",
+      gradient: "from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500",
+      accentColor: "neural-magenta-600",
       accentPosition: "bottom-left",
       usage: ["Progress Bars", "Health Metrics", "Success States", "Cognitive Enhancement"],
       hsl: {
-        emerald: "160° 52% 48%",
-        teal: "173° 52% 48%",
-        cyan: "186° 52% 45%"
+        brainHealth: "173° 75% 52%",
+        clarityTeal: "180° 75% 52%",
+        emerald: "160° 52% 48%"
       },
-      saturation: "45-55% (Clinical credibility)",
+      saturation: "68-78% (Vibrant wellness)",
       icon: Brain,
       preview: [
-        { name: "Emerald 500", className: "bg-gradient-to-r from-emerald-500 to-emerald-600" },
-        { name: "Teal 500", className: "bg-gradient-to-r from-teal-500 to-teal-600" },
-        { name: "Cyan 600", className: "bg-gradient-to-r from-cyan-600 to-cyan-700" }
+        { name: "Brain Health 500", className: "bg-gradient-to-r from-brain-health-500 to-brain-health-600" },
+        { name: "Clarity Teal 500", className: "bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600" },
+        { name: "Memory Emerald 500", className: "bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600" }
       ]
     },
     action: {
-      name: "Burnt Orange",
+      name: "Vibrant Orange",
       description: "Premium action trigger - Primary CTAs, critical actions",
-      gradient: "from-orange-600 to-orange-700",
-      accentColor: "indigo-600",
+      gradient: "from-brand-orange-500 to-brand-orange-600",
+      accentColor: "neural-magenta-600",
       accentPosition: "top-left",
-      usage: ["Primary CTAs", "Submit Buttons", "Start Actions", "Premium Upgrades"],
+      usage: ["Primary CTAs", "Submit Buttons", "Start Actions", "Empowerment Upgrades"],
       hsl: {
-        primary: "18° 68% 48%",
-        hover: "18° 70% 42%"
+        primary: "25° 88% 58%",
+        hover: "25° 88% 52%"
       },
-      saturation: "60-75% (Luxury warmth)",
+      saturation: "85-90% (Energized warmth)",
       icon: Zap,
       preview: [
-        { name: "Orange 600", className: "bg-gradient-to-r from-orange-600 to-orange-700" },
-        { name: "Orange 700", className: "bg-gradient-to-r from-orange-700 to-orange-800" }
+        { name: "Orange 500", className: "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600" },
+        { name: "Orange 600", className: "bg-gradient-to-r from-brand-orange-600 to-brand-orange-700" }
       ]
     },
     neutrals: {
       name: "Warm-to-Cool Grays",
       description: "Sophisticated backgrounds with subtle gradients",
       gradient: "from-slate-50 to-gray-100",
-      accentColor: "cyan-600",
+      accentColor: "neural-magenta-600",
       accentPosition: "bottom-right",
       usage: ["Backgrounds", "Body Text", "Borders", "Subtle Accents"],
       hsl: {
@@ -87,28 +107,40 @@ export function ColorSystemBible() {
 
   const gradientFlows = [
     {
-      name: "Brand Hero Gradient",
-      description: "For hero sections and major headers",
-      className: "bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white",
-      code: "from-purple-600 via-indigo-600 to-blue-600"
+      name: "Empowerment Hero",
+      description: "For hero sections and major empowerment headers",
+      className: "bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 text-white",
+      code: "from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600"
     },
     {
-      name: "Brain Health Flow",
-      description: "For progress and cognitive metrics",
-      className: "bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 text-white",
-      code: "from-emerald-500 via-teal-500 to-cyan-600"
+      name: "Brain Passion Flow",
+      description: "For progress bars and passionate cognitive metrics",
+      className: "bg-gradient-to-r from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500 text-white",
+      code: "from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500"
+    },
+    {
+      name: "Transformation Gradient",
+      description: "For transformation moments and achievements",
+      className: "bg-gradient-to-r from-neural-blue-600 via-neural-magenta-500 to-neural-purple-600 text-white",
+      code: "from-neural-blue-600 via-neural-magenta-500 to-neural-purple-600"
     },
     {
       name: "Action Trigger",
-      description: "Primary CTAs with burnt orange",
-      className: "bg-gradient-to-r from-orange-600 to-orange-700 text-white",
-      code: "from-orange-600 to-orange-700"
+      description: "Primary CTAs with vibrant orange-magenta",
+      className: "bg-gradient-to-r from-neural-magenta-500 to-brand-orange-600 text-white",
+      code: "from-neural-magenta-500 to-brand-orange-600"
+    },
+    {
+      name: "Wellness Flow",
+      description: "Health and wellness progress indicators",
+      className: "bg-gradient-to-r from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500 text-white",
+      code: "from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500"
     },
     {
       name: "Subtle Background",
-      description: "Page backgrounds with depth",
-      className: "bg-gradient-to-br from-purple-50/30 via-indigo-50/20 to-blue-50/30",
-      code: "from-purple-50/30 via-indigo-50/20 to-blue-50/30"
+      description: "Page backgrounds with vibrant depth",
+      className: "bg-gradient-to-br from-neural-purple-50/30 via-neural-magenta-50/25 to-clarity-teal-100/30",
+      code: "from-neural-purple-50/30 via-neural-magenta-50/25 to-clarity-teal-100/30"
     }
   ];
 
@@ -117,21 +149,21 @@ export function ColorSystemBible() {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent">
-            Neural Luxury Color System
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 bg-clip-text text-transparent">
+            Vibrant Empowerment Color System
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Apple/Tesla/Gucci aesthetic meets clinical brain health credibility
+            Bold, confident colors that inspire transformation and cognitive empowerment
           </p>
           <div className="flex items-center justify-center gap-3">
             <Badge variant="outline" className="bg-white/50 backdrop-blur-sm">
-              Dr. Caroline Leaf Approved
+              85-92% Saturation
             </Badge>
             <Badge variant="outline" className="bg-white/50 backdrop-blur-sm">
-              Dr. Daniel Amen Credibility
+              Neuroplasticity-Inspired
             </Badge>
             <Badge variant="outline" className="bg-white/50 backdrop-blur-sm">
-              Luxury Tech Standard
+              Empowerment Aesthetic
             </Badge>
           </div>
         </div>
@@ -216,64 +248,6 @@ export function ColorSystemBible() {
           })}
         </div>
 
-        {/* Color Relationships */}
-        <Card className="p-8 bg-gradient-to-br from-white via-slate-50/50 to-white backdrop-blur-sm border-2 border-slate-200/60 shadow-lg">
-          <h2 className="text-3xl font-bold text-slate-800 mb-6">Color Relationships & Accent Strategy</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="space-y-3 p-4 rounded-xl bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200/50">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600"></div>
-                <span className="font-bold text-purple-800">Neural Luxury</span>
-              </div>
-              <div className="flex items-center gap-2 pl-10">
-                <span className="text-sm text-slate-600">+</span>
-                <div className="w-6 h-6 rounded-full bg-emerald-500"></div>
-                <span className="text-sm font-medium text-emerald-700">Emerald Accent</span>
-              </div>
-              <p className="text-xs text-slate-600 pl-10">Creates trust + growth energy</p>
-            </div>
-
-            <div className="space-y-3 p-4 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200/50">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"></div>
-                <span className="font-bold text-emerald-800">Brain Health</span>
-              </div>
-              <div className="flex items-center gap-2 pl-10">
-                <span className="text-sm text-slate-600">+</span>
-                <div className="w-6 h-6 rounded-full bg-orange-600"></div>
-                <span className="text-sm font-medium text-orange-700">Orange Accent</span>
-              </div>
-              <p className="text-xs text-slate-600 pl-10">Balances calm with action</p>
-            </div>
-
-            <div className="space-y-3 p-4 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200/50">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-600 to-orange-700"></div>
-                <span className="font-bold text-orange-800">Burnt Orange</span>
-              </div>
-              <div className="flex items-center gap-2 pl-10">
-                <span className="text-sm text-slate-600">+</span>
-                <div className="w-6 h-6 rounded-full bg-indigo-600"></div>
-                <span className="text-sm font-medium text-indigo-700">Indigo Accent</span>
-              </div>
-              <p className="text-xs text-slate-600 pl-10">Premium warmth + sophistication</p>
-            </div>
-
-            <div className="space-y-3 p-4 rounded-xl bg-gradient-to-br from-slate-50 to-gray-50 border border-slate-200">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-slate-100 to-gray-200"></div>
-                <span className="font-bold text-slate-700">Neutrals</span>
-              </div>
-              <div className="flex items-center gap-2 pl-10">
-                <span className="text-sm text-slate-600">+</span>
-                <div className="w-6 h-6 rounded-full bg-cyan-600"></div>
-                <span className="text-sm font-medium text-cyan-700">Cyan Accent</span>
-              </div>
-              <p className="text-xs text-slate-600 pl-10">Subtle energy on calm base</p>
-            </div>
-          </div>
-        </Card>
-
         {/* Gradient Flows */}
         <Card className="p-8 bg-white/80 backdrop-blur-sm border-2 border-slate-200/60 shadow-lg">
           <h2 className="text-3xl font-bold text-slate-800 mb-6">Gradient Flow Examples</h2>
@@ -295,257 +269,48 @@ export function ColorSystemBible() {
           </div>
         </Card>
 
-        {/* Luxury Details System */}
-        <Card className="p-8 bg-gradient-to-br from-slate-50 via-white to-slate-50 backdrop-blur-sm border-2 border-slate-200/60 shadow-lg">
-          <h2 className="text-3xl font-bold text-slate-800 mb-8">Luxury Details System</h2>
+        {/* Color Philosophy */}
+        <Card className="p-8 bg-gradient-to-br from-white via-slate-50/50 to-white backdrop-blur-sm border-2 border-slate-200/60 shadow-lg">
+          <h2 className="text-3xl font-bold text-slate-800 mb-6">Color Philosophy: Empowerment Through Vibrancy</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Typography */}
+            {/* Before: Clinical */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-purple-700 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-purple-600"></span>
-                Typography Scale
+              <h3 className="text-xl font-bold text-red-700 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-red-600"></span>
+                Before: Clinical & Muted
               </h3>
               <div className="space-y-3 bg-white/80 rounded-lg p-5 border border-slate-200">
-                <div className="text-4xl font-bold text-slate-800">Headline</div>
-                <p className="text-xs text-slate-500">48px / Bold (700)</p>
-                <div className="text-2xl font-semibold text-slate-700">Subheadline</div>
-                <p className="text-xs text-slate-500">24px / Semibold (600)</p>
-                <div className="text-base font-medium text-slate-600">Body Text</div>
-                <p className="text-xs text-slate-500">16px / Medium (500)</p>
-                <div className="text-sm text-slate-500">Caption</div>
-                <p className="text-xs text-slate-500">14px / Regular (400)</p>
+                <p className="text-sm text-slate-600">❌ 65-75% saturation (too conservative)</p>
+                <p className="text-sm text-slate-600">❌ No magenta/passion dimension</p>
+                <p className="text-sm text-slate-600">❌ Safe, medical app aesthetic</p>
+                <p className="text-sm text-slate-600">❌ Low emotional engagement</p>
               </div>
             </div>
 
-            {/* Shadow System */}
+            {/* After: Empowerment */}
             <div className="space-y-4">
-              <h3 className="text-xl font-bold text-indigo-700 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-indigo-600"></span>
-                Shadow System
+              <h3 className="text-xl font-bold text-green-700 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-green-600"></span>
+                After: Vibrant Empowerment
               </h3>
-              <div className="space-y-3">
-                <div className="bg-white rounded-lg p-4 shadow-sm border border-slate-100">
-                  <p className="font-medium text-slate-700">Subtle</p>
-                  <code className="text-xs text-slate-500">shadow-sm</code>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-md">
-                  <p className="font-medium text-slate-700">Medium</p>
-                  <code className="text-xs text-slate-500">shadow-md</code>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-lg">
-                  <p className="font-medium text-slate-700">Elevated</p>
-                  <code className="text-xs text-slate-500">shadow-lg</code>
-                </div>
-                <div className="bg-white rounded-lg p-4 shadow-2xl">
-                  <p className="font-medium text-slate-700">Prominent</p>
-                  <code className="text-xs text-slate-500">shadow-2xl</code>
-                </div>
-              </div>
-            </div>
-
-            {/* Spacing */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-emerald-700 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
-                Spacing (8px Grid)
-              </h3>
-              <div className="space-y-2 bg-white/80 rounded-lg p-5 border border-slate-200">
-                <div className="flex items-center gap-4">
-                  <div className="w-2 h-2 bg-emerald-500"></div>
-                  <span className="text-sm font-medium text-slate-700">4px - Tight spacing</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-4 h-4 bg-emerald-500"></div>
-                  <span className="text-sm font-medium text-slate-700">8px - Base unit</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-8 h-8 bg-emerald-500"></div>
-                  <span className="text-sm font-medium text-slate-700">16px - Standard</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-emerald-500"></div>
-                  <span className="text-sm font-medium text-slate-700">24px - Comfortable</span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-emerald-500"></div>
-                  <span className="text-sm font-medium text-slate-700">32px - Generous</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Border Radius */}
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-orange-700 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-orange-600"></span>
-                Border Radius
-              </h3>
-              <div className="space-y-3">
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded p-4 text-white font-medium">
-                  4px - Subtle
-                </div>
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-4 text-white font-medium">
-                  8px - Standard (rounded-lg)
-                </div>
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl p-4 text-white font-medium">
-                  12px - Comfortable (rounded-xl)
-                </div>
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-4 text-white font-medium">
-                  16px - Prominent (rounded-2xl)
-                </div>
+              <div className="space-y-3 bg-white/80 rounded-lg p-5 border border-slate-200">
+                <p className="text-sm text-slate-600">✅ 85-92% saturation (confident & bold)</p>
+                <p className="text-sm text-slate-600">✅ Neural Magenta adds passion & emotion</p>
+                <p className="text-sm text-slate-600">✅ Premium wellness aesthetic</p>
+                <p className="text-sm text-slate-600">✅ High emotional connection</p>
               </div>
             </div>
           </div>
-        </Card>
 
-        {/* Design Principles */}
-        <Card className="p-8 bg-gradient-to-br from-purple-50/50 via-indigo-50/30 to-blue-50/50 backdrop-blur-sm border-2 border-purple-200/40 shadow-lg">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent mb-6">
-            Design Principles
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold text-purple-700">Luxury Simplicity</h3>
-              <p className="text-sm text-slate-700">
-                Reduced saturation (65-75%) creates sophistication. No overwhelming gradients.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold text-indigo-700">Clinical Credibility</h3>
-              <p className="text-sm text-slate-700">
-                Brain health colors (45-55% saturation) convey medical trust and expertise.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="text-lg font-bold text-blue-700">Action Clarity</h3>
-              <p className="text-sm text-slate-700">
-                Burnt orange CTAs (60-75% saturation) create premium warmth without aggression.
-              </p>
-            </div>
-          </div>
-        </Card>
-
-        {/* Component Examples */}
-        <Card className="p-8 bg-white/80 backdrop-blur-sm border-2 border-slate-200/60 shadow-lg">
-          <h2 className="text-3xl font-bold text-slate-800 mb-6">Real Component Examples</h2>
-          <div className="space-y-8">
-            {/* Button Examples */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold text-slate-700">Buttons with Accent Strategy</h3>
-              <div className="flex flex-wrap gap-4">
-                <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-                  Neural Luxury CTA
-                </button>
-                <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-                  Brain Health Action
-                </button>
-                <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-orange-600 to-orange-700 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-                  Primary Action
-                </button>
-              </div>
-            </div>
-
-            {/* Card Examples */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold text-slate-700">Cards with Gradient Borders</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 opacity-5 group-hover:opacity-10 transition-opacity rounded-xl"></div>
-                  <div className="relative">
-                    <h4 className="font-bold text-slate-800 mb-2">Premium Feature</h4>
-                    <p className="text-sm text-slate-600">Neural Luxury theme card with subtle gradient overlay</p>
-                  </div>
-                </div>
-                <div className="relative p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 opacity-5 group-hover:opacity-10 transition-opacity rounded-xl"></div>
-                  <div className="relative">
-                    <h4 className="font-bold text-slate-800 mb-2">Health Metric</h4>
-                    <p className="text-sm text-slate-600">Brain Health spectrum with clinical credibility</p>
-                  </div>
-                </div>
-                <div className="relative p-6 bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600 to-orange-700 opacity-5 group-hover:opacity-10 transition-opacity rounded-xl"></div>
-                  <div className="relative">
-                    <h4 className="font-bold text-slate-800 mb-2">Action Card</h4>
-                    <p className="text-sm text-slate-600">Burnt orange warmth for engagement</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Text Readability Examples */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold text-slate-700">Text Contrast & Readability</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-600 rounded-xl p-6 text-white">
-                  <h4 className="font-bold mb-2">White on Neural Luxury</h4>
-                  <p className="text-sm opacity-90">WCAG AAA Contrast Ratio: 7.2:1</p>
-                  <p className="text-xs mt-2 opacity-75">Perfect for headlines and key messages</p>
-                </div>
-                <div className="bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 rounded-xl p-6 text-white">
-                  <h4 className="font-bold mb-2">White on Brain Health</h4>
-                  <p className="text-sm opacity-90">WCAG AAA Contrast Ratio: 6.8:1</p>
-                  <p className="text-xs mt-2 opacity-75">Excellent for health metrics</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Card>
-
-        {/* Comparison */}
-        <Card className="p-8 bg-white/80 backdrop-blur-sm border-2 border-slate-200/60 shadow-lg">
-          <h2 className="text-3xl font-bold text-slate-800 mb-6">Before vs. After Transformation</h2>
-          <div className="grid grid-cols-2 gap-8">
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-red-600 flex items-center gap-2">
-                <span className="text-2xl">❌</span> Before (Fragmented)
-              </h3>
-              <div className="space-y-3">
-                <div className="space-y-2">
-                  <div className="h-16 bg-gradient-to-r from-emerald-400 to-teal-500 rounded-lg flex items-center justify-center text-white font-semibold shadow-md">
-                    Too Bright
-                  </div>
-                  <p className="text-xs text-slate-600">Multiple teal/emerald families (80-90% saturation)</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-16 bg-gradient-to-r from-purple-500 to-purple-700 rounded-lg flex items-center justify-center text-white font-semibold shadow-md">
-                    Too Intense
-                  </div>
-                  <p className="text-xs text-slate-600">Beacon: 70-95% saturation (overwhelming)</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-16 bg-gradient-to-r from-orange-400 to-orange-500 rounded-lg flex items-center justify-center text-white font-semibold shadow-md">
-                    Not Burnt
-                  </div>
-                  <p className="text-xs text-slate-600">Bright orange (lacks luxury warmth)</p>
-                </div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-emerald-600 flex items-center gap-2">
-                <span className="text-2xl">✅</span> After (Luxury)
-              </h3>
-              <div className="space-y-3">
-                <div className="space-y-2">
-                  <div className="h-16 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 rounded-lg flex items-center justify-center text-white font-semibold shadow-lg hover:shadow-xl transition-all">
-                    Refined
-                  </div>
-                  <p className="text-xs text-slate-600">Unified brain health gradient (45-55% saturation)</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-16 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 rounded-lg flex items-center justify-center text-white font-semibold shadow-lg hover:shadow-xl transition-all">
-                    Sophisticated
-                  </div>
-                  <p className="text-xs text-slate-600">Neural Luxury: 65-75% saturation (elegant)</p>
-                </div>
-                <div className="space-y-2">
-                  <div className="h-16 bg-gradient-to-r from-orange-600 to-orange-700 rounded-lg flex items-center justify-center text-white font-semibold shadow-lg hover:shadow-xl transition-all">
-                    Premium
-                  </div>
-                  <p className="text-xs text-slate-600">Burnt orange (luxury warmth with action)</p>
-                </div>
-              </div>
-            </div>
+          <div className="mt-8 p-6 bg-gradient-to-r from-neural-purple-50 via-neural-magenta-50 to-brand-orange-50 rounded-lg border border-neural-magenta-200">
+            <p className="text-lg text-slate-700 font-medium mb-4">
+              💡 <strong>Design Principle:</strong> Empowerment Through Vibrancy
+            </p>
+            <p className="text-slate-600">
+              Our vibrant color system reflects the neuroplastic potential of the brain - bold, adaptable, and full of energy. 
+              Each color choice reinforces the message: <em>"Your brain can change, grow stronger, and transform."</em>
+            </p>
           </div>
         </Card>
       </div>

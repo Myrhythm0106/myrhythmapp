@@ -202,7 +202,7 @@ export function EnhancedMemoryBridgeDashboard() {
           <Sparkles className="h-4 w-4 mr-2" />
           Word of the Month
         </Badge>
-        <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 mb-4">
+        <h1 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-neural-magenta-600 via-brand-orange-600 to-clarity-teal-600 mb-4">
           {wordOfTheMonth}
         </h1>
       </div>
@@ -247,7 +247,7 @@ export function EnhancedMemoryBridgeDashboard() {
         <Button
           onClick={handleStartRecording}
           size="lg"
-          className="bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700 text-white px-8 py-4 text-lg"
+          className="bg-gradient-to-r from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500 hover:from-neural-magenta-600 hover:via-brand-orange-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl"
         >
           <Zap className="h-6 w-6 mr-2" />
           Record Your First Conversation

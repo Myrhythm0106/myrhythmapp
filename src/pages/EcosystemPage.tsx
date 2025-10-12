@@ -40,12 +40,12 @@ export default function EcosystemPage() {
       <Dialog open={showWelcome} onOpenChange={setShowWelcome}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-center text-2xl font-bold bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 bg-clip-text text-transparent">
-              <Sparkles className="h-6 w-6 inline-block mr-2 text-memory-emerald-500" />
-              Welcome to Your Ecosystem
+            <DialogTitle className="text-center text-2xl font-bold bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 bg-clip-text text-transparent">
+              <Sparkles className="h-6 w-6 inline-block mr-2 text-neural-magenta-500" />
+              Welcome to Your Life Empowerment Journey
             </DialogTitle>
             <DialogDescription className="text-center text-base text-brain-health-700 pt-2">
-              This is your command center for cognitive health and daily organization.
+              This is your transformation hub for cognitive empowerment and purposeful living.
             </DialogDescription>
           </DialogHeader>
 
