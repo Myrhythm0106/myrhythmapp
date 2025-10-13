@@ -20,6 +20,11 @@ import { CheckCircle, Share2, Calendar, Users, Brain, Heart, Clock, AlertTriangl
 import { ConfirmationDialog } from '@/components/ui/ConfirmationDialog';
 import { WatcherSelectionModal } from './WatcherSelectionModal';
 import { EmptyACTsState } from './EmptyACTsState';
+import { PersonaSwitcher } from './PersonaSwitcher';
+import { usePersona } from '@/hooks/usePersona';
+import { SimplifiedActionView } from './recovery/SimplifiedActionView';
+import { CaregiverCollaborationPanel } from './recovery/CaregiverCollaborationPanel';
+import { MedicalContextHelper } from './recovery/MedicalContextHelper';
 
 interface ExtractedActionsReviewProps {
   meetingId?: string;
@@ -37,6 +42,7 @@ export function ExtractedActionsReview({
   const isMobile = useIsMobile();
   const { user } = useAuth();
   const { fetchExtractedActions, confirmAction } = useMemoryBridge();
+  const persona = usePersona();
   const [actions, setActions] = useState<ExtractedAction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [commentCounts, setCommentCounts] = useState<Record<string, number>>({});
@@ -95,9 +101,7 @@ export function ExtractedActionsReview({
       }
       
       if (onActionConfirm) onActionConfirm(actionId, 'confirmed');
-      toast.success("Empowered commitment confirmed! 💪", {
-        description: "You're building stronger relationships with every promise kept"
-      });
+      toast.success(persona.confirmMessage);
     } catch (error) {
       toast.error("Failed to confirm action");
     }
@@ -147,8 +151,8 @@ export function ExtractedActionsReview({
       setShowSmartScheduling(false);
       setActionForWatchers(null);
       
-      toast.success("Action scheduled with SMART suggestions! 📅💜", {
-        description: `${watcherNames.length > 0 ? watcherNames.join(', ') + ' will' : 'Your circle will'} be notified of this empowering commitment`
+      toast.success(persona.scheduleMessage, {
+        description: `${watcherNames.length > 0 ? watcherNames.join(', ') + ' will' : 'Your circle will'} be notified`
       });
     } catch (error) {
       toast.error("Failed to schedule action");
@@ -267,6 +271,24 @@ export function ExtractedActionsReview({
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto p-6">
+      {/* Persona Switcher */}
+      <PersonaSwitcher />
+      
+      {/* Recovery Mode Specific Features */}
+      {persona.personaMode === 'recovery' && (
+        <>
+          <SimplifiedActionView 
+            actions={actions}
+            onActionComplete={handleSwipeComplete}
+            maxVisible={3}
+          />
+          <div className="grid md:grid-cols-2 gap-4">
+            <MedicalContextHelper />
+            <CaregiverCollaborationPanel />
+          </div>
+        </>
+      )}
+      
       {/* Today's Priority Banner */}
       <TodaysPriorityBanner />
       
@@ -294,11 +316,15 @@ export function ExtractedActionsReview({
           <div className="flex items-center justify-center gap-2 mb-2">
             <Sparkles className="h-6 w-6 text-primary animate-pulse" />
             <CardTitle className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Your SMART ACTS Framework
+              {persona.frameworkLabel}
             </CardTitle>
             <Sparkles className="h-6 w-6 text-primary animate-pulse" />
           </div>
-          <p className="text-muted-foreground">Empowering your conversations into actionable progress</p>
+          <p className="text-muted-foreground">
+            {persona.personaMode === 'recovery' 
+              ? 'Supporting your wellness journey with actionable care steps' 
+              : 'Empowering your conversations into actionable progress'}
+          </p>
           <div className="flex items-center justify-center gap-2 mt-2">
             <Heart className="h-4 w-4 text-primary" />
             <span className="text-sm text-primary font-medium">No One Walks Alone</span>
@@ -308,7 +334,7 @@ export function ExtractedActionsReview({
             <div className="flex justify-center mt-4">
               <Button onClick={handleScheduleAllConfirmed} className="flex items-center gap-2 bg-gradient-to-r from-primary to-secondary">
                 <Calendar className="h-4 w-4" />
-                Schedule {confirmedCount} Empowered Actions
+                Schedule {confirmedCount} {persona.actionLabelPlural}
               </Button>
             </div>
           )}
