@@ -67,6 +67,9 @@ verify_jwt = false
 [functions.calendar-google-sync]
 verify_jwt = true
 
+[functions.create-google-calendar-event]
+verify_jwt = true
+
 # Week 2: Vision Framework
 [functions.generate-weekly-affirmation]
 verify_jwt = true

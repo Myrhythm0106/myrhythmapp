@@ -68,14 +68,32 @@ export function ExtractedActionsReview({
 
   const handleSwipeComplete = async (actionId: string) => {
     try {
+      const action = actions.find(a => a.id === actionId);
+      if (!action) return;
+
       await confirmAction(actionId, 'confirmed');
-      setActions(prev => 
-        prev.map(action => 
-          action.id === actionId 
-            ? { ...action, status: 'confirmed' as const }
-            : action
-        )
-      );
+      
+      // Schedule to calendar automatically
+      if (user?.id) {
+        const eventId = await convertActionToCalendarEvent(action, user.id);
+        
+        setActions(prev => 
+          prev.map(a => 
+            a.id === actionId 
+              ? { ...a, status: 'confirmed' as const, calendar_synced: !!eventId, calendar_event_id: eventId }
+              : a
+          )
+        );
+      } else {
+        setActions(prev => 
+          prev.map(a => 
+            a.id === actionId 
+              ? { ...a, status: 'confirmed' as const }
+              : a
+          )
+        );
+      }
+      
       if (onActionConfirm) onActionConfirm(actionId, 'confirmed');
       toast.success("Empowered commitment confirmed! 💪", {
         description: "You're building stronger relationships with every promise kept"
@@ -419,6 +437,12 @@ export function ExtractedActionsReview({
                       )}
                       {action.status === 'rejected' && (
                         <Badge className="text-xs bg-gray-100 text-gray-800">❌ Declined</Badge>
+                      )}
+                      {(action as any).calendar_synced && (
+                        <Badge variant="outline" className="text-xs gap-1 border-blue-500 text-blue-700 bg-blue-50">
+                          <Calendar className="h-3 w-3" />
+                          Synced to Google Calendar
+                        </Badge>
                       )}
                     </div>
                   </CardContent>

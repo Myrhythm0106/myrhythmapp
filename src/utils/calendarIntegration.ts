@@ -89,6 +89,42 @@ export async function convertActionToCalendarEvent(
     // Link action to daily actions for tracking with watchers
     await createDailyActionFromExtracted(action, userId, finalDate, finalTime, durationEstimate);
 
+    // Check if user has active Google Calendar integration and sync
+    if (data.id) {
+      const { data: integration } = await supabase
+        .from('calendar_integrations')
+        .select('id, provider')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .maybeSingle();
+      
+      if (integration && integration.provider === 'google') {
+        try {
+          const { data: externalEvent, error: externalError } = await supabase.functions.invoke(
+            'create-google-calendar-event',
+            { body: { calendar_event_id: data.id, action_id: action.id } }
+          );
+          
+          if (!externalError && externalEvent?.success) {
+            toast.success("✅ Added to your Google Calendar!", {
+              description: "View in calendar",
+              action: {
+                label: "Open",
+                onClick: () => window.open(externalEvent.event_link, '_blank')
+              }
+            });
+          } else if (externalError) {
+            console.error('External calendar sync error:', externalError);
+            toast.error("Saved locally but failed to sync to Google Calendar", {
+              description: "We'll retry automatically"
+            });
+          }
+        } catch (syncError) {
+          console.error('Failed to sync to external calendar:', syncError);
+        }
+      }
+    }
+
     return data.id;
   } catch (error) {
     console.error('Failed to convert action to calendar event:', error);
