@@ -12,22 +12,30 @@ export const uploadVoiceRecording = async (
   description?: string,
   shareWithHealthcare: boolean = false
 ) => {
+  console.log('📤 Starting upload for user:', userId);
+  
   const recordingId = uuidv4();
   const fileName = `${userId}/${recordingId}.webm`;
   
   // Upload to Supabase Storage
+  console.log('📁 Uploading to storage:', fileName);
   const { error: uploadError } = await supabase.storage
     .from('voice-recordings')
     .upload(fileName, audioBlob);
 
-  if (uploadError) throw uploadError;
+  if (uploadError) {
+    console.error('❌ Storage upload error:', uploadError);
+    throw uploadError;
+  }
 
-  // Save metadata to database
+  console.log('✅ Storage upload successful, saving metadata...');
+  
+  // Save metadata to database with explicit user_id
   const { data, error: dbError } = await supabase
     .from('voice_recordings')
     .insert({
       id: recordingId,
-      user_id: userId,
+      user_id: userId,  // Explicitly set from authenticated user
       title,
       description,
       category,
@@ -39,7 +47,18 @@ export const uploadVoiceRecording = async (
     .select()
     .single();
 
-  if (dbError) throw dbError;
+  if (dbError) {
+    console.error('❌ Database insert error:', dbError);
+    console.error('Failed insert data:', {
+      id: recordingId,
+      user_id: userId,
+      title,
+      category
+    });
+    throw dbError;
+  }
+  
+  console.log('✅ Database insert successful:', data);
   return data;
 };
 

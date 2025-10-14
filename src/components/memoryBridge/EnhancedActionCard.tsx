@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   CheckCircle2, 
   Clock, 
@@ -19,13 +20,17 @@ import {
 } from 'lucide-react';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { analyzeSMART, getSMARTColor, getSMARTLabel } from '@/utils/smartValidation';
+import { celebrateActionComplete } from '@/utils/celebration';
+import { toast } from 'sonner';
 
 interface EnhancedActionCardProps {
   action: ExtractedAction;
   onUpdate?: (updates: Partial<ExtractedAction>) => void;
+  compact?: boolean;
+  layout?: 'card' | 'list';
 }
 
-export function EnhancedActionCard({ action, onUpdate }: EnhancedActionCardProps) {
+export function EnhancedActionCard({ action, onUpdate, compact = false, layout = 'card' }: EnhancedActionCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const smartAnalysis = analyzeSMART({
     action_text: action.action_text,
@@ -42,6 +47,12 @@ export function EnhancedActionCard({ action, onUpdate }: EnhancedActionCardProps
   const isHighConfidence = confidenceScore >= 0.8;
   const isMediumConfidence = confidenceScore >= 0.6 && confidenceScore < 0.8;
   const isLowConfidence = confidenceScore < 0.6;
+
+  const handleComplete = () => {
+    celebrateActionComplete();
+    toast.success('🎉 Action completed! Great work!');
+    onUpdate?.({ status: 'done' });
+  };
 
   const getConfidenceBadge = () => {
     if (isHighConfidence) {
@@ -80,7 +91,12 @@ export function EnhancedActionCard({ action, onUpdate }: EnhancedActionCardProps
   };
 
   return (
-    <Card className={`transition-all ${isHighConfidence ? 'border-green-200 bg-green-50/30' : isMediumConfidence ? 'border-yellow-200 bg-yellow-50/30' : 'border-orange-200 bg-orange-50/30'}`}>
+    <TooltipProvider>
+      <Card className={`transition-all hover:scale-[1.02] hover:shadow-lg active:scale-[0.98] ${
+        isHighConfidence ? 'border-green-200 bg-green-50/30' : 
+        isMediumConfidence ? 'border-yellow-200 bg-yellow-50/30' : 
+        'border-orange-200 bg-orange-50/30'
+      }`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1">
@@ -99,18 +115,26 @@ export function EnhancedActionCard({ action, onUpdate }: EnhancedActionCardProps
                 <Heart className="w-4 h-4 mt-0.5 text-primary flex-shrink-0" />
                 <span>{action.motivation_statement}</span>
               </CardDescription>
-            )}
+              )}
+            </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="flex-shrink-0"
+                  aria-label={isExpanded ? "Collapse details" : "Expand details"}
+                >
+                  {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {isExpanded ? "Hide details" : "Show details"}
+              </TooltipContent>
+            </Tooltip>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex-shrink-0"
-          >
-            {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          </Button>
-        </div>
-      </CardHeader>
+        </CardHeader>
 
       <CardContent className="space-y-4">
         {/* 2-Minute Starter - Always Visible for Actions */}
@@ -312,5 +336,6 @@ export function EnhancedActionCard({ action, onUpdate }: EnhancedActionCardProps
         </Collapsible>
       </CardContent>
     </Card>
+    </TooltipProvider>
   );
 }

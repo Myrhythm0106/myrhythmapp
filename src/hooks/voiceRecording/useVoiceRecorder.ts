@@ -9,6 +9,7 @@ import {
   deleteVoiceRecording,
   getRecordingSignedUrl
 } from '@/utils/voiceRecording';
+import { supabase } from '@/integrations/supabase/client';
 
 export function useVoiceRecorder() {
   const { user } = useAuth();
@@ -186,12 +187,26 @@ export function useVoiceRecorder() {
     shareWithHealthcare: boolean = false
   ) => {
     if (!user) {
+      console.error('❌ No user found - cannot save recording');
       toast.error('Please sign in to save recordings');
-      return;
+      return null;
     }
 
+    console.log('💾 Saving recording for user:', user.id);
     setIsProcessing(true);
+    
     try {
+      // Verify user session is still valid
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.error('❌ Session validation failed:', sessionError);
+        toast.error('Your session has expired. Please sign in again.');
+        return null;
+      }
+
+      console.log('✅ Session valid, uploading recording...');
+      
       const data = await uploadVoiceRecording(
         audioBlob,
         title,
@@ -201,12 +216,26 @@ export function useVoiceRecorder() {
         shareWithHealthcare
       );
 
+      console.log('✅ Recording saved successfully:', data);
       toast.success('Recording saved successfully');
       await fetchRecordings(); // Refresh the list
       return data;
     } catch (error) {
-      console.error('Error saving recording:', error);
-      toast.error('Failed to save recording');
+      console.error('❌ Error saving recording:', error);
+      
+      // Check if it's an RLS policy error
+      if (error instanceof Error) {
+        if (error.message.includes('row-level security') || error.message.includes('RLS')) {
+          console.error('🔒 RLS Policy Error - user_id mismatch detected');
+          toast.error('Authentication error. Please try signing out and back in.');
+        } else {
+          toast.error(`Failed to save recording: ${error.message}`);
+        }
+      } else {
+        toast.error('Failed to save recording');
+      }
+      
+      return null;
     } finally {
       setIsProcessing(false);
     }
