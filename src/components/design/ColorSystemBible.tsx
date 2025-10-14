@@ -6,88 +6,108 @@ import { Sparkles, Brain, Zap, Target, Heart } from 'lucide-react';
 export function ColorSystemBible() {
   const colorSystem = {
     primary: {
-      name: "Neural Empowerment",
+      name: "Empowerment Gradient",
       description: "Vibrant brand gradient - Headers, navigation, empowerment moments",
-      gradient: "from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600",
+      gradient: "from-neural-purple-600 via-neural-blue-500 to-brand-orange-600",
       accentColor: "clarity-teal-500",
       accentPosition: "top-right",
       usage: ["Hero Headers & Titles", "Navigation Active States", "Empowerment Moments", "Transformation Features"],
       hsl: {
         purple: "270° 88% 52%",
-        magenta: "320° 92% 58%", 
+        blue: "220° 88% 56%", 
         orange: "25° 88% 52%"
       },
-      saturation: "85-92% (Vibrant empowerment)",
+      saturation: "85-88% (Vibrant empowerment)",
       icon: Sparkles,
       preview: [
         { name: "Neural Purple 600", className: "bg-gradient-to-r from-neural-purple-600 to-neural-purple-700" },
-        { name: "Neural Magenta 500", className: "bg-gradient-to-r from-neural-magenta-500 to-neural-magenta-600" },
+        { name: "Neural Blue 500", className: "bg-gradient-to-r from-neural-blue-500 to-neural-blue-600" },
         { name: "Brand Orange 600", className: "bg-gradient-to-r from-brand-orange-600 to-brand-orange-700" }
       ]
     },
-    magenta: {
-      name: "Neural Magenta - Passionate Empowerment",
-      description: "Vibrant magenta/pink for emotional connection and bold confidence",
-      gradient: "from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500",
-      accentColor: "brand-orange-500",
+    teal: {
+      name: "Cognitive Clarity - Teal",
+      description: "Mental focus, clarity, and cognitive wellness",
+      gradient: "from-clarity-teal-500 to-brain-health-500",
+      accentColor: "memory-emerald-500",
       accentPosition: "bottom-left",
-      usage: ["Emotional Moments", "Passion Accents", "Celebration States", "Gradient Flows", "CTA Highlights"],
+      usage: ["Focus States", "Cognitive Features", "Mental Clarity", "Navigation Icons", "Success with Emerald"],
       hsl: {
-        primary: "320° 92% 58%",
-        light: "320° 92% 75%",
-        dark: "320° 92% 42%"
+        primary: "180° 75% 52%",
+        light: "180° 75% 75%",
+        dark: "180° 75% 42%"
       },
-      saturation: "90-95% (Bold emotional energy)",
-      icon: Heart,
+      saturation: "75% (Vibrant clarity)",
+      icon: Brain,
       preview: [
-        { name: "Magenta 500", className: "bg-gradient-to-r from-neural-magenta-500 to-neural-magenta-600" },
-        { name: "Magenta 400", className: "bg-gradient-to-r from-neural-magenta-400 to-neural-magenta-500" },
-        { name: "Magenta 600", className: "bg-gradient-to-r from-neural-magenta-600 to-neural-magenta-700" }
+        { name: "Clarity Teal 500", className: "bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600" },
+        { name: "Brain Health 500", className: "bg-gradient-to-r from-brain-health-500 to-brain-health-600" },
+        { name: "Teal 400", className: "bg-gradient-to-r from-clarity-teal-400 to-clarity-teal-500" }
       ]
     },
     accent: {
-      name: "Brain Health Spectrum",
-      description: "Vibrant health gradient - Progress, wellness metrics, cognitive focus",
-      gradient: "from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500",
-      accentColor: "neural-magenta-600",
+      name: "Brain Health Spectrum - Emerald",
+      description: "Growth, healing, memory retention, and success",
+      gradient: "from-memory-emerald-500 via-clarity-teal-500 to-brain-health-500",
+      accentColor: "brand-orange-600",
       accentPosition: "bottom-left",
-      usage: ["Progress Bars", "Health Metrics", "Success States", "Cognitive Enhancement"],
+      usage: ["Success States", "Health Metrics", "Memory Features", "Healing Progress", "Achievement Badges"],
       hsl: {
-        brainHealth: "173° 75% 52%",
+        emerald: "160° 52% 48%",
         clarityTeal: "180° 75% 52%",
-        emerald: "160° 52% 48%"
+        brainHealth: "173° 75% 52%"
       },
-      saturation: "68-78% (Vibrant wellness)",
-      icon: Brain,
+      saturation: "52-75% (Natural wellness)",
+      icon: Heart,
       preview: [
-        { name: "Brain Health 500", className: "bg-gradient-to-r from-brain-health-500 to-brain-health-600" },
+        { name: "Memory Emerald 500", className: "bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600" },
         { name: "Clarity Teal 500", className: "bg-gradient-to-r from-clarity-teal-500 to-clarity-teal-600" },
-        { name: "Memory Emerald 500", className: "bg-gradient-to-r from-memory-emerald-500 to-memory-emerald-600" }
+        { name: "Brain Health 500", className: "bg-gradient-to-r from-brain-health-500 to-brain-health-600" }
       ]
     },
     action: {
-      name: "Vibrant Orange",
+      name: "Burnt Orange - Primary Action",
       description: "Premium action trigger - Primary CTAs, critical actions",
       gradient: "from-brand-orange-500 to-brand-orange-600",
-      accentColor: "neural-magenta-600",
+      accentColor: "neural-purple-600",
       accentPosition: "top-left",
-      usage: ["Primary CTAs", "Submit Buttons", "Start Actions", "Empowerment Upgrades"],
+      usage: ["Primary CTAs", "Submit Buttons", "Start Actions", "Active States"],
       hsl: {
         primary: "25° 88% 58%",
         hover: "25° 88% 52%"
       },
-      saturation: "85-90% (Energized warmth)",
+      saturation: "88% (Bold action)",
       icon: Zap,
       preview: [
         { name: "Orange 500", className: "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600" },
         { name: "Orange 600", className: "bg-gradient-to-r from-brand-orange-600 to-brand-orange-700" }
       ]
     },
+    blue: {
+      name: "Neural Blue - Trust & Structure",
+      description: "Trust, stability, and core navigation",
+      gradient: "from-neural-blue-500 to-neural-blue-600",
+      accentColor: "neural-purple-600",
+      accentPosition: "top-right",
+      usage: ["Navigation", "Structural Elements", "Informational Content", "Trust Indicators"],
+      hsl: {
+        primary: "220° 88% 56%",
+        light: "220° 88% 75%",
+        dark: "220° 88% 46%"
+      },
+      saturation: "88% (Strong trust)",
+      icon: Target,
+      preview: [
+        { name: "Neural Blue 500", className: "bg-gradient-to-r from-neural-blue-500 to-neural-blue-600" },
+        { name: "Neural Blue 600", className: "bg-gradient-to-r from-neural-blue-600 to-neural-blue-700" },
+        { name: "Neural Blue 400", className: "bg-gradient-to-r from-neural-blue-400 to-neural-blue-500" }
+      ]
+    },
     neutrals: {
       name: "Warm-to-Cool Grays",
       description: "Sophisticated backgrounds with subtle gradients",
       gradient: "from-slate-50 to-gray-100",
-      accentColor: "neural-magenta-600",
+      accentColor: "neural-purple-600",
       accentPosition: "bottom-right",
       usage: ["Backgrounds", "Body Text", "Borders", "Subtle Accents"],
       hsl: {
@@ -109,38 +129,38 @@ export function ColorSystemBible() {
     {
       name: "Empowerment Hero",
       description: "For hero sections and major empowerment headers",
-      className: "bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 text-white",
-      code: "from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600"
+      className: "bg-gradient-to-r from-neural-purple-600 via-neural-blue-500 to-brand-orange-600 text-white",
+      code: "from-neural-purple-600 via-neural-blue-500 to-brand-orange-600"
     },
     {
-      name: "Brain Passion Flow",
-      description: "For progress bars and passionate cognitive metrics",
-      className: "bg-gradient-to-r from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500 text-white",
-      code: "from-neural-magenta-500 via-brand-orange-500 to-clarity-teal-500"
-    },
-    {
-      name: "Transformation Gradient",
-      description: "For transformation moments and achievements",
-      className: "bg-gradient-to-r from-neural-blue-600 via-neural-magenta-500 to-neural-purple-600 text-white",
-      code: "from-neural-blue-600 via-neural-magenta-500 to-neural-purple-600"
+      name: "Success Flow",
+      description: "For progress bars and success metrics",
+      className: "bg-gradient-to-r from-memory-emerald-500 via-clarity-teal-500 to-brain-health-500 text-white",
+      code: "from-memory-emerald-500 via-clarity-teal-500 to-brain-health-500"
     },
     {
       name: "Action Trigger",
-      description: "Primary CTAs with vibrant orange-magenta",
-      className: "bg-gradient-to-r from-neural-magenta-500 to-brand-orange-600 text-white",
-      code: "from-neural-magenta-500 to-brand-orange-600"
+      description: "Primary CTAs with bold orange",
+      className: "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white",
+      code: "from-brand-orange-500 to-brand-orange-600"
     },
     {
-      name: "Wellness Flow",
-      description: "Health and wellness progress indicators",
-      className: "bg-gradient-to-r from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500 text-white",
-      code: "from-brain-health-500 via-clarity-teal-500 to-memory-emerald-500"
+      name: "Cognitive Gradient",
+      description: "Teal-based cognitive clarity",
+      className: "bg-gradient-to-r from-clarity-teal-500 to-brain-health-500 text-white",
+      code: "from-clarity-teal-500 to-brain-health-500"
+    },
+    {
+      name: "Empowerment Blend",
+      description: "Purple to blue empowerment",
+      className: "bg-gradient-to-r from-neural-purple-600 to-neural-blue-600 text-white",
+      code: "from-neural-purple-600 to-neural-blue-600"
     },
     {
       name: "Subtle Background",
-      description: "Page backgrounds with vibrant depth",
-      className: "bg-gradient-to-br from-neural-purple-50/30 via-neural-magenta-50/25 to-clarity-teal-100/30",
-      code: "from-neural-purple-50/30 via-neural-magenta-50/25 to-clarity-teal-100/30"
+      description: "Page backgrounds with subtle depth",
+      className: "bg-gradient-to-br from-neural-purple-50/30 via-neural-blue-50/25 to-clarity-teal-50/30",
+      code: "from-neural-purple-50/30 via-neural-blue-50/25 to-clarity-teal-50/30"
     }
   ];
 
@@ -149,21 +169,21 @@ export function ColorSystemBible() {
       <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h1 className="text-5xl font-bold bg-gradient-to-r from-neural-purple-600 via-neural-magenta-600 to-brand-orange-600 bg-clip-text text-transparent">
-            Vibrant Empowerment Color System
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-neural-purple-600 via-neural-blue-500 to-brand-orange-600 bg-clip-text text-transparent">
+            MyRhythm Color System
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Bold, confident colors that inspire transformation and cognitive empowerment
+            5 core colors that inspire transformation and cognitive empowerment: Teal, Emerald, Orange, Blue, Purple
           </p>
           <div className="flex items-center justify-center gap-3">
             <Badge variant="outline" className="bg-white/50 backdrop-blur-sm">
-              85-92% Saturation
+              5-Color Palette
             </Badge>
             <Badge variant="outline" className="bg-white/50 backdrop-blur-sm">
-              Neuroplasticity-Inspired
+              Brain-Health Focused
             </Badge>
             <Badge variant="outline" className="bg-white/50 backdrop-blur-sm">
-              Empowerment Aesthetic
+              Apple/Google Standard
             </Badge>
           </div>
         </div>
@@ -271,45 +291,45 @@ export function ColorSystemBible() {
 
         {/* Color Philosophy */}
         <Card className="p-8 bg-gradient-to-br from-white via-slate-50/50 to-white backdrop-blur-sm border-2 border-slate-200/60 shadow-lg">
-          <h2 className="text-3xl font-bold text-slate-800 mb-6">Color Philosophy: Empowerment Through Vibrancy</h2>
+          <h2 className="text-3xl font-bold text-slate-800 mb-6">Color Philosophy: Clarity Through Simplicity</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Before: Clinical */}
+            {/* Before: Too Many Colors */}
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-red-700 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-red-600"></span>
-                Before: Clinical & Muted
+                Before: Too Complex
               </h3>
               <div className="space-y-3 bg-white/80 rounded-lg p-5 border border-slate-200">
-                <p className="text-sm text-slate-600">❌ 65-75% saturation (too conservative)</p>
-                <p className="text-sm text-slate-600">❌ No magenta/passion dimension</p>
-                <p className="text-sm text-slate-600">❌ Safe, medical app aesthetic</p>
-                <p className="text-sm text-slate-600">❌ Low emotional engagement</p>
+                <p className="text-sm text-slate-600">❌ 7+ colors (magenta, indigo, beacon)</p>
+                <p className="text-sm text-slate-600">❌ Inconsistent usage across components</p>
+                <p className="text-sm text-slate-600">❌ Overwhelming for brain injury users</p>
+                <p className="text-sm text-slate-600">❌ No clear semantic meaning</p>
               </div>
             </div>
 
-            {/* After: Empowerment */}
+            {/* After: 5-Color System */}
             <div className="space-y-4">
               <h3 className="text-xl font-bold text-green-700 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-green-600"></span>
-                After: Vibrant Empowerment
+                After: Clear & Focused
               </h3>
               <div className="space-y-3 bg-white/80 rounded-lg p-5 border border-slate-200">
-                <p className="text-sm text-slate-600">✅ 85-92% saturation (confident & bold)</p>
-                <p className="text-sm text-slate-600">✅ Neural Magenta adds passion & emotion</p>
-                <p className="text-sm text-slate-600">✅ Premium wellness aesthetic</p>
-                <p className="text-sm text-slate-600">✅ High emotional connection</p>
+                <p className="text-sm text-slate-600">✅ 5 core colors with clear purposes</p>
+                <p className="text-sm text-slate-600">✅ Consistent semantic usage</p>
+                <p className="text-sm text-slate-600">✅ Brain-friendly, not overwhelming</p>
+                <p className="text-sm text-slate-600">✅ Apple/Google design standard</p>
               </div>
             </div>
           </div>
 
-          <div className="mt-8 p-6 bg-gradient-to-r from-neural-purple-50 via-neural-magenta-50 to-brand-orange-50 rounded-lg border border-neural-magenta-200">
+          <div className="mt-8 p-6 bg-gradient-to-r from-neural-purple-50 via-neural-blue-50 to-clarity-teal-50 rounded-lg border border-clarity-teal-200">
             <p className="text-lg text-slate-700 font-medium mb-4">
-              💡 <strong>Design Principle:</strong> Empowerment Through Vibrancy
+              💡 <strong>Design Principle:</strong> Clarity Through Simplicity
             </p>
             <p className="text-slate-600">
-              Our vibrant color system reflects the neuroplastic potential of the brain - bold, adaptable, and full of energy. 
-              Each color choice reinforces the message: <em>"Your brain can change, grow stronger, and transform."</em>
+              By limiting to 5 colors, we create a cohesive, predictable interface that doesn't overwhelm users recovering from brain injuries. 
+              Each color has a clear semantic meaning: <em>Teal = Clarity, Emerald = Success, Orange = Action, Blue = Trust, Purple = Empowerment.</em>
             </p>
           </div>
         </Card>

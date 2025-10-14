@@ -567,4 +567,26 @@ html, body {
     filter: brightness(1.1) contrast(0.9);
   }
 
+  /* Spacing Utilities */
+  .touch-spacing-y > * + * {
+    @apply mt-mobile-touch;
+  }
+  
+  .section-spacing-y > * + * {
+    @apply mt-section;
+  }
+
+  /* Input Validation States */
+  .input-valid {
+    @apply border-memory-emerald-500 focus:ring-memory-emerald-500/20;
+  }
+  
+  .input-invalid {
+    @apply border-red-500 focus:ring-red-500/20;
+  }
+  
+  .input-idle {
+    @apply border-clarity-teal-300 focus:ring-clarity-teal-500/20;
+  }
+
 }

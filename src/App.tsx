@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,10 +10,21 @@ import { PriorityProvider } from "@/contexts/PriorityContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { SetupProgressProvider } from "@/contexts/SetupProgressContext";
 import { SetupProgressBar } from "@/components/progress/SetupProgressBar";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import { NavProvider } from "@/components/navigation/NavContext";
+import { MobileBottomNav } from "@/components/navigation/MobileBottomNav";
+import { useNetworkStatus } from "@/hooks/useNetworkStatus";
+import { lazy, Suspense } from "react";
+import { PageSkeleton } from "@/components/loading/PageSkeleton";
 import Landing from "./pages/Landing";
 import MemoryBridge from "./routes/MemoryBridge";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
+// Lazy load heavy routes for better performance
+const CalendarPage = lazy(() => import("./pages/CalendarPage"));
+const Assessment = lazy(() => import("./pages/Assessment"));
+const CommandCenter = lazy(() => import("./pages/CommandCenter"));
+
 import EmailVerification from "./pages/EmailVerification";
 import MVPPaymentPage from "./pages/MVPPaymentPage";
 import GetStartedPage from "./pages/GetStartedPage";
@@ -26,15 +36,12 @@ import TermsOfService from "./pages/TermsOfService";
 import FoundersMemoryStory from "./pages/FoundersMemoryStory";
 import InAppPurchase from "./routes/InAppPurchase";
 import MemoryBank from "./routes/MemoryBank";
-import CommandCenter from "./pages/CommandCenter";
-import CalendarPage from "./pages/CalendarPage";
 import OrganizationsDirectory from "./pages/OrganizationsDirectory";
 import SymptomTracking from "./pages/SymptomTracking";
 import AcceptInvitation from "./pages/AcceptInvitation";
 import SupportMemberDashboard from "./pages/SupportMemberDashboard";
 import { SupportMemberDashboardPage } from "./pages/SupportMemberDashboardPage";
 import DemoLanding from "./pages/DemoLanding";
-import Assessment from "./pages/Assessment";
 import QuickAssessment from "./pages/QuickAssessment";
 import BrainInjuryAssessment from "./pages/BrainInjuryAssessment";
 import CognitivePerformanceAssessment from "./pages/CognitivePerformanceAssessment";
@@ -76,20 +83,30 @@ import ColorSystemBible from "./pages/ColorSystemBible";
 
 const queryClient = new QueryClient();
 
+// Network status component
+function NetworkStatusMonitor() {
+  useNetworkStatus();
+  return null;
+}
+
 function App() {
   console.log('🎯 App.tsx: App component rendering');
   return (
-    <QueryClientProvider client={queryClient}>
-      <MockAuthWrapper>
-        <SubscriptionProvider>
-          <PomodoroProvider>
-            <DailyActionsProvider>
-              <SetupProgressProvider>
-                <TooltipProvider>
-                  <Toaster />
-                  <BrowserRouter>
-                    <SetupProgressBar />
-                  <Routes>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <MockAuthWrapper>
+          <SubscriptionProvider>
+            <PomodoroProvider>
+              <DailyActionsProvider>
+                <SetupProgressProvider>
+                  <TooltipProvider>
+                    <Toaster />
+                    <NetworkStatusMonitor />
+                    <BrowserRouter>
+                      <NavProvider>
+                        <SetupProgressBar />
+                        <Suspense fallback={<PageSkeleton />}>
+                          <Routes>
      {/* Landing and Discovery Routes */}
                      <Route path="/" element={<Landing />} />
                      <Route path="/auth" element={<Auth />} />
@@ -230,15 +247,19 @@ function App() {
                         </ProtectedRoute>
                       } />
                        <Route path="/congrats" element={<CongratsPage />} />
-                  </Routes>
-                </BrowserRouter>
-              </TooltipProvider>
-            </SetupProgressProvider>
-          </DailyActionsProvider>
-        </PomodoroProvider>
-        </SubscriptionProvider>
-      </MockAuthWrapper>
-  </QueryClientProvider>
+                   </Routes>
+                        </Suspense>
+                        <MobileBottomNav />
+                      </NavProvider>
+                    </BrowserRouter>
+                  </TooltipProvider>
+                </SetupProgressProvider>
+              </DailyActionsProvider>
+            </PomodoroProvider>
+          </SubscriptionProvider>
+        </MockAuthWrapper>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

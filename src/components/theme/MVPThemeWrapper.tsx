@@ -9,8 +9,8 @@ export function MVPThemeWrapper({ children, className = '' }: MVPThemeWrapperPro
   return (
     <div className={`min-h-screen bg-gradient-to-br from-neural-purple-50 to-neural-blue-50 dark:from-neural-purple-900 dark:to-neural-blue-800 ${className}`}>
       <div className="relative">
-        {/* Background gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-br from-neural-indigo-500/10 via-neural-purple-500/5 to-brain-health-500/10 dark:from-neural-indigo-400/20 dark:via-neural-purple-400/10 dark:to-brain-health-400/20 pointer-events-none" />
+        {/* Background gradient overlay - 5 colors only */}
+        <div className="absolute inset-0 bg-gradient-to-br from-neural-purple-500/10 via-neural-blue-500/5 to-brain-health-500/10 dark:from-neural-purple-400/20 dark:via-neural-blue-400/10 dark:to-brain-health-400/20 pointer-events-none" />
         
         {/* Content */}
         <div className="relative z-10">
