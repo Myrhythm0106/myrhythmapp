@@ -38,18 +38,8 @@ export default function StartPage() {
     return <ThreeStepWarmOnboarding />;
   }
   
-  // STATE 3: Authenticated + onboarding complete → Redirect to appropriate dashboard
-  const chosenPath = localStorage.getItem('myrhythm_chosen_path') as 'guided' | 'explorer' | null;
-  console.log('StartPage: User authenticated with completed onboarding, redirecting based on path:', chosenPath);
-  
-  if (chosenPath === 'guided') {
-    navigate('/guided-journey', { replace: true });
-  } else if (chosenPath === 'explorer') {
-    navigate('/explorer', { replace: true });
-  } else {
-    // Fallback to memory bridge if no path chosen
-    navigate('/memory-bridge', { replace: true });
-  }
-  
+  // STATE 3: Authenticated + onboarding complete → Redirect to memory-bridge
+  console.log('StartPage: User authenticated with completed onboarding, redirecting to memory-bridge');
+  navigate('/memory-bridge', { replace: true });
   return null;
 }
