@@ -49,13 +49,27 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     return <Navigate to="/support-member-dashboard" replace />;
   }
 
-  // Check if user needs onboarding (for all protected routes except onboarding routes, memory bridge, and support members)
-  if (requireAuth && user && !isSupportMember && !location.pathname.includes('onboarding') && !location.pathname.includes('/memory-bridge')) {
+  // Check if user needs onboarding (Phase 4: Route guards)
+  if (requireAuth && user && !isSupportMember) {
     const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete') === 'true';
-    console.log('Checking onboarding status:', { onboardingComplete, currentPath: location.pathname });
-    if (!onboardingComplete) {
-      console.log('Redirecting to onboarding:', getOnboardingRoute());
-      return <Navigate to={getOnboardingRoute()} replace />;
+    const chosenPath = localStorage.getItem('myrhythm_chosen_path') as 'guided' | 'explorer' | null;
+    
+    // If onboarding not complete and not on start page, redirect to /start
+    if (!onboardingComplete && !location.pathname.includes('/start') && !location.pathname.includes('/auth')) {
+      console.log('ProtectedRoute: User has not completed onboarding, redirecting to /start');
+      return <Navigate to="/start" replace />;
+    }
+    
+    // If trying to access guided-journey without choosing guided path
+    if (location.pathname.includes('/guided-journey') && chosenPath !== 'guided' && onboardingComplete) {
+      console.log('ProtectedRoute: User chose explorer path, redirecting to /explorer');
+      return <Navigate to="/explorer" replace />;
+    }
+    
+    // If trying to access explorer without choosing explorer path
+    if (location.pathname.includes('/explorer') && chosenPath !== 'explorer' && onboardingComplete) {
+      console.log('ProtectedRoute: User chose guided path, redirecting to /guided-journey');
+      return <Navigate to="/guided-journey" replace />;
     }
   }
 

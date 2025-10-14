@@ -38,9 +38,11 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
   };
 
   const handleStep3Complete = (assessmentResult: any, selectedPackage: 'starter' | 'plus' | 'pro', paymentChoice: 'premium' | 'free') => {
-    setCheckIn(assessmentResult); // Store assessment result in place of checkIn
+    setCheckIn(assessmentResult);
     setPackage(selectedPackage);
     updateState({ paymentChoice });
+    
+    // Complete onboarding with path-based routing
     completeOnboarding();
   };
 

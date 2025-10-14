@@ -63,6 +63,64 @@ export function useWarmOnboarding() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }, [state]);
 
+  // Load incomplete onboarding from database on mount (Phase 5: Resume functionality)
+  useEffect(() => {
+    const loadIncompleteOnboarding = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      
+      // Only load if not already loaded and not completed
+      if (state.step > 1 || isOnboardingCompleted()) return;
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('onboarding_step, onboarding_data')
+        .eq('id', user.id)
+        .single();
+        
+      if (error || !data || data.onboarding_step === 'complete') return;
+      
+      // If onboarding is incomplete and has saved data, restore state
+      if (data.onboarding_step !== 'not_started' && data.onboarding_data) {
+        const savedData = data.onboarding_data as any;
+        
+        // Map onboarding_step to step number
+        const stepMap: Record<string, number> = {
+          'not_started': 1,
+          'authentication': 1,
+          'user-profile': 1,
+          'path-selection': 2,
+          'assessment': 3,
+          'plan-selection': 3,
+          'complete': 3
+        };
+        
+        const resumeStep = stepMap[data.onboarding_step] || 1;
+        
+        setState(prev => ({
+          ...prev,
+          step: resumeStep,
+          sessionId: savedData.sessionId || prev.sessionId,
+          persona: savedData.persona || prev.persona,
+          primaryCondition: savedData.primaryCondition || prev.primaryCondition,
+          challenges: savedData.challenges || prev.challenges,
+          additionalInfo: savedData.additionalInfo || prev.additionalInfo,
+          selectedPath: savedData.selectedPath || prev.selectedPath,
+          checkIn: savedData.checkIn || prev.checkIn,
+          selectedPackage: savedData.selectedPackage || prev.selectedPackage,
+          paymentChoice: savedData.paymentChoice || prev.paymentChoice
+        }));
+        
+        toast.success('Welcome back!', {
+          description: 'Continuing where you left off.',
+          duration: 3000
+        });
+      }
+    };
+    
+    loadIncompleteOnboarding();
+  }, []);
+
   const trackEvent = async (eventName: string, properties: Record<string, any> = {}) => {
     try {
       const user = await supabase.auth.getUser();
@@ -138,25 +196,32 @@ export function useWarmOnboarding() {
       const user = await supabase.auth.getUser();
       
       if (user.data.user) {
-        // Save onboarding summary to notes
-        await supabase.from('notes').insert({
-          user_id: user.data.user.id,
-          title: 'Onboarding Summary',
-          content: JSON.stringify({
-            sessionId: state.sessionId,
-            persona: state.persona,
-            primaryCondition: state.primaryCondition,
-            challenges: state.challenges,
-            additionalInfo: state.additionalInfo,
-            selectedPath: state.selectedPath,
-            checkIn: state.checkIn,
-            selectedPackage: state.selectedPackage,
-            completedAt: new Date().toISOString()
+        // Update profiles table with onboarding completion and data
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .update({
+            onboarding_step: 'complete',
+            onboarding_data: {
+              sessionId: state.sessionId,
+              persona: state.persona,
+              primaryCondition: state.primaryCondition,
+              challenges: state.challenges,
+              additionalInfo: state.additionalInfo,
+              selectedPath: state.selectedPath,
+              checkIn: state.checkIn,
+              selectedPackage: state.selectedPackage,
+              paymentChoice: state.paymentChoice,
+              completedAt: new Date().toISOString()
+            }
           })
-        });
+          .eq('id', user.data.user.id);
+        
+        if (profileError) {
+          console.error('Failed to update profile onboarding status:', profileError);
+        }
       }
 
-      // Mark onboarding as completed (write both keys for consistency)
+      // Mark onboarding as completed in localStorage (backup)
       localStorage.setItem('myrhythm_onboarding_completed', 'true');
       localStorage.setItem('myrhythm_onboarding_complete', 'true');
       localStorage.removeItem(STORAGE_KEY);
@@ -178,13 +243,24 @@ export function useWarmOnboarding() {
         paymentChoice: state.paymentChoice
       });
 
-      // Navigate to Memory Bridge with first-time tutorial
+      // Navigate based on chosen path
+      const chosenPath = localStorage.getItem('myrhythm_chosen_path') as 'guided' | 'explorer' | null;
+      
       toast.success('Welcome to MyRhythm! Your journey begins now.', {
-        description: 'Let\'s capture your first memory together',
+        description: chosenPath === 'guided' 
+          ? 'Let\'s get started with your personalized guidance' 
+          : 'Ready to explore at your own pace',
         duration: 5000
       });
       
-      navigate('/memory-bridge?firstTime=true&tab=quick-capture');
+      if (chosenPath === 'guided') {
+        navigate('/guided-journey');
+      } else if (chosenPath === 'explorer') {
+        navigate('/explorer');
+      } else {
+        // Fallback to memory bridge
+        navigate('/memory-bridge?firstTime=true&tab=quick-capture');
+      }
       
     } catch (error) {
       console.error('Onboarding completion failed:', error);

@@ -140,6 +140,8 @@ export function Step2FeelDifferenceChoosePath({ persona, intents, onComplete, se
               <button
                 key={option.id}
                 onClick={() => {
+                  // Store the chosen path for later routing
+                  localStorage.setItem('myrhythm_chosen_path', option.id);
                   setPath(option.id);
                   onComplete();
                 }}
