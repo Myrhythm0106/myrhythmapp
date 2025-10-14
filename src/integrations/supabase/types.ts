@@ -1619,6 +1619,8 @@ export type Database = {
           mfa_enabled: boolean | null
           name: string
           onboarding_completed: boolean | null
+          onboarding_data: Json | null
+          onboarding_step: string | null
           persona_mode: string | null
           phone_number: string | null
           phone_verified: boolean | null
@@ -1634,6 +1636,8 @@ export type Database = {
           mfa_enabled?: boolean | null
           name: string
           onboarding_completed?: boolean | null
+          onboarding_data?: Json | null
+          onboarding_step?: string | null
           persona_mode?: string | null
           phone_number?: string | null
           phone_verified?: boolean | null
@@ -1649,6 +1653,8 @@ export type Database = {
           mfa_enabled?: boolean | null
           name?: string
           onboarding_completed?: boolean | null
+          onboarding_data?: Json | null
+          onboarding_step?: string | null
           persona_mode?: string | null
           phone_number?: string | null
           phone_verified?: boolean | null

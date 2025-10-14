@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -18,7 +18,34 @@ const SubscribePage = () => {
   const [isYearly, setIsYearly] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+
+  // Redirect to start page if not authenticated
+  useEffect(() => {
+    if (!authLoading && !user) {
+      console.log('SubscribePage: User not authenticated, redirecting to /start');
+      toast.error('Please sign in to view plans');
+      navigate('/start', { replace: true });
+    }
+  }, [user, authLoading, navigate]);
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-neural-purple-50 to-neural-blue-50">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin mx-auto text-neural-purple-600" />
+          <p className="text-neural-indigo-700">Preparing your plan selection...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render if not authenticated
+  if (!user) {
+    return null;
+  }
+
   const userTypeMessages: Record<string, string> = {
     'brain-injury': 'Perfect for Brain Injury Recovery',
     'caregiver': 'Perfect for Caregivers & Families',
