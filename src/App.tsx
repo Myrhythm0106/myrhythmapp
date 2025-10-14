@@ -167,6 +167,7 @@ function App() {
                      } />
                      <Route path="/ecosystem" element={<ProtectedRoute requireAuth={false}><EcosystemPage /></ProtectedRoute>} />
                      <Route path="/next-steps" element={<ProtectedRoute requireAuth={false}><div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"><NextStepsHub /></div></ProtectedRoute>} />
+                     <Route path="/next-steps-hub" element={<ProtectedRoute requireAuth={false}><div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"><NextStepsHub /></div></ProtectedRoute>} />
                      <Route path="/command-center" element={<ProtectedRoute requireAuth={false}><CommandCenter /></ProtectedRoute>} />
                     <Route path="/organizations" element={<ProtectedRoute requireAuth={false}><OrganizationsDirectory /></ProtectedRoute>} />
                     <Route path="/tracking" element={<ProtectedRoute requireAuth={false}><SymptomTracking /></ProtectedRoute>} />

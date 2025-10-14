@@ -16,6 +16,9 @@ export function Step3AssessmentPlanPackages({ persona, intents, onComplete, vari
   const [showPaymentGate, setShowPaymentGate] = useState(false);
   const [paymentChoice, setPaymentChoice] = useState<'premium' | 'free' | null>(null);
 
+  // Get chosen path to determine assessment length
+  const chosenPath = localStorage.getItem('myrhythm_chosen_path') as 'guided' | 'explorer' | null;
+
   // Map persona to UserType
   const getUserType = (): UserType => {
     if (persona === 'loved-one') return 'caregiver';
@@ -55,6 +58,7 @@ export function Step3AssessmentPlanPackages({ persona, intents, onComplete, vari
         <EnhancedQuickStartAssessment 
           userType={getUserType()}
           onComplete={handleAssessmentComplete}
+          questionsToShow={chosenPath === 'explorer' ? 5 : undefined}
         />
       </div>
     );

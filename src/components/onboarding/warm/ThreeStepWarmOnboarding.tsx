@@ -42,7 +42,7 @@ export function ThreeStepWarmOnboarding({ variant = 'default' }: { variant?: 'de
     setPackage(selectedPackage);
     updateState({ paymentChoice });
     
-    // Complete onboarding with path-based routing
+    // Complete onboarding - useWarmOnboarding hook will handle routing
     completeOnboarding();
   };
 

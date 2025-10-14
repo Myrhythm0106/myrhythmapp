@@ -12,17 +12,23 @@ import { Lightbulb, Target, Zap, TrendingUp } from "lucide-react";
 interface EnhancedQuickStartAssessmentProps {
   userType: UserType;
   onComplete: (data: any) => void;
+  questionsToShow?: number; // Optional: limit number of questions (for explorer path)
 }
 
-export function EnhancedQuickStartAssessment({ userType, onComplete }: EnhancedQuickStartAssessmentProps) {
+export function EnhancedQuickStartAssessment({ userType, onComplete, questionsToShow }: EnhancedQuickStartAssessmentProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [showInsight, setShowInsight] = useState(false);
   const [realTimeProfile, setRealTimeProfile] = useState<any>(null);
   const { hasFeature } = useSubscription();
 
-  const currentQuestion = quickStartQuestions[currentStep];
-  const progress = ((currentStep + 1) / quickStartQuestions.length) * 100;
+  // Use limited questions for explorer path, or all questions for guided path
+  const questionsToUse = questionsToShow 
+    ? quickStartQuestions.slice(0, questionsToShow) 
+    : quickStartQuestions;
+  
+  const currentQuestion = questionsToUse[currentStep];
+  const progress = ((currentStep + 1) / questionsToUse.length) * 100;
   const currentResponse = responses[currentQuestion.id];
 
   const handleResponse = (questionId: string, value: any) => {
@@ -79,7 +85,7 @@ export function EnhancedQuickStartAssessment({ userType, onComplete }: EnhancedQ
   };
 
   const handleNext = () => {
-    if (currentStep < quickStartQuestions.length - 1) {
+    if (currentStep < questionsToUse.length - 1) {
       setCurrentStep(currentStep + 1);
       setShowInsight(false);
     } else {
@@ -248,7 +254,7 @@ export function EnhancedQuickStartAssessment({ userType, onComplete }: EnhancedQ
                   {currentQuestion.letterName}
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Question {currentStep + 1} of {quickStartQuestions.length}
+                  Question {currentStep + 1} of {questionsToUse.length}
                 </div>
               </div>
             </div>
@@ -270,7 +276,7 @@ export function EnhancedQuickStartAssessment({ userType, onComplete }: EnhancedQ
           </div>
           
           <div className="flex justify-between text-xs text-muted-foreground">
-            {quickStartQuestions.map((q, index) => (
+            {questionsToUse.map((q, index) => (
               <span 
                 key={q.id}
                 className={`${index <= currentStep ? 'text-primary font-semibold' : ''}`}
@@ -332,16 +338,16 @@ export function EnhancedQuickStartAssessment({ userType, onComplete }: EnhancedQ
               disabled={!currentResponse}
               className="bg-gradient-to-r from-primary to-accent hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {currentStep === quickStartQuestions.length - 1 ? (
-                <>Complete Enhanced Assessment</>
+              {currentStep === questionsToUse.length - 1 ? (
+                <>Complete {questionsToShow ? 'Quick' : 'Enhanced'} Assessment</>
               ) : (
-                <>Next: {quickStartQuestions[currentStep + 1]?.letterName}</>
+                <>Next: {questionsToUse[currentStep + 1]?.letterName}</>
               )}
             </Button>
           </div>
 
           {/* Value preview for final question */}
-          {currentStep === quickStartQuestions.length - 1 && currentResponse && (
+          {currentStep === questionsToUse.length - 1 && currentResponse && (
             <div className="mt-6 p-4 bg-gradient-to-r from-primary/5 to-accent/5 rounded-lg">
               <div className="text-center">
                 <div className="font-semibold text-foreground mb-2">
