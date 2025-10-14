@@ -26,6 +26,29 @@ export function useVoiceRecorder() {
   const startRecording = useCallback(async () => {
     console.log('🎤 Starting recording process...');
     
+    // ✅ Pre-flight session check
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError || !session) {
+      toast.error('Your session has expired. Please sign in again to start recording.');
+      return false;
+    }
+    
+    // Check if session is about to expire (less than 10 minutes left)
+    const expiresAt = session.expires_at || 0;
+    const now = Math.floor(Date.now() / 1000);
+    const timeLeft = expiresAt - now;
+    
+    if (timeLeft < 600) { // Less than 10 minutes
+      console.log('🔄 Session expiring soon, refreshing...');
+      const { error: refreshError } = await supabase.auth.refreshSession();
+      if (refreshError) {
+        toast.error('Failed to refresh session. Please sign in again.');
+        return false;
+      }
+      toast.success('Session refreshed - ready to record! 🔄');
+    }
+    
     try {
       // Check if mediaDevices is available
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
@@ -200,9 +223,52 @@ export function useVoiceRecorder() {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
       if (sessionError || !session) {
-        console.error('❌ Session validation failed:', sessionError);
-        toast.error('Your session has expired. Please sign in again.');
-        return null;
+        console.error('❌ Session validation failed - saving locally:', sessionError);
+        
+        // ✅ Save recording locally to prevent data loss
+        try {
+          const { openDB } = await import('idb');
+          
+          // Store metadata in localStorage
+          const localRecording = {
+            title,
+            category,
+            description,
+            shareWithHealthcare,
+            timestamp: Date.now(),
+            size: audioBlob.size
+          };
+          localStorage.setItem('pending-recording-meta', JSON.stringify(localRecording));
+          
+          // Store blob in IndexedDB (larger storage limit)
+          const db = await openDB('myrhythm-voice-recordings', 1, {
+            upgrade(db) {
+              if (!db.objectStoreNames.contains('pending')) {
+                db.createObjectStore('pending', { keyPath: 'timestamp' });
+              }
+            }
+          });
+          
+          await db.put('pending', { 
+            timestamp: Date.now(), 
+            blob: audioBlob, 
+            ...localRecording 
+          });
+          
+          toast.warning('Session expired - recording saved locally. Sign in to upload it.', {
+            action: {
+              label: 'Sign In Now',
+              onClick: () => window.location.href = '/auth'
+            },
+            duration: 10000
+          });
+          
+          return null;
+        } catch (storageError) {
+          console.error('Failed to save locally:', storageError);
+          toast.error('Session expired and failed to save locally. Recording may be lost.');
+          return null;
+        }
       }
 
       console.log('✅ Session valid, uploading recording...');

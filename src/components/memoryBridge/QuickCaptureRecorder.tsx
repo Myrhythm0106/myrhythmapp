@@ -19,6 +19,7 @@ import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
 import { useAuth } from '@/hooks/useAuth';
+import { useSessionMonitor } from '@/hooks/useSessionMonitor';
 import { VoiceCoach } from './VoiceCoach';
 import { ProcessingProgress } from './ProcessingProgress';
 import { toast } from 'sonner';
@@ -50,6 +51,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   
   const { startMeetingRecording } = useMemoryBridge();
   const { subscription } = useSubscription();
+  const { isSessionExpiring, isSessionExpired, refreshSession } = useSessionMonitor();
   
   const [recordingState, setRecordingState] = useState<RecordingState>('ready');
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
@@ -337,6 +339,67 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
     }
   }, [isOverLimit, isVoiceRecording, handleSecondTap]);
 
+  // Auto-stop if session expires during recording
+  useEffect(() => {
+    if (isSessionExpired && isVoiceRecording) {
+      handleSecondTap();
+      toast.error('Recording stopped: Your session expired. Please sign in again.');
+    }
+  }, [isSessionExpired, isVoiceRecording, handleSecondTap]);
+
+  // Check for pending recordings on mount
+  useEffect(() => {
+    const checkPendingRecordings = async () => {
+      const pendingMeta = localStorage.getItem('pending-recording-meta');
+      if (pendingMeta && user && session && !isSessionExpired) {
+        try {
+          const meta = JSON.parse(pendingMeta);
+          const { openDB } = await import('idb');
+          
+          toast.info(`You have a pending recording from ${new Date(meta.timestamp).toLocaleString()}`, {
+            action: {
+              label: 'Upload Now',
+              onClick: async () => {
+                try {
+                  // Retrieve blob from IndexedDB
+                  const db = await openDB('myrhythm-voice-recordings', 1);
+                  const pending = await db.get('pending', meta.timestamp);
+                  
+                  if (pending?.blob) {
+                    const result = await saveRecording(
+                      pending.blob,
+                      pending.title,
+                      pending.category,
+                      pending.description,
+                      pending.shareWithHealthcare
+                    );
+                    
+                    if (result) {
+                      // Clean up
+                      localStorage.removeItem('pending-recording-meta');
+                      await db.delete('pending', meta.timestamp);
+                      toast.success('Pending recording uploaded successfully! 🎉');
+                    }
+                  }
+                } catch (error) {
+                  console.error('Failed to upload pending recording:', error);
+                  toast.error('Failed to upload pending recording');
+                }
+              }
+            },
+            duration: 15000
+          });
+        } catch (error) {
+          console.error('Error checking pending recordings:', error);
+        }
+      }
+    };
+    
+    if (user && session && !isSessionExpired) {
+      checkPendingRecordings();
+    }
+  }, [user, session, isSessionExpired, saveRecording]);
+
   return (
     <Card className="border-2 border-memory-emerald-200 bg-gradient-to-br from-white via-memory-emerald-50/50 to-brain-health-50/30">
       <CardContent className="pt-6">
@@ -362,6 +425,51 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
               </div>
               <p className="text-sm text-orange-600 mt-1">
                 Please verify your email address to enable recording functionality.
+              </p>
+            </div>
+          )}
+
+          {/* Session Expiring Warning */}
+          {isSessionExpiring && !isSessionExpired && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-orange-700">
+                  <Clock className="h-4 w-4" />
+                  <span className="font-medium">Session Expiring Soon</span>
+                </div>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={refreshSession}
+                  className="border-orange-300 text-orange-700 hover:bg-orange-100"
+                >
+                  Stay Signed In
+                </Button>
+              </div>
+              <p className="text-sm text-orange-600 mt-1">
+                Your session will expire soon. Click "Stay Signed In" to keep recording.
+              </p>
+            </div>
+          )}
+
+          {/* Session Expired Warning */}
+          {isSessionExpired && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-red-700">
+                  <AlertTriangle className="h-4 w-4" />
+                  <span className="font-medium">Session Expired</span>
+                </div>
+                <Button 
+                  size="sm" 
+                  onClick={() => window.location.href = '/auth'}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  Sign In Again
+                </Button>
+              </div>
+              <p className="text-sm text-red-600 mt-1">
+                Your session has expired. Please sign in again to continue recording.
               </p>
             </div>
           )}
@@ -490,13 +598,18 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
           <div className="flex flex-col items-center gap-3">
             <Button
               onClick={handleMainAction}
-              disabled={recordingState === 'processing' || !user || emailVerificationStatus === 'pending'}
+              disabled={
+                recordingState === 'processing' || 
+                !user || 
+                emailVerificationStatus === 'pending' ||
+                isSessionExpired
+              }
               size="lg"
               className={`px-8 py-4 text-lg gap-2 ${
                 recordingState === 'recording' && !isPaused
                   ? 'bg-orange-600 hover:bg-orange-700' 
                   : 'bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 hover:from-memory-emerald-700 hover:to-brain-health-700'
-              } text-white`}
+              } text-white ${isSessionExpired ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {getButtonIcon()}
               {getButtonText()}

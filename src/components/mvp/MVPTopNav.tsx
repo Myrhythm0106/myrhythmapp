@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Brain, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
+import { useSessionMonitor } from '@/hooks/useSessionMonitor';
 import { BackButton } from '@/components/ui/BackButton';
 import { useHideOnScroll } from '@/hooks/useHideOnScroll';
+import { cn } from '@/lib/utils';
 
 interface MVPTopNavProps {
   showBack?: boolean;
@@ -14,6 +16,7 @@ export function MVPTopNav({ showBack = true }: MVPTopNavProps) {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
   const { isVisible } = useHideOnScroll();
+  const { isSessionExpiring, isSessionExpired, refreshSession, formatTimeRemaining } = useSessionMonitor();
 
   const handleAuthAction = async () => {
     if (user) {
@@ -39,15 +42,39 @@ export function MVPTopNav({ showBack = true }: MVPTopNavProps) {
             <Brain className="h-8 w-8 text-memory-emerald-600" />
             <span className="text-2xl font-bold text-brain-health-900">MyRhythm</span>
           </div>
-          <Button
-            onClick={handleAuthAction}
-            variant="outline"
-            size="sm"
-            className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
-          >
-            <User className="h-4 w-4 mr-2" />
-            {user ? 'Sign Out' : 'Log In'}
-          </Button>
+          <div className="flex items-center gap-3">
+            {/* Session Status Indicator */}
+            {user && (
+              <div className="flex items-center gap-2">
+                <div 
+                  className={cn(
+                    "h-2 w-2 rounded-full transition-colors",
+                    isSessionExpired ? "bg-red-500" : 
+                    isSessionExpiring ? "bg-orange-500 animate-pulse" : 
+                    "bg-green-500"
+                  )}
+                  title={isSessionExpired ? 'Session Expired' : isSessionExpiring ? 'Session Expiring' : 'Session Active'}
+                />
+                {(isSessionExpiring || isSessionExpired) && (
+                  <button 
+                    onClick={isSessionExpired ? () => navigate('/auth') : refreshSession}
+                    className="text-xs text-orange-600 hover:underline"
+                  >
+                    {isSessionExpired ? 'Sign In' : `Refresh (${formatTimeRemaining})`}
+                  </button>
+                )}
+              </div>
+            )}
+            <Button
+              onClick={handleAuthAction}
+              variant="outline"
+              size="sm"
+              className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
+            >
+              <User className="h-4 w-4 mr-2" />
+              {user ? 'Sign Out' : 'Log In'}
+            </Button>
+          </div>
         </div>
       </div>
     </nav>
