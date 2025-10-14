@@ -22,6 +22,16 @@ const config: Config = {
       fontFamily: {
         'serif': ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
       },
+      spacing: {
+        'mobile-touch': '12px',
+        'section': '24px',
+        'page': '32px',
+        'page-mobile': '16px',
+        'card': '16px',
+        'card-lg': '24px',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'nav-height': '64px',
+      },
       fontSize: {
         'display-lg': ['3.5rem', { lineHeight: '1.2', fontWeight: '700' }],
         'display-md': ['2.5rem', { lineHeight: '1.2', fontWeight: '700' }],

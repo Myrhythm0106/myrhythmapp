@@ -301,9 +301,39 @@ html, body {
   input, select, textarea {
     @apply transition-all duration-300 focus:ring-2 focus:ring-primary/20;
   }
+
+  /* Mobile Touch Optimization - Apple/Google Standards */
+  @media (max-width: 768px) {
+    button, a, [role="button"], [role="tab"] {
+      touch-action: manipulation; /* Prevents double-tap zoom */
+      min-height: 44px; /* iOS minimum */
+      min-width: 44px;
+    }
+  }
 }
 
 @layer components {
+  /* Standard Brand Gradients - ONLY approved 5 colors */
+  .brand-gradient-primary {
+    @apply bg-gradient-to-r from-neural-purple-600 via-neural-blue-500 to-brand-orange-600;
+  }
+
+  .brand-gradient-success {
+    @apply bg-gradient-to-r from-memory-emerald-500 via-clarity-teal-500 to-brain-health-500;
+  }
+
+  .brand-gradient-action {
+    @apply bg-gradient-to-r from-brand-orange-500 to-brand-orange-600;
+  }
+
+  .brand-gradient-cognitive {
+    @apply bg-gradient-to-r from-clarity-teal-500 to-brain-health-500;
+  }
+
+  .brand-gradient-empowerment {
+    @apply bg-gradient-to-r from-neural-purple-600 to-neural-blue-600;
+  }
+
   .card-gradient {
     @apply bg-gradient-to-br from-card to-brain-health-50;
   }
