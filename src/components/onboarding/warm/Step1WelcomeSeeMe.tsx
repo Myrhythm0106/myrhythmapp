@@ -170,22 +170,17 @@ export function Step1WelcomeSeeMe({ onComplete, variant = 'default' }: Step1Welc
 
           <div className="flex flex-col items-center space-y-4 pt-4">
             <Button
-              onClick={() => window.location.href = '/subscribe'}
+              onClick={handleContinue}
+              disabled={!canContinue}
               size="lg"
               className={`px-8 py-3 text-lg font-semibold ${variant === 'mvp' ? 'bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white' : ''}`}
             >
-              Choose Plan
+              Continue to Your Personalized Journey
             </Button>
             
-            <Button
-              onClick={handleContinue}
-              disabled={!canContinue}
-              variant="ghost"
-              size="sm"
-              className="text-brain-health-600 hover:text-brain-health-700 underline"
-            >
-              Show me how MyRhythm will support me
-            </Button>
+            <p className="text-sm text-muted-foreground text-center max-w-md">
+              We'll guide you through a brief setup to personalize your MyRhythm experience
+            </p>
           </div>
         </CardContent>
       </Card>

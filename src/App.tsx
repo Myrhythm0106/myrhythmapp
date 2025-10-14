@@ -97,8 +97,8 @@ function App() {
                      <Route path="/landing" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
-                     {/* Subscription Routes */}
-                     <Route path="/subscribe" element={<ProtectedRoute requireAuth={false}><SubscribePage /></ProtectedRoute>} />
+                     {/* Subscription Routes - Now requires authentication */}
+                     <Route path="/subscribe" element={<ProtectedRoute requireAuth={true}><SubscribePage /></ProtectedRoute>} />
                      
                      <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
                      
