@@ -7,17 +7,6 @@ import { motion } from 'framer-motion';
 
 export function MVPUserTypeSelection() {
   const navigate = useNavigate();
-  
-  // Check authentication on mount
-  React.useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await import('@/integrations/supabase/client').then(m => m.supabase.auth.getSession());
-      if (!session) {
-        navigate('/start');
-      }
-    };
-    checkAuth();
-  }, [navigate]);
 
   const userTypes = [
     {
@@ -34,7 +23,7 @@ export function MVPUserTypeSelection() {
       description: 'Specialized support for brain injury recovery and cognitive rehabilitation',
       icon: Heart,
       color: 'from-brain-health-500 to-clarity-teal-500',
-      path: '/subscribe?userType=brain-injury'
+      path: '/mvp/brain-injury-welcome'
     },
     {
       id: 'caregiver',

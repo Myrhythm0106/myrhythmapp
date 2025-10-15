@@ -80,6 +80,7 @@ import { WelcomeCongratsPage } from "./components/mvp/WelcomeCongratsPage";
 import { UserGuideTimeline } from "./components/mvp/UserGuideTimeline";
 import VisionPage from "./pages/VisionPage";
 import ColorSystemBible from "./pages/ColorSystemBible";
+import BrainInjuryWelcomePage from "./pages/BrainInjuryWelcomePage";
 
 const queryClient = new QueryClient();
 
@@ -217,6 +218,7 @@ function App() {
                     
                      {/* Warm Onboarding Flow */}
                      <Route path="/start" element={<StartPage />} />
+                     <Route path="/mvp/brain-injury-welcome" element={<BrainInjuryWelcomePage />} />
                      
                      {/* New Assessment and Setup Flow */}
          <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />
