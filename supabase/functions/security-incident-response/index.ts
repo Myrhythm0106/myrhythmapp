@@ -1,10 +1,18 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { z } from 'https://esm.sh/zod@3.22.4'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
+
+// Input validation schema
+const requestSchema = z.object({
+  action: z.enum(['emergency_lockout', 'force_password_reset', 'audit_user_activity']),
+  userId: z.string().uuid('Invalid user ID format'),
+  reason: z.string().min(10, 'Reason must be at least 10 characters').max(500, 'Reason must be less than 500 characters')
+})
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -18,7 +26,73 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { action, userId, reason } = await req.json()
+    // Extract and validate JWT
+    const authHeader = req.headers.get('authorization')
+    if (!authHeader) {
+      console.error('🚨 SECURITY: Unauthorized request - no auth header')
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Authentication required' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const token = authHeader.replace('Bearer ', '')
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
+
+    if (authError || !user) {
+      console.error('🚨 SECURITY: Invalid JWT token:', authError?.message)
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Invalid authentication token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Check if user has admin role
+    const { data: isAdmin, error: roleError } = await supabaseAdmin.rpc('has_role', {
+      _user_id: user.id,
+      _role: 'admin'
+    })
+
+    if (roleError || !isAdmin) {
+      console.error('🚨 SECURITY: Non-admin user attempted security action:', user.email, 'Error:', roleError?.message)
+      
+      // Log unauthorized access attempt
+      await supabaseAdmin.rpc('log_security_event', {
+        p_user_id: user.id,
+        p_event_type: 'UNAUTHORIZED_ADMIN_ACCESS_ATTEMPT',
+        p_event_data: {
+          attempted_action: 'security_incident_response',
+          timestamp: new Date().toISOString()
+        }
+      })
+
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: Admin role required for security operations' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    // Validate request body
+    const body = await req.json()
+    const validationResult = requestSchema.safeParse(body)
+    
+    if (!validationResult.success) {
+      console.error('🚨 SECURITY: Invalid request format:', validationResult.error.errors)
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid request format',
+          details: validationResult.error.errors.map(e => ({
+            field: e.path.join('.'),
+            message: e.message
+          }))
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const { action, userId, reason } = validationResult.data
+
+    console.log(`🚨 SECURITY INCIDENT: Admin ${user.email} executing ${action} for user ${userId}. Reason: ${reason}`)
 
     console.log(`🚨 SECURITY INCIDENT: Executing ${action} for user ${userId}. Reason: ${reason}`)
 

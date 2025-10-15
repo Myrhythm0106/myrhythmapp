@@ -46,7 +46,7 @@ verify_jwt = true
 verify_jwt = false
 
 [functions.security-incident-response]
-verify_jwt = false
+verify_jwt = true
 
 [functions.debug-keys]
 verify_jwt = false

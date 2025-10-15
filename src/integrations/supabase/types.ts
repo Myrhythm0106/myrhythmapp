@@ -2177,6 +2177,39 @@ export type Database = {
           },
         ]
       }
+      user_onboarding: {
+        Row: {
+          chosen_path: string | null
+          completed: boolean
+          completed_at: string | null
+          created_at: string | null
+          current_step: number
+          id: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          chosen_path?: string | null
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number
+          id?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          chosen_path?: string | null
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string | null
+          current_step?: number
+          id?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_onboarding_progress: {
         Row: {
           assessment_id: string | null
@@ -2214,6 +2247,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_roles: {
+        Row: {
+          granted_at: string | null
+          granted_by: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          granted_at?: string | null
+          granted_by?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
       }
       user_schedule_preferences: {
         Row: {
@@ -2578,6 +2635,13 @@ export type Database = {
         Args: { user_uuid: string }
         Returns: string
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       log_security_event: {
         Args: {
           p_event_data?: Json
@@ -2636,7 +2700,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2763,6 +2827,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

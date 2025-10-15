@@ -36,11 +36,32 @@ export function isOnboardingCompleted(): boolean {
   }
 }
 
-export function markOnboardingCompleted(): void {
+export async function markOnboardingCompleted(userId?: string, chosenPath?: 'guided' | 'explorer'): Promise<void> {
   try {
+    // Update localStorage for cache
     localStorage.setItem(KEY_COMPLETE, 'true');
     localStorage.setItem(KEY_COMPLETED, 'true');
-  } catch {}
+    
+    // Update database if user ID is provided
+    if (userId && chosenPath) {
+      const { error } = await supabase
+        .from('user_onboarding')
+        .upsert({
+          user_id: userId,
+          completed: true,
+          chosen_path: chosenPath,
+          completed_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id'
+        });
+      
+      if (error) {
+        console.error('Error updating onboarding in database:', error);
+      }
+    }
+  } catch (error) {
+    console.error('Error marking onboarding complete:', error);
+  }
 }
 
 export function clearOnboardingCompletion(): void {

@@ -244,26 +244,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .maybeSingle();
       
       if (existingProfile) {
-        // User exists, try to sign them in to check verification status
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-        
-        if (!signInError && signInData.user) {
-          // User signed in successfully, they're already verified
-          toast.error('An account with this email already exists and is verified. You have been signed in.');
-          return { error: null }; // Allow the sign in to proceed
-        } else if (signInError?.message.includes('Invalid login credentials')) {
-          // Wrong password, but user exists - they should sign in with correct password
-          toast.error('An account with this email already exists. Please sign in with your existing password.');
-          return { error: new Error('User already exists') };
-        } else if (signInError?.message.includes('Email not confirmed')) {
-          // User exists but not verified
-          toast.error('An account with this email already exists but is not verified. Please check your email or use the "Resend Verification" option.');
-          setEmailVerificationStatus('pending');
-          return { error: new Error('User exists but not verified') };
-        }
+        // User exists - use generic message to prevent email enumeration
+        toast.error('If this email is not already registered, you will receive a confirmation email. If you already have an account, please sign in instead.');
+        return { error: new Error('Registration requires verification') };
       }
       
       // User doesn't exist, create new account
@@ -311,22 +294,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) {
         SecureLogger.error('AuthContext: Sign in error:', error);
-        console.error('Error details:', {
-          message: error.message,
-          status: error.status,
-          code: (error as any).code
-        });
         
-        // Provide specific error messages
-        if (error.message.includes('Invalid login credentials')) {
-          toast.error('Invalid email or password. Please check your credentials.');
-        } else if (error.message.includes('Email not confirmed')) {
-          toast.error('Please verify your email address before signing in.');
+        // Generic error message to prevent user enumeration
+        toast.error('Invalid credentials. Please check your email and password and try again.');
+        
+        // Still set email verification status if needed (without revealing existence)
+        if (error.message.includes('Email not confirmed')) {
           setEmailVerificationStatus('pending');
-        } else if (error.message.includes('Too many requests')) {
-          toast.error('Too many login attempts. Please wait a moment and try again.');
-        } else {
-          toast.error(`Sign in failed: ${error.message}`);
         }
       } else {
         console.log('AuthContext: Sign in successful for user:', data.user?.email);

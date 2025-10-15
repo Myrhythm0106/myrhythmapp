@@ -49,8 +49,10 @@ export function ProtectedRoute({ children, requireAuth = true }: ProtectedRouteP
     return <Navigate to="/support-member-dashboard" replace />;
   }
 
-  // Check if user needs onboarding (Phase 4: Route guards)
+  // Check if user needs onboarding (using database)
   if (requireAuth && user && !isSupportMember) {
+    // This will be handled by useOnboarding hook in components
+    // For now, keep localStorage as fallback for backward compatibility
     const onboardingComplete = localStorage.getItem('myrhythm_onboarding_complete') === 'true';
     const chosenPath = localStorage.getItem('myrhythm_chosen_path') as 'guided' | 'explorer' | null;
     
