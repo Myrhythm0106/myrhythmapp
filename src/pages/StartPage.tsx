@@ -10,6 +10,14 @@ export default function StartPage() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   
+  // Redirect authenticated users with completed onboarding
+  React.useEffect(() => {
+    if (!loading && user && isOnboardingCompleted()) {
+      console.log('StartPage: User authenticated with completed onboarding, redirecting to memory-bridge');
+      navigate('/memory-bridge', { replace: true });
+    }
+  }, [user, loading, navigate]);
+  
   // Show loading state while auth is being checked
   if (loading) {
     return (
@@ -38,8 +46,6 @@ export default function StartPage() {
     return <ThreeStepWarmOnboarding />;
   }
   
-  // STATE 3: Authenticated + onboarding complete → Redirect to memory-bridge
-  console.log('StartPage: User authenticated with completed onboarding, redirecting to memory-bridge');
-  navigate('/memory-bridge', { replace: true });
+  // STATE 3: Authenticated + onboarding complete → Will redirect via useEffect
   return null;
 }
