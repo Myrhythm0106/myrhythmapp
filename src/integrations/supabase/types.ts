@@ -1668,7 +1668,10 @@ export type Database = {
         Row: {
           comment_count: number
           created_at: string
+          daily_duration_minutes: number | null
+          daily_limit_reached_at: string | null
           id: string
+          last_recording_date: string | null
           period_end: string
           period_start: string
           recording_count: number
@@ -1680,7 +1683,10 @@ export type Database = {
         Insert: {
           comment_count?: number
           created_at?: string
+          daily_duration_minutes?: number | null
+          daily_limit_reached_at?: string | null
           id?: string
+          last_recording_date?: string | null
           period_end: string
           period_start: string
           recording_count?: number
@@ -1692,7 +1698,10 @@ export type Database = {
         Update: {
           comment_count?: number
           created_at?: string
+          daily_duration_minutes?: number | null
+          daily_limit_reached_at?: string | null
           id?: string
+          last_recording_date?: string | null
           period_end?: string
           period_start?: string
           recording_count?: number

@@ -128,6 +128,7 @@ export function useVoiceRecorder() {
       setIsProcessing(true);
       
       const fileName = `${user.id}/${Date.now()}.webm`;
+      const durationMinutes = Math.ceil(duration / 60);
       
       // Upload to storage
       const { error: uploadError } = await supabase.storage
@@ -153,6 +154,36 @@ export function useVoiceRecorder() {
         .single();
 
       if (dbError) throw dbError;
+
+      // Update daily usage tracking
+      const today = new Date().toISOString().split('T')[0];
+      const currentPeriod = new Date();
+      const periodStart = new Date(currentPeriod.getFullYear(), currentPeriod.getMonth(), 1);
+      
+      // Get or create usage tracking record
+      const { data: usageData } = await supabase
+        .from('recording_usage_tracking')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('period_start', periodStart.toISOString().split('T')[0])
+        .maybeSingle();
+
+      if (usageData) {
+        // Update existing record
+        const newDailyDuration = (usageData.last_recording_date === today) 
+          ? (usageData.daily_duration_minutes || 0) + durationMinutes
+          : durationMinutes; // Reset if new day
+
+        await supabase
+          .from('recording_usage_tracking')
+          .update({
+            daily_duration_minutes: newDailyDuration,
+            last_recording_date: today,
+            recording_duration_minutes: (usageData.recording_duration_minutes || 0) + durationMinutes,
+            recording_count: (usageData.recording_count || 0) + 1
+          })
+          .eq('id', usageData.id);
+      }
 
       await fetchRecordings();
       toast.success('Recording saved successfully!');

@@ -145,6 +145,9 @@ export interface RecordingUsageTracking {
   period_start: string;
   period_end: string;
   subscription_tier: 'free' | 'premium' | 'family';
+  daily_duration_minutes?: number;
+  last_recording_date?: string;
+  daily_limit_reached_at?: string;
   created_at: string;
   updated_at: string;
 }

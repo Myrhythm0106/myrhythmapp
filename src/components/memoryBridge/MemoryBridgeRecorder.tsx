@@ -3,12 +3,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle, Brain } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useRecordingLimits } from '@/hooks/memoryBridge/useRecordingLimits';
 import { useRealtimeTranscription } from '@/hooks/memoryBridge/useRealtimeTranscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
+import { DailyLimitReachedModal } from './DailyLimitReachedModal';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -22,15 +25,32 @@ interface MemoryBridgeRecorderProps {
 const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: MemoryBridgeRecorderProps) => {
   const { startMeetingRecording, stopMeetingRecording, isRecording, isProcessing, currentMeeting } = useMemoryBridge();
   const { isRecording: isVoiceRecording, isPaused, duration, startRecording, pauseRecording, resumeRecording, stopRecording, saveRecording, formatDuration } = useVoiceRecorder();
-  const { subscription } = useSubscription();
+  const { subscription, tier } = useSubscription();
+  const { 
+    canRecordToday, 
+    getRemainingDailyTime, 
+    getDailyUsage,
+    getHoursUntilReset,
+    getMinutesUntilReset,
+    dailyLimit 
+  } = useRecordingLimits();
   const { transcript, isTranscribing, startTranscription, stopTranscription, resetTranscript } = useRealtimeTranscription();
   const { acts, isExtracting, extractACTs, clearACTs } = useRealtimeACTs(currentMeeting?.id);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
+  const [showDailyLimitModal, setShowDailyLimitModal] = useState(false);
   const [showLiveACTs, setShowLiveACTs] = useState(false);
 
-  // Get subscription limits
-  const maxDurationMinutes = subscription?.plan_type === 'premium' ? 60 : 5;
+  // Get daily and per-recording limits
+  const remainingDailyMinutes = getRemainingDailyTime();
+  const dailyUsageMinutes = getDailyUsage();
+  const hasReachedDailyLimit = !canRecordToday();
+  
+  // Dynamic max duration based on remaining daily time for free tier
+  const maxDurationMinutes = tier === 'free' 
+    ? Math.min(remainingDailyMinutes === -1 ? 30 : remainingDailyMinutes, 30)
+    : (subscription?.plan_type === 'premium' ? 180 : 30);
+  
   const maxDuration = maxDurationMinutes * 60; // Convert to seconds
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
@@ -52,6 +72,17 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   }, [isOverLimit, isVoiceRecording]);
 
   const handleStart = useCallback(async () => {
+    // Check daily limit before starting
+    if (hasReachedDailyLimit) {
+      setShowDailyLimitModal(true);
+      return;
+    }
+    
+    if (remainingDailyMinutes === 0) {
+      setShowDailyLimitModal(true);
+      return;
+    }
+    
     const success = await startRecording();
     if (success) {
       console.log('Voice recording started successfully');
@@ -61,7 +92,7 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
       resetTranscript();
       clearACTs();
     }
-  }, [startRecording, startTranscription, resetTranscript, clearACTs]);
+  }, [startRecording, startTranscription, resetTranscript, clearACTs, hasReachedDailyLimit, remainingDailyMinutes]);
 
   const handlePause = useCallback(() => {
     pauseRecording();
@@ -229,6 +260,28 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
               )}
             </div>
 
+            {/* Daily Usage Info (Free Tier Only) */}
+            {tier === 'free' && dailyLimit !== -1 && (
+              <div className="mb-4 p-3 bg-muted/50 rounded-lg">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-medium">Daily Recording Time</span>
+                  <Badge variant={remainingDailyMinutes <= 5 ? "destructive" : "secondary"}>
+                    {remainingDailyMinutes} min remaining today
+                  </Badge>
+                </div>
+                <Progress 
+                  value={(dailyUsageMinutes / dailyLimit) * 100} 
+                  className="h-1.5"
+                />
+                {remainingDailyMinutes <= 5 && remainingDailyMinutes > 0 && (
+                  <p className="text-xs text-orange-600 mt-2 flex items-center gap-1">
+                    <AlertTriangle className="h-3 w-3" />
+                    Running low on daily recording time
+                  </p>
+                )}
+              </div>
+            )}
+
             {/* Recording Controls */}
             <div className="space-y-4">
               {/* Duration and Progress */}
@@ -261,9 +314,14 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
               {!audioBlob && (
                 <div className="flex justify-center gap-3">
                   {!isVoiceRecording ? (
-                    <Button onClick={handleStart} size="lg" className="gap-2">
+                    <Button 
+                      onClick={handleStart} 
+                      size="lg" 
+                      className="gap-2"
+                      disabled={hasReachedDailyLimit}
+                    >
                       <Mic className="h-4 w-4" />
-                      Start Recording
+                      {hasReachedDailyLimit ? 'Daily Limit Reached' : 'Start Recording'}
                     </Button>
                   ) : (
                     <>
@@ -376,6 +434,14 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
             </div>
           </CardContent>
         </Card>
+
+        {/* Daily Limit Modal */}
+        <DailyLimitReachedModal
+          open={showDailyLimitModal}
+          onClose={() => setShowDailyLimitModal(false)}
+          hoursUntilReset={getHoursUntilReset()}
+          minutesUntilReset={getMinutesUntilReset()}
+        />
       </DialogContent>
     </Dialog>
   );

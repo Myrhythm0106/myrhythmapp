@@ -4,6 +4,15 @@ import { useSubscription } from '@/contexts/SubscriptionContext';
 import { supabase } from '@/integrations/supabase/client';
 import { SUBSCRIPTION_LIMITS, RecordingUsageTracking } from '@/types/memoryBridge';
 
+// Daily recording limits by tier (in minutes)
+const DAILY_LIMITS = {
+  free: 30,      // 30 minutes per day
+  starter: -1,   // Unlimited
+  premium: -1,   // Unlimited
+  smart_pro: -1, // Unlimited
+  family_smart: -1 // Unlimited
+};
+
 export function useRecordingLimits() {
   const { user } = useAuth();
   const { tier } = useSubscription();
@@ -11,6 +20,7 @@ export function useRecordingLimits() {
   const [isLoading, setIsLoading] = useState(true);
 
   const limits = SUBSCRIPTION_LIMITS[tier];
+  const dailyLimit = DAILY_LIMITS[tier] || DAILY_LIMITS.free;
 
   const fetchUsage = useCallback(async () => {
     if (!user) {
@@ -130,13 +140,80 @@ export function useRecordingLimits() {
     return Math.max(0, daysLeft);
   };
 
+  const canRecordToday = () => {
+    if (!usage) return true;
+    
+    if (dailyLimit === -1) return true; // Unlimited
+    
+    // Check if we need to reset (new day)
+    const today = new Date().toDateString();
+    const lastRecordingDate = usage.last_recording_date ? new Date(usage.last_recording_date).toDateString() : '';
+    
+    if (today !== lastRecordingDate) {
+      // New day - will be reset on next usage update
+      return true;
+    }
+    
+    return (usage.daily_duration_minutes || 0) < dailyLimit;
+  };
+
+  const getRemainingDailyTime = () => {
+    if (!usage) return dailyLimit === -1 ? -1 : dailyLimit;
+    
+    if (dailyLimit === -1) return -1; // Unlimited
+    
+    const today = new Date().toDateString();
+    const lastRecordingDate = usage.last_recording_date ? new Date(usage.last_recording_date).toDateString() : '';
+    
+    if (today !== lastRecordingDate) {
+      return dailyLimit; // New day - full limit available
+    }
+    
+    return Math.max(0, dailyLimit - (usage.daily_duration_minutes || 0));
+  };
+
+  const getDailyUsage = () => {
+    if (!usage) return 0;
+    
+    const today = new Date().toDateString();
+    const lastRecordingDate = usage.last_recording_date ? new Date(usage.last_recording_date).toDateString() : '';
+    
+    if (today !== lastRecordingDate) {
+      return 0; // New day
+    }
+    
+    return usage.daily_duration_minutes || 0;
+  };
+
+  const getHoursUntilReset = () => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const msUntilMidnight = midnight.getTime() - now.getTime();
+    return Math.floor(msUntilMidnight / (1000 * 60 * 60));
+  };
+
+  const getMinutesUntilReset = () => {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);
+    const msUntilMidnight = midnight.getTime() - now.getTime();
+    return Math.floor((msUntilMidnight % (1000 * 60 * 60)) / (1000 * 60));
+  };
+
   return {
     usage,
     limits,
+    dailyLimit,
     isLoading,
     canRecord,
+    canRecordToday,
     canAddWatchers,
     getDeletionCountdown,
+    getRemainingDailyTime,
+    getDailyUsage,
+    getHoursUntilReset,
+    getMinutesUntilReset,
     updateUsage,
     refetch: fetchUsage
   };
