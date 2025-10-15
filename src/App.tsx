@@ -61,6 +61,8 @@ import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
 
 import SubscribeCancel from "./pages/SubscribeCancel";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import PaymentCancelPage from "./pages/PaymentCancelPage";
 import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
 import TestingSuitePage from "./pages/TestingSuitePage";
@@ -119,6 +121,8 @@ function App() {
                      <Route path="/subscribe" element={<ProtectedRoute requireAuth={true}><SubscribePage /></ProtectedRoute>} />
                      
                      <Route path="/subscribe/cancel" element={<ProtectedRoute requireAuth={false}><SubscribeCancel /></ProtectedRoute>} />
+                     <Route path="/payment/success" element={<ProtectedRoute requireAuth={false}><PaymentSuccessPage /></ProtectedRoute>} />
+                     <Route path="/payment/cancel" element={<ProtectedRoute requireAuth={false}><PaymentCancelPage /></ProtectedRoute>} />
                      
       {/* Restrict Welcome page to post-payment users only */}
       <Route path="/welcome" element={<ProtectedRoute requireAuth={false}><Welcome /></ProtectedRoute>} />

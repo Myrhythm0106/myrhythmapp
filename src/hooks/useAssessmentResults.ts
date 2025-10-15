@@ -43,7 +43,8 @@ export function useAssessmentResults() {
     responses: Record<string, any>,
     scores?: Record<string, number>,
     recommendations?: Record<string, any>,
-    completionStatus: 'in_progress' | 'completed' = 'in_progress'
+    completionStatus: 'in_progress' | 'completed' = 'in_progress',
+    paymentStatus: 'free' | 'paid' = 'free'
   ): Promise<AssessmentResult | null> => {
     if (!user) {
       toast.error('Please log in to save your assessment');
@@ -61,7 +62,7 @@ export function useAssessmentResults() {
         scores: scores || {},
         recommendations: recommendations || {},
         completion_status: completionStatus,
-        payment_status: 'free' as const, // Default to free, can be updated later
+        payment_status: paymentStatus, // Use the parameter instead of hardcoded 'free'
         raw_assessment_data: {
           responses,
           scores,

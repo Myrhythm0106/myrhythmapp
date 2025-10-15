@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Sparkles, Zap, Lock, ChevronDown, Crown, Star, Timer, TrendingUp } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface PaymentCallToActionProps {
   onPaymentSelect: (option: 'trial' | 'monthly' | 'annual' | 'skip') => void;
@@ -12,6 +14,45 @@ interface PaymentCallToActionProps {
 
 export function PaymentCallToAction({ onPaymentSelect }: PaymentCallToActionProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePayment = async (plan: 'basic' | 'premium' | 'family', interval: 'monthly' | 'annual') => {
+    setIsProcessing(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        toast.error('Please sign in to continue');
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { plan, interval }
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast.error('Failed to start payment. Please try again.');
+      setIsProcessing(false);
+    }
+  };
+
+  const handleTrialClick = () => {
+    handlePayment('basic', 'monthly');
+  };
+
+  const handleMonthlyClick = () => {
+    handlePayment('premium', 'monthly');
+  };
+
+  const handleAnnualClick = () => {
+    handlePayment('premium', 'annual');
+  };
 
   return (
     <div className="space-y-6">
@@ -83,19 +124,21 @@ export function PaymentCallToAction({ onPaymentSelect }: PaymentCallToActionProp
             
             <div className="grid gap-3 max-w-lg mx-auto">
               <Button
-                onClick={() => onPaymentSelect('trial')}
+                onClick={handleTrialClick}
                 size="lg"
-                className="bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-4 shadow-lg"
+                disabled={isProcessing}
+                className="bg-green-600 hover:bg-green-700 text-white font-bold text-lg py-4 shadow-lg disabled:opacity-50"
               >
                 <Sparkles className="h-6 w-6 mr-3" />
-                START 7-DAY PREMIUM TRIAL
+                {isProcessing ? 'PROCESSING...' : 'START 7-DAY PREMIUM TRIAL'}
                 <Badge className="ml-3 bg-yellow-500 text-black font-bold">FREE</Badge>
               </Button>
               
               <div className="grid grid-cols-2 gap-2">
                 <Button
-                  onClick={() => onPaymentSelect('annual')}
-                  className="bg-purple-600 hover:bg-purple-700 text-white font-semibold relative"
+                  onClick={handleAnnualClick}
+                  disabled={isProcessing}
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-semibold relative disabled:opacity-50"
                 >
                   <Zap className="h-4 w-4 mr-2" />
                   Annual (Save 20%)
@@ -104,9 +147,10 @@ export function PaymentCallToAction({ onPaymentSelect }: PaymentCallToActionProp
                   </Badge>
                 </Button>
                 <Button
-                  onClick={() => onPaymentSelect('monthly')}
+                  onClick={handleMonthlyClick}
+                  disabled={isProcessing}
                   variant="outline"
-                  className="border-2 font-semibold"
+                  className="border-2 font-semibold disabled:opacity-50"
                 >
                   Monthly Plan
                 </Button>

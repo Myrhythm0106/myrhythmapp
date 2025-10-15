@@ -1,5 +1,7 @@
 
-import React, { createContext, useContext, ReactNode, useState } from 'react';
+import React, { createContext, useContext, ReactNode, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 export interface SubscriptionFeatures {
   // Memory Bridge Features
@@ -223,22 +225,101 @@ interface SubscriptionProviderProps {
 
 export function SubscriptionProvider({ 
   children, 
-  tier: initialTier = 'free' // Default to free tier for demo
+  tier: initialTier = 'free'
 }: SubscriptionProviderProps) {
+  const { user } = useAuth();
   const [currentTier, setCurrentTier] = useState<SubscriptionTier>(initialTier);
+  const [subscriptionData, setSubscriptionData] = useState<SubscriptionData>({
+    subscribed: false,
+    trial_active: false,
+    trial_days_left: 0,
+    subscription_tier: 'free'
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load subscription from database
+  useEffect(() => {
+    const loadSubscription = async () => {
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (data) {
+          const trialActive = data.status === 'trial' && new Date(data.trial_end) > new Date();
+          const trialDaysLeft = trialActive 
+            ? Math.ceil((new Date(data.trial_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+            : 0;
+
+          const tier = data.plan_type === 'premium' 
+            ? (trialActive ? 'starter' : 'smart_pro')
+            : data.plan_type === 'family'
+            ? 'family_smart'
+            : data.plan_type === 'basic'
+            ? 'starter'
+            : 'free';
+
+          setCurrentTier(tier);
+          setSubscriptionData({
+            subscribed: data.status === 'active' || trialActive,
+            trial_active: trialActive,
+            trial_days_left: trialDaysLeft,
+            subscription_tier: tier
+          });
+        } else {
+          // No subscription found - check localStorage for trial start
+          const trialStartDate = localStorage.getItem('trial_start_date');
+          if (trialStartDate) {
+            const trialStart = new Date(trialStartDate);
+            const trialEnd = new Date(trialStart);
+            trialEnd.setDate(trialEnd.getDate() + 7);
+            const now = new Date();
+            const trialActive = now < trialEnd;
+            const trialDaysLeft = trialActive 
+              ? Math.ceil((trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+              : 0;
+
+            if (trialActive) {
+              setCurrentTier('starter');
+              setSubscriptionData({
+                subscribed: true,
+                trial_active: true,
+                trial_days_left: trialDaysLeft,
+                subscription_tier: 'starter'
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading subscription:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadSubscription();
+  }, [user]);
   const features = getFeaturesByTier(currentTier);
-  
-  // Mock subscription data for demo
-  const subscriptionData: SubscriptionData = {
-    subscribed: currentTier !== 'free',
-    trial_active: currentTier === 'free',
-    trial_days_left: currentTier === 'free' ? 7 : 0,
-    subscription_tier: currentTier
-  };
   
   const updateSubscription = (newTier: SubscriptionTier) => {
     console.log("SubscriptionContext: Updating subscription tier from", currentTier, "to", newTier);
     setCurrentTier(newTier);
+    setSubscriptionData(prev => ({
+      ...prev,
+      subscribed: newTier !== 'free',
+      subscription_tier: newTier
+    }));
   };
   
   const hasFeature = (feature: keyof SubscriptionFeatures): boolean => {
@@ -268,7 +349,7 @@ export function SubscriptionProvider({
       tier: currentTier,
       features,
       subscriptionData,
-      isLoading: false,
+      isLoading,
       hasFeature,
       upgradeRequired,
       openCustomerPortal,
