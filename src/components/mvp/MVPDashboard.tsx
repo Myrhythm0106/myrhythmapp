@@ -45,6 +45,17 @@ const MVP_FEATURES: MVPFeature[] = [
     completionRate: 0
   },
   {
+    id: 'calendar-goals',
+    title: 'Brain-Friendly Calendar',
+    description: 'Schedule actions, set reminders, and visualize your day—designed for cognitive wellness',
+    cognitiveBenefit: 'Reduces cognitive load through visual scheduling and smart reminders',
+    myrhythmPhase: 'H - Habits & Structure',
+    icon: Calendar,
+    route: '/calendar',
+    color: 'sunrise-amber',
+    completionRate: 0
+  },
+  {
     id: 'brain-games',
     title: 'Brain Games',
     description: 'Memory-focused cognitive exercises and challenges',
@@ -64,17 +75,6 @@ const MVP_FEATURES: MVPFeature[] = [
     icon: Heart,
     route: '/gratitude',
     color: 'clarity-teal',
-    completionRate: 0
-  },
-  {
-    id: 'calendar-goals',
-    title: 'Calendar & Goals',
-    description: 'Brain-friendly scheduling and goal tracking',
-    cognitiveBenefit: 'Supports executive function and time management',
-    myrhythmPhase: 'H - Habits & Structure',
-    icon: Calendar,
-    route: '/calendar',
-    color: 'sunrise-amber',
     completionRate: 0
   },
   {

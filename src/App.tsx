@@ -83,6 +83,11 @@ import { UserGuideTimeline } from "./components/mvp/UserGuideTimeline";
 import VisionPage from "./pages/VisionPage";
 import ColorSystemBible from "./pages/ColorSystemBible";
 import BrainInjuryWelcomePage from "./pages/BrainInjuryWelcomePage";
+import MemoryFirstWelcomePage from "./pages/MemoryFirstWelcomePage";
+import BrainHealthWelcomePage from "./pages/BrainHealthWelcomePage";
+import CaregiverWelcomePage from "./pages/CaregiverWelcomePage";
+import MedicalProfessionalWelcomePage from "./pages/MedicalProfessionalWelcomePage";
+import CognitiveSupportWelcomePage from "./pages/CognitiveSupportWelcomePage";
 
 const queryClient = new QueryClient();
 
@@ -222,6 +227,11 @@ function App() {
                     
                      {/* Warm Onboarding Flow */}
                      <Route path="/start" element={<StartPage />} />
+                     <Route path="/mvp/memory-first-welcome" element={<MemoryFirstWelcomePage />} />
+                     <Route path="/mvp/brain-health-welcome" element={<BrainHealthWelcomePage />} />
+                     <Route path="/mvp/caregiver-welcome" element={<CaregiverWelcomePage />} />
+                     <Route path="/mvp/medical-professional-welcome" element={<MedicalProfessionalWelcomePage />} />
+                     <Route path="/mvp/cognitive-support-welcome" element={<CognitiveSupportWelcomePage />} />
                      <Route path="/mvp/brain-injury-welcome" element={<BrainInjuryWelcomePage />} />
                      
                      {/* New Assessment and Setup Flow */}

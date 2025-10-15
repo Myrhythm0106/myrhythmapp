@@ -10,20 +10,20 @@ export function MVPUserTypeSelection() {
 
   const userTypes = [
     {
-      id: 'individual',
+      id: 'brain-health',
       title: 'Brain Health Optimisation',
       description: 'Personal cognitive wellness and brain health optimization',
       icon: Brain,
       color: 'from-neural-purple-500 to-neural-blue-500',
-      path: '/subscribe?userType=individual'
+      path: '/mvp/brain-health-welcome'
     },
     {
-      id: 'brain-injury',
-      title: 'Brain Injury Recovery',
-      description: 'Specialized support for brain injury recovery and cognitive rehabilitation',
+      id: 'memory-challenges',
+      title: 'Memory Challenges (After Brain Injury)',
+      description: 'For anyone rebuilding after brain injury, stroke, or cognitive change—you\'re the CEO of your journey',
       icon: Heart,
       color: 'from-brain-health-500 to-clarity-teal-500',
-      path: '/mvp/brain-injury-welcome'
+      path: '/mvp/memory-first-welcome'
     },
     {
       id: 'caregiver',
@@ -31,7 +31,7 @@ export function MVPUserTypeSelection() {
       description: 'Tools for family members, caregivers, and support partners',
       icon: Users,
       color: 'from-brand-orange-500 to-neural-magenta-500',
-      path: '/subscribe?userType=caregiver'
+      path: '/mvp/caregiver-welcome'
     },
     {
       id: 'medical-professional',
@@ -39,7 +39,7 @@ export function MVPUserTypeSelection() {
       description: 'Healthcare providers, therapists, and medical staff supporting cognitive health',
       icon: Users,
       color: 'from-neural-blue-500 to-neural-indigo-500',
-      path: '/subscribe?userType=medical-professional'
+      path: '/mvp/medical-professional-welcome'
     },
     {
       id: 'cognitive-support',
@@ -47,7 +47,7 @@ export function MVPUserTypeSelection() {
       description: 'For individuals with ADHD, memory challenges, or other cognitive considerations',
       icon: Brain,
       color: 'from-clarity-teal-500 to-brain-health-500',
-      path: '/subscribe?userType=cognitive-support'
+      path: '/mvp/cognitive-support-welcome'
     }
   ];
 
@@ -73,6 +73,9 @@ export function MVPUserTypeSelection() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         <div className="text-center max-w-4xl mx-auto mb-12">
+          <p className="text-sm text-neural-indigo-600 mb-2 italic">
+            "Empower Your Mind, Rebuild Your Memory, Reclaim Your Life"
+          </p>
           <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-neural-purple-700 via-neural-indigo-700 to-neural-blue-700 bg-clip-text text-transparent">
             Choose Your Path
           </h1>

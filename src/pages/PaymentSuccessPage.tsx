@@ -81,11 +81,11 @@ export default function PaymentSuccessPage() {
               </div>
 
               <Button 
-                onClick={() => navigate('/memory-bridge?firstTime=true')}
-                className="w-full bg-gradient-to-r from-teal-600 to-emerald-600 text-white"
+                onClick={() => navigate('/path-selection')}
+                className="w-full bg-gradient-to-r from-memory-emerald-600 to-brain-health-600 text-white"
               >
                 <Sparkles className="h-4 w-4 mr-2" />
-                Start Your Journey
+                Continue to MyRhythm
               </Button>
             </>
           )}
