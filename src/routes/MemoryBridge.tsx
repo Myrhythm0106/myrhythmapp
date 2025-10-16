@@ -1,11 +1,11 @@
 import React from 'react';
-import { EnhancedMemoryBridgeDashboard } from '@/components/memoryBridge/EnhancedMemoryBridgeDashboard';
+import MemoryBridgeSimple from './MemoryBridgeSimple';
 import { EmpowermentProvider } from '@/contexts/EmpowermentContext';
 
 const MemoryBridge = () => {
   return (
     <EmpowermentProvider>
-      <EnhancedMemoryBridgeDashboard />
+      <MemoryBridgeSimple />
     </EmpowermentProvider>
   );
 };

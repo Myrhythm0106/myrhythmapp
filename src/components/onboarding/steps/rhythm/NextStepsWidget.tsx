@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 interface NextStepsWidgetProps {
-  currentStep: number;
+  currentStep: number | string;
   onNextAction: () => void;
   onGetHelp?: () => void;
   onGoHome?: () => void;
@@ -34,7 +34,10 @@ export function NextStepsWidget({
 }: NextStepsWidgetProps) {
   
   const getStepInfo = () => {
-    switch (currentStep) {
+    // Convert string steps to numbers for backward compatibility
+    const step = typeof currentStep === 'string' ? 1 : currentStep;
+    
+    switch (step) {
       case 1:
         return {
           title: 'Understanding Your Rhythm',
@@ -89,7 +92,8 @@ export function NextStepsWidget({
   const stepInfo = getStepInfo();
   const Icon = stepInfo.icon;
 
-  if (currentStep === 5) {
+  // Show Executive Report for step 5
+  if (currentStep === 5 || currentStep === "setup_complete") {
     return <ExecutiveReport />;
   }
 
