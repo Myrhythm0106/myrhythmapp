@@ -223,7 +223,7 @@ export function NextStepsHub() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold">Next Steps Hub</h1>
-                <p className="text-muted-foreground">Your empowering action center</p>
+                <p className="text-muted-foreground">Your empowering actions, organized and ready</p>
               </div>
             </div>
             
@@ -303,11 +303,11 @@ export function NextStepsHub() {
             <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
               <Target className="w-12 h-12 text-primary" />
             </div>
-            <h3 className="text-2xl font-bold mb-2">Your Action Journey Awaits</h3>
+            <h3 className="text-2xl font-bold mb-2">Your Action Journey Begins Here</h3>
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
               {searchQuery || selectedFilter !== 'all' 
-                ? "No actions match your current filters. Try adjusting your search to discover more opportunities." 
-                : "Ready to transform your thoughts into action? Start by making a recording to capture your goals and commitments."
+                ? "No actions match your filters. Adjust your search to find what you're looking for." 
+                : "Start by recording a conversation to automatically discover action items and schedule them at your best times."
               }
             </p>
             {(!searchQuery && selectedFilter === 'all') && (

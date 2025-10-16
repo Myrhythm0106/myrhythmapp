@@ -1,194 +1,353 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ShareSummaryV2 } from "@/components/ui/ShareSummaryV2";
-import { SwipeableContainer } from "@/components/ui/SwipeableContainer";
-import { SwipeHint } from "@/components/gratitude/journal/components/SwipeHint";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { ChevronLeft, ChevronRight, Calendar, Users, TrendingUp, FileText, AlertTriangle, CheckCircle } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
+import { useMemoryBridge } from "@/hooks/memoryBridge/useMemoryBridge";
+import { RecordingsTab } from "@/components/memoryBridge/RecordingsTab";
+import { MemoryBridgeFloatingButton } from "@/components/memoryBridge/MemoryBridgeFloatingButton";
+import { Mic, Sparkles, FileAudio, Target, Calendar, TrendingUp, CheckCircle2, ArrowRight, Brain } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function MemoryBridgeSimple() {
-  const isMobile = useIsMobile();
-  const [activeTab, setActiveTab] = useState("brief");
+  const navigate = useNavigate();
+  const { recordings, fetchRecordings } = useVoiceRecorder();
+  const { extractedActions, fetchExtractedActions } = useMemoryBridge();
+  const [currentState, setCurrentState] = useState<'empty' | 'recordings' | 'actions'>('empty');
 
-  const tabs = ["brief", "shared", "people", "insights", "watch-outs", "acts", "reports"];
-  const currentTabIndex = tabs.indexOf(activeTab);
+  useEffect(() => {
+    fetchRecordings();
+    fetchExtractedActions();
+  }, []);
 
-  const handleSwipeLeft = () => {
-    if (currentTabIndex < tabs.length - 1) {
-      setActiveTab(tabs[currentTabIndex + 1]);
-      toast({ title: "Next tab" });
+  useEffect(() => {
+    // Determine current state based on data
+    const meetingRecordings = recordings.filter(r => r.category === 'meeting');
+    const actionItems = extractedActions.filter(a => a.category === 'action');
+
+    if (actionItems.length > 0) {
+      setCurrentState('actions');
+    } else if (meetingRecordings.length > 0) {
+      setCurrentState('recordings');
+    } else {
+      setCurrentState('empty');
     }
+  }, [recordings, extractedActions]);
+
+  const handleProcessComplete = (meetingId: string, actionsCount: number) => {
+    fetchExtractedActions();
   };
 
-  const handleSwipeRight = () => {
-    if (currentTabIndex > 0) {
-      setActiveTab(tabs[currentTabIndex - 1]);
-      toast({ title: "Previous tab" });
-    }
-  };
+  // Empty State - No recordings yet
+  if (currentState === 'empty') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background p-4 md:p-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-2xl mx-auto"
+        >
+          {/* Header */}
+          <div className="text-center mb-12">
+            <motion.div
+              initial={{ scale: 0.5 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2 }}
+              className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center"
+            >
+              <Brain className="h-12 w-12 text-primary-foreground" />
+            </motion.div>
+            <h1 className="mobile-heading-xl md:text-5xl font-bold text-foreground mb-4">
+              Memory Bridge
+            </h1>
+            <p className="mobile-body text-muted-foreground max-w-md mx-auto">
+              Capture conversations. Discover actions. Schedule with confidence.
+            </p>
+          </div>
+
+          {/* Main CTA Card */}
+          <Card className="border-2 border-primary/20 shadow-xl">
+            <CardContent className="p-8 text-center space-y-6">
+              <div className="space-y-3">
+                <h2 className="mobile-heading-lg font-semibold text-foreground">
+                  Start Your First Recording
+                </h2>
+                <p className="mobile-body text-muted-foreground">
+                  Your conversations will automatically transform into organized action items with personalized scheduling suggestions
+                </p>
+              </div>
+
+              <MemoryBridgeFloatingButton className="relative bottom-0 right-0 w-full" />
+
+              {/* Benefits */}
+              <div className="grid gap-4 mt-8 text-left">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Mic className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="mobile-label font-semibold mb-1">Voice-to-Text</h3>
+                    <p className="mobile-caption text-muted-foreground">
+                      Accurate transcription of your meetings and conversations
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="mobile-label font-semibold mb-1">AI-Powered Extraction</h3>
+                    <p className="mobile-caption text-muted-foreground">
+                      Automatically discover action items from your recordings
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                    <Calendar className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="mobile-label font-semibold mb-1">Smart Scheduling</h3>
+                    <p className="mobile-caption text-muted-foreground">
+                      Personalized time suggestions based on your peak performance
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Recordings State - Has recordings but no actions yet
+  if (currentState === 'recordings') {
+    const meetingRecordings = recordings.filter(r => r.category === 'meeting');
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background p-4 md:p-8">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h1 className="mobile-heading-xl md:text-4xl font-bold text-foreground">
+                Your Recordings
+              </h1>
+              <Badge variant="secondary" className="mobile-label">
+                {meetingRecordings.length} Recording{meetingRecordings.length !== 1 ? 's' : ''}
+              </Badge>
+            </div>
+            <p className="mobile-body text-muted-foreground">
+              Process your recordings to discover actionable insights
+            </p>
+          </motion.div>
+
+          {/* Recordings List */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <RecordingsTab onProcessComplete={handleProcessComplete} />
+          </motion.div>
+        </div>
+
+        {/* Floating Action Button */}
+        <MemoryBridgeFloatingButton />
+      </div>
+    );
+  }
+
+  // Actions State - Has extracted actions
+  const highPriorityActions = extractedActions.filter(a => a.priority_level === 1 && a.category === 'action');
+  const totalActions = extractedActions.filter(a => a.category === 'action').length;
+  const completedActions = extractedActions.filter(a => a.status === 'completed').length;
+  const scheduledActions = extractedActions.filter(a => a.status === 'scheduled').length;
 
   return (
-    <div className="container mx-auto py-4 md:py-8 px-4 space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="mobile-heading-xl md:text-4xl font-bold text-foreground mb-2">Memory Bridge</h1>
-          <p className="mobile-label text-muted-foreground">Your central hub for memories, actions, and insights</p>
-        </div>
-        <ShareSummaryV2 />
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background p-4 md:p-8">
+      <div className="max-w-6xl mx-auto space-y-6">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h1 className="mobile-heading-xl md:text-4xl font-bold text-foreground mb-2">
+            Your Next Steps
+          </h1>
+          <p className="mobile-body text-muted-foreground">
+            Empowering actions ready for your attention
+          </p>
+        </motion.div>
 
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-2">
-              <CheckCircle className="h-5 w-5 text-emerald-600" />
-              <p className="mobile-caption text-muted-foreground">Today's Actions</p>
-            </div>
-            <p className="mobile-heading-md font-bold">8 / 12</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="h-5 w-5 text-brand-orange-600" />
-              <p className="mobile-caption text-muted-foreground">Streak</p>
-            </div>
-            <p className="mobile-heading-md font-bold">7 days</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-2">
-              <Calendar className="h-5 w-5 text-primary" />
-              <p className="mobile-caption text-muted-foreground">This Week</p>
-            </div>
-            <p className="mobile-heading-md font-bold">24 actions</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-2">
-              <Users className="h-5 w-5 text-clarity-teal-600" />
-              <p className="mobile-caption text-muted-foreground">People</p>
-            </div>
-            <p className="mobile-heading-md font-bold">5 active</p>
-          </CardContent>
-        </Card>
-      </div>
+        {/* Executive Summary Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/20">
+            <CardHeader>
+              <CardTitle className="mobile-heading-lg flex items-center gap-2">
+                <Target className="h-5 w-5" />
+                Today's Priorities
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    <p className="mobile-caption text-muted-foreground">High Priority</p>
+                  </div>
+                  <p className="mobile-heading-md font-bold">{highPriorityActions.length}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-primary" />
+                    <p className="mobile-caption text-muted-foreground">Scheduled</p>
+                  </div>
+                  <p className="mobile-heading-md font-bold">{scheduledActions}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <p className="mobile-caption text-muted-foreground">Completed</p>
+                  </div>
+                  <p className="mobile-heading-md font-bold">{completedActions}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Target className="h-4 w-4 text-muted-foreground" />
+                    <p className="mobile-caption text-muted-foreground">Total Actions</p>
+                  </div>
+                  <p className="mobile-heading-md font-bold">{totalActions}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
-      <SwipeableContainer
-        enableHorizontalSwipe={isMobile}
-        onSwipeLeft={currentTabIndex < tabs.length - 1 ? {
-          label: "Next",
-          icon: <ChevronRight />,
-          color: "hsl(var(--primary))",
-          action: handleSwipeLeft
-        } : undefined}
-        onSwipeRight={currentTabIndex > 0 ? {
-          label: "Back",
-          icon: <ChevronLeft />,
-          color: "hsl(var(--primary))",
-          action: handleSwipeRight
-        } : undefined}
-      >
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-7 gap-1 mb-6">
-            <TabsTrigger value="brief" className="flex-shrink-0">Daily Brief</TabsTrigger>
-            <TabsTrigger value="shared" className="flex-shrink-0">Shared</TabsTrigger>
-            <TabsTrigger value="people" className="flex-shrink-0">People</TabsTrigger>
-            <TabsTrigger value="insights" className="flex-shrink-0">Insights</TabsTrigger>
-            <TabsTrigger value="watch-outs" className="flex-shrink-0">Watch Outs</TabsTrigger>
-            <TabsTrigger value="acts" className="flex-shrink-0">Acts</TabsTrigger>
-            <TabsTrigger value="reports" className="flex-shrink-0">Reports</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="brief">
+        {/* High Priority Actions */}
+        {highPriorityActions.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
             <Card>
               <CardHeader>
-                <CardTitle className="mobile-heading-lg">Daily Brief</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="mobile-body text-muted-foreground">Your daily summary will appear here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="shared">
-            <Card>
-              <CardHeader>
-                <CardTitle className="mobile-heading-lg">Shared Memories</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="mobile-body text-muted-foreground">Shared content will appear here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="people">
-            <Card>
-              <CardHeader>
-                <CardTitle className="mobile-heading-lg">People & Connections</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="mobile-body text-muted-foreground">Your connections will appear here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="insights">
-            <Card>
-              <CardHeader>
-                <CardTitle className="mobile-heading-lg">Insights & Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="mobile-body text-muted-foreground">Your insights will appear here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="watch-outs">
-            <Card>
-              <CardHeader>
-                <CardTitle className="mobile-heading-lg flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-amber-600" />
-                  Watch Outs
+                <CardTitle className="mobile-heading-lg flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
+                    Priority Actions
+                  </span>
+                  <Badge variant="destructive">{highPriorityActions.length}</Badge>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="mobile-body text-muted-foreground">Important reminders will appear here.</p>
+              <CardContent className="space-y-4">
+                {highPriorityActions.slice(0, 3).map((action) => (
+                  <Card key={action.id} className="border-l-4 border-l-red-500 hover:shadow-md transition-shadow">
+                    <CardContent className="p-4">
+                      <h3 className="mobile-label font-semibold mb-2">{action.action_text}</h3>
+                      
+                      {/* AI Recommendation */}
+                      <div className="bg-primary/5 rounded-lg p-3 mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Sparkles className="h-4 w-4 text-primary" />
+                          <span className="mobile-caption font-semibold text-primary">Smart Scheduling</span>
+                        </div>
+                        <p className="mobile-caption text-muted-foreground">
+                          Based on your assessment: Best scheduled during your peak focus time
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          {action.assigned_to && (
+                            <Badge variant="outline" className="mobile-caption">
+                              {action.assigned_to}
+                            </Badge>
+                          )}
+                          <Badge variant="secondary" className="mobile-caption capitalize">
+                            {action.status?.replace('_', ' ') || 'Ready to Begin'}
+                          </Badge>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => navigate('/next-steps')}
+                          className="text-primary hover:text-primary/80"
+                        >
+                          Schedule
+                          <ArrowRight className="h-4 w-4 ml-1" />
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </CardContent>
             </Card>
-          </TabsContent>
+          </motion.div>
+        )}
 
-          <TabsContent value="acts">
-            <Card>
-              <CardHeader>
-                <CardTitle className="mobile-heading-lg">Actions Review</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="mobile-body text-muted-foreground">Your actions will appear here.</p>
-              </CardContent>
-            </Card>
-          </TabsContent>
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="grid md:grid-cols-2 gap-4"
+        >
+          <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate('/next-steps')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <Target className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="mobile-label font-semibold mb-1">All Actions</h3>
+                    <p className="mobile-caption text-muted-foreground">View and manage everything</p>
+                  </div>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
 
-          <TabsContent value="reports">
-            <Card>
-              <CardHeader>
-                <CardTitle className="mobile-heading-lg">Reports</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ShareSummaryV2 />
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </SwipeableContainer>
+          <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate('/memory-bridge')}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                    <FileAudio className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="mobile-label font-semibold mb-1">Recordings</h3>
+                    <p className="mobile-caption text-muted-foreground">Listen and process</p>
+                  </div>
+                </div>
+                <ArrowRight className="h-5 w-5 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
 
-      <SwipeHint isMobile={isMobile} />
+      {/* Floating Action Button */}
+      <MemoryBridgeFloatingButton />
     </div>
   );
 }

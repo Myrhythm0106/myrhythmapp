@@ -110,12 +110,14 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
 
   if (meetingRecordings.length === 0) {
     return (
-      <Card>
-        <CardContent className="text-center py-8">
-          <FileAudio className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-lg font-semibold mb-2">No Recordings Yet</h3>
-          <p className="text-muted-foreground">
-            Complete your first recording to see it here and process it into ACTs.
+      <Card className="border-2 border-dashed border-primary/30">
+        <CardContent className="text-center py-12">
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+            <FileAudio className="h-10 w-10 text-primary" />
+          </div>
+          <h3 className="mobile-heading-lg font-semibold mb-2">No Recordings Yet</h3>
+          <p className="mobile-body text-muted-foreground max-w-md mx-auto">
+            Start your first recording to capture important conversations and automatically discover action items
           </p>
         </CardContent>
       </Card>
@@ -170,7 +172,7 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                         <div className="flex items-center gap-2">
                           <Badge className="bg-green-100 text-green-800">
                             <Brain className="h-3 w-3 mr-1" />
-                            Processed
+                            Actions Ready
                           </Badge>
                           <Button
                             variant="outline"
@@ -194,7 +196,7 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                             className="flex items-center gap-1"
                           >
                             <Brain className="h-3 w-3" />
-                            ACTS
+                            View Actions
                           </Button>
                         </div>
                       ) : (
@@ -218,12 +220,12 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                             {isProcessing ? (
                               <>
                                 <Loader2 className="h-3 w-3 mr-1 animate-spin" />
-                                Processing...
+                                Discovering Actions...
                               </>
                             ) : (
                               <>
                                 <Brain className="h-3 w-3 mr-1" />
-                                Process to ACTs
+                                Discover Actions
                                 <ChevronRight className="h-3 w-3 ml-1" />
                               </>
                             )}

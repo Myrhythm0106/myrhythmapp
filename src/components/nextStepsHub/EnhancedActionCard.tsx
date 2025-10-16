@@ -132,6 +132,16 @@ export function EnhancedActionCard({
     }
   };
 
+  const getEmpoweringStatusLabel = (status: string) => {
+    switch (status) {
+      case 'not_started': return 'Ready to Begin';
+      case 'in_progress': return 'Making Progress';
+      case 'scheduled': return 'Scheduled';
+      case 'completed': return 'Completed';
+      default: return 'Ready to Begin';
+    }
+  };
+
   const handleGenerateSuggestions = async () => {
     if (action.category !== 'action' || action.status === 'completed' || action.status === 'scheduled') {
       return;
@@ -291,7 +301,7 @@ export function EnhancedActionCard({
       {/* Status & Actions */}
       <div className="flex items-center justify-between pt-2">
         <Badge className={`text-xs border ${getStatusColor(action.status || 'not_started')}`}>
-          {action.status?.replace('_', ' ') || 'Not Started'}
+          {getEmpoweringStatusLabel(action.status || 'not_started')}
         </Badge>
         
         <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
