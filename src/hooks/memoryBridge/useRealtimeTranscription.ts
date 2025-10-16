@@ -19,11 +19,26 @@ export const useRealtimeTranscription = () => {
 
   const connect = useCallback(async () => {
     try {
-      // Get token from our edge function
-      const { data, error } = await supabase.functions.invoke('assemblyai-token');
+      // Get fresh session for auth
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        console.warn('No active session for transcription');
+        toast.warning('Recording without live transcription');
+        return;
+      }
+
+      // Get token from our edge function with auth header
+      const { data, error } = await supabase.functions.invoke('assemblyai-token', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`
+        }
+      });
       
       if (error || !data?.token) {
-        throw new Error('Failed to get AssemblyAI token');
+        console.warn('Transcription service unavailable:', error);
+        toast.warning('Recording without live transcription');
+        return;
       }
 
       // Connect to AssemblyAI WebSocket
@@ -45,7 +60,6 @@ export const useRealtimeTranscription = () => {
 
       socket.onerror = (error) => {
         console.error('WebSocket error:', error);
-        toast.error('Transcription connection error');
         setIsConnected(false);
       };
 
@@ -56,8 +70,8 @@ export const useRealtimeTranscription = () => {
       };
 
     } catch (error) {
-      console.error('Connection error:', error);
-      toast.error('Failed to connect to transcription service');
+      console.warn('Transcription unavailable:', error);
+      // Don't throw - allow recording to continue
     }
   }, []);
 

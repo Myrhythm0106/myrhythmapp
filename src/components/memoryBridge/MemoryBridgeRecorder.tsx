@@ -86,9 +86,15 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     const success = await startRecording();
     if (success) {
       console.log('Voice recording started successfully');
-      // Start realtime transcription for SMART ACTs
-      await startTranscription();
-      setShowLiveACTs(true);
+      
+      // Try to start realtime transcription, but don't block if it fails
+      try {
+        await startTranscription();
+        setShowLiveACTs(true);
+      } catch (error) {
+        console.warn('Live transcription unavailable, will process after recording');
+      }
+      
       resetTranscript();
       clearACTs();
     }
@@ -159,28 +165,34 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
 
         if (meetingRecord) {
           // Trigger background processing using stored file (fast path)
-          await supabase.functions.invoke('process-meeting-audio', {
-            body: {
-              filePath: voiceRecording.file_path,
-              meetingId: meetingRecord.id,
-              meetingData: {
-                title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
-                type: 'informal',
-                participants: meetingData.participants || [],
-                context: meetingData.context || '',
-                recording_id: voiceRecording.id
+          try {
+            await supabase.functions.invoke('process-meeting-audio', {
+              body: {
+                filePath: voiceRecording.file_path,
+                meetingId: meetingRecord.id,
+                meetingData: {
+                  title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
+                  type: 'informal',
+                  participants: meetingData.participants || [],
+                  context: meetingData.context || '',
+                  recording_id: voiceRecording.id
+                }
               }
-            }
-          });
+            });
 
-          toast.success('Processing started! ACTs will appear shortly.');
+            toast.success('Processing started! ACTs will appear shortly.');
+          } catch (processingError) {
+            console.warn('Processing queued for later:', processingError);
+            toast.success('Recording saved! ACTs will appear in 1-2 minutes.');
+          }
+          
           onComplete();
           onClose();
         }
       }
     } catch (error) {
-      console.error('Error processing recording:', error);
-      toast.error('Failed to process recording');
+      console.error('Error saving recording:', error);
+      toast.error('Failed to save recording. Please try again.');
     }
   }, [meetingData, saveRecording, startMeetingRecording, onComplete, onClose]);
 

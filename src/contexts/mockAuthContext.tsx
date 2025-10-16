@@ -53,7 +53,7 @@ const createMockSession = (user: User): Session => {
     role: 'authenticated',
     iat: Math.floor(Date.now() / 1000),
     exp: Math.floor(Date.now() / 1000) + 3600,
-    user_id: user.id, // Use actual user.id instead of literal string
+    sub: user.id, // Use 'sub' claim for Supabase compatibility
     aud: 'authenticated',
     email: user.email
   };
