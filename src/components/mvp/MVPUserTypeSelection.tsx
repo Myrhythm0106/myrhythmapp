@@ -19,7 +19,7 @@ export function MVPUserTypeSelection() {
     },
     {
       id: 'memory-challenges',
-      title: 'Memory Challenges (After Brain Injury)',
+      title: 'Brain Injury Navigator',
       description: 'For anyone rebuilding after brain injury, stroke, or cognitive change—you\'re the CEO of your journey',
       icon: Heart,
       color: 'from-brain-health-500 to-clarity-teal-500',
