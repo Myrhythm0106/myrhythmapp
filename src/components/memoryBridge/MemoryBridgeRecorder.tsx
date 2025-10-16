@@ -40,6 +40,7 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   const [showLimitWarning, setShowLimitWarning] = useState(false);
   const [showDailyLimitModal, setShowDailyLimitModal] = useState(false);
   const [showLiveACTs, setShowLiveACTs] = useState(false);
+  const [processingStage, setProcessingStage] = useState<'idle' | 'transcribing' | 'extracting' | 'completed' | 'error'>('idle');
 
   // Get daily and per-recording limits
   const remainingDailyMinutes = getRemainingDailyTime();
@@ -145,7 +146,7 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     if (!blobToProcess || !meetingData) return;
 
     try {
-      toast.info('Processing recording...', { duration: 1000 });
+      toast.info('📼 Saving recording instantly...', { duration: 2000 });
       
       // First save the voice recording
       const voiceRecording = await saveRecording(
@@ -164,9 +165,13 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
         }, voiceRecording.id);
 
         if (meetingRecord) {
+          toast.success('✅ Recording saved! Processing in background...');
+          setProcessingStage('transcribing');
+          
           // Trigger background processing using stored file (fast path)
           try {
-            await supabase.functions.invoke('process-meeting-audio', {
+            // Fire and forget - don't await
+            supabase.functions.invoke('process-meeting-audio', {
               body: {
                 filePath: voiceRecording.file_path,
                 meetingId: meetingRecord.id,
@@ -180,10 +185,9 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
               }
             });
 
-            toast.success('Processing started! ACTs will appear shortly.');
+            toast.info('🎤 Transcribing audio in background...', { duration: 3000 });
           } catch (processingError) {
             console.warn('Processing queued for later:', processingError);
-            toast.success('Recording saved! ACTs will appear in 1-2 minutes.');
           }
           
           onComplete();
@@ -193,6 +197,7 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     } catch (error) {
       console.error('Error saving recording:', error);
       toast.error('Failed to save recording. Please try again.');
+      setProcessingStage('error');
     }
   }, [meetingData, saveRecording, startMeetingRecording, onComplete, onClose]);
 
@@ -230,6 +235,46 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
       return () => clearTimeout(timeoutId);
     }
   }, [transcript, isTranscribing, extractACTs]);
+
+  // Real-time progress monitoring
+  useEffect(() => {
+    if (!currentMeeting?.id) return;
+
+    const channel = supabase
+      .channel(`meeting-progress-${currentMeeting.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'meeting_recordings',
+          filter: `id=eq.${currentMeeting.id}`
+        },
+        (payload) => {
+          const status = payload.new.processing_status;
+          console.log('📊 Processing status update:', status);
+
+          if (status === 'transcribing') {
+            setProcessingStage('transcribing');
+            toast.info('🎤 Transcribing audio...', { duration: 5000 });
+          } else if (status === 'extracting_actions') {
+            setProcessingStage('extracting');
+            toast.info('🎯 Extracting actions...', { duration: 5000 });
+          } else if (status === 'completed') {
+            setProcessingStage('completed');
+            toast.success(`✅ Processing complete! Found ${payload.new.actions_count || 0} actions!`);
+          } else if (status === 'error') {
+            setProcessingStage('error');
+            toast.error('❌ Processing failed. Recording is saved.');
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [currentMeeting?.id]);
 
   if (isProcessing) {
     return (

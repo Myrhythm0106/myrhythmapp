@@ -14,17 +14,16 @@ serve(async (req) => {
   }
 
   try {
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
+    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-    const ASSEMBLYAI_API_KEY = Deno.env.get('ASSEMBLYAI_API_KEY');
     
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       throw new Error('Missing required Supabase environment variables');
     }
     
-    if (!OPENAI_API_KEY) {
-      console.warn('OpenAI API key not configured - will use fallback extractors (AssemblyAI LeMUR or local).');
+    if (!LOVABLE_API_KEY) {
+      console.warn('Lovable AI API key not configured - will use rule-based fallback.');
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -34,10 +33,8 @@ serve(async (req) => {
       throw new Error('Missing required parameters: transcript, meetingId, userId');
     }
 
-    console.log('🚀 PROCESSING TRANSCRIPT with OpenAI + Enhanced Fallback for meeting:', meetingId);
-    console.log('🔑 OpenAI API Key available:', !!OPENAI_API_KEY);
-    console.log('🔑 OpenAI Key length:', OPENAI_API_KEY?.length);
-    console.log('🔑 OpenAI Key starts with sk-:', OPENAI_API_KEY?.startsWith('sk-'));
+    console.log('🚀 PROCESSING TRANSCRIPT with Lovable AI (Gemini) for meeting:', meetingId);
+    console.log('🔑 Lovable AI API Key available:', !!LOVABLE_API_KEY);
     console.log('📝 Transcript length:', transcript.length);
 
     // Update meeting status to extracting
@@ -172,244 +169,143 @@ serve(async (req) => {
       }
     };
 
-    // 1) Try OpenAI first (if key present)
-    if (OPENAI_API_KEY) {
+    // 1) Try Lovable AI (Gemini) first - FASTEST & CHEAPEST
+    if (LOVABLE_API_KEY) {
       try {
-        const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+        const geminiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${OPENAI_API_KEY}`,
-            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+            'Content-Type': 'application/json'
           },
-            body: JSON.stringify({
-              model: 'gpt-4o-mini',
-              max_tokens: 4000,
-              messages: [{
-                role: 'system',
-                content: `EXTRACT NEXT STEPS from meeting transcripts with MAXIMUM CLARITY and FOLLOW-THROUGH OPTIMIZATION.
-
-CONTEXT: This is for someone with brain injury who needs CRYSTAL CLEAR, VERB-FIRST structured next steps that inspire pride and follow-through.
-
-🎯 MASTER VERB LIBRARY BY CONTEXT:
-**COMMUNICATION**: CALL, EMAIL, TEXT, DISCUSS, CONFIRM, FOLLOW UP, REACH OUT, CONTACT, NOTIFY, UPDATE, RESPOND, CONNECT
-**MEDICAL**: SCHEDULE, BOOK, TAKE, REFILL, PICK UP, ATTEND, FOLLOW UP, MONITOR, TRACK, RECORD
-**PLANNING**: CREATE, ORGANIZE, PREPARE, PLAN, ARRANGE, SET UP, RESEARCH, INVESTIGATE, REVIEW, OUTLINE
-**COMPLETION**: FINISH, COMPLETE, SUBMIT, DELIVER, SEND, UPLOAD, FILE, CLOSE, WRAP UP
-**DECISION**: DECIDE, CHOOSE, SELECT, DETERMINE, EVALUATE, ASSESS, CONSIDER, COMPARE
-**COORDINATION**: COORDINATE, ARRANGE, SYNC, ALIGN, SCHEDULE, SET, CONFIRM
+          body: JSON.stringify({
+            model: 'google/gemini-2.5-flash',
+            messages: [
+              { 
+                role: 'system', 
+                content: `Extract VERB-FIRST action items from meeting transcripts for someone with brain injury.
 
 🎯 CATEGORIZE INTO 4 TYPES:
-1. ACTIONS ✅ - What I will do (verb-first from Master Verb Library)
-2. WATCH-OUTS ⚠️ - Things to keep in mind, gentle reminders, awareness points
-3. DEPENDS ON 🔗 - What this relies on (people, events, timing, conditions, prerequisites)
-4. NOTES 📝 - Important details, context to remember, thoughts and reflections
+1. ACTIONS ✅ - "CALL Dr. Martinez", "SCHEDULE appointment"
+2. WATCH-OUTS ⚠️ - "Watch for side effects" 
+3. DEPENDS ON 🔗 - "Depends on doctor approval"
+4. NOTES 📝 - "Important contact info"
 
-📋 CATEGORIZATION RULES:
-- ACTIONS: Direct tasks with clear verbs - "CALL therapist", "SCHEDULE appointment", "COMPLETE form"
-- WATCH-OUTS: Cautionary items - "Watch for side effects", "Keep in mind budget limits", "Be aware of timing"
-- DEPENDS ON: Prerequisites/dependencies - "Depends on doctor approval", "Relies on Monday meeting", "Needs family input"
-- NOTES: Information items - "Important contact info", "Remember preference for morning appointments", "Context about previous discussion"
+📋 KEY RULES:
+- Start with VERB (CALL, EMAIL, SCHEDULE, BOOK, CREATE, COMPLETE, etc.)
+- Include WHO + WHAT + WHY
+- Infer dates: "by Friday" → actual date, "soon" → tomorrow
+- Break complex tasks into 2-3 micro-tasks
+- Include emotional stakes for motivation
 
-🗓️ SMART DATE INFERENCE:
-Current date context: ${new Date().toISOString().split('T')[0]}
-- "by Friday" → Calculate actual Friday date
-- "next week" → Add 7-10 days from current date
-- "soon/ASAP" → Tomorrow or next business day
-- "this month" → Within 2-3 weeks
-- No timeframe? Simple task = 2-3 days, Complex = 1 week
+Current date: ${new Date().toISOString().split('T')[0]}
 
-💡 BRAIN INJURY OPTIMIZATION:
-- Use encouraging, pride-building language
-- Break complex actions into micro-steps
-- Include emotional stakes to motivate follow-through
-- Provide clear success markers to prevent confusion
-
-JSON SCHEMA WITH ENHANCED FIELDS:
-{
-  "action_text": "VERB + specific WHO + WHAT + context (e.g., 'CALL Dr. Martinez to schedule next therapy session')",
-  "verb_category": "COMMUNICATION|MEDICAL|PLANNING|COMPLETION|DECISION|COORDINATION",
-  "category": "action|watch_out|depends_on|note",
-  "success_criteria": "Clear completion marker",
-  "completion_criteria_specific": "Action-type specific completion (e.g., 'when you've spoken with [person] and noted their response')",
-  "motivation_statement": "This will help you [specific personal benefit]",
-  "assigned_to": "Who does it (specific name or 'me')",
-  "owner": "Who is responsible (specific name or 'me')",
-  "due_context": "Original timeline from transcript",
-  "start_date": "YYYY-MM-DD or null",
-  "end_date": "YYYY-MM-DD or null", 
-  "completion_date": "YYYY-MM-DD (target date)",
-  "relationship_impact": "How this affects relationships/wellbeing",
-  "emotional_stakes": "What's at risk emotionally if not completed",
-  "intent_behind": "The deeper 'why' behind this next step",
-  "what_outcome": "Specific result when complete",
-  "how_steps": ["Step 1", "Step 2", "Step 3"],
-  "micro_tasks": [{"text": "Tiny first step", "completed": false}],
-  "priority_level": 1-5 (1=highest),
-  "confidence_score": 0.0-1.0,
-  "momentum_builder": "Right after completing this, you could...",
-  "two_minute_starter": "Just [ultra-simple first step] - you don't have to [complete action] yet",
-  "celebration_trigger": "When done, [celebration action]",
-  "potential_barriers": ["barrier1", "barrier2"],
-  "if_stuck": "If you feel stuck, try this instead: [alternative]",
-  "best_time": "Optimal timing (e.g., 'Morning when energy is highest')",
-  "next_natural_steps": ["Next step 1", "Next step 2"],
-  "detail_level": "standard",
-  "alternative_phrasings": []
-}
-
-🌟 PERFECT EXAMPLES:
-[{
-  "action_text": "CALL Dr. Martinez (neurologist) to schedule next therapy session",
-  "verb_category": "MEDICAL",
-  "category": "action",
-  "success_criteria": "Appointment scheduled and confirmed",
-  "completion_criteria_specific": "when you've spoken with Dr. Martinez's office and received confirmation with date, time, location, and any prep instructions",
-  "motivation_statement": "This will help you maintain momentum in your recovery and reduce anxiety about gaps in care",
-  "assigned_to": "me",
-  "owner": "me",
-  "due_context": "by Friday this week",
-  "start_date": "2025-01-17",
-  "end_date": "2025-01-19", 
-  "completion_date": "2025-01-19",
-  "relationship_impact": "Shows commitment to healing and reduces family worry",
-  "emotional_stakes": "Risk of losing progress momentum and feeling defeated",
-  "intent_behind": "Maintaining consistent care for optimal recovery",
-  "what_outcome": "Next therapy session scheduled and confirmed in calendar",
-  "how_steps": ["Find Dr. Martinez's direct number (check recent bill or patient portal)", "Call during business hours 9am-5pm", "Ask for next available appointment", "Confirm location and parking info", "Add to calendar with reminder"],
-  "micro_tasks": [{"text": "Open contacts and search for 'Dr. Martinez'", "completed": false}, {"text": "Just dial the number - you don't have to schedule yet", "completed": false}],
-  "priority_level": 2,
-  "confidence_score": 0.95,
-  "momentum_builder": "Right after scheduling, you could text your support person to let them know the appointment date",
-  "two_minute_starter": "Just find the phone number in your contacts - you don't have to call yet",
-  "celebration_trigger": "When done, text someone you trust: 'Scheduled my therapy - proud of myself!'",
-  "potential_barriers": ["Phone anxiety", "Not remembering questions to ask", "Voicemail instead of person"],
-  "if_stuck": "If calling feels too hard, try the patient portal online to request an appointment instead",
-  "best_time": "Morning between 9-10am when office is less busy and your energy is higher",
-  "next_natural_steps": ["Add appointment to calendar with 30-minute reminder", "Prepare list of topics to discuss", "Arrange transportation if needed"],
-  "detail_level": "complete",
-  "alternative_phrasings": []
-}, {
-  "action_text": "Watch for medication side effects during first week",
-  "verb_category": "MEDICAL",
-  "category": "watch_out",
-  "success_criteria": "Actively monitoring and tracking any changes",
-  "completion_criteria_specific": "when you notice and track any changes in energy, mood, sleep, or appetite",
-  "motivation_statement": "This will help you stay safe and catch any issues early",
-  "assigned_to": "me",
-  "owner": "me",
-  "due_context": "first week of treatment",
-  "priority_level": 1,
-  "confidence_score": 0.90,
-  "momentum_builder": "Keep a simple daily log - just 1-2 sentences about how you feel",
-  "two_minute_starter": "Just notice how you feel right now - no need to write anything yet",
-  "best_time": "Same time each evening before bed for consistency",
-  "potential_barriers": ["Forgetting to check in with yourself", "Not sure what counts as a side effect"],
-  "if_stuck": "If tracking feels overwhelming, just text yourself one word each day: Good, Okay, or Concerning",
-  "next_natural_steps": ["Call doctor if any concerning symptoms arise", "Continue monitoring through week 2"],
-  "detail_level": "standard",
-  "alternative_phrasings": []
-}]
-
-Return ONLY a JSON array. No explanations or commentary.`
-            }, {
-              role: 'user',
-              content: `TRANSCRIPT: ${transcript}`
-            }]
+Return JSON array with these essential fields:
+- action_text (VERB-first)
+- category (action|watch_out|depends_on|note)
+- assigned_to
+- due_context
+- completion_date (YYYY-MM-DD)
+- priority_level (1-5)
+- confidence_score (0-1)
+- success_criteria
+- micro_tasks [{"text": "...", "completed": false}]
+- motivation_statement
+- what_outcome
+- how_steps []`
+              },
+              { role: 'user', content: `TRANSCRIPT: ${transcript}` }
+            ],
+            tools: [{
+              type: 'function',
+              function: {
+                name: 'extract_actions',
+                description: 'Extract structured action items from transcript',
+                parameters: {
+                  type: 'object',
+                  properties: {
+                    actions: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          action_text: { type: 'string' },
+                          category: { type: 'string', enum: ['action', 'watch_out', 'depends_on', 'note'] },
+                          assigned_to: { type: 'string' },
+                          due_context: { type: 'string' },
+                          completion_date: { type: 'string' },
+                          priority_level: { type: 'integer' },
+                          confidence_score: { type: 'number' },
+                          success_criteria: { type: 'string' },
+                          micro_tasks: { 
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                text: { type: 'string' },
+                                completed: { type: 'boolean' }
+                              }
+                            }
+                          },
+                          motivation_statement: { type: 'string' },
+                          what_outcome: { type: 'string' },
+                          how_steps: { type: 'array', items: { type: 'string' } }
+                        },
+                        required: ['action_text', 'category', 'assigned_to', 'priority_level', 'confidence_score']
+                      }
+                    }
+                  },
+                  required: ['actions']
+                }
+              }
+            }],
+            tool_choice: { type: 'function', function: { name: 'extract_actions' } }
           })
         });
 
-        if (openAIResponse.ok) {
-          const openAIData = await openAIResponse.json();
-          console.log('✅ OpenAI API SUCCESS - Status:', openAIResponse.status);
-          console.log('✅ OpenAI full response:', JSON.stringify(openAIData, null, 2));
+        if (geminiResponse.ok) {
+          const geminiData = await geminiResponse.json();
+          console.log('✅ Gemini API SUCCESS - Status:', geminiResponse.status);
           
-          const content = openAIData.choices?.[0]?.message?.content?.trim();
-          console.log('✅ Raw OpenAI content:', content);
-          
-          if (content && content !== '[]' && content !== '') {
+          // Extract from tool call
+          const toolCall = geminiData.choices?.[0]?.message?.tool_calls?.[0];
+          if (toolCall && toolCall.function?.arguments) {
             try {
-              // Clean the content to ensure it's valid JSON
-              let cleanContent = content;
-              if (!cleanContent.startsWith('[')) {
-                // If it starts with text, try to find the JSON array
-                const arrayMatch = cleanContent.match(/\[[\s\S]*\]/);
-                if (arrayMatch) {
-                  cleanContent = arrayMatch[0];
-                } else {
-                  throw new Error('No JSON array found in content');
-                }
-              }
+              const parsedArgs = typeof toolCall.function.arguments === 'string' 
+                ? JSON.parse(toolCall.function.arguments)
+                : toolCall.function.arguments;
               
-              extractedActions = JSON.parse(cleanContent);
-              console.log('✅ SUCCESS: Parsed', extractedActions.length, 'actions via OpenAI');
+              extractedActions = parsedArgs.actions || [];
+              console.log('✅ SUCCESS: Parsed', extractedActions.length, 'actions via Gemini');
               console.log('✅ First action sample:', JSON.stringify(extractedActions[0] || {}, null, 2));
               
               // Validate the structure
               if (Array.isArray(extractedActions) && extractedActions.length > 0) {
-                console.log('✅ OpenAI extraction complete with', extractedActions.length, 'structured actions');
+                console.log('✅ Gemini extraction complete with', extractedActions.length, 'structured actions');
+                extractionMethod = 'gemini-2.5-flash';
               } else {
-                console.log('❌ OpenAI returned empty array, falling back');
+                console.log('❌ Gemini returned empty array, falling back');
                 extractedActions = [];
               }
             } catch (parseError) {
-              console.error('❌ PARSE ERROR - Failed to parse OpenAI JSON:', parseError);
-              console.error('❌ Raw content was:', JSON.stringify(content, null, 2));
+              console.error('❌ PARSE ERROR - Failed to parse Gemini tool call:', parseError);
+              console.error('❌ Raw tool call was:', JSON.stringify(toolCall, null, 2));
               extractedActions = [];
             }
           } else {
-            console.log('❌ OpenAI returned empty/null content');
+            console.log('❌ Gemini returned empty/null tool call');
             extractedActions = [];
           }
         } else {
-          const errorText = await openAIResponse.text();
-          console.error('OpenAI API error - Status:', openAIResponse.status, 'Text:', errorText);
+          const errorText = await geminiResponse.text();
+          console.error('Gemini API error - Status:', geminiResponse.status, 'Text:', errorText);
         }
       } catch (err) {
-        console.error('OpenAI fetch failed:', err);
+        console.error('Gemini fetch failed:', err);
       }
     }
 
-    // 2) Fallback to AssemblyAI LeMUR if nothing extracted and key present
-    if (extractedActions.length === 0 && ASSEMBLYAI_API_KEY) {
-      try {
-        const lemurPrompt = `Extract Actionable items (ACTs) from the following conversation. Output ONLY a JSON array with objects having keys: action, assignee, priority (high|medium|low), due_context, context, confidence (0-1), reasoning. Be concise and concrete.`;
-        const lemurRes = await fetch('https://api.assemblyai.com/v2/lemur/tasks', {
-          method: 'POST',
-          headers: {
-            'Authorization': ASSEMBLYAI_API_KEY,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            prompt: lemurPrompt,
-            final_model: 'claude_sonnet_4_20250514',
-            input_text: transcript,
-            max_output_size: 1500,
-            temperature: 0.1
-          })
-        });
-
-        if (lemurRes.ok) {
-          const lemurData = await lemurRes.json();
-          const text = (lemurData?.response || '').trim();
-          try {
-            const parsed = JSON.parse(text);
-            if (Array.isArray(parsed)) {
-              extractedActions = parsed;
-              console.log('ACTs extracted via AssemblyAI LeMUR:', extractedActions.length);
-            }
-          } catch (e) {
-            console.error('Failed to parse LeMUR response as JSON array');
-          }
-        } else {
-          const errText = await lemurRes.text();
-          console.error('LeMUR API error:', errText);
-        }
-      } catch (err) {
-        console.error('AssemblyAI LeMUR fetch failed:', err);
-      }
-    }
-
-    // 3) Last resort: local rule-based extractor
+    // 2) Last resort: local rule-based extractor
     if (extractedActions.length === 0) {
       extractedActions = localExtractActions(transcript);
       console.log('ACTs extracted via local fallback:', extractedActions.length);

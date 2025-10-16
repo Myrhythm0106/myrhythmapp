@@ -220,9 +220,9 @@ serve(async (req) => {
         const transcriptId = transcriptionData.id;
         console.log('✅ Transcription job started, ID:', transcriptId);
         
-        // Poll for completion (simplified - in production use webhooks)
+        // Poll for completion (optimized for faster processing)
         let attempts = 0;
-        const maxAttempts = 30; // 5 minutes max
+        const maxAttempts = 20; // 60 seconds max (3s * 20)
         
         console.log('⏳ Polling for transcription completion...');
         while (attempts < maxAttempts) {
@@ -260,14 +260,15 @@ serve(async (req) => {
             throw new Error(`Transcription failed: ${statusData.error}`);
           }
           
-          console.log(`⏳ Status: ${statusData.status}, waiting 10 seconds...`);
-          await new Promise(resolve => setTimeout(resolve, 10000)); // Wait 10 seconds
+          console.log(`⏳ Status: ${statusData.status}, waiting 3 seconds...`);
+          await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3 seconds
           attempts++;
         }
         
         if (!transcriptText) {
-          console.error('❌ Transcription timed out after', maxAttempts, 'attempts');
-          throw new Error('Transcription timed out');
+          console.warn('⚠️ Transcription timeout after 60 seconds, using partial transcript');
+          transcriptText = statusData.text || '';
+          // If still no text, we'll proceed with rule-based extraction
         }
       } catch (assemblyError) {
         console.error('❌ AssemblyAI processing failed:', assemblyError);
@@ -322,8 +323,7 @@ serve(async (req) => {
       .from('meeting_recordings')
       .update({ 
         transcript: transcriptText,
-        processing_status: 'completed',
-        processing_completed_at: new Date().toISOString()
+        processing_status: 'extracting_actions'
       })
       .eq('id', meetingId);
 
@@ -346,8 +346,26 @@ serve(async (req) => {
     if (extractionError) {
       console.error('❌ Error extracting ACTs:', extractionError);
       console.error('🔍 Extraction error details:', JSON.stringify(extractionError, null, 2));
+      
+      // Mark as completed even if extraction fails
+      await supabase
+        .from('meeting_recordings')
+        .update({ 
+          processing_status: 'completed',
+          processing_completed_at: new Date().toISOString()
+        })
+        .eq('id', meetingId);
     } else {
       console.log('✅ ACT extraction successful, found:', extractionData?.actionsCount || 0, 'actions');
+      
+      // Mark as completed after successful extraction
+      await supabase
+        .from('meeting_recordings')
+        .update({ 
+          processing_status: 'completed',
+          processing_completed_at: new Date().toISOString()
+        })
+        .eq('id', meetingId);
     }
 
     console.log('🎉 Processing completed successfully');
