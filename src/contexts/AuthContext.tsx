@@ -259,22 +259,57 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             is_freemium: isFreemium,
             signup_type: isFreemium ? 'freemium' : 'premium'
           },
-          emailRedirectTo: isFreemium 
-            ? `${window.location.origin}/welcome`
-            : `${window.location.origin}/email-verification`
+          emailRedirectTo: `${window.location.origin}/email-verification`
         }
       });
       
       if (error) {
         SecureLogger.error('AuthContext: Sign up error:', error);
         toast.error(error.message);
-      } else {
-        console.log('AuthContext: Sign up successful:', data);
-        toast.success('Account created successfully! Please check your email to verify your account.');
+        return { error };
+      }
+
+      // Generate custom verification token and send via Resend
+      if (data?.user?.id) {
+        const verificationToken = crypto.randomUUID();
+        
+        // Store verification token in database
+        const { error: tokenError } = await supabase
+          .from('email_verifications')
+          .insert({
+            email,
+            token: verificationToken,
+            user_id: data.user.id
+          });
+
+        if (tokenError) {
+          console.error('Error storing verification token:', tokenError);
+          toast.error('Account created but verification email failed. Please try resending.');
+          return { error: tokenError };
+        }
+
+        // Send custom verification email via Resend edge function
+        const { error: emailError } = await supabase.functions.invoke('send-verification-email', {
+          body: {
+            email,
+            name,
+            token: verificationToken,
+            redirectUrl: `${window.location.origin}/email-verification`
+          }
+        });
+
+        if (emailError) {
+          console.error('Error sending verification email:', emailError);
+          toast.error('Account created but verification email failed. Please check spam or try resending.');
+        } else {
+          console.log('Custom verification email sent successfully via Resend');
+          toast.success('Account created! Check your email to verify your account.');
+        }
+        
         setEmailVerificationStatus('pending');
       }
       
-      return { error };
+      return { error: null };
     } catch (error) {
       SecureLogger.error('AuthContext: Sign up exception:', error);
       toast.error('Sign up failed. Please try again.');
