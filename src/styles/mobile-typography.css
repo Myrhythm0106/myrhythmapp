@@ -1,0 +1,85 @@
+/* Mobile-first typography (Apple HIG + Material Design 3) */
+
+/* Mobile sizes (base) */
+.mobile-heading-xl {
+  font-size: 28px;
+  line-height: 34px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.mobile-heading-lg {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.mobile-heading-md {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.mobile-body {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.mobile-label {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}
+
+.mobile-caption {
+  font-size: 12px;
+  line-height: 16px;
+  font-weight: 400;
+}
+
+/* Desktop breakpoint (md: 768px+) */
+@media (min-width: 768px) {
+  .mobile-heading-xl {
+    font-size: 36px;
+    line-height: 44px;
+  }
+
+  .mobile-heading-lg {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .mobile-heading-md {
+    font-size: 22px;
+    line-height: 30px;
+  }
+
+  .mobile-body {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .mobile-label {
+    font-size: 16px;
+    line-height: 24px;
+  }
+}
+
+/* Touch targets (Apple: 44pt, Material: 48dp) */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.touch-target-md {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+/* Spacing grid (Apple: 8pt) */
+.spacing-1 { margin: 8px; }
+.spacing-2 { margin: 16px; }
+.spacing-3 { margin: 24px; }
+.spacing-4 { margin: 32px; }

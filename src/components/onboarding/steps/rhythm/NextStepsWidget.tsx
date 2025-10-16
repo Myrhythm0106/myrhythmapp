@@ -1,20 +1,24 @@
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowRight, 
-  HelpCircle, 
-  Home, 
-  Settings, 
+import { ExecutiveReport } from "@/components/memoryBridge/ExecutiveReport";
+import {
   Target,
   Calendar,
-  Clock,
-  Users
+  Brain,
+  Users,
+  Activity,
+  Sparkles,
+  ArrowRight,
+  HelpCircle,
+  Home,
+  TrendingUp,
 } from "lucide-react";
 
 interface NextStepsWidgetProps {
-  currentStep: string;
+  currentStep: number;
   onNextAction: () => void;
   onGetHelp?: () => void;
   onGoHome?: () => void;
@@ -31,37 +35,45 @@ export function NextStepsWidget({
   
   const getStepInfo = () => {
     switch (currentStep) {
-      case 'assessment_complete':
+      case 1:
         return {
-          title: 'Start Your Life Operating Model Setup',
-          description: 'Set up calendar, focus time, and support network (15 min)',
-          icon: Settings,
-          actionText: 'Begin Setup',
-          nextSteps: ['Calendar integration', 'Focus timer', 'Support circle']
+          title: 'Understanding Your Rhythm',
+          description: 'Complete the assessment to personalize your experience',
+          icon: Brain,
+          actionText: 'Start Assessment',
+          nextSteps: ['Energy patterns', 'Focus preferences', 'Support needs']
         };
-      case 'calendar_setup':
+      case 2:
         return {
-          title: 'Configure Your Focus Timer',
-          description: 'Personalized Pomodoro settings based on your assessment',
-          icon: Clock,
-          actionText: 'Set Focus Timer',
-          nextSteps: ['Work sessions', 'Break intervals', 'Daily cycles']
+          title: 'Set Up Your Calendar',
+          description: 'Connect your calendar for seamless scheduling',
+          icon: Calendar,
+          actionText: 'Connect Calendar',
+          nextSteps: ['Sync events', 'Set focus blocks', 'Add routines']
         };
-      case 'pomodoro_setup':
+      case 3:
         return {
-          title: 'Connect Your Support Circle',
-          description: 'Add family and healthcare team for gentle accountability',
+          title: 'Build Your Support Circle',
+          description: 'Add family and healthcare team for accountability',
           icon: Users,
           actionText: 'Add Support Network',
           nextSteps: ['Family members', 'Healthcare team', 'Trusted friends']
         };
-      case 'support_setup':
+      case 4:
         return {
-          title: 'Setup Complete! Start Living MYRHYTHM',
-          description: 'Access your dashboard and begin your daily routine',
+          title: 'Configure Your Focus Timer',
+          description: 'Personalized Pomodoro based on your assessment',
+          icon: Activity,
+          actionText: 'Set Focus Timer',
+          nextSteps: ['Work sessions', 'Break intervals', 'Daily cycles']
+        };
+      case 5:
+        return {
+          title: 'Your Executive Dashboard',
+          description: 'Review your actions and progress',
           icon: Target,
-          actionText: 'Log In',
-          nextSteps: ['Daily actions', 'Goal setting', 'Progress tracking']
+          actionText: 'View Dashboard',
+          nextSteps: ['Track actions', 'Monitor progress', 'Share updates']
         };
       default:
         return {
@@ -77,92 +89,91 @@ export function NextStepsWidget({
   const stepInfo = getStepInfo();
   const Icon = stepInfo.icon;
 
+  if (currentStep === 5) {
+    return <ExecutiveReport />;
+  }
+
   return (
-    <Card className="sticky bottom-4 border-primary/20 bg-primary/5 shadow-lg">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-4">
-          {/* Icon and Progress */}
-          <div className="flex-shrink-0">
-            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center relative">
+    <Card className="w-full max-w-3xl mx-auto shadow-lg border-2 border-primary/20">
+      <CardHeader className="pb-4">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
               <Icon className="h-6 w-6 text-primary" />
-              {completionPercentage > 0 && (
-                <div className="absolute -top-1 -right-1">
-                  <Badge variant="default" className="text-xs px-1 py-0">
-                    {completionPercentage}%
-                  </Badge>
-                </div>
-              )}
+            </div>
+            <div>
+              <CardTitle className="mobile-heading-lg md:text-2xl">{stepInfo.title}</CardTitle>
+              <p className="mobile-label text-muted-foreground mt-1">
+                {stepInfo.description}
+              </p>
             </div>
           </div>
+        </div>
+      </CardHeader>
 
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-foreground mb-1 truncate">
-              {stepInfo.title}
-            </h3>
-            <p className="text-sm text-muted-foreground mb-2">
-              {stepInfo.description}
-            </p>
-            
-            {stepInfo.nextSteps.length > 0 && (
-              <div className="flex gap-1 flex-wrap">
-                {stepInfo.nextSteps.map((step, index) => (
-                  <Badge key={index} variant="outline" className="text-xs">
-                    {step}
-                  </Badge>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {onGetHelp && (
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={onGetHelp}
-                className="text-muted-foreground hover:text-foreground"
+      <CardContent className="space-y-6">
+        <div className="space-y-3">
+          <h3 className="mobile-heading-md font-semibold flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary" />
+            Your Next Steps
+          </h3>
+          <div className="flex flex-wrap gap-2">
+            {stepInfo.nextSteps.map((step, index) => (
+              <Badge
+                key={index}
+                variant="secondary"
+                className="py-2 px-3 mobile-label"
               >
-                <HelpCircle className="h-4 w-4" />
-              </Button>
-            )}
-            
-            {onGoHome && (
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={onGoHome}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <Home className="h-4 w-4" />
-              </Button>
-            )}
-
-            <Button 
-              onClick={onNextAction}
-              className="bg-primary hover:bg-primary/90"
-              size="sm"
-            >
-              {stepInfo.actionText}
-              <ArrowRight className="ml-2 h-3 w-3" />
-            </Button>
+                {index + 1}. {step}
+              </Badge>
+            ))}
           </div>
         </div>
 
-        {/* Progress Bar */}
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Button
+            onClick={onNextAction}
+            size="lg"
+            className="flex-1 mobile-body py-6 touch-target"
+          >
+            {stepInfo.actionText}
+            <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+
+          {onGetHelp && (
+            <Button
+              onClick={onGetHelp}
+              variant="outline"
+              size="lg"
+              className="sm:w-auto touch-target"
+            >
+              <HelpCircle className="mr-2 h-5 w-5" />
+              Get Help
+            </Button>
+          )}
+          {onGoHome && (
+            <Button
+              onClick={onGoHome}
+              variant="outline"
+              size="lg"
+              className="sm:w-auto touch-target"
+            >
+              <Home className="mr-2 h-5 w-5" />
+              Go Home
+            </Button>
+          )}
+        </div>
+
         {completionPercentage > 0 && (
-          <div className="mt-3">
-            <div className="flex justify-between text-xs text-muted-foreground mb-1">
+          <div className="space-y-2">
+            <div className="flex justify-between mobile-label text-muted-foreground">
               <span>Setup Progress</span>
-              <span>{completionPercentage}% complete</span>
+              <span className="flex items-center gap-1">
+                <TrendingUp className="h-3 w-3" />
+                {completionPercentage}%
+              </span>
             </div>
-            <div className="w-full h-1.5 bg-muted rounded-full">
-              <div 
-                className="h-full bg-primary rounded-full transition-all duration-500"
-                style={{ width: `${completionPercentage}%` }}
-              />
-            </div>
+            <Progress value={completionPercentage} className="h-2" />
           </div>
         )}
       </CardContent>
