@@ -31,7 +31,7 @@ export function MyRhythmAppDocumentation() {
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-3">
           <Brain className="h-12 w-12 text-primary" />
-          <h1 className="text-4xl font-bold">MyRhythm App Documentation</h1>
+          <h1 className="mobile-heading-xl font-bold">MyRhythm App Documentation</h1>
         </div>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
           Comprehensive guide to all features and functionality in MyRhythm - your personalised brain recovery and wellness companion
@@ -39,15 +39,15 @@ export function MyRhythmAppDocumentation() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 md:grid-cols-8">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="onboarding">Onboarding</TabsTrigger>
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="calendar">Calendar</TabsTrigger>
-          <TabsTrigger value="health">Health</TabsTrigger>
-          <TabsTrigger value="brain">Brain</TabsTrigger>
-          <TabsTrigger value="community">Community</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-8 gap-1">
+          <TabsTrigger value="overview" className="flex-shrink-0">Overview</TabsTrigger>
+          <TabsTrigger value="onboarding" className="flex-shrink-0">Onboarding</TabsTrigger>
+          <TabsTrigger value="dashboard" className="flex-shrink-0">Dashboard</TabsTrigger>
+          <TabsTrigger value="calendar" className="flex-shrink-0">Calendar</TabsTrigger>
+          <TabsTrigger value="health" className="flex-shrink-0">Health</TabsTrigger>
+          <TabsTrigger value="brain" className="flex-shrink-0">Brain</TabsTrigger>
+          <TabsTrigger value="community" className="flex-shrink-0">Community</TabsTrigger>
+          <TabsTrigger value="settings" className="flex-shrink-0">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">

@@ -30,7 +30,7 @@ export default function StrategyDashboard() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">MyRhythm Strategy Command Center</h1>
+              <h1 className="mobile-heading-xl font-bold text-gray-900 mb-2">MyRhythm Strategy Command Center</h1>
               <p className="text-lg text-gray-600">Your private dashboard to achieve £500K by December 31, 2025</p>
             </div>
             <Badge variant="secondary" className="text-lg px-4 py-2">
@@ -48,7 +48,7 @@ export default function StrategyDashboard() {
               <DollarSign className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">£{currentRevenue.toLocaleString()}</div>
+              <div className="mobile-heading-md font-bold text-green-600">£{currentRevenue.toLocaleString()}</div>
               <p className="text-xs text-muted-foreground">of £500,000 target</p>
               <Progress value={revenueProgress} className="mt-2" />
             </CardContent>
@@ -60,7 +60,7 @@ export default function StrategyDashboard() {
               <Users className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-blue-600">450</div>
+              <div className="mobile-heading-md font-bold text-blue-600">450</div>
               <p className="text-xs text-muted-foreground">of 2,800 target</p>
               <Progress value={16} className="mt-2" />
             </CardContent>
@@ -72,7 +72,7 @@ export default function StrategyDashboard() {
               <Target className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-600">3</div>
+              <div className="mobile-heading-md font-bold text-purple-600">3</div>
               <p className="text-xs text-muted-foreground">of 57 target</p>
               <Progress value={5} className="mt-2" />
             </CardContent>
@@ -84,7 +84,7 @@ export default function StrategyDashboard() {
               <TrendingUp className="h-4 w-4 text-orange-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-orange-600">+12%</div>
+              <div className="mobile-heading-md font-bold text-orange-600">+12%</div>
               <p className="text-xs text-muted-foreground">vs last month</p>
               <div className="text-green-600 text-sm mt-1">↗ On track</div>
             </CardContent>
@@ -93,26 +93,29 @@ export default function StrategyDashboard() {
 
         {/* Main Dashboard Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-white shadow-lg">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+          <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-5 bg-white shadow-lg gap-1">
+            <TabsTrigger value="overview" className="flex items-center gap-2 flex-shrink-0">
               <TrendingUp className="w-4 h-4" />
-              Overview
+              <span>Overview</span>
             </TabsTrigger>
-            <TabsTrigger value="marketing" className="flex items-center gap-2">
+            <TabsTrigger value="marketing" className="flex items-center gap-2 flex-shrink-0">
               <Zap className="w-4 h-4" />
-              Marketing Strategy
+              <span className="hidden sm:inline">Marketing Strategy</span>
+              <span className="sm:hidden">Marketing</span>
             </TabsTrigger>
-            <TabsTrigger value="quotes" className="flex items-center gap-2">
+            <TabsTrigger value="quotes" className="flex items-center gap-2 flex-shrink-0">
               <BookOpen className="w-4 h-4" />
-              Quote Generator
+              <span className="hidden sm:inline">Quote Generator</span>
+              <span className="sm:hidden">Quotes</span>
             </TabsTrigger>
-            <TabsTrigger value="revenue" className="flex items-center gap-2">
+            <TabsTrigger value="revenue" className="flex items-center gap-2 flex-shrink-0">
               <DollarSign className="w-4 h-4" />
-              Revenue Tracker
+              <span className="hidden sm:inline">Revenue Tracker</span>
+              <span className="sm:hidden">Revenue</span>
             </TabsTrigger>
-            <TabsTrigger value="milestones" className="flex items-center gap-2">
+            <TabsTrigger value="milestones" className="flex items-center gap-2 flex-shrink-0">
               <Target className="w-4 h-4" />
-              Milestones
+              <span>Milestones</span>
             </TabsTrigger>
           </TabsList>
 

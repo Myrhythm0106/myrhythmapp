@@ -156,20 +156,20 @@ export function TBICalendarApp() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10">
           <div className="px-4 py-3">
-            <TabsList className="grid w-full grid-cols-5 max-w-2xl mx-auto">
-              <TabsTrigger value="day" className="text-sm font-medium">
+            <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-5 max-w-2xl mx-auto gap-1">
+              <TabsTrigger value="day" className="mobile-label font-medium flex-shrink-0">
                 Day
               </TabsTrigger>
-              <TabsTrigger value="week" className="text-sm font-medium">
+              <TabsTrigger value="week" className="mobile-label font-medium flex-shrink-0">
                 Week
               </TabsTrigger>
-              <TabsTrigger value="month" className="text-sm font-medium">
+              <TabsTrigger value="month" className="mobile-label font-medium flex-shrink-0">
                 Month
               </TabsTrigger>
-              <TabsTrigger value="year" className="text-sm font-medium">
+              <TabsTrigger value="year" className="mobile-label font-medium flex-shrink-0">
                 Year
               </TabsTrigger>
-              <TabsTrigger value="pomodoro" className="text-sm font-medium">
+              <TabsTrigger value="pomodoro" className="mobile-label font-medium flex-shrink-0">
                 Focus
               </TabsTrigger>
             </TabsList>

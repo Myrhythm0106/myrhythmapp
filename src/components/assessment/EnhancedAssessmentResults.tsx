@@ -110,7 +110,7 @@ export function EnhancedAssessmentResults({
                   assessmentResult.riskLevel === 'moderate' ? 'bg-gradient-to-r from-sunrise-amber-500 to-clarity-teal-500' :
                   'bg-gradient-to-r from-orange-500 to-red-500'
                 } text-white`}>
-                  <span className="text-2xl font-bold">{assessmentResult.overallScore}</span>
+                  <span className="mobile-heading-md font-bold">{assessmentResult.overallScore}</span>
                 </div>
                 <p className="text-sm font-medium text-brain-health-700">Overall Wellness Score</p>
                 <p className="text-xs text-brain-health-600 mt-1">{assessmentResult.primaryRhythm}</p>
@@ -174,11 +174,20 @@ export function EnhancedAssessmentResults({
 
       {/* Detailed Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid grid-cols-4 w-full">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="cognitive">Cognitive Impact</TabsTrigger>
-          <TabsTrigger value="projections">Recovery Path</TabsTrigger>
-          <TabsTrigger value="scheduling">Optimal Timing</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-4 gap-1">
+          <TabsTrigger value="overview" className="flex-shrink-0">Overview</TabsTrigger>
+          <TabsTrigger value="cognitive" className="flex-shrink-0">
+            <span className="hidden sm:inline">Cognitive Impact</span>
+            <span className="sm:hidden">Cognitive</span>
+          </TabsTrigger>
+          <TabsTrigger value="projections" className="flex-shrink-0">
+            <span className="hidden sm:inline">Recovery Path</span>
+            <span className="sm:hidden">Recovery</span>
+          </TabsTrigger>
+          <TabsTrigger value="scheduling" className="flex-shrink-0">
+            <span className="hidden sm:inline">Optimal Timing</span>
+            <span className="sm:hidden">Timing</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -247,7 +256,7 @@ export function EnhancedAssessmentResults({
                     <Zap className="h-5 w-5 text-brain-health-500 mr-2" />
                     <h4 className="font-medium text-brain-health-700">Peak Focus</h4>
                   </div>
-                  <p className="text-2xl font-bold text-brain-health-600">{assessmentResult.optimalTimes.bestFocusTime}</p>
+                  <p className="mobile-heading-md font-bold text-brain-health-600">{assessmentResult.optimalTimes.bestFocusTime}</p>
                   <p className="text-sm text-brain-health-600">Schedule demanding tasks here</p>
                 </div>
 
@@ -256,7 +265,7 @@ export function EnhancedAssessmentResults({
                     <Users className="h-5 w-5 text-memory-emerald-500 mr-2" />
                     <h4 className="font-medium text-memory-emerald-700">Best Meetings</h4>
                   </div>
-                  <p className="text-2xl font-bold text-memory-emerald-600">{assessmentResult.optimalTimes.preferredMeetingTime}</p>
+                  <p className="mobile-heading-md font-bold text-memory-emerald-600">{assessmentResult.optimalTimes.preferredMeetingTime}</p>
                   <p className="text-sm text-memory-emerald-600">Ideal for important conversations</p>
                 </div>
 
@@ -265,7 +274,7 @@ export function EnhancedAssessmentResults({
                     <Shield className="h-5 w-5 text-sunrise-amber-500 mr-2" />
                     <h4 className="font-medium text-sunrise-amber-700">Sustained Focus</h4>
                   </div>
-                  <p className="text-2xl font-bold text-sunrise-amber-600">{assessmentResult.optimalTimes.sustainedAttentionTime}</p>
+                  <p className="mobile-heading-md font-bold text-sunrise-amber-600">{assessmentResult.optimalTimes.sustainedAttentionTime}</p>
                   <p className="text-sm text-sunrise-amber-600">30+ minute focus blocks</p>
                 </div>
               </div>

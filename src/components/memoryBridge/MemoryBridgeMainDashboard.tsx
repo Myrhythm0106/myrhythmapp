@@ -48,7 +48,7 @@ export function MemoryBridgeMainDashboard() {
               <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-blue-500 to-teal-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Brain className="h-8 w-8 text-white" />
               </div>
-              <CardTitle className="text-3xl bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+              <CardTitle className="mobile-heading-lg bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
                 Memory Bridge Premium
               </CardTitle>
               <p className="text-lg text-muted-foreground">
@@ -126,7 +126,7 @@ export function MemoryBridgeMainDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
+            <h1 className="mobile-heading-lg font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
               Memory Bridge
             </h1>
             <p className="text-muted-foreground">Preserve relationships, never forget commitments</p>
@@ -152,7 +152,7 @@ export function MemoryBridgeMainDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-600">{stats.totalCommitments}</div>
+                <div className="mobile-heading-md font-bold text-purple-600">{stats.totalCommitments}</div>
                 <p className="text-sm text-muted-foreground">Total Commitments</p>
               </div>
             </CardContent>
@@ -161,7 +161,7 @@ export function MemoryBridgeMainDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">{stats.completedCommitments}</div>
+                <div className="mobile-heading-md font-bold text-green-600">{stats.completedCommitments}</div>
                 <p className="text-sm text-muted-foreground">Completed</p>
               </div>
             </CardContent>
@@ -170,7 +170,7 @@ export function MemoryBridgeMainDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">{stats.pendingCommitments}</div>
+                <div className="mobile-heading-md font-bold text-orange-600">{stats.pendingCommitments}</div>
                 <p className="text-sm text-muted-foreground">Pending</p>
               </div>
             </CardContent>
@@ -179,7 +179,7 @@ export function MemoryBridgeMainDashboard() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <div className="text-2xl font-bold text-red-600">{stats.highPriorityCommitments}</div>
+                <div className="mobile-heading-md font-bold text-red-600">{stats.highPriorityCommitments}</div>
                 <p className="text-sm text-muted-foreground">High Priority</p>
               </div>
             </CardContent>
@@ -188,26 +188,27 @@ export function MemoryBridgeMainDashboard() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="actions" className="flex items-center gap-2">
+          <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-5 gap-1">
+            <TabsTrigger value="actions" className="flex items-center gap-2 flex-shrink-0">
               <List className="h-4 w-4" />
-              Actions
+              <span>Actions</span>
             </TabsTrigger>
-            <TabsTrigger value="family" className="flex items-center gap-2">
+            <TabsTrigger value="family" className="flex items-center gap-2 flex-shrink-0">
               <Users className="h-4 w-4" />
-              Family
+              <span>Family</span>
             </TabsTrigger>
-            <TabsTrigger value="lifelines" className="flex items-center gap-2">
+            <TabsTrigger value="lifelines" className="flex items-center gap-2 flex-shrink-0">
               <MessageCircle className="h-4 w-4" />
-              Lifelines
+              <span>Lifelines</span>
             </TabsTrigger>
-            <TabsTrigger value="crisis" className="flex items-center gap-2">
+            <TabsTrigger value="crisis" className="flex items-center gap-2 flex-shrink-0">
               <Shield className="h-4 w-4" />
-              Prevention
+              <span className="hidden sm:inline">Prevention</span>
+              <span className="sm:hidden">Alert</span>
             </TabsTrigger>
-            <TabsTrigger value="record" className="flex items-center gap-2">
+            <TabsTrigger value="record" className="flex items-center gap-2 flex-shrink-0">
               <Mic className="h-4 w-4" />
-              Record
+              <span>Record</span>
             </TabsTrigger>
           </TabsList>
 

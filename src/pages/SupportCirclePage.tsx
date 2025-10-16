@@ -46,10 +46,10 @@ const SupportCirclePage = () => {
     <div className="container mx-auto p-6 space-y-8">
       {/* Header - Enhanced for brain-injury users */}
       <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-brain-health-600 to-memory-emerald-600 bg-clip-text text-transparent">
+        <h1 className="mobile-heading-xl font-bold bg-gradient-to-r from-brain-health-600 to-memory-emerald-600 bg-clip-text text-transparent">
           Your Support Circle
         </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="mobile-body text-muted-foreground max-w-2xl mx-auto">
           Connect with people who care about your journey. Just email + role + notes + permissions - that's it! 
           They'll receive clear invitations and can start supporting you immediately.
         </p>
@@ -60,7 +60,7 @@ const SupportCirclePage = () => {
         <Card>
           <CardContent className="p-6 text-center">
             <Users className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold">{activeMembers.length}</div>
+            <div className="mobile-heading-md font-bold">{activeMembers.length}</div>
             <div className="text-sm text-muted-foreground">Active Members</div>
           </CardContent>
         </Card>
@@ -68,7 +68,7 @@ const SupportCirclePage = () => {
         <Card>
           <CardContent className="p-6 text-center">
             <Bell className="h-8 w-8 text-green-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold">{pendingMembers.length}</div>
+            <div className="mobile-heading-md font-bold">{pendingMembers.length}</div>
             <div className="text-sm text-muted-foreground">Pending Invites</div>
           </CardContent>
         </Card>
@@ -76,7 +76,7 @@ const SupportCirclePage = () => {
         <Card>
           <CardContent className="p-6 text-center">
             <MessageCircle className="h-8 w-8 text-purple-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold">12</div>
+            <div className="mobile-heading-md font-bold">12</div>
             <div className="text-sm text-muted-foreground">Recent Messages</div>
           </CardContent>
         </Card>
@@ -84,7 +84,7 @@ const SupportCirclePage = () => {
         <Card>
           <CardContent className="p-6 text-center">
             <Heart className="h-8 w-8 text-red-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold">98%</div>
+            <div className="mobile-heading-md font-bold">98%</div>
             <div className="text-sm text-muted-foreground">Privacy Score</div>
           </CardContent>
         </Card>
@@ -92,26 +92,28 @@ const SupportCirclePage = () => {
 
       {/* Main Content */}
       <Tabs defaultValue="add-member" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="add-member" className="flex items-center gap-2">
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-5 gap-1">
+          <TabsTrigger value="add-member" className="flex items-center gap-2 flex-shrink-0">
             <Plus className="h-4 w-4" />
-            Add Member
+            <span className="hidden sm:inline">Add Member</span>
+            <span className="sm:hidden">Add</span>
           </TabsTrigger>
-          <TabsTrigger value="members" className="flex items-center gap-2">
+          <TabsTrigger value="members" className="flex items-center gap-2 flex-shrink-0">
             <Users className="h-4 w-4" />
-            Members
+            <span>Members</span>
           </TabsTrigger>
-          <TabsTrigger value="messages" className="flex items-center gap-2">
+          <TabsTrigger value="messages" className="flex items-center gap-2 flex-shrink-0">
             <MessageCircle className="h-4 w-4" />
-            Messages
+            <span>Messages</span>
           </TabsTrigger>
-          <TabsTrigger value="permissions" className="flex items-center gap-2">
+          <TabsTrigger value="permissions" className="flex items-center gap-2 flex-shrink-0">
             <Shield className="h-4 w-4" />
-            Permissions
+            <span className="hidden sm:inline">Permissions</span>
+            <span className="sm:hidden">Access</span>
           </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
+          <TabsTrigger value="settings" className="flex items-center gap-2 flex-shrink-0">
             <Settings className="h-4 w-4" />
-            Settings
+            <span>Settings</span>
           </TabsTrigger>
         </TabsList>
 

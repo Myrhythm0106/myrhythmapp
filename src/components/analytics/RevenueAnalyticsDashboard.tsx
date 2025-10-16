@@ -50,7 +50,7 @@ export function RevenueAnalyticsDashboard() {
             <DollarSign className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">£{currentRevenue.toLocaleString()}</div>
+            <div className="mobile-heading-md font-bold text-green-600">£{currentRevenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">+28% from last month</p>
           </CardContent>
         </Card>
@@ -61,7 +61,7 @@ export function RevenueAnalyticsDashboard() {
             <Users className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">589</div>
+            <div className="mobile-heading-md font-bold text-blue-600">589</div>
             <p className="text-xs text-muted-foreground">+15% this month</p>
           </CardContent>
         </Card>
@@ -72,7 +72,7 @@ export function RevenueAnalyticsDashboard() {
             <TrendingUp className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">4.8%</div>
+            <div className="mobile-heading-md font-bold text-orange-600">4.8%</div>
             <p className="text-xs text-muted-foreground">-1.2% improvement</p>
           </CardContent>
         </Card>
@@ -83,7 +83,7 @@ export function RevenueAnalyticsDashboard() {
             <Target className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-purple-600">{progressPercentage.toFixed(1)}%</div>
+            <div className="mobile-heading-md font-bold text-purple-600">{progressPercentage.toFixed(1)}%</div>
             <Progress value={progressPercentage} className="mt-2" />
           </CardContent>
         </Card>
@@ -91,11 +91,23 @@ export function RevenueAnalyticsDashboard() {
 
       {/* Main Analytics Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Revenue Overview</TabsTrigger>
-          <TabsTrigger value="subscriptions">Subscription Analytics</TabsTrigger>
-          <TabsTrigger value="engagement">User Engagement</TabsTrigger>
-          <TabsTrigger value="projections">Future Projections</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-4 gap-1">
+          <TabsTrigger value="overview" className="flex-shrink-0">
+            <span className="hidden sm:inline">Revenue Overview</span>
+            <span className="sm:hidden">Revenue</span>
+          </TabsTrigger>
+          <TabsTrigger value="subscriptions" className="flex-shrink-0">
+            <span className="hidden sm:inline">Subscription Analytics</span>
+            <span className="sm:hidden">Subs</span>
+          </TabsTrigger>
+          <TabsTrigger value="engagement" className="flex-shrink-0">
+            <span className="hidden sm:inline">User Engagement</span>
+            <span className="sm:hidden">Users</span>
+          </TabsTrigger>
+          <TabsTrigger value="projections" className="flex-shrink-0">
+            <span className="hidden sm:inline">Future Projections</span>
+            <span className="sm:hidden">Forecast</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">

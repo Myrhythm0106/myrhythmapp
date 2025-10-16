@@ -77,7 +77,7 @@ export function RevenueTrackerView() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">£{currentData.actual.toLocaleString()}</div>
+            <div className="mobile-heading-lg font-bold">£{currentData.actual.toLocaleString()}</div>
             <p className="text-green-100">This month</p>
             <Progress value={progressToTarget} className="mt-2 bg-white/20" />
           </CardContent>
@@ -91,7 +91,7 @@ export function RevenueTrackerView() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">£{currentData.target.toLocaleString()}</div>
+            <div className="mobile-heading-lg font-bold">£{currentData.target.toLocaleString()}</div>
             <p className="text-blue-100">January 2025</p>
             <div className="text-sm mt-2">
               {currentData.variance < 0 ? '⚠️' : '✅'} £{Math.abs(currentData.variance).toLocaleString()} 
@@ -108,7 +108,7 @@ export function RevenueTrackerView() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">£{annualProjection.toLocaleString()}</div>
+            <div className="mobile-heading-lg font-bold">£{annualProjection.toLocaleString()}</div>
             <p className="text-purple-100">Based on current</p>
             <div className="text-sm mt-2">
               {annualProjection >= 500000 ? '✅ On track' : '⚠️ Needs improvement'}
@@ -124,7 +124,7 @@ export function RevenueTrackerView() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">
+            <div className="mobile-heading-lg font-bold">
               {currentData.subscribers.starter.count + 
                currentData.subscribers.pro.count + 
                currentData.subscribers.careTeam.count}
@@ -136,11 +136,20 @@ export function RevenueTrackerView() {
       </div>
 
       <Tabs defaultValue="breakdown" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="breakdown">Revenue Breakdown</TabsTrigger>
-          <TabsTrigger value="trends">Monthly Trends</TabsTrigger>
-          <TabsTrigger value="projections">Projections</TabsTrigger>
-          <TabsTrigger value="actions">Action Items</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-4 gap-1">
+          <TabsTrigger value="breakdown" className="flex-shrink-0">
+            <span className="hidden sm:inline">Revenue Breakdown</span>
+            <span className="sm:hidden">Revenue</span>
+          </TabsTrigger>
+          <TabsTrigger value="trends" className="flex-shrink-0">
+            <span className="hidden sm:inline">Monthly Trends</span>
+            <span className="sm:hidden">Trends</span>
+          </TabsTrigger>
+          <TabsTrigger value="projections" className="flex-shrink-0">Projections</TabsTrigger>
+          <TabsTrigger value="actions" className="flex-shrink-0">
+            <span className="hidden sm:inline">Action Items</span>
+            <span className="sm:hidden">Actions</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="breakdown" className="space-y-6">
@@ -260,17 +269,17 @@ export function RevenueTrackerView() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="p-3 bg-indigo-50 rounded-lg text-center">
                   <div className="font-medium">Advanced Analytics</div>
-                  <div className="text-2xl font-bold text-indigo-600">{currentData.premium.analytics}</div>
+                  <div className="mobile-heading-md font-bold text-indigo-600">{currentData.premium.analytics}</div>
                   <div className="text-sm text-gray-600">users</div>
                 </div>
                 <div className="p-3 bg-teal-50 rounded-lg text-center">
                   <div className="font-medium">Clinical Reports</div>
-                  <div className="text-2xl font-bold text-teal-600">{currentData.premium.reports}</div>
+                  <div className="mobile-heading-md font-bold text-teal-600">{currentData.premium.reports}</div>
                   <div className="text-sm text-gray-600">users</div>
                 </div>
                 <div className="p-3 bg-pink-50 rounded-lg text-center">
                   <div className="font-medium">Family Dashboard</div>
-                  <div className="text-2xl font-bold text-pink-600">{currentData.premium.family}</div>
+                  <div className="mobile-heading-md font-bold text-pink-600">{currentData.premium.family}</div>
                   <div className="text-sm text-gray-600">users</div>
                 </div>
               </div>

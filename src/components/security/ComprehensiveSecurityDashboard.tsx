@@ -145,12 +145,24 @@ export function ComprehensiveSecurityDashboard() {
       </Card>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="breach">Threat Detection</TabsTrigger>
-          <TabsTrigger value="compliance">Data Protection</TabsTrigger>
-          <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
-          <TabsTrigger value="actions">Security Actions</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-5 gap-1">
+          <TabsTrigger value="overview" className="flex-shrink-0">Overview</TabsTrigger>
+          <TabsTrigger value="breach" className="flex-shrink-0">
+            <span className="hidden sm:inline">Threat Detection</span>
+            <span className="sm:hidden">Threats</span>
+          </TabsTrigger>
+          <TabsTrigger value="compliance" className="flex-shrink-0">
+            <span className="hidden sm:inline">Data Protection</span>
+            <span className="sm:hidden">Privacy</span>
+          </TabsTrigger>
+          <TabsTrigger value="monitoring" className="flex-shrink-0">
+            <span className="hidden sm:inline">Monitoring</span>
+            <span className="sm:hidden">Monitor</span>
+          </TabsTrigger>
+          <TabsTrigger value="actions" className="flex-shrink-0">
+            <span className="hidden sm:inline">Security Actions</span>
+            <span className="sm:hidden">Actions</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview">
@@ -161,7 +173,7 @@ export function ComprehensiveSecurityDashboard() {
                 <CardTitle className="text-sm">Security Score</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">
+                <div className="mobile-heading-md font-bold text-green-600">
                   {breachAnalysis?.riskLevel === 'low' ? '95' : 
                    breachAnalysis?.riskLevel === 'medium' ? '75' : 
                    breachAnalysis?.riskLevel === 'high' ? '45' : '25'}/100
@@ -178,7 +190,7 @@ export function ComprehensiveSecurityDashboard() {
                 <CardTitle className="text-sm">Threats Detected</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-red-600">
+                <div className="mobile-heading-md font-bold text-red-600">
                   {securityReport?.summary?.suspiciousEvents || 0}
                 </div>
                 <p className="text-xs text-gray-600">In last 7 days</p>
@@ -191,7 +203,7 @@ export function ComprehensiveSecurityDashboard() {
                 <CardTitle className="text-sm">Data Retention</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">
+                <div className="mobile-heading-md font-bold text-blue-600">
                   {complianceReport ? 'Compliant' : 'Unknown'}
                 </div>
                 <p className="text-xs text-gray-600">GDPR/CCPA Ready</p>
@@ -322,15 +334,15 @@ export function ComprehensiveSecurityDashboard() {
                 <div className="space-y-4">
                   <div className="grid gap-4 md:grid-cols-3">
                     <div className="text-center p-4 border rounded-lg">
-                      <div className="text-2xl font-bold">{securityReport.summary.totalEvents}</div>
+                      <div className="mobile-heading-md font-bold">{securityReport.summary.totalEvents}</div>
                       <div className="text-sm text-gray-600">Total Events</div>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
-                      <div className="text-2xl font-bold text-orange-600">{securityReport.summary.suspiciousEvents}</div>
+                      <div className="mobile-heading-md font-bold text-orange-600">{securityReport.summary.suspiciousEvents}</div>
                       <div className="text-sm text-gray-600">Suspicious</div>
                     </div>
                     <div className="text-center p-4 border rounded-lg">
-                      <div className="text-2xl font-bold text-red-600">{securityReport.summary.criticalEvents}</div>
+                      <div className="mobile-heading-md font-bold text-red-600">{securityReport.summary.criticalEvents}</div>
                       <div className="text-sm text-gray-600">Critical</div>
                     </div>
                   </div>

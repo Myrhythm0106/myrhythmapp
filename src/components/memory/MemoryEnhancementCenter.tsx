@@ -31,7 +31,7 @@ export function MemoryEnhancementCenter() {
             <Brain className="h-8 w-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="mobile-heading-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               Memory Enhancement Center
             </h1>
             <p className="text-muted-foreground">
@@ -46,7 +46,7 @@ export function MemoryEnhancementCenter() {
             <CardContent className="pt-4">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Calendar className="h-4 w-4 text-blue-600" />
-                <span className="text-2xl font-bold text-blue-600">{memoryProgress.daysActive}</span>
+                <span className="mobile-heading-md font-bold text-blue-600">{memoryProgress.daysActive}</span>
               </div>
               <p className="text-sm text-muted-foreground">Days Active</p>
             </CardContent>
@@ -56,7 +56,7 @@ export function MemoryEnhancementCenter() {
             <CardContent className="pt-4">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Target className="h-4 w-4 text-green-600" />
-                <span className="text-2xl font-bold text-green-600">{memoryProgress.tasksCompleted}</span>
+                <span className="mobile-heading-md font-bold text-green-600">{memoryProgress.tasksCompleted}</span>
               </div>
               <p className="text-sm text-muted-foreground">Memory Tasks</p>
             </CardContent>
@@ -66,7 +66,7 @@ export function MemoryEnhancementCenter() {
             <CardContent className="pt-4">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <TrendingUp className="h-4 w-4 text-purple-600" />
-                <span className="text-2xl font-bold text-purple-600">{memoryProgress.improvementScore}%</span>
+                <span className="mobile-heading-md font-bold text-purple-600">{memoryProgress.improvementScore}%</span>
               </div>
               <p className="text-sm text-muted-foreground">Improvement</p>
             </CardContent>
@@ -76,7 +76,7 @@ export function MemoryEnhancementCenter() {
             <CardContent className="pt-4">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Star className="h-4 w-4 text-amber-600" />
-                <span className="text-2xl font-bold text-amber-600">{memoryProgress.currentStreak}</span>
+                <span className="mobile-heading-md font-bold text-amber-600">{memoryProgress.currentStreak}</span>
               </div>
               <p className="text-sm text-muted-foreground">Day Streak</p>
             </CardContent>
@@ -86,11 +86,11 @@ export function MemoryEnhancementCenter() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="journey">My Journey</TabsTrigger>
-          <TabsTrigger value="exercises">Exercises</TabsTrigger>
-          <TabsTrigger value="insights">Insights</TabsTrigger>
-          <TabsTrigger value="assessment">Assessment</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-4 gap-1">
+          <TabsTrigger value="journey" className="flex-shrink-0">My Journey</TabsTrigger>
+          <TabsTrigger value="exercises" className="flex-shrink-0">Exercises</TabsTrigger>
+          <TabsTrigger value="insights" className="flex-shrink-0">Insights</TabsTrigger>
+          <TabsTrigger value="assessment" className="flex-shrink-0">Assessment</TabsTrigger>
         </TabsList>
         
         <TabsContent value="journey" className="space-y-6">

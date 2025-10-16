@@ -96,26 +96,28 @@ export function TestingSuite() {
 
       {/* Main Testing Interface */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="quickstart" className="flex items-center gap-2">
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-5 gap-1">
+          <TabsTrigger value="quickstart" className="flex items-center gap-2 flex-shrink-0">
             <Zap className="h-4 w-4" />
-            Quick Start
+            <span className="hidden sm:inline">Quick Start</span>
+            <span className="sm:hidden">Start</span>
           </TabsTrigger>
-          <TabsTrigger value="overview" className="flex items-center gap-2">
+          <TabsTrigger value="overview" className="flex items-center gap-2 flex-shrink-0">
             <CheckCircle className="h-4 w-4" />
-            System Health
+            <span className="hidden sm:inline">System Health</span>
+            <span className="sm:hidden">Health</span>
           </TabsTrigger>
-          <TabsTrigger value="routes" className="flex items-center gap-2">
+          <TabsTrigger value="routes" className="flex items-center gap-2 flex-shrink-0">
             <Globe className="h-4 w-4" />
-            Routes
+            <span>Routes</span>
           </TabsTrigger>
-          <TabsTrigger value="tests" className="flex items-center gap-2">
+          <TabsTrigger value="tests" className="flex items-center gap-2 flex-shrink-0">
             <Play className="h-4 w-4" />
-            Tests
+            <span>Tests</span>
           </TabsTrigger>
-          <TabsTrigger value="reports" className="flex items-center gap-2">
+          <TabsTrigger value="reports" className="flex items-center gap-2 flex-shrink-0">
             <FileText className="h-4 w-4" />
-            Reports
+            <span>Reports</span>
           </TabsTrigger>
         </TabsList>
 

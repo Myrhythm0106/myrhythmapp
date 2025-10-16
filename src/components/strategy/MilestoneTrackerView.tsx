@@ -163,7 +163,7 @@ export function MilestoneTrackerView() {
       {/* Header */}
       <Card className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
         <CardHeader>
-          <CardTitle className="text-2xl flex items-center gap-2">
+          <CardTitle className="mobile-heading-md flex items-center gap-2">
             <Trophy className="w-6 h-6" />
             Milestone Achievement Tracker
           </CardTitle>
@@ -172,11 +172,17 @@ export function MilestoneTrackerView() {
       </Card>
 
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="quarterly">Quarterly View</TabsTrigger>
-          <TabsTrigger value="timeline">Timeline</TabsTrigger>
-          <TabsTrigger value="achievements">Achievements</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-4 gap-1">
+          <TabsTrigger value="overview" className="flex-shrink-0">Overview</TabsTrigger>
+          <TabsTrigger value="quarterly" className="flex-shrink-0">
+            <span className="hidden sm:inline">Quarterly View</span>
+            <span className="sm:hidden">Quarterly</span>
+          </TabsTrigger>
+          <TabsTrigger value="timeline" className="flex-shrink-0">Timeline</TabsTrigger>
+          <TabsTrigger value="achievements" className="flex-shrink-0">
+            <span className="hidden sm:inline">Achievements</span>
+            <span className="sm:hidden">Awards</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -187,7 +193,7 @@ export function MilestoneTrackerView() {
                 <CardTitle className="text-sm">Completed</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-green-600">0</div>
+                <div className="mobile-heading-md font-bold text-green-600">0</div>
                 <p className="text-xs text-muted-foreground">milestones</p>
               </CardContent>
             </Card>
@@ -197,7 +203,7 @@ export function MilestoneTrackerView() {
                 <CardTitle className="text-sm">In Progress</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-blue-600">4</div>
+                <div className="mobile-heading-md font-bold text-blue-600">4</div>
                 <p className="text-xs text-muted-foreground">milestones</p>
               </CardContent>
             </Card>
@@ -207,7 +213,7 @@ export function MilestoneTrackerView() {
                 <CardTitle className="text-sm">Behind Schedule</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-red-600">1</div>
+                <div className="mobile-heading-md font-bold text-red-600">1</div>
                 <p className="text-xs text-muted-foreground">milestones</p>
               </CardContent>
             </Card>
@@ -217,7 +223,7 @@ export function MilestoneTrackerView() {
                 <CardTitle className="text-sm">Planned</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold text-gray-600">3</div>
+                <div className="mobile-heading-md font-bold text-gray-600">3</div>
                 <p className="text-xs text-muted-foreference">milestones</p>
               </CardContent>
             </Card>

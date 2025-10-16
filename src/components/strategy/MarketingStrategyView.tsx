@@ -51,7 +51,7 @@ export function MarketingStrategyView() {
       {/* Phase Overview */}
       <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
         <CardHeader>
-          <CardTitle className="text-2xl">{currentPhase.name}</CardTitle>
+          <CardTitle className="mobile-heading-md">{currentPhase.name}</CardTitle>
           <p className="text-blue-100">{currentPhase.period}</p>
         </CardHeader>
         <CardContent>
@@ -59,7 +59,7 @@ export function MarketingStrategyView() {
             {currentPhase.kpis.map((kpi, index) => (
               <div key={index} className="bg-white/10 rounded-lg p-4">
                 <div className="text-lg font-semibold">{kpi.metric}</div>
-                <div className="text-2xl font-bold">{kpi.current}</div>
+                <div className="mobile-heading-md font-bold">{kpi.current}</div>
                 <div className="text-sm text-blue-100">of {kpi.target}</div>
                 <Progress value={kpi.progress} className="mt-2 bg-white/20" />
               </div>
@@ -69,11 +69,23 @@ export function MarketingStrategyView() {
       </Card>
 
       <Tabs value={activePhase} onValueChange={setActivePhase}>
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="current">Current Phase</TabsTrigger>
-          <TabsTrigger value="channels">Marketing Channels</TabsTrigger>
-          <TabsTrigger value="calendar">Content Calendar</TabsTrigger>
-          <TabsTrigger value="budget">Budget Tracking</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-4 gap-1">
+          <TabsTrigger value="current" className="flex-shrink-0">
+            <span className="hidden sm:inline">Current Phase</span>
+            <span className="sm:hidden">Phase</span>
+          </TabsTrigger>
+          <TabsTrigger value="channels" className="flex-shrink-0">
+            <span className="hidden sm:inline">Marketing Channels</span>
+            <span className="sm:hidden">Channels</span>
+          </TabsTrigger>
+          <TabsTrigger value="calendar" className="flex-shrink-0">
+            <span className="hidden sm:inline">Content Calendar</span>
+            <span className="sm:hidden">Calendar</span>
+          </TabsTrigger>
+          <TabsTrigger value="budget" className="flex-shrink-0">
+            <span className="hidden sm:inline">Budget Tracking</span>
+            <span className="sm:hidden">Budget</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="current" className="space-y-6">

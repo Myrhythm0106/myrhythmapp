@@ -77,7 +77,7 @@ export function QuoteGeneratorView() {
       {/* Header */}
       <Card className="bg-gradient-to-r from-purple-600 to-pink-600 text-white">
         <CardHeader>
-          <CardTitle className="text-2xl flex items-center gap-2">
+          <CardTitle className="mobile-heading-md flex items-center gap-2">
             <BookOpen className="w-6 h-6" />
             90-Day Brain Health Quote Generator
           </CardTitle>
@@ -86,11 +86,23 @@ export function QuoteGeneratorView() {
       </Card>
 
       <Tabs defaultValue="browse" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="browse">Browse Quotes</TabsTrigger>
-          <TabsTrigger value="schedule">Content Calendar</TabsTrigger>
-          <TabsTrigger value="analytics">Performance</TabsTrigger>
-          <TabsTrigger value="generate">AI Variants</TabsTrigger>
+        <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-4 gap-1">
+          <TabsTrigger value="browse" className="flex-shrink-0">
+            <span className="hidden sm:inline">Browse Quotes</span>
+            <span className="sm:hidden">Browse</span>
+          </TabsTrigger>
+          <TabsTrigger value="schedule" className="flex-shrink-0">
+            <span className="hidden sm:inline">Content Calendar</span>
+            <span className="sm:hidden">Schedule</span>
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex-shrink-0">
+            <span className="hidden sm:inline">Performance</span>
+            <span className="sm:hidden">Stats</span>
+          </TabsTrigger>
+          <TabsTrigger value="generate" className="flex-shrink-0">
+            <span className="hidden sm:inline">AI Variants</span>
+            <span className="sm:hidden">AI</span>
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="browse" className="space-y-6">
@@ -234,7 +246,7 @@ export function QuoteGeneratorView() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">4.2K</div>
+                <div className="mobile-heading-lg font-bold">4.2K</div>
                 <p className="text-sm text-gray-600">Total likes this month</p>
                 <div className="text-green-600 text-sm mt-1">↗ +23% vs last month</div>
               </CardContent>
@@ -248,7 +260,7 @@ export function QuoteGeneratorView() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">892</div>
+                <div className="mobile-heading-lg font-bold">892</div>
                 <p className="text-sm text-gray-600">Total comments this month</p>
                 <div className="text-green-600 text-sm mt-1">↗ +18% vs last month</div>
               </CardContent>
@@ -262,7 +274,7 @@ export function QuoteGeneratorView() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold">156</div>
+                <div className="mobile-heading-lg font-bold">156</div>
                 <p className="text-sm text-gray-600">Total shares this month</p>
                 <div className="text-green-600 text-sm mt-1">↗ +31% vs last month</div>
               </CardContent>
