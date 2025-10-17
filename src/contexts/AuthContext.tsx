@@ -250,6 +250,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
       
       // User doesn't exist, create new account
+      // NOTE: To prevent "535 API key not found" errors, disable email confirmation in Supabase Dashboard:
+      // Authentication → Providers → Email → Uncheck "Confirm email"
+      // This allows our custom Resend verification flow (below) to handle email verification
       const { data, error } = await supabase.auth.signUp({
         email,
         password,

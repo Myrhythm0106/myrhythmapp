@@ -16,6 +16,7 @@ import { MobileBottomNav } from "@/components/navigation/MobileBottomNav";
 import { useNetworkStatus } from "@/hooks/useNetworkStatus";
 import { lazy, Suspense } from "react";
 import { PageSkeleton } from "@/components/loading/PageSkeleton";
+import { useAuth } from "@/hooks/useAuth";
 import Landing from "./pages/Landing";
 import MemoryBridge from "./routes/MemoryBridge";
 import Dashboard from "./pages/Dashboard";
@@ -95,6 +96,16 @@ const queryClient = new QueryClient();
 function NetworkStatusMonitor() {
   useNetworkStatus();
   return null;
+}
+
+// Authenticated Bottom Nav - only shows when user is logged in
+function AuthenticatedBottomNav() {
+  const { user, loading } = useAuth();
+  
+  // Hide nav while checking auth or if no user logged in
+  if (loading || !user) return null;
+  
+  return <MobileBottomNav />;
 }
 
 function App() {
@@ -265,7 +276,7 @@ function App() {
                        <Route path="/congrats" element={<CongratsPage />} />
                    </Routes>
                         </Suspense>
-                        <MobileBottomNav />
+                        <AuthenticatedBottomNav />
                       </NavProvider>
                     </BrowserRouter>
                   </TooltipProvider>
