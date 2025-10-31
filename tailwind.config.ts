@@ -20,7 +20,14 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
+        'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+        'display': ['Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
         'serif': ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+      },
+      letterSpacing: {
+        'tighter': '-0.02em',
+        'tight': '-0.015em',
+        'snug': '-0.01em',
       },
       spacing: {
         'mobile-touch': '12px',
@@ -33,8 +40,10 @@ const config: Config = {
         'nav-height': '64px',
       },
       fontSize: {
-        'display-lg': ['3.5rem', { lineHeight: '1.2', fontWeight: '700' }],
-        'display-md': ['2.5rem', { lineHeight: '1.2', fontWeight: '700' }],
+        'display-xl': ['6rem', { lineHeight: '1', fontWeight: '800', letterSpacing: '-0.02em' }],
+        'display-lg': ['4.5rem', { lineHeight: '1.05', fontWeight: '800', letterSpacing: '-0.015em' }],
+        'display-md': ['3.75rem', { lineHeight: '1.1', fontWeight: '700', letterSpacing: '-0.01em' }],
+        'display-sm': ['3rem', { lineHeight: '1.15', fontWeight: '700', letterSpacing: '-0.01em' }],
         'title': ['1.75rem', { lineHeight: '1.3', fontWeight: '600' }],
         'body-lg': ['1.125rem', { lineHeight: '1.6', fontWeight: '400' }],
         'body': ['1rem', { lineHeight: '1.6', fontWeight: '400' }],
@@ -322,6 +331,24 @@ const config: Config = {
             opacity: "1"
           }
         },
+        "fade-in-up": {
+          "0%": { 
+            opacity: "0",
+            transform: "translateY(20px)"
+          },
+          "100%": { 
+            opacity: "1",
+            transform: "translateY(0)"
+          }
+        },
+        "parallax-float": {
+          "0%, 100%": { 
+            transform: "translateY(0px)"
+          },
+          "50%": { 
+            transform: "translateY(-20px)"
+          }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -332,6 +359,8 @@ const config: Config = {
         "achievement-celebration": "achievement-celebration 0.6s ease-out",
         "cognitive-flow": "cognitive-flow 3s ease-in-out infinite",
         "slide-in-from-top": "slide-in-from-top 0.5s ease-out",
+        "fade-in-up": "fade-in-up 0.6s ease-out",
+        "parallax-float": "parallax-float 3s ease-in-out infinite",
       },
     },
   },
