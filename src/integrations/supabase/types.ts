@@ -411,7 +411,7 @@ export type Database = {
           accessed_at: string
           id: string
           integration_id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_id: string
         }
@@ -420,7 +420,7 @@ export type Database = {
           accessed_at?: string
           id?: string
           integration_id: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id: string
         }
@@ -429,7 +429,7 @@ export type Database = {
           accessed_at?: string
           id?: string
           integration_id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string
         }
@@ -1432,7 +1432,7 @@ export type Database = {
           created_at: string
           factor_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           success: boolean
           user_agent: string | null
           user_id: string
@@ -1441,7 +1441,7 @@ export type Database = {
           created_at?: string
           factor_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success: boolean
           user_agent?: string | null
           user_id: string
@@ -1450,7 +1450,7 @@ export type Database = {
           created_at?: string
           factor_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           success?: boolean
           user_agent?: string | null
           user_id?: string
@@ -1570,6 +1570,36 @@ export type Database = {
           reflection_date?: string | null
           title?: string
           updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      oauth_states: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          provider: string
+          token: string
+          used: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          provider: string
+          token: string
+          used?: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          provider?: string
+          token?: string
+          used?: boolean
           user_id?: string
         }
         Relationships: []
@@ -1759,7 +1789,7 @@ export type Database = {
           event_data: Json | null
           event_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           user_agent: string | null
           user_id: string | null
         }
@@ -1768,7 +1798,7 @@ export type Database = {
           event_data?: Json | null
           event_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string | null
         }
@@ -1777,7 +1807,7 @@ export type Database = {
           event_data?: Json | null
           event_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           user_agent?: string | null
           user_id?: string | null
         }
@@ -2580,22 +2610,11 @@ export type Database = {
         Args: { p_token: string; p_user_email: string }
         Returns: Json
       }
-      check_user_status: {
-        Args: { p_email: string }
-        Returns: Json
-      }
-      cleanup_expired_invitations: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      cleanup_expired_verification_tokens: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      cleanup_expired_voice_recordings: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      check_user_status: { Args: { p_email: string }; Returns: Json }
+      clean_expired_oauth_states: { Args: never; Returns: undefined }
+      cleanup_expired_invitations: { Args: never; Returns: number }
+      cleanup_expired_verification_tokens: { Args: never; Returns: number }
+      cleanup_expired_voice_recordings: { Args: never; Returns: undefined }
       create_trial_subscription: {
         Args: { stripe_customer_id?: string; user_uuid: string }
         Returns: string
@@ -2611,14 +2630,8 @@ export type Database = {
         }
         Returns: string
       }
-      generate_backup_codes: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
-      generate_invitation_token: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_backup_codes: { Args: never; Returns: Json }
+      generate_invitation_token: { Args: never; Returns: string }
       get_calendar_integration_tokens: {
         Args: { p_integration_id: string }
         Returns: {
@@ -2627,10 +2640,7 @@ export type Database = {
           token_expires_at: string
         }[]
       }
-      get_current_user_email: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      get_current_user_email: { Args: never; Returns: string }
       get_user_subscription_status: {
         Args: { user_uuid: string }
         Returns: string
@@ -2690,10 +2700,7 @@ export type Database = {
         Args: { p_integration_id: string }
         Returns: boolean
       }
-      user_owns_memory: {
-        Args: { memory_uuid: string }
-        Returns: boolean
-      }
+      user_owns_memory: { Args: { memory_uuid: string }; Returns: boolean }
       verify_backup_code: {
         Args: { p_code: string; p_user_id: string }
         Returns: boolean
