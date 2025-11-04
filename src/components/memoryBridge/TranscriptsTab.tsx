@@ -146,6 +146,7 @@ export function TranscriptsTab() {
           {recordings.map((recording) => {
             const hoursLeft = getHoursLeft(recording.created_at);
             const isExpired = hoursLeft <= 0;
+            const isCritical = hoursLeft <= 3 && hoursLeft > 0;
             const isExpiringSoon = hoursLeft < 24 && hoursLeft > 0;
 
             return (
@@ -175,6 +176,11 @@ export function TranscriptsTab() {
                         <Badge variant="destructive" className="text-xs">
                           <AlertTriangle className="h-3 w-3 mr-1" />
                           Expired
+                        </Badge>
+                      ) : isCritical ? (
+                        <Badge variant="destructive" className="text-xs animate-pulse bg-red-600">
+                          <AlertTriangle className="h-3 w-3 mr-1 animate-bounce" />
+                          {Math.floor(hoursLeft)}h {Math.floor((hoursLeft % 1) * 60)}m left!
                         </Badge>
                       ) : isExpiringSoon ? (
                         <Badge variant="secondary" className="text-xs bg-amber-100 text-amber-800 border-amber-200">

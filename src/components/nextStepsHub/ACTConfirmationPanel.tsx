@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Check, Edit, XCircle, Sparkles, Target, Map, HelpCircle } from "lucide-react";
+import { X, Check, Edit, XCircle, Sparkles, Target, Map, HelpCircle, Brain, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
@@ -387,6 +387,39 @@ export function ACTConfirmationPanel({
                   </div>
                 )}
               </div>
+
+              {/* Source Meeting */}
+              {action.meeting_recording_id && (
+                <div className="pt-6 border-t border-border space-y-3">
+                  <div className="space-y-2">
+                    <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                      <Brain className="h-4 w-4 text-primary" />
+                      Source Meeting
+                    </h3>
+                    <div className="bg-muted/50 rounded-lg p-3 space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">Extracted from:</span>
+                        <span className="font-medium">Memory Bridge Recording</span>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full"
+                        onClick={() => {
+                          // This will need to be implemented - open TranscriptViewer
+                          toast({
+                            title: "View Transcript",
+                            description: "Navigate to Memory Bridge to view full transcript",
+                          });
+                        }}
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
+                        View Full Transcript
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Additional Details */}
               {(action.start_date || action.due_context || action.assigned_watchers) && (

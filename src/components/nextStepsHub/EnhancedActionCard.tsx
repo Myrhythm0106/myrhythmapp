@@ -10,7 +10,8 @@ import {
   CheckCircle2,
   ArrowRight,
   Sparkles,
-  Star
+  Star,
+  FileText
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -224,6 +225,20 @@ export function EnhancedActionCard({
       <h3 className="font-semibold text-foreground mb-3 line-clamp-2 leading-snug">
         {action.action_text}
       </h3>
+
+      {/* Source Transcript Link */}
+      {action.meeting_recording_id && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            // Open TranscriptViewer - will be handled by parent
+          }}
+          className="text-xs text-primary hover:text-primary/80 flex items-center gap-1 mb-2"
+        >
+          <FileText className="h-3 w-3" />
+          View source transcript
+        </button>
+      )}
 
       {/* Smart Scheduling Preview */}
       {isActionable && topSuggestion && (

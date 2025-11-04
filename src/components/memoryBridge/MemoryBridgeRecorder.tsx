@@ -256,16 +256,29 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
 
           if (status === 'transcribing') {
             setProcessingStage('transcribing');
-            toast.info('🎤 Transcribing audio...', { duration: 5000 });
+            toast.info('🎤 Transcribing your recording...', { 
+              description: 'This usually takes 30-60 seconds',
+              duration: 10000 
+            });
           } else if (status === 'extracting_actions') {
             setProcessingStage('extracting');
-            toast.info('🎯 Extracting actions...', { duration: 5000 });
+            toast.info('🎯 Extracting action items...', { 
+              description: 'Looking for commitments and next steps',
+              duration: 10000 
+            });
           } else if (status === 'completed') {
             setProcessingStage('completed');
-            toast.success(`✅ Processing complete! Found ${payload.new.actions_count || 0} actions!`);
+            const actionsCount = payload.new.actions_count || 0;
+            toast.success(`✅ Found ${actionsCount} action${actionsCount !== 1 ? 's' : ''} ready to review!`, {
+              description: 'View them in Next Steps Hub',
+              duration: 8000
+            });
           } else if (status === 'error') {
             setProcessingStage('error');
-            toast.error('❌ Processing failed. Recording is saved.');
+            toast.error('❌ Processing failed', {
+              description: payload.new.processing_error || 'Recording is saved, please try again',
+              duration: 8000
+            });
           }
         }
       )

@@ -105,22 +105,48 @@ export function TranscriptViewer({
         </DialogHeader>
 
         <div className="space-y-4">
-          {/* 48-Hour Warning */}
-          <Alert className={hoursLeft < 24 ? "border-red-200 bg-red-50" : "border-amber-200 bg-amber-50"}>
-            <AlertTriangle className={`h-4 w-4 ${hoursLeft < 24 ? "text-red-500" : "text-amber-500"}`} />
-            <AlertDescription className={hoursLeft < 24 ? "text-red-700" : "text-amber-700"}>
+          {/* 48-Hour Warning with 3-Hour Critical Threshold */}
+          <Alert className={
+            hoursLeft <= 3 ? "border-red-500 bg-red-100 animate-pulse" : 
+            hoursLeft < 24 ? "border-red-200 bg-red-50" : 
+            "border-amber-200 bg-amber-50"
+          }>
+            <AlertTriangle className={`h-4 w-4 ${
+              hoursLeft <= 3 ? "text-red-700 animate-bounce" : 
+              hoursLeft < 24 ? "text-red-500" : 
+              "text-amber-500"
+            }`} />
+            <AlertDescription className={
+              hoursLeft <= 3 ? "text-red-900 font-bold" : 
+              hoursLeft < 24 ? "text-red-700" : 
+              "text-amber-700"
+            }>
               <div className="flex items-center justify-between">
-              <span>
-                {hoursLeft > 0 
-                  ? `Your transcript remains available for ${Math.round(hoursLeft)} more hours` 
-                  : "This transcript has completed its 48-hour availability window"
-                }
+                <span>
+                  {hoursLeft <= 0 
+                    ? "This transcript has completed its 48-hour availability window"
+                    : hoursLeft <= 3
+                    ? `⚠️ URGENT: Transcript will be DELETED in ${Math.floor(hoursLeft)} hours ${Math.floor((hoursLeft % 1) * 60)} minutes!`
+                    : `Your transcript remains available for ${Math.round(hoursLeft)} more hours`
+                  }
                 </span>
                 <div className="flex items-center gap-2 text-xs">
                   <Clock className="h-3 w-3" />
-                  48-hour limit
+                  {hoursLeft <= 3 ? "EXPIRES SOON" : "48-hour limit"}
                 </div>
               </div>
+              {hoursLeft <= 3 && hoursLeft > 0 && (
+                <div className="mt-3">
+                  <Button 
+                    onClick={downloadTranscript}
+                    size="sm"
+                    variant="destructive"
+                    className="animate-pulse w-full"
+                  >
+                    💾 Download Now Before It's Deleted
+                  </Button>
+                </div>
+              )}
             </AlertDescription>
           </Alert>
 
