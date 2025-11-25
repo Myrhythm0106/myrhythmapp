@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -51,7 +52,33 @@ serve(async (req) => {
     
     console.log('📋 Reading request body...');
     const requestBody = await req.json();
-    const { filePath, meetingId, meetingData, audio, userId } = requestBody;
+    
+    // Validate request body
+    const requestSchema = z.object({
+      filePath: z.string().optional(),
+      meetingId: z.string().uuid('Invalid meeting ID'),
+      userId: z.string().uuid('Invalid user ID').optional(),
+      audio: z.string().optional(),
+      meetingData: z.record(z.any()).optional(),
+    }).refine(
+      (data) => data.filePath || data.audio,
+      { message: 'Either filePath or audio must be provided' }
+    );
+    
+    const validation = requestSchema.safeParse(requestBody);
+    if (!validation.success) {
+      console.error('❌ Invalid request:', validation.error);
+      return new Response(JSON.stringify({ 
+        success: false, 
+        error: 'Invalid request data',
+        details: validation.error 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    
+    const { filePath, meetingId, meetingData, audio, userId } = validation.data;
     
     console.log('📝 Request data received:', {
       hasFilePath: !!filePath,

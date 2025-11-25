@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -34,7 +35,27 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { actionText, actionType, estimatedDuration } = await req.json();
+    // Validate request body
+    const requestSchema = z.object({
+      actionText: z.string().min(1, 'Action text is required').max(500, 'Action text too long'),
+      actionType: z.string().min(1).max(50),
+      estimatedDuration: z.number().min(1).max(480, 'Duration must be between 1-480 minutes'),
+    });
+    
+    const body = await req.json();
+    const validation = requestSchema.safeParse(body);
+    
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid request data',
+          details: validation.error 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    const { actionText, actionType, estimatedDuration } = validation.data;
 
     // Get user's assessment data for personalized scheduling
     const { data: assessmentData } = await supabase

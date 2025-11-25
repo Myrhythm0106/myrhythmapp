@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,11 +30,27 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { calendar_event_id, action_id } = await req.json();
-
-    if (!calendar_event_id) {
-      throw new Error('calendar_event_id is required');
+    // Validate request body
+    const requestSchema = z.object({
+      calendar_event_id: z.string().uuid('Invalid calendar event ID'),
+      action_id: z.string().uuid('Invalid action ID').optional(),
+    });
+    
+    const body = await req.json();
+    const validation = requestSchema.safeParse(body);
+    
+    if (!validation.success) {
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: 'Invalid request data',
+          details: validation.error 
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
+      );
     }
+    
+    const { calendar_event_id, action_id } = validation.data;
 
     console.log('Creating Google Calendar event for:', { calendar_event_id, action_id, user_id: user.id });
 
