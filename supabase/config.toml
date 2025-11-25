@@ -48,11 +48,6 @@ verify_jwt = false
 [functions.security-incident-response]
 verify_jwt = true
 
-[functions.debug-keys]
-verify_jwt = false
-
-[functions.test-api-keys]
-verify_jwt = false
 
 [functions.send-verification-email]
 verify_jwt = false
