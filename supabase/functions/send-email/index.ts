@@ -29,7 +29,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log(`Sending ${invitationType} email to ${to}`);
 
     const emailResponse = await resend.emails.send({
-      from: "MyRhythm <onboarding@resend.dev>",
+      from: "MyRhythm <info@annabelaaron.com>",
       to: [to],
       subject: `MyRhythm - ${subject}`,
       html: `
