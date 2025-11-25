@@ -1,10 +1,47 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const webhookSchema = z.object({
+  transcript_id: z.string().min(1).max(100),
+  status: z.enum(['completed', 'processing', 'error']),
+  error: z.string().optional(),
+});
+
+async function verifyWebhookSignature(req: Request, body: string): Promise<boolean> {
+  const signature = req.headers.get('x-assemblyai-signature');
+  const webhookSecret = Deno.env.get('ASSEMBLYAI_WEBHOOK_SECRET');
+  
+  if (!signature || !webhookSecret) {
+    return false;
+  }
+
+  const encoder = new TextEncoder();
+  const key = await crypto.subtle.importKey(
+    'raw',
+    encoder.encode(webhookSecret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['verify']
+  );
+
+  const expectedSignature = signature.split('=')[1];
+  const signatureBytes = Uint8Array.from(
+    expectedSignature.match(/.{1,2}/g)!.map(byte => parseInt(byte, 16))
+  );
+
+  return await crypto.subtle.verify(
+    'HMAC',
+    key,
+    signatureBytes,
+    encoder.encode(body)
+  );
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -17,15 +54,33 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL!, SUPABASE_SERVICE_ROLE_KEY!);
 
-    // AssemblyAI webhook payload
-    const webhookData = await req.json();
-    console.log('📨 AssemblyAI webhook received:', webhookData.status);
-
-    const { transcript_id, status } = webhookData;
-
-    if (!transcript_id) {
-      throw new Error('No transcript_id in webhook payload');
+    // Get raw body for signature verification
+    const bodyText = await req.text();
+    
+    // Verify webhook signature
+    const isValidSignature = await verifyWebhookSignature(req, bodyText);
+    if (!isValidSignature) {
+      console.error('❌ Invalid webhook signature');
+      return new Response(
+        JSON.stringify({ error: 'Invalid webhook signature' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
+
+    // Parse and validate webhook data
+    const webhookData = JSON.parse(bodyText);
+    const validation = webhookSchema.safeParse(webhookData);
+    
+    if (!validation.success) {
+      console.error('❌ Invalid webhook payload:', validation.error);
+      return new Response(
+        JSON.stringify({ error: 'Invalid webhook payload', details: validation.error }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { transcript_id, status } = validation.data;
+    console.log('📨 AssemblyAI webhook received:', status);
 
     // Find the transcription job by job_id (which is the transcript_id from AssemblyAI)
     const { data: job, error: jobError } = await supabase
