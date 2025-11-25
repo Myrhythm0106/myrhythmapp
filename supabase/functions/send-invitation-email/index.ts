@@ -91,7 +91,7 @@ const handler = async (req: Request): Promise<Response> => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "MyRhythm <noreply@resend.dev>",
+        from: "MyRhythm <info@annabelaaron.com>",
         to: [memberEmail],
         subject: `MyRhythm - ${inviterName} invited you to their Support Circle`,
         html: `
