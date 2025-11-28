@@ -48,7 +48,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
 
     const emailResponse = await resend.emails.send({
-      from: "MyRhythm Support <info@annabelaaron.com>",
+      from: "MyRhythm Support <info@myrhythmapp.com>",
       to: [memberEmail],
       subject: `MyRhythm - ${inviterName} has invited you to join their Support Circle`,
       html: `
