@@ -84,7 +84,7 @@ serve(async (req) => {
 
         // Send reminder email
         const emailResponse = await resend.emails.send({
-          from: "MyRhythm <info@annabelaaron.com>",
+          from: "MyRhythm <info@myrhythmapp.com>",
           to: [userProfile.email],
           subject: "Your MyRhythm trial ends in 2 days",
           html: `
