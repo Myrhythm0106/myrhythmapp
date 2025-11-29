@@ -1,10 +1,17 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Input validation schema
+const requestSchema = z.object({
+  year: z.number().int().min(2020).max(2100).optional(),
+  weekNumber: z.number().int().min(1).max(53).optional(),
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -35,7 +42,22 @@ serve(async (req) => {
       throw new Error('Unauthorized');
     }
 
-    const { year, weekNumber } = await req.json();
+    // Validate request body
+    const rawBody = await req.json();
+    const validation = requestSchema.safeParse(rawBody);
+    
+    if (!validation.success) {
+      console.error('❌ Invalid request:', validation.error);
+      return new Response(JSON.stringify({ 
+        error: 'Invalid request data',
+        details: validation.error.errors 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { year, weekNumber } = validation.data;
     const currentYear = year || new Date().getFullYear();
     const currentWeek = weekNumber || Math.ceil((new Date().getTime() - new Date(currentYear, 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000));
 
