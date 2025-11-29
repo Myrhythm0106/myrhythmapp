@@ -340,10 +340,28 @@ export function useEnhancedSmartScheduling() {
 
       if (actionError) throw actionError;
 
+      // Auto-create smart reminders for the scheduled action
+      const defaultReminders = [
+        { time: '15_minutes_before', methods: ['in_app', 'push'] },
+        { time: 'morning_of', methods: ['email', 'in_app'] }
+      ];
+
+      for (const reminder of defaultReminders) {
+        await supabase
+          .from('event_reminders')
+          .insert({
+            event_id: calendarEvent.id,
+            user_id: user.id,
+            reminder_time: reminder.time,
+            reminder_methods: reminder.methods,
+            is_active: true
+          });
+      }
+
       toast.success(
         `Action scheduled for ${formatDate(suggestion.date)} at ${formatTime(suggestion.time)}`,
         {
-          description: suggestion.reason
+          description: `${suggestion.reason} - Reminders set!`
         }
       );
 
