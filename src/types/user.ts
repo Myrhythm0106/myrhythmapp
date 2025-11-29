@@ -1,5 +1,5 @@
 
-export type UserType = 'brain-injury' | 'caregiver' | 'cognitive-optimization' | 'wellness' | 'medical-professional' | 'colleague' | 'other';
+export type UserType = 'brain-injury' | 'caregiver' | 'cognitive-optimization' | 'wellness' | 'medical-professional' | 'colleague' | 'other' | 'student' | 'executive' | 'post-recovery';
 
 export type CaregiverRole = 'primary' | 'secondary' | 'healthcare' | 'friend';
 

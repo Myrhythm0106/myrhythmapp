@@ -284,7 +284,10 @@ function generateUserTypeMessage(
     "wellness": `Your ${focusArea} focus perfectly aligns with building sustainable wellness and productivity systems. Your assessment indicates this foundation will support all your other life optimization goals.`,
     "medical-professional": `As a healthcare professional, your ${focusArea} focus will enhance your clinical understanding and enable you to provide even better patient care. Your assessment indicates this knowledge will benefit both your practice and your patients.`,
     "colleague": `As a supportive colleague, your ${focusArea} focus will help you create a more inclusive and understanding workplace while developing skills that benefit both you and your colleagues. Your assessment shows this collaborative approach will strengthen your professional relationships.`,
-    "other": `Your ${focusArea} focus aligns with your unique journey and goals. Your assessment shows this personalized approach will support your specific needs and help you achieve your individual objectives.`
+    "other": `Your ${focusArea} focus aligns with your unique journey and goals. Your assessment shows this personalized approach will support your specific needs and help you achieve your individual objectives.`,
+    "student": `As a student, your ${focusArea} focus will help you capture and organize information more effectively. Your assessment shows this approach will boost your study efficiency and academic performance.`,
+    "executive": `As an executive, your ${focusArea} focus will maximize your productivity and ensure no commitment falls through the cracks. Your assessment indicates this area will deliver the highest ROI on your time.`,
+    "post-recovery": `Having rebuilt your cognitive strength, your ${focusArea} focus will help you maintain those gains and continue optimizing. Your assessment shows you're ready for this next level of performance.`
   };
   
   return contextMap[userType] || "";
@@ -324,7 +327,10 @@ function getUserTypeContext(userType?: UserType): string | null {
     "wellness": "wellness and productivity goals",
     "medical-professional": "clinical practice and patient care",
     "colleague": "workplace wellness and collaboration",
-    "other": "unique personal journey"
+    "other": "unique personal journey",
+    "student": "academic and learning success",
+    "executive": "leadership and productivity excellence",
+    "post-recovery": "sustained cognitive wellness"
   };
   return userType ? contextMap[userType] : null;
 }
@@ -337,7 +343,10 @@ function getUserTypeCharacteristic(userType?: UserType): string | null {
     "wellness": "Balanced approach to life optimization",
     "medical-professional": "Evidence-based clinical approach with patient-centered focus",
     "colleague": "Collaborative and workplace-supportive approach",
-    "other": "Unique and adaptable approach tailored to specific needs"
+    "other": "Unique and adaptable approach tailored to specific needs",
+    "student": "Learning-focused mindset with growth orientation",
+    "executive": "Results-driven approach with strategic focus",
+    "post-recovery": "Resilient optimization mindset with maintenance focus"
   };
   return userType ? charMap[userType] : null;
 }
@@ -350,7 +359,10 @@ function getUserTypePersonalMessage(userType?: UserType): string {
     "wellness": "Your balanced perspective creates an ideal foundation for sustainable life optimization.",
     "medical-professional": "Your clinical insight combined with personal reflection demonstrates exceptional professional growth potential.",
     "colleague": "Your thoughtful approach to supporting colleagues shows strong collaborative leadership potential.",
-    "other": "Your thoughtful and personalized responses show strong self-awareness and growth potential."
+    "other": "Your thoughtful and personalized responses show strong self-awareness and growth potential.",
+    "student": "Your willingness to seek help shows maturity and a strong foundation for academic success.",
+    "executive": "Your strategic thinking is evident - you're ready to optimize for maximum impact.",
+    "post-recovery": "Your resilience and commitment to growth is inspiring - you've built a strong foundation."
   };
   return userType ? messageMap[userType] : "Your thoughtful responses show strong self-awareness and growth potential.";
 }
@@ -365,7 +377,10 @@ function getUserTypeSpecificStep(userType?: UserType, focusArea?: FocusArea): st
     "wellness": "Integrate wellness practices with your productivity systems",
     "medical-professional": "Apply evidence-based assessment insights to enhance patient care protocols",
     "colleague": "Build inclusive workplace practices and support colleague wellbeing initiatives",
-    "other": "Create personalized strategies that align with your unique situation and goals"
+    "other": "Create personalized strategies that align with your unique situation and goals",
+    "student": "Set up your study schedule around your peak focus times",
+    "executive": "Connect Memory Bridge to your calendar for seamless meeting-to-action flow",
+    "post-recovery": "Establish daily check-ins to maintain your cognitive gains"
   };
   
   return stepMap[userType];

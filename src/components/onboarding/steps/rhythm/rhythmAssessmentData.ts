@@ -149,6 +149,9 @@ export const baseSections: Section[] = [
 
 const userTypeQuestions: Record<UserType, Section[]> = {
   "brain-injury": baseSections,
+  "student": baseSections,
+  "executive": baseSections,
+  "post-recovery": baseSections,
   
   "cognitive-optimization": [
     {

@@ -16,18 +16,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-interface AssessmentQuestion {
-  id: string;
-  question: string;
-  options: {
-    value: string;
-    label: string;
-    feature: string;
-    benefit: string;
-  }[];
-  category: 'cognitive' | 'emotional' | 'functional' | 'social';
-}
+import { getQuestionsForPersona, AssessmentQuestion, BRAIN_INJURY_QUESTIONS } from './PersonaAssessmentQuestions';
 
 const BRIEF_QUESTIONS: AssessmentQuestion[] = [
   {
@@ -196,6 +185,7 @@ export function MVPAssessment() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const assessmentType = searchParams.get('type') || 'brief';
+  const personaType = searchParams.get('persona') || assessmentType; // Use type param for persona if specified
   const autostart = searchParams.get('autostart') === 'true';
   const isPaid = searchParams.get('paid') === 'true';
   
@@ -205,8 +195,24 @@ export function MVPAssessment() {
   const [recommendations, setRecommendations] = React.useState<string[]>([]);
   const [showIntro, setShowIntro] = React.useState(!autostart);
 
-  const questions = assessmentType === 'comprehensive' ? COMPREHENSIVE_QUESTIONS : BRIEF_QUESTIONS;
+  // Get persona-specific questions - falls back to brain-injury questions if type is 'comprehensive' or 'brief'
+  const personaQuestions = getQuestionsForPersona(personaType);
+  const questions = personaQuestions.length > 0 ? personaQuestions : BRAIN_INJURY_QUESTIONS;
   const progress = ((currentQuestion + 1) / questions.length) * 100;
+
+  // Get persona-friendly label
+  const getPersonaLabel = (type: string): string => {
+    const labels: Record<string, string> = {
+      'student': 'Student',
+      'executive': 'Executive',
+      'post-recovery': 'Thriving',
+      'brain-injury': 'Brain Health',
+      'caregiver': 'Caregiver',
+      'brief': 'Quick Start',
+      'comprehensive': 'Comprehensive'
+    };
+    return labels[type] || 'Personal';
+  };
 
   const handleAnswer = (questionId: string, answer: string) => {
     const newAnswers = { ...answers, [questionId]: answer };
