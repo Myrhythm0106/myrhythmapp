@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +18,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { EnhancedActionCard } from './EnhancedActionCard';
 import { useUserPreferences } from '@/hooks/useUserPreferences';
+import { useActionCompletion } from '@/hooks/useActionCompletion';
 
 interface ActsReviewTableProps {
   actions: ExtractedAction[];
@@ -35,6 +36,16 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
   const { suggestions, isLoading, generateSuggestionsForAction } = useActsScheduling();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { markActionComplete } = useActionCompletion();
+
+  const handleMarkComplete = useCallback(async (actionId: string, actionTitle: string): Promise<boolean> => {
+    const success = await markActionComplete(actionId, actionTitle);
+    if (success) {
+      // Trigger a refresh by updating the action locally
+      onUpdateAction(actionId, { status: 'completed' });
+    }
+    return success;
+  }, [markActionComplete, onUpdateAction]);
 
   const highConfidenceActions = useMemo(() => 
     actions.filter(action => (action.confidence_score || 0) >= 0.8),
@@ -662,6 +673,7 @@ export function ActsReviewTable({ actions, onUpdateAction, onConfirmActions }: A
               <EnhancedActionCard
                 action={action}
                 onUpdate={(updates) => onUpdateAction(action.id!, updates)}
+                onMarkComplete={handleMarkComplete}
               />
             </div>
           ))}

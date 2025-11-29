@@ -16,22 +16,28 @@ import {
   Target,
   TrendingUp,
   Calendar,
-  Flag
+  Flag,
+  Check,
+  Loader2
 } from 'lucide-react';
 import { ExtractedAction } from '@/types/memoryBridge';
 import { analyzeSMART, getSMARTColor, getSMARTLabel } from '@/utils/smartValidation';
-import { celebrateActionComplete } from '@/utils/celebration';
+import { celebrateActionComplete, celebrateBigWin } from '@/utils/celebration';
 import { toast } from 'sonner';
 
 interface EnhancedActionCardProps {
   action: ExtractedAction;
   onUpdate?: (updates: Partial<ExtractedAction>) => void;
+  onMarkComplete?: (actionId: string, actionTitle: string) => Promise<boolean>;
   compact?: boolean;
   layout?: 'card' | 'list';
 }
 
-export function EnhancedActionCard({ action, onUpdate, compact = false, layout = 'card' }: EnhancedActionCardProps) {
+export function EnhancedActionCard({ action, onUpdate, onMarkComplete, compact = false, layout = 'card' }: EnhancedActionCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
+  const isCompleted = action.status === 'completed' || action.status === 'done';
+  
   const smartAnalysis = analyzeSMART({
     action_text: action.action_text,
     assigned_to: action.assigned_to,
@@ -48,10 +54,31 @@ export function EnhancedActionCard({ action, onUpdate, compact = false, layout =
   const isMediumConfidence = confidenceScore >= 0.6 && confidenceScore < 0.8;
   const isLowConfidence = confidenceScore < 0.6;
 
-  const handleComplete = () => {
-    celebrateActionComplete();
-    toast.success('🎉 Action completed! Great work!');
-    onUpdate?.({ status: 'done' });
+  const handleComplete = async () => {
+    if (isCompleting || isCompleted) return;
+    
+    setIsCompleting(true);
+    try {
+      if (onMarkComplete) {
+        const success = await onMarkComplete(action.id, action.action_text);
+        if (success) {
+          // Big celebration for completed actions!
+          celebrateBigWin();
+          toast.success('🎉 Amazing! Action completed!', {
+            description: action.assigned_watchers?.length 
+              ? 'Your support circle has been notified!' 
+              : 'Keep up the great momentum!'
+          });
+        }
+      } else {
+        // Fallback to simple update
+        celebrateActionComplete();
+        toast.success('🎉 Action completed! Great work!');
+        onUpdate?.({ status: 'completed' });
+      }
+    } finally {
+      setIsCompleting(false);
+    }
   };
 
   const getConfidenceBadge = () => {
@@ -188,7 +215,47 @@ export function EnhancedActionCard({ action, onUpdate, compact = false, layout =
               {action.priority_level <= 2 ? '🔴 High' : action.priority_level <= 3 ? '🟡 Medium' : '🟢 Low'} Priority
             </Badge>
           )}
+          {action.assigned_watchers && action.assigned_watchers.length > 0 && (
+            <Badge variant="outline" className="gap-1 border-purple-300 text-purple-700">
+              👀 {action.assigned_watchers.length} watcher{action.assigned_watchers.length > 1 ? 's' : ''}
+            </Badge>
+          )}
         </div>
+
+        {/* Mark Complete Button - Prominent */}
+        {action.category === 'action' && !isCompleted && (
+          <Button
+            onClick={handleComplete}
+            disabled={isCompleting}
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 shadow-lg hover:shadow-xl transition-all"
+            size="lg"
+          >
+            {isCompleting ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Completing...
+              </>
+            ) : (
+              <>
+                <Check className="w-5 h-5 mr-2" />
+                Mark Complete
+              </>
+            )}
+          </Button>
+        )}
+
+        {/* Completed Badge */}
+        {isCompleted && (
+          <div className="flex items-center justify-center gap-2 p-3 bg-green-100 rounded-lg border border-green-300">
+            <CheckCircle2 className="w-5 h-5 text-green-600" />
+            <span className="font-semibold text-green-800">Completed!</span>
+            {action.completion_date && (
+              <span className="text-sm text-green-600">
+                on {new Date(action.completion_date).toLocaleDateString()}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* SMART Score */}
         <div className="flex items-center justify-between p-2 bg-muted/50 rounded">

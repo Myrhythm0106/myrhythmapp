@@ -220,6 +220,61 @@ export function useMemoryBridge() {
     }
   }, [user, fetchExtractedActions]);
 
+  const markActionComplete = useCallback(async (
+    actionId: string,
+    actionTitle: string
+  ): Promise<boolean> => {
+    if (!user) return false;
+
+    try {
+      // Update action status to completed
+      const { error: updateError } = await supabase
+        .from('extracted_actions')
+        .update({ 
+          status: 'completed',
+          completion_date: new Date().toISOString().split('T')[0]
+        })
+        .eq('id', actionId)
+        .eq('user_id', user.id);
+
+      if (updateError) throw updateError;
+
+      // Notify support circle watchers via the RPC function
+      const { error: notifyError } = await supabase.rpc('notify_watchers_of_action_completion', {
+        p_action_id: actionId,
+        p_user_id: user.id,
+        p_action_title: actionTitle,
+        p_completion_status: 'completed'
+      });
+
+      if (notifyError) {
+        console.warn('Could not notify watchers:', notifyError);
+        // Don't fail the completion if notification fails
+      }
+
+      // Create cross-device notification for the user's own devices
+      await supabase.from('cross_device_notifications').insert({
+        user_id: user.id,
+        notification_type: 'action_completed',
+        device_source: 'web',
+        data: {
+          action_id: actionId,
+          action_title: actionTitle,
+          completed_at: new Date().toISOString()
+        }
+      });
+
+      // Refresh actions
+      await fetchExtractedActions();
+      
+      return true;
+    } catch (error) {
+      console.error('Error completing action:', error);
+      toast.error('Failed to mark action as complete');
+      return false;
+    }
+  }, [user, fetchExtractedActions]);
+
   return {
     isRecording,
     isProcessing,
@@ -230,6 +285,7 @@ export function useMemoryBridge() {
     fetchExtractedActions,
     confirmAction,
     fetchMeetingHistory,
-    updateExtractedAction
+    updateExtractedAction,
+    markActionComplete
   };
 }
