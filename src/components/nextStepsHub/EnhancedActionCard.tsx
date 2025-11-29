@@ -11,7 +11,9 @@ import {
   ArrowRight,
   Sparkles,
   Star,
-  FileText
+  FileText,
+  Check,
+  Loader2
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,6 +22,8 @@ import { DisclosureCard } from '@/components/ui/DisclosureCard';
 import { SmartSuggestionCard } from '@/components/ui/SmartSuggestionCard';
 import { ConflictIndicator } from '@/components/ui/ConflictIndicator';
 import { useEnhancedSmartScheduling, EnhancedSmartSuggestion } from '@/hooks/useEnhancedSmartScheduling';
+import { useActionCompletion } from '@/hooks/useActionCompletion';
+import { toast } from 'sonner';
 
 interface EnhancedActionCardProps {
   action: NextStepsItem;
@@ -29,6 +33,7 @@ interface EnhancedActionCardProps {
   isSelected?: boolean;
   onToggleSelect?: () => void;
   isScheduling?: boolean;
+  onActionCompleted?: () => void;
 }
 
 export function EnhancedActionCard({ 
@@ -38,11 +43,34 @@ export function EnhancedActionCard({
   showCheckbox = false,
   isSelected = false,
   onToggleSelect,
-  isScheduling = false 
+  isScheduling = false,
+  onActionCompleted 
 }: EnhancedActionCardProps) {
   const [suggestions, setSuggestions] = useState<EnhancedSmartSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isCompleting, setIsCompleting] = useState(false);
   const { generateSmartSuggestions, isGenerating } = useEnhancedSmartScheduling();
+  const { markActionComplete } = useActionCompletion();
+
+  const isCompleted = action.status === 'completed' || action.status === 'done';
+
+  const handleMarkComplete = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isCompleting || isCompleted) return;
+    
+    setIsCompleting(true);
+    try {
+      const success = await markActionComplete(action.id!, action.action_text);
+      if (success) {
+        toast.success('🎉 Amazing! Action completed!', {
+          description: 'Your support circle has been notified!'
+        });
+        onActionCompleted?.();
+      }
+    } finally {
+      setIsCompleting(false);
+    }
+  };
 
   // Get validation and quality indicators
   const validationScore = (action as any).validation_score || 0;
@@ -319,7 +347,27 @@ export function EnhancedActionCard({
           {getEmpoweringStatusLabel(action.status || 'not_started')}
         </Badge>
         
-        <div className="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex items-center space-x-2">
+          {/* Mark Complete Button - Always visible for actions */}
+          {action.category === 'action' && !isCompleted && (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleMarkComplete}
+              disabled={isCompleting}
+              className="bg-green-500 hover:bg-green-600 text-white text-xs"
+            >
+              {isCompleting ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <>
+                  <Check className="w-3 h-3 mr-1" />
+                  Done
+                </>
+              )}
+            </Button>
+          )}
+          
           {isActionable && (
             <Button
               variant="ghost"
