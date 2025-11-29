@@ -12,6 +12,7 @@ import {
   Zap
 } from 'lucide-react';
 import { NextStepsItem } from '@/types/memoryBridge';
+import { EmpoweringTerm } from '@/components/ui/EmpoweringTerm';
 
 interface MotivationalHeaderProps {
   actions: NextStepsItem[];
@@ -75,19 +76,31 @@ export function MotivationalHeader({ actions, recommendedAction }: MotivationalH
               <div className="text-3xl font-bold text-green-600">
                 {completedActions.length}
               </div>
-              <p className="text-sm text-green-700 font-medium">Completed</p>
+              <p className="text-sm text-green-700 font-medium">
+                <EmpoweringTerm term="Victory Achieved" showIndicator={false}>
+                  Victories
+                </EmpoweringTerm>
+              </p>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">
                 {activeActions.length}
               </div>
-              <p className="text-sm text-blue-700 font-medium">In Progress</p>
+              <p className="text-sm text-blue-700 font-medium">
+                <EmpoweringTerm term="Building Momentum" showIndicator={false}>
+                  Building Momentum
+                </EmpoweringTerm>
+              </p>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-600">
                 {completionRate}%
               </div>
-              <p className="text-sm text-purple-700 font-medium">Success Rate</p>
+              <p className="text-sm text-purple-700 font-medium">
+                <EmpoweringTerm term="Completion Rate" showIndicator={false}>
+                  Success Rate
+                </EmpoweringTerm>
+              </p>
             </div>
           </div>
         </div>

@@ -24,6 +24,7 @@ import { ConflictIndicator } from '@/components/ui/ConflictIndicator';
 import { useEnhancedSmartScheduling, EnhancedSmartSuggestion } from '@/hooks/useEnhancedSmartScheduling';
 import { useActionCompletion } from '@/hooks/useActionCompletion';
 import { toast } from 'sonner';
+import { EmpoweringTerm, EmpoweringStatus, EmpoweringPriority } from '@/components/ui/EmpoweringTerm';
 
 interface EnhancedActionCardProps {
   action: NextStepsItem;
@@ -161,13 +162,14 @@ export function EnhancedActionCard({
     }
   };
 
-  const getEmpoweringStatusLabel = (status: string) => {
+  const getEmpoweringStatusLabel = (status: string): { term: string; display: string } => {
     switch (status) {
-      case 'not_started': return 'Ready to Begin';
-      case 'in_progress': return 'Making Progress';
-      case 'scheduled': return 'Scheduled';
-      case 'completed': return 'Completed';
-      default: return 'Ready to Begin';
+      case 'not_started': return { term: 'Ready to Conquer', display: 'Ready to Conquer' };
+      case 'in_progress': return { term: 'Building Momentum', display: 'Building Momentum 🚀' };
+      case 'scheduled': return { term: 'Time Blocked', display: 'Time Blocked' };
+      case 'completed': 
+      case 'done': return { term: 'Victory Achieved', display: 'Victory Achieved! 🎉' };
+      default: return { term: 'Ready to Conquer', display: 'Ready to Conquer' };
     }
   };
 
@@ -344,7 +346,12 @@ export function EnhancedActionCard({
       {/* Status & Actions */}
       <div className="flex items-center justify-between pt-2">
         <Badge className={`text-xs border ${getStatusColor(action.status || 'not_started')}`}>
-          {getEmpoweringStatusLabel(action.status || 'not_started')}
+          <EmpoweringTerm 
+            term={getEmpoweringStatusLabel(action.status || 'not_started').term}
+            showIndicator={false}
+          >
+            {getEmpoweringStatusLabel(action.status || 'not_started').display}
+          </EmpoweringTerm>
         </Badge>
         
         <div className="flex items-center space-x-2">
