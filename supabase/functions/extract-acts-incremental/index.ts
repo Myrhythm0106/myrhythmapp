@@ -1,11 +1,19 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Input validation schema
+const requestSchema = z.object({
+  transcript: z.string().min(1, 'Transcript cannot be empty').max(500000, 'Transcript too long'),
+  meetingId: z.string().uuid('Invalid meeting ID format'),
+  userId: z.string().uuid('Invalid user ID format'),
+});
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -27,11 +35,23 @@ serve(async (req) => {
     }
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-    const { transcript, meetingId, userId } = await req.json();
-
-    if (!transcript || !meetingId || !userId) {
-      throw new Error('Missing required parameters: transcript, meetingId, userId');
+    
+    // Validate request body
+    const rawBody = await req.json();
+    const validation = requestSchema.safeParse(rawBody);
+    
+    if (!validation.success) {
+      console.error('❌ Invalid request:', validation.error);
+      return new Response(JSON.stringify({ 
+        error: 'Invalid request data',
+        details: validation.error.errors 
+      }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
+    
+    const { transcript, meetingId, userId } = validation.data;
 
     console.log('🚀 PROCESSING TRANSCRIPT with Lovable AI (Gemini) for meeting:', meetingId);
     console.log('🔑 Lovable AI API Key available:', !!LOVABLE_API_KEY);
