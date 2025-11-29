@@ -14,6 +14,7 @@ import {
   Trophy
 } from 'lucide-react';
 import { NextStepsItem } from '@/types/memoryBridge';
+import { EmpoweringTerm } from '@/components/ui/EmpoweringTerm';
 
 interface ProgressInsightsProps {
   actions: NextStepsItem[];
@@ -127,7 +128,11 @@ export function ProgressInsights({ actions }: ProgressInsightsProps) {
           <div className="text-3xl font-bold text-green-600">
             {completionRate}%
           </div>
-          <p className="text-sm text-green-700 font-medium">Success Rate</p>
+          <p className="text-sm text-green-700 font-medium">
+            <EmpoweringTerm term="Completion Rate" showIndicator={false}>
+              Success Rate
+            </EmpoweringTerm>
+          </p>
           <p className="text-xs text-green-600 mt-1">Building trust daily!</p>
         </Card>
 
@@ -136,7 +141,11 @@ export function ProgressInsights({ actions }: ProgressInsightsProps) {
           <div className="text-3xl font-bold text-blue-600">
             {completedActions.length}
           </div>
-          <p className="text-sm text-blue-700 font-medium">Actions Completed</p>
+          <p className="text-sm text-blue-700 font-medium">
+            <EmpoweringTerm term="Victory Achieved" showIndicator={false}>
+              Victories Achieved
+            </EmpoweringTerm>
+          </p>
           <p className="text-xs text-blue-600 mt-1">Neural pathways strengthened!</p>
         </Card>
 
@@ -145,7 +154,11 @@ export function ProgressInsights({ actions }: ProgressInsightsProps) {
           <div className="text-3xl font-bold text-purple-600">
             {recentCompletions}
           </div>
-          <p className="text-sm text-purple-700 font-medium">This Week</p>
+          <p className="text-sm text-purple-700 font-medium">
+            <EmpoweringTerm term="Momentum Streak" showIndicator={false}>
+              This Week's Momentum
+            </EmpoweringTerm>
+          </p>
           <p className="text-xs text-purple-600 mt-1">Momentum building!</p>
         </Card>
 
@@ -154,7 +167,11 @@ export function ProgressInsights({ actions }: ProgressInsightsProps) {
           <div className="text-3xl font-bold text-orange-600">
             {activeActions.length}
           </div>
-          <p className="text-sm text-orange-700 font-medium">In Progress</p>
+          <p className="text-sm text-orange-700 font-medium">
+            <EmpoweringTerm term="Building Momentum" showIndicator={false}>
+              Building Momentum
+            </EmpoweringTerm>
+          </p>
           <p className="text-xs text-orange-600 mt-1">Future victories!</p>
         </Card>
       </div>
@@ -165,7 +182,9 @@ export function ProgressInsights({ actions }: ProgressInsightsProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-blue-800">
               <Clock className="h-5 w-5" />
-              Your Peak Performance Time
+              <EmpoweringTerm term="Peak Performance" showIndicator={false}>
+                Your Peak Performance Time
+              </EmpoweringTerm>
             </CardTitle>
           </CardHeader>
           <CardContent>
