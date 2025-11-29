@@ -54,10 +54,11 @@ serve(async (req) => {
     }
 
     // Get a temporary token for real-time transcription
+    // AssemblyAI uses API key directly in Authorization header (no Bearer prefix)
     const response = await fetch('https://api.assemblyai.com/v2/realtime/token', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${ASSEMBLYAI_API_KEY}`,
+        'Authorization': ASSEMBLYAI_API_KEY,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
