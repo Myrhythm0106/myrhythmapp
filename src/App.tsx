@@ -83,6 +83,8 @@ import { WelcomeCongratsPage } from "./components/mvp/WelcomeCongratsPage";
 import { UserGuideTimeline } from "./components/mvp/UserGuideTimeline";
 import VisionPage from "./pages/VisionPage";
 import ColorSystemBible from "./pages/ColorSystemBible";
+import FirstTimePage from "./pages/FirstTimePage";
+import { SmartReminderToast } from "./components/notifications/SmartReminderToast";
 import BrainInjuryWelcomePage from "./pages/BrainInjuryWelcomePage";
 import MemoryFirstWelcomePage from "./pages/MemoryFirstWelcomePage";
 import BrainHealthWelcomePage from "./pages/BrainHealthWelcomePage";
@@ -123,6 +125,7 @@ function App() {
                 <SetupProgressProvider>
                   <TooltipProvider>
                     <Toaster />
+                    <SmartReminderToast />
                     <NetworkStatusMonitor />
                     <BrowserRouter>
                       <NavProvider>
@@ -183,6 +186,7 @@ function App() {
                      <Route path="/quick-capture" element={<ProtectedRoute requireAuth={false}><QuickCapture /></ProtectedRoute>} />
                       <Route path="/email-verification" element={<EmailVerification />} />
                        <Route path="/get-started" element={<GetStartedPage />} />
+                       <Route path="/first-time" element={<FirstTimePage />} />
                      <Route path="/mvp-payment" element={<MVPPaymentPage />} />
                     <Route path="/accept-invitation" element={<AcceptInvitation />} />
                     <Route path="/support-member-dashboard" element={<ProtectedRoute><SupportMemberDashboard /></ProtectedRoute>} />
