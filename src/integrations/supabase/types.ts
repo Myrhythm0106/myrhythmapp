@@ -2449,16 +2449,21 @@ export type Database = {
       voice_recordings: {
         Row: {
           access_level: string
+          ai_summary: string | null
           category: string
           created_at: string
           description: string | null
           duration_seconds: number | null
           expires_at: string | null
+          extracted_actions_count: number | null
           file_path: string
           file_size_bytes: number
           id: string
+          key_insights: Json | null
           legal_retention_required: boolean | null
           metadata: Json | null
+          processed_at: string | null
+          processing_status: string | null
           retention_period_days: number | null
           title: string
           transcription: string | null
@@ -2468,16 +2473,21 @@ export type Database = {
         }
         Insert: {
           access_level?: string
+          ai_summary?: string | null
           category?: string
           created_at?: string
           description?: string | null
           duration_seconds?: number | null
           expires_at?: string | null
+          extracted_actions_count?: number | null
           file_path: string
           file_size_bytes: number
           id?: string
+          key_insights?: Json | null
           legal_retention_required?: boolean | null
           metadata?: Json | null
+          processed_at?: string | null
+          processing_status?: string | null
           retention_period_days?: number | null
           title: string
           transcription?: string | null
@@ -2487,16 +2497,21 @@ export type Database = {
         }
         Update: {
           access_level?: string
+          ai_summary?: string | null
           category?: string
           created_at?: string
           description?: string | null
           duration_seconds?: number | null
           expires_at?: string | null
+          extracted_actions_count?: number | null
           file_path?: string
           file_size_bytes?: number
           id?: string
+          key_insights?: Json | null
           legal_retention_required?: boolean | null
           metadata?: Json | null
+          processed_at?: string | null
+          processing_status?: string | null
           retention_period_days?: number | null
           title?: string
           transcription?: string | null

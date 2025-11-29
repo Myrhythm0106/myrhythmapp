@@ -7,9 +7,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Mic, Square, Save, Loader2 } from 'lucide-react';
+import { Mic, Square, Save, Loader2, Sparkles } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { cn } from '@/lib/utils';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface VoiceRecorderProps {
   defaultCategory?: string;
@@ -31,6 +33,8 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
   const [category, setCategory] = useState<string>(defaultCategory);
   const [shareWithHealthcare, setShareWithHealthcare] = useState(false);
   const [recordingDuration, setRecordingDuration] = useState(0);
+  const [isProcessingAI, setIsProcessingAI] = useState(false);
+  const [lastSavedRecording, setLastSavedRecording] = useState<any>(null);
 
   React.useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -46,6 +50,7 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
 
   const handleStartRecording = async () => {
     setAudioBlob(null);
+    setLastSavedRecording(null);
     await startRecording();
   };
 
@@ -68,12 +73,55 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
     );
 
     if (result) {
+      setLastSavedRecording(result);
       // Reset form
       setAudioBlob(null);
       setTitle('');
       setDescription('');
       setShareWithHealthcare(false);
       onSaved?.(result);
+    }
+  };
+
+  const handleProcessWithAI = async () => {
+    if (!lastSavedRecording?.id) {
+      toast.error('Please save a recording first');
+      return;
+    }
+
+    setIsProcessingAI(true);
+    
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Please sign in to use AI processing');
+        return;
+      }
+
+      const response = await supabase.functions.invoke('process-voice-recording', {
+        body: { 
+          recording_id: lastSavedRecording.id,
+          transcription: lastSavedRecording.transcription 
+        }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      const { summary, extracted_acts_count } = response.data;
+      
+      toast.success(
+        `AI processed! Found ${extracted_acts_count} action items.`,
+        { description: summary?.substring(0, 100) + '...' }
+      );
+
+      setLastSavedRecording(null);
+    } catch (error) {
+      console.error('AI processing error:', error);
+      toast.error('Failed to process with AI. Please try again.');
+    } finally {
+      setIsProcessingAI(false);
     }
   };
 
@@ -94,7 +142,7 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
       <CardContent className="space-y-4">
         {/* Recording Controls */}
         <div className="flex items-center justify-center">
-          {!isRecording && !audioBlob && (
+          {!isRecording && !audioBlob && !lastSavedRecording && (
             <Button
               onClick={handleStartRecording}
               size="lg"
@@ -138,6 +186,45 @@ export function VoiceRecorder({ defaultCategory = 'general', onSaved }: VoiceRec
                 <Mic className="h-4 w-4 mr-2" />
                 Record Again
               </Button>
+            </div>
+          )}
+
+          {/* Show AI processing option after save */}
+          {lastSavedRecording && !audioBlob && (
+            <div className="flex flex-col items-center gap-3 p-4 border rounded-lg bg-muted/50">
+              <div className="text-center">
+                <p className="font-medium text-green-600">Recording saved! ✓</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Process with AI to extract action items and insights
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleProcessWithAI}
+                  disabled={isProcessingAI}
+                  className="gap-2"
+                >
+                  {isProcessingAI ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Processing...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      Process with AI
+                    </>
+                  )}
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setLastSavedRecording(null);
+                  }}
+                >
+                  Skip
+                </Button>
+              </div>
             </div>
           )}
         </div>
