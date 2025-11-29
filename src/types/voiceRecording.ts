@@ -10,4 +10,16 @@ export interface VoiceRecording {
   created_at: string;
   access_level: 'private' | 'healthcare';
   legal_retention_required: boolean;
+  // AI processing fields
+  ai_summary?: string;
+  key_insights?: KeyInsight[];
+  extracted_actions_count?: number;
+  processing_status?: 'pending' | 'processing' | 'completed' | 'failed';
+  processed_at?: string;
+}
+
+export interface KeyInsight {
+  insight: string;
+  type: 'emotional' | 'practical' | 'relationship' | 'health';
+  importance: 'high' | 'medium' | 'low';
 }

@@ -74,7 +74,11 @@ export const fetchUserRecordings = async (userId: string): Promise<VoiceRecordin
   // Type cast the database response to match our interface
   const typedRecordings: VoiceRecording[] = (data || []).map(record => ({
     ...record,
-    access_level: record.access_level as 'private' | 'healthcare'
+    access_level: record.access_level as 'private' | 'healthcare',
+    processing_status: record.processing_status as VoiceRecording['processing_status'],
+    key_insights: Array.isArray(record.key_insights) 
+      ? (record.key_insights as unknown as VoiceRecording['key_insights']) 
+      : []
   }));
   
   return typedRecordings;
