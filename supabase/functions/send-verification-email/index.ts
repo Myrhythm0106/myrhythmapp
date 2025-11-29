@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
+import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -9,12 +10,13 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-interface VerificationEmailRequest {
-  email: string;
-  name: string;
-  token: string;
-  redirectUrl: string;
-}
+// Input validation schema
+const requestSchema = z.object({
+  email: z.string().email('Invalid email format').max(255, 'Email too long'),
+  name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
+  token: z.string().min(10, 'Invalid token').max(500, 'Token too long'),
+  redirectUrl: z.string().url('Invalid redirect URL').max(500, 'URL too long'),
+});
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -26,14 +28,18 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, name, token, redirectUrl }: VerificationEmailRequest = await req.json();
-
-    if (!email || !name || !token || !redirectUrl) {
+    const rawBody = await req.json();
+    const validation = requestSchema.safeParse(rawBody);
+    
+    if (!validation.success) {
+      console.error('❌ Invalid request:', validation.error);
       return new Response(
-        JSON.stringify({ error: "Missing required fields" }),
+        JSON.stringify({ error: "Invalid request data", details: validation.error.errors }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
+    
+    const { email, name, token, redirectUrl } = validation.data;
 
     const verificationLink = `${redirectUrl}?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
 
