@@ -403,7 +403,10 @@ export function generateSampleAssessmentResult(userType: UserType = 'cognitive-o
     'wellness': 'emotional',
     'medical-professional': 'growth',
     'colleague': 'structure',
-    'other': 'growth'
+    'other': 'growth',
+    'student': 'structure',
+    'executive': 'achievement',
+    'post-recovery': 'memory'
   };
 
   const primaryRhythms = [

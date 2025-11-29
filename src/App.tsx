@@ -89,6 +89,9 @@ import BrainHealthWelcomePage from "./pages/BrainHealthWelcomePage";
 import CaregiverWelcomePage from "./pages/CaregiverWelcomePage";
 import MedicalProfessionalWelcomePage from "./pages/MedicalProfessionalWelcomePage";
 import CognitiveSupportWelcomePage from "./pages/CognitiveSupportWelcomePage";
+import StudentWelcomePage from "./pages/StudentWelcomePage";
+import ExecutiveWelcomePage from "./pages/ExecutiveWelcomePage";
+import PostRecoveryWelcomePage from "./pages/PostRecoveryWelcomePage";
 
 const queryClient = new QueryClient();
 
@@ -244,6 +247,9 @@ function App() {
                      <Route path="/mvp/medical-professional-welcome" element={<MedicalProfessionalWelcomePage />} />
                      <Route path="/mvp/cognitive-support-welcome" element={<CognitiveSupportWelcomePage />} />
                      <Route path="/mvp/brain-injury-welcome" element={<BrainInjuryWelcomePage />} />
+                     <Route path="/mvp/student-welcome" element={<StudentWelcomePage />} />
+                     <Route path="/mvp/executive-welcome" element={<ExecutiveWelcomePage />} />
+                     <Route path="/mvp/thriving-welcome" element={<PostRecoveryWelcomePage />} />
                      
                      {/* New Assessment and Setup Flow */}
          <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />

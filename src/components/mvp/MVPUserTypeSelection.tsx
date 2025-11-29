@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Brain, Heart, Users, Calendar, ArrowRight } from 'lucide-react';
+import { Brain, Heart, Users, Calendar, ArrowRight, BookOpen, Briefcase, Star, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function MVPUserTypeSelection() {
@@ -10,12 +10,20 @@ export function MVPUserTypeSelection() {
 
   const userTypes = [
     {
-      id: 'brain-health',
-      title: 'Brain Health Optimisation',
-      description: 'Personal cognitive wellness and brain health optimization',
-      icon: Brain,
-      color: 'from-neural-purple-500 to-neural-blue-500',
-      path: '/mvp/brain-health-welcome'
+      id: 'student',
+      title: 'Student / Young Person',
+      description: 'Capture class notes, organize homework, and schedule study time - your study superpower!',
+      icon: BookOpen,
+      color: 'from-blue-500 to-cyan-500',
+      path: '/mvp/student-welcome'
+    },
+    {
+      id: 'executive',
+      title: 'Executive / Visionary',
+      description: 'Turn meetings into actions, maximize productivity, and never drop a commitment',
+      icon: Briefcase,
+      color: 'from-amber-500 to-orange-500',
+      path: '/mvp/executive-welcome'
     },
     {
       id: 'memory-challenges',
@@ -26,20 +34,20 @@ export function MVPUserTypeSelection() {
       path: '/mvp/memory-first-welcome'
     },
     {
+      id: 'post-recovery',
+      title: 'Thriving (Post-Recovery)',
+      description: 'You\'ve rebuilt and regained - now maintain your wins and keep optimizing',
+      icon: Star,
+      color: 'from-emerald-500 to-teal-500',
+      path: '/mvp/thriving-welcome'
+    },
+    {
       id: 'caregiver',
-      title: 'Caregiver/Support',
+      title: 'Caregiver / Support',
       description: 'Tools for family members, caregivers, and support partners',
       icon: Users,
       color: 'from-brand-orange-500 to-neural-magenta-500',
       path: '/mvp/caregiver-welcome'
-    },
-    {
-      id: 'medical-professional',
-      title: 'Medical Professional',
-      description: 'Healthcare providers, therapists, and medical staff supporting cognitive health',
-      icon: Users,
-      color: 'from-neural-blue-500 to-neural-indigo-500',
-      path: '/mvp/medical-professional-welcome'
     },
     {
       id: 'cognitive-support',
