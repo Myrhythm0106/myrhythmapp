@@ -41,8 +41,8 @@ export const useRealtimeTranscription = () => {
         return;
       }
 
-      // Connect to AssemblyAI WebSocket
-      const socket = new WebSocket(`wss://api.assemblyai.com/v2/realtime/ws?sample_rate=16000&token=${data.token}`);
+      // Connect to AssemblyAI Universal Streaming WebSocket (new API)
+      const socket = new WebSocket(`wss://streaming.assemblyai.com/v3/ws?sample_rate=16000&token=${data.token}`);
       socketRef.current = socket;
 
       socket.onopen = () => {

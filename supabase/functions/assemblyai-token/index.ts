@@ -53,17 +53,16 @@ serve(async (req) => {
       );
     }
 
-    // Get a temporary token for real-time transcription
-    // AssemblyAI uses API key directly in Authorization header (no Bearer prefix)
-    const response = await fetch('https://api.assemblyai.com/v2/realtime/token', {
-      method: 'POST',
+    // Get a temporary token for Universal Streaming (new API)
+    // New endpoint: GET https://streaming.assemblyai.com/v3/token
+    const tokenUrl = new URL('https://streaming.assemblyai.com/v3/token');
+    tokenUrl.searchParams.set('expires_in_seconds', '3600'); // 1 hour
+
+    const response = await fetch(tokenUrl.toString(), {
+      method: 'GET',
       headers: {
         'Authorization': ASSEMBLYAI_API_KEY,
-        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        expires_in: 3600, // 1 hour
-      }),
     });
 
     if (!response.ok) {
@@ -104,7 +103,6 @@ serve(async (req) => {
     console.error('Unexpected error in assemblyai-token function:', {
       error: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
-      userId: 'unknown' // user is not available in this catch scope
     });
     
     return new Response(
