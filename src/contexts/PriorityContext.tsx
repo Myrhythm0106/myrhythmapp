@@ -120,10 +120,45 @@ export function PriorityProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Mock progress calculation (in production, would be based on completed actions)
+  // Real progress calculation based on completed actions matching priorities
   const calculateProgress = (priorities: Priorities): PriorityProgress => {
     const total = [priorities.p1, priorities.p2, priorities.p3].filter(p => p.trim()).length;
-    const completed = Math.floor(total * Math.random() * 0.7); // Mock completion
+    
+    // Get completed actions from localStorage for now (real implementation would query DB)
+    // This will be enhanced when DailyActionsContext provides the data
+    let completed = 0;
+    
+    try {
+      const storageKey = user ? `priority_completions_${user.id}` : 'priority_completions';
+      const storedCompletions = localStorage.getItem(storageKey);
+      
+      if (storedCompletions) {
+        const completions = JSON.parse(storedCompletions);
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Check if each priority has a matching completed action
+        const todayCompletions = completions[today] || [];
+        
+        if (priorities.p1 && todayCompletions.some((c: string) => 
+          c.toLowerCase().includes(priorities.p1.toLowerCase().substring(0, 10))
+        )) {
+          completed++;
+        }
+        if (priorities.p2 && todayCompletions.some((c: string) => 
+          c.toLowerCase().includes(priorities.p2.toLowerCase().substring(0, 10))
+        )) {
+          completed++;
+        }
+        if (priorities.p3 && todayCompletions.some((c: string) => 
+          c.toLowerCase().includes(priorities.p3.toLowerCase().substring(0, 10))
+        )) {
+          completed++;
+        }
+      }
+    } catch (error) {
+      console.error('Error calculating priority progress:', error);
+    }
+    
     return {
       completed,
       total,

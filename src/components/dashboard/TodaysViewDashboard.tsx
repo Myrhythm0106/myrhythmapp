@@ -9,6 +9,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { useDailyActions } from '@/contexts/DailyActionsContext';
 import { supabase } from '@/integrations/supabase/client';
 import { format, isToday } from 'date-fns';
+import { PriorityJourneyMap } from '@/components/priorities/PriorityJourneyMap';
+import { UniversalProgressBar } from '@/components/progress/UniversalProgressBar';
 import { 
   Brain, 
   Calendar, 
@@ -319,6 +321,27 @@ export function TodaysViewDashboard() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Progress & Priority Section - Brain-Injury-First */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Universal Progress Bar - Always visible to remind of wins */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.55 }}
+          >
+            <UniversalProgressBar showMessage={true} />
+          </motion.div>
+
+          {/* Priority Journey Map - Shows Day → Week → Month → Year cascade */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <PriorityJourneyMap collapsible={true} showProgress={true} />
+          </motion.div>
+        </div>
 
         {/* Detailed Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

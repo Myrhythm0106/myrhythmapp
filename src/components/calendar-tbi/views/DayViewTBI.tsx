@@ -8,7 +8,8 @@ import { format, isSameDay } from 'date-fns';
 import { UnifiedHeader } from '../components/UnifiedHeader';
 import { NavigationHeader } from '../components/NavigationHeader';
 import { useDailyActions } from '@/contexts/DailyActionsContext';
-import { Plus, X, Clock, CheckCircle2 } from 'lucide-react';
+import { useAssessmentToScheduling } from '@/hooks/useAssessmentToScheduling';
+import { Plus, X, Clock, CheckCircle2, Lightbulb } from 'lucide-react';
 
 interface DayViewTBIProps {
   dayData: DayData;
@@ -50,6 +51,7 @@ export function DayViewTBI({
   onTimeSlotClick
 }: DayViewTBIProps) {
   const { actions, completeAction } = useDailyActions();
+  const { getScheduleReasoning, scheduleMapping } = useAssessmentToScheduling();
   const [carryOver, setCarryOver] = useState('');
   const [notes, setNotes] = useState('');
 
@@ -120,11 +122,11 @@ export function DayViewTBI({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* P1 Priority */}
             <div>
-              <label className="block text-sm font-medium mb-2">P1 - Most Important</label>
+              <label className="block text-sm font-medium mb-2">P1 - Your Top Priority</label>
               <Input
                 value={priorities.p1}
                 onChange={(e) => updatePriorities('p1', e.target.value)}
-                placeholder="Your top priority..."
+                placeholder="What matters most today..."
                 className="bg-white/20 border-white/30 text-white placeholder-white/70"
               />
             </div>
@@ -142,7 +144,7 @@ export function DayViewTBI({
 
             {/* P3 Priority */}
             <div>
-              <label className="block text-sm font-medium mb-2">P3 - Nice to Have</label>
+              <label className="block text-sm font-medium mb-2">P3 - When Time Allows</label>
               <Input
                 value={priorities.p3}
                 onChange={(e) => updatePriorities('p3', e.target.value)}
@@ -151,6 +153,14 @@ export function DayViewTBI({
               />
             </div>
           </div>
+
+          {/* Schedule reasoning - show WHY */}
+          {scheduleMapping.displayReason && (
+            <div className="mt-4 flex items-center gap-2 text-sm opacity-90 bg-white/10 rounded-lg px-3 py-2">
+              <Lightbulb className="h-4 w-4 flex-shrink-0" />
+              <span>{scheduleMapping.displayReason}</span>
+            </div>
+          )}
         </div>
       </Card>
 
@@ -215,6 +225,13 @@ export function DayViewTBI({
                                   </span>
                                 )}
                               </div>
+                              {/* Schedule reasoning for this time slot */}
+                              {scheduleMapping.peakHours.includes(time) && (
+                                <p className="text-xs mt-1 opacity-60 flex items-center gap-1">
+                                  <Lightbulb className="h-3 w-3" />
+                                  Your peak energy time
+                                </p>
+                              )}
                             </div>
                             {action.status !== 'completed' && (
                               <Button
