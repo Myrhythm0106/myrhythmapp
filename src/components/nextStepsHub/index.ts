@@ -5,3 +5,4 @@ export { SimplifiedActionCard } from './SimplifiedActionCard';
 export { EnhancedActionCard } from './EnhancedActionCard';
 export { ACTConfirmationPanel } from './ACTConfirmationPanel';
 export { BulkActionBar } from './BulkActionBar';
+export { SupportCircleQuickAssign } from './SupportCircleQuickAssign';
