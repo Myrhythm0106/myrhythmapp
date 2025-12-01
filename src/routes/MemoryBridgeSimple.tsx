@@ -7,6 +7,9 @@ import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { useMemoryBridge } from "@/hooks/memoryBridge/useMemoryBridge";
 import { RecordingsTab } from "@/components/memoryBridge/RecordingsTab";
 import { MemoryBridgeFloatingButton } from "@/components/memoryBridge/MemoryBridgeFloatingButton";
+import { PersistentNavHeader } from "@/components/navigation/PersistentNavHeader";
+import { QuickEscapeButton } from "@/components/navigation/QuickEscapeButton";
+import { MobileBottomNav } from "@/components/navigation/MobileBottomNav";
 import { Mic, Sparkles, FileAudio, Target, Calendar, TrendingUp, CheckCircle2, ArrowRight, Brain } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -42,7 +45,9 @@ export default function MemoryBridgeSimple() {
   // Empty State - No recordings yet
   if (currentState === 'empty') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background p-4 md:p-8">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background pb-20">
+        <PersistentNavHeader />
+        <div className="p-4 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -121,6 +126,9 @@ export default function MemoryBridgeSimple() {
             </CardContent>
           </Card>
         </motion.div>
+        </div>
+        <QuickEscapeButton />
+        <MobileBottomNav />
       </div>
     );
   }
@@ -130,7 +138,9 @@ export default function MemoryBridgeSimple() {
     const meetingRecordings = recordings.filter(r => r.category === 'meeting');
     
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background p-4 md:p-8">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background pb-20">
+        <PersistentNavHeader />
+        <div className="p-4 md:p-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <motion.div
@@ -160,9 +170,12 @@ export default function MemoryBridgeSimple() {
             <RecordingsTab onProcessComplete={handleProcessComplete} />
           </motion.div>
         </div>
+        </div>
 
         {/* Floating Action Button */}
         <MemoryBridgeFloatingButton />
+        <QuickEscapeButton />
+        <MobileBottomNav />
       </div>
     );
   }
@@ -174,7 +187,9 @@ export default function MemoryBridgeSimple() {
   const scheduledActions = extractedActions.filter(a => a.status === 'scheduled').length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background pb-20">
+      <PersistentNavHeader />
+      <div className="p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
         <motion.div
@@ -345,9 +360,12 @@ export default function MemoryBridgeSimple() {
           </Card>
         </motion.div>
       </div>
+      </div>
 
       {/* Floating Action Button */}
       <MemoryBridgeFloatingButton />
+      <QuickEscapeButton />
+      <MobileBottomNav />
     </div>
   );
 }
