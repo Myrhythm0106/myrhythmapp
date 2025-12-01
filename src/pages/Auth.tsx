@@ -271,16 +271,24 @@ const Auth = () => {
 
   const handleSignInSuccess = () => {
     toast.success('Welcome back!');
-    // Redirect authenticated users to dashboard
-    console.log('Auth page: Sign in successful, redirecting to dashboard');
-    navigate('/dashboard', { replace: true });
+    // Check for redirect parameter first, then use location state, then default to dashboard
+    const redirectTo = searchParams.get('redirect') || from;
+    console.log('Auth page: Sign in successful, redirecting to:', redirectTo);
+    navigate(redirectTo, { replace: true });
   };
 
   const handleSignUpSuccess = () => {
     toast.success('Account created successfully!');
-    // After signup, redirect new users to assessment flow
-    console.log('Auth page: Sign up successful, redirecting to assessment');
-    navigate('/mvp/assessment-flow?flow=register', { replace: true });
+    // Check for redirect parameter for new users too
+    const redirectTo = searchParams.get('redirect');
+    if (redirectTo) {
+      console.log('Auth page: Sign up successful, redirecting to:', redirectTo);
+      navigate(redirectTo, { replace: true });
+    } else {
+      // After signup without redirect, go to assessment flow
+      console.log('Auth page: Sign up successful, redirecting to assessment');
+      navigate('/mvp/assessment-flow?flow=register', { replace: true });
+    }
   };
 
   const handlePasswordRecoverySuccess = () => {

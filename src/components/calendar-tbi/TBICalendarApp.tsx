@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayViewTBI } from './views/DayViewTBI';
@@ -6,68 +5,34 @@ import { WeekViewTBI } from './views/WeekViewTBI';
 import { MonthViewTBI } from './views/MonthViewTBI';
 import { YearViewTBI } from './views/YearViewTBI';
 import { DayDetailsModal } from './components/DayDetailsModal';
-import { TBIEvent, EnergyLevel, DayData, CalendarSettings } from './types/calendarTypes';
+import { FloatingAddButton } from './components/FloatingAddButton';
+import { TBIEvent, EnergyLevel, DayData } from './types/calendarTypes';
 import { toast } from 'sonner';
 import { usePomodoro } from '@/contexts/PomodoroContext';
 import { useDailyActions } from '@/contexts/DailyActionsContext';
+import { useCalendarEvents } from '@/hooks/useCalendarEvents';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Timer, Users, Target } from 'lucide-react';
+import { Timer, Users, Target, Loader2, CalendarPlus } from 'lucide-react';
 import { usePriorities } from '@/contexts/PriorityContext';
-
-// Mock data for demonstration
-const mockEvents: TBIEvent[] = [
-  {
-    id: '1',
-    title: 'Morning Medication',
-    startTime: new Date(2024, 0, 15, 8, 0),
-    endTime: new Date(2024, 0, 15, 8, 15),
-    type: 'medication',
-    status: 'completed',
-    caregiverNotes: 'Take with breakfast and water',
-    completedAt: new Date(2024, 0, 15, 8, 5)
-  },
-  {
-    id: '2',
-    title: 'Physical Therapy',
-    startTime: new Date(2024, 0, 15, 10, 0),
-    endTime: new Date(2024, 0, 15, 11, 0),
-    type: 'therapy',
-    status: 'current',
-    location: 'Rehabilitation Center',
-    contactPerson: 'Dr. Sarah Johnson',
-    contactPhone: '(555) 123-4567',
-    caregiverNotes: 'Remember to bring water bottle and comfortable shoes'
-  },
-  {
-    id: '3',
-    title: 'Lunch Break',
-    startTime: new Date(2024, 0, 15, 12, 30),
-    endTime: new Date(2024, 0, 15, 13, 30),
-    type: 'rest',
-    status: 'upcoming',
-    caregiverNotes: 'Try to eat something nutritious'
-  },
-  {
-    id: '4',
-    title: 'Cognitive Therapy Session',
-    startTime: new Date(2024, 0, 15, 14, 0),
-    endTime: new Date(2024, 0, 15, 15, 0),
-    type: 'therapy',
-    status: 'upcoming',
-    location: 'Room 204, Medical Building',
-    contactPerson: 'Dr. Mike Chen',
-    reminderMinutes: 15
-  }
-];
 
 export function TBICalendarApp() {
   const { actions } = useDailyActions();
+  const { events: realEvents, isLoading, error, refresh } = useCalendarEvents();
+  
   const [dayData, setDayData] = useState<DayData>({
     date: new Date(),
-    events: mockEvents,
+    events: [],
     energyLevel: undefined
   });
+
+  // Sync real events to dayData when they change
+  useEffect(() => {
+    setDayData(prev => ({
+      ...prev,
+      events: realEvents
+    }));
+  }, [realEvents]);
 
   // Separate date states for each view
   const [dayViewDate, setDayViewDate] = useState(new Date());
@@ -149,10 +114,59 @@ export function TBICalendarApp() {
   const handleDayDetailsClose = () => {
     setShowDayDetails(false);
     setSelectedTime(null);
+    // Refresh events after modal closes (in case new event was created)
+    refresh();
   };
 
+  const handleAddEvent = () => {
+    setSelectedDate(new Date());
+    setSelectedTime(null);
+    setShowDayDetails(true);
+  };
+
+  // Show loading state
+  if (isLoading && realEvents.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-muted-foreground">Loading your calendar...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-destructive">{error}</p>
+          <Button onClick={refresh} variant="outline">Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 pb-20">
+      {/* Empty state prompt */}
+      {realEvents.length === 0 && (
+        <div className="bg-gradient-to-r from-primary/10 to-primary/5 border-b border-primary/20 px-4 py-3">
+          <div className="max-w-2xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CalendarPlus className="h-5 w-5 text-primary" />
+              <span className="text-sm text-primary font-medium">
+                Your calendar is empty. Start by adding an event or recording a conversation!
+              </span>
+            </div>
+            <Button size="sm" onClick={handleAddEvent}>
+              Add Event
+            </Button>
+          </div>
+        </div>
+      )}
+      
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10">
           <div className="px-4 py-3">
@@ -315,6 +329,9 @@ export function TBICalendarApp() {
         events={dayData.events}
         prefilledTime={selectedTime}
       />
+
+      {/* Floating Add Button */}
+      <FloatingAddButton onClick={handleAddEvent} />
     </div>
   );
 }
