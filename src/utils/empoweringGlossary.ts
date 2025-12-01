@@ -136,7 +136,7 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
     plain: "How your priorities connect across timeframes"
   },
   
-  // Recording Terms
+// Recording Terms
   "Memory Bridge": {
     empowering: "Memory Bridge",
     plain: "Voice recording feature for capturing conversations"
@@ -144,6 +144,36 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
   "Action Extraction": {
     empowering: "Action Extraction",
     plain: "AI finds tasks from your recordings"
+  },
+  
+  // Journey Terms
+  "Launch Your Journey": {
+    empowering: "Launch Your Journey 🚀",
+    plain: "Getting started with the app"
+  },
+  "Discover Your Identity": {
+    empowering: "Discover Your Identity 👤",
+    plain: "Setting up your user profile"
+  },
+  "Choose Your Path": {
+    empowering: "Choose Your Path 🛤️",
+    plain: "Selecting guided or explorer mode"
+  },
+  "Build Your Rhythm Profile": {
+    empowering: "Build Your Rhythm Profile 🧠",
+    plain: "Completing the cognitive assessment"
+  },
+  "Build Your Foundation": {
+    empowering: "Build Your Foundation 💪",
+    plain: "Setting up your support network"
+  },
+  "Activate Your Voice": {
+    empowering: "Activate Your Voice 🎤",
+    plain: "Making your first voice recording"
+  },
+  "Claim Your First Victory": {
+    empowering: "Claim Your First Victory 🏆",
+    plain: "Completing your first scheduled action"
   }
 };
 

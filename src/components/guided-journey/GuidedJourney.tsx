@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -6,6 +6,9 @@ import { AssessmentResult } from '@/utils/rhythmAnalysis';
 import { ArrowRight, CheckCircle, Clock, Star, Target, Calendar, Users, Heart, Brain } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { EmpoweringJourneyProgress } from '@/components/onboarding/EmpoweringJourneyProgress';
+import { useJourneyProgress } from '@/hooks/useJourneyProgress';
+import { EmpoweringTerm } from '@/components/ui/EmpoweringTerm';
 
 interface GuidedJourneyProps {
   assessmentResult: AssessmentResult;
@@ -16,6 +19,12 @@ export function GuidedJourney({ assessmentResult, onComplete }: GuidedJourneyPro
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSetups, setCompletedSetups] = useState<Set<string>>(new Set());
+  const { markStepComplete } = useJourneyProgress();
+
+  // Mark profile step as complete when entering guided journey (after assessment)
+  useEffect(() => {
+    markStepComplete('profile');
+  }, [markStepComplete]);
 
   // Personalized journey based on assessment results
   const getPersonalizedJourney = () => {
@@ -81,6 +90,13 @@ export function GuidedJourney({ assessmentResult, onComplete }: GuidedJourneyPro
     setCompletedSetups(prev => new Set([...prev, step.id]));
     toast.success(`${step.title} activated! 🎉`);
     
+    // Mark journey milestones based on which step was completed
+    if (step.id === 'support-circle') {
+      markStepComplete('foundation');
+    } else if (step.id === 'memory-bridge') {
+      markStepComplete('voice');
+    }
+    
     // Navigate to the setup page
     navigate(step.route);
   };
@@ -100,6 +116,9 @@ export function GuidedJourney({ assessmentResult, onComplete }: GuidedJourneyPro
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-teal-50 p-4">
       <div className="max-w-4xl mx-auto">
+        {/* Empowering Journey Progress */}
+        <EmpoweringJourneyProgress variant="mini" className="mb-6" />
+
         {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm mb-4">
@@ -112,7 +131,7 @@ export function GuidedJourney({ assessmentResult, onComplete }: GuidedJourneyPro
             Let's activate your most impactful features first.
           </p>
           
-          {/* Progress */}
+          {/* Setup Progress */}
           <div className="mt-6 max-w-md mx-auto">
             <div className="flex justify-between text-sm text-gray-600 mb-2">
               <span>Setup Progress</span>
