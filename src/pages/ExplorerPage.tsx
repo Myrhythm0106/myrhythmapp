@@ -10,11 +10,11 @@ import {
   CheckSquare, 
   Star,
   ArrowRight,
-  Sparkles,
-  Zap
+  Users
 } from 'lucide-react';
 import { MVPThemeWrapper } from '@/components/theme/MVPThemeWrapper';
 import { MVPTopNav } from '@/components/mvp/MVPTopNav';
+import { EmpoweringJourneyProgress } from '@/components/onboarding/EmpoweringJourneyProgress';
 
 export default function ExplorerPage() {
   const navigate = useNavigate();
@@ -59,6 +59,17 @@ export default function ExplorerPage() {
       badge: 'Optional',
       badgeColor: 'bg-neural-purple-100 text-neural-purple-700',
       buttonColor: 'bg-neural-purple-600 hover:bg-neural-purple-700'
+    },
+    {
+      id: 'support-circle',
+      title: 'Support Circle',
+      subtitle: '(Accountability Network)',
+      description: 'Invite trusted people to celebrate wins and keep you accountable',
+      icon: Users,
+      route: '/support-circle',
+      badge: 'Essential',
+      badgeColor: 'bg-sunrise-amber-100 text-sunrise-amber-700',
+      buttonColor: 'bg-sunrise-amber-600 hover:bg-sunrise-amber-700'
     }
   ];
 
@@ -67,6 +78,9 @@ export default function ExplorerPage() {
       <MVPTopNav showBack={false} />
       <div className="min-h-screen bg-gradient-to-br from-neural-purple-50 via-white to-neural-blue-50">
         <div className="max-w-5xl mx-auto px-6 py-12">
+          {/* Journey Progress */}
+          <EmpoweringJourneyProgress variant="mini" className="mb-8" />
+
           {/* Welcome Header */}
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neural-purple-100 text-neural-purple-700 mb-4">
@@ -95,9 +109,14 @@ export default function ExplorerPage() {
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="flex items-center gap-2 text-2xl">
+                    <CardTitle className="flex items-center gap-2 text-2xl">
                           <IconComponent className="h-6 w-6" />
                           {feature.title}
+                          {(feature as any).subtitle && (
+                            <span className="text-sm font-normal text-muted-foreground">
+                              {(feature as any).subtitle}
+                            </span>
+                          )}
                         </CardTitle>
                         <CardDescription className="mt-2">
                           {feature.description}
@@ -117,6 +136,7 @@ export default function ExplorerPage() {
                       {feature.id === 'memory-bridge' ? 'Start Recording' :
                        feature.id === 'calendar' ? 'View Calendar' :
                        feature.id === 'next-steps' ? 'Open Hub' :
+                       feature.id === 'support-circle' ? 'Build Network' :
                        'View Dashboard'}
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>

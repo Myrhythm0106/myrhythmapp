@@ -18,6 +18,8 @@ interface EmpoweringTermProps {
   plainText?: string;
   /** Show the dotted underline indicator */
   showIndicator?: boolean;
+  /** Show plain text inline after the term */
+  showPlainInline?: boolean;
   /** Additional className for styling */
   className?: string;
   /** Render as inline or block */
@@ -35,10 +37,23 @@ export function EmpoweringTerm({
   children,
   plainText,
   showIndicator = true,
+  showPlainInline = false,
   className,
   as: Component = "span"
 }: EmpoweringTermProps) {
   const explanation = plainText || getPlainText(term);
+  
+  // If showing plain text inline, render without tooltip
+  if (showPlainInline) {
+    return (
+      <Component className={className}>
+        {children || term}
+        {explanation && (
+          <span className="text-muted-foreground ml-1">({explanation})</span>
+        )}
+      </Component>
+    );
+  }
   
   // If no explanation found, just render the text without tooltip
   if (!explanation) {
