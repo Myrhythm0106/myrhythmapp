@@ -167,9 +167,9 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" 
-                  onClick={() => navigate('/quick-capture')}
+                  onClick={() => user ? navigate('/memory-bridge') : navigate('/auth?redirect=/memory-bridge')}
                 >
-                  Start Capture
+                  {user ? 'Open Memory Bridge' : 'Start Capture'}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>
@@ -193,9 +193,9 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white" 
-                  onClick={() => setActiveFeatureModal('calendar')}
+                  onClick={() => user ? navigate('/calendar') : navigate('/auth?redirect=/calendar')}
                 >
-                  Explore Calendar
+                  {user ? 'Open Calendar' : 'Explore Calendar'}
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>
