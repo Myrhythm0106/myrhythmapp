@@ -1,38 +1,42 @@
-// @version 0.1
-// @feature Next Steps Hub - ACT Management with Bulk Scheduling
+// @version 0.2
+// @feature Next Steps Hub - Brain-Injury-First Redesign
 
 import React, { useState, useEffect } from 'react';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
-import { EnhancedActionCard } from './EnhancedActionCard';
+import { FocusModeView } from './FocusModeView';
+import { PriorityOverview } from './PriorityOverview';
+import { SimplifiedActionCard } from './SimplifiedActionCard';
 import { ACTConfirmationPanel } from './ACTConfirmationPanel';
-import { BulkActionBar } from './BulkActionBar';
 import { ActionSchedulingModal } from '@/components/memoryBridge/ActionSchedulingModal';
 import { ExtractedAction } from '@/types/memoryBridge';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { 
   Target, 
-  Search, 
-  Filter,
-  ListChecks,
+  Eye,
+  List,
+  LayoutGrid,
   Plus,
   ArrowRight,
-  AlertCircle,
-  Clock,
-  Brain,
-  Sparkles
+  Heart,
+  Sparkles,
+  CheckCircle2
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { usePersona } from '@/hooks/usePersona';
+import { getPersonaLanguage } from '@/utils/personaLanguage';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthRequiredMessage } from '@/components/ui/AuthRequiredMessage';
 import { toast } from '@/hooks/use-toast';
 
+type ViewMode = 'focus' | 'overview' | 'all';
+
 export function NextStepsHub() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { personaMode } = usePersona();
+  const language = getPersonaLanguage(personaMode);
   const { 
     extractedActions, 
     fetchExtractedActions, 
@@ -42,18 +46,12 @@ export function NextStepsHub() {
 
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'action' | 'watch_out' | 'depends_on' | 'note'>('all');
+  const [viewMode, setViewMode] = useState<ViewMode>('focus');
+  const [selectedFilter, setSelectedFilter] = useState<'pending' | 'scheduled' | 'completed'>('pending');
   
-  // Bulk selection state
-  const [selectedActionIds, setSelectedActionIds] = useState<string[]>([]);
-  const [selectionMode, setSelectionMode] = useState(false);
-  
-  // Confirmation panel state
+  // Panels
   const [showConfirmationPanel, setShowConfirmationPanel] = useState(false);
   const [selectedActionForConfirmation, setSelectedActionForConfirmation] = useState<ExtractedAction | null>(null);
-  
-  // Scheduling modal state
   const [isSchedulingModalOpen, setIsSchedulingModalOpen] = useState(false);
   const [actionsToSchedule, setActionsToSchedule] = useState<ExtractedAction[]>([]);
 
@@ -90,14 +88,13 @@ export function NextStepsHub() {
   if (authChecked && !user) {
     return (
       <AuthRequiredMessage
-        title="Sign in to access your Next Steps Hub"
-        message="Your AI-powered personal assistant is ready to help you organize, prioritize, and schedule your actions with intelligent suggestions."
+        title="Sign in to access your Next Steps"
+        message="Your personal space to organize and complete your actions - one step at a time."
         features={[
-          "Smart ACT confirmation with 'Why this matters' context",
-          "Bulk scheduling for multiple actions at once",
-          "AI-powered action extraction from recordings",
-          "Seamless calendar integration",
-          "Progress tracking and celebrations"
+          "Focus on one thing at a time",
+          "See your progress clearly",
+          "Schedule at your best times",
+          "Celebrate your wins"
         ]}
       />
     );
@@ -105,15 +102,34 @@ export function NextStepsHub() {
 
   const actions = extractedActions || [];
 
-  const filteredActions = actions.filter(action => {
-    const matchesSearch = searchQuery === '' || 
-      action.action_text?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      action.assigned_to?.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesFilter = selectedFilter === 'all' || action.category === selectedFilter;
-    
-    return matchesSearch && matchesFilter;
-  });
+  // Filter actions based on selected filter
+  const getFilteredActions = () => {
+    switch (selectedFilter) {
+      case 'pending':
+        return actions.filter(a => 
+          a.status !== 'completed' && 
+          a.status !== 'done' && 
+          a.status !== 'scheduled'
+        );
+      case 'scheduled':
+        return actions.filter(a => a.status === 'scheduled');
+      case 'completed':
+        return actions.filter(a => 
+          a.status === 'completed' || a.status === 'done'
+        );
+      default:
+        return actions;
+    }
+  };
+
+  const filteredActions = getFilteredActions();
+  const pendingCount = actions.filter(a => 
+    a.status !== 'completed' && a.status !== 'done' && a.status !== 'scheduled'
+  ).length;
+  const scheduledCount = actions.filter(a => a.status === 'scheduled').length;
+  const completedCount = actions.filter(a => 
+    a.status === 'completed' || a.status === 'done'
+  ).length;
 
   const handleActionClick = (action: ExtractedAction) => {
     setSelectedActionForConfirmation(action);
@@ -141,51 +157,22 @@ export function NextStepsHub() {
     setIsSchedulingModalOpen(true);
   };
 
-  const handleToggleSelection = (actionId: string) => {
-    setSelectedActionIds(prev =>
-      prev.includes(actionId) ? prev.filter(id => id !== actionId) : [...prev, actionId]
-    );
+  const handleComplete = async (action: ExtractedAction) => {
+    await loadActions();
   };
 
-  const handleSelectAll = () => {
-    if (selectedActionIds.length === filteredActions.length) {
-      setSelectedActionIds([]);
-    } else {
-      setSelectedActionIds(filteredActions.map(a => a.id!).filter(Boolean));
-    }
-  };
-
-  const handleBulkSchedule = () => {
-    const selectedActions = actions.filter(a => selectedActionIds.includes(a.id!));
-    if (selectedActions.length > 0) {
-      setActionsToSchedule(selectedActions);
-      setIsSchedulingModalOpen(true);
-      toast({
-        title: "Bulk Scheduling",
-        description: `Preparing to schedule ${selectedActions.length} actions with smart suggestions...`,
-      });
-    }
-  };
-
-  const handleClearSelection = () => {
-    setSelectedActionIds([]);
-    setSelectionMode(false);
-  };
-
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'action': return Target;
-      case 'watch_out': return AlertCircle;
-      case 'depends_on': return Clock;
-      case 'note': return Brain;
-      default: return Target;
-    }
+  const handleLater = (action: ExtractedAction) => {
+    // Move to next action in focus mode
+    toast({
+      title: "No problem!",
+      description: "We'll keep this for later. Moving to the next step.",
+    });
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 p-6">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -194,11 +181,11 @@ export function NextStepsHub() {
             <div className="text-center space-y-4">
               <div className="relative">
                 <div className="w-16 h-16 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
-                <Sparkles className="w-6 h-6 text-primary absolute top-0 right-0 animate-pulse" />
+                <Heart className="w-6 h-6 text-primary absolute top-0 right-0 animate-pulse" />
               </div>
               <div className="space-y-2">
                 <h3 className="text-xl font-semibold">Loading Your Next Steps</h3>
-                <p className="text-muted-foreground">Organizing your empowering journey...</p>
+                <p className="text-muted-foreground">Getting everything ready for you...</p>
               </div>
             </div>
           </motion.div>
@@ -209,142 +196,232 @@ export function NextStepsHub() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-      {/* Header Section */}
+      {/* Simplified Header */}
       <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+        <div className="max-w-4xl mx-auto px-4 py-4">
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center justify-between"
           >
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
-                <Target className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold">Next Steps Hub</h1>
-                <p className="text-muted-foreground">Your empowering actions, organized and ready</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="relative">
-                <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search actions..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-64 border rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent bg-background"
-                />
+            {/* View Mode Toggle */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
+                  <Target className="w-5 h-5 text-primary-foreground" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold">Next Steps</h1>
+                  <p className="text-sm text-muted-foreground">
+                    {language.overwhelmSupport || "One step at a time"}
+                  </p>
+                </div>
               </div>
               
-              <Button
-                variant={selectionMode ? "default" : "outline"}
-                onClick={() => setSelectionMode(!selectionMode)}
-              >
-                <ListChecks className="w-4 h-4 mr-2" />
-                {selectionMode ? "Exit Selection" : "Select Mode"}
-              </Button>
+              {/* View Switcher - Simple */}
+              <div className="flex items-center bg-muted rounded-lg p-1">
+                <Button
+                  variant={viewMode === 'focus' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('focus')}
+                  className="h-8 px-3 gap-1.5"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span className="hidden sm:inline">Focus</span>
+                </Button>
+                <Button
+                  variant={viewMode === 'overview' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('overview')}
+                  className="h-8 px-3 gap-1.5"
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                  <span className="hidden sm:inline">Overview</span>
+                </Button>
+                <Button
+                  variant={viewMode === 'all' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('all')}
+                  className="h-8 px-3 gap-1.5"
+                >
+                  <List className="w-4 h-4" />
+                  <span className="hidden sm:inline">All</span>
+                </Button>
+              </div>
             </div>
+
+            {/* Simple Filter Tabs - Only in All view */}
+            {viewMode === 'all' && (
+              <div className="flex items-center gap-2 bg-muted rounded-lg p-1">
+                <button
+                  onClick={() => setSelectedFilter('pending')}
+                  className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                    selectedFilter === 'pending'
+                      ? 'bg-background shadow-sm text-primary'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Ready to Do
+                  {pendingCount > 0 && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {pendingCount}
+                    </Badge>
+                  )}
+                </button>
+                <button
+                  onClick={() => setSelectedFilter('scheduled')}
+                  className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                    selectedFilter === 'scheduled'
+                      ? 'bg-background shadow-sm text-primary'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  Scheduled
+                  {scheduledCount > 0 && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {scheduledCount}
+                    </Badge>
+                  )}
+                </button>
+                <button
+                  onClick={() => setSelectedFilter('completed')}
+                  className={`flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                    selectedFilter === 'completed'
+                      ? 'bg-background shadow-sm text-primary'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  <CheckCircle2 className="w-4 h-4 inline mr-1" />
+                  Done
+                  {completedCount > 0 && (
+                    <Badge variant="secondary" className="ml-2 text-xs bg-green-100 text-green-700">
+                      {completedCount}
+                    </Badge>
+                  )}
+                </button>
+              </div>
+            )}
           </motion.div>
-
-          {/* Select All Checkbox */}
-          {selectionMode && filteredActions.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="flex items-center gap-2 mt-4 p-3 bg-muted rounded-lg"
-            >
-              <Checkbox
-                checked={selectedActionIds.length === filteredActions.length}
-                onCheckedChange={handleSelectAll}
-              />
-              <span className="text-sm font-medium">
-                Select All ({filteredActions.length} actions)
-              </span>
-            </motion.div>
-          )}
-
-          {/* Filter Tabs */}
-          <div className="flex items-center space-x-2 mt-4 bg-muted rounded-xl p-1">
-            {[
-              { value: 'all', label: 'All', count: actions.length },
-              { value: 'action', label: 'Actions', count: actions.filter(a => a.category === 'action').length },
-              { value: 'watch_out', label: 'Watch Outs', count: actions.filter(a => a.category === 'watch_out').length },
-              { value: 'depends_on', label: 'Dependencies', count: actions.filter(a => a.category === 'depends_on').length },
-              { value: 'note', label: 'Notes', count: actions.filter(a => a.category === 'note').length }
-            ].map((filter) => (
-              <button
-                key={filter.value}
-                onClick={() => setSelectedFilter(filter.value as any)}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  selectedFilter === filter.value
-                    ? 'bg-background shadow-sm text-primary'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                {filter.label} {filter.count > 0 && `(${filter.count})`}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {filteredActions.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-20"
-          >
-            <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-              <Target className="w-12 h-12 text-primary" />
-            </div>
-            <h3 className="text-2xl font-bold mb-2">Your Action Journey Begins Here</h3>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
-              {searchQuery || selectedFilter !== 'all' 
-                ? "No actions match your filters. Adjust your search to find what you're looking for." 
-                : "Start by recording a conversation to automatically discover action items and schedule them at your best times."
-              }
-            </p>
-            {(!searchQuery && selectedFilter === 'all') && (
+      <div className="pb-20">
+        <AnimatePresence mode="wait">
+          {actions.length === 0 ? (
+            <motion.div 
+              key="empty"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="text-center py-20 px-4"
+            >
+              <div className="w-24 h-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="w-12 h-12 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold mb-2">
+                {language.warmWelcome || "Ready to Get Started?"}
+              </h3>
+              <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                Record a conversation to discover action items, or add your first step manually.
+              </p>
               <Button 
                 onClick={() => navigate('/memory-bridge')}
                 className="px-8 py-3"
               >
                 <Plus className="w-5 h-5 mr-2" />
-                Start Your First Recording
+                Start Recording
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
-            )}
-          </motion.div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatePresence>
-              {filteredActions.map((action, index) => (
+            </motion.div>
+          ) : viewMode === 'focus' ? (
+            <motion.div
+              key="focus"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <FocusModeView
+                actions={actions}
+                onComplete={handleComplete}
+                onLater={handleLater}
+                onViewAll={() => setViewMode('all')}
+                onSchedule={handleSchedule}
+                personaType={personaMode}
+              />
+            </motion.div>
+          ) : viewMode === 'overview' ? (
+            <motion.div
+              key="overview"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <PriorityOverview
+                actions={actions}
+                onActionClick={handleActionClick}
+                onSchedule={handleSchedule}
+                onComplete={handleComplete}
+                personaType={personaMode}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="all"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="max-w-3xl mx-auto px-4 py-6"
+            >
+              {/* Progress acknowledgment */}
+              {completedCount > 0 && selectedFilter === 'pending' && (
                 <motion.div
-                  key={action.id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ delay: index * 0.05 }}
+                  className="mb-6 p-4 bg-green-50 dark:bg-green-950/30 rounded-xl border border-green-200 dark:border-green-900"
                 >
-                  <EnhancedActionCard
-                    action={action}
-                    onClick={() => handleActionClick(action)}
-                    onSchedule={handleSchedule}
-                    showCheckbox={selectionMode}
-                    isSelected={selectedActionIds.includes(action.id!)}
-                    onToggleSelect={() => handleToggleSelection(action.id!)}
-                  />
+                  <p className="text-sm text-green-700 dark:text-green-300 flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span>
+                      {language.progressAck || `You've completed ${completedCount} steps. Amazing progress!`}
+                    </span>
+                  </p>
                 </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-        )}
+              )}
+
+              {/* Simplified Cards */}
+              <div className="space-y-3">
+                {filteredActions.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-muted-foreground">
+                      {selectedFilter === 'completed' 
+                        ? "Complete your first step to see it here! 🎯"
+                        : selectedFilter === 'scheduled'
+                        ? "Schedule a step to see it here 📅"
+                        : "All caught up! Nothing pending right now 🎉"
+                      }
+                    </p>
+                  </div>
+                ) : (
+                  filteredActions.map((action, index) => (
+                    <motion.div
+                      key={action.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                    >
+                      <SimplifiedActionCard
+                        action={action}
+                        onSchedule={handleSchedule}
+                        onComplete={handleComplete}
+                        onViewDetails={handleActionClick}
+                      />
+                    </motion.div>
+                  ))
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Modals and Panels */}
@@ -357,12 +434,11 @@ export function NextStepsHub() {
         actions={actionsToSchedule}
         onScheduleComplete={async (scheduledActions) => {
           toast({
-            title: "Actions Scheduled!",
-            description: `Successfully scheduled ${scheduledActions.length} actions.`,
+            title: "Scheduled! 📅",
+            description: `${scheduledActions.length} ${scheduledActions.length === 1 ? 'step' : 'steps'} scheduled.`,
           });
           setIsSchedulingModalOpen(false);
           setActionsToSchedule([]);
-          setSelectedActionIds([]);
           await loadActions();
         }}
       />
@@ -378,13 +454,6 @@ export function NextStepsHub() {
         onModify={handleModifyAction}
         onReject={handleRejectAction}
         onSchedule={handleSchedule}
-      />
-
-      <BulkActionBar
-        selectedCount={selectedActionIds.length}
-        onScheduleAll={handleBulkSchedule}
-        onClearSelection={handleClearSelection}
-        isProcessing={isProcessing}
       />
     </div>
   );
