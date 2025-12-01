@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { PriorityProvider } from "@/contexts/PriorityContext";
 import { FirstTimeUserExperience } from "@/components/onboarding/FirstTimeUserExperience";
+import { DailyWelcomeOverlay } from "@/components/welcome/DailyWelcomeOverlay";
 import { useSessionTracking } from "@/hooks/useSessionTracking";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
@@ -119,6 +120,7 @@ const Dashboard = () => {
         <DailyActionsProvider>
           <MainLayout>
             <FirstTimeUserExperience showOnMount={location.pathname === '/'} />
+            <DailyWelcomeOverlay />
             {renderContent()}
           </MainLayout>
           <ConnectionMoments />
