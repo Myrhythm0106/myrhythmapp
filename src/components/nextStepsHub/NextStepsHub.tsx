@@ -29,6 +29,9 @@ import { getPersonaLanguage } from '@/utils/personaLanguage';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AuthRequiredMessage } from '@/components/ui/AuthRequiredMessage';
 import { toast } from '@/hooks/use-toast';
+import { PersistentNavHeader } from '@/components/navigation/PersistentNavHeader';
+import { QuickEscapeButton } from '@/components/navigation/QuickEscapeButton';
+import { MobileBottomNav } from '@/components/navigation/MobileBottomNav';
 
 type ViewMode = 'focus' | 'overview' | 'all';
 
@@ -195,9 +198,12 @@ export function NextStepsHub() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted/20 pb-20">
+      {/* Persistent Navigation Header */}
+      <PersistentNavHeader />
+      
       {/* Simplified Header */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-lg border-b">
+      <div className="sticky top-[57px] z-10 bg-background/80 backdrop-blur-lg border-b">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <motion.div 
             initial={{ opacity: 0, y: -10 }}
@@ -455,6 +461,10 @@ export function NextStepsHub() {
         onReject={handleRejectAction}
         onSchedule={handleSchedule}
       />
+      
+      {/* Mobile Navigation */}
+      <QuickEscapeButton />
+      <MobileBottomNav />
     </div>
   );
 }

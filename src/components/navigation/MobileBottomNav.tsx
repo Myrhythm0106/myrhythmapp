@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Home, Brain, Calendar, User } from 'lucide-react';
+import { Home, Brain, Calendar, User, Target } from 'lucide-react';
 import { useNav } from './NavContext';
 import { haptics } from '@/utils/haptics/hapticFeedback';
 import { cn } from '@/lib/utils';
@@ -26,6 +26,12 @@ const navItems: NavItem[] = [
     color: 'teal', // Cognitive clarity
   },
   {
+    icon: Target,
+    label: 'Steps',
+    path: '/next-steps',
+    color: 'green', // Progress & growth
+  },
+  {
     icon: Calendar,
     label: 'Calendar',
     path: '/calendar',
@@ -47,6 +53,10 @@ const colorClasses = {
   teal: {
     active: 'bg-clarity-teal-500 text-white',
     inactive: 'text-gray-600 hover:text-clarity-teal-600',
+  },
+  green: {
+    active: 'bg-brain-health-500 text-white',
+    inactive: 'text-gray-600 hover:text-brain-health-600',
   },
   blue: {
     active: 'bg-neural-blue-500 text-white',
