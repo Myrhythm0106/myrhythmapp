@@ -775,37 +775,61 @@ export type Database = {
       }
       event_reminders: {
         Row: {
+          benefit_message: string | null
+          confirmation_received: boolean | null
           created_at: string
+          escalation_level: number | null
           event_id: string
           id: string
           is_active: boolean
+          location_context: string | null
+          original_motivation: string | null
+          pre_reminder_sent_at: string | null
           reminder_methods: string[] | null
           reminder_time: string
           sent_at: string | null
+          success_visual_url: string | null
           updated_at: string
           user_id: string
+          who_benefits: string | null
         }
         Insert: {
+          benefit_message?: string | null
+          confirmation_received?: boolean | null
           created_at?: string
+          escalation_level?: number | null
           event_id: string
           id?: string
           is_active?: boolean
+          location_context?: string | null
+          original_motivation?: string | null
+          pre_reminder_sent_at?: string | null
           reminder_methods?: string[] | null
           reminder_time: string
           sent_at?: string | null
+          success_visual_url?: string | null
           updated_at?: string
           user_id: string
+          who_benefits?: string | null
         }
         Update: {
+          benefit_message?: string | null
+          confirmation_received?: boolean | null
           created_at?: string
+          escalation_level?: number | null
           event_id?: string
           id?: string
           is_active?: boolean
+          location_context?: string | null
+          original_motivation?: string | null
+          pre_reminder_sent_at?: string | null
           reminder_methods?: string[] | null
           reminder_time?: string
           sent_at?: string | null
+          success_visual_url?: string | null
           updated_at?: string
           user_id?: string
+          who_benefits?: string | null
         }
         Relationships: [
           {
@@ -1782,6 +1806,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      reminder_streaks: {
+        Row: {
+          created_at: string | null
+          current_streak: number | null
+          id: string
+          last_completed_at: string | null
+          longest_streak: number | null
+          reminder_type: string
+          total_completions: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_streak?: number | null
+          id?: string
+          last_completed_at?: string | null
+          longest_streak?: number | null
+          reminder_type?: string
+          total_completions?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_streak?: number | null
+          id?: string
+          last_completed_at?: string | null
+          longest_streak?: number | null
+          reminder_type?: string
+          total_completions?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       security_events: {
         Row: {
