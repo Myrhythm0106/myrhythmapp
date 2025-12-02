@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge";
 import { EmpowermentProvider } from '@/contexts/EmpowermentContext';
 import { EmpowermentNugget } from '@/components/empowerment/EmpowermentNugget';
 import { GlobalQuickActions } from './GlobalQuickActions';
+import { EmpowermentSignature } from '@/components/shared/EmpowermentSignature';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -194,7 +195,7 @@ export function MainLayout({ children }: MainLayoutProps) {
         </header>
         
           {/* Content */}
-          <div className="flex-1 overflow-auto p-6">
+          <div className="flex-1 overflow-auto p-6 pb-16">
             {children}
           </div>
         </main>
@@ -202,6 +203,9 @@ export function MainLayout({ children }: MainLayoutProps) {
       
       {/* Global Quick Actions - Available on all pages */}
       <GlobalQuickActions />
+      
+      {/* Growth Mindset Signature - Visible on every authenticated page */}
+      <EmpowermentSignature />
     </div>
     </EmpowermentProvider>
   );
