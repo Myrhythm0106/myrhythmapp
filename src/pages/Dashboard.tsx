@@ -98,12 +98,15 @@ const Dashboard = () => {
                 return <DecisionsPage />;
               case '/':
               case '/dashboard':
+                // BrainFriendlyDashboard is the default for all users
+                return <BrainFriendlyDashboard />;
+              case '/dashboard-legacy':
+                // Legacy dashboard access for specific user types
                 if (profile?.user_type === 'brain-injury') {
                   return <BrainInjuryDashboard userName={profile?.name} />;
                 } else if (profile?.user_type === 'caregiver') {
                   return <CaregiverDashboard userName={profile?.name} />;
                 }
-                // Show unified Today's View as default
                 return <TodaysViewDashboard />;
               default:
                 return <DashboardContent />;

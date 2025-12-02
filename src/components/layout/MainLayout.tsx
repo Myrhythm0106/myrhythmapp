@@ -17,6 +17,7 @@ import { useUserData } from "@/hooks/use-user-data";
 import { Badge } from "@/components/ui/badge";
 import { EmpowermentProvider } from '@/contexts/EmpowermentContext';
 import { EmpowermentNugget } from '@/components/empowerment/EmpowermentNugget';
+import { GlobalQuickActions } from './GlobalQuickActions';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -198,6 +199,9 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
         </main>
       </div>
+      
+      {/* Global Quick Actions - Available on all pages */}
+      <GlobalQuickActions />
     </div>
     </EmpowermentProvider>
   );
