@@ -11,6 +11,8 @@ import { PromiseScore } from "@/components/memoryBridge/PromiseScore";
 import { PersistentNavHeader } from "@/components/navigation/PersistentNavHeader";
 import { QuickEscapeButton } from "@/components/navigation/QuickEscapeButton";
 import { MobileBottomNav } from "@/components/navigation/MobileBottomNav";
+import { AppSignature } from "@/components/shared/AppSignature";
+import { BrainBoostWidget } from "@/components/memoryBridge/BrainBoostWidget";
 import { Mic, Sparkles, FileAudio, Target, Calendar, TrendingUp, CheckCircle2, ArrowRight, Brain, Zap, Heart, Users, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -158,6 +160,9 @@ export default function MemoryBridgeSimple() {
                 </CardContent>
               </Card>
             </motion.div>
+
+            {/* App Signature */}
+            <AppSignature className="mt-8" />
           </motion.div>
         </div>
         <QuickEscapeButton />
@@ -200,6 +205,9 @@ export default function MemoryBridgeSimple() {
             >
               <RecordingsTab onProcessComplete={handleProcessComplete} />
             </motion.div>
+
+            {/* App Signature */}
+            <AppSignature className="mt-8" />
           </div>
         </div>
 
@@ -365,17 +373,17 @@ export default function MemoryBridgeSimple() {
             </Card>
           </motion.div>
 
-          {/* Motivational Footer */}
+          {/* Daily Brain Boost */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
-            className="text-center py-6"
           >
-            <p className="text-sm text-muted-foreground italic">
-              "Every promise you keep builds trust. You're building something amazing." 💪
-            </p>
+            <BrainBoostWidget />
           </motion.div>
+
+          {/* App Signature */}
+          <AppSignature />
         </div>
       </div>
 
