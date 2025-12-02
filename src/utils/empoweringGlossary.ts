@@ -174,6 +174,36 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
   "Claim Your First Victory": {
     empowering: "Claim Your First Victory 🏆",
     plain: "Completing your first scheduled action"
+  },
+  
+  // Recovery Journey Terms
+  "My Path Forward": {
+    empowering: "My Path Forward 🛤️",
+    plain: "Your recovery plan created with your support team"
+  },
+  "My Journey So Far": {
+    empowering: "My Journey So Far ✨",
+    plain: "Your recovery progress and achievements"
+  },
+  "Next Steps": {
+    empowering: "Next Steps",
+    plain: "Upcoming actions from your recovery plan"
+  },
+  "Milestones Reached": {
+    empowering: "Milestones Reached 🏆",
+    plain: "Goals you've achieved in your recovery"
+  },
+  "Team Actions": {
+    empowering: "Team Actions",
+    plain: "Tasks created together with your support team or rehab staff"
+  },
+  "Gentle Reminder": {
+    empowering: "Gentle Reminder 💙",
+    plain: "A kind nudge to help you stay on track"
+  },
+  "Check-In": {
+    empowering: "Check-In",
+    plain: "A moment to see how you're doing"
   }
 };
 
@@ -199,7 +229,8 @@ export const getTermsByCategory = (category: string): TermDefinition[] => {
     encouragement: ["You're Unstoppable", "Keep Building", "Every Step Counts"],
     empty: ["Power Hub Awaits", "Fresh Start"],
     calendar: ["Time Blocked", "Priority Flow"],
-    recording: ["Memory Bridge", "Action Extraction"]
+    recording: ["Memory Bridge", "Action Extraction"],
+    recovery: ["My Path Forward", "My Journey So Far", "Next Steps", "Milestones Reached", "Team Actions", "Gentle Reminder", "Check-In"]
   };
   
   const terms = categoryMap[category] || [];
