@@ -275,10 +275,64 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     }
   }, [transcript, isTranscribing, extractACTs]);
 
-  // Real-time progress monitoring
+  // Handle completion logic
+  const handleProcessingComplete = useCallback(async (meetingId: string) => {
+    setProcessingStage('completed');
+    
+    // Fetch actions count
+    const { count } = await supabase
+      .from('extracted_actions')
+      .select('id', { count: 'exact' })
+      .eq('meeting_recording_id', meetingId);
+    
+    const foundCount = count || 0;
+    setActionsCount(foundCount);
+    setShowCelebration(true);
+    onComplete();
+  }, [onComplete]);
+
+  // Real-time progress monitoring with polling fallback
   useEffect(() => {
     if (!lastMeetingId) return;
+    
+    let pollInterval: NodeJS.Timeout | null = null;
+    let hasCompleted = false;
 
+    // Polling function as backup
+    const pollStatus = async () => {
+      if (hasCompleted) return;
+      
+      const { data, error } = await supabase
+        .from('meeting_recordings')
+        .select('processing_status, processing_error')
+        .eq('id', lastMeetingId)
+        .maybeSingle();
+      
+      if (error || !data) return;
+      
+      console.log('🔄 Poll status:', data.processing_status);
+      
+      if (data.processing_status === 'transcribing') {
+        setProcessingStage('transcribing');
+      } else if (data.processing_status === 'extracting_actions') {
+        setProcessingStage('extracting');
+      } else if (data.processing_status === 'completed') {
+        hasCompleted = true;
+        if (pollInterval) clearInterval(pollInterval);
+        await handleProcessingComplete(lastMeetingId);
+      } else if (data.processing_status === 'error') {
+        hasCompleted = true;
+        if (pollInterval) clearInterval(pollInterval);
+        setProcessingStage('error');
+        setProcessingError(data.processing_error || 'Processing failed');
+      }
+    };
+
+    // Start polling every 3 seconds as backup
+    pollStatus(); // Check immediately
+    pollInterval = setInterval(pollStatus, 3000);
+
+    // Also set up realtime subscription
     const channel = supabase
       .channel(`meeting-progress-${lastMeetingId}`)
       .on(
@@ -289,29 +343,23 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
           table: 'meeting_recordings',
           filter: `id=eq.${lastMeetingId}`
         },
-        (payload) => {
+        async (payload) => {
+          if (hasCompleted) return;
+          
           const status = payload.new.processing_status;
-          console.log('📊 Processing status update:', status);
+          console.log('📊 Realtime status update:', status);
 
           if (status === 'transcribing') {
             setProcessingStage('transcribing');
           } else if (status === 'extracting_actions') {
             setProcessingStage('extracting');
           } else if (status === 'completed') {
-            setProcessingStage('completed');
-            
-            // Fetch actions count
-            supabase
-              .from('extracted_actions')
-              .select('id', { count: 'exact' })
-              .eq('meeting_recording_id', lastMeetingId)
-              .then(({ count }) => {
-                const foundCount = count || 0;
-                setActionsCount(foundCount);
-                setShowCelebration(true);
-                onComplete();
-              });
+            hasCompleted = true;
+            if (pollInterval) clearInterval(pollInterval);
+            await handleProcessingComplete(lastMeetingId);
           } else if (status === 'error') {
+            hasCompleted = true;
+            if (pollInterval) clearInterval(pollInterval);
             setProcessingStage('error');
             setProcessingError(payload.new.processing_error || 'Processing failed');
           }
@@ -320,9 +368,10 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
       .subscribe();
 
     return () => {
+      if (pollInterval) clearInterval(pollInterval);
       supabase.removeChannel(channel);
     };
-  }, [lastMeetingId, onComplete]);
+  }, [lastMeetingId, handleProcessingComplete]);
 
   // Processing View
   if (processingStage !== 'idle' && !isVoiceRecording) {
