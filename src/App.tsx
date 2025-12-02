@@ -96,6 +96,22 @@ import StudentWelcomePage from "./pages/StudentWelcomePage";
 import ExecutiveWelcomePage from "./pages/ExecutiveWelcomePage";
 import PostRecoveryWelcomePage from "./pages/PostRecoveryWelcomePage";
 
+// V1 Launch Mode Pages
+import {
+  LaunchLanding,
+  LaunchAssessment,
+  LaunchWelcome,
+  LaunchDashboard,
+  LaunchCalendar,
+  LaunchMemoryBridge,
+  LaunchBrainGames,
+  LaunchGratitude,
+  LaunchSupportCircle,
+  LaunchFeatureStore,
+  LaunchProfile,
+} from "./pages/launch";
+import { LaunchModeProvider } from "./hooks/useLaunchMode";
+
 const queryClient = new QueryClient();
 
 // Network status component
@@ -286,6 +302,19 @@ function App() {
                         </ProtectedRoute>
                       } />
                        <Route path="/congrats" element={<CongratsPage />} />
+                       
+                       {/* V1 Launch Mode Routes */}
+                       <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
+                       <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchAssessment /></LaunchModeProvider>} />
+                       <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchWelcome /></LaunchModeProvider>} />
+                       <Route path="/launch/home" element={<LaunchModeProvider><LaunchDashboard /></LaunchModeProvider>} />
+                       <Route path="/launch/calendar" element={<LaunchModeProvider><LaunchCalendar /></LaunchModeProvider>} />
+                       <Route path="/launch/memory" element={<LaunchModeProvider><LaunchMemoryBridge /></LaunchModeProvider>} />
+                       <Route path="/launch/games" element={<LaunchModeProvider><LaunchBrainGames /></LaunchModeProvider>} />
+                       <Route path="/launch/gratitude" element={<LaunchModeProvider><LaunchGratitude /></LaunchModeProvider>} />
+                       <Route path="/launch/support" element={<LaunchModeProvider><LaunchSupportCircle /></LaunchModeProvider>} />
+                       <Route path="/launch/store" element={<LaunchModeProvider><LaunchFeatureStore /></LaunchModeProvider>} />
+                       <Route path="/launch/profile" element={<LaunchModeProvider><LaunchProfile /></LaunchModeProvider>} />
                    </Routes>
                         </Suspense>
                         <AuthenticatedBottomNav />
