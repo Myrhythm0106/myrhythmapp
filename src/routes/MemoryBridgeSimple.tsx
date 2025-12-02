@@ -13,6 +13,7 @@ import { QuickEscapeButton } from "@/components/navigation/QuickEscapeButton";
 import { MobileBottomNav } from "@/components/navigation/MobileBottomNav";
 import { AppSignature } from "@/components/shared/AppSignature";
 import { BrainBoostWidget } from "@/components/memoryBridge/BrainBoostWidget";
+import { BrainHealthReminderWidget } from "@/components/reminders/BrainHealthReminderWidget";
 import { Mic, Sparkles, FileAudio, Target, Calendar, TrendingUp, CheckCircle2, ArrowRight, Brain, Zap, Heart, Users, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -371,6 +372,15 @@ export default function MemoryBridgeSimple() {
                 </div>
               </CardContent>
             </Card>
+          </motion.div>
+
+          {/* Brain-Health Reminders */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.45 }}
+          >
+            <BrainHealthReminderWidget showStreak={true} maxReminders={3} />
           </motion.div>
 
           {/* Daily Brain Boost */}
