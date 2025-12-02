@@ -1,7 +1,7 @@
-
 import { LucideIcon } from "lucide-react";
 
-export type PlanType = "basic" | "premium" | "family" | "preview" | "starter" | "stretch" | "leap";
+// Simplified to single tier
+export type PlanType = "free" | "premium";
 
 export interface Plan {
   id: PlanType;
@@ -22,5 +22,11 @@ export interface Plan {
 
 export interface PlanStepProps {
   onComplete: (plan: PlanType, billingPeriod?: 'monthly' | 'annual') => void;
-  selectedPlan?: PlanType;
+  selectedPlan?: PlanType | null;
+}
+
+export interface PricingDisplayProps {
+  isFoundingMember: boolean;
+  isAnnual: boolean;
+  showSavings?: boolean;
 }

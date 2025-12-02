@@ -84,6 +84,7 @@ import { UserGuideTimeline } from "./components/mvp/UserGuideTimeline";
 import VisionPage from "./pages/VisionPage";
 import ColorSystemBible from "./pages/ColorSystemBible";
 import FirstTimePage from "./pages/FirstTimePage";
+import WhatsNew from "./pages/WhatsNew";
 import { SmartReminderToast } from "./components/notifications/SmartReminderToast";
 import BrainInjuryWelcomePage from "./pages/BrainInjuryWelcomePage";
 import MemoryFirstWelcomePage from "./pages/MemoryFirstWelcomePage";
@@ -155,6 +156,7 @@ function App() {
                      <Route path="/mvp/welcome-congrats" element={<ProtectedRoute requireAuth={false}><WelcomeCongratsPage /></ProtectedRoute>} />
                      <Route path="/mvp/user-guide" element={<ProtectedRoute requireAuth={false}><UserGuideTimeline /></ProtectedRoute>} />
                      <Route path="/design/color-system" element={<ColorSystemBible />} />
+                     <Route path="/whats-new" element={<ProtectedRoute requireAuth={false}><WhatsNew /></ProtectedRoute>} />
                        
                        {/* Help Routes */}
                     <Route path="/help" element={<ProtectedRoute requireAuth={false}><Help /></ProtectedRoute>} />
