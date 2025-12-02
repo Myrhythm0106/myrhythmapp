@@ -379,7 +379,9 @@ serve(async (req) => {
         .from('meeting_recordings')
         .update({ 
           processing_status: 'completed',
-          processing_completed_at: new Date().toISOString()
+          processing_completed_at: new Date().toISOString(),
+          is_active: false,
+          ended_at: new Date().toISOString()
         })
         .eq('id', meetingId);
     } else {
@@ -390,7 +392,9 @@ serve(async (req) => {
         .from('meeting_recordings')
         .update({ 
           processing_status: 'completed',
-          processing_completed_at: new Date().toISOString()
+          processing_completed_at: new Date().toISOString(),
+          is_active: false,
+          ended_at: new Date().toISOString()
         })
         .eq('id', meetingId);
     }
