@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
+import { EmpoweringTerm } from '@/components/ui/EmpoweringTerm';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
