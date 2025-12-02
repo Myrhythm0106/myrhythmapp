@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle, Brain } from 'lucide-react';
+import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle, Brain, Sparkles, CheckCircle2, RotateCcw } from 'lucide-react';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -12,8 +12,11 @@ import { useRecordingLimits } from '@/hooks/memoryBridge/useRecordingLimits';
 import { useRealtimeTranscription } from '@/hooks/memoryBridge/useRealtimeTranscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
 import { DailyLimitReachedModal } from './DailyLimitReachedModal';
+import { EnhancedProcessingProgress, ProcessingStage } from './EnhancedProcessingProgress';
+import { RecordingCelebration } from './RecordingCelebration';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { motion } from 'framer-motion';
 
 interface MemoryBridgeRecorderProps {
   open: boolean;
@@ -21,6 +24,9 @@ interface MemoryBridgeRecorderProps {
   meetingData: any;
   onComplete: () => void;
 }
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY_MS = 2000;
 
 const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: MemoryBridgeRecorderProps) => {
   const { startMeetingRecording, stopMeetingRecording, isRecording, isProcessing, currentMeeting } = useMemoryBridge();
@@ -36,11 +42,18 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   } = useRecordingLimits();
   const { transcript, isTranscribing, startTranscription, stopTranscription, resetTranscript } = useRealtimeTranscription();
   const { acts, isExtracting, extractACTs, clearACTs } = useRealtimeACTs(currentMeeting?.id);
+  
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [showLimitWarning, setShowLimitWarning] = useState(false);
   const [showDailyLimitModal, setShowDailyLimitModal] = useState(false);
   const [showLiveACTs, setShowLiveACTs] = useState(false);
-  const [processingStage, setProcessingStage] = useState<'idle' | 'transcribing' | 'extracting' | 'completed' | 'error'>('idle');
+  const [processingStage, setProcessingStage] = useState<ProcessingStage>('idle');
+  const [retryCount, setRetryCount] = useState(0);
+  const [lastMeetingId, setLastMeetingId] = useState<string | null>(null);
+  const [lastVoiceRecordingPath, setLastVoiceRecordingPath] = useState<string | null>(null);
+  const [actionsCount, setActionsCount] = useState(0);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [processingError, setProcessingError] = useState<string | null>(null);
 
   // Get daily and per-recording limits
   const remainingDailyMinutes = getRemainingDailyTime();
@@ -52,7 +65,7 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     ? Math.min(remainingDailyMinutes === -1 ? 30 : remainingDailyMinutes, 30)
     : (subscription?.plan_type === 'premium' ? 180 : 30);
   
-  const maxDuration = maxDurationMinutes * 60; // Convert to seconds
+  const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
@@ -73,7 +86,6 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   }, [isOverLimit, isVoiceRecording]);
 
   const handleStart = useCallback(async () => {
-    // Check daily limit before starting
     if (hasReachedDailyLimit) {
       setShowDailyLimitModal(true);
       return;
@@ -87,8 +99,10 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     const success = await startRecording();
     if (success) {
       console.log('Voice recording started successfully');
+      setProcessingStage('idle');
+      setProcessingError(null);
+      setRetryCount(0);
       
-      // Try to start realtime transcription, but don't block if it fails
       try {
         await startTranscription();
         setShowLiveACTs(true);
@@ -118,37 +132,52 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     }
   }, [stopRecording, stopTranscription]);
 
-  const handleSave = useCallback(async () => {
-    if (!audioBlob || !meetingData) return;
-
+  // Process with retry logic
+  const triggerProcessing = useCallback(async (filePath: string, meetingId: string, attempt: number = 1): Promise<boolean> => {
     try {
-      // Save the voice recording without processing
-      const voiceRecording = await saveRecording(
-        audioBlob,
-        meetingData.meeting_title || meetingData.title,
-        'meeting',
-        `Meeting with ${meetingData.participants?.map((p: any) => p.name).join(', ') || 'participants'}`
-      );
+      console.log(`🔄 Processing attempt ${attempt}/${MAX_RETRIES} for meeting ${meetingId}`);
+      
+      const { data, error } = await supabase.functions.invoke('process-meeting-audio', {
+        body: {
+          filePath: filePath,
+          meetingId: meetingId,
+          meetingData: {
+            title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
+            type: 'informal',
+            participants: meetingData.participants || [],
+            context: meetingData.context || ''
+          }
+        }
+      });
 
-      if (voiceRecording) {
-        toast.success('Recording saved successfully!');
-        onComplete();
-        onClose();
+      if (error) {
+        throw new Error(error.message || 'Processing failed');
       }
-    } catch (error) {
-      console.error('Error saving recording:', error);
-      toast.error('Failed to save recording');
+
+      console.log('✅ Processing initiated successfully:', data);
+      return true;
+    } catch (error: any) {
+      console.error(`❌ Processing attempt ${attempt} failed:`, error);
+      
+      if (attempt < MAX_RETRIES) {
+        console.log(`⏳ Retrying in ${RETRY_DELAY_MS}ms...`);
+        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS * attempt));
+        return triggerProcessing(filePath, meetingId, attempt + 1);
+      }
+      
+      throw error;
     }
-  }, [audioBlob, meetingData, saveRecording, onComplete, onClose]);
+  }, [meetingData]);
 
   const handleSaveAndProcess = useCallback(async (audioBlob?: Blob) => {
-    const blobToProcess = audioBlob || audioBlob;
+    const blobToProcess = audioBlob;
     if (!blobToProcess || !meetingData) return;
 
     try {
-      toast.info('📼 Saving recording instantly...', { duration: 2000 });
+      setProcessingStage('saving');
+      toast.info('📼 Saving your recording...', { duration: 2000 });
       
-      // First save the voice recording
+      // Save the voice recording
       const voiceRecording = await saveRecording(
         blobToProcess,
         meetingData.meeting_title || meetingData.title,
@@ -156,50 +185,69 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
         `Meeting with ${meetingData.participants?.map((p: any) => p.name).join(', ') || 'participants'}`
       );
 
-      if (voiceRecording) {
-        // Start the meeting recording to get a meeting ID
-        const meetingRecord = await startMeetingRecording({
-          title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
-          participants: meetingData.participants || [],
-          meetingType: 'informal'
-        }, voiceRecording.id);
-
-        if (meetingRecord) {
-          toast.success('✅ Recording saved! Processing in background...');
-          setProcessingStage('transcribing');
-          
-          // Trigger background processing using stored file (fast path)
-          try {
-            // Fire and forget - don't await
-            supabase.functions.invoke('process-meeting-audio', {
-              body: {
-                filePath: voiceRecording.file_path,
-                meetingId: meetingRecord.id,
-                meetingData: {
-                  title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
-                  type: 'informal',
-                  participants: meetingData.participants || [],
-                  context: meetingData.context || '',
-                  recording_id: voiceRecording.id
-                }
-              }
-            });
-
-            toast.info('🎤 Transcribing audio in background...', { duration: 3000 });
-          } catch (processingError) {
-            console.warn('Processing queued for later:', processingError);
-          }
-          
-          onComplete();
-          onClose();
-        }
+      if (!voiceRecording) {
+        throw new Error('Failed to save voice recording');
       }
-    } catch (error) {
+
+      // Start the meeting recording
+      const meetingRecord = await startMeetingRecording({
+        title: meetingData.meeting_title || meetingData.title || 'Memory Bridge Recording',
+        participants: meetingData.participants || [],
+        meetingType: 'informal'
+      }, voiceRecording.id);
+
+      if (!meetingRecord) {
+        throw new Error('Failed to create meeting record');
+      }
+
+      setLastMeetingId(meetingRecord.id);
+      setLastVoiceRecordingPath(voiceRecording.file_path);
+      
+      toast.success('✅ Recording saved!', { duration: 2000 });
+      setProcessingStage('transcribing');
+      
+      // Trigger processing with proper error handling and retry
+      try {
+        await triggerProcessing(voiceRecording.file_path, meetingRecord.id);
+        toast.info('🎤 Transcribing your conversation...', { duration: 5000 });
+      } catch (processingError: any) {
+        console.error('❌ All processing attempts failed:', processingError);
+        setProcessingStage('error');
+        setProcessingError(processingError.message || 'Processing failed after multiple attempts');
+        toast.error('Processing failed. You can retry below.', {
+          description: 'Your recording is saved safely.',
+          duration: 8000
+        });
+        return;
+      }
+      
+    } catch (error: any) {
       console.error('Error saving recording:', error);
-      toast.error('Failed to save recording. Please try again.');
       setProcessingStage('error');
+      setProcessingError(error.message || 'Failed to save recording');
+      toast.error('Failed to save recording. Please try again.');
     }
-  }, [meetingData, saveRecording, startMeetingRecording, onComplete, onClose]);
+  }, [meetingData, saveRecording, startMeetingRecording, triggerProcessing]);
+
+  const handleRetryProcessing = useCallback(async () => {
+    if (!lastVoiceRecordingPath || !lastMeetingId) {
+      toast.error('No recording to retry');
+      return;
+    }
+
+    setProcessingStage('transcribing');
+    setProcessingError(null);
+    setRetryCount(prev => prev + 1);
+
+    try {
+      await triggerProcessing(lastVoiceRecordingPath, lastMeetingId);
+      toast.info('🔄 Retrying processing...', { duration: 3000 });
+    } catch (error: any) {
+      setProcessingStage('error');
+      setProcessingError(error.message || 'Retry failed');
+      toast.error('Retry failed. Please try again later.');
+    }
+  }, [lastVoiceRecordingPath, lastMeetingId, triggerProcessing]);
 
   const handleDiscard = useCallback(() => {
     setAudioBlob(null);
@@ -207,6 +255,8 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     setShowLiveACTs(false);
     resetTranscript();
     clearACTs();
+    setProcessingStage('idle');
+    setProcessingError(null);
     onClose();
   }, [onClose, stopTranscription, resetTranscript, clearACTs]);
 
@@ -214,23 +264,12 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     return (duration / maxDuration) * 100;
   };
 
-  const getProgressColor = () => {
-    if (!subscription) return 'hsl(var(--destructive))';
-    
-    const limit = subscription.plan_type === 'premium' ? 60 : 5;
-    const minutes = duration / 60;
-    
-    if (minutes >= limit * 0.9) return 'hsl(var(--destructive))';
-    if (minutes >= limit * 0.7) return 'hsl(var(--warning))';
-    return 'hsl(var(--primary))';
-  };
-
   // Extract ACTs every 10 seconds during transcription
   useEffect(() => {
     if (transcript && isTranscribing && transcript.length > 50) {
       const timeoutId = setTimeout(() => {
         extractACTs(transcript);
-      }, 2000); // Debounce by 2 seconds
+      }, 2000);
       
       return () => clearTimeout(timeoutId);
     }
@@ -238,17 +277,17 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
 
   // Real-time progress monitoring
   useEffect(() => {
-    if (!currentMeeting?.id) return;
+    if (!lastMeetingId) return;
 
     const channel = supabase
-      .channel(`meeting-progress-${currentMeeting.id}`)
+      .channel(`meeting-progress-${lastMeetingId}`)
       .on(
         'postgres_changes',
         {
           event: 'UPDATE',
           schema: 'public',
           table: 'meeting_recordings',
-          filter: `id=eq.${currentMeeting.id}`
+          filter: `id=eq.${lastMeetingId}`
         },
         (payload) => {
           const status = payload.new.processing_status;
@@ -256,29 +295,25 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
 
           if (status === 'transcribing') {
             setProcessingStage('transcribing');
-            toast.info('🎤 Transcribing your recording...', { 
-              description: 'This usually takes 30-60 seconds',
-              duration: 10000 
-            });
           } else if (status === 'extracting_actions') {
             setProcessingStage('extracting');
-            toast.info('🎯 Extracting action items...', { 
-              description: 'Looking for commitments and next steps',
-              duration: 10000 
-            });
           } else if (status === 'completed') {
             setProcessingStage('completed');
-            const actionsCount = payload.new.actions_count || 0;
-            toast.success(`✅ Found ${actionsCount} action${actionsCount !== 1 ? 's' : ''} ready to review!`, {
-              description: 'View them in Next Steps Hub',
-              duration: 8000
-            });
+            
+            // Fetch actions count
+            supabase
+              .from('extracted_actions')
+              .select('id', { count: 'exact' })
+              .eq('meeting_recording_id', lastMeetingId)
+              .then(({ count }) => {
+                const foundCount = count || 0;
+                setActionsCount(foundCount);
+                setShowCelebration(true);
+                onComplete();
+              });
           } else if (status === 'error') {
             setProcessingStage('error');
-            toast.error('❌ Processing failed', {
-              description: payload.new.processing_error || 'Recording is saved, please try again',
-              duration: 8000
-            });
+            setProcessingError(payload.new.processing_error || 'Processing failed');
           }
         }
       )
@@ -287,23 +322,60 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [currentMeeting?.id]);
+  }, [lastMeetingId, onComplete]);
 
-  if (isProcessing) {
+  // Processing View
+  if (processingStage !== 'idle' && !isVoiceRecording) {
     return (
-      <Dialog open={open} onOpenChange={() => {}}>
-        <DialogContent className="sm:max-w-[500px]">
-          <div className="flex flex-col items-center justify-center py-8 space-y-4">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            <div className="text-center">
-              <h3 className="text-lg font-semibold">Processing Meeting...</h3>
-              <p className="text-muted-foreground">
-                Transcribing audio and extracting ACTs
-              </p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <>
+        <Dialog open={open} onOpenChange={processingStage === 'error' ? onClose : undefined}>
+          <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-primary" />
+                Processing Your Recording
+              </DialogTitle>
+            </DialogHeader>
+            
+            <EnhancedProcessingProgress
+              stage={processingStage}
+              actionsCount={actionsCount}
+              errorMessage={processingError || undefined}
+              onRetry={processingStage === 'error' ? handleRetryProcessing : undefined}
+            />
+            
+            {processingStage === 'error' && (
+              <div className="flex gap-2 mt-4">
+                <Button variant="outline" onClick={onClose} className="flex-1">
+                  Close
+                </Button>
+                <Button onClick={handleRetryProcessing} className="flex-1 gap-2">
+                  <RotateCcw className="h-4 w-4" />
+                  Retry ({retryCount}/{MAX_RETRIES})
+                </Button>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+        
+        <RecordingCelebration
+          show={showCelebration}
+          actionsCount={actionsCount}
+          onViewActions={() => {
+            setShowCelebration(false);
+            onClose();
+          }}
+          onRecordAnother={() => {
+            setShowCelebration(false);
+            setProcessingStage('idle');
+            setAudioBlob(null);
+          }}
+          onDismiss={() => {
+            setShowCelebration(false);
+            onClose();
+          }}
+        />
+      </>
     );
   }
 
@@ -312,73 +384,77 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Mic className="h-5 w-5" />
+            <Mic className="h-5 w-5 text-primary" />
             Memory Bridge Recording
           </DialogTitle>
         </DialogHeader>
 
-        <Card>
+        <Card className="border-2 border-primary/20">
           <CardContent className="pt-6">
             {/* Meeting Info */}
-            <div className="mb-6 space-y-2">
-              <h4 className="font-medium">{meetingData?.meeting_title || meetingData?.title}</h4>
+            <motion.div 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 space-y-2"
+            >
+              <h4 className="font-semibold text-lg">{meetingData?.meeting_title || meetingData?.title}</h4>
               {meetingData?.participants && meetingData.participants.length > 0 && (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Users className="h-4 w-4" />
                   {meetingData.participants.map((p: any) => p.name).join(', ')}
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* Daily Usage Info (Free Tier Only) */}
             {tier === 'free' && dailyLimit !== -1 && (
-              <div className="mb-4 p-3 bg-muted/50 rounded-lg">
+              <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium">Daily Recording Time</span>
                   <Badge variant={remainingDailyMinutes <= 5 ? "destructive" : "secondary"}>
-                    {remainingDailyMinutes} min remaining today
+                    {remainingDailyMinutes} min remaining
                   </Badge>
                 </div>
                 <Progress 
                   value={(dailyUsageMinutes / dailyLimit) * 100} 
-                  className="h-1.5"
+                  className="h-2"
                 />
-                {remainingDailyMinutes <= 5 && remainingDailyMinutes > 0 && (
-                  <p className="text-xs text-orange-600 mt-2 flex items-center gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    Running low on daily recording time
-                  </p>
-                )}
               </div>
             )}
 
             {/* Recording Controls */}
-            <div className="space-y-4">
-              {/* Duration and Progress */}
-              <div className="text-center space-y-2">
-                <div className="flex items-center justify-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  <span className="text-2xl font-mono">
+            <div className="space-y-6">
+              {/* Duration Display */}
+              <motion.div 
+                animate={isVoiceRecording ? { scale: [1, 1.02, 1] } : {}}
+                transition={{ duration: 1, repeat: isVoiceRecording ? Infinity : 0 }}
+                className="text-center space-y-2"
+              >
+                <div className="flex items-center justify-center gap-3">
+                  {isVoiceRecording && (
+                    <div className="h-3 w-3 bg-red-500 rounded-full animate-pulse" />
+                  )}
+                  <span className="text-4xl font-mono font-bold">
                     {formatDuration(duration)}
                   </span>
-                  <span className="text-sm text-muted-foreground">
+                  <span className="text-lg text-muted-foreground">
                     / {formatDuration(maxDuration)}
                   </span>
                 </div>
                 
-                <div className="space-y-1">
-                  <Progress 
-                    value={getProgressValue()} 
-                    className="h-2"
-                  />
-                  {isNearLimit && (
-                    <div className="flex items-center justify-center gap-1 text-sm text-orange-600">
-                      <AlertTriangle className="h-3 w-3" />
-                      Approaching duration limit
-                    </div>
-                  )}
-                </div>
-              </div>
+                <Progress value={getProgressValue()} className="h-2" />
+                
+                {isNearLimit && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex items-center justify-center gap-1 text-sm text-orange-600"
+                  >
+                    <AlertTriangle className="h-4 w-4" />
+                    Approaching limit
+                  </motion.div>
+                )}
+              </motion.div>
 
               {/* Control Buttons */}
               {!audioBlob && (
@@ -387,10 +463,10 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
                     <Button 
                       onClick={handleStart} 
                       size="lg" 
-                      className="gap-2"
+                      className="gap-2 bg-gradient-to-r from-primary to-green-600 hover:from-primary/90 hover:to-green-600/90 text-lg px-8 py-6"
                       disabled={hasReachedDailyLimit}
                     >
-                      <Mic className="h-4 w-4" />
+                      <Mic className="h-5 w-5" />
                       {hasReachedDailyLimit ? 'Daily Limit Reached' : 'Start Recording'}
                     </Button>
                   ) : (
@@ -402,7 +478,7 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
                           size="lg"
                           className="gap-2"
                         >
-                          <Pause className="h-4 w-4" />
+                          <Pause className="h-5 w-5" />
                           Pause
                         </Button>
                       ) : (
@@ -412,18 +488,17 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
                           size="lg"
                           className="gap-2"
                         >
-                          <Play className="h-4 w-4" />
+                          <Play className="h-5 w-5" />
                           Continue
                         </Button>
                       )}
                       <Button
                         onClick={handleStop}
-                        variant="destructive"
                         size="lg"
-                        className="gap-2"
+                        className="gap-2 bg-gradient-to-r from-green-600 to-primary"
                       >
-                        <Square className="h-4 w-4" />
-                        Stop
+                        <CheckCircle2 className="h-5 w-5" />
+                        Done Recording
                       </Button>
                     </>
                   )}
@@ -432,74 +507,62 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
 
               {/* Recording Status */}
               {isVoiceRecording && (
-                <div className="text-center">
-                  <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="text-center p-4 bg-red-500/10 rounded-lg border border-red-500/20"
+                >
+                  <div className="flex items-center justify-center gap-3 text-sm">
+                    <div className="flex items-center gap-2 text-red-600 font-medium">
                       <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse" />
-                      <span>Recording...</span>
-                      {isTranscribing && (
-                        <div className="flex items-center gap-1 text-primary">
-                          <div className="h-1.5 w-1.5 bg-primary rounded-full animate-pulse" />
-                          <span className="text-xs">Live ACTs</span>
-                        </div>
-                      )}
+                      Recording in progress...
                     </div>
-                    <div>
-                      {Math.floor(duration / 60)}:{(duration % 60).toString().padStart(2, '0')}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Live SMART ACTs Display */}
-              {showLiveACTs && (
-                <div className="space-y-4">
-                  <div className="border-t pt-4">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="h-2 w-2 bg-primary rounded-full animate-pulse" />
-                      <h3 className="font-medium text-sm">Live SMART ACTs</h3>
-                      {isExtracting && (
-                        <div className="text-xs text-muted-foreground">(Processing...)</div>
-                      )}
-                    </div>
-                    
-                    {acts.length > 0 ? (
-                      <div className="space-y-2 max-h-40 overflow-y-auto">
-                        {acts.map((act, index) => (
-                          <div key={index} className="bg-muted/50 rounded-lg p-2 text-sm">
-                            <div className="font-medium text-primary">{act.action}</div>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              <span className="mr-3">👤 {act.assignee}</span>
-                              <span className="mr-3">📅 {act.deadline}</span>
-                              <span className={`px-1 py-0.5 rounded text-xs ${
-                                act.priority === 'high' ? 'bg-red-100 text-red-700' :
-                                act.priority === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                                'bg-green-100 text-green-700'
-                              }`}>
-                                {act.priority}
-                              </span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="text-xs text-muted-foreground italic">
-                        No actionable items detected yet...
+                    {isTranscribing && (
+                      <div className="flex items-center gap-1 text-primary">
+                        <Sparkles className="h-4 w-4" />
+                        <span className="text-xs">Live transcription active</span>
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               )}
 
-              {/* Auto-processing message */}
-              {audioBlob && !isProcessing && (
-                <div className="text-center space-y-4">
-                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                    <Brain className="h-4 w-4 animate-pulse text-primary" />
-                    Processing your recording into ACTs...
+              {/* Live SMART ACTs Display */}
+              {showLiveACTs && acts.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  className="border-t pt-4"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <Brain className="h-4 w-4 text-primary" />
+                    <h3 className="font-medium text-sm">Live Actions Detected</h3>
+                    <Badge variant="secondary">{acts.length}</Badge>
                   </div>
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
-                </div>
+                  
+                  <div className="space-y-2 max-h-40 overflow-y-auto">
+                    {acts.map((act, index) => (
+                      <motion.div 
+                        key={index}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-primary/5 rounded-lg p-3 text-sm border border-primary/10"
+                      >
+                        <div className="font-medium text-primary">{act.action}</div>
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">
+                          <span>👤 {act.assignee}</span>
+                          <span>📅 {act.deadline}</span>
+                          <Badge variant={
+                            act.priority === 'high' ? 'destructive' :
+                            act.priority === 'medium' ? 'default' : 'secondary'
+                          } className="text-xs">
+                            {act.priority}
+                          </Badge>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
               )}
             </div>
           </CardContent>
