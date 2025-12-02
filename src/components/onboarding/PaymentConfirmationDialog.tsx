@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { PlanType } from "./steps/PlanStep";
+import { PlanType } from "./steps/plan/types";
 
 interface PaymentConfirmationDialogProps {
   open: boolean;
@@ -18,10 +17,11 @@ export function PaymentConfirmationDialog({
   selectedPlan 
 }: PaymentConfirmationDialogProps) {
   const planInfo = {
-    basic: { name: "Basic Plan", price: "$7.99/month", trial: "7 Day Free Trial" },
-    premium: { name: "Premium Plan", price: "$9.99/month" },
-    family: { name: "Family Plan", price: "$19.99/month" }
+    free: { name: "Free Trial", price: "£0", trial: "7 Day Free Trial" },
+    premium: { name: "MyRhythm Premium", price: "£10/month", trial: "7 Day Free Trial" }
   };
+
+  const currentPlan = planInfo[selectedPlan] || planInfo.premium;
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>
@@ -34,11 +34,9 @@ export function PaymentConfirmationDialog({
         </DialogHeader>
         
         <div className="bg-muted p-4 rounded-md my-4">
-          <h3 className="font-medium text-lg">{planInfo[selectedPlan].name}</h3>
+          <h3 className="font-medium text-lg">{currentPlan.name}</h3>
           <p className="text-muted-foreground">
-            {selectedPlan === "basic" 
-              ? `${planInfo.basic.trial} - Your card will be charged ${planInfo.basic.price} after trial ends.` 
-              : `You will be charged ${planInfo[selectedPlan].price} monthly.`}
+            {currentPlan.trial} - Your card will be charged {currentPlan.price} after trial ends.
           </p>
           <p className="text-sm text-muted-foreground mt-2">
             You can cancel anytime from your account settings.
