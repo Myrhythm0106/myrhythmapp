@@ -432,8 +432,8 @@ Return JSON array with these essential fields:
     
     // Determine processing method used (for UI display)
     if (transcript.length > 100) {
-      processingMethod = OPENAI_API_KEY ? 'openai' : 'rule_based';
-      if (processingMethod === 'openai') confidenceScore += 15;
+      processingMethod = LOVABLE_API_KEY ? 'lovable-ai' : 'rule_based';
+      if (processingMethod === 'lovable-ai') confidenceScore += 15;
     }
     
     // Cap at 100

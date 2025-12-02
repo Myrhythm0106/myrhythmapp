@@ -7,10 +7,11 @@ import { useVoiceRecorder } from "@/hooks/useVoiceRecorder";
 import { useMemoryBridge } from "@/hooks/memoryBridge/useMemoryBridge";
 import { RecordingsTab } from "@/components/memoryBridge/RecordingsTab";
 import { MemoryBridgeFloatingButton } from "@/components/memoryBridge/MemoryBridgeFloatingButton";
+import { PromiseScore } from "@/components/memoryBridge/PromiseScore";
 import { PersistentNavHeader } from "@/components/navigation/PersistentNavHeader";
 import { QuickEscapeButton } from "@/components/navigation/QuickEscapeButton";
 import { MobileBottomNav } from "@/components/navigation/MobileBottomNav";
-import { Mic, Sparkles, FileAudio, Target, Calendar, TrendingUp, CheckCircle2, ArrowRight, Brain } from "lucide-react";
+import { Mic, Sparkles, FileAudio, Target, Calendar, TrendingUp, CheckCircle2, ArrowRight, Brain, Zap, Heart, Users, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function MemoryBridgeSimple() {
@@ -25,7 +26,6 @@ export default function MemoryBridgeSimple() {
   }, []);
 
   useEffect(() => {
-    // Determine current state based on data
     const meetingRecordings = recordings.filter(r => r.category === 'meeting');
     const actionItems = extractedActions.filter(a => a.category === 'action');
 
@@ -42,90 +42,123 @@ export default function MemoryBridgeSimple() {
     fetchExtractedActions();
   };
 
-  // Empty State - No recordings yet
+  // Calculate stats
+  const totalActions = extractedActions.filter(a => a.category === 'action').length;
+  const completedActions = extractedActions.filter(a => a.status === 'completed').length;
+  const scheduledActions = extractedActions.filter(a => a.status === 'scheduled').length;
+  const highPriorityActions = extractedActions.filter(a => a.priority_level === 1 && a.category === 'action');
+  
+  // Calculate streak (simplified - in real app, fetch from database)
+  const today = new Date().toDateString();
+  const hasCompletedToday = extractedActions.some(a => 
+    a.status === 'completed' && 
+    new Date(a.completion_date || '').toDateString() === today
+  );
+  const streakDays = hasCompletedToday ? 1 : 0; // Simplified - would need proper tracking
+
+  // Empty State - Beautiful onboarding
   if (currentState === 'empty') {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background pb-20">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-green-500/5 pb-20">
         <PersistentNavHeader />
         <div className="p-4 md:p-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-2xl mx-auto"
-        >
-          {/* Header */}
-          <div className="text-center mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="max-w-2xl mx-auto"
+          >
+            {/* Hero Section */}
+            <div className="text-center mb-10">
+              <motion.div
+                initial={{ scale: 0.5, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+                className="w-28 h-28 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary via-purple-500 to-green-500 flex items-center justify-center shadow-2xl"
+              >
+                <Brain className="h-14 w-14 text-white" />
+              </motion.div>
+              
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-purple-500 to-green-500 bg-clip-text text-transparent mb-4"
+              >
+                Memory Bridge
+              </motion.h1>
+              
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="text-lg text-muted-foreground max-w-md mx-auto"
+              >
+                Your personal assistant that never lets you forget a promise
+              </motion.p>
+            </div>
+
+            {/* Main CTA Card */}
             <motion.div
-              initial={{ scale: 0.5 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
             >
-              <Brain className="h-12 w-12 text-primary-foreground" />
+              <Card className="border-2 border-primary/30 shadow-2xl bg-gradient-to-br from-background to-primary/5 overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-primary/20 to-transparent rounded-bl-full" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-green-500/20 to-transparent rounded-tr-full" />
+                
+                <CardContent className="p-8 text-center space-y-6 relative">
+                  <div className="space-y-3">
+                    <h2 className="text-2xl font-bold text-foreground">
+                      Start Your First Recording
+                    </h2>
+                    <p className="text-muted-foreground">
+                      Conversations → Actions → Scheduled → Done ✓
+                    </p>
+                  </div>
+
+                  <MemoryBridgeFloatingButton className="relative bottom-0 right-0 w-full" />
+
+                  {/* Value Props with Icons */}
+                  <div className="grid gap-4 mt-8 text-left">
+                    {[
+                      { icon: Mic, title: "Capture Everything", desc: "Voice-to-text transcription in real-time", color: "text-blue-500" },
+                      { icon: Brain, title: "AI Finds Your Actions", desc: "Commitments extracted automatically", color: "text-purple-500" },
+                      { icon: Calendar, title: "Smart Scheduling", desc: "Based on your peak productivity times", color: "text-green-500" },
+                      { icon: Users, title: "Support Circle", desc: "Your team gets notified to encourage you", color: "text-orange-500" },
+                    ].map((item, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.6 + index * 0.1 }}
+                        className="flex items-start gap-3"
+                      >
+                        <div className={`w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0`}>
+                          <item.icon className={`h-5 w-5 ${item.color}`} />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-sm mb-0.5">{item.title}</h3>
+                          <p className="text-xs text-muted-foreground">{item.desc}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Social Proof */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                    className="pt-4 border-t flex items-center justify-center gap-2 text-sm text-muted-foreground"
+                  >
+                    <Heart className="h-4 w-4 text-red-500" />
+                    <span>Trusted by people who want to keep their promises</span>
+                  </motion.div>
+                </CardContent>
+              </Card>
             </motion.div>
-            <h1 className="mobile-heading-xl md:text-5xl font-bold text-foreground mb-4">
-              Memory Bridge
-            </h1>
-            <p className="mobile-body text-muted-foreground max-w-md mx-auto">
-              Capture conversations. Discover actions. Schedule with confidence.
-            </p>
-          </div>
-
-          {/* Main CTA Card */}
-          <Card className="border-2 border-primary/20 shadow-xl">
-            <CardContent className="p-8 text-center space-y-6">
-              <div className="space-y-3">
-                <h2 className="mobile-heading-lg font-semibold text-foreground">
-                  Start Your First Recording
-                </h2>
-                <p className="mobile-body text-muted-foreground">
-                  Your conversations will automatically transform into organized action items with personalized scheduling suggestions
-                </p>
-              </div>
-
-              <MemoryBridgeFloatingButton className="relative bottom-0 right-0 w-full" />
-
-              {/* Benefits */}
-              <div className="grid gap-4 mt-8 text-left">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Mic className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="mobile-label font-semibold mb-1">Voice-to-Text</h3>
-                    <p className="mobile-caption text-muted-foreground">
-                      Accurate transcription of your meetings and conversations
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Sparkles className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="mobile-label font-semibold mb-1">AI-Powered Extraction</h3>
-                    <p className="mobile-caption text-muted-foreground">
-                      Automatically discover action items from your recordings
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Calendar className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="mobile-label font-semibold mb-1">Smart Scheduling</h3>
-                    <p className="mobile-caption text-muted-foreground">
-                      Personalized time suggestions based on your peak performance
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+          </motion.div>
         </div>
         <QuickEscapeButton />
         <MobileBottomNav />
@@ -141,38 +174,35 @@ export default function MemoryBridgeSimple() {
       <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background pb-20">
         <PersistentNavHeader />
         <div className="p-4 md:p-8">
-        <div className="max-w-6xl mx-auto">
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h1 className="mobile-heading-xl md:text-4xl font-bold text-foreground">
-                Your Recordings
-              </h1>
-              <Badge variant="secondary" className="mobile-label">
-                {meetingRecordings.length} Recording{meetingRecordings.length !== 1 ? 's' : ''}
-              </Badge>
-            </div>
-            <p className="mobile-body text-muted-foreground">
-              Process your recordings to discover actionable insights
-            </p>
-          </motion.div>
+          <div className="max-w-6xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+                  Your Recordings
+                </h1>
+                <Badge variant="secondary" className="text-sm px-3 py-1">
+                  {meetingRecordings.length} Recording{meetingRecordings.length !== 1 ? 's' : ''}
+                </Badge>
+              </div>
+              <p className="text-muted-foreground">
+                Process your recordings to discover actionable insights
+              </p>
+            </motion.div>
 
-          {/* Recordings List */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-          >
-            <RecordingsTab onProcessComplete={handleProcessComplete} />
-          </motion.div>
-        </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+            >
+              <RecordingsTab onProcessComplete={handleProcessComplete} />
+            </motion.div>
+          </div>
         </div>
 
-        {/* Floating Action Button */}
         <MemoryBridgeFloatingButton />
         <QuickEscapeButton />
         <MobileBottomNav />
@@ -180,189 +210,175 @@ export default function MemoryBridgeSimple() {
     );
   }
 
-  // Actions State - Has extracted actions
-  const highPriorityActions = extractedActions.filter(a => a.priority_level === 1 && a.category === 'action');
-  const totalActions = extractedActions.filter(a => a.category === 'action').length;
-  const completedActions = extractedActions.filter(a => a.status === 'completed').length;
-  const scheduledActions = extractedActions.filter(a => a.status === 'scheduled').length;
-
+  // Actions State - Full dashboard with Promise Score
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-background pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-green-500/5 pb-20">
       <PersistentNavHeader />
       <div className="p-4 md:p-8">
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <h1 className="mobile-heading-xl md:text-4xl font-bold text-foreground mb-2">
-            Your Next Steps
-          </h1>
-          <p className="mobile-body text-muted-foreground">
-            Empowering actions ready for your attention
-          </p>
-        </motion.div>
+        <div className="max-w-6xl mx-auto space-y-6">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary via-purple-500 to-green-500 bg-clip-text text-transparent mb-2">
+              Your Promise Dashboard
+            </h1>
+            <p className="text-muted-foreground">
+              Every commitment captured. Every promise tracked.
+            </p>
+          </motion.div>
 
-        {/* Executive Summary Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/20">
-            <CardHeader>
-              <CardTitle className="mobile-heading-lg flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Today's Priorities
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-red-500" />
-                    <p className="mobile-caption text-muted-foreground">High Priority</p>
-                  </div>
-                  <p className="mobile-heading-md font-bold">{highPriorityActions.length}</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4 text-primary" />
-                    <p className="mobile-caption text-muted-foreground">Scheduled</p>
-                  </div>
-                  <p className="mobile-heading-md font-bold">{scheduledActions}</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    <p className="mobile-caption text-muted-foreground">Completed</p>
-                  </div>
-                  <p className="mobile-heading-md font-bold">{completedActions}</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-muted-foreground" />
-                    <p className="mobile-caption text-muted-foreground">Total Actions</p>
-                  </div>
-                  <p className="mobile-heading-md font-bold">{totalActions}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
+          {/* Promise Score - Hero Component */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+          >
+            <PromiseScore
+              completedCount={completedActions}
+              totalCount={totalActions}
+              streakDays={streakDays}
+            />
+          </motion.div>
 
-        {/* High Priority Actions */}
-        {highPriorityActions.length > 0 && (
+          {/* Quick Stats Grid */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-4"
           >
-            <Card>
-              <CardHeader>
-                <CardTitle className="mobile-heading-lg flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse" />
-                    Priority Actions
-                  </span>
-                  <Badge variant="destructive">{highPriorityActions.length}</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {highPriorityActions.slice(0, 3).map((action) => (
-                  <Card key={action.id} className="border-l-4 border-l-red-500 hover:shadow-md transition-shadow">
-                    <CardContent className="p-4">
-                      <h3 className="mobile-label font-semibold mb-2">{action.action_text}</h3>
+            {[
+              { label: "High Priority", value: highPriorityActions.length, icon: Zap, color: "text-red-500", bg: "bg-red-500/10" },
+              { label: "Scheduled", value: scheduledActions, icon: Calendar, color: "text-blue-500", bg: "bg-blue-500/10" },
+              { label: "Completed", value: completedActions, icon: CheckCircle2, color: "text-green-500", bg: "bg-green-500/10" },
+              { label: "Total Actions", value: totalActions, icon: Target, color: "text-primary", bg: "bg-primary/10" },
+            ].map((stat, index) => (
+              <Card key={index} className={`${stat.bg} border-none`}>
+                <CardContent className="p-4 text-center">
+                  <stat.icon className={`h-6 w-6 mx-auto mb-2 ${stat.color}`} />
+                  <p className="text-3xl font-bold">{stat.value}</p>
+                  <p className="text-xs text-muted-foreground">{stat.label}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </motion.div>
+
+          {/* High Priority Actions */}
+          {highPriorityActions.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Card className="border-red-500/30 bg-gradient-to-br from-red-500/5 to-background">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    <span className="flex items-center gap-2">
+                      <Zap className="h-5 w-5 text-red-500" />
+                      Needs Your Attention
+                    </span>
+                    <Badge variant="destructive">{highPriorityActions.length}</Badge>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {highPriorityActions.slice(0, 3).map((action) => (
+                    <motion.div
+                      key={action.id}
+                      whileHover={{ scale: 1.01 }}
+                      className="p-4 bg-background rounded-xl border-l-4 border-l-red-500 shadow-sm hover:shadow-md transition-all cursor-pointer"
+                      onClick={() => navigate('/next-steps')}
+                    >
+                      <h3 className="font-semibold mb-2">{action.action_text}</h3>
                       
-                      {/* AI Recommendation */}
-                      <div className="bg-primary/5 rounded-lg p-3 mb-3">
-                        <div className="flex items-center gap-2 mb-1">
-                          <Sparkles className="h-4 w-4 text-primary" />
-                          <span className="mobile-caption font-semibold text-primary">Smart Scheduling</span>
-                        </div>
-                        <p className="mobile-caption text-muted-foreground">
-                          Based on your assessment: Best scheduled during your peak focus time
-                        </p>
+                      {/* Smart Scheduling Suggestion */}
+                      <div className="flex items-center gap-2 text-sm text-primary bg-primary/5 rounded-lg p-2 mb-2">
+                        <Sparkles className="h-4 w-4" />
+                        <span>AI suggests: {action.best_time || "Schedule for your peak focus time"}</span>
                       </div>
                       
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          {action.assigned_to && (
-                            <Badge variant="outline" className="mobile-caption">
-                              {action.assigned_to}
+                          {action.due_context && (
+                            <Badge variant="outline" className="text-xs">
+                              <Clock className="h-3 w-3 mr-1" />
+                              {action.due_context}
                             </Badge>
                           )}
-                          <Badge variant="secondary" className="mobile-caption capitalize">
-                            {action.status?.replace('_', ' ') || 'Ready to Begin'}
-                          </Badge>
                         </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => navigate('/next-steps')}
-                          className="text-primary hover:text-primary/80"
-                        >
-                          Schedule
-                          <ArrowRight className="h-4 w-4 ml-1" />
+                        <Button variant="ghost" size="sm" className="text-primary">
+                          Schedule <ArrowRight className="h-4 w-4 ml-1" />
                         </Button>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                    </motion.div>
+                  ))}
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {/* Quick Navigation */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="grid md:grid-cols-2 gap-4"
+          >
+            <Card 
+              className="hover:shadow-lg transition-all cursor-pointer group bg-gradient-to-br from-primary/5 to-background border-primary/20" 
+              onClick={() => navigate('/next-steps')}
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <Target className="h-7 w-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold mb-1">View All Actions</h3>
+                      <p className="text-sm text-muted-foreground">Manage and schedule your commitments</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="hover:shadow-lg transition-all cursor-pointer group bg-gradient-to-br from-green-500/5 to-background border-green-500/20"
+            >
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-teal-500 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <FileAudio className="h-7 w-7 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold mb-1">Your Recordings</h3>
+                      <p className="text-sm text-muted-foreground">{recordings.filter(r => r.category === 'meeting').length} conversations captured</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                </div>
               </CardContent>
             </Card>
           </motion.div>
-        )}
 
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="grid md:grid-cols-2 gap-4"
-        >
-          <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate('/next-steps')}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <Target className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="mobile-label font-semibold mb-1">All Actions</h3>
-                    <p className="mobile-caption text-muted-foreground">View and manage everything</p>
-                  </div>
-                </div>
-                <ArrowRight className="h-5 w-5 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate('/memory-bridge')}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                    <FileAudio className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="mobile-label font-semibold mb-1">Recordings</h3>
-                    <p className="mobile-caption text-muted-foreground">Listen and process</p>
-                  </div>
-                </div>
-                <ArrowRight className="h-5 w-5 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-      </div>
+          {/* Motivational Footer */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="text-center py-6"
+          >
+            <p className="text-sm text-muted-foreground italic">
+              "Every promise you keep builds trust. You're building something amazing." 💪
+            </p>
+          </motion.div>
+        </div>
       </div>
 
-      {/* Floating Action Button */}
       <MemoryBridgeFloatingButton />
       <QuickEscapeButton />
       <MobileBottomNav />
