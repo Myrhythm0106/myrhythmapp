@@ -190,6 +190,9 @@ serve(async (req) => {
     };
 
     // 1) Try Lovable AI (Gemini) first - FASTEST & CHEAPEST
+    let conversationSummary = '';
+    let smartScheduleSuggestions: any[] = [];
+    
     if (LOVABLE_API_KEY) {
       try {
         const geminiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -203,7 +206,10 @@ serve(async (req) => {
             messages: [
               { 
                 role: 'system', 
-                content: `Extract VERB-FIRST action items from meeting transcripts for someone with brain injury.
+                content: `You are a brain-health assistant that helps people with memory challenges capture and organize their commitments from conversations.
+
+FIRST: Summarize the key topics discussed in 3-5 bullet points.
+THEN: Extract VERB-FIRST action items.
 
 🎯 CATEGORIZE INTO 4 TYPES:
 1. ACTIONS ✅ - "CALL Dr. Martinez", "SCHEDULE appointment"
@@ -217,33 +223,38 @@ serve(async (req) => {
 - Infer dates: "by Friday" → actual date, "soon" → tomorrow
 - Break complex tasks into 2-3 micro-tasks
 - Include emotional stakes for motivation
+- Suggest optimal scheduling times (morning for important tasks, afternoon for calls)
+
+🗓️ SMART SCHEDULING:
+- For each action, suggest 2-3 optimal times based on task type
+- Morning (8-11am): High-focus tasks, important decisions
+- Afternoon (2-4pm): Meetings, calls, collaborative work
+- Evening (5-7pm): Planning, reflection, light tasks
 
 Current date: ${new Date().toISOString().split('T')[0]}
 
-Return JSON array with these essential fields:
-- action_text (VERB-first)
-- category (action|watch_out|depends_on|note)
-- assigned_to
-- due_context
-- completion_date (YYYY-MM-DD)
-- priority_level (1-5)
-- confidence_score (0-1)
-- success_criteria
-- micro_tasks [{"text": "...", "completed": false}]
-- motivation_statement
-- what_outcome
-- how_steps []`
+Be encouraging and supportive - remember these users may have memory challenges.`
               },
               { role: 'user', content: `TRANSCRIPT: ${transcript}` }
             ],
             tools: [{
               type: 'function',
               function: {
-                name: 'extract_actions',
-                description: 'Extract structured action items from transcript',
+                name: 'extract_meeting_content',
+                description: 'Extract summary, actions, and scheduling suggestions from transcript',
                 parameters: {
                   type: 'object',
                   properties: {
+                    conversation_summary: {
+                      type: 'object',
+                      properties: {
+                        key_topics: { type: 'array', items: { type: 'string' } },
+                        main_decisions: { type: 'array', items: { type: 'string' } },
+                        participants_mentioned: { type: 'array', items: { type: 'string' } },
+                        overall_tone: { type: 'string' },
+                        empowering_takeaway: { type: 'string' }
+                      }
+                    },
                     actions: {
                       type: 'array',
                       items: {
@@ -269,17 +280,28 @@ Return JSON array with these essential fields:
                           },
                           motivation_statement: { type: 'string' },
                           what_outcome: { type: 'string' },
-                          how_steps: { type: 'array', items: { type: 'string' } }
+                          how_steps: { type: 'array', items: { type: 'string' } },
+                          suggested_times: {
+                            type: 'array',
+                            items: {
+                              type: 'object',
+                              properties: {
+                                time_of_day: { type: 'string' },
+                                reason: { type: 'string' },
+                                confidence: { type: 'number' }
+                              }
+                            }
+                          }
                         },
                         required: ['action_text', 'category', 'assigned_to', 'priority_level', 'confidence_score']
                       }
                     }
                   },
-                  required: ['actions']
+                  required: ['conversation_summary', 'actions']
                 }
               }
             }],
-            tool_choice: { type: 'function', function: { name: 'extract_actions' } }
+            tool_choice: { type: 'function', function: { name: 'extract_meeting_content' } }
           })
         });
 
@@ -294,6 +316,19 @@ Return JSON array with these essential fields:
               const parsedArgs = typeof toolCall.function.arguments === 'string' 
                 ? JSON.parse(toolCall.function.arguments)
                 : toolCall.function.arguments;
+              
+              // Extract conversation summary
+              if (parsedArgs.conversation_summary) {
+                const summary = parsedArgs.conversation_summary;
+                conversationSummary = JSON.stringify({
+                  key_topics: summary.key_topics || [],
+                  main_decisions: summary.main_decisions || [],
+                  participants_mentioned: summary.participants_mentioned || [],
+                  overall_tone: summary.overall_tone || 'neutral',
+                  empowering_takeaway: summary.empowering_takeaway || 'You captured important commitments from this conversation!'
+                });
+                console.log('✅ Conversation summary extracted:', conversationSummary);
+              }
               
               extractedActions = parsedArgs.actions || [];
               console.log('✅ SUCCESS: Parsed', extractedActions.length, 'actions via Gemini');
@@ -329,6 +364,17 @@ Return JSON array with these essential fields:
     if (extractedActions.length === 0) {
       extractedActions = localExtractActions(transcript);
       console.log('ACTs extracted via local fallback:', extractedActions.length);
+      
+      // Generate basic summary for fallback
+      if (!conversationSummary) {
+        conversationSummary = JSON.stringify({
+          key_topics: ['Meeting content captured'],
+          main_decisions: [],
+          participants_mentioned: [],
+          overall_tone: 'neutral',
+          empowering_takeaway: 'You took the important step of capturing this conversation!'
+        });
+      }
     }
 
     console.log(`🎯 Pre-validation: ${extractedActions.length} actions extracted`);
@@ -439,10 +485,22 @@ Return JSON array with these essential fields:
     // Cap at 100
     confidenceScore = Math.min(confidenceScore, 100);
 
+    // Update meeting recording with summary
+    if (conversationSummary) {
+      await supabase
+        .from('meeting_recordings')
+        .update({ 
+          processing_status: 'completed',
+          proposed_schedule: conversationSummary
+        })
+        .eq('id', meetingId);
+    }
+
     return new Response(JSON.stringify({ 
       success: true, 
       actionsCount: extractedActions.length,
       actions: extractedActions,
+      conversationSummary: conversationSummary ? JSON.parse(conversationSummary) : null,
       confidenceScore,
       processingMethod,
       transcriptLength: transcript.length

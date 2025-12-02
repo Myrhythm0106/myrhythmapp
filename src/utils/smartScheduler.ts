@@ -32,29 +32,90 @@ export class SmartScheduler {
 
   async getUserPreferences(userId: string): Promise<UserSchedulePreference> {
     try {
-      const { data, error } = await supabase
+      // First try to get from user_schedule_preferences table
+      const { data: schedulePrefs, error: scheduleError } = await supabase
         .from('user_schedule_preferences')
         .select('*')
         .eq('user_id', userId)
         .limit(1);
 
-      if (error || !data || data.length === 0) {
-        return this.defaultPreferences;
+      if (!scheduleError && schedulePrefs && schedulePrefs.length > 0) {
+        const prefs = schedulePrefs[0];
+        return {
+          mostProductiveHours: (prefs.time_slots as any)?.productive || this.defaultPreferences.mostProductiveHours,
+          leastProductiveHours: (prefs.time_slots as any)?.unproductive || this.defaultPreferences.leastProductiveHours,
+          preferredMeetingTimes: (prefs.time_slots as any)?.meetings || this.defaultPreferences.preferredMeetingTimes,
+          energyPeaks: (prefs.time_slots as any)?.energy_peak || this.defaultPreferences.energyPeaks,
+          doNotDisturb: (prefs.time_slots as any)?.do_not_disturb || this.defaultPreferences.doNotDisturb
+        };
       }
 
-      // Convert database format to our preferences
-      const prefs = data[0];
-      return {
-        mostProductiveHours: (prefs.time_slots as any)?.productive || this.defaultPreferences.mostProductiveHours,
-        leastProductiveHours: (prefs.time_slots as any)?.unproductive || this.defaultPreferences.leastProductiveHours,
-        preferredMeetingTimes: (prefs.time_slots as any)?.meetings || this.defaultPreferences.preferredMeetingTimes,
-        energyPeaks: (prefs.time_slots as any)?.energy_peak || this.defaultPreferences.energyPeaks,
-        doNotDisturb: (prefs.time_slots as any)?.do_not_disturb || this.defaultPreferences.doNotDisturb
-      };
+      // Fallback: Try to derive preferences from assessment_results
+      const { data: assessmentData, error: assessmentError } = await supabase
+        .from('assessment_results')
+        .select('responses, scores')
+        .eq('user_id', userId)
+        .eq('completion_status', 'completed')
+        .order('completed_at', { ascending: false })
+        .limit(1);
+
+      if (!assessmentError && assessmentData && assessmentData.length > 0) {
+        const responses = assessmentData[0].responses as Record<string, any>;
+        return this.mapAssessmentToPreferences(responses);
+      }
+
+      return this.defaultPreferences;
     } catch (error) {
       console.error('Error loading user preferences:', error);
       return this.defaultPreferences;
     }
+  }
+
+  // Map assessment responses to schedule preferences
+  private mapAssessmentToPreferences(responses: Record<string, any>): UserSchedulePreference {
+    const energyLevel = responses['energy-level'] || responses['energyLevel'] || 'moderate';
+    const dailyStructure = responses['daily-structure'] || responses['dailyStructure'] || 'flexible';
+    
+    // Map energy levels to productive hours
+    let mostProductiveHours: string[];
+    let energyPeaks: 'morning' | 'afternoon' | 'evening';
+    
+    switch (energyLevel) {
+      case 'high':
+      case 'morning':
+        mostProductiveHours = ['07:00', '08:00', '09:00', '10:00', '11:00'];
+        energyPeaks = 'morning';
+        break;
+      case 'afternoon':
+      case 'moderate':
+        mostProductiveHours = ['10:00', '11:00', '14:00', '15:00', '16:00'];
+        energyPeaks = 'afternoon';
+        break;
+      case 'evening':
+      case 'low':
+        mostProductiveHours = ['14:00', '15:00', '16:00', '17:00', '18:00'];
+        energyPeaks = 'evening';
+        break;
+      default:
+        mostProductiveHours = this.defaultPreferences.mostProductiveHours;
+        energyPeaks = 'morning';
+    }
+
+    // Adjust based on daily structure preference
+    let doNotDisturb = ['12:00', '13:00']; // Standard lunch break
+    if (dailyStructure === 'structured') {
+      doNotDisturb = ['12:00', '13:00', '18:00', '19:00', '20:00'];
+    } else if (dailyStructure === 'flexible') {
+      doNotDisturb = ['12:30'];
+    }
+
+    return {
+      mostProductiveHours,
+      leastProductiveHours: ['12:00', '13:00', '17:00', '18:00'],
+      preferredMeetingTimes: mostProductiveHours.slice(1, 4),
+      energyPeaks,
+      doNotDisturb
+    };
   }
 
   async getExistingEvents(userId: string, startDate: string, endDate: string) {
