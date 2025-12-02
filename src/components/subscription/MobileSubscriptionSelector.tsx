@@ -1,216 +1,166 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { CheckCircle, Star, Crown, Users, Zap, Smartphone } from "lucide-react";
+import { CheckCircle, Crown, Zap, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { isFoundingMemberActive } from "@/config/pricing";
 
 interface MobileSubscriptionSelectorProps {
-  onSelectPlan: (planType: 'starter' | 'smart_pro' | 'family_smart') => void;
-  onContinueFree: () => void;
+  onSelectPlan: (planType: 'premium') => void;
+  onContinueFree?: () => void;
 }
 
 export function MobileSubscriptionSelector({ onSelectPlan, onContinueFree }: MobileSubscriptionSelectorProps) {
-  const [selectedPlan, setSelectedPlan] = useState<'starter' | 'smart_pro' | 'family_smart' | null>(null);
   const [isYearly, setIsYearly] = useState(false);
+  const [isSelecting, setIsSelecting] = useState(false);
+  const isFoundingActive = isFoundingMemberActive();
 
-  const plans = [
-    {
-      id: 'starter' as const,
-      name: 'Starter',
-      monthlyPrice: '£7.99',
-      yearlyPrice: '£79.99',
-      description: 'Perfect for getting started',
-      icon: Star,
-      color: 'text-teal-600',
-      gradient: 'from-teal-500 to-emerald-600',
-      features: [
-        'Unlimited Memory Bridge recordings',
-        'Full Next Step Summary',
-        'Complete assessments',
-        'Up to 3 support circle members',
-        'Basic calendar integration'
-      ]
-    },
-    {
-      id: 'smart_pro' as const,
-      name: 'SMART Pro',
-      monthlyPrice: '£14.99',
-      yearlyPrice: '£149.99',
-      description: 'AI-powered scheduling & optimization',
-      icon: Crown,
-      color: 'text-teal-600',
-      gradient: 'from-teal-600 to-emerald-700',
-      badge: 'Most Popular',
-      features: [
-        'Everything in Starter',
-        'SMART Scheduling Engine',
-        'External calendar sync',
-        'Schedule optimization',
-        'Advanced analytics',
-        'Up to 5 support circle members',
-        'Priority support'
-      ]
-    },
-    {
-      id: 'family_smart' as const,
-      name: 'Family SMART',
-      monthlyPrice: '£24.99',
-      yearlyPrice: '£249.99',
-      description: 'Complete family coordination',
-      icon: Users,
-      color: 'text-teal-600',
-      gradient: 'from-teal-700 to-emerald-800',
-      features: [
-        'Everything in SMART Pro',
-        'Up to 6 family accounts',
-        'Shared family calendar',
-        'Family progress dashboard',
-        'Care coordination tools',
-        'Unlimited support circle',
-        'Family insights & reports'
-      ]
-    }
+  const pricing = {
+    monthly: isFoundingActive ? 10 : 15,
+    yearly: isFoundingActive ? 100 : 150,
+    regularMonthly: 15,
+    regularYearly: 150
+  };
+
+  const features = [
+    'Unlimited Memory Bridge recordings',
+    'Brain Health Reminders with escalation',
+    'Daily Brain Boost (240+ challenges)',
+    'Support Circle (5 members)',
+    'LEAP Assessment & Analytics',
+    'Calendar Integration',
+    'Progress Tracking & Reports',
+    'Priority support'
   ];
 
-  const handleSelectPlan = (planType: 'starter' | 'smart_pro' | 'family_smart') => {
-    setSelectedPlan(planType);
-    const planName = plans.find(p => p.id === planType)?.name;
+  const handleSelectPlan = () => {
+    setIsSelecting(true);
     const billingPeriod = isYearly ? 'yearly' : 'monthly';
-    toast.success(`${planName} (${billingPeriod}) selected!`);
+    toast.success(`MyRhythm Premium (${billingPeriod}) selected!`);
     
-    // Simulate App Store purchase flow
     setTimeout(() => {
-      onSelectPlan(planType);
+      onSelectPlan('premium');
     }, 500);
   };
 
   return (
     <div className="max-w-md mx-auto space-y-4 p-4">
       <div className="text-center mb-6">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <Smartphone className="h-6 w-6 text-teal-600" />
-          <h2 className="text-2xl font-bold text-slate-800">Choose Your Plan</h2>
-        </div>
-        <p className="text-slate-600">
-          {isYearly ? 'Annual plans with instant access and savings' : 'Start your 7-day free trial via App Store'}
+        <h2 className="text-2xl font-bold text-foreground mb-2">MyRhythm Premium</h2>
+        <p className="text-muted-foreground">
+          Everything you need for your cognitive empowerment journey
         </p>
       </div>
 
-      {/* Billing Toggle */}
-      <div className="flex items-center justify-center mb-6">
-        <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-teal-50 to-emerald-50 rounded-xl border border-teal-200 shadow-sm">
-          <span className={cn(
-            "text-sm font-medium transition-colors",
-            !isYearly ? "text-slate-900" : "text-slate-500"
-          )}>
-            Monthly
-          </span>
-          <Switch
-            checked={isYearly}
-            onCheckedChange={setIsYearly}
-            className="data-[state=checked]:bg-teal-600"
-          />
-          <span className={cn(
-            "text-sm font-medium transition-colors",
-            isYearly ? "text-slate-900" : "text-slate-500"
-          )}>
-            Annual
-          </span>
-          {isYearly && (
-            <Badge className="bg-teal-600 text-white font-medium px-2 py-1 text-xs ml-2">
-              Save up to £40/year
-            </Badge>
-          )}
+      {/* Founding Member Banner */}
+      {isFoundingActive && (
+        <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 text-center">
+          <div className="flex items-center justify-center gap-2 text-primary font-medium">
+            <Sparkles className="h-4 w-4" />
+            <span>Founding Member Pricing</span>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1">
+            Lock in £10/month forever - limited to first 500 users
+          </p>
         </div>
+      )}
+
+      {/* Billing Toggle */}
+      <div className="flex items-center justify-center gap-4 p-4 bg-muted/50 rounded-xl">
+        <span className={cn(
+          "text-sm font-medium transition-colors",
+          !isYearly ? "text-foreground" : "text-muted-foreground"
+        )}>
+          Monthly
+        </span>
+        <Switch
+          checked={isYearly}
+          onCheckedChange={setIsYearly}
+          className="data-[state=checked]:bg-primary"
+        />
+        <span className={cn(
+          "text-sm font-medium transition-colors",
+          isYearly ? "text-foreground" : "text-muted-foreground"
+        )}>
+          Annual
+        </span>
+        {isYearly && (
+          <Badge className="bg-primary text-primary-foreground">
+            Save £20
+          </Badge>
+        )}
       </div>
 
-        {plans.map((plan) => {
-        const Icon = plan.icon;
-        const isSelected = selectedPlan === plan.id;
-        const currentPrice = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
-        const period = isYearly ? '/year' : '/month';
-        
-        return (
-          <Card 
-            key={plan.id}
-            className={`transition-all duration-200 border-2 ${
-              isSelected 
-                ? 'ring-2 ring-teal-500 shadow-lg border-teal-300' 
-                : 'hover:shadow-md border-teal-200'
-            } ${plan.id === 'smart_pro' ? 'bg-gradient-to-br from-teal-50 to-emerald-50' : 'bg-white'}`}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Icon className={`h-5 w-5 ${plan.color}`} />
-                  <CardTitle className="text-lg text-slate-800">{plan.name}</CardTitle>
-                </div>
-                {plan.badge && (
-                  <Badge className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
-                    {plan.badge}
-                  </Badge>
-                )}
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-2xl font-bold text-slate-800">{currentPrice}</span>
-                <span className="text-sm text-slate-600">{period}</span>
-              </div>
-              <p className="text-sm text-slate-600">{plan.description}</p>
-            </CardHeader>
+      {/* Single Premium Card */}
+      <Card className="border-2 border-primary bg-gradient-to-br from-primary/5 to-primary/10">
+        <CardHeader className="pb-3 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <Crown className="h-5 w-5 text-primary" />
+            <CardTitle className="text-lg">MyRhythm Premium</CardTitle>
+          </div>
+          
+          <div className="mt-4">
+            <div className="flex items-baseline justify-center gap-1">
+              <span className="text-4xl font-bold">
+                £{isYearly ? pricing.yearly : pricing.monthly}
+              </span>
+              <span className="text-muted-foreground">
+                /{isYearly ? 'year' : 'month'}
+              </span>
+            </div>
             
-            <CardContent className="space-y-4">
-              <ul className="space-y-2">
-                {plan.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-teal-600 flex-shrink-0" />
-                    <span className="text-slate-700">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <Button 
-                onClick={() => handleSelectPlan(plan.id)}
-                disabled={selectedPlan === plan.id}
-                className={`w-full shadow-md ${
-                  plan.id === 'smart_pro' 
-                    ? `bg-gradient-to-r ${plan.gradient} hover:shadow-lg` 
-                    : `bg-gradient-to-r ${plan.gradient}`
-                } text-white`}
-              >
-                {selectedPlan === plan.id ? (
-                  'Selected - Redirecting to App Store...'
-                ) : (
-                  <>
-                    <Zap className="h-4 w-4 mr-2" />
-                    {isYearly ? 'Subscribe Now' : 'Start 7-Day Free Trial'}
-                  </>
-                )}
-              </Button>
-            </CardContent>
-          </Card>
-        );
-      })}
+            {isFoundingActive && (
+              <p className="text-sm text-muted-foreground mt-1">
+                <span className="line-through">
+                  £{isYearly ? pricing.regularYearly : pricing.regularMonthly}
+                </span>
+                <span className="text-primary ml-2">
+                  Save £{isYearly ? (pricing.regularYearly - pricing.yearly) : (pricing.regularMonthly - pricing.monthly)}
+                </span>
+              </p>
+            )}
+          </div>
+          
+          <p className="text-sm text-muted-foreground mt-2">
+            7-day free trial included
+          </p>
+        </CardHeader>
+        
+        <CardContent className="space-y-4">
+          <ul className="space-y-2">
+            {features.map((feature, index) => (
+              <li key={index} className="flex items-center gap-2 text-sm">
+                <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+          
+          <Button 
+            onClick={handleSelectPlan}
+            disabled={isSelecting}
+            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+            size="lg"
+          >
+            {isSelecting ? (
+              'Processing...'
+            ) : (
+              <>
+                <Zap className="h-4 w-4 mr-2" />
+                Start 7-Day Free Trial
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
 
-      <div className="text-center text-xs text-slate-500 space-y-1 pt-4 border-t border-teal-200">
-        {isYearly ? (
-          <>
-            <p>• Annual plans - immediate access</p>
-            <p>• Significant savings compared to monthly</p>
-            <p>• 30-day money-back guarantee</p>
-            <p>• Cancel anytime in App Store settings</p>
-          </>
-        ) : (
-          <>
-            <p>• 7-day free trial for all plans</p>
-            <p>• Billed through App Store subscription</p>
-            <p>• Cancel anytime in App Store settings</p>
-            <p>• No charges during trial period</p>
-          </>
-        )}
+      <div className="text-center text-xs text-muted-foreground space-y-1 pt-4">
+        <p>• 7-day free trial - no charge until trial ends</p>
+        <p>• Cancel anytime in settings</p>
+        <p>• 30-day money-back guarantee</p>
       </div>
     </div>
   );

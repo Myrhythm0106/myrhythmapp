@@ -1,82 +1,76 @@
-
-import { Crown, Users, Shield } from "lucide-react";
+import { Crown } from "lucide-react";
 import { Plan } from "./types";
 
+// Single tier pricing - MyRhythm Premium
 export const plans: Plan[] = [
   {
-    id: "starter",
-    name: "MyStarter",
-    description: "Perfect start to build your rhythm with support circle",
-    price: "£7.00/month",
-    regularPrice: "£39.00/month",
-    annualPrice: "£70.00/year",
-    regularAnnualPrice: "£390.00/year",
-    monthlySavings: "Save £14.00",
-    foundingSavings: "Save £32/month",
-    trialDays: 7,
-    icon: Shield,
-    features: [
-      "✨ 3 Free Support Circle Members",
-      "Your LEAP Assessment & Results",
-      "Personal Rhythm Discovery",
-      "Basic Calendar & Goals",
-      "Memory Enhancement Tools",
-      "Brain Games & Exercises",
-      "Daily Progress Tracking",
-      "Community Access"
-    ]
-  },
-  {
-    id: "stretch", 
-    name: "MyStretch",
-    description: "Enhanced experience with advanced momentum building",
-    price: "£13.00/month",
-    regularPrice: "£79.00/month",
-    annualPrice: "£130.00/year",
-    regularAnnualPrice: "£790.00/year",
-    monthlySavings: "Save £26.00",
-    foundingSavings: "Save £66/month",
+    id: "premium",
+    name: "MyRhythm Premium",
+    description: "Everything you need for your cognitive empowerment journey",
+    price: "£10",
+    regularPrice: "£15",
+    annualPrice: "£100",
+    regularAnnualPrice: "£150",
+    monthlySavings: "Save £20/year",
+    foundingSavings: "Save £5/month forever",
     trialDays: 7,
     popular: true,
     icon: Crown,
-    highlight: "Most Popular",
+    highlight: "Founding Member Price",
     features: [
-      "✨ 3 Free Support Circle Members",
-      "Everything in MyStarter",
-      "Advanced LEAP Analytics",
-      "Personalized Momentum Insights",
-      "Priority Customer Support",
-      "Advanced Calendar Management",
-      "Goal Achievement Coaching",
-      "Premium Brain Training",
-      "Detailed Progress Reports",
-      "Export & Share Features"
-    ]
-  },
-  {
-    id: "leap",
-    name: "MyLeap",
-    description: "Complete family wellness journey with unlimited support", 
-    price: "£20.00/month",
-    regularPrice: "£199.00/month",
-    annualPrice: "£200.00/year",
-    regularAnnualPrice: "£1990.00/year",
-    monthlySavings: "Save £40.00",
-    foundingSavings: "Save £179/month",
-    trialDays: 7,
-    icon: Users,
-    features: [
-      "✨ 3 Free Support Circle Members",
-      "Everything in MyStretch",
-      "Up to 6 Family Members",
-      "Shared Family Calendar",
-      "Caregiver Dashboard Access",
-      "Family Progress Tracking",
-      "Collaborative Goal Setting",
-      "Family Support Resources",
-      "Dedicated Family Coach",
-      "Emergency Contact System",
-      "Unlimited Support Circle Growth"
+      "✨ 7-day free trial",
+      "Unlimited Memory Bridge recordings",
+      "Brain Health Reminders with escalation",
+      "Daily Brain Boost (240+ challenges)",
+      "Support Circle (5 members included)",
+      "LEAP Assessment & Analytics",
+      "Calendar Integration",
+      "Progress Tracking & Reports",
+      "Promise Score tracking",
+      "Streak celebrations & motivation",
+      "Priority customer support"
     ]
   }
 ];
+
+// Simple feature list for marketing
+export const coreFeatures = [
+  {
+    title: "Memory Bridge",
+    description: "Record conversations and automatically extract action items",
+    icon: "🎙️"
+  },
+  {
+    title: "Brain Health Reminders",
+    description: "Progressive escalation system with contextual anchors",
+    icon: "🧠"
+  },
+  {
+    title: "Daily Brain Boost",
+    description: "240+ cognitive, emotional, and social challenges",
+    icon: "💪"
+  },
+  {
+    title: "Support Circle",
+    description: "Connect up to 5 trusted people as your safety net",
+    icon: "💚"
+  },
+  {
+    title: "LEAP Assessment",
+    description: "Discover your unique cognitive rhythm",
+    icon: "📊"
+  },
+  {
+    title: "Promise Score",
+    description: "Track your commitment and build trust",
+    icon: "⭐"
+  }
+];
+
+// Value proposition
+export const valueProposition = {
+  headline: "Less than a coffee a week",
+  subheadline: "£10/month = £2.50/week",
+  comparison: "That's less than one coffee for a complete brain health system",
+  urgency: "Founding Member pricing ends after 500 users or 6 months"
+};

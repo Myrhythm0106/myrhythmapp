@@ -1,7 +1,12 @@
-
-import React from "react";
-import PlanCard from "./PlanCard";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Check, Crown, Sparkles, ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { isFoundingMemberActive, foundingMemberConfig } from "@/config/pricing";
 
 interface PricingSectionProps {
   onSelectPlan?: (plan: string) => void;
@@ -9,111 +14,137 @@ interface PricingSectionProps {
 
 const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
   const navigate = useNavigate();
+  const [isAnnual, setIsAnnual] = useState(false);
+  const isFoundingActive = isFoundingMemberActive();
   
-  const handleSelectPlan = (plan: string) => {
+  const monthlyPrice = isFoundingActive ? 10 : 15;
+  const annualPrice = isFoundingActive ? 100 : 150;
+  const regularMonthly = 15;
+  const regularAnnual = 150;
+  
+  const handleSelectPlan = () => {
     if (onSelectPlan) {
-      onSelectPlan(plan);
+      onSelectPlan('premium');
     } else {
       navigate('/subscribe');
     }
   };
 
+  const features = [
+    "7-day free trial - no charge until trial ends",
+    "Unlimited Memory Bridge recordings",
+    "Brain Health Reminders with escalation",
+    "Daily Brain Boost (240+ challenges)",
+    "Support Circle (5 members included)",
+    "LEAP Assessment & Analytics",
+    "Calendar Integration",
+    "Progress Tracking & Reports",
+    "Promise Score tracking",
+    "Streak celebrations & motivation",
+    "Priority customer support"
+  ];
+
   return (
     <section className="py-16 bg-muted/40">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-3">Choose Your MyRhythm Journey</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Every plan includes a 7-day trial to discover your personal LEAP pattern and build unstoppable momentum.
-            Choose the level that fits your journey.
+      <div className="container mx-auto px-4 max-w-2xl">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold mb-3">Simple, Transparent Pricing</h2>
+          <p className="text-muted-foreground max-w-xl mx-auto">
+            One plan. Everything included. Start with a 7-day free trial.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <PlanCard
-            title="MyStarter"
-            description="Perfect start with your support circle included"
-            price={
-              <>
-                <div className="text-3xl font-bold">£7</div>
-                <div className="text-sm text-muted-foreground">per month</div>
-              </>
-            }
-            features={[
-              "✨ 3 Free Support Circle Members",
-              "Your LEAP Assessment & Results",
-              "Personal Rhythm Discovery",
-              "Basic Calendar & Goals",
-              "Memory Enhancement Tools",
-              "Smart Break Reminders",
-              "Brain Games & Exercises",
-              "Daily Progress Tracking"
-            ]}
-            buttonText="Start with MyStarter"
-            onSelectPlan={() => handleSelectPlan('starter')}
-          />
-
-          <PlanCard
-            title="MyStretch"
-            description="Enhanced experience with connected care network"
-            price={
-              <>
-                <div className="text-3xl font-bold">£13</div>
-                <div className="text-sm text-muted-foreground">per month</div>
-              </>
-            }
-            features={[
-              "✨ 3 Free Support Circle Members",
-              "Everything in MyStarter",
-              "Advanced LEAP Analytics",
-              "Personalized Momentum Insights", 
-              "Priority Customer Support",
-              "Advanced Calendar Management",
-              "Goal Achievement Coaching",
-              "Premium Brain Training",
-              "Detailed Progress Reports"
-            ]}
-            buttonText="Start with MyStretch"
-            isPopular={true}
-            onSelectPlan={() => handleSelectPlan('smart_pro')}
-          />
-
-          <PlanCard
-            title="MyLeap"
-            description="Complete family wellness with unlimited support"
-            price={
-              <>
-                <div className="text-3xl font-bold">£20</div>
-<div className="text-sm text-muted-foreground">per month</div>
-              </>
-            }
-            features={[
-              "✨ 3 Free Support Circle Members",
-              "Everything in MyStretch",
-              "Up to 6 Family Members",
-              "Shared Family Calendar",
-              "Family Time Scheduling",
-              "Family Progress Tracking", 
-              "Collaborative Goal Setting",
-              "Family Support Resources",
-              "Dedicated Family Coach",
-              "Unlimited Support Circle Growth"
-            ]}
-            buttonText="Start with MyLeap"
-            buttonVariant="outline"
-            onSelectPlan={() => handleSelectPlan('family_smart')}
-          />
+        {/* Billing Toggle */}
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <span className={cn("text-sm font-medium", !isAnnual ? "text-foreground" : "text-muted-foreground")}>
+            Monthly
+          </span>
+          <Switch checked={isAnnual} onCheckedChange={setIsAnnual} />
+          <span className={cn("text-sm font-medium", isAnnual ? "text-foreground" : "text-muted-foreground")}>
+            Annual
+          </span>
+          {isAnnual && (
+            <Badge variant="secondary" className="bg-primary/10 text-primary">
+              Save £20/year
+            </Badge>
+          )}
         </div>
 
-        <div className="text-center bg-gradient-to-r from-teal-50 to-emerald-50 p-6 rounded-lg border border-teal-200">
-          <h3 className="font-semibold text-teal-900 mb-2">
-            🤝 Connected Care Experience - Starting at £7
-          </h3>
-          <p className="text-sm text-teal-800 max-w-3xl mx-auto">
-            Every plan includes: <strong>3 Free Support Circle Members</strong> • LEAP Assessment & Results • Personal Rhythm Discovery • Memory Enhancement Tools • 
-            Goal Setting & Progress Tracking • Brain Training • Community Access • Momentum Building Insights. 
-            <strong>Build your connected care network from day one!</strong>
+        {/* Single Premium Card */}
+        <Card className="border-2 border-primary relative overflow-hidden">
+          {isFoundingActive && (
+            <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground py-2 text-center text-sm font-medium">
+              <Sparkles className="inline-block h-4 w-4 mr-2" />
+              Founding Member Price - Lock in {isAnnual ? '£100/year' : '£10/month'} forever
+            </div>
+          )}
+          
+          <CardHeader className={cn("text-center", isFoundingActive && "pt-14")}>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Crown className="h-6 w-6 text-primary" />
+              <CardTitle className="text-2xl">MyRhythm Premium</CardTitle>
+            </div>
+            
+            <div className="mt-4">
+              <div className="flex items-baseline justify-center gap-2">
+                <span className="text-5xl font-bold">
+                  £{isAnnual ? annualPrice : monthlyPrice}
+                </span>
+                <span className="text-muted-foreground">
+                  /{isAnnual ? 'year' : 'month'}
+                </span>
+              </div>
+              
+              {isFoundingActive && (
+                <p className="text-sm text-muted-foreground mt-2">
+                  <span className="line-through">£{isAnnual ? regularAnnual : regularMonthly}/{isAnnual ? 'year' : 'month'}</span>
+                  <span className="text-primary ml-2 font-medium">
+                    Save £{isAnnual ? (regularAnnual - annualPrice) : (regularMonthly - monthlyPrice)}/{isAnnual ? 'year' : 'month'}
+                  </span>
+                </p>
+              )}
+              
+              <p className="text-sm text-muted-foreground mt-1">
+                That's less than {isAnnual ? '£2/week' : 'a coffee/week'}
+              </p>
+            </div>
+          </CardHeader>
+
+          <CardContent className="space-y-6">
+            <ul className="space-y-3">
+              {features.map((feature, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <Check className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                  <span className={index === 0 ? "font-medium text-primary" : ""}>{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <Button 
+              onClick={handleSelectPlan}
+              size="lg"
+              className="w-full bg-primary hover:bg-primary/90 text-lg py-6"
+            >
+              Start Your Free Trial
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+
+            <p className="text-center text-xs text-muted-foreground">
+              No payment required to start • Cancel anytime • 30-day money-back guarantee
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Trust Indicators */}
+        <div className="mt-8 text-center">
+          <p className="text-sm text-muted-foreground mb-4">
+            Join our community of people building better memory habits
           </p>
+          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+            <span>✓ Secure payment</span>
+            <span>✓ Cancel anytime</span>
+            <span>✓ GDPR compliant</span>
+          </div>
         </div>
       </div>
     </section>
