@@ -56,7 +56,7 @@ serve(async (req) => {
     // Get a temporary token for Universal Streaming (new API)
     // New endpoint: GET https://streaming.assemblyai.com/v3/token
     const tokenUrl = new URL('https://streaming.assemblyai.com/v3/token');
-    tokenUrl.searchParams.set('expires_in_seconds', '3600'); // 1 hour
+    tokenUrl.searchParams.set('expires_in_seconds', '600'); // 10 minutes (max allowed by AssemblyAI)
 
     const response = await fetch(tokenUrl.toString(), {
       method: 'GET',
