@@ -141,11 +141,11 @@ export function ExecutiveWelcome() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button
                   size="lg"
-                  onClick={() => navigate('/memory-bridge')}
-                  className="bg-white text-amber-600 hover:bg-amber-50"
+                  onClick={() => navigate('/launch/register?userType=executive')}
+                  className="bg-white text-amber-600 hover:bg-amber-50 font-semibold"
                 >
-                  <Mic className="mr-2 h-5 w-5" />
-                  Start First Meeting
+                  <Zap className="mr-2 h-5 w-5" />
+                  Start 7-Day Free Trial
                 </Button>
                 <Button
                   size="lg"
@@ -157,6 +157,9 @@ export function ExecutiveWelcome() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </div>
+              <p className="text-white/80 text-sm mt-4">
+                No credit card charged for 7 days • Cancel anytime
+              </p>
             </CardContent>
           </Card>
         </div>

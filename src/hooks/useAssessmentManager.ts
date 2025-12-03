@@ -63,7 +63,7 @@ export function useAssessmentManager() {
   const scheduleUpgradeReminder = async (assessmentId: string) => {
     try {
       const reminderDate = new Date();
-      reminderDate.setDate(reminderDate.getDate() + 7); // 7 days from now
+      reminderDate.setDate(reminderDate.getDate() + 90); // 3 months from now
 
       const reminderData: AssessmentReminder = {
         id: crypto.randomUUID(),

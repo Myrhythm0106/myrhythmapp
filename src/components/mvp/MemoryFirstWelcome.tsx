@@ -188,17 +188,19 @@ export function MemoryFirstWelcome({ onStartJourney }: MemoryFirstWelcomeProps) 
               <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
                 Join thousands who've regained their independence with MyRhythm's memory-first approach.
               </p>
-              <Button
-                onClick={onStartJourney}
-                size="lg"
-                className="bg-white text-brain-health-700 hover:bg-white/90 text-lg px-8 py-6 h-auto shadow-xl hover:shadow-2xl transition-all duration-200"
-              >
-                <Brain className="h-5 w-5 mr-2" />
-                Start Your Journey Now
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  onClick={() => window.location.href = '/launch/register?userType=brain-injury'}
+                  size="lg"
+                  className="bg-white text-brain-health-700 hover:bg-white/90 text-lg px-8 py-6 h-auto shadow-xl hover:shadow-2xl transition-all duration-200"
+                >
+                  <Brain className="h-5 w-5 mr-2" />
+                  Start 7-Day Free Trial
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Button>
+              </div>
               <p className="text-white/80 text-sm mt-4">
-                7-day free trial • No credit card required • Cancel anytime
+                No credit card charged for 7 days • Cancel anytime
               </p>
             </CardContent>
           </Card>

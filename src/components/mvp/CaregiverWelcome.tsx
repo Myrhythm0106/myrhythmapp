@@ -130,17 +130,19 @@ export function CaregiverWelcome({ onContinue, onStartJourney }: CaregiverWelcom
               <p className="text-white/90 text-lg mb-6 max-w-2xl mx-auto">
                 Join caregivers who've found balance and confidence with MyRhythm's coordinated care tools.
               </p>
-              <Button
-                onClick={handleClick}
-                size="lg"
-                className="bg-white text-brand-orange-700 hover:bg-white/90 text-lg px-8 py-6 h-auto shadow-xl hover:shadow-2xl transition-all duration-200"
-              >
-                <Heart className="h-5 w-5 mr-2" />
-                Begin Your Care Journey
-                <ArrowRight className="h-5 w-5 ml-2" />
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  onClick={() => window.location.href = '/launch/register?userType=caregiver'}
+                  size="lg"
+                  className="bg-white text-brand-orange-700 hover:bg-white/90 text-lg px-8 py-6 h-auto shadow-xl hover:shadow-2xl transition-all duration-200"
+                >
+                  <Heart className="h-5 w-5 mr-2" />
+                  Start 7-Day Free Trial
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Button>
+              </div>
               <p className="text-white/80 text-sm mt-4">
-                7-day free trial • No credit card required • Cancel anytime
+                No credit card charged for 7 days • Cancel anytime
               </p>
             </CardContent>
           </Card>
