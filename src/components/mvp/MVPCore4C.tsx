@@ -30,7 +30,7 @@ export function MVPCore4C() {
   }, [location]);
   
   const handleGetStarted = () => {
-    navigate("/mvp/user-type-selection");
+    navigate("/launch/register");
   };
 
   const { signOut } = useAuth();
@@ -100,7 +100,7 @@ export function MVPCore4C() {
                  <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
-                  onClick={() => navigate('/mvp/user-type-selection')}
+                  onClick={() => navigate('/launch/register')}
                 >
                   <Sparkles className="h-5 w-5 mr-2" />
                   Register Now
@@ -260,6 +260,30 @@ export function MVPCore4C() {
             <p className="text-brain-health-600 font-medium max-w-2xl mx-auto">
               The complete MyRhythm system - Capture memories and conversations, Commit to your rhythm and follow through, Calibrate your well being and Celebrate with your community.
             </p>
+          </div>
+
+          {/* Prominent CTA */}
+          <div className="mt-16 text-center">
+            <div className="inline-flex flex-col items-center p-8 bg-gradient-to-br from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 rounded-3xl border border-memory-emerald-200/50">
+              <h3 className="text-2xl md:text-3xl font-bold text-brain-health-900 mb-3">
+                Ready to Transform Your Journey?
+              </h3>
+              <p className="text-brain-health-700 mb-6 max-w-lg">
+                Start your 7-day free trial today. No commitment, cancel anytime.
+              </p>
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-10 py-6 text-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105" 
+                onClick={() => navigate('/launch/register')}
+              >
+                <Sparkles className="h-6 w-6 mr-3" />
+                Start 7-Day Free Trial
+                <ArrowRight className="h-6 w-6 ml-3" />
+              </Button>
+              <p className="text-sm text-brain-health-500 mt-4">
+                ✓ No charge until trial ends &nbsp;•&nbsp; ✓ Cancel anytime
+              </p>
+            </div>
           </div>
         </div>
       </section>
