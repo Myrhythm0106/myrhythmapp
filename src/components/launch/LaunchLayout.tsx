@@ -4,7 +4,7 @@ import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
 import { SupportCircleBadge } from './SupportCircleBadge';
 import { WhatsNewBadge } from './WhatsNewBadge';
-
+import { LaunchQuickActions } from './LaunchQuickActions';
 interface LaunchLayoutProps {
   children: ReactNode;
   showNav?: boolean;
@@ -51,6 +51,9 @@ export function LaunchLayout({
       
       {/* Growth Footer */}
       {showFooter && <GrowthFooter />}
+      
+      {/* Global Quick Actions - Always visible */}
+      <LaunchQuickActions />
       
       {/* Bottom Navigation (Mobile) */}
       {showNav && <LaunchNav />}

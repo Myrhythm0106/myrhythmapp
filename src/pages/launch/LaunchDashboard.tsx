@@ -1,32 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
-import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompactBrainTip } from '@/components/launch/CompactBrainTip';
 import { getDaysRemainingInYear } from '@/hooks/useLaunchMode';
 import { 
-  Calendar, Camera, Gamepad2, Heart, Plus, Target, 
-  ChevronRight, Sparkles, TrendingUp 
+  Calendar, Gamepad2, Heart, Target, 
+  ChevronRight, TrendingUp 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function LaunchDashboard() {
   const navigate = useNavigate();
-  const [showQuickActions, setShowQuickActions] = useState(false);
   const daysRemaining = getDaysRemainingInYear();
   
   // Get assessment results for personalization
   const launchData = JSON.parse(localStorage.getItem('myrhythm_launch_mode') || '{}');
   const isRecoveryUser = launchData.assessmentResults?.userType === 'recovery';
   const userName = 'there'; // Would come from auth
-
-  const quickActions = [
-    { label: 'Record Memory', icon: Camera, path: '/launch/memory', color: 'bg-brand-emerald-500' },
-    { label: 'Add Event', icon: Calendar, path: '/launch/calendar', color: 'bg-blue-500' },
-    { label: 'Brain Game', icon: Gamepad2, path: '/launch/games', color: 'bg-purple-500' },
-    { label: 'Gratitude', icon: Heart, path: '/launch/gratitude', color: 'bg-rose-500' },
-  ];
 
   return (
     <LaunchLayout>
@@ -138,7 +129,7 @@ export default function LaunchDashboard() {
       </div>
 
       {/* Weekly Progress */}
-      <LaunchCard className="mb-24">
+      <LaunchCard className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-semibold text-gray-900">This Week</h3>
           <TrendingUp className="h-5 w-5 text-brand-emerald-500" />
@@ -157,45 +148,6 @@ export default function LaunchDashboard() {
           ))}
         </div>
       </LaunchCard>
-
-      {/* Floating Quick Action Button */}
-      <div className="fixed bottom-24 right-6 md:bottom-20 z-40">
-        <div className="relative">
-          {/* Quick Action Options */}
-          {showQuickActions && (
-            <div className="absolute bottom-16 right-0 space-y-2 animate-in fade-in slide-in-from-bottom-4 duration-200">
-              {quickActions.map((action) => (
-                <button
-                  key={action.label}
-                  onClick={() => {
-                    navigate(action.path);
-                    setShowQuickActions(false);
-                  }}
-                  className="flex items-center gap-3 bg-white shadow-lg rounded-full pl-4 pr-5 py-3 hover:shadow-xl transition-shadow"
-                >
-                  <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", action.color)}>
-                    <action.icon className="h-4 w-4 text-white" />
-                  </div>
-                  <span className="font-medium text-gray-900 whitespace-nowrap">{action.label}</span>
-                </button>
-              ))}
-            </div>
-          )}
-
-          {/* Main FAB */}
-          <button
-            onClick={() => setShowQuickActions(!showQuickActions)}
-            className={cn(
-              "w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200",
-              showQuickActions 
-                ? "bg-gray-900 rotate-45" 
-                : "bg-gradient-to-br from-brand-emerald-500 to-brand-teal-500"
-            )}
-          >
-            <Plus className="h-6 w-6 text-white" />
-          </button>
-        </div>
-      </div>
     </LaunchLayout>
   );
 }
