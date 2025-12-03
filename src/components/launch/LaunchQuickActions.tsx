@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
-  Calendar, Camera, Gamepad2, Heart, Plus, Users, Home 
+  Calendar, Camera, Gamepad2, Heart, Compass, Users, Home 
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -56,17 +56,17 @@ export function LaunchQuickActions() {
           />
         )}
 
-        {/* Main FAB */}
+        {/* Main FAB - Compass for Navigation */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
-            "w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-200",
+            "w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300",
             isOpen 
-              ? "bg-gray-900 rotate-45" 
+              ? "bg-gray-900 scale-110" 
               : "bg-gradient-to-br from-brand-emerald-500 to-brand-teal-500"
           )}
         >
-          <Plus className="h-6 w-6 text-white" />
+          <Compass className={cn("h-6 w-6 text-white transition-transform duration-300", isOpen && "rotate-90")} />
         </button>
       </div>
     </div>
