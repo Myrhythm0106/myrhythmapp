@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Star, Zap, Target, ChevronDown, ChevronUp } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, Zap, Target, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
 
 type ViewScope = 'day' | 'week' | 'month' | 'year';
 
@@ -8,56 +9,74 @@ interface LaunchCommitmentBannerProps {
   scope: ViewScope;
   date?: Date;
   className?: string;
+  inheritedVision?: string;
+  inheritedFocus?: string;
+  onVisionChange?: (vision: string) => void;
 }
 
 const scopeTitles: Record<ViewScope, (date: Date) => string> = {
-  day: () => "Today's Purpose",
-  week: () => "This Week's Mission",
-  month: (date) => `My ${date.toLocaleDateString('en-US', { month: 'long' })} Focus`,
-  year: (date) => `My ${date.getFullYear()} Vision`,
+  day: () => "Today's Focus",
+  week: () => "This Week's Focus",
+  month: (date) => `${date.toLocaleDateString('en-US', { month: 'long' })} Focus`,
+  year: (date) => `${date.getFullYear()} Vision`,
 };
+
+const empoweringMessages = [
+  "Your rhythm, your rules",
+  "Every small step builds momentum",
+  "Progress, not perfection",
+  "You're building something meaningful",
+  "One moment at a time",
+  "Trust your journey",
+  "Small wins add up",
+  "You've got this",
+];
 
 const commitmentTypes = [
   { 
     key: 'core', 
-    label: 'My Core Commitment', 
+    label: 'Core', 
+    sublabel: 'This is non-negotiable',
     icon: Star, 
-    color: 'text-amber-500',
-    bgColor: 'bg-amber-50',
-    borderColor: 'border-amber-200',
-    hint: 'This is non-negotiable'
+    iconColor: 'text-amber-300',
   },
   { 
     key: 'key', 
-    label: 'My Key Commitment', 
+    label: 'Key', 
+    sublabel: 'Important to me',
     icon: Zap, 
-    color: 'text-brand-emerald-500',
-    bgColor: 'bg-brand-emerald-50',
-    borderColor: 'border-brand-emerald-200',
-    hint: 'Important to me'
+    iconColor: 'text-white',
   },
   { 
     key: 'stretch', 
-    label: 'My Stretch Commitment', 
+    label: 'Stretch', 
+    sublabel: 'When energy allows',
     icon: Target, 
-    color: 'text-brand-teal-500',
-    bgColor: 'bg-brand-teal-50',
-    borderColor: 'border-brand-teal-200',
-    hint: 'When energy allows'
+    iconColor: 'text-brand-teal-200',
   },
 ];
 
 export function LaunchCommitmentBanner({ 
   scope, 
   date = new Date(),
-  className = '' 
+  className = '',
+  inheritedVision,
+  inheritedFocus,
+  onVisionChange
 }: LaunchCommitmentBannerProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
   const [commitments, setCommitments] = useState<Record<string, string>>({
     core: '',
     key: '',
     stretch: '',
   });
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentMessageIndex((prev) => (prev + 1) % empoweringMessages.length);
+    }, 8000);
+    return () => clearInterval(timer);
+  }, []);
 
   const title = scopeTitles[scope](date);
 
@@ -65,67 +84,82 @@ export function LaunchCommitmentBanner({
     setCommitments(prev => ({ ...prev, [key]: value }));
   };
 
+  // For year view, show vision input instead of commitments
+  if (scope === 'year') {
+    return (
+      <div className={cn(
+        "rounded-2xl overflow-hidden shadow-lg",
+        "bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500",
+        className
+      )}>
+        <div className="p-6 text-white">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles className="h-5 w-5 text-amber-300" />
+            <h2 className="text-xl font-bold">{title}</h2>
+          </div>
+          <p className="text-white/80 text-sm mb-4">
+            What do you want this year to be about?
+          </p>
+          <Input
+            value={inheritedVision || ''}
+            onChange={(e) => onVisionChange?.(e.target.value)}
+            placeholder="My year of abundance & growth..."
+            className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30"
+          />
+          <p className="text-white/70 text-xs mt-3 italic">
+            ✨ {empoweringMessages[currentMessageIndex]}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={cn("bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden", className)}>
-      {/* Header */}
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 flex items-center justify-between bg-gradient-to-r from-brand-emerald-50 to-brand-teal-50"
-      >
-        <div className="flex items-center gap-2">
-          <span className="text-lg font-semibold text-gray-900">{title}</span>
-        </div>
-        {isExpanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-400" />
-        ) : (
-          <ChevronDown className="h-5 w-5 text-gray-400" />
+    <div className={cn(
+      "rounded-2xl overflow-hidden shadow-lg",
+      "bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500",
+      className
+    )}>
+      <div className="p-6 text-white">
+        {/* Inherited context breadcrumb */}
+        {(inheritedVision || inheritedFocus) && (
+          <div className="text-white/70 text-xs mb-2 flex items-center gap-2">
+            {inheritedVision && <span>🌟 {inheritedVision}</span>}
+            {inheritedVision && inheritedFocus && <span>→</span>}
+            {inheritedFocus && <span>{inheritedFocus}</span>}
+          </div>
         )}
-      </button>
 
-      {/* Collapsed Preview */}
-      {!isExpanded && (
-        <div className="px-4 py-2 flex gap-2 overflow-x-auto">
-          {commitmentTypes.map((type) => (
-            <div 
-              key={type.key}
-              className={cn(
-                "flex items-center gap-1 px-2 py-1 rounded-full text-xs",
-                type.bgColor,
-                commitments[type.key] ? "opacity-100" : "opacity-50"
-              )}
-            >
-              <type.icon className={cn("h-3 w-3", type.color)} />
-              <span className="truncate max-w-[100px]">
-                {commitments[type.key] || type.hint}
-              </span>
-            </div>
-          ))}
+        {/* Header with empowering message */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-amber-300" />
+            <h2 className="text-xl font-bold">{title}</h2>
+          </div>
+          <span className="text-white/80 text-sm italic">
+            ✨ {empoweringMessages[currentMessageIndex]}
+          </span>
         </div>
-      )}
 
-      {/* Expanded Form */}
-      {isExpanded && (
-        <div className="p-4 space-y-3">
+        {/* 3-column commitment grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {commitmentTypes.map((type) => (
-            <div 
-              key={type.key}
-              className={cn("rounded-lg p-3 border", type.bgColor, type.borderColor)}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                <type.icon className={cn("h-4 w-4", type.color)} />
-                <span className="font-medium text-sm text-gray-800">{type.label}</span>
-              </div>
-              <input
-                type="text"
+            <div key={type.key} className="space-y-2">
+              <label className="flex items-center gap-2 text-sm font-medium">
+                <type.icon className={cn("h-4 w-4", type.iconColor)} />
+                <span>{type.label}</span>
+                <span className="text-white/60 text-xs">- {type.sublabel}</span>
+              </label>
+              <Input
                 value={commitments[type.key]}
                 onChange={(e) => handleCommitmentChange(type.key, e.target.value)}
-                placeholder={type.hint}
-                className="w-full px-3 py-2 text-sm rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-emerald-500 focus:border-transparent bg-white"
+                placeholder={type.sublabel}
+                className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30 text-sm"
               />
             </div>
           ))}
         </div>
-      )}
+      </div>
     </div>
   );
 }

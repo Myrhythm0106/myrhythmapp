@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { cn } from '@/lib/utils';
@@ -16,9 +16,18 @@ interface LaunchWeekViewProps {
   events: Event[];
   onDaySelect: (date: Date) => void;
   className?: string;
+  inheritedVision?: string;
+  inheritedMonthFocus?: string;
 }
 
-export function LaunchWeekView({ date, events, onDaySelect, className = '' }: LaunchWeekViewProps) {
+export function LaunchWeekView({ 
+  date, 
+  events, 
+  onDaySelect, 
+  className = '',
+  inheritedVision,
+  inheritedMonthFocus
+}: LaunchWeekViewProps) {
   const weekStart = startOfWeek(date, { weekStartsOn: 1 }); // Monday
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const today = new Date();
@@ -27,9 +36,35 @@ export function LaunchWeekView({ date, events, onDaySelect, className = '' }: La
     return events.filter(e => e.date && isSameDay(e.date, day));
   };
 
+  // Build breadcrumb
+  const breadcrumbParts = [];
+  if (inheritedVision) breadcrumbParts.push(`🌟 ${inheritedVision}`);
+  if (inheritedMonthFocus) breadcrumbParts.push(inheritedMonthFocus);
+
   return (
     <div className={cn("space-y-4", className)}>
-      <LaunchCommitmentBanner scope="week" date={date} />
+      {/* Vision Cascade Breadcrumb */}
+      {breadcrumbParts.length > 0 && (
+        <div className="text-sm text-brand-teal-600 flex items-center gap-2 flex-wrap px-1">
+          {breadcrumbParts.map((part, i) => (
+            <React.Fragment key={i}>
+              <span className={i === breadcrumbParts.length - 1 ? 'font-medium' : ''}>
+                {part}
+              </span>
+              {i < breadcrumbParts.length - 1 && (
+                <span className="text-brand-teal-400">→</span>
+              )}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+
+      <LaunchCommitmentBanner 
+        scope="week" 
+        date={date}
+        inheritedVision={inheritedVision}
+        inheritedFocus={inheritedMonthFocus}
+      />
 
       <div className="grid grid-cols-7 gap-2">
         {weekDays.map((day) => {

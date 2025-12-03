@@ -2,12 +2,14 @@ import React from 'react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { cn } from '@/lib/utils';
-import { format, isSameMonth } from 'date-fns';
+import { isSameMonth } from 'date-fns';
 
 interface LaunchYearViewProps {
   date: Date;
   onMonthSelect: (date: Date) => void;
   className?: string;
+  yearVision?: string;
+  onYearVisionChange?: (vision: string) => void;
 }
 
 const months = [
@@ -16,17 +18,28 @@ const months = [
   'September', 'October', 'November', 'December'
 ];
 
-export function LaunchYearView({ date, onMonthSelect, className = '' }: LaunchYearViewProps) {
+export function LaunchYearView({ 
+  date, 
+  onMonthSelect, 
+  className = '',
+  yearVision,
+  onYearVisionChange
+}: LaunchYearViewProps) {
   const today = new Date();
   const currentYear = date.getFullYear();
 
   return (
     <div className={cn("space-y-4", className)}>
-      <LaunchCommitmentBanner scope="year" date={date} />
+      <LaunchCommitmentBanner 
+        scope="year" 
+        date={date}
+        inheritedVision={yearVision}
+        onVisionChange={onYearVisionChange}
+      />
 
       <div className="text-center mb-4">
         <h2 className="text-2xl font-bold text-gray-900">{currentYear}</h2>
-        <p className="text-sm text-brand-teal-600">Your year of growth 🌱</p>
+        <p className="text-sm text-brand-teal-600">Your year of growth</p>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -66,6 +79,16 @@ export function LaunchYearView({ date, onMonthSelect, className = '' }: LaunchYe
           Set your yearly vision above, then break it down into monthly focuses. 
           Each month brings you closer to your goals.
         </p>
+        {yearVision && (
+          <div className="mt-3 p-3 bg-brand-emerald-50 rounded-lg">
+            <p className="text-sm text-brand-emerald-700">
+              <span className="font-medium">Your Vision:</span> {yearVision}
+            </p>
+            <p className="text-xs text-brand-emerald-600 mt-1">
+              This flows down to guide your months, weeks, and days
+            </p>
+          </div>
+        )}
       </LaunchCard>
     </div>
   );

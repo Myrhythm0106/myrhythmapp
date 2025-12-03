@@ -25,9 +25,16 @@ interface LaunchMonthViewProps {
   events: Event[];
   onDaySelect: (date: Date) => void;
   className?: string;
+  inheritedVision?: string;
 }
 
-export function LaunchMonthView({ date, events, onDaySelect, className = '' }: LaunchMonthViewProps) {
+export function LaunchMonthView({ 
+  date, 
+  events, 
+  onDaySelect, 
+  className = '',
+  inheritedVision
+}: LaunchMonthViewProps) {
   const monthStart = startOfMonth(date);
   const monthEnd = endOfMonth(date);
   const calendarStart = startOfWeek(monthStart, { weekStartsOn: 1 });
@@ -48,7 +55,18 @@ export function LaunchMonthView({ date, events, onDaySelect, className = '' }: L
 
   return (
     <div className={cn("space-y-4", className)}>
-      <LaunchCommitmentBanner scope="month" date={date} />
+      {/* Vision Cascade Breadcrumb */}
+      {inheritedVision && (
+        <div className="text-sm text-brand-teal-600 flex items-center gap-2 px-1">
+          <span>🌟 {inheritedVision}</span>
+        </div>
+      )}
+
+      <LaunchCommitmentBanner 
+        scope="month" 
+        date={date}
+        inheritedVision={inheritedVision}
+      />
 
       <LaunchCard className="p-4">
         {/* Day Headers */}
