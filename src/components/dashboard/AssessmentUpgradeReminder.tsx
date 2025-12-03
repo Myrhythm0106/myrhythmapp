@@ -38,18 +38,19 @@ export function AssessmentUpgradeReminder({ onClose }: AssessmentUpgradeReminder
           <div className="flex-1 space-y-3">
             <div className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-purple-600" />
-              <h3 className="font-semibold text-purple-800">Unlock Your Full Potential</h3>
-              <Badge className="bg-purple-100 text-purple-700">Recommended</Badge>
+              <h3 className="font-semibold text-purple-800">🎉 3 Months of Growth!</h3>
+              <Badge className="bg-purple-100 text-purple-700">Milestone</Badge>
             </div>
             
             <p className="text-sm text-purple-700">
-              You've been using MyRhythm for a week! Ready to get more personalized insights with our comprehensive assessment? 
-              It takes just 5 minutes and will unlock more accurate recommendations tailored to your unique needs.
+              Congratulations on 3 months with MyRhythm! You've built amazing habits. 
+              Ready to unlock deeper insights with our comprehensive assessment? 
+              It takes just 5-7 minutes and will reveal your progress and new optimization opportunities.
             </p>
             
             <div className="flex items-center gap-2 text-xs text-purple-600">
               <Clock className="h-3 w-3" />
-              <span>5-7 minutes • More detailed insights • Better recommendations</span>
+              <span>5-7 minutes • Track your growth • Unlock advanced features</span>
             </div>
             
             <div className="flex gap-2">

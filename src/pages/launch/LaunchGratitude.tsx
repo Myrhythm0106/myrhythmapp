@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Heart, Plus, Share2, Calendar, X, Users, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
+import { toast } from 'sonner';
 
 export default function LaunchGratitude() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -76,7 +77,10 @@ export default function LaunchGratitude() {
                   <span className="text-xs text-gray-400">{entry.date}</span>
                 </div>
               </div>
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <button 
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                onClick={() => toast.info('Share with Support Circle coming soon!')}
+              >
                 <Share2 className="h-4 w-4 text-gray-400" />
               </button>
             </div>

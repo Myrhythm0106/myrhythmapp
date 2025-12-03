@@ -29,16 +29,16 @@ export default function LaunchLanding() {
         {/* CTA Button */}
         <LaunchButton
           size="lg"
-          onClick={() => navigate('/launch/assessment')}
+          onClick={() => navigate('/launch/register')}
           className="gap-3 px-10"
         >
-          Start Your Journey
+          Start 7-Day Free Trial
           <ArrowRight className="h-5 w-5" />
         </LaunchButton>
 
         {/* Trust Signal */}
         <p className="text-sm text-gray-500 mt-6">
-          Free to start • No credit card required
+          No credit card charged for 7 days • Cancel anytime
         </p>
       </div>
 

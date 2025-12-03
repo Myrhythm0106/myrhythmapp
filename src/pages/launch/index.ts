@@ -1,5 +1,8 @@
 // V1 Launch Mode Pages
 export { default as LaunchLanding } from './LaunchLanding';
+export { default as LaunchRegister } from './LaunchRegister';
+export { default as LaunchUserType } from './LaunchUserType';
+export { default as LaunchPayment } from './LaunchPayment';
 export { default as LaunchAssessment } from './LaunchAssessment';
 export { default as LaunchWelcome } from './LaunchWelcome';
 export { default as LaunchDashboard } from './LaunchDashboard';

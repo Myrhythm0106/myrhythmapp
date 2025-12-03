@@ -1,7 +1,7 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 
 interface AssessmentResults {
-  userType: 'recovery' | 'goal-achiever' | 'caregiver' | null;
+  userType: 'recovery' | 'goal-achiever' | 'caregiver' | 'brain-injury' | 'student' | 'executive' | 'wellness' | 'medical-professional' | 'cognitive-optimization' | 'post-recovery' | null;
   rhythmPreference: 'morning' | 'afternoon' | 'evening' | null;
   keyStruggles: string[];
   goals: string[];
@@ -14,6 +14,8 @@ interface LaunchModeState {
   assessmentResults: AssessmentResults;
   lastViewedWhatsNew: string | null;
   purchasedFeatures: string[];
+  selectedUserType: string | null;
+  assessmentCompletedAt: string | null;
 }
 
 interface LaunchModeContextType extends LaunchModeState {
@@ -24,6 +26,7 @@ interface LaunchModeContextType extends LaunchModeState {
   markWhatsNewViewed: (version: string) => void;
   addPurchasedFeature: (featureId: string) => void;
   hasFeature: (featureId: string) => boolean;
+  setSelectedUserType: (userType: string) => void;
 }
 
 const LaunchModeContext = createContext<LaunchModeContextType | undefined>(undefined);
@@ -48,6 +51,8 @@ export function LaunchModeProvider({ children }: { children: ReactNode }) {
       assessmentResults: defaultAssessment,
       lastViewedWhatsNew: null,
       purchasedFeatures: [],
+      selectedUserType: null,
+      assessmentCompletedAt: null,
     };
   });
 
@@ -64,7 +69,15 @@ export function LaunchModeProvider({ children }: { children: ReactNode }) {
   };
 
   const completeAssessment = () => {
-    setState(prev => ({ ...prev, assessmentCompleted: true }));
+    setState(prev => ({ 
+      ...prev, 
+      assessmentCompleted: true,
+      assessmentCompletedAt: new Date().toISOString(),
+    }));
+  };
+
+  const setSelectedUserType = (userType: string) => {
+    setState(prev => ({ ...prev, selectedUserType: userType }));
   };
 
   const markWhatsNewViewed = (version: string) => {
@@ -86,11 +99,12 @@ export function LaunchModeProvider({ children }: { children: ReactNode }) {
     ...state,
     setAssessmentResults,
     completeAssessment,
-    isRecoveryUser: state.assessmentResults.userType === 'recovery',
-    isGoalAchiever: state.assessmentResults.userType === 'goal-achiever',
+    isRecoveryUser: state.assessmentResults.userType === 'recovery' || state.assessmentResults.userType === 'brain-injury',
+    isGoalAchiever: state.assessmentResults.userType === 'goal-achiever' || state.assessmentResults.userType === 'executive',
     markWhatsNewViewed,
     addPurchasedFeature,
     hasFeature,
+    setSelectedUserType,
   };
 
   return (

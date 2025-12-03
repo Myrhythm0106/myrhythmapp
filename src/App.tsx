@@ -99,6 +99,9 @@ import PostRecoveryWelcomePage from "./pages/PostRecoveryWelcomePage";
 // V1 Launch Mode Pages
 import {
   LaunchLanding,
+  LaunchRegister,
+  LaunchUserType,
+  LaunchPayment,
   LaunchAssessment,
   LaunchWelcome,
   LaunchDashboard,
@@ -305,6 +308,9 @@ function App() {
                        
                        {/* V1 Launch Mode Routes */}
                        <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
+                       <Route path="/launch/register" element={<LaunchModeProvider><LaunchRegister /></LaunchModeProvider>} />
+                       <Route path="/launch/user-type" element={<LaunchModeProvider><LaunchUserType /></LaunchModeProvider>} />
+                       <Route path="/launch/payment" element={<LaunchModeProvider><LaunchPayment /></LaunchModeProvider>} />
                        <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchAssessment /></LaunchModeProvider>} />
                        <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchWelcome /></LaunchModeProvider>} />
                        <Route path="/launch/home" element={<LaunchModeProvider><LaunchDashboard /></LaunchModeProvider>} />
