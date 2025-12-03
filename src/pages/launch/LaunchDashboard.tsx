@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { CompactBrainTip } from '@/components/launch/CompactBrainTip';
+import { LaunchAppTour } from '@/components/launch/LaunchAppTour';
 import { getDaysRemainingInYear } from '@/hooks/useLaunchMode';
 import { 
   Calendar, Gamepad2, Heart, Target, 
@@ -13,14 +14,39 @@ import { cn } from '@/lib/utils';
 export default function LaunchDashboard() {
   const navigate = useNavigate();
   const daysRemaining = getDaysRemainingInYear();
+  const [showTour, setShowTour] = useState(false);
   
   // Get assessment results for personalization
   const launchData = JSON.parse(localStorage.getItem('myrhythm_launch_mode') || '{}');
   const isRecoveryUser = launchData.assessmentResults?.userType === 'recovery';
   const userName = 'there'; // Would come from auth
 
+  // Check if first-time user and show tour
+  useEffect(() => {
+    const hasSeenTour = localStorage.getItem('myrhythm-launch-tour-completed');
+    if (!hasSeenTour) {
+      // Slight delay so user sees the dashboard first
+      const timer = setTimeout(() => setShowTour(true), 800);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  // Listen for manual tour trigger from compass menu
+  useEffect(() => {
+    const handleShowTour = () => setShowTour(true);
+    window.addEventListener('show-launch-tour', handleShowTour);
+    return () => window.removeEventListener('show-launch-tour', handleShowTour);
+  }, []);
+
+  const handleTourClose = () => {
+    setShowTour(false);
+  };
+
   return (
     <LaunchLayout>
+      {/* App Tour Dialog */}
+      <LaunchAppTour isOpen={showTour} onClose={handleTourClose} />
+
       {/* Header with Days Remaining */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">

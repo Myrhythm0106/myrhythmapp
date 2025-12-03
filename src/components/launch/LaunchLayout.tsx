@@ -1,10 +1,13 @@
 import React, { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { LaunchNav } from './LaunchNav';
 import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
 import { SupportCircleBadge } from './SupportCircleBadge';
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { LaunchQuickActions } from './LaunchQuickActions';
+import { HelpCircle } from 'lucide-react';
+
 interface LaunchLayoutProps {
   children: ReactNode;
   showNav?: boolean;
@@ -18,6 +21,8 @@ export function LaunchLayout({
   showFooter = true,
   showHeader = true 
 }: LaunchLayoutProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col">
       {/* Top Header Bar */}
@@ -33,8 +38,19 @@ export function LaunchLayout({
               </span>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <WhatsNewBadge />
+              
+              {/* Help Button */}
+              <button
+                onClick={() => navigate('/help/getting-started')}
+                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                title="How to use MyRhythm"
+                aria-label="Help and guides"
+              >
+                <HelpCircle className="h-5 w-5 text-gray-600" />
+              </button>
+              
               <SupportCircleBadge />
               <AccountDropdown />
             </div>
