@@ -112,9 +112,12 @@ export default function LaunchGratitude() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Why does this matter? (optional)
+              <label className="text-sm font-medium text-gray-700 mb-1 block">
+                🧠 Why does this matter? <span className="text-rose-500">*</span>
               </label>
+              <p className="text-xs text-gray-500 mb-2">
+                Reflecting on "why" activates deeper brain pathways!
+              </p>
               <textarea
                 value={whyGrateful}
                 onChange={(e) => setWhyGrateful(e.target.value)}
@@ -137,7 +140,7 @@ export default function LaunchGratitude() {
               Share with Support Circle
             </button>
 
-            <LaunchButton onClick={handleSave} className="w-full" disabled={!gratitudeText.trim()}>
+            <LaunchButton onClick={handleSave} className="w-full" disabled={!gratitudeText.trim() || !whyGrateful.trim()}>
               <Sparkles className="h-5 w-5" />
               Save Gratitude
             </LaunchButton>

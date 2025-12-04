@@ -56,8 +56,8 @@ export default function LaunchSignIn() {
         return;
       }
 
-      // Success - navigate to dashboard
-      navigate('/launch/dashboard');
+      // Success - navigate to home
+      navigate('/launch/home');
     } catch (err: any) {
       toast.error(err.message || 'Something went wrong');
     } finally {
@@ -212,7 +212,7 @@ export default function LaunchSignIn() {
                     const { supabase } = await import('@/integrations/supabase/client');
                     const { error } = await supabase.auth.signInWithOtp({
                       email: email.trim(),
-                      options: { emailRedirectTo: `${window.location.origin}/launch/dashboard` }
+                      options: { emailRedirectTo: `${window.location.origin}/launch/home` }
                     });
                     if (error) throw error;
                     toast.success('Magic link sent! Check your email.');
