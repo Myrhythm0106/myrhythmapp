@@ -172,7 +172,7 @@ export default function LaunchRegister() {
           <p className="mt-6 text-sm text-gray-600">
             Already verified?{' '}
             <button
-              onClick={() => navigate('/auth')}
+              onClick={() => navigate('/launch/signin')}
               className="text-brand-emerald-600 hover:text-brand-emerald-700 font-medium"
             >
               Sign in
@@ -297,7 +297,7 @@ export default function LaunchRegister() {
         <p className="mt-6 text-sm text-gray-600">
           Already have an account?{' '}
           <button
-            onClick={() => navigate('/auth')}
+            onClick={() => navigate('/launch/signin')}
             className="text-brand-emerald-600 hover:text-brand-emerald-700 font-medium"
           >
             Sign in
