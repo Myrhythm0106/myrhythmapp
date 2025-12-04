@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User } from 'lucide-react';
+import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PainPointImageCard } from './PainPointImageCard';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
@@ -13,6 +13,7 @@ import { FeatureExplorationModal } from './FeatureExplorationModal';
 import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
 import { useAuth } from '@/hooks/useAuth';
 import { TestAccountButton } from '@/components/auth/TestAccountButton';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 export function MVPCore4C() {
   const navigate = useNavigate();
@@ -55,15 +56,25 @@ export function MVPCore4C() {
               <Brain className="h-8 w-8 text-memory-emerald-600" />
               <span className="text-2xl font-bold text-brain-health-900">MyRhythm</span>
             </div>
-            <Button
-              onClick={handleAuthAction}
-              variant="outline"
-              size="sm"
-              className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
-            >
-              <User className="h-4 w-4 mr-2" />
-              {user ? 'Sign Out' : 'Log In'}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                onClick={() => navigate('/help/getting-started')}
+                variant="ghost"
+                size="sm"
+                className="text-brain-health-600 hover:text-brain-health-800 hover:bg-brain-health-50"
+              >
+                <HelpCircle className="h-5 w-5" />
+              </Button>
+              <Button
+                onClick={handleAuthAction}
+                variant="outline"
+                size="sm"
+                className="border-brain-health-300 text-brain-health-700 hover:bg-brain-health-50 hover:text-brain-health-900 transition-colors"
+              >
+                <User className="h-4 w-4 mr-2" />
+                {user ? 'Sign Out' : 'Log In'}
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
@@ -167,7 +178,7 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" 
-                  onClick={() => user ? navigate('/memory-bridge') : navigate('/auth?redirect=/memory-bridge')}
+                  onClick={() => user ? navigate('/launch/memory') : navigate('/auth?redirect=/launch/memory')}
                 >
                   {user ? 'Open Memory Bridge' : 'Start Capture'}
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -193,7 +204,7 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white" 
-                  onClick={() => user ? navigate('/calendar') : navigate('/auth?redirect=/calendar')}
+                  onClick={() => user ? navigate('/launch/calendar') : navigate('/auth?redirect=/launch/calendar')}
                 >
                   {user ? 'Open Calendar' : 'Explore Calendar'}
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -455,6 +466,9 @@ export function MVPCore4C() {
             <TestAccountButton />
           </div>
         )}
+        
+        {/* Compass FAB - Navigation */}
+        <LaunchQuickActions />
       </div>
     );
   }

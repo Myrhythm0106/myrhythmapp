@@ -307,7 +307,7 @@ function App() {
                        <Route path="/congrats" element={<CongratsPage />} />
                        
                        {/* V1 Launch Mode Routes */}
-                       <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
+                       <Route path="/launch" element={<LaunchModeProvider><MVPCore4CPage /></LaunchModeProvider>} />
                        <Route path="/launch/register" element={<LaunchModeProvider><LaunchRegister /></LaunchModeProvider>} />
                        <Route path="/launch/user-type" element={<LaunchModeProvider><LaunchUserType /></LaunchModeProvider>} />
                        <Route path="/launch/payment" element={<LaunchModeProvider><LaunchPayment /></LaunchModeProvider>} />
