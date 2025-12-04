@@ -42,7 +42,7 @@ export function MVPCore4C() {
       await signOut();
       navigate('/');
     } else {
-      navigate('/auth');
+      navigate('/launch/signin');
     }
   };
 

@@ -286,9 +286,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           });
 
         if (tokenError) {
-          console.error('Error storing verification token:', tokenError);
-          toast.error('Account created but verification email failed. Please try resending.');
-          return { error: tokenError };
+          console.error('Custom verification token storage failed:', tokenError);
+          // Don't fail signup - account was created successfully
+          // Supabase will send its native verification email as fallback
+          console.log('Proceeding with signup - Supabase native email will be used');
+          toast.success('Account created! Check your email to verify your account.');
+          setEmailVerificationStatus('pending');
+          return { error: null };
         }
 
         // Send custom verification email via Resend edge function
