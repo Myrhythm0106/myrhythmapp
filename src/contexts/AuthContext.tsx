@@ -410,11 +410,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         .from('profiles')
         .select('id, name')
         .eq('email', email)
-        .single();
+        .maybeSingle();
       
-      if (profileError || !profileData) {
-        toast.error('User not found. Please sign up first.');
+      if (profileError) {
+        console.error('Error looking up profile:', profileError);
+        toast.error('Error looking up account. Please try again.');
         return { error: profileError };
+      }
+
+      // If no profile found, use Supabase's built-in resend (works for auth.users)
+      if (!profileData) {
+        console.log('No profile found for email, using Supabase native resend');
+        const { error: resendError } = await supabase.auth.resend({
+          type: 'signup',
+          email: email,
+          options: {
+            emailRedirectTo: `${window.location.origin}/launch/home`
+          }
+        });
+        
+        if (resendError) {
+          console.error('Supabase resend error:', resendError);
+          toast.error('Failed to resend verification. Please try signing up again.');
+          return { error: resendError };
+        }
+        
+        toast.success('Verification email sent! Check your inbox and spam folder.');
+        return { error: null };
       }
 
       // Generate new verification token
