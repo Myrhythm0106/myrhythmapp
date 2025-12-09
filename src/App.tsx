@@ -114,6 +114,7 @@ import {
   LaunchFeatureStore,
   LaunchProfile,
 } from "./pages/launch";
+import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
 
 const queryClient = new QueryClient();
@@ -323,6 +324,7 @@ function App() {
                        <Route path="/launch/support" element={<LaunchModeProvider><LaunchSupportCircle /></LaunchModeProvider>} />
                        <Route path="/launch/store" element={<LaunchModeProvider><LaunchFeatureStore /></LaunchModeProvider>} />
                        <Route path="/launch/profile" element={<LaunchModeProvider><LaunchProfile /></LaunchModeProvider>} />
+                       <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
                    </Routes>
                         </Suspense>
                         <AuthenticatedBottomNav />

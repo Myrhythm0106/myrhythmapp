@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
+import { BackButton } from '@/components/ui/BackButton';
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50),
@@ -99,6 +99,10 @@ export default function LaunchRegister() {
   if (registrationSuccess) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col">
+        {/* Back Button */}
+        <div className="p-4">
+          <BackButton onClick={() => navigate('/launch')} />
+        </div>
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
           {/* Logo */}
           <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
@@ -179,15 +183,16 @@ export default function LaunchRegister() {
             </button>
           </p>
         </div>
-        
-        {/* Compass FAB */}
-        <LaunchQuickActions />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col">
+      {/* Back Button */}
+      <div className="p-4">
+        <BackButton onClick={() => navigate('/launch')} />
+      </div>
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         {/* Logo */}
         <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
@@ -304,9 +309,6 @@ export default function LaunchRegister() {
           </button>
         </p>
       </div>
-      
-      {/* Compass FAB */}
-      <LaunchQuickActions />
     </div>
   );
 }
