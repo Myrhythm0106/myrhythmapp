@@ -115,6 +115,8 @@ import {
   LaunchProfile,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
+import LaunchCapture from "./pages/launch/LaunchCapture";
+import LaunchCommit from "./pages/launch/LaunchCommit";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
 
 const queryClient = new QueryClient();
@@ -325,6 +327,8 @@ function App() {
                        <Route path="/launch/store" element={<LaunchModeProvider><LaunchFeatureStore /></LaunchModeProvider>} />
                        <Route path="/launch/profile" element={<LaunchModeProvider><LaunchProfile /></LaunchModeProvider>} />
                        <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
+                       <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
+                       <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
                    </Routes>
                         </Suspense>
                         <AuthenticatedBottomNav />
