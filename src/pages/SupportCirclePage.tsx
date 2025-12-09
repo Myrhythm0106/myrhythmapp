@@ -24,9 +24,9 @@ const SupportCirclePage = () => {
   const activeMembers = supportCircle.filter(m => m.status === 'active');
   const pendingMembers = supportCircle.filter(m => m.status === 'pending');
 
-  const handleAddMember = (member: any) => {
-    // Handle the new member addition
-    console.log('New member added:', member);
+  const handleAddMember = () => {
+    // Member was added via the hook - the component handles everything
+    console.log('New member added successfully');
   };
 
   if (isLoading) {

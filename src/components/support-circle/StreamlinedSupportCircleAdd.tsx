@@ -15,41 +15,33 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { 
   UserPlus, 
-  Heart, 
   Shield, 
   CheckCircle,
   Users,
   Stethoscope,
   Home,
-  Briefcase
+  Briefcase,
+  Heart
 } from 'lucide-react';
+import { useAccountabilitySystem, SupportCircleMember } from '@/hooks/use-accountability-system';
 
 interface StreamlinedSupportCircleAddProps {
-  onAdd?: (member: SupportMember) => void;
+  onAdd?: () => void;
   onCancel?: () => void;
 }
 
-interface SupportMember {
-  email: string;
-  role: string;
-  notes: string;
-  permissions: {
-    viewProgress: boolean;
-    receiveUpdates: boolean;
-    emergencyContact: boolean;
-    viewCalendar: boolean;
-  };
-}
-
 const roleOptions = [
-  { value: 'family', label: 'Family Member', icon: Home, description: 'Spouse, parent, child, or close relative' },
-  { value: 'caregiver', label: 'Caregiver', icon: Heart, description: 'Professional or family caregiver' },
-  { value: 'medical', label: 'Medical Professional', icon: Stethoscope, description: 'Doctor, therapist, or healthcare provider' },
-  { value: 'friend', label: 'Close Friend', icon: Users, description: 'Trusted friend or peer supporter' },
-  { value: 'colleague', label: 'Work Colleague', icon: Briefcase, description: 'Workplace support or supervisor' },
+  { value: 'family', label: 'Family Member', icon: Home, description: 'Spouse, parent, child, or close relative', dbRole: 'supporter' as const },
+  { value: 'caregiver', label: 'Caregiver', icon: Heart, description: 'Professional or family caregiver', dbRole: 'caregiver' as const },
+  { value: 'medical', label: 'Medical Professional', icon: Stethoscope, description: 'Doctor, therapist, or healthcare provider', dbRole: 'medical' as const },
+  { value: 'friend', label: 'Close Friend', icon: Users, description: 'Trusted friend or peer supporter', dbRole: 'supporter' as const },
+  { value: 'colleague', label: 'Work Colleague', icon: Briefcase, description: 'Workplace support or supervisor', dbRole: 'viewer' as const },
 ];
 
 export function StreamlinedSupportCircleAdd({ onAdd, onCancel }: StreamlinedSupportCircleAddProps) {
+  const { addSupportMember } = useAccountabilitySystem();
+  
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
   const [notes, setNotes] = useState('');
@@ -121,6 +113,11 @@ export function StreamlinedSupportCircleAdd({ onAdd, onCancel }: StreamlinedSupp
     e.preventDefault();
     
     // Validation
+    if (!name.trim()) {
+      toast.error('Name is required');
+      return;
+    }
+    
     if (!email.trim()) {
       toast.error('Email address is required');
       return;
@@ -141,23 +138,35 @@ export function StreamlinedSupportCircleAdd({ onAdd, onCancel }: StreamlinedSupp
     setIsSubmitting(true);
 
     try {
-      const newMember: SupportMember = {
-        email: email.trim(),
-        role,
-        notes: notes.trim(),
-        permissions,
-      };
+      // Get the database role from the selected role option
+      const selectedRoleOption = roleOptions.find(r => r.value === role);
+      const dbRole = selectedRoleOption?.dbRole || 'viewer';
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      if (onAdd) {
-        onAdd(newMember);
-      }
+      // Call the real database function
+      await addSupportMember({
+        member_name: name.trim(),
+        member_email: email.trim(),
+        relationship: role,
+        role: dbRole,
+        permissions: {
+          mood: permissions.viewProgress,
+          health: permissions.viewProgress,
+          calendar: permissions.viewCalendar,
+          goals: permissions.viewProgress,
+          gratitude: false,
+        },
+        can_send_reminders: false,
+        can_receive_alerts: permissions.receiveUpdates,
+        notification_preferences: {
+          email: true,
+          sms: false,
+        }
+      });
       
       toast.success(`Invitation sent to ${email}! They'll receive an email with instructions to join your support circle.`);
       
       // Reset form
+      setName('');
       setEmail('');
       setRole('');
       setNotes('');
@@ -168,8 +177,14 @@ export function StreamlinedSupportCircleAdd({ onAdd, onCancel }: StreamlinedSupp
         viewCalendar: false,
       });
       
-    } catch (error) {
-      toast.error('Failed to send invitation. Please try again.');
+      // Call onAdd callback to notify parent
+      if (onAdd) {
+        onAdd();
+      }
+      
+    } catch (error: any) {
+      console.error('Failed to add support member:', error);
+      toast.error(error.message || 'Failed to send invitation. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -189,7 +204,7 @@ export function StreamlinedSupportCircleAdd({ onAdd, onCancel }: StreamlinedSupp
               Add Support Circle Member
             </CardTitle>
             <p className="text-sm text-brain-health-600 mt-1">
-              Just 4 simple fields to invite someone who cares about your journey
+              Invite someone who cares about your journey
             </p>
           </div>
         </div>
@@ -197,6 +212,23 @@ export function StreamlinedSupportCircleAdd({ onAdd, onCancel }: StreamlinedSupp
 
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name - Required */}
+          <div className="space-y-2">
+            <Label htmlFor="name" className="text-sm font-semibold text-brain-health-900 flex items-center gap-2">
+              <span className="w-2 h-2 bg-memory-emerald-500 rounded-full"></span>
+              Name
+            </Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="Enter their name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full"
+              required
+            />
+          </div>
+
           {/* Email - Required */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-semibold text-brain-health-900 flex items-center gap-2">
@@ -316,7 +348,7 @@ export function StreamlinedSupportCircleAdd({ onAdd, onCancel }: StreamlinedSupp
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
-              disabled={isSubmitting || !email.trim() || !role}
+              disabled={isSubmitting || !name.trim() || !email.trim() || !role}
               className="premium-button flex-1"
             >
               {isSubmitting ? (
