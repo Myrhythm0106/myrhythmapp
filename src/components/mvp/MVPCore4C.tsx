@@ -20,6 +20,13 @@ export function MVPCore4C() {
   const [activeFeatureModal, setActiveFeatureModal] = useState<'capture' | 'calendar' | 'calibrate' | 'community' | null>(null);
   const { user } = useAuth();
   
+  // Auto-redirect logged-in users to dashboard
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+  
   // Check if we should auto-open the modal on mount
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -176,9 +183,9 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" 
-                  onClick={() => user ? navigate('/launch/memory') : navigate('/auth?redirect=/launch/memory')}
+                  onClick={() => navigate('/launch/capture')}
                 >
-                  {user ? 'Open Memory Bridge' : 'Start Capture'}
+                  Explore Memory Bridge
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>
@@ -202,9 +209,9 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white" 
-                  onClick={() => user ? navigate('/launch/calendar') : navigate('/auth?redirect=/launch/calendar')}
+                  onClick={() => navigate('/launch/commit')}
                 >
-                  {user ? 'Open Calendar' : 'Explore Calendar'}
+                  Explore Calendar
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               </CardContent>
