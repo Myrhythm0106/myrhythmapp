@@ -13,8 +13,6 @@ import { FeatureExplorationModal } from './FeatureExplorationModal';
 import { FloatingRegisterButton } from '@/components/landing/FloatingRegisterButton';
 import { useAuth } from '@/hooks/useAuth';
 import { TestAccountButton } from '@/components/auth/TestAccountButton';
-import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
-
 export function MVPCore4C() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -230,7 +228,7 @@ export function MVPCore4C() {
                 <Button 
                   size="sm"
                   className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white" 
-                  onClick={() => setActiveFeatureModal('calibrate')}
+                  onClick={() => navigate('/launch/calibrate')}
                 >
                   Explore Calibrate
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -466,9 +464,6 @@ export function MVPCore4C() {
             <TestAccountButton />
           </div>
         )}
-        
-        {/* Compass FAB - Navigation */}
-        <LaunchQuickActions />
       </div>
     );
   }
