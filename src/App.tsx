@@ -68,6 +68,7 @@ import GuidedJourneyPage from "./pages/GuidedJourneyPage";
 import QuickCapture from "./pages/QuickCapture";
 import TestingSuitePage from "./pages/TestingSuitePage";
 import TestMemoryBridge from "./routes/TestMemoryBridge";
+import BrainInjuryNavigatorTestPage from "./pages/BrainInjuryNavigatorTestPage";
 import { NextStepsDebugger } from "./components/debug/NextStepsDebugger";
 import { BrainFriendlyDashboard } from "./components/dashboard/BrainFriendlyDashboard";
 import Help from "./pages/Help";
@@ -208,6 +209,7 @@ function App() {
                       </ProtectedRoute>
                     } />
                     <Route path="/testing-suite" element={<ProtectedRoute requireAuth={false}><TestingSuitePage /></ProtectedRoute>} />
+                    <Route path="/testing/navigator-script" element={<ProtectedRoute requireAuth={false}><BrainInjuryNavigatorTestPage /></ProtectedRoute>} />
                      <Route path="/quick-capture" element={<ProtectedRoute requireAuth={false}><QuickCapture /></ProtectedRoute>} />
                       <Route path="/email-verification" element={<EmailVerification />} />
                        <Route path="/get-started" element={<GetStartedPage />} />
