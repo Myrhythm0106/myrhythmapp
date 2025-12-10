@@ -540,6 +540,7 @@ export type Database = {
           goal_id: string | null
           id: string
           is_daily_win: boolean
+          priority_id: string | null
           start_time: string | null
           status: string
           title: string
@@ -561,6 +562,7 @@ export type Database = {
           goal_id?: string | null
           id?: string
           is_daily_win?: boolean
+          priority_id?: string | null
           start_time?: string | null
           status?: string
           title: string
@@ -582,6 +584,7 @@ export type Database = {
           goal_id?: string | null
           id?: string
           is_daily_win?: boolean
+          priority_id?: string | null
           start_time?: string | null
           status?: string
           title?: string
@@ -595,6 +598,13 @@ export type Database = {
             columns: ["calendar_event_id"]
             isOneToOne: false
             referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "daily_actions_priority_id_fkey"
+            columns: ["priority_id"]
+            isOneToOne: false
+            referencedRelation: "priorities"
             referencedColumns: ["id"]
           },
           {
@@ -1091,6 +1101,7 @@ export type Database = {
       }
       goals: {
         Row: {
+          annual_priority_id: string | null
           category: string | null
           created_at: string
           description: string | null
@@ -1103,6 +1114,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          annual_priority_id?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
@@ -1115,6 +1127,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          annual_priority_id?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
@@ -1126,7 +1139,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "goals_annual_priority_id_fkey"
+            columns: ["annual_priority_id"]
+            isOneToOne: false
+            referencedRelation: "annual_priorities"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       gratitude_entries: {
         Row: {
@@ -1664,6 +1685,68 @@ export type Database = {
         }
         Relationships: []
       }
+      priorities: {
+        Row: {
+          created_at: string
+          date: string | null
+          goal_id: string | null
+          id: string
+          is_shareable: boolean
+          month: number | null
+          notes: string | null
+          priority_number: number
+          scope: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+          week_number: number | null
+          year: number
+        }
+        Insert: {
+          created_at?: string
+          date?: string | null
+          goal_id?: string | null
+          id?: string
+          is_shareable?: boolean
+          month?: number | null
+          notes?: string | null
+          priority_number: number
+          scope: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+          week_number?: number | null
+          year?: number
+        }
+        Update: {
+          created_at?: string
+          date?: string | null
+          goal_id?: string | null
+          id?: string
+          is_shareable?: boolean
+          month?: number | null
+          notes?: string | null
+          priority_number?: number
+          scope?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+          week_number?: number | null
+          year?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "priorities_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -1872,6 +1955,50 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      shared_traceability_views: {
+        Row: {
+          can_comment: boolean
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_active: boolean
+          support_circle_member_id: string
+          updated_at: string
+          user_id: string
+          view_type: string
+        }
+        Insert: {
+          can_comment?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          support_circle_member_id: string
+          updated_at?: string
+          user_id: string
+          view_type?: string
+        }
+        Update: {
+          can_comment?: boolean
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean
+          support_circle_member_id?: string
+          updated_at?: string
+          user_id?: string
+          view_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shared_traceability_views_support_circle_member_id_fkey"
+            columns: ["support_circle_member_id"]
+            isOneToOne: false
+            referencedRelation: "support_circle_members"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       subscriptions: {
         Row: {
