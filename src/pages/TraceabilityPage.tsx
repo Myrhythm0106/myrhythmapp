@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Target, Share2, RefreshCw, Plus, Sparkles, Users } from 'lucide-react';
-import PageLayout from '@/components/layout/PageLayout';
+import { PageLayout } from '@/components/shared/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -49,12 +49,13 @@ const TraceabilityPage = () => {
       currentLinkId = (node.item as TaskItem).priority_id || (node.item as TaskItem).goal_id;
     }
 
+    const nodeType = node.type as 'goal' | 'priority' | 'task';
+    const nodeTitle = (node.item as GoalItem | PriorityItem | TaskItem).title;
+    
     setLinkingTarget({
-      type: node.type as 'goal' | 'priority' | 'task',
+      type: nodeType,
       id: (node.item as any).id,
-      title: node.type === 'vision' 
-        ? (node.item as VisionItem).yearly_theme || 'Vision'
-        : (node.item as GoalItem | PriorityItem | TaskItem).title,
+      title: nodeTitle,
       currentLinkId
     });
     setIsLinkingOpen(true);
