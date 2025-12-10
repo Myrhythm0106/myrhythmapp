@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { MockAuthWrapper } from "@/components/auth/MockAuthWrapper";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import { PomodoroProvider } from "@/contexts/PomodoroContext";
@@ -128,12 +128,13 @@ function NetworkStatusMonitor() {
   return null;
 }
 
-// Authenticated Bottom Nav - only shows when user is logged in
+// Authenticated Bottom Nav - only shows when user is logged in and NOT on launch pages
 function AuthenticatedBottomNav() {
   const { user, loading } = useAuth();
+  const location = useLocation();
   
-  // Hide nav while checking auth or if no user logged in
-  if (loading || !user) return null;
+  // Hide nav while checking auth, if no user logged in, or on launch routes (they have LaunchNav)
+  if (loading || !user || location.pathname.startsWith('/launch')) return null;
   
   return <MobileBottomNav />;
 }
