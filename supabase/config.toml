@@ -77,3 +77,9 @@ verify_jwt = true
 
 [functions.send-scheduled-reminders]
 verify_jwt = false
+
+[functions.calendar-outlook-auth]
+verify_jwt = false
+
+[functions.calendar-outlook-sync]
+verify_jwt = true

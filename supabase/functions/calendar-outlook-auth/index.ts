@@ -15,13 +15,19 @@ serve(async (req) => {
     const url = new URL(req.url);
     const pathname = url.pathname;
 
-    const GOOGLE_CLIENT_ID = Deno.env.get('GOOGLE_CLIENT_ID');
-    const GOOGLE_CLIENT_SECRET = Deno.env.get('GOOGLE_CLIENT_SECRET');
+    const OUTLOOK_CLIENT_ID = Deno.env.get('OUTLOOK_CLIENT_ID');
+    const OUTLOOK_CLIENT_SECRET = Deno.env.get('OUTLOOK_CLIENT_SECRET');
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-      throw new Error('Google OAuth credentials not configured');
+    if (!OUTLOOK_CLIENT_ID || !OUTLOOK_CLIENT_SECRET) {
+      console.log('Outlook OAuth credentials not configured');
+      return new Response(
+        JSON.stringify({ 
+          error: 'Outlook integration not configured. Please add OUTLOOK_CLIENT_ID and OUTLOOK_CLIENT_SECRET secrets.' 
+        }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const supabase = createClient(
@@ -31,13 +37,12 @@ serve(async (req) => {
 
     // Route: /auth - Initiate OAuth flow
     if (pathname.includes('/auth')) {
-      const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
-      authUrl.searchParams.set('client_id', GOOGLE_CLIENT_ID);
-      authUrl.searchParams.set('redirect_uri', `${SUPABASE_URL}/functions/v1/calendar-google-auth/callback`);
+      const authUrl = new URL('https://login.microsoftonline.com/common/oauth2/v2.0/authorize');
+      authUrl.searchParams.set('client_id', OUTLOOK_CLIENT_ID);
+      authUrl.searchParams.set('redirect_uri', `${SUPABASE_URL}/functions/v1/calendar-outlook-auth/callback`);
       authUrl.searchParams.set('response_type', 'code');
-      authUrl.searchParams.set('scope', 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events');
-      authUrl.searchParams.set('access_type', 'offline');
-      authUrl.searchParams.set('prompt', 'consent');
+      authUrl.searchParams.set('scope', 'openid profile email Calendars.Read Calendars.ReadWrite offline_access');
+      authUrl.searchParams.set('response_mode', 'query');
 
       // Store user ID in state for callback
       const authHeader = req.headers.get('Authorization');
@@ -65,14 +70,14 @@ serve(async (req) => {
       }
 
       // Exchange code for tokens
-      const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
+      const tokenResponse = await fetch('https://login.microsoftonline.com/common/oauth2/v2.0/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
           code,
-          client_id: GOOGLE_CLIENT_ID,
-          client_secret: GOOGLE_CLIENT_SECRET,
-          redirect_uri: `${SUPABASE_URL}/functions/v1/calendar-google-auth/callback`,
+          client_id: OUTLOOK_CLIENT_ID,
+          client_secret: OUTLOOK_CLIENT_SECRET,
+          redirect_uri: `${SUPABASE_URL}/functions/v1/calendar-outlook-auth/callback`,
           grant_type: 'authorization_code'
         })
       });
@@ -85,23 +90,22 @@ serve(async (req) => {
 
       const tokens = await tokenResponse.json();
 
-      // Get user's email from Google
-      const userInfoResponse = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
+      // Get user's email from Microsoft Graph
+      const userInfoResponse = await fetch('https://graph.microsoft.com/v1.0/me', {
         headers: { Authorization: `Bearer ${tokens.access_token}` }
       });
       const userInfo = await userInfoResponse.json();
 
-      // Save to calendar_integrations table (metadata only)
+      // Save to calendar_integrations table
       const expiresAt = new Date(Date.now() + (tokens.expires_in * 1000));
       
-      // First upsert the integration without tokens
       const { data: integration, error: dbError } = await supabase
         .from('calendar_integrations')
         .upsert({
           user_id: state,
-          provider: 'google',
-          account_email: userInfo.email,
-          account_name: userInfo.name,
+          provider: 'outlook',
+          account_email: userInfo.mail || userInfo.userPrincipalName,
+          account_name: userInfo.displayName,
           is_active: true,
           sync_enabled: true,
           last_sync: new Date().toISOString()
@@ -116,23 +120,18 @@ serve(async (req) => {
         throw new Error('Failed to create calendar integration');
       }
 
-      // Update tokens securely using service role and security definer function
-      const { error: tokenError } = await supabase.rpc('update_calendar_integration_tokens', {
+      // Update tokens securely
+      await supabase.rpc('update_calendar_integration_tokens', {
         p_integration_id: integration.id,
         p_access_token: tokens.access_token,
         p_refresh_token: tokens.refresh_token,
         p_token_expires_at: expiresAt.toISOString()
       });
 
-      if (dbError) {
-        console.error('Database error:', dbError);
-        throw dbError;
-      }
-
       // Redirect back to the app
       const appUrl = SUPABASE_URL?.includes('supabase.co') 
-        ? 'https://lovable.dev/calendar?connected=google'
-        : `${SUPABASE_URL}/calendar?connected=google`;
+        ? 'https://lovable.dev/calendar?connected=outlook'
+        : `${SUPABASE_URL}/calendar?connected=outlook`;
 
       return new Response(null, {
         status: 302,
@@ -149,7 +148,7 @@ serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Google Auth Error:', error);
+    console.error('Outlook Auth Error:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

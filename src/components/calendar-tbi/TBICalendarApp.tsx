@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DayViewTBI } from './views/DayViewTBI';
 import { WeekViewTBI } from './views/WeekViewTBI';
@@ -11,14 +12,19 @@ import { toast } from 'sonner';
 import { usePomodoro } from '@/contexts/PomodoroContext';
 import { useDailyActions } from '@/contexts/DailyActionsContext';
 import { useCalendarEvents } from '@/hooks/useCalendarEvents';
+import { useCalendarIntegration } from '@/hooks/useCalendarIntegration';
+import { CalendarSyncSettings } from '@/components/calendar/CalendarSyncSettings';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Timer, Users, Target, Loader2, CalendarPlus } from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Timer, Users, Target, Loader2, CalendarPlus, Settings, RefreshCw } from 'lucide-react';
 import { usePriorities } from '@/contexts/PriorityContext';
 
 export function TBICalendarApp() {
+  const [searchParams] = useSearchParams();
   const { actions } = useDailyActions();
   const { events: realEvents, isLoading, error, refresh } = useCalendarEvents();
+  const { integrations, isSyncing, syncCalendar } = useCalendarIntegration();
   
   const [dayData, setDayData] = useState<DayData>({
     date: new Date(),
@@ -33,6 +39,17 @@ export function TBICalendarApp() {
       events: realEvents
     }));
   }, [realEvents]);
+
+  // Show toast when calendar is connected
+  useEffect(() => {
+    const connected = searchParams.get('connected');
+    if (connected) {
+      toast.success(`${connected === 'google' ? 'Google Calendar' : 'Outlook'} connected successfully!`);
+      // Clean up URL
+      window.history.replaceState({}, '', '/calendar');
+      refresh();
+    }
+  }, [searchParams, refresh]);
 
   // Separate date states for each view
   const [dayViewDate, setDayViewDate] = useState(new Date());
@@ -169,8 +186,8 @@ export function TBICalendarApp() {
       
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <div className="sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-200 z-10">
-          <div className="px-4 py-3">
-            <TabsList className="w-full overflow-x-auto flex md:grid md:grid-cols-5 max-w-2xl mx-auto gap-1">
+          <div className="px-4 py-3 flex items-center justify-between">
+            <TabsList className="overflow-x-auto flex md:grid md:grid-cols-5 max-w-2xl gap-1">
               <TabsTrigger value="day" className="mobile-label font-medium flex-shrink-0">
                 Day
               </TabsTrigger>
@@ -187,9 +204,53 @@ export function TBICalendarApp() {
                 Focus
               </TabsTrigger>
             </TabsList>
+
+            <div className="flex items-center gap-2">
+              {integrations.length > 0 && (
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => syncCalendar()}
+                  disabled={isSyncing}
+                  className="h-8 w-8"
+                >
+                  <RefreshCw className={`h-4 w-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                </Button>
+              )}
+              
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8">
+                    <Settings className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent>
+                  <SheetHeader>
+                    <SheetTitle>Calendar Settings</SheetTitle>
+                  </SheetHeader>
+                  <div className="mt-6">
+                    <CalendarSyncSettings />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
-
+              <TabsTrigger value="day" className="mobile-label font-medium flex-shrink-0">
+                Day
+              </TabsTrigger>
+              <TabsTrigger value="week" className="mobile-label font-medium flex-shrink-0">
+                Week
+              </TabsTrigger>
+              <TabsTrigger value="month" className="mobile-label font-medium flex-shrink-0">
+                Month
+              </TabsTrigger>
+              <TabsTrigger value="year" className="mobile-label font-medium flex-shrink-0">
+                Year
+              </TabsTrigger>
+              <TabsTrigger value="pomodoro" className="mobile-label font-medium flex-shrink-0">
+                Focus
+              </TabsTrigger>
         <div className="p-4">
           <TabsContent value="day" className="mt-0">
             <DayViewTBI
