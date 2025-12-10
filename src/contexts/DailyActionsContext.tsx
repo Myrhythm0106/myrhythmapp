@@ -254,6 +254,21 @@ export function DailyActionsProvider({ children }: { children: React.ReactNode }
     fetchGoals();
   }, [fetchActionsForToday, fetchGoals]);
 
+  // Real-time subscription for actions
+  useEffect(() => {
+    const channel = supabase
+      .channel('daily-actions-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'daily_actions' }, (payload) => {
+        console.log('📋 Daily actions changed via realtime:', payload.eventType);
+        fetchActionsForToday();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [fetchActionsForToday]);
+
   const value = {
     actions,
     goals,
