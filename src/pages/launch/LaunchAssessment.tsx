@@ -144,80 +144,85 @@ export default function LaunchAssessment() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col px-6 py-8">
-      {/* Progress Bar */}
-      <div className="max-w-md mx-auto w-full mb-8">
-        <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 transition-all duration-500"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        <p className="text-xs text-gray-500 mt-2 text-center">
-          Question {currentQuestion + 1} of {questions.length}
-        </p>
-      </div>
-
-      {/* Question */}
-      <div className="flex-1 max-w-md mx-auto w-full">
-        <div className="text-center mb-8">
-          <div className="w-16 h-16 mx-auto mb-4 bg-brand-emerald-100 rounded-2xl flex items-center justify-center">
-            <question.icon className="h-8 w-8 text-brand-emerald-600" />
+    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto px-6 py-8">
+        {/* Progress Bar */}
+        <div className="max-w-md mx-auto w-full mb-8">
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div 
+              className="h-full bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{question.title}</h2>
-          <p className="text-gray-600">{question.subtitle}</p>
+          <p className="text-xs text-gray-500 mt-2 text-center">
+            Question {currentQuestion + 1} of {questions.length}
+          </p>
         </div>
 
-        {/* Options */}
-        <div className="space-y-3 mb-8">
-          {question.options.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => handleSelect(option.value)}
-              className={cn(
-                "w-full p-4 rounded-2xl border-2 text-left transition-all",
-                isSelected(option.value)
-                  ? "border-brand-emerald-500 bg-brand-emerald-50"
-                  : "border-gray-200 bg-white hover:border-brand-emerald-200"
-              )}
-            >
-              <div className="flex items-start gap-3">
-                <div className={cn(
-                  "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5",
+        {/* Question */}
+        <div className="max-w-md mx-auto w-full">
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 mx-auto mb-4 bg-brand-emerald-100 rounded-2xl flex items-center justify-center">
+              <question.icon className="h-8 w-8 text-brand-emerald-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{question.title}</h2>
+            <p className="text-gray-600">{question.subtitle}</p>
+          </div>
+
+          {/* Options */}
+          <div className="space-y-3 pb-4">
+            {question.options.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => handleSelect(option.value)}
+                className={cn(
+                  "w-full p-4 rounded-2xl border-2 text-left transition-all",
                   isSelected(option.value)
-                    ? "border-brand-emerald-500 bg-brand-emerald-500"
-                    : "border-gray-300"
-                )}>
-                  {isSelected(option.value) && <Check className="h-4 w-4 text-white" />}
+                    ? "border-brand-emerald-500 bg-brand-emerald-50"
+                    : "border-gray-200 bg-white hover:border-brand-emerald-200"
+                )}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={cn(
+                    "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5",
+                    isSelected(option.value)
+                      ? "border-brand-emerald-500 bg-brand-emerald-500"
+                      : "border-gray-300"
+                  )}>
+                    {isSelected(option.value) && <Check className="h-4 w-4 text-white" />}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">{option.label}</p>
+                    <p className="text-sm text-gray-600">{option.description}</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold text-gray-900">{option.label}</p>
-                  <p className="text-sm text-gray-600">{option.description}</p>
-                </div>
-              </div>
-            </button>
-          ))}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Navigation */}
-      <div className="max-w-md mx-auto w-full flex gap-3">
-        <LaunchButton
-          variant="outline"
-          onClick={handleBack}
-          className="flex-1"
-        >
-          <ArrowLeft className="h-5 w-5" />
-          Back
-        </LaunchButton>
-        <LaunchButton
-          onClick={handleNext}
-          disabled={!canContinue}
-          className="flex-1"
-        >
-          {isLast ? 'Complete' : 'Continue'}
-          <ArrowRight className="h-5 w-5" />
-        </LaunchButton>
+      {/* Sticky Navigation Footer */}
+      <div className="flex-shrink-0 px-6 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
+        <div className="max-w-md mx-auto w-full flex gap-3">
+          <LaunchButton
+            variant="outline"
+            onClick={handleBack}
+            className="flex-1"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            Back
+          </LaunchButton>
+          <LaunchButton
+            onClick={handleNext}
+            disabled={!canContinue}
+            className="flex-1"
+          >
+            {isLast ? 'Complete' : 'Continue'}
+            <ArrowRight className="h-5 w-5" />
+          </LaunchButton>
+        </div>
       </div>
     </div>
   );

@@ -64,57 +64,62 @@ export default function LaunchUserType() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-10"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-emerald-100 rounded-full mb-4">
-            <Sparkles className="h-4 w-4 text-brand-emerald-600" />
-            <span className="text-sm font-medium text-brand-emerald-700">Personalize Your Experience</span>
-          </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
-            What brings you to MyRhythm?
-          </h1>
-          <p className="text-lg text-gray-600 max-w-xl mx-auto">
-            We'll tailor your experience based on your unique needs
-          </p>
-        </motion.div>
+    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto py-12 px-4">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center mb-10"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-emerald-100 rounded-full mb-4">
+              <Sparkles className="h-4 w-4 text-brand-emerald-600" />
+              <span className="text-sm font-medium text-brand-emerald-700">Personalize Your Experience</span>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+              What brings you to MyRhythm?
+            </h1>
+            <p className="text-lg text-gray-600 max-w-xl mx-auto">
+              We'll tailor your experience based on your unique needs
+            </p>
+          </motion.div>
 
-        {/* User Type Grid */}
-        <div className="grid md:grid-cols-2 gap-4 mb-8">
-          {userTypes.map((type, index) => (
-            <motion.div
-              key={type.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Card
-                className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-brand-emerald-300 bg-white/80 backdrop-blur-sm"
-                onClick={() => handleSelect(type.id)}
+          {/* User Type Grid */}
+          <div className="grid md:grid-cols-2 gap-4 mb-8">
+            {userTypes.map((type, index) => (
+              <motion.div
+                key={type.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
               >
-                <CardContent className="p-5">
-                  <div className="flex items-start gap-4">
-                    <div className={`w-12 h-12 bg-gradient-to-br ${type.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                      <type.icon className="h-6 w-6 text-white" />
+                <Card
+                  className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-brand-emerald-300 bg-white/80 backdrop-blur-sm"
+                  onClick={() => handleSelect(type.id)}
+                >
+                  <CardContent className="p-5">
+                    <div className="flex items-start gap-4">
+                      <div className={`w-12 h-12 bg-gradient-to-br ${type.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
+                        <type.icon className="h-6 w-6 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900 mb-1">{type.title}</h3>
+                        <p className="text-sm text-gray-600">{type.description}</p>
+                      </div>
+                      <ArrowRight className="h-5 w-5 text-gray-400 mt-1" />
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-gray-900 mb-1">{type.title}</h3>
-                      <p className="text-sm text-gray-600">{type.description}</p>
-                    </div>
-                    <ArrowRight className="h-5 w-5 text-gray-400 mt-1" />
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
+      </div>
 
-        {/* Skip option */}
+      {/* Sticky Footer */}
+      <div className="flex-shrink-0 px-4 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
         <div className="text-center">
           <button
             onClick={() => {

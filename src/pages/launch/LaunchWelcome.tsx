@@ -55,53 +55,61 @@ export default function LaunchWelcome() {
   const content = getMessage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col items-center justify-center px-6 py-12">
-      {/* Celebration Icon */}
-      <div className="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mb-8 shadow-lg animate-bounce">
-        <Sparkles className="h-10 w-10 text-white" />
-      </div>
+    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+      {/* Scrollable Content Area */}
+      <div className="flex-1 overflow-y-auto px-6 py-12 flex flex-col items-center justify-center">
+        {/* Celebration Icon */}
+        <div className="w-20 h-20 bg-gradient-to-br from-amber-400 to-orange-500 rounded-3xl flex items-center justify-center mb-8 shadow-lg animate-bounce">
+          <Sparkles className="h-10 w-10 text-white" />
+        </div>
 
-      {/* Main Message */}
-      <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center max-w-lg">
-        {content.headline}
-      </h1>
-      
-      <p className="text-lg text-gray-600 text-center max-w-md mb-10">
-        {content.subtitle}
-      </p>
+        {/* Main Message */}
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 text-center max-w-lg">
+          {content.headline}
+        </h1>
+        
+        <p className="text-lg text-gray-600 text-center max-w-md mb-10">
+          {content.subtitle}
+        </p>
 
-      {/* Personalized Highlights */}
-      <div className="space-y-4 mb-10 max-w-md w-full">
-        {content.highlights.map((highlight, index) => (
-          <div 
-            key={index}
-            className="flex items-center gap-4 bg-white/80 backdrop-blur-sm rounded-2xl p-4"
-          >
-            <div className="w-12 h-12 rounded-xl bg-brand-emerald-100 flex items-center justify-center flex-shrink-0">
-              <highlight.icon className="h-6 w-6 text-brand-emerald-600" />
+        {/* Personalized Highlights */}
+        <div className="space-y-4 mb-10 max-w-md w-full">
+          {content.highlights.map((highlight, index) => (
+            <div 
+              key={index}
+              className="flex items-center gap-4 bg-white/80 backdrop-blur-sm rounded-2xl p-4"
+            >
+              <div className="w-12 h-12 rounded-xl bg-brand-emerald-100 flex items-center justify-center flex-shrink-0">
+                <highlight.icon className="h-6 w-6 text-brand-emerald-600" />
+              </div>
+              <p className="font-medium text-gray-900">{highlight.text}</p>
             </div>
-            <p className="font-medium text-gray-900">{highlight.text}</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      {/* CTA */}
-      <LaunchButton
-        size="lg"
-        onClick={() => navigate('/launch/home')}
-        className="gap-3 px-10"
-      >
-        Let's Begin
-        <ArrowRight className="h-5 w-5" />
-      </LaunchButton>
+      {/* Sticky Footer */}
+      <div className="flex-shrink-0 px-6 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
+        <div className="flex flex-col items-center">
+          {/* CTA */}
+          <LaunchButton
+            size="lg"
+            onClick={() => navigate('/launch/home')}
+            className="gap-3 px-10"
+          >
+            Let's Begin
+            <ArrowRight className="h-5 w-5" />
+          </LaunchButton>
 
-      {/* Skip to auth if needed */}
-      <button 
-        onClick={() => navigate('/auth')}
-        className="mt-6 text-sm text-gray-500 hover:text-gray-700"
-      >
-        Sign in to existing account
-      </button>
+          {/* Skip to auth if needed */}
+          <button 
+            onClick={() => navigate('/auth')}
+            className="mt-4 text-sm text-gray-500 hover:text-gray-700"
+          >
+            Sign in to existing account
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
