@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Settings, Bell, Shield, Palette, Globe } from 'lucide-react';
+import { Settings, Bell, Shield, Palette, Globe, Calendar, HardDrive } from 'lucide-react';
+import { CalendarSyncSettings } from '@/components/calendar/CalendarSyncSettings';
 
 export default function SettingsPage() {
   return (
@@ -94,18 +95,92 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-2">
               <Label>Time Zone</Label>
-              <Select defaultValue="utc-5">
+              <Select defaultValue="Europe/London">
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="utc-5">Eastern Time (UTC-5)</SelectItem>
-                  <SelectItem value="utc-6">Central Time (UTC-6)</SelectItem>
-                  <SelectItem value="utc-7">Mountain Time (UTC-7)</SelectItem>
-                  <SelectItem value="utc-8">Pacific Time (UTC-8)</SelectItem>
+                  {/* United Kingdom & Ireland */}
+                  <SelectItem value="Europe/London">London, UK (GMT/BST)</SelectItem>
+                  <SelectItem value="Europe/Dublin">Dublin, Ireland (GMT/IST)</SelectItem>
+                  
+                  {/* Western Europe */}
+                  <SelectItem value="Europe/Paris">Paris, France (CET)</SelectItem>
+                  <SelectItem value="Europe/Amsterdam">Amsterdam, Netherlands (CET)</SelectItem>
+                  <SelectItem value="Europe/Brussels">Brussels, Belgium (CET)</SelectItem>
+                  <SelectItem value="Europe/Madrid">Madrid, Spain (CET)</SelectItem>
+                  <SelectItem value="Europe/Lisbon">Lisbon, Portugal (WET)</SelectItem>
+                  
+                  {/* Central Europe */}
+                  <SelectItem value="Europe/Berlin">Berlin, Germany (CET)</SelectItem>
+                  <SelectItem value="Europe/Rome">Rome, Italy (CET)</SelectItem>
+                  <SelectItem value="Europe/Vienna">Vienna, Austria (CET)</SelectItem>
+                  <SelectItem value="Europe/Warsaw">Warsaw, Poland (CET)</SelectItem>
+                  <SelectItem value="Europe/Zurich">Zurich, Switzerland (CET)</SelectItem>
+                  
+                  {/* Eastern Europe */}
+                  <SelectItem value="Europe/Athens">Athens, Greece (EET)</SelectItem>
+                  <SelectItem value="Europe/Helsinki">Helsinki, Finland (EET)</SelectItem>
+                  <SelectItem value="Europe/Bucharest">Bucharest, Romania (EET)</SelectItem>
+                  <SelectItem value="Europe/Stockholm">Stockholm, Sweden (CET)</SelectItem>
+                  <SelectItem value="Europe/Oslo">Oslo, Norway (CET)</SelectItem>
+                  <SelectItem value="Europe/Copenhagen">Copenhagen, Denmark (CET)</SelectItem>
+                  
+                  {/* United States */}
+                  <SelectItem value="America/New_York">New York (Eastern Time)</SelectItem>
+                  <SelectItem value="America/Chicago">Chicago (Central Time)</SelectItem>
+                  <SelectItem value="America/Denver">Denver (Mountain Time)</SelectItem>
+                  <SelectItem value="America/Los_Angeles">Los Angeles (Pacific Time)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              Connected Calendars
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CalendarSyncSettings />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <HardDrive className="h-5 w-5" />
+              Storage Management
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Recording Retention Period</Label>
+              <Select defaultValue="30">
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="7">7 days (recommended for active users)</SelectItem>
+                  <SelectItem value="14">14 days</SelectItem>
+                  <SelectItem value="30">30 days (default)</SelectItem>
+                  <SelectItem value="90">90 days</SelectItem>
+                </SelectContent>
+              </Select>
+              <p className="text-sm text-muted-foreground">
+                Recordings will be automatically deleted after this period. You'll receive reminders before deletion.
+              </p>
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="auto-delete">Auto-delete after transcription</Label>
+              <Switch id="auto-delete" />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              When enabled, audio files will be deleted automatically once transcribed and actions extracted.
+            </p>
           </CardContent>
         </Card>
 
