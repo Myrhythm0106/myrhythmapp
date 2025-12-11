@@ -18,7 +18,7 @@ export default function LaunchProfile() {
       label: 'Feature Store', 
       description: 'Unlock more features',
       icon: Sparkles, 
-      path: '/launch/features',
+      path: '/launch/store',
       badge: 'New'
     },
     { 
@@ -31,19 +31,19 @@ export default function LaunchProfile() {
       label: 'Notifications', 
       description: 'Manage alerts',
       icon: Bell, 
-      path: '/settings',
+      path: '/launch/settings',
     },
     { 
       label: 'Privacy & Security', 
       description: 'Your data settings',
       icon: Shield, 
-      path: '/settings',
+      path: '/launch/settings',
     },
     { 
       label: 'Help & Support', 
       description: 'Get assistance',
       icon: HelpCircle, 
-      path: '/support',
+      path: '/launch/help',
     },
   ];
 

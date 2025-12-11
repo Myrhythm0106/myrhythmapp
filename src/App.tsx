@@ -114,6 +114,11 @@ import {
   LaunchSupportCircle,
   LaunchFeatureStore,
   LaunchProfile,
+  LaunchSettings,
+  LaunchGoals,
+  LaunchAnalytics,
+  LaunchWhatsNew,
+  LaunchHelp,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
@@ -161,7 +166,7 @@ function App() {
      {/* Landing and Discovery Routes */}
                      <Route path="/" element={<Navigate to="/launch" replace />} />
                      <Route path="/auth" element={<Auth />} />
-                     <Route path="/dashboard" element={<Dashboard />} />
+                     <Route path="/dashboard" element={<Navigate to="/launch/home" replace />} />
                      <Route path="/landing" element={<Landing />} />
                     <Route path="/demo-landing" element={<DemoLanding />} />
                     
@@ -314,7 +319,7 @@ function App() {
                        <Route path="/congrats" element={<CongratsPage />} />
                        
                        {/* V1 Launch Mode Routes */}
-                       <Route path="/launch" element={<LaunchModeProvider><MVPCore4CPage /></LaunchModeProvider>} />
+                       <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
                        <Route path="/launch/register" element={<LaunchModeProvider><LaunchRegister /></LaunchModeProvider>} />
                        <Route path="/launch/signin" element={<LaunchModeProvider><LaunchSignIn /></LaunchModeProvider>} />
                        <Route path="/launch/user-type" element={<LaunchModeProvider><LaunchUserType /></LaunchModeProvider>} />
@@ -329,6 +334,11 @@ function App() {
                        <Route path="/launch/support" element={<LaunchModeProvider><LaunchSupportCircle /></LaunchModeProvider>} />
                        <Route path="/launch/store" element={<LaunchModeProvider><LaunchFeatureStore /></LaunchModeProvider>} />
                        <Route path="/launch/profile" element={<LaunchModeProvider><LaunchProfile /></LaunchModeProvider>} />
+                       <Route path="/launch/settings" element={<LaunchModeProvider><LaunchSettings /></LaunchModeProvider>} />
+                       <Route path="/launch/goals" element={<LaunchModeProvider><LaunchGoals /></LaunchModeProvider>} />
+                       <Route path="/launch/analytics" element={<LaunchModeProvider><LaunchAnalytics /></LaunchModeProvider>} />
+                       <Route path="/launch/whats-new" element={<LaunchModeProvider><LaunchWhatsNew /></LaunchModeProvider>} />
+                       <Route path="/launch/help" element={<LaunchModeProvider><LaunchHelp /></LaunchModeProvider>} />
                        <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
                        <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
                        <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
