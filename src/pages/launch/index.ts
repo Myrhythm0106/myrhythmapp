@@ -14,3 +14,8 @@ export { default as LaunchGratitude } from './LaunchGratitude';
 export { default as LaunchSupportCircle } from './LaunchSupportCircle';
 export { default as LaunchFeatureStore } from './LaunchFeatureStore';
 export { default as LaunchProfile } from './LaunchProfile';
+export { default as LaunchSettings } from './LaunchSettings';
+export { default as LaunchGoals } from './LaunchGoals';
+export { default as LaunchAnalytics } from './LaunchAnalytics';
+export { default as LaunchWhatsNew } from './LaunchWhatsNew';
+export { default as LaunchHelp } from './LaunchHelp';
