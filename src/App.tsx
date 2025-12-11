@@ -164,7 +164,7 @@ function App() {
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
      {/* Landing and Discovery Routes */}
-                     <Route path="/" element={<Navigate to="/launch" replace />} />
+                     <Route path="/" element={<Navigate to="/mvp" replace />} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/dashboard" element={<Navigate to="/launch/home" replace />} />
                      <Route path="/landing" element={<Landing />} />
