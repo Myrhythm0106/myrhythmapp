@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,18 +17,27 @@ import { MemoryBridgeSection } from "@/components/landing/MemoryBridgeSection";
 import { FoundingMemberBanner } from "@/components/landing/FoundingMemberBanner";
 import { FoundingMemberPricingCard } from "@/components/landing/FoundingMemberPricingCard";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { ConfirmationDialog } from "@/components/ui/ConfirmationDialog";
 
 const Landing = () => {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const [showRedirectDialog, setShowRedirectDialog] = useState(false);
   
-  // Redirect authenticated users to Dashboard
+  // Show confirmation dialog for authenticated users instead of auto-redirect
   useEffect(() => {
     if (user && !loading) {
-      console.log('Landing: Redirecting authenticated user to Dashboard');
-      navigate("/dashboard", { replace: true });
+      setShowRedirectDialog(true);
     }
-  }, [user, loading, navigate]);
+  }, [user, loading]);
+
+  const handleConfirmRedirect = () => {
+    navigate("/dashboard", { replace: true });
+  };
+
+  const handleStayOnLanding = () => {
+    setShowRedirectDialog(false);
+  };
 
   // For unauthenticated users, prioritize authentication
   const handleAuthRedirect = () => {
@@ -60,6 +69,16 @@ const Landing = () => {
   // For unauthenticated users or when loading is complete, show the landing page
   return (
     <ErrorBoundary>
+      <ConfirmationDialog
+        isOpen={showRedirectDialog}
+        onConfirm={handleConfirmRedirect}
+        onCancel={handleStayOnLanding}
+        title="You're Already Logged In"
+        description="Would you like to go to your Dashboard, or stay here to view the landing page?"
+        confirmText="Go to Dashboard"
+        cancelText="Stay Here"
+        variant="default"
+      />
       <div className="min-h-screen">
         <FoundingMemberBanner />
         <ScrollArea className="h-screen">
