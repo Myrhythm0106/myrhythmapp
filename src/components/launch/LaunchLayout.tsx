@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { LaunchNav } from './LaunchNav';
 import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
-import { SupportCircleBadge } from './SupportCircleBadge';
+
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { LaunchQuickActions } from './LaunchQuickActions';
 import { HelpCircle } from 'lucide-react';
@@ -51,7 +51,6 @@ export function LaunchLayout({
                 <HelpCircle className="h-5 w-5 text-gray-600" />
               </button>
               
-              <SupportCircleBadge />
               <AccountDropdown />
             </div>
           </div>
