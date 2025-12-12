@@ -3,8 +3,19 @@ import { motion } from 'framer-motion';
 import { Download, X, Loader2, Sparkles, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Dream } from './DreamCard';
 import { toast } from 'sonner';
+
+interface Dream {
+  id: string;
+  title: string;
+  why?: string;
+  emoji?: string;
+  category?: string;
+  progress: number;
+  linkedGoalId?: string;
+  linkedGoalTitle?: string;
+  createdAt: string;
+}
 
 interface ShareVisionBoardProps {
   open: boolean;
@@ -14,6 +25,15 @@ interface ShareVisionBoardProps {
   affirmation: string;
   year?: number;
 }
+
+// Pillar colors for the wallpaper
+const pillarColors: Record<string, { from: string; to: string }> = {
+  'mind-growth': { from: '#8B5CF6', to: '#3B82F6' },
+  'health-body': { from: '#14B8A6', to: '#10B981' },
+  'relationships': { from: '#EC4899', to: '#F472B6' },
+  'financial': { from: '#F97316', to: '#FB923C' },
+  'purpose-joy': { from: '#3B82F6', to: '#14B8A6' }
+};
 
 export function ShareVisionBoard({
   open,
@@ -31,8 +51,6 @@ export function ShareVisionBoard({
     setIsExporting(true);
     
     try {
-      // Create a canvas-based export
-      // For production, you would use html2canvas or a similar library
       const canvas = document.createElement('canvas');
       canvas.width = 1080;
       canvas.height = 1920;
@@ -43,91 +61,112 @@ export function ShareVisionBoard({
       }
 
       // Create gradient background
-      const gradient = ctx.createLinearGradient(0, 0, 0, 1920);
-      gradient.addColorStop(0, '#f0f9ff'); // brain-health-50
-      gradient.addColorStop(0.5, '#f5f3ff'); // neural-purple-50
-      gradient.addColorStop(1, '#ecfdf5'); // memory-emerald-50
+      const gradient = ctx.createLinearGradient(0, 0, 1080, 1920);
+      gradient.addColorStop(0, '#FAF5FF'); // neural-purple-50
+      gradient.addColorStop(0.5, '#F0FDFA'); // brain-health-50
+      gradient.addColorStop(1, '#EFF6FF'); // neural-blue-50
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, 1080, 1920);
 
       // Add header
       ctx.fillStyle = '#1f2937';
-      ctx.font = 'bold 48px system-ui, sans-serif';
+      ctx.font = 'bold 56px system-ui, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('My Vision Board', 540, 120);
+      ctx.fillText('My Vision Board', 540, 140);
       
-      ctx.font = '32px system-ui, sans-serif';
+      ctx.font = '36px system-ui, sans-serif';
       ctx.fillStyle = '#6b7280';
-      ctx.fillText(`${year} - ${yearlyTheme || 'My Year of Growth'}`, 540, 180);
+      ctx.fillText(`${year} — Year of ${yearlyTheme}`, 540, 200);
 
-      // Add dreams
+      // Draw quadrant grid (2x2 + 1 full width)
+      const cardWidth = 480;
+      const cardHeight = 320;
+      const gap = 30;
+      const startX = 60;
       let yOffset = 280;
-      const maxDreams = Math.min(dreams.length, 5);
-      
-      for (let i = 0; i < maxDreams; i++) {
-        const dream = dreams[i];
+
+      // Draw first 4 dreams in 2x2 grid
+      const gridDreams = dreams.slice(0, 4);
+      gridDreams.forEach((dream, i) => {
+        const col = i % 2;
+        const row = Math.floor(i / 2);
+        const x = startX + col * (cardWidth + gap);
+        const y = yOffset + row * (cardHeight + gap);
         
-        // Dream card background
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+        // Card gradient background
+        const colors = pillarColors[dream.category || 'mind-growth'] || pillarColors['mind-growth'];
+        const cardGrad = ctx.createLinearGradient(x, y, x + cardWidth, y + cardHeight);
+        cardGrad.addColorStop(0, colors.from);
+        cardGrad.addColorStop(1, colors.to);
+        ctx.fillStyle = cardGrad;
         ctx.beginPath();
-        ctx.roundRect(80, yOffset, 920, 220, 24);
+        ctx.roundRect(x, y, cardWidth, cardHeight, 24);
         ctx.fill();
-        
+
         // Emoji
-        ctx.font = '64px system-ui, sans-serif';
+        ctx.font = '56px system-ui, sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText(dream.emoji || '✨', 120, yOffset + 85);
-        
+        ctx.fillText(dream.emoji || '✨', x + 30, y + 70);
+
         // Title
-        ctx.fillStyle = '#1f2937';
-        ctx.font = 'bold 36px system-ui, sans-serif';
-        ctx.fillText(dream.title.slice(0, 30), 210, yOffset + 70);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 32px system-ui, sans-serif';
+        ctx.fillText(dream.title.slice(0, 20), x + 30, y + 140);
+
+        // Progress dots
+        for (let j = 0; j < 5; j++) {
+          const dotX = x + 30 + j * 30;
+          const dotY = y + cardHeight - 50;
+          const filled = dream.progress >= (j + 1) * 20;
+          ctx.beginPath();
+          ctx.arc(dotX + 8, dotY, 10, 0, Math.PI * 2);
+          ctx.fillStyle = filled ? '#ffffff' : 'rgba(255,255,255,0.4)';
+          ctx.fill();
+        }
+      });
+
+      // Draw 5th dream (full width) if exists
+      if (dreams.length >= 5) {
+        const dream = dreams[4];
+        const fullY = yOffset + 2 * (cardHeight + gap);
+        const fullWidth = cardWidth * 2 + gap;
         
-        // Why
-        ctx.fillStyle = '#6b7280';
-        ctx.font = '24px system-ui, sans-serif';
-        const whyText = dream.why.slice(0, 50) + (dream.why.length > 50 ? '...' : '');
-        ctx.fillText(whyText, 210, yOffset + 115);
-        
-        // Progress bar
-        ctx.fillStyle = '#e5e7eb';
+        const colors = pillarColors[dream.category || 'purpose-joy'] || pillarColors['purpose-joy'];
+        const cardGrad = ctx.createLinearGradient(startX, fullY, startX + fullWidth, fullY + 200);
+        cardGrad.addColorStop(0, colors.from);
+        cardGrad.addColorStop(1, colors.to);
+        ctx.fillStyle = cardGrad;
         ctx.beginPath();
-        ctx.roundRect(210, yOffset + 150, 700, 16, 8);
+        ctx.roundRect(startX, fullY, fullWidth, 200, 24);
         ctx.fill();
-        
-        ctx.fillStyle = '#14b8a6';
-        ctx.beginPath();
-        ctx.roundRect(210, yOffset + 150, (700 * dream.progress) / 100, 16, 8);
-        ctx.fill();
-        
-        // Progress text
-        ctx.fillStyle = '#14b8a6';
-        ctx.font = 'bold 20px system-ui, sans-serif';
-        ctx.textAlign = 'right';
-        ctx.fillText(`${dream.progress}%`, 920, yOffset + 185);
+
+        ctx.font = '56px system-ui, sans-serif';
         ctx.textAlign = 'left';
+        ctx.fillText(dream.emoji || '🌟', startX + 40, fullY + 80);
         
-        yOffset += 260;
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 36px system-ui, sans-serif';
+        ctx.fillText(dream.title.slice(0, 35), startX + 40, fullY + 140);
       }
 
       // Add affirmation at bottom
       if (affirmation) {
-        ctx.fillStyle = 'rgba(139, 92, 246, 0.1)';
+        ctx.fillStyle = 'rgba(139, 92, 246, 0.15)';
         ctx.beginPath();
-        ctx.roundRect(80, 1600, 920, 140, 24);
+        ctx.roundRect(60, 1650, 960, 120, 24);
         ctx.fill();
         
         ctx.fillStyle = '#7c3aed';
         ctx.font = 'italic 28px system-ui, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(`"${affirmation.slice(0, 60)}"`, 540, 1680);
+        ctx.fillText(`"${affirmation.slice(0, 55)}${affirmation.length > 55 ? '...' : ''}"`, 540, 1720);
       }
 
       // Add watermark
       ctx.fillStyle = '#9ca3af';
-      ctx.font = '20px system-ui, sans-serif';
+      ctx.font = '22px system-ui, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText('Created with MyRhythm', 540, 1880);
+      ctx.fillText('Created with MyRhythm', 540, 1860);
 
       // Download
       const dataUrl = canvas.toDataURL('image/png');
@@ -176,7 +215,7 @@ export function ShareVisionBoard({
             </div>
             <div>
               <h2 className="font-semibold text-foreground">Save as Wallpaper</h2>
-              <p className="text-xs text-muted-foreground">Perfect for your phone background</p>
+              <p className="text-xs text-muted-foreground">Beautiful 5-pillar vision board</p>
             </div>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -190,36 +229,56 @@ export function ShareVisionBoard({
             ref={canvasRef}
             className={cn(
               "aspect-[9/16] rounded-xl overflow-hidden",
-              "bg-gradient-to-b from-brain-health-50 via-neural-purple-50 to-memory-emerald-50",
-              "border shadow-inner p-4"
+              "bg-gradient-to-b from-neural-purple-50 via-brain-health-50 to-neural-blue-50",
+              "border shadow-inner p-3"
             )}
           >
             {/* Mini Preview */}
             <div className="h-full flex flex-col">
-              <div className="text-center mb-4">
-                <Sparkles className="h-6 w-6 text-neural-purple-500 mx-auto mb-2" />
-                <h3 className="text-sm font-bold text-foreground">My Vision Board</h3>
-                <p className="text-[10px] text-muted-foreground">{year}</p>
+              <div className="text-center mb-3">
+                <Sparkles className="h-5 w-5 text-neural-purple-500 mx-auto mb-1" />
+                <h3 className="text-xs font-bold text-foreground">My Vision Board</h3>
+                <p className="text-[8px] text-muted-foreground">{year} — Year of {yearlyTheme}</p>
               </div>
 
-              <div className="flex-1 space-y-2 overflow-hidden">
-                {dreams.slice(0, 4).map((dream, i) => (
-                  <div 
-                    key={dream.id}
-                    className="bg-white/80 rounded-lg p-2 flex items-center gap-2"
-                  >
-                    <span className="text-sm">{dream.emoji || '✨'}</span>
-                    <span className="text-[10px] font-medium truncate flex-1">
-                      {dream.title}
-                    </span>
-                  </div>
-                ))}
+              {/* Mini 2x2 Grid */}
+              <div className="grid grid-cols-2 gap-1.5 flex-1">
+                {dreams.slice(0, 4).map((dream) => {
+                  const colors = pillarColors[dream.category || 'mind-growth'];
+                  return (
+                    <div 
+                      key={dream.id}
+                      className="rounded-lg p-2 flex flex-col justify-between"
+                      style={{ background: `linear-gradient(135deg, ${colors?.from || '#8B5CF6'}, ${colors?.to || '#3B82F6'})` }}
+                    >
+                      <span className="text-sm">{dream.emoji || '✨'}</span>
+                      <span className="text-[7px] font-medium text-white truncate">
+                        {dream.title}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
+
+              {/* Mini Full Width */}
+              {dreams[4] && (
+                <div 
+                  className="mt-1.5 rounded-lg p-2 flex items-center gap-2"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${pillarColors[dreams[4].category || 'purpose-joy']?.from || '#3B82F6'}, ${pillarColors[dreams[4].category || 'purpose-joy']?.to || '#14B8A6'})` 
+                  }}
+                >
+                  <span className="text-sm">{dreams[4].emoji || '🌟'}</span>
+                  <span className="text-[8px] font-medium text-white truncate">
+                    {dreams[4].title}
+                  </span>
+                </div>
+              )}
 
               {affirmation && (
-                <div className="mt-auto pt-4">
-                  <p className="text-[8px] text-center text-neural-purple-600 italic">
-                    "{affirmation.slice(0, 40)}..."
+                <div className="mt-auto pt-2">
+                  <p className="text-[7px] text-center text-neural-purple-600 italic">
+                    "{affirmation.slice(0, 35)}..."
                   </p>
                 </div>
               )}
@@ -227,7 +286,7 @@ export function ShareVisionBoard({
           </div>
 
           <p className="text-xs text-muted-foreground text-center mt-4">
-            Your vision board will be exported as a 1080x1920 phone wallpaper
+            Your 5-pillar vision board as a phone wallpaper
           </p>
         </div>
 
