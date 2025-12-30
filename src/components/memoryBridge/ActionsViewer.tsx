@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   Brain, 
   CheckCircle, 
@@ -14,11 +14,17 @@ import {
   Target,
   TrendingUp,
   Sparkles,
-  Save
+  GripVertical,
+  LayoutGrid,
+  TableIcon
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { EditableField } from './EditableField';
+import { ActionWatcherSelector } from './ActionWatcherSelector';
+import { ActionCommentsSection } from './ActionCommentsSection';
+import { ActionsTableView } from './ActionsTableView';
 import { toast } from 'sonner';
 
 interface ActionsViewerProps {
@@ -36,6 +42,9 @@ export function ActionsViewer({
 }: ActionsViewerProps) {
   const [extractedActions, setExtractedActions] = useState<NextStepsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  const [sortField, setSortField] = useState<'priority' | 'status' | 'date'>('priority');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
   const statusOptions = [
     { value: 'not_started', label: 'Ready to Begin' },
@@ -57,7 +66,6 @@ export function ActionsViewer({
     const fetchActions = async () => {
       setIsLoading(true);
       try {
-        // Get meeting record first
         const { data: meetingRecording } = await supabase
           .from('meeting_recordings')
           .select('id')
@@ -65,23 +73,22 @@ export function ActionsViewer({
           .single();
 
         if (meetingRecording) {
-          // Get extracted actions
           const { data: actions } = await supabase
             .from('extracted_actions')
             .select('*')
             .eq('meeting_recording_id', meetingRecording.id)
             .order('priority_level', { ascending: true });
 
-        setExtractedActions((actions || []).map(action => ({ 
-          ...action, 
-          category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note',
-          action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
-          status: action.status as 'done' | 'doing' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled',
-          detail_level: (action.detail_level || 'standard') as 'minimal' | 'standard' | 'complete',
-          alternative_phrasings: Array.isArray(action.alternative_phrasings) 
-            ? (action.alternative_phrasings as Array<{ text: string; confidence: number }>)
-            : []
-        })));
+          setExtractedActions((actions || []).map(action => ({ 
+            ...action, 
+            category: (action.category || 'action') as 'action' | 'watch_out' | 'depends_on' | 'note',
+            action_type: action.action_type as 'commitment' | 'promise' | 'task' | 'reminder' | 'follow_up',
+            status: action.status as 'done' | 'doing' | 'on_hold' | 'confirmed' | 'pending' | 'rejected' | 'modified' | 'scheduled' | 'not_started' | 'cancelled',
+            detail_level: (action.detail_level || 'standard') as 'minimal' | 'standard' | 'complete',
+            alternative_phrasings: Array.isArray(action.alternative_phrasings) 
+              ? (action.alternative_phrasings as Array<{ text: string; confidence: number }>)
+              : []
+          })));
         }
       } catch (error) {
         console.error('Error fetching actions:', error);
@@ -108,26 +115,72 @@ export function ActionsViewer({
         )
       );
 
-      toast.success('Action updated successfully');
+      toast.success('Action updated');
     } catch (error) {
       console.error('Error updating action:', error);
       toast.error('Failed to update action');
     }
   };
 
+  const handleDragEnd = async (result: DropResult) => {
+    if (!result.destination) return;
+
+    const reordered = Array.from(extractedActions);
+    const [removed] = reordered.splice(result.source.index, 1);
+    reordered.splice(result.destination.index, 0, removed);
+
+    // Update priority_level based on new positions
+    const updates = reordered.map((action, index) => ({
+      id: action.id,
+      priority_level: index + 1
+    }));
+
+    setExtractedActions(reordered);
+
+    // Save to database
+    try {
+      for (const update of updates) {
+        await supabase
+          .from('extracted_actions')
+          .update({ priority_level: update.priority_level })
+          .eq('id', update.id);
+      }
+      toast.success('Priority order updated!');
+    } catch (error) {
+      console.error('Error updating priority order:', error);
+      toast.error('Failed to update order');
+    }
+  };
+
+  const handleSort = (field: 'priority' | 'status' | 'date') => {
+    if (sortField === field) {
+      setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
+  const handleStatusChange = (actionId: string, status: string) => {
+    updateAction(actionId, { status: status as any });
+  };
+
+  const handleWatchersChange = (actionId: string, watchers: string[]) => {
+    updateAction(actionId, { assigned_watchers: watchers });
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'done':
-        return 'bg-success/10 text-success border-success/20';
+        return 'bg-memory-emerald-100 text-memory-emerald-700 border-memory-emerald-200 shadow-memory-emerald-500/20';
       case 'doing':
-        return 'bg-primary/10 text-primary border-primary/20';
+        return 'bg-neural-blue-100 text-neural-blue-700 border-neural-blue-200 shadow-neural-blue-500/20';
       case 'on_hold':
-        return 'bg-warning/10 text-warning border-warning/20';
+        return 'bg-amber-100 text-amber-700 border-amber-200 shadow-amber-500/20';
       case 'cancelled':
-        return 'bg-destructive/10 text-destructive border-destructive/20';
-      case 'not_started':
+        return 'bg-red-100 text-red-700 border-red-200 shadow-red-500/20';
       default:
-        return 'bg-muted/10 text-muted-foreground border-muted/20';
+        return 'bg-muted text-muted-foreground border-muted shadow-none';
     }
   };
 
@@ -144,38 +197,10 @@ export function ActionsViewer({
     }
   };
 
-  const formatACTSAction = (action: NextStepsItem) => {
-    return {
-      assign: action.assigned_to || 'You',
-      complete: action.due_context || action.scheduled_date || 'Set your timeline',
-      track: generateTrackingMessage(action),
-      status: action.status || 'ready to start'
-    };
-  };
-
-  const generateTrackingMessage = (action: NextStepsItem) => {
-    const empoweringMessages = [
-      "🌟 Your brain loves consistency - check in daily to build this neural pathway stronger!",
-      "💪 Each small step rewires your brain for success. Track your wins to boost confidence!",
-      "🎯 Progress tracking isn't about perfection - it's about celebrating every step forward.",
-      "✨ Your follow-through muscle gets stronger with every check-in. You're building real power!",
-      "🚀 Small actions, tracked consistently, create breakthrough momentum. Keep going!",
-      "🔥 Every progress update sends a signal to your brain: 'I keep my commitments!' Own that power.",
-      "💎 Tracking progress turns ordinary actions into extraordinary self-trust. You've got this!",
-      "⚡ Your brain craves the dopamine hit of progress updates. Give yourself that gift daily!"
-    ];
-    
-    // Use action ID to get consistent message per action
-    const messageIndex = action.id ? parseInt(action.id.slice(-1), 16) % empoweringMessages.length : 0;
-    return empoweringMessages[messageIndex];
-  };
-
   const getStructuredActionText = (action: NextStepsItem) => {
-    // Use new structured fields if available, otherwise fallback to parsing
     const what = action.what_outcome || action.action_text;
     const howSteps = action.how_steps || [];
     
-    // Handle micro_tasks which comes as Json from database
     let microTasks: Array<{text: string; completed: boolean}> = [];
     try {
       if (action.micro_tasks) {
@@ -189,354 +214,332 @@ export function ActionsViewer({
       }
     } catch (e) {
       console.warn('Error parsing micro_tasks:', e);
-      microTasks = [];
     }
     
-    // If we have structured steps, format them nicely
     let how = "";
     if (howSteps.length > 0) {
       how = howSteps.map((step: string, index: number) => `${index + 1}. ${step}`).join(', ');
     } else if (action.action_text.includes('|')) {
-      // Fallback to old format parsing
       const [, howPart] = action.action_text.split('|').map(s => s.trim());
       how = howPart || "Take it step by step, following your own pace and style.";
     } else {
       how = action.relationship_impact || "Break this down into manageable steps that work for you.";
     }
     
-    return { 
-      what, 
-      how,
-      microTasks
-    };
+    return { what, how, microTasks };
   };
 
   if (!isOpen) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5 text-primary" />
-            Next Step Summary: {meetingTitle}
-            <Badge variant="outline" className="ml-2">
-              {extractedActions.length} actions
-            </Badge>
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-xl border border-white/40 shadow-2xl">
+        {/* Premium header */}
+        <DialogHeader className="relative pb-4 border-b border-white/40">
+          {/* Neural pathway decoration */}
+          <div className="absolute top-0 right-0 w-32 h-32 opacity-10">
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              <path d="M10,50 Q30,20 50,50 T90,50" stroke="currentColor" fill="none" strokeWidth="2" className="text-neural-purple-500" />
+              <path d="M10,60 Q30,30 50,60 T90,60" stroke="currentColor" fill="none" strokeWidth="1" className="text-brand-orange-500" />
+            </svg>
+          </div>
+          
+          <DialogTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 bg-gradient-to-br from-brand-orange-500 to-brand-orange-600 rounded-xl shadow-lg shadow-brand-orange-500/30">
+                <Brain className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <span className="font-bold text-lg">Next Step Summary</span>
+                <span className="text-sm text-muted-foreground ml-2">• {meetingTitle}</span>
+              </div>
+              <Badge className="bg-gradient-to-r from-brand-orange-100 to-brand-orange-50 text-brand-orange-700 border border-brand-orange-200 shadow-sm">
+                {extractedActions.length} actions
+              </Badge>
+            </div>
+            
+            {/* View toggle */}
+            <div className="flex gap-1 p-1 bg-muted/50 rounded-lg backdrop-blur-sm">
+              <Button 
+                variant={viewMode === 'cards' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('cards')}
+                className={cn(
+                  "transition-all duration-200",
+                  viewMode === 'cards' && "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white shadow-md"
+                )}
+              >
+                <LayoutGrid className="h-4 w-4 mr-1" /> Cards
+              </Button>
+              <Button 
+                variant={viewMode === 'table' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('table')}
+                className={cn(
+                  "transition-all duration-200",
+                  viewMode === 'table' && "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white shadow-md"
+                )}
+              >
+                <TableIcon className="h-4 w-4 mr-1" /> Table
+              </Button>
+            </div>
           </DialogTitle>
-          <p className="text-sm text-muted-foreground">
-            Your personalized action plan with <strong>W</strong>hat needs to happen • <strong>W</strong>ho's responsible • <strong>W</strong>hen to complete - Brain-friendly and empowering
+          <p className="text-sm text-muted-foreground mt-1">
+            Drag to reorder • <strong>W</strong>hat • <strong>W</strong>ho • <strong>W</strong>hen — Brain-friendly and empowering
           </p>
         </DialogHeader>
 
-        <ScrollArea className="flex-1 pr-4">
-          <div className="space-y-6">
-            {isLoading ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Brain className="h-8 w-8 mx-auto mb-4 animate-pulse" />
-                Analyzing your commitments...
-              </div>
-            ) : extractedActions.length === 0 ? (
-              <div className="text-center py-12 text-muted-foreground">
-                <Target className="h-8 w-8 mx-auto mb-4" />
-                No actionable commitments found in this recording.
-              </div>
-            ) : (
-              extractedActions.map((action, index) => {
-                const actsData = formatACTSAction(action);
-                const structuredAction = getStructuredActionText(action);
-                
-                return (
-                  <Card key={action.id || index} className="border-l-4 border-l-primary bg-gradient-to-r from-background to-muted/20">
-                    <CardHeader>
-                      <CardTitle className="flex items-start justify-between">
-                        <div className="space-y-4 flex-1">
-                           {/* VERB-FIRST ACTION TITLE */}
-                           <div className="bg-primary/10 rounded-lg p-4 border-l-4 border-primary">
-                             <div className="flex items-center gap-2 mb-2">
-                               <Sparkles className="h-5 w-5 text-primary" />
-                               <span className="font-bold text-primary uppercase text-sm">ACTION</span>
-                             </div>
-                             <EditableField
-                               value={action.action_text}
-                               onSave={(value) => updateAction(action.id!, { action_text: value })}
-                               type="textarea"
-                               placeholder="Enter action..."
-                               className="text-lg font-bold"
-                             />
-                           </div>
-
-                           {/* Success Criteria */}
-                           <div className="bg-green-500/10 rounded-md p-3 border border-green-500/20">
-                             <div className="flex items-center gap-2 mb-1">
-                               <CheckCircle className="h-4 w-4 text-green-600" />
-                               <span className="font-semibold text-green-700 text-sm">YOU'LL KNOW YOU'RE DONE WHEN</span>
-                             </div>
-                             <EditableField
-                               value={action.success_criteria || ''}
-                               onSave={(value) => updateAction(action.id!, { success_criteria: value })}
-                               type="textarea"
-                               placeholder="Define success criteria..."
-                               className="text-sm"
-                             />
-                           </div>
-
-                           {/* Motivation Statement */}
-                           <div className="bg-yellow-500/10 rounded-md p-3 border border-yellow-500/20">
-                             <div className="flex items-center gap-2 mb-1">
-                               <TrendingUp className="h-4 w-4 text-yellow-600" />
-                               <span className="font-semibold text-yellow-700 text-sm">THIS WILL HELP YOU</span>
-                             </div>
-                             <EditableField
-                               value={action.motivation_statement || ''}
-                               onSave={(value) => updateAction(action.id!, { motivation_statement: value })}
-                               type="textarea"
-                               placeholder="Why this matters to you..."
-                               className="text-sm font-medium"
-                             />
-                           </div>
-
-                            {/* Date Range */}
-                            <div className="bg-blue-500/10 rounded-md p-3 border border-blue-500/20">
-                              <div className="flex items-center gap-2 mb-3">
-                                <Calendar className="h-4 w-4 text-blue-600" />
-                                <span className="font-semibold text-blue-700 text-sm">TIMELINE</span>
-                              </div>
-                              <div className="space-y-3">
-                                <div className="grid grid-cols-3 gap-3">
-                                  <EditableField
-                                    value={action.start_date}
-                                    onSave={(value) => updateAction(action.id!, { start_date: value })}
-                                    type="date"
-                                    label="START DATE"
-                                    placeholder="Set start date"
-                                    className="text-sm"
-                                  />
-                                  <EditableField
-                                    value={action.completion_date}
-                                    onSave={(value) => updateAction(action.id!, { completion_date: value })}
-                                    type="date"
-                                    label="TARGET DATE"
-                                    placeholder="Set target date"
-                                    className="text-sm font-bold"
-                                  />
-                                  <EditableField
-                                    value={action.end_date}
-                                    onSave={(value) => updateAction(action.id!, { end_date: value })}
-                                    type="date"
-                                    label="DEADLINE"
-                                    placeholder="Set deadline"
-                                    className="text-sm"
-                                  />
+        <ScrollArea className="flex-1 pr-4 max-h-[calc(95vh-140px)]">
+          {isLoading ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <Brain className="h-8 w-8 mx-auto mb-4 animate-pulse text-brand-orange-500" />
+              Analyzing your commitments...
+            </div>
+          ) : extractedActions.length === 0 ? (
+            <div className="text-center py-12 text-muted-foreground">
+              <Target className="h-8 w-8 mx-auto mb-4" />
+              No actionable commitments found in this recording.
+            </div>
+          ) : viewMode === 'table' ? (
+            <ActionsTableView
+              actions={extractedActions}
+              onDragEnd={handleDragEnd}
+              onStatusChange={handleStatusChange}
+              onSort={handleSort}
+              sortField={sortField}
+              sortDirection={sortDirection}
+            />
+          ) : (
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <Droppable droppableId="actions-list">
+                {(provided) => (
+                  <div {...provided.droppableProps} ref={provided.innerRef} className="space-y-6 py-2">
+                    {extractedActions.map((action, index) => {
+                      const structuredAction = getStructuredActionText(action);
+                      
+                      return (
+                        <Draggable key={action.id} draggableId={action.id!} index={index}>
+                          {(provided, snapshot) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              className={cn(
+                                "relative transition-all duration-200",
+                                snapshot.isDragging && "shadow-2xl scale-[1.02] rotate-1 z-50"
+                              )}
+                            >
+                              {/* Premium action card */}
+                              <div className="relative overflow-hidden rounded-2xl bg-white/90 backdrop-blur-sm border border-white/60 shadow-xl">
+                                {/* Glass reflection */}
+                                <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-white/50 to-transparent pointer-events-none" />
+                                
+                                {/* Drag handle bar */}
+                                <div 
+                                  {...provided.dragHandleProps}
+                                  className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-muted/50 to-transparent flex items-center justify-center cursor-grab active:cursor-grabbing hover:from-brand-orange-100/50 transition-colors"
+                                >
+                                  <GripVertical className="h-5 w-5 text-muted-foreground" />
                                 </div>
-                                {!action.calendar_checked && action.completion_date && (
-                                  <div className="text-red-600 text-xs flex items-center gap-1">
-                                    <AlertCircle className="h-3 w-3" />
-                                    Calendar not verified
+                                
+                                <div className="pl-10 pr-4 py-5 space-y-4">
+                                  {/* Header with status and priority */}
+                                  <div className="flex items-start justify-between gap-4">
+                                    <div className="flex-1 space-y-4">
+                                      {/* ACTION block - Premium burnt orange glass */}
+                                      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-brand-orange-50/90 to-brand-orange-100/70 backdrop-blur-sm border border-brand-orange-200/50 shadow-lg p-5">
+                                        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+                                        <div className="relative z-10">
+                                          <div className="flex items-center gap-2 mb-3">
+                                            <div className="p-1.5 bg-brand-orange-500 rounded-lg shadow-md">
+                                              <Sparkles className="h-4 w-4 text-white" />
+                                            </div>
+                                            <span className="font-bold text-brand-orange-700 uppercase text-sm tracking-wide">ACTION</span>
+                                          </div>
+                                          <EditableField
+                                            value={action.action_text}
+                                            onSave={(value) => updateAction(action.id!, { action_text: value })}
+                                            type="textarea"
+                                            placeholder="Enter action..."
+                                            className="text-lg font-bold text-foreground"
+                                          />
+                                        </div>
+                                      </div>
+
+                                      {/* SUCCESS CRITERIA - Emerald glass */}
+                                      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-memory-emerald-50/90 to-memory-emerald-100/70 backdrop-blur-sm border border-memory-emerald-200/50 shadow-lg p-4">
+                                        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+                                        <div className="relative z-10">
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <CheckCircle className="h-4 w-4 text-memory-emerald-600" />
+                                            <span className="font-semibold text-memory-emerald-700 text-sm">YOU'LL KNOW YOU'RE DONE WHEN</span>
+                                          </div>
+                                          <EditableField
+                                            value={action.success_criteria || ''}
+                                            onSave={(value) => updateAction(action.id!, { success_criteria: value })}
+                                            type="textarea"
+                                            placeholder="Define success criteria..."
+                                            className="text-sm"
+                                          />
+                                        </div>
+                                      </div>
+
+                                      {/* MOTIVATION - Amber glass */}
+                                      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-50/90 to-amber-100/70 backdrop-blur-sm border border-amber-200/50 shadow-lg p-4">
+                                        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+                                        <div className="relative z-10">
+                                          <div className="flex items-center gap-2 mb-2">
+                                            <TrendingUp className="h-4 w-4 text-amber-600" />
+                                            <span className="font-semibold text-amber-700 text-sm">THIS WILL HELP YOU</span>
+                                          </div>
+                                          <EditableField
+                                            value={action.motivation_statement || ''}
+                                            onSave={(value) => updateAction(action.id!, { motivation_statement: value })}
+                                            type="textarea"
+                                            placeholder="Why this matters to you..."
+                                            className="text-sm font-medium"
+                                          />
+                                        </div>
+                                      </div>
+
+                                      {/* TIMELINE - Neural blue glass */}
+                                      <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-neural-blue-50/90 to-neural-blue-100/70 backdrop-blur-sm border border-neural-blue-200/50 shadow-lg p-4">
+                                        <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+                                        {/* Neural pathway decoration */}
+                                        <div className="absolute bottom-0 right-0 w-20 h-20 opacity-10">
+                                          <svg viewBox="0 0 100 100" className="w-full h-full">
+                                            <circle cx="80" cy="80" r="15" fill="currentColor" className="text-neural-blue-500" />
+                                            <circle cx="60" cy="60" r="8" fill="currentColor" className="text-neural-blue-400" />
+                                            <path d="M60,60 L80,80" stroke="currentColor" strokeWidth="2" className="text-neural-blue-400" />
+                                          </svg>
+                                        </div>
+                                        <div className="relative z-10">
+                                          <div className="flex items-center gap-2 mb-3">
+                                            <Calendar className="h-4 w-4 text-neural-blue-600" />
+                                            <span className="font-semibold text-neural-blue-700 text-sm">TIMELINE</span>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-3">
+                                            <EditableField
+                                              value={action.start_date}
+                                              onSave={(value) => updateAction(action.id!, { start_date: value })}
+                                              type="date"
+                                              label="START"
+                                              placeholder="Set start date"
+                                              className="text-sm"
+                                            />
+                                            <EditableField
+                                              value={action.completion_date}
+                                              onSave={(value) => updateAction(action.id!, { completion_date: value })}
+                                              type="date"
+                                              label="TARGET"
+                                              placeholder="Set target date"
+                                              className="text-sm font-bold"
+                                            />
+                                            <EditableField
+                                              value={action.end_date}
+                                              onSave={(value) => updateAction(action.id!, { end_date: value })}
+                                              type="date"
+                                              label="DEADLINE"
+                                              placeholder="Set deadline"
+                                              className="text-sm"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* EXPECTED RESULT - Teal glass */}
+                                      {structuredAction.what && (
+                                        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-clarity-teal-50/90 to-clarity-teal-100/70 backdrop-blur-sm border border-clarity-teal-200/50 shadow-lg p-4">
+                                          <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+                                          <div className="relative z-10">
+                                            <div className="flex items-center gap-2 mb-2">
+                                              <Target className="h-4 w-4 text-clarity-teal-600" />
+                                              <span className="font-semibold text-clarity-teal-700 text-sm">EXPECTED RESULT</span>
+                                            </div>
+                                            <p className="text-foreground font-medium">{structuredAction.what}</p>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* Micro tasks */}
+                                      {structuredAction.microTasks && structuredAction.microTasks.length > 0 && (
+                                        <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-green-50/90 to-green-100/70 backdrop-blur-sm border border-green-200/50 shadow-lg p-4">
+                                          <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+                                          <div className="relative z-10">
+                                            <div className="flex items-center gap-2 mb-2">
+                                              <CheckCircle className="h-4 w-4 text-green-600" />
+                                              <span className="font-semibold text-green-700 text-sm">START WITH THESE TINY STEPS</span>
+                                            </div>
+                                            <div className="space-y-1">
+                                              {structuredAction.microTasks.map((task, i) => (
+                                                <div key={i} className="flex items-center gap-2 text-xs text-green-700 bg-green-100/80 px-2 py-1 rounded-lg">
+                                                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                                                  {task.text}
+                                                </div>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* SUPPORT CIRCLE & COMMENTS */}
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <ActionWatcherSelector
+                                          actionId={action.id!}
+                                          assignedWatchers={action.assigned_watchers || []}
+                                          onWatchersChange={(watchers) => handleWatchersChange(action.id!, watchers)}
+                                          onNotify={() => updateAction(action.id!, { support_circle_notified: true })}
+                                        />
+                                        <ActionCommentsSection actionId={action.id!} />
+                                      </div>
+                                    </div>
+
+                                    {/* Right side - Status & Priority */}
+                                    <div className="flex flex-col gap-3 min-w-[140px]">
+                                      <EditableField
+                                        value={String(action.priority_level || 3)}
+                                        onSave={(value) => updateAction(action.id!, { priority_level: Number(value) })}
+                                        type="select"
+                                        options={priorityOptions}
+                                        label="PRIORITY"
+                                        className="text-xs"
+                                      />
+                                      <EditableField
+                                        value={action.status}
+                                        onSave={(value) => updateAction(action.id!, { status: value as any })}
+                                        type="select"
+                                        options={statusOptions}
+                                        label="STATUS"
+                                        className="text-xs"
+                                      />
+                                      <Badge 
+                                        className={cn(
+                                          "justify-center py-1.5 border shadow-lg transition-all",
+                                          getStatusColor(action.status)
+                                        )}
+                                      >
+                                        {getStatusIcon(action.status)}
+                                        <span className="ml-1.5 capitalize text-xs">
+                                          {action.status.replace('_', ' ')}
+                                        </span>
+                                      </Badge>
+                                      <Badge variant="outline" className="text-xs justify-center">
+                                        {Math.round((action.confidence_score || 0) * 100)}% Confidence
+                                      </Badge>
+                                    </div>
                                   </div>
-                                )}
-                              </div>
-                            </div>
-
-                          {/* Expected Outcome */}
-                          {structuredAction.what && (
-                            <div className="bg-secondary/10 rounded-lg p-4 border-l-4 border-secondary">
-                              <div className="flex items-center gap-2 mb-2">
-                                <Target className="h-4 w-4 text-secondary" />
-                                <span className="font-semibold text-secondary">EXPECTED RESULT</span>
-                              </div>
-                              <p className="text-foreground font-medium">{structuredAction.what}</p>
-                            </div>
-                          )}
-                          
-                          {/* HOW Steps */}
-                          {structuredAction.how && (
-                            <div className="bg-secondary/5 rounded-lg p-4 border-l-2 border-secondary">
-                              <div className="flex items-center gap-2 mb-3">
-                                <Target className="h-4 w-4 text-secondary-foreground" />
-                                <span className="font-semibold text-secondary-foreground">HOW TO DO IT</span>
-                              </div>
-                              <div className="bg-secondary/50 p-3 rounded-lg border border-secondary/30">
-                                <p className="text-sm text-secondary-foreground leading-relaxed">{structuredAction.how}</p>
+                                </div>
                               </div>
                             </div>
                           )}
-                          
-                           {/* Micro Tasks */}
-                           {structuredAction.microTasks && structuredAction.microTasks.length > 0 && (
-                             <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-                               <div className="flex items-center gap-2 mb-2">
-                                 <CheckCircle className="h-4 w-4 text-green-600" />
-                                 <span className="font-semibold text-green-700 text-sm">START WITH THESE TINY STEPS</span>
-                               </div>
-                               <div className="space-y-1">
-                                 {structuredAction.microTasks.map((task: {text: string; completed: boolean}, index: number) => (
-                                   <div key={index} className="flex items-center gap-2 text-xs text-green-700 bg-green-100 px-2 py-1 rounded">
-                                     <div className="w-1.5 h-1.5 bg-green-500 rounded-full" />
-                                     {task.text}
-                                   </div>
-                                 ))}
-                               </div>
-                             </div>
-                           )}
-
-                          {/* Support Circle Status */}
-                          <div className="bg-purple-500/5 rounded-lg p-3 border border-purple-500/20">
-                            <div className="flex items-center gap-2 mb-2">
-                              <User className="h-4 w-4 text-purple-600" />
-                              <span className="font-medium text-purple-700 text-sm">SUPPORT CIRCLE</span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm text-foreground">
-                                {action.assigned_watchers && action.assigned_watchers.length > 0 
-                                  ? `${action.assigned_watchers.length} watcher(s) assigned`
-                                  : 'No watchers assigned - add your support team!'
-                                }
-                              </span>
-                              <Badge variant={(action as any).support_circle_notified ? "default" : "secondary"} className="text-xs">
-                                {(action as any).support_circle_notified ? "Notified" : "Not notified"}
-                              </Badge>
-                            </div>
-                          </div>
-                        </div>
-                        
-                         <div className="flex gap-2 flex-col">
-                           <div className="space-y-2">
-                             <EditableField
-                               value={String(action.priority_level || 3)}
-                               onSave={(value) => updateAction(action.id!, { priority_level: Number(value) })}
-                               type="select"
-                               options={priorityOptions}
-                               label="PRIORITY"
-                               className="text-xs"
-                             />
-                             <EditableField
-                               value={action.status}
-                               onSave={(value) => updateAction(action.id!, { status: value as any })}
-                               type="select"
-                               options={statusOptions}
-                               label="STATUS"
-                               className="text-xs"
-                             />
-                           </div>
-                           <Badge variant="outline" className="text-xs">
-                             {Math.round((action.confidence_score || 0) * 100)}% Confidence
-                           </Badge>
-                         </div>
-                      </CardTitle>
-                    </CardHeader>
-                    
-                    <CardContent className="space-y-6">
-                      {/* ACTS Framework Grid */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Assign */}
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                              <User className="h-4 w-4 text-blue-600" />
-                            </div>
-                            <div>
-                              <span className="font-semibold text-blue-700">A - Assign</span>
-                              <p className="text-xs text-blue-600">Who's responsible?</p>
-                            </div>
-                          </div>
-                          <div className="pl-11">
-                            <p className="font-medium text-foreground">{actsData.assign}</p>
-                          </div>
-                        </div>
-
-                        {/* Complete */}
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
-                              <Calendar className="h-4 w-4 text-orange-600" />
-                            </div>
-                            <div>
-                              <span className="font-semibold text-orange-700">C - Complete</span>
-                              <p className="text-xs text-orange-600">When is the deadline?</p>
-                            </div>
-                          </div>
-                           <div className="pl-11">
-                             <p className="font-medium text-foreground">
-                               {action.completion_date 
-                                 ? new Date(action.completion_date).toLocaleDateString()
-                                 : action.end_date
-                                 ? new Date(action.end_date).toLocaleDateString()
-                                 : actsData.complete
-                               }
-                             </p>
-                           </div>
-                        </div>
-
-                        {/* Track */}
-                        <div className="space-y-3 md:col-span-2">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                              <TrendingUp className="h-4 w-4 text-green-600" />
-                            </div>
-                            <div>
-                              <span className="font-semibold text-green-700">T - Track</span>
-                              <p className="text-xs text-green-600">Encouraging progress monitoring</p>
-                            </div>
-                          </div>
-                          <div className="pl-11">
-                            <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
-                              <p className="font-medium text-green-800 leading-relaxed">
-                                {actsData.track}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Status */}
-                        <div className="space-y-3 md:col-span-2">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                              <Target className="h-4 w-4 text-purple-600" />
-                            </div>
-                            <div>
-                              <span className="font-semibold text-purple-700">S - Status</span>
-                              <p className="text-xs text-purple-600">Current progress state</p>
-                            </div>
-                          </div>
-                          <div className="pl-11">
-                            <Badge className={`${getStatusColor(actsData.status)} border text-sm px-3 py-1`}>
-                              {getStatusIcon(actsData.status)}
-                              <span className="ml-2 capitalize font-medium">
-                                {actsData.status.replace('_', ' ')}
-                              </span>
-                            </Badge>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Additional Context */}
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs pt-4 border-t border-muted">
-                        {(action as any).emotional_stakes && (
-                          <div className="flex items-start gap-2 text-muted-foreground">
-                            <AlertCircle className="h-3 w-3 mt-0.5" />
-                            <div>
-                              <span className="font-medium">Emotional Stakes:</span>
-                              <p className="mt-1">{(action as any).emotional_stakes}</p>
-                            </div>
-                          </div>
-                        )}
-                        {(action as any).intent_behind && (
-                          <div className="flex items-start gap-2 text-muted-foreground">
-                            <TrendingUp className="h-3 w-3 mt-0.5" />
-                            <div>
-                              <span className="font-medium">Intent:</span>
-                              <p className="mt-1">{(action as any).intent_behind}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                );
-              })
-            )}
-          </div>
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
+          )}
         </ScrollArea>
       </DialogContent>
     </Dialog>
