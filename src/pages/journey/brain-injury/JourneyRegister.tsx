@@ -299,7 +299,7 @@ export default function JourneyRegister() {
         <Button
           type="submit"
           disabled={!isFormValid || isSubmitting}
-          className="w-full h-16 text-lg font-semibold rounded-xl bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-16 text-lg font-semibold rounded-xl bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 text-white shadow-lg hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? (
             <Loader2 className="w-6 h-6 animate-spin" />
