@@ -2,7 +2,12 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { Resend } from "https://esm.sh/resend@2.0.0";
 import { z } from 'https://deno.land/x/zod@v3.22.4/mod.ts';
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+// ============================================
+// CONFIGURATION - UPDATE THESE IF NEEDED
+// ============================================
+const SENDER_EMAIL = "MyRhythm <noreply@myrhythmapp.com>";
+// For testing, you can use: "MyRhythm <onboarding@resend.dev>"
+// Make sure myrhythmapp.com is verified in Resend: https://resend.com/domains
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -19,32 +24,95 @@ const requestSchema = z.object({
 });
 
 const handler = async (req: Request): Promise<Response> => {
+  const requestId = crypto.randomUUID().slice(0, 8);
+  const startTime = Date.now();
+  
+  console.log(`📧 [${requestId}] ========== VERIFICATION EMAIL REQUEST ==========`);
+  console.log(`📧 [${requestId}] Timestamp: ${new Date().toISOString()}`);
+  console.log(`📧 [${requestId}] Method: ${req.method}`);
+
   if (req.method === "OPTIONS") {
+    console.log(`📧 [${requestId}] Handling CORS preflight`);
     return new Response(null, { headers: corsHeaders });
   }
 
   if (req.method !== "POST") {
+    console.log(`❌ [${requestId}] Method not allowed: ${req.method}`);
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
 
   try {
-    const rawBody = await req.json();
-    const validation = requestSchema.safeParse(rawBody);
-    
-    if (!validation.success) {
-      console.error('❌ Invalid request:', validation.error);
+    // Step 1: Check API Key
+    const apiKey = Deno.env.get("RESEND_API_KEY");
+    if (!apiKey) {
+      console.error(`❌ [${requestId}] CRITICAL: RESEND_API_KEY is not set!`);
+      console.error(`❌ [${requestId}] Please add RESEND_API_KEY to Supabase Edge Function secrets`);
+      console.error(`❌ [${requestId}] Go to: https://supabase.com/dashboard/project/_/settings/functions`);
       return new Response(
-        JSON.stringify({ error: "Invalid request data", details: validation.error.errors }),
+        JSON.stringify({ 
+          error: "Email service not configured",
+          details: "RESEND_API_KEY is missing. Please contact support.",
+          code: "MISSING_API_KEY"
+        }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    console.log(`✅ [${requestId}] RESEND_API_KEY is configured (length: ${apiKey.length})`);
+
+    // Step 2: Parse and validate request body
+    console.log(`📧 [${requestId}] Parsing request body...`);
+    let rawBody;
+    try {
+      rawBody = await req.json();
+      console.log(`✅ [${requestId}] Request body parsed successfully`);
+      console.log(`📧 [${requestId}] Email: ${rawBody.email}`);
+      console.log(`📧 [${requestId}] Name: ${rawBody.name}`);
+      console.log(`📧 [${requestId}] RedirectUrl: ${rawBody.redirectUrl}`);
+      console.log(`📧 [${requestId}] Token length: ${rawBody.token?.length || 0}`);
+    } catch (parseError) {
+      console.error(`❌ [${requestId}] Failed to parse request body:`, parseError);
+      return new Response(
+        JSON.stringify({ 
+          error: "Invalid JSON in request body",
+          code: "INVALID_JSON"
+        }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
+
+    // Step 3: Validate input data
+    console.log(`📧 [${requestId}] Validating input data...`);
+    const validation = requestSchema.safeParse(rawBody);
+    
+    if (!validation.success) {
+      console.error(`❌ [${requestId}] Validation failed:`, JSON.stringify(validation.error.errors));
+      return new Response(
+        JSON.stringify({ 
+          error: "Invalid request data", 
+          details: validation.error.errors,
+          code: "VALIDATION_FAILED"
+        }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+    console.log(`✅ [${requestId}] Input validation passed`);
     
     const { email, name, token, redirectUrl } = validation.data;
-
     const verificationLink = `${redirectUrl}?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`;
+    
+    console.log(`📧 [${requestId}] Verification link generated (length: ${verificationLink.length})`);
 
+    // Step 4: Initialize Resend client
+    console.log(`📧 [${requestId}] Initializing Resend client...`);
+    const resend = new Resend(apiKey);
+
+    // Step 5: Send email
+    console.log(`📧 [${requestId}] Sending email via Resend...`);
+    console.log(`📧 [${requestId}] From: ${SENDER_EMAIL}`);
+    console.log(`📧 [${requestId}] To: ${email}`);
+    
     const emailResponse = await resend.emails.send({
-      from: "MyRhythm <noreply@myrhythmapp.com>",
+      from: SENDER_EMAIL,
       to: [email],
       subject: "Verify your MyRhythm account",
       html: `
@@ -66,7 +134,7 @@ const handler = async (req: Request): Promise<Response> => {
               .verify-button { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 16px 32px; border-radius: 8px; font-weight: 600; font-size: 16px; margin: 0 0 30px; }
               .verify-button:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3); }
               .manual-token { background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0; }
-              .token-code { font-family: 'Monaco', 'Menlo', monospace; font-size: 18px; font-weight: bold; color: #1f2937; letter-spacing: 2px; }
+              .token-code { font-family: 'Monaco', 'Menlo', monospace; font-size: 18px; font-weight: bold; color: #1f2937; letter-spacing: 2px; word-break: break-all; }
               .footer { background: #f9fafb; padding: 30px 20px; text-align: center; color: #6b7280; font-size: 14px; }
               .footer a { color: #667eea; text-decoration: none; }
             </style>
@@ -101,19 +169,70 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Verification email sent successfully:", emailResponse);
+    const duration = Date.now() - startTime;
+
+    // Step 6: Check response
+    if (emailResponse.error) {
+      console.error(`❌ [${requestId}] Resend API error:`, JSON.stringify(emailResponse.error));
+      console.error(`❌ [${requestId}] Duration: ${duration}ms`);
+      
+      // Provide specific error messages based on error type
+      let userMessage = "Failed to send verification email";
+      let errorCode = "RESEND_ERROR";
+      
+      if (emailResponse.error.message?.includes("API key")) {
+        userMessage = "Email service configuration error. Please contact support.";
+        errorCode = "INVALID_API_KEY";
+        console.error(`❌ [${requestId}] API Key issue detected - check RESEND_API_KEY`);
+      } else if (emailResponse.error.message?.includes("domain")) {
+        userMessage = "Email domain not verified. Please contact support.";
+        errorCode = "DOMAIN_NOT_VERIFIED";
+        console.error(`❌ [${requestId}] Domain issue - verify myrhythmapp.com at https://resend.com/domains`);
+      } else if (emailResponse.error.message?.includes("rate")) {
+        userMessage = "Too many emails sent. Please wait a few minutes and try again.";
+        errorCode = "RATE_LIMITED";
+      }
+
+      return new Response(
+        JSON.stringify({ 
+          error: userMessage,
+          code: errorCode,
+          details: emailResponse.error.message
+        }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    console.log(`✅ [${requestId}] Email sent successfully!`);
+    console.log(`✅ [${requestId}] Message ID: ${emailResponse.data?.id}`);
+    console.log(`✅ [${requestId}] Duration: ${duration}ms`);
+    console.log(`📧 [${requestId}] ========== REQUEST COMPLETE ==========`);
 
     return new Response(
-      JSON.stringify({ success: true, messageId: emailResponse.data?.id }),
+      JSON.stringify({ 
+        success: true, 
+        messageId: emailResponse.data?.id,
+        timestamp: new Date().toISOString()
+      }),
       {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       }
     );
   } catch (error: any) {
-    console.error("Error sending verification email:", error);
+    const duration = Date.now() - startTime;
+    console.error(`❌ [${requestId}] Unexpected error:`, error);
+    console.error(`❌ [${requestId}] Error name: ${error.name}`);
+    console.error(`❌ [${requestId}] Error message: ${error.message}`);
+    console.error(`❌ [${requestId}] Error stack: ${error.stack}`);
+    console.error(`❌ [${requestId}] Duration: ${duration}ms`);
+    
     return new Response(
-      JSON.stringify({ error: error.message || "Failed to send verification email" }),
+      JSON.stringify({ 
+        error: "Failed to send verification email. Please try again.",
+        code: "UNEXPECTED_ERROR",
+        details: error.message
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
