@@ -126,7 +126,7 @@ import LaunchCommit from "./pages/launch/LaunchCommit";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
 
 // Brain Injury Journey Routes
-import { JourneyRegister } from "./pages/journey/brain-injury";
+import { JourneyRegister, JourneyEnergyCheck, JourneyAssessment, JourneySupportCircle, JourneyReady } from "./pages/journey/brain-injury";
 
 const queryClient = new QueryClient();
 
@@ -323,6 +323,10 @@ function App() {
                        
                        {/* Brain Injury Journey Routes - Golden Path */}
                        <Route path="/journey/brain-injury/register" element={<JourneyRegister />} />
+                       <Route path="/journey/brain-injury/energy" element={<JourneyEnergyCheck />} />
+                       <Route path="/journey/brain-injury/assessment" element={<JourneyAssessment />} />
+                       <Route path="/journey/brain-injury/support" element={<JourneySupportCircle />} />
+                       <Route path="/journey/brain-injury/ready" element={<JourneyReady />} />
                        
                        {/* V1 Launch Mode Routes */}
                        <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
