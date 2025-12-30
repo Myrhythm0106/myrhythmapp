@@ -125,6 +125,9 @@ import LaunchCapture from "./pages/launch/LaunchCapture";
 import LaunchCommit from "./pages/launch/LaunchCommit";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
 
+// Brain Injury Journey Routes
+import { JourneyRegister } from "./pages/journey/brain-injury";
+
 const queryClient = new QueryClient();
 
 // Network status component
@@ -317,6 +320,9 @@ function App() {
                         </ProtectedRoute>
                       } />
                        <Route path="/congrats" element={<CongratsPage />} />
+                       
+                       {/* Brain Injury Journey Routes - Golden Path */}
+                       <Route path="/journey/brain-injury/register" element={<JourneyRegister />} />
                        
                        {/* V1 Launch Mode Routes */}
                        <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
