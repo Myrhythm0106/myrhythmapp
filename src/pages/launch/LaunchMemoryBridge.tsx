@@ -3,19 +3,45 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
-import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2 } from 'lucide-react';
+import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
+import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
+import { processSavedRecording } from '@/utils/processSavedRecording';
+import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 type RecordingState = 'idle' | 'recording' | 'paused' | 'reviewing';
 
+interface VoiceRecording {
+  id: string;
+  title: string;
+  description?: string;
+  category: string;
+  file_path: string;
+  duration_seconds?: number;
+  transcription?: string;
+  access_level: string;
+  created_at: string;
+}
+
 export default function LaunchMemoryBridge() {
+  const { user } = useAuth();
   const [state, setState] = useState<RecordingState>('idle');
   const [showCelebration, setShowCelebration] = useState(false);
   const [notifySupport, setNotifySupport] = useState(true);
   const [recordingTitle, setRecordingTitle] = useState('');
   const audioBlobRef = useRef<Blob | null>(null);
+
+  // Playback and actions state
+  const [playingId, setPlayingId] = useState<string | null>(null);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+  const [processedRecordings, setProcessedRecordings] = useState<Set<string>>(new Set());
+  const [actionsCountMap, setActionsCountMap] = useState<Record<string, number>>({});
+  const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const {
     isRecording,
@@ -29,13 +55,53 @@ export default function LaunchMemoryBridge() {
     stopRecording,
     saveRecording,
     fetchRecordings,
+    getRecordingUrl,
     formatDuration
   } = useVoiceRecorder();
 
-  // Fetch recordings on mount
+  // Fetch recordings and check which ones have been processed
   useEffect(() => {
     fetchRecordings();
   }, [fetchRecordings]);
+
+  // Check for processed recordings when recordings change
+  useEffect(() => {
+    if (!user || recordings.length === 0) return;
+
+    const checkProcessedRecordings = async () => {
+      const { data: meetings } = await supabase
+        .from('meeting_recordings')
+        .select('recording_id, id')
+        .eq('user_id', user.id)
+        .in('recording_id', recordings.map(r => r.id));
+
+      if (!meetings || meetings.length === 0) return;
+
+      const meetingMap = new Map(meetings.map(m => [m.recording_id, m.id]));
+      const processedIds = new Set<string>();
+      const countsMap: Record<string, number> = {};
+
+      // Get actions count for each meeting
+      for (const [recordingId, meetingId] of meetingMap) {
+        if (!recordingId) continue;
+        
+        const { data: actions } = await supabase
+          .from('extracted_actions')
+          .select('id')
+          .eq('meeting_recording_id', meetingId);
+
+        if (actions && actions.length > 0) {
+          processedIds.add(recordingId);
+          countsMap[recordingId] = actions.length;
+        }
+      }
+
+      setProcessedRecordings(processedIds);
+      setActionsCountMap(countsMap);
+    };
+
+    checkProcessedRecordings();
+  }, [user, recordings]);
 
   // Sync hook state with component state
   useEffect(() => {
@@ -45,6 +111,16 @@ export default function LaunchMemoryBridge() {
       setState('paused');
     }
   }, [isRecording, isPaused]);
+
+  // Clean up audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
 
   const handleStartRecording = async () => {
     const success = await startRecording();
@@ -93,6 +169,76 @@ export default function LaunchMemoryBridge() {
     setShowCelebration(false);
     setState('idle');
     setRecordingTitle('');
+  };
+
+  const handlePlayRecording = async (recording: VoiceRecording) => {
+    // If already playing this recording, stop it
+    if (playingId === recording.id) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+      setPlayingId(null);
+      return;
+    }
+
+    // Stop any currently playing audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+
+    const url = await getRecordingUrl(recording.file_path);
+    if (url) {
+      const audio = new Audio(url);
+      audioRef.current = audio;
+      setPlayingId(recording.id);
+
+      audio.onended = () => {
+        setPlayingId(null);
+        audioRef.current = null;
+      };
+
+      audio.onerror = () => {
+        toast.error('Failed to play recording');
+        setPlayingId(null);
+        audioRef.current = null;
+      };
+
+      audio.play();
+    } else {
+      toast.error('Could not load recording');
+    }
+  };
+
+  const handleProcessRecording = async (recording: VoiceRecording) => {
+    if (!user) return;
+
+    setProcessingId(recording.id);
+    
+    const result = await processSavedRecording(
+      recording.id,
+      user.id,
+      recording.duration_seconds || 0
+    );
+
+    if (result.success) {
+      setProcessedRecordings(prev => new Set([...prev, recording.id]));
+      setActionsCountMap(prev => ({ ...prev, [recording.id]: result.actionsCount || 0 }));
+      
+      if (result.actionsCount && result.actionsCount > 0) {
+        toast.success(`Found ${result.actionsCount} actions!`);
+      }
+    }
+    
+    setProcessingId(null);
+  };
+
+  const handleViewActions = (recording: VoiceRecording) => {
+    setViewingActions({
+      recordingId: recording.id,
+      title: recording.title
+    });
   };
 
   const formatRecordingDate = (dateStr: string) => {
@@ -227,27 +373,105 @@ export default function LaunchMemoryBridge() {
             <p className="text-muted-foreground">No recordings yet. Start your first one!</p>
           </LaunchCard>
         ) : (
-          recordings.slice(0, 5).map((recording) => (
-            <LaunchCard key={recording.id} variant="glass" className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-brand-emerald-100 flex items-center justify-center">
-                    <Mic className="h-5 w-5 text-brand-emerald-600" />
+          recordings.slice(0, 5).map((recording) => {
+            const isProcessed = processedRecordings.has(recording.id);
+            const isCurrentlyProcessing = processingId === recording.id;
+            const isPlaying = playingId === recording.id;
+            const actionsCount = actionsCountMap[recording.id] || 0;
+
+            return (
+              <LaunchCard key={recording.id} variant="glass" className="p-4">
+                <div className="flex flex-col gap-3">
+                  {/* Header row */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-brand-emerald-100 flex items-center justify-center">
+                        <Mic className="h-5 w-5 text-brand-emerald-600" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-foreground">{recording.title}</p>
+                        <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {formatRecordingDate(recording.created_at)}
+                          {recording.duration_seconds && (
+                            <span className="ml-2">• {formatDuration(recording.duration_seconds)}</span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Processed badge */}
+                    {isProcessed && (
+                      <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-brand-emerald-100 text-brand-emerald-700 text-xs font-medium">
+                        <CheckCircle className="h-3 w-3" />
+                        Actions Ready
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <p className="font-medium text-foreground">{recording.title}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {formatRecordingDate(recording.created_at)}
-                      {recording.duration_seconds && (
-                        <span className="ml-2">• {formatDuration(recording.duration_seconds)}</span>
+
+                  {/* Action buttons row */}
+                  <div className="flex items-center gap-2">
+                    {/* Play button */}
+                    <button
+                      onClick={() => handlePlayRecording(recording)}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                        isPlaying
+                          ? "bg-brand-emerald-500 text-white"
+                          : "bg-muted hover:bg-muted/80 text-foreground"
                       )}
-                    </p>
+                    >
+                      {isPlaying ? (
+                        <>
+                          <VolumeX className="h-4 w-4" />
+                          Stop
+                        </>
+                      ) : (
+                        <>
+                          <Volume2 className="h-4 w-4" />
+                          Play
+                        </>
+                      )}
+                    </button>
+
+                    {/* Process or View Actions button */}
+                    {isProcessed ? (
+                      <button
+                        onClick={() => handleViewActions(recording)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-brand-emerald-500 text-white hover:bg-brand-emerald-600 transition-colors"
+                      >
+                        <Eye className="h-4 w-4" />
+                        View {actionsCount} Action{actionsCount !== 1 ? 's' : ''}
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleProcessRecording(recording)}
+                        disabled={isCurrentlyProcessing}
+                        className={cn(
+                          "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors",
+                          isCurrentlyProcessing
+                            ? "bg-muted text-muted-foreground cursor-not-allowed"
+                            : "bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 text-white hover:opacity-90"
+                        )}
+                      >
+                        {isCurrentlyProcessing ? (
+                          <>
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <Brain className="h-4 w-4" />
+                            Discover Actions
+                          </>
+                        )}
+                      </button>
+                    )}
                   </div>
                 </div>
-              </div>
-            </LaunchCard>
-          ))
+              </LaunchCard>
+            );
+          })
         )}
       </div>
 
@@ -259,6 +483,16 @@ export default function LaunchMemoryBridge() {
         onNotifySupport={notifySupport ? () => console.log('Notifying support') : undefined}
         streakCount={3}
       />
+
+      {/* Actions Viewer Modal */}
+      {viewingActions && (
+        <ActionsViewer
+          recordingId={viewingActions.recordingId}
+          meetingTitle={viewingActions.title}
+          isOpen={!!viewingActions}
+          onClose={() => setViewingActions(null)}
+        />
+      )}
     </LaunchLayout>
   );
 }
