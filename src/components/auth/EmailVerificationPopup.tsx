@@ -43,72 +43,78 @@ export const EmailVerificationPopup: React.FC<EmailVerificationPopupProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md bg-background border-border">
+      <DialogContent className="sm:max-w-md bg-card/95 backdrop-blur-sm border-border/50 shadow-2xl">
         <DialogHeader className="text-center">
           <motion.div 
-            className="mx-auto w-16 h-16 rounded-full bg-brand-teal/20 flex items-center justify-center mb-4"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", duration: 0.5 }}
+            className="mx-auto w-20 h-20 rounded-full bg-gradient-to-br from-brain-health-500 to-clarity-teal-500 flex items-center justify-center mb-4 shadow-lg"
+            initial={{ scale: 0, rotate: -180 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
           >
-            <Mail className="w-8 h-8 text-brand-teal" />
+            <Mail className="w-10 h-10 text-white" />
           </motion.div>
           
-          <DialogTitle className="text-xl font-semibold text-foreground">
+          <DialogTitle className="text-2xl font-bold text-foreground">
             Verification Email Sent!
           </DialogTitle>
           
-          <DialogDescription className="text-muted-foreground">
+          <DialogDescription className="text-base text-muted-foreground">
             We've sent a verification email to:
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 py-4">
-          {/* Email display */}
-          <div className="bg-muted/50 rounded-lg p-3 text-center">
-            <span className="font-medium text-foreground">{email}</span>
+        <div className="space-y-5 py-4">
+          {/* Email display - Premium styling */}
+          <div className="bg-brain-health-50 rounded-xl p-4 text-center border border-brain-health-200/50">
+            <span className="font-semibold text-lg text-foreground">{email}</span>
           </div>
 
-          {/* Instructions */}
-          <div className="space-y-2 text-sm text-muted-foreground">
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />
-              <span>Check your inbox (and spam folder)</span>
+          {/* Instructions - Larger text for brain-health */}
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-memory-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                <CheckCircle className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-base text-foreground">Check your inbox (and spam folder)</span>
             </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />
-              <span>Click the verification link in the email</span>
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-memory-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                <CheckCircle className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-base text-foreground">Click the verification link in the email</span>
             </div>
-            <div className="flex items-start gap-2">
-              <CheckCircle className="w-4 h-4 text-brand-teal mt-0.5 shrink-0" />
-              <span>Verify within 24 hours to unlock all features</span>
+            <div className="flex items-start gap-3">
+              <div className="w-6 h-6 rounded-full bg-memory-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+                <CheckCircle className="w-4 h-4 text-white" />
+              </div>
+              <span className="text-base text-foreground">Verify within 24 hours</span>
             </div>
           </div>
 
           {/* Didn't receive email section */}
           <div className="border-t border-border pt-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Didn't receive it?</span>
+              <span className="text-base text-muted-foreground">Didn't receive it?</span>
               <Button
-                variant="ghost"
-                size="sm"
+                variant="outline"
+                size="lg"
                 onClick={handleResend}
                 disabled={isResending || resendSuccess}
-                className="text-brand-teal hover:text-brand-teal/80"
+                className="h-12 px-6 text-brain-health-600 border-brain-health-300 hover:bg-brain-health-50"
               >
                 {isResending ? (
                   <>
-                    <RefreshCw className="w-4 h-4 mr-1 animate-spin" />
+                    <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
                     Sending...
                   </>
                 ) : resendSuccess ? (
                   <>
-                    <CheckCircle className="w-4 h-4 mr-1" />
+                    <CheckCircle className="w-5 h-5 mr-2 text-memory-emerald-500" />
                     Sent!
                   </>
                 ) : (
                   <>
-                    <RefreshCw className="w-4 h-4 mr-1" />
+                    <RefreshCw className="w-5 h-5 mr-2" />
                     Resend Email
                   </>
                 )}
@@ -116,29 +122,29 @@ export const EmailVerificationPopup: React.FC<EmailVerificationPopupProps> = ({
             </div>
           </div>
 
-          {/* Important note */}
-          <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-3 flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
-            <p className="text-xs text-amber-600 dark:text-amber-400">
-              You can continue setting up your account, but some features will be limited until you verify your email.
+          {/* Important note - Softer warning */}
+          <div className="bg-clarity-teal-50 border border-clarity-teal-200 rounded-xl p-4 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-clarity-teal-600 mt-0.5 shrink-0" />
+            <p className="text-sm text-clarity-teal-700">
+              You can continue setting up your account now. Some features will unlock after verification.
             </p>
           </div>
         </div>
 
-        {/* Actions */}
-        <div className="flex flex-col gap-2">
+        {/* Actions - Large Touch Targets */}
+        <div className="flex flex-col gap-3 pt-2">
           <Button
             onClick={handleContinue}
-            className="w-full bg-brand-teal hover:bg-brand-teal/90 text-white"
+            className="w-full h-16 text-lg font-semibold rounded-xl bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white shadow-lg"
           >
             Continue to Setup
-            <ArrowRight className="w-4 h-4 ml-2" />
+            <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
           
           <Button
             variant="ghost"
             onClick={onClose}
-            className="w-full text-muted-foreground"
+            className="w-full h-12 text-base text-muted-foreground hover:text-foreground"
           >
             I'll verify first
           </Button>
