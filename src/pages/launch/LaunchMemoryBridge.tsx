@@ -9,10 +9,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
+import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { EnhancedBackgroundEffects } from '@/components/ui/EnhancedBackgroundEffects';
 import { Badge } from '@/components/ui/badge';
+import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
+import { NextStepsItem } from '@/types/memoryBridge';
 
 type RecordingState = 'idle' | 'recording' | 'paused' | 'reviewing';
 
@@ -42,6 +45,16 @@ export default function LaunchMemoryBridge() {
   const [actionsCountMap, setActionsCountMap] = useState<Record<string, number>>({});
   const [viewingActions, setViewingActions] = useState<{ recordingId: string; title: string } | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // New states for streamlined flow
+  const [showPostExtractionDialog, setShowPostExtractionDialog] = useState(false);
+  const [lastExtractionResult, setLastExtractionResult] = useState<{ 
+    meetingId: string; 
+    recordingId: string; 
+    actionsCount: number; 
+    title: string 
+  } | null>(null);
+  const [isExtracting, setIsExtracting] = useState(false);
 
   const {
     isRecording,
@@ -144,26 +157,120 @@ export default function LaunchMemoryBridge() {
   };
 
   const handleSave = async () => {
-    if (!audioBlobRef.current) return;
+    if (!audioBlobRef.current || !user) return;
+    
+    setIsExtracting(true);
+    const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
     
     const saved = await saveRecording(
       audioBlobRef.current,
-      recordingTitle || `Recording ${new Date().toLocaleTimeString()}`,
+      title,
       'memory-bridge',
       undefined,
       notifySupport
     );
 
     if (saved) {
-      setShowCelebration(true);
       audioBlobRef.current = null;
+      
+      // Automatically start extraction
+      const result = await processSavedRecording(
+        saved.id,
+        user.id,
+        duration
+      );
+      
+      setIsExtracting(false);
+      
+      if (result.success && result.actionsCount && result.actionsCount > 0) {
+        // Show post-extraction dialog with Accept All / Review options
+        setLastExtractionResult({
+          meetingId: result.meetingId!,
+          recordingId: saved.id,
+          actionsCount: result.actionsCount,
+          title
+        });
+        setShowPostExtractionDialog(true);
+        setProcessedRecordings(prev => new Set([...prev, saved.id]));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
+      } else {
+        // No actions found - show regular celebration
+        setShowCelebration(true);
+        toast.info('Recording saved! No actionable items found.');
+      }
+      
+      fetchRecordings();
+      setState('idle');
+      setRecordingTitle('');
+    } else {
+      setIsExtracting(false);
     }
+  };
+
+  const handleAcceptAndScheduleAll = async (notifyCircle: boolean) => {
+    if (!lastExtractionResult || !user) return;
+    
+    try {
+      // Fetch all extracted actions for this meeting
+      const { data: actions, error } = await supabase
+        .from('extracted_actions')
+        .select('*')
+        .eq('meeting_recording_id', lastExtractionResult.meetingId);
+      
+      if (error) throw error;
+      
+      let scheduled = 0;
+      for (const action of actions || []) {
+        try {
+          const eventId = await convertActionToCalendarEvent(
+            action as unknown as NextStepsItem,
+            user.id,
+            [],
+            action.proposed_date,
+            action.proposed_time
+          );
+          
+          if (eventId) {
+            await supabase
+              .from('extracted_actions')
+              .update({ 
+                status: 'scheduled',
+                calendar_event_id: eventId,
+                support_circle_notified: notifyCircle
+              })
+              .eq('id', action.id);
+            scheduled++;
+          }
+        } catch (err) {
+          console.error('Failed to schedule action:', err);
+        }
+      }
+      
+      toast.success(`Scheduled ${scheduled} actions to your calendar!`);
+      setShowPostExtractionDialog(false);
+      setShowCelebration(true);
+      
+    } catch (error) {
+      console.error('Error scheduling all actions:', error);
+      toast.error('Failed to schedule actions');
+    }
+  };
+
+  const handleReviewIndividually = () => {
+    if (lastExtractionResult) {
+      setViewingActions({
+        recordingId: lastExtractionResult.recordingId,
+        title: lastExtractionResult.title
+      });
+    }
+    setShowPostExtractionDialog(false);
   };
 
   const handleCelebrationClose = () => {
     setShowCelebration(false);
     setState('idle');
     setRecordingTitle('');
+    setLastExtractionResult(null);
   };
 
   const handlePlayRecording = async (recording: VoiceRecording) => {
@@ -384,11 +491,11 @@ export default function LaunchMemoryBridge() {
                   </button>
                 </div>
 
-                <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 shadow-lg shadow-brand-orange-500/30" disabled={isProcessing}>
-                  {isProcessing ? (
+                <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 shadow-lg shadow-brand-orange-500/30" disabled={isProcessing || isExtracting}>
+                  {isProcessing || isExtracting ? (
                     <>
                       <Loader2 className="h-5 w-5 animate-spin" />
-                      Saving...
+                      {isExtracting ? 'Extracting Actions...' : 'Saving...'}
                     </>
                   ) : (
                     <>
@@ -537,11 +644,21 @@ export default function LaunchMemoryBridge() {
         </div>
       </div>
 
+      {/* Post-Extraction Dialog - Accept All or Review */}
+      <PostExtractionDialog
+        isOpen={showPostExtractionDialog}
+        onClose={() => setShowPostExtractionDialog(false)}
+        actionsCount={lastExtractionResult?.actionsCount || 0}
+        meetingTitle={lastExtractionResult?.title || ''}
+        onAcceptAndScheduleAll={handleAcceptAndScheduleAll}
+        onReviewIndividually={handleReviewIndividually}
+      />
+
       {/* Celebration Modal */}
       <CompletionCelebration
         isOpen={showCelebration}
         onClose={handleCelebrationClose}
-        actionTitle="Memory Bridge recording"
+        actionTitle={lastExtractionResult ? `${lastExtractionResult.actionsCount} actions scheduled` : "Memory Bridge recording"}
         onNotifySupport={notifySupport ? () => console.log('Notifying support') : undefined}
         streakCount={3}
       />
