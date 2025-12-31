@@ -16,7 +16,10 @@ import {
   Sparkles,
   GripVertical,
   LayoutGrid,
-  TableIcon
+  TableIcon,
+  Users,
+  Loader2,
+  CalendarPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -26,6 +29,9 @@ import { ActionWatcherSelector } from './ActionWatcherSelector';
 import { ActionCommentsSection } from './ActionCommentsSection';
 import { ActionsTableView } from './ActionsTableView';
 import { toast } from 'sonner';
+import { useAuth } from '@/hooks/useAuth';
+import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
+import { BulkWatcherDialog } from './BulkWatcherDialog';
 
 interface ActionsViewerProps {
   recordingId: string;
@@ -40,11 +46,14 @@ export function ActionsViewer({
   isOpen, 
   onClose
 }: ActionsViewerProps) {
+  const { user } = useAuth();
   const [extractedActions, setExtractedActions] = useState<NextStepsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
   const [sortField, setSortField] = useState<'priority' | 'status' | 'date'>('priority');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [isSchedulingAll, setIsSchedulingAll] = useState(false);
+  const [showBulkWatcherDialog, setShowBulkWatcherDialog] = useState(false);
 
   const statusOptions = [
     { value: 'not_started', label: 'Ready to Begin' },
@@ -169,6 +178,126 @@ export function ActionsViewer({
     updateAction(actionId, { assigned_watchers: watchers });
   };
 
+  // Bulk actions
+  const handleScheduleAll = async () => {
+    if (!user) return;
+    setIsSchedulingAll(true);
+    
+    try {
+      let scheduled = 0;
+      for (const action of extractedActions) {
+        if (action.status === 'scheduled') continue; // Skip already scheduled
+        
+        try {
+          const eventId = await convertActionToCalendarEvent(
+            action,
+            user.id,
+            [],
+            action.proposed_date || undefined,
+            action.proposed_time || undefined
+          );
+          
+          if (eventId) {
+            await supabase
+              .from('extracted_actions')
+              .update({ 
+                status: 'scheduled',
+                calendar_event_id: eventId
+              })
+              .eq('id', action.id);
+            
+            // Update local state
+            setExtractedActions(prev => 
+              prev.map(a => a.id === action.id ? { ...a, status: 'scheduled' as const, calendar_event_id: eventId } : a)
+            );
+            scheduled++;
+          }
+        } catch (err) {
+          console.error('Failed to schedule action:', err);
+        }
+      }
+      
+      toast.success(`Scheduled ${scheduled} actions to your calendar!`);
+    } catch (error) {
+      console.error('Error scheduling all actions:', error);
+      toast.error('Failed to schedule actions');
+    } finally {
+      setIsSchedulingAll(false);
+    }
+  };
+
+  const handleBulkAddWatchers = async (watcherIds: string[]) => {
+    try {
+      let updated = 0;
+      for (const action of extractedActions) {
+        const existingWatchers = action.assigned_watchers || [];
+        const newWatchers = [...new Set([...existingWatchers, ...watcherIds])];
+        
+        await supabase
+          .from('extracted_actions')
+          .update({ 
+            assigned_watchers: newWatchers,
+            support_circle_notified: true
+          })
+          .eq('id', action.id);
+        
+        // Update local state
+        setExtractedActions(prev => 
+          prev.map(a => a.id === action.id ? { ...a, assigned_watchers: newWatchers, support_circle_notified: true } : a)
+        );
+        updated++;
+      }
+      
+      toast.success(`Added watchers to ${updated} actions!`);
+    } catch (error) {
+      console.error('Error adding watchers to all:', error);
+      toast.error('Failed to add watchers');
+    }
+  };
+
+  const handleScheduleIndividual = async (action: NextStepsItem) => {
+    if (!user) return;
+    
+    try {
+      const eventId = await convertActionToCalendarEvent(
+        action,
+        user.id,
+        [],
+        action.proposed_date || undefined,
+        action.proposed_time || undefined
+      );
+      
+      if (eventId) {
+        await supabase
+          .from('extracted_actions')
+          .update({ 
+            status: 'scheduled',
+            calendar_event_id: eventId
+          })
+          .eq('id', action.id);
+        
+        setExtractedActions(prev => 
+          prev.map(a => a.id === action.id ? { ...a, status: 'scheduled' as const, calendar_event_id: eventId } : a)
+        );
+        
+        toast.success('Added to your calendar!');
+      }
+    } catch (error) {
+      console.error('Failed to schedule action:', error);
+      toast.error('Failed to schedule action');
+    }
+  };
+
+  const acceptProposedDate = async (action: NextStepsItem) => {
+    if (action.proposed_date) {
+      await updateAction(action.id!, { 
+        scheduled_date: action.proposed_date,
+        scheduled_time: action.proposed_time || undefined
+      });
+      toast.success('AI-suggested date accepted!');
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'done':
@@ -244,44 +373,69 @@ export function ActionsViewer({
             </svg>
           </div>
           
-          <DialogTitle className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-gradient-to-br from-brand-orange-500 to-brand-orange-600 rounded-xl shadow-lg shadow-brand-orange-500/30">
-                <Brain className="h-5 w-5 text-white" />
+          <DialogTitle className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-gradient-to-br from-brand-orange-500 to-brand-orange-600 rounded-xl shadow-lg shadow-brand-orange-500/30">
+                  <Brain className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <span className="font-bold text-lg">Next Step Summary</span>
+                  <span className="text-sm text-muted-foreground ml-2">• {meetingTitle}</span>
+                </div>
+                <Badge className="bg-gradient-to-r from-brand-orange-100 to-brand-orange-50 text-brand-orange-700 border border-brand-orange-200 shadow-sm">
+                  {extractedActions.length} actions
+                </Badge>
               </div>
-              <div>
-                <span className="font-bold text-lg">Next Step Summary</span>
-                <span className="text-sm text-muted-foreground ml-2">• {meetingTitle}</span>
-              </div>
-              <Badge className="bg-gradient-to-r from-brand-orange-100 to-brand-orange-50 text-brand-orange-700 border border-brand-orange-200 shadow-sm">
-                {extractedActions.length} actions
-              </Badge>
             </div>
             
-            {/* View toggle */}
-            <div className="flex gap-1 p-1 bg-muted/50 rounded-lg backdrop-blur-sm">
-              <Button 
-                variant={viewMode === 'cards' ? 'default' : 'ghost'}
+            {/* Bulk actions bar */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <Button
+                onClick={handleScheduleAll}
+                disabled={isSchedulingAll || extractedActions.length === 0}
                 size="sm"
-                onClick={() => setViewMode('cards')}
-                className={cn(
-                  "transition-all duration-200",
-                  viewMode === 'cards' && "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white shadow-md"
-                )}
+                className="bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 text-white shadow-md"
               >
-                <LayoutGrid className="h-4 w-4 mr-1" /> Cards
+                {isSchedulingAll ? (
+                  <><Loader2 className="h-4 w-4 animate-spin mr-1" /> Scheduling...</>
+                ) : (
+                  <><CalendarPlus className="h-4 w-4 mr-1" /> Accept & Schedule All</>
+                )}
               </Button>
-              <Button 
-                variant={viewMode === 'table' ? 'default' : 'ghost'}
+              <Button
+                onClick={() => setShowBulkWatcherDialog(true)}
+                variant="outline"
                 size="sm"
-                onClick={() => setViewMode('table')}
-                className={cn(
-                  "transition-all duration-200",
-                  viewMode === 'table' && "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white shadow-md"
-                )}
               >
-                <TableIcon className="h-4 w-4 mr-1" /> Table
+                <Users className="h-4 w-4 mr-1" /> Add Watchers to All
               </Button>
+              
+              {/* View toggle */}
+              <div className="flex gap-1 p-1 bg-muted/50 rounded-lg backdrop-blur-sm ml-auto">
+                <Button 
+                  variant={viewMode === 'cards' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('cards')}
+                  className={cn(
+                    "transition-all duration-200",
+                    viewMode === 'cards' && "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white shadow-md"
+                  )}
+                >
+                  <LayoutGrid className="h-4 w-4 mr-1" /> Cards
+                </Button>
+                <Button 
+                  variant={viewMode === 'table' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setViewMode('table')}
+                  className={cn(
+                    "transition-all duration-200",
+                    viewMode === 'table' && "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white shadow-md"
+                  )}
+                >
+                  <TableIcon className="h-4 w-4 mr-1" /> Table
+                </Button>
+              </div>
             </div>
           </DialogTitle>
           <p className="text-sm text-muted-foreground mt-1">
@@ -542,6 +696,14 @@ export function ActionsViewer({
           )}
         </ScrollArea>
       </DialogContent>
+
+      {/* Bulk Watcher Dialog */}
+      <BulkWatcherDialog
+        isOpen={showBulkWatcherDialog}
+        onClose={() => setShowBulkWatcherDialog(false)}
+        onApply={handleBulkAddWatchers}
+        actionsCount={extractedActions.length}
+      />
     </Dialog>
   );
 }
