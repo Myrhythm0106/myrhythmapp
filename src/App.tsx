@@ -62,6 +62,7 @@ import { RedirectToStart } from "./components/redirects/RedirectToStart";
 import SubscribePage from "./pages/SubscribePage";
 
 const InvestorDeckPage = lazy(() => import("./pages/InvestorDeckPage"));
+const ProductivityDeckPage = lazy(() => import("./pages/ProductivityDeckPage"));
 import SubscribeCancel from "./pages/SubscribeCancel";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentCancelPage from "./pages/PaymentCancelPage";
@@ -329,8 +330,9 @@ function App() {
                        <Route path="/journey/brain-injury/support" element={<JourneySupportCircle />} />
                        <Route path="/journey/brain-injury/ready" element={<JourneyReady />} />
                        
-                       {/* Investor Deck */}
+                       {/* Investor Decks */}
                        <Route path="/investor-deck" element={<InvestorDeckPage />} />
+                       <Route path="/investor-deck-productivity" element={<ProductivityDeckPage />} />
                        
                        {/* V1 Launch Mode Routes */}
                        <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />

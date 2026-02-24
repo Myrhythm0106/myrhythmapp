@@ -1,0 +1,667 @@
+import { ReactNode } from "react";
+
+/* ─── Shared layout wrapper ─── */
+function Slide({ children, bg = "white" }: { children: ReactNode; bg?: string }) {
+  return (
+    <div
+      className="w-[1920px] h-[1080px] overflow-hidden flex flex-col"
+      style={{
+        background: bg,
+        fontFamily: "'Inter', 'SF Pro Display', -apple-system, system-ui, sans-serif",
+        color: "#1a1a2e",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function GradientLine() {
+  return (
+    <div
+      className="w-[120px] h-[4px] rounded-full"
+      style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }}
+    />
+  );
+}
+
+function SectionLabel({ children }: { children: ReactNode }) {
+  return (
+    <span
+      className="text-[16px] font-semibold tracking-[0.2em] uppercase"
+      style={{ color: "#a855f7" }}
+    >
+      {children}
+    </span>
+  );
+}
+
+/* ─── SLIDE 1: TITLE ─── */
+function Slide01() {
+  return (
+    <Slide bg="#fafafa">
+      <div className="flex-1 flex flex-col items-center justify-center px-[200px] text-center">
+        <GradientLine />
+        <h1 className="mt-[40px] text-[96px] font-bold tracking-tight leading-none" style={{ color: "#1a1a2e" }}>
+          MyRhythm
+        </h1>
+        <p className="mt-[32px] text-[36px] font-light leading-snug max-w-[1000px]" style={{ color: "#475569" }}>
+          Your brain is your operating system.<br />It has no support layer.
+        </p>
+        <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
+        <p className="mt-[24px] text-[22px] font-medium tracking-wide" style={{ color: "#a855f7" }}>
+          Cognitive Performance Infrastructure
+        </p>
+        <p className="mt-[16px] text-[18px]" style={{ color: "#94a3b8" }}>
+          Investor Presentation · 2026
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 2: THE PRODUCTIVITY PROBLEM ─── */
+function Slide02() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>The Productivity Problem</SectionLabel>
+        <h2 className="mt-[24px] text-[64px] font-bold leading-[1.1]">
+          Knowledge workers lose 2.1 hours<br />every day to cognitive friction.
+        </h2>
+        <div className="mt-[60px] flex gap-[80px]">
+          {[
+            { stat: "2.1hrs", label: "Lost daily to interruptions, context-switching, and re-orientation" },
+            { stat: "23 min", label: "Average time to refocus after a single interruption" },
+            { stat: "71%", label: "of professionals report forgetting commitments made in meetings" },
+          ].map((d) => (
+            <div key={d.label}>
+              <div className="text-[56px] font-bold" style={{ color: "#f97316" }}>{d.stat}</div>
+              <div className="text-[20px] mt-[8px] max-w-[320px]" style={{ color: "#64748b" }}>{d.label}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-[60px] text-[28px] font-light italic" style={{ color: "#94a3b8" }}>
+          The cost is not time. It is reliability.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 3: THE HIDDEN COST ─── */
+function Slide03() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>The Hidden Cost</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold leading-tight">
+          Broken commitments erode trust,<br />teams, and careers.
+        </h2>
+        <div className="mt-[50px] flex gap-[32px]">
+          {[
+            { step: "01", title: "Missed follow-ups", desc: "The action from Monday's meeting never happens. Nobody chases it. Momentum dies." },
+            { step: "02", title: "Lost credibility", desc: "Colleagues stop relying on you. Reputation erodes silently, meeting by meeting." },
+            { step: "03", title: "Relationship erosion", desc: "Partners, clients, and teams lose confidence. Trust compounds — and so does its absence." },
+            { step: "04", title: "Career stagnation", desc: "Promotion decisions are trust decisions. Unreliable execution is invisible self-sabotage." },
+          ].map((d) => (
+            <div key={d.step} className="flex-1">
+              <div className="text-[48px] font-bold" style={{ color: "#f97316" }}>{d.step}</div>
+              <div className="mt-[12px] text-[24px] font-semibold">{d.title}</div>
+              <div className="mt-[12px] text-[18px] leading-relaxed" style={{ color: "#64748b" }}>{d.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 4: WHY IT HAPPENS ─── */
+function Slide04() {
+  return (
+    <Slide bg="#fafafa">
+      <div className="flex-1 flex flex-col items-center justify-center px-[240px] text-center">
+        <SectionLabel>Why It Happens</SectionLabel>
+        <h2 className="mt-[40px] text-[64px] font-bold leading-[1.15]">
+          The gap between intending and doing<br />has no infrastructure.
+        </h2>
+        <div className="mt-[48px] w-[80px] h-[4px] rounded-full" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
+        <p className="mt-[48px] text-[28px] leading-relaxed max-w-[900px]" style={{ color: "#64748b" }}>
+          We have tools for planning. Tools for communication. Tools for storage. But nothing exists between the moment you decide to do something and the moment you reliably do it.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 5: THE SCALE ─── */
+function Slide05() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>The Scale</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold leading-tight">
+          A universal problem disguised<br />as individual failure.
+        </h2>
+        <div className="mt-[50px] flex flex-wrap gap-[20px]">
+          {[
+            { pop: "Knowledge Workers", size: "1B+ globally", note: "Context-switching, meeting overload" },
+            { pop: "Students", size: "200M+ globally", note: "Executive function still developing" },
+            { pop: "Aging Adults", size: "55M+ (US alone)", note: "Mild cognitive decline, forgetfulness" },
+            { pop: "ADHD", size: "366M globally", note: "Intention-action gap is defining symptom" },
+            { pop: "Caregivers", size: "53M in US", note: "Cognitive overload from dual responsibilities" },
+            { pop: "Post-Surgery / Brain Injury", size: "70M annual TBI", note: "Clinical-grade cognitive support" },
+          ].map((p) => (
+            <div key={p.pop} className="w-[calc(33.33%-14px)] p-[28px] rounded-[16px]" style={{ background: "#f8fafc" }}>
+              <div className="text-[22px] font-semibold">{p.pop}</div>
+              <div className="text-[20px] font-bold mt-[8px]" style={{ color: "#f97316" }}>{p.size}</div>
+              <div className="text-[16px] mt-[6px]" style={{ color: "#94a3b8" }}>{p.note}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-[40px] text-[24px] font-light italic" style={{ color: "#94a3b8" }}>
+          One functional problem. Many conditions. No existing solution.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 6: WHY TOOLS FAIL ─── */
+function Slide06() {
+  const rows = [
+    { tool: "Notion / Todoist", designed: "Organised, self-directed workers", fails: "Assumes you remember to check it. No re-engagement after interruption." },
+    { tool: "Apple Reminders", designed: "Simple notification use", fails: "Single ping, easily dismissed. No escalation, no accountability." },
+    { tool: "Calendly / Cal.com", designed: "Scheduling coordination", fails: "Schedules the meeting, not the follow-through." },
+    { tool: "Headspace / Calm", designed: "Meditation & relaxation", fails: "Reduces stress, doesn't improve execution reliability." },
+  ];
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>Why Tools Fail</SectionLabel>
+        <h2 className="mt-[24px] text-[48px] font-bold">
+          Productivity tools assume the brain they are trying to help.
+        </h2>
+        <div className="mt-[50px]">
+          <div className="flex text-[16px] font-semibold uppercase tracking-widest pb-[16px] border-b" style={{ color: "#94a3b8", borderColor: "#e2e8f0" }}>
+            <div className="w-[280px]">Tool</div>
+            <div className="w-[340px]">Designed For</div>
+            <div className="flex-1">Why It Fails</div>
+          </div>
+          {rows.map((r) => (
+            <div key={r.tool} className="flex items-start py-[20px] border-b text-[22px]" style={{ borderColor: "#f1f5f9" }}>
+              <div className="w-[280px] font-semibold">{r.tool}</div>
+              <div className="w-[340px]" style={{ color: "#64748b" }}>{r.designed}</div>
+              <div className="flex-1" style={{ color: "#64748b" }}>{r.fails}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-[40px] text-[22px] font-light italic" style={{ color: "#94a3b8" }}>
+          Every tool on this list requires reliable cognition to use reliably.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 7: THE INSIGHT ─── */
+function Slide07() {
+  return (
+    <Slide bg="#fafafa">
+      <div className="flex-1 flex flex-col items-center justify-center px-[240px] text-center">
+        <SectionLabel>The Insight</SectionLabel>
+        <h2 className="mt-[40px] text-[64px] font-bold leading-[1.15]">
+          The problem is not organisation.<br />It is cognitive continuity.
+        </h2>
+        <div className="mt-[48px] w-[80px] h-[4px] rounded-full" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
+        <p className="mt-[48px] text-[28px] leading-relaxed max-w-[900px]" style={{ color: "#64748b" }}>
+          People do not fail because they lack lists. They fail because interruptions break their thread of intention — and nothing exists to restore it.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 8: THE CATEGORY ─── */
+function Slide08() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>New Category</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Cognitive Performance Infrastructure</h2>
+        <p className="mt-[20px] text-[24px] max-w-[900px]" style={{ color: "#64748b" }}>
+          The missing layer between intention and reliable execution. Not a productivity app. Not a wellness app. Infrastructure.
+        </p>
+        <div className="mt-[60px] flex items-center gap-[24px]">
+          <div className="flex-1 py-[40px] px-[48px] rounded-[16px] text-center" style={{ background: "#f0f9ff" }}>
+            <div className="text-[20px] font-semibold" style={{ color: "#0284c7" }}>Intention</div>
+            <div className="text-[16px] mt-[8px]" style={{ color: "#64748b" }}>You decide to act</div>
+            <div className="text-[16px]" style={{ color: "#64748b" }}>Meetings, ideas, commitments</div>
+          </div>
+          <div className="w-[200px] h-[4px]" style={{ background: "linear-gradient(90deg, #0284c7, #f97316)" }} />
+          <div className="flex-1 py-[40px] px-[48px] rounded-[16px] text-center border-2" style={{ borderColor: "#f97316", background: "#fff7ed" }}>
+            <div className="text-[24px] font-bold" style={{ color: "#f97316" }}>MyRhythm</div>
+            <div className="text-[16px] mt-[8px]" style={{ color: "#64748b" }}>Cognitive continuity layer</div>
+            <div className="text-[16px]" style={{ color: "#64748b" }}>Capture → Commit → Calibrate → Celebrate</div>
+          </div>
+          <div className="w-[200px] h-[4px]" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
+          <div className="flex-1 py-[40px] px-[48px] rounded-[16px] text-center" style={{ background: "#faf5ff" }}>
+            <div className="text-[20px] font-semibold" style={{ color: "#a855f7" }}>Reliable Execution</div>
+            <div className="text-[16px] mt-[8px]" style={{ color: "#64748b" }}>Promises kept, trust built</div>
+            <div className="text-[16px]" style={{ color: "#64748b" }}>Compounding confidence</div>
+          </div>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 9: THE SOLUTION ─── */
+function Slide09() {
+  const steps = [
+    { title: "Capture", desc: "Voice-record any conversation. AI extracts every commitment, promise, and next step — so your brain doesn't have to hold them.", icon: "🎙" },
+    { title: "Commit", desc: "Review, confirm, and schedule extracted actions. Assign accountability. Make intention concrete.", icon: "✅" },
+    { title: "Calibrate", desc: "Progressive re-engagement when you drift. Gentle → moderate → urgent. Support Circle activated when needed.", icon: "🔄" },
+    { title: "Celebrate", desc: "Every completion logged. Streaks tracked. Confidence compounds. The system proves you can be relied upon.", icon: "🏆" },
+  ];
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>The Solution</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Capture → Commit → Calibrate → Celebrate</h2>
+        <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>
+          A behavioural scaffolding system for cognitive performance.
+        </p>
+        <div className="mt-[50px] grid grid-cols-4 gap-[28px]">
+          {steps.map((s, i) => (
+            <div key={s.title} className="p-[32px] rounded-[16px] relative" style={{ background: "#f8fafc" }}>
+              <div className="text-[40px]">{s.icon}</div>
+              <div className="mt-[16px] text-[28px] font-semibold">{s.title}</div>
+              <div className="mt-[12px] text-[18px] leading-relaxed" style={{ color: "#64748b" }}>{s.desc}</div>
+              {i < 3 && (
+                <div className="absolute top-[50%] right-[-18px] text-[24px] font-bold" style={{ color: "#f97316" }}>→</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 10: HOW IT WORKS ─── */
+function Slide10() {
+  const loop = [
+    { time: "Morning", action: "Set intention", detail: "Review today's commitments. Confirm priorities. Brain knows what matters." },
+    { time: "Mid-day", action: "Interruption hits", detail: "Meeting runs over. Email derails focus. Context switches pile up." },
+    { time: "Afternoon", action: "Re-engagement", detail: "MyRhythm detects drift. Progressive nudge restores the thread. You pick up where you left off." },
+    { time: "Evening", action: "Completion", detail: "Actions marked done. Wins celebrated. Tomorrow's intentions seeded." },
+    { time: "Over time", action: "Confidence compounds", detail: "Streak builds. Trust grows. Reliability becomes identity." },
+  ];
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>How It Works</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">A Closed Performance Loop Across the Day</h2>
+        <div className="mt-[50px] flex items-start gap-[16px]">
+          {loop.map((l, i) => (
+            <div key={l.time} className="flex-1 flex flex-col items-center text-center">
+              <div className="w-[64px] h-[64px] rounded-full flex items-center justify-center text-[20px] font-bold" style={{ background: i === 2 ? "#f97316" : "#f8fafc", color: i === 2 ? "#fff" : "#475569" }}>
+                {i + 1}
+              </div>
+              <div className="mt-[16px] text-[18px] font-bold" style={{ color: "#f97316" }}>{l.time}</div>
+              <div className="mt-[8px] text-[20px] font-semibold">{l.action}</div>
+              <div className="mt-[8px] text-[16px] leading-relaxed px-[8px]" style={{ color: "#64748b" }}>{l.detail}</div>
+              {i < loop.length - 1 && (
+                <div className="absolute" />
+              )}
+            </div>
+          ))}
+        </div>
+        <div className="mt-[40px] flex justify-center">
+          <div className="px-[32px] py-[12px] rounded-full text-[18px] font-medium" style={{ background: "#fff7ed", color: "#92400e" }}>
+            Morning → Interruption → Re-engagement → Completion → Confidence
+          </div>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 11: THE CLINICAL MOAT ─── */
+function Slide11() {
+  return (
+    <Slide bg="#fafafa">
+      <div className="flex-1 flex flex-col items-center justify-center px-[200px] text-center">
+        <SectionLabel>The Clinical Moat</SectionLabel>
+        <h2 className="mt-[32px] text-[64px] font-bold leading-[1.15]">
+          Validated in the hardest<br />cognitive environments.
+        </h2>
+        <div className="mt-[48px] w-[80px] h-[4px] rounded-full" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
+        <p className="mt-[40px] text-[32px] leading-relaxed max-w-[1000px]" style={{ color: "#475569" }}>
+          We built MyRhythm to work for TBI survivors — people whose cognition fluctuates hourly, whose memory fails under load, who lose the thread after every interruption.
+        </p>
+        <p className="mt-[32px] text-[28px] font-semibold" style={{ color: "#f97316" }}>
+          If it works there, it works everywhere.
+        </p>
+        <div className="mt-[48px] flex gap-[48px]">
+          {[
+            { label: "Progressive escalation", desc: "Built for brains that dismiss single pings" },
+            { label: "Support Circle", desc: "Built for people who need human backup" },
+            { label: "AI action extraction", desc: "Built for minds that can't hold meeting details" },
+          ].map((f) => (
+            <div key={f.label} className="text-center max-w-[300px]">
+              <div className="text-[20px] font-semibold">{f.label}</div>
+              <div className="text-[16px] mt-[6px]" style={{ color: "#94a3b8" }}>{f.desc}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 12: THE EXPANSION ─── */
+function Slide12() {
+  const rings = [
+    { label: "Post-Surgery / TBI", size: 200, color: "#a855f7", textColor: "#fff" },
+    { label: "Mild Cognitive Impairment", size: 340, color: "#faf5ff", textColor: "#7c3aed" },
+    { label: "Caregivers (53M in US)", size: 480, color: "#fff7ed", textColor: "#92400e" },
+    { label: "Knowledge Workers & Professionals", size: 640, color: "#f0f9ff", textColor: "#0284c7" },
+  ];
+  return (
+    <Slide>
+      <div className="flex-1 flex px-[160px] items-center">
+        <div className="w-[700px] shrink-0">
+          <SectionLabel>The Expansion</SectionLabel>
+          <h2 className="mt-[24px] text-[48px] font-bold leading-tight">
+            From clinical recovery to<br />everyday performance.
+          </h2>
+          <p className="mt-[24px] text-[22px]" style={{ color: "#64748b" }}>
+            We start where the volume is massive and deepen where the need is clinical.
+          </p>
+          <div className="mt-[32px]">
+            <GradientLine />
+          </div>
+          <p className="mt-[32px] text-[20px] font-medium leading-relaxed" style={{ color: "#475569" }}>
+            This single diagram explains our wedge, expansion, scalability, and inevitability. Investors immediately understand how we grow without paid ads.
+          </p>
+        </div>
+        {/* Concentric circles — inverted: professionals on outside */}
+        <div className="flex-1 flex items-center justify-center relative" style={{ height: 700 }}>
+          {rings.slice().reverse().map((r) => (
+            <div
+              key={r.label}
+              className="absolute rounded-full flex items-end justify-center pb-[20px]"
+              style={{
+                width: r.size,
+                height: r.size,
+                background: r.color,
+                border: r.color === "#a855f7" ? "none" : "1px solid rgba(0,0,0,0.06)",
+              }}
+            >
+              <span className="text-[15px] font-medium text-center px-[16px]" style={{ color: r.textColor }}>
+                {r.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 13: MARKET SIZE ─── */
+function Slide13() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>Market Opportunity</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">TAM · SAM · SOM</h2>
+        <div className="mt-[50px]">
+          <div className="flex text-[16px] font-semibold uppercase tracking-widest pb-[16px] border-b" style={{ color: "#94a3b8", borderColor: "#e2e8f0" }}>
+            <div className="w-[160px]">Metric</div>
+            <div className="flex-1">Segment</div>
+            <div className="w-[200px] text-right">Size</div>
+          </div>
+          {[
+            { metric: "TAM", segment: "Global productivity + cognitive wellness market", size: "$22B" },
+            { metric: "SAM", segment: "English-speaking knowledge workers + brain health", size: "$4.2B" },
+            { metric: "SOM", segment: "UK + US direct-to-consumer Year 1", size: "$35M" },
+          ].map((r) => (
+            <div key={r.metric} className="flex items-center py-[24px] border-b text-[24px]" style={{ borderColor: "#f1f5f9" }}>
+              <div className="w-[160px] font-bold" style={{ color: "#f97316" }}>{r.metric}</div>
+              <div className="flex-1" style={{ color: "#475569" }}>{r.segment}</div>
+              <div className="w-[200px] text-right text-[32px] font-bold">{r.size}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-[40px] text-[22px]" style={{ color: "#64748b" }}>
+          We begin with concentrated need and expand to universal utility.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 14: DISTRIBUTION ─── */
+function Slide14() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>Distribution</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Built-In Adoption Channels</h2>
+        <div className="mt-[50px] flex items-center gap-[16px]">
+          {[
+            { stage: "Workplace", desc: "Team accountability loops. One user brings the tool — the team adopts it.", color: "#0284c7" },
+            { stage: "Home", desc: "Personal commitments flow into the same system. One tool for all of life.", color: "#f97316" },
+            { stage: "Family", desc: "Support Circles connect partners, parents, children. Each member sees the value.", color: "#a855f7" },
+            { stage: "Clinical", desc: "Clinicians prescribe for post-surgery, TBI, and cognitive rehab. Medical credibility.", color: "#16a34a" },
+            { stage: "Insurer", desc: "Outcome data enables reimbursement pathways. Institutional adoption.", color: "#64748b" },
+          ].map((s, i) => (
+            <div key={s.stage} className="flex-1 flex flex-col items-center text-center">
+              <div className="w-[80px] h-[80px] rounded-full flex items-center justify-center text-[28px] font-bold text-white" style={{ background: s.color }}>
+                {i + 1}
+              </div>
+              <div className="mt-[16px] text-[22px] font-semibold">{s.stage}</div>
+              <div className="mt-[8px] text-[16px] leading-relaxed" style={{ color: "#64748b" }}>{s.desc}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-[48px] text-[24px] font-light italic text-center" style={{ color: "#94a3b8" }}>
+          Workplace → Home → Family → Clinical → Insurer. Each stage unlocks the next.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 15: EARLY EVIDENCE ─── */
+function Slide15() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>Early Evidence</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">What Happens When People Use It</h2>
+        <div className="mt-[50px] flex gap-[40px]">
+          {[
+            { metric: "Consistency", direction: "↑", detail: "Users complete more of what they commit to. The closed loop creates follow-through.", color: "#16a34a" },
+            { metric: "Restart After Interruption", direction: "↑", detail: "Progressive re-engagement pulls users back to their thread — instead of losing the day.", color: "#f97316" },
+            { metric: "Confidence", direction: "↑", detail: "Tracked wins compound into self-trust. Users report feeling more capable over time.", color: "#a855f7" },
+          ].map((e) => (
+            <div key={e.metric} className="flex-1 p-[40px] rounded-[16px]" style={{ background: "#f8fafc" }}>
+              <div className="text-[56px] font-bold" style={{ color: e.color }}>{e.direction}</div>
+              <div className="mt-[12px] text-[28px] font-semibold">{e.metric}</div>
+              <div className="mt-[16px] text-[20px] leading-relaxed" style={{ color: "#64748b" }}>{e.detail}</div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-[40px] flex gap-[32px]">
+          <div className="px-[24px] py-[12px] rounded-full text-[18px]" style={{ background: "#f0f9ff", color: "#0284c7" }}>Working MVP</div>
+          <div className="px-[24px] py-[12px] rounded-full text-[18px]" style={{ background: "#fff7ed", color: "#92400e" }}>Lived-experience validation</div>
+          <div className="px-[24px] py-[12px] rounded-full text-[18px]" style={{ background: "#faf5ff", color: "#7c3aed" }}>Clinical conversations active</div>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 16: BUSINESS MODEL ─── */
+function Slide16() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>Business Model</SectionLabel>
+        <h2 className="mt-[24px] text-[48px] font-bold">Recurring Cognitive Infrastructure</h2>
+        <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>Path to £500K by December 2026</p>
+        <div className="mt-[50px] flex gap-[40px]">
+          {/* Revenue streams */}
+          <div className="flex-1">
+            <div className="text-[20px] font-semibold uppercase tracking-widest mb-[24px]" style={{ color: "#f97316" }}>Revenue Streams</div>
+            <div className="space-y-[20px]">
+              {[
+                { stream: "B2C Subscription", price: "£10–15/month", note: "Individual cognitive performance. Founding member pricing available." },
+                { stream: "B2B Team Licensing", price: "£8/user/month", note: "Team accountability and cognitive continuity for organisations." },
+                { stream: "Clinical Licensing", price: "£50/patient/month", note: "Post-discharge cognitive support. Prescribed by clinicians." },
+              ].map((p) => (
+                <div key={p.stream} className="p-[24px] rounded-[12px]" style={{ background: "#f8fafc" }}>
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-[22px] font-semibold">{p.stream}</span>
+                    <span className="text-[22px] font-bold" style={{ color: "#f97316" }}>{p.price}</span>
+                  </div>
+                  <div className="text-[16px] mt-[4px]" style={{ color: "#94a3b8" }}>{p.note}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          {/* Unit economics */}
+          <div className="flex-1">
+            <div className="text-[20px] font-semibold uppercase tracking-widest mb-[24px]" style={{ color: "#a855f7" }}>Unit Economics</div>
+            <div className="space-y-[16px]">
+              {[
+                { label: "LTV", value: "£180+" },
+                { label: "CAC", value: "£20" },
+                { label: "LTV:CAC", value: "9:1" },
+                { label: "Gross Margin", value: "85%+" },
+                { label: "Monthly Churn", value: "<5%" },
+              ].map((m) => (
+                <div key={m.label} className="flex justify-between items-center p-[20px] rounded-[12px]" style={{ background: "#faf5ff" }}>
+                  <span className="text-[20px]" style={{ color: "#475569" }}>{m.label}</span>
+                  <span className="text-[24px] font-bold">{m.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 17: COMPETITIVE ADVANTAGE ─── */
+function Slide17() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>Competitive Advantage</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Why This Wins</h2>
+        <div className="mt-[50px] flex gap-[32px]">
+          <div className="flex-1 p-[40px] rounded-[16px] border-2" style={{ borderColor: "#e2e8f0" }}>
+            <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#94a3b8" }}>Not a Productivity App</div>
+            <div className="text-[20px] leading-relaxed" style={{ color: "#64748b" }}>
+              Productivity tools assume functioning cognition. They work when you're at your best. They fail exactly when you need them most.
+            </div>
+          </div>
+          <div className="flex-1 p-[40px] rounded-[16px] border-2" style={{ borderColor: "#e2e8f0" }}>
+            <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#94a3b8" }}>Not Therapy</div>
+            <div className="text-[20px] leading-relaxed" style={{ color: "#64748b" }}>
+              Therapy is episodic. Once a week, one hour. The other 167 hours have no support layer. Life happens in the gaps between sessions.
+            </div>
+          </div>
+          <div className="flex-1 p-[40px] rounded-[16px] border-2" style={{ borderColor: "#f97316", background: "#fff7ed" }}>
+            <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#f97316" }}>Cognitive Continuity Infrastructure</div>
+            <div className="text-[20px] leading-relaxed" style={{ color: "#475569" }}>
+              Always-on. Adapts to cognitive state. Escalates when needed. Celebrates when earned. The layer that was always missing.
+            </div>
+          </div>
+        </div>
+        <div className="mt-[40px] p-[24px] rounded-[12px]" style={{ background: "#f8fafc" }}>
+          <span className="text-[20px] font-semibold">Moat: </span>
+          <span className="text-[20px]" style={{ color: "#64748b" }}>
+            Clinical-grade reliability · Lived-experience foundation · Network effects via Support Circle · Behavioural data moat
+          </span>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 18: THE ASK ─── */
+function Slide18() {
+  return (
+    <Slide>
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <SectionLabel>The Ask</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Funding the First Cognitive Performance Network</h2>
+        <div className="mt-[50px] flex gap-[40px]">
+          {/* Use of funds */}
+          <div className="flex-1">
+            <div className="text-[20px] font-semibold mb-[24px]" style={{ color: "#475569" }}>Use of Funds</div>
+            {[
+              { label: "Product & Engineering", pct: 40, color: "#f97316" },
+              { label: "Growth & Distribution", pct: 30, color: "#a855f7" },
+              { label: "Clinical Validation", pct: 15, color: "#0284c7" },
+              { label: "Operations & Team", pct: 10, color: "#16a34a" },
+              { label: "Reserve", pct: 5, color: "#94a3b8" },
+            ].map((f) => (
+              <div key={f.label} className="mb-[14px]">
+                <div className="flex justify-between text-[18px] mb-[6px]">
+                  <span>{f.label}</span>
+                  <span className="font-semibold">{f.pct}%</span>
+                </div>
+                <div className="w-full h-[8px] rounded-full" style={{ background: "#f1f5f9" }}>
+                  <div className="h-full rounded-full" style={{ width: `${f.pct}%`, background: f.color }} />
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Milestones */}
+          <div className="flex-1">
+            <div className="text-[20px] font-semibold mb-[24px]" style={{ color: "#475569" }}>2026 Milestones</div>
+            {[
+              { q: "Q1", milestone: "1,000 active users, team features live" },
+              { q: "Q2", milestone: "Clinical pilot partnerships, B2B beta" },
+              { q: "Q3", milestone: "5,000 users, outcome data published" },
+              { q: "Q4", milestone: "£500K revenue, Series A ready" },
+            ].map((m) => (
+              <div key={m.q} className="flex items-start gap-[16px] mb-[20px]">
+                <div className="w-[48px] h-[48px] rounded-full flex items-center justify-center shrink-0 text-[18px] font-bold" style={{ background: "#fff7ed", color: "#f97316" }}>
+                  {m.q}
+                </div>
+                <div className="text-[20px]" style={{ color: "#475569" }}>{m.milestone}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-[48px] flex items-center justify-between p-[32px] rounded-[16px]" style={{ background: "#f8fafc" }}>
+          <div>
+            <div className="text-[24px] font-bold">Built from the gap it solves.</div>
+            <div className="text-[18px] mt-[4px]" style={{ color: "#64748b" }}>Cognitive Performance Infrastructure for every brain.</div>
+          </div>
+          <div className="text-[18px]" style={{ color: "#94a3b8" }}>
+            investors@myrhythm.com · myrhythm.app
+          </div>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE RENDERER ─── */
+const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18];
+
+export function ProductivityInvestorSlides({ currentSlide }: { currentSlide: number }) {
+  const SlideComponent = slides[currentSlide] || Slide01;
+  return <SlideComponent />;
+}
