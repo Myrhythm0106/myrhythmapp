@@ -1,53 +1,68 @@
 
 
-## Assessment: Current Deck vs. Requested Structure
+## Brain Health & Productivity Investor Deck — Alternate Entry Point
 
-The current deck has the right skeleton but significantly different messaging. The user's version is **sharper, more precise, and uses investor-grade language** focused on "reliability," "behaviour," and "continuity" rather than the more generic wellness framing currently in place.
+The current deck starts with TBI and expands outward. This new deck **inverts the funnel**: starts with the massive brain health and productivity market, then reveals the clinical depth as a defensible moat.
 
-### Slide-by-Slide Comparison
+Same presentation engine (`InvestorDeckPage.tsx`), new route, new slide component.
 
-| # | User Wants | Current Has | Status |
-|---|-----------|-------------|--------|
-| 1 | "Stabilising behaviour when thinking and memory become unreliable" | "Continuous Cognitive Support" (generic) | **Rewrite** |
-| 2 | "Recovery Does Not Restore Reliability" | Stats-heavy TBI numbers | **Rewrite** |
-| 3 | "Healthcare Measures Safety. Life Requires Stability." | "Patient goes home, system moves on" | **Rewrite** |
-| 4 | "Failure Happens Between Remembering and Acting" (re-engagement failures) | Post-discharge cascade (promises, trust, burnout) | **Rewrite** |
-| 5 | "The Scale — An Invisible but Massive Population" | Does not exist | **New slide** |
-| 6 | "Tools Depend on the Ability They Require" | Similar table but different framing | **Rewrite** |
-| 7 | "Behaviour Collapses When Cognition Fluctuates" | "Recovery is a daily practice" | **Rewrite** |
-| 8 | "Continuous Cognitive Support — missing layer between capability and dependable functioning" | Similar but softer language | **Rewrite** |
-| 9 | "Capture → Commit → Calibrate → Celebrate" | Four pillars (Memory Bridge, Escalation, etc.) | **Rewrite** |
-| 10 | "A Closed Behaviour Loop Across the Day" | Vision/Purpose/Goals slide (different content) | **Replace** |
-| 11 | Expansion Diagram with caption about wedge/scalability/inevitability | Concentric circles exist but caption missing | **Rewrite** |
-| 12 | Market Size + "We begin with concentrated need..." | TAM/SAM/SOM exists, needs line added | **Update** |
-| 13 | "Built-in Adoption Channels: Rehab → Home → Family → Workplace → Insurer" | Similar but different framing | **Rewrite** |
-| 14 | "What Happens When People Use It" (consistency, restart, confidence) | Current evidence slide is feature-focused | **Rewrite** |
-| 15 | "Recurring Behavioural Infrastructure" (subscription, clinical, workforce) | Current B2C/B2B pricing model | **Rewrite** |
-| 16 | "Behavioural continuity infrastructure" (not productivity, not therapy) | Competitor comparison table | **Rewrite** |
-| 17 | "Funding the First Continuity Network" | Current ask with fund allocation | **Rewrite** |
-| 18 | "Built From the Gap It Solves" | Current founder slide | **Rewrite** |
+---
 
-### Key Messaging Shifts
+### The Strategic Inversion
 
-The user's version makes three critical upgrades:
+| Current Deck | New Deck |
+|---|---|
+| Starts with TBI pain | Starts with universal cognitive inefficiency |
+| Clinical credibility → mass market | Mass market opportunity → clinical moat |
+| "Built for TBI, useful for everyone" | "Built for everyone, validated in the hardest cases" |
+| Wedge = underserved patients | Wedge = professionals losing productivity |
+| Emotional hook | Commercial hook |
 
-1. **From "wellness" to "reliability"** — Investors understand reliability as infrastructure. "Cognitive wellness" sounds like a nice-to-have. "Behavioural reliability" sounds like a must-have.
+---
 
-2. **From features to behaviour loops** — "Capture → Commit → Calibrate → Celebrate" is a system, not a feature list. Slide 10 ("closed behaviour loop") shows the mechanism, not the toolbox.
+### 18-Slide Structure
 
-3. **The expansion caption** — "We start where the need is undeniable and expand to where reliability is universally required." This single line explains wedge, expansion, scalability, and inevitability. Currently missing.
+| # | Title | Purpose |
+|---|-------|---------|
+| 1 | **MyRhythm** — "Your brain is your operating system. It has no support layer." | Title. Category: Cognitive Performance Infrastructure |
+| 2 | **The Productivity Problem** — "Knowledge workers lose 2.1 hours/day to cognitive friction" | Hook with universal stats (interruptions, context-switching, forgotten commitments) |
+| 3 | **The Hidden Cost** — "Broken commitments erode trust, teams, and careers" | The downstream damage: missed follow-ups, lost credibility, relationship erosion |
+| 4 | **Why It Happens** — "The gap between intending and doing has no infrastructure" | Insight: no system exists between thinking and reliably acting |
+| 5 | **The Scale** — "A universal problem disguised as individual failure" | Populations: professionals, students, aging adults, ADHD, caregivers, post-surgery, brain injury |
+| 6 | **Why Tools Fail** — "Productivity tools assume the brain they are trying to help" | Same table concept but framed for productivity: Notion, Todoist, Apple Reminders, Calendly |
+| 7 | **The Insight** — "The problem is not organisation. It is cognitive continuity." | Reframe from task management to behavioural reliability |
+| 8 | **The Category** — "Cognitive Performance Infrastructure" | New category: the missing layer between intention and reliable execution |
+| 9 | **The Solution** — "Capture → Commit → Calibrate → Celebrate" | Same behaviour loop, framed for productivity/performance |
+| 10 | **How It Works** — "A closed performance loop across the day" | Morning intention → interruption → re-engagement → completion → confidence |
+| 11 | **The Clinical Moat** — "Validated in the hardest cognitive environments" | The aha: built to work for TBI survivors, which means it works for everyone. Clinical-grade reliability as competitive advantage |
+| 12 | **The Expansion** — Concentric circles inverted: Professionals → Caregivers → MCI → TBI | "We start where the volume is massive and deepen where the need is clinical." Caption explains wedge, expansion, defensibility |
+| 13 | **Market Size** — TAM/SAM/SOM | TAM: $22B global productivity + cognitive wellness. SAM: $4.2B English-speaking knowledge workers + brain health. SOM: $35M UK+US Year 1 |
+| 14 | **Distribution** — "Built-in adoption channels: Workplace → Home → Family → Clinical → Insurer" | Viral loops: team accountability, family support circles, clinical referrals |
+| 15 | **Early Evidence** — "What happens when people use it" | Consistency improves, restart after interruption improves, confidence improves. Working MVP, lived-experience validation |
+| 16 | **Business Model** — "Recurring cognitive infrastructure" | B2C subscription, B2B team/enterprise licensing, clinical licensing (future). £500K target Dec 2026 |
+| 17 | **Competitive Advantage** — "Why this wins" | Not a productivity app (assumes functioning). Not therapy (episodic). Cognitive continuity infrastructure (always-on). Feature comparison table |
+| 18 | **The Ask** — "Funding the first cognitive performance network" | Use of funds, milestones, contact. "Built from the gap it solves." |
 
-### Removed Slides
-- **Vision, Purpose & Goals** (current Slide 9) — absorbed into the solution and behaviour loop
-- **Universal Utility** (current Slide 11) — absorbed into the expansion diagram caption and market size slide
+---
+
+### Key Messaging Differences
+
+1. **From "behavioural reliability" to "cognitive performance infrastructure"** — same system, investor-friendly productivity framing
+2. **Clinical depth becomes the moat, not the entry** — Slide 11 is the "aha" moment: "We built this to work for TBI survivors. If it works there, it works everywhere."
+3. **TAM is larger** — $22B productivity market vs $4.2B cognitive wellness. Different investor appetite
+4. **Distribution starts with teams** — workplace adoption, then home, then clinical. Reverses the current flow
+
+---
 
 ### Implementation
 
-Full rewrite of `InvestorSlides.tsx` with all 18 slides using the user's exact headlines, framing, and structure. Same file, same shell, same 18-slide count. The `InvestorDeckPage.tsx` and route remain unchanged.
-
 | File | Action |
 |------|--------|
-| `src/components/investor/InvestorSlides.tsx` | **REWRITE** — all 18 slides with the sharper investor-grade messaging |
+| `src/components/investor/ProductivityInvestorSlides.tsx` | **CREATE** — all 18 slides with productivity-first messaging |
+| `src/pages/ProductivityDeckPage.tsx` | **CREATE** — presentation shell (same pattern as InvestorDeckPage) |
+| `src/App.tsx` | **MODIFY** — add `/investor-deck-productivity` route |
 
-The design language stays identical: white backgrounds, near-black type, gradient accents, clean tables, generous spacing. The content and messaging changes completely.
+The existing `/investor-deck` (clinical-first) remains untouched. Two decks, two entry points, same company, same product.
+
+Design language identical: white backgrounds, near-black type, gradient accents, clean tables, generous spacing. Only the narrative arc and framing change.
 
