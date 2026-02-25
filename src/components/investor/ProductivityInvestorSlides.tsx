@@ -515,10 +515,10 @@ function Slide16() {
         <SectionLabel>Business Model</SectionLabel>
         <h2 className="mt-[24px] text-[48px] font-bold">Recurring Cognitive Infrastructure</h2>
         <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>Path to £500K by December 2026</p>
-        <div className="mt-[50px] flex gap-[40px]">
+        <div className="mt-[40px] flex gap-[40px]">
           {/* Revenue streams */}
           <div className="flex-1">
-            <div className="text-[20px] font-semibold uppercase tracking-widest mb-[24px]" style={{ color: "#f97316" }}>Revenue Streams</div>
+            <div className="text-[20px] font-semibold uppercase tracking-widest mb-[24px]" style={{ color: "#f97316" }}>How We Make Money</div>
             <div className="space-y-[20px]">
               {[
                 { stream: "B2C Subscription", price: "£10–15/month", note: "Individual cognitive performance. Founding member pricing available." },
@@ -535,20 +535,20 @@ function Slide16() {
               ))}
             </div>
           </div>
-          {/* Unit economics */}
+          {/* Why this is a good investment */}
           <div className="flex-1">
-            <div className="text-[20px] font-semibold uppercase tracking-widest mb-[24px]" style={{ color: "#a855f7" }}>Unit Economics</div>
+            <div className="text-[20px] font-semibold uppercase tracking-widest mb-[24px]" style={{ color: "#a855f7" }}>Why This Makes Money for Investors</div>
             <div className="space-y-[16px]">
               {[
-                { label: "LTV", value: "£180+" },
-                { label: "CAC", value: "£20" },
-                { label: "LTV:CAC", value: "9:1" },
-                { label: "Gross Margin", value: "85%+" },
-                { label: "Monthly Churn", value: "<5%" },
+                { plain: "£500K revenue by Dec 2026", meaning: "Proves the model works — real customers paying real money" },
+                { plain: "85% gross margins", meaning: "For every £1 we earn, 85p is profit before overheads" },
+                { plain: "9:1 return on customer spend", meaning: "Every £1 spent getting a customer returns £9 over their lifetime" },
+                { plain: "Recurring subscriptions", meaning: "Money comes in every month — not one-off purchases" },
+                { plain: "Multiple exit paths", meaning: "Acquisition by health-tech or productivity platform, or continued growth" },
               ].map((m) => (
-                <div key={m.label} className="flex justify-between items-center p-[20px] rounded-[12px]" style={{ background: "#faf5ff" }}>
-                  <span className="text-[20px]" style={{ color: "#475569" }}>{m.label}</span>
-                  <span className="text-[24px] font-bold">{m.value}</span>
+                <div key={m.plain} className="p-[16px] rounded-[12px]" style={{ background: "#faf5ff" }}>
+                  <div className="text-[20px] font-semibold">{m.plain}</div>
+                  <div className="text-[16px] mt-[4px]" style={{ color: "#64748b" }}>{m.meaning}</div>
                 </div>
               ))}
             </div>
@@ -601,53 +601,73 @@ function Slide17() {
 function Slide18() {
   return (
     <Slide>
-      <div className="flex-1 flex flex-col justify-center px-[160px]">
+      <div className="flex-1 flex flex-col justify-center px-[120px]">
         <SectionLabel>The Ask</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">Funding the First Cognitive Performance Network</h2>
-        <div className="mt-[50px] flex gap-[40px]">
-          {/* Use of funds */}
+        <h2 className="mt-[20px] text-[52px] font-bold">
+          We are raising <span style={{ color: "#f97316" }}>£250,000</span> in pre-seed funding.
+        </h2>
+
+        <div className="mt-[36px] flex gap-[32px]">
+          {/* LEFT: What your money buys */}
           <div className="flex-1">
-            <div className="text-[20px] font-semibold mb-[24px]" style={{ color: "#475569" }}>Use of Funds</div>
+            <div className="text-[20px] font-semibold mb-[20px]" style={{ color: "#475569" }}>What Your £250K Buys</div>
             {[
-              { label: "Product & Engineering", pct: 40, color: "#f97316" },
-              { label: "Growth & Distribution", pct: 30, color: "#a855f7" },
-              { label: "Clinical Validation", pct: 15, color: "#0284c7" },
-              { label: "Operations & Team", pct: 10, color: "#16a34a" },
-              { label: "Reserve", pct: 5, color: "#94a3b8" },
+              { amount: "£100K", purpose: "Build the product to clinical-grade standard" },
+              { amount: "£75K", purpose: "Get the first 1,000 paying users" },
+              { amount: "£37.5K", purpose: "Run clinical pilots that prove outcomes" },
+              { amount: "£25K", purpose: "Hire key team members" },
+              { amount: "£12.5K", purpose: "Safety net for unexpected costs" },
             ].map((f) => (
-              <div key={f.label} className="mb-[14px]">
-                <div className="flex justify-between text-[18px] mb-[6px]">
-                  <span>{f.label}</span>
-                  <span className="font-semibold">{f.pct}%</span>
-                </div>
-                <div className="w-full h-[8px] rounded-full" style={{ background: "#f1f5f9" }}>
-                  <div className="h-full rounded-full" style={{ width: `${f.pct}%`, background: f.color }} />
-                </div>
+              <div key={f.amount} className="flex items-baseline gap-[12px] mb-[12px]">
+                <span className="text-[22px] font-bold shrink-0 w-[100px]" style={{ color: "#f97316" }}>{f.amount}</span>
+                <span className="text-[20px]" style={{ color: "#475569" }}>{f.purpose}</span>
               </div>
             ))}
           </div>
-          {/* Milestones */}
+
+          {/* RIGHT: What happens next */}
           <div className="flex-1">
-            <div className="text-[20px] font-semibold mb-[24px]" style={{ color: "#475569" }}>2026 Milestones</div>
+            <div className="text-[20px] font-semibold mb-[20px]" style={{ color: "#475569" }}>Your Investment Journey</div>
             {[
-              { q: "Q1", milestone: "1,000 active users, team features live" },
-              { q: "Q2", milestone: "Clinical pilot partnerships, B2B beta" },
-              { q: "Q3", milestone: "5,000 users, outcome data published" },
-              { q: "Q4", milestone: "£500K revenue, Series A ready" },
+              { time: "Month 1–3", event: "Product launched, founding members onboarded" },
+              { time: "Month 4–6", event: "Clinical pilots producing outcome data" },
+              { time: "Month 7–9", event: "2,500+ subscribers, B2B revenue starting" },
+              { time: "Month 10–12", event: "£500K revenue run rate — Series A ready" },
             ].map((m) => (
-              <div key={m.q} className="flex items-start gap-[16px] mb-[20px]">
-                <div className="w-[48px] h-[48px] rounded-full flex items-center justify-center shrink-0 text-[18px] font-bold" style={{ background: "#fff7ed", color: "#f97316" }}>
-                  {m.q}
-                </div>
-                <div className="text-[20px]" style={{ color: "#475569" }}>{m.milestone}</div>
+              <div key={m.time} className="flex items-start gap-[12px] mb-[14px]">
+                <span className="text-[18px] font-bold shrink-0 w-[120px]" style={{ color: "#a855f7" }}>{m.time}</span>
+                <span className="text-[20px]" style={{ color: "#475569" }}>{m.event}</span>
               </div>
             ))}
           </div>
         </div>
-        <div className="mt-[48px] flex items-center justify-between p-[32px] rounded-[16px]" style={{ background: "#f8fafc" }}>
-          <div>
-            <div className="text-[24px] font-bold">Built from the gap it solves.</div>
-            <div className="text-[18px] mt-[4px]" style={{ color: "#64748b" }}>Cognitive Performance Infrastructure for every brain.</div>
+
+        {/* What the investor gets */}
+        <div className="mt-[28px] p-[28px] rounded-[16px]" style={{ background: "#fff7ed" }}>
+          <div className="text-[22px] font-bold mb-[12px]">What You Get as an Investor</div>
+          <div className="flex gap-[48px]">
+            <div className="flex-1">
+              <div className="text-[20px]" style={{ color: "#475569" }}>
+                <strong>Equity in MyRhythm</strong> — you own a percentage of the company
+              </div>
+              <div className="text-[20px] mt-[8px]" style={{ color: "#475569" }}>
+                <strong>Early-stage entry</strong> — before clinical validation increases the valuation
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="text-[20px]" style={{ color: "#475569" }}>
+                <strong>10–20x typical return</strong> — pre-seed health-tech investors see significant multiples
+              </div>
+              <div className="text-[20px] mt-[8px]" style={{ color: "#475569" }}>
+                <strong>Your £250K today</strong> could be worth substantially more at Series A
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-[20px] flex items-center justify-between">
+          <div className="text-[20px] font-semibold" style={{ color: "#1a1a2e" }}>
+            Built from the gap it solves.
           </div>
           <div className="text-[18px]" style={{ color: "#94a3b8" }}>
             investors@myrhythm.com · myrhythm.app
