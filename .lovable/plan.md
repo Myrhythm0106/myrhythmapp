@@ -1,56 +1,69 @@
 
 
-## Brain Health & Productivity Investor Deck — Alternate Entry Point
+## The Problem: Neither Deck Answers the Investor's Two Core Questions
 
-The current deck starts with TBI and expands outward. This new deck **inverts the funnel**: starts with the massive brain health and productivity market, then reveals the clinical depth as a defensible moat.
+Both decks currently have a critical gap. An investor watching either deck will think:
 
-Same presentation engine (`InvestorDeckPage.tsx`), new route, new slide component.
+1. **"How much money do you actually want from me?"** — Neither deck states a specific funding amount. They show percentage allocations (40% engineering, 30% growth...) but 40% *of what*? There is no number.
 
----
+2. **"What do I get back?"** — Neither deck explains the return. No equity mention, no valuation, no projected exit, no multiple. An investor puts money in to get more money out. That story is completely missing.
 
-### The Strategic Inversion
+### What Needs to Change — Both Decks
 
-| Current Deck | New Deck |
-|---|---|
-| Starts with TBI pain | Starts with universal cognitive inefficiency |
-| Clinical credibility → mass market | Mass market opportunity → clinical moat |
-| "Built for TBI, useful for everyone" | "Built for everyone, validated in the hardest cases" |
-| Wedge = underserved patients | Wedge = professionals losing productivity |
-| Emotional hook | Commercial hook |
+The **Business Model slide** (Slide 16 in both) and **The Ask slide** (Slide 18 in both) need to be rewritten to answer these questions in plain, non-financial language.
 
 ---
 
-### 18-Slide Structure
+### Slide 16 (Business Model) — Add "Why This Is a Good Investment"
 
-| # | Title | Purpose |
-|---|-------|---------|
-| 1 | **MyRhythm** — "Your brain is your operating system. It has no support layer." | Title. Category: Cognitive Performance Infrastructure |
-| 2 | **The Productivity Problem** — "Knowledge workers lose 2.1 hours/day to cognitive friction" | Hook with universal stats (interruptions, context-switching, forgotten commitments) |
-| 3 | **The Hidden Cost** — "Broken commitments erode trust, teams, and careers" | The downstream damage: missed follow-ups, lost credibility, relationship erosion |
-| 4 | **Why It Happens** — "The gap between intending and doing has no infrastructure" | Insight: no system exists between thinking and reliably acting |
-| 5 | **The Scale** — "A universal problem disguised as individual failure" | Populations: professionals, students, aging adults, ADHD, caregivers, post-surgery, brain injury |
-| 6 | **Why Tools Fail** — "Productivity tools assume the brain they are trying to help" | Same table concept but framed for productivity: Notion, Todoist, Apple Reminders, Calendly |
-| 7 | **The Insight** — "The problem is not organisation. It is cognitive continuity." | Reframe from task management to behavioural reliability |
-| 8 | **The Category** — "Cognitive Performance Infrastructure" | New category: the missing layer between intention and reliable execution |
-| 9 | **The Solution** — "Capture → Commit → Calibrate → Celebrate" | Same behaviour loop, framed for productivity/performance |
-| 10 | **How It Works** — "A closed performance loop across the day" | Morning intention → interruption → re-engagement → completion → confidence |
-| 11 | **The Clinical Moat** — "Validated in the hardest cognitive environments" | The aha: built to work for TBI survivors, which means it works for everyone. Clinical-grade reliability as competitive advantage |
-| 12 | **The Expansion** — Concentric circles inverted: Professionals → Caregivers → MCI → TBI | "We start where the volume is massive and deepen where the need is clinical." Caption explains wedge, expansion, defensibility |
-| 13 | **Market Size** — TAM/SAM/SOM | TAM: $22B global productivity + cognitive wellness. SAM: $4.2B English-speaking knowledge workers + brain health. SOM: $35M UK+US Year 1 |
-| 14 | **Distribution** — "Built-in adoption channels: Workplace → Home → Family → Clinical → Insurer" | Viral loops: team accountability, family support circles, clinical referrals |
-| 15 | **Early Evidence** — "What happens when people use it" | Consistency improves, restart after interruption improves, confidence improves. Working MVP, lived-experience validation |
-| 16 | **Business Model** — "Recurring cognitive infrastructure" | B2C subscription, B2B team/enterprise licensing, clinical licensing (future). £500K target Dec 2026 |
-| 17 | **Competitive Advantage** — "Why this wins" | Not a productivity app (assumes functioning). Not therapy (episodic). Cognitive continuity infrastructure (always-on). Feature comparison table |
-| 18 | **The Ask** — "Funding the first cognitive performance network" | Use of funds, milestones, contact. "Built from the gap it solves." |
+After the revenue streams and unit economics, add a clear section:
+
+**"Why This Makes Money for Investors"**
+- **£500K revenue by Dec 2026** — proves the model works
+- **85% gross margins** — for every £1 earned, £0.85 is profit before overheads
+- **9:1 LTV:CAC ratio** — every £1 spent acquiring a customer returns £9 in revenue over their lifetime
+- **Recurring subscription revenue** — money comes in every month, not one-off purchases
+- **Multiple exit paths** — acquisition by health tech or productivity platform, or continued growth to IPO
+
+This section translates the metrics into plain English: "this is a business that makes far more than it spends."
 
 ---
 
-### Key Messaging Differences
+### Slide 18 (The Ask) — Rewrite to Be Crystal Clear
 
-1. **From "behavioural reliability" to "cognitive performance infrastructure"** — same system, investor-friendly productivity framing
-2. **Clinical depth becomes the moat, not the entry** — Slide 11 is the "aha" moment: "We built this to work for TBI survivors. If it works there, it works everywhere."
-3. **TAM is larger** — $22B productivity market vs $4.2B cognitive wellness. Different investor appetite
-4. **Distribution starts with teams** — workplace adoption, then home, then clinical. Reverses the current flow
+Replace the current vague "Investment Opportunity" / "Funding the First Cognitive Performance Network" with a slide that explicitly states:
+
+**The specific funding ask:**
+- "We are raising **£250,000** in pre-seed funding" (or whatever the actual number is — I will use £250K as a placeholder since the docs reference early-stage)
+
+**What the investor gets:**
+- Equity in MyRhythm (percentage based on valuation)
+- Early-stage entry before clinical validation increases valuation
+- A seat at the table in a category being created
+
+**What the money buys (in plain English):**
+- £100K → Build the product to clinical-grade standard
+- £75K → Get the first 1,000 paying users
+- £37.5K → Run clinical pilots that prove outcomes
+- £25K → Hire key team members
+- £12.5K → Safety net for unexpected costs
+
+**What happens next (the investor's journey):**
+- **Month 1-3:** Product launched, founding members onboarded
+- **Month 4-6:** Clinical pilots producing outcome data
+- **Month 7-9:** 2,500+ subscribers, B2B revenue starting
+- **Month 10-12:** £500K revenue run rate, Series A ready — investor's stake has grown significantly
+
+**The return story (in plain terms):**
+- Pre-seed investors in successful health-tech startups typically see **10-20x returns**
+- If MyRhythm hits £500K revenue and raises a Series A, the company valuation increases substantially
+- Your £250K investment today could be worth significantly more at the next funding round
+
+---
+
+### Important Note
+
+I need to use placeholder numbers (£250K raise) since the actual funding amount is not specified anywhere in the codebase. The structure will make it trivial to swap in the real number.
 
 ---
 
@@ -58,11 +71,8 @@ Same presentation engine (`InvestorDeckPage.tsx`), new route, new slide componen
 
 | File | Action |
 |------|--------|
-| `src/components/investor/ProductivityInvestorSlides.tsx` | **CREATE** — all 18 slides with productivity-first messaging |
-| `src/pages/ProductivityDeckPage.tsx` | **CREATE** — presentation shell (same pattern as InvestorDeckPage) |
-| `src/App.tsx` | **MODIFY** — add `/investor-deck-productivity` route |
+| `src/components/investor/InvestorSlides.tsx` | **MODIFY** Slide16 and Slide18 — add investor return section and explicit ask |
+| `src/components/investor/ProductivityInvestorSlides.tsx` | **MODIFY** Slide16 and Slide18 — same changes, productivity framing |
 
-The existing `/investor-deck` (clinical-first) remains untouched. Two decks, two entry points, same company, same product.
-
-Design language identical: white backgrounds, near-black type, gradient accents, clean tables, generous spacing. Only the narrative arc and framing change.
+Both decks get the same financial clarity. Four slide functions rewritten across two files.
 
