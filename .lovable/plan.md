@@ -1,32 +1,24 @@
 
 
-## Add ABI alongside TBI across both decks
+## Add References Slide (Slide 19) to Clinical Deck
 
-Simple find-and-replace style updates — wherever TBI appears alone, add ABI alongside it.
+### 1. Fix citation on Slide 12 (line 462)
+Update the sources line to use correct journal attributions:
+- `"Sources: Dewan et al., J Neurosurg 2019; GBD 2019 / Feigin et al., Lancet Neurology 2021; AARP/NAC 2020; Grand View Research 2023"`
 
-### Clinical Deck (`src/components/investor/InvestorSlides.tsx`)
+### 2. Add Slide 19 — References (after Slide 18, before the renderer)
+A clean, typeset bibliography slide with section label "References" and the following verified citations:
 
-| Line | Current | Updated |
-|------|---------|---------|
-| 72 | `"of TBI survivors report daily cognitive struggles"` | `"of ABI & TBI survivors report daily cognitive struggles"` |
-| 321 | `"TBI Survivors"` | `"ABI & TBI Survivors"` |
-| 335 | `"We begin with TBI survivors — the most underserved"` | `"We begin with ABI & TBI survivors — the most underserved"` |
-| 369 | `"Built for TBI. Useful for Every Brain."` | `"Built for ABI & TBI. Useful for Every Brain."` |
-| 396 | `"help a TBI survivor keep promises"` | `"help an ABI & TBI survivor keep promises"` |
-| 530 | `"TBI survivor networks"` | `"ABI & TBI survivor networks"` |
-| 559 | `"Built by a TBI survivor"` | `"Built by an ABI survivor"` |
-| 632 | `"Built by a TBI survivor who"` | `"Built by an ABI survivor who"` |
+1. **Dewan MC et al.** "Estimating the global incidence of traumatic brain injury." *Journal of Neurosurgery*, 2019; 130(4): 1080–1097.
+2. **Feigin VL et al.** "Global, regional, and national burden of stroke and its risk factors, 1990–2019: a systematic analysis for the Global Burden of Disease Study 2019." *Lancet Neurology*, 2021; 20(10): 795–820.
+3. **World Stroke Organization.** Global Stroke Fact Sheet, 2022.
+4. **AARP & National Alliance for Caregiving.** "Caregiving in the U.S." 2020.
+5. **Grand View Research.** "Cognitive Assessment & Training in Healthcare Market Report." 2023.
+6. **Rabinowitz AR, Levin HS.** "Cognitive Sequelae of Traumatic Brain Injury." *Psychiatr Clin North Am*, 2014; 37(1): 1–11.
 
-### Productivity Deck (`src/components/investor/ProductivityInvestorSlides.tsx`)
+### 3. Update slides array (line 728)
+Append `Slide19` to the array.
 
-| Line | Current | Updated |
-|------|---------|---------|
-| 154 | `"Post-Surgery / Brain Injury", size: "70M annual TBI"` | `"Acquired Brain Injury (ABI & TBI)", size: "80M+ annually"` |
-| 343 | `"for TBI survivors"` | `"for ABI & TBI survivors"` |
-| 368 | `"Post-Surgery / TBI"` | `"ABI & TBI Survivors"` |
-| 493 | `"post-surgery, TBI, and cognitive rehab"` | `"post-surgery, ABI, TBI, and cognitive rehab"` |
-
-### Files changed
-- `src/components/investor/InvestorSlides.tsx` — ~8 line edits
-- `src/components/investor/ProductivityInvestorSlides.tsx` — ~4 line edits
+### File changed
+- `src/components/investor/InvestorSlides.tsx` — fix line 462, add Slide19 component, update slides array
 
