@@ -151,7 +151,7 @@ function Slide05() {
             { pop: "Aging Adults", size: "55M+ (US alone)", note: "Mild cognitive decline, forgetfulness" },
             { pop: "ADHD", size: "366M globally", note: "Intention-action gap is defining symptom" },
             { pop: "Caregivers", size: "53M in US", note: "Cognitive overload from dual responsibilities" },
-            { pop: "Post-Surgery / Brain Injury", size: "70M annual TBI", note: "Clinical-grade cognitive support" },
+            { pop: "Acquired Brain Injury (ABI & TBI)", size: "80M+ annually", note: "Clinical-grade cognitive support" },
           ].map((p) => (
             <div key={p.pop} className="w-[calc(33.33%-14px)] p-[28px] rounded-[16px]" style={{ background: "#f8fafc" }}>
               <div className="text-[22px] font-semibold">{p.pop}</div>
@@ -340,7 +340,7 @@ function Slide11() {
         </h2>
         <div className="mt-[48px] w-[80px] h-[4px] rounded-full" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
         <p className="mt-[40px] text-[32px] leading-relaxed max-w-[1000px]" style={{ color: "#475569" }}>
-          We built MyRhythm to work for TBI survivors — people whose cognition fluctuates hourly, whose memory fails under load, who lose the thread after every interruption.
+          We built MyRhythm to work for ABI & TBI survivors — people whose cognition fluctuates hourly, whose memory fails under load, who lose the thread after every interruption.
         </p>
         <p className="mt-[32px] text-[28px] font-semibold" style={{ color: "#f97316" }}>
           If it works there, it works everywhere.
@@ -365,7 +365,7 @@ function Slide11() {
 /* ─── SLIDE 12: THE EXPANSION ─── */
 function Slide12() {
   const rings = [
-    { label: "Post-Surgery / TBI", size: 200, color: "#a855f7", textColor: "#fff" },
+    { label: "ABI & TBI Survivors", size: 200, color: "#a855f7", textColor: "#fff" },
     { label: "Mild Cognitive Impairment", size: 340, color: "#faf5ff", textColor: "#7c3aed" },
     { label: "Caregivers (53M in US)", size: 480, color: "#fff7ed", textColor: "#92400e" },
     { label: "Knowledge Workers & Professionals", size: 640, color: "#f0f9ff", textColor: "#0284c7" },
@@ -490,7 +490,7 @@ function Slide14() {
             { stage: "Workplace", desc: "Team accountability loops. One user brings the tool — the team adopts it.", color: "#0284c7" },
             { stage: "Home", desc: "Personal commitments flow into the same system. One tool for all of life.", color: "#f97316" },
             { stage: "Family", desc: "Support Circles connect partners, parents, children. Each member sees the value.", color: "#a855f7" },
-            { stage: "Clinical", desc: "Clinicians prescribe for post-surgery, TBI, and cognitive rehab. Medical credibility.", color: "#16a34a" },
+            { stage: "Clinical", desc: "Clinicians prescribe for post-surgery, ABI, TBI, and cognitive rehab. Medical credibility.", color: "#16a34a" },
             { stage: "Insurer", desc: "Outcome data enables reimbursement pathways. Institutional adoption.", color: "#64748b" },
           ].map((s, i) => (
             <div key={s.stage} className="flex-1 flex flex-col items-center text-center">

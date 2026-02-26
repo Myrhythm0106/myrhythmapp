@@ -69,7 +69,7 @@ function Slide02() {
         <div className="mt-[60px] flex gap-[80px]">
           {[
             { stat: "53M", label: "Americans are caregivers" },
-            { stat: "85%", label: "of TBI survivors report daily cognitive struggles" },
+            { stat: "85%", label: "of ABI & TBI survivors report daily cognitive struggles" },
             { stat: "6 wks", label: "average rehab before discharge" },
           ].map((d) => (
             <div key={d.label}>
@@ -318,7 +318,7 @@ function Slide09() {
 /* ─── SLIDE 10: THE EXPANSION ─── */
 function Slide10() {
   const rings = [
-    { label: "TBI Survivors", size: 200, color: "#f97316", textColor: "#fff" },
+    { label: "ABI & TBI Survivors", size: 200, color: "#f97316", textColor: "#fff" },
     { label: "Mild Cognitive Impairment", size: 340, color: "#fed7aa", textColor: "#92400e" },
     { label: "Caregivers (53M in US)", size: 480, color: "#faf5ff", textColor: "#7c3aed" },
     { label: "Brain Health & Productivity", size: 620, color: "#f0f9ff", textColor: "#0284c7" },
@@ -332,7 +332,7 @@ function Slide10() {
             Starts concentrated.<br />Expands to universal utility.
           </h2>
           <p className="mt-[24px] text-[22px]" style={{ color: "#64748b" }}>
-            We begin with TBI survivors — the most underserved, highest-need cohort. Every feature we build for them works for everyone.
+            We begin with ABI & TBI survivors — the most underserved, highest-need cohort. Every feature we build for them works for everyone.
           </p>
           <GradientLine />
         </div>
@@ -366,7 +366,7 @@ function Slide11() {
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
         <SectionLabel>Universal Utility</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">Built for TBI. Useful for Every Brain.</h2>
+        <h2 className="mt-[24px] text-[56px] font-bold">Built for ABI & TBI. Useful for Every Brain.</h2>
         <div className="mt-[50px] flex gap-[40px]">
           <div className="flex-1 p-[40px] rounded-[16px]" style={{ background: "#fff7ed" }}>
             <div className="text-[22px] font-semibold mb-[20px]" style={{ color: "#f97316" }}>For Cognitive Recovery</div>
@@ -393,7 +393,7 @@ function Slide11() {
           ))}
         </div>
         <p className="mt-[32px] text-[22px] font-light italic" style={{ color: "#94a3b8" }}>
-          The features that help a TBI survivor keep promises are the same features that help a CEO keep commitments.
+          The features that help an ABI & TBI survivor keep promises are the same features that help a CEO keep commitments.
         </p>
       </div>
     </Slide>
@@ -527,7 +527,7 @@ function Slide14() {
         <h2 className="mt-[24px] text-[56px] font-bold">Built-In Growth Loops</h2>
         <div className="mt-[50px] flex gap-[32px]">
           {[
-            { title: "Community-Led", desc: "TBI survivor networks, Headway UK, Brain Injury Association. Trust-based adoption where clinical referrals fail.", color: "#f97316" },
+            { title: "Community-Led", desc: "ABI & TBI survivor networks, Headway UK, Brain Injury Association. Trust-based adoption where clinical referrals fail.", color: "#f97316" },
             { title: "Clinical Partnerships", desc: "Rehabilitation centres prescribing MyRhythm as post-discharge support. Embedded into the care pathway.", color: "#a855f7" },
             { title: "Support Circle Virality", desc: "Every user invites up to 5 people. Each Support Circle member sees the product working — and has their own needs.", color: "#0284c7" },
           ].map((ch) => (
@@ -556,7 +556,7 @@ function Slide15() {
         <div className="mt-[50px] grid grid-cols-2 gap-[24px]">
           {[
             { title: "Working Product", desc: "Live, functional MVP with Memory Bridge, Support Circle, Brain Boost, Calendar, and Goal tracking." },
-            { title: "Authentic Problem-Market Fit", desc: "Built by a TBI survivor. Not a Silicon Valley solution looking for a problem." },
+            { title: "Authentic Problem-Market Fit", desc: "Built by an ABI survivor. Not a Silicon Valley solution looking for a problem." },
             { title: "Clinical Conversations", desc: "Partnership discussions with Headway UK and rehabilitation centres. Interest validated." },
             { title: "Full Feature Set", desc: "Progressive escalation, AI action extraction, cognitive exercises (240+), and gratitude journaling." },
           ].map((e) => (
@@ -629,7 +629,7 @@ function Slide17() {
       <div className="flex-1 flex flex-col items-center justify-center px-[240px] text-center">
         <SectionLabel>The Founder</SectionLabel>
         <h2 className="mt-[32px] text-[56px] font-bold leading-tight">
-          Built by a TBI survivor who<br />needed this tool to exist.
+          Built by an ABI survivor who<br />needed this tool to exist.
         </h2>
         <div className="mt-[48px] w-[80px] h-[4px] rounded-full" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
         <p className="mt-[48px] text-[26px] leading-relaxed max-w-[900px]" style={{ color: "#475569" }}>
