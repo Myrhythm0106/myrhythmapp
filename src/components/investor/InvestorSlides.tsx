@@ -459,7 +459,7 @@ function Slide12() {
         </div>
 
         <p className="mt-[20px] text-[18px]" style={{ color: "#64748b" }}>
-          8.1% CAGR · Sources: World Stroke Organization 2022, Lancet Neurology 2019 (Dewan et al.), Grand View Research 2023
+          8.1% CAGR · Sources: Dewan et al., J Neurosurg 2019; GBD 2019 / Feigin et al., Lancet Neurology 2021; AARP/NAC 2020; Grand View Research 2023
         </p>
       </div>
     </Slide>
@@ -724,8 +724,92 @@ function Slide18() {
   );
 }
 
+/* ─── SLIDE 19: REFERENCES ─── */
+function Slide19() {
+  const references = [
+    {
+      number: 1,
+      authors: "Dewan MC, Rattani A, Gupta S, et al.",
+      title: "Estimating the global incidence of traumatic brain injury.",
+      journal: "Journal of Neurosurgery",
+      details: "2019; 130(4): 1080–1097.",
+    },
+    {
+      number: 2,
+      authors: "Feigin VL, Stark BA, Johnson CO, et al.",
+      title: "Global, regional, and national burden of stroke and its risk factors, 1990–2019: a systematic analysis for the Global Burden of Disease Study 2019.",
+      journal: "Lancet Neurology",
+      details: "2021; 20(10): 795–820.",
+    },
+    {
+      number: 3,
+      authors: "World Stroke Organization.",
+      title: "Global Stroke Fact Sheet.",
+      journal: "",
+      details: "2022.",
+    },
+    {
+      number: 4,
+      authors: "AARP & National Alliance for Caregiving.",
+      title: "Caregiving in the U.S.",
+      journal: "",
+      details: "2020.",
+    },
+    {
+      number: 5,
+      authors: "Grand View Research.",
+      title: "Cognitive Assessment & Training in Healthcare Market Report.",
+      journal: "",
+      details: "2023.",
+    },
+    {
+      number: 6,
+      authors: "Rabinowitz AR, Levin HS.",
+      title: "Cognitive Sequelae of Traumatic Brain Injury.",
+      journal: "Psychiatr Clin North Am",
+      details: "2014; 37(1): 1–11.",
+    },
+  ];
+
+  return (
+    <Slide>
+      <div className="flex flex-col h-full px-[60px] py-[48px]" style={{ background: "linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)" }}>
+        <div className="flex items-center gap-[12px] mb-[32px]">
+          <div className="w-[6px] h-[36px] rounded-full" style={{ background: "linear-gradient(180deg, #1a1a2e, #3b82f6)" }} />
+          <h2 className="text-[36px] font-bold tracking-tight" style={{ color: "#1a1a2e" }}>
+            References
+          </h2>
+        </div>
+
+        <div className="flex-1 flex flex-col justify-center gap-[20px]">
+          {references.map((ref) => (
+            <div key={ref.number} className="flex gap-[12px] text-[17px] leading-[1.5]">
+              <span className="font-bold min-w-[24px]" style={{ color: "#3b82f6" }}>{ref.number}.</span>
+              <p style={{ color: "#334155" }}>
+                <span className="font-semibold">{ref.authors}</span>{" "}
+                "{ref.title}"{" "}
+                {ref.journal && <em>{ref.journal}, </em>}
+                {ref.details}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-[20px] flex items-center justify-between border-t pt-[16px]" style={{ borderColor: "#e2e8f0" }}>
+          <div className="text-[16px]" style={{ color: "#94a3b8" }}>
+            All statistics cited in this presentation are sourced from the references above.
+          </div>
+          <div className="text-[16px]" style={{ color: "#94a3b8" }}>
+            myrhythm.app
+          </div>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
 /* ─── SLIDE RENDERER ─── */
-const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18];
+const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19];
 
 export function InvestorSlides({ currentSlide }: { currentSlide: number }) {
   const SlideComponent = slides[currentSlide] || Slide01;
