@@ -63,18 +63,20 @@ function Slide02() {
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
         <SectionLabel>The Human Problem</SectionLabel>
-        <h2 className="mt-[24px] text-[72px] font-bold leading-[1.1]">
-          69 million people sustain a<br />traumatic brain injury every year.
+        <h2 className="mt-[24px] text-[60px] font-bold leading-[1.1]">
+          Every year, 69 million people sustain a TBI.<br />
+          <span style={{ color: "#f97316" }}>12 million more suffer a stroke or acquired brain injury.</span>
         </h2>
-        <div className="mt-[60px] flex gap-[80px]">
+        <div className="mt-[60px] flex gap-[60px]">
           {[
-            { stat: "53M", label: "Americans are caregivers" },
+            { stat: "69M", label: "traumatic brain injuries annually (Dewan et al., 2019)" },
+            { stat: "12M", label: "new strokes annually (Feigin et al., Lancet Neurology 2021)" },
+            { stat: "53M", label: "Americans are caregivers (AARP/NAC 2020)" },
             { stat: "85%", label: "of ABI & TBI survivors report daily cognitive struggles" },
-            { stat: "6 wks", label: "average rehab before discharge" },
           ].map((d) => (
             <div key={d.label}>
-              <div className="text-[56px] font-bold" style={{ color: "#f97316" }}>{d.stat}</div>
-              <div className="text-[20px] mt-[8px] max-w-[280px]" style={{ color: "#64748b" }}>{d.label}</div>
+              <div className="text-[48px] font-bold" style={{ color: "#f97316" }}>{d.stat}</div>
+              <div className="text-[18px] mt-[8px] max-w-[240px]" style={{ color: "#64748b" }}>{d.label}</div>
             </div>
           ))}
         </div>
@@ -88,41 +90,49 @@ function Slide02() {
 
 /* ─── SLIDE 3: THE SYSTEM GAP ─── */
 function Slide03() {
+  const impactCards = [
+    { icon: "💔", label: "Marriages", stat: "49%", detail: "of pre-injury relationships break down within 5–8 years", source: "Wood & Yurdakul, Brain Injury 1997" },
+    { icon: "💼", label: "Careers", stat: "60%", detail: "of moderate-severe TBI survivors unable to return to prior employment", source: "Shames et al., NeuroRehabilitation 2007" },
+    { icon: "🏥", label: "Readmission", stat: "1 in 3", detail: "TBI patients readmitted to hospital within 5 years", source: "CDC/NIDILRR Model Systems" },
+    { icon: "💰", label: "Economic", stat: "$40B+", detail: "annual direct US healthcare costs for TBI alone", source: "Miller et al., Medical Care 2021" },
+    { icon: "😔", label: "Caregivers", stat: "40%", detail: "of brain injury caregivers report clinical depression", source: "National Academies 2022" },
+    { icon: "👨‍👩‍👧", label: "Children", stat: "68%", detail: "of families report children's wellbeing significantly affected", source: "UKABIF Family Survey 2019" },
+  ];
+
   return (
     <Slide>
-      <div className="flex-1 flex flex-col justify-center px-[160px]">
+      <div className="flex-1 flex flex-col justify-center px-[100px]">
         <SectionLabel>The System Gap</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold leading-tight">
-          The patient goes home. The system moves on.
+        <h2 className="mt-[16px] text-[44px] font-bold leading-tight">
+          The ABI & TBI patient goes home. The system moves on.<br />
+          <span style={{ color: "#dc2626" }}>The real damage begins.</span>
         </h2>
-        <div className="mt-[60px] flex items-center gap-[40px]">
-          {/* Left: what exists */}
-          <div className="flex-1 p-[40px] rounded-[16px]" style={{ background: "#f8fafc" }}>
-            <div className="text-[18px] font-semibold uppercase tracking-widest mb-[20px]" style={{ color: "#94a3b8" }}>What Exists</div>
-            <ul className="space-y-[16px] text-[22px]" style={{ color: "#475569" }}>
-              <li>Clinical rehab: 6–12 weeks</li>
-              <li>Structured therapist sessions</li>
-              <li>Discharge with pamphlets</li>
-              <li>Follow-up: 1 visit in 6 months</li>
-            </ul>
-          </div>
-          {/* Gap */}
-          <div className="flex flex-col items-center gap-[8px]">
-            <div className="w-[4px] h-[80px]" style={{ background: "linear-gradient(180deg, #f97316, transparent)" }} />
-            <div className="text-[24px] font-bold px-[20px] py-[12px] rounded-full" style={{ background: "#fef3c7", color: "#92400e" }}>GAP</div>
-            <div className="w-[4px] h-[80px]" style={{ background: "linear-gradient(180deg, transparent, #a855f7)" }} />
-          </div>
-          {/* Right: what's needed */}
-          <div className="flex-1 p-[40px] rounded-[16px]" style={{ background: "#faf5ff" }}>
-            <div className="text-[18px] font-semibold uppercase tracking-widest mb-[20px]" style={{ color: "#a855f7" }}>What Is Needed</div>
-            <ul className="space-y-[16px] text-[22px]" style={{ color: "#475569" }}>
-              <li>Continuous daily support</li>
-              <li>Promise and commitment tracking</li>
-              <li>Care team coordination</li>
-              <li>Indefinite — for life</li>
-            </ul>
-          </div>
+
+        <p className="mt-[20px] text-[22px] rounded-[12px] px-[24px] py-[16px]" style={{ background: "#fef2f2", color: "#991b1b" }}>
+          Clinical rehab: 6–12 weeks post-ABI/TBI. Then: a pamphlet and a follow-up in 6 months.
+        </p>
+
+        <div className="mt-[28px] grid grid-cols-3 gap-[16px]">
+          {impactCards.map((card) => (
+            <div key={card.label} className="rounded-[12px] p-[20px] border" style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
+              <div className="flex items-center gap-[8px] mb-[8px]">
+                <span className="text-[20px]">{card.icon}</span>
+                <span className="text-[14px] font-semibold uppercase tracking-wider" style={{ color: "#94a3b8" }}>{card.label}</span>
+              </div>
+              <div className="text-[36px] font-bold" style={{ color: "#dc2626" }}>{card.stat}</div>
+              <p className="text-[15px] mt-[4px] leading-snug" style={{ color: "#475569" }}>{card.detail}</p>
+              <p className="text-[12px] mt-[6px] italic" style={{ color: "#94a3b8" }}>{card.source}</p>
+            </div>
+          ))}
         </div>
+
+        <p className="mt-[20px] text-[11px]" style={{ color: "#94a3b8" }}>
+          Sources: Wood 1997; Shames 2007; CDC/NIDILRR; Miller 2021; National Academies 2022; UKABIF 2019
+        </p>
+
+        <p className="mt-[12px] text-[24px] font-light italic text-center" style={{ color: "#64748b" }}>
+          "No app. No system. No continuity. Just a person trying to remember who they were."
+        </p>
       </div>
     </Slide>
   );
@@ -768,6 +778,41 @@ function Slide19() {
       title: "Cognitive Sequelae of Traumatic Brain Injury.",
       journal: "Psychiatr Clin North Am",
       details: "2014; 37(1): 1–11.",
+    },
+    {
+      number: 7,
+      authors: "Miller GF, DePadilla L, Xu L.",
+      title: "Costs of non-fatal traumatic brain injury in the United States, 2016.",
+      journal: "Medical Care",
+      details: "2021; 59(5): 451–455.",
+    },
+    {
+      number: 8,
+      authors: "Wood RL, Yurdakul LK.",
+      title: "Change in relationship status following traumatic brain injury.",
+      journal: "Brain Injury",
+      details: "1997; 11(7): 491–501.",
+    },
+    {
+      number: 9,
+      authors: "National Academies of Sciences, Engineering, and Medicine.",
+      title: "Traumatic Brain Injury: A Roadmap for Accelerating Progress.",
+      journal: "National Academies Press",
+      details: "2022.",
+    },
+    {
+      number: 10,
+      authors: "Shames J, Treger I, Ring H, Giaquinto S.",
+      title: "Return to work following traumatic brain injury: trends and challenges.",
+      journal: "NeuroRehabilitation",
+      details: "2007; 22(3): 205–213.",
+    },
+    {
+      number: 11,
+      authors: "GBD 2021 Stroke Collaborators / Feigin VL, et al.",
+      title: "Global, regional, and national burden of stroke and its risk factors, 1990–2021.",
+      journal: "Lancet Neurology",
+      details: "2024; 23(10): 973–1003.",
     },
   ];
 
