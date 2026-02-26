@@ -404,29 +404,62 @@ function Slide11() {
 function Slide12() {
   return (
     <Slide>
-      <div className="flex-1 flex flex-col justify-center px-[160px]">
+      <div className="flex-1 flex flex-col justify-center px-[120px]">
         <SectionLabel>Market Opportunity</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">TAM · SAM · SOM</h2>
-        <div className="mt-[50px]">
-          <div className="flex text-[16px] font-semibold uppercase tracking-widest pb-[16px] border-b" style={{ color: "#94a3b8", borderColor: "#e2e8f0" }}>
-            <div className="w-[160px]">Metric</div>
-            <div className="flex-1">Segment</div>
-            <div className="w-[200px] text-right">Size</div>
+        <h2 className="mt-[20px] text-[44px] font-bold">The Combined Opportunity</h2>
+        <p className="mt-[8px] text-[26px] font-semibold" style={{ color: "#f97316" }}>
+          TAM: $4.2B — Global ABI + TBI Cognitive Support Market
+        </p>
+
+        {/* Two-column ABI vs TBI breakdown */}
+        <div className="mt-[36px] grid grid-cols-[180px_1fr_1fr] gap-0 text-[18px]">
+          {/* Header row */}
+          <div className="py-[12px] border-b-2" style={{ borderColor: "#e2e8f0" }} />
+          <div className="py-[12px] border-b-2 text-center font-bold text-[20px]" style={{ borderColor: "#e2e8f0", color: "#0284c7" }}>
+            ABI (Non-Traumatic)
           </div>
-          {[
-            { metric: "TAM", segment: "Global cognitive wellness & brain injury market", size: "$4.2B" },
-            { metric: "SAM", segment: "English-speaking TBI + MCI + caregivers", size: "$1.1B" },
-            { metric: "SOM", segment: "UK + US direct-to-consumer Year 1", size: "$28M" },
-          ].map((r) => (
-            <div key={r.metric} className="flex items-center py-[24px] border-b text-[24px]" style={{ borderColor: "#f1f5f9" }}>
-              <div className="w-[160px] font-bold" style={{ color: "#f97316" }}>{r.metric}</div>
-              <div className="flex-1" style={{ color: "#475569" }}>{r.segment}</div>
-              <div className="w-[200px] text-right text-[32px] font-bold">{r.size}</div>
-            </div>
-          ))}
+          <div className="py-[12px] border-b-2 text-center font-bold text-[20px]" style={{ borderColor: "#e2e8f0", color: "#f97316" }}>
+            TBI (Traumatic)
+          </div>
+
+          {/* Annual cases */}
+          <div className="py-[14px] border-b font-semibold" style={{ borderColor: "#f1f5f9", color: "#334155" }}>Annual Cases</div>
+          <div className="py-[14px] border-b text-center" style={{ borderColor: "#f1f5f9", color: "#475569" }}>12.2M strokes + 2M+ other (tumour, anoxia, infection)</div>
+          <div className="py-[14px] border-b text-center" style={{ borderColor: "#f1f5f9", color: "#475569" }}>69M globally</div>
+
+          {/* Key populations */}
+          <div className="py-[14px] border-b font-semibold" style={{ borderColor: "#f1f5f9", color: "#334155" }}>Key Populations</div>
+          <div className="py-[14px] border-b text-center" style={{ borderColor: "#f1f5f9", color: "#475569" }}>Stroke survivors, post-surgery, encephalitis</div>
+          <div className="py-[14px] border-b text-center" style={{ borderColor: "#f1f5f9", color: "#475569" }}>Falls, accidents, sport, military</div>
+
+          {/* Market size */}
+          <div className="py-[14px] border-b font-semibold" style={{ borderColor: "#f1f5f9", color: "#334155" }}>Market Size</div>
+          <div className="py-[14px] border-b text-center text-[24px] font-bold" style={{ borderColor: "#f1f5f9", color: "#0284c7" }}>$2.4B</div>
+          <div className="py-[14px] border-b text-center text-[24px] font-bold" style={{ borderColor: "#f1f5f9", color: "#f97316" }}>$1.8B</div>
+
+          {/* Combined row */}
+          <div className="py-[16px] font-bold text-[20px]" style={{ color: "#334155" }}>Combined</div>
+          <div className="py-[16px] col-span-2 text-center text-[28px] font-bold" style={{ color: "#16a34a" }}>
+            $4.2B Total Addressable Market
+          </div>
         </div>
-        <p className="mt-[40px] text-[22px]" style={{ color: "#64748b" }}>
-          8.1% CAGR · Aging population · Growing awareness · Projected growth through 2026 and beyond.
+
+        {/* SAM / SOM */}
+        <div className="mt-[28px] flex gap-[40px]">
+          <div className="flex-1 rounded-[12px] p-[20px]" style={{ background: "#f8fafc" }}>
+            <div className="text-[16px] font-semibold uppercase tracking-widest" style={{ color: "#94a3b8" }}>SAM</div>
+            <div className="mt-[8px] text-[28px] font-bold">$1.1B</div>
+            <div className="mt-[4px] text-[16px]" style={{ color: "#64748b" }}>English-speaking ABI + TBI + MCI + caregivers</div>
+          </div>
+          <div className="flex-1 rounded-[12px] p-[20px]" style={{ background: "#f8fafc" }}>
+            <div className="text-[16px] font-semibold uppercase tracking-widest" style={{ color: "#94a3b8" }}>SOM</div>
+            <div className="mt-[8px] text-[28px] font-bold">$28M</div>
+            <div className="mt-[4px] text-[16px]" style={{ color: "#64748b" }}>UK + US direct-to-consumer Year 1</div>
+          </div>
+        </div>
+
+        <p className="mt-[20px] text-[18px]" style={{ color: "#64748b" }}>
+          8.1% CAGR · Sources: World Stroke Organization 2022, Lancet Neurology 2019 (Dewan et al.), Grand View Research 2023
         </p>
       </div>
     </Slide>
