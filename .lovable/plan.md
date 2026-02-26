@@ -1,38 +1,32 @@
 
 
-## Update TAM Segments to Include ABI — Both Decks
+## Add ABI alongside TBI across both decks
 
-### Goal
-Show ABI and TBI as distinct but complementary segments that can be viewed individually, compared side-by-side, and understood as a combined total.
+Simple find-and-replace style updates — wherever TBI appears alone, add ABI alongside it.
 
-### Clinical Deck (`InvestorSlides.tsx`) — Slide 12
+### Clinical Deck (`src/components/investor/InvestorSlides.tsx`)
 
-Replace the current 3-row TAM/SAM/SOM table with a richer layout:
+| Line | Current | Updated |
+|------|---------|---------|
+| 72 | `"of TBI survivors report daily cognitive struggles"` | `"of ABI & TBI survivors report daily cognitive struggles"` |
+| 321 | `"TBI Survivors"` | `"ABI & TBI Survivors"` |
+| 335 | `"We begin with TBI survivors — the most underserved"` | `"We begin with ABI & TBI survivors — the most underserved"` |
+| 369 | `"Built for TBI. Useful for Every Brain."` | `"Built for ABI & TBI. Useful for Every Brain."` |
+| 396 | `"help a TBI survivor keep promises"` | `"help an ABI & TBI survivor keep promises"` |
+| 530 | `"TBI survivor networks"` | `"ABI & TBI survivor networks"` |
+| 559 | `"Built by a TBI survivor"` | `"Built by an ABI survivor"` |
+| 632 | `"Built by a TBI survivor who"` | `"Built by an ABI survivor who"` |
 
-**Top section: "The Combined Opportunity"**
-- One bold combined figure: e.g. "TAM: $4.2B — Global ABI + TBI cognitive support market"
+### Productivity Deck (`src/components/investor/ProductivityInvestorSlides.tsx`)
 
-**Middle section: Two-column breakdown**
+| Line | Current | Updated |
+|------|---------|---------|
+| 154 | `"Post-Surgery / Brain Injury", size: "70M annual TBI"` | `"Acquired Brain Injury (ABI & TBI)", size: "80M+ annually"` |
+| 343 | `"for TBI survivors"` | `"for ABI & TBI survivors"` |
+| 368 | `"Post-Surgery / TBI"` | `"ABI & TBI Survivors"` |
+| 493 | `"post-surgery, TBI, and cognitive rehab"` | `"post-surgery, ABI, TBI, and cognitive rehab"` |
 
-| | ABI (non-traumatic) | TBI (traumatic) |
-|---|---|---|
-| **Annual cases** | 12.2M strokes + 2M+ other (tumour, anoxia, infection) | 69M globally |
-| **Key populations** | Stroke survivors, post-surgery, encephalitis | Falls, accidents, sport, military |
-| **Market size** | $2.4B | $1.8B |
-| **Combined** | colspan → **$4.2B TAM** |
-
-This lets investors see each segment individually, compare them, and grasp the full picture.
-
-**Bottom section: SAM + SOM rows unchanged** (updated labels to say "ABI + TBI" instead of just "TBI")
-
-### Productivity Deck (`ProductivityInvestorSlides.tsx`) — Slide 13
-
-Same structural change — two-column ABI vs TBI breakdown within the broader $22B TAM, showing the clinical populations as the beachhead within the larger productivity market.
-
-### Files
-
-| File | Lines | Change |
-|------|-------|--------|
-| `src/components/investor/InvestorSlides.tsx` | ~403-433 | Rewrite Slide12 with two-column ABI/TBI breakdown + combined total |
-| `src/components/investor/ProductivityInvestorSlides.tsx` | ~415-445 | Rewrite Slide13 with same ABI/TBI breakdown within productivity TAM |
+### Files changed
+- `src/components/investor/InvestorSlides.tsx` — ~8 line edits
+- `src/components/investor/ProductivityInvestorSlides.tsx` — ~4 line edits
 
