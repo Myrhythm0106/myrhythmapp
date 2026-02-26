@@ -247,6 +247,7 @@ function Slide08() {
   const pillars = [
     { title: "Memory Bridge", desc: "Record conversations. AI extracts promises, commitments, and next steps automatically.", icon: "🎙" },
     { title: "Progressive Escalation", desc: "Gentle → moderate → urgent reminders. Support Circle activated when needed.", icon: "📈" },
+    { title: "Vision & Goal Setting", desc: "Set life goals, break them into steps, and share progress with rehab and medical teams. Forward momentum that empowers and maintains clinical connections.", icon: "🎯" },
     { title: "Support Circle", desc: "Trusted network of 5 people who step in when the brain needs backup.", icon: "🤝" },
     { title: "Daily Brain Boost", desc: "240+ cognitive exercises building resilience, confidence, and mental agility.", icon: "🧠" },
   ];
@@ -255,12 +256,23 @@ function Slide08() {
       <div className="flex-1 flex flex-col justify-center px-[160px]">
         <SectionLabel>The Solution</SectionLabel>
         <h2 className="mt-[24px] text-[56px] font-bold">How MyRhythm Works</h2>
-        <div className="mt-[50px] grid grid-cols-2 gap-[32px]">
-          {pillars.map((p) => (
-            <div key={p.title} className="p-[40px] rounded-[16px]" style={{ background: "#f8fafc" }}>
+        {/* Top row: 3 pillars */}
+        <div className="mt-[50px] grid grid-cols-3 gap-[28px]">
+          {pillars.slice(0, 3).map((p) => (
+            <div key={p.title} className="p-[36px] rounded-[16px]" style={{ background: "#f8fafc" }}>
               <div className="text-[40px]">{p.icon}</div>
-              <div className="mt-[16px] text-[28px] font-semibold">{p.title}</div>
-              <div className="mt-[12px] text-[20px] leading-relaxed" style={{ color: "#64748b" }}>{p.desc}</div>
+              <div className="mt-[14px] text-[26px] font-semibold">{p.title}</div>
+              <div className="mt-[10px] text-[18px] leading-relaxed" style={{ color: "#64748b" }}>{p.desc}</div>
+            </div>
+          ))}
+        </div>
+        {/* Bottom row: 2 pillars centered */}
+        <div className="mt-[28px] grid grid-cols-2 gap-[28px] max-w-[1080px] mx-auto">
+          {pillars.slice(3).map((p) => (
+            <div key={p.title} className="p-[36px] rounded-[16px]" style={{ background: "#f8fafc" }}>
+              <div className="text-[40px]">{p.icon}</div>
+              <div className="mt-[14px] text-[26px] font-semibold">{p.title}</div>
+              <div className="mt-[10px] text-[18px] leading-relaxed" style={{ color: "#64748b" }}>{p.desc}</div>
             </div>
           ))}
         </div>
@@ -269,29 +281,33 @@ function Slide08() {
   );
 }
 
-/* ─── SLIDE 9: VISION, PURPOSE & GOALS ─── */
+/* ─── SLIDE 9: THE DAILY BEHAVIOUR LOOP ─── */
 function Slide09() {
+  const loopSteps = [
+    { phase: "Capture", time: "Morning", icon: "🌅", desc: "Vision reminds you why. Goals show you what. Your day starts with purpose, not panic.", color: "#f97316" },
+    { phase: "Commit", time: "During the Day", icon: "⚡", desc: "Actions keep you moving. Support Circle keeps you accountable. Every step is tracked.", color: "#0284c7" },
+    { phase: "Calibrate", time: "Evening", icon: "📊", desc: "Review progress. Adjust tomorrow. Medical team sees continuity without extra appointments.", color: "#7c3aed" },
+    { phase: "Celebrate", time: "Always", icon: "🎉", desc: "Every win — big or small — is recognised. Confidence builds. Momentum compounds.", color: "#16a34a" },
+  ];
   return (
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
-        <SectionLabel>Differentiator</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">Start with Why. Break it Down. Stay Accountable.</h2>
-        <div className="mt-[50px] space-y-[24px]">
-          {[
-            { label: "Vision", q: "Where do you want to be?", desc: "Capture life direction and purpose — not just tasks" },
-            { label: "Goals", q: "What will get you there?", desc: "AI-assisted breakdown into actionable, time-bound steps" },
-            { label: "Accountability", q: "Who keeps you honest?", desc: "Support Circle integration, progress tracking, celebration triggers" },
-          ].map((row) => (
-            <div key={row.label} className="flex items-start gap-[32px] p-[32px] rounded-[16px]" style={{ background: "#f8fafc" }}>
-              <div className="w-[160px] shrink-0">
-                <div className="text-[24px] font-bold" style={{ color: "#f97316" }}>{row.label}</div>
-                <div className="text-[18px] mt-[4px] italic" style={{ color: "#94a3b8" }}>{row.q}</div>
-              </div>
-              <div className="text-[22px] leading-relaxed" style={{ color: "#475569" }}>{row.desc}</div>
+        <SectionLabel>The Behaviour Loop</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Capture → Commit → Calibrate → Celebrate</h2>
+        <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>
+          Five pillars. One daily cycle. A closed loop that turns vision into visible progress.
+        </p>
+        <div className="mt-[44px] grid grid-cols-4 gap-[28px]">
+          {loopSteps.map((s) => (
+            <div key={s.phase} className="p-[32px] rounded-[16px] text-center" style={{ background: "#f8fafc" }}>
+              <div className="text-[44px]">{s.icon}</div>
+              <div className="mt-[12px] text-[28px] font-bold" style={{ color: s.color }}>{s.phase}</div>
+              <div className="mt-[6px] text-[16px] font-medium" style={{ color: "#94a3b8" }}>{s.time}</div>
+              <div className="mt-[14px] text-[17px] leading-relaxed" style={{ color: "#475569" }}>{s.desc}</div>
             </div>
           ))}
         </div>
-        <p className="mt-[40px] text-[24px] font-light italic" style={{ color: "#94a3b8" }}>
+        <p className="mt-[36px] text-[22px] font-light italic" style={{ color: "#94a3b8" }}>
           Every productivity app starts with a task. MyRhythm starts with a purpose.
         </p>
       </div>
