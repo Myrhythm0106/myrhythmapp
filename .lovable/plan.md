@@ -1,61 +1,37 @@
 
 
-## Strengthen the Value Demonstration in Section 5.9 — Make It a "No Brainer"
+## Update 5-Year Strategy PDF — Timeline Shift + Text Wrapping
 
-The current Section 5.9 is 10 lines of dry requirements. The approved plan adds persona paths, longitudinal tracking, and professional engagement. But to make it truly compelling for investors, we need to add **quantifiable outcomes** and **cost-avoidance economics** — the language investors actually respond to.
+### Changes
 
-Here's what to add on top of the already-approved plan:
+**1. Shift timeline to start April 2026 (US-first)**
 
----
+All year references shift forward by ~1 year:
 
-### 1. Measurable Outcome Metrics (the "proof engine")
+| Current | Updated |
+|---------|---------|
+| 2025–2030 | 2026–2031 |
+| Year 1 — 2025: Foundation & Validation (UK) | Year 1 — 2026/27: US Launch & Validation (April 2026 start) |
+| Year 2 — 2026: US Launch | Year 2 — 2027/28: Scale & International |
+| Year 3 — 2027 | Year 3 — 2028/29 |
+| Year 4 — 2028 | Year 4 — 2029/30 |
+| Year 5 — 2029-2030 | Year 5 — 2030/31 |
 
-Document how the assessment system generates hard numbers investors can model:
+The cover page subtitle becomes **"April 2026 – March 2031"**. Year 1 starts in the US (not UK), reflecting the US-first strategy. All quarterly milestones, funding rounds, and KPI tables shift accordingly.
 
-- **Readmission reduction**: If MyRhythm reduces the 33% readmission rate by even 10%, that saves **$4B+ annually** in US healthcare costs alone (Miller 2021). The longitudinal assessment data is the evidence base for this claim.
-- **Caregiver burnout prevention**: Periodic caregiver self-assessments flag burnout risk early. If the 40% depression rate drops by even a quarter, that's fewer lost workdays and lower NHS/insurance burden.
-- **Return-to-work acceleration**: Tracking cognitive improvement over time gives employers and insurers evidence that rehabilitation is working — unlocking insurance reimbursement and employer-sponsored subscriptions.
+**2. Fix text wrapping in tables**
 
-### 2. Data Asset Value (the "hidden goldmine")
+The root cause of text merging/overflow is that cell content is plain strings, not `Paragraph` objects. Plain strings don't wrap — they overflow into adjacent cells.
 
-The assessment database itself is an asset:
+Fix: Convert all table cell data to `Paragraph` objects with a cell-specific style that has proper word wrapping and controlled `fontSize=8`. This applies to every `tbl()` call in the script (~15 tables). Update the `tbl()` helper function to auto-wrap any string cell into a `Paragraph`.
 
-- **Anonymised longitudinal cognitive data** across thousands of ABI/TBI survivors does not exist anywhere in commercial health tech today
-- This data is valuable for pharmaceutical companies, clinical researchers, and insurers
-- The assessment system creates a **data moat** — the more users complete assessments over time, the more valuable the dataset becomes, and the harder it is to replicate
+### Technical detail
 
-### 3. Clinical Partnership Revenue Trigger
+- Modify the `tbl()` function to auto-convert string cells: `Paragraph(str(cell), cell_style)` where `cell_style` has `wordWrap='CJK'` and appropriate leading
+- Adjust column widths where needed to give more space to text-heavy columns
+- Update all date references, milestone labels, revenue targets, and copyright footer
 
-Assessment data is the key that unlocks B2B revenue:
-
-- Neurologists and rehab centres subscribe because they get **outcome data they can't get elsewhere** — patient progress between appointments
-- This turns MyRhythm from a consumer app (hard to monetise) into a **clinical tool with measurable ROI** (easy to sell to NHS trusts, insurance companies, rehab centres)
-- Assessment reports become the "proof of value" document that clinicians share with commissioners
-
-### 4. Network Effects & Viral Loop
-
-Each assessment creates connections:
-
-- Survivor completes assessment → app recommends adding Support Circle → caregiver joins → caregiver gets own assessment → caregiver shares with their GP → GP explores clinical licence
-- One assessment generates **3-5 additional users** through the support network alone
-
-### 5. Competitive Moat Summary
-
-No competitor has:
-
-- Persona-specific cognitive baselines (6 distinct paths)
-- Longitudinal tracking tied to daily app engagement data
-- Caregiver self-care assessment alongside patient tracking
-- Professional-visible progress summaries built into a consumer app
-- Energy-aware assessment adaptation (checks fatigue before testing)
-
----
-
-### Implementation
-
-Expand Section 5.9 of `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` to include all 5 areas above, integrated with the previously approved persona paths, longitudinal tracking, and professional engagement content. Add a new subsection called **"5.9.6 Investment Value Demonstration"** that frames these points explicitly for investor audiences.
-
-| File | Action |
-|------|--------|
-| `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Expand Section 5.9 with full assessment documentation + new "Investment Value Demonstration" subsection |
+### File changed
+- `/tmp/strategy_pdf.py` — rewrite with shifted timeline + Paragraph-wrapped table cells
+- Output: `/mnt/documents/MyRhythm_5_Year_Strategy_v2.pdf`
 
