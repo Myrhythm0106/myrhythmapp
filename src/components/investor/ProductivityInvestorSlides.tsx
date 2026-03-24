@@ -50,10 +50,13 @@ function Slide01() {
         </p>
         <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
         <p className="mt-[24px] text-[22px] font-medium tracking-wide" style={{ color: "#a855f7" }}>
-          Cognitive Performance Infrastructure
+          Life Empowerment &amp; Productivity Platform
+        </p>
+        <p className="mt-[12px] text-[18px] font-medium" style={{ color: "#f97316" }}>
+          Powered by Collaborative Cognitive Management (CCM)
         </p>
         <p className="mt-[16px] text-[18px]" style={{ color: "#94a3b8" }}>
-          Investor Presentation · 2026
+          Empower Your Day. Own Your Rhythm. · Investor Presentation · 2026
         </p>
       </div>
     </Slide>
