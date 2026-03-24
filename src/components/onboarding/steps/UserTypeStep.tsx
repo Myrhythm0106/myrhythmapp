@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Brain, Heart, Users, Sparkles, Stethoscope, Plus, Target, Leaf, Building2 } from "lucide-react";
+import { Brain, Heart, Users, Sparkles, Stethoscope, Plus, Target, Leaf, Building2, Zap, Cloud, Activity } from "lucide-react";
 import { UserType } from "@/types/user";
 
 interface UserTypeStepProps {
