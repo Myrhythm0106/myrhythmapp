@@ -46,7 +46,10 @@ function Slide01() {
           MyRhythm
         </h1>
         <p className="mt-[24px] text-[32px] font-light tracking-wide" style={{ color: "#64748b" }}>
-          Continuous Cognitive Support
+          Life Empowerment &amp; Productivity
+        </p>
+        <p className="mt-[12px] text-[20px] font-light" style={{ color: "#94a3b8" }}>
+          Powered by Collaborative Cognitive Management (CCM)
         </p>
         <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
         <p className="mt-[24px] text-[20px]" style={{ color: "#94a3b8" }}>
