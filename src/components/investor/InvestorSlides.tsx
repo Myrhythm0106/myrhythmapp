@@ -46,7 +46,10 @@ function Slide01() {
           MyRhythm
         </h1>
         <p className="mt-[24px] text-[32px] font-light tracking-wide" style={{ color: "#64748b" }}>
-          Continuous Cognitive Support
+          Life Empowerment &amp; Productivity
+        </p>
+        <p className="mt-[12px] text-[20px] font-light" style={{ color: "#94a3b8" }}>
+          Powered by Collaborative Cognitive Management (CCM)
         </p>
         <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
         <p className="mt-[24px] text-[20px]" style={{ color: "#94a3b8" }}>
@@ -211,7 +214,7 @@ function Slide06() {
         </h2>
         <div className="mt-[48px] w-[80px] h-[4px] rounded-full" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
         <p className="mt-[48px] text-[28px] leading-relaxed max-w-[900px]" style={{ color: "#64748b" }}>
-          The missing layer is not another app. It is continuous cognitive support — woven into the fabric of daily life, backed by people who care.
+          The missing layer is not another app. It is Collaborative Cognitive Management — woven into the fabric of daily life, backed by people who care.
         </p>
       </div>
     </Slide>
@@ -224,7 +227,7 @@ function Slide07() {
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
         <SectionLabel>New Category</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">Continuous Cognitive Support</h2>
+        <h2 className="mt-[24px] text-[56px] font-bold">Collaborative Cognitive Management</h2>
         <p className="mt-[20px] text-[24px] max-w-[800px]" style={{ color: "#64748b" }}>
           Not brain games. Not reminders. Not clinical software. The infrastructure layer between clinical care and daily living.
         </p>
@@ -237,8 +240,8 @@ function Slide07() {
           <div className="w-[200px] h-[4px]" style={{ background: "linear-gradient(90deg, #0284c7, #f97316)" }} />
           <div className="flex-1 py-[40px] px-[48px] rounded-[16px] text-center border-2" style={{ borderColor: "#f97316", background: "#fff7ed" }}>
             <div className="text-[24px] font-bold" style={{ color: "#f97316" }}>MyRhythm</div>
-            <div className="text-[16px] mt-[8px]" style={{ color: "#64748b" }}>Continuous support</div>
-            <div className="text-[16px]" style={{ color: "#64748b" }}>For life</div>
+            <div className="text-[16px] mt-[8px]" style={{ color: "#64748b" }}>Collaborative Cognitive</div>
+            <div className="text-[16px]" style={{ color: "#64748b" }}>Management</div>
           </div>
           <div className="w-[200px] h-[4px]" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
           <div className="flex-1 py-[40px] px-[48px] rounded-[16px] text-center" style={{ background: "#faf5ff" }}>
@@ -724,7 +727,7 @@ function Slide18() {
 
         <div className="mt-[20px] flex items-center justify-between">
           <div className="text-[20px] font-semibold" style={{ color: "#1a1a2e" }}>
-            MyRhythm: Continuous Cognitive Support
+            MyRhythm: Life Empowerment &amp; Productivity
           </div>
           <div className="text-[18px]" style={{ color: "#94a3b8" }}>
             investors@myrhythm.com · myrhythm.app

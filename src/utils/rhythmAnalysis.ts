@@ -406,7 +406,10 @@ export function generateSampleAssessmentResult(userType: UserType = 'cognitive-o
     'other': 'growth',
     'student': 'structure',
     'executive': 'achievement',
-    'post-recovery': 'memory'
+    'post-recovery': 'memory',
+    'adhd': 'structure',
+    'long-covid': 'emotional',
+    'ms-cognitive': 'emotional'
   };
 
   const primaryRhythms = [

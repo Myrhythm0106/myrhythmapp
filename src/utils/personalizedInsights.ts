@@ -287,7 +287,10 @@ function generateUserTypeMessage(
     "other": `Your ${focusArea} focus aligns with your unique journey and goals. Your assessment shows this personalized approach will support your specific needs and help you achieve your individual objectives.`,
     "student": `As a student, your ${focusArea} focus will help you capture and organize information more effectively. Your assessment shows this approach will boost your study efficiency and academic performance.`,
     "executive": `As an executive, your ${focusArea} focus will maximize your productivity and ensure no commitment falls through the cracks. Your assessment indicates this area will deliver the highest ROI on your time.`,
-    "post-recovery": `Having rebuilt your cognitive strength, your ${focusArea} focus will help you maintain those gains and continue optimizing. Your assessment shows you're ready for this next level of performance.`
+    "post-recovery": `Having rebuilt your cognitive strength, your ${focusArea} focus will help you maintain those gains and continue optimizing. Your assessment shows you're ready for this next level of performance.`,
+    "adhd": `Your fast-moving mind is your superpower. Your ${focusArea} focus channels your energy into structured momentum — capturing ideas, chunking tasks, and celebrating every win along the way.`,
+    "long-covid": `Pacing is power. Your ${focusArea} focus honours your energy levels and helps you do more on good days while resting without guilt on harder ones. Every step forward counts.`,
+    "ms-cognitive": `Your rhythm, your way. Your ${focusArea} focus supports you in managing cognitive fatigue with tools that adapt to your day — empowering you to focus on what matters most.`
   };
   
   return contextMap[userType] || "";
@@ -330,7 +333,10 @@ function getUserTypeContext(userType?: UserType): string | null {
     "other": "unique personal journey",
     "student": "academic and learning success",
     "executive": "leadership and productivity excellence",
-    "post-recovery": "sustained cognitive wellness"
+    "post-recovery": "sustained cognitive wellness",
+    "adhd": "focus and momentum building",
+    "long-covid": "energy management and recovery support",
+    "ms-cognitive": "fatigue-aware productivity"
   };
   return userType ? contextMap[userType] : null;
 }
@@ -346,7 +352,10 @@ function getUserTypeCharacteristic(userType?: UserType): string | null {
     "other": "Unique and adaptable approach tailored to specific needs",
     "student": "Learning-focused mindset with growth orientation",
     "executive": "Results-driven approach with strategic focus",
-    "post-recovery": "Resilient optimization mindset with maintenance focus"
+    "post-recovery": "Resilient optimization mindset with maintenance focus",
+    "adhd": "Fast-thinking creative approach with momentum focus",
+    "long-covid": "Energy-aware resilient approach with pacing focus",
+    "ms-cognitive": "Adaptive rhythm approach with fatigue-aware planning"
   };
   return userType ? charMap[userType] : null;
 }
@@ -362,7 +371,10 @@ function getUserTypePersonalMessage(userType?: UserType): string {
     "other": "Your thoughtful and personalized responses show strong self-awareness and growth potential.",
     "student": "Your willingness to seek help shows maturity and a strong foundation for academic success.",
     "executive": "Your strategic thinking is evident - you're ready to optimize for maximum impact.",
-    "post-recovery": "Your resilience and commitment to growth is inspiring - you've built a strong foundation."
+    "post-recovery": "Your resilience and commitment to growth is inspiring - you've built a strong foundation.",
+    "adhd": "Your energy and creativity are assets — channelled with the right tools, you're unstoppable.",
+    "long-covid": "Your courage in navigating brain fog shows incredible strength — every step forward matters.",
+    "ms-cognitive": "Your determination to thrive despite fatigue is remarkable — your rhythm is yours to own."
   };
   return userType ? messageMap[userType] : "Your thoughtful responses show strong self-awareness and growth potential.";
 }
@@ -380,7 +392,10 @@ function getUserTypeSpecificStep(userType?: UserType, focusArea?: FocusArea): st
     "other": "Create personalized strategies that align with your unique situation and goals",
     "student": "Set up your study schedule around your peak focus times",
     "executive": "Connect Memory Bridge to your calendar for seamless meeting-to-action flow",
-    "post-recovery": "Establish daily check-ins to maintain your cognitive gains"
+    "post-recovery": "Establish daily check-ins to maintain your cognitive gains",
+    "adhd": "Set up focus timers and impulse capture to channel your energy",
+    "long-covid": "Configure energy-paced scheduling to honour your daily rhythm",
+    "ms-cognitive": "Enable fatigue-aware scheduling to plan around your energy windows"
   };
   
   return stepMap[userType];

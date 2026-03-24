@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Brain, Heart, Users, Calendar, ArrowRight, BookOpen, Briefcase, Star, Sparkles } from 'lucide-react';
+import { Brain, Heart, Users, Calendar, ArrowRight, BookOpen, Briefcase, Star, Sparkles, Zap, Cloud, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function MVPUserTypeSelection() {
@@ -56,6 +56,30 @@ export function MVPUserTypeSelection() {
       icon: Brain,
       color: 'from-clarity-teal-500 to-brain-health-500',
       path: '/mvp/cognitive-support-welcome'
+    },
+    {
+      id: 'adhd',
+      title: 'ADHD Support',
+      description: 'Focus-friendly timers, impulse capture, and dopamine-friendly task chunking — your fast-moving mind is your superpower',
+      icon: Zap,
+      color: 'from-purple-500 to-violet-500',
+      path: '/mvp/adhd-welcome'
+    },
+    {
+      id: 'long-covid',
+      title: 'Long COVID Support',
+      description: 'Energy-paced scheduling, voice capture for foggy moments, and gentle reminders — brain fog doesn\'t define you',
+      icon: Cloud,
+      color: 'from-slate-500 to-blue-500',
+      path: '/mvp/long-covid-welcome'
+    },
+    {
+      id: 'ms-cognitive',
+      title: 'MS Cognitive Support',
+      description: 'Fatigue-aware scheduling, cognitive load awareness, and encouragement — your rhythm, your way',
+      icon: Activity,
+      color: 'from-teal-500 to-emerald-500',
+      path: '/mvp/ms-cognitive-welcome'
     }
   ];
 

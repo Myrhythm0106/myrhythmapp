@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Brain, Heart, Users, Sparkles, Stethoscope, Plus, Target, Leaf, Building2 } from "lucide-react";
+import { Brain, Heart, Users, Sparkles, Stethoscope, Plus, Target, Leaf, Building2, Zap, Cloud, Activity } from "lucide-react";
 import { UserType } from "@/types/user";
 
 interface UserTypeStepProps {
@@ -59,6 +59,27 @@ const userTypes = [
     description: "Tell us about your unique situation and we'll personalize MyRhythm for your specific needs",
     icon: Plus,
     color: "bg-gradient-to-br from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700",
+  },
+  {
+    id: "adhd" as const,
+    title: "ADHD Support",
+    description: "Your fast-moving mind is your superpower. Focus timers, impulse capture, and dopamine-friendly task chunking to channel your energy into unstoppable momentum.",
+    icon: Zap,
+    color: "bg-gradient-to-br from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700",
+  },
+  {
+    id: "long-covid" as const,
+    title: "Long COVID Support",
+    description: "Brain fog doesn't define you. Energy-paced scheduling, voice capture for foggy moments, and gentle progressive reminders that honour your pace.",
+    icon: Cloud,
+    color: "bg-gradient-to-br from-slate-500 to-blue-600 hover:from-slate-600 hover:to-blue-700",
+  },
+  {
+    id: "ms-cognitive" as const,
+    title: "MS Cognitive Support",
+    description: "Your rhythm, your way. Fatigue-aware scheduling, cognitive load awareness, and an encouragement system that celebrates every win.",
+    icon: Activity,
+    color: "bg-gradient-to-br from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700",
   }
 ];
 

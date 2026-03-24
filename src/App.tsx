@@ -98,6 +98,9 @@ import CognitiveSupportWelcomePage from "./pages/CognitiveSupportWelcomePage";
 import StudentWelcomePage from "./pages/StudentWelcomePage";
 import ExecutiveWelcomePage from "./pages/ExecutiveWelcomePage";
 import PostRecoveryWelcomePage from "./pages/PostRecoveryWelcomePage";
+import ADHDWelcomePage from "./pages/ADHDWelcomePage";
+import LongCovidWelcomePage from "./pages/LongCovidWelcomePage";
+import MSCognitiveWelcomePage from "./pages/MSCognitiveWelcomePage";
 
 // V1 Launch Mode Pages
 import {
@@ -292,6 +295,9 @@ function App() {
                      <Route path="/mvp/student-welcome" element={<StudentWelcomePage />} />
                      <Route path="/mvp/executive-welcome" element={<ExecutiveWelcomePage />} />
                      <Route path="/mvp/thriving-welcome" element={<PostRecoveryWelcomePage />} />
+                     <Route path="/mvp/adhd-welcome" element={<ADHDWelcomePage />} />
+                     <Route path="/mvp/long-covid-welcome" element={<LongCovidWelcomePage />} />
+                     <Route path="/mvp/ms-cognitive-welcome" element={<MSCognitiveWelcomePage />} />
                      
                      {/* New Assessment and Setup Flow */}
          <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />

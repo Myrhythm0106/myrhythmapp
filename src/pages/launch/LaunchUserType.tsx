@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Users, Briefcase, BookOpen, Heart, Star, Sparkles, ArrowRight, Stethoscope } from 'lucide-react';
+import { Brain, Users, Briefcase, BookOpen, Heart, Star, Sparkles, ArrowRight, Stethoscope, Zap, Cloud, Activity } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
@@ -52,6 +52,30 @@ const userTypes = [
     icon: Star,
     color: 'from-purple-500 to-pink-500',
     bgColor: 'bg-purple-50',
+  },
+  {
+    id: 'adhd',
+    title: 'ADHD Support',
+    description: 'Focus tools and impulse capture for fast-moving minds',
+    icon: Zap,
+    color: 'from-purple-500 to-violet-500',
+    bgColor: 'bg-purple-50',
+  },
+  {
+    id: 'long-covid',
+    title: 'Long COVID Support',
+    description: 'Energy-paced scheduling and brain fog support tools',
+    icon: Cloud,
+    color: 'from-slate-500 to-blue-500',
+    bgColor: 'bg-slate-50',
+  },
+  {
+    id: 'ms-cognitive',
+    title: 'MS Cognitive Support',
+    description: 'Fatigue-aware scheduling and cognitive load management',
+    icon: Activity,
+    color: 'from-teal-500 to-emerald-500',
+    bgColor: 'bg-teal-50',
   },
 ];
 
