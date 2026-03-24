@@ -222,6 +222,9 @@ function Slide07() {
         <p className="mt-[48px] text-[28px] leading-relaxed max-w-[900px]" style={{ color: "#64748b" }}>
           People do not fail because they lack lists. They fail because interruptions break their thread of intention — and nothing exists to restore it.
         </p>
+        <p className="mt-[32px] text-[26px] leading-relaxed max-w-[900px] font-medium" style={{ color: "#475569" }}>
+          When people feel reliable, confidence returns. When confidence returns, productivity follows. The lever is not efficiency — it is self-trust.
+        </p>
       </div>
     </Slide>
   );
@@ -313,7 +316,7 @@ function Slide10() {
     { time: "Mid-day", action: "Interruption hits", detail: "Meeting runs over. Email derails focus. Context switches pile up." },
     { time: "Afternoon", action: "Re-engagement", detail: "MyRhythm detects drift. Progressive nudge restores the thread. You pick up where you left off." },
     { time: "Evening", action: "Completion", detail: "Actions marked done. Wins celebrated. Tomorrow's intentions seeded." },
-    { time: "Over time", action: "Confidence compounds", detail: "Streak builds. Trust grows. Reliability becomes identity." },
+    { time: "Over time", action: "Reliability becomes identity", detail: "You keep promises. Others notice. Confidence returns. Productivity follows naturally — not from pressure, but from self-trust." },
   ];
   return (
     <Slide>
@@ -541,11 +544,12 @@ function Slide15() {
             { metric: "Consistency", direction: "↑", detail: "Users complete more of what they commit to. The closed loop creates follow-through.", color: "#16a34a" },
             { metric: "Restart After Interruption", direction: "↑", detail: "Progressive re-engagement pulls users back to their thread — instead of losing the day.", color: "#f97316" },
             { metric: "Confidence", direction: "↑", detail: "Tracked wins compound into self-trust. Users report feeling more capable over time.", color: "#a855f7" },
+            { metric: "Productivity", direction: "↑", detail: "As reliability builds and confidence returns, users report sustained productivity gains — not through working harder, but through trusting themselves to follow through.", color: "#0284c7" },
           ].map((e) => (
-            <div key={e.metric} className="flex-1 p-[40px] rounded-[16px]" style={{ background: "#f8fafc" }}>
-              <div className="text-[56px] font-bold" style={{ color: e.color }}>{e.direction}</div>
-              <div className="mt-[12px] text-[28px] font-semibold">{e.metric}</div>
-              <div className="mt-[16px] text-[20px] leading-relaxed" style={{ color: "#64748b" }}>{e.detail}</div>
+            <div key={e.metric} className="flex-1 p-[36px] rounded-[16px]" style={{ background: "#f8fafc" }}>
+              <div className="text-[48px] font-bold" style={{ color: e.color }}>{e.direction}</div>
+              <div className="mt-[10px] text-[24px] font-semibold">{e.metric}</div>
+              <div className="mt-[12px] text-[17px] leading-relaxed" style={{ color: "#64748b" }}>{e.detail}</div>
             </div>
           ))}
         </div>
