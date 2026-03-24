@@ -50,10 +50,13 @@ function Slide01() {
         </p>
         <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
         <p className="mt-[24px] text-[22px] font-medium tracking-wide" style={{ color: "#a855f7" }}>
-          Cognitive Performance Infrastructure
+          Life Empowerment &amp; Productivity Platform
+        </p>
+        <p className="mt-[12px] text-[18px] font-medium" style={{ color: "#f97316" }}>
+          Powered by Collaborative Cognitive Management (CCM)
         </p>
         <p className="mt-[16px] text-[18px]" style={{ color: "#94a3b8" }}>
-          Investor Presentation · 2026
+          Empower Your Day. Own Your Rhythm. · Investor Presentation · 2026
         </p>
       </div>
     </Slide>
@@ -228,11 +231,23 @@ function Slide08() {
   return (
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
-        <SectionLabel>New Category</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">Cognitive Performance Infrastructure</h2>
+        <SectionLabel>The Methodology</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Collaborative Cognitive Management</h2>
         <p className="mt-[20px] text-[24px] max-w-[900px]" style={{ color: "#64748b" }}>
-          The missing layer between intention and reliable execution. Not a productivity app. Not a wellness app. Infrastructure.
+          The LEAP platform is powered by CCM — three pillars that bridge intention and reliable execution.
         </p>
+        <div className="mt-[28px] flex gap-[20px]">
+          {[
+            { pillar: "Collaborative", desc: "Support Circles, caregiver dashboards, shared accountability", color: "#a855f7" },
+            { pillar: "Cognitive", desc: "Rhythmic Intelligence, energy-aware scheduling, Memory Bridge", color: "#0284c7" },
+            { pillar: "Management", desc: "Task chunking, smart scheduling, celebration streaks", color: "#f97316" },
+          ].map((p) => (
+            <div key={p.pillar} className="flex-1 p-[20px] rounded-[12px]" style={{ background: "#f8fafc" }}>
+              <div className="text-[20px] font-bold" style={{ color: p.color }}>{p.pillar}</div>
+              <div className="text-[16px] mt-[6px]" style={{ color: "#64748b" }}>{p.desc}</div>
+            </div>
+          ))}
+        </div>
         <div className="mt-[60px] flex items-center gap-[24px]">
           <div className="flex-1 py-[40px] px-[48px] rounded-[16px] text-center" style={{ background: "#f0f9ff" }}>
             <div className="text-[20px] font-semibold" style={{ color: "#0284c7" }}>Intention</div>
@@ -271,7 +286,7 @@ function Slide09() {
         <SectionLabel>The Solution</SectionLabel>
         <h2 className="mt-[24px] text-[56px] font-bold">Capture → Commit → Calibrate → Celebrate</h2>
         <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>
-          A behavioural scaffolding system for cognitive performance.
+          The CCM engine that powers every LEAP experience.
         </p>
         <div className="mt-[50px] grid grid-cols-4 gap-[28px]">
           {steps.map((s, i) => (
@@ -343,7 +358,10 @@ function Slide11() {
           We built MyRhythm to work for ABI & TBI survivors — people whose cognition fluctuates hourly, whose memory fails under load, who lose the thread after every interruption.
         </p>
         <p className="mt-[32px] text-[28px] font-semibold" style={{ color: "#f97316" }}>
-          If it works there, it works everywhere.
+          Built from lived experience. If it works there, it works everywhere.
+        </p>
+        <p className="mt-[16px] text-[20px] max-w-[800px]" style={{ color: "#94a3b8" }}>
+          Brain injury recovery is our foundation — the lived experience that shapes every feature in the LEAP platform.
         </p>
         <div className="mt-[48px] flex gap-[48px]">
           {[
@@ -546,7 +564,7 @@ function Slide16() {
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
         <SectionLabel>Business Model</SectionLabel>
-        <h2 className="mt-[24px] text-[48px] font-bold">Recurring Cognitive Infrastructure</h2>
+        <h2 className="mt-[24px] text-[48px] font-bold">Recurring LEAP Platform Revenue</h2>
         <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>Path to £500K by December 2026</p>
         <div className="mt-[40px] flex gap-[40px]">
           {/* Revenue streams */}
@@ -613,9 +631,9 @@ function Slide17() {
             </div>
           </div>
           <div className="flex-1 p-[40px] rounded-[16px] border-2" style={{ borderColor: "#f97316", background: "#fff7ed" }}>
-            <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#f97316" }}>Cognitive Continuity Infrastructure</div>
+           <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#f97316" }}>LEAP + CCM Platform</div>
             <div className="text-[20px] leading-relaxed" style={{ color: "#475569" }}>
-              Always-on. Adapts to cognitive state. Escalates when needed. Celebrates when earned. The layer that was always missing.
+              Always-on. Collaborative. Adapts to cognitive state. Escalates when needed. Celebrates when earned. Life empowerment, not just productivity.
             </div>
           </div>
         </div>
@@ -700,11 +718,14 @@ function Slide18() {
 
         <div className="mt-[20px] flex items-center justify-between">
           <div className="text-[20px] font-semibold" style={{ color: "#1a1a2e" }}>
-            Built from the gap it solves.
+            Empower Your Day. Own Your Rhythm.
           </div>
           <div className="text-[18px]" style={{ color: "#94a3b8" }}>
             investors@myrhythm.com · myrhythm.app
           </div>
+        </div>
+        <div className="mt-[12px] text-[14px] text-center" style={{ color: "#94a3b8" }}>
+          MyRhythm is a life empowerment and productivity app. It is not a medical device.
         </div>
       </div>
     </Slide>
