@@ -107,6 +107,7 @@ function Slide03() {
             { step: "02", title: "Lost credibility", desc: "Colleagues stop relying on you. Reputation erodes silently, meeting by meeting." },
             { step: "03", title: "Relationship erosion", desc: "Partners, clients, and teams lose confidence. Trust compounds — and so does its absence." },
             { step: "04", title: "Career stagnation", desc: "Promotion decisions are trust decisions. Unreliable execution is invisible self-sabotage." },
+            { step: "05", title: "Confidence collapses", desc: "Repeated memory failures erode self-trust. You stop committing because you've stopped believing you'll follow through." },
           ].map((d) => (
             <div key={d.step} className="flex-1">
               <div className="text-[48px] font-bold" style={{ color: "#f97316" }}>{d.step}</div>

@@ -100,6 +100,8 @@ function Slide03() {
     { icon: "💰", label: "Economic", stat: "$40B+", detail: "annual direct US healthcare costs for TBI alone", source: "Miller et al., Medical Care 2021" },
     { icon: "😔", label: "Caregivers", stat: "40%", detail: "of brain injury caregivers report clinical depression", source: "National Academies 2022" },
     { icon: "👨‍👩‍👧", label: "Children", stat: "68%", detail: "of families report children's wellbeing significantly affected", source: "UKABIF Family Survey 2019" },
+    { icon: "🧠", label: "Memory", stat: "54%", detail: "of moderate-severe TBI survivors report persistent memory difficulties affecting daily life", source: "Dikmen et al., Archives of Physical Medicine 2009" },
+    { icon: "😞", label: "Confidence", stat: "57%", detail: "of ABI survivors report clinically significant loss of self-confidence and identity", source: "Gracey et al., Neuropsychological Rehabilitation 2008" },
   ];
 
   return (
@@ -115,22 +117,22 @@ function Slide03() {
           Clinical rehab: 6–12 weeks post-ABI/TBI. Then: a pamphlet and a follow-up in 6 months.
         </p>
 
-        <div className="mt-[28px] grid grid-cols-3 gap-[16px]">
+        <div className="mt-[28px] grid grid-cols-4 gap-[16px]">
           {impactCards.map((card) => (
-            <div key={card.label} className="rounded-[12px] p-[20px] border" style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
-              <div className="flex items-center gap-[8px] mb-[8px]">
-                <span className="text-[20px]">{card.icon}</span>
-                <span className="text-[14px] font-semibold uppercase tracking-wider" style={{ color: "#94a3b8" }}>{card.label}</span>
+            <div key={card.label} className="rounded-[12px] p-[16px] border" style={{ background: "#ffffff", borderColor: "#e2e8f0" }}>
+              <div className="flex items-center gap-[8px] mb-[6px]">
+                <span className="text-[18px]">{card.icon}</span>
+                <span className="text-[12px] font-semibold uppercase tracking-wider" style={{ color: "#94a3b8" }}>{card.label}</span>
               </div>
-              <div className="text-[36px] font-bold" style={{ color: "#dc2626" }}>{card.stat}</div>
-              <p className="text-[15px] mt-[4px] leading-snug" style={{ color: "#475569" }}>{card.detail}</p>
-              <p className="text-[12px] mt-[6px] italic" style={{ color: "#94a3b8" }}>{card.source}</p>
+              <div className="text-[32px] font-bold" style={{ color: "#dc2626" }}>{card.stat}</div>
+              <p className="text-[13px] mt-[4px] leading-snug" style={{ color: "#475569" }}>{card.detail}</p>
+              <p className="text-[11px] mt-[4px] italic" style={{ color: "#94a3b8" }}>{card.source}</p>
             </div>
           ))}
         </div>
 
         <p className="mt-[20px] text-[11px]" style={{ color: "#94a3b8" }}>
-          Sources: Wood 1997; Shames 2007; CDC/NIDILRR; Miller 2021; National Academies 2022; UKABIF 2019
+          Sources: Wood 1997; Shames 2007; CDC/NIDILRR; Miller 2021; National Academies 2022; UKABIF 2019; Dikmen 2009; Gracey 2008
         </p>
 
         <p className="mt-[12px] text-[24px] font-light italic text-center" style={{ color: "#64748b" }}>
