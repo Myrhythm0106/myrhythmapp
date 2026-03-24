@@ -214,7 +214,7 @@ function Slide06() {
         </h2>
         <div className="mt-[48px] w-[80px] h-[4px] rounded-full" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
         <p className="mt-[48px] text-[28px] leading-relaxed max-w-[900px]" style={{ color: "#64748b" }}>
-          The missing layer is not another app. It is continuous cognitive support — woven into the fabric of daily life, backed by people who care.
+          The missing layer is not another app. It is Collaborative Cognitive Management — woven into the fabric of daily life, backed by people who care.
         </p>
       </div>
     </Slide>
