@@ -352,7 +352,10 @@ function getUserTypeCharacteristic(userType?: UserType): string | null {
     "other": "Unique and adaptable approach tailored to specific needs",
     "student": "Learning-focused mindset with growth orientation",
     "executive": "Results-driven approach with strategic focus",
-    "post-recovery": "Resilient optimization mindset with maintenance focus"
+    "post-recovery": "Resilient optimization mindset with maintenance focus",
+    "adhd": "Fast-thinking creative approach with momentum focus",
+    "long-covid": "Energy-aware resilient approach with pacing focus",
+    "ms-cognitive": "Adaptive rhythm approach with fatigue-aware planning"
   };
   return userType ? charMap[userType] : null;
 }
