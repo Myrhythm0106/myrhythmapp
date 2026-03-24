@@ -718,11 +718,14 @@ function Slide18() {
 
         <div className="mt-[20px] flex items-center justify-between">
           <div className="text-[20px] font-semibold" style={{ color: "#1a1a2e" }}>
-            Built from the gap it solves.
+            Empower Your Day. Own Your Rhythm.
           </div>
           <div className="text-[18px]" style={{ color: "#94a3b8" }}>
             investors@myrhythm.com · myrhythm.app
           </div>
+        </div>
+        <div className="mt-[12px] text-[14px] text-center" style={{ color: "#94a3b8" }}>
+          MyRhythm is a life empowerment and productivity app. It is not a medical device.
         </div>
       </div>
     </Slide>
