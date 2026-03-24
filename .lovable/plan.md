@@ -1,36 +1,23 @@
 
 
-# Elevate Brain Injury as the Foundation — Never Forgotten
+# Update ProductivityInvestorSlides with LEAP + CCM Branding
 
-## The Problem
+## Current State
+- **InvestorSlides.tsx** (ABI/brain injury deck at `/investor-deck`) — fully updated with LEAP + CCM
+- **ProductivityInvestorSlides.tsx** (productivity deck at `/productivity-deck`) — still uses old "Cognitive Performance Infrastructure" language, no LEAP or CCM references
 
-Brain injury survivors are currently listed as one of nine equal cards on the MVP selection page. The LEAP broadening risks making them feel like "just another audience." This is wrong — brain injury is the origin, the founder's lived experience, and the reason the app exists.
+## What Changes
 
-## The Fix
+Update `src/components/investor/ProductivityInvestorSlides.tsx` to align with the LEAP + CCM framework:
 
-Restructure the MVP page into a clear visual hierarchy that honours the foundation while welcoming the broader LEAP audience.
+1. **Slide 1 (Title):** Replace "Cognitive Performance Infrastructure" with "Life Empowerment and Productivity Platform" and add "Powered by Collaborative Cognitive Management (CCM)"
+2. **Throughout all 18 slides:** Replace any "cognitive performance infrastructure" references with LEAP-aligned language
+3. **Add CCM methodology reference** where the deck describes how MyRhythm works (the three pillars: Collaborative, Cognitive, Management)
+4. **Ensure the brain injury foundation** is acknowledged — even in the productivity deck, include a slide or section noting "Built from lived experience with brain injury recovery"
+5. **Update tagline** to "Empower Your Day. Own Your Rhythm." where applicable
+6. **Add mandatory disclaimer** on final slide: "MyRhythm is a life empowerment and productivity app. It is not a medical device."
 
-### Layout Change — `MVPUserTypeSelection.tsx`
-
-**1. Foundation Hero Section (above the grid)**
-A prominent, visually distinct card spanning full width before the grid:
-- Title: "Built From Lived Experience"
-- Subtitle: "MyRhythm was born from brain injury recovery. Every feature — Memory Bridge, Support Circles, energy-aware scheduling — was designed by a survivor, for survivors. This is our foundation."
-- Two side-by-side CTAs:
-  - **Brain Injury Navigator** (primary, prominent button)
-  - **Caregiver / Support** (secondary button)
-- Warm gradient (brain-health to clarity-teal), Heart + Brain icons
-
-**2. "Your Rhythm, Your Way" Grid (below)**
-The remaining 7 cards (Student, Executive, Thriving, Cognitive Support, ADHD, Long COVID, MS Cognitive) in the existing 3-column grid with a subtle section header:
-- "MyRhythm also empowers people with ADHD, Long COVID, MS cognitive fatigue, and anyone who wants to own their day."
-
-**3. Update tagline** from the old clinical one to LEAP:
-- `"Empower Your Day. Own Your Rhythm."` — replaces `"Empower Your Mind, Rebuild Your Memory, Reclaim Your Life"`
-
-### Files Modified
-- `src/components/mvp/MVPUserTypeSelection.tsx` — restructure layout with foundation hero + grid
-
-### No Other Files Change
-Welcome screens, routes, types, and PDFs remain as-is. This is a presentation hierarchy fix only.
+## Files Modified
+- `src/components/investor/ProductivityInvestorSlides.tsx`
+- `src/pages/ProductivityDeckPage.tsx` (slide count adjustment if needed)
 
