@@ -1,34 +1,36 @@
 
 
-## LEAP + CCM Integration Complete
+# Elevate Brain Injury as the Foundation — Never Forgotten
 
-### LEAP (Life Empowerment & Productivity) — External Brand
-- Tagline: "Empower Your Day. Own Your Rhythm."
-- Five pillars: Support, Inspire, Remind, Encourage, Empower
+## The Problem
 
-### CCM (Collaborative Cognitive Management) — Internal Methodology
-- Three pillars: Collaborative, Cognitive, Management
-- Replaces "Cognitive Continuation Management" throughout
+Brain injury survivors are currently listed as one of nine equal cards on the MVP selection page. The LEAP broadening risks making them feel like "just another audience." This is wrong — brain injury is the origin, the founder's lived experience, and the reason the app exists.
 
-### Changes Made
+## The Fix
 
-**New User Flows (ADHD, Long COVID, MS Cognitive):**
-- `src/components/mvp/ADHDWelcome.tsx` — Focus timers, impulse capture, celebration streaks
-- `src/components/mvp/LongCovidWelcome.tsx` — Energy pacing, voice capture, gentle reminders
-- `src/components/mvp/MSCognitiveWelcome.tsx` — Fatigue-aware scheduling, cognitive load
-- `src/pages/ADHDWelcomePage.tsx`, `LongCovidWelcomePage.tsx`, `MSCognitiveWelcomePage.tsx`
+Restructure the MVP page into a clear visual hierarchy that honours the foundation while welcoming the broader LEAP audience.
 
-**Updated Files:**
-- `src/types/user.ts` — Added `adhd`, `long-covid`, `ms-cognitive` to UserType
-- `src/App.tsx` — Added 3 new routes
-- `src/components/mvp/MVPUserTypeSelection.tsx` — 3 new cards
-- `src/pages/launch/LaunchUserType.tsx` — 3 new cards
-- `src/components/onboarding/steps/UserTypeStep.tsx` — 3 new cards
-- `src/components/investor/InvestorSlides.tsx` — LEAP + CCM branding
-- `src/utils/personalizedInsights.ts` — New user type entries
-- `src/utils/rhythmAnalysis.ts` — New focus area mappings
-- `src/components/onboarding/steps/rhythm/rhythmAssessmentData.ts` — New assessment sections
+### Layout Change — `MVPUserTypeSelection.tsx`
 
-**Generated Documents:**
-- `MyRhythm_5_Year_Strategy_v5.pdf` — 8-page strategy with LEAP/CCM framing
-- `MyRhythm_WHO_Insurer_Executive_Brief_v2.pdf` — 2-page institutional brief
+**1. Foundation Hero Section (above the grid)**
+A prominent, visually distinct card spanning full width before the grid:
+- Title: "Built From Lived Experience"
+- Subtitle: "MyRhythm was born from brain injury recovery. Every feature — Memory Bridge, Support Circles, energy-aware scheduling — was designed by a survivor, for survivors. This is our foundation."
+- Two side-by-side CTAs:
+  - **Brain Injury Navigator** (primary, prominent button)
+  - **Caregiver / Support** (secondary button)
+- Warm gradient (brain-health to clarity-teal), Heart + Brain icons
+
+**2. "Your Rhythm, Your Way" Grid (below)**
+The remaining 7 cards (Student, Executive, Thriving, Cognitive Support, ADHD, Long COVID, MS Cognitive) in the existing 3-column grid with a subtle section header:
+- "MyRhythm also empowers people with ADHD, Long COVID, MS cognitive fatigue, and anyone who wants to own their day."
+
+**3. Update tagline** from the old clinical one to LEAP:
+- `"Empower Your Day. Own Your Rhythm."` — replaces `"Empower Your Mind, Rebuild Your Memory, Reclaim Your Life"`
+
+### Files Modified
+- `src/components/mvp/MVPUserTypeSelection.tsx` — restructure layout with foundation hero + grid
+
+### No Other Files Change
+Welcome screens, routes, types, and PDFs remain as-is. This is a presentation hierarchy fix only.
+
