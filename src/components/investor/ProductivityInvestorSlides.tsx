@@ -286,7 +286,7 @@ function Slide09() {
         <SectionLabel>The Solution</SectionLabel>
         <h2 className="mt-[24px] text-[56px] font-bold">Capture → Commit → Calibrate → Celebrate</h2>
         <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>
-          A behavioural scaffolding system for cognitive performance.
+          The CCM engine that powers every LEAP experience.
         </p>
         <div className="mt-[50px] grid grid-cols-4 gap-[28px]">
           {steps.map((s, i) => (
