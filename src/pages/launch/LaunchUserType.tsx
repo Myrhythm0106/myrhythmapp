@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Users, Briefcase, BookOpen, Heart, Star, Sparkles, ArrowRight, Stethoscope } from 'lucide-react';
+import { Brain, Users, Briefcase, BookOpen, Heart, Star, Sparkles, ArrowRight, Stethoscope, Zap, Cloud, Activity } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
