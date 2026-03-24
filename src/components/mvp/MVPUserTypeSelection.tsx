@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Brain, Heart, Users, Calendar, ArrowRight, BookOpen, Briefcase, Star, Sparkles } from 'lucide-react';
+import { Brain, Heart, Users, Calendar, ArrowRight, BookOpen, Briefcase, Star, Sparkles, Zap, Cloud, Activity } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export function MVPUserTypeSelection() {
