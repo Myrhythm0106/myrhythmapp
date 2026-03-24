@@ -358,7 +358,10 @@ function Slide11() {
           We built MyRhythm to work for ABI & TBI survivors — people whose cognition fluctuates hourly, whose memory fails under load, who lose the thread after every interruption.
         </p>
         <p className="mt-[32px] text-[28px] font-semibold" style={{ color: "#f97316" }}>
-          If it works there, it works everywhere.
+          Built from lived experience. If it works there, it works everywhere.
+        </p>
+        <p className="mt-[16px] text-[20px] max-w-[800px]" style={{ color: "#94a3b8" }}>
+          Brain injury recovery is our foundation — the lived experience that shapes every feature in the LEAP platform.
         </p>
         <div className="mt-[48px] flex gap-[48px]">
           {[
