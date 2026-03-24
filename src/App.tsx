@@ -295,6 +295,9 @@ function App() {
                      <Route path="/mvp/student-welcome" element={<StudentWelcomePage />} />
                      <Route path="/mvp/executive-welcome" element={<ExecutiveWelcomePage />} />
                      <Route path="/mvp/thriving-welcome" element={<PostRecoveryWelcomePage />} />
+                     <Route path="/mvp/adhd-welcome" element={<ADHDWelcomePage />} />
+                     <Route path="/mvp/long-covid-welcome" element={<LongCovidWelcomePage />} />
+                     <Route path="/mvp/ms-cognitive-welcome" element={<MSCognitiveWelcomePage />} />
                      
                      {/* New Assessment and Setup Flow */}
          <Route path="/mvp/assessment-flow" element={<MVPAssessmentFlowPage />} />
