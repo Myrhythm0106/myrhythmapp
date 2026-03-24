@@ -564,7 +564,7 @@ function Slide16() {
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
         <SectionLabel>Business Model</SectionLabel>
-        <h2 className="mt-[24px] text-[48px] font-bold">Recurring Cognitive Infrastructure</h2>
+        <h2 className="mt-[24px] text-[48px] font-bold">Recurring LEAP Platform Revenue</h2>
         <p className="mt-[16px] text-[24px]" style={{ color: "#64748b" }}>Path to £500K by December 2026</p>
         <div className="mt-[40px] flex gap-[40px]">
           {/* Revenue streams */}
