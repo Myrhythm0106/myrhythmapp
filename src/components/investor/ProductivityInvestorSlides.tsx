@@ -231,11 +231,23 @@ function Slide08() {
   return (
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
-        <SectionLabel>New Category</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">Cognitive Performance Infrastructure</h2>
+        <SectionLabel>The Methodology</SectionLabel>
+        <h2 className="mt-[24px] text-[56px] font-bold">Collaborative Cognitive Management</h2>
         <p className="mt-[20px] text-[24px] max-w-[900px]" style={{ color: "#64748b" }}>
-          The missing layer between intention and reliable execution. Not a productivity app. Not a wellness app. Infrastructure.
+          The LEAP platform is powered by CCM — three pillars that bridge intention and reliable execution.
         </p>
+        <div className="mt-[28px] flex gap-[20px]">
+          {[
+            { pillar: "Collaborative", desc: "Support Circles, caregiver dashboards, shared accountability", color: "#a855f7" },
+            { pillar: "Cognitive", desc: "Rhythmic Intelligence, energy-aware scheduling, Memory Bridge", color: "#0284c7" },
+            { pillar: "Management", desc: "Task chunking, smart scheduling, celebration streaks", color: "#f97316" },
+          ].map((p) => (
+            <div key={p.pillar} className="flex-1 p-[20px] rounded-[12px]" style={{ background: "#f8fafc" }}>
+              <div className="text-[20px] font-bold" style={{ color: p.color }}>{p.pillar}</div>
+              <div className="text-[16px] mt-[6px]" style={{ color: "#64748b" }}>{p.desc}</div>
+            </div>
+          ))}
+        </div>
         <div className="mt-[60px] flex items-center gap-[24px]">
           <div className="flex-1 py-[40px] px-[48px] rounded-[16px] text-center" style={{ background: "#f0f9ff" }}>
             <div className="text-[20px] font-semibold" style={{ color: "#0284c7" }}>Intention</div>
