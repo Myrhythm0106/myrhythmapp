@@ -1,55 +1,43 @@
 
 
-## Updated 5-Year Strategy PDF (v4) — Fully Integrated Strategic Vision + WHO/Insurer Alignment
+## Integrating CCM (Collaborative Cognitive Management) into the LEAP Framework
 
-### What we're building
+### The Fit
 
-A single updated PDF (`MyRhythm_5_Year_Strategy_v4.pdf`) that integrates the CCM Strategic Vision, Three Pillars, and WHO/Insurer alignment into one cohesive document. Plus a standalone 2-page executive brief for institutional audiences.
+**LEAP** = the external brand identity (Life Empowerment and Productivity) — what users see.
+**CCM** = the internal methodology engine (Collaborative Cognitive Management) — how it works.
 
-### Document structure (new/updated sections in bold)
+This is a natural pairing: LEAP is the *what*, CCM is the *how*. "Collaborative" captures the Support Circle, caregiver involvement, Memory Bridge watchers, and shared calendars — features already built into the codebase. It also removes the clinical weight of "Continuation" while keeping the cognitive focus.
 
-1. Cover page — "April 2026 – March 2031"
-2. **Strategic Vision: The MyRhythm Ecosystem**
-   - Cognitive Continuation Management (CCM) definition
-   - The Implementation Gap explanation
-3. **The Three Strategic Pillars** (full detail)
-   - User Pillar: Agency through Synchrony (Problem → Goal → Rhythmic Regulation)
-   - Caregiver Pillar: Relational Friction Reduction (Problem → Goal → Collaborative Continuation)
-   - Clinical Pillar: Ecological Data Continuity (Problem → Goal → Ecological Integration)
-4. **Strategic Value Proposition & Key Terminology**
-   - "Solving the Continuity Crisis" statement (Capacity vs Continuation)
-   - Terminology table: Continuation Friction, The Sync-Point, Transition Threshold, Rhythmic Intelligence (RI)
-5. **Global Health & Insurer Alignment** (new)
-   - WHO REHAB 2030 mapping table (5 action areas → MyRhythm capabilities)
-   - WHO Global Action Plan on Neurological Disorders 2022-2031 alignment
-   - CMS RTM reimbursement codes (CPT 98975-98981) with qualification criteria
-   - Insurer ROI case: TBI readmission costs ($35K/episode), caregiver burden ($522B/yr), return-to-work acceleration
-   - PMPM pricing model for insurer partnerships
-   - Target partners: UnitedHealth, Aetna/CVS, Cigna, Anthem
-6. **Regulatory Pathway Timeline**
-   - Y1-2: FDA 510(k) De Novo
-   - Y2-3: CMS reimbursement establishment
-   - Y3-5: EU MDR Class IIa, NHS DTAC, WHO Digital Health Atlas
-7. Market sizing (TAM/SAM/SOM) — existing
-8. US-first expansion & global roadmap — existing
-9. Revenue model & financial projections — existing
-10. Competitive moats — existing
-11. Investment thesis — existing
+### Where CCM Lives
 
-Sources cited: WHO REHAB 2030 (2017), WHO Neurological Disorders Action Plan (2022), Feigin et al. Lancet Neurology 2021, CMS RTM Final Rule 2022, AARP/NAC Caregiving Report 2020, CDC NIDILRR TBI Model Systems.
+| Surface | How CCM appears |
+|---------|----------------|
+| User-facing app | Subtle — "Powered by Collaborative Cognitive Management" in about/settings, not on every screen |
+| Welcome screens | Not mentioned — users see LEAP language (support, inspire, remind, encourage, empower) |
+| Investor/strategy PDFs | Prominent — CCM is the proprietary methodology, the defensible IP layer |
+| WHO/Insurer briefs | Central — CCM maps to reimbursement frameworks (RTM, REHAB 2030) as the clinical-adjacent model |
+| Founder's story | "The CCM methodology was born from lived experience" |
 
-### Standalone Executive Brief
+### CCM's Three Pillars (Updated)
 
-`MyRhythm_WHO_Insurer_Executive_Brief.pdf` — 2 pages:
-- Page 1: CCM definition, three pillars (compact), WHO REHAB 2030 alignment table, global TBI/stroke scale
-- Page 2: CMS RTM codes, cost-avoidance economics, insurer value proposition, partnership model
+1. **Collaborative** — Support Circles, caregiver dashboards, shared Memory Bridge items, watcher accountability
+2. **Cognitive** — Rhythmic Intelligence (RI), energy-aware scheduling, Memory Bridge capture, pattern recognition
+3. **Management** — Task chunking, smart scheduling, calendar sync, progress tracking, celebration streaks
 
-### Technical approach
+### Impact on the Approved Plan
 
-- Python/reportlab script at `/tmp/strategy_v4.py`
-- All table cells wrapped in `Paragraph` objects with `wordWrap='CJK'`
-- Professional styling consistent with v2/v3
-- Author: Annabel Aaron
-- Visual QA via `pdftoppm` on all pages
-- Output: `/mnt/documents/MyRhythm_5_Year_Strategy_v4.pdf` and `/mnt/documents/MyRhythm_WHO_Insurer_Executive_Brief.pdf`
+The previously approved plan (neurodiverse user flows + strategy PDFs) remains unchanged except:
+
+- **`MyRhythm_5_Year_Strategy_v5.pdf`** — CCM is redefined as "Collaborative Cognitive Management" throughout. The three pillars update from User/Caregiver/Clinical to Collaborative/Cognitive/Management. Positioned as the proprietary methodology powering the LEAP platform.
+- **`MyRhythm_WHO_Insurer_Executive_Brief_v2.pdf`** — Same reframing. CCM as the methodology that maps to institutional frameworks.
+- **Welcome screens** (ADHD, Long COVID, MS Cognitive) — No change. They use LEAP empowerment language. CCM stays behind the scenes.
+- **Existing codebase references** — `memory/brand/cognitive-continuation-management` context and any in-app references to "Cognitive Continuation Management" will be updated to "Collaborative Cognitive Management."
+- **Investor slides** (`InvestorSlides.tsx`) — CCM pillar descriptions updated to reflect the Collaborative/Cognitive/Management framing.
+
+### Files Affected (in addition to the previously approved plan)
+
+- `src/components/investor/InvestorSlides.tsx` — Update CCM pillar names and descriptions
+- Strategy and brief PDFs — CCM redefined throughout
+- Any component referencing "Cognitive Continuation Management" (will search and update)
 
