@@ -98,6 +98,9 @@ import CognitiveSupportWelcomePage from "./pages/CognitiveSupportWelcomePage";
 import StudentWelcomePage from "./pages/StudentWelcomePage";
 import ExecutiveWelcomePage from "./pages/ExecutiveWelcomePage";
 import PostRecoveryWelcomePage from "./pages/PostRecoveryWelcomePage";
+import ADHDWelcomePage from "./pages/ADHDWelcomePage";
+import LongCovidWelcomePage from "./pages/LongCovidWelcomePage";
+import MSCognitiveWelcomePage from "./pages/MSCognitiveWelcomePage";
 
 // V1 Launch Mode Pages
 import {
