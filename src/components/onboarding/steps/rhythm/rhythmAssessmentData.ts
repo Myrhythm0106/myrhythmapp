@@ -611,7 +611,10 @@ const userTypeQuestions: Record<UserType, Section[]> = {
     }
   ],
   
-  "other": baseSections
+  "other": baseSections,
+  "adhd": baseSections,
+  "long-covid": baseSections,
+  "ms-cognitive": baseSections
 };
 
 export const getCurrentSections = (): Section[] => baseSections;

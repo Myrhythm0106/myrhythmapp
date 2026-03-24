@@ -392,7 +392,10 @@ function getUserTypeSpecificStep(userType?: UserType, focusArea?: FocusArea): st
     "other": "Create personalized strategies that align with your unique situation and goals",
     "student": "Set up your study schedule around your peak focus times",
     "executive": "Connect Memory Bridge to your calendar for seamless meeting-to-action flow",
-    "post-recovery": "Establish daily check-ins to maintain your cognitive gains"
+    "post-recovery": "Establish daily check-ins to maintain your cognitive gains",
+    "adhd": "Set up focus timers and impulse capture to channel your energy",
+    "long-covid": "Configure energy-paced scheduling to honour your daily rhythm",
+    "ms-cognitive": "Enable fatigue-aware scheduling to plan around your energy windows"
   };
   
   return stepMap[userType];
