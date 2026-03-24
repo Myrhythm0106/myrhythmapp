@@ -227,7 +227,7 @@ function Slide07() {
     <Slide>
       <div className="flex-1 flex flex-col justify-center px-[160px]">
         <SectionLabel>New Category</SectionLabel>
-        <h2 className="mt-[24px] text-[56px] font-bold">Continuous Cognitive Support</h2>
+        <h2 className="mt-[24px] text-[56px] font-bold">Collaborative Cognitive Management</h2>
         <p className="mt-[20px] text-[24px] max-w-[800px]" style={{ color: "#64748b" }}>
           Not brain games. Not reminders. Not clinical software. The infrastructure layer between clinical care and daily living.
         </p>
