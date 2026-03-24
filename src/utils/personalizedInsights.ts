@@ -371,7 +371,10 @@ function getUserTypePersonalMessage(userType?: UserType): string {
     "other": "Your thoughtful and personalized responses show strong self-awareness and growth potential.",
     "student": "Your willingness to seek help shows maturity and a strong foundation for academic success.",
     "executive": "Your strategic thinking is evident - you're ready to optimize for maximum impact.",
-    "post-recovery": "Your resilience and commitment to growth is inspiring - you've built a strong foundation."
+    "post-recovery": "Your resilience and commitment to growth is inspiring - you've built a strong foundation.",
+    "adhd": "Your energy and creativity are assets — channelled with the right tools, you're unstoppable.",
+    "long-covid": "Your courage in navigating brain fog shows incredible strength — every step forward matters.",
+    "ms-cognitive": "Your determination to thrive despite fatigue is remarkable — your rhythm is yours to own."
   };
   return userType ? messageMap[userType] : "Your thoughtful responses show strong self-awareness and growth potential.";
 }
