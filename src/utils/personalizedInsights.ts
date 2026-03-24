@@ -333,7 +333,10 @@ function getUserTypeContext(userType?: UserType): string | null {
     "other": "unique personal journey",
     "student": "academic and learning success",
     "executive": "leadership and productivity excellence",
-    "post-recovery": "sustained cognitive wellness"
+    "post-recovery": "sustained cognitive wellness",
+    "adhd": "focus and momentum building",
+    "long-covid": "energy management and recovery support",
+    "ms-cognitive": "fatigue-aware productivity"
   };
   return userType ? contextMap[userType] : null;
 }
