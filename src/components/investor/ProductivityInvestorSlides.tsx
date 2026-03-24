@@ -316,7 +316,7 @@ function Slide10() {
     { time: "Mid-day", action: "Interruption hits", detail: "Meeting runs over. Email derails focus. Context switches pile up." },
     { time: "Afternoon", action: "Re-engagement", detail: "MyRhythm detects drift. Progressive nudge restores the thread. You pick up where you left off." },
     { time: "Evening", action: "Completion", detail: "Actions marked done. Wins celebrated. Tomorrow's intentions seeded." },
-    { time: "Over time", action: "Confidence compounds", detail: "Streak builds. Trust grows. Reliability becomes identity." },
+    { time: "Over time", action: "Reliability becomes identity", detail: "You keep promises. Others notice. Confidence returns. Productivity follows naturally — not from pressure, but from self-trust." },
   ];
   return (
     <Slide>
