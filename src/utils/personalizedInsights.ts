@@ -287,7 +287,10 @@ function generateUserTypeMessage(
     "other": `Your ${focusArea} focus aligns with your unique journey and goals. Your assessment shows this personalized approach will support your specific needs and help you achieve your individual objectives.`,
     "student": `As a student, your ${focusArea} focus will help you capture and organize information more effectively. Your assessment shows this approach will boost your study efficiency and academic performance.`,
     "executive": `As an executive, your ${focusArea} focus will maximize your productivity and ensure no commitment falls through the cracks. Your assessment indicates this area will deliver the highest ROI on your time.`,
-    "post-recovery": `Having rebuilt your cognitive strength, your ${focusArea} focus will help you maintain those gains and continue optimizing. Your assessment shows you're ready for this next level of performance.`
+    "post-recovery": `Having rebuilt your cognitive strength, your ${focusArea} focus will help you maintain those gains and continue optimizing. Your assessment shows you're ready for this next level of performance.`,
+    "adhd": `Your fast-moving mind is your superpower. Your ${focusArea} focus channels your energy into structured momentum — capturing ideas, chunking tasks, and celebrating every win along the way.`,
+    "long-covid": `Pacing is power. Your ${focusArea} focus honours your energy levels and helps you do more on good days while resting without guilt on harder ones. Every step forward counts.`,
+    "ms-cognitive": `Your rhythm, your way. Your ${focusArea} focus supports you in managing cognitive fatigue with tools that adapt to your day — empowering you to focus on what matters most.`
   };
   
   return contextMap[userType] || "";
