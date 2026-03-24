@@ -631,9 +631,9 @@ function Slide17() {
             </div>
           </div>
           <div className="flex-1 p-[40px] rounded-[16px] border-2" style={{ borderColor: "#f97316", background: "#fff7ed" }}>
-            <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#f97316" }}>Cognitive Continuity Infrastructure</div>
+           <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#f97316" }}>LEAP + CCM Platform</div>
             <div className="text-[20px] leading-relaxed" style={{ color: "#475569" }}>
-              Always-on. Adapts to cognitive state. Escalates when needed. Celebrates when earned. The layer that was always missing.
+              Always-on. Collaborative. Adapts to cognitive state. Escalates when needed. Celebrates when earned. Life empowerment, not just productivity.
             </div>
           </div>
         </div>
