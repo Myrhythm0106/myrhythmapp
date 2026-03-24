@@ -1,33 +1,35 @@
 
 
-# Add Memory & Confidence Pain Points to Investor Decks
+# Reliability → Confidence → Productivity + Exportable Deck
 
-## What
+## Three deliverables
 
-Add two new evidence-based pain points to the "System Gap" slide in the ABI investor deck, and reinforce these themes in the Productivity deck.
+### 1. Strengthen the Reliability-Confidence-Productivity narrative
 
-## Changes
+The deck already touches on confidence (Slide 03 step 05, Slide 15) but doesn't explicitly connect the chain: **using MyRhythm → feeling reliable → confidence rebuilds → productivity increases**. This is the core behavioural insight and needs to be a visible thread.
 
-### 1. `src/components/investor/InvestorSlides.tsx` — Slide 03 (The System Gap)
+**Changes to `ProductivityInvestorSlides.tsx`:**
 
-Add two new cards to the `impactCards` array:
+- **Slide 15 (Early Evidence):** Add a 4th evidence card — **"Productivity"** with upward arrow: "As reliability builds and confidence returns, users report sustained productivity gains — not through working harder, but through trusting themselves to follow through." This completes the chain: Consistency → Re-engagement → Confidence → Productivity.
 
-| Icon | Label | Stat | Detail | Source |
-|------|-------|------|--------|--------|
-| 🧠 | Memory | 54% | of moderate-severe TBI survivors report persistent memory difficulties affecting daily life | Dikmen et al., Archives of Physical Medicine 2009 |
-| 😞 | Confidence | 57% | of ABI survivors report clinically significant loss of self-confidence and identity | Gracey et al., Neuropsychological Rehabilitation 2008 |
+- **Slide 10 (How It Works):** Update the "Over time" step from "Confidence compounds" to **"Reliability becomes identity"** with detail: "You keep promises. Others notice. Confidence returns. Productivity follows naturally — not from pressure, but from self-trust."
 
-Adjust the grid from `grid-cols-3` (6 cards) to accommodate 8 cards — either keep `grid-cols-3` with a partial last row, or switch to `grid-cols-4` with 2 rows of 4. Given the card sizes, `grid-cols-4` at 2×4 will be cleaner.
+- **Slide 07 (The Insight):** Add a second paragraph reinforcing the mechanism: "When people feel reliable, confidence returns. When confidence returns, productivity follows. The lever is not efficiency — it is self-trust."
 
-### 2. `src/components/investor/ProductivityInvestorSlides.tsx` — Slide 02 (The Cascade)
+### 2. Generate PDF version
 
-Add a 5th step to the cascade to reference memory and confidence:
+Run a script that converts the 18 slides to a PDF using the existing React components rendered via headless browser (Puppeteer), capturing each slide at 1920x1080 and assembling into a single PDF document. Output to `/home/lovable/MyRhythm_Productivity_Investor_Deck.pdf`.
 
-```
-{ step: "05", title: "Confidence collapses", desc: "Repeated memory failures erode self-trust. You stop committing because you've stopped believing you'll follow through." }
-```
+### 3. Generate Google Slides-compatible PPTX
 
-## Files Modified
-- `src/components/investor/InvestorSlides.tsx` — add 2 pain point cards, adjust grid
-- `src/components/investor/ProductivityInvestorSlides.tsx` — add confidence/memory step to cascade
+Create a PPTX file using `pptxgenjs` that replicates the content and visual style of all 18 slides — same colour palette (#f97316 orange, #a855f7 purple, #1a1a2e navy), Inter font family, gradient accents. Each slide recreated with matching layout, stats, and text. Output to `/home/lovable/MyRhythm_Productivity_Investor_Deck.pptx`.
+
+The PPTX will be importable into Google Slides and saveable as PDF from there.
+
+### Files modified
+- `src/components/investor/ProductivityInvestorSlides.tsx` — narrative updates (slides 7, 10, 15)
+
+### Files generated
+- `/home/lovable/MyRhythm_Productivity_Investor_Deck.pdf`
+- `/home/lovable/MyRhythm_Productivity_Investor_Deck.pptx`
 
