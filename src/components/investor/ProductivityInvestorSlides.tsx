@@ -222,6 +222,9 @@ function Slide07() {
         <p className="mt-[48px] text-[28px] leading-relaxed max-w-[900px]" style={{ color: "#64748b" }}>
           People do not fail because they lack lists. They fail because interruptions break their thread of intention — and nothing exists to restore it.
         </p>
+        <p className="mt-[32px] text-[26px] leading-relaxed max-w-[900px] font-medium" style={{ color: "#475569" }}>
+          When people feel reliable, confidence returns. When confidence returns, productivity follows. The lever is not efficiency — it is self-trust.
+        </p>
       </div>
     </Slide>
   );
