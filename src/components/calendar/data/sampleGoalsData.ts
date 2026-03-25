@@ -29,7 +29,7 @@ export const sampleGoals: Goal[] = [
     type: "long-term",
     description: "Use mindfulness techniques to manage stress and anxiety",
     progress: 40,
-    createdAt: "2023-04-15",
+    createdAt: "2026-02-15",
     smallSteps: []
   }
 ];
