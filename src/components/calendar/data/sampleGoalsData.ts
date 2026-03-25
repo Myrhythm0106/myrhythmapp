@@ -9,8 +9,8 @@ export const sampleGoals: Goal[] = [
     type: "weekly",
     description: "Practice memory exercises regularly to improve recall",
     progress: 60,
-    dueDate: "2023-06-15",
-    createdAt: "2023-05-01",
+    dueDate: "2026-06-15",
+    createdAt: "2026-03-01",
     smallSteps: []
   },
   {
