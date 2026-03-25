@@ -1,39 +1,91 @@
 
 
-# Fix: Update All Dates to 2026 + Regenerate Attractive CCM Investor Deck
+# Interactive Gantt Chart Roadmap Page
 
-## Problem
-The investor deck and multiple sample data files throughout the app use **2023 dates** — three years out of date. Today is **24 March 2026**.
+## What We're Building
+A new `/launch/roadmap` page with an interactive Gantt chart showing the MVP timeline (April-June 2026) and Full Launch timeline (April-December 2026). The page will include export to CSV (Google Sheets compatible), PDF download, and a shareable link.
 
-## Plan
+## Page Structure
 
-### 1. Regenerate CCM Investor Deck (high priority)
-Using the `pptxgenjs` approach from the PPTX skill for a visually striking deck:
+```text
++------------------------------------------+
+|  LaunchLayout Header                     |
++------------------------------------------+
+|  ROADMAP HERO                            |
+|  "MyRhythm CCM Roadmap"                 |
+|  [Download CSV] [Download PDF] [Share]   |
++------------------------------------------+
+|  PHASE TABS: [MVP] [Full Launch] [All]   |
++------------------------------------------+
+|  INTERACTIVE GANTT CHART                 |
+|  ┌─────────────────────────────────┐     |
+|  │ Apr  May  Jun  Jul  Aug ... Dec │     |
+|  │ ████ Auth & Onboarding         │     |
+|  │  ████ LEAP Core Features       │     |
+|  │   ███ Stripe Integration       │     |
+|  │      ████ Clinical Pilots      │     |
+|  │        ██████ Scale & Growth   │     |
+|  └─────────────────────────────────┘     |
++------------------------------------------+
+|  MILESTONE CARDS (below chart)           |
+|  Key dates with status indicators        |
++------------------------------------------+
+```
 
-- **Color palette**: Deep midnight navy (`#0a0a1a`) with luminous brand accents — teal (`#028090`), emerald (`#00A896`), warm orange (`#F96167`)
-- **Dark backgrounds throughout** for premium feel
-- **Bold stat callouts** (60-72pt numbers), icon grids, comparison columns
-- **Varied layouts** per slide — no two slides look the same
-- **All dates reflect 2026**: Q2 2026 launch, £500K target by Dec 2026, 5-year roadmap to 2031
-- **10 slides**: Title, Discharge Cliff, CCM Solution, Market ($40B+), LEAP Platform, Revenue Model, Traction/Milestones, Competition/Moats, Funding Ask, CTA
-- Full visual QA cycle with slide-by-slide image inspection
+## Technical Approach
 
-### 2. Update hardcoded 2023 dates across the app (7 files)
-All sample/placeholder dates updated from `2023-05-xx` to `2026-03-xx` or contextually appropriate 2026 dates:
+### 1. Create roadmap data file
+**`src/data/roadmapData.ts`** — All milestone/task data with dates, phases, dependencies, status, and colors. Dates: April-December 2026.
 
-| File | Change |
+### 2. Create Gantt chart component
+**`src/components/roadmap/GanttChart.tsx`** — Pure CSS/div-based horizontal bar chart (no external charting library needed). Each task is a colored bar positioned by start/end date. Hover shows details. Click expands subtasks. Responsive with horizontal scroll on mobile.
+
+### 3. Create export utilities
+**`src/components/roadmap/roadmapExports.ts`**:
+- **CSV export**: Generates Google Sheets-compatible CSV with task name, phase, start date, end date, status, dependencies. Uses `Blob` + download link.
+- **PDF export**: Uses `react-to-print` (already in project) to render the chart as a printable PDF.
+- **Share**: Copies the `/launch/roadmap` URL to clipboard with toast confirmation.
+
+### 4. Create the page
+**`src/pages/launch/LaunchRoadmap.tsx`** — Uses `LaunchLayout`, renders hero section, phase filter tabs, `GanttChart`, milestone cards, and action buttons (CSV, PDF, Share).
+
+### 5. Add route
+Update **`src/App.tsx`** to add `/launch/roadmap` route wrapped in `LaunchModeProvider`.
+
+### 6. Add navigation link
+Update **`src/components/launch/LaunchNav.tsx`** or dashboard to include a link to the roadmap page.
+
+## Roadmap Content (2026 Dates)
+
+**MVP Phase (Apr 1 - Jun 30, 2026)**
+- Auth & User Onboarding (Apr 1-18)
+- LEAP Core: Memory Bridge + Scheduling (Apr 14 - May 16)
+- 3-Tier Subscription UI (May 5-23)
+- Stripe Payment Integration (May 19 - Jun 6)
+- Beta Testing & QA (Jun 2-20)
+- Soft Launch: 50 Founding Members (Jun 23-30)
+
+**Full Launch Phase (Jul 1 - Dec 31, 2026)**
+- Clinical Partnership Pilots (Jul 1 - Aug 15)
+- Support Circle Features (Jul 14 - Aug 29)
+- Brain Games & Cognitive Tools (Aug 4 - Sep 19)
+- Analytics Dashboard (Sep 1 - Oct 3)
+- B2B Enterprise Features (Oct 1 - Nov 14)
+- Marketing & Growth Push (Nov 1 - Dec 12)
+- £500K ARR Target (Dec 31)
+
+## Export Formats
+- **CSV**: Standard comma-separated with headers — opens directly in Google Sheets via File > Import
+- **PDF**: Print-optimized layout via `react-to-print`
+- **Share**: Clipboard copy of page URL
+
+## Files to Create/Edit
+| File | Action |
 |------|--------|
-| `calendar/data/actionsData.ts` | All dates → March/April 2026 |
-| `calendar/data/sampleGoalsData.ts` | All dates → 2026 |
-| `calendar/types/calendarTypes.ts` | All dates → 2026 |
-| `tracking/SymptomHistory.tsx` | All dates → March 2026 |
-| `community/ExpertQA.tsx` | All dates → March/April 2026 |
-| `investor/InvestorSlides.tsx` | Research citations stay as-is (publication years are real) |
-| `investor/ProductivityInvestorSlides.tsx` | Same — citation years unchanged |
-
-### Technical approach
-- Use `pptxgenjs` (Node.js) to create the PPTX from scratch with embedded design
-- Convert to PDF via LibreOffice for QA
-- Output to `/mnt/documents/` as `MyRhythm_CCM_Investor_Deck_v2.pptx` and `.pdf`
-- Line-replace all 2023 sample dates in the 5 data files
+| `src/data/roadmapData.ts` | Create — task/milestone data |
+| `src/components/roadmap/GanttChart.tsx` | Create — interactive chart |
+| `src/components/roadmap/RoadmapExports.ts` | Create — CSV/PDF/share utils |
+| `src/components/roadmap/MilestoneCards.tsx` | Create — key date cards |
+| `src/pages/launch/LaunchRoadmap.tsx` | Create — page component |
+| `src/App.tsx` | Edit — add route |
 
