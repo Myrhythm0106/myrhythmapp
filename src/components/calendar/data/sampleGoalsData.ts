@@ -86,7 +86,7 @@ export const sampleActions: Action[] = [
     id: "a6",
     title: "Mindfulness meditation",
     type: "activity",
-    date: "2023-05-26",
+    date: "2026-03-31",
     startTime: "07:30 AM",
     status: "done",
     goalId: "g3"
