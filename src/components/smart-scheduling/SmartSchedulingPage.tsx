@@ -34,7 +34,9 @@ interface SmartSchedulingPageProps {
 
 const SmartSchedulingPage = ({ onCalendarIntegration }: SmartSchedulingPageProps) => {
   const navigate = useNavigate();
+  const { getBlockedSlots, saveUnavailableBlocks, isLoading: prefsLoading } = useSchedulePreferences();
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [assessmentPeaks, setAssessmentPeaks] = useState<{ start: number; end: number; days: number[] } | null>(null);
   const [newActivity, setNewActivity] = useState({
     name: '',
     duration: 30,
@@ -44,6 +46,20 @@ const SmartSchedulingPage = ({ onCalendarIntegration }: SmartSchedulingPageProps
   });
   const [generatedSchedule, setGeneratedSchedule] = useState<ScheduleSlot[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Load assessment peaks on mount
+  useEffect(() => {
+    const loadPeaks = async () => {
+      try {
+        const prefs = await smartScheduler.getUserPreferences('temp-user-id');
+        const peaks = smartScheduler.getAssessmentPeaks(prefs);
+        setAssessmentPeaks(peaks);
+      } catch (e) {
+        console.error('Error loading assessment peaks:', e);
+      }
+    };
+    loadPeaks();
+  }, []);
 
   const addActivity = () => {
     if (!newActivity.name.trim()) {
