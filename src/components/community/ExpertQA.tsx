@@ -52,7 +52,7 @@ export function ExpertQA() {
         avatar: undefined,
       },
       topic: "Managing Depression After Brain Injury",
-      date: "May 15, 2023",
+      date: "March 20, 2026",
       time: "3:00 PM",
       status: "past",
     }

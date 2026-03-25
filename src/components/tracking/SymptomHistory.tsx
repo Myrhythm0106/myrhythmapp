@@ -24,7 +24,7 @@ const sampleData = [
   },
   { 
     id: 2, 
-    date: "2023-05-15", 
+    date: "2026-03-20", 
     time: "03:15 PM", 
     symptom: "Fatigue", 
     severity: 3, 

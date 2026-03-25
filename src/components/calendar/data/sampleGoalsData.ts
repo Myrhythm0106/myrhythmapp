@@ -19,8 +19,8 @@ export const sampleGoals: Goal[] = [
     type: "monthly",
     description: "Attend all scheduled therapy sessions",
     progress: 75,
-    dueDate: "2023-07-01",
-    createdAt: "2023-05-05",
+    dueDate: "2026-07-01",
+    createdAt: "2026-03-05",
     smallSteps: []
   },
   {

@@ -83,7 +83,7 @@ export const sampleEvents: CalendarEvent[] = [
   {
     id: "4",
     title: "Improve Memory Skills",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "All Day",
     type: "goal",
     description: "Practice memory exercises for 30 minutes daily",
