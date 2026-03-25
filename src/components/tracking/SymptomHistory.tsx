@@ -14,7 +14,7 @@ import { toast } from "sonner";
 const sampleData = [
   { 
     id: 1, 
-    date: "2023-05-15", 
+    date: "2026-03-20", 
     time: "08:30 AM", 
     symptom: "Headache", 
     severity: 4, 
