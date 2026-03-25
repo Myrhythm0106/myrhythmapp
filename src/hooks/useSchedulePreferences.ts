@@ -10,10 +10,15 @@ interface TimeSlot {
 
 interface SchedulePreference {
   id?: string;
-  preference_type: 'most_productive' | 'least_productive' | 'preferred_meeting_times';
+  preference_type: 'most_productive' | 'least_productive' | 'preferred_meeting_times' | 'unavailable';
   time_slots: TimeSlot[];
   energy_level?: number;
   notes?: string;
+}
+
+interface BlockedSlot {
+  day: number;
+  hour: number;
 }
 
 export function useSchedulePreferences() {
