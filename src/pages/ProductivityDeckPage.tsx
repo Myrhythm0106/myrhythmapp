@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { ProductivityInvestorSlides } from "@/components/investor/ProductivityInvestorSlides";
 import { ChevronLeft, ChevronRight, Maximize, Minimize } from "lucide-react";
 
-const TOTAL_SLIDES = 18;
+const TOTAL_SLIDES = 20;
 
 export default function ProductivityDeckPage() {
   const [currentSlide, setCurrentSlide] = useState(0);

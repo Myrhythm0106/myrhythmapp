@@ -766,8 +766,103 @@ function Slide18() {
   );
 }
 
+/* ─── SLIDE 19: REFERENCES ─── */
+function Slide19() {
+  return (
+    <Slide bg="#0a0a1a">
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <span className="text-[16px] font-semibold tracking-[0.2em] uppercase" style={{ color: "#a855f7" }}>
+          References
+        </span>
+        <h2 className="mt-[24px] text-[48px] font-bold" style={{ color: "#ffffff" }}>Sources &amp; Citations</h2>
+        <div className="mt-[40px] grid grid-cols-2 gap-x-[60px] gap-y-[20px]">
+          {[
+            "McKinsey Global Institute (2023). The social economy: Unlocking value and productivity through social technologies.",
+            "Microsoft Research (2023). Viva Insights — Attention span and context-switching in knowledge work.",
+            "Grand View Research (2023). Cognitive Assessment & Training Market Size Report, 2023–2030.",
+            "Precedence Research (2023). Brain Health Supplements & Digital Cognitive Wellness Market.",
+            "Wood, R.L. (1997). Neuropathological indicators of brain damage. Brain Injury, 11(10), pp.735–741.",
+            "Dikmen, S.S. et al. (2009). Cognitive outcome following traumatic brain injury. Journal of the International Neuropsychological Society.",
+            "CDC (2022). TBI-related emergency department visits, hospitalisations, and readmission data.",
+            "World Stroke Organisation (2022). Global Stroke Fact Sheet. Lancet Neurology.",
+          ].map((ref, i) => (
+            <div key={i} className="flex gap-[12px]">
+              <span className="text-[16px] font-mono shrink-0" style={{ color: "#a855f7" }}>[{i + 1}]</span>
+              <span className="text-[16px] leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>{ref}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 20: APPENDIX — RECOMMENDED MVP ─── */
+function Slide20() {
+  return (
+    <Slide bg="#0a0a1a">
+      <div className="flex-1 flex flex-col justify-center px-[120px]">
+        <span className="text-[16px] font-semibold tracking-[0.2em] uppercase" style={{ color: "#a855f7" }}>
+          Appendix
+        </span>
+        <h2 className="mt-[20px] text-[44px] font-bold" style={{ color: "#ffffff" }}>Recommended MVP</h2>
+        <p className="mt-[8px] text-[20px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+          Every feature built to clinical-grade cognitive standards. Available to all users from day one.
+        </p>
+
+        <div className="mt-[32px] flex gap-[40px]">
+          {/* MVP Core */}
+          <div className="flex-1 p-[32px] rounded-[16px]" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="text-[20px] font-bold mb-[20px]" style={{ color: "#f97316" }}>MVP Core (Months 1–3)</div>
+            <div className="space-y-[14px]">
+              {[
+                { name: "Memory Bridge", desc: "Voice capture + AI action extraction" },
+                { name: "Support Circle", desc: "Invite up to 5 people, escalation alerts" },
+                { name: "Daily Brain Boost", desc: "50 cognitive exercises from the 240+ library" },
+                { name: "Smart Scheduling", desc: "MYRHYTHM assessment determines cognitive peaks; users block unavailable days; AI schedules at optimal windows" },
+                { name: "Founding Member", desc: "Stripe subscription, £10/month" },
+              ].map((f) => (
+                <div key={f.name}>
+                  <span className="text-[18px] font-semibold" style={{ color: "#ffffff" }}>{f.name}</span>
+                  <span className="text-[16px] ml-[8px]" style={{ color: "rgba(255,255,255,0.5)" }}>— {f.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Post-MVP */}
+          <div className="flex-1 p-[32px] rounded-[16px]" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div className="text-[20px] font-bold mb-[20px]" style={{ color: "#a855f7" }}>Post-MVP (Months 4–6)</div>
+            <div className="space-y-[14px]">
+              {[
+                { name: "Clinical Dashboard", desc: "Provider view of patient progress (ABI/TBI unlock)" },
+                { name: "Full Brain Boost Library", desc: "240+ exercises across all cognitive domains" },
+                { name: "Progressive Escalation v2", desc: "Customisable urgency tiers" },
+                { name: "B2B Team Licensing", desc: "Organisational accounts and admin portal" },
+                { name: "Analytics & Reporting", desc: "Outcome tracking and exportable reports" },
+              ].map((f) => (
+                <div key={f.name}>
+                  <span className="text-[18px] font-semibold" style={{ color: "#ffffff" }}>{f.name}</span>
+                  <span className="text-[16px] ml-[8px]" style={{ color: "rgba(255,255,255,0.4)" }}>— {f.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-[32px] p-[20px] rounded-[12px] text-center" style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.15)" }}>
+          <span className="text-[18px] font-medium" style={{ color: "#f97316" }}>
+            MVP Scope: 12 weeks · Budget: £100K of £250K raise · Target: 50 founding members at launch
+          </span>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
 /* ─── SLIDE RENDERER ─── */
-const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18];
+const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19, Slide20];
 
 export function ProductivityInvestorSlides({ currentSlide }: { currentSlide: number }) {
   const SlideComponent = slides[currentSlide] || Slide01;
