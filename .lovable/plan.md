@@ -1,66 +1,45 @@
 
 
-# Where "Block Unavailable Days + Optimal Scheduling" Fits in the Plan
+# Status Check: What's Done vs What Remains
 
-## What Already Exists
+## Already Implemented (in previous message)
 
-The codebase has the building blocks but they're not fully connected:
+All **deck slide changes** are complete:
+- **Slide 01**: CCM title with midnight background, "Built for the hardest cognitive challenges. Available to everyone." tagline, Annabel Aaron metadata — done
+- **Slide 12**: Concentric rings with ABI/TBI at centre, three-phase rollout (Launch → Clinical Partnerships → Full ABI/TBI Focus), "Revenue starts broad, then deepens into clinical" — done
+- **Slide 19**: References with McKinsey, Microsoft, Grand View, Wood 1997, Dikmen 2009, CDC, WSO citations — done
+- **Slide 20**: MVP Appendix with two-column layout, 12-week scope, £100K budget, 50 founding members — done
+- **TOTAL_SLIDES = 20** in ProductivityDeckPage.tsx — done
+- **Smart Scheduling enhancements** (AvailabilityBlocker, assessment pipeline, optimal meeting suggester) — done
 
-- **MYRHYTHM Assessment** (`myrhythmQuestions.ts`) — 7 letters (M-Y-R-H-Y-T-H-M) covering cognitive patterns, energy, recovery, motivation
-- **SmartScheduler** (`src/utils/smartScheduler.ts`) — already reads `assessment_results` and maps responses to productive hours, energy peaks, and do-not-disturb windows
-- **useSchedulePreferences** hook — reads/writes `user_schedule_preferences` table with time slots and energy levels
-- **No UI exists** for blocking out unavailable days/times or visually configuring availability
+## Still Outstanding
 
-## What's Missing
+### 1. Generate Strategy PDF
+`/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v1.pdf` — 8 pages via ReportLab:
 
-1. **Availability Blocker UI** — a visual calendar/weekly grid where users mark days/times as unavailable (medical appointments, rest days, caregiver commitments)
-2. **Assessment → Schedule Pipeline** — the MYRHYTHM assessment captures energy patterns (the "H" cluster: Energy & Recovery) but doesn't automatically write optimal windows into `user_schedule_preferences`
-3. **Optimal Meeting Scheduler** — using the combined data (blocked times + assessment-derived energy peaks) to suggest the best meeting slots
+1. **Cover** — "MyRhythm: Collaborative Cognitive Management" by Annabel Aaron
+2. **Executive Summary** — Built for ABI/TBI, available to everyone, revenue starts broad
+3. **Market Opportunity** — $22B total TAM, $4.2B clinical SAM as ultimate destination
+4. **Year-by-Year Roadmap 2026–2031** — Year 1: everyone launch + early clinical pilots, Year 2: clinical partnerships, Year 3–5: full ABI/TBI institutional revenue
+5. **Revenue Model & Unit Economics** — 85% margins, 9:1 LTV:CAC
+6. **Funding Roadmap** — £250K pre-seed → £2M Series A → £10M Series B
+7. **Go-to-Market** — Broad launch generates revenue; clinical validation builds the moat
+8. **Risk Mitigation** — Why building for ABI/TBI first creates a superior product for everyone
 
-## Where This Fits in the Plan
+### Answering "HAS THIS BEEN ADDRESSED?" — Risk Mitigation
 
-This is a **Smart Scheduling enhancement** that sits in the **MVP Core (Months 1-3)** section of the investor deck, specifically under "Smart Scheduling (calendar sync + energy-aware time blocking)."
+**Yes, but only in the deck narrative, not yet as a dedicated document section.** The risk mitigation argument is embedded across Slide 11 (Clinical Moat: "If it works there, it works everywhere"), Slide 12 (phased rollout de-risks regulatory exposure), and Slide 17 (Competitive Advantage: clinical-grade reliability as moat).
 
-In the current plan, it strengthens Slide 12 (Expansion) and Slide 20 (MVP Appendix) by making the scheduling story concrete:
+The Strategy PDF Page 8 will consolidate this into an explicit Risk Mitigation section covering:
+- **Regulatory risk**: Phase 1 launches as wellness/productivity (no medical device classification needed), clinical features unlocked only after regulatory frameworks are in place
+- **Market risk**: Broad consumer launch validates demand before narrowing to clinical; multiple revenue streams prevent single-market dependency
+- **Product risk**: Building for the hardest use case (ABI/TBI) means the product over-delivers for easier use cases — any user who can benefit from a productivity tool gets a clinically-robust one
+- **Competition risk**: No competitor bridges consumer productivity and clinical cognitive support; the CCM framework is proprietary
+- **Funding risk**: £250K pre-seed is capital-efficient (12-week MVP, £100K build budget); revenue generation begins before Series A is needed
 
-### Updated MVP Appendix (Slide 20) — Add to Smart Scheduling bullet:
-
-**Smart Scheduling** becomes:
-- "Smart Scheduling — MYRHYTHM assessment determines cognitive peaks and energy patterns; users block unavailable days; AI schedules meetings and actions at optimal cognitive windows"
-
-### Implementation Plan (3 components)
-
-**A. Availability Manager Component**
-- New file: `src/components/smart-scheduling/AvailabilityBlocker.tsx`
-- Weekly grid view (Mon-Sun, 7am-9pm) where users tap to block/unblock time slots
-- "Block entire day" toggle for rest days or appointments
-- Recurring blocks (e.g., "every Tuesday afternoon is therapy")
-- Saves to `user_schedule_preferences` table with `preference_type: 'unavailable'`
-
-**B. Assessment → Preferences Pipeline**
-- Update `SmartScheduler.mapAssessmentToPreferences()` to read MYRHYTHM "H" (Energy & Recovery) and "R" (Rhythm) cluster responses
-- After assessment completion, auto-populate `user_schedule_preferences` with derived optimal windows
-- Add a "Your Optimal Schedule" summary card shown post-assessment: "Based on your MYRHYTHM results, your peak cognitive hours are 9-11am and 2-4pm"
-
-**C. Optimal Meeting Suggester**
-- Enhance existing `SmartScheduler.suggestOptimalTime()` to cross-reference: blocked times + assessment energy peaks + existing calendar events
-- When scheduling any action or meeting, show a ranked list of suggested slots with confidence scores and reasons ("Peak energy window", "No conflicts", "Matches your rhythm")
-
-### Files to Create/Edit
+## Files to Create
 
 | File | Action |
 |------|--------|
-| `src/components/smart-scheduling/AvailabilityBlocker.tsx` | New — weekly grid UI for blocking unavailable times |
-| `src/utils/smartScheduler.ts` | Enhance `mapAssessmentToPreferences()` and `suggestOptimalTime()` |
-| `src/hooks/useSchedulePreferences.ts` | Add `saveUnavailableBlocks()` method and `'unavailable'` preference type |
-| `src/components/smart-scheduling/SmartSchedulingPage.tsx` | Integrate AvailabilityBlocker into the scheduling page |
-| `src/components/investor/ProductivityInvestorSlides.tsx` | Update Smart Scheduling description in Slide 20 MVP Appendix |
-
-### Investor Deck Narrative Update
-
-In Slide 20 (MVP Appendix), the Smart Scheduling bullet becomes:
-
-> **Smart Scheduling** — MYRHYTHM assessment establishes cognitive baseline and energy patterns. Users block unavailable days. AI cross-references peaks, availability, and calendar to schedule meetings and actions at optimal cognitive windows. Built for ABI/TBI-grade precision, available to everyone.
-
-This directly ties the assessment ("where the user is cognitively") to the scheduling engine ("when they should do things"), which is the core CCM value proposition.
+| `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v1.pdf` | Create via ReportLab — 8 pages, midnight brand aesthetic |
 
