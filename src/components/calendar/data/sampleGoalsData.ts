@@ -48,7 +48,7 @@ export const sampleActions: Action[] = [
     id: "a2",
     title: "Cognitive therapy session",
     type: "therapy",
-    date: "2023-05-22",
+    date: "2026-03-27",
     startTime: "2:30 PM",
     endTime: "3:30 PM",
     status: "pending",
