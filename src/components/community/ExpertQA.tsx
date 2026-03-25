@@ -40,7 +40,7 @@ export function ExpertQA() {
         avatar: undefined,
       },
       topic: "Cognitive Exercises for TBI Recovery",
-      date: "May 25, 2023",
+      date: "April 1, 2026",
       time: "4:00 PM",
       status: "upcoming",
     },
