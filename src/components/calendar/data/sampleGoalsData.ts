@@ -95,7 +95,7 @@ export const sampleActions: Action[] = [
     id: "a7",
     title: "Doctor appointment",
     type: "appointment",
-    date: "2023-05-29",
+    date: "2026-04-03",
     startTime: "3:00 PM",
     endTime: "4:00 PM",
     status: "pending"
