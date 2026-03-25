@@ -65,7 +65,7 @@ export const sampleEvents: CalendarEvent[] = [
   {
     id: "3",
     title: "Support Group Meeting",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "6:00 PM",
     endTime: "7:30 PM",
     location: "Community Center",
