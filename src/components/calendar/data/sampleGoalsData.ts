@@ -67,7 +67,7 @@ export const sampleActions: Action[] = [
     id: "a4",
     title: "Group therapy session",
     type: "therapy",
-    date: "2023-05-27",
+    date: "2026-04-01",
     startTime: "11:15 AM",
     endTime: "12:30 PM",
     status: "doing",
