@@ -53,7 +53,7 @@ function Slide01() {
           Collaborative Cognitive Management
         </p>
         <p className="mt-[24px] text-[24px] font-light leading-relaxed max-w-[900px]" style={{ color: "#cbd5e1" }}>
-          Built for the hardest cognitive challenges. Available to everyone.
+          Built for the hardest cognitive (memory) challenges. Designed for cognitive resilience. Available to everyone.
         </p>
         <div className="mt-[48px] w-[600px] h-[1px]" style={{ background: "rgba(255,255,255,0.1)" }} />
         {/* Bottom metadata bar */}
