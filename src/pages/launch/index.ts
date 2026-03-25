@@ -19,3 +19,4 @@ export { default as LaunchGoals } from './LaunchGoals';
 export { default as LaunchAnalytics } from './LaunchAnalytics';
 export { default as LaunchWhatsNew } from './LaunchWhatsNew';
 export { default as LaunchHelp } from './LaunchHelp';
+export { default as LaunchRoadmap } from './LaunchRoadmap';

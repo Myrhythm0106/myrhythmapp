@@ -22,9 +22,9 @@ export default function LaunchRoadmap() {
     : roadmapTasks.filter(t => t.phase === filter);
 
   const handlePrint = useReactToPrint({
-    content: () => printRef.current,
+    contentRef: printRef,
     documentTitle: 'MyRhythm_Roadmap_2026',
-  });
+  } as any);
 
   const handleCSV = () => {
     exportToCSV(filteredTasks);

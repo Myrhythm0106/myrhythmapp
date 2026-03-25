@@ -361,7 +361,8 @@ function App() {
                        <Route path="/launch/goals" element={<LaunchModeProvider><LaunchGoals /></LaunchModeProvider>} />
                        <Route path="/launch/analytics" element={<LaunchModeProvider><LaunchAnalytics /></LaunchModeProvider>} />
                        <Route path="/launch/whats-new" element={<LaunchModeProvider><LaunchWhatsNew /></LaunchModeProvider>} />
-                       <Route path="/launch/help" element={<LaunchModeProvider><LaunchHelp /></LaunchModeProvider>} />
+                        <Route path="/launch/help" element={<LaunchModeProvider><LaunchHelp /></LaunchModeProvider>} />
+                        <Route path="/launch/roadmap" element={<LaunchModeProvider><LaunchRoadmap /></LaunchModeProvider>} />
                        <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
                        <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
                        <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
