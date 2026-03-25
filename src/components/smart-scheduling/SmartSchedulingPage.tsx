@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,9 @@ import { Brain, Clock, Calendar, Zap, Plus, X } from 'lucide-react';
 import { PageLayout } from '@/components/shared/PageLayout';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { AvailabilityBlocker } from './AvailabilityBlocker';
+import { useSchedulePreferences } from '@/hooks/useSchedulePreferences';
+import { smartScheduler } from '@/utils/smartScheduler';
 
 interface Activity {
   id: string;
