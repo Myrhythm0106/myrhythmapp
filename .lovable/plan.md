@@ -1,102 +1,66 @@
 
 
-# Three Updates: Title Slide, MVP Appendix, and 5-Year Strategy Alignment
+# Where "Block Unavailable Days + Optimal Scheduling" Fits in the Plan
 
-## Overview
+## What Already Exists
 
-Three deliverables:
-1. A Deloitte/Accenture-grade title slide for the in-app investor deck
-2. A recommended MVP appendix slide added to the deck
-3. An updated 5-Year Strategy PDF (v5) aligned with the investor deck content
+The codebase has the building blocks but they're not fully connected:
 
----
+- **MYRHYTHM Assessment** (`myrhythmQuestions.ts`) — 7 letters (M-Y-R-H-Y-T-H-M) covering cognitive patterns, energy, recovery, motivation
+- **SmartScheduler** (`src/utils/smartScheduler.ts`) — already reads `assessment_results` and maps responses to productive hours, energy peaks, and do-not-disturb windows
+- **useSchedulePreferences** hook — reads/writes `user_schedule_preferences` table with time slots and energy levels
+- **No UI exists** for blocking out unavailable days/times or visually configuring availability
 
-## 1. Deloitte/Accenture-Influenced Title Slide
+## What's Missing
 
-Replace `Slide01` in `InvestorSlides.tsx` with a premium consulting-firm aesthetic:
+1. **Availability Blocker UI** — a visual calendar/weekly grid where users mark days/times as unavailable (medical appointments, rest days, caregiver commitments)
+2. **Assessment → Schedule Pipeline** — the MYRHYTHM assessment captures energy patterns (the "H" cluster: Energy & Recovery) but doesn't automatically write optimal windows into `user_schedule_preferences`
+3. **Optimal Meeting Scheduler** — using the combined data (blocked times + assessment-derived energy peaks) to suggest the best meeting slots
 
-- **Dark background** (`#0a0a1a`) — the "boardroom" look Deloitte and Accenture use
-- **Thin accent line** at top (brand gradient orange → violet, full width, 4px)
-- **"MyRhythm"** in large, bold white type (80pt) with subtle letter-spacing
-- **Subtitle**: "Collaborative Cognitive Management" in muted teal (`#028090`)
-- **Tagline**: "Bridging the gap between clinical care and daily living" in light grey
-- **Divider line** (thin, 1px white at 10% opacity)
-- **Bottom metadata bar** in structured layout:
-  - Left: "Investor Presentation | Pre-Seed Round | Confidential"
-  - Center: "Prepared by Annabel Aaron, Founder & CEO"
-  - Right: "March 2026"
-- **"CONFIDENTIAL"** watermark-style text, small, bottom-right corner
-- Clean geometric feel — no emojis, no gradients on text, just precision typography
+## Where This Fits in the Plan
 
-This replaces the current light-background centred title with something that commands the room.
+This is a **Smart Scheduling enhancement** that sits in the **MVP Core (Months 1-3)** section of the investor deck, specifically under "Smart Scheduling (calendar sync + energy-aware time blocking)."
 
----
+In the current plan, it strengthens Slide 12 (Expansion) and Slide 20 (MVP Appendix) by making the scheduling story concrete:
 
-## 2. Recommended MVP Slide (Appendix)
+### Updated MVP Appendix (Slide 20) — Add to Smart Scheduling bullet:
 
-Add a new `Slide20` — "Appendix: Recommended MVP" — after the References slide. This slide answers "what gets built first and why":
+**Smart Scheduling** becomes:
+- "Smart Scheduling — MYRHYTHM assessment determines cognitive peaks and energy patterns; users block unavailable days; AI schedules meetings and actions at optimal cognitive windows"
 
-**Layout**: Two-column with a priority matrix feel
+### Implementation Plan (3 components)
 
-**Left column — "MVP Core (Months 1-3)":**
-- Memory Bridge (voice capture + AI action extraction)
-- Support Circle (invite up to 5 people, escalation alerts)
-- Daily Brain Boost (50 cognitive exercises from the 240+ library)
-- Smart Scheduling (calendar sync + energy-aware time blocking)
-- Founding Member subscription (Stripe, £10/month)
+**A. Availability Manager Component**
+- New file: `src/components/smart-scheduling/AvailabilityBlocker.tsx`
+- Weekly grid view (Mon-Sun, 7am-9pm) where users tap to block/unblock time slots
+- "Block entire day" toggle for rest days or appointments
+- Recurring blocks (e.g., "every Tuesday afternoon is therapy")
+- Saves to `user_schedule_preferences` table with `preference_type: 'unavailable'`
 
-**Right column — "Post-MVP (Months 4-6)":**
-- Clinical Dashboard (provider view of patient progress)
-- Full Brain Boost library (240+ exercises)
-- Progressive Escalation v2 (customisable urgency tiers)
-- B2B licensing portal
-- Analytics and outcome reporting
+**B. Assessment → Preferences Pipeline**
+- Update `SmartScheduler.mapAssessmentToPreferences()` to read MYRHYTHM "H" (Energy & Recovery) and "R" (Rhythm) cluster responses
+- After assessment completion, auto-populate `user_schedule_preferences` with derived optimal windows
+- Add a "Your Optimal Schedule" summary card shown post-assessment: "Based on your MYRHYTHM results, your peak cognitive hours are 9-11am and 2-4pm"
 
-**Bottom bar**: "MVP Scope: 12 weeks | Budget: £100K of £250K raise | Target: 50 founding members at launch"
+**C. Optimal Meeting Suggester**
+- Enhance existing `SmartScheduler.suggestOptimalTime()` to cross-reference: blocked times + assessment energy peaks + existing calendar events
+- When scheduling any action or meeting, show a ranked list of suggested slots with confidence scores and reasons ("Peak energy window", "No conflicts", "Matches your rhythm")
 
-**Why this MVP**: The features selected are the ones that demonstrate the CCM methodology end-to-end — capture (Memory Bridge), commit (Support Circle + Scheduling), calibrate (Brain Boost tracking), and celebrate (progress milestones). They also create the Support Circle virality loop from day one.
-
-Update `TOTAL_SLIDES` in `InvestorDeckPage.tsx` from 18 to 20 (fixing the existing off-by-one: 19 slides currently, plus this new one = 20).
-
----
-
-## 3. Updated 5-Year Strategy PDF (v5)
-
-Regenerate `MyRhythm_5_Year_Strategy_v5.pdf` using ReportLab, aligned with the investor deck's numbers and narrative:
-
-**Content alignment with investor deck:**
-
-| Element | Investor Deck Says | Strategy v5 Will Say |
-|---------|-------------------|---------------------|
-| Raise | £250K pre-seed | £250K pre-seed → £2M Series A → £10M Series B |
-| Year 1 target | £500K revenue | £500K ARR by Dec 2026 |
-| TAM | $4.2B | $4.2B (ABI $2.4B + TBI $1.8B) |
-| SAM / SOM | $1.1B / $28M | Same |
-| Margins | 85% gross | 85% gross, 9:1 LTV:CAC |
-| Beachhead | US (NYC, LA, Chicago) | Same — Shepherd Center, Craig Hospital |
-| Year 5 target | Per memory: £100M+ ARR | £100M+ ARR |
-
-**Document structure** (ReportLab, dark header bars with brand colours):
-1. Executive Summary (1 page)
-2. Market Opportunity & TAM/SAM/SOM (1 page)
-3. Year-by-Year Roadmap: 2026-2031 (2 pages)
-4. Revenue Model & Unit Economics (1 page)
-5. Funding Roadmap: Pre-seed → Series D (1 page)
-6. Go-to-Market: Bowling Pin Expansion (1 page)
-7. Risk Mitigation (1 page)
-
-**Author**: "Annabel Aaron, Founder & CEO" on the cover page
-**Design**: Professional consulting-style with MyRhythm brand colours, clean tables, no emojis
-
-Full visual QA cycle on the PDF before delivery.
-
----
-
-## Files to Create/Edit
+### Files to Create/Edit
 
 | File | Action |
 |------|--------|
-| `src/components/investor/InvestorSlides.tsx` | Edit Slide01 (title), add Slide20 (MVP appendix), update slides array |
-| `src/pages/InvestorDeckPage.tsx` | Update `TOTAL_SLIDES` to 20 |
-| `/mnt/documents/MyRhythm_5_Year_Strategy_v5.pdf` | Create via ReportLab script |
+| `src/components/smart-scheduling/AvailabilityBlocker.tsx` | New — weekly grid UI for blocking unavailable times |
+| `src/utils/smartScheduler.ts` | Enhance `mapAssessmentToPreferences()` and `suggestOptimalTime()` |
+| `src/hooks/useSchedulePreferences.ts` | Add `saveUnavailableBlocks()` method and `'unavailable'` preference type |
+| `src/components/smart-scheduling/SmartSchedulingPage.tsx` | Integrate AvailabilityBlocker into the scheduling page |
+| `src/components/investor/ProductivityInvestorSlides.tsx` | Update Smart Scheduling description in Slide 20 MVP Appendix |
+
+### Investor Deck Narrative Update
+
+In Slide 20 (MVP Appendix), the Smart Scheduling bullet becomes:
+
+> **Smart Scheduling** — MYRHYTHM assessment establishes cognitive baseline and energy patterns. Users block unavailable days. AI cross-references peaks, availability, and calendar to schedule meetings and actions at optimal cognitive windows. Built for ABI/TBI-grade precision, available to everyone.
+
+This directly ties the assessment ("where the user is cognitively") to the scheduling engine ("when they should do things"), which is the core CCM value proposition.
 
