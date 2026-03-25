@@ -36,25 +36,70 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-/* ─── SLIDE 1: TITLE ─── */
+/* ─── SLIDE 1: TITLE (Deloitte/Accenture aesthetic) ─── */
 function Slide01() {
   return (
-    <Slide bg="#fafafa">
-      <div className="flex-1 flex flex-col items-center justify-center px-[200px] text-center">
-        <GradientLine />
-        <h1 className="mt-[40px] text-[96px] font-bold tracking-tight leading-none" style={{ color: "#1a1a2e" }}>
+    <Slide bg="#0a0a1a">
+      {/* Top accent line */}
+      <div className="w-full h-[4px]" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
+
+      <div className="flex-1 flex flex-col justify-center px-[200px] relative">
+        {/* Main title block */}
+        <h1
+          className="text-[96px] font-bold leading-none"
+          style={{ color: "#ffffff", letterSpacing: "0.04em" }}
+        >
           MyRhythm
         </h1>
-        <p className="mt-[24px] text-[32px] font-light tracking-wide" style={{ color: "#64748b" }}>
-          Life Empowerment &amp; Productivity
+        <p
+          className="mt-[28px] text-[36px] font-light tracking-wide"
+          style={{ color: "#028090" }}
+        >
+          Collaborative Cognitive Management
         </p>
-        <p className="mt-[12px] text-[20px] font-light" style={{ color: "#94a3b8" }}>
-          Powered by Collaborative Cognitive Management (CCM)
+        <p
+          className="mt-[20px] text-[24px] font-light leading-relaxed max-w-[800px]"
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
+          Bridging the gap between clinical care and daily living
         </p>
-        <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
-        <p className="mt-[24px] text-[20px]" style={{ color: "#94a3b8" }}>
-          Investor Presentation · 2026
-        </p>
+
+        {/* Divider */}
+        <div className="mt-[60px] w-full h-[1px]" style={{ background: "rgba(255,255,255,0.1)" }} />
+
+        {/* Bottom metadata bar */}
+        <div className="mt-[40px] flex items-end justify-between">
+          <div>
+            <p className="text-[16px] tracking-[0.15em] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Investor Presentation
+            </p>
+            <p className="mt-[6px] text-[14px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+              Pre-Seed Round · Confidential
+            </p>
+          </div>
+
+          <div className="text-center">
+            <p className="text-[18px] font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>
+              Annabel Aaron
+            </p>
+            <p className="mt-[4px] text-[14px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+              Founder &amp; CEO
+            </p>
+          </div>
+
+          <div className="text-right">
+            <p className="text-[16px] tracking-[0.15em] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>
+              March 2026
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Confidential watermark */}
+      <div className="absolute bottom-[20px] right-[40px]">
+        <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: "rgba(255,255,255,0.12)" }}>
+          Confidential
+        </span>
       </div>
     </Slide>
   );
@@ -859,8 +904,95 @@ function Slide19() {
   );
 }
 
+/* ─── SLIDE 20: APPENDIX — RECOMMENDED MVP ─── */
+function Slide20() {
+  const mvpCore = [
+    { title: "Memory Bridge", desc: "Voice capture + AI action extraction — the core CCM loop" },
+    { title: "Support Circle", desc: "Invite up to 5 people, escalation alerts, accountability" },
+    { title: "Daily Brain Boost", desc: "50 cognitive exercises from the 240+ library" },
+    { title: "Smart Scheduling", desc: "Calendar sync + energy-aware time blocking" },
+    { title: "Founding Member Sub", desc: "Stripe integration, £10/month subscription" },
+  ];
+  const postMvp = [
+    { title: "Clinical Dashboard", desc: "Provider view of patient progress & outcomes" },
+    { title: "Full Brain Boost Library", desc: "All 240+ cognitive exercises unlocked" },
+    { title: "Progressive Escalation v2", desc: "Customisable urgency tiers & rules" },
+    { title: "B2B Licensing Portal", desc: "Enterprise onboarding & management" },
+    { title: "Analytics & Reporting", desc: "Outcome tracking, exportable reports" },
+  ];
+  return (
+    <Slide bg="#0a0a1a">
+      <div className="flex-1 flex flex-col px-[120px] py-[80px]">
+        <div className="flex items-center gap-[16px]">
+          <div className="w-[6px] h-[36px] rounded-full" style={{ background: "linear-gradient(180deg, #f97316, #a855f7)" }} />
+          <span className="text-[16px] font-semibold tracking-[0.2em] uppercase" style={{ color: "#a855f7" }}>
+            Appendix
+          </span>
+        </div>
+        <h2 className="mt-[20px] text-[52px] font-bold" style={{ color: "#ffffff" }}>
+          Recommended MVP
+        </h2>
+        <p className="mt-[12px] text-[22px]" style={{ color: "rgba(255,255,255,0.45)" }}>
+          Features selected to demonstrate end-to-end CCM: Capture → Commit → Calibrate → Celebrate
+        </p>
+
+        <div className="mt-[48px] flex gap-[48px] flex-1">
+          {/* Left column: MVP Core */}
+          <div className="flex-1">
+            <div className="flex items-center gap-[12px] mb-[28px]">
+              <div className="w-[12px] h-[12px] rounded-full" style={{ background: "#f97316" }} />
+              <span className="text-[20px] font-bold tracking-wide uppercase" style={{ color: "#f97316" }}>
+                MVP Core — Months 1–3
+              </span>
+            </div>
+            <div className="flex flex-col gap-[20px]">
+              {mvpCore.map((item, i) => (
+                <div key={i} className="p-[24px] rounded-[12px] border" style={{ background: "rgba(249,115,22,0.06)", borderColor: "rgba(249,115,22,0.15)" }}>
+                  <div className="text-[22px] font-semibold" style={{ color: "#ffffff" }}>{item.title}</div>
+                  <div className="mt-[6px] text-[16px]" style={{ color: "rgba(255,255,255,0.5)" }}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right column: Post-MVP */}
+          <div className="flex-1">
+            <div className="flex items-center gap-[12px] mb-[28px]">
+              <div className="w-[12px] h-[12px] rounded-full" style={{ background: "#a855f7" }} />
+              <span className="text-[20px] font-bold tracking-wide uppercase" style={{ color: "#a855f7" }}>
+                Post-MVP — Months 4–6
+              </span>
+            </div>
+            <div className="flex flex-col gap-[20px]">
+              {postMvp.map((item, i) => (
+                <div key={i} className="p-[24px] rounded-[12px] border" style={{ background: "rgba(168,85,247,0.06)", borderColor: "rgba(168,85,247,0.15)" }}>
+                  <div className="text-[22px] font-semibold" style={{ color: "#ffffff" }}>{item.title}</div>
+                  <div className="mt-[6px] text-[16px]" style={{ color: "rgba(255,255,255,0.5)" }}>{item.desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-[40px] py-[20px] px-[32px] rounded-[12px] flex items-center justify-between" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+          <span className="text-[18px] font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>
+            MVP Scope: <span style={{ color: "#f97316" }}>12 weeks</span>
+          </span>
+          <span className="text-[18px] font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>
+            Budget: <span style={{ color: "#f97316" }}>£100K</span> of £250K raise
+          </span>
+          <span className="text-[18px] font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>
+            Target: <span style={{ color: "#f97316" }}>50 founding members</span> at launch
+          </span>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
 /* ─── SLIDE RENDERER ─── */
-const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19];
+const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19, Slide20];
 
 export function InvestorSlides({ currentSlide }: { currentSlide: number }) {
   const SlideComponent = slides[currentSlide] || Slide01;
