@@ -43,7 +43,7 @@ export const sampleEvents: CalendarEvent[] = [
   {
     id: "2",
     title: "Cognitive Therapy",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "2:30 PM",
     endTime: "3:30 PM",
     location: "Healing Minds Clinic",
