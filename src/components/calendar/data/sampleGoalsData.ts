@@ -58,7 +58,7 @@ export const sampleActions: Action[] = [
     id: "a3",
     title: "Brain training app exercises",
     type: "activity",
-    date: "2023-05-25",
+    date: "2026-03-30",
     startTime: "6:00 PM",
     status: "pending",
     goalId: "g1"
