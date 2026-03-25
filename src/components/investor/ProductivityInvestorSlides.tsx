@@ -36,28 +36,42 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-/* ─── SLIDE 1: TITLE ─── */
+/* ─── SLIDE 1: TITLE — Deloitte/Accenture aesthetic, CCM front & centre ─── */
 function Slide01() {
   return (
-    <Slide bg="#fafafa">
+    <Slide bg="#0a0a1a">
+      {/* Top accent line */}
+      <div className="w-full h-[4px]" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
       <div className="flex-1 flex flex-col items-center justify-center px-[200px] text-center">
-        <GradientLine />
-        <h1 className="mt-[40px] text-[96px] font-bold tracking-tight leading-none" style={{ color: "#1a1a2e" }}>
+        <h1
+          className="text-[80px] font-bold tracking-[0.04em] leading-none"
+          style={{ color: "#ffffff" }}
+        >
           MyRhythm
         </h1>
-        <p className="mt-[32px] text-[36px] font-light leading-snug max-w-[1000px]" style={{ color: "#475569" }}>
-          Your brain is your operating system.<br />It has no support layer.
+        <p className="mt-[28px] text-[36px] font-medium tracking-wide" style={{ color: "#028090" }}>
+          Collaborative Cognitive Management
         </p>
-        <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
-        <p className="mt-[24px] text-[22px] font-medium tracking-wide" style={{ color: "#a855f7" }}>
-          Life Empowerment &amp; Productivity Platform
+        <p className="mt-[24px] text-[24px] font-light leading-relaxed max-w-[900px]" style={{ color: "#cbd5e1" }}>
+          Built for the hardest cognitive challenges. Available to everyone.
         </p>
-        <p className="mt-[12px] text-[18px] font-medium" style={{ color: "#f97316" }}>
-          Powered by Collaborative Cognitive Management (CCM)
-        </p>
-        <p className="mt-[16px] text-[18px]" style={{ color: "#94a3b8" }}>
-          Empower Your Day. Own Your Rhythm. · Investor Presentation · 2026
-        </p>
+        <div className="mt-[48px] w-[600px] h-[1px]" style={{ background: "rgba(255,255,255,0.1)" }} />
+        {/* Bottom metadata bar */}
+        <div className="mt-[48px] w-full flex items-center justify-between px-[40px]">
+          <span className="text-[16px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+            Investor Presentation · Pre-Seed Round · Confidential
+          </span>
+          <span className="text-[16px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+            Prepared by Annabel Aaron, Founder &amp; CEO
+          </span>
+          <span className="text-[16px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+            March 2026
+          </span>
+        </div>
+      </div>
+      {/* Confidential watermark */}
+      <div className="absolute bottom-[20px] right-[32px] text-[11px] tracking-[0.3em] uppercase" style={{ color: "rgba(255,255,255,0.12)" }}>
+        CONFIDENTIAL
       </div>
     </Slide>
   );
