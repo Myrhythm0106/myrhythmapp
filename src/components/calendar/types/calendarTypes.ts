@@ -25,7 +25,7 @@ export const sampleEvents: CalendarEvent[] = [
   {
     id: "1",
     title: "Neurology Appointment",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "10:00 AM",
     endTime: "11:00 AM",
     location: "Dallas Neuro Center",
@@ -43,7 +43,7 @@ export const sampleEvents: CalendarEvent[] = [
   {
     id: "2",
     title: "Cognitive Therapy",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "2:30 PM",
     endTime: "3:30 PM",
     location: "Healing Minds Clinic",
@@ -65,7 +65,7 @@ export const sampleEvents: CalendarEvent[] = [
   {
     id: "3",
     title: "Support Group Meeting",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "6:00 PM",
     endTime: "7:30 PM",
     location: "Community Center",
@@ -83,7 +83,7 @@ export const sampleEvents: CalendarEvent[] = [
   {
     id: "4",
     title: "Improve Memory Skills",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "All Day",
     type: "goal",
     description: "Practice memory exercises for 30 minutes daily",

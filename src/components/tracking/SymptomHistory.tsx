@@ -14,7 +14,7 @@ import { toast } from "sonner";
 const sampleData = [
   { 
     id: 1, 
-    date: "2023-05-15", 
+    date: "2026-03-20", 
     time: "08:30 AM", 
     symptom: "Headache", 
     severity: 4, 
@@ -24,7 +24,7 @@ const sampleData = [
   },
   { 
     id: 2, 
-    date: "2023-05-15", 
+    date: "2026-03-20", 
     time: "03:15 PM", 
     symptom: "Fatigue", 
     severity: 3, 
@@ -34,7 +34,7 @@ const sampleData = [
   },
   { 
     id: 3, 
-    date: "2023-05-16", 
+    date: "2026-03-21", 
     time: "11:00 AM", 
     symptom: "Dizziness", 
     severity: 2, 
@@ -44,7 +44,7 @@ const sampleData = [
   },
   { 
     id: 4, 
-    date: "2023-05-17", 
+    date: "2026-03-22", 
     time: "09:45 AM", 
     symptom: "Memory Issue", 
     severity: 3, 
@@ -54,7 +54,7 @@ const sampleData = [
   },
   { 
     id: 5, 
-    date: "2023-05-18", 
+    date: "2026-03-23", 
     time: "07:00 PM", 
     symptom: "Anxiety", 
     severity: 4, 

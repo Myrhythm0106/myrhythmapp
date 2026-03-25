@@ -6,7 +6,7 @@ export const actions: Action[] = [
   {
     id: "1",
     title: "Neurology Appointment",
-    date: "2023-05-20",
+    date: "2026-03-25",
     time: "10:00 AM",
     location: "Dallas Neuro Center",
     type: "appointment",
@@ -20,7 +20,7 @@ export const actions: Action[] = [
   {
     id: "2",
     title: "Cognitive Therapy",
-    date: "2023-05-22",
+    date: "2026-03-27",
     time: "2:30 PM",
     location: "Healing Minds Clinic",
     type: "therapy",
@@ -33,7 +33,7 @@ export const actions: Action[] = [
   {
     id: "3",
     title: "Support Group Meeting",
-    date: "2023-05-25",
+    date: "2026-03-30",
     time: "6:00 PM",
     location: "Community Center",
     type: "activity",
@@ -42,7 +42,7 @@ export const actions: Action[] = [
   {
     id: "4",
     title: "Physical Therapy",
-    date: "2023-05-27",
+    date: "2026-04-01",
     time: "11:15 AM",
     location: "RehabWorks",
     type: "therapy",
