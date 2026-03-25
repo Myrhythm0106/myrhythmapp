@@ -1,35 +1,39 @@
 
 
-# Reliability → Confidence → Productivity + Exportable Deck
+# Fix: Update All Dates to 2026 + Regenerate Attractive CCM Investor Deck
 
-## Three deliverables
+## Problem
+The investor deck and multiple sample data files throughout the app use **2023 dates** — three years out of date. Today is **24 March 2026**.
 
-### 1. Strengthen the Reliability-Confidence-Productivity narrative
+## Plan
 
-The deck already touches on confidence (Slide 03 step 05, Slide 15) but doesn't explicitly connect the chain: **using MyRhythm → feeling reliable → confidence rebuilds → productivity increases**. This is the core behavioural insight and needs to be a visible thread.
+### 1. Regenerate CCM Investor Deck (high priority)
+Using the `pptxgenjs` approach from the PPTX skill for a visually striking deck:
 
-**Changes to `ProductivityInvestorSlides.tsx`:**
+- **Color palette**: Deep midnight navy (`#0a0a1a`) with luminous brand accents — teal (`#028090`), emerald (`#00A896`), warm orange (`#F96167`)
+- **Dark backgrounds throughout** for premium feel
+- **Bold stat callouts** (60-72pt numbers), icon grids, comparison columns
+- **Varied layouts** per slide — no two slides look the same
+- **All dates reflect 2026**: Q2 2026 launch, £500K target by Dec 2026, 5-year roadmap to 2031
+- **10 slides**: Title, Discharge Cliff, CCM Solution, Market ($40B+), LEAP Platform, Revenue Model, Traction/Milestones, Competition/Moats, Funding Ask, CTA
+- Full visual QA cycle with slide-by-slide image inspection
 
-- **Slide 15 (Early Evidence):** Add a 4th evidence card — **"Productivity"** with upward arrow: "As reliability builds and confidence returns, users report sustained productivity gains — not through working harder, but through trusting themselves to follow through." This completes the chain: Consistency → Re-engagement → Confidence → Productivity.
+### 2. Update hardcoded 2023 dates across the app (7 files)
+All sample/placeholder dates updated from `2023-05-xx` to `2026-03-xx` or contextually appropriate 2026 dates:
 
-- **Slide 10 (How It Works):** Update the "Over time" step from "Confidence compounds" to **"Reliability becomes identity"** with detail: "You keep promises. Others notice. Confidence returns. Productivity follows naturally — not from pressure, but from self-trust."
+| File | Change |
+|------|--------|
+| `calendar/data/actionsData.ts` | All dates → March/April 2026 |
+| `calendar/data/sampleGoalsData.ts` | All dates → 2026 |
+| `calendar/types/calendarTypes.ts` | All dates → 2026 |
+| `tracking/SymptomHistory.tsx` | All dates → March 2026 |
+| `community/ExpertQA.tsx` | All dates → March/April 2026 |
+| `investor/InvestorSlides.tsx` | Research citations stay as-is (publication years are real) |
+| `investor/ProductivityInvestorSlides.tsx` | Same — citation years unchanged |
 
-- **Slide 07 (The Insight):** Add a second paragraph reinforcing the mechanism: "When people feel reliable, confidence returns. When confidence returns, productivity follows. The lever is not efficiency — it is self-trust."
-
-### 2. Generate PDF version
-
-Run a script that converts the 18 slides to a PDF using the existing React components rendered via headless browser (Puppeteer), capturing each slide at 1920x1080 and assembling into a single PDF document. Output to `/home/lovable/MyRhythm_Productivity_Investor_Deck.pdf`.
-
-### 3. Generate Google Slides-compatible PPTX
-
-Create a PPTX file using `pptxgenjs` that replicates the content and visual style of all 18 slides — same colour palette (#f97316 orange, #a855f7 purple, #1a1a2e navy), Inter font family, gradient accents. Each slide recreated with matching layout, stats, and text. Output to `/home/lovable/MyRhythm_Productivity_Investor_Deck.pptx`.
-
-The PPTX will be importable into Google Slides and saveable as PDF from there.
-
-### Files modified
-- `src/components/investor/ProductivityInvestorSlides.tsx` — narrative updates (slides 7, 10, 15)
-
-### Files generated
-- `/home/lovable/MyRhythm_Productivity_Investor_Deck.pdf`
-- `/home/lovable/MyRhythm_Productivity_Investor_Deck.pptx`
+### Technical approach
+- Use `pptxgenjs` (Node.js) to create the PPTX from scratch with embedded design
+- Convert to PDF via LibreOffice for QA
+- Output to `/mnt/documents/` as `MyRhythm_CCM_Investor_Deck_v2.pptx` and `.pdf`
+- Line-replace all 2023 sample dates in the 5 data files
 
