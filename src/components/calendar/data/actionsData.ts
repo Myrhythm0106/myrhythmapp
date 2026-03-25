@@ -33,7 +33,7 @@ export const actions: Action[] = [
   {
     id: "3",
     title: "Support Group Meeting",
-    date: "2023-05-25",
+    date: "2026-03-30",
     time: "6:00 PM",
     location: "Community Center",
     type: "activity",
