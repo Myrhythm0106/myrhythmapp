@@ -36,25 +36,70 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-/* ─── SLIDE 1: TITLE ─── */
+/* ─── SLIDE 1: TITLE (Deloitte/Accenture aesthetic) ─── */
 function Slide01() {
   return (
-    <Slide bg="#fafafa">
-      <div className="flex-1 flex flex-col items-center justify-center px-[200px] text-center">
-        <GradientLine />
-        <h1 className="mt-[40px] text-[96px] font-bold tracking-tight leading-none" style={{ color: "#1a1a2e" }}>
+    <Slide bg="#0a0a1a">
+      {/* Top accent line */}
+      <div className="w-full h-[4px]" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
+
+      <div className="flex-1 flex flex-col justify-center px-[200px] relative">
+        {/* Main title block */}
+        <h1
+          className="text-[96px] font-bold leading-none"
+          style={{ color: "#ffffff", letterSpacing: "0.04em" }}
+        >
           MyRhythm
         </h1>
-        <p className="mt-[24px] text-[32px] font-light tracking-wide" style={{ color: "#64748b" }}>
-          Life Empowerment &amp; Productivity
+        <p
+          className="mt-[28px] text-[36px] font-light tracking-wide"
+          style={{ color: "#028090" }}
+        >
+          Collaborative Cognitive Management
         </p>
-        <p className="mt-[12px] text-[20px] font-light" style={{ color: "#94a3b8" }}>
-          Powered by Collaborative Cognitive Management (CCM)
+        <p
+          className="mt-[20px] text-[24px] font-light leading-relaxed max-w-[800px]"
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
+          Bridging the gap between clinical care and daily living
         </p>
-        <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
-        <p className="mt-[24px] text-[20px]" style={{ color: "#94a3b8" }}>
-          Investor Presentation · 2026
-        </p>
+
+        {/* Divider */}
+        <div className="mt-[60px] w-full h-[1px]" style={{ background: "rgba(255,255,255,0.1)" }} />
+
+        {/* Bottom metadata bar */}
+        <div className="mt-[40px] flex items-end justify-between">
+          <div>
+            <p className="text-[16px] tracking-[0.15em] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>
+              Investor Presentation
+            </p>
+            <p className="mt-[6px] text-[14px]" style={{ color: "rgba(255,255,255,0.25)" }}>
+              Pre-Seed Round · Confidential
+            </p>
+          </div>
+
+          <div className="text-center">
+            <p className="text-[18px] font-medium" style={{ color: "rgba(255,255,255,0.6)" }}>
+              Annabel Aaron
+            </p>
+            <p className="mt-[4px] text-[14px]" style={{ color: "rgba(255,255,255,0.3)" }}>
+              Founder &amp; CEO
+            </p>
+          </div>
+
+          <div className="text-right">
+            <p className="text-[16px] tracking-[0.15em] uppercase" style={{ color: "rgba(255,255,255,0.35)" }}>
+              March 2026
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Confidential watermark */}
+      <div className="absolute bottom-[20px] right-[40px]">
+        <span className="text-[11px] tracking-[0.3em] uppercase" style={{ color: "rgba(255,255,255,0.12)" }}>
+          Confidential
+        </span>
       </div>
     </Slide>
   );
