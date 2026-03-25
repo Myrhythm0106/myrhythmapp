@@ -71,28 +71,33 @@ export class SmartScheduler {
     }
   }
 
-  // Map assessment responses to schedule preferences
-  private mapAssessmentToPreferences(responses: Record<string, any>): UserSchedulePreference {
-    const energyLevel = responses['energy-level'] || responses['energyLevel'] || 'moderate';
-    const dailyStructure = responses['daily-structure'] || responses['dailyStructure'] || 'flexible';
+  // Map MYRHYTHM assessment responses to schedule preferences
+  // H = Energy & Recovery, R = Rhythm clusters drive scheduling
+  mapAssessmentToPreferences(responses: Record<string, any>): UserSchedulePreference {
+    const energyLevel = responses['energy-level'] || responses['energyLevel'] || responses['h-energy'] || 'moderate';
+    const dailyStructure = responses['daily-structure'] || responses['dailyStructure'] || responses['r-rhythm'] || 'flexible';
+    const cognitiveEndurance = responses['h-endurance'] || responses['cognitive-endurance'] || 'moderate';
+    const recoveryNeeds = responses['h-recovery'] || responses['recovery-needs'] || 'standard';
     
-    // Map energy levels to productive hours
     let mostProductiveHours: string[];
     let energyPeaks: 'morning' | 'afternoon' | 'evening';
     
     switch (energyLevel) {
       case 'high':
       case 'morning':
+      case 'early-bird':
         mostProductiveHours = ['07:00', '08:00', '09:00', '10:00', '11:00'];
         energyPeaks = 'morning';
         break;
       case 'afternoon':
       case 'moderate':
+      case 'steady':
         mostProductiveHours = ['10:00', '11:00', '14:00', '15:00', '16:00'];
         energyPeaks = 'afternoon';
         break;
       case 'evening':
       case 'low':
+      case 'night-owl':
         mostProductiveHours = ['14:00', '15:00', '16:00', '17:00', '18:00'];
         energyPeaks = 'evening';
         break;
@@ -101,12 +106,19 @@ export class SmartScheduler {
         energyPeaks = 'morning';
     }
 
-    // Adjust based on daily structure preference
-    let doNotDisturb = ['12:00', '13:00']; // Standard lunch break
-    if (dailyStructure === 'structured') {
+    // Build do-not-disturb based on recovery needs and structure
+    let doNotDisturb = ['12:00', '13:00'];
+    if (dailyStructure === 'structured' || recoveryNeeds === 'high') {
       doNotDisturb = ['12:00', '13:00', '18:00', '19:00', '20:00'];
     } else if (dailyStructure === 'flexible') {
       doNotDisturb = ['12:30'];
+    }
+
+    // Reduce productive hours if cognitive endurance is low
+    if (cognitiveEndurance === 'low' || cognitiveEndurance === 'limited') {
+      mostProductiveHours = mostProductiveHours.slice(0, 3);
+      // Add extra rest periods
+      doNotDisturb = [...doNotDisturb, '11:00', '15:00'];
     }
 
     return {
@@ -116,6 +128,38 @@ export class SmartScheduler {
       energyPeaks,
       doNotDisturb
     };
+  }
+
+  // Get assessment-derived peak hours for the AvailabilityBlocker UI
+  getAssessmentPeaks(preferences: UserSchedulePreference): { start: number; end: number; days: number[] } | null {
+    if (!preferences.mostProductiveHours.length) return null;
+    const hours = preferences.mostProductiveHours.map(h => parseInt(h.split(':')[0]));
+    return {
+      start: Math.min(...hours),
+      end: Math.max(...hours) + 1,
+      days: [0, 1, 2, 3, 4] // Weekdays by default
+    };
+  }
+
+  // Write assessment-derived preferences to Supabase
+  async saveAssessmentPreferences(userId: string, responses: Record<string, any>) {
+    const prefs = this.mapAssessmentToPreferences(responses);
+    try {
+      await supabase.from('user_schedule_preferences').insert({
+        user_id: userId,
+        preference_type: 'most_productive',
+        time_slots: {
+          productive: prefs.mostProductiveHours,
+          unproductive: prefs.leastProductiveHours,
+          meetings: prefs.preferredMeetingTimes,
+          energy_peak: prefs.energyPeaks,
+          do_not_disturb: prefs.doNotDisturb
+        } as any,
+        notes: 'Auto-generated from MYRHYTHM assessment'
+      });
+    } catch (error) {
+      console.error('Error saving assessment preferences:', error);
+    }
   }
 
   async getExistingEvents(userId: string, startDate: string, endDate: string) {

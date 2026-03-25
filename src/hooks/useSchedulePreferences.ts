@@ -165,6 +165,40 @@ export function useSchedulePreferences() {
     return null;
   };
 
+  // Get unavailable/blocked time slots
+  const getBlockedSlots = (): BlockedSlot[] => {
+    const unavailable = preferences.find(p => p.preference_type === 'unavailable');
+    if (!unavailable?.time_slots) return [];
+    // Convert TimeSlot format to BlockedSlot format
+    return unavailable.time_slots.flatMap(slot => 
+      slot.days.map(day => ({ day, hour: parseInt(slot.start.split(':')[0]) }))
+    );
+  };
+
+  // Save blocked/unavailable slots
+  const saveUnavailableBlocks = async (blockedSlots: BlockedSlot[]) => {
+    // Convert BlockedSlot[] to TimeSlot[] format for storage
+    const timeSlotMap = new Map<string, number[]>();
+    for (const slot of blockedSlots) {
+      const hourKey = `${String(slot.hour).padStart(2, '0')}:00`;
+      const endKey = `${String(slot.hour + 1).padStart(2, '0')}:00`;
+      const key = `${hourKey}-${endKey}`;
+      if (!timeSlotMap.has(key)) timeSlotMap.set(key, []);
+      timeSlotMap.get(key)!.push(slot.day);
+    }
+
+    const timeSlots: TimeSlot[] = Array.from(timeSlotMap.entries()).map(([key, days]) => {
+      const [start, end] = key.split('-');
+      return { start, end, days };
+    });
+
+    await savePreference({
+      preference_type: 'unavailable',
+      time_slots: timeSlots,
+      notes: 'Blocked unavailable times'
+    });
+  };
+
   return {
     preferences,
     isLoading,
@@ -173,6 +207,8 @@ export function useSchedulePreferences() {
     fetchPreferences,
     getBestTimeSlots,
     getWorstTimeSlots,
+    getBlockedSlots,
+    saveUnavailableBlocks,
     suggestOptimalTime
   };
 }

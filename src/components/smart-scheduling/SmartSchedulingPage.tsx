@@ -157,6 +157,33 @@ const SmartSchedulingPage = ({ onCalendarIntegration }: SmartSchedulingPageProps
           </Badge>
         </div>
 
+        {/* Assessment Summary Card */}
+        {assessmentPeaks && (
+          <Card className="border-green-200 bg-green-50/50 dark:bg-green-900/10 dark:border-green-800">
+            <CardContent className="pt-4 pb-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Zap className="h-4 w-4 text-green-600" />
+                <span className="font-semibold text-sm">Your Optimal Schedule (from MYRHYTHM Assessment)</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Based on your MYRHYTHM results, your peak cognitive hours are{' '}
+                <strong>{assessmentPeaks.start > 12 ? assessmentPeaks.start - 12 : assessmentPeaks.start}{assessmentPeaks.start < 12 ? 'am' : 'pm'}</strong>
+                {' – '}
+                <strong>{assessmentPeaks.end > 12 ? assessmentPeaks.end - 12 : assessmentPeaks.end}{assessmentPeaks.end < 12 ? 'am' : 'pm'}</strong>
+                {' '}on weekdays. High-impact tasks are automatically scheduled in these windows.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Availability Blocker */}
+        <AvailabilityBlocker
+          blockedSlots={getBlockedSlots()}
+          onSave={saveUnavailableBlocks}
+          assessmentPeaks={assessmentPeaks}
+          isLoading={prefsLoading}
+        />
+
         {/* Activity Input */}
         <Card>
           <CardHeader>
