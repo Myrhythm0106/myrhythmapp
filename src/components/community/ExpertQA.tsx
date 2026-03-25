@@ -28,7 +28,7 @@ export function ExpertQA() {
         avatar: undefined,
       },
       topic: "Understanding Post-TBI Headaches",
-      date: "May 22, 2023",
+      date: "March 28, 2026",
       time: "2:00 PM",
       status: "upcoming",
     },
