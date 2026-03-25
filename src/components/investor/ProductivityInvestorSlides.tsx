@@ -412,19 +412,34 @@ function Slide12() {
         <div className="w-[700px] shrink-0">
           <SectionLabel>The Expansion</SectionLabel>
           <h2 className="mt-[24px] text-[48px] font-bold leading-tight">
-            From clinical recovery to<br />everyday performance.
+            Designed for ABI/TBI.<br />Available to everyone.
           </h2>
           <p className="mt-[24px] text-[22px]" style={{ color: "#64748b" }}>
-            We start where the volume is massive and deepen where the need is clinical.
+            ABI &amp; TBI survivors are our north star — every feature is built for this community. Everyone else benefits from that rigour.
           </p>
           <div className="mt-[32px]">
             <GradientLine />
           </div>
-          <p className="mt-[32px] text-[20px] font-medium leading-relaxed" style={{ color: "#475569" }}>
-            This single diagram explains our wedge, expansion, scalability, and inevitability. Investors immediately understand how we grow without paid ads.
+          <div className="mt-[28px] space-y-[14px]">
+            {[
+              { phase: "Phase 1 (Launch)", desc: "Available to everyone — professionals, students, productivity seekers. Immediate revenue, no regulatory friction.", color: "#0284c7" },
+              { phase: "Phase 2 (Months 6–12)", desc: "Clinical partnerships, pilot programmes with rehab centres.", color: "#f97316" },
+              { phase: "Phase 3 (Year 2+)", desc: "Full ABI/TBI clinical focus — NHS, insurance, institutional licensing.", color: "#a855f7" },
+            ].map((p) => (
+              <div key={p.phase} className="flex items-start gap-[12px]">
+                <div className="w-[10px] h-[10px] rounded-full mt-[8px] shrink-0" style={{ background: p.color }} />
+                <div>
+                  <span className="text-[18px] font-semibold" style={{ color: p.color }}>{p.phase}</span>
+                  <span className="text-[17px] ml-[8px]" style={{ color: "#475569" }}>{p.desc}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-[24px] text-[18px] italic" style={{ color: "#94a3b8" }}>
+            Revenue starts broad, then deepens into clinical.
           </p>
         </div>
-        {/* Concentric circles — inverted: professionals on outside */}
+        {/* Concentric circles — ABI at centre */}
         <div className="flex-1 flex items-center justify-center relative" style={{ height: 700 }}>
           {rings.slice().reverse().map((r) => (
             <div
