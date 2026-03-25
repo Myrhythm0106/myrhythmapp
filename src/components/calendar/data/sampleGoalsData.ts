@@ -39,7 +39,7 @@ export const sampleActions: Action[] = [
     id: "a1",
     title: "Memory card game exercise",
     type: "activity",
-    date: "2023-05-20",
+    date: "2026-03-25",
     startTime: "10:00 AM",
     status: "done",
     goalId: "g1"
