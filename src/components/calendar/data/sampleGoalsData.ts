@@ -77,7 +77,7 @@ export const sampleActions: Action[] = [
     id: "a5",
     title: "Review memory flashcards",
     type: "personal",
-    date: "2023-05-28",
+    date: "2026-04-02",
     startTime: "09:00 AM",
     status: "pending",
     goalId: "g1"
