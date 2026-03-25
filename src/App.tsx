@@ -124,6 +124,7 @@ import {
   LaunchAnalytics,
   LaunchWhatsNew,
   LaunchHelp,
+  LaunchRoadmap,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
