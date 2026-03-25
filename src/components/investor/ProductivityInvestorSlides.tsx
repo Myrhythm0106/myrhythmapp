@@ -36,28 +36,42 @@ function SectionLabel({ children }: { children: ReactNode }) {
   );
 }
 
-/* ─── SLIDE 1: TITLE ─── */
+/* ─── SLIDE 1: TITLE — Deloitte/Accenture aesthetic, CCM front & centre ─── */
 function Slide01() {
   return (
-    <Slide bg="#fafafa">
+    <Slide bg="#0a0a1a">
+      {/* Top accent line */}
+      <div className="w-full h-[4px]" style={{ background: "linear-gradient(90deg, #f97316, #a855f7)" }} />
       <div className="flex-1 flex flex-col items-center justify-center px-[200px] text-center">
-        <GradientLine />
-        <h1 className="mt-[40px] text-[96px] font-bold tracking-tight leading-none" style={{ color: "#1a1a2e" }}>
+        <h1
+          className="text-[80px] font-bold tracking-[0.04em] leading-none"
+          style={{ color: "#ffffff" }}
+        >
           MyRhythm
         </h1>
-        <p className="mt-[32px] text-[36px] font-light leading-snug max-w-[1000px]" style={{ color: "#475569" }}>
-          Your brain is your operating system.<br />It has no support layer.
+        <p className="mt-[28px] text-[36px] font-medium tracking-wide" style={{ color: "#028090" }}>
+          Collaborative Cognitive Management
         </p>
-        <div className="mt-[60px] w-[600px] h-[1px]" style={{ background: "rgba(0,0,0,0.08)" }} />
-        <p className="mt-[24px] text-[22px] font-medium tracking-wide" style={{ color: "#a855f7" }}>
-          Life Empowerment &amp; Productivity Platform
+        <p className="mt-[24px] text-[24px] font-light leading-relaxed max-w-[900px]" style={{ color: "#cbd5e1" }}>
+          Built for the hardest cognitive challenges. Available to everyone.
         </p>
-        <p className="mt-[12px] text-[18px] font-medium" style={{ color: "#f97316" }}>
-          Powered by Collaborative Cognitive Management (CCM)
-        </p>
-        <p className="mt-[16px] text-[18px]" style={{ color: "#94a3b8" }}>
-          Empower Your Day. Own Your Rhythm. · Investor Presentation · 2026
-        </p>
+        <div className="mt-[48px] w-[600px] h-[1px]" style={{ background: "rgba(255,255,255,0.1)" }} />
+        {/* Bottom metadata bar */}
+        <div className="mt-[48px] w-full flex items-center justify-between px-[40px]">
+          <span className="text-[16px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+            Investor Presentation · Pre-Seed Round · Confidential
+          </span>
+          <span className="text-[16px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+            Prepared by Annabel Aaron, Founder &amp; CEO
+          </span>
+          <span className="text-[16px]" style={{ color: "rgba(255,255,255,0.4)" }}>
+            March 2026
+          </span>
+        </div>
+      </div>
+      {/* Confidential watermark */}
+      <div className="absolute bottom-[20px] right-[32px] text-[11px] tracking-[0.3em] uppercase" style={{ color: "rgba(255,255,255,0.12)" }}>
+        CONFIDENTIAL
       </div>
     </Slide>
   );
@@ -398,19 +412,34 @@ function Slide12() {
         <div className="w-[700px] shrink-0">
           <SectionLabel>The Expansion</SectionLabel>
           <h2 className="mt-[24px] text-[48px] font-bold leading-tight">
-            From clinical recovery to<br />everyday performance.
+            Designed for ABI/TBI.<br />Available to everyone.
           </h2>
           <p className="mt-[24px] text-[22px]" style={{ color: "#64748b" }}>
-            We start where the volume is massive and deepen where the need is clinical.
+            ABI &amp; TBI survivors are our north star — every feature is built for this community. Everyone else benefits from that rigour.
           </p>
           <div className="mt-[32px]">
             <GradientLine />
           </div>
-          <p className="mt-[32px] text-[20px] font-medium leading-relaxed" style={{ color: "#475569" }}>
-            This single diagram explains our wedge, expansion, scalability, and inevitability. Investors immediately understand how we grow without paid ads.
+          <div className="mt-[28px] space-y-[14px]">
+            {[
+              { phase: "Phase 1 (Launch)", desc: "Available to everyone — professionals, students, productivity seekers. Immediate revenue, no regulatory friction.", color: "#0284c7" },
+              { phase: "Phase 2 (Months 6–12)", desc: "Clinical partnerships, pilot programmes with rehab centres.", color: "#f97316" },
+              { phase: "Phase 3 (Year 2+)", desc: "Full ABI/TBI clinical focus — NHS, insurance, institutional licensing.", color: "#a855f7" },
+            ].map((p) => (
+              <div key={p.phase} className="flex items-start gap-[12px]">
+                <div className="w-[10px] h-[10px] rounded-full mt-[8px] shrink-0" style={{ background: p.color }} />
+                <div>
+                  <span className="text-[18px] font-semibold" style={{ color: p.color }}>{p.phase}</span>
+                  <span className="text-[17px] ml-[8px]" style={{ color: "#475569" }}>{p.desc}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="mt-[24px] text-[18px] italic" style={{ color: "#94a3b8" }}>
+            Revenue starts broad, then deepens into clinical.
           </p>
         </div>
-        {/* Concentric circles — inverted: professionals on outside */}
+        {/* Concentric circles — ABI at centre */}
         <div className="flex-1 flex items-center justify-center relative" style={{ height: 700 }}>
           {rings.slice().reverse().map((r) => (
             <div
@@ -737,8 +766,103 @@ function Slide18() {
   );
 }
 
+/* ─── SLIDE 19: REFERENCES ─── */
+function Slide19() {
+  return (
+    <Slide bg="#0a0a1a">
+      <div className="flex-1 flex flex-col justify-center px-[160px]">
+        <span className="text-[16px] font-semibold tracking-[0.2em] uppercase" style={{ color: "#a855f7" }}>
+          References
+        </span>
+        <h2 className="mt-[24px] text-[48px] font-bold" style={{ color: "#ffffff" }}>Sources &amp; Citations</h2>
+        <div className="mt-[40px] grid grid-cols-2 gap-x-[60px] gap-y-[20px]">
+          {[
+            "McKinsey Global Institute (2023). The social economy: Unlocking value and productivity through social technologies.",
+            "Microsoft Research (2023). Viva Insights — Attention span and context-switching in knowledge work.",
+            "Grand View Research (2023). Cognitive Assessment & Training Market Size Report, 2023–2030.",
+            "Precedence Research (2023). Brain Health Supplements & Digital Cognitive Wellness Market.",
+            "Wood, R.L. (1997). Neuropathological indicators of brain damage. Brain Injury, 11(10), pp.735–741.",
+            "Dikmen, S.S. et al. (2009). Cognitive outcome following traumatic brain injury. Journal of the International Neuropsychological Society.",
+            "CDC (2022). TBI-related emergency department visits, hospitalisations, and readmission data.",
+            "World Stroke Organisation (2022). Global Stroke Fact Sheet. Lancet Neurology.",
+          ].map((ref, i) => (
+            <div key={i} className="flex gap-[12px]">
+              <span className="text-[16px] font-mono shrink-0" style={{ color: "#a855f7" }}>[{i + 1}]</span>
+              <span className="text-[16px] leading-relaxed" style={{ color: "rgba(255,255,255,0.6)" }}>{ref}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
+/* ─── SLIDE 20: APPENDIX — RECOMMENDED MVP ─── */
+function Slide20() {
+  return (
+    <Slide bg="#0a0a1a">
+      <div className="flex-1 flex flex-col justify-center px-[120px]">
+        <span className="text-[16px] font-semibold tracking-[0.2em] uppercase" style={{ color: "#a855f7" }}>
+          Appendix
+        </span>
+        <h2 className="mt-[20px] text-[44px] font-bold" style={{ color: "#ffffff" }}>Recommended MVP</h2>
+        <p className="mt-[8px] text-[20px]" style={{ color: "rgba(255,255,255,0.5)" }}>
+          Every feature built to clinical-grade cognitive standards. Available to all users from day one.
+        </p>
+
+        <div className="mt-[32px] flex gap-[40px]">
+          {/* MVP Core */}
+          <div className="flex-1 p-[32px] rounded-[16px]" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            <div className="text-[20px] font-bold mb-[20px]" style={{ color: "#f97316" }}>MVP Core (Months 1–3)</div>
+            <div className="space-y-[14px]">
+              {[
+                { name: "Memory Bridge", desc: "Voice capture + AI action extraction" },
+                { name: "Support Circle", desc: "Invite up to 5 people, escalation alerts" },
+                { name: "Daily Brain Boost", desc: "50 cognitive exercises from the 240+ library" },
+                { name: "Smart Scheduling", desc: "MYRHYTHM assessment determines cognitive peaks; users block unavailable days; AI schedules at optimal windows" },
+                { name: "Founding Member", desc: "Stripe subscription, £10/month" },
+              ].map((f) => (
+                <div key={f.name}>
+                  <span className="text-[18px] font-semibold" style={{ color: "#ffffff" }}>{f.name}</span>
+                  <span className="text-[16px] ml-[8px]" style={{ color: "rgba(255,255,255,0.5)" }}>— {f.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Post-MVP */}
+          <div className="flex-1 p-[32px] rounded-[16px]" style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)" }}>
+            <div className="text-[20px] font-bold mb-[20px]" style={{ color: "#a855f7" }}>Post-MVP (Months 4–6)</div>
+            <div className="space-y-[14px]">
+              {[
+                { name: "Clinical Dashboard", desc: "Provider view of patient progress (ABI/TBI unlock)" },
+                { name: "Full Brain Boost Library", desc: "240+ exercises across all cognitive domains" },
+                { name: "Progressive Escalation v2", desc: "Customisable urgency tiers" },
+                { name: "B2B Team Licensing", desc: "Organisational accounts and admin portal" },
+                { name: "Analytics & Reporting", desc: "Outcome tracking and exportable reports" },
+              ].map((f) => (
+                <div key={f.name}>
+                  <span className="text-[18px] font-semibold" style={{ color: "#ffffff" }}>{f.name}</span>
+                  <span className="text-[16px] ml-[8px]" style={{ color: "rgba(255,255,255,0.4)" }}>— {f.desc}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-[32px] p-[20px] rounded-[12px] text-center" style={{ background: "rgba(249,115,22,0.08)", border: "1px solid rgba(249,115,22,0.15)" }}>
+          <span className="text-[18px] font-medium" style={{ color: "#f97316" }}>
+            MVP Scope: 12 weeks · Budget: £100K of £250K raise · Target: 50 founding members at launch
+          </span>
+        </div>
+      </div>
+    </Slide>
+  );
+}
+
 /* ─── SLIDE RENDERER ─── */
-const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18];
+const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19, Slide20];
 
 export function ProductivityInvestorSlides({ currentSlide }: { currentSlide: number }) {
   const SlideComponent = slides[currentSlide] || Slide01;

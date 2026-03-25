@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +9,9 @@ import { Brain, Clock, Calendar, Zap, Plus, X } from 'lucide-react';
 import { PageLayout } from '@/components/shared/PageLayout';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { AvailabilityBlocker } from './AvailabilityBlocker';
+import { useSchedulePreferences } from '@/hooks/useSchedulePreferences';
+import { smartScheduler } from '@/utils/smartScheduler';
 
 interface Activity {
   id: string;
@@ -31,7 +34,9 @@ interface SmartSchedulingPageProps {
 
 const SmartSchedulingPage = ({ onCalendarIntegration }: SmartSchedulingPageProps) => {
   const navigate = useNavigate();
+  const { getBlockedSlots, saveUnavailableBlocks, isLoading: prefsLoading } = useSchedulePreferences();
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [assessmentPeaks, setAssessmentPeaks] = useState<{ start: number; end: number; days: number[] } | null>(null);
   const [newActivity, setNewActivity] = useState({
     name: '',
     duration: 30,
@@ -41,6 +46,20 @@ const SmartSchedulingPage = ({ onCalendarIntegration }: SmartSchedulingPageProps
   });
   const [generatedSchedule, setGeneratedSchedule] = useState<ScheduleSlot[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Load assessment peaks on mount
+  useEffect(() => {
+    const loadPeaks = async () => {
+      try {
+        const prefs = await smartScheduler.getUserPreferences('temp-user-id');
+        const peaks = smartScheduler.getAssessmentPeaks(prefs);
+        setAssessmentPeaks(peaks);
+      } catch (e) {
+        console.error('Error loading assessment peaks:', e);
+      }
+    };
+    loadPeaks();
+  }, []);
 
   const addActivity = () => {
     if (!newActivity.name.trim()) {
@@ -137,6 +156,33 @@ const SmartSchedulingPage = ({ onCalendarIntegration }: SmartSchedulingPageProps
             Premium Feature
           </Badge>
         </div>
+
+        {/* Assessment Summary Card */}
+        {assessmentPeaks && (
+          <Card className="border-green-200 bg-green-50/50 dark:bg-green-900/10 dark:border-green-800">
+            <CardContent className="pt-4 pb-3">
+              <div className="flex items-center gap-2 mb-1">
+                <Zap className="h-4 w-4 text-green-600" />
+                <span className="font-semibold text-sm">Your Optimal Schedule (from MYRHYTHM Assessment)</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                Based on your MYRHYTHM results, your peak cognitive hours are{' '}
+                <strong>{assessmentPeaks.start > 12 ? assessmentPeaks.start - 12 : assessmentPeaks.start}{assessmentPeaks.start < 12 ? 'am' : 'pm'}</strong>
+                {' – '}
+                <strong>{assessmentPeaks.end > 12 ? assessmentPeaks.end - 12 : assessmentPeaks.end}{assessmentPeaks.end < 12 ? 'am' : 'pm'}</strong>
+                {' '}on weekdays. High-impact tasks are automatically scheduled in these windows.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Availability Blocker */}
+        <AvailabilityBlocker
+          blockedSlots={getBlockedSlots()}
+          onSave={saveUnavailableBlocks}
+          assessmentPeaks={assessmentPeaks}
+          isLoading={prefsLoading}
+        />
 
         {/* Activity Input */}
         <Card>
