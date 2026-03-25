@@ -1,91 +1,102 @@
 
 
-# Interactive Gantt Chart Roadmap Page
+# Three Updates: Title Slide, MVP Appendix, and 5-Year Strategy Alignment
 
-## What We're Building
-A new `/launch/roadmap` page with an interactive Gantt chart showing the MVP timeline (April-June 2026) and Full Launch timeline (April-December 2026). The page will include export to CSV (Google Sheets compatible), PDF download, and a shareable link.
+## Overview
 
-## Page Structure
+Three deliverables:
+1. A Deloitte/Accenture-grade title slide for the in-app investor deck
+2. A recommended MVP appendix slide added to the deck
+3. An updated 5-Year Strategy PDF (v5) aligned with the investor deck content
 
-```text
-+------------------------------------------+
-|  LaunchLayout Header                     |
-+------------------------------------------+
-|  ROADMAP HERO                            |
-|  "MyRhythm CCM Roadmap"                 |
-|  [Download CSV] [Download PDF] [Share]   |
-+------------------------------------------+
-|  PHASE TABS: [MVP] [Full Launch] [All]   |
-+------------------------------------------+
-|  INTERACTIVE GANTT CHART                 |
-|  ┌─────────────────────────────────┐     |
-|  │ Apr  May  Jun  Jul  Aug ... Dec │     |
-|  │ ████ Auth & Onboarding         │     |
-|  │  ████ LEAP Core Features       │     |
-|  │   ███ Stripe Integration       │     |
-|  │      ████ Clinical Pilots      │     |
-|  │        ██████ Scale & Growth   │     |
-|  └─────────────────────────────────┘     |
-+------------------------------------------+
-|  MILESTONE CARDS (below chart)           |
-|  Key dates with status indicators        |
-+------------------------------------------+
-```
+---
 
-## Technical Approach
+## 1. Deloitte/Accenture-Influenced Title Slide
 
-### 1. Create roadmap data file
-**`src/data/roadmapData.ts`** — All milestone/task data with dates, phases, dependencies, status, and colors. Dates: April-December 2026.
+Replace `Slide01` in `InvestorSlides.tsx` with a premium consulting-firm aesthetic:
 
-### 2. Create Gantt chart component
-**`src/components/roadmap/GanttChart.tsx`** — Pure CSS/div-based horizontal bar chart (no external charting library needed). Each task is a colored bar positioned by start/end date. Hover shows details. Click expands subtasks. Responsive with horizontal scroll on mobile.
+- **Dark background** (`#0a0a1a`) — the "boardroom" look Deloitte and Accenture use
+- **Thin accent line** at top (brand gradient orange → violet, full width, 4px)
+- **"MyRhythm"** in large, bold white type (80pt) with subtle letter-spacing
+- **Subtitle**: "Collaborative Cognitive Management" in muted teal (`#028090`)
+- **Tagline**: "Bridging the gap between clinical care and daily living" in light grey
+- **Divider line** (thin, 1px white at 10% opacity)
+- **Bottom metadata bar** in structured layout:
+  - Left: "Investor Presentation | Pre-Seed Round | Confidential"
+  - Center: "Prepared by Annabel Aaron, Founder & CEO"
+  - Right: "March 2026"
+- **"CONFIDENTIAL"** watermark-style text, small, bottom-right corner
+- Clean geometric feel — no emojis, no gradients on text, just precision typography
 
-### 3. Create export utilities
-**`src/components/roadmap/roadmapExports.ts`**:
-- **CSV export**: Generates Google Sheets-compatible CSV with task name, phase, start date, end date, status, dependencies. Uses `Blob` + download link.
-- **PDF export**: Uses `react-to-print` (already in project) to render the chart as a printable PDF.
-- **Share**: Copies the `/launch/roadmap` URL to clipboard with toast confirmation.
+This replaces the current light-background centred title with something that commands the room.
 
-### 4. Create the page
-**`src/pages/launch/LaunchRoadmap.tsx`** — Uses `LaunchLayout`, renders hero section, phase filter tabs, `GanttChart`, milestone cards, and action buttons (CSV, PDF, Share).
+---
 
-### 5. Add route
-Update **`src/App.tsx`** to add `/launch/roadmap` route wrapped in `LaunchModeProvider`.
+## 2. Recommended MVP Slide (Appendix)
 
-### 6. Add navigation link
-Update **`src/components/launch/LaunchNav.tsx`** or dashboard to include a link to the roadmap page.
+Add a new `Slide20` — "Appendix: Recommended MVP" — after the References slide. This slide answers "what gets built first and why":
 
-## Roadmap Content (2026 Dates)
+**Layout**: Two-column with a priority matrix feel
 
-**MVP Phase (Apr 1 - Jun 30, 2026)**
-- Auth & User Onboarding (Apr 1-18)
-- LEAP Core: Memory Bridge + Scheduling (Apr 14 - May 16)
-- 3-Tier Subscription UI (May 5-23)
-- Stripe Payment Integration (May 19 - Jun 6)
-- Beta Testing & QA (Jun 2-20)
-- Soft Launch: 50 Founding Members (Jun 23-30)
+**Left column — "MVP Core (Months 1-3)":**
+- Memory Bridge (voice capture + AI action extraction)
+- Support Circle (invite up to 5 people, escalation alerts)
+- Daily Brain Boost (50 cognitive exercises from the 240+ library)
+- Smart Scheduling (calendar sync + energy-aware time blocking)
+- Founding Member subscription (Stripe, £10/month)
 
-**Full Launch Phase (Jul 1 - Dec 31, 2026)**
-- Clinical Partnership Pilots (Jul 1 - Aug 15)
-- Support Circle Features (Jul 14 - Aug 29)
-- Brain Games & Cognitive Tools (Aug 4 - Sep 19)
-- Analytics Dashboard (Sep 1 - Oct 3)
-- B2B Enterprise Features (Oct 1 - Nov 14)
-- Marketing & Growth Push (Nov 1 - Dec 12)
-- £500K ARR Target (Dec 31)
+**Right column — "Post-MVP (Months 4-6)":**
+- Clinical Dashboard (provider view of patient progress)
+- Full Brain Boost library (240+ exercises)
+- Progressive Escalation v2 (customisable urgency tiers)
+- B2B licensing portal
+- Analytics and outcome reporting
 
-## Export Formats
-- **CSV**: Standard comma-separated with headers — opens directly in Google Sheets via File > Import
-- **PDF**: Print-optimized layout via `react-to-print`
-- **Share**: Clipboard copy of page URL
+**Bottom bar**: "MVP Scope: 12 weeks | Budget: £100K of £250K raise | Target: 50 founding members at launch"
+
+**Why this MVP**: The features selected are the ones that demonstrate the CCM methodology end-to-end — capture (Memory Bridge), commit (Support Circle + Scheduling), calibrate (Brain Boost tracking), and celebrate (progress milestones). They also create the Support Circle virality loop from day one.
+
+Update `TOTAL_SLIDES` in `InvestorDeckPage.tsx` from 18 to 20 (fixing the existing off-by-one: 19 slides currently, plus this new one = 20).
+
+---
+
+## 3. Updated 5-Year Strategy PDF (v5)
+
+Regenerate `MyRhythm_5_Year_Strategy_v5.pdf` using ReportLab, aligned with the investor deck's numbers and narrative:
+
+**Content alignment with investor deck:**
+
+| Element | Investor Deck Says | Strategy v5 Will Say |
+|---------|-------------------|---------------------|
+| Raise | £250K pre-seed | £250K pre-seed → £2M Series A → £10M Series B |
+| Year 1 target | £500K revenue | £500K ARR by Dec 2026 |
+| TAM | $4.2B | $4.2B (ABI $2.4B + TBI $1.8B) |
+| SAM / SOM | $1.1B / $28M | Same |
+| Margins | 85% gross | 85% gross, 9:1 LTV:CAC |
+| Beachhead | US (NYC, LA, Chicago) | Same — Shepherd Center, Craig Hospital |
+| Year 5 target | Per memory: £100M+ ARR | £100M+ ARR |
+
+**Document structure** (ReportLab, dark header bars with brand colours):
+1. Executive Summary (1 page)
+2. Market Opportunity & TAM/SAM/SOM (1 page)
+3. Year-by-Year Roadmap: 2026-2031 (2 pages)
+4. Revenue Model & Unit Economics (1 page)
+5. Funding Roadmap: Pre-seed → Series D (1 page)
+6. Go-to-Market: Bowling Pin Expansion (1 page)
+7. Risk Mitigation (1 page)
+
+**Author**: "Annabel Aaron, Founder & CEO" on the cover page
+**Design**: Professional consulting-style with MyRhythm brand colours, clean tables, no emojis
+
+Full visual QA cycle on the PDF before delivery.
+
+---
 
 ## Files to Create/Edit
+
 | File | Action |
 |------|--------|
-| `src/data/roadmapData.ts` | Create — task/milestone data |
-| `src/components/roadmap/GanttChart.tsx` | Create — interactive chart |
-| `src/components/roadmap/RoadmapExports.ts` | Create — CSV/PDF/share utils |
-| `src/components/roadmap/MilestoneCards.tsx` | Create — key date cards |
-| `src/pages/launch/LaunchRoadmap.tsx` | Create — page component |
-| `src/App.tsx` | Edit — add route |
+| `src/components/investor/InvestorSlides.tsx` | Edit Slide01 (title), add Slide20 (MVP appendix), update slides array |
+| `src/pages/InvestorDeckPage.tsx` | Update `TOTAL_SLIDES` to 20 |
+| `/mnt/documents/MyRhythm_5_Year_Strategy_v5.pdf` | Create via ReportLab script |
 
