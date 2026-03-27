@@ -910,7 +910,7 @@ function Slide20() {
     { title: "Memory Bridge", desc: "Voice capture + AI action extraction — the core CCM loop" },
     { title: "Support Circle", desc: "Invite up to 5 people, escalation alerts, accountability" },
     { title: "Daily Brain Boost", desc: "50 cognitive exercises from the 240+ library" },
-    { title: "Smart Scheduling", desc: "Calendar sync + energy-aware time blocking" },
+    { title: "Smart Scheduling", desc: "MYRHYTHM assessment determines peaks; AI auto-schedules with attendee invitations; smart email auto-complete from saved contacts; confirm or auto-accept" },
     { title: "Founding Member Sub", desc: "Stripe integration, £10/month subscription" },
   ];
   const postMvp = [

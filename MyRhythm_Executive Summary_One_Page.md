@@ -27,9 +27,10 @@ Our three-tier revenue model generates income through:
 ### COMPETITIVE ADVANTAGE
 1. **Authentic Foundation:** Built by cognitive wellness champions with personal recovery experience
 2. **Dual-Market Approach:** Only platform serving both consumers and healthcare providers
-3. **Clinical Integration:** Medical-grade features with family and care team collaboration
-4. **Comprehensive Platform:** Full-spectrum life management vs. single-purpose tools
-5. **Empowerment Focus:** Strength-based approach rather than deficit-focused alternatives
+3. **Assistant-First AI Scheduling:** MYRHYTHM assessment determines cognitive peaks; AI auto-schedules commitments with attendee invitations from Support Circle — no other tool does this
+4. **Clinical Integration:** Medical-grade features with family and care team collaboration
+5. **Comprehensive Platform:** Full-spectrum life management vs. single-purpose tools
+6. **Empowerment Focus:** Strength-based approach rather than deficit-focused alternatives
 
 ### MARKET TRACTION & VALIDATION
 - Strong MVP with demonstrated user demand and engagement

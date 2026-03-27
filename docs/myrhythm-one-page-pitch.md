@@ -32,6 +32,7 @@ MyRhythm is the **first reminder app built on brain science**.
 
 Unlike generic productivity tools, MyRhythm:
 - Uses **Memory Bridge** to capture conversations and commitments your brain can't hold
+- Uses **Assistant-First scheduling** — AI auto-places commitments at cognitive peak times with attendee invitations
 - Uses **contextual memory anchors** ("Here's why this matters...")
 - Implements **progressive escalation** mimicking natural importance signals
 - Activates **social accountability** without shame
