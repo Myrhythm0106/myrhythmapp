@@ -25,7 +25,7 @@ export function FeatureCategories() {
             status="available"
             category="essential"
             path="/personal-empowerment"
-            metric={{ value: "Day 7", label: "LEAP Journey" }}
+            metric={{ value: "Day 7", label: "LEAP-OS Journey" }}
           />
           <FeatureCard
             title="Mood Harmony"
