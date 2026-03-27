@@ -34,6 +34,7 @@ serve(async (req) => {
     const requestSchema = z.object({
       calendar_event_id: z.string().uuid('Invalid calendar event ID'),
       action_id: z.string().uuid('Invalid action ID').optional(),
+      attendees: z.array(z.object({ email: z.string().email() })).optional(),
     });
     
     const body = await req.json();
@@ -50,7 +51,7 @@ serve(async (req) => {
       );
     }
     
-    const { calendar_event_id, action_id } = validation.data;
+    const { calendar_event_id, action_id, attendees } = validation.data;
 
     console.log('Creating Google Calendar event for:', { calendar_event_id, action_id, user_id: user.id });
 
@@ -175,6 +176,7 @@ serve(async (req) => {
             dateTime: endDateTime,
             timeZone: 'UTC',
           },
+          ...(attendees && attendees.length > 0 ? { attendees } : {}),
           reminders: {
             useDefault: false,
             overrides: [

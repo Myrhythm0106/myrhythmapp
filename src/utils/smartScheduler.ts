@@ -364,6 +364,20 @@ export class SmartScheduler {
     const [hours, minutes] = time.split(':').map(Number);
     return hours * 60 + minutes;
   }
+  // Extract mentioned contacts from action text by matching against Support Circle members
+  extractMentionedContacts(
+    actionText: string, 
+    supportCircleMembers: { name?: string; email: string }[]
+  ): { name?: string; email: string }[] {
+    const text = actionText.toLowerCase();
+    return supportCircleMembers.filter(member => {
+      if (member.name) {
+        const nameParts = member.name.toLowerCase().split(/\s+/);
+        return nameParts.some(part => part.length > 2 && text.includes(part));
+      }
+      return false;
+    });
+  }
 }
 
 export const smartScheduler = new SmartScheduler();

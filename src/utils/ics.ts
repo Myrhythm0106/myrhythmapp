@@ -7,6 +7,7 @@ interface CalendarEvent {
   end: Date;
   location?: string;
   uid?: string;
+  attendees?: { name?: string; email: string }[];
 }
 
 export function generateICS(events: CalendarEvent[]): string {
@@ -52,6 +53,14 @@ function generateICSEvent(event: CalendarEvent): string {
 
   if (location) {
     eventLines.push(`LOCATION:${location}`);
+  }
+
+  // Add attendees
+  if (event.attendees && event.attendees.length > 0) {
+    for (const attendee of event.attendees) {
+      const cn = attendee.name ? escapeICSText(attendee.name) : attendee.email;
+      eventLines.push(`ATTENDEE;ROLE=REQ-PARTICIPANT;CN=${cn}:mailto:${attendee.email}`);
+    }
   }
 
   // Add reminders (15 minutes before)
@@ -108,6 +117,11 @@ export function generateGoogleCalendarLink(event: CalendarEvent): string {
     location: event.location || ''
   });
 
+  // Add attendees for Google Calendar
+  if (event.attendees && event.attendees.length > 0) {
+    params.set('add', event.attendees.map(a => a.email).join(','));
+  }
+
   return `${baseUrl}?${params.toString()}`;
 }
 
@@ -144,6 +158,11 @@ function generateOutlookLink(event: CalendarEvent): string {
     body: event.description || '',
     location: event.location || ''
   });
+
+  // Add attendees for Outlook
+  if (event.attendees && event.attendees.length > 0) {
+    params.set('to', event.attendees.map(a => a.email).join(';'));
+  }
 
   return `${baseUrl}?${params.toString()}`;
 }
