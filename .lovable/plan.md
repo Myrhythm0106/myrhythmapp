@@ -1,75 +1,58 @@
 
 
-# Contact List Feature + Commit Section Updates
+# Add Provider Directory / Marketplace to 5-Year Strategy
 
-## Context
+## Concept
 
-The SmartScheduleCard already supports adding attendees via Support Circle and manual email entry. But there's no persistent **contact list** — every manual email is typed fresh each time. The "Commit" section in the strategy document also doesn't mention edit, deny, or manual email capabilities.
+A **Provider Directory** within MyRhythm where clinics, neurologists, neuropsychologists, and other brain health / memory specialists can advertise and promote their services to users. This creates a new revenue stream (listing fees, promoted placements) and builds a two-sided marketplace connecting patients with qualified providers.
 
-## Two Deliverables
+The app already has a `LocalServicesCard` and `localServicesData.ts` with hardcoded services — this evolves into a self-service provider marketplace.
 
-### A. Contact List Feature (New Database Table + UI)
+## What Changes
 
-A lightweight personal address book that sits alongside Support Circle. Support Circle = trusted people with permissions to your data. Contact List = anyone you might invite to meetings (no data access).
+### 1. Productivity 5-Year Strategy PDF (v5)
 
-**Database**: New `user_contacts` table:
-- `id`, `user_id`, `name`, `email`, `created_at`, `updated_at`
-- RLS: users can only CRUD their own contacts
-- Unique constraint on `(user_id, email)`
+Add a new section: **"Provider Directory & Marketplace"** woven into the roadmap:
 
-**Smart auto-save**: When a user manually types an email in the SmartScheduleCard, offer to save it to contacts. Next time, it appears as a suggestion alongside Support Circle members.
+- **Year 1 (Post-MVP, Months 4-6)**: Curated directory — MyRhythm lists vetted clinics, neurologists, neuropsychologists, and brain health professionals. Free listings to seed the directory. Users discover providers by category and location.
+- **Year 2**: Self-service provider portal — professionals create profiles, add credentials, specialities (TBI, ABI, memory rehabilitation, neuropsychology), and service descriptions. Paid promoted listings and featured placements introduced as a new revenue stream.
+- **Year 3-5**: Full marketplace — providers advertise directly to users based on cognitive profile and location. Appointment booking integration. Verified credentials badge. Provider analytics dashboard (impressions, enquiries). This becomes a significant B2B revenue channel alongside clinical licensing.
 
-**Typeahead in SmartScheduleCard**: When typing an email, fuzzy-match against:
-1. Support Circle members (shown with a badge)
-2. Saved contacts (shown with a different badge)
-3. If no match, allow free-text entry
+New revenue line item: **Provider Directory fees** (listing subscriptions from £29-£199/month depending on tier and visibility).
 
-This is the "SMART showup" behaviour described in the investor deck — stored emails surface as the user types, without blocking free input.
+### 2. Productivity Investor Deck (`ProductivityInvestorSlides.tsx`)
 
-**UI integration**: No separate "contacts page" needed initially. Contacts are managed inline:
-- Auto-suggested while typing in the attendee field
-- "Save to contacts?" prompt after adding a new email
-- Optional: a small "Manage Contacts" link in Settings for bulk editing
+- **Slide 20 (Post-MVP)**: Add "Provider Directory — Clinics and specialists advertise brain health services to users" to the Post-MVP list
+- **Revenue slide** (if applicable): Reference provider listing fees as an additional B2B revenue stream
 
-### B. Strategy Document Updates
+### 3. One-Page Pitch (`docs/myrhythm-one-page-pitch.md`)
 
-Update the "Commit" pillar description in the 5-Year Strategy PDF (v4) and the PRD to explicitly include:
+- **Business Model / Future B2B section**: Add provider directory listing fees as a revenue stream
+- **Roadmap**: Reference provider marketplace in Phase 2-3
 
-- **Edit**: User can adjust suggested date/time/attendees before confirming
-- **Deny**: User can dismiss/reject any AI-suggested scheduling item
-- **Manual email entry**: Type any email address; system auto-suggests from Contact List and Support Circle
-- **Contact List**: Persistent personal address book that learns from usage
+### 4. Executive Summary (`MyRhythm_Executive Summary_One_Page.md`)
 
-### Files
+- **Business Model section**: Add provider advertising/directory as a revenue channel
+
+### 5. PRD (`/mnt/documents/MyRhythm_PRD_IP_Documentation.md`)
+
+- Add a new subsection describing the Provider Directory feature, its evolution from curated to self-service, and how it connects users with memory and brain health specialists
+
+## Revenue Model for Provider Directory
+
+| Tier | Price | Features |
+|------|-------|----------|
+| Basic Listing | Free | Name, address, specialities, contact |
+| Professional | £49/month | Enhanced profile, photos, credentials, priority in search |
+| Premium | £149/month | Featured placement, analytics dashboard, direct messaging |
+
+## Files
 
 | File | Action |
 |------|--------|
-| Migration SQL | Create `user_contacts` table with RLS |
-| `src/components/scheduling/SmartScheduleCard.tsx` | Add typeahead against contacts + "Save to contacts?" prompt |
-| `src/hooks/use-contacts.ts` | Create — CRUD hook for `user_contacts` table |
-| `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v4.pdf` | Regenerate with updated Commit section |
-| `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Update Section 5.2 Commit flow to include edit, deny, manual email, contact list |
-| `src/components/investor/ProductivityInvestorSlides.tsx` | Update Slide 08 (CCM Management pillar) to reference edit/deny/contact list |
-
-### How Typeahead Works
-
-```text
-User types: "sa..."
-┌─────────────────────────────────┐
-│ 👥 Sarah Johnson (Support Circle)│
-│ 📋 Sam Peters (Saved Contact)    │
-│ ➕ Type full email to add new    │
-└─────────────────────────────────┘
-```
-
-- Support Circle members matched by name or email
-- Saved contacts matched by name or email
-- No match? User keeps typing a full email — validated on submit
-- After adding a new email: "Save to contacts for next time?" toast with Save button
-
-### 5-Year Plan Placement
-
-- **Year 1 MVP**: Contact list auto-save from scheduling flow, typeahead suggestions
-- **Year 2**: Contact list sync with external address books (Google Contacts, Outlook People)
-- **Year 3-5**: AI-suggested attendees based on meeting context and past invitation patterns
+| `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v5.pdf` | Regenerate with Provider Directory section |
+| `src/components/investor/ProductivityInvestorSlides.tsx` | Add to Post-MVP slide |
+| `docs/myrhythm-one-page-pitch.md` | Add to Business Model |
+| `MyRhythm_Executive Summary_One_Page.md` | Add to revenue channels |
+| `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Add Provider Directory subsection |
 
