@@ -386,6 +386,7 @@ function Slide11() {
             { label: "Progressive escalation", desc: "Built for brains that dismiss single pings" },
             { label: "Support Circle", desc: "Built for people who need human backup" },
             { label: "AI action extraction", desc: "Built for minds that can't hold meeting details" },
+            { label: "Memory Bridge", desc: "Built for people who lose conversations minutes after they happen" },
           ].map((f) => (
             <div key={f.label} className="text-center max-w-[300px]">
               <div className="text-[20px] font-semibold">{f.label}</div>
