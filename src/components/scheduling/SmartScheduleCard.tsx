@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useContacts } from '@/hooks/use-contacts';
 import { smartScheduler } from '@/utils/smartScheduler';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { EmailValidator } from '@/utils/security/emailValidator';
 import { toast } from 'sonner';
 import { 
   Calendar, Check, X, Clock, ChevronDown, ChevronUp, 
-  Users, Plus, Sparkles, Brain, Zap, Mail
+  Users, Plus, Sparkles, Brain, Zap, Mail, BookUser, Save
 } from 'lucide-react';
 import type { ExtractedAction } from '@/types/memoryBridge';
 
@@ -38,6 +39,7 @@ interface SmartScheduleCardProps {
 
 export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartScheduleCardProps) {
   const { user } = useAuth();
+  const { contacts, searchContacts, addContact } = useContacts();
   const [items, setItems] = useState<ScheduleItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [autoAccept, setAutoAccept] = useState(false);
@@ -48,6 +50,7 @@ export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartS
   const [emailInput, setEmailInput] = useState('');
   const [emailError, setEmailError] = useState('');
   const [supportCircleMembers, setSupportCircleMembers] = useState<Attendee[]>([]);
+  const [showTypeahead, setShowTypeahead] = useState(false);
 
   // Load support circle members
   useEffect(() => {
@@ -247,19 +250,63 @@ export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartS
     }
   }, [user?.id]);
 
-  const addEmailAttendee = useCallback((itemIndex: number) => {
-    if (!EmailValidator.isValidEmail(emailInput)) {
+  const addEmailAttendee = useCallback((itemIndex: number, emailOverride?: string) => {
+    const email = emailOverride || emailInput;
+    if (!EmailValidator.isValidEmail(email)) {
       setEmailError('Please enter a valid email address');
       return;
     }
     setEmailError('');
+    const isNewEmail = !supportCircleMembers.some(m => m.email === email) && 
+                       !contacts.some(c => c.email.toLowerCase() === email.toLowerCase());
+    
     setItems(prev => prev.map((item, i) => 
       i === itemIndex 
-        ? { ...item, attendees: [...item.attendees, { email: emailInput }] }
+        ? { ...item, attendees: [...item.attendees, { email }] }
         : item
     ));
     setEmailInput('');
-  }, [emailInput]);
+    setShowTypeahead(false);
+
+    // Offer to save new emails to contacts
+    if (isNewEmail) {
+      toast('Save to contacts?', {
+        description: email,
+        action: {
+          label: 'Save',
+          onClick: () => {
+            addContact(email);
+            toast.success('Contact saved!');
+          },
+        },
+        duration: 8000,
+      });
+    }
+  }, [emailInput, supportCircleMembers, contacts, addContact]);
+
+  // Typeahead suggestions based on input
+  const typeaheadSuggestions = useMemo(() => {
+    if (!emailInput || emailInput.length < 2) return [];
+    const q = emailInput.toLowerCase();
+    const results: Array<Attendee & { source: 'circle' | 'contact' }> = [];
+    
+    // Search Support Circle
+    supportCircleMembers.forEach(m => {
+      if ((m.name && m.name.toLowerCase().includes(q)) || m.email.toLowerCase().includes(q)) {
+        results.push({ ...m, source: 'circle' });
+      }
+    });
+    
+    // Search saved contacts (exclude those already in Support Circle)
+    const circleEmails = new Set(supportCircleMembers.map(m => m.email.toLowerCase()));
+    searchContacts(emailInput).forEach(c => {
+      if (!circleEmails.has(c.email.toLowerCase())) {
+        results.push({ name: c.name || undefined, email: c.email, source: 'contact' });
+      }
+    });
+    
+    return results.slice(0, 5);
+  }, [emailInput, supportCircleMembers, searchContacts]);
 
   const addSupportCircleAttendee = useCallback((itemIndex: number, attendee: Attendee) => {
     setItems(prev => prev.map((item, i) => {
@@ -506,23 +553,58 @@ export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartS
                   </div>
                 )}
 
-                {/* Manual email input */}
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    value={emailInput}
-                    onChange={(e) => { setEmailInput(e.target.value); setEmailError(''); }}
-                    placeholder="Enter email address"
-                    className="flex-1 px-3 py-1.5 text-xs rounded-md border border-input bg-background"
-                    onKeyDown={(e) => e.key === 'Enter' && addEmailAttendee(index)}
-                  />
-                  <Button 
-                    size="xs" 
-                    variant="outline" 
-                    onClick={() => addEmailAttendee(index)}
-                  >
-                    Add
-                  </Button>
+                {/* Manual email input with typeahead */}
+                <div className="relative">
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={emailInput}
+                      onChange={(e) => { setEmailInput(e.target.value); setEmailError(''); setShowTypeahead(true); }}
+                      onFocus={() => setShowTypeahead(true)}
+                      onBlur={() => setTimeout(() => setShowTypeahead(false), 200)}
+                      placeholder="Type name or email..."
+                      className="flex-1 px-3 py-1.5 text-xs rounded-md border border-input bg-background"
+                      onKeyDown={(e) => e.key === 'Enter' && addEmailAttendee(index)}
+                    />
+                    <Button 
+                      size="xs" 
+                      variant="outline" 
+                      onClick={() => addEmailAttendee(index)}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  
+                  {/* Typeahead dropdown */}
+                  {showTypeahead && typeaheadSuggestions.length > 0 && (
+                    <div className="absolute z-10 top-full left-0 right-12 mt-1 rounded-md border border-border bg-popover shadow-md overflow-hidden">
+                      {typeaheadSuggestions.map((suggestion) => (
+                        <button
+                          key={suggestion.email}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            addSupportCircleAttendee(index, { name: suggestion.name, email: suggestion.email });
+                            setEmailInput('');
+                            setShowTypeahead(false);
+                          }}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-accent transition-colors text-left"
+                        >
+                          {suggestion.source === 'circle' ? (
+                            <Users className="h-3 w-3 text-neural-purple-500 shrink-0" />
+                          ) : (
+                            <BookUser className="h-3 w-3 text-clarity-teal-500 shrink-0" />
+                          )}
+                          <span className="font-medium truncate">{suggestion.name || suggestion.email}</span>
+                          {suggestion.name && (
+                            <span className="text-muted-foreground truncate">{suggestion.email}</span>
+                          )}
+                          <span className="ml-auto text-[10px] text-muted-foreground shrink-0">
+                            {suggestion.source === 'circle' ? 'Circle' : 'Contact'}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 {emailError && <p className="text-xs text-destructive">{emailError}</p>}
               </div>

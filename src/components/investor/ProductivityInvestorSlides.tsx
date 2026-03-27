@@ -258,7 +258,7 @@ function Slide08() {
           {[
             { pillar: "Collaborative", desc: "Support Circles, caregiver dashboards, shared accountability", color: "#a855f7" },
             { pillar: "Cognitive", desc: "Memory Bridge — captures what your brain can't hold, Rhythmic Intelligence, energy-aware scheduling", color: "#0284c7" },
-            { pillar: "Management", desc: "Assistant-First auto-scheduling with attendee invitations, task chunking, celebration streaks", color: "#f97316" },
+            { pillar: "Management", desc: "Assistant-First auto-scheduling with edit, deny, and contact list — users adjust times, dismiss suggestions, or add any email with smart typeahead from saved contacts and Support Circle", color: "#f97316" },
           ].map((p) => (
             <div key={p.pillar} className="flex-1 p-[20px] rounded-[12px]" style={{ background: "#f8fafc" }}>
               <div className="text-[20px] font-bold" style={{ color: p.color }}>{p.pillar}</div>
