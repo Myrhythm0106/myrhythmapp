@@ -34,6 +34,7 @@ serve(async (req) => {
     const requestSchema = z.object({
       calendar_event_id: z.string().uuid('Invalid calendar event ID'),
       action_id: z.string().uuid('Invalid action ID').optional(),
+      attendees: z.array(z.object({ email: z.string().email() })).optional(),
     });
     
     const body = await req.json();
