@@ -257,7 +257,7 @@ function Slide08() {
         <div className="mt-[28px] flex gap-[20px]">
           {[
             { pillar: "Collaborative", desc: "Support Circles, caregiver dashboards, shared accountability", color: "#a855f7" },
-            { pillar: "Cognitive", desc: "Rhythmic Intelligence, energy-aware scheduling, Memory Bridge", color: "#0284c7" },
+            { pillar: "Cognitive", desc: "Memory Bridge — captures what your brain can't hold, Rhythmic Intelligence, energy-aware scheduling", color: "#0284c7" },
             { pillar: "Management", desc: "Task chunking, smart scheduling, celebration streaks", color: "#f97316" },
           ].map((p) => (
             <div key={p.pillar} className="flex-1 p-[20px] rounded-[12px]" style={{ background: "#f8fafc" }}>
@@ -386,6 +386,7 @@ function Slide11() {
             { label: "Progressive escalation", desc: "Built for brains that dismiss single pings" },
             { label: "Support Circle", desc: "Built for people who need human backup" },
             { label: "AI action extraction", desc: "Built for minds that can't hold meeting details" },
+            { label: "Memory Bridge", desc: "Built for people who lose conversations minutes after they happen" },
           ].map((f) => (
             <div key={f.label} className="text-center max-w-[300px]">
               <div className="text-[20px] font-semibold">{f.label}</div>
@@ -574,6 +575,7 @@ function Slide15() {
             { metric: "Restart After Interruption", direction: "↑", detail: "Progressive re-engagement pulls users back to their thread — instead of losing the day.", color: "#f97316" },
             { metric: "Confidence", direction: "↑", detail: "Tracked wins compound into self-trust. Users report feeling more capable over time.", color: "#a855f7" },
             { metric: "Productivity", direction: "↑", detail: "As reliability builds and confidence returns, users report sustained productivity gains — not through working harder, but through trusting themselves to follow through.", color: "#0284c7" },
+            { metric: "Memory Confidence", direction: "↑", detail: "Users report trusting their memory for the first time. The system remembers so they don't have to.", color: "#16a34a" },
           ].map((e) => (
             <div key={e.metric} className="flex-1 p-[36px] rounded-[16px]" style={{ background: "#f8fafc" }}>
               <div className="text-[48px] font-bold" style={{ color: e.color }}>{e.direction}</div>
@@ -667,7 +669,7 @@ function Slide17() {
           <div className="flex-1 p-[40px] rounded-[16px] border-2" style={{ borderColor: "#f97316", background: "#fff7ed" }}>
            <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#f97316" }}>LEAP + CCM Platform</div>
             <div className="text-[20px] leading-relaxed" style={{ color: "#475569" }}>
-              Always-on. Collaborative. Adapts to cognitive state. Escalates when needed. Celebrates when earned. Life empowerment, not just productivity.
+              Always-on. Remembers what you can't. Adapts to cognitive state. Escalates when needed. Celebrates when earned. Built by someone who knows what memory loss feels like.
             </div>
           </div>
         </div>

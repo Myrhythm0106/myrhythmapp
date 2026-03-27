@@ -17,22 +17,25 @@ MyRhythm is the **first reminder app built on brain science**.
 
 | Feature | How It Works |
 |---------|--------------|
-| 🎙️ **Memory Bridge** | Record conversations → AI extracts action items |
-| 🧠 **Brain Health Reminders** | Progressive escalation (gentle → moderate → urgent) |
+| 🎙️ **Memory Bridge** | Record conversations → AI extracts action items. Built for people with memory challenges who lose context minutes after it happens. |
+| 🧠 **Brain Health Reminders** | Progressive escalation (gentle → moderate → urgent) — CCM-powered cognitive continuity |
 | 💪 **Daily Brain Boost** | 240+ science-backed cognitive challenges |
-| 💚 **Support Circle** | Trusted people notified when you need help |
+| 💚 **Support Circle** | Trusted people notified when you need help — collaborative accountability |
+| 🔄 **CCM Engine** | Collaborative Cognitive Management methodology bridges the gap between intention and reliable execution |
 
 ---
 
 ### UNIQUE VALUE PROPOSITION
 
-> **"The only reminder app that escalates until you respond — with your support network as backup."**
+> **"The only platform powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, escalates until you respond, with your support network as backup."**
 
 Unlike generic productivity tools, MyRhythm:
+- Uses **Memory Bridge** to capture conversations and commitments your brain can't hold
 - Uses **contextual memory anchors** ("Here's why this matters...")
 - Implements **progressive escalation** mimicking natural importance signals
 - Activates **social accountability** without shame
 - Builds **habits through celebration** and streak tracking
+- Powered by **CCM methodology** — memory-first design for cognitive resilience
 
 ---
 
@@ -94,7 +97,7 @@ Unlike generic productivity tools, MyRhythm:
 | CareZone | Medication tracking | Broader cognitive support |
 | Notion/Todoist | Productivity | Not built for memory challenges |
 
-**Moat:** Community of users with shared experience + clinical validation roadmap
+**Moat:** CCM methodology · Memory-first design · Community of users with shared experience · Clinical validation roadmap
 
 ---
 
