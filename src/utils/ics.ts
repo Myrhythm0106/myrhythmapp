@@ -55,6 +55,14 @@ function generateICSEvent(event: CalendarEvent): string {
     eventLines.push(`LOCATION:${location}`);
   }
 
+  // Add attendees
+  if (event.attendees && event.attendees.length > 0) {
+    for (const attendee of event.attendees) {
+      const cn = attendee.name ? escapeICSText(attendee.name) : attendee.email;
+      eventLines.push(`ATTENDEE;ROLE=REQ-PARTICIPANT;CN=${cn}:mailto:${attendee.email}`);
+    }
+  }
+
   // Add reminders (15 minutes before)
   eventLines.push(
     'BEGIN:VALARM',
