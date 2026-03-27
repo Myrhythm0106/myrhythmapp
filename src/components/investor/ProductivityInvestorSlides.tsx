@@ -258,7 +258,7 @@ function Slide08() {
           {[
             { pillar: "Collaborative", desc: "Support Circles, caregiver dashboards, shared accountability", color: "#a855f7" },
             { pillar: "Cognitive", desc: "Memory Bridge — captures what your brain can't hold, Rhythmic Intelligence, energy-aware scheduling", color: "#0284c7" },
-            { pillar: "Management", desc: "Task chunking, smart scheduling, celebration streaks", color: "#f97316" },
+            { pillar: "Management", desc: "Assistant-First auto-scheduling with attendee invitations, task chunking, celebration streaks", color: "#f97316" },
           ].map((p) => (
             <div key={p.pillar} className="flex-1 p-[20px] rounded-[12px]" style={{ background: "#f8fafc" }}>
               <div className="text-[20px] font-bold" style={{ color: p.color }}>{p.pillar}</div>
@@ -821,7 +821,7 @@ function Slide20() {
                 { name: "Memory Bridge", desc: "Voice capture + AI action extraction" },
                 { name: "Support Circle", desc: "Invite up to 5 people, escalation alerts" },
                 { name: "Daily Brain Boost", desc: "50 cognitive exercises from the 240+ library" },
-                { name: "Smart Scheduling", desc: "MYRHYTHM assessment determines cognitive peaks; users block unavailable days; AI schedules at optimal windows" },
+                { name: "Smart Scheduling", desc: "MYRHYTHM assessment determines peaks; AI auto-schedules with attendee invitations from Support Circle; smart email auto-complete; confirm or auto-accept" },
                 { name: "Founding Member", desc: "Stripe subscription, £10/month" },
               ].map((f) => (
                 <div key={f.name}>

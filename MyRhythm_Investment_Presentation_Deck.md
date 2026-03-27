@@ -42,10 +42,12 @@
 - Empowerment-focused approach
 
 💪 **Core Features:**
-- Personalized cognitive training
+- **Memory Bridge** — Record conversations, AI extracts commitments your memory can't hold
+- **Assistant-First Smart Scheduling** — MYRHYTHM assessment determines cognitive peaks; AI auto-schedules at optimal windows; suggests inviting attendees from Support Circle; syncs with Google Calendar & Outlook; confirm or auto-accept
+- Personalized cognitive training (240+ exercises)
 - Clinical-grade progress tracking
-- Care team collaboration tools
-- Supportive community platform
+- Care team collaboration via Support Circle
+- Powered by CCM (Collaborative Cognitive Management) methodology
 
 ---
 

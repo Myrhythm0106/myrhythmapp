@@ -310,7 +310,7 @@ function Slide08() {
     { title: "Vision & Goal Setting", desc: "Set life goals, break them into steps, and share progress with rehab and medical teams. Forward momentum that empowers and maintains clinical connections.", icon: "🎯" },
     { title: "Support Circle", desc: "Trusted network of 5 people who step in when the brain needs backup.", icon: "🤝" },
     { title: "Daily Brain Boost", desc: "240+ cognitive exercises building resilience, confidence, and mental agility.", icon: "🧠" },
-    { title: "Smart Scheduling", desc: "Your personal assistant. MyRhythm reads your calendar availability and automatically schedules meetings, appointments, and actions — so nothing falls through the cracks. Integrates with Google Calendar, Outlook, and more to sync seamlessly with your existing schedule.", icon: "📅" },
+    { title: "Smart Scheduling", desc: "Your AI personal assistant. MYRHYTHM assessment determines your cognitive peaks. Memory Bridge extracts commitments. AI auto-schedules at optimal windows, suggests inviting attendees from your Support Circle, and syncs with Google Calendar and Outlook.", icon: "📅" },
   ];
   return (
     <Slide>
@@ -910,7 +910,7 @@ function Slide20() {
     { title: "Memory Bridge", desc: "Voice capture + AI action extraction — the core CCM loop" },
     { title: "Support Circle", desc: "Invite up to 5 people, escalation alerts, accountability" },
     { title: "Daily Brain Boost", desc: "50 cognitive exercises from the 240+ library" },
-    { title: "Smart Scheduling", desc: "Calendar sync + energy-aware time blocking" },
+    { title: "Smart Scheduling", desc: "MYRHYTHM assessment determines peaks; AI auto-schedules with attendee invitations; smart email auto-complete from saved contacts; confirm or auto-accept" },
     { title: "Founding Member Sub", desc: "Stripe integration, £10/month subscription" },
   ];
   const postMvp = [
