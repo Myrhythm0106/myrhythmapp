@@ -7,6 +7,7 @@ interface CalendarEvent {
   end: Date;
   location?: string;
   uid?: string;
+  attendees?: { name?: string; email: string }[];
 }
 
 export function generateICS(events: CalendarEvent[]): string {
