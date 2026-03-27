@@ -117,6 +117,11 @@ export function generateGoogleCalendarLink(event: CalendarEvent): string {
     location: event.location || ''
   });
 
+  // Add attendees for Google Calendar
+  if (event.attendees && event.attendees.length > 0) {
+    params.set('add', event.attendees.map(a => a.email).join(','));
+  }
+
   return `${baseUrl}?${params.toString()}`;
 }
 
