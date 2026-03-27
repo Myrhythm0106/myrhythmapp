@@ -19,7 +19,8 @@ export async function convertActionToCalendarEvent(
   userId: string,
   watcherNames?: string[],
   selectedDate?: string,
-  selectedTime?: string
+  selectedTime?: string,
+  attendees?: { name?: string; email: string }[]
 ): Promise<string | null> {
   try {
     let eventDate = selectedDate;
