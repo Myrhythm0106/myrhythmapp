@@ -17,10 +17,11 @@ MyRhythm is the **first reminder app built on brain science**.
 
 | Feature | How It Works |
 |---------|--------------|
-| 🎙️ **Memory Bridge** | Record conversations → AI extracts action items |
-| 🧠 **Brain Health Reminders** | Progressive escalation (gentle → moderate → urgent) |
+| 🎙️ **Memory Bridge** | Record conversations → AI extracts action items. Built for people with memory challenges who lose context minutes after it happens. |
+| 🧠 **Brain Health Reminders** | Progressive escalation (gentle → moderate → urgent) — CCM-powered cognitive continuity |
 | 💪 **Daily Brain Boost** | 240+ science-backed cognitive challenges |
-| 💚 **Support Circle** | Trusted people notified when you need help |
+| 💚 **Support Circle** | Trusted people notified when you need help — collaborative accountability |
+| 🔄 **CCM Engine** | Collaborative Cognitive Management methodology bridges the gap between intention and reliable execution |
 
 ---
 
