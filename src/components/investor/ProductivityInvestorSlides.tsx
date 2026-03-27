@@ -669,7 +669,7 @@ function Slide17() {
           <div className="flex-1 p-[40px] rounded-[16px] border-2" style={{ borderColor: "#f97316", background: "#fff7ed" }}>
            <div className="text-[22px] font-bold mb-[16px]" style={{ color: "#f97316" }}>LEAP + CCM Platform</div>
             <div className="text-[20px] leading-relaxed" style={{ color: "#475569" }}>
-              Always-on. Collaborative. Adapts to cognitive state. Escalates when needed. Celebrates when earned. Life empowerment, not just productivity.
+              Always-on. Remembers what you can't. Adapts to cognitive state. Escalates when needed. Celebrates when earned. Built by someone who knows what memory loss feels like.
             </div>
           </div>
         </div>

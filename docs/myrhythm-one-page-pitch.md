@@ -97,7 +97,7 @@ Unlike generic productivity tools, MyRhythm:
 | CareZone | Medication tracking | Broader cognitive support |
 | Notion/Todoist | Productivity | Not built for memory challenges |
 
-**Moat:** Community of users with shared experience + clinical validation roadmap
+**Moat:** CCM methodology · Memory-first design · Community of users with shared experience · Clinical validation roadmap
 
 ---
 
