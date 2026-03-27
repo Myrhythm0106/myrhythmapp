@@ -39,6 +39,7 @@ interface SmartScheduleCardProps {
 
 export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartScheduleCardProps) {
   const { user } = useAuth();
+  const { contacts, searchContacts, addContact } = useContacts();
   const [items, setItems] = useState<ScheduleItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [autoAccept, setAutoAccept] = useState(false);
@@ -49,6 +50,7 @@ export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartS
   const [emailInput, setEmailInput] = useState('');
   const [emailError, setEmailError] = useState('');
   const [supportCircleMembers, setSupportCircleMembers] = useState<Attendee[]>([]);
+  const [showTypeahead, setShowTypeahead] = useState(false);
 
   // Load support circle members
   useEffect(() => {
