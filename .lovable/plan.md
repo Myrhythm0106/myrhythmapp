@@ -1,58 +1,91 @@
 
 
-# Add Provider Directory / Marketplace to 5-Year Strategy
+# LEAP-OS: Life Empowerment And Productivity — Operating System
 
-## Concept
+## Definition
 
-A **Provider Directory** within MyRhythm where clinics, neurologists, neuropsychologists, and other brain health / memory specialists can advertise and promote their services to users. This creates a new revenue stream (listing fees, promoted placements) and builds a two-sided marketplace connecting patients with qualified providers.
+**LEAP-OS** = **L**ife **E**mpowerment **A**nd **P**roductivity — **O**perating **S**ystem
 
-The app already has a `LocalServicesCard` and `localServicesData.ts` with hardcoded services — this evolves into a self-service provider marketplace.
+The acronym LEAP retains "And Productivity" as a core pillar. The "-OS" suffix elevates it from app to infrastructure. Full tagline:
 
-## What Changes
+> LEAP-OS is the world's first Life Empowerment And Productivity Operating System — a cognitive infrastructure designed to align your daily actions with your biological rhythm and long-term aspirations.
 
-### 1. Productivity 5-Year Strategy PDF (v5)
+## Changes
 
-Add a new section: **"Provider Directory & Marketplace"** woven into the roadmap:
+### Tier 1: Primary brand surfaces (7 files)
 
-- **Year 1 (Post-MVP, Months 4-6)**: Curated directory — MyRhythm lists vetted clinics, neurologists, neuropsychologists, and brain health professionals. Free listings to seed the directory. Users discover providers by category and location.
-- **Year 2**: Self-service provider portal — professionals create profiles, add credentials, specialities (TBI, ABI, memory rehabilitation, neuropsychology), and service descriptions. Paid promoted listings and featured placements introduced as a new revenue stream.
-- **Year 3-5**: Full marketplace — providers advertise directly to users based on cognitive profile and location. Appointment booking integration. Verified credentials badge. Provider analytics dashboard (impressions, enquiries). This becomes a significant B2B revenue channel alongside clinical licensing.
+| File | Line | Current | New |
+|------|------|---------|-----|
+| `AppleHeroSection.tsx` | 35 | "Transform challenges into confidence..." | Add line below: "Powered by LEAP-OS — the world's first Life Empowerment And Productivity Operating System" |
+| `SplashScreen.tsx` | 35 | Just "MyRhythm" | Add subtitle: "Powered by LEAP-OS" |
+| `ProductivityInvestorSlides.tsx` | 56 | "Built for the hardest cognitive (memory) challenges..." | Add "Powered by LEAP-OS" beneath. Update line 764 disclaimer to "MyRhythm is a Life Empowerment And Productivity Operating System (LEAP-OS). It is not a medical device." |
+| `MeetMyRhythmSection.tsx` | 10 | "isn't just another productivity app" | "isn't just another productivity app — it's LEAP-OS: the world's first Life Empowerment And Productivity Operating System" |
+| `AuthenticationGate.tsx` | 109 | "Memory1st → LEAP Forward" | "Powered by LEAP-OS" |
+| `Welcome.tsx` | 148 | "Memory1st → LEAP Forward" | "Powered by LEAP-OS" |
+| `AuthPage.tsx` | 58 | "Memory1st → LEAP Forward" | "Powered by LEAP-OS" |
 
-New revenue line item: **Provider Directory fees** (listing subscriptions from £29-£199/month depending on tier and visibility).
+### Tier 2: Welcome screen disclaimers (5 files)
 
-### 2. Productivity Investor Deck (`ProductivityInvestorSlides.tsx`)
+All updated to: "MyRhythm is a Life Empowerment And Productivity Operating System (LEAP-OS). It is not a medical device..."
 
-- **Slide 20 (Post-MVP)**: Add "Provider Directory — Clinics and specialists advertise brain health services to users" to the Post-MVP list
-- **Revenue slide** (if applicable): Reference provider listing fees as an additional B2B revenue stream
+| File | Line |
+|------|------|
+| `BrainHealthWelcome.tsx` | 107 |
+| `CognitiveSupportWelcome.tsx` | 107 |
+| `MSCognitiveWelcome.tsx` | 107 |
+| `LongCovidWelcome.tsx` | 107 |
+| `ADHDWelcome.tsx` | 107 |
 
-### 3. One-Page Pitch (`docs/myrhythm-one-page-pitch.md`)
+### Tier 3: Dashboard and feature references (5 files)
 
-- **Business Model / Future B2B section**: Add provider directory listing fees as a revenue stream
-- **Roadmap**: Reference provider marketplace in Phase 2-3
+| File | Current | New |
+|------|---------|-----|
+| `FeatureCategories.tsx` L28 | "LEAP Journey" | "LEAP-OS Journey" |
+| `FeatureCategories.tsx` L49 | "LEAP Goals" | "LEAP-OS Goals" |
+| `PersonalEmpowermentMeter.tsx` L84 | "Daily LEAP Actions" | "Daily LEAP-OS Actions" |
+| `PersonalEmpowermentHub.tsx` L49 | "Day X of Your LEAP Journey" | "Day X of Your LEAP-OS Journey" |
+| `BrainRecoveryPage.tsx` L35 | "LEAP methodology" | "LEAP-OS methodology" |
 
-### 4. Executive Summary (`MyRhythm_Executive Summary_One_Page.md`)
+### Tier 4: Documentation (3 files)
 
-- **Business Model section**: Add provider advertising/directory as a revenue channel
-
-### 5. PRD (`/mnt/documents/MyRhythm_PRD_IP_Documentation.md`)
-
-- Add a new subsection describing the Provider Directory feature, its evolution from curated to self-service, and how it connects users with memory and brain health specialists
-
-## Revenue Model for Provider Directory
-
-| Tier | Price | Features |
-|------|-------|----------|
-| Basic Listing | Free | Name, address, specialities, contact |
-| Professional | £49/month | Enhanced profile, photos, credentials, priority in search |
-| Premium | £149/month | Featured placement, analytics dashboard, direct messaging |
-
-## Files
-
-| File | Action |
+| File | Change |
 |------|--------|
-| `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v5.pdf` | Regenerate with Provider Directory section |
-| `src/components/investor/ProductivityInvestorSlides.tsx` | Add to Post-MVP slide |
-| `docs/myrhythm-one-page-pitch.md` | Add to Business Model |
-| `MyRhythm_Executive Summary_One_Page.md` | Add to revenue channels |
-| `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Add Provider Directory subsection |
+| `docs/myrhythm-one-page-pitch.md` | Solution line: "MyRhythm is the first Life Empowerment And Productivity Operating System built on brain science." UVP references LEAP-OS. |
+| `MyRhythm_Executive Summary_One_Page.md` | Opening definition updated to LEAP-OS |
+| `InvestorSlides.tsx` L777 | "Life Empowerment & Productivity" → "Life Empowerment And Productivity Operating System (LEAP-OS)" |
+
+### Tier 5: Strategy PDF (v6)
+
+Regenerate `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v6.pdf` with LEAP-OS framing throughout, including a new section: "Why an Operating System?" explaining platform defensibility and ecosystem moat.
+
+## What stays unchanged
+
+- "Memory1st → LEAP" references in motivational/empowerment content (DailyEmpowermentBoost, WelcomeCard descriptions, tutorialData) — these refer to the user's personal journey outcome, not the platform brand
+- Competitor contrasts using "productivity app/tool" — these describe competitors, not MyRhythm
+- LoginModal tagline — will naturally update via the AuthPage change pattern
+
+## Files Summary
+
+| # | File | Action |
+|---|------|--------|
+| 1 | `src/components/landing/AppleHeroSection.tsx` | Add LEAP-OS subtitle |
+| 2 | `src/components/mobile/SplashScreen.tsx` | Add LEAP-OS subtitle |
+| 3 | `src/components/investor/ProductivityInvestorSlides.tsx` | Update subtitle + disclaimer |
+| 4 | `src/components/investor/InvestorSlides.tsx` | Update footer text |
+| 5 | `src/components/founders-story/MeetMyRhythmSection.tsx` | Update intro |
+| 6 | `src/components/onboarding/AuthenticationGate.tsx` | Update tagline |
+| 7 | `src/pages/Welcome.tsx` | Update tagline |
+| 8 | `src/pages/AuthPage.tsx` | Update tagline |
+| 9 | `src/components/mvp/BrainHealthWelcome.tsx` | Update disclaimer |
+| 10 | `src/components/mvp/CognitiveSupportWelcome.tsx` | Update disclaimer |
+| 11 | `src/components/mvp/MSCognitiveWelcome.tsx` | Update disclaimer |
+| 12 | `src/components/mvp/LongCovidWelcome.tsx` | Update disclaimer |
+| 13 | `src/components/mvp/ADHDWelcome.tsx` | Update disclaimer |
+| 14 | `src/components/dashboard/FeatureCategories.tsx` | LEAP → LEAP-OS |
+| 15 | `src/components/dashboard/PersonalEmpowermentMeter.tsx` | LEAP → LEAP-OS |
+| 16 | `src/components/dashboard/PersonalEmpowermentHub.tsx` | LEAP → LEAP-OS |
+| 17 | `src/pages/BrainRecoveryPage.tsx` | LEAP → LEAP-OS |
+| 18 | `docs/myrhythm-one-page-pitch.md` | Update solution + UVP |
+| 19 | `MyRhythm_Executive Summary_One_Page.md` | Update opening |
+| 20 | `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v6.pdf` | Regenerate |
 
