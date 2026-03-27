@@ -81,7 +81,7 @@ export function PersonalEmpowermentMeter({
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2">
               <Brain className="h-4 w-4 text-blue-500" />
-              <span>Daily LEAP Actions</span>
+              <span>Daily LEAP-OS Actions</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-16 h-2 bg-gray-200 rounded-full">

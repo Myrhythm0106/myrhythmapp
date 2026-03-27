@@ -34,6 +34,7 @@ const SplashScreen = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
             MyRhythm
           </h1>
+          <p className="text-sm text-beacon-600/70 font-medium tracking-wide mt-1">Powered by LEAP-OS</p>
         </div>
 
         {/* Taglines and Description */}

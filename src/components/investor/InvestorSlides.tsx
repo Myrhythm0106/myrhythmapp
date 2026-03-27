@@ -774,7 +774,7 @@ function Slide18() {
 
         <div className="mt-[20px] flex items-center justify-between">
           <div className="text-[20px] font-semibold" style={{ color: "#1a1a2e" }}>
-            MyRhythm: Life Empowerment &amp; Productivity
+            MyRhythm: Life Empowerment And Productivity Operating System (LEAP-OS)
           </div>
           <div className="text-[18px]" style={{ color: "#94a3b8" }}>
             investors@myrhythm.com · myrhythm.app

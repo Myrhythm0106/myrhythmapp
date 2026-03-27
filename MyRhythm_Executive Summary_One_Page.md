@@ -1,14 +1,14 @@
 
 # MyRhythm Executive Summary
-## Transforming Cognitive Wellness Through Digital Innovation
+## LEAP-OS: The World's First Life Empowerment And Productivity Operating System
 
 ---
 
 ### THE OPPORTUNITY
-**MyRhythm** addresses a £2.3 billion global market opportunity in cognitive wellness and brain injury recovery through our comprehensive digital health platform. With 1.4 million annual TBI cases and 15+ million potential cognitive wellness users in target markets, we're positioned to capture significant market share in an underserved sector growing at 8.1% annually.
+**MyRhythm**, powered by **LEAP-OS** (Life Empowerment And Productivity Operating System), addresses a £2.3 billion global market opportunity in cognitive wellness and brain injury recovery through the world's first cognitive infrastructure platform. With 1.4 million annual TBI cases and 15+ million potential cognitive wellness users in target markets, we're positioned to capture significant market share in an underserved sector growing at 8.1% annually.
 
 ### UNIQUE VALUE PROPOSITION
-We are the **only platform** that bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience in cognitive recovery. Our comprehensive approach combines Memory Bridge conversation capture, Assistant-First Smart Scheduling powered by the MYRHYTHM assessment, personalized training, clinical-grade progress tracking, care team collaboration via Support Circle, and community support—differentiating us from single-purpose competitors like Lumosity (consumer-only) and CogniFit (clinical-only).
+We are the **only operating system** that bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience in cognitive recovery. LEAP-OS combines Memory Bridge conversation capture, Assistant-First Smart Scheduling powered by the MYRHYTHM assessment, personalized training, clinical-grade progress tracking, care team collaboration via Support Circle, and community support — functioning as a complete cognitive infrastructure that aligns daily actions with biological rhythm and long-term aspirations.
 
 ### BUSINESS MODEL & FINANCIAL PROJECTIONS
 **Revenue Target: £500,000 by December 2025**
@@ -26,12 +26,13 @@ Our diversified revenue model generates income through:
 - 85%+ gross margins with <5% monthly churn
 
 ### COMPETITIVE ADVANTAGE
-1. **Authentic Foundation:** Built by cognitive wellness champions with personal recovery experience
-2. **Dual-Market Approach:** Only platform serving both consumers and healthcare providers
-3. **Assistant-First AI Scheduling:** MYRHYTHM assessment determines cognitive peaks; AI auto-schedules commitments with attendee invitations from Support Circle — no other tool does this
-4. **Clinical Integration:** Medical-grade features with family and care team collaboration
-5. **Comprehensive Platform:** Full-spectrum life management vs. single-purpose tools
-6. **Empowerment Focus:** Strength-based approach rather than deficit-focused alternatives
+1. **LEAP-OS Architecture:** The only Life Empowerment And Productivity Operating System — not an app, but cognitive infrastructure with platform defensibility
+2. **Authentic Foundation:** Built by cognitive wellness champions with personal recovery experience
+3. **Dual-Market Approach:** Only platform serving both consumers and healthcare providers
+4. **Assistant-First AI Scheduling:** MYRHYTHM assessment determines cognitive peaks; AI auto-schedules commitments with attendee invitations from Support Circle — no other tool does this
+5. **Clinical Integration:** Medical-grade features with family and care team collaboration
+6. **CCM Kernel:** Collaborative Cognitive Management methodology powers every feature as the operating system's core engine
+7. **Empowerment Focus:** Strength-based approach rather than deficit-focused alternatives
 
 ### MARKET TRACTION & VALIDATION
 - Strong MVP with demonstrated user demand and engagement
@@ -56,6 +57,8 @@ Our diversified revenue model generates income through:
 Comprehensive risk management through multiple clinical pilot programs, first-mover advantage development, proactive compliance measures, robust technical infrastructure, and diversified revenue streams to ensure sustainable growth and market position.
 
 ### INVESTMENT HIGHLIGHTS
+- **Category Creation:** LEAP-OS defines a new category — Life Empowerment Operating Systems — with first-mover advantage
+- **Platform Moat:** An OS implies ecosystem expansion (providers, integrations, APIs, third-party extensions)
 - **Proven Market Demand:** Validated user need with strong early traction
 - **Experienced Team:** Founders with lived experience and technical expertise
 - **Scalable Business Model:** Multiple revenue streams with high margins
@@ -66,8 +69,7 @@ Comprehensive risk management through multiple clinical pilot programs, first-mo
 ### CONTACT & NEXT STEPS
 **Investment Opportunities:** investors@myrhythm.com | **Partnerships:** partnerships@myrhythm.com | **Website:** myrhythm.app
 
-*MyRhythm represents a unique opportunity to capture significant value in the growing digital health market while making meaningful impact on cognitive wellness and brain injury recovery. Our combination of authentic expertise, comprehensive platform capabilities, and dual-market approach positions us for rapid growth and market leadership.*
+*MyRhythm's LEAP-OS represents a unique opportunity to invest in the world's first Life Empowerment And Productivity Operating System — cognitive infrastructure that captures significant value in the growing digital health market while making meaningful impact on cognitive wellness and brain injury recovery. Our combination of authentic expertise, OS-level platform capabilities, and dual-market approach positions us for rapid growth and category leadership.*
 
 ---
 **This executive summary provides a complete overview for initial investor discussions, partnership opportunities, and stakeholder communications.**
-

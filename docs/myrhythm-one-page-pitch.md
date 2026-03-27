@@ -1,5 +1,5 @@
 # MyRhythm
-## Transform Conversations into Kept Promises
+## The World's First Life Empowerment And Productivity Operating System
 
 ---
 
@@ -13,7 +13,7 @@
 
 ### OUR SOLUTION
 
-MyRhythm is the **first reminder app built on brain science**.
+MyRhythm is the **first Life Empowerment And Productivity Operating System (LEAP-OS) built on brain science** — a cognitive infrastructure designed to align your daily actions with your biological rhythm and long-term aspirations.
 
 | Feature | How It Works |
 |---------|--------------|
@@ -22,15 +22,15 @@ MyRhythm is the **first reminder app built on brain science**.
 | 🧠 **Brain Health Reminders** | Progressive escalation (gentle → moderate → urgent) — CCM-powered cognitive continuity |
 | 💪 **Daily Brain Boost** | 240+ science-backed cognitive challenges |
 | 💚 **Support Circle** | Trusted people notified when you need help — collaborative accountability |
-| 🔄 **CCM Engine** | Collaborative Cognitive Management methodology bridges the gap between intention and reliable execution |
+| 🔄 **CCM Engine** | Collaborative Cognitive Management methodology — the "kernel" of LEAP-OS — bridges the gap between intention and reliable execution |
 
 ---
 
 ### UNIQUE VALUE PROPOSITION
 
-> **"The only platform powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, escalates until you respond, with your support network as backup."**
+> **"LEAP-OS: the only operating system powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, schedules at your cognitive peaks, escalates until you respond, with your support network as backup."**
 
-Unlike generic productivity tools, MyRhythm:
+Unlike generic productivity tools, LEAP-OS:
 - Uses **Memory Bridge** to capture conversations and commitments your brain can't hold
 - Uses **Assistant-First scheduling** — AI auto-places commitments at cognitive peak times with attendee invitations
 - Uses **contextual memory anchors** ("Here's why this matters...")
@@ -100,7 +100,7 @@ Unlike generic productivity tools, MyRhythm:
 | CareZone | Medication tracking | Broader cognitive support |
 | Notion/Todoist | Productivity | Not built for memory challenges |
 
-**Moat:** CCM methodology · Memory-first design · Community of users with shared experience · Clinical validation roadmap
+**Moat:** LEAP-OS architecture · CCM methodology · Memory-first design · Community of users with shared experience · Clinical validation roadmap
 
 ---
 
@@ -131,10 +131,10 @@ Unlike generic productivity tools, MyRhythm:
 
 ### TEAM
 
-**Founder:** [Name]
+**Founder:** Annabel Aaron
 - TBI survivor (personal mission)
-- [X] years in [relevant experience]
-- Building the tool they desperately needed
+- Certified Dr Amen Brain Health Coach
+- Building the tool she desperately needed
 
 **Advisors:** [TBD - Clinical, Business]
 
@@ -152,4 +152,4 @@ Unlike generic productivity tools, MyRhythm:
 
 ---
 
-*MyRhythm © 2024 | Pitch Document v2.0 | December 2024*
+*MyRhythm © 2024 | LEAP-OS — Life Empowerment And Productivity Operating System | Pitch Document v3.0*

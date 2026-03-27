@@ -34,6 +34,9 @@ export function AppleHeroSection() {
               <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light leading-relaxed">
                 Transform challenges into confidence with personalized cognitive support designed for you.
               </p>
+              <p className="text-sm md:text-base text-gray-500 max-w-xl mx-auto font-light tracking-wide">
+                Powered by LEAP-OS — the world's first Life Empowerment And Productivity Operating System
+              </p>
 
               {/* Primary CTA */}
               <div className="pt-6">

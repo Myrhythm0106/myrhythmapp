@@ -145,7 +145,7 @@ const Welcome = () => {
                 <h1 className="text-5xl font-bold gradient-text-brand mb-2">
                   MyRhythm
                 </h1>
-                <p className="text-brain-health-600 font-medium text-lg">Memory1st → LEAP Forward</p>
+                <p className="text-brain-health-600 font-medium text-lg">Powered by LEAP-OS</p>
               </div>
             </div>
             

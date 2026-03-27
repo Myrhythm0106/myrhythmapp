@@ -32,7 +32,7 @@ export default function BrainRecoveryPage() {
             </h1>
           </div>
           <p className="text-slate-600 max-w-2xl mx-auto">
-            Advanced cognitive rehabilitation tools designed specifically for brain injury recovery and cognitive enhancement using the LEAP methodology.
+            Advanced cognitive rehabilitation tools designed specifically for brain injury recovery and cognitive enhancement using the LEAP-OS methodology.
           </p>
         </div>
 

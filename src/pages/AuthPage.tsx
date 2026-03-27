@@ -55,7 +55,7 @@ export default function AuthPage() {
                   <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
                     MyRhythm
                   </h1>
-                  <p className="text-sm text-muted-foreground">Memory1st → LEAP Forward</p>
+                  <p className="text-sm text-muted-foreground">Powered by LEAP-OS</p>
                 </div>
               </div>
             </CardHeader>

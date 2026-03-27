@@ -25,7 +25,7 @@ export function FeatureCategories() {
             status="available"
             category="essential"
             path="/personal-empowerment"
-            metric={{ value: "Day 7", label: "LEAP Journey" }}
+            metric={{ value: "Day 7", label: "LEAP-OS Journey" }}
           />
           <FeatureCard
             title="Mood Harmony"
@@ -46,7 +46,7 @@ export function FeatureCategories() {
             metric={{ value: "3/5", label: "Activities completed" }}
           />
           <FeatureCard
-            title="LEAP Goals"
+            title="LEAP-OS Goals"
             description="Empowering goal-setting with Memory1st approach and gentle progress tracking"
             icon={<Target className="h-5 w-5 text-green-600" />}
             status="available"
