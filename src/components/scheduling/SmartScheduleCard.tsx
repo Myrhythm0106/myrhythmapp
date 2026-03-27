@@ -553,23 +553,58 @@ export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartS
                   </div>
                 )}
 
-                {/* Manual email input */}
-                <div className="flex gap-2">
-                  <input
-                    type="email"
-                    value={emailInput}
-                    onChange={(e) => { setEmailInput(e.target.value); setEmailError(''); }}
-                    placeholder="Enter email address"
-                    className="flex-1 px-3 py-1.5 text-xs rounded-md border border-input bg-background"
-                    onKeyDown={(e) => e.key === 'Enter' && addEmailAttendee(index)}
-                  />
-                  <Button 
-                    size="xs" 
-                    variant="outline" 
-                    onClick={() => addEmailAttendee(index)}
-                  >
-                    Add
-                  </Button>
+                {/* Manual email input with typeahead */}
+                <div className="relative">
+                  <div className="flex gap-2">
+                    <input
+                      type="email"
+                      value={emailInput}
+                      onChange={(e) => { setEmailInput(e.target.value); setEmailError(''); setShowTypeahead(true); }}
+                      onFocus={() => setShowTypeahead(true)}
+                      onBlur={() => setTimeout(() => setShowTypeahead(false), 200)}
+                      placeholder="Type name or email..."
+                      className="flex-1 px-3 py-1.5 text-xs rounded-md border border-input bg-background"
+                      onKeyDown={(e) => e.key === 'Enter' && addEmailAttendee(index)}
+                    />
+                    <Button 
+                      size="xs" 
+                      variant="outline" 
+                      onClick={() => addEmailAttendee(index)}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  
+                  {/* Typeahead dropdown */}
+                  {showTypeahead && typeaheadSuggestions.length > 0 && (
+                    <div className="absolute z-10 top-full left-0 right-12 mt-1 rounded-md border border-border bg-popover shadow-md overflow-hidden">
+                      {typeaheadSuggestions.map((suggestion) => (
+                        <button
+                          key={suggestion.email}
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            addSupportCircleAttendee(index, { name: suggestion.name, email: suggestion.email });
+                            setEmailInput('');
+                            setShowTypeahead(false);
+                          }}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-accent transition-colors text-left"
+                        >
+                          {suggestion.source === 'circle' ? (
+                            <Users className="h-3 w-3 text-neural-purple-500 shrink-0" />
+                          ) : (
+                            <BookUser className="h-3 w-3 text-clarity-teal-500 shrink-0" />
+                          )}
+                          <span className="font-medium truncate">{suggestion.name || suggestion.email}</span>
+                          {suggestion.name && (
+                            <span className="text-muted-foreground truncate">{suggestion.email}</span>
+                          )}
+                          <span className="ml-auto text-[10px] text-muted-foreground shrink-0">
+                            {suggestion.source === 'circle' ? 'Circle' : 'Contact'}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 {emailError && <p className="text-xs text-destructive">{emailError}</p>}
               </div>
