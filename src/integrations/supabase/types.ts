@@ -2491,6 +2491,7 @@ export type Database = {
       }
       user_schedule_preferences: {
         Row: {
+          auto_accept_scheduling: boolean | null
           created_at: string
           energy_level: number | null
           id: string
@@ -2501,6 +2502,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          auto_accept_scheduling?: boolean | null
           created_at?: string
           energy_level?: number | null
           id?: string
@@ -2511,6 +2513,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          auto_accept_scheduling?: boolean | null
           created_at?: string
           energy_level?: number | null
           id?: string

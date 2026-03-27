@@ -159,5 +159,10 @@ function generateOutlookLink(event: CalendarEvent): string {
     location: event.location || ''
   });
 
+  // Add attendees for Outlook
+  if (event.attendees && event.attendees.length > 0) {
+    params.set('to', event.attendees.map(a => a.email).join(';'));
+  }
+
   return `${baseUrl}?${params.toString()}`;
 }
