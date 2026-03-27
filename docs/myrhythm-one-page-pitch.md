@@ -65,6 +65,7 @@ Unlike generic productivity tools, MyRhythm:
 - Clinical licenses: £50/user/month
 - Enterprise partnerships: Custom pricing
 - Insurance reimbursement potential
+- Provider Directory listings: £49–£149/month (clinics, neurologists, neuropsychologists advertise brain health services)
 
 ---
 
