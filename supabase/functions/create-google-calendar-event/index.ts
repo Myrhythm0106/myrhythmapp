@@ -176,6 +176,7 @@ serve(async (req) => {
             dateTime: endDateTime,
             timeZone: 'UTC',
           },
+          ...(attendees && attendees.length > 0 ? { attendees } : {}),
           reminders: {
             useDefault: false,
             overrides: [

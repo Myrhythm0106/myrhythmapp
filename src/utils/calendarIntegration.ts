@@ -103,7 +103,11 @@ export async function convertActionToCalendarEvent(
         try {
           const { data: externalEvent, error: externalError } = await supabase.functions.invoke(
             'create-google-calendar-event',
-            { body: { calendar_event_id: data.id, action_id: action.id } }
+            { body: { 
+              calendar_event_id: data.id, 
+              action_id: action.id,
+              attendees: attendees?.map(a => ({ email: a.email }))
+            } }
           );
           
           if (!externalError && externalEvent?.success) {
