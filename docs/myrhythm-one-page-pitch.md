@@ -26,13 +26,15 @@ MyRhythm is the **first reminder app built on brain science**.
 
 ### UNIQUE VALUE PROPOSITION
 
-> **"The only reminder app that escalates until you respond — with your support network as backup."**
+> **"The only platform powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, escalates until you respond, with your support network as backup."**
 
 Unlike generic productivity tools, MyRhythm:
+- Uses **Memory Bridge** to capture conversations and commitments your brain can't hold
 - Uses **contextual memory anchors** ("Here's why this matters...")
 - Implements **progressive escalation** mimicking natural importance signals
 - Activates **social accountability** without shame
 - Builds **habits through celebration** and streak tracking
+- Powered by **CCM methodology** — memory-first design for cognitive resilience
 
 ---
 
