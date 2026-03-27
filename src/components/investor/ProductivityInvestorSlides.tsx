@@ -764,7 +764,7 @@ function Slide18() {
           </div>
         </div>
         <div className="mt-[12px] text-[14px] text-center" style={{ color: "#94a3b8" }}>
-          MyRhythm is a life empowerment and productivity app. It is not a medical device.
+          MyRhythm is a Life Empowerment And Productivity Operating System (LEAP-OS). It is not a medical device.
         </div>
       </div>
     </Slide>

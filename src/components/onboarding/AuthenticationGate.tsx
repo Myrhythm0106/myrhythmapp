@@ -106,7 +106,7 @@ export const AuthenticationGate = ({ onAuthSuccess }: AuthenticationGateProps) =
               <CardTitle className="text-2xl font-bold bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 bg-clip-text text-transparent">
                 MyRhythm
               </CardTitle>
-              <p className="text-sm text-muted-foreground">Memory1st → LEAP Forward</p>
+              <p className="text-sm text-muted-foreground">Powered by LEAP-OS</p>
             </div>
           </div>
           <div className="space-y-2">

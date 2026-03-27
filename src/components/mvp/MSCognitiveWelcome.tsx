@@ -104,7 +104,7 @@ export function MSCognitiveWelcome({ onStartJourney }: MSCognitiveWelcomeProps) 
           <Card className="bg-white/70 backdrop-blur-sm border-teal-200">
             <CardContent className="p-4">
               <p className="text-sm text-teal-600 text-center">
-                <strong>Important:</strong> MyRhythm is a life empowerment and productivity app. It is not a medical device and does not provide diagnosis, treatment, or clinical advice.
+                <strong>Important:</strong> MyRhythm is a Life Empowerment And Productivity Operating System (LEAP-OS). It is not a medical device and does not provide diagnosis, treatment, or clinical advice.
               </p>
             </CardContent>
           </Card>

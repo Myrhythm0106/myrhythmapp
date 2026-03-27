@@ -46,7 +46,7 @@ export function PersonalEmpowermentHub() {
               </div>
             </div>
             <Badge variant="outline" className="bg-gradient-to-r from-purple-50 to-blue-50 text-purple-700 border-purple-200 px-4 py-1">
-              🚀 Day {todayStats.streakDays} of Your LEAP Journey
+              🚀 Day {todayStats.streakDays} of Your LEAP-OS Journey
             </Badge>
           </div>
 
