@@ -250,19 +250,63 @@ export function SmartScheduleCard({ actions = [], onSchedulingComplete }: SmartS
     }
   }, [user?.id]);
 
-  const addEmailAttendee = useCallback((itemIndex: number) => {
-    if (!EmailValidator.isValidEmail(emailInput)) {
+  const addEmailAttendee = useCallback((itemIndex: number, emailOverride?: string) => {
+    const email = emailOverride || emailInput;
+    if (!EmailValidator.isValidEmail(email)) {
       setEmailError('Please enter a valid email address');
       return;
     }
     setEmailError('');
+    const isNewEmail = !supportCircleMembers.some(m => m.email === email) && 
+                       !contacts.some(c => c.email.toLowerCase() === email.toLowerCase());
+    
     setItems(prev => prev.map((item, i) => 
       i === itemIndex 
-        ? { ...item, attendees: [...item.attendees, { email: emailInput }] }
+        ? { ...item, attendees: [...item.attendees, { email }] }
         : item
     ));
     setEmailInput('');
-  }, [emailInput]);
+    setShowTypeahead(false);
+
+    // Offer to save new emails to contacts
+    if (isNewEmail) {
+      toast('Save to contacts?', {
+        description: email,
+        action: {
+          label: 'Save',
+          onClick: () => {
+            addContact(email);
+            toast.success('Contact saved!');
+          },
+        },
+        duration: 8000,
+      });
+    }
+  }, [emailInput, supportCircleMembers, contacts, addContact]);
+
+  // Typeahead suggestions based on input
+  const typeaheadSuggestions = useMemo(() => {
+    if (!emailInput || emailInput.length < 2) return [];
+    const q = emailInput.toLowerCase();
+    const results: Array<Attendee & { source: 'circle' | 'contact' }> = [];
+    
+    // Search Support Circle
+    supportCircleMembers.forEach(m => {
+      if ((m.name && m.name.toLowerCase().includes(q)) || m.email.toLowerCase().includes(q)) {
+        results.push({ ...m, source: 'circle' });
+      }
+    });
+    
+    // Search saved contacts (exclude those already in Support Circle)
+    const circleEmails = new Set(supportCircleMembers.map(m => m.email.toLowerCase()));
+    searchContacts(emailInput).forEach(c => {
+      if (!circleEmails.has(c.email.toLowerCase())) {
+        results.push({ name: c.name || undefined, email: c.email, source: 'contact' });
+      }
+    });
+    
+    return results.slice(0, 5);
+  }, [emailInput, supportCircleMembers, searchContacts]);
 
   const addSupportCircleAttendee = useCallback((itemIndex: number, attendee: Attendee) => {
     setItems(prev => prev.map((item, i) => {
