@@ -842,6 +842,7 @@ function Slide20() {
                 { name: "Progressive Escalation v2", desc: "Customisable urgency tiers" },
                 { name: "B2B Team Licensing", desc: "Organisational accounts and admin portal" },
                 { name: "Analytics & Reporting", desc: "Outcome tracking and exportable reports" },
+                { name: "Provider Directory", desc: "Clinics and brain health specialists advertise services to users" },
               ].map((f) => (
                 <div key={f.name}>
                   <span className="text-[18px] font-semibold" style={{ color: "#ffffff" }}>{f.name}</span>

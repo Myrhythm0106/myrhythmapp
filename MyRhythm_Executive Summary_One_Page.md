@@ -13,10 +13,11 @@ We are the **only platform** that bridges consumer cognitive wellness with clini
 ### BUSINESS MODEL & FINANCIAL PROJECTIONS
 **Revenue Target: £500,000 by December 2025**
 
-Our three-tier revenue model generates income through:
+Our diversified revenue model generates income through:
 - **Consumer Subscriptions (60% - £300K):** Starter (£7.99), Pro (£9.99), and Care Team (£15.99) monthly plans
-- **B2B Clinical Subscriptions (30% - £150K):** Healthcare provider solutions from £99-£599/month
-- **In-App Purchases (10% - £50K):** Premium features and advanced content
+- **B2B Clinical Subscriptions (25% - £125K):** Healthcare provider solutions from £99-£599/month
+- **Provider Directory & Marketplace (10% - £50K):** Clinics, neurologists, and brain health specialists pay £49–£149/month to advertise services to users
+- **In-App Purchases (5% - £25K):** Premium features and advanced content
 
 **Key Metrics by December 2025:**
 - 2,800+ total subscribers across all plans
