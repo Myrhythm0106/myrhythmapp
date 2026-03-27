@@ -257,7 +257,7 @@ function Slide08() {
         <div className="mt-[28px] flex gap-[20px]">
           {[
             { pillar: "Collaborative", desc: "Support Circles, caregiver dashboards, shared accountability", color: "#a855f7" },
-            { pillar: "Cognitive", desc: "Rhythmic Intelligence, energy-aware scheduling, Memory Bridge", color: "#0284c7" },
+            { pillar: "Cognitive", desc: "Memory Bridge — captures what your brain can't hold, Rhythmic Intelligence, energy-aware scheduling", color: "#0284c7" },
             { pillar: "Management", desc: "Task chunking, smart scheduling, celebration streaks", color: "#f97316" },
           ].map((p) => (
             <div key={p.pillar} className="flex-1 p-[20px] rounded-[12px]" style={{ background: "#f8fafc" }}>
