@@ -1,16 +1,17 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useContacts } from '@/hooks/use-contacts';
 import { smartScheduler } from '@/utils/smartScheduler';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { EmailValidator } from '@/utils/security/emailValidator';
 import { toast } from 'sonner';
 import { 
   Calendar, Check, X, Clock, ChevronDown, ChevronUp, 
-  Users, Plus, Sparkles, Brain, Zap, Mail
+  Users, Plus, Sparkles, Brain, Zap, Mail, BookUser, Save
 } from 'lucide-react';
 import type { ExtractedAction } from '@/types/memoryBridge';
 
