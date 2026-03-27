@@ -51,7 +51,7 @@ serve(async (req) => {
       );
     }
     
-    const { calendar_event_id, action_id } = validation.data;
+    const { calendar_event_id, action_id, attendees } = validation.data;
 
     console.log('Creating Google Calendar event for:', { calendar_event_id, action_id, user_id: user.id });
 
