@@ -8,7 +8,7 @@
 **MyRhythm** addresses a £2.3 billion global market opportunity in cognitive wellness and brain injury recovery through our comprehensive digital health platform. With 1.4 million annual TBI cases and 15+ million potential cognitive wellness users in target markets, we're positioned to capture significant market share in an underserved sector growing at 8.1% annually.
 
 ### UNIQUE VALUE PROPOSITION
-We are the **only platform** that bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience in cognitive recovery. Our comprehensive approach combines personalized training, clinical progress tracking, care team collaboration, and community support—differentiating us from single-purpose competitors like Lumosity (consumer-only) and CogniFit (clinical-only).
+We are the **only platform** that bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience in cognitive recovery. Our comprehensive approach combines Memory Bridge conversation capture, Assistant-First Smart Scheduling powered by the MYRHYTHM assessment, personalized training, clinical-grade progress tracking, care team collaboration via Support Circle, and community support—differentiating us from single-purpose competitors like Lumosity (consumer-only) and CogniFit (clinical-only).
 
 ### BUSINESS MODEL & FINANCIAL PROJECTIONS
 **Revenue Target: £500,000 by December 2025**
