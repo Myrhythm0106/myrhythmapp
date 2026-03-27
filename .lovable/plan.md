@@ -1,35 +1,47 @@
 
 
-# Memory + CCM Consistency Update (Revised)
+# Assistant-First Smart Scheduling — Implementation Complete
 
-## Scope
+## What Was Built
 
-Slides 03, 07, and 09 remain unchanged. All other updates from the approved plan proceed.
+### 1. Database Migration ✅
+- Added `auto_accept_scheduling boolean DEFAULT false` to `user_schedule_preferences`
 
-### A. Investor Deck (ProductivityInvestorSlides.tsx) — 5 slide edits
+### 2. SmartScheduleCard Component ✅
+- `src/components/scheduling/SmartScheduleCard.tsx` — single card that handles the entire scheduling flow
+- Header with item count + auto-schedule toggle
+- Per-item: title, date/time, energy badge (Peak/Good/Off-peak), empowering reason
+- Per-item actions: approve (✓), dismiss (✗), add people
+- Context-aware attendee suggestions from action text
+- Support Circle quick-add chips + manual email input with validation
+- "Approve All" batch button
+- Post-approval summary with "View in Calendar" link
 
-| Slide | Change |
-|-------|--------|
-| **08** CCM Methodology | Cognitive pillar: **"Memory Bridge — captures what your brain can't hold, Rhythmic Intelligence, energy-aware scheduling"** |
-| **11** Clinical Moat | Add 4th feature: **"Memory Bridge"** — "Built for people who lose conversations minutes after they happen" |
-| **15** Early Evidence | Add 5th metric: **"Memory Confidence ↑"** — "Users report trusting their memory for the first time. The system remembers so they don't have to." |
-| **17** Competitive Advantage | LEAP+CCM box: "Always-on. **Remembers what you can't.** Adapts to cognitive state. Escalates when needed. Celebrates when earned. Built by someone who knows what memory loss feels like." |
+### 3. SmartScheduler Update ✅
+- `src/utils/smartScheduler.ts` — added `extractMentionedContacts()` method
+- Matches names in action text against Support Circle members
 
-### B. Regenerate 5-Year Strategy PDF
+### 4. ICS + Calendar Link Updates ✅
+- `src/utils/ics.ts` — added `attendees` to CalendarEvent interface
+- ICS: emits `ATTENDEE;ROLE=REQ-PARTICIPANT;CN=Name:mailto:email` lines
+- Google: appends `&add=email1,email2`
+- Outlook: appends `&to=email1;email2`
 
-`/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v2.pdf` — 8 pages via ReportLab, same structure as v1 but with memory + CCM woven through every page (cover tagline, executive summary leading with memory challenges, market opportunity citing 54% persistent memory difficulties, roadmap featuring Memory Bridge, go-to-market messaging, and explicit risk mitigation section on why building for memory challenges first creates a superior product).
+### 5. Calendar Integration Update ✅
+- `src/utils/calendarIntegration.ts` — `convertActionToCalendarEvent()` accepts optional `attendees` parameter
+- Passes attendees to edge function invocation
 
-### C. Update One-Page Pitch (docs/myrhythm-one-page-pitch.md)
+### 6. Google Calendar Edge Function ✅
+- `supabase/functions/create-google-calendar-event/index.ts` — accepts optional `attendees` array
+- Includes attendees in Google Calendar API payload for native invite emails
 
-- UVP updated to lead with memory and CCM
-- Solution table includes CCM mention
-- Competitive Advantage includes "CCM methodology" and "memory-first design"
-
-## Files
+## Files Changed
 
 | File | Action |
 |------|--------|
-| `src/components/investor/ProductivityInvestorSlides.tsx` | Edit slides 08, 11, 15, 17 |
-| `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v2.pdf` | Regenerate with memory+CCM narrative |
-| `docs/myrhythm-one-page-pitch.md` | Update UVP, Solution, Competitive Advantage |
-
+| `user_schedule_preferences` table | Migration: added `auto_accept_scheduling` column |
+| `src/components/scheduling/SmartScheduleCard.tsx` | Created |
+| `src/utils/smartScheduler.ts` | Edited: added `extractMentionedContacts()` |
+| `src/utils/ics.ts` | Edited: attendee support in ICS/Google/Outlook |
+| `src/utils/calendarIntegration.ts` | Edited: attendees parameter |
+| `supabase/functions/create-google-calendar-event/index.ts` | Edited: attendees in API call |
