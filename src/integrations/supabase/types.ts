@@ -2365,6 +2365,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_contacts: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_favorite_statements: {
         Row: {
           created_at: string
