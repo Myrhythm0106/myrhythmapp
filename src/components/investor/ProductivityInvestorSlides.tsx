@@ -575,6 +575,7 @@ function Slide15() {
             { metric: "Restart After Interruption", direction: "↑", detail: "Progressive re-engagement pulls users back to their thread — instead of losing the day.", color: "#f97316" },
             { metric: "Confidence", direction: "↑", detail: "Tracked wins compound into self-trust. Users report feeling more capable over time.", color: "#a855f7" },
             { metric: "Productivity", direction: "↑", detail: "As reliability builds and confidence returns, users report sustained productivity gains — not through working harder, but through trusting themselves to follow through.", color: "#0284c7" },
+            { metric: "Memory Confidence", direction: "↑", detail: "Users report trusting their memory for the first time. The system remembers so they don't have to.", color: "#16a34a" },
           ].map((e) => (
             <div key={e.metric} className="flex-1 p-[36px] rounded-[16px]" style={{ background: "#f8fafc" }}>
               <div className="text-[48px] font-bold" style={{ color: e.color }}>{e.direction}</div>
