@@ -55,6 +55,9 @@ function Slide01() {
         <p className="mt-[24px] text-[24px] font-light leading-relaxed max-w-[900px]" style={{ color: "#cbd5e1" }}>
           Built for the hardest cognitive (memory) challenges. Designed for cognitive resilience. Available to everyone.
         </p>
+        <p className="mt-[16px] text-[18px] font-medium tracking-widest" style={{ color: "#028090" }}>
+          Powered by LEAP-OS
+        </p>
         <div className="mt-[48px] w-[600px] h-[1px]" style={{ background: "rgba(255,255,255,0.1)" }} />
         {/* Bottom metadata bar */}
         <div className="mt-[48px] w-full flex items-center justify-between px-[40px]">
