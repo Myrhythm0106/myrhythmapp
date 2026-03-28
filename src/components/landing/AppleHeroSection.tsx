@@ -35,7 +35,7 @@ export function AppleHeroSection() {
                 Transform challenges into confidence with personalized cognitive support designed for you.
               </p>
               <p className="text-sm md:text-base text-gray-500 max-w-xl mx-auto font-light tracking-wide">
-                Powered by LEAP-OS — the world's first Life Empowerment And Productivity Operating System
+                Powered by LEAP-OS — the world's first Cognitive Operating System
               </p>
 
               {/* Primary CTA */}
