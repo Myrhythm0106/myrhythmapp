@@ -1,5 +1,5 @@
 # MyRhythm
-## The World's First Life Empowerment And Productivity Operating System
+## The World's First Cognitive Operating System
 
 ---
 
@@ -13,7 +13,9 @@
 
 ### OUR SOLUTION
 
-MyRhythm is the **first Life Empowerment And Productivity Operating System (LEAP-OS) built on brain science** — a cognitive infrastructure designed to align your daily actions with your biological rhythm and long-term aspirations.
+MyRhythm is powered by **LEAP-OS** — the world's first Cognitive Operating System. Aligning memory, biological rhythm, and follow-through to turn daily actions into long-term performance and outcomes.
+
+LEAP stands for **Life Empowerment And Productivity** — and the "-OS" signals that this is cognitive infrastructure, not just another app.
 
 | Feature | How It Works |
 |---------|--------------|
@@ -28,7 +30,7 @@ MyRhythm is the **first Life Empowerment And Productivity Operating System (LEAP
 
 ### UNIQUE VALUE PROPOSITION
 
-> **"LEAP-OS: the only operating system powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, schedules at your cognitive peaks, escalates until you respond, with your support network as backup."**
+> **"LEAP-OS: the only Cognitive Operating System powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, schedules at your cognitive peaks, escalates until you respond, with your support network as backup."**
 
 Unlike generic productivity tools, LEAP-OS:
 - Uses **Memory Bridge** to capture conversations and commitments your brain can't hold
@@ -152,4 +154,4 @@ Unlike generic productivity tools, LEAP-OS:
 
 ---
 
-*MyRhythm © 2024 | LEAP-OS — Life Empowerment And Productivity Operating System | Pitch Document v3.0*
+*MyRhythm © 2024 | LEAP-OS — the world's first Cognitive Operating System | Pitch Document v4.0*
