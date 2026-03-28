@@ -7,7 +7,7 @@ export function MeetMyRhythmSection() {
       <h2 className="text-2xl font-semibold text-foreground">💡 Meet MyRhythm</h2>
       <div className="space-y-4 mt-3 text-foreground">
         <p>
-          MyRhythm isn't just another productivity app — it's LEAP-OS: the world's first Life Empowerment And Productivity Operating System.<br />
+          MyRhythm isn't just another productivity app — it's LEAP-OS — the world's first Cognitive Operating System. Aligning memory, biological rhythm, and follow-through to turn daily actions into long-term performance and outcomes.<br />
           It's the wellness system I designed to survive—and thrive—after brain injury.
         </p>
         <p className="text-foreground">Whether you're navigating recovery, burnout, or just trying to stay organized when life feels like too much, MyRhythm helps you:</p>

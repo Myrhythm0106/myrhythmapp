@@ -104,7 +104,7 @@ export function ADHDWelcome({ onStartJourney }: ADHDWelcomeProps) {
           <Card className="bg-white/70 backdrop-blur-sm border-purple-200">
             <CardContent className="p-4">
               <p className="text-sm text-purple-600 text-center">
-                <strong>Important:</strong> MyRhythm is a Life Empowerment And Productivity Operating System (LEAP-OS). It is not a medical device and does not provide diagnosis, treatment, or clinical advice.
+                <strong>Important:</strong> MyRhythm is a Cognitive Operating System (LEAP-OS). It is not a medical device and does not provide diagnosis, treatment, or clinical advice.
               </p>
             </CardContent>
           </Card>
