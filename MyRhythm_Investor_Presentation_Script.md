@@ -151,11 +151,13 @@ This dual-market approach gives us multiple revenue streams and reduces market r
 #### **Community & Accountability**
 *[Show community features]*
 
-"Isolation is a major challenge in cognitive recovery:
+"Our brand promise is simple: **No One Walks Alone.** Isolation is a major challenge in cognitive recovery, and the Support Circle is how we deliver on that promise:
 - **Peer support** from others on similar journeys
 - **Accountability partners** for goal achievement
 - **Family integration** for care team users
-- **Professional networks** for clinical users"
+- **Professional networks** for clinical users
+
+No One Walks Alone isn't a tagline — it's the emotional heart of the Collaborative layer in our CCM methodology. It's why users stay, and it's why their support networks become our growth engine."
 
 ### **Mobile Experience**
 *[Switch to mobile view or device]*
