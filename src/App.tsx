@@ -8,6 +8,8 @@ import { PomodoroProvider } from "@/contexts/PomodoroContext";
 import { DailyActionsProvider } from "@/contexts/DailyActionsContext";
 import { PriorityProvider } from "@/contexts/PriorityContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
+import { AdminRoute } from "@/components/auth/AdminRoute";
+import FounderFinancialsPage from "./pages/FounderFinancialsPage";
 import { SetupProgressProvider } from "@/contexts/SetupProgressContext";
 import { SetupProgressBar } from "@/components/progress/SetupProgressBar";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
