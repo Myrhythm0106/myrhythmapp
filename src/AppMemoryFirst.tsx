@@ -19,6 +19,8 @@ import MVPCorePage from "./pages/MVPCorePage";
 import MemoryBridge from "./routes/MemoryBridge";
 import CalendarPage from "./pages/CalendarPage";
 import CommandCenter from "./pages/CommandCenter";
+import FounderFinancialsPage from "./pages/FounderFinancialsPage";
+import { AdminRoute } from "./components/auth/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -99,6 +101,16 @@ function AppMemoryFirst() {
                     <ProtectedRoute>
                       <OnboardingPage />
                     </ProtectedRoute>
+                  }
+                />
+                
+                {/* @feature Founder Financials - Admin-only financial dashboard */}
+                <Route
+                  path="/founder/financials"
+                  element={
+                    <AdminRoute>
+                      <FounderFinancialsPage />
+                    </AdminRoute>
                   }
                 />
               </Routes>
