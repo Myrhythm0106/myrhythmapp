@@ -21,6 +21,9 @@ export function HeroSection() {
         <p className="text-xl opacity-90 text-white">
           Your personalised path to rebuilding your rhythm and reclaiming your day.
         </p>
+        <p className="text-base opacity-80 text-white italic">
+          Our vision: A world where no one loses their independence because their memory fails them.
+        </p>
         
         <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/20 italic mt-6">
           <p className="text-sm md:text-base text-white">

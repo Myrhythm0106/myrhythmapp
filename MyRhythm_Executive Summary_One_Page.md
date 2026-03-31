@@ -2,6 +2,9 @@
 # MyRhythm Executive Summary
 ## LEAP-OS: The World's First Cognitive Operating System
 
+### OUR VISION
+> **"A world where no one loses their independence because their memory fails them."**
+
 ---
 
 ### THE OPPORTUNITY

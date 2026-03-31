@@ -6,6 +6,9 @@ export function MeetMyRhythmSection() {
     <section>
       <h2 className="text-2xl font-semibold text-foreground">💡 Meet MyRhythm</h2>
       <div className="space-y-4 mt-3 text-foreground">
+        <p className="font-medium text-lg text-foreground italic">
+          "A world where no one loses their independence because their memory fails them."
+        </p>
         <p>
           MyRhythm isn't just another productivity app — it's LEAP-OS — the world's first Cognitive Operating System. Aligning memory, biological rhythm, and follow-through to turn daily actions into long-term performance and outcomes.<br />
           It's the wellness system I designed to survive—and thrive—after brain injury.

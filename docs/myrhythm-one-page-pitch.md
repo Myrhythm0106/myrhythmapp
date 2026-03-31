@@ -3,6 +3,16 @@
 
 ---
 
+### OUR VISION
+
+> **"A world where no one loses their independence because their memory fails them."**
+
+LEAP-OS exists to make cognitive resilience a basic human right — not a privilege of the healthy, the wealthy, or the young. We are building the world's first Cognitive Operating System so that every person, whether recovering from brain injury, navigating age-related decline, or simply demanding more from their day, has an intelligent layer between intention and action that never forgets, never stops learning, and never lets them fall through the cracks.
+
+Our standard is simple: if you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life.
+
+---
+
 ### THE PROBLEM
 
 **69 million people** experience traumatic brain injury globally each year. **53 million caregivers** in the US alone support loved ones with memory challenges. Existing reminder apps fail them because they're designed for neurotypical brains.
