@@ -32,7 +32,7 @@ export function AppleHeroSection() {
               </h1>
               
               <p className="text-xl md:text-2xl text-gray-600 max-w-2xl mx-auto font-light leading-relaxed">
-                Transform challenges into confidence with personalized cognitive support designed for you.
+                A world where no one loses their independence because their memory fails them.
               </p>
               <p className="text-sm md:text-base text-gray-500 max-w-xl mx-auto font-light tracking-wide">
                 Powered by LEAP-OS — the world's first Cognitive Operating System
