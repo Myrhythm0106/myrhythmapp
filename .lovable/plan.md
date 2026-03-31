@@ -1,56 +1,59 @@
 
 
-# Fix Founding Member Pricing + Add Layman Interpretations
+# Vision Statement for LEAP-OS — The Definitive Cognitive Operating System
 
-## Problem 1: Pricing Error in Excel
+## The Gap
 
-The app's pricing config is correct — Founding Members pay **£10/month** (cheaper) and regular users pay **£15/month** (more). The Excel model has these swapped or mislabelled. We'll regenerate the Excel with correct pricing:
+Across all strategic documents, there is no formal **Vision Statement**. There are taglines, UVPs, and mission fragments, but no single declaration of where LEAP-OS is going and why it will be indispensable. This needs to exist as the north star that every document, pitch, and product decision points back to.
 
-- **Founding Member price**: £10/month (the discount, locked in forever)
-- **Standard/Regular price**: £15/month (what new users pay after founding period ends)
+## Crafting the Vision
 
-## Problem 2: Layman Interpretations
+### Competitor landscape reality
 
-Every financial row/metric in the Excel will get a plain-English explanation column. For the interactive dashboard, each metric will show a tooltip or subtitle in everyday language.
+Headspace, Calm, Notion, Todoist, CareZone — they all operate in **one lane**: either wellness OR productivity OR clinical. None of them own the **cognitive layer** — the infrastructure between what your brain intends and what your life delivers. That's the gap LEAP-OS fills permanently.
 
-### Examples of layman interpretations:
+### What makes this unassailable
 
-| Financial Term | Layman Explanation |
-|---|---|
-| MRR £15,000 | "We're earning £15,000 every month from subscriptions" |
-| ARR £180K | "If this month repeated for a year, we'd earn £180K total" |
-| CAC £35 | "It costs us £35 in marketing to get one new paying customer" |
-| LTV £315 | "Each customer is worth £315 to us over their whole lifetime" |
-| LTV:CAC 9:1 | "For every £1 we spend getting a customer, we earn £9 back" |
-| Gross Margin 85% | "We keep 85p of every £1 earned after basic costs" |
-| Burn Rate £22K | "We're spending £22K more than we earn each month" |
-| Runway 11 months | "At this spending rate, our money lasts 11 more months" |
-| EBIT -£8K | "We lost £8K this month after all expenses — normal for startups" |
-| Churn 5% | "5 out of every 100 subscribers cancel each month" |
-| Payback 3.5 months | "We recover the cost of getting a customer in 3.5 months" |
+- **CCM is proprietary methodology** — no competitor has it
+- **Memory-first architecture** — competitors start from tasks; LEAP-OS starts from cognition
+- **OS positioning** — not an app you use, but infrastructure you depend on
+- **AI-native from day one** — not bolted on later
 
-## Deliverables
+### Proposed Vision Statement
 
-### 1. Regenerate Excel (`MyRhythm_LEAP_OS_Financial_Model_v2.xlsx`)
+> **"A world where no one loses their independence because their memory fails them."**
 
-- Fix founding vs standard pricing labels and values
-- Add a "What This Means" column to every sheet with plain-English explanations
-- Every row with a financial figure gets a layman interpretation
-- Assumptions sheet: each assumption gets a "Why This Matters" note
-- Revenue sheet: each monthly line explains what's driving the number
-- P&L sheet: each line item explained in everyday language
+This is the emotional anchor — short, universal, impossible to argue against, and impossible for competitors to claim because they aren't built from lived cognitive experience.
 
-### 2. Update Interactive Dashboard (`FounderFinancialsPage.tsx`)
+### Supporting Vision Narrative (for documents that need more context)
 
-- Add subtitle/description text under every metric card explaining what it means
-- Unit economics section: add plain-English explanation under each value
-- Funding roadmap: add "what this means for you" context
-- Summary cards: add layman-friendly subtitles
+> LEAP-OS exists to make cognitive resilience a basic human right — not a privilege of the healthy, the wealthy, or the young. We are building the world's first Cognitive Operating System so that every person, whether recovering from brain injury, navigating age-related decline, or simply demanding more from their day, has an intelligent layer between intention and action that never forgets, never stops learning, and never lets them fall through the cracks.
+>
+> Our standard is simple: if you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life.
 
-### Files
+### Why this works strategically
 
-| # | File | Action |
-|---|------|--------|
-| 1 | `/mnt/documents/MyRhythm_LEAP_OS_Financial_Model_v2.xlsx` | Regenerate with correct pricing + layman explanations |
-| 2 | `src/pages/FounderFinancialsPage.tsx` | Add layman interpretations to all metrics and charts |
+- **Competitor-proof**: No productivity app can claim cognitive resilience. No wellness app can claim execution infrastructure. No clinical tool can claim consumer independence.
+- **Market-expanding**: Applies to TBI survivors, caregivers, ageing populations, neurodivergent users, AND high-performers — the entire addressable market.
+- **AI-forward**: "never stops learning" positions AI as core, not a feature.
+- **Lifetime lock-in**: "For life" — this isn't a tool you outgrow, it's infrastructure that grows with you.
+- **Independence-centred**: Directly addresses the deepest fear of every user segment.
+
+## Where It Goes
+
+| # | File | Placement |
+|---|------|-----------|
+| 1 | `docs/myrhythm-one-page-pitch.md` | New "OUR VISION" section after the title, before "THE PROBLEM" |
+| 2 | `MyRhythm_Executive Summary_One_Page.md` | Opening line, replacing or preceding the current intro |
+| 3 | `MyRhythm_500K_Marketing_Strategy_2025.md` | Replace the generic "Vision" line in Brand Foundation |
+| 4 | `MyRhythm_Investor_Presentation_Script.md` | Replace "Vision Restatement" in closing section |
+| 5 | `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v9.pdf` | New "Vision" section on page 1, before the framework |
+| 6 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Add as the opening section |
+| 7 | `src/components/founders-story/MeetMyRhythmSection.tsx` | Update the intro paragraph to lead with the vision |
+| 8 | `src/components/brain-recovery/sections/HeroSection.tsx` | Add vision as the subtitle |
+| 9 | `src/components/landing/AppleHeroSection.tsx` | Weave vision language into hero copy |
+
+## Summary
+
+One vision statement. Nine touchpoints. Every document, pitch, and page aligned to a single north star that no competitor can replicate because it's rooted in CCM, memory-first architecture, and lived experience.
 
