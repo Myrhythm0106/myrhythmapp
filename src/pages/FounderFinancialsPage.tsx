@@ -53,10 +53,10 @@ const monthlyData = buildMonthlyData();
 const lastMonth = monthlyData[monthlyData.length - 1];
 
 const fundingRounds = [
-  { round: 'Pre-Seed', amount: '£250K', valuation: '£1.67M', timeline: 'Q1 2026', milestone: '1,000 founding members, MVP live' },
-  { round: 'Series A', amount: '£2M', valuation: '£15M', timeline: 'Q1 2027', milestone: '5,000+ users, £42K MRR' },
-  { round: 'Series B', amount: '£10M', valuation: '£75M', timeline: 'Q1 2028', milestone: '50K users, NHS pilots' },
-  { round: 'Series C', amount: '£25M', valuation: '£200M', timeline: '2029', milestone: 'Market leadership, API platform' },
+  { round: 'Pre-Seed', amount: '£250K', valuation: '£1.67M', timeline: 'Q1 2026', milestone: '1,000 founding members, MVP live', explain: 'First investment to build the product — investors get shares at £1.67M company value' },
+  { round: 'Series A', amount: '£2M', valuation: '£15M', timeline: 'Q1 2027', milestone: '5,000+ users, £42K MRR', explain: 'Bigger investment to grow fast — company now worth £15M based on proven traction' },
+  { round: 'Series B', amount: '£10M', valuation: '£75M', timeline: 'Q1 2028', milestone: '50K users, NHS pilots', explain: 'Major funding for market dominance — NHS partnerships validate the clinical value' },
+  { round: 'Series C', amount: '£25M', valuation: '£200M', timeline: '2029', milestone: 'Market leadership, API platform', explain: 'Growth capital for global expansion — company valued at £200M' },
 ];
 
 const mvpFeatures = [
@@ -68,6 +68,11 @@ const mvpFeatures = [
 
 const fmt = (n: number) => n >= 1000 ? `£${(n / 1000).toFixed(0)}K` : `£${n}`;
 
+// Layman explanation helper
+const Explain = ({ children }: { children: string }) => (
+  <p className="text-xs text-muted-foreground/70 italic mt-1">{children}</p>
+);
+
 // ─── Component ──────────────────────────────────────────────────────────────────
 
 export default function FounderFinancialsPage() {
@@ -77,16 +82,17 @@ export default function FounderFinancialsPage() {
       <div>
         <h1 className="text-3xl font-bold text-foreground">LEAP-OS Financial Model</h1>
         <p className="text-muted-foreground mt-1">The World's First Cognitive Operating System — Investor Dashboard</p>
+        <Explain>This dashboard shows how the business will earn money, what it costs to run, and when we expect to become profitable.</Explain>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Pre-Seed Ask', value: '£250K', sub: '£1.67M valuation', icon: PoundSterling },
-          { label: 'M12 ARR', value: fmt(lastMonth.arr), sub: `${fmt(lastMonth.totalMRR)} MRR`, icon: TrendingUp },
-          { label: 'Subscribers (M12)', value: lastMonth.subscribers.toLocaleString(), sub: '5% monthly churn', icon: Users },
-          { label: 'Gross Margin', value: '85%', sub: 'LTV:CAC 9:1', icon: Target },
-        ].map(({ label, value, sub, icon: Icon }) => (
+          { label: 'Pre-Seed Ask', value: '£250K', sub: '£1.67M valuation', icon: PoundSterling, explain: 'The money we need now to build and launch — investors value the company at £1.67M' },
+          { label: 'M12 ARR', value: fmt(lastMonth.arr), sub: `${fmt(lastMonth.totalMRR)} MRR`, icon: TrendingUp, explain: "If month 12's revenue repeated all year, we'd earn this much" },
+          { label: 'Subscribers (M12)', value: lastMonth.subscribers.toLocaleString(), sub: '5% monthly churn', icon: Users, explain: 'Total paying users by month 12 — we lose about 5% each month to cancellations' },
+          { label: 'Gross Margin', value: '85%', sub: 'LTV:CAC 9:1', icon: Target, explain: 'We keep 85p of every £1 earned, and earn £9 for every £1 spent on marketing' },
+        ].map(({ label, value, sub, icon: Icon, explain }) => (
           <Card key={label} className="border-border">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between mb-2">
@@ -95,10 +101,30 @@ export default function FounderFinancialsPage() {
               </div>
               <p className="text-2xl font-bold text-foreground">{value}</p>
               <p className="text-xs text-muted-foreground mt-1">{sub}</p>
+              <Explain>{explain}</Explain>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {/* Pricing Clarification */}
+      <Card className="border-primary/20 bg-primary/5">
+        <CardContent className="pt-6">
+          <div className="flex items-start gap-3">
+            <PoundSterling className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+            <div>
+              <p className="font-semibold text-foreground">Founding Member Pricing</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                <strong>Founding Members: £10/month</strong> — locked in forever as a reward for early supporters
+              </p>
+              <p className="text-sm text-muted-foreground">
+                <strong>Standard Price: £15/month</strong> — what new users pay after founding spots fill (50% more)
+              </p>
+              <Explain>Founding members save £5/month (£60/year). This creates urgency to sign up early and rewards our first 500 users.</Explain>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Revenue Chart */}
       <Card>
@@ -108,6 +134,7 @@ export default function FounderFinancialsPage() {
             12-Month MRR Projection
           </CardTitle>
           <CardDescription>B2C subscriptions + B2B clinical + Provider directory</CardDescription>
+          <Explain>This chart shows how our monthly income grows from three sources: consumer subscriptions (B2C), clinical partnerships (B2B), and provider directory listings.</Explain>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={350}>
@@ -131,6 +158,7 @@ export default function FounderFinancialsPage() {
           <CardHeader>
             <CardTitle>Cost Structure</CardTitle>
             <CardDescription>Monthly operating costs by category</CardDescription>
+            <Explain>Where our money goes each month — engineering is the biggest cost because we're building complex AI features.</Explain>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -153,6 +181,7 @@ export default function FounderFinancialsPage() {
           <CardHeader>
             <CardTitle>Cash Flow</CardTitle>
             <CardDescription>Running cash balance with £250K injection</CardDescription>
+            <Explain>The solid line shows money in the bank. The dashed line shows monthly profit/loss — when it crosses above zero, we're making money.</Explain>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -176,19 +205,21 @@ export default function FounderFinancialsPage() {
             <Shield className="h-5 w-5 text-primary" />
             Unit Economics
           </CardTitle>
+          <Explain>These numbers show how profitable each individual customer is — investors love these metrics because they prove the business model works.</Explain>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {[
-              { label: 'CAC', value: '£35' },
-              { label: 'LTV', value: '£315' },
-              { label: 'LTV:CAC', value: '9.0x' },
-              { label: 'Gross Margin', value: '85%' },
-              { label: 'Payback', value: '3.5 months' },
-            ].map(({ label, value }) => (
+              { label: 'CAC', value: '£35', explain: 'Cost to get one new customer — includes ads and referral rewards' },
+              { label: 'LTV', value: '£315', explain: 'Total revenue one customer generates over their lifetime (~21 months)' },
+              { label: 'LTV:CAC', value: '9.0x', explain: 'We earn £9 for every £1 spent on marketing — 3x+ is considered healthy' },
+              { label: 'Gross Margin', value: '85%', explain: 'We keep 85p of every £1 after basic server costs' },
+              { label: 'Payback', value: '3.5 months', explain: 'We recover marketing cost in 3.5 months — then it\'s pure profit' },
+            ].map(({ label, value, explain }) => (
               <div key={label} className="text-center">
                 <p className="text-sm text-muted-foreground">{label}</p>
                 <p className="text-xl font-bold text-foreground mt-1">{value}</p>
+                <Explain>{explain}</Explain>
               </div>
             ))}
           </div>
@@ -200,6 +231,7 @@ export default function FounderFinancialsPage() {
         <CardHeader>
           <CardTitle>MVP Features — CCM Framework Mapping</CardTitle>
           <CardDescription>£100K budget justified by market evidence</CardDescription>
+          <Explain>Each feature maps to a layer of our Cognitive Operating System (CCM) — this shows investors we're building with purpose, not guessing.</Explain>
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
@@ -225,22 +257,28 @@ export default function FounderFinancialsPage() {
         <CardHeader>
           <CardTitle>Funding Roadmap</CardTitle>
           <CardDescription>Pre-Seed → Series C progression</CardDescription>
+          <Explain>Each round brings bigger investment at a higher company valuation — this shows the growth path from startup to market leader.</Explain>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {fundingRounds.map(({ round, amount, valuation, timeline, milestone }, i) => (
-              <div key={round} className="flex items-center gap-4">
-                <div className="flex flex-col items-center">
-                  <div className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
-                  {i < fundingRounds.length - 1 && <div className="w-px h-8 bg-border" />}
+            {fundingRounds.map(({ round, amount, valuation, timeline, milestone, explain }, i) => (
+              <div key={round}>
+                <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-center">
+                    <div className={`w-3 h-3 rounded-full ${i === 0 ? 'bg-primary' : 'bg-muted-foreground/30'}`} />
+                    {i < fundingRounds.length - 1 && <div className="w-px h-8 bg-border" />}
+                  </div>
+                  <div className="flex-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                    <span className="font-semibold text-foreground">{round}</span>
+                    <span className="text-primary font-bold">{amount}</span>
+                    <span className="text-sm text-muted-foreground">@ {valuation}</span>
+                    <span className="text-xs text-muted-foreground">({timeline})</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground hidden md:block max-w-xs">{milestone}</p>
                 </div>
-                <div className="flex-1 flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                  <span className="font-semibold text-foreground">{round}</span>
-                  <span className="text-primary font-bold">{amount}</span>
-                  <span className="text-sm text-muted-foreground">@ {valuation}</span>
-                  <span className="text-xs text-muted-foreground">({timeline})</span>
+                <div className="ml-7 mt-1">
+                  <Explain>{explain}</Explain>
                 </div>
-                <p className="text-xs text-muted-foreground hidden md:block max-w-xs">{milestone}</p>
               </div>
             ))}
           </div>
