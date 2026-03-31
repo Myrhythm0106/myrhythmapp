@@ -33,7 +33,7 @@ LEAP stands for **Life Empowerment And Productivity** — and the "-OS" signals 
 | 📅 **Smart Scheduling** | MYRHYTHM assessment determines your peaks. AI auto-schedules commitments from Memory Bridge at optimal times. Users can **edit**, **deny**, or **approve** each suggestion. Smart typeahead from persistent **Contact List** + Support Circle + any email. Syncs with Google Calendar & Outlook. Confirm or auto-accept. |
 | 🧠 **Brain Health Reminders** | Progressive escalation (gentle → moderate → urgent) — CCM-powered cognitive continuity |
 | 💪 **Daily Brain Boost** | 240+ science-backed cognitive challenges |
-| 💚 **Support Circle** | Trusted people notified when you need help — collaborative accountability |
+| 💚 **Support Circle** | *No One Walks Alone.* Trusted people notified when you need help — collaborative accountability |
 | 🔄 **CCM Engine** | Collaborative Cognitive Management methodology — the "kernel" of LEAP-OS — bridges the gap between intention and reliable execution |
 
 ---
