@@ -151,11 +151,13 @@ This dual-market approach gives us multiple revenue streams and reduces market r
 #### **Community & Accountability**
 *[Show community features]*
 
-"Isolation is a major challenge in cognitive recovery:
+"Our brand promise is simple: **No One Walks Alone.** Isolation is a major challenge in cognitive recovery, and the Support Circle is how we deliver on that promise:
 - **Peer support** from others on similar journeys
 - **Accountability partners** for goal achievement
 - **Family integration** for care team users
-- **Professional networks** for clinical users"
+- **Professional networks** for clinical users
+
+No One Walks Alone isn't a tagline — it's the emotional heart of the Collaborative layer in our CCM methodology. It's why users stay, and it's why their support networks become our growth engine."
 
 ### **Mobile Experience**
 *[Switch to mobile view or device]*
@@ -290,7 +292,7 @@ Phase 4: Global partnerships (2027+)"
 ## **SECTION 8: CLOSING & CALL TO ACTION (1-2 minutes)**
 
 ### **Vision Restatement**
-"Our vision is a world where no one loses their independence because their memory fails them. MyRhythm isn't just a business — it's cognitive infrastructure for life. LEAP-OS exists to make cognitive resilience a basic human right. If you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life."
+"Our vision is a world where no one loses their independence because their memory fails them — and our promise is that **No One Walks Alone**. MyRhythm isn't just a business — it's cognitive infrastructure for life. LEAP-OS exists to make cognitive resilience a basic human right. It remembers what you can't, schedules at your cognitive peaks, escalates until you respond, and surrounds you with people who care. If you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life."
 
 ### **Personal Connection**
 "Three years ago, I was told I might never fully recover. Today, I'm not just recovered—I'm using that experience to help millions of others. That's the power of choosing to turn your greatest challenge into your greatest opportunity."

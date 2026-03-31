@@ -33,7 +33,7 @@ LEAP stands for **Life Empowerment And Productivity** — and the "-OS" signals 
 | 📅 **Smart Scheduling** | MYRHYTHM assessment determines your peaks. AI auto-schedules commitments from Memory Bridge at optimal times. Users can **edit**, **deny**, or **approve** each suggestion. Smart typeahead from persistent **Contact List** + Support Circle + any email. Syncs with Google Calendar & Outlook. Confirm or auto-accept. |
 | 🧠 **Brain Health Reminders** | Progressive escalation (gentle → moderate → urgent) — CCM-powered cognitive continuity |
 | 💪 **Daily Brain Boost** | 240+ science-backed cognitive challenges |
-| 💚 **Support Circle** | Trusted people notified when you need help — collaborative accountability |
+| 💚 **Support Circle** | *No One Walks Alone.* Trusted people notified when you need help — collaborative accountability |
 | 🔄 **CCM Engine** | Collaborative Cognitive Management methodology — the "kernel" of LEAP-OS — bridges the gap between intention and reliable execution |
 
 ---
@@ -43,11 +43,11 @@ LEAP stands for **Life Empowerment And Productivity** — and the "-OS" signals 
 > **"LEAP-OS: the only Cognitive Operating System powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, schedules at your cognitive peaks, escalates until you respond, with your support network as backup."**
 
 Unlike generic productivity tools, LEAP-OS:
-- Uses **Memory Bridge** to capture conversations and commitments your brain can't hold
+- Uses **Memory Bridge** to capture conversations and commitments your brain can't hold — *"It remembers what you can't"*
 - Uses **Assistant-First scheduling** — AI auto-places commitments at cognitive peak times with attendee invitations
 - Uses **contextual memory anchors** ("Here's why this matters...")
 - Implements **progressive escalation** mimicking natural importance signals
-- Activates **social accountability** without shame
+- Activates **social accountability** without shame — *"No One Walks Alone"*
 - Builds **habits through celebration** and streak tracking
 - Powered by **CCM methodology** — memory-first design for cognitive resilience
 

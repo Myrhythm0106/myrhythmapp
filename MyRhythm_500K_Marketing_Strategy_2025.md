@@ -292,6 +292,7 @@
 **Mission:** Empowering cognitive wellness through technology built by lived experience
 **Vision:** A world where no one loses their independence because their memory fails them.
 **North Star Narrative:** LEAP-OS exists to make cognitive resilience a basic human right — not a privilege of the healthy, the wealthy, or the young. If you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life.
+**Brand Promise:** No One Walks Alone.
 **Values:** Authenticity, Empathy, Innovation, Community, Hope
 
 ### **Unique Value Proposition**
@@ -314,10 +315,10 @@
 - **Proof Points:** Goal setting, family integration, daily life management, community support
 - **Practical Appeal:** Everything you need in one place, designed for your unique needs
 
-#### **Pillar 4: Community & Support**
-- **Message:** "You're not alone—join thousands on similar journeys"
-- **Proof Points:** Active user community, family integration, peer support features
-- **Social Appeal:** Belonging, mutual support, shared celebration of progress
+#### **Pillar 4: No One Walks Alone**
+- **Message:** "No One Walks Alone — your Support Circle surrounds you with accountability, not judgment"
+- **Proof Points:** Active user community, family integration, Support Circle, peer support features
+- **Social Appeal:** Belonging, mutual support, shared celebration of progress — independent but never isolated
 
 ### **Competitive Differentiation**
 
