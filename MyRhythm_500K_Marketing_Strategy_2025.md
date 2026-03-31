@@ -292,6 +292,7 @@
 **Mission:** Empowering cognitive wellness through technology built by lived experience
 **Vision:** A world where no one loses their independence because their memory fails them.
 **North Star Narrative:** LEAP-OS exists to make cognitive resilience a basic human right — not a privilege of the healthy, the wealthy, or the young. If you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life.
+**Brand Promise:** No One Walks Alone.
 **Values:** Authenticity, Empathy, Innovation, Community, Hope
 
 ### **Unique Value Proposition**
