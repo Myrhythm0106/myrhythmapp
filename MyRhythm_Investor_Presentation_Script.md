@@ -292,7 +292,7 @@ Phase 4: Global partnerships (2027+)"
 ## **SECTION 8: CLOSING & CALL TO ACTION (1-2 minutes)**
 
 ### **Vision Restatement**
-"Our vision is a world where no one loses their independence because their memory fails them. MyRhythm isn't just a business — it's cognitive infrastructure for life. LEAP-OS exists to make cognitive resilience a basic human right. If you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life."
+"Our vision is a world where no one loses their independence because their memory fails them — and our promise is that **No One Walks Alone**. MyRhythm isn't just a business — it's cognitive infrastructure for life. LEAP-OS exists to make cognitive resilience a basic human right. It remembers what you can't, schedules at your cognitive peaks, escalates until you respond, and surrounds you with people who care. If you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life."
 
 ### **Personal Connection**
 "Three years ago, I was told I might never fully recover. Today, I'm not just recovered—I'm using that experience to help millions of others. That's the power of choosing to turn your greatest challenge into your greatest opportunity."

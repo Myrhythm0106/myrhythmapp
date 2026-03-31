@@ -43,11 +43,11 @@ LEAP stands for **Life Empowerment And Productivity** — and the "-OS" signals 
 > **"LEAP-OS: the only Cognitive Operating System powered by Collaborative Cognitive Management (CCM) — it remembers what you can't, schedules at your cognitive peaks, escalates until you respond, with your support network as backup."**
 
 Unlike generic productivity tools, LEAP-OS:
-- Uses **Memory Bridge** to capture conversations and commitments your brain can't hold
+- Uses **Memory Bridge** to capture conversations and commitments your brain can't hold — *"It remembers what you can't"*
 - Uses **Assistant-First scheduling** — AI auto-places commitments at cognitive peak times with attendee invitations
 - Uses **contextual memory anchors** ("Here's why this matters...")
 - Implements **progressive escalation** mimicking natural importance signals
-- Activates **social accountability** without shame
+- Activates **social accountability** without shame — *"No One Walks Alone"*
 - Builds **habits through celebration** and streak tracking
 - Powered by **CCM methodology** — memory-first design for cognitive resilience
 

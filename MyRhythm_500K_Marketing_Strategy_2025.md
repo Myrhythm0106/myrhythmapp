@@ -315,10 +315,10 @@
 - **Proof Points:** Goal setting, family integration, daily life management, community support
 - **Practical Appeal:** Everything you need in one place, designed for your unique needs
 
-#### **Pillar 4: Community & Support**
-- **Message:** "You're not alone—join thousands on similar journeys"
-- **Proof Points:** Active user community, family integration, peer support features
-- **Social Appeal:** Belonging, mutual support, shared celebration of progress
+#### **Pillar 4: No One Walks Alone**
+- **Message:** "No One Walks Alone — your Support Circle surrounds you with accountability, not judgment"
+- **Proof Points:** Active user community, family integration, Support Circle, peer support features
+- **Social Appeal:** Belonging, mutual support, shared celebration of progress — independent but never isolated
 
 ### **Competitive Differentiation**
 
