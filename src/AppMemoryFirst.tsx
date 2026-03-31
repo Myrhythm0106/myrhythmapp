@@ -103,6 +103,16 @@ function AppMemoryFirst() {
                     </ProtectedRoute>
                   }
                 />
+                
+                {/* @feature Founder Financials - Admin-only financial dashboard */}
+                <Route
+                  path="/founder/financials"
+                  element={
+                    <AdminRoute>
+                      <FounderFinancialsPage />
+                    </AdminRoute>
+                  }
+                />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>
