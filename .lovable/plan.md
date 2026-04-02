@@ -1,43 +1,89 @@
 
 
-# Weave "No One Walks Alone" into Strategic Documents
+# Practical 5-Year Execution Plan — Excel Workbook
 
-## The Opportunity
+## What You Get
 
-"No One Walks Alone" already appears organically across 10+ UI components — it's clearly a core emotional thread of MyRhythm. But it doesn't appear in a single strategic document. This is a missed opportunity: it's the **human promise** behind the CCM "people layer" (Collaborative) and the Support Circle feature. It deserves formal recognition as a brand principle.
+A downloadable Excel workbook (`MyRhythm_LEAP_OS_5Year_Execution_Plan.xlsx`) structured as your daily/weekly command centre. Designed to prevent overwhelm: each year is a separate sheet, each quarter is a grouped section you can collapse, and every action has a clear owner, deadline, and status checkbox.
 
-## Where It Belongs
+## Workbook Structure
 
-The phrase works as the **Collaborative pillar's public-facing promise** — the emotional translation of "the people layer." It complements the vision statement perfectly:
+### Sheet 1: Dashboard (Your Daily View)
+- Current phase summary and "What to focus on THIS WEEK"
+- Key milestones tracker with status (Not Started / In Progress / Done)
+- Revenue vs target tracking (monthly)
+- A "layman" row under each metric explaining what it means
 
-- **Vision**: "A world where no one loses their independence because their memory fails them."
-- **Promise**: "No One Walks Alone."
+### Sheet 2: Year 1 — Foundation & Launch (2026)
+Quarterly groups (collapsible via Excel grouping):
 
-Together they say: *we protect your independence AND we surround you with support.*
+**Q1 (Apr–Jun): MVP & Founding Members**
+- Weekly actions: finalise MVP features, set up analytics, recruit 50 founding members
+- Daily tasks: social media posts, community engagement, user testing sessions
+- Key deliverables: working app, payment integration, first 50 users at £10/month
 
-## Placement Plan
+**Q2 (Jul–Sep): Growth & Validation**
+- Weekly actions: content marketing cadence, podcast outreach, referral programme launch
+- Daily tasks: respond to user feedback, publish content, track conversions
+- Key deliverables: 250 subscribers, first clinical conversation, Support Circle live
 
-| # | Document | Where & How |
-|---|----------|-------------|
-| 1 | `docs/myrhythm-one-page-pitch.md` | Add as the Support Circle tagline in the feature table; add to UVP section as a brand principle alongside "It remembers what you can't" |
-| 2 | `MyRhythm_Executive Summary_One_Page.md` | Weave into the Support Circle description as its defining promise |
-| 3 | `MyRhythm_500K_Marketing_Strategy_2025.md` | Add as a formal Brand Pillar alongside the vision statement; use in community/content marketing messaging |
-| 4 | `MyRhythm_Investor_Presentation_Script.md` | Add to the Support Circle slide narrative and the closing "vision restatement" |
-| 5 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Add under the CCM Collaborative layer as the user-facing expression of "the people layer" |
-| 6 | `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v10.pdf` | Add to the CCM Framework section under Collaborative, and to the Support Circle feature description |
+**Q3 (Oct–Dec): Scale & Clinical Pilots**
+- Weekly actions: healthcare outreach, conference attendance, provider directory soft launch
+- Daily tasks: ad campaign management, email nurture sequences, community moderation
+- Key deliverables: 500+ subscribers, 2 clinical pilots, £500K ARR run-rate target
 
-## How It Integrates
+**Q4 (Jan–Mar 2027): Consolidate**
+- Transition to regular pricing, clinical partnership contracts, NHS/insurer conversations
 
-- **CCM Framework**: Collaborative = "the people layer" → public promise = **"No One Walks Alone"**
-- **Vision alignment**: Vision speaks to independence; "No One Walks Alone" speaks to connection. Together they form the emotional foundation: *independent but never isolated*.
-- **Investor narrative**: Demonstrates community moat and retention driver — users stay because of the network effect around them.
+### Sheet 3: Year 2 — Expansion (2027)
+- Caregiver market entry, Provider Directory monetisation, B2B sales team hire
+- International English-speaking market research
+- Clinical validation studies begin
 
-## No UI Changes Needed
+### Sheet 4: Year 3 — Clinical Scale (2028)
+- NHS/insurance partnerships, enterprise licensing, API ecosystem
+- Provider Marketplace self-service launch
+- 10,000+ user target
 
-The phrase is already well-represented across the app's UI components. This update is purely strategic documentation alignment.
+### Sheet 5: Year 4 — Platform Maturity (2029)
+- International expansion, third-party integrations, CCM certification programme
+- Revenue diversification milestones
 
-## Technical Detail
+### Sheet 6: Year 5 — Market Leadership (2030–31)
+- Category ownership, potential acquisition/Series B positioning
+- Full Cognitive OS ecosystem with developer platform
 
-- Update 5 markdown files with targeted text additions
-- Regenerate the strategy PDF (v10) with the Collaborative layer update using the existing ReportLab script
+### Sheet 7: Assumptions & Sources
+- Market data sources, pricing logic, growth rate assumptions
+- "What This Means" column for every assumption
+
+## Column Structure (Every Year Sheet)
+
+| Column | Content |
+|--------|---------|
+| A | Phase / Quarter (grouped, collapsible) |
+| B | Week # |
+| C | Action Item (specific, verb-led) |
+| D | Category (Marketing / Product / Sales / Ops / Clinical) |
+| E | Priority (Must Do / Should Do / Nice to Have) |
+| F | Owner (Founder / Hire / Agency / Partner) |
+| G | Deadline |
+| H | Status (dropdown: Not Started / In Progress / Done) |
+| I | What This Means (layman explanation of why this action matters) |
+| J | Dependencies / Notes |
+
+## Design Principles
+
+- **Collapsible quarter groups** so you only see the current quarter expanded
+- **Conditional formatting**: red = overdue, amber = this week, green = done
+- **Year 1 is granular** (weekly/daily actions) — Years 2–5 are monthly/quarterly (strategic milestones)
+- **Every action tied to a revenue or user milestone** so you always know WHY you're doing it
+- **Layman column** on every row so you build context as you execute
+- **Formulas** for status summary counts and completion percentages per quarter
+
+## Files
+
+| File | Action |
+|------|--------|
+| `/mnt/documents/MyRhythm_LEAP_OS_5Year_Execution_Plan.xlsx` | Generate with openpyxl, 7 sheets, grouped rows, conditional formatting, dropdowns |
 
