@@ -311,3 +311,9 @@
 - Team performance and goals
 
 This comprehensive plan provides the roadmap to achieve £500,000 in revenue by December 2025 through systematic execution, clinical validation, and strategic growth across multiple revenue streams.
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

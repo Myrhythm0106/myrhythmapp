@@ -281,3 +281,8 @@
 - Scalable infrastructure planning
 
 This execution plan provides the detailed roadmap for transforming MyRhythm from a founding member startup to a market-leading IPO candidate within 24 months.
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

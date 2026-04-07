@@ -174,3 +174,8 @@ Thanks for helping make this better!
 - **Geographic Distribution**: Where testers are accessing from
 
 This comprehensive testing package ensures thorough validation across all user types, devices, and use cases while collecting actionable feedback for rapid iteration and improvement.
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

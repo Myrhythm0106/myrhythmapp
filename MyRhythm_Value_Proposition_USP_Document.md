@@ -273,3 +273,9 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 ---
 
 *Document Version: 1.0 | Created: January 2025 | For Internal Strategic Use*
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

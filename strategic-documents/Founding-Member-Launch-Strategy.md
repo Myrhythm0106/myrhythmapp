@@ -101,3 +101,8 @@ When we reach 1,000 users or month 4 (whichever comes first):
 - **Month 4**: 1,000 founding members reached → Transition to regular pricing
 
 This strategy maintains affordability while creating urgency and positioning for natural price evolution based on proven value delivery.
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

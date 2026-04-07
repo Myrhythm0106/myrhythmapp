@@ -375,3 +375,8 @@ Our testing approach focuses on:
 - Strategic pivot recommendations
 
 This comprehensive testing schedule ensures that every feature and user journey is validated for effectiveness, clinical relevance, and business impact, supporting the premium positioning and justifying the pricing evolution throughout the 24-month strategy.
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

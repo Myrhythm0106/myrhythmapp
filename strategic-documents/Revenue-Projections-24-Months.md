@@ -337,3 +337,8 @@
 - Market Position: #1 in cognitive wellness
 
 This revenue projection demonstrates the transformation from an underpriced startup to a premium market leader ready for IPO, with sustainable unit economics and exceptional growth metrics throughout the journey.
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

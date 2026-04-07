@@ -357,3 +357,9 @@ A: "Our Supabase infrastructure handles millions of users, our content is digita
 ---
 
 This comprehensive script provides a complete framework for presenting MyRhythm to investors, combining your personal story with strong business fundamentals and live product demonstration. The script is designed to create emotional connection while building confidence in the business opportunity and technical execution.
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*
