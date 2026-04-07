@@ -1,89 +1,76 @@
 
 
-# Practical 5-Year Execution Plan — Excel Workbook
+# Add Confidentiality Footer to All Strategic Documents
 
-## What You Get
+## Footer Text
 
-A downloadable Excel workbook (`MyRhythm_LEAP_OS_5Year_Execution_Plan.xlsx`) structured as your daily/weekly command centre. Designed to prevent overwhelm: each year is a separate sheet, each quarter is a grouped section you can collapse, and every action has a clear owner, deadline, and status checkbox.
+Every page/sheet/slide of every document related to the app gets:
 
-## Workbook Structure
+```
+Confidential – Not for Distribution
+© 2026 Annabel Aaron. All rights reserved.
+```
 
-### Sheet 1: Dashboard (Your Daily View)
-- Current phase summary and "What to focus on THIS WEEK"
-- Key milestones tracker with status (Not Started / In Progress / Done)
-- Revenue vs target tracking (monthly)
-- A "layman" row under each metric explaining what it means
+## Document Inventory
 
-### Sheet 2: Year 1 — Foundation & Launch (2026)
-Quarterly groups (collapsible via Excel grouping):
+### Markdown Files (14 files) — Add as final line
+| # | File |
+|---|------|
+| 1 | `docs/myrhythm-one-page-pitch.md` |
+| 2 | `docs/v0.1-features.md` |
+| 3 | `docs/v0.1-friends-family-testing-guide.md` |
+| 4 | `docs/v0.1-testing-plan.md` |
+| 5 | `docs/v0.2-complete-testing-guide.md` |
+| 6 | `MyRhythm_Executive Summary_One_Page.md` |
+| 7 | `MyRhythm_500K_Marketing_Strategy_2025.md` |
+| 8 | `MyRhythm_Investor_Presentation_Script.md` |
+| 9 | `MyRhythm_Investment_Presentation_Deck.md` |
+| 10 | `MyRhythm_Justification_and_Commercials_Document.md` |
+| 11 | `MyRhythm_Revenue_Strategy_500K_Plan.md` |
+| 12 | `MyRhythm_Value_Proposition_USP_Document.md` |
+| 13 | `MyRhythm_Operational_Execution_Plan.md` |
+| 14 | `MyRhythm_Executive_Strategy_Overview.md` |
+| 15 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` |
+| 16 | `/mnt/documents/MyRhythm_CCM_Deck_Design_Philosophy.md` |
+| 17 | All 9 files in `strategic-documents/` |
 
-**Q1 (Apr–Jun): MVP & Founding Members**
-- Weekly actions: finalise MVP features, set up analytics, recruit 50 founding members
-- Daily tasks: social media posts, community engagement, user testing sessions
-- Key deliverables: working app, payment integration, first 50 users at £10/month
+For markdown: append a horizontal rule and the footer in italics at the bottom of each file.
 
-**Q2 (Jul–Sep): Growth & Validation**
-- Weekly actions: content marketing cadence, podcast outreach, referral programme launch
-- Daily tasks: respond to user feedback, publish content, track conversions
-- Key deliverables: 250 subscribers, first clinical conversation, Support Circle live
+### Excel Files (2 files) — Add footer row + sheet header/footer
+| # | File |
+|---|------|
+| 1 | `/mnt/documents/MyRhythm_LEAP_OS_5Year_Execution_Plan.xlsx` |
+| 2 | `/mnt/documents/MyRhythm_LEAP_OS_Financial_Model_v2.xlsx` |
 
-**Q3 (Oct–Dec): Scale & Clinical Pilots**
-- Weekly actions: healthcare outreach, conference attendance, provider directory soft launch
-- Daily tasks: ad campaign management, email nurture sequences, community moderation
-- Key deliverables: 500+ subscribers, 2 clinical pilots, £500K ARR run-rate target
+For Excel: add the confidentiality text as a print footer on every sheet, and as a merged row at the bottom of each sheet's data area.
 
-**Q4 (Jan–Mar 2027): Consolidate**
-- Transition to regular pricing, clinical partnership contracts, NHS/insurer conversations
+### PDF Files — Regenerate latest versions only
+| # | File | Method |
+|---|------|--------|
+| 1 | `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v10.pdf` | Regenerate via ReportLab with footer on every page |
+| 2 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.pdf` | Regenerate from updated markdown |
+| 3 | `/mnt/documents/MyRhythm_5_Year_Strategy_v5.pdf` | Regenerate with footer |
+| 4 | `/mnt/documents/MyRhythm_WHO_Insurer_Executive_Brief.pdf` | Regenerate with footer |
 
-### Sheet 3: Year 2 — Expansion (2027)
-- Caregiver market entry, Provider Directory monetisation, B2B sales team hire
-- International English-speaking market research
-- Clinical validation studies begin
+Older PDF versions (v1-v9, etc.) will NOT be regenerated — they are superseded.
 
-### Sheet 4: Year 3 — Clinical Scale (2028)
-- NHS/insurance partnerships, enterprise licensing, API ecosystem
-- Provider Marketplace self-service launch
-- 10,000+ user target
+### PPTX Files (2 files) — Add footer to every slide
+| # | File |
+|---|------|
+| 1 | `/mnt/documents/MyRhythm_CCM_Investor_Deck_v2.pptx` |
+| 2 | `MyRhythm_Productivity_Investor_Deck_v2.pptx` |
 
-### Sheet 5: Year 4 — Platform Maturity (2029)
-- International expansion, third-party integrations, CCM certification programme
-- Revenue diversification milestones
+For PPTX: add the confidentiality text as a text box at the bottom of every slide.
 
-### Sheet 6: Year 5 — Market Leadership (2030–31)
-- Category ownership, potential acquisition/Series B positioning
-- Full Cognitive OS ecosystem with developer platform
+## What Won't Be Changed
+- `README.md`, `package.json`, config files — not strategic documents
+- Older PDF versions — superseded by latest
+- Source code files — not documents
+- `90_Day_Brain_Health_Quotes_MyRhythm.md`, `Daily_Action_Plan_2025_Detailed.md`, `MEMORY_PARTNER_DECISION_LOG.md` — internal working notes, not presentation documents (will include if you want)
 
-### Sheet 7: Assumptions & Sources
-- Market data sources, pricing logic, growth rate assumptions
-- "What This Means" column for every assumption
-
-## Column Structure (Every Year Sheet)
-
-| Column | Content |
-|--------|---------|
-| A | Phase / Quarter (grouped, collapsible) |
-| B | Week # |
-| C | Action Item (specific, verb-led) |
-| D | Category (Marketing / Product / Sales / Ops / Clinical) |
-| E | Priority (Must Do / Should Do / Nice to Have) |
-| F | Owner (Founder / Hire / Agency / Partner) |
-| G | Deadline |
-| H | Status (dropdown: Not Started / In Progress / Done) |
-| I | What This Means (layman explanation of why this action matters) |
-| J | Dependencies / Notes |
-
-## Design Principles
-
-- **Collapsible quarter groups** so you only see the current quarter expanded
-- **Conditional formatting**: red = overdue, amber = this week, green = done
-- **Year 1 is granular** (weekly/daily actions) — Years 2–5 are monthly/quarterly (strategic milestones)
-- **Every action tied to a revenue or user milestone** so you always know WHY you're doing it
-- **Layman column** on every row so you build context as you execute
-- **Formulas** for status summary counts and completion percentages per quarter
-
-## Files
-
-| File | Action |
-|------|--------|
-| `/mnt/documents/MyRhythm_LEAP_OS_5Year_Execution_Plan.xlsx` | Generate with openpyxl, 7 sheets, grouped rows, conditional formatting, dropdowns |
+## Technical Approach
+- Markdown: simple append
+- Excel: openpyxl to add print headers/footers and visible footer rows
+- PDFs: regenerate using ReportLab scripts with a page footer callback
+- PPTX: unpack, add footer text box to each slide, repack
 
