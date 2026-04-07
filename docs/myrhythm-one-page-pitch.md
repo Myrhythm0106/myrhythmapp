@@ -165,3 +165,9 @@ Unlike generic productivity tools, LEAP-OS:
 ---
 
 *MyRhythm © 2024 | LEAP-OS — the world's first Cognitive Operating System | Pitch Document v4.0*
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

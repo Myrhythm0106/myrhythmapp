@@ -263,3 +263,9 @@ The original three-tier pricing (MyStarter £7, MyStretch £13, MyLeap £20) was
 ---
 
 *This is a living document. Review monthly and update based on real data and market feedback.*
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

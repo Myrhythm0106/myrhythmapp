@@ -278,3 +278,8 @@
 5. **Global Scale**: International presence and recognition
 
 This pricing evolution transforms MyRhythm from an underpriced consumer app to a premium medical intervention with global enterprise reach, justified at each step by increasing value, validation, and market position.
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

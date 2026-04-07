@@ -232,3 +232,9 @@ MyRhythm represents a unique opportunity to capture significant value in the gro
 - **Partnership Opportunities:** partnerships@myrhythm.com
 
 *This document contains forward-looking statements based on current expectations and assumptions. Actual results may vary.*
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

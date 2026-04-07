@@ -284,3 +284,9 @@
 
 *This presentation deck provides the complete story for investor meetings, board presentations, and stakeholder communications. Each slide can be expanded with additional detail as needed for specific audiences.*
 
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

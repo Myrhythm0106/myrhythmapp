@@ -267,3 +267,9 @@ MyRhythm is positioned to become the definitive platform for cognitive wellness 
 **Last Updated**: December 2024  
 **Version**: 1.0  
 **Distribution**: Investor Relations & Strategic Partners
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

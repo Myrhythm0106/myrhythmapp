@@ -76,3 +76,9 @@ Comprehensive risk management through multiple clinical pilot programs, first-mo
 
 ---
 **This executive summary provides a complete overview for initial investor discussions, partnership opportunities, and stakeholder communications.**
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*
