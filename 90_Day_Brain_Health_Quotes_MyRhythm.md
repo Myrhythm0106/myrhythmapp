@@ -214,3 +214,9 @@
 - "[Your Name], Creator of MyRhythm"
 
 These quotes establish you as a thought leader while driving traffic to your blog and app!
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*

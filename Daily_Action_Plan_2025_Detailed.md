@@ -264,3 +264,9 @@ Every day should contribute to the £500,000 goal through:
 - Customer success focus
 
 This detailed plan provides the granular daily actions needed to systematically build MyRhythm from current state to £500,000 in revenue by December 2025.
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*
