@@ -1,76 +1,50 @@
 
 
-# Add Confidentiality Footer to All Strategic Documents
+# Investor Pitch Script — Updated with ABI Coverage
 
-## Footer Text
+## What Changed from Previous Plan
 
-Every page/sheet/slide of every document related to the app gets:
+The script now explicitly includes **Acquired Brain Injury (ABI)** — strokes, brain aneurysms, tumours, infections — alongside TBI. This widens the addressable market narrative and reflects MyRhythm's actual user base. The SAM breakdown (£2.4B ABI + £1.8B TBI = £4.2B) becomes a powerful investor talking point.
 
-```
-Confidential – Not for Distribution
-© 2026 Annabel Aaron. All rights reserved.
-```
+## Structure (15–20 min + Q&A)
 
-## Document Inventory
+| Section | Key ABI-Inclusive Updates |
+|---------|-------------------------|
+| **1. The Hook** (1 min) | Personal story — brain injury (not just "TBI"), the sticky notes, the moment |
+| **2. The Problem** (2 min) | "69M TBIs globally, 12.2M strokes annually, 2M+ other ABIs — brain aneurysms, tumours, infections. Every one of them falls into the same gap between clinical care and daily life." |
+| **3. The Vision** (1 min) | Full vision statement + "No One Walks Alone" |
+| **4. The Solution — LEAP-OS** (4 min) | CCM framework, Memory Bridge, progressive escalation — designed for ALL cognitive recovery, not just one diagnosis |
+| **5. Why Now** (2 min) | Post-COVID awareness, ageing population (stroke risk), AI maturity |
+| **6. Market Opportunity** (2 min) | **TAM £12.8B** → **SAM £4.2B** (ABI £2.4B + TBI £1.8B) → **SOM £420M**. "Most competitors target TBI alone. We serve the full spectrum of acquired and traumatic brain injury." |
+| **7. Business Model** (2 min) | Founding Members £10/mo, standard £15/mo, B2B clinical £50/user/mo |
+| **8. Traction** (1 min) | Working MVP, beta feedback, clinical conversations |
+| **9. Competitive Advantage** (2 min) | "No competitor addresses ABI + TBI + caregivers + cognitive optimisers in one OS" |
+| **10. The Ask** (1 min) | Funding amount, use of funds |
+| **11. Close** (1 min) | "It's not just about remembering. It's about rising." |
+| **Appendix: Q&A Prep** | 8 anticipated questions including "Why ABI and TBI together?" |
 
-### Markdown Files (14 files) — Add as final line
-| # | File |
-|---|------|
-| 1 | `docs/myrhythm-one-page-pitch.md` |
-| 2 | `docs/v0.1-features.md` |
-| 3 | `docs/v0.1-friends-family-testing-guide.md` |
-| 4 | `docs/v0.1-testing-plan.md` |
-| 5 | `docs/v0.2-complete-testing-guide.md` |
-| 6 | `MyRhythm_Executive Summary_One_Page.md` |
-| 7 | `MyRhythm_500K_Marketing_Strategy_2025.md` |
-| 8 | `MyRhythm_Investor_Presentation_Script.md` |
-| 9 | `MyRhythm_Investment_Presentation_Deck.md` |
-| 10 | `MyRhythm_Justification_and_Commercials_Document.md` |
-| 11 | `MyRhythm_Revenue_Strategy_500K_Plan.md` |
-| 12 | `MyRhythm_Value_Proposition_USP_Document.md` |
-| 13 | `MyRhythm_Operational_Execution_Plan.md` |
-| 14 | `MyRhythm_Executive_Strategy_Overview.md` |
-| 15 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` |
-| 16 | `/mnt/documents/MyRhythm_CCM_Deck_Design_Philosophy.md` |
-| 17 | All 9 files in `strategic-documents/` |
+## ABI-Specific Content Woven Throughout
 
-For markdown: append a horizontal rule and the footer in italics at the bottom of each file.
+- **Problem section**: Names stroke, aneurysm, tumour, and infection survivors alongside TBI — with stats (12.2M strokes/year globally, WHO)
+- **Market section**: Breaks SAM into two pillars (ABI £2.4B + TBI £1.8B) showing investors the market is bigger than they assumed
+- **Competitive advantage**: "Every competitor in this space focuses on TBI or general wellness. No one serves the full acquired brain injury spectrum — stroke survivors, aneurysm survivors, tumour recovery — with the same depth."
+- **Q&A prep**: Includes answer for "Isn't ABI too broad?" — clinical evidence that cognitive rehabilitation needs are shared across ABI types
 
-### Excel Files (2 files) — Add footer row + sheet header/footer
-| # | File |
-|---|------|
-| 1 | `/mnt/documents/MyRhythm_LEAP_OS_5Year_Execution_Plan.xlsx` |
-| 2 | `/mnt/documents/MyRhythm_LEAP_OS_Financial_Model_v2.xlsx` |
+## Tone & Formatting
 
-For Excel: add the confidentiality text as a print footer on every sheet, and as a merged row at the bottom of each sheet's data area.
+- First person, Annabel's voice — warm, confident, personal
+- Stage directions in grey italic
+- Key stats bolded
+- Arial 12pt body, 3pt confidentiality footer
+- ~12-15 pages
 
-### PDF Files — Regenerate latest versions only
-| # | File | Method |
-|---|------|--------|
-| 1 | `/mnt/documents/MyRhythm_Productivity_5_Year_Strategy_v10.pdf` | Regenerate via ReportLab with footer on every page |
-| 2 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.pdf` | Regenerate from updated markdown |
-| 3 | `/mnt/documents/MyRhythm_5_Year_Strategy_v5.pdf` | Regenerate with footer |
-| 4 | `/mnt/documents/MyRhythm_WHO_Insurer_Executive_Brief.pdf` | Regenerate with footer |
+## Deliverable
 
-Older PDF versions (v1-v9, etc.) will NOT be regenerated — they are superseded.
-
-### PPTX Files (2 files) — Add footer to every slide
-| # | File |
-|---|------|
-| 1 | `/mnt/documents/MyRhythm_CCM_Investor_Deck_v2.pptx` |
-| 2 | `MyRhythm_Productivity_Investor_Deck_v2.pptx` |
-
-For PPTX: add the confidentiality text as a text box at the bottom of every slide.
-
-## What Won't Be Changed
-- `README.md`, `package.json`, config files — not strategic documents
-- Older PDF versions — superseded by latest
-- Source code files — not documents
-- `90_Day_Brain_Health_Quotes_MyRhythm.md`, `Daily_Action_Plan_2025_Detailed.md`, `MEMORY_PARTNER_DECISION_LOG.md` — internal working notes, not presentation documents (will include if you want)
+| File | Format |
+|------|--------|
+| `/mnt/documents/MyRhythm_Investor_Pitch_Script.docx` | Word document |
 
 ## Technical Approach
-- Markdown: simple append
-- Excel: openpyxl to add print headers/footers and visible footer rows
-- PDFs: regenerate using ReportLab scripts with a page footer callback
-- PPTX: unpack, add footer text box to each slide, repack
+
+Generate using `docx-js` (npm `docx` package) with proper heading styles, bullet lists via `LevelFormat.BULLET`, page breaks between sections, and the 3pt confidentiality footer on every page.
 
