@@ -147,3 +147,9 @@
 ---
 
 *This decision log will be updated with each strategic choice made during product development to ensure alignment with our Memory Partner positioning and £500K revenue goal.*
+
+
+---
+
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*
