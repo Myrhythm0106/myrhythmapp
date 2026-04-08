@@ -29,8 +29,18 @@
 🎯 **The Problem:**
 - No operating system for how people think, plan, and follow through
 - Productivity tools built for neurotypical brains — failing everyone else
-- Clinical cognitive support ends at hospital discharge
 - Fragmented apps that don't connect intention to action
+
+🩺 **The Discharge Cliff:**
+> *Clinical care ends. Real life begins. Nothing bridges the gap.*
+
+The ABI & TBI patient goes home. The system moves on. The real damage begins. Clinical rehab: 6–12 weeks. Then: a pamphlet and a follow-up in 6 months. What follows is a cascade:
+1. **Forgotten promises** — appointments missed, medications skipped
+2. **Eroded trust** — relationships strained by unreliability
+3. **Caregiver burnout** — families carrying the weight with no tools
+4. **Confidence collapse** — the person stops trying because they've stopped believing they can
+
+*No app. No system. No continuity. Just a person trying to remember who they were.* **That's the gap LEAP-OS fills.**
 
 **Our Approach:** Launch to the masses first (productivity, ADHD, burnout, aging), then expand into clinical markets (ABI, TBI, dementia/MCI) with proven traction. Dementia is not a niche — it is the 7th leading cause of death globally, and there is no consumer-grade cognitive platform designed for early intervention. LEAP-OS fills that gap.
 

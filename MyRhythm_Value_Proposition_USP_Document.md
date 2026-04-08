@@ -92,8 +92,8 @@ MyRhythm stands as the **only comprehensive cognitive wellness platform** that b
 **Phase 2/3 — Clinical (Year 2+ Expansion)**
 | **User Segment** | **Specific Value** | **Pain Point Solved** | **Competitive Alternative** |
 |------------------|-------------------|----------------------|---------------------------|
-| ABI/TBI Survivors | Comprehensive recovery support with lived experience | No continuity of support after hospital discharge | Medical apps (too clinical) or consumer apps (too basic) |
-| Family Caregivers | Structured support without overwhelming responsibility | Caregiver burnout and feeling helpless | No integrated family support solutions |
+| ABI/TBI Survivors | Comprehensive recovery support with lived experience | **The Discharge Cliff:** Clinical care ends. Real life begins. Nothing bridges the gap. Clinical rehab: 6–12 weeks, then a pamphlet and a follow-up in 6 months. The cascade: forgotten promises → eroded trust → caregiver burnout → confidence collapse. *No app. No system. No continuity. Just a person trying to remember who they were.* **LEAP-OS fills that gap.** | Medical apps (too clinical) or consumer apps (too basic) |
+| Family Caregivers | Structured support without overwhelming responsibility | Caregiver burnout and feeling helpless — carrying the weight with no tools | No integrated family support solutions |
 | **Dementia & MCI** (**55M globally, 10M new cases/year**, projected **139M by 2050** — **£1.2B** digital cognitive market, 7th leading cause of death globally) | Early intervention, cognitive monitoring, and family support | No consumer-grade early detection or intervention platform | Clinical-only tools with poor UX, no family integration |
 
 ### 🏥 **Healthcare Providers (B2B Market)**

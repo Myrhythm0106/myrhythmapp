@@ -19,6 +19,18 @@ Our standard is simple: if you can think it, LEAP-OS helps you do it — at the 
 
 **The gap:** One notification, easily dismissed, no context = forgotten promises, strained relationships, eroded trust.
 
+### THE DISCHARGE CLIFF
+
+> **Clinical care ends. Real life begins. Nothing bridges the gap.**
+
+The ABI & TBI patient goes home. The system moves on. The real damage begins. Clinical rehab: 6–12 weeks. Then: a pamphlet and a follow-up in 6 months. What follows is a cascade:
+1. **Forgotten promises** — appointments missed, medications skipped
+2. **Eroded trust** — relationships strained by unreliability
+3. **Caregiver burnout** — families carrying the weight with no tools
+4. **Confidence collapse** — the person stops trying because they've stopped believing they can
+
+*No app. No system. No continuity. Just a person trying to remember who they were.* **That's the gap LEAP-OS fills.**
+
 ---
 
 ### OUR SOLUTION

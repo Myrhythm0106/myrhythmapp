@@ -33,6 +33,21 @@
 
 **Implementation Strategy:** Launch to the masses first (productivity, ADHD, burnout, aging) — no medical claims, no clinical approvals. Expand into clinical segments (ABI, TBI, dementia/MCI) in Year 2+ with proven traction and data. Dementia is not a niche — it is a global health crisis affecting 55 million people today, growing to 139 million by 2050. There is no consumer-grade cognitive platform designed for early intervention. LEAP-OS fills that gap.
 
+### The Discharge Cliff — Why This Market Exists
+
+> **Clinical care ends. Real life begins. Nothing bridges the gap.**
+
+The ABI & TBI patient goes home. The system moves on. The real damage begins. Clinical rehab lasts 6–12 weeks. Then: a pamphlet and a follow-up in 6 months. What happens in between is a cascade:
+
+1. **Forgotten promises** — appointments missed, medications skipped
+2. **Eroded trust** — relationships strained by unreliability
+3. **Caregiver burnout** — families carrying the weight with no tools
+4. **Confidence collapse** — the person stops trying because they've stopped believing they can
+
+*No app. No system. No continuity. Just a person trying to remember who they were.*
+
+**That's the gap LEAP-OS fills** — and it's why the commercial opportunity is not theoretical. It is a daily reality for millions of people and the families who love them.
+
 ### Revenue Model Justification
 Our three-tier revenue approach maximizes market capture:
 
