@@ -277,5 +277,22 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 
 ---
 
+### References & Evidence Base
+
+1. Dewan, A. et al. (2018) 'Estimating the global incidence of traumatic brain injury', *Journal of Neurosurgery*, 130(4), pp. 1080–1097.
+2. World Stroke Organization (2022) *Global Stroke Fact Sheet 2022*.
+3. CDC (2024) *Traumatic Brain Injury & Concussion: Data and Statistics*.
+4. AARP & NAC (2020) *Caregiving in the United States 2020*.
+5. Petersen, R.C. et al. (2018) 'Mild cognitive impairment', *Neurology*, 90(3), pp. 126–135.
+6. Grand View Research (2023) *Cognitive Assessment & Training Market Report, 2023–2030*.
+7. Allied Market Research (2023) *Brain Health Supplements Market Forecast, 2023–2032*.
+8. Headway UK (2023) *Brain Injury Statistics: Key Facts and Figures*.
+9. NHS England (2019) *The NHS Long Term Plan*.
+10. Deloitte (2023) *Digital Therapeutics: Realising the Potential*.
+11. IQVIA Institute (2023) *Digital Health Trends 2023*.
+12. WHO (2021) *Global Status Report on the Public Health Response to Dementia*.
+
+---
+
 *Confidential – Not for Distribution*
 *© 2026 Annabel Aaron. All rights reserved.*

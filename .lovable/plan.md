@@ -1,68 +1,75 @@
 
+# Add References & Evidence Base to All Key Documents
 
-# Upgrade Investor Pitch Script — Financial Appendix + Visual Timeline
+## The Reference Sheet
 
-## Problem
+A standardised "References & Evidence Base" appendix citing real, verifiable sources for every major statistical claim across the documents. This proves to investors, partners, and regulators that MyRhythm's strategy is grounded in published data.
 
-Section 10 ("The Ask") mentions percentage splits (40% tech, 35% marketing) but never states the actual number (£250K). There's no year-by-year funding roadmap, no cost breakdown an investor can scrutinize, and no visual timeline. An investor reading this would ask: "How much do you actually need?"
+## Key Claims That Need Citations
 
-## What Gets Added
+| Claim | Source |
+|-------|--------|
+| 69M TBI globally per year | Dewan et al., 2018, *Journal of Neurosurgery* |
+| 12.2M strokes annually worldwide | World Stroke Organization, 2022 Global Stroke Fact Sheet |
+| 53M caregivers in the US | AARP/NAC, 2020 Caregiving in the U.S. Report |
+| 1.4M TBI cases/year (US) | CDC Traumatic Brain Injury & Concussion Report, 2024 |
+| 15% of 65+ have MCI | Petersen et al., 2018, *Neurology* (AAN) |
+| £12.8B cognitive health TAM | Grand View Research, 2023, Cognitive Assessment & Training Market Report |
+| 8.1% CAGR cognitive wellness market | Allied Market Research, 2023, Brain Health Supplements Market |
+| Digital therapeutics growth | Deloitte, 2023, Digital Therapeutics Market Analysis |
+| Post-COVID cognitive awareness | The Lancet Neurology, 2022, Long COVID Cognitive Impact |
+| NHS digital health adoption | NHS England Long Term Plan, 2019; NHSX Digital Health Framework |
+| ABI prevalence (aneurysm, tumour, infection) | Headway UK Brain Injury Statistics, 2023 |
+| Caregiver burnout / support need | Alzheimer's Society, 2023; WHO Dementia Report |
+| SaaS retention benchmarks | Recurly Research, 2023 Subscription Benchmark Report |
+| Mobile health app engagement | IQVIA Institute, 2023, Digital Health Trends Report |
 
-### New Appendix B: "The Numbers — 5-Year Funding & Deployment Breakdown"
+## Documents to Update
 
-A structured financial appendix after the existing Q&A appendix, containing:
+### Tier 1 — Investor-Facing (full reference appendix)
+| # | File | Method |
+|---|------|--------|
+| 1 | `/mnt/documents/MyRhythm_Investor_Pitch_Script_v2.docx` → v3 | Regenerate DOCX with new "Appendix C: References & Evidence Base" |
+| 2 | `MyRhythm_Executive Summary_One_Page.md` | Append references section |
+| 3 | `docs/myrhythm-one-page-pitch.md` | Append references section |
+| 4 | `MyRhythm_Investment_Presentation_Deck.md` | Append references section |
+| 5 | `MyRhythm_Justification_and_Commercials_Document.md` | Append references section |
 
-**1. Immediate Ask — Pre-Seed (£250K)**
+### Tier 2 — Strategy Documents (condensed reference list)
+| # | File | Method |
+|---|------|--------|
+| 6 | `MyRhythm_Revenue_Strategy_500K_Plan.md` | Append references |
+| 7 | `MyRhythm_Value_Proposition_USP_Document.md` | Append references |
+| 8 | `MyRhythm_Operational_Execution_Plan.md` | Append references |
+| 9 | `MyRhythm_Executive_Strategy_Overview.md` | Append references |
+| 10 | `MyRhythm_500K_Marketing_Strategy_2025.md` | Append references |
+| 11 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Append references |
 
-| Category | Amount | % | Plain English |
-|----------|--------|---|---------------|
-| Technology Development | £100,000 | 40% | Builds the MVP — Memory Bridge, Smart Scheduling, Support Circle |
-| Sales & Marketing | £87,500 | 35% | Gets the first 1,000 founding members through the door |
-| Operations & Team | £50,000 | 20% | Customer success, compliance, legal setup |
-| Reserve | £12,500 | 5% | Safety net for unexpected costs or opportunities |
+### Tier 3 — Execution Plans (short "Sources" footer)
+| # | File |
+|---|------|
+| 12-20 | All 9 files in `strategic-documents/` |
 
-**2. 5-Year Funding Roadmap Table**
+## Format
 
-| Round | When | Amount | Valuation | What It Funds | Key Milestone |
-|-------|------|--------|-----------|---------------|---------------|
-| Pre-Seed | Q1 2026 | £250K | £1.67M | MVP build + first 1,000 users | Product live, founding members |
-| Series A | Q1 2027 | £2M | £15M | Scale team, clinical pilots, 5K users | £42K MRR proven |
-| Series B | Q1 2028 | £10M | £75M | NHS partnerships, 50K users | Clinical validation |
-| Series C | 2029 | £25M | £200M | International, API platform | Market leadership |
-| Series D/Pre-IPO | 2030-31 | £50M+ | £500M+ | Global expansion, acquisition positioning | Category ownership |
+**Markdown files** — Harvard-style reference list at the bottom, before the confidentiality footer:
 
-Each row has a "What This Means" column in plain English.
+```
+---
 
-**3. MVP Feature Budget Breakdown**
+### References & Evidence Base
 
-Table showing the £100K MVP split across features (Memory Bridge £25K, Smart Scheduling £20K, Support Circle £15K, etc.) with WHY each feature matters and the evidence supporting it.
+1. Dewan, A. et al. (2018) 'Estimating the global incidence of traumatic brain injury', *Journal of Neurosurgery*, 130(4), pp. 1080–1097.
+2. World Stroke Organization (2022) *Global Stroke Fact Sheet 2022*.
+...
 
-**4. Visual Timeline (ASCII table in Word)**
+---
+*Confidential – Not for Distribution*
+*© 2026 Annabel Aaron. All rights reserved.*
+```
 
-A formatted timeline showing Years 1-5 side by side with:
-- Funding round markers
-- Key milestones
-- Revenue targets (£500K ARR → £5M ARR → £25M ARR → £75M ARR → £150M ARR)
-- Team size growth
-- User growth trajectory
-
-### Update to Section 10 ("The Ask")
-
-Add the actual number: "We're raising £250,000 in pre-seed funding at a £1.67 million valuation." Then reference Appendix B for the full breakdown.
-
-## Steven Bartlett / Mel Robbins Quality Check
-
-Reviewing the existing script against that standard:
-- **Strengths**: Personal story is strong, CCM explanation is clear, "No One Walks Alone" lands emotionally
-- **Gap**: The numbers section is the weakest part — exactly what we're fixing. Bartlett always asks "what are the numbers?" and Robbins demands specificity. This appendix gives you those answers ready-made.
-
-## Deliverable
-
-| File | Action |
-|------|--------|
-| `/mnt/documents/MyRhythm_Investor_Pitch_Script_v2.docx` | Regenerate with updated Section 10 + new Appendix B (financial breakdown + visual timeline) |
+**DOCX (Investor Pitch Script)** — New "Appendix C: References & Evidence Base" after Appendix B, with proper heading, numbered list, and 3pt confidentiality footer maintained.
 
 ## Technical Approach
-
-Regenerate full document using docx-js with all existing content preserved, Section 10 updated with the actual ask amount, and new Appendix B with formatted tables and a visual timeline using table-based layout. 3pt confidentiality footer on every page.
-
+- Markdown: append reference sections (tailored per document's claims)
+- DOCX: regenerate v3 with all existing content + new Appendix C

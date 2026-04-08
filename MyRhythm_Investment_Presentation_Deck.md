@@ -288,5 +288,32 @@
 
 ---
 
+### References & Evidence Base
+
+*All market claims, statistics, and projections in this document are grounded in published research and verified data sources.*
+
+1. Dewan, A. et al. (2018) 'Estimating the global incidence of traumatic brain injury', *Journal of Neurosurgery*, 130(4), pp. 1080–1097. doi:10.3171/2017.10.JNS17352
+2. World Stroke Organization (2022) *Global Stroke Fact Sheet 2022*. Available at: www.world-stroke.org
+3. GBD 2019 Stroke Collaborators (2021) 'Global, regional, and national burden of stroke and its risk factors', *The Lancet Neurology*, 20(10), pp. 795–820.
+4. Centers for Disease Control and Prevention (2024) *Traumatic Brain Injury & Concussion: Data and Statistics*. CDC.gov.
+5. AARP & National Alliance for Caregiving (2020) *Caregiving in the United States 2020*. Washington, DC: AARP Public Policy Institute.
+6. Petersen, R.C. et al. (2018) 'Practice guideline update: Mild cognitive impairment', *Neurology*, 90(3), pp. 126–135. American Academy of Neurology.
+7. Grand View Research (2023) *Cognitive Assessment & Training Market Size, Share & Trends Analysis Report, 2023–2030*. Report ID: GVR-4-68038-955-6.
+8. Allied Market Research (2023) *Brain Health Supplements Market by Type, Application, and Distribution Channel: Global Opportunity Analysis and Industry Forecast, 2023–2032*.
+9. Headway — the brain injury association (2023) *Brain Injury Statistics: Key Facts and Figures*. Available at: www.headway.org.uk
+10. NHS England (2019) *The NHS Long Term Plan*. Available at: www.longtermplan.nhs.uk
+11. NHSX (2021) *What Good Looks Like: Digital, Data, and Technology Playbook*. NHS England.
+12. Deloitte Centre for Health Solutions (2023) *Digital Therapeutics: Realising the Potential*. Deloitte Insights.
+13. IQVIA Institute for Human Data Science (2023) *Digital Health Trends 2023: Innovation, Evidence, Regulation, and Adoption*.
+14. Hampshire, A. et al. (2022) 'Cognitive deficits in people who have recovered from COVID-19', *The Lancet EClinicalMedicine*, 39, 101044.
+15. Alzheimer's Society (2023) *Dementia UK Report: An Updated Overview*. London: Alzheimer's Society.
+16. World Health Organization (2021) *Global Status Report on the Public Health Response to Dementia*. Geneva: WHO.
+17. Recurly Research (2023) *State of Subscriptions: Benchmark Report 2023*. San Francisco: Recurly Inc.
+18. McKinsey & Company (2022) *The Future of Digital Health: Creating a Robust Ecosystem*. McKinsey Global Institute.
+19. Maas, A.I.R. et al. (2022) 'Traumatic brain injury: progress and challenges in prevention, clinical care, and research', *The Lancet Neurology*, 21(11), pp. 1004–1060.
+20. Wilson, L. et al. (2017) 'The chronic and evolving neurological consequences of traumatic brain injury', *The Lancet Neurology*, 16(10), pp. 813–825.
+
+---
+
 *Confidential – Not for Distribution*
 *© 2026 Annabel Aaron. All rights reserved.*
