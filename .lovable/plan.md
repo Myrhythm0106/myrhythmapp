@@ -1,50 +1,68 @@
 
 
-# Investor Pitch Script — Updated with ABI Coverage
+# Upgrade Investor Pitch Script — Financial Appendix + Visual Timeline
 
-## What Changed from Previous Plan
+## Problem
 
-The script now explicitly includes **Acquired Brain Injury (ABI)** — strokes, brain aneurysms, tumours, infections — alongside TBI. This widens the addressable market narrative and reflects MyRhythm's actual user base. The SAM breakdown (£2.4B ABI + £1.8B TBI = £4.2B) becomes a powerful investor talking point.
+Section 10 ("The Ask") mentions percentage splits (40% tech, 35% marketing) but never states the actual number (£250K). There's no year-by-year funding roadmap, no cost breakdown an investor can scrutinize, and no visual timeline. An investor reading this would ask: "How much do you actually need?"
 
-## Structure (15–20 min + Q&A)
+## What Gets Added
 
-| Section | Key ABI-Inclusive Updates |
-|---------|-------------------------|
-| **1. The Hook** (1 min) | Personal story — brain injury (not just "TBI"), the sticky notes, the moment |
-| **2. The Problem** (2 min) | "69M TBIs globally, 12.2M strokes annually, 2M+ other ABIs — brain aneurysms, tumours, infections. Every one of them falls into the same gap between clinical care and daily life." |
-| **3. The Vision** (1 min) | Full vision statement + "No One Walks Alone" |
-| **4. The Solution — LEAP-OS** (4 min) | CCM framework, Memory Bridge, progressive escalation — designed for ALL cognitive recovery, not just one diagnosis |
-| **5. Why Now** (2 min) | Post-COVID awareness, ageing population (stroke risk), AI maturity |
-| **6. Market Opportunity** (2 min) | **TAM £12.8B** → **SAM £4.2B** (ABI £2.4B + TBI £1.8B) → **SOM £420M**. "Most competitors target TBI alone. We serve the full spectrum of acquired and traumatic brain injury." |
-| **7. Business Model** (2 min) | Founding Members £10/mo, standard £15/mo, B2B clinical £50/user/mo |
-| **8. Traction** (1 min) | Working MVP, beta feedback, clinical conversations |
-| **9. Competitive Advantage** (2 min) | "No competitor addresses ABI + TBI + caregivers + cognitive optimisers in one OS" |
-| **10. The Ask** (1 min) | Funding amount, use of funds |
-| **11. Close** (1 min) | "It's not just about remembering. It's about rising." |
-| **Appendix: Q&A Prep** | 8 anticipated questions including "Why ABI and TBI together?" |
+### New Appendix B: "The Numbers — 5-Year Funding & Deployment Breakdown"
 
-## ABI-Specific Content Woven Throughout
+A structured financial appendix after the existing Q&A appendix, containing:
 
-- **Problem section**: Names stroke, aneurysm, tumour, and infection survivors alongside TBI — with stats (12.2M strokes/year globally, WHO)
-- **Market section**: Breaks SAM into two pillars (ABI £2.4B + TBI £1.8B) showing investors the market is bigger than they assumed
-- **Competitive advantage**: "Every competitor in this space focuses on TBI or general wellness. No one serves the full acquired brain injury spectrum — stroke survivors, aneurysm survivors, tumour recovery — with the same depth."
-- **Q&A prep**: Includes answer for "Isn't ABI too broad?" — clinical evidence that cognitive rehabilitation needs are shared across ABI types
+**1. Immediate Ask — Pre-Seed (£250K)**
 
-## Tone & Formatting
+| Category | Amount | % | Plain English |
+|----------|--------|---|---------------|
+| Technology Development | £100,000 | 40% | Builds the MVP — Memory Bridge, Smart Scheduling, Support Circle |
+| Sales & Marketing | £87,500 | 35% | Gets the first 1,000 founding members through the door |
+| Operations & Team | £50,000 | 20% | Customer success, compliance, legal setup |
+| Reserve | £12,500 | 5% | Safety net for unexpected costs or opportunities |
 
-- First person, Annabel's voice — warm, confident, personal
-- Stage directions in grey italic
-- Key stats bolded
-- Arial 12pt body, 3pt confidentiality footer
-- ~12-15 pages
+**2. 5-Year Funding Roadmap Table**
+
+| Round | When | Amount | Valuation | What It Funds | Key Milestone |
+|-------|------|--------|-----------|---------------|---------------|
+| Pre-Seed | Q1 2026 | £250K | £1.67M | MVP build + first 1,000 users | Product live, founding members |
+| Series A | Q1 2027 | £2M | £15M | Scale team, clinical pilots, 5K users | £42K MRR proven |
+| Series B | Q1 2028 | £10M | £75M | NHS partnerships, 50K users | Clinical validation |
+| Series C | 2029 | £25M | £200M | International, API platform | Market leadership |
+| Series D/Pre-IPO | 2030-31 | £50M+ | £500M+ | Global expansion, acquisition positioning | Category ownership |
+
+Each row has a "What This Means" column in plain English.
+
+**3. MVP Feature Budget Breakdown**
+
+Table showing the £100K MVP split across features (Memory Bridge £25K, Smart Scheduling £20K, Support Circle £15K, etc.) with WHY each feature matters and the evidence supporting it.
+
+**4. Visual Timeline (ASCII table in Word)**
+
+A formatted timeline showing Years 1-5 side by side with:
+- Funding round markers
+- Key milestones
+- Revenue targets (£500K ARR → £5M ARR → £25M ARR → £75M ARR → £150M ARR)
+- Team size growth
+- User growth trajectory
+
+### Update to Section 10 ("The Ask")
+
+Add the actual number: "We're raising £250,000 in pre-seed funding at a £1.67 million valuation." Then reference Appendix B for the full breakdown.
+
+## Steven Bartlett / Mel Robbins Quality Check
+
+Reviewing the existing script against that standard:
+- **Strengths**: Personal story is strong, CCM explanation is clear, "No One Walks Alone" lands emotionally
+- **Gap**: The numbers section is the weakest part — exactly what we're fixing. Bartlett always asks "what are the numbers?" and Robbins demands specificity. This appendix gives you those answers ready-made.
 
 ## Deliverable
 
-| File | Format |
+| File | Action |
 |------|--------|
-| `/mnt/documents/MyRhythm_Investor_Pitch_Script.docx` | Word document |
+| `/mnt/documents/MyRhythm_Investor_Pitch_Script_v2.docx` | Regenerate with updated Section 10 + new Appendix B (financial breakdown + visual timeline) |
 
 ## Technical Approach
 
-Generate using `docx-js` (npm `docx` package) with proper heading styles, bullet lists via `LevelFormat.BULLET`, page breaks between sections, and the 3pt confidentiality footer on every page.
+Regenerate full document using docx-js with all existing content preserved, Section 10 updated with the actual ask amount, and new Appendix B with formatted tables and a visual timeline using table-based layout. 3pt confidentiality footer on every page.
 
