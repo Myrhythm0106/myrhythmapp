@@ -281,5 +281,11 @@ This pricing evolution transforms MyRhythm from an underpriced consumer app to a
 
 ---
 
+### Sources
+
+*Market statistics referenced in this document are drawn from: Dewan et al. (2018) Journal of Neurosurgery; World Stroke Organization (2022); CDC TBI Data (2024); AARP Caregiving Report (2020); Grand View Research Cognitive Market Report (2023); Headway UK Brain Injury Statistics (2023); NHS Long Term Plan (2019).*
+
+---
+
 *Confidential – Not for Distribution*
 *© 2026 Annabel Aaron. All rights reserved.*
