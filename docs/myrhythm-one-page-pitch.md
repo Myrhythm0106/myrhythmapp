@@ -15,7 +15,7 @@ Our standard is simple: if you can think it, LEAP-OS helps you do it — at the 
 
 ### THE PROBLEM
 
-**69 million people** experience traumatic brain injury globally each year. **53 million caregivers** in the US alone support loved ones with memory challenges. Existing reminder apps fail them because they're designed for neurotypical brains.
+**Every professional, student, and parent** juggles more commitments than their memory can hold. **69 million people** experience traumatic brain injury globally each year. **366 million adults** live with ADHD. **67% of workers** report burnout. Existing productivity tools fail them because they're designed for ideal brains — not real ones.
 
 **The gap:** One notification, easily dismissed, no context = forgotten promises, strained relationships, eroded trust.
 
@@ -55,14 +55,20 @@ Unlike generic productivity tools, LEAP-OS:
 
 ### TARGET MARKET
 
-| Segment | Size | Our Angle |
-|---------|------|-----------|
-| TBI Survivors | 1.7M US/year | Built by a TBI survivor |
-| Mild Cognitive Impairment | 15% of 65+ | Early intervention tool |
-| Caregivers | 53M in US | Peace of mind features |
-| Brain Health Enthusiasts | Growing | Proactive wellness |
+| Segment | Size | Phase | Our Angle |
+|---------|------|-------|-----------|
+| Productivity seekers & professionals | 200M+ globally | Phase 1 — Launch | Think better, execute faster |
+| Students & academics | 150M+ globally | Phase 1 — Launch | Study smarter, focus longer |
+| ADHD & focus challenges | 366M adults globally | Phase 1 — Launch | Built for how your brain actually works |
+| Burnout & cognitive fatigue | 67% of workers | Phase 1 — Launch | Reclaim mental clarity |
+| Aging adults (brain health) | 15% of 65+ | Phase 1 — Launch | Proactive cognitive wellness |
+| Long-COVID cognitive fog | 65M+ globally | Phase 1/2 — Bridge | Cognitive recovery support |
+| TBI survivors | 69M/year globally | Phase 2/3 — Clinical | Built by a TBI survivor |
+| ABI survivors (stroke, aneurysm) | 12M+ strokes/year | Phase 2/3 — Clinical | Post-discharge continuity |
+| Caregivers & families | 53M in US | Phase 2/3 — Clinical | Peace of mind features |
+| Dementia & MCI | 55M globally | Phase 3 — Clinical | Early intervention tool |
 
-**Initial Focus:** TBI communities + caregivers (deeply understand the problem)
+**Initial Focus:** Productivity seekers & efficiency-minded professionals — no medical barriers, fast growth. Clinical expansion (ABI, TBI, dementia) follows in Year 2+ with proven traction.
 
 ---
 
@@ -118,9 +124,9 @@ Unlike generic productivity tools, LEAP-OS:
 
 ### ROADMAP
 
-**Phase 1 (Now - 6mo):** Founding Member launch, 500 users, clinical pilots
-**Phase 2 (6-12mo):** 2,000 users, NHS conversations, external calendar sync, Provider Directory (curated listings)
-**Phase 3 (12-24mo):** 10,000+ users, B2B clinical revenue, self-service Provider Marketplace, international expansion
+**Phase 1 (Now - 6mo):** Founding Member launch, 500 users — productivity seekers, ADHD, burnout, aging adults
+**Phase 2 (6-12mo):** 2,000 users, caregivers & long-COVID bridge, external calendar sync, Provider Directory
+**Phase 3 (12-24mo):** 10,000+ users, ABI/TBI/dementia clinical expansion, NHS partnerships, B2B clinical revenue, international expansion
 
 ---
 

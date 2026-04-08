@@ -77,13 +77,24 @@ MyRhythm stands as the **only comprehensive cognitive wellness platform** that b
 
 ## TARGET MARKET VALUE ANALYSIS
 
-### 👤 **Individual Users (Primary Market)**
+### 👤 **Individual Users — Outside-In Strategy**
+
+**Phase 1 — Everyone (Launch Market)**
 | **User Segment** | **Specific Value** | **Pain Point Solved** | **Competitive Alternative** |
 |------------------|-------------------|----------------------|---------------------------|
-| Brain Injury Survivors | Comprehensive recovery support with lived experience backing | Fragmented tools, lack of understanding | Medical apps (too clinical) or consumer apps (too basic) |
-| Cognitive Wellness Seekers | Holistic brain health with community support | Generic brain training without life integration | Lumosity (games only), Headspace (meditation only) |
+| Productivity Seekers & Professionals | Cognitive OS that aligns intention with action | Too many tools, nothing connects thinking to doing | Notion, Todoist (task-only, no cognitive layer) |
+| Students & Academics | Memory-first study & focus management | Information overload, attention fragmentation | Forest, Anki (single-purpose tools) |
+| Executives & Entrepreneurs | Meeting capture, commitment tracking, peak scheduling | Forgotten promises, cognitive overload | Generic calendars and note apps |
+| ADHD & Focus Challenges | Built for how your brain actually works | Apps designed for neurotypical brains | Generic productivity apps that increase shame |
+| Burnout & Cognitive Fatigue | Energy-aware scheduling, cognitive load management | Working harder but thinking worse | Wellness apps (meditation only, no action) |
+| Aging Adults | Proactive brain health with dignity | Fear-based decline narratives | Senior-focused apps (often patronizing) |
+
+**Phase 2/3 — Clinical (Year 2+ Expansion)**
+| **User Segment** | **Specific Value** | **Pain Point Solved** | **Competitive Alternative** |
+|------------------|-------------------|----------------------|---------------------------|
+| ABI/TBI Survivors | Comprehensive recovery support with lived experience | No continuity of support after hospital discharge | Medical apps (too clinical) or consumer apps (too basic) |
 | Family Caregivers | Structured support without overwhelming responsibility | Caregiver burnout and feeling helpless | No integrated family support solutions |
-| Aging Adults | Cognitive maintenance with dignity and empowerment | Fear-based decline narratives | Senior-focused apps (often patronizing) |
+| Dementia & MCI | Early intervention and cognitive monitoring | No consumer-grade early detection tools | Clinical-only tools with poor UX |
 
 ### 🏥 **Healthcare Providers (B2B Market)**
 | **Provider Type** | **Specific Value** | **Clinical Need Met** | **Current Alternative** |
@@ -191,7 +202,7 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 ## KEY MESSAGING FRAMEWORK
 
 ### 🎯 **Primary Message**
-"MyRhythm is the only comprehensive cognitive wellness platform built by brain injury survivors for individuals, families, and healthcare providers—transforming recovery through authentic experience and clinical-grade support."
+"MyRhythm is the world's first Cognitive Operating System — built for everyone who thinks. Whether you're a professional chasing peak performance, a student managing information overload, or someone rebuilding after brain injury — LEAP-OS aligns your memory, rhythm, and follow-through so nothing falls through the cracks."
 
 ### 💬 **Supporting Messages**
 1. **Authenticity**: "Built by people who've walked this path"

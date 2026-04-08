@@ -33,8 +33,12 @@
 1. **Start at**: `your-domain.lovable.app/landing`
 2. **Complete Flow**: User type → Assessment → Review pricing → (Optional) Sign up
 3. **Test Scenarios**:
-   - Memory concerns user journey
-   - Family caregiver journey  
+   - **Phase 1 (Priority):** Productivity seeker journey — meeting capture, smart scheduling
+   - **Phase 1:** ADHD/focus user journey — energy-aware scheduling, brain games
+   - **Phase 1:** Burnout professional journey — cognitive load management
+   - **Phase 1:** Student journey — study organisation, focus training
+   - **Phase 2/3:** Memory concerns user journey
+   - **Phase 2/3:** Family caregiver journey  
    - Professional assessment journey
    - Mobile vs desktop experience
    - Pricing clarity and appeal

@@ -6,7 +6,7 @@
 
 ### SLIDE 1: TITLE SLIDE
 **MyRhythm: Transforming Cognitive Wellness**
-*Digital Health Platform for Brain Injury Recovery & Cognitive Enhancement*
+*The World's First Cognitive Operating System — Built for Everyone Who Thinks*
 
 - **Funding Goal:** Series A Investment
 - **Revenue Target:** £500,000 by December 2025
@@ -19,16 +19,18 @@
 **Massive Underserved Market**
 
 📊 **Market Size:**
-- £2.3B Global Brain Training Market (8.1% CAGR)
-- 1.4M Annual TBI Cases in Target Markets
-- 15M+ Potential Cognitive Wellness Users
-- 12,000+ Healthcare Provider Opportunities
+- £12.8B TAM — Global Cognitive Health (8.1% CAGR)
+- £4.2B SAM — ABI (£2.4B) + TBI (£1.8B) clinical support
+- 200M+ professionals, students & executives seeking cognitive edge
+- 69M annual TBI + 12M ABI cases globally
 
 🎯 **The Problem:**
-- Fragmented cognitive wellness tools
-- No clinical-grade consumer platforms
-- Limited family/care team integration
-- Deficit-focused approach vs. empowerment
+- No operating system for how people think, plan, and follow through
+- Productivity tools built for neurotypical brains — failing everyone else
+- Clinical cognitive support ends at hospital discharge
+- Fragmented apps that don't connect intention to action
+
+**Our Approach:** Launch to the masses first (productivity, ADHD, burnout, aging), then expand into clinical markets (ABI, TBI, dementia) with proven traction.
 
 ---
 
@@ -126,17 +128,17 @@
 ### SLIDE 8: GO-TO-MARKET STRATEGY
 **Multi-Channel Growth Engine**
 
-**🎯 Consumer Acquisition:**
-- Digital marketing (Google, Facebook, TikTok)
-- Content marketing and SEO
-- Influencer partnerships
-- Community building
+**🎯 Phase 1 — Everyone (Launch):**
+- Productivity & efficiency channels (LinkedIn, YouTube, podcasts)
+- ADHD & focus communities (TikTok, Reddit, Facebook groups)
+- Burnout & wellness audiences (Instagram, newsletters)
+- Student & academic channels (university partnerships)
 
-**🏥 Clinical Sales:**
-- Direct healthcare provider outreach
+**🏥 Phase 2/3 — Clinical (Year 2+):**
+- NHS & healthcare provider partnerships
 - Medical conference participation
-- Clinical pilot programs
-- Referral partner network
+- Clinical pilot programs with ABI/TBI centres
+- Caregiver support organizations
 
 **📈 Growth Multipliers:**
 - Referral programs

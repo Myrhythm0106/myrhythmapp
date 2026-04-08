@@ -41,9 +41,23 @@
 2. **Test**: Assessment professional features
 3. **Focus**: Clinical reporting and outcome tracking
 
-## 10 USE CASE TESTING SCENARIOS
+## 12 USE CASE TESTING SCENARIOS
 
-### 1. Memory Concerns (Early Stage)
+### Phase 1 — Everyone (Launch Priority)
+
+### 1. Productivity Professional
+- **User**: 32-year-old marketing manager juggling meetings and projects
+- **Journey**: Meeting capture → Smart scheduling → Commitment tracking
+- **Test**: Memory Bridge, calendar integration, Support Circle for accountability
+
+### 2. ADHD/Focus Seeker
+- **User**: 28-year-old developer with ADHD, struggles with follow-through
+- **Journey**: Energy-aware scheduling → Brain games → Daily rhythm
+- **Test**: Cognitive peak detection, progressive reminders, celebration system
+
+### Phase 2/3 — Clinical (Future Expansion)
+
+### 3. Memory Concerns (Early Stage)
 - **User**: 65+ with mild memory concerns
 - **Journey**: MyStarter plan selection
 - **Test**: Assessment sensitivity, support circle integration

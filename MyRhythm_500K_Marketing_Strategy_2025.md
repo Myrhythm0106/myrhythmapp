@@ -16,11 +16,20 @@
 
 ## **MARKET ANALYSIS & OPPORTUNITY**
 
-### **Primary Markets:**
-1. **Brain Injury Recovery (UK/US):** 1.4M annual cases, £2.3B market
-2. **Cognitive Wellness Seekers:** 15M+ adults seeking brain health solutions
-3. **Healthcare Providers:** 50K+ clinics needing patient engagement tools
-4. **Family Caregivers:** 6.5M supporting cognitive health challenges
+### **Primary Markets (Outside-In Strategy):**
+
+**Phase 1 — Everyone (Launch):**
+1. **Productivity Seekers & Professionals:** 200M+ globally wanting cognitive edge
+2. **Students & Academics:** 150M+ seeking focus and memory support
+3. **ADHD & Focus Challenges:** 366M adults globally — underserved by neurotypical tools
+4. **Burnout & Cognitive Fatigue:** 67% of workers reporting burnout
+5. **Aging Adults:** 15M+ seeking proactive brain health
+
+**Phase 2/3 — Clinical (Year 2+):**
+6. **ABI/TBI Survivors:** 69M TBI + 12M ABI annually — £4.2B SAM
+7. **Family Caregivers:** 53M+ supporting cognitive health challenges
+8. **Healthcare Providers:** 50K+ clinics needing patient engagement tools
+9. **Dementia & MCI:** 55M globally — early intervention market
 
 ### **Market Gaps MyRhythm Fills:**
 - **Lived Experience Design:** Built BY brain health warriors FOR brain health warriors
@@ -132,12 +141,12 @@
 
 ### **Customer Personas & Targeting**
 
-#### **Primary Persona: Sarah (TBI Survivor, Age 34)**
-- **Demographics:** Professional, married, 2 children, household income £50K+
-- **Pain Points:** Memory issues, cognitive fatigue, overwhelmed by recovery options
-- **Goals:** Regain independence, return to work, support family effectively
-- **Channels:** Facebook groups, healthcare provider referrals, Google search
-- **Messaging:** "Tools built by someone who understands your journey"
+#### **Primary Persona: Alex (Productivity-Driven Professional, Age 32)**
+- **Demographics:** Marketing manager, ambitious, juggles meetings/projects/family, household income £55K+
+- **Pain Points:** Forgets commitments from meetings, cognitive overload, too many tools that don't connect
+- **Goals:** Never drop a ball, think clearer, execute faster, maintain work-life balance
+- **Channels:** LinkedIn, YouTube productivity channels, podcasts, Reddit
+- **Messaging:** "The operating system for how you think — it remembers what you can't"
 
 #### **Secondary Persona: Michael (Family Caregiver, Age 42)**
 - **Demographics:** Spouse of brain injury survivor, primary income earner
