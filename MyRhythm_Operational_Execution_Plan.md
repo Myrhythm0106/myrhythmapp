@@ -120,13 +120,13 @@ CEO/Founder
 #### Customer Acquisition Framework
 
 **Consumer Acquisition (B2C)**
-- **Digital Marketing:** Google Ads, Facebook, TikTok targeting cognitive wellness
+- **Digital Marketing:** Google Ads, LinkedIn, TikTok targeting productivity seekers, ADHD communities, burnout & focus
 - **Content Marketing:** SEO-optimized blog, video content, podcast appearances
 - **Influencer Partnerships:** Mental health advocates, recovery success stories
 - **Community Building:** Social media groups, webinars, support communities
 
 **Clinical Acquisition (B2B)**
-- **Direct Sales:** Targeted outreach to rehabilitation centers and neurologists
+- **Direct Sales:** Phase 1: productivity & wellness partnerships. Phase 2/3: rehabilitation centers and neurologists
 - **Conference Marketing:** Healthcare events, medical conferences, trade shows
 - **Partner Referrals:** Existing healthcare relationships and advisory board
 - **Case Study Marketing:** Success stories and clinical outcome data

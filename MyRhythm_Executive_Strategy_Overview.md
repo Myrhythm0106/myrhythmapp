@@ -11,7 +11,7 @@
 **Key Investment Highlights:**
 - **Revenue Target:** £500,000 by December 2025
 - **Market Opportunity:** £2.3B global brain training market growing at 8.1% CAGR
-- **Unique Position:** Only platform combining consumer wellness with clinical-grade TBI support
+- **Unique Position:** Built for everyone who thinks. Clinically deep enough for those who need it most.
 - **Proven Traction:** Strong MVP with validated user demand and clinical interest
 
 ---
@@ -21,10 +21,10 @@
 #### Market Size & Growth
 - **Total Addressable Market:** £2.3 billion (global cognitive training)
 - **Serviceable Market:** £340 million (UK/EU digital health wellness)
-- **Target Market Segments:**
-  - Consumer cognitive wellness: 15M+ potential users
-  - Clinical brain injury support: 1.4M annual TBI cases in target markets
-  - Healthcare provider tools: 12,000+ potential clinical partners
+- **Target Market Segments (Outside-In Strategy):**
+  - **Phase 1 — Everyone (Launch):** Productivity seekers, students, executives, ADHD/focus, burnout, aging adults — 200M+ potential users
+  - **Phase 2 — Bridge (Months 6–12):** Caregivers, long-COVID cognitive fog, ADHD support communities
+  - **Phase 3 — Clinical (Year 2+):** ABI/TBI survivors, dementia/MCI, healthcare professionals — 12,000+ potential clinical partners
 
 #### Competitive Differentiation
 - **Lived Experience Foundation:** Built by cognitive wellness champions who understand the journey

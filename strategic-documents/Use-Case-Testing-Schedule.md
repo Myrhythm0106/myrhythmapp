@@ -14,7 +14,7 @@ Our testing approach focuses on:
 ---
 
 ## PHASE 1: FOUNDING MEMBER TESTING (Months 1-3)
-### Theme: "Foundation Excellence & User Experience Optimization"
+### Theme: "Masses-First Launch — Productivity, Focus & Cognitive Performance"
 
 #### MONTH 1: CORE USER JOURNEY TESTING
 

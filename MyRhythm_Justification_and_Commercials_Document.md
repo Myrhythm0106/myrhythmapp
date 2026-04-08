@@ -6,7 +6,7 @@
 
 ## Executive Summary
 
-**MyRhythm** represents a transformative approach to cognitive wellness and brain injury recovery, addressing a £2.3 billion global market opportunity through evidence-based digital health solutions. Our platform uniquely bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience and validated through comprehensive research.
+**MyRhythm** represents a transformative approach to cognitive wellness and brain injury recovery, addressing a £12.8 billion global market opportunity across the full cognitive spectrum — from productivity seekers and professionals to brain injury survivors and clinical recovery. Our platform launches to everyone who wants to think better, then expands into clinical-grade brain injury and dementia support, built by founders with lived experience and validated through comprehensive research.
 
 ### Key Investment Highlights
 - **Market Opportunity**: £2.3B global cognitive wellness market growing at 8.1% annually
@@ -20,12 +20,18 @@
 ## Market Justification & Commercial Opportunity
 
 ### Target Market Size & Growth
-| Market Segment | Market Size | Annual Growth | Target Users |
-|---|---|---|---|
-| **Digital Brain Training** | £1.2B | 8.5% | 12M+ consumers |
-| **Brain Injury Recovery** | £800M | 7.3% | 1.4M annual cases |
-| **Cognitive Wellness** | £300M | 12.1% | 3M+ wellness-focused users |
-| **Total Addressable Market** | **£2.3B** | **8.1%** | **16.4M+ users** |
+| Market Segment | Market Size | Annual Growth | Target Users | Phase |
+|---|---|---|---|---|
+| **Productivity & Performance** | £3.2B | 12.1% | 200M+ professionals | Phase 1 — Launch |
+| **ADHD & Focus** | £2.1B | 15.3% | 366M adults globally | Phase 1 — Launch |
+| **Burnout & Cognitive Fatigue** | £1.8B | 9.2% | 100M+ workers | Phase 1 — Launch |
+| **Aging & Brain Health** | £2.5B | 8.5% | 50M+ adults | Phase 1 — Launch |
+| **ABI Recovery (stroke, aneurysm)** | £2.4B | 7.3% | 12M+ annual cases | Phase 2/3 — Clinical |
+| **TBI Recovery** | £1.8B | 7.3% | 69M annual cases | Phase 2/3 — Clinical |
+| **Dementia & MCI** | £1.2B | 8.1% | 55M globally | Phase 3 — Clinical |
+| **Total Addressable Market** | **£12.8B** | **8.1%** | **200M+ users** | |
+
+**Implementation Strategy:** Launch to the masses first (productivity, ADHD, burnout, aging) — no medical claims, no clinical approvals. Expand into clinical segments (ABI, TBI, dementia) in Year 2+ with proven traction and data.
 
 ### Revenue Model Justification
 Our three-tier revenue approach maximizes market capture:

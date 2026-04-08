@@ -58,16 +58,25 @@ Price will increase from £10 → £15/month when ANY of these conditions are me
 - [ ] Generate 50+ testimonials
 - [ ] Establish clinical partner conversations
 
-### Target Audiences (Priority Order)
-1. **TBI Survivors & Families** - Deep understanding of memory challenges
-2. **Caregivers** - Looking for tools to support loved ones
-3. **Mild Cognitive Impairment** - Early intervention market
-4. **Brain Health Enthusiasts** - Proactive wellness seekers
+### Target Audiences (Priority Order — Outside-In Strategy)
+
+**Phase 1 — Everyone (Launch):**
+1. **Productivity Seekers & Professionals** — Want to think better, execute faster
+2. **Students & Academics** — Focus, memory, study management
+3. **ADHD & Focus Challenges** — Built for how their brain actually works
+4. **Burnout & Cognitive Fatigue** — Energy-aware scheduling, cognitive load management
+5. **Aging Adults** — Proactive brain health and wellness
+
+**Phase 2/3 — Clinical (Year 2+):**
+6. **TBI Survivors & Families** — Deep understanding of memory challenges
+7. **ABI Survivors** — Stroke, aneurysm, tumour recovery support
+8. **Caregivers** — Looking for tools to support loved ones
+9. **Dementia & MCI** — Early intervention market
 
 ### Marketing Channels
 | Channel | Budget | Expected Users |
 |---------|--------|----------------|
-| TBI Communities (Headway, etc.) | £0 (organic) | 100 |
+| Productivity & ADHD communities (Reddit, LinkedIn) | £0 (organic) | 150 |
 | LinkedIn (Founder's Story) | £0 (organic) | 50 |
 | Facebook Groups | £200/month | 150 |
 | Word of Mouth | £0 | 100 |

@@ -8,7 +8,7 @@
 ---
 
 ### THE OPPORTUNITY
-**MyRhythm**, powered by **LEAP-OS** (the world's first Cognitive Operating System), addresses a £2.3 billion global market opportunity in cognitive wellness and brain injury recovery. LEAP — Life Empowerment And Productivity — is the philosophy; the "-OS" signals cognitive infrastructure. Aligning memory, biological rhythm, and follow-through to turn daily actions into long-term performance and outcomes. With 1.4 million annual TBI cases and 15+ million potential cognitive wellness users in target markets, we're positioned to capture significant market share in an underserved sector growing at 8.1% annually.
+**MyRhythm**, powered by **LEAP-OS** (the world's first Cognitive Operating System), addresses a £12.8 billion global market opportunity across the full cognitive spectrum — from productivity seekers and professionals to brain injury survivors and clinical recovery. LEAP — Life Empowerment And Productivity — is the philosophy; the "-OS" signals cognitive infrastructure. Aligning memory, biological rhythm, and follow-through to turn daily actions into long-term performance and outcomes. Our addressable market spans productivity seekers, ADHD/focus, burnout, aging adults, long-COVID, caregivers, ABI/TBI survivors, and dementia/MCI — with Phase 1 launching to the masses (no medical barriers) before expanding into clinical markets in Year 2+.
 
 ### UNIQUE VALUE PROPOSITION
 We are the **only Cognitive Operating System** that bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience in cognitive recovery. LEAP-OS combines Memory Bridge conversation capture (*"It remembers what you can't"*), Assistant-First Smart Scheduling powered by the MYRHYTHM assessment, personalized training, clinical-grade progress tracking, care team collaboration via Support Circle (*"No One Walks Alone"*), and community support — functioning as a complete cognitive infrastructure that aligns daily actions with biological rhythm and long-term aspirations.
@@ -31,7 +31,7 @@ Our diversified revenue model generates income through:
 ### COMPETITIVE ADVANTAGE
 1. **Cognitive Operating System Architecture:** LEAP-OS is not an app — it's cognitive infrastructure with platform defensibility and ecosystem lock-in
 2. **Authentic Foundation:** Built by cognitive wellness champions with personal recovery experience
-3. **Dual-Market Approach:** Only platform serving both consumers and healthcare providers
+3. **Outside-In Strategy:** Launch to everyone who wants to think better (Phase 1), then expand into clinical markets (Phase 2/3) — serving both consumers and healthcare providers
 4. **Assistant-First AI Scheduling:** MYRHYTHM assessment determines cognitive peaks; AI auto-schedules commitments with attendee invitations from Support Circle — no other tool does this
 5. **Clinical Integration:** Medical-grade features with family and care team collaboration
 6. **CCM Kernel:** Collaborative Cognitive Management methodology powers every feature as the operating system's core engine
