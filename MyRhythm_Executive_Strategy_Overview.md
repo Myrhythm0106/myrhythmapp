@@ -26,6 +26,12 @@
   - **Phase 2 — Bridge (Months 6–12):** Caregivers, long-COVID cognitive fog, ADHD support communities
   - **Phase 3 — Clinical (Year 2+):** ABI/TBI survivors, healthcare professionals — 12,000+ potential clinical partners. **Dementia & MCI** is a standalone clinical opportunity: **55M people** living with dementia globally, **10M new cases/year** (WHO), projected to reach **139M by 2050** — a **£1.2B** addressable digital cognitive market with no consumer-grade early intervention platform
 
+#### The Discharge Cliff — Why This Matters
+
+> **Clinical care ends. Real life begins. Nothing bridges the gap.**
+
+The ABI & TBI patient goes home. The system moves on. The real damage begins. Clinical rehab: 6–12 weeks. Then: a pamphlet and a follow-up in 6 months. What follows is a cascade: **1) Forgotten promises** — appointments missed, medications skipped. **2) Eroded trust** — relationships strained by unreliability. **3) Caregiver burnout** — families carrying the weight with no tools. **4) Confidence collapse** — the person stops trying because they've stopped believing they can. *No app. No system. No continuity. Just a person trying to remember who they were.* **That's the gap LEAP-OS fills.**
+
 #### Competitive Differentiation
 - **Lived Experience Foundation:** Built by cognitive wellness champions who understand the journey
 - **Dual-Market Approach:** Consumer wellness + clinical-grade healthcare solutions
