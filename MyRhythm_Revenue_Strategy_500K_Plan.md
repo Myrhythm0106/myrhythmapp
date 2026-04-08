@@ -234,6 +234,7 @@
 - 57+ clinical partnerships
 - £41,667+ MRR (£500,000+ ARR)
 - Market leadership position — from productivity seekers to clinical cognitive support
+- **Dementia market pipeline:** 55M people globally, 10M new cases/year (WHO), £1.2B digital cognitive market — Phase 3 clinical persona ready for Year 2+ expansion
 
 ## DAILY EXECUTION FRAMEWORK
 

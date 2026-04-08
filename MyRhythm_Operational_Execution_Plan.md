@@ -126,7 +126,7 @@ CEO/Founder
 - **Community Building:** Social media groups, webinars, support communities
 
 **Clinical Acquisition (B2B)**
-- **Direct Sales:** Phase 1: productivity & wellness partnerships. Phase 2/3: rehabilitation centers and neurologists
+- **Direct Sales:** Phase 1: productivity & wellness partnerships. Phase 2/3: rehabilitation centres, neurologists, and **dementia/MCI services** (55M globally, 10M new cases/year, £1.2B digital cognitive market — the largest underserved clinical segment)
 - **Conference Marketing:** Healthcare events, medical conferences, trade shows
 - **Partner Referrals:** Existing healthcare relationships and advisory board
 - **Case Study Marketing:** Success stories and clinical outcome data

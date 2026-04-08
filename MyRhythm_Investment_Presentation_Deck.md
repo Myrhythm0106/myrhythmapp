@@ -32,7 +32,7 @@
 - Clinical cognitive support ends at hospital discharge
 - Fragmented apps that don't connect intention to action
 
-**Our Approach:** Launch to the masses first (productivity, ADHD, burnout, aging), then expand into clinical markets (ABI, TBI, dementia) with proven traction.
+**Our Approach:** Launch to the masses first (productivity, ADHD, burnout, aging), then expand into clinical markets (ABI, TBI, dementia/MCI) with proven traction. Dementia is not a niche — it is the 7th leading cause of death globally, and there is no consumer-grade cognitive platform designed for early intervention. LEAP-OS fills that gap.
 
 ---
 

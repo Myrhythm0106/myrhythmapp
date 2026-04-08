@@ -94,7 +94,7 @@ MyRhythm stands as the **only comprehensive cognitive wellness platform** that b
 |------------------|-------------------|----------------------|---------------------------|
 | ABI/TBI Survivors | Comprehensive recovery support with lived experience | No continuity of support after hospital discharge | Medical apps (too clinical) or consumer apps (too basic) |
 | Family Caregivers | Structured support without overwhelming responsibility | Caregiver burnout and feeling helpless | No integrated family support solutions |
-| Dementia & MCI | Early intervention and cognitive monitoring | No consumer-grade early detection tools | Clinical-only tools with poor UX |
+| **Dementia & MCI** (**55M globally, 10M new cases/year**, projected **139M by 2050** — **£1.2B** digital cognitive market, 7th leading cause of death globally) | Early intervention, cognitive monitoring, and family support | No consumer-grade early detection or intervention platform | Clinical-only tools with poor UX, no family integration |
 
 ### 🏥 **Healthcare Providers (B2B Market)**
 | **Provider Type** | **Specific Value** | **Clinical Need Met** | **Current Alternative** |

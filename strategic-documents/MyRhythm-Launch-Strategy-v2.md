@@ -71,7 +71,7 @@ Price will increase from £10 → £15/month when ANY of these conditions are me
 6. **TBI Survivors & Families** — Deep understanding of memory challenges
 7. **ABI Survivors** — Stroke, aneurysm, tumour recovery support
 8. **Caregivers** — Looking for tools to support loved ones
-9. **Dementia & MCI** — Early intervention market
+9. **Dementia & MCI** — **55M globally, 10M new cases/year** (WHO), projected **139M by 2050**. **£1.2B** digital cognitive market. 7th leading cause of death globally. No consumer-grade early intervention platform exists.
 
 ### Marketing Channels
 | Channel | Budget | Expected Users |

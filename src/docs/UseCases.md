@@ -40,6 +40,8 @@
 35. **Entrepreneur Mental Clarity** - Cognitive optimization for startup leadership and innovation
 
 ## Aging and Wellness (10 cases)
+> **Market context — Dementia:** 55 million people live with dementia globally, with 10 million new cases every year (WHO 2021). By 2050, cases are projected to reach 139 million. Alzheimer's disease accounts for 60–70% of cases. Dementia is the 7th leading cause of death globally. The addressable digital cognitive market for dementia/MCI is £1.2 billion — and no consumer-grade platform exists for early intervention.
+
 36. **Healthy Aging Cognitive Maintenance** - Proactive brain health for aging adults
 37. **Early Dementia Detection** - Sensitive monitoring for cognitive changes over time
 38. **Retirement Cognitive Engagement** - Maintaining mental sharpness in retirement

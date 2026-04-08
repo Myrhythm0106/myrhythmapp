@@ -24,7 +24,7 @@
 - **Target Market Segments (Outside-In Strategy):**
   - **Phase 1 — Everyone (Launch):** Productivity seekers, students, executives, ADHD/focus, burnout, aging adults — 200M+ potential users
   - **Phase 2 — Bridge (Months 6–12):** Caregivers, long-COVID cognitive fog, ADHD support communities
-  - **Phase 3 — Clinical (Year 2+):** ABI/TBI survivors, dementia/MCI, healthcare professionals — 12,000+ potential clinical partners
+  - **Phase 3 — Clinical (Year 2+):** ABI/TBI survivors, healthcare professionals — 12,000+ potential clinical partners. **Dementia & MCI** is a standalone clinical opportunity: **55M people** living with dementia globally, **10M new cases/year** (WHO), projected to reach **139M by 2050** — a **£1.2B** addressable digital cognitive market with no consumer-grade early intervention platform
 
 #### Competitive Differentiation
 - **Lived Experience Foundation:** Built by cognitive wellness champions who understand the journey
