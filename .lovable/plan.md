@@ -1,62 +1,53 @@
 
 
-# Call Out Dementia as a Major Market Segment Across All Documents
+# Restore "The Discharge Cliff" Narrative Across Strategic Documents
 
-## The Gap
+## The Problem
 
-Dementia currently appears in most documents but is buried as a line item — "Dementia & MCI" tucked into Phase 3 tables. It deserves stronger treatment: **55 million people globally live with dementia, with 10 million new cases every year** (WHO). The global dementia care market is projected at **£1.2B** in the cognitive digital space alone. This is not a footnote — it is one of the largest addressable clinical segments and a powerful investor narrative.
+The most powerful differentiator in your entire pitch — **"The Discharge Cliff"** — exists only in the web investor deck and the PPTX. The strategic documents and DOCX pitch script water it down to bland one-liners like "no continuity after discharge."
 
-Several documents barely mention it, and none give it the weight it deserves as a standalone market opportunity.
+The original language is visceral and unforgettable:
 
-## What Changes
+- **"Clinical care ends. Real life begins. Nothing bridges the gap."**
+- **"The ABI & TBI patient goes home. The system moves on. The real damage begins."**
+- **"Clinical rehab: 6–12 weeks. Then: a pamphlet and a follow-up in 6 months."**
+- **"No app. No system. No continuity. Just a person trying to remember who they were."**
+- The 4-step cascade: Forgotten promises → Eroded trust → Caregiver burnout → Confidence collapse
 
-### Elevate Dementia in Market Tables and Narratives
+This language will NOT be replaced. It will be ADDED to documents that currently lack it, alongside the broader market positioning already in place.
 
-Every document that lists market segments will:
-- **Separate "Dementia & MCI" into its own prominent line** with stats: 55M globally, 10M new cases/year, £1.2B digital cognitive market
-- **Add dementia-specific language** in market narratives — not just bundled with ABI/TBI
-- **Reference Alzheimer's Society and WHO data** already in our evidence base
+## What Gets Added (and Where)
+
+### The Discharge Cliff Block
+
+A standardised narrative block — adapted per document — that includes:
+1. The "Discharge Cliff" label and the core line: "Clinical care ends. Real life begins. Nothing bridges the gap."
+2. The 4-step cascade (forgotten promises, eroded trust, caregiver burnout, confidence collapse)
+3. The closing line: "No app. No system. No continuity. Just a person trying to remember who they were."
+4. The bridge to LEAP-OS: "That's the gap LEAP-OS fills."
 
 ### Documents to Update
 
 | # | File | What Changes |
 |---|------|-------------|
-| 1 | `MyRhythm_Executive Summary_One_Page.md` | Add dementia with standalone stats in the opportunity paragraph |
-| 2 | `MyRhythm_Investment_Presentation_Deck.md` | Expand market slide to call out dementia separately with 55M stat |
-| 3 | `docs/myrhythm-one-page-pitch.md` | Already has dementia row — add "10M new cases/year" stat |
-| 4 | `MyRhythm_Justification_and_Commercials_Document.md` | Already has £1.2B row — strengthen narrative text to call out dementia as standalone opportunity |
-| 5 | `MyRhythm_Executive_Strategy_Overview.md` | Add dementia stats to Phase 3 description |
-| 6 | `MyRhythm_Revenue_Strategy_500K_Plan.md` | Add dementia as a named clinical persona with market size |
-| 7 | `MyRhythm_Value_Proposition_USP_Document.md` | Strengthen dementia row with market stats |
-| 8 | `MyRhythm_500K_Marketing_Strategy_2025.md` | Expand dementia line with "10M new cases/year" context |
-| 9 | `MyRhythm_Operational_Execution_Plan.md` | Add dementia-specific Phase 3 milestone |
-| 10 | `strategic-documents/MyRhythm-Launch-Strategy-v2.md` | Expand dementia from one-liner to include market size |
-| 11 | `strategic-documents/App-Testing-Distribution-Package.md` | Add dementia-specific test scenario (early detection user journey) |
-| 12 | `strategic-documents/Use-Case-Testing-Schedule.md` | Add dementia use case to Phase 3 testing |
-| 13 | `src/docs/UseCases.md` | Already has aging/dementia section — strengthen with market context |
-| 14 | `/mnt/documents/MyRhythm_Investor_Pitch_Script_v4.docx` | Regenerate as v5 — call out dementia as standalone market in Section 6 (Market) and Q&A |
+| 1 | `MyRhythm_Executive Summary_One_Page.md` | Add "The Discharge Cliff" as a short paragraph after the Opportunity section — the emotional anchor before UVP |
+| 2 | `MyRhythm_Investment_Presentation_Deck.md` | Expand the current "Clinical cognitive support ends at hospital discharge" bullet into the full Discharge Cliff narrative |
+| 3 | `docs/myrhythm-one-page-pitch.md` | Add a "The Discharge Cliff" callout between The Gap and Solution sections |
+| 4 | `MyRhythm_Justification_and_Commercials_Document.md` | Add Discharge Cliff section before "Revenue Model Justification" — positions the emotional need before the commercial answer |
+| 5 | `MyRhythm_Executive_Strategy_Overview.md` | Add to Market Opportunity section as the "why this matters" emotional context |
+| 6 | `MyRhythm_Value_Proposition_USP_Document.md` | Add Discharge Cliff narrative to the ABI/TBI row context — expand "No continuity of support after hospital discharge" into the full cascade |
+| 7 | `MyRhythm_Operational_Execution_Plan.md` | Add brief Discharge Cliff reference in the Phase 2/3 clinical rationale |
+| 8 | `/mnt/documents/MyRhythm_Investor_Pitch_Script_v5.docx` | Regenerate as **v6** — add a dedicated "The Discharge Cliff" subsection in Section 2 (The Problem) with the 4-step cascade formatted as a numbered breakdown, preserving all existing content |
 
-### Key Stats to Weave In
-
-- **55 million** people living with dementia globally (WHO 2021)
-- **10 million** new cases every year (WHO 2021)
-- **£1.2 billion** addressable digital cognitive market for dementia/MCI
-- By 2050, dementia cases projected to reach **139 million** (WHO)
-- **Alzheimer's disease** accounts for 60-70% of dementia cases
-- Dementia is the **7th leading cause of death** globally
-
-### Investor Narrative Addition
-
-"Dementia is not a niche — it is a global health crisis affecting 55 million people today, growing to 139 million by 2050. There is no consumer-grade cognitive platform designed for early intervention. LEAP-OS fills that gap — and by the time we reach Phase 3, we will have the traction data and clinical credibility to become the default platform for dementia support."
-
-## What Does NOT Change
-- Dementia stays in Phase 3 (Clinical) — implementation order unchanged
-- Pricing unchanged
-- Financial projections unchanged
-- All existing content preserved — this is additive
+### What Does NOT Change
+- The existing broader market positioning (Outside-In strategy, Phase 1/2/3) stays exactly as-is
+- The dementia stats stay as-is
+- "No One Walks Alone" stays as-is
+- All financial projections, pricing, and revenue models untouched
+- The PPTX and web investor deck already have this — no changes needed there
 
 ## Technical Approach
-- Markdown: targeted text additions in market sections across 13 files
-- DOCX: regenerate v5 using docx-js with dementia called out in market and Q&A sections
+- **Markdown (7 files):** Targeted text additions — inserting the Discharge Cliff block in the right context within each document
+- **DOCX:** Regenerate v6 using docx-js with a new subsection in Section 2, formatted with the 4-step cascade as a bold numbered list
 - All files keep 3pt confidentiality footer
 
