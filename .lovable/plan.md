@@ -1,75 +1,95 @@
 
-# Add References & Evidence Base to All Key Documents
 
-## The Reference Sheet
+# Align Market & Implementation Strategy Across All Documents
 
-A standardised "References & Evidence Base" appendix citing real, verifiable sources for every major statistical claim across the documents. This proves to investors, partners, and regulators that MyRhythm's strategy is grounded in published data.
+## The Principle
 
-## Key Claims That Need Citations
+**Market story (for investors):** LEAP-OS serves the full cognitive spectrum — ABI, TBI, dementia, ADHD, burnout, long-COVID, aging, and productivity seekers. TAM £12.8B, SAM £4.2B.
 
-| Claim | Source |
-|-------|--------|
-| 69M TBI globally per year | Dewan et al., 2018, *Journal of Neurosurgery* |
-| 12.2M strokes annually worldwide | World Stroke Organization, 2022 Global Stroke Fact Sheet |
-| 53M caregivers in the US | AARP/NAC, 2020 Caregiving in the U.S. Report |
-| 1.4M TBI cases/year (US) | CDC Traumatic Brain Injury & Concussion Report, 2024 |
-| 15% of 65+ have MCI | Petersen et al., 2018, *Neurology* (AAN) |
-| £12.8B cognitive health TAM | Grand View Research, 2023, Cognitive Assessment & Training Market Report |
-| 8.1% CAGR cognitive wellness market | Allied Market Research, 2023, Brain Health Supplements Market |
-| Digital therapeutics growth | Deloitte, 2023, Digital Therapeutics Market Analysis |
-| Post-COVID cognitive awareness | The Lancet Neurology, 2022, Long COVID Cognitive Impact |
-| NHS digital health adoption | NHS England Long Term Plan, 2019; NHSX Digital Health Framework |
-| ABI prevalence (aneurysm, tumour, infection) | Headway UK Brain Injury Statistics, 2023 |
-| Caregiver burnout / support need | Alzheimer's Society, 2023; WHO Dementia Report |
-| SaaS retention benchmarks | Recurly Research, 2023 Subscription Benchmark Report |
-| Mobile health app engagement | IQVIA Institute, 2023, Digital Health Trends Report |
+**Implementation strategy (for execution):** Launch to the masses FIRST — productivity seekers, professionals wanting efficiency, students, entrepreneurs, anyone who wants to think sharper. No medical boundaries, no clinical approvals needed. THEN expand into clinical segments (ABI, TBI, dementia, MCI) which require medical standards, partnerships, and regulatory compliance.
+
+## What's Wrong Now
+
+Most documents list "TBI Survivors & Families" as Priority #1 for launch. This contradicts the approved Outside-In strategy. The market sections also inconsistently mention some segments but not others.
+
+## Changes Needed
+
+### Standardised Market Segments (for all docs)
+
+Every document that mentions target market will use this consistent list:
+
+| Segment | Category |
+|---------|----------|
+| Productivity seekers & professionals | Phase 1 — Everyone |
+| Students & academics | Phase 1 — Everyone |
+| Executives & entrepreneurs | Phase 1 — Everyone |
+| ADHD & focus challenges | Phase 1 — Everyone |
+| Burnout & cognitive fatigue | Phase 1 — Everyone |
+| Aging adults (proactive brain health) | Phase 1 — Everyone |
+| Long-COVID cognitive fog | Phase 1/2 — Bridge |
+| TBI survivors | Phase 2/3 — Clinical |
+| ABI survivors (stroke, aneurysm, tumour) | Phase 2/3 — Clinical |
+| Dementia & MCI | Phase 3 — Clinical |
+| Caregivers & families | Phase 2/3 — Clinical |
+| Healthcare professionals | Phase 3 — Clinical |
+
+### Standardised Implementation Phases
+
+**Phase 1 (Launch):** "Everyone" — productivity, efficiency, brain health. No medical claims, no clinical approvals. Fast growth, broad appeal.
+
+**Phase 2 (Months 6-12):** Bridge — caregivers, long-COVID, ADHD support communities. Light clinical language, Support Circle features.
+
+**Phase 3 (Year 2+):** Clinical — ABI, TBI, dementia, MCI. NHS partnerships, clinical validation, medical standards, provider integration.
 
 ## Documents to Update
 
-### Tier 1 — Investor-Facing (full reference appendix)
-| # | File | Method |
-|---|------|--------|
-| 1 | `/mnt/documents/MyRhythm_Investor_Pitch_Script_v2.docx` → v3 | Regenerate DOCX with new "Appendix C: References & Evidence Base" |
-| 2 | `MyRhythm_Executive Summary_One_Page.md` | Append references section |
-| 3 | `docs/myrhythm-one-page-pitch.md` | Append references section |
-| 4 | `MyRhythm_Investment_Presentation_Deck.md` | Append references section |
-| 5 | `MyRhythm_Justification_and_Commercials_Document.md` | Append references section |
+### Tier 1 — Investor-Facing (5 files)
+| # | File | What Changes |
+|---|------|-------------|
+| 1 | `MyRhythm_Executive Summary_One_Page.md` | Market section: add full segment list. Implementation: clarify Phase 1 = masses |
+| 2 | `MyRhythm_Investment_Presentation_Deck.md` | Market slide: expand segments. Go-to-market slide: lead with productivity seekers |
+| 3 | `docs/myrhythm-one-page-pitch.md` | Target Market table: expand to all segments. Initial Focus: change from "TBI communities" to "productivity seekers & efficiency-minded professionals" |
+| 4 | `MyRhythm_Justification_and_Commercials_Document.md` | Market section: add ADHD, burnout, aging, productivity. Phased rollout clarity |
+| 5 | `MyRhythm_Executive_Strategy_Overview.md` | Target Market Segments: reorder with productivity first. Phase 1 description updated |
 
-### Tier 2 — Strategy Documents (condensed reference list)
-| # | File | Method |
-|---|------|--------|
-| 6 | `MyRhythm_Revenue_Strategy_500K_Plan.md` | Append references |
-| 7 | `MyRhythm_Value_Proposition_USP_Document.md` | Append references |
-| 8 | `MyRhythm_Operational_Execution_Plan.md` | Append references |
-| 9 | `MyRhythm_Executive_Strategy_Overview.md` | Append references |
-| 10 | `MyRhythm_500K_Marketing_Strategy_2025.md` | Append references |
-| 11 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | Append references |
+### Tier 2 — Strategy (5 files)
+| # | File | What Changes |
+|---|------|-------------|
+| 6 | `MyRhythm_Revenue_Strategy_500K_Plan.md` | Customer personas: lead with productivity seekers. Phase 1 targets updated |
+| 7 | `MyRhythm_Value_Proposition_USP_Document.md` | Target Market section: add all segments. Reframe primary market as "Everyone" |
+| 8 | `MyRhythm_500K_Marketing_Strategy_2025.md` | Primary Markets: reorder. Phase 1 marketing: productivity/efficiency channels first |
+| 9 | `MyRhythm_Operational_Execution_Plan.md` | Execution phases: align to masses-first strategy |
+| 10 | `/mnt/documents/MyRhythm_PRD_IP_Documentation.md` | User segments: expand. Implementation priority: masses first |
 
-### Tier 3 — Execution Plans (short "Sources" footer)
-| # | File |
-|---|------|
-| 12-20 | All 9 files in `strategic-documents/` |
+### Tier 3 — Execution (4 files)
+| # | File | What Changes |
+|---|------|-------------|
+| 11 | `strategic-documents/MyRhythm-Launch-Strategy-v2.md` | Target Audiences: flip priority order — productivity seekers #1, TBI moves to Phase 2/3 |
+| 12 | `strategic-documents/Founding-Member-Launch-Strategy.md` | Testing scenarios: add productivity/efficiency user journeys |
+| 13 | `strategic-documents/App-Testing-Distribution-Package.md` | Use case scenarios: add productivity-first test flows |
+| 14 | `strategic-documents/Use-Case-Testing-Schedule.md` | Align test priority to masses-first rollout |
 
-## Format
+### Tier 4 — DOCX (1 file)
+| # | File | What Changes |
+|---|------|-------------|
+| 15 | `/mnt/documents/MyRhythm_Investor_Pitch_Script_v3.docx` | Regenerate as v4: Section 2 (Problem) broadened, Section 6 (Market) shows full spectrum with phased implementation, Q&A updated |
 
-**Markdown files** — Harvard-style reference list at the bottom, before the confidentiality footer:
+## Key Messaging Change
 
-```
----
+**Before:** "Built for brain injury survivors. Available to everyone."
+**After:** "Built for everyone who thinks. Clinically deep enough for those who need it most."
 
-### References & Evidence Base
+The investor narrative becomes: "We launch where there's no friction — millions of people who want to think better. That traction and data then powers our expansion into clinical markets where the need is greatest and the revenue per user is highest."
 
-1. Dewan, A. et al. (2018) 'Estimating the global incidence of traumatic brain injury', *Journal of Neurosurgery*, 130(4), pp. 1080–1097.
-2. World Stroke Organization (2022) *Global Stroke Fact Sheet 2022*.
-...
-
----
-*Confidential – Not for Distribution*
-*© 2026 Annabel Aaron. All rights reserved.*
-```
-
-**DOCX (Investor Pitch Script)** — New "Appendix C: References & Evidence Base" after Appendix B, with proper heading, numbered list, and 3pt confidentiality footer maintained.
+## What Does NOT Change
+- The vision statement stays as-is
+- "No One Walks Alone" stays as-is
+- Pricing stays as-is
+- Financial projections stay as-is
+- The full market TAM/SAM/SOM numbers stay — we're just clarifying the ORDER of attack
 
 ## Technical Approach
-- Markdown: append reference sections (tailored per document's claims)
-- DOCX: regenerate v3 with all existing content + new Appendix C
+- Markdown: targeted text replacements in market/strategy sections
+- DOCX: regenerate v4 with docx-js, maintaining all existing content + updated market/implementation sections
+- All files keep 3pt confidentiality footer
+
