@@ -29,7 +29,7 @@
 6. **ABI/TBI Survivors:** 69M TBI + 12M ABI annually — £4.2B SAM
 7. **Family Caregivers:** 53M+ supporting cognitive health challenges
 8. **Healthcare Providers:** 50K+ clinics needing patient engagement tools
-9. **Dementia & MCI:** 55M globally — early intervention market
+9. **Dementia & MCI:** **55M globally, 10M new cases/year** (WHO), projected to reach **139M by 2050** — **£1.2B** addressable digital cognitive market, 7th leading cause of death globally. No consumer-grade early intervention platform exists.
 
 ### **Market Gaps MyRhythm Fills:**
 - **Lived Experience Design:** Built BY brain health warriors FOR brain health warriors

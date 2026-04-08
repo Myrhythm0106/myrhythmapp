@@ -28,10 +28,10 @@
 | **Aging & Brain Health** | £2.5B | 8.5% | 50M+ adults | Phase 1 — Launch |
 | **ABI Recovery (stroke, aneurysm)** | £2.4B | 7.3% | 12M+ annual cases | Phase 2/3 — Clinical |
 | **TBI Recovery** | £1.8B | 7.3% | 69M annual cases | Phase 2/3 — Clinical |
-| **Dementia & MCI** | £1.2B | 8.1% | 55M globally | Phase 3 — Clinical |
+| **Dementia & MCI** | **£1.2B** | 8.1% | **55M globally, 10M new cases/year** (WHO). Projected to reach **139M by 2050**. 7th leading cause of death globally. Alzheimer's accounts for 60–70% of cases. | Phase 3 — Clinical |
 | **Total Addressable Market** | **£12.8B** | **8.1%** | **200M+ users** | |
 
-**Implementation Strategy:** Launch to the masses first (productivity, ADHD, burnout, aging) — no medical claims, no clinical approvals. Expand into clinical segments (ABI, TBI, dementia) in Year 2+ with proven traction and data.
+**Implementation Strategy:** Launch to the masses first (productivity, ADHD, burnout, aging) — no medical claims, no clinical approvals. Expand into clinical segments (ABI, TBI, dementia/MCI) in Year 2+ with proven traction and data. Dementia is not a niche — it is a global health crisis affecting 55 million people today, growing to 139 million by 2050. There is no consumer-grade cognitive platform designed for early intervention. LEAP-OS fills that gap.
 
 ### Revenue Model Justification
 Our three-tier revenue approach maximizes market capture:

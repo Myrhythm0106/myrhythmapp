@@ -190,6 +190,13 @@ Our testing approach focuses on:
 - Insurance documentation requirements
 - Medical-grade reporting standards
 
+**Test Case 35b: Dementia & MCI Early Detection Use Case**
+- **Market context:** 55M people living with dementia globally, 10M new cases/year (WHO), projected 139M by 2050 — £1.2B digital cognitive market
+- **Test scenario:** User with family history of Alzheimer's performs baseline cognitive assessment, tracks changes over 8 weeks
+- **Metrics:** Sensitivity of cognitive change detection, false positive rate, family/Support Circle notification accuracy
+- **Success criteria:** Platform detects meaningful cognitive changes consistent with MCI screening tools; user and family feel informed, not alarmed
+- **Phase:** Phase 3 — Clinical (Year 2+)
+
 **Test Case 36-40: Scale Preparation**
 - System performance under load
 - Customer support efficiency

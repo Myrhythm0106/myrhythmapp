@@ -21,8 +21,10 @@
 📊 **Market Size:**
 - £12.8B TAM — Global Cognitive Health (8.1% CAGR)
 - £4.2B SAM — ABI (£2.4B) + TBI (£1.8B) clinical support
+- £1.2B addressable digital cognitive market for dementia/MCI alone
 - 200M+ professionals, students & executives seeking cognitive edge
 - 69M annual TBI + 12M ABI cases globally
+- **55M people** living with dementia globally, **10M new cases/year** (WHO) — projected to reach **139M by 2050**
 
 🎯 **The Problem:**
 - No operating system for how people think, plan, and follow through
@@ -30,7 +32,7 @@
 - Clinical cognitive support ends at hospital discharge
 - Fragmented apps that don't connect intention to action
 
-**Our Approach:** Launch to the masses first (productivity, ADHD, burnout, aging), then expand into clinical markets (ABI, TBI, dementia) with proven traction.
+**Our Approach:** Launch to the masses first (productivity, ADHD, burnout, aging), then expand into clinical markets (ABI, TBI, dementia/MCI) with proven traction. Dementia is not a niche — it is the 7th leading cause of death globally, and there is no consumer-grade cognitive platform designed for early intervention. LEAP-OS fills that gap.
 
 ---
 

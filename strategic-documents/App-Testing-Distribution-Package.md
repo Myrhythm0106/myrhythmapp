@@ -67,6 +67,11 @@
 - **Journey**: MyLeap family plan
 - **Test**: Family dashboard, caregiver features
 
+### 2b. Dementia Early Detection Journey
+- **User**: 62-year-old noticing memory lapses, concerned about family history of Alzheimer's
+- **Journey**: Self-assessment → cognitive baseline → progress monitoring → family notification
+- **Test**: Sensitivity of early cognitive change detection, proactive alert system, Support Circle integration for family visibility. **Market context:** 55M people living with dementia globally, 10M new cases/year — early intervention is the critical gap LEAP-OS fills.
+
 ### 3. Recently Diagnosed (Cognitive Decline)
 - **User**: 70-year-old, recent diagnosis
 - **Journey**: MyStretch plan for comprehensive support

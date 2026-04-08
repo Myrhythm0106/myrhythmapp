@@ -66,7 +66,7 @@ Unlike generic productivity tools, LEAP-OS:
 | TBI survivors | 69M/year globally | Phase 2/3 — Clinical | Built by a TBI survivor |
 | ABI survivors (stroke, aneurysm) | 12M+ strokes/year | Phase 2/3 — Clinical | Post-discharge continuity |
 | Caregivers & families | 53M in US | Phase 2/3 — Clinical | Peace of mind features |
-| Dementia & MCI | 55M globally | Phase 3 — Clinical | Early intervention tool |
+| **Dementia & MCI** | **55M globally, 10M new cases/year** (WHO) — projected **139M by 2050**. £1.2B digital cognitive market. 7th leading cause of death globally. Alzheimer's accounts for 60–70% of cases. | Phase 3 — Clinical | Early intervention & cognitive monitoring |
 
 **Initial Focus:** Productivity seekers & efficiency-minded professionals — no medical barriers, fast growth. Clinical expansion (ABI, TBI, dementia) follows in Year 2+ with proven traction.
 
