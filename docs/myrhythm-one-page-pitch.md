@@ -95,7 +95,10 @@ Unlike generic productivity tools, LEAP-OS:
 - Clinical licenses: £50/user/month
 - Enterprise partnerships: Custom pricing
 - Insurance reimbursement potential
-- Provider Directory listings: £49–£149/month (clinics, neurologists, neuropsychologists advertise brain health services)
+- **Provider Directory & Marketplace** (two paid tiers, no free listings):
+  - **Professional (£49/month):** Directory listing, profile page, specialty matching, inquiry notifications, verified badge
+  - **Premium (£149/month):** Featured placement, analytics dashboard, priority cognitive-profile matching, branded profile, monthly referral reports
+  - Every provider pays to be there — LEAP-OS delivers qualified, cognitively-profiled referrals, not cold traffic
 
 ---
 
