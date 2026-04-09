@@ -1,53 +1,40 @@
 
 
-# Restore "The Discharge Cliff" Narrative Across Strategic Documents
+# Remove Free Provider Tier — Two Paid Tiers Only
 
-## The Problem
+## The Change
 
-The most powerful differentiator in your entire pitch — **"The Discharge Cliff"** — exists only in the web investor deck and the PPTX. The strategic documents and DOCX pitch script water it down to bland one-liners like "no continuity after discharge."
+Remove "Basic (Free)" from the Provider Directory & Marketplace model. Reframe as a premium referral platform with two paid tiers:
 
-The original language is visceral and unforgettable:
+- **Professional (£49/month):** Directory listing, profile page, specialty matching, inquiry notifications, verified badge
+- **Premium (£149/month):** Featured placement, analytics dashboard, priority cognitive-profile matching, branded profile, monthly referral reports
 
-- **"Clinical care ends. Real life begins. Nothing bridges the gap."**
-- **"The ABI & TBI patient goes home. The system moves on. The real damage begins."**
-- **"Clinical rehab: 6–12 weeks. Then: a pamphlet and a follow-up in 6 months."**
-- **"No app. No system. No continuity. Just a person trying to remember who they were."**
-- The 4-step cascade: Forgotten promises → Eroded trust → Caregiver burnout → Confidence collapse
+**Positioning shift:** From "free listings with paid upgrades" to "qualified, cognitively-profiled referrals for serious practitioners." Providers pay because LEAP-OS delivers pre-qualified patients matched by cognitive profile — not cold traffic.
 
-This language will NOT be replaced. It will be ADDED to documents that currently lack it, alongside the broader market positioning already in place.
+## Documents to Update
 
-## What Gets Added (and Where)
+| # | File | Current State | Change |
+|---|------|--------------|--------|
+| 1 | `MyRhythm_Executive Summary_One_Page.md` (line 26) | "£49–£149/month to advertise services" | Reframe: two paid tiers, no free. Add "no free listings" language |
+| 2 | `docs/myrhythm-one-page-pitch.md` (line 98) | "£49–£149/month" one-liner | Expand to name both tiers, emphasise qualified referrals |
+| 3 | `MyRhythm_Investment_Presentation_Deck.md` | No explicit Provider Directory revenue line | Add Provider Directory as named B2B revenue stream with two paid tiers |
+| 4 | `MyRhythm_Justification_and_Commercials_Document.md` | General B2B clinical section, no directory detail | Add Provider Directory subsection with tier breakdown and revenue justification |
+| 5 | `MyRhythm_Revenue_Strategy_500K_Plan.md` | Generic "healthcare provider" references | Add Provider Directory launch milestone with two-tier pricing |
+| 6 | `MyRhythm_Value_Proposition_USP_Document.md` | No directory mention | Add provider value prop: "qualified referrals, not free listings" |
+| 7 | `/mnt/documents/MyRhythm_Investor_Pitch_Script_v6.docx` | Regenerate as **v7** with Provider Directory called out in revenue section |
 
-### The Discharge Cliff Block
+## Key Narrative
 
-A standardised narrative block — adapted per document — that includes:
-1. The "Discharge Cliff" label and the core line: "Clinical care ends. Real life begins. Nothing bridges the gap."
-2. The 4-step cascade (forgotten promises, eroded trust, caregiver burnout, confidence collapse)
-3. The closing line: "No app. No system. No continuity. Just a person trying to remember who they were."
-4. The bridge to LEAP-OS: "That's the gap LEAP-OS fills."
+"Every provider on LEAP-OS pays to be there. That's deliberate. Free listings attract anyone. Paid listings attract committed professionals who value qualified, cognitively-profiled referrals. Our users aren't browsing — they're matched by cognitive profile to the right specialist. That's worth £49–£149/month to any practice billing £200+ per hour."
 
-### Documents to Update
-
-| # | File | What Changes |
-|---|------|-------------|
-| 1 | `MyRhythm_Executive Summary_One_Page.md` | Add "The Discharge Cliff" as a short paragraph after the Opportunity section — the emotional anchor before UVP |
-| 2 | `MyRhythm_Investment_Presentation_Deck.md` | Expand the current "Clinical cognitive support ends at hospital discharge" bullet into the full Discharge Cliff narrative |
-| 3 | `docs/myrhythm-one-page-pitch.md` | Add a "The Discharge Cliff" callout between The Gap and Solution sections |
-| 4 | `MyRhythm_Justification_and_Commercials_Document.md` | Add Discharge Cliff section before "Revenue Model Justification" — positions the emotional need before the commercial answer |
-| 5 | `MyRhythm_Executive_Strategy_Overview.md` | Add to Market Opportunity section as the "why this matters" emotional context |
-| 6 | `MyRhythm_Value_Proposition_USP_Document.md` | Add Discharge Cliff narrative to the ABI/TBI row context — expand "No continuity of support after hospital discharge" into the full cascade |
-| 7 | `MyRhythm_Operational_Execution_Plan.md` | Add brief Discharge Cliff reference in the Phase 2/3 clinical rationale |
-| 8 | `/mnt/documents/MyRhythm_Investor_Pitch_Script_v5.docx` | Regenerate as **v6** — add a dedicated "The Discharge Cliff" subsection in Section 2 (The Problem) with the 4-step cascade formatted as a numbered breakdown, preserving all existing content |
-
-### What Does NOT Change
-- The existing broader market positioning (Outside-In strategy, Phase 1/2/3) stays exactly as-is
-- The dementia stats stay as-is
-- "No One Walks Alone" stays as-is
-- All financial projections, pricing, and revenue models untouched
-- The PPTX and web investor deck already have this — no changes needed there
+## What Does NOT Change
+- Consumer pricing unchanged
+- Phase 1/2/3 strategy unchanged
+- Financial projections unchanged (directory was already £50K target)
+- All existing content preserved — this is refinement, not replacement
+- 3pt confidentiality footer on all files
 
 ## Technical Approach
-- **Markdown (7 files):** Targeted text additions — inserting the Discharge Cliff block in the right context within each document
-- **DOCX:** Regenerate v6 using docx-js with a new subsection in Section 2, formatted with the 4-step cascade as a bold numbered list
-- All files keep 3pt confidentiality footer
+- Markdown: targeted text edits in 6 files
+- DOCX: regenerate v7 using docx-js with updated Provider Directory revenue section
 
