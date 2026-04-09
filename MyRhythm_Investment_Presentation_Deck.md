@@ -97,8 +97,11 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
   - Medium Healthcare: £299/month × 20 subscriptions
   - Enterprise: £599/month × 7 subscriptions
 
-- **In-App Purchases (10% - £50K)**
-  - Premium content and advanced features
+- **Provider Directory & Marketplace (10% - £50K)**
+  - Two paid tiers only — no free listings
+  - Professional (£49/month): Directory listing, specialty matching, verified badge
+  - Premium (£149/month): Featured placement, analytics dashboard, priority cognitive-profile matching
+  - Clinics, neuropsychologists, and neurosurgeons pay because LEAP-OS delivers qualified, cognitively-profiled referrals
 
 ---
 

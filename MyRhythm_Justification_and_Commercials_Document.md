@@ -61,10 +61,12 @@ Our three-tier revenue approach maximizes market capture:
 - Rehabilitation Center Partnerships: Volume licensing agreements
 - Clinical Research Collaborations: Data insights and outcome tracking
 
-**In-App Purchases (10% - £50K target)**
-- Premium assessment modules and specialized content
-- Advanced analytics and reporting features
-- Personalized coaching and intervention programs
+**Provider Directory & Marketplace (10% - £50K target)**
+Every provider on LEAP-OS pays to be there. Free listings attract anyone. Paid listings attract committed professionals who value qualified, cognitively-profiled referrals. Our users aren't browsing — they're matched by cognitive profile to the right specialist. That's worth £49–£149/month to any practice billing £200+ per hour.
+
+- **Professional Tier (£49/month):** Directory listing, profile page, specialty matching, inquiry notifications, verified badge
+- **Premium Tier (£149/month):** Featured placement, analytics dashboard, priority cognitive-profile matching, branded profile, monthly referral reports
+- Target: 50+ paying providers by Year 1, growing to 200+ as clinical segments expand
 
 ---
 

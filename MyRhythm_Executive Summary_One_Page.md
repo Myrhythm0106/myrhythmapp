@@ -23,7 +23,7 @@ We are the **only Cognitive Operating System** that bridges consumer cognitive w
 Our diversified revenue model generates income through:
 - **Consumer Subscriptions (60% - £300K):** Starter (£7.99), Pro (£9.99), and Care Team (£15.99) monthly plans
 - **B2B Clinical Subscriptions (25% - £125K):** Healthcare provider solutions from £99-£599/month
-- **Provider Directory & Marketplace (10% - £50K):** Clinics, neurologists, and brain health specialists pay £49–£149/month to advertise services to users
+- **Provider Directory & Marketplace (10% - £50K):** Two paid tiers only — Professional (£49/month) and Premium (£149/month). No free listings. Clinics, neuropsychologists, neurosurgeons, and brain health specialists pay because LEAP-OS delivers qualified, cognitively-profiled referrals — not cold traffic
 - **In-App Purchases (5% - £25K):** Premium features and advanced content
 
 **Key Metrics by December 2025:**

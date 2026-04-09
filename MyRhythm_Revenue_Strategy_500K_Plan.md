@@ -19,11 +19,12 @@
    - Medium Healthcare (£299/month): 20 subscriptions = £71,760/year
    - Enterprise Clinical (£599/month): 7 subscriptions = £50,328/year
 
-3. **In-App Purchases & Add-ons: £50,000 (10%)**
-   - Advanced Brain Games Pack: £4.99/month
-   - Clinical Report Generator: £9.99/month
-   - Premium Content Library: £2.99/month
-   - Target: 1,000 active purchasers averaging £4.17/month
+3. **Provider Directory & Marketplace: £50,000 (10%)**
+   - Two paid tiers only — no free listings
+   - **Professional (£49/month):** Directory listing, profile page, specialty matching, inquiry notifications, verified badge
+   - **Premium (£149/month):** Featured placement, analytics dashboard, priority cognitive-profile matching, branded profile, monthly referral reports
+   - Target: 50+ paying providers (clinics, neuropsychologists, neurosurgeons, rehabilitation centres)
+   - Every provider pays because LEAP-OS delivers qualified, cognitively-profiled referrals — not cold traffic
 
 ## TARGET METRICS BY DECEMBER 2025
 

@@ -164,10 +164,11 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
    - **Medium Healthcare** (£299/month): Advanced analytics and reporting
    - **Enterprise Clinical** (£599/month): Full integration and white-labeling
 
-3. **In-App Purchases & Add-ons** (10% - £50K target)
-   - Premium brain games and cognitive assessments
-   - Advanced clinical reports and insights
-   - Specialized content and training modules
+3. **Provider Directory & Marketplace** (10% - £50K target)
+   - Two paid tiers only — no free listings. Every provider pays because LEAP-OS delivers qualified, cognitively-profiled referrals, not cold traffic
+   - **Professional (£49/month):** Directory listing, profile page, specialty matching, inquiry notifications, verified badge
+   - **Premium (£149/month):** Featured placement, analytics dashboard, priority cognitive-profile matching, branded profile, monthly referral reports
+   - Target providers: neuropsychologists, neurosurgeons, clinics, rehabilitation centres, and brain health specialists
 
 ### 🎯 **Revenue Model Advantages**
 - **Diversification**: Multiple streams reduce risk
