@@ -23,7 +23,7 @@ MyRhythm stands as the **only comprehensive cognitive wellness platform** that b
 | **Support System** | Integrated family/care team collaboration | Individual-only solutions | **Community-powered** recovery acceleration |
 | **Clinical Integration** | Healthcare provider dashboard & reporting | Consumer apps with no clinical features | **Bridge healthcare gap** and improve outcomes |
 | **Personalization** | AI-powered rhythm assessment & customization | Generic one-size-fits-all approaches | **Individualized** cognitive wellness journeys |
-| **Revenue Model** | Three-tier diversified streams (B2C + B2B + Add-ons) | Single subscription models | **Revenue resilience** and scalability |
+| **Revenue Model** | Diversified streams (B2C + B2B + Provider Directory) | Single subscription models | **Revenue resilience** and scalability |
 
 ---
 
@@ -160,12 +160,12 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 
 ## REVENUE MODEL VALUE PROPOSITION
 
-### 💰 **Three-Tier Revenue Advantage**
+### 💰 **Simplified Premium Revenue Model**
 
 1. **Consumer Subscriptions (60% - £300K target)**
-   - **Starter Plan** (£7.99/month): Basic cognitive wellness
-   - **Pro Plan** (£9.99/month): Advanced features and personalization
-   - **Care Team Plan** (£15.99/month): Family and caregiver integration
+   - **MyRhythm Premium:** £10/month (Founding Member) / £15/month (Standard)
+   - £100/year (Founding) / £150/year (Standard) annual option
+   - 7-day free trial × 2,500 subscribers
 
 2. **B2B Clinical Subscriptions (30% - £150K target)**
    - **Small Clinics** (£99/month): Basic provider dashboard
@@ -188,22 +188,24 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 
 ## RELEASE & ROLLOUT STRATEGY INTEGRATION
 
-### 🚀 **Phase 1: Foundation Launch (Q1 2025)**
-**USP Focus**: Lived Experience + Clinical Validation
+### 🚀 **Phase 1: Foundation Launch (Q2 2026)**
+**USP Focus**: Lived Experience + Brain Health Score
 - Lead with founder story and authentic experience
-- Highlight clinical pilot partnerships
-- Emphasize comprehensive approach vs. fragmented alternatives
+- Launch Brain Health Score as flagship differentiator
+- Founding Member offer (£10/month forever)
+- Signature Content Strategy drives top-of-funnel growth
 
-### 📈 **Phase 2: Market Expansion (Q2 2025)**
+### 📈 **Phase 2: Market Expansion (Q3 2026)**
 **USP Focus**: Dual-Market Bridge + Care Team Integration
 - Showcase healthcare provider adoption
+- Launch Group Cohorts and Automated Nudge Sequences
 - Highlight family/caregiver success stories
-- Emphasize unique position in market
 
-### 🏆 **Phase 3: Market Leadership (Q3-Q4 2025)**
+### 🏆 **Phase 3: Market Leadership (Q4 2026)**
 **USP Focus**: AI Personalization + Comprehensive Platform
 - Advanced feature demonstrations
 - Clinical outcome data and case studies
+- Facilitator Certification Programme soft launch
 - Market category leadership establishment
 
 ---
@@ -288,12 +290,10 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 
 ---
 
-**This document serves as the foundational reference for all marketing, sales, partnership, and strategic communications during MyRhythm's launch and growth phases. Our unique position as the comprehensive cognitive wellness platform built by survivors for the entire care ecosystem creates unprecedented value and competitive advantage in the digital health market.**
-
----
-
-*Document Version: 1.0 | Created: January 2025 | For Internal Strategic Use*
-
+**Document Classification**: Value Proposition & USP Analysis
+**Last Updated**: April 2026
+**Version**: 2.0
+**Distribution**: Investor Relations & Strategic Partners
 
 ---
 
@@ -314,5 +314,6 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 
 ---
 
-*Confidential – Not for Distribution*
+*Private & Confidential*
+*Created by Annabel Aaron, Founder & CEO*
 *© 2026 Annabel Aaron. All rights reserved.*

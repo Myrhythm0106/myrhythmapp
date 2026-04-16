@@ -8,10 +8,11 @@
 **MyRhythm: Transforming Cognitive Wellness**
 *The World's First Cognitive Operating System — Built for Everyone Who Thinks*
 
-- **Funding Goal:** Series A Investment
-- **Revenue Target:** £500,000 by December 2025
+- **Funding Goal:** Pre-Seed — £250,000
+- **Revenue Target:** £500,000 by December 2026
 - **Market Opportunity:** £2.3B Global Cognitive Training Market
-- **Presentation Date:** January 2025
+- **Presentation Date:** April 2026
+- **Created by:** Annabel Aaron, Founder & CEO
 
 ---
 
@@ -89,9 +90,9 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 
 **💰 Revenue Breakdown:**
 - **Consumer Subscriptions (60% - £300K)**
-  - Starter: £7.99/month × 1,500 users
-  - Pro: £9.99/month × 1,000 users
-  - Care Team: £15.99/month × 300 users
+  - £10/month (Founding Member) / £15/month (Standard) × 2,500 subscribers
+  - £100/year (Founding) / £150/year (Standard) annual option
+  - 7-day free trial included
 
 - **B2B Clinical (30% - £150K)**
   - Small Clinics: £99/month × 30 subscriptions
@@ -121,7 +122,7 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 - Community engagement established
 
 🎯 **Target Achievement:**
-- 2,800+ total subscribers by Dec 2025
+- 2,500+ total subscribers by Dec 2026
 - 57+ clinical partnerships
 - £41,667+ monthly recurring revenue
 - Market leadership position
@@ -133,10 +134,10 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 
 | Quarter | Revenue | Growth | Subscribers | Clinical Partners |
 |---------|---------|--------|-------------|-------------------|
-| Q1 2025 | £75K | Foundation | 1,000 | 8 |
-| Q2 2025 | £175K | 133% | 2,000 | 20 |
-| Q3 2025 | £325K | 86% | 2,500 | 40 |
-| Q4 2025 | £500K | 54% | 2,800+ | 57+ |
+| Q1 2026 | £30K | Foundation | 200 | 3 |
+| Q2 2026 | £125K | 317% | 800 | 15 |
+| Q3 2026 | £300K | 140% | 1,800 | 35 |
+| Q4 2026 | £500K | 67% | 2,500+ | 57+ |
 
 💡 **Key Metrics:**
 - Customer Lifetime Value: £150+
@@ -195,47 +196,49 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 ### SLIDE 10: FUNDING REQUEST
 **Investment Opportunity**
 
-**💰 Funding Goals:**
-- **Amount:** Series A investment round
+**💰 Pre-Seed Funding:**
+- **Amount:** £250,000
 - **Use of Funds:**
-  - Technology Development (40%)
-  - Sales & Marketing (35%)
-  - Operations & Team (20%)
-  - Reserve & Contingency (5%)
+  - Technology Development (40% — £100,000)
+  - Sales & Marketing (35% — £87,500)
+  - Operations & Team (20% — £50,000)
+  - Reserve & Contingency (5% — £12,500)
 
 **📊 Investor Returns:**
-- Clear path to profitability
-- Scalable business model
-- Large addressable market
-- Strong competitive positioning
+- Clear path to profitability by Q4 2026
+- Scalable business model with 85%+ gross margins
+- Large addressable market (£12.8B TAM)
+- Strong competitive positioning with first-mover advantage
 
 ---
 
 ### SLIDE 11: MILESTONES & TIMELINE
 **Execution Roadmap**
 
-**🗓️ 2025 Key Milestones:**
+**🗓️ 2026 Key Milestones:**
 
-**Q1:** Foundation Launch
+**Q1 (Jan–Mar):** Pre-Launch Preparation
+- MVP finalisation and beta testing
+- Founding Member waitlist build
 - Clinical pilot partners secured
-- Care Team plan launched
-- HIPAA compliance achieved
+- Pre-seed funding close
 
-**Q2:** Market Expansion  
-- International markets entered
-- Enterprise sales team hired
-- Advanced features released
+**Q2 (Apr–Jun):** Foundation Launch
+- Founding Member launch (£10/month)
+- Brain Health Score launch
+- Signature Content Strategy deployment
+- First 800 subscribers
 
-**Q3:** Scale Operations
+**Q3 (Jul–Sep):** Scale Operations
 - Healthcare system partnerships
 - AI-powered personalization
-- Operational optimization
 - **Group Cohorts** launch (12-week cognitive improvement programmes with shared milestones)
+- Automated Nudge Sequences deployment
 
-**Q4:** Target Achievement
+**Q4 (Oct–Dec):** Target Achievement
 - £500K revenue milestone
 - Market leadership position
-- Series B preparation
+- Seed round preparation (£1M+)
 
 ---
 
@@ -307,12 +310,6 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 
 ---
 
-*This presentation deck provides the complete story for investor meetings, board presentations, and stakeholder communications. Each slide can be expanded with additional detail as needed for specific audiences.*
-
-
-
----
-
 ### References & Evidence Base
 
 *All market claims, statistics, and projections in this document are grounded in published research and verified data sources.*
@@ -340,5 +337,6 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 
 ---
 
-*Confidential – Not for Distribution*
+*Private & Confidential*
+*Created by Annabel Aaron, Founder & CEO*
 *© 2026 Annabel Aaron. All rights reserved.*
