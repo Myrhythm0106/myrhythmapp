@@ -47,6 +47,7 @@ LEAP stands for **Life Empowerment And Productivity** — and the "-OS" signals 
 | 💪 **Daily Brain Boost** | 240+ science-backed cognitive challenges |
 | 💚 **Support Circle** | *No One Walks Alone.* Trusted people notified when you need help — collaborative accountability |
 | 🔄 **CCM Engine** | Collaborative Cognitive Management methodology — the "kernel" of LEAP-OS — bridges the gap between intention and reliable execution |
+| 📊 **Brain Health Score** | Branded composite cognitive metric — like a credit score for the brain. Derived from MYRHYTHM assessment, Daily Brain Boost performance, mood tracking, and engagement data. Drives retention and re-assessment loops. |
 
 ---
 
@@ -99,6 +100,9 @@ Unlike generic productivity tools, LEAP-OS:
   - **Professional (£49/month):** Directory listing, profile page, specialty matching, inquiry notifications, verified badge
   - **Premium (£149/month):** Featured placement, analytics dashboard, priority cognitive-profile matching, branded profile, monthly referral reports
   - Every provider pays to be there — LEAP-OS delivers qualified, cognitively-profiled referrals, not cold traffic
+- **Facilitator Certification Programme** (Year 3+):
+  - Brain Health Coach (£500), Clinical Facilitator (£1,200), Corporate Wellness Facilitator (£2,000)
+  - Every certified facilitator becomes a distribution channel partner
 
 ---
 
@@ -139,9 +143,9 @@ Unlike generic productivity tools, LEAP-OS:
 
 ### ROADMAP
 
-**Phase 1 (Now - 6mo):** Founding Member launch, 500 users — productivity seekers, ADHD, burnout, aging adults
-**Phase 2 (6-12mo):** 2,000 users, caregivers & long-COVID bridge, external calendar sync, Provider Directory
-**Phase 3 (12-24mo):** 10,000+ users, ABI/TBI/dementia clinical expansion, NHS partnerships, B2B clinical revenue, international expansion
+**Phase 1 (Now - 6mo):** Founding Member launch, 500 users — productivity seekers, ADHD, burnout, aging adults. **Brain Health Score** launch. **Signature Content Strategy** ("The Intention-Action Gap Explainer") drives top-of-funnel growth.
+**Phase 2 (6-12mo):** 2,000 users, caregivers & long-COVID bridge, external calendar sync, Provider Directory. **Automated Nudge Sequences** (email/SMS tied to Score changes). **Group Cohorts** (12-week cognitive improvement programmes).
+**Phase 3 (12-24mo):** 10,000+ users, ABI/TBI/dementia clinical expansion, NHS partnerships, B2B clinical revenue, international expansion. **Facilitator Certification Programme** (£500–£2,000 per certification).
 
 ---
 

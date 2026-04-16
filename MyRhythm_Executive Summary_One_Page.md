@@ -15,7 +15,7 @@
 The ABI & TBI patient goes home. The system moves on. The real damage begins. Clinical rehab lasts 6–12 weeks. Then: a pamphlet and a follow-up in 6 months. What happens in between is a cascade: **1) Forgotten promises** — appointments missed, medications skipped. **2) Eroded trust** — relationships strained by unreliability. **3) Caregiver burnout** — families carrying the weight with no tools. **4) Confidence collapse** — the person stops trying because they've stopped believing they can. No app. No system. No continuity. Just a person trying to remember who they were. **That's the gap LEAP-OS fills.**
 
 ### UNIQUE VALUE PROPOSITION
-We are the **only Cognitive Operating System** that bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience in cognitive recovery. LEAP-OS combines Memory Bridge conversation capture (*"It remembers what you can't"*), Assistant-First Smart Scheduling powered by the MYRHYTHM assessment, personalized training, clinical-grade progress tracking, care team collaboration via Support Circle (*"No One Walks Alone"*), and community support — functioning as a complete cognitive infrastructure that aligns daily actions with biological rhythm and long-term aspirations.
+We are the **only Cognitive Operating System** that bridges consumer cognitive wellness with clinical-grade brain injury support, built by founders with lived experience in cognitive recovery. LEAP-OS combines Memory Bridge conversation capture (*"It remembers what you can't"*), Assistant-First Smart Scheduling powered by the MYRHYTHM assessment, the **Brain Health Score** (a branded composite cognitive metric — like a credit score for the brain — derived from MYRHYTHM assessment, Daily Brain Boost performance, mood tracking, and engagement data), personalized training, clinical-grade progress tracking, care team collaboration via Support Circle (*"No One Walks Alone"*), and community support — functioning as a complete cognitive infrastructure that aligns daily actions with biological rhythm and long-term aspirations.
 
 ### BUSINESS MODEL & FINANCIAL PROJECTIONS
 **Revenue Target: £500,000 by December 2025**
@@ -25,6 +25,7 @@ Our diversified revenue model generates income through:
 - **B2B Clinical Subscriptions (25% - £125K):** Healthcare provider solutions from £99-£599/month
 - **Provider Directory & Marketplace (10% - £50K):** Two paid tiers only — Professional (£49/month) and Premium (£149/month). No free listings. Clinics, neuropsychologists, neurosurgeons, and brain health specialists pay because LEAP-OS delivers qualified, cognitively-profiled referrals — not cold traffic
 - **In-App Purchases (5% - £25K):** Premium features and advanced content
+- **Year 3+ Revenue Expansion:** Facilitator Certification Programme (£500–£2,000 per certification) for brain health coaches, therapists, and corporate wellness facilitators — scalable B2B distribution channel
 
 **Key Metrics by December 2025:**
 - 2,800+ total subscribers across all plans
