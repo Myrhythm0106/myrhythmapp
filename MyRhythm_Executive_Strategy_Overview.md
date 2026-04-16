@@ -9,7 +9,8 @@
 **MyRhythm** represents a breakthrough opportunity in the rapidly expanding digital health market, specifically targeting the underserved cognitive wellness and brain injury recovery sectors. Our comprehensive platform empowers individuals through personalized tools, clinical-grade features, and supportive community engagement.
 
 **Key Investment Highlights:**
-- **Revenue Target:** £500,000 by December 2025
+- **Revenue Target:** £500,000 by December 2026
+- **Pre-Seed Funding:** £250,000
 - **Market Opportunity:** £2.3B global brain training market growing at 8.1% CAGR
 - **Unique Position:** Built for everyone who thinks. Clinically deep enough for those who need it most.
 - **Proven Traction:** Strong MVP with validated user demand and clinical interest
@@ -43,93 +44,91 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 
 ### REVENUE MODEL & FINANCIAL PROJECTIONS
 
-#### Three-Tier Revenue Strategy
+#### Simplified Premium Revenue Strategy
 
 **1. Consumer Subscriptions (60% - £300,000)**
-- **MyRhythm Starter:** £7.99/month → 1,500 subscribers
-- **MyRhythm Pro:** £9.99/month → 1,000 subscribers  
-- **MyRhythm Care Team:** £15.99/month → 300 subscribers
+- **MyRhythm Premium:** £10/month (Founding Member) / £15/month (Standard)
+- £100/year (Founding) / £150/year (Standard)
+- 7-day free trial → 2,500 subscribers
 
 **2. B2B Clinical Subscriptions (30% - £150,000)**
 - **Small Clinics:** £99/month → 30 subscriptions
 - **Medium Healthcare:** £299/month → 20 subscriptions
 - **Enterprise Clinical:** £599/month → 7 subscriptions
 
-**3. In-App Purchases & Add-ons (10% - £50,000)**
-- Advanced brain games, clinical reports, premium content
-- Target: 1,000 active purchasers averaging £4.17/month
+**3. Provider Directory & Marketplace (10% - £50,000)**
+- Professional (£49/month) and Premium (£149/month) — no free listings
+- Target: 50+ paying providers by Year 1
 
 #### Financial Milestones by Quarter
 
 | Quarter | Revenue Target | Subscribers | Clinical Partners | Key Metrics |
 |---------|---------------|-------------|-------------------|-------------|
-| Q1 2025 | £75,000 | 1,000 | 8 | Foundation launch |
-| Q2 2025 | £175,000 | 2,000 | 20 | Market expansion |
-| Q3 2025 | £325,000 | 2,500 | 40 | Scale operations |
-| Q4 2025 | £500,000 | 2,800+ | 57+ | Target achievement |
+| Q1 2026 | £30,000 | 200 | 3 | Pre-launch & funding |
+| Q2 2026 | £125,000 | 800 | 15 | Founding Member launch |
+| Q3 2026 | £300,000 | 1,800 | 35 | Scale operations |
+| Q4 2026 | £500,000 | 2,500+ | 57+ | Target achievement |
 
 ---
 
 ### STRATEGIC ROADMAP & KEY MILESTONES
 
-#### Phase 1: Foundation (Q1 2025)
-**Objective:** Establish market presence and clinical validation
-- Launch Care Team plan with clinical features
+#### Phase 1: Foundation (Q1 2026)
+**Objective:** Secure funding, finalise MVP, build waitlist
+- Close pre-seed round (£250,000)
+- Complete beta testing with 100+ users
 - Secure first 3 clinical pilot partners
-- Achieve 1,000 total subscribers
-- Establish HIPAA compliance and security protocols
+- Build Founding Member waitlist
 
-#### Phase 2: Growth (Q2 2025)
-**Objective:** Scale customer acquisition and expand feature set
-- International market expansion (Canada, Australia)
-- Enterprise sales team establishment
-- Advanced clinical reporting features
+#### Phase 2: Launch & Growth (Q2 2026)
+**Objective:** Launch to market, scale customer acquisition
+- Founding Member launch (£10/month)
+- Brain Health Score launch
+- **Signature Content Strategy** — "The Intention-Action Gap Explainer" drives top-of-funnel growth
 - **Automated Nudge Sequences** — behavioural email/SMS system tied to Brain Health Score changes and engagement drops, reducing churn by 15–25%
-- 2,000 subscribers and 20 clinical partnerships
+- 800 subscribers and 15 clinical partnerships
 
-#### Phase 3: Scale (Q3 2025)
+#### Phase 3: Scale (Q3 2026)
 **Objective:** Market leadership and operational efficiency
 - Large healthcare system partnerships
 - AI-powered personalization features
-- Team expansion and operational optimization
+- **Group Cohorts** launch (12-week cognitive improvement programmes with shared milestones)
 - **Facilitator Certification Programme** soft launch — Brain Health Coach (£500), Clinical Facilitator (£1,200), Corporate Wellness (£2,000) — scalable B2B distribution channel
-- 2,500 subscribers and 40 clinical partnerships
+- 1,800 subscribers and 35 clinical partnerships
 
-#### Phase 4: Optimization (Q4 2025)
+#### Phase 4: Optimisation (Q4 2026)
 **Objective:** Revenue target achievement and market consolidation
 - Premium feature launches and pricing optimization
 - Thought leadership establishment
 - Partnership channel expansion
 - £500,000 annual recurring revenue achievement
+- Seed round preparation (£1M+)
 
 ---
 
 ### INVESTMENT REQUIREMENTS & USE OF FUNDS
 
-#### Funding Allocation Strategy
+#### Pre-Seed: £250,000
 
-**Technology Development (40%)**
+**Technology Development (40% — £100,000)**
 - Clinical-grade security and compliance infrastructure
 - AI-powered personalization and insights engine
 - Mobile app optimization and accessibility features
 - Advanced reporting and analytics dashboard
 
-**Sales & Marketing (35%)**
-- Clinical sales specialist and enterprise team
-- Digital marketing campaigns and content creation
+**Sales & Marketing (35% — £87,500)**
+- Digital campaigns and Signature Content Strategy
 - Healthcare conference participation and partnerships
 - Brand establishment and thought leadership
 
-**Operations & Team (20%)**
+**Operations & Team (20% — £50,000)**
 - Customer success and support team expansion
 - Quality assurance and testing infrastructure
 - Legal compliance and regulatory consultation
-- Administrative and operational systems
 
-**Reserve & Contingency (5%)**
+**Reserve & Contingency (5% — £12,500)**
 - Market adaptation and pivot capabilities
 - Unexpected opportunity capitalization
-- Risk mitigation and emergency reserves
 
 ---
 
@@ -225,10 +224,10 @@ MyRhythm represents a unique opportunity to capture significant value in the gro
 - Strong competitive moats and expansion opportunities
 
 **Next Steps:**
-1. **Immediate:** Secure Series A funding for accelerated growth
-2. **Q1 2025:** Launch clinical features and expand team
-3. **Q2-Q4 2025:** Execute growth strategy and achieve revenue targets
-4. **2026+:** International expansion and market leadership consolidation
+1. **Immediate:** Close pre-seed round (£250,000)
+2. **Q2 2026:** Launch Founding Members, deploy Brain Health Score
+3. **Q3-Q4 2026:** Execute growth strategy and achieve revenue targets
+4. **2027+:** Seed round, international expansion, and market leadership consolidation
 
 *MyRhythm is not just building a product—we're empowering a movement toward cognitive wellness and human potential. Join us in transforming how people thrive through their cognitive wellness journey.*
 
@@ -238,9 +237,6 @@ MyRhythm represents a unique opportunity to capture significant value in the gro
 - **Website:** myrhythm.app
 - **Investment Inquiries:** investors@myrhythm.com
 - **Partnership Opportunities:** partnerships@myrhythm.com
-
-*This document contains forward-looking statements based on current expectations and assumptions. Actual results may vary.*
-
 
 ---
 
@@ -261,5 +257,6 @@ MyRhythm represents a unique opportunity to capture significant value in the gro
 
 ---
 
-*Confidential – Not for Distribution*
+*Private & Confidential*
+*Created by Annabel Aaron, Founder & CEO*
 *© 2026 Annabel Aaron. All rights reserved.*

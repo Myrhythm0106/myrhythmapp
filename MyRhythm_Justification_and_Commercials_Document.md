@@ -11,7 +11,8 @@
 ### Key Investment Highlights
 - **Market Opportunity**: £2.3B global cognitive wellness market growing at 8.1% annually
 - **Unique Positioning**: Only platform serving both consumer wellness and clinical recovery markets
-- **Revenue Target**: £500,000 by December 2025 with 85%+ gross margins
+- **Revenue Target**: £500,000 by December 2026 with 85%+ gross margins
+- **Pre-Seed Funding**: £250,000
 - **Clinical Validation**: Evidence-based approach with healthcare provider partnerships
 - **Authentic Foundation**: Built by cognitive wellness champions with personal recovery experience
 
@@ -49,12 +50,12 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 **That's the gap LEAP-OS fills** — and it's why the commercial opportunity is not theoretical. It is a daily reality for millions of people and the families who love them.
 
 ### Revenue Model Justification
-Our three-tier revenue approach maximizes market capture:
+Our simplified premium revenue approach maximizes market capture:
 
 **Consumer Subscriptions (60% - £300K target)**
-- Starter Plan (£7.99/month): Entry-level cognitive wellness tools
-- Pro Plan (£9.99/month): Advanced personal development features  
-- Care Team Plan (£15.99/month): Family and caregiver collaboration
+- MyRhythm Premium: £10/month (Founding Member) / £15/month (Standard)
+- £100/year (Founding) / £150/year (Standard) annual option
+- 7-day free trial → 2,500 subscribers by December 2026
 
 **B2B Clinical Subscriptions (30% - £150K target)**
 - Healthcare Provider Solutions: £99-£599/month per practice
@@ -188,26 +189,26 @@ MyRhythm's approach is grounded in peer-reviewed research demonstrating the effi
 ## Financial Projections & Investment Justification
 
 ### Revenue Growth Trajectory
-| Year | Consumer Revenue | B2B Revenue | In-App Revenue | Total Revenue | Growth Rate |
+| Year | Consumer Revenue | B2B Revenue | Directory/Other | Total Revenue | Growth Rate |
 |---|---|---|---|---|---|
-| **2025** | £300,000 | £150,000 | £50,000 | £500,000 | - |
-| **2026** | £720,000 | £480,000 | £140,000 | £1,340,000 | 168% |
-| **2027** | £1,440,000 | £1,080,000 | £280,000 | £2,800,000 | 109% |
-| **2028** | £2,520,000 | £2,160,000 | £520,000 | £5,200,000 | 86% |
+| **2026** | £300,000 | £150,000 | £50,000 | £500,000 | - |
+| **2027** | £720,000 | £480,000 | £140,000 | £1,340,000 | 168% |
+| **2028** | £1,440,000 | £1,080,000 | £280,000 | £2,800,000 | 109% |
+| **2029** | £2,520,000 | £2,160,000 | £520,000 | £5,200,000 | 86% |
 
 ### Key Performance Indicators
 - **Customer Acquisition Cost (CAC)**: £32 (consumer), £285 (B2B)
-- **Lifetime Value (LTV)**: £890 (consumer), £4,200 (B2B)  
+- **Lifetime Value (LTV)**: £890 (consumer), £4,200 (B2B)
 - **LTV:CAC Ratio**: 28:1 (consumer), 15:1 (B2B)
 - **Monthly Churn Rate**: <3% (consumer), <1% (B2B)
 - **Gross Margin**: 87% (software), 72% (blended)
 
 ### Investment Requirements & ROI
-**Total Investment Required**: £1.2M over 24 months
-- Technology Development: 45% (£540K)
-- Market Expansion: 35% (£420K)  
-- Operations & Team: 15% (£180K)
-- Reserve & Contingency: 5% (£60K)
+**Pre-Seed: £250,000**
+- Technology Development: 40% (£100,000)
+- Sales & Marketing: 35% (£87,500)
+- Operations & Team: 20% (£50,000)
+- Reserve & Contingency: 5% (£12,500)
 
 **Projected ROI**: 340% at 3 years, 890% at 5 years
 
@@ -217,14 +218,14 @@ MyRhythm's approach is grounded in peer-reviewed research demonstrating the effi
 
 ### Market Risk Mitigation
 | Risk Category | Mitigation Strategy | Success Probability |
-|---|---|---|---|
+|---|---|---|
 | **Regulatory Changes** | Proactive compliance framework | 92% |
 | **Market Competition** | First-mover advantage and moats | 85% |
 | **Technology Disruption** | Continuous innovation pipeline | 88% |
 | **Economic Downturn** | Diversified revenue streams | 81% |
 
 ### Clinical Validation Strategy
-- **Pilot Programs**: 12 healthcare partnerships launching Q1 2025
+- **Pilot Programs**: 12 healthcare partnerships launching Q2 2026
 - **Research Collaborations**: 3 university research agreements
 - **Outcome Studies**: Longitudinal effectiveness tracking
 - **Regulatory Approval**: CE marking and FDA breakthrough device pathway
@@ -247,23 +248,24 @@ MyRhythm's approach is grounded in peer-reviewed research demonstrating the effi
 
 ## Implementation Timeline & Milestones
 
-### Phase 1: Foundation (Q1-Q2 2025)
-- **Technology Platform**: Complete core platform development
+### Phase 1: Foundation & Launch (Q1-Q2 2026)
+- **Pre-Seed Close**: £250,000 funding secured
+- **Founding Member Launch**: April 2026 at £10/month
 - **Clinical Pilots**: Launch 5 healthcare provider partnerships
-- **User Acquisition**: Achieve 500 active users
-- **Revenue Target**: £75,000 quarterly run rate
+- **User Acquisition**: Achieve 800 active users
+- **Revenue Target**: £125,000 by end of Q2
 
-### Phase 2: Expansion (Q3-Q4 2025)  
-- **Market Growth**: Scale to 2,000+ active users
-- **B2B Sales**: Secure 15 enterprise partnerships
+### Phase 2: Growth & Scale (Q3-Q4 2026)
+- **Market Growth**: Scale to 2,500+ active users
+- **B2B Sales**: Secure 57+ clinical partnerships
 - **Clinical Evidence**: Publish pilot program outcomes
-- **Revenue Target**: £125,000 quarterly run rate
+- **Revenue Target**: £500,000 annual run rate by December 2026
 
-### Phase 3: Scale (2026)
-- **International Expansion**: Launch in 3 additional markets
+### Phase 3: Expansion (2027)
+- **Seed Round**: £1M+ for international expansion
 - **Platform Enhancement**: Advanced AI and personalization
 - **Research Publication**: Peer-reviewed efficacy studies
-- **Revenue Target**: £335,000 quarterly run rate
+- **Revenue Target**: £1.34M annual run rate
 
 ---
 
@@ -273,7 +275,7 @@ MyRhythm represents a unique convergence of personal passion, clinical expertise
 
 ### Investment Highlights
 ✅ **Massive Market Opportunity**: £2.3B growing at 8.1% annually
-✅ **Unique Competitive Position**: Only dual-market platform with authentic expertise  
+✅ **Unique Competitive Position**: Only dual-market platform with authentic expertise
 ✅ **Strong Financial Projections**: £500K revenue target with 85%+ margins
 ✅ **Evidence-Based Impact**: Demonstrated health, social, and economic benefits
 ✅ **Experienced Team**: Founders with lived experience and technical expertise
@@ -287,20 +289,17 @@ MyRhythm is positioned to become the definitive platform for cognitive wellness 
 ---
 
 ### Contact Information
-**Investment Opportunities**: investors@myrhythm.com  
-**Strategic Partnerships**: partnerships@myrhythm.com  
-**Clinical Collaborations**: clinical@myrhythm.com  
+**Investment Opportunities**: investors@myrhythm.com
+**Strategic Partnerships**: partnerships@myrhythm.com
+**Clinical Collaborations**: clinical@myrhythm.com
 **Platform Information**: myrhythm.app
-
-*This document represents a comprehensive analysis of MyRhythm's commercial potential, social impact, and investment opportunity. All projections are based on current market research, clinical evidence, and conservative growth assumptions.*
 
 ---
 
-**Document Classification**: Commercial Justification & Investment Analysis  
-**Last Updated**: December 2024  
-**Version**: 1.0  
+**Document Classification**: Commercial Justification & Investment Analysis
+**Last Updated**: April 2026
+**Version**: 2.0
 **Distribution**: Investor Relations & Strategic Partners
-
 
 ---
 
@@ -331,5 +330,6 @@ MyRhythm is positioned to become the definitive platform for cognitive wellness 
 
 ---
 
-*Confidential – Not for Distribution*
+*Private & Confidential*
+*Created by Annabel Aaron, Founder & CEO*
 *© 2026 Annabel Aaron. All rights reserved.*

@@ -1,18 +1,19 @@
 
-# MyRhythm Revenue Strategy: £500,000 by December 2025
+# MyRhythm Revenue Strategy: £500,000 by December 2026
 
 ## EXECUTIVE SUMMARY
-**Goal:** Generate £500,000 revenue by December 31, 2025
-**Timeline:** 11 months (January 2025 - December 2025)
+**Goal:** Generate £500,000 revenue by December 31, 2026
+**Timeline:** 9 months (April 2026 - December 2026)
+**Pre-Seed Funding:** £250,000
 **Current Status:** Strong MVP with clinical potential
 
 ## REVENUE MODEL BREAKDOWN
 
 ### Target Revenue Streams:
 1. **Consumer Subscriptions: £300,000 (60%)**
-   - Starter Plan (£7.99/month): 1,500 subscribers = £143,820/year
-   - Pro Plan (£9.99/month): 1,000 subscribers = £119,880/year  
-   - Care Team Plan (£15.99/month): 300 subscribers = £57,564/year
+   - MyRhythm Premium: £10/month (Founding Member) / £15/month (Standard)
+   - £100/year (Founding) / £150/year (Standard) annual option
+   - 7-day free trial → target 2,500 subscribers by December 2026
 
 2. **B2B Clinical Subscriptions: £150,000 (30%)**
    - Small Clinics (£99/month): 30 subscriptions = £35,640/year
@@ -26,11 +27,11 @@
    - Target: 50+ paying providers (clinics, neuropsychologists, neurosurgeons, rehabilitation centres)
    - Every provider pays because LEAP-OS delivers qualified, cognitively-profiled referrals — not cold traffic
 
-## TARGET METRICS BY DECEMBER 2025
+## TARGET METRICS BY DECEMBER 2026
 
 ### Consumer Metrics:
-- Total Active Subscribers: 2,800
-- Monthly Recurring Revenue (MRR): £32,127
+- Total Active Subscribers: 2,500
+- Monthly Recurring Revenue (MRR): £41,667
 - Annual Customer Lifetime Value: £150
 - Customer Acquisition Cost: £25
 - Monthly Churn Rate: <5%
@@ -47,115 +48,89 @@
 - Customer Satisfaction Score: >4.5/5
 - Net Promoter Score: >50
 
-## DAILY ACTION PLAN: JANUARY 2025 - DECEMBER 2025
+## EXECUTION PLAN: APRIL 2026 - DECEMBER 2026
 
-### PHASE 1: FOUNDATION (JANUARY - MARCH 2025)
+### PHASE 1: FOUNDATION (APRIL - MAY 2026)
 
-#### JANUARY 2025 - Week 1 (Jan 1-7)
-**Day 1 (Jan 1):** 
-- Strategy kickoff meeting
-- Set up project management system (Notion/Asana)
-- Define KPIs and tracking dashboard
-- Create revenue tracking spreadsheet
+#### APRIL 2026 - Week 1 (Apr 1-7)
+**Day 1 (Apr 1):**
+- Founding Member launch day
+- Activate payment processing (£10/month Founding rate)
+- Deploy Brain Health Score to all users
+- Publish Signature Content: "The Intention-Action Gap Explainer"
 
-**Day 2 (Jan 2):**
-- Finalize Care Team plan features specification
-- Design clinical dashboard wireframes
-- Research HIPAA compliance requirements
-- Contact 3 healthcare compliance consultants
+**Day 2 (Apr 2):**
+- Monitor launch metrics and conversion funnel
+- Begin daily social media content cadence
+- Contact first 10 productivity & ADHD influencers
+- Set up analytics tracking for all user flows
 
-**Day 3 (Jan 3):**
-- Implement Care Team plan in codebase
-- Update payment processing for new tier
-- Create clinical features MVP scope
-- Set up development sprint planning
+**Day 3 (Apr 3):**
+- Launch LinkedIn thought leadership campaign
+- Contact 5 clinical pilot partner prospects
+- Begin email nurture sequences for waitlist
+- Optimize onboarding based on Day 1-2 data
 
-**Day 4 (Jan 4):**
-- Design clinical reporting templates
-- Research healthcare provider pain points
-- Create target customer personas (clinical)
-- Draft clinical value proposition
+**Day 4 (Apr 4):**
+- Clinical demo environment preparation
+- Create clinical sales presentation deck
+- Target healthcare provider communities
+- Content: "How LEAP-OS Helps You Think Better, Execute Faster"
 
-**Day 5 (Jan 5):**
+**Day 5 (Apr 5):**
 - Weekend: User research interviews (5 productivity seekers & professionals)
-- Competitive analysis of clinical brain health apps
-- Document feature requirements
+- Competitive analysis refinement
+- Document feature requirements from early feedback
 
 **Day 6-7 (Weekend):**
-- Prepare clinical demo environment
+- Prepare clinical partnership proposals
 - Create marketing asset templates
 - Plan partnership outreach strategy
 
-#### JANUARY 2025 - Week 2 (Jan 8-14)
-**Day 8:** Develop secure data sharing features
-**Day 9:** Create healthcare provider onboarding flow
-**Day 10:** Build clinical progress reporting system
-**Day 11:** Test security and compliance features
-**Day 12:** Launch Care Team plan publicly
-**Day 13-14:** Monitor launch metrics and user feedback
+#### APRIL 2026 - Week 2 (Apr 8-14)
+**Day 8:** Clinical partner outreach (5 calls)
+**Day 9:** Content marketing: blog + social media push
+**Day 10:** Optimize conversion funnel based on week 1 data
+**Day 11:** Healthcare provider onboarding flow refinement
+**Day 12:** Launch referral program for existing users
+**Day 13-14:** Monitor metrics, adjust campaigns
 
-#### JANUARY 2025 - Week 3 (Jan 15-21)
-**Day 15:** Contact first 10 potential clinical partners
-**Day 16:** Create clinical sales presentation deck
-**Day 17:** Set up clinical demo accounts
-**Day 18:** Launch targeted LinkedIn campaign for healthcare
-**Day 19:** Content creation: "How LEAP-OS Helps You Think Better, Execute Faster"
-**Day 20-21:** Prepare for clinical pilot program
+#### APRIL 2026 - Week 3 (Apr 15-21)
+**Day 15:** Secure first clinical pilot partner
+**Day 16:** Launch targeted LinkedIn campaign for healthcare
+**Day 17:** SEO optimization for cognitive wellness keywords
+**Day 18:** Content creation: video series on Brain Health Score
+**Day 19:** Partner outreach to ADHD and wellness communities
+**Day 20-21:** Weekly metrics review and strategy adjustment
 
-#### JANUARY 2025 - Week 4 (Jan 22-28)
-**Day 22:** Secure first clinical pilot partner
-**Day 23:** Implement clinical partner feedback
-**Day 24:** Launch consumer acquisition campaigns
-**Day 25:** Create referral program for existing users
-**Day 26:** SEO optimization for clinical keywords
-**Day 27-28:** Weekly metrics review and strategy adjustment
+#### APRIL 2026 - Week 4 (Apr 22-30)
+**Day 22-26:** Scale successful acquisition channels
+**Day 27:** Productivity & cognitive performance content series
+**Day 28:** **Signature Content Strategy** amplification: distribute "The Intention-Action Gap Explainer" across podcast appearances, LinkedIn articles, YouTube
+**Day 29-30:** Month 1 performance review and May planning
 
-#### JANUARY 2025 - Week 5 (Jan 29-31)
-**Day 29:** Launch productivity & cognitive performance content series
-**Day 30:** Partner outreach to productivity, ADHD, and wellness communities. **Signature Content Strategy** launch: "The Intention-Action Gap Explainer" — free high-authority content positioned as our Sinek "Start With Why" equivalent for cognitive wellness. Top-of-funnel acquisition engine.
-**Day 31:** Month 1 performance review and February planning
+**April Target:** 200 subscribers, £10K MRR, 3 clinical pilots
 
-### FEBRUARY 2025 - SCALING FOUNDATION
+### MAY 2026 - SCALING FOUNDATION
 
-#### Week 1 (Feb 1-7)
+#### Week 1-4 (May 1-31)
 **Daily Actions:**
-- Clinical partner development (2 calls/day)
+- Clinical partner development (3 calls/day)
 - Content marketing (1 piece/day)
 - User acquisition optimization
-- Product feature development
+- Product feature iteration based on feedback
 - Customer success outreach
 
 **Key Goals:**
-- Secure 3 clinical pilot partners
-- Reach 100 Care Team subscribers
-- Launch in-app purchases MVP
-- Establish content marketing rhythm
+- Reach 500 total subscribers
+- 8 active clinical partnerships
+- Launch Provider Directory MVP
+- £20K MRR
 
-#### Week 2-4 (Feb 8-28)
-**Daily Focus Areas:**
-- **Morning (9-12pm):** Product development and clinical features
-- **Afternoon (1-4pm):** Sales and partnership development  
-- **Evening (5-7pm):** Marketing and content creation
-- **Weekly:** Strategy review and metrics analysis
+### PHASE 2: GROWTH (JUNE - AUGUST 2026)
 
-### MARCH 2025 - GROWTH ACCELERATION
-
-**Key Objectives:**
-- 500 total subscribers across all plans
-- 5 active clinical partnerships
-- £15,000 monthly recurring revenue
-- Launch advanced brain games in-app purchase
-
-**Daily Structure:**
-- **Product Development:** 4 hours/day
-- **Sales Activities:** 3 hours/day
-- **Marketing:** 2 hours/day
-- **Operations:** 1 hour/day
-
-### PHASE 2: GROWTH (APRIL - JUNE 2025)
-
-#### APRIL 2025 - MARKET EXPANSION
-**Week 1:** Launch international markets (Canada, Australia)
+#### JUNE 2026 - MARKET EXPANSION
+**Week 1:** Scale digital advertising (Google, Facebook, LinkedIn)
 **Week 2:** Healthcare conference participation and networking
 **Week 3:** Advanced clinical features development — **Brain Health Score Tracker dashboard** (historical tracking, trend visualisation, goal setting, re-assessment scheduling)
 **Week 4:** Customer success optimization and retention
@@ -167,78 +142,66 @@
 
 **Target Metrics:**
 - 800 total subscribers
-- 10 clinical partnerships
+- 15 clinical partnerships
 - £25,000 MRR
 - 15% month-over-month growth
 
-#### MAY 2025 - ENTERPRISE FOCUS
-**Week 1:** Enterprise sales team hiring
+#### JULY 2026 - ENTERPRISE FOCUS
+**Week 1:** Enterprise sales development
 **Week 2:** Large healthcare system outreach
 **Week 3:** Advanced reporting and analytics features
 **Week 4:** Partnership with medical device companies
 
-#### JUNE 2025 - OPTIMIZATION
+#### AUGUST 2026 - OPTIMISATION
 **Week 1:** Conversion rate optimization
 **Week 2:** Customer lifetime value improvement
-**Week 3:** Advanced in-app purchase features
-**Week 4:** Q2 review and Q3 planning
+**Week 3:** Advanced premium features
+**Week 4:** Q3 review and Q4 planning
 
 **Target Metrics:**
 - 1,200 total subscribers
-- 20 clinical partnerships
+- 25 clinical partnerships
 - £35,000 MRR
 - Customer satisfaction >4.5/5
 
-### PHASE 3: SCALE (JULY - SEPTEMBER 2025)
+### PHASE 3: SCALE (SEPTEMBER - OCTOBER 2026)
 
-#### JULY 2025 - TEAM EXPANSION
+#### SEPTEMBER 2026 - TEAM EXPANSION
 - Hire clinical sales specialist
 - Add customer success manager
 - Expand development team
 - Launch affiliate program
+- **Facilitator Certification Programme** soft launch (Brain Health Coach tier at £500)
 
-#### AUGUST 2025 - ENTERPRISE SALES
-- Target large healthcare systems
+#### OCTOBER 2026 - COMMUNITY & COHORTS
+- Scale successful marketing channels
 - Develop enterprise features
 - Create case studies and ROI documentation
 - Launch clinical webinar series
-- **Facilitator Certification Programme** soft launch (Brain Health Coach tier at £500)
-
-#### SEPTEMBER 2025 - INTERNATIONAL GROWTH
-- Launch in UK and European markets
-- Establish international partnerships
-- Localize content and features
-- Compliance with international regulations
 - **Group Cohorts** pilot (12-week cognitive improvement cohorts with 8–12 participants)
 
 **Q3 Target Metrics:**
-- 2,000 total subscribers
-- 40 clinical partnerships
-- £45,000 MRR
+- 1,800 total subscribers
+- 35 clinical partnerships
+- £40,000 MRR
 - Positive unit economics across all channels
 
-### PHASE 4: OPTIMIZATION (OCTOBER - DECEMBER 2025)
+### PHASE 4: TARGET ACHIEVEMENT (NOVEMBER - DECEMBER 2026)
 
-#### OCTOBER 2025 - REVENUE OPTIMIZATION
-- Implement advanced pricing strategies
+#### NOVEMBER 2026 - REVENUE OPTIMISATION
+- Implement advanced pricing strategies (transition early users to Standard £15/month)
 - Launch premium in-app features
 - Optimize customer success and retention
 - Expand partnership channel
 
-#### NOVEMBER 2025 - MARKET LEADERSHIP
-- Establish thought leadership in cognitive performance & brain health
-- Launch research partnerships
-- Advanced AI features development
-- Customer advocacy program
-
-#### DECEMBER 2025 - TARGET ACHIEVEMENT
+#### DECEMBER 2026 - TARGET ACHIEVEMENT
 - Final push for £500,000 revenue goal
 - Year-end optimization and planning
 - Celebrate milestones and team success
-- Plan 2026 growth strategy
+- Prepare Seed round (£1M+) for 2027 growth
 
 **Final Target Metrics:**
-- 2,800+ total subscribers
+- 2,500+ total subscribers
 - 57+ clinical partnerships
 - £41,667+ MRR (£500,000+ ARR)
 - Market leadership position — from productivity seekers to clinical cognitive support
@@ -319,8 +282,7 @@
 - Competitive positioning review
 - Team performance and goals
 
-This comprehensive plan provides the roadmap to achieve £500,000 in revenue by December 2025 through systematic execution, clinical validation, and strategic growth across multiple revenue streams.
-
+This comprehensive plan provides the roadmap to achieve £500,000 in revenue by December 2026 through systematic execution, clinical validation, and strategic growth across multiple revenue streams.
 
 ---
 
@@ -341,5 +303,6 @@ This comprehensive plan provides the roadmap to achieve £500,000 in revenue by 
 
 ---
 
-*Confidential – Not for Distribution*
+*Private & Confidential*
+*Created by Annabel Aaron, Founder & CEO*
 *© 2026 Annabel Aaron. All rights reserved.*
