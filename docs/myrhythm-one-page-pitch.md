@@ -88,8 +88,8 @@ Unlike generic productivity tools, LEAP-OS:
 ### BUSINESS MODEL
 
 **B2C Subscription:**
-- £10/month (Founding) → £15/month (Regular)
-- £100/year (Founding) → £150/year (Regular)
+- £10/month (Founding Member) → £15/month (Standard)
+- £100/year (Founding) → £150/year (Standard)
 - 7-day free trial
 
 **Future B2B:**
@@ -125,7 +125,7 @@ Unlike generic productivity tools, LEAP-OS:
 - ✅ **TBI survivor founder** (authentic problem understanding)
 - ✅ **Beta testing** in progress with positive feedback
 - 🔄 **Clinical partnerships** in conversation (Headway UK)
-- 🔄 **First paying users** targeted Dec 2024
+- 🔄 **Founding Member launch** targeted April 2026
 
 ---
 
@@ -143,13 +143,21 @@ Unlike generic productivity tools, LEAP-OS:
 
 ### ROADMAP
 
-**Phase 1 (Now - 6mo):** Founding Member launch, 500 users — productivity seekers, ADHD, burnout, aging adults. **Brain Health Score** launch. **Signature Content Strategy** ("The Intention-Action Gap Explainer") drives top-of-funnel growth.
-**Phase 2 (6-12mo):** 2,000 users, caregivers & long-COVID bridge, external calendar sync, Provider Directory. **Automated Nudge Sequences** (email/SMS tied to Score changes). **Group Cohorts** (12-week cognitive improvement programmes).
-**Phase 3 (12-24mo):** 10,000+ users, ABI/TBI/dementia clinical expansion, NHS partnerships, B2B clinical revenue, international expansion. **Facilitator Certification Programme** (£500–£2,000 per certification).
+**Phase 1 (Apr–Sep 2026):** Founding Member launch, 2,500 users — productivity seekers, ADHD, burnout, aging adults. **Brain Health Score** launch. **Signature Content Strategy** ("The Intention-Action Gap Explainer") drives top-of-funnel growth.
+**Phase 2 (Oct 2026–Mar 2027):** 5,000 users, caregivers & long-COVID bridge, external calendar sync, Provider Directory. **Automated Nudge Sequences** (email/SMS tied to Score changes). **Group Cohorts** (12-week cognitive improvement programmes).
+**Phase 3 (2027–2028):** 10,000+ users, ABI/TBI/dementia clinical expansion, NHS partnerships, B2B clinical revenue, international expansion. **Facilitator Certification Programme** (£500–£2,000 per certification).
 
 ---
 
 ### THE ASK
+
+**Pre-Seed Funding: £250,000**
+
+**Use of Funds:**
+- Technology Development (40% — £100,000)
+- Sales & Marketing (35% — £87,500)
+- Operations & Team (20% — £50,000)
+- Reserve & Contingency (5% — £12,500)
 
 **For Users:**
 - Join as a Founding Member (£10/month forever)
@@ -160,9 +168,10 @@ Unlike generic productivity tools, LEAP-OS:
 - Integration discussions
 - Strategic introductions
 
-**For Investors (Future):**
-- Seed round planned post-validation (500+ paying users)
+**For Investors:**
+- Pre-seed round open (£250,000)
 - Healthcare + wellness tech experience valued
+- Clear path to £500K revenue by Dec 2026
 
 ---
 
@@ -179,18 +188,13 @@ Unlike generic productivity tools, LEAP-OS:
 
 ### CONTACT
 
-**Website:** myrhythm.lovable.app  
-**Email:** [contact email]  
+**Website:** myrhythm.lovable.app
+**Email:** [contact email]
 **LinkedIn:** [founder LinkedIn]
 
 ---
 
 > **"Every promise you keep builds trust. You're building something amazing."** 💪
-
----
-
-*MyRhythm © 2024 | LEAP-OS — the world's first Cognitive Operating System | Pitch Document v4.0*
-
 
 ---
 
@@ -221,5 +225,6 @@ Unlike generic productivity tools, LEAP-OS:
 
 ---
 
-*Confidential – Not for Distribution*
+*Private & Confidential*
+*Created by Annabel Aaron, Founder & CEO*
 *© 2026 Annabel Aaron. All rights reserved.*
