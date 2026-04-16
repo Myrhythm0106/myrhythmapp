@@ -58,6 +58,7 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 💪 **Core Features:**
 - **Memory Bridge** — Record conversations, AI extracts commitments your memory can't hold
 - **Assistant-First Smart Scheduling** — MYRHYTHM assessment determines cognitive peaks; AI auto-schedules at optimal windows; suggests inviting attendees from Support Circle; syncs with Google Calendar & Outlook; confirm or auto-accept
+- **Brain Health Score** — Branded composite cognitive metric (like a credit score for the brain). Derived from MYRHYTHM assessment, Daily Brain Boost performance, mood tracking, and engagement data. Drives retention and re-assessment loops.
 - Personalized cognitive training (240+ exercises)
 - Clinical-grade progress tracking
 - Care team collaboration via Support Circle
@@ -102,6 +103,11 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
   - Professional (£49/month): Directory listing, specialty matching, verified badge
   - Premium (£149/month): Featured placement, analytics dashboard, priority cognitive-profile matching
   - Clinics, neuropsychologists, and neurosurgeons pay because LEAP-OS delivers qualified, cognitively-profiled referrals
+
+- **Year 3+ Expansion: Facilitator Certification Programme**
+  - Brain Health Coach (£500), Clinical Facilitator (£1,200), Corporate Wellness (£2,000)
+  - 200+ certifications in Year 3 = £100K–£400K incremental revenue
+  - Every certified facilitator becomes a distribution channel partner
 
 ---
 
@@ -148,6 +154,7 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 - ADHD & focus communities (TikTok, Reddit, Facebook groups)
 - Burnout & wellness audiences (Instagram, newsletters)
 - Student & academic channels (university partnerships)
+- **Signature Content Strategy:** Free high-authority content ("The Intention-Action Gap Explainer") — our "Start With Why" equivalent for cognitive wellness. Builds brand authority and drives top-of-funnel acquisition before asking for a subscription.
 
 **🏥 Phase 2/3 — Clinical (Year 2+):**
 - NHS & healthcare provider partnerships
@@ -223,6 +230,7 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 - Healthcare system partnerships
 - AI-powered personalization
 - Operational optimization
+- **Group Cohorts** launch (12-week cognitive improvement programmes with shared milestones)
 
 **Q4:** Target Achievement
 - £500K revenue milestone

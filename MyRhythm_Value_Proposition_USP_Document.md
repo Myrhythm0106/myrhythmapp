@@ -36,20 +36,28 @@ MyRhythm stands as the **only comprehensive cognitive wellness platform** that b
    - Authentic insights drive every feature decision
    - Real-world tested solutions, not theoretical approaches
 
-2. **Dual-Market Bridge**
+2. **Brain Health Score**
+   - Branded composite cognitive metric — like a credit score for the brain
+   - Derived from MYRHYTHM assessment, Daily Brain Boost performance, mood tracking, and engagement data
+   - Drives retention through re-assessment loops: track → improve → re-assess → track
+   - Users who see a 10+ point improvement in month one have 3x higher retention
+   - No competitor offers a unified, branded cognitive score that evolves over time
+
+3. **Dual-Market Bridge**
    - Only platform serving both consumer wellness AND clinical needs
    - Seamless transition from consumer to clinical-grade features
    - Healthcare provider integration without losing user-friendliness
 
-3. **Comprehensive Life Management**
+4. **Comprehensive Life Management**
    - Calendar, goals, mood tracking, brain training, and community in one platform
    - Eliminates need for multiple apps and cognitive load
    - Holistic approach to cognitive wellness and recovery
 
-4. **Care Team Collaboration**
+5. **Care Team Collaboration & Group Cohorts**
    - Family members and caregivers can participate without burnout
    - Healthcare providers get clinical insights and progress tracking
    - Shared journey reduces isolation and improves outcomes
+   - **Group Cohorts** — structured 12-week cognitive improvement programmes with shared milestones and peer accountability (8–12 participants per cohort)
 
 ### 🚀 **SECONDARY USPs**
 

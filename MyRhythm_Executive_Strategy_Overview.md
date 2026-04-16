@@ -84,6 +84,7 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 - International market expansion (Canada, Australia)
 - Enterprise sales team establishment
 - Advanced clinical reporting features
+- **Automated Nudge Sequences** — behavioural email/SMS system tied to Brain Health Score changes and engagement drops, reducing churn by 15–25%
 - 2,000 subscribers and 20 clinical partnerships
 
 #### Phase 3: Scale (Q3 2025)
@@ -91,6 +92,7 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 - Large healthcare system partnerships
 - AI-powered personalization features
 - Team expansion and operational optimization
+- **Facilitator Certification Programme** soft launch — Brain Health Coach (£500), Clinical Facilitator (£1,200), Corporate Wellness (£2,000) — scalable B2B distribution channel
 - 2,500 subscribers and 40 clinical partnerships
 
 #### Phase 4: Optimization (Q4 2025)

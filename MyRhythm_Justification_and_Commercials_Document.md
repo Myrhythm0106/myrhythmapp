@@ -68,6 +68,13 @@ Every provider on LEAP-OS pays to be there. Free listings attract anyone. Paid l
 - **Premium Tier (£149/month):** Featured placement, analytics dashboard, priority cognitive-profile matching, branded profile, monthly referral reports
 - Target: 50+ paying providers by Year 1, growing to 200+ as clinical segments expand
 
+**Year 3+ Expansion: Facilitator Certification Programme**
+A scalable B2B distribution channel generating £100K–£400K incremental revenue:
+- **Brain Health Coach Certification (£500):** Online self-paced programme for wellness coaches
+- **Clinical Facilitator Certification (£1,200):** For therapists, OTs, and neuropsychologists integrating LEAP-OS into practice
+- **Corporate Wellness Facilitator (£2,000):** For HR/wellbeing leads running cognitive health programmes at scale
+- Every certified facilitator becomes a channel partner — a self-sustaining distribution network
+
 ---
 
 ## Evidence-Based Health Impact Justification
@@ -88,6 +95,8 @@ MyRhythm's approach is grounded in peer-reviewed research demonstrating the effi
 **Personalization Efficacy**: Research shows personalized interventions are 2.3x more effective than one-size-fits-all approaches.
 
 **Family-Centered Care**: Evidence indicates family involvement improves outcomes by 40% while reducing caregiver stress by 28%.
+
+**Automated Nudge Sequences**: Behavioural email/SMS nudge system tied to Brain Health Score changes and engagement drops. Comparable health-tech platforms using nudge sequences report 15–25% reduction in monthly churn (Recurly 2023). LEAP-OS nudges include Score Drop alerts, Engagement Drop re-engagement prompts, Milestone Celebrations, and Re-assessment Prompts — all personalised to the user's cognitive profile and journey stage.
 
 ---
 
@@ -169,6 +178,7 @@ MyRhythm's approach is grounded in peer-reviewed research demonstrating the effi
 
 ### Innovation & Intellectual Property
 - **Proprietary Assessment Algorithm**: Validated cognitive evaluation framework
+- **Brain Health Score**: Branded composite cognitive metric derived from MYRHYTHM assessment, Daily Brain Boost performance, mood tracking, and engagement data. Functions as a "credit score for the brain" — a proprietary, defensible IP asset that drives retention through re-assessment loops and creates a data moat competitors cannot replicate.
 - **Family Integration Platform**: Unique multi-stakeholder collaboration tools
 - **Outcome Prediction Models**: AI-driven recovery trajectory forecasting
 - **Personalized Intervention Engine**: Adaptive treatment recommendation system
