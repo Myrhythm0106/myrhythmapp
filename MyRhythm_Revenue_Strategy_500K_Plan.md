@@ -112,7 +112,7 @@
 
 #### JANUARY 2025 - Week 5 (Jan 29-31)
 **Day 29:** Launch productivity & cognitive performance content series
-**Day 30:** Partner outreach to productivity, ADHD, and wellness communities
+**Day 30:** Partner outreach to productivity, ADHD, and wellness communities. **Signature Content Strategy** launch: "The Intention-Action Gap Explainer" — free high-authority content positioned as our Sinek "Start With Why" equivalent for cognitive wellness. Top-of-funnel acquisition engine.
 **Day 31:** Month 1 performance review and February planning
 
 ### FEBRUARY 2025 - SCALING FOUNDATION
@@ -157,8 +157,13 @@
 #### APRIL 2025 - MARKET EXPANSION
 **Week 1:** Launch international markets (Canada, Australia)
 **Week 2:** Healthcare conference participation and networking
-**Week 3:** Advanced clinical features development
+**Week 3:** Advanced clinical features development — **Brain Health Score Tracker dashboard** (historical tracking, trend visualisation, goal setting, re-assessment scheduling)
 **Week 4:** Customer success optimization and retention
+
+**🆕 Automated Nudge Sequences Launch:**
+- Deploy behavioural email/SMS system tied to Brain Health Score changes
+- Score Drop Nudge, Engagement Drop Nudge, Milestone Celebration, Re-assessment Prompt
+- Target: 15–25% reduction in monthly churn (benchmarked against Recurly 2023 health-tech data)
 
 **Target Metrics:**
 - 800 total subscribers
@@ -197,12 +202,14 @@
 - Develop enterprise features
 - Create case studies and ROI documentation
 - Launch clinical webinar series
+- **Facilitator Certification Programme** soft launch (Brain Health Coach tier at £500)
 
 #### SEPTEMBER 2025 - INTERNATIONAL GROWTH
 - Launch in UK and European markets
 - Establish international partnerships
 - Localize content and features
 - Compliance with international regulations
+- **Group Cohorts** pilot (12-week cognitive improvement cohorts with 8–12 participants)
 
 **Q3 Target Metrics:**
 - 2,000 total subscribers

@@ -77,6 +77,12 @@
 - **SEO Targeting:** "brain injury recovery," "cognitive wellness," "memory improvement"
 - **Video Content:** YouTube channel with recovery journeys and app previews
 
+**🆕 Signature Content Strategy:**
+- **"The Intention-Action Gap Explainer"** — our "Start With Why" equivalent for cognitive wellness. Free, high-authority content explaining why people forget, fail to follow through, and lose confidence — and what LEAP-OS does about it.
+- Positioned as a top-of-funnel acquisition engine: builds brand authority before asking for a subscription
+- Benchmarked against Simon Sinek's free content → paid ecosystem model and Steven Bartlett's DOAC membership funnel
+- Formats: longform video series, articles, social content, podcast appearances
+
 **Speaking & Authority:**
 - **Conferences:** Brain injury conferences, healthcare innovation events
 - **Podcasts:** Health & wellness shows, entrepreneur podcasts, recovery stories
