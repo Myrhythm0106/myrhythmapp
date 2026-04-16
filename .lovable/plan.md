@@ -1,68 +1,110 @@
 
 
-# Create VISION.md + Integrate 5 New Features into Strategic Documents
+# Plan: Update All Investor Docs + Create 90-Day Sprint Plan
 
-## Part 1: Create VISION.md (Project Root)
+## Problem Found
 
-A standalone synthesised 5-year strategy document that combines the existing phased roadmap with 5 new named features. Structure:
+All investor documents still reference **2025 dates and old pricing** (£7.99/£9.99/£15.99 tiers), when:
+- Project anchor date is **March 2026**
+- Correct pricing is **£10/month (Founding) / £15/month (Standard)**
+- Seed ask is **£250,000** (not generic "Series A")
+- The 5 new features (Brain Health Score, Facilitator Certification, Group Cohorts, Nudge Sequences, Signature Content) need consistent representation
+- All documents need **"Private & Confidential | Created by Annabel Aaron"** footer
 
-- **Header & Vision Statement** — "A world where no one loses their independence because their memory fails them."
-- **Year 1: Foundation & Launch (2026)** — MVP build (Memory Bridge, Smart Scheduling, Support Circle, Daily Brain Boost), founding member launch (£10/month), 500+ subscribers, Outside-In Phase 1 (productivity, ADHD, burnout, aging), Provider Directory launch (£49/£149 tiers). **NEW: Brain Health Score** — branded composite cognitive metric (like a credit score for the brain) derived from MYRHYTHM assessment, Daily Brain Boost performance, mood tracking, and engagement data. Drives retention and re-assessment loops. **NEW: Signature Content Strategy** — free high-authority content ("The Intention-Action Gap Explainer") positioned as the Sinek "Start With Why" equivalent for cognitive wellness. Top-of-funnel growth engine.
-- **Year 2: Monetisation & Clinical Expansion (2027)** — Phase 2/3 clinical segments (ABI, TBI, dementia/MCI), NHS partnerships, paid Brain Health Score Tracker dashboard (historical tracking, trend visualisation, goal setting, re-assessment scheduling), B2B clinical licensing. **NEW: Automated Nudge Sequences** — behavioural email/SMS nudge system tied to Brain Health Score changes and engagement drops. Reduces churn, increases re-engagement. **NEW: Group Cohorts** — structured progression groups with shared milestones and group accountability (e.g., 12-week cognitive improvement cohorts).
-- **Year 3: Accountability & Community (2028)** — Accountability Partner matching, digital check-in schedules, facilitator dashboard, group cohorts with shared milestones, advanced analytics. **NEW: Facilitator Certification Programme** — £500–£2,000 per certification for brain health coaches, therapists, and corporate wellness facilitators. Scalable B2B revenue stream.
-- **Year 4: Platform Maturity (2029)** — International expansion, API ecosystem, wearable integrations, AI predictive insights, white-label for healthcare providers, enterprise features.
-- **Year 5: Market Leadership (2030–31)** — Series D/Pre-IPO positioning, £150M+ ARR target, mobile app (React Native), B2B corporate wellness licensing, research partnerships, marketplace for third-party extensions, global category ownership.
-- **Revenue Model Progression** section — Year 1 subscriptions → Year 2 freemium Score Tracker → Year 3-4 certification + accountability tiers → Year 5 B2B licensing + certification
-- **Strategic Positioning** section — differentiator vs Lumosity/BrainHQ/Constant Therapy, the human accountability layer, Sinek/Bartlett benchmarking
-- **Confidentiality footer** — standard 3pt format
+---
 
-## Part 2: Integrate 5 Features into Existing Documents
+## Part 1: Investor Document Overhaul (8 Markdown files)
 
-### 1. Brain Health Score
-- **Executive Summary** (line ~17): Add to UVP as a named feature
-- **One-Page Pitch** (line ~42-50): Add to solution features table
-- **Investment Deck** (Slide 3, line ~58-64): Add as core feature
-- **Justification & Commercials** (line ~160-174): Add to innovation/IP section
-- **Revenue Strategy** (Phase 2, line ~155-179): Add as monetisation milestone
-- **Value Proposition USP** (line ~30-50): Add as a primary USP
+### What changes across ALL files:
 
-### 2. Facilitator Certification Programme
-- **Executive Summary** (line ~23-27): Add to revenue model
-- **One-Page Pitch** (line ~87-101): Add to business model
-- **Investment Deck** (Slide 5, line ~86-105): Add as Year 3 revenue stream
-- **Justification & Commercials** (line ~51-69): Add to revenue model
-- **Revenue Strategy** (Phase 3, line ~187-211): Add as named milestone
-- **Executive Strategy Overview** (line ~89-101): Add to Phase 3
+| Issue | Current | Corrected |
+|-------|---------|-----------|
+| Timeline | 2025 dates throughout | 2026–2027 (anchored to March 2026) |
+| Consumer pricing | £7.99 / £9.99 / £15.99 | £10/month (Founding) / £15/month (Standard) |
+| Funding ask | "Series A" | "Pre-Seed: £250,000" |
+| Revenue target | £500K by Dec 2025 | £500K by Dec 2026 |
+| Quarterly milestones | Q1–Q4 2025 | Q1–Q4 2026 (Apr launch) |
+| Footer | Inconsistent | Standard 3pt with "Private & Confidential | Created by Annabel Aaron, Founder & CEO | © 2026 Annabel Aaron. All rights reserved." |
 
-### 3. Group Cohorts
-- **One-Page Pitch** (roadmap, line ~140-144): Add to Phase 2
-- **Investment Deck** (Slide 11, line ~207-231): Add to Q3/Year 2 milestones
-- **Value Proposition USP** (line ~44-50): Add to Care Team Collaboration USP
+### Files updated:
+1. `MyRhythm_Investment_Presentation_Deck.md` — Title slide date, pricing, quarterly table, milestones
+2. `MyRhythm_Executive Summary_One_Page.md` — Revenue target, pricing tiers, quarterly timeline
+3. `MyRhythm_Revenue_Strategy_500K_Plan.md` — Entire month-by-month plan shifted to 2026, pricing corrected
+4. `docs/myrhythm-one-page-pitch.md` — Dates, pricing
+5. `MyRhythm_Justification_and_Commercials_Document.md` — Timeline references
+6. `MyRhythm_Executive_Strategy_Overview.md` — Phase dates
+7. `MyRhythm_Value_Proposition_USP_Document.md` — Any date/pricing refs
+8. `MyRhythm_500K_Marketing_Strategy_2025.md` — Rename references to 2026
 
-### 4. Automated Nudge Sequences
-- **Executive Strategy Overview** (Phase 2, line ~82-88): Add as named feature
-- **Revenue Strategy** (Phase 2, line ~155-179): Add as retention tool
-- **Justification & Commercials** (line ~85-115): Add to clinical outcomes section
+### Regenerated artifacts:
+- **`MyRhythm_Investor_Pitch_Script_v8.docx`** — Aligned with corrected dates/pricing
+- **`MyRhythm_CCM_Investor_Deck_v4.pptx`** + PDF — Slide deck with corrected content
 
-### 5. Signature Content Strategy
-- **One-Page Pitch** (go-to-market, line ~140-144): Add to Phase 1 growth
-- **Investment Deck** (Slide 8, line ~143-163): Add to go-to-market strategy
-- **Revenue Strategy** (Phase 1, line ~52-117): Add as acquisition channel
-- **500K Marketing Strategy**: Add as named content pillar
+---
 
-## Files Created/Modified
+## Part 2: 90-Day Investor Sprint Plan (Downloadable .xlsx)
 
-| File | Action |
-|------|--------|
-| `VISION.md` | **Create** — standalone 5-year strategy synthesis |
-| `MyRhythm_Executive Summary_One_Page.md` | Add Brain Health Score, Facilitator Certification to revenue model |
-| `docs/myrhythm-one-page-pitch.md` | Add all 5 features in appropriate sections |
-| `MyRhythm_Investment_Presentation_Deck.md` | Add Brain Health Score to Slide 3, Certification to Slide 5, Signature Content to Slide 8 |
-| `MyRhythm_Justification_and_Commercials_Document.md` | Add Brain Health Score to IP, Nudges to outcomes, Certification to revenue |
-| `MyRhythm_Revenue_Strategy_500K_Plan.md` | Add Brain Health Score, Nudges, Certification as phased milestones |
-| `MyRhythm_Value_Proposition_USP_Document.md` | Add Brain Health Score as primary USP, Group Cohorts to collaboration |
-| `MyRhythm_Executive_Strategy_Overview.md` | Add Certification and Nudges to phased roadmap |
-| `MyRhythm_500K_Marketing_Strategy_2025.md` | Add Signature Content Strategy as acquisition channel |
+A day-by-day operational plan for **Days 1–90** covering two parallel workstreams: **Investor Outreach** and **MVP Development**.
 
-All files retain the standard confidentiality footer: *"Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved."*
+### Structure:
+
+**Sheet 1: Daily Action Plan**
+| Column | Content |
+|--------|---------|
+| Day # | 1–90 |
+| Date | Starting from April 2026 |
+| Week # | 1–13 |
+| Phase | Preparation (Wk 1–2), Outreach (Wk 3–8), Close (Wk 9–13) |
+| Workstream | Investor / MVP / Both |
+| Daily Task | Specific action for that day |
+| Deliverable | What's produced |
+| Status | Checkbox column (Not Started / In Progress / Done) |
+| Notes | Space for tracking |
+
+**Sheet 2: Investor Target List**
+- Template with columns: Name, Fund, Stage Focus, Sector, Contact, Status, Last Contact, Next Action, Notes
+- Pre-populated with categories (Angel Networks, Pre-Seed Funds, Health-Tech VCs, Impact Investors)
+
+**Sheet 3: Weekly KPIs**
+- Week-by-week targets: pitches sent, meetings booked, follow-ups, MVP milestones hit
+
+### 90-Day Phase Breakdown:
+
+**Weeks 1–2: Preparation**
+- Finalise pitch deck, one-pager, financial model
+- Build investor target list (50+ contacts)
+- Set up CRM/tracking system
+- Rehearse pitch (record, review, iterate)
+- Launch Signature Content ("Intention-Action Gap")
+
+**Weeks 3–8: Active Outreach**
+- 5 cold outreach emails/day
+- 2–3 warm introductions/week
+- 1–2 pitch meetings/week
+- Attend 1 investor event per week
+- MVP development milestones (auth, Memory Bridge, Smart Scheduling)
+- Weekly pitch refinement based on feedback
+
+**Weeks 9–13: Conversion & Close**
+- Follow-up sequences
+- Due diligence preparation
+- Term sheet negotiation
+- MVP beta launch to founding members
+- Brain Health Score prototype demo-ready
+
+### Output:
+- **`MyRhythm_90_Day_Sprint_Plan.xlsx`** — formatted, colour-coded, print-ready
+
+---
+
+## Delivery
+
+| Artifact | Format |
+|----------|--------|
+| 8 Markdown docs | Updated in repo |
+| Investor Pitch Script v8 | .docx in /mnt/documents/ |
+| Investor Deck v4 | .pptx + .pdf in /mnt/documents/ |
+| 90-Day Sprint Plan | .xlsx in /mnt/documents/ |
+
+All artifacts QA'd before delivery.
 
