@@ -255,5 +255,4 @@ Unlike competitors who digitise cognition in isolation, LEAP-OS wraps every feat
 
 ---
 
-*Confidential – Not for Distribution*
-*© 2026 Annabel Aaron. All rights reserved.*
+*Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved.*
