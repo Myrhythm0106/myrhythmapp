@@ -1,365 +1,251 @@
 
 # MyRhythm Investor Presentation Script
-## Comprehensive Demo Script with Founder Story Integration
+## Pre-Seed Pitch Script for April 2026 Investor Meetings
 
 ---
 
 ## **PRESENTATION OVERVIEW**
-**Duration:** 15-20 minutes presentation + 10-15 minutes Q&A
-**Audience:** Angel investors, VCs, potential partners
-**Objective:** Secure Series A funding for market expansion
-**Demo Environment:** Live application demonstration
+**Duration:** 15–20 minutes presentation + 10–15 minutes Q&A  
+**Audience:** Angel investors, pre-seed funds, strategic partners  
+**Objective:** Secure **£250,000 Pre-Seed** funding to launch the MVP, validate demand, and convert early traction into a scalable business  
+**Demo Environment:** Live product demonstration + updated investor deck walkthrough
 
 ---
 
-## **SECTION 1: OPENING & FOUNDER STORY (3-4 minutes)**
+## **SECTION 1: OPENING & FOUNDER STORY (3–4 minutes)**
 
 ### **Opening Hook**
-*[Stand confidently, make eye contact with audience]*
+*[Stand confidently, make eye contact, slow the first sentence down]*
 
-"Three years ago, I was told I might never fully recover from my traumatic brain injury. Today, I'm here to show you how that experience led to a £2.3 billion market opportunity that's transforming cognitive wellness for millions."
+“Three years ago, I was told I might never fully recover from my traumatic brain injury. Today, I’m here because that experience revealed a far bigger problem — millions of people are expected to remember, organise, and follow through with lives and brains that traditional tools were never built for.”
 
-*[Pause for effect]*
+*[Pause]*
+
+“And that problem has become a company: **MyRhythm**, powered by **LEAP-OS**, the world’s first Cognitive Operating System.”
 
 ### **Personal Journey**
-"My name is [Your Name], and I'm the founder of MyRhythm. In [Year], my life changed forever when I suffered a traumatic brain injury. Like 1.4 million people annually in our target markets, I faced a fragmented healthcare system with no comprehensive solution for cognitive recovery."
+“I’m Annabel Aaron, founder of MyRhythm. MyRhythm didn’t begin as a trend opportunity. It began as survival. I experienced first-hand what happens when clinical care ends, real life begins, and there is no system to bridge the gap between intention and action.”
 
-*[Show slide with personal photo/timeline]*
-
-"But in that moment of vulnerability, I made a choice—what I call my '#IChoose' moment. I chose to not just recover, but to transform that experience into something that could help millions of others facing similar challenges."
+“What I lived through is what millions live through every day — after brain injury, during burnout, with ADHD, through cognitive overload, or while caring for someone whose memory and follow-through are failing.”
 
 ### **The Problem Discovery**
-"During my recovery, I discovered that existing solutions were either:
-- **Consumer-focused** like Lumosity—fun games but no real clinical integration
-- **Clinical-only** like CogniFit—effective but terrible user experience
-- **Single-purpose** tools that didn't address the whole person
+“What I found in the market was fragmented:
+- Consumer tools that were polished but shallow
+- Clinical tools that were useful but hard to live with
+- Single-purpose apps that didn’t connect memory, scheduling, accountability, and follow-through
 
-There was no platform that combined clinical-grade effectiveness with consumer-friendly experience while supporting the entire care ecosystem."
+There was no platform that acted like real cognitive infrastructure.”
 
 ### **The Vision**
-"That's when MyRhythm was born—not just as a business opportunity, but as a mission to bridge the gap between consumer cognitive wellness and clinical brain injury recovery, built by someone who's lived the experience."
+“So we built one. Our vision is simple: **a world where no one loses their independence because their memory fails them.**”
 
 ---
 
-## **SECTION 2: MARKET OPPORTUNITY (2-3 minutes)**
+## **SECTION 2: THE MARKET OPPORTUNITY (2–3 minutes)**
 
-### **Market Size & Growth**
-*[Display market size slide]*
+### **The Market Size**
+*[Display market opportunity slide]*
 
-"The cognitive training market is massive and growing:
-- **£2.3 billion global market** growing at 8.1% annually
-- **1.4 million annual TBI cases** in our target markets
-- **15+ million potential users** for cognitive wellness
-- **12,000+ healthcare providers** seeking solutions"
+“The opportunity is large, urgent, and underserved:
+- **£12.8B total addressable market** across cognitive wellness and recovery
+- **200M+ professionals, students, and performance-seekers** struggling with overload and follow-through
+- **69M annual TBI cases and 12M ABI cases globally**
+- **55M people living with dementia globally, with 10M new cases each year**
 
-### **Unique Market Position**
-"We're not just another brain training app. We're the **only platform** that serves both:
-1. **Consumers** seeking cognitive wellness
-2. **Healthcare providers** managing patient care
+This is not a niche. It is a cross-market human problem.”
 
-This dual-market approach gives us multiple revenue streams and reduces market risk while serving an underserved intersection."
+### **The Discharge Cliff**
+“In clinical recovery, there is a specific failure point we call **the Discharge Cliff**.
 
----
+Clinical care ends. Real life begins. Nothing bridges the gap.
 
-## **SECTION 3: LIVE PRODUCT DEMONSTRATION (8-10 minutes)**
+That’s where forgotten promises, missed appointments, caregiver burnout, and confidence collapse begin. That is the gap LEAP-OS fills.”
 
-### **Demo Setup**
-*[Open laptop/tablet, ensure strong WiFi connection]*
-
-"Let me show you exactly how MyRhythm works. I'll walk you through the complete user journey, from first-time visitor to engaged user."
-
-### **Landing Page Demo**
-*[Navigate to landing page]*
-
-"This is what potential users see first. Notice how we immediately communicate our unique value proposition—'Memory1st → LEAP Forward.' This isn't just marketing speak; it's our evidence-based framework."
-
-*[Scroll through landing page]*
-
-"Key elements you'll see:
-- **Clear value proposition** for our dual market
-- **Founder credibility** built on lived experience  
-- **Social proof** and testimonials
-- **Transparent pricing** for all user types
-- **Professional design** that builds trust"
-
-### **Registration & Onboarding Flow**
-*[Click 'Register Here' button]*
-
-"Watch how smooth our onboarding is. We've removed friction by eliminating email verification—users can start immediately."
-
-*[Complete quick registration]*
-
-"This authentication system handles:
-- **Immediate access** for better conversion
-- **Secure data handling** for trust
-- **Role-based permissions** for different user types"
-
-*[Show onboarding screens]*
-
-"Our onboarding introduces the LEAP framework—our proprietary approach that combines:
-- **L**earning your patterns
-- **E**mpowering your strengths  
-- **A**ccelerating progress
-- **P**ersonalizing your journey"
-
-### **Dashboard Demonstration**
-*[Enter main dashboard]*
-
-"This is our command center—notice how it's immediately valuable:
-- **Personalized content** based on user preferences
-- **Quick actions** for most-used features
-- **Progress visualization** to maintain engagement
-- **Empowerment-focused** messaging rather than deficit-focused"
-
-### **Core Features Walkthrough**
-
-#### **Assessment Feature**
-*[Click on Assessment]*
-
-"Our assessment isn't just another test—it's a comprehensive baseline that:
-- **Identifies strengths** rather than just weaknesses
-- **Personalizes** the entire experience
-- **Tracks progress** over time
-- **Provides clinical-grade** data for healthcare providers"
-
-*[Show sample assessment]*
-
-"This data becomes the foundation for everything else in the platform."
-
-#### **Brain Games**
-*[Navigate to Brain Games]*
-
-"Our brain training games are different:
-- **Evidence-based** rather than just entertaining
-- **Adaptive difficulty** that grows with the user
-- **Progress tracking** with meaningful metrics
-- **Engaging design** that people actually want to use"
-
-*[Demo a quick game]*
-
-"Notice how this isn't just about getting a high score—it's about measurable cognitive improvement."
-
-#### **Mood & Progress Tracking**
-*[Show mood tracking]*
-
-"Mental wellness is crucial for cognitive health:
-- **Daily mood tracking** with energy levels
-- **Pattern recognition** over time
-- **Integrated with other features** for holistic view
-- **Family sharing** for care team plans"
-
-#### **Community & Accountability**
-*[Show community features]*
-
-"Our brand promise is simple: **No One Walks Alone.** Isolation is a major challenge in cognitive recovery, and the Support Circle is how we deliver on that promise:
-- **Peer support** from others on similar journeys
-- **Accountability partners** for goal achievement
-- **Family integration** for care team users
-- **Professional networks** for clinical users
-
-No One Walks Alone isn't a tagline — it's the emotional heart of the Collaborative layer in our CCM methodology. It's why users stay, and it's why their support networks become our growth engine."
-
-### **Mobile Experience**
-*[Switch to mobile view or device]*
-
-"80% of our users access the platform on mobile:
-- **Fully responsive** design
-- **Touch-optimized** interface
-- **Offline capability** for core features
-- **Push notifications** for engagement"
+### **Why We Win This Market**
+“We launch outside-in: first to the broader consumer market where there are no medical barriers, then expand into clinical segments with proven traction, data, and product maturity.”
 
 ---
 
-## **SECTION 4: BUSINESS MODEL & TRACTION (3-4 minutes)**
+## **SECTION 3: PRODUCT DEMONSTRATION (7–9 minutes)**
+
+### **Demo Framing**
+“Let me show you how MyRhythm works in practice — not as a wellness concept, but as a system that changes daily execution.”
+
+### **Landing Experience**
+*[Open product / landing route]*
+
+“The product is positioned around a clear promise: helping users remember what they can’t, act when it matters, and stay connected to people who can support them.”
+
+### **Core Feature 1 — Memory Bridge**
+“This is **Memory Bridge**. Users record conversations, meetings, or moments of commitment, and the platform turns those into actionable next steps. This is critical for anyone who loses context fast or struggles to convert intention into follow-through.”
+
+### **Core Feature 2 — Smart Scheduling**
+“This is not a generic calendar. Our **Assistant-First Smart Scheduling** uses the MYRHYTHM assessment to identify cognitive peak times, then suggests when tasks should happen and who should be involved.”
+
+### **Core Feature 3 — Brain Health Score**
+“This is one of our most important retention and differentiation engines: the **Brain Health Score**.
+
+Think of it like a credit score for the brain — a branded composite metric derived from assessment data, Daily Brain Boost performance, mood tracking, and engagement behaviour. It gives users a single signal they can understand, improve, and return to.”
+
+### **Core Feature 4 — Support Circle**
+“Our brand promise is **No One Walks Alone**. The Support Circle turns accountability into shared follow-through instead of shame. It gives users a way to involve trusted people when they need support.”
+
+### **Core Feature 5 — Automated Nudge Sequences**
+“We also use **Automated Nudge Sequences** linked to Brain Health Score changes and engagement drops. These help bring users back at the right moment, which directly supports retention.”
+
+### **Future Expansion Features**
+“Two features are particularly important for scale and defensibility:
+- **Group Cohorts** — structured 12-week programmes combining accountability and outcomes
+- **Facilitator Certification** — creating trained distribution partners who can deliver MyRhythm inside practices, teams, and communities”
+
+---
+
+## **SECTION 4: BUSINESS MODEL & TRACTION (3–4 minutes)**
 
 ### **Revenue Model**
-*[Display revenue breakdown slide]*
+*[Show revenue slide]*
 
-"We have three proven revenue streams:
+“We have a clear multi-stream model with near-term revenue clarity and longer-term expansion upside.”
 
-**1. Consumer Subscriptions (60% - £300K target)**
-- Starter: £7.99/month for basic features
-- Pro: £9.99/month for full personal features  
-- Care Team: £15.99/month for family collaboration
+**1. Consumer subscriptions — 60% / £300K target**  
+“Our main offer is a simple premium structure:
+- **£10/month Founding Member**
+- **£15/month Standard**
+- With annual options at **£100** and **£150**”
 
-**2. B2B Clinical Subscriptions (30% - £150K target)**
-- Small practices: £99/month
-- Medium practices: £299/month
-- Enterprise: £599/month
+**2. B2B clinical subscriptions — 30% / £150K target**  
+“Small clinics, medium healthcare providers, and enterprise clinical partners purchase provider solutions from **£99 to £599 per month**.”
 
-**3. In-App Purchases (10% - £50K target)**
-- Premium content and advanced features"
+**3. Provider Directory & Marketplace — 10% / £50K target**  
+“Two paid tiers only. No free listings. Providers pay because we deliver qualified, cognitively-profiled demand — not cold traffic.”
 
-### **Financial Projections**
-*[Show financial projections slide]*
+### **Expansion Revenue**
+“From Year 3 onward, **Facilitator Certification** becomes an additional high-margin revenue stream and distribution channel.”
 
-"Our path to £500K by December 2025:
-- **Q1 2025:** £75K (foundation building)
-- **Q2 2025:** £175K (market expansion)  
-- **Q3 2025:** £325K (healthcare partnerships)
-- **Q4 2025:** £500K (target achievement)
+### **Financial Path**
+“Our path to **£500,000 revenue by December 2026** is phased:
+- **Q1 2026:** Foundation and pre-launch preparation
+- **Q2 2026:** Founding Member launch and first 800 subscribers
+- **Q3 2026:** Scale channels, partnerships, cohorts, and nudge systems
+- **Q4 2026:** Reach £500K revenue milestone and prepare for Seed”
 
-With **85% gross margins** and **<5% monthly churn**"
-
-### **Early Traction**
-"We're already seeing strong validation:
-- **Clinical partners** expressing interest
-- **Healthcare providers** providing feedback
-- **User engagement** metrics exceeding benchmarks
-- **Market research** confirming demand"
+### **Why the Model Works**
+“The model works because it combines recurring consumer revenue, B2B expansion, and later certification/channel economics — all anchored in a product users return to regularly.”
 
 ---
 
-## **SECTION 5: COMPETITIVE ADVANTAGE (2-3 minutes)**
+## **SECTION 5: GO-TO-MARKET (2–3 minutes)**
 
-### **Competitive Landscape**
-*[Display competitive analysis slide]*
+### **Outside-In Launch Strategy**
+“We start where adoption is fastest:
+- Productivity seekers
+- ADHD and focus communities
+- Burnout and cognitive fatigue audiences
+- Aging adults focused on proactive brain health”
 
-"Let's look at the competition:
-- **Lumosity:** 100M+ users, but no clinical integration
-- **CogniFit:** Strong clinical tools, poor user experience
-- **Headspace Health:** General wellness, no cognitive specialization
+### **Signature Content Strategy**
+“Our top-of-funnel acquisition engine is **Signature Content** — especially *The Intention-Action Gap Explainer*. This is our authority-building entry point: free, high-conviction content that frames the problem before asking for a subscription.”
 
-**We're the only platform** that combines:
-1. **Clinical-grade effectiveness**
-2. **Consumer-friendly experience**  
-3. **Family/care team integration**
-4. **Built by someone with lived experience**"
-
-### **Barriers to Entry**
-"Our competitive moats:
-- **Authentic foundation** from personal experience
-- **Clinical partnerships** and validation
-- **Comprehensive platform** vs. point solutions
-- **Network effects** from community features
-- **Data advantage** from dual-market approach"
+### **Clinical Expansion**
+“Once traction is established, we expand into ABI, TBI, caregiver, and dementia-support pathways with pilots, partnerships, and provider-facing tools.”
 
 ---
 
-## **SECTION 6: GROWTH STRATEGY (2-3 minutes)**
+## **SECTION 6: WHY NOW / WHY US (2–3 minutes)**
 
-### **Go-to-Market Strategy**
-"Our multi-channel approach:
+### **Why Now**
+“The timing matters:
+1. Cognitive overload is now mainstream, not niche
+2. Digital health adoption is structurally higher
+3. The market still lacks a category-defining cognitive operating system
+4. Families, providers, and consumers all feel the same problem from different angles”
 
-**Consumer Acquisition:**
-- **Digital marketing** (Google, Facebook, TikTok)
-- **Content marketing** and SEO
-- **Influencer partnerships** in health/wellness
-- **Community building** and referrals
-
-**Clinical Sales:**
-- **Direct outreach** to healthcare providers
-- **Medical conference** participation
-- **Clinical pilot programs** for validation
-- **Referral partner** network"
-
-### **International Expansion**
-"Phase 1: UK and Ireland (current)
-Phase 2: EU expansion (2025)
-Phase 3: North American market (2026)
-Phase 4: Global partnerships (2027+)"
+### **Why Us**
+“We have four core advantages:
+1. **Authentic lived-experience foundation**
+2. **Cross-market product architecture**
+3. **A differentiated retention engine through Brain Health Score and nudges**
+4. **A long-term ecosystem model through cohorts, providers, and certification**”
 
 ---
 
-## **SECTION 7: INVESTMENT OPPORTUNITY (2-3 minutes)**
+## **SECTION 7: THE ASK (2 minutes)**
 
 ### **Funding Request**
-"We're raising a Series A round to accelerate growth:
+“We are raising **£250,000 Pre-Seed**.”
 
-**Use of Funds:**
-- **40%** Technology development (AI, mobile, security)
-- **35%** Sales & marketing (team, campaigns, partnerships)
-- **20%** Operations & team expansion
-- **5%** Reserve for opportunities"
+### **Use of Funds**
+“- **40% Technology Development** — product completion, data layer, mobile optimisation, analytics
+- **35% Sales & Marketing** — Signature Content Strategy, investor outreach support, launch acquisition
+- **20% Operations & Team** — customer success, QA, compliance readiness
+- **5% Reserve & Contingency**”
 
-### **Why Invest Now**
-"This is the perfect time because:
-1. **Market timing:** Post-COVID mental health awareness
-2. **Technology readiness:** Platform proven and scalable
-3. **Team experience:** Founder with lived experience + technical skills
-4. **Early market position:** First-mover advantage in dual-market approach
-5. **Clear path to profitability** with multiple revenue streams"
-
-### **Expected Returns**
-"Conservative projections show:
-- **5x-10x returns** over 3-5 years
-- **Multiple exit opportunities** (acquisition or IPO)
-- **Recurring revenue model** with high customer lifetime value
-- **Social impact** creating additional value"
+### **What This Round Unlocks**
+“This round gives us the runway to:
+- Launch in April 2026
+- Build early subscriber traction
+- Secure first clinical and distribution partnerships
+- Validate the Brain Health Score loop and retention system
+- Reach the milestones required for a stronger Seed round narrative”
 
 ---
 
-## **SECTION 8: CLOSING & CALL TO ACTION (1-2 minutes)**
+## **SECTION 8: CLOSING (1–2 minutes)**
 
-### **Vision Restatement**
-"Our vision is a world where no one loses their independence because their memory fails them — and our promise is that **No One Walks Alone**. MyRhythm isn't just a business — it's cognitive infrastructure for life. LEAP-OS exists to make cognitive resilience a basic human right. It remembers what you can't, schedules at your cognitive peaks, escalates until you respond, and surrounds you with people who care. If you can think it, LEAP-OS helps you do it — at the right time, with the right people, in the right rhythm. For life."
+### **Closing Statement**
+“MyRhythm is not just another app in a crowded wellness category. It is cognitive infrastructure for life.
 
-### **Personal Connection**
-"Three years ago, I was told I might never fully recover. Today, I'm not just recovered—I'm using that experience to help millions of others. That's the power of choosing to turn your greatest challenge into your greatest opportunity."
+It remembers what people can’t.
+It helps them act when it matters.
+It keeps them connected to the people who help them keep going.
 
-### **The Ask**
-"I'm inviting you to join this journey. Not just as investors, but as partners in transforming cognitive wellness for millions of people worldwide."
+And in a world where millions are falling through the gap between intention and action, that matters.”
 
-*[Pause, make eye contact]*
-
-"The question isn't whether the cognitive wellness market will grow—it's whether you want to be part of the platform that's leading that transformation."
-
-### **Next Steps**
-"I'd love to discuss:
-1. **Partnership opportunities** that align with your portfolio
-2. **Due diligence** process and timeline
-3. **Terms discussion** based on your investment criteria
-4. **Pilot opportunities** with your portfolio companies"
+### **Investor Close**
+“We’re inviting the right investors to help us build the category-defining Cognitive Operating System — and to do it at the moment where traction, timing, and product clarity are aligning.”
 
 ---
 
 ## **Q&A PREPARATION**
 
-### **Anticipated Questions & Responses**
+### **Likely Questions**
 
-**Q: "How do you compete with big tech companies if they enter this space?"**
-A: "Our lived experience and clinical focus create authentic differentiation that big tech can't replicate. Plus, they typically acquire rather than compete with specialized platforms like ours."
+**Q: Why will users keep paying?**  
+A: “Because Brain Health Score, Memory Bridge, scheduling, and accountability create an ongoing operating system, not a one-off tool. Retention is designed into the product loop.”
 
-**Q: "What's your customer acquisition cost?"**
-A: "Currently £25 per user with £150+ lifetime value. Our dual-market approach and community features create viral growth that reduces CAC over time."
+**Q: What makes this more than a wellness app?**  
+A: “The product sits at the intersection of consumer usability, behavioural accountability, and clinical expansion potential. That combination is where the moat forms.”
 
-**Q: "How do you prove clinical efficacy?"**
-A: "We're conducting clinical trials with partner institutions and have early data showing measurable improvements. Our medical advisory board provides clinical oversight."
+**Q: Why start with consumers if the clinical need is strong?**  
+A: “Because outside-in adoption is faster, cheaper, and gives us product usage data before heavier clinical expansion. It derisks the business.”
 
-**Q: "What happens if regulation changes?"**
-A: "We're proactively building compliance into our platform. Our clinical partnerships keep us ahead of regulatory changes, and our consumer focus provides market diversification."
+**Q: What are the main growth engines?**  
+A: “Signature Content, referral loops, provider partnerships, Group Cohorts, and later Facilitator Certification.”
 
-**Q: "How scalable is this really?"**
-A: "Our Supabase infrastructure handles millions of users, our content is digitally scalable, and our community features create network effects. We're built for global scale from day one."
+**Q: What does success look like 12 months from now?**  
+A: “A launched MVP, early recurring revenue, working acquisition channels, clear retention signals, and an investable pathway into Seed.”
 
 ---
 
-## **DEMO DAY LOGISTICS**
+## **DEMO DAY CHECKLIST**
 
 ### **Technical Setup**
-- **Backup devices** (laptop + tablet)
-- **Offline demo** version in case of connectivity issues
-- **Screen recording** of perfect demo run
-- **Demo account** pre-loaded with sample data
+- Backup device ready
+- Demo account pre-loaded
+- Stable route for product walkthrough
+- Investor deck open in parallel
 
-### **Presentation Materials**
-- **Slide deck** with key metrics and visuals
-- **One-page executive summary** for handout
-- **Business card** with QR code to landing page
-- **Follow-up materials** ready to send
+### **Materials**
+- Executive summary
+- One-page pitch
+- Updated deck PDF
+- Follow-up note template
 
-### **Success Metrics**
-- **Engagement:** Questions asked, interest level
-- **Follow-up:** Meeting requests, due diligence starts
-- **Validation:** Positive feedback on product and vision
-- **Investment:** Term sheet discussions initiated
-
----
-
-This comprehensive script provides a complete framework for presenting MyRhythm to investors, combining your personal story with strong business fundamentals and live product demonstration. The script is designed to create emotional connection while building confidence in the business opportunity and technical execution.
-
+### **Goal for the Meeting**
+- Secure follow-up diligence conversation
+- Confirm investor fit for pre-seed
+- Get feedback on risk, conviction, and timeline
 
 ---
 
-*Confidential – Not for Distribution*
-*© 2026 Annabel Aaron. All rights reserved.*
+*Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved.*
