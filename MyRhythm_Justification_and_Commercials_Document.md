@@ -330,6 +330,4 @@ MyRhythm is positioned to become the definitive platform for cognitive wellness 
 
 ---
 
-*Private & Confidential*
-*Created by Annabel Aaron, Founder & CEO*
-*© 2026 Annabel Aaron. All rights reserved.*
+*Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved.*

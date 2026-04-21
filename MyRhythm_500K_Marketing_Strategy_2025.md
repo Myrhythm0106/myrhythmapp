@@ -515,6 +515,4 @@ This comprehensive marketing strategy provides the detailed roadmap to achieve �
 
 ---
 
-*Private & Confidential*
-*Created by Annabel Aaron, Founder & CEO*
-*© 2026 Annabel Aaron. All rights reserved.*
+*Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved.*

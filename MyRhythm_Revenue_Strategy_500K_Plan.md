@@ -303,6 +303,4 @@ This comprehensive plan provides the roadmap to achieve £500,000 in revenue by 
 
 ---
 
-*Private & Confidential*
-*Created by Annabel Aaron, Founder & CEO*
-*© 2026 Annabel Aaron. All rights reserved.*
+*Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved.*

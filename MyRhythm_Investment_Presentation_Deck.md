@@ -337,6 +337,4 @@ The ABI & TBI patient goes home. The system moves on. The real damage begins. Cl
 
 ---
 
-*Private & Confidential*
-*Created by Annabel Aaron, Founder & CEO*
-*© 2026 Annabel Aaron. All rights reserved.*
+*Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved.*

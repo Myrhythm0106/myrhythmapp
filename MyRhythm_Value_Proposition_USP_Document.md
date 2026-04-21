@@ -314,6 +314,4 @@ MyRhythm doesn't just compete in existing categories—we're creating a new one:
 
 ---
 
-*Private & Confidential*
-*Created by Annabel Aaron, Founder & CEO*
-*© 2026 Annabel Aaron. All rights reserved.*
+*Confidential – Not for Distribution | © 2026 Annabel Aaron. All rights reserved.*
