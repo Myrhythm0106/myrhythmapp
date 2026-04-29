@@ -146,7 +146,34 @@
 
 ---
 
-*This decision log will be updated with each strategic choice made during product development to ensure alignment with our Memory Partner positioning and £500K revenue goal.*
+### CORE THESIS DECISION — TWO NAMED FAILURES *(28 April 2026)*
+
+**Decision:** MyRhythm's core thesis is reframed around **two interlocking failures** in current care pathways, both addressed by a single clinically co-owned Bridge Pathway that **begins pre-discharge on the ward**.
+
+**The two failures:**
+1. **The Discharge Cliff** — At discharge, every support structure (nurses, routines, prompts, observation, peer presence) disappears at once. There is no graded step-down. Survivors and families fall silently into missed medications, missed appointments, isolation, re-admission, depression, relationship breakdown, and job loss.
+2. **The Clinical-Ready vs Life-Ready Gap** — A discharge letter confirms *clinical* readiness (vitals stable, scans clear). It does not confirm *life* readiness (managing meds, appointments, energy, intentions, relationships, and work without ward structure). Clinical readiness is a checkbox; life readiness is a capability — and no one currently owns the gap between them.
+
+**MyRhythm's role:** The clinically co-owned operating system that turns the Discharge Cliff into a guided crossing and clinical readiness into life readiness. Clinical team prescribes and monitors the Bridge; patient walks it; support circle holds the rails.
+
+**Bridge Pathway stages (begins pre-discharge):**
+Prepare (in-patient) → Stabilise (Wks 0–2) → Structure (Wks 2–6) → Strengthen (Wks 6–12) → Stretch (Mo 3–6) → Sustain (Mo 6+) → Discharged from app.
+Each stage carries clinician-defined entry criteria, exit criteria, and patient-visible milestones.
+
+**Investor thesis one-liner (use to lead every meeting):**
+*"Discharge confirms clinically ready — not life ready. Survivors fall off the Discharge Cliff into that gap. MyRhythm is the clinically co-owned operating system that bridges both."*
+
+**Strategic impact:**
+- Repositions MyRhythm from a post-discharge consumer app to a **clinically-prescribed continuity-of-care tool**, unlocking NHS / hospital / rehab-centre commissioning revenue.
+- Maps directly to **SBRI Healthcare** funding criteria (NHS England funds discharge/transition tools).
+- Justifies a **£2.0M post-money valuation cap** above pure consumer comparables.
+- Provides a defensible "why now" via post-COVID discharge backlog + NHS Long Term Plan digital priorities.
+
+**Status:** ✅ APPROVED — being propagated across all 9 strategy documents, in-app surfaces, and investor materials in the 4-week rollout (W1: 28 Apr – 4 May 2026).
+
+---
+
+*This decision log will be updated with each strategic choice made during product development to ensure alignment with our Bridge Pathway positioning and £250K Seed round.*
 
 
 ---

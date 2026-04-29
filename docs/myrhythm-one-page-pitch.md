@@ -3,6 +3,21 @@
 
 ---
 
+---
+
+## ⚡ THE TWO FAILURES WE EXIST TO FIX
+*(Core thesis — anchor for every conversation, slide, and feature. Approved 28 April 2026.)*
+
+**1. The Discharge Cliff** — At discharge, every support structure (nurses, routines, prompts, observation, peer presence) disappears at once. There is no graded step-down. Survivors and families fall silently into missed medications, missed appointments, isolation, re-admission, depression, relationship breakdown, and job loss. The NHS knows this gap exists; nothing currently fills it at the patient's daily-life layer.
+
+**2. The Clinical-Ready vs Life-Ready Gap** — A discharge letter confirms a patient is *clinically ready* (vitals stable, scans clear, no acute care needed). It does **not** confirm they are *life ready* (able to manage medications, appointments, energy, intentions, relationships, and work without ward structure). Clinical readiness is a checkbox; life readiness is a capability — and no one currently owns the gap between them.
+
+**MyRhythm is the clinically co-owned operating system that bridges both.** The Bridge Pathway begins **pre-discharge on the ward** and continues through five life-readiness stages — Prepare → Stabilise → Structure → Strengthen → Stretch → Sustain → Discharged from app — each with clinician-defined entry criteria, exit criteria, and patient-visible milestones. Clinical team prescribes and monitors the bridge; patient walks it; support circle holds the rails.
+
+> **Investor one-liner:** *"Discharge confirms clinically ready — not life ready. Survivors fall off the Discharge Cliff into that gap. MyRhythm is the clinically co-owned operating system that bridges both."*
+
+---
+
 ### OUR VISION
 
 > **"A world where no one loses their independence because their memory fails them."**
