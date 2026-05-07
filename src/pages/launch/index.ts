@@ -20,3 +20,4 @@ export { default as LaunchAnalytics } from './LaunchAnalytics';
 export { default as LaunchWhatsNew } from './LaunchWhatsNew';
 export { default as LaunchHelp } from './LaunchHelp';
 export { default as LaunchRoadmap } from './LaunchRoadmap';
+export { default as LaunchClinicalBrief } from './LaunchClinicalBrief';
