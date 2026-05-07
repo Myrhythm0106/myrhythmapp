@@ -1,146 +1,155 @@
-# Plan v4: Discharge Cliff + Clinical-Ready → Life-Ready Bridge + Timeline + Fundraising
+# Plan v5.3 (final) — Quiet Power · Memory-safe · Brain-health-led · Memory Bridge promoted
 
-Adds the **Discharge Cliff** explicitly as a co-equal problem statement alongside the Clinical-Ready vs Life-Ready Gap. Everything from v2 + v3 stands. Anchor date: **28 April 2026**.
-
----
-
-## Part 0 (NEW): Problem Framing — Two Named Failures, One Bridge
-
-The app/operating system addresses **two interlocking failures** in current care pathways. Both must be named in every investor doc, the deck, the pitch script, the website, and the in-app clinician/patient surfaces.
-
-### Problem 1 — The Discharge Cliff
-The moment a patient leaves the ward, the scaffolding (nurses, routines, prompts, observation, peer presence) disappears overnight. There is no graded step-down. Survivors and families fall — into missed medications, missed appointments, isolation, re-admission, depression, relationship breakdown, and job loss. The NHS knows this gap exists; nothing currently fills it at the patient's daily-life layer.
-
-### Problem 2 — The Clinical-Ready vs Life-Ready Gap
-Discharge confirms a patient is *clinically ready* — vitals stable, scans clear, no acute care needed. It does **not** confirm they are *life ready* — able to manage medications, appointments, energy, intentions, relationships, and work without ward structure. Clinical readiness is a checkbox; life readiness is a capability — and no one currently owns it.
-
-### MyRhythm's role
-MyRhythm is the **operating system that turns the Discharge Cliff into a guided crossing, and clinical readiness into life readiness**. The clinical team prescribes and monitors the bridge; the patient walks it; the support circle holds the rails.
-
-### Standard wording block (replaces v2's single-paragraph block in every doc)
-
-> **The Two Failures We Exist To Fix**
->
-> **The Discharge Cliff** — At discharge, every support structure disappears at once. There is no step-down. Survivors fall silently into re-admission, isolation, depression, and lost livelihoods.
->
-> **The Clinical-Ready vs Life-Ready Gap** — A discharge letter confirms clinical readiness. It does not confirm life readiness. The two are not the same, and no one currently owns the gap between them.
->
-> MyRhythm is the clinically co-owned bridge across both. The pathway begins **pre-discharge** on the ward and continues through five life-readiness stages until the survivor is self-directed.
+## Locked principles (carried forward)
+- **Calm surface, generous scaffolding. Hide complexity, never hide possibility.**
+- Home always shows: what you could do now · what you did last · what's coming next · where to get help.
+- All four surfaces are powered by **live goals + live calendar + live Memory Bridge data** — no mock data.
+- Re-entry card defaults to >24h; Settings allow `Every session | 24h | 72h | Off` and a "Show all options always" toggle.
+- Strict no-medical-claims policy; brain-health language is supportive and educational only.
 
 ---
 
-## Part 1 (UPDATED): Strategy & Investor Document Updates
+## Brain Health is the through-line (every tier)
 
-The same 9 docs from v2, plus these now lead with the **two-failure framing**:
+> **Every action carries a Brain Health Lens** — a short, plain-English line on why it matters for cognition, mood, energy or recovery. No claims. No fixes.
 
-| File | Change |
-|------|--------|
-| `VISION.md` | Bridge becomes 6th pillar; problem section reframed as "Two Failures" |
-| `MyRhythm_Investment_Presentation_Deck.md` | Problem slide split into 2 failures; Bridge slide follows as the unified solution |
-| `MyRhythm_Investor_Presentation_Script.md` | Existing Discharge Cliff segment **kept and strengthened**; Bridge segment added immediately after |
-| `MyRhythm_Executive Summary_One_Page.md` | Opening line: "MyRhythm bridges the Discharge Cliff and closes the Clinical-Ready vs Life-Ready Gap." |
-| `MyRhythm_Executive_Strategy_Overview.md` | Phase 1 reframed around the Bridge Pathway |
-| `MyRhythm_Value_Proposition_USP_Document.md` | USP #1: "Only platform clinically co-owned across the Discharge Cliff and the Life-Readiness Gap" |
-| `MyRhythm_Justification_and_Commercials_Document.md` | NHS commissioning angle: SBRI Healthcare explicitly funds discharge/transition tools — direct match |
-| `docs/myrhythm-one-page-pitch.md` | New tagline: *"From Discharge Cliff to Life-Ready — clinically co-owned."* |
-| `MEMORY_PARTNER_DECISION_LOG.md` | Decision dated 28 Apr 2026 logging both failures as core thesis |
+Surfaces:
+- **Brain Health chip** on every Today item, chip suggestion, and Memory Bridge ACT.
+- **Daily Brain Health Insight** card on Home (rotating, citation-backed).
+- **Weekly Brain Health Reflection** in Calibrate (~60 sec, voice or text via Memory Bridge).
+- **Brain Health Footprint** in Celebrate.
+- Footer disclaimer site-wide: *"MyRhythm supports brain health habits. It does not diagnose, treat or cure any condition."*
 
 ---
 
-## Parts 2–5 (unchanged from v2)
+## Memory Bridge — promoted to first-class on /launch/home
 
-- **Bridge Pathway** stages: Prepare (in-patient) → Stabilise → Structure → Strengthen → Stretch → Sustain → Discharged
-- `ClinicalBridgeTracker.tsx` + patient bridge card on `/launch/home`
-- `/launch/clinical/bridge` clinician dashboard, `has_role('clinician')` gated
-- DB migration: `clinician` role, `clinical_bridge_status` table, RLS, entry/exit criteria JSONB
-- Memory files + decision log updated
-- Memory Bridge route subtitle, MedicalProfessional welcome copy refresh, UseCases.md update
+Memory Bridge is the **capture layer** for all four scaffold surfaces and is now permanently visible.
+
+### Placement on Home
+- A persistent **Capture button** (mic icon + "Capture") sits to the **left of the composer**, always visible, all tiers including Free.
+- One tap → opens lightweight Memory Bridge sheet (no full route change) → record up to tier limit → returns to Home with a confirmation chip and a "View ACTs" link.
+- Voice route remains at `/launch/memory-bridge` for full sessions; the inline sheet handles quick captures.
+
+### Why promote
+- Externalising memory in the moment is the single most brain-health-aligned action in the product.
+- Hiding it behind intent routing risks under-use by exactly the users who need it most.
+- Aligns with "Hide complexity, never hide possibility."
+
+### How Memory Bridge powers each scaffold
+| Surface | Memory Bridge role |
+|---|---|
+| Last time you… | Reads `voice_recordings` + `extracted_actions` |
+| Next-best-action chips | Ranks `extracted_actions` (status='not_started') alongside goals + calendar |
+| Brain Health Lens chips | Mapped from `verb_category` + `action_type` via `action_brain_lens` |
+| Weekly Reflection (Plus+) | 30-sec voice note → Memory Bridge with `meeting_type='reflection'` |
+| Voice check-ins (Pro+) | Daily 30-sec spoken reflection |
+| Cognitive Load Meter (Plus+) | Factors unresolved ACTs + calendar density |
+| Re-entry card (>24h) | "Yesterday you recorded a conversation with Mum — 2 actions captured" |
+| Clinical Brief (Bridge tier) | Aggregated ACT completion + reflection cadence, RLS-gated to clinician |
+
+### Tiered Memory Bridge (existing `SUBSCRIPTION_LIMITS`, no change)
+- **Free / Starter:** 3 recordings · 30 min · 7-day retention · Lens chips on every ACT.
+- **Plus / Personal:** unlimited · 3-hour · permanent · watchers · Weekly Reflection.
+- **Pro / Premium (`family`):** all Plus + voice check-ins + Brain Health Trends.
+- **Clinical / Bridge:** all Pro + clinician brief + discharge-cliff escalation when reflection cadence drops.
 
 ---
 
-## Part 6: Timeline — anchored to 28 Apr 2026
+## /launch/home final layout
 
 ```text
-WEEK 1  | 28 Apr – 4 May    Foundation
-  - DB migration, memory + decision log
-  - 9 strategy docs reframed with two-failure block
-  - VISION.md Bridge pillar
-
-WEEK 2  | 5 – 11 May        Patient Surface
-  - ClinicalBridgeTracker, /launch/home Bridge card
-  - Memory Bridge subtitle, UseCases.md, MedicalProfessional copy
-
-WEEK 3  | 12 – 18 May       Clinician Surface
-  - /launch/clinical/bridge dashboard
-  - Entry/Exit criteria checklists, Stage 0 Prepare flow
-  - RLS QA pass
-
-WEEK 4  | 19 – 25 May       Investor Pack Refresh
-  - Deck v5 (.pptx + .pdf) — Discharge Cliff + Gap split slides
-  - Pitch Script v9 (.docx)
-  - 90-Day Sprint Plan v2 (.xlsx)
-  - 3-min Bridge demo recording
-
-MILESTONE | 25 May 2026     Investor-Ready
+┌──────────────────────────────────────────────────────┐
+│ M · Bridge: Stabilise · Help · Account               │
+├──────────────────────────────────────────────────────┤
+│ [Re-entry card — only if >24h]                       │
+│                                                      │
+│ Good morning, Sam.                                   │
+│ Last time you logged a walk with Mum.                │
+│                                                      │
+│ ┌ Today (3) ───────────┐ ┌ Brain Insight ──────────┐ │
+│ │ 09:00 Physio         │ │ Short walks after meals │ │
+│ │ 13:00 Walk           │ │ steady energy.          │ │
+│ │ 16:00 Call Dr Smith  │ │                         │ │
+│ └──────────────────────┘ └─────────────────────────┘ │
+│                                                      │
+│ [🎙 Capture] [ Composer: What do you want to do? ]   │
+│ Chips: Prepare for physio · Log how I slept ·        │
+│        Tell circle I'm tired                         │
+│ Each chip shows tiny lens: "Supports memory"         │
+│                                                      │
+│ [ I'm not sure — show me my options ]                │
+│                                                      │
+│ Cognitive Load today: ●●○ Light                      │
+│ Bridge: ○──●──○──○──○──○                             │
+└──────────────────────────────────────────────────────┘
+Footer: MyRhythm supports brain health habits. It does
+not diagnose, treat or cure any condition.
 ```
 
 ---
 
-## Part 7: £250K Seed Fundraising Playbook
+## Files
 
-### Round structure
-| Item | Detail |
-|------|--------|
-| Ask | £250,000 |
-| Instrument | SAFE or ASA (SEIS/EIS compatible, UK) |
-| Valuation cap | £2.0M post-money |
-| Use of funds | 40% engineering · 25% clinical pilots · 20% founder runway · 10% compliance (DTAC/DCB0129) · 5% legal |
-| Runway | 12 months to Series-Seed milestone |
+**New**
+- `src/pages/launch/LaunchHomeQuiet.tsx`
+- `src/components/launch/quiet/IntentComposer.tsx`
+- `src/components/launch/quiet/CaptureButton.tsx` *(inline Memory Bridge sheet trigger)*
+- `src/components/launch/quiet/InlineCaptureSheet.tsx`
+- `src/components/launch/quiet/LastSessionAnchor.tsx`
+- `src/components/launch/quiet/ReEntryCard.tsx`
+- `src/components/launch/quiet/OptionsSlideOver.tsx`
+- `src/components/launch/quiet/TodayAndNext.tsx`
+- `src/components/launch/quiet/BridgeTrack.tsx`
+- `src/components/launch/quiet/BrainHealthInsight.tsx`
+- `src/components/launch/quiet/BrainHealthLensChip.tsx`
+- `src/components/launch/quiet/CognitiveLoadMeter.tsx`
+- `src/components/launch/quiet/BrainHealthFootprint.tsx`
+- `src/components/launch/quiet/BrainHealthTrends.tsx`
+- `src/components/launch/quiet/StalenessIndicators.tsx`
+- `src/hooks/quiet/useNextBestActions.ts`
+- `src/hooks/quiet/useLastSession.ts`
+- `src/hooks/quiet/useTodayAndNext.ts`
+- `src/hooks/quiet/useBridgeStage.ts`
+- `src/hooks/quiet/useReEntry.ts`
+- `src/hooks/quiet/useBrainHealthInsight.ts`
+- `src/hooks/quiet/useBrainFocusDomains.ts`
+- `src/hooks/quiet/useCognitiveLoad.ts`
+- `src/utils/brainHealthLens.ts`
+- `supabase/functions/launch-intent-router/index.ts`
+- `supabase/functions/daily-brain-insight/index.ts`
+- `docs/design-system/quiet-power.md`
+- `mem://style/quiet-power`
+- `mem://brand/brain-health-through-line`
+- `mem://features/memory-bridge-promoted`
 
-### Investor segments — pursued in parallel
-1. **SEIS/EIS angels** (£10K–£50K cheques) — 8–15 needed. Channels: SyndicateRoom, Envestors, OION, Cambridge Angels, Health Foundry.
-2. **Non-dilutive grants** (stack on equity): Innovate UK Smart Grants, **SBRI Healthcare** (NHS England — funds discharge/transition tools — direct fit), NIHR i4i Connect.
-3. **Lived-experience strategic angels** via Headway, UKABIF, Stroke Association.
-4. **Micro-VCs** (£50K–£150K): Zinc VC, Calm/Storm, Form Ventures, Ascension SEIS/EIS funds.
+**Changed**
+- `src/pages/launch/LaunchDashboard.tsx` (route to Quiet home when `ui_mode='quiet'`)
+- `src/pages/launch/LaunchProfile.tsx` (settings additions)
+- `src/config/pricing.ts` (gate Plus/Pro/Clinical brain-health features)
+- `mem://index.md`
 
-### 6-week fundraise sprint (parallel to build)
-```text
-W1–2 | 28 Apr – 11 May    Materials lock + SEIS Advance Assurance filed
-W3   | 12 – 18 May        50-name list scored, 20 warm intros requested
-W4–5 | 19 May – 1 Jun     25 first meetings → 10 seconds → 4–5 verbal commits
-W6   | 2 – 8 Jun          Lead anchors; rolling close on SAFE
-Target full close: end June 2026
-```
-
-### Investment thesis (one sentence to lead every meeting)
-*"Discharge confirms clinically ready — not life ready. Survivors fall off the Discharge Cliff into that gap. MyRhythm is the clinically co-owned operating system that bridges both."*
-
-This single framing:
-- Maps directly to **SBRI Healthcare** funding criteria (de-risks revenue)
-- Justifies a **£2M cap** above pure consumer comparables
-- Gives every angel a defensible "why now" (post-COVID discharge backlog + NHS Long Term Plan digital priorities)
-
-### Founder cadence
-- Mon AM pipeline review · Tue–Thu meetings (5/wk) · Fri PM follow-ups + decision log · Weekly LinkedIn progress note (builds inbound)
-
-### Risks & mitigations
-| Risk | Mitigation |
-|------|------------|
-| SEIS Advance Assurance delay (4–8 wks) | File Week 1; angels commit subject-to |
-| No lead investor | SeedLegals rolling-close SAFE — no lead required |
-| Clinical pilot not signed in time | 2 LOIs from rehab centres are sufficient at this stage |
-| Founder bandwidth | Weeks 1–6 fundraise is full-time; Bridge build continues via existing dev velocity |
+**DB migration**
+- Extend `profiles` / `user_preferences`: `ui_mode text default 'quiet'`, `re_entry_threshold_hours int default 24`, `show_all_options boolean default false`, `brain_focus_domains text[]`, `cognitive_load_pref text default 'standard'`, `insight_opt_in boolean default true`, `circle_brief_opt_in boolean default false`.
+- New tables: `brain_health_insights`, `action_brain_lens` (RLS: insights public-read; lens public-read).
 
 ---
 
-## Cumulative Deliverables (v1+v2+v3+v4)
+## Acceptance criteria
+- Capture button visible on Home for every authenticated user, every tier.
+- Every action and chip shows a Brain Health Lens label.
+- Daily insight visible on Home for every signed-in user; tier-appropriate.
+- Every insight has a citation URL or is hidden.
+- No insight uses *cure*, *treat*, *fix*, *heal*, *guarantee*, *clinical outcome*.
+- All four scaffolds populated from live data; no mock fallbacks.
+- Re-entry card respects user threshold; defaults to 24h.
 
-1. 9 strategy docs reframed with **Discharge Cliff + Life-Readiness Gap** two-failure block
-2. `ClinicalBridgeTracker` + patient `/launch/home` card + clinician dashboard
-3. DB migration: `clinician` role + `clinical_bridge_status` + RLS
-4. 2 memory files (`mem://brand/clinical-life-ready-gap` covers both failures + Bridge; updated `mem://index.md` Core)
-5. Decision log entry dated **28 Apr 2026**
-6. `MyRhythm_Seed_Round_Onepager.pdf` + `MyRhythm_Investor_Pipeline.xlsx` (Week 1)
-7. Deck v5, Pitch Script v9, 90-Day Sprint Plan v2 (Week 4)
+---
 
-Reply **Approved** to switch to build mode and execute Week 1 immediately.
+## Build order (4 weeks)
+- **Week 1:** DB migration + design tokens + Settings + seed first 30 brain-health insights.
+- **Week 2:** Quiet shell + 4 scaffold hooks + Capture button + InlineCaptureSheet + Lens chips wired to Memory Bridge data.
+- **Week 3:** OptionsSlideOver + ReEntry + BridgeTrack + Cognitive Load Meter + Weekly Reflection in Calibrate + voice parity.
+- **Week 4:** Pro Trends + Clinical brief preview + investor deck refresh with live screenshots.
+
+Approve and I'll execute Week 1 immediately.
