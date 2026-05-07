@@ -368,6 +368,7 @@ function App() {
                        <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
                        <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
                        <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
+                       <Route path="/launch/clinical-brief" element={<LaunchModeProvider><LaunchClinicalBrief /></LaunchModeProvider>} />
                        
                        {/* Founder-only financial dashboard — admin role required */}
                        <Route path="/founder/financials" element={<AdminRoute><FounderFinancialsPage /></AdminRoute>} />
