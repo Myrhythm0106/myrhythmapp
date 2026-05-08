@@ -42,33 +42,33 @@ export function VictoryCelebration({
       case 'daily_win':
         return {
           icon: Star,
-          title: "Daily Victory Complete! 🌟",
-          subtitle: message || "Every small win builds your strength!",
-          gradient: "from-yellow-400 via-orange-500 to-red-500",
-          bgGradient: "from-yellow-50 to-orange-50"
+          title: "Daily Victory",
+          subtitle: message || "Every disciplined step compounds.",
+          gradient: "from-amber-500 via-orange-500 to-rose-500",
+          bgGradient: "from-amber-50 to-orange-50"
         };
       case 'streak_milestone':
         return {
           icon: Trophy,
-          title: `🔥 ${milestone} Day Victory Streak!`,
-          subtitle: message || "Your consistency is incredible!",
-          gradient: "from-orange-400 via-red-500 to-pink-500",
-          bgGradient: "from-orange-50 to-red-50"
+          title: `${milestone}-Day Streak`,
+          subtitle: message || "Consistency, confirmed.",
+          gradient: "from-orange-500 via-rose-500 to-pink-500",
+          bgGradient: "from-orange-50 to-rose-50"
         };
       case 'goal_progress':
         return {
           icon: Heart,
-          title: "Goal Progress Milestone! 💪",
-          subtitle: message || "You're making amazing progress!",
-          gradient: "from-green-400 via-blue-500 to-purple-500",
-          bgGradient: "from-green-50 to-blue-50"
+          title: "Milestone Reached",
+          subtitle: message || "Measured progress on your goal.",
+          gradient: "from-emerald-500 via-teal-500 to-blue-500",
+          bgGradient: "from-emerald-50 to-teal-50"
         };
       default:
         return {
           icon: Sparkles,
-          title: "Celebration! ✨",
-          subtitle: message || "Keep up the great work!",
-          gradient: "from-blue-400 to-purple-500",
+          title: "Milestone",
+          subtitle: message || "Forward.",
+          gradient: "from-blue-500 to-purple-500",
           bgGradient: "from-blue-50 to-purple-50"
         };
     }
@@ -109,7 +109,7 @@ export function VictoryCelebration({
                 config.gradient
               )}
             >
-              Amazing! ✨
+              Continue
             </Button>
           </div>
           

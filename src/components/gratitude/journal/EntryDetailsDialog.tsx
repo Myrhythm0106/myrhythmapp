@@ -334,7 +334,7 @@ export function EntryDetailsDialog({
               <span className="text-sm text-muted-foreground">{formattedDate}</span>
               <div className="grow"></div>
               <div className="text-xl" title={`Mood: ${selectedEntry.moodScore}/5`}>
-                {['😔', '😐', '🙂', '😊', '😄'][selectedEntry.moodScore - 1]}
+                {['●', '●', '●', '●', '●'][selectedEntry.moodScore - 1]}
               </div>
             </div>
             

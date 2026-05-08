@@ -139,9 +139,9 @@ export function EnhancedGratitudePrompt({ promptType, activity, onSave, onClose 
     
     // Enhanced success message based on quality
     if (isPremiumQuality) {
-      toast.success("🧠✨ Premium gratitude recorded! Your deep reflection is supercharging your neural pathways!");
+      toast.success("Premium gratitude recorded.", { description: "Deep reflection strengthens neural pathways." });
     } else {
-      toast.success("Gratitude recorded! Your brain loves this reflection! 🧠✨");
+      toast.success("Gratitude recorded.", { description: "Reflection strengthens neural pathways." });
     }
     
     if (onClose) {
@@ -228,7 +228,7 @@ export function EnhancedGratitudePrompt({ promptType, activity, onSave, onClose 
         {/* WHAT section */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <label className="font-medium text-brain-health-700">What are you grateful for? 💖</label>
+            <label className="font-medium text-brain-health-700">What are you grateful for?</label>
             {gratitudeText.trim() && <CheckCircle className="h-4 w-4 text-memory-emerald-500" />}
           </div>
           <Textarea
@@ -245,7 +245,7 @@ export function EnhancedGratitudePrompt({ promptType, activity, onSave, onClose 
               className="w-full mt-2 bg-brain-health-50 border-brain-health-300 text-brain-health-700 hover:bg-brain-health-100"
             >
               <ArrowDown className="h-4 w-4 mr-2" />
-              Continue to "WHY" section below ⬇️ (This is where the magic happens!)
+              Continue to the "Why" section below — where the depth happens.
             </Button>
           )}
         </div>
@@ -258,7 +258,7 @@ export function EnhancedGratitudePrompt({ promptType, activity, onSave, onClose 
             </div>
             <div className="flex-1">
               <p className="font-bold text-lg text-brain-health-800">
-                🧠 Brain Health Boost: Why does this matter to you?
+                Brain Health Boost: Why does this matter to you?
               </p>
               <p className="text-sm text-brain-health-600">
                 This deeper reflection creates stronger neural pathways and lasting positive change
@@ -309,8 +309,8 @@ export function EnhancedGratitudePrompt({ promptType, activity, onSave, onClose 
             <div className="mt-2 flex items-center gap-2 text-sm">
               <CheckCircle className="h-4 w-4 text-memory-emerald-500" />
               <span className="text-memory-emerald-600 font-medium">
-                Excellent depth! Your brain is getting a premium workout! 
-                {whyWordCount >= 20 && " 🏆"}
+                Excellent depth — your reflection is doing the work.
+                {whyWordCount >= 20 && " Premium quality."}
               </span>
             </div>
           )}

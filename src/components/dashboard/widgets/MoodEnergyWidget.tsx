@@ -1,79 +1,63 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Battery, ArrowRight, TrendingUp, Sparkles } from "lucide-react";
+import { Heart, Battery, ArrowRight, TrendingUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { GrowthMindsetMessage } from "@/components/shared/GrowthMindsetMessage";
+import { MoodStateSelector, MoodValue } from "@/components/sophisticated/MoodStateSelector";
+
+const COMPACT_MOODS = [
+  { value: 'good' as const,    label: 'Strong',  icon: TrendingUp,  ring: 'ring-brand-teal-400',     fill: 'text-brand-teal-600 bg-brand-teal-50' },
+  { value: 'neutral' as const, label: 'Steady',  icon: Battery,     ring: 'ring-slate-400',          fill: 'text-slate-600 bg-slate-50' },
+  { value: 'challenging' as const, label: 'Low', icon: Heart,       ring: 'ring-brand-orange-400',   fill: 'text-brand-orange-600 bg-brand-orange-50' },
+];
 
 export function MoodEnergyWidget() {
   const navigate = useNavigate();
-  const [currentMood, setCurrentMood] = useState<string | null>(null);
-  
-  // Mock data for energy level
+  const [currentMood, setCurrentMood] = useState<MoodValue | null>(null);
   const energyLevel = 75;
-  
-  const moodOptions = [
-    { emoji: "😊", label: "Great", value: "great" },
-    { emoji: "😐", label: "Okay", value: "okay" },
-    { emoji: "😔", label: "Low", value: "low" }
-  ];
 
   return (
     <Card className="h-full">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <Heart className="h-5 w-5 text-red-500" />
-          Mood & Energy
-          <Sparkles className="h-4 w-4 text-yellow-500" />
+          <Heart className="h-5 w-5 text-neural-magenta-500" strokeWidth={1.75} />
+          Mood &amp; Energy
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <GrowthMindsetMessage type="progress" />
-        
+
         <div className="space-y-3">
           <div>
-            <p className="text-sm font-medium mb-2">Your emotional awareness is growing! 🌱</p>
-            <div className="flex gap-2">
-              {moodOptions.map((mood) => (
-                <Button
-                  key={mood.value}
-                  variant={currentMood === mood.value ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentMood(mood.value)}
-                  className="flex-1 h-12 flex-col gap-1"
-                >
-                  <span className="text-lg">{mood.emoji}</span>
-                  <span className="text-xs">{mood.label}</span>
-                </Button>
-              ))}
-            </div>
+            <p className="text-sm font-medium mb-2 text-foreground">How are you arriving today?</p>
+            <MoodStateSelector value={currentMood} onChange={setCurrentMood} options={COMPACT_MOODS} />
           </div>
 
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Battery className="h-4 w-4 text-green-500" />
-              <span className="text-sm font-medium">Energy Building</span>
-              <span className="text-sm text-muted-foreground">{energyLevel}%</span>
+              <Battery className="h-4 w-4 text-memory-emerald-500" strokeWidth={1.75} />
+              <span className="text-sm font-medium">Energy</span>
+              <span className="text-sm text-muted-foreground ml-auto">{energyLevel}%</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
-                className="bg-green-500 h-2 rounded-full transition-all duration-300"
+            <div className="w-full bg-muted rounded-full h-1.5">
+              <div
+                className="bg-memory-emerald-500 h-1.5 rounded-full transition-all duration-300"
                 style={{ width: `${energyLevel}%` }}
               />
             </div>
           </div>
         </div>
 
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           size="sm"
           onClick={() => navigate("/mood")}
           className="w-full justify-between"
         >
           <span className="flex items-center gap-1">
             <TrendingUp className="h-4 w-4" />
-            Explore Your Growth
+            Explore your trend
           </span>
           <ArrowRight className="h-4 w-4" />
         </Button>

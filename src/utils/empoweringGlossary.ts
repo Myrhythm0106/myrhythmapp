@@ -10,11 +10,11 @@ export interface TermDefinition {
 export const empoweringGlossary: Record<string, TermDefinition> = {
   // Status Terms
   "Victory Achieved": {
-    empowering: "Victory Achieved! 🎉",
+    empowering: "Victory Achieved!",
     plain: "Task completed successfully"
   },
   "Building Momentum": {
-    empowering: "Building Momentum 🚀",
+    empowering: "Building Momentum",
     plain: "Task is currently in progress"
   },
   "Ready to Conquer": {
@@ -90,7 +90,7 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
   
   // Progress Terms
   "Momentum Streak": {
-    empowering: "Momentum Streak 🔥",
+    empowering: "Momentum Streak",
     plain: "Consecutive days of completed tasks"
   },
   "Completion Rate": {
@@ -104,7 +104,7 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
   
   // Encouragement Terms
   "You're Unstoppable": {
-    empowering: "You're Unstoppable! 💪",
+    empowering: "You're Unstoppable!",
     plain: "Great job - you're making excellent progress"
   },
   "Keep Building": {
@@ -118,7 +118,7 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
   
   // Empty States
   "Power Hub Awaits": {
-    empowering: "Your Power Hub Awaits! 🌟",
+    empowering: "Your Power Hub Awaits!",
     plain: "No tasks yet - add your first one"
   },
   "Fresh Start": {
@@ -148,41 +148,41 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
   
   // Journey Terms
   "Launch Your Journey": {
-    empowering: "Launch Your Journey 🚀",
+    empowering: "Launch Your Journey",
     plain: "Getting started with the app"
   },
   "Discover Your Identity": {
-    empowering: "Discover Your Identity 👤",
+    empowering: "Discover Your Identity",
     plain: "Setting up your user profile"
   },
   "Choose Your Path": {
-    empowering: "Choose Your Path 🛤️",
+    empowering: "Choose Your Path",
     plain: "Selecting guided or explorer mode"
   },
   "Build Your Rhythm Profile": {
-    empowering: "Build Your Rhythm Profile 🧠",
+    empowering: "Build Your Rhythm Profile",
     plain: "Completing the cognitive assessment"
   },
   "Build Your Foundation": {
-    empowering: "Build Your Foundation 💪",
+    empowering: "Build Your Foundation",
     plain: "Setting up your support network"
   },
   "Activate Your Voice": {
-    empowering: "Activate Your Voice 🎤",
+    empowering: "Activate Your Voice",
     plain: "Making your first voice recording"
   },
   "Claim Your First Victory": {
-    empowering: "Claim Your First Victory 🏆",
+    empowering: "Claim Your First Victory",
     plain: "Completing your first scheduled action"
   },
   
   // Recovery Journey Terms
   "My Path Forward": {
-    empowering: "My Path Forward 🛤️",
+    empowering: "My Path Forward",
     plain: "Your recovery plan created with your support team"
   },
   "My Journey So Far": {
-    empowering: "My Journey So Far ✨",
+    empowering: "My Journey So Far",
     plain: "Your recovery progress and achievements"
   },
   "Next Steps": {
@@ -190,7 +190,7 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
     plain: "Upcoming actions from your recovery plan"
   },
   "Milestones Reached": {
-    empowering: "Milestones Reached 🏆",
+    empowering: "Milestones Reached",
     plain: "Goals you've achieved in your recovery"
   },
   "Team Actions": {
@@ -198,7 +198,7 @@ export const empoweringGlossary: Record<string, TermDefinition> = {
     plain: "Tasks created together with your support team or rehab staff"
   },
   "Gentle Reminder": {
-    empowering: "Gentle Reminder 💙",
+    empowering: "Gentle Reminder",
     plain: "A kind nudge to help you stay on track"
   },
   "Check-In": {

@@ -129,7 +129,7 @@ export const brainBoostData: BrainBoostItem[] = [
   { id: 'learn-34', content: "New word: Eustress - positive, beneficial stress.", category: 'learn', benefit: "Not all stress is bad - some stress motivates and enhances performance." },
   { id: 'learn-35', content: "The 'elaboration' technique: Connect new info to what you already know.", category: 'learn', benefit: "Building on existing knowledge creates stronger memory networks." },
 
-  // 😄 BRAIN HUMOR (30+ items)
+  // ● BRAIN HUMOR (30+ items)
   { id: 'humor-1', content: "Why did the neuron break up with the other neuron? There was too much potential but no spark.", category: 'humor', benefit: "Laughing releases endorphins and reduces cortisol, boosting brain health!" },
   { id: 'humor-2', content: "I told my brain to stop overthinking. It said, 'Let me think about that.'", category: 'humor', benefit: "Humor about our tendencies helps us accept and work with them." },
   { id: 'humor-3', content: "What did one hippocampus say to the other? 'I have no memory of this conversation.'", category: 'humor', benefit: "Laughter strengthens social bonds and reduces stress hormones." },
@@ -278,7 +278,7 @@ export function getCategoryEmoji(category: BrainBoostItem['category']): string {
     fact: '🧠',
     tip: '💡',
     learn: '📚',
-    humor: '😄',
+    humor: '●',
     challenge: '🎯',
     motivational: '🌟',
     trivia: '❓'

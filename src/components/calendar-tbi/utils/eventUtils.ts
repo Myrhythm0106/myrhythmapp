@@ -19,7 +19,7 @@ export const getEventTypeIcon = (type: EventType): string => {
     appointment: '👩‍⚕️',
     therapy: '🧠',
     medication: '💊',
-    rest: '😴',
+    rest: '●',
     personal: '👤',
     emergency: '🚨'
   };

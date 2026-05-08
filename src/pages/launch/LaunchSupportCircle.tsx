@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Users, MessageCircle, Target, UserPlus, 
   Send, Heart, Check, Clock, ChevronRight,
-  Stethoscope, User, Home
+  Stethoscope, User, Home, HeartHandshake, Briefcase
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -16,16 +16,16 @@ export default function LaunchSupportCircle() {
   const [activeTab, setActiveTab] = useState('team');
   const [newMessage, setNewMessage] = useState('');
 
-  // Mock data
+  // Mock data — initials used in lieu of avatars (no childish icons)
   const members = [
-    { id: '1', name: 'Sarah Johnson', role: 'family', relationship: 'Sister', lastActive: 'Online', avatar: '👩' },
-    { id: '2', name: 'Dr. Michael Chen', role: 'therapist', relationship: 'Therapist', lastActive: '2h ago', avatar: '👨‍⚕️' },
-    { id: '3', name: 'Emily Davis', role: 'rehab-staff', relationship: 'Rehab Coordinator', lastActive: '1d ago', avatar: '🏥' },
-    { id: '4', name: 'Tom Wilson', role: 'friend', relationship: 'Best Friend', lastActive: 'Online', avatar: '👨' },
+    { id: '1', name: 'Sarah Johnson', role: 'family', relationship: 'Sister', lastActive: 'Online', initials: 'SJ' },
+    { id: '2', name: 'Dr. Michael Chen', role: 'therapist', relationship: 'Therapist', lastActive: '2h ago', initials: 'MC' },
+    { id: '3', name: 'Emily Davis', role: 'rehab-staff', relationship: 'Rehab Coordinator', lastActive: '1d ago', initials: 'ED' },
+    { id: '4', name: 'Tom Wilson', role: 'friend', relationship: 'Best Friend', lastActive: 'Online', initials: 'TW' },
   ];
 
   const messages = [
-    { id: '1', from: 'Sarah Johnson', text: 'So proud of your progress this week! 💪', time: '10:30 AM', isRead: false },
+    { id: '1', from: 'Sarah Johnson', text: 'So proud of your progress this week.', time: '10:30 AM', isRead: false },
     { id: '2', from: 'Dr. Chen', text: 'Great work on completing your exercises!', time: 'Yesterday', isRead: true },
     { id: '3', from: 'Emily Davis', text: 'Your next session is confirmed for Friday', time: '2 days ago', isRead: true },
   ];
@@ -65,8 +65,8 @@ export default function LaunchSupportCircle() {
   return (
     <LaunchLayout>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Support Circle</h1>
-        <p className="text-gray-600">Your team is here for you 💙</p>
+        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Support Circle</h1>
+        <p className="text-gray-600">Your team is here for you.</p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-24">
@@ -97,8 +97,8 @@ export default function LaunchSupportCircle() {
           {members.map((member) => (
             <LaunchCard key={member.id} variant="glass" className="p-4">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-emerald-100 to-brand-teal-100 flex items-center justify-center text-2xl">
-                  {member.avatar}
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-emerald-100 to-brand-teal-100 flex items-center justify-center text-sm font-semibold tracking-wide text-brand-emerald-800">
+                  {member.initials}
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
@@ -211,8 +211,8 @@ export default function LaunchSupportCircle() {
             ))}
           </div>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
-            "You're not walking this path alone." 💙
+          <p className="text-center text-sm italic text-gray-500 mt-6">
+            "You're not walking this path alone."
           </p>
         </TabsContent>
 
@@ -244,18 +244,18 @@ export default function LaunchSupportCircle() {
                 <label className="text-sm font-medium text-gray-700 mb-2 block">Role</label>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { value: 'family', label: 'Family', icon: '👨‍👩‍👧' },
-                    { value: 'friend', label: 'Friend', icon: '👥' },
-                    { value: 'caregiver', label: 'Caregiver', icon: '🤝' },
-                    { value: 'rehab-staff', label: 'Rehab Staff', icon: '🏥' },
-                    { value: 'therapist', label: 'Therapist', icon: '👨‍⚕️' },
-                    { value: 'colleague', label: 'Colleague', icon: '💼' },
+                    { value: 'family', label: 'Family', Icon: Home },
+                    { value: 'friend', label: 'Friend', Icon: User },
+                    { value: 'caregiver', label: 'Caregiver', Icon: HeartHandshake },
+                    { value: 'rehab-staff', label: 'Rehab Staff', Icon: Stethoscope },
+                    { value: 'therapist', label: 'Therapist', Icon: Stethoscope },
+                    { value: 'colleague', label: 'Colleague', Icon: Briefcase },
                   ].map((role) => (
                     <button
                       key={role.value}
-                      className="p-3 border-2 border-gray-200 rounded-xl text-left hover:border-brand-emerald-300 transition-colors"
+                      className="p-3 border-2 border-gray-200 rounded-xl text-left hover:border-brand-emerald-300 transition-colors flex items-center gap-2"
                     >
-                      <span className="text-xl mr-2">{role.icon}</span>
+                      <role.Icon className="h-4 w-4 text-brand-emerald-600" strokeWidth={1.75} />
                       <span className="text-sm font-medium">{role.label}</span>
                     </button>
                   ))}

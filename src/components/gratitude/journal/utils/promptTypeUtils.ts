@@ -1,3 +1,4 @@
+import { Dumbbell, Brain, Users, Lightbulb, Pencil, LucideIcon } from "lucide-react";
 
 export const getPromptTypeColor = (type: string) => {
   switch (type) {
@@ -9,12 +10,12 @@ export const getPromptTypeColor = (type: string) => {
   }
 };
 
-export const getPromptTypeIcon = (type: string) => {
+export const getPromptTypeIcon = (type: string): LucideIcon => {
   switch (type) {
-    case "fitness": return "💪";
-    case "mindfulness": return "🧘";
-    case "social": return "👥";
-    case "general": return "✨";
-    default: return "📝";
+    case "fitness": return Dumbbell;
+    case "mindfulness": return Brain;
+    case "social": return Users;
+    case "general": return Lightbulb;
+    default: return Pencil;
   }
 };

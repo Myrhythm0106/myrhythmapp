@@ -53,11 +53,11 @@ export function MoodSnapshotCard() {
   // Get emoji based on mood
   const getMoodEmoji = (mood: MoodType | null) => {
     switch (mood) {
-      case "great": return "😄";
-      case "good": return "🙂";
-      case "okay": return "😐";
+      case "great": return "●";
+      case "good": return "●";
+      case "okay": return "●";
       case "not-great": return "😕";
-      case "struggling": return "😔";
+      case "struggling": return "●";
       default: return "❓";
     }
   };

@@ -33,7 +33,7 @@ export async function convertActionToCalendarEvent(
         eventDate = eventDate || suggestions[0].date;
         eventTime = eventTime || suggestions[0].time;
         
-        toast.success("SMART scheduling applied! 🧠", {
+        toast.success("SMART scheduling applied", {
           description: suggestions[0].reason
         });
       }
@@ -47,32 +47,32 @@ export async function convertActionToCalendarEvent(
     const durationEstimate = estimateActionDuration(action);
     
     // Create empowering description with Support Circle integration
-    let description = `🎯 SMART Action: ${action.action_text}`;
+    let description = `SMART Action: ${action.action_text}`;
     
     if (action.relationship_impact) {
-      description += `\n\n💜 Relationship Impact: ${action.relationship_impact}`;
+      description += `\n\nRelationship Impact: ${action.relationship_impact}`;
     }
     
     if (action.emotional_stakes) {
-      description += `\n\n❤️ Why This Matters: ${action.emotional_stakes}`;
+      description += `\n\nWhy This Matters: ${action.emotional_stakes}`;
     }
     
     if (action.intent_behind) {
-      description += `\n\n🚀 Intent & Growth: ${action.intent_behind}`;
+      description += `\n\nIntent & Growth: ${action.intent_behind}`;
     }
     
     if (watcherNames && watcherNames.length > 0) {
-      description += `\n\n💜 Support Circle: ${watcherNames.join(', ')}\nYour circle celebrates every step forward with you! No one walks alone.`;
+      description += `\n\nSupport Circle: ${watcherNames.join(', ')}\nYour circle moves forward with you. No one walks alone.`;
     }
     
-    description += '\n\n✨ Remember: Progress over perfection. You are capable, worthy, and supported on this journey.';
+    description += '\n\nProgress over perfection. You are capable, worthy, and supported on this journey.';
 
     // Create calendar event
     const { data, error } = await supabase
       .from('calendar_events')
       .insert({
         user_id: userId,
-        title: `🌟 Life Priority: ${action.action_text}`,
+        title: `Life Priority: ${action.action_text}`,
         description,
         date: finalDate,
         time: finalTime,
@@ -111,7 +111,7 @@ export async function convertActionToCalendarEvent(
           );
           
           if (!externalError && externalEvent?.success) {
-            toast.success("✅ Added to your Google Calendar!", {
+            toast.success("Added to your Google Calendar", {
               description: "View in calendar",
               action: {
                 label: "Open",
@@ -149,7 +149,7 @@ async function createDailyActionFromExtracted(
       .from('daily_actions')
       .insert({
         user_id: userId,
-        title: `🎯 ${action.action_text}`,
+        title: action.action_text,
         description: `Life-empowering action from Memory Bridge: ${action.relationship_impact || action.emotional_stakes || 'Building stronger connections through intentional action'}`,
         date,
         start_time: time,
@@ -165,7 +165,7 @@ async function createDailyActionFromExtracted(
     
     // Send empowering notification for high-priority actions
     if (action.priority_level >= 4) {
-      toast.success("High-impact action locked in! 💪", {
+      toast.success("High-impact action locked in.", {
         description: "This priority aligns with your growth journey"
       });
     }
