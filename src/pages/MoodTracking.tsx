@@ -1,39 +1,37 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Heart, TrendingUp, Calendar, MessageCircle } from "lucide-react";
+import { Heart, TrendingUp, Calendar, Zap, Minus, TrendingDown } from "lucide-react";
+import { MoodStateSelector, MoodValue } from "@/components/sophisticated/MoodStateSelector";
+import { EnergyLevelSelector, EnergyValue } from "@/components/sophisticated/EnergyLevelSelector";
 
 const MoodTracking = () => {
-  const [selectedMood, setSelectedMood] = useState<string>("");
-  const [energyLevel, setEnergyLevel] = useState<number>(5);
+  const [selectedMood, setSelectedMood] = useState<MoodValue | null>(null);
+  const [energyLevel, setEnergyLevel] = useState<EnergyValue>(3);
   const [notes, setNotes] = useState<string>("");
-
-  const moods = [
-    { emoji: "😊", label: "Great", value: "great" },
-    { emoji: "🙂", label: "Good", value: "good" },
-    { emoji: "😐", label: "Okay", value: "okay" },
-    { emoji: "😔", label: "Low", value: "low" },
-    { emoji: "😰", label: "Difficult", value: "difficult" }
-  ];
 
   const handleSave = () => {
     console.log("Saving mood entry:", { selectedMood, energyLevel, notes });
-    // Reset form
-    setSelectedMood("");
-    setEnergyLevel(5);
+    setSelectedMood(null);
+    setEnergyLevel(3);
     setNotes("");
   };
 
+  const recent = [
+    { label: "Yesterday", icon: Zap, tone: "text-memory-emerald-600 bg-memory-emerald-50", energy: 8 },
+    { label: "2 days ago", icon: TrendingUp, tone: "text-brand-teal-600 bg-brand-teal-50", energy: 7 },
+    { label: "3 days ago", icon: Minus, tone: "text-slate-600 bg-slate-50", energy: 5 },
+  ];
+
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-red-600 bg-clip-text text-transparent">
-          Mood & Energy Tracking
+      <div className="text-center space-y-3">
+        <h1 className="text-4xl font-semibold tracking-tight text-foreground">
+          Mood &amp; Energy
         </h1>
         <p className="text-lg text-muted-foreground">
-          Track your emotional well-being and energy levels
+          A clear signal of how you're showing up today.
         </p>
       </div>
 
@@ -41,56 +39,32 @@ const MoodTracking = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Heart className="h-5 w-5 mr-2" />
-              How are you feeling today?
+              <Heart className="h-5 w-5 mr-2 text-neural-magenta-500" strokeWidth={1.75} />
+              How are you arriving today?
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
               <label className="block text-sm font-medium mb-3">Mood</label>
-              <div className="grid grid-cols-5 gap-2">
-                {moods.map((mood) => (
-                  <button
-                    key={mood.value}
-                    onClick={() => setSelectedMood(mood.value)}
-                    className={`p-4 rounded-lg border text-center transition-colors ${
-                      selectedMood === mood.value
-                        ? "border-primary bg-primary/10"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <div className="text-2xl mb-1">{mood.emoji}</div>
-                    <div className="text-xs">{mood.label}</div>
-                  </button>
-                ))}
-              </div>
+              <MoodStateSelector value={selectedMood} onChange={setSelectedMood} />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-3">
-                Energy Level: {energyLevel}/10
-              </label>
-              <input
-                type="range"
-                min="1"
-                max="10"
-                value={energyLevel}
-                onChange={(e) => setEnergyLevel(parseInt(e.target.value))}
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-              />
+              <label className="block text-sm font-medium mb-3">Energy</label>
+              <EnergyLevelSelector value={energyLevel} onChange={setEnergyLevel} />
             </div>
 
             <div>
               <label className="block text-sm font-medium mb-3">Notes (optional)</label>
               <Textarea
-                placeholder="How are you feeling? What's on your mind?"
+                placeholder="Add context for today's signal..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={4}
               />
             </div>
 
-            <Button onClick={handleSave} className="w-full">
+            <Button onClick={handleSave} className="w-full" disabled={!selectedMood}>
               Save Entry
             </Button>
           </CardContent>
@@ -100,34 +74,25 @@ const MoodTracking = () => {
           <CardHeader>
             <CardTitle className="flex items-center">
               <TrendingUp className="h-5 w-5 mr-2" />
-              Recent Trends
+              Recent Trend
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">😊</span>
-                  <span className="text-sm">Yesterday</span>
-                </div>
-                <div className="text-sm text-muted-foreground">Energy: 8/10</div>
-              </div>
-              
-              <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">🙂</span>
-                  <span className="text-sm">2 days ago</span>
-                </div>
-                <div className="text-sm text-muted-foreground">Energy: 7/10</div>
-              </div>
-
-              <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-                <div className="flex items-center space-x-2">
-                  <span className="text-lg">😐</span>
-                  <span className="text-sm">3 days ago</span>
-                </div>
-                <div className="text-sm text-muted-foreground">Energy: 5/10</div>
-              </div>
+            <div className="space-y-3">
+              {recent.map((r) => {
+                const Icon = r.icon;
+                return (
+                  <div key={r.label} className="flex justify-between items-center p-3 rounded-lg border border-border">
+                    <div className="flex items-center gap-3">
+                      <span className={`flex h-8 w-8 items-center justify-center rounded-lg ${r.tone}`}>
+                        <Icon className="h-4 w-4" strokeWidth={1.75} />
+                      </span>
+                      <span className="text-sm font-medium">{r.label}</span>
+                    </div>
+                    <div className="text-sm text-muted-foreground">Energy {r.energy}/10</div>
+                  </div>
+                );
+              })}
             </div>
 
             <Button variant="outline" className="w-full mt-4">
