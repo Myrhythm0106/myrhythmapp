@@ -16,6 +16,8 @@ export interface UserVision {
   pillarId: string;
   title: string;
   why?: string;
+  /** @deprecated retained for backward compatibility; UI no longer renders */
+  emoji?: string;
   imageUrl?: string;
   progress: number;
   linkedGoalId?: string;
@@ -137,4 +139,9 @@ export const defaultVisions: Record<string, UserVision> = {
     progress: 0,
     createdAt: new Date().toISOString()
   }
+};
+
+// Deprecated — kept for backward compatibility. No longer surfaced in UI.
+export const pillarEmojis: Record<string, string[]> = {
+  'mind-growth': [], 'health-body': [], 'relationships': [], 'financial': [], 'purpose-joy': []
 };

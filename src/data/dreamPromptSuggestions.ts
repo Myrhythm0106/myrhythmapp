@@ -138,3 +138,8 @@ export const templateDreams = [
     category: "wellbeing",
   },
 ];
+
+// Deprecated — kept for backward compatibility. No longer surfaced in UI.
+export const dreamEmojis: Record<string, string[]> = {
+  health: [], relationships: [], career: [], finance: [], growth: [], creativity: [], wellbeing: [], personal: []
+};
