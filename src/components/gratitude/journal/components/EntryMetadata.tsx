@@ -10,10 +10,11 @@ interface EntryMetadataProps {
 }
 
 export function EntryMetadata({ promptType, date }: EntryMetadataProps) {
+  const Icon = getPromptTypeIcon(promptType);
   return (
     <div className="flex items-start justify-between mb-3">
       <div className="flex items-center gap-2">
-        <span className="text-lg">{getPromptTypeIcon(promptType)}</span>
+        <Icon className="h-4 w-4 text-muted-foreground" strokeWidth={1.75} />
         <Badge 
           variant="secondary" 
           className={getPromptTypeColor(promptType)}
