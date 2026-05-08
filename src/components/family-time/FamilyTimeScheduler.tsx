@@ -47,7 +47,7 @@ export function FamilyTimeScheduler() {
         action: (
           <div className="flex gap-1">
             <Button size="sm" variant="outline" onClick={() => recordFamilyTime(activity.id, "great")}>
-              😊 Amazing
+              ● Amazing
             </Button>
             <Button size="sm" variant="outline" onClick={() => recordFamilyTime(activity.id, "good")}>
               👍 Good

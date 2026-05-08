@@ -21,20 +21,20 @@ interface EmotionalWellnessCaptureProps {
 
 const emotionOptions: EmotionOption[] = [
   // Positive emotions
-  { id: 'joyful', emoji: '😊', label: 'Joyful', category: 'positive', color: 'bg-yellow-100 border-yellow-300' },
-  { id: 'proud', emoji: '😌', label: 'Proud', category: 'positive', color: 'bg-green-100 border-green-300' },
+  { id: 'joyful', emoji: '●', label: 'Joyful', category: 'positive', color: 'bg-yellow-100 border-yellow-300' },
+  { id: 'proud', emoji: '●', label: 'Proud', category: 'positive', color: 'bg-green-100 border-green-300' },
   { id: 'grateful', emoji: '🙏', label: 'Grateful', category: 'positive', color: 'bg-blue-100 border-blue-300' },
   { id: 'excited', emoji: '🤗', label: 'Excited', category: 'positive', color: 'bg-purple-100 border-purple-300' },
-  { id: 'calm', emoji: '😌', label: 'Calm', category: 'positive', color: 'bg-teal-100 border-teal-300' },
+  { id: 'calm', emoji: '●', label: 'Calm', category: 'positive', color: 'bg-teal-100 border-teal-300' },
   
   // Neutral emotions
-  { id: 'okay', emoji: '😐', label: 'Okay', category: 'neutral', color: 'bg-gray-100 border-gray-300' },
+  { id: 'okay', emoji: '●', label: 'Okay', category: 'neutral', color: 'bg-gray-100 border-gray-300' },
   { id: 'curious', emoji: '🤔', label: 'Curious', category: 'neutral', color: 'bg-indigo-100 border-indigo-300' },
   { id: 'focused', emoji: '🎯', label: 'Focused', category: 'neutral', color: 'bg-orange-100 border-orange-300' },
   
   // Challenging emotions (reframed positively)
   { id: 'processing', emoji: '🧠', label: 'Processing', category: 'challenging', color: 'bg-pink-100 border-pink-300' },
-  { id: 'tired', emoji: '😴', label: 'Resting', category: 'challenging', color: 'bg-slate-100 border-slate-300' },
+  { id: 'tired', emoji: '●', label: 'Resting', category: 'challenging', color: 'bg-slate-100 border-slate-300' },
   { id: 'overwhelmed', emoji: '😅', label: 'Challenged', category: 'challenging', color: 'bg-red-100 border-red-300' },
 ];
 

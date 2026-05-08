@@ -143,7 +143,7 @@ function Slide03() {
     { icon: "💼", label: "Careers", stat: "60%", detail: "of moderate-severe TBI survivors unable to return to prior employment", source: "Shames et al., NeuroRehabilitation 2007" },
     { icon: "🏥", label: "Readmission", stat: "1 in 3", detail: "TBI patients readmitted to hospital within 5 years", source: "CDC/NIDILRR Model Systems" },
     { icon: "💰", label: "Economic", stat: "$40B+", detail: "annual direct US healthcare costs for TBI alone", source: "Miller et al., Medical Care 2021" },
-    { icon: "😔", label: "Caregivers", stat: "40%", detail: "of brain injury caregivers report clinical depression", source: "National Academies 2022" },
+    { icon: "●", label: "Caregivers", stat: "40%", detail: "of brain injury caregivers report clinical depression", source: "National Academies 2022" },
     { icon: "👨‍👩‍👧", label: "Children", stat: "68%", detail: "of families report children's wellbeing significantly affected", source: "UKABIF Family Survey 2019" },
     { icon: "🧠", label: "Memory", stat: "54%", detail: "of moderate-severe TBI survivors report persistent memory difficulties affecting daily life", source: "Dikmen et al., Archives of Physical Medicine 2009" },
     { icon: "😞", label: "Confidence", stat: "57%", detail: "of ABI survivors report clinically significant loss of self-confidence and identity", source: "Gracey et al., Neuropsychological Rehabilitation 2008" },

@@ -146,7 +146,7 @@ export function MorningRitualDashboard({
                 className="h-16 flex flex-col items-center justify-center"
               >
                 <span className="text-2xl mb-1">
-                  {level === 1 ? '😴' : level === 2 ? '😊' : level === 3 ? '🙂' : level === 4 ? '😄' : '🚀'}
+                  {level === 1 ? '●' : level === 2 ? '●' : level === 3 ? '●' : level === 4 ? '●' : '🚀'}
                 </span>
                 <span className="text-xs">{level}</span>
               </Button>

@@ -100,10 +100,10 @@ export function IntelligentBreakSuggestions() {
         action: (
           <div className="flex gap-1">
             <Button size="sm" variant="outline" onClick={() => recordBreakQuality(suggestion.id, "good")}>
-              😊 Great
+              ● Great
             </Button>
             <Button size="sm" variant="outline" onClick={() => recordBreakQuality(suggestion.id, "okay")}>
-              😐 Okay  
+              ● Okay  
             </Button>
           </div>
         )
