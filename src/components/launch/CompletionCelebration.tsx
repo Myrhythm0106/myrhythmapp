@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { PartyPopper, Users, Send, X } from 'lucide-react';
+import { CheckCircle2, Users, Send, X, Flame } from 'lucide-react';
 import { LaunchButton } from './LaunchButton';
 import confetti from 'canvas-confetti';
 
@@ -53,13 +53,13 @@ export function CompletionCelebration({
 
         <div className="text-center p-8">
           {/* Celebration Icon */}
-          <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg animate-bounce">
-            <PartyPopper className="h-10 w-10 text-white" />
+          <div className="w-16 h-16 mx-auto mb-4 bg-memory-emerald-100 rounded-2xl flex items-center justify-center ring-1 ring-memory-emerald-200">
+            <CheckCircle2 className="h-8 w-8 text-memory-emerald-700" strokeWidth={1.75} />
           </div>
 
           {/* Main Message */}
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Amazing Work! 🎉
+          <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+            Well executed.
           </h2>
           
           <p className="text-gray-600 mb-4">
@@ -68,12 +68,12 @@ export function CompletionCelebration({
 
           {/* Streak Info */}
           {streakCount && streakCount > 1 && (
-            <div className="inline-flex items-center gap-2 bg-white/80 rounded-full px-4 py-2 mb-4">
-              <span className="text-2xl">🔥</span>
-              <span className="font-semibold text-orange-600">{streakCount} day streak!</span>
+            <div className="inline-flex items-center gap-2 bg-white/80 rounded-full px-4 py-2 mb-4 border border-brand-orange-100">
+              <Flame className="h-4 w-4 text-brand-orange-600" strokeWidth={1.75} />
+              <span className="font-semibold text-brand-orange-700 tabular-nums">{streakCount}-day streak</span>
               {isPersonalBest && (
-                <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                  Personal Best!
+                <span className="text-[10px] uppercase tracking-wider bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
+                  Personal best
                 </span>
               )}
             </div>
@@ -108,7 +108,7 @@ export function CompletionCelebration({
             <div className="mt-6 p-4 bg-brand-emerald-100 rounded-xl">
               <p className="text-brand-emerald-700 font-medium flex items-center justify-center gap-2">
                 <Send className="h-4 w-4" />
-                Your support circle has been notified! 💙
+                Your support circle has been notified.
               </p>
             </div>
           )}

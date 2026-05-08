@@ -107,7 +107,7 @@ export function LaunchCommitmentBanner({
             className="bg-white/20 border-white/30 text-white placeholder:text-white/60 focus:bg-white/30"
           />
           <p className="text-white/70 text-xs mt-3 italic">
-            ✨ {empoweringMessages[currentMessageIndex]}
+            {empoweringMessages[currentMessageIndex]}
           </p>
         </div>
       </div>
@@ -124,7 +124,7 @@ export function LaunchCommitmentBanner({
         {/* Inherited context breadcrumb */}
         {(inheritedVision || inheritedFocus) && (
           <div className="text-white/70 text-xs mb-2 flex items-center gap-2">
-            {inheritedVision && <span>🌟 {inheritedVision}</span>}
+            {inheritedVision && <span>{inheritedVision}</span>}
             {inheritedVision && inheritedFocus && <span>→</span>}
             {inheritedFocus && <span>{inheritedFocus}</span>}
           </div>
@@ -137,7 +137,7 @@ export function LaunchCommitmentBanner({
             <h2 className="text-xl font-bold">{title}</h2>
           </div>
           <span className="text-white/80 text-sm italic">
-            ✨ {empoweringMessages[currentMessageIndex]}
+            {empoweringMessages[currentMessageIndex]}
           </span>
         </div>
 

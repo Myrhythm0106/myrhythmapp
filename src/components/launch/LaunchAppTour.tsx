@@ -172,9 +172,9 @@ export function LaunchAppTour({ isOpen, onClose }: LaunchAppTourProps) {
           </p>
 
           {/* Tip */}
-          <div className="bg-brand-emerald-50 rounded-xl px-4 py-3 mb-8">
+          <div className="bg-brand-emerald-50 rounded-xl px-4 py-3 mb-8 border border-brand-emerald-100">
             <p className="text-sm text-brand-emerald-700 font-medium">
-              💡 {step.tip}
+              {step.tip}
             </p>
           </div>
 

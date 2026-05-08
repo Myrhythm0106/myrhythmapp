@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Edit3, Check, X } from 'lucide-react';
+import { Sparkles, Edit3, Check, X, Quote } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -48,7 +48,7 @@ export function PersonalAffirmation({
       <div className="relative z-10">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <span className="text-lg">💭</span>
+            <Quote className="h-4 w-4 text-neural-purple-500" strokeWidth={1.75} />
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
               My Daily Affirmation
             </h3>

@@ -3,7 +3,7 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
-import { Gamepad2, Brain, Zap, Target, Clock, Lock, Trophy } from 'lucide-react';
+import { Gamepad2, Brain, Zap, Target, Clock, Lock, Trophy, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function LaunchBrainGames() {
@@ -60,9 +60,9 @@ export default function LaunchBrainGames() {
           <h1 className="text-2xl font-bold text-gray-900">Brain Games</h1>
           <p className="text-gray-600">Keep your mind sharp</p>
         </div>
-        <div className="flex items-center gap-2 bg-orange-100 px-3 py-1.5 rounded-full">
-          <span className="text-lg">🔥</span>
-          <span className="font-bold text-orange-600">{streak} day streak</span>
+        <div className="flex items-center gap-2 bg-brand-orange-50 border border-brand-orange-100 px-3 py-1.5 rounded-full">
+          <Flame className="h-4 w-4 text-brand-orange-600" strokeWidth={1.75} />
+          <span className="font-semibold text-brand-orange-700 tabular-nums">{streak}-day streak</span>
         </div>
       </div>
 
@@ -146,8 +146,8 @@ export default function LaunchBrainGames() {
             <p className="text-xs text-gray-500">Games played</p>
           </div>
           <div>
-            <div className="w-12 h-12 mx-auto mb-2 bg-orange-100 rounded-xl flex items-center justify-center">
-              <span className="text-xl">🔥</span>
+            <div className="w-12 h-12 mx-auto mb-2 bg-brand-orange-50 rounded-xl flex items-center justify-center">
+              <Flame className="h-6 w-6 text-brand-orange-600" strokeWidth={1.75} />
             </div>
             <p className="text-xl font-bold text-gray-900">{streak}</p>
             <p className="text-xs text-gray-500">Day streak</p>

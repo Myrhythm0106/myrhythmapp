@@ -69,7 +69,7 @@ export default function LaunchAnalytics() {
             <div>
               <p className="text-sm text-gray-600">Current Streak</p>
               <p className="text-4xl font-bold text-gray-900">{stats.weeklyStreak} days</p>
-              <p className="text-xs text-brand-emerald-600">🎉 Personal best!</p>
+              <p className="text-xs text-brand-emerald-600">Personal best</p>
             </div>
           </div>
         </LaunchCard>

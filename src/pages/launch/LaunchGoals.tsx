@@ -35,7 +35,7 @@ export default function LaunchGoals() {
         pillarId: 'mind-growth',
         title: 'Master a new skill',
         why: 'To grow professionally and feel confident',
-        emoji: '🧠',
+        emoji: '',
         progress: 40,
         createdAt: new Date().toISOString()
       },
@@ -44,7 +44,7 @@ export default function LaunchGoals() {
         pillarId: 'health-body',
         title: 'Feel stronger and healthier',
         why: 'To have energy for what matters most',
-        emoji: '💪',
+        emoji: '',
         progress: 65,
         linkedGoalId: 'goal-1',
         linkedGoalTitle: 'Improve my fitness',
@@ -69,7 +69,7 @@ export default function LaunchGoals() {
         pillarId: 'purpose-joy',
         title: 'Practice daily gratitude',
         why: 'Because focusing on what I have brings joy',
-        emoji: '🌟',
+        emoji: '',
         progress: 25,
         createdAt: new Date().toISOString()
       }
@@ -123,7 +123,7 @@ export default function LaunchGoals() {
       id: v.id,
       title: v.title,
       why: v.why || '',
-      emoji: v.emoji || '✨',
+      emoji: v.emoji || '',
       category: v.pillarId,
       progress: v.progress,
       linkedGoalId: v.linkedGoalId,

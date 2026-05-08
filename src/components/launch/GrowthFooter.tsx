@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles } from 'lucide-react';
 
 const growthMessages = [
-  "Every small step builds momentum 🌱",
-  "You're stronger than you think 💪",
-  "Progress, not perfection ✨",
-  "Your brain adapts and grows every day 🧠",
-  "Celebrate every victory, big or small 🎉",
-  "You're not walking this path alone 💙",
-  "Each action creates new possibilities 🚀",
-  "Your journey is uniquely yours 🛤️",
+  "Every small step builds momentum.",
+  "Progress, not perfection.",
+  "Your brain adapts and grows every day.",
+  "Steady action creates new possibilities.",
+  "You are not walking this path alone.",
+  "Consistency outperforms intensity.",
+  "A clearer rhythm, day by day.",
+  "Your journey is uniquely yours.",
 ];
 
 export function GrowthFooter() {
@@ -29,11 +29,11 @@ export function GrowthFooter() {
   }, []);
 
   return (
-    <div className="hidden md:block fixed bottom-0 left-0 right-0 bg-gradient-to-r from-brand-emerald-500/10 via-brand-teal-500/10 to-brand-blue-500/10 border-t border-brand-emerald-200/30 py-3 px-4">
+    <div className="hidden md:block fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur border-t border-brain-health-100 py-3 px-4">
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2">
-        <Sparkles className="h-4 w-4 text-brand-emerald-500" />
-        <p 
-          className={`text-sm text-brand-emerald-700 font-medium transition-opacity duration-300 ${
+        <Sparkles className="h-3.5 w-3.5 text-brain-health-400" strokeWidth={1.75} />
+        <p
+          className={`text-sm text-brain-health-600 transition-opacity duration-300 ${
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}
         >

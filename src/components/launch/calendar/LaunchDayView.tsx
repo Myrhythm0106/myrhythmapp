@@ -72,7 +72,7 @@ export function LaunchDayView({
 
   const handleMarkDone = (index: number) => {
     onEventStatusChange?.(index, 'done');
-    toast.success('Great job! Task completed! 🎉');
+    toast.success('Task completed.');
   };
 
   const handleCancel = (index: number) => {
@@ -98,7 +98,7 @@ export function LaunchDayView({
 
   // Build breadcrumb trail
   const breadcrumbParts = [];
-  if (inheritedVision) breadcrumbParts.push(`🌟 ${inheritedVision}`);
+  if (inheritedVision) breadcrumbParts.push(inheritedVision);
   if (inheritedMonthFocus) breadcrumbParts.push(inheritedMonthFocus);
   if (inheritedWeekFocus) breadcrumbParts.push(inheritedWeekFocus);
 

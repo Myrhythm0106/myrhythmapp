@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Sparkles, Target, Star, CheckCircle2, Circle, ChevronRight } from 'lucide-react';
+import { X, Sparkles, Target, Star, CheckCircle2, Circle, ChevronRight, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
@@ -106,7 +106,7 @@ export function JourneyView({
         {/* Header */}
         <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="text-2xl">{dream.emoji || '✨'}</div>
+            <Compass className="h-6 w-6 text-neural-purple-600" strokeWidth={1.75} />
             <div>
               <h2 className="font-semibold text-foreground">Your Journey</h2>
               <p className="text-xs text-muted-foreground">Dream → Goal → Daily Actions</p>

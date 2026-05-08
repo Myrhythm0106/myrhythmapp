@@ -149,7 +149,7 @@ export default function LaunchProfile() {
 
       {/* Version */}
       <p className="text-center text-xs text-gray-400 pb-4">
-        MyRhythm v0.2.0 • Made with 💙
+        MyRhythm v0.2.0
       </p>
     </LaunchLayout>
   );

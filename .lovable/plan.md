@@ -1,142 +1,88 @@
-# Emoji-to-Icon Sophistication Plan
+# Plan v5.9 — McKinsey-Grade Polish for Launch Pages
 
-## Goal
-Eradicate every childish/baby emoji from user-facing surfaces. Replace with a visual language evoking top-tier consulting firms — clean, iconic, proud, and worthy.
+Goal: every `/launch/*` surface should feel as poised as a top-tier consulting deliverable — calm, confident, icon-led, never childish. No emojis, no exclamation-heavy copy, no toy gradients.
 
-## Design Direction
-- **No cartoon faces, no toys, no animals.**
-- **Lucide icons** for functional states (mood, energy, actions).
-- **Abstract geometric shapes** (circles, diamonds, bars, rings) for tiered/ranked data (energy levels 1-5, mood states).
-- **Premium colour-coded pills** with single-letter or Roman numeral labels where ranking matters.
-- **Refined celebration badges** using starburst/radial lines, not party emojis.
+## Principles (applied uniformly)
 
-## Scope — All user-facing emojis
+1. **No user-facing emojis.** Replace with Lucide icons (stroke 1.75) or geometric shapes/initials.
+2. **Restrained typography.** One display weight per surface, sentence case headings, no ALL-CAPS shouting except small eyebrow labels.
+3. **Disciplined color.** Brand tokens only; muted surfaces, single accent per card. No rainbow gradients.
+4. **Editorial spacing.** Generous whitespace, 8pt rhythm, max content width ~1100px on desktop.
+5. **Quiet motion.** Subtle fades/slide-up only; no bounces, no confetti spray.
+6. **Sober copy.** Replace "You're amazing!" / "Let's crush it!" with calm, capable language ("Well executed.", "Ready when you are.").
 
-### 1. Energy & Mood Selection (Highest Impact)
-**Files:**
-- `src/components/calendar-tbi/components/EnergyLevelInput.tsx`
-- `src/components/dashboard/widgets/MoodEnergyWidget.tsx`
-- `src/components/dashboard/widgets/EmpowermentMoodWidget.tsx`
-- `src/components/onboarding/empowerment/WellnessAssessmentStep.tsx`
-- `src/pages/MoodTracking.tsx`
+## Scope — 21 files identified, grouped by surface
 
-**Current:** Face emojis (😴😑😊😄🚀 / 😊😐😔🤕)
+### A. Dashboard & Hero surfaces
+- `LaunchDashboardLegacy.tsx`, `HeroSection.tsx` (referenced by legacy)
+  - Replace "YOUR COMMAND CENTER" shout-headline with sentence-case "Your day, organised."
+  - Strip emojis, downgrade gradient to single-tone wash.
+- `QuietHome.tsx` (already calm) — minor copy polish, ensure tier pill uses neutral grey.
 
-**Replace with:**
-- Energy 1-5: Vertical bar icons (Battery style) or filled-circle progression rings in a refined palette
-- Mood 5-state: Diamond-shaped mood markers with Lucide icons — `Zap` (excellent), `TrendingUp` (good), `Minus` (neutral), `TrendingDown` (challenging), `CloudRain` (difficult)
-- Colour: muted brand tones, not primary-bright
+### B. Calendar suite
+- `LaunchCalendar.tsx`, `calendar/Launch{Day,Week,Month,Year}View.tsx`, `LaunchCommitmentBanner.tsx`
+  - Remove emoji event markers; use coloured 6px dots and Lucide category icons.
+  - Banner: drop celebratory emojis, use `BadgeCheck` icon + concise status.
 
-### 2. Celebration & Milestone System
-**Files:**
-- `src/components/celebrations/VictoryCelebration.tsx`
-- `src/components/celebrations/CelebrationSystem.tsx`
-- `src/hooks/useMilestoneCelebrations.ts`
+### C. Goals / Vision / Gratitude
+- `LaunchGoals.tsx`, `LaunchGratitude.tsx`, `vision/{DreamCard,DreamCreator,JourneyView,ShareVisionBoard}.tsx`
+  - Replace heart/star emojis with `Target`, `Compass`, `Bookmark`, `Quote` icons.
+  - Vision board export: keep brand gradient but remove emoji decorations.
 
-**Current:** 🚀💪🏆✨
+### D. Brain Games & Analytics
+- `LaunchBrainGames.tsx`, `LaunchAnalytics.tsx`
+  - Game tiles: Lucide icons + monochrome covers, no emoji thumbnails.
+  - Analytics: tabular KPI cards (label · value · delta arrow), sparkline accents only.
 
-**Replace with:**
-- Icons: `Rocket` (launch), `Trophy` (win), `Sparkles` (milestone), `Star` (achievement), `Target` (goal)
-- Animation: subtle scale + glow, no bounce
+### E. Celebrations & motivational
+- `CompletionCelebration.tsx`, `MomentumCelebration.tsx`, `PowerMovesSection.tsx`, `WinningWeekTracker.tsx`, `LaunchAppTour.tsx`, `GrowthFooter.tsx`
+  - Replace party/rocket emojis with `CheckCircle2`, `TrendingUp`, `Award` SVG glyphs.
+  - Reduce animation amplitude; single fade + 8px rise.
+  - Rewrite copy to executive-summary tone.
 
-### 3. Gratitude & Journal Prompts
-**Files:**
-- `src/components/gratitude/journal/utils/promptTypeUtils.ts`
-- `src/components/gratitude/EnhancedGratitudePrompt.tsx`
+### F. Shared chrome
+- `LaunchLayout.tsx`, `LaunchNav.tsx`, `LaunchCard.tsx`
+  - Header logo: keep monogram; switch to single brand-teal flat (no tri-gradient).
+  - Card variants: tighten radii (3xl → 2xl), softer shadows, hairline borders `border-brain-health-100`.
+  - Nav active state: underline + neutral fill instead of green pill.
 
-**Current:** 💪🧘👥✨📝
+### G. Auth / onboarding entry pages
+- `LaunchLanding.tsx`, `LaunchWelcome.tsx`, `LaunchRegister.tsx`, `LaunchSignIn.tsx`, `LaunchUserType.tsx`, `LaunchAssessment.tsx`, `LaunchPayment.tsx`
+  - Reframe headlines as outcome statements ("A clearer rhythm, day by day.").
+  - Replace emoji bullet lists with icon + label rows.
+  - Buttons: solid brand-teal primary, outline secondary; remove gradient buttons.
 
-**Replace with:**
-- `Dumbbell` (fitness), `Brain` (mindfulness), `Users` (social), `Lightbulb` (general), `Pencil` (journal)
+### H. Settings / Profile / Help / Roadmap / WhatsNew / FeatureStore / SupportCircle / MemoryBridge / Capture / Commit / Calibrate / ClinicalBrief
+  - Audit pass: emoji strip, copy de-shouting, consistent section header pattern (`<Eyebrow>` + `<H2>` + `<Lede>`), Lucide-only iconography.
 
-### 4. Support Circle & Social
-**Files:**
-- `src/pages/launch/LaunchSupportCircle.tsx`
+## New shared primitives (added once, reused)
 
-**Current:** 💪👥
+- `src/components/launch/chrome/SectionHeader.tsx` — eyebrow + title + optional lede.
+- `src/components/launch/chrome/KpiCard.tsx` — label, value, delta, optional sparkline slot.
+- `src/components/launch/chrome/StatusPill.tsx` — neutral, success, attention variants.
+- `src/components/launch/chrome/IconBadge.tsx` — 40px rounded square hosting a Lucide icon in a brand tone.
 
-**Replace with:**
-- `HeartHandshake` or `Users` for support circle
-- `UserPlus` for invite
+These replace ad-hoc inline cards across the surfaces above to guarantee consistency.
 
-### 5. Dashboard & Widgets
-**Files:**
-- `src/components/dashboard/RecentWins.tsx`
-- `src/components/launch/LaunchEmpoweringMessage.tsx`
-- `src/components/launch/quiet/IChooseHeart.tsx`
+## Copy guidelines (applied during sweep)
 
-**Current:** 🏆 and rotating text emojis
+- Headings: sentence case, no exclamation marks.
+- CTAs: verbs + object ("Begin assessment", "Open clinical brief"). Avoid "Let's…", "Crush…", "You got this".
+- Empty states: 1 sentence + 1 action. No mascot phrasing.
+- Disclaimers: keep mandatory medical disclaimer wording verbatim.
 
-**Replace with:**
-- `Award` or `Medal` for wins
-- Text-only empowering messages, no trailing symbols
-- `Heart` icon (already Lucide, keep it)
+## Verification
 
-### 6. Data Files (Content Strings)
-**Files:**
-- `src/data/dreamPromptSuggestions.ts`
-- `src/data/visionPillars.ts`
-- `src/utils/empoweringGlossary.ts`
-- `src/utils/personaLanguage.ts`
+1. `rg "🎉|✨|💪|🧠|❤️|🌟|🚀|👋|😊|🙌|🎯|💡|⭐|🔥|👍|🌈|☀️|🌙|🎊|🏆|💎|🤝|👏|💚|💙|💜" src/pages/launch src/components/launch` returns 0 hits.
+2. Manual screenshot pass (Dashboard, Calendar, Goals, Analytics, Support Circle, Settings) at 1430px and 390px to confirm consistent chrome.
+3. No regression in routes — `?quiet=0` legacy fallback still works.
 
-**Action:** Strip all emoji characters from labels, titles, and descriptions. Replace with nothing or a Lucide icon wrapper where contextually needed.
+## Out of scope
 
-### 7. Toast & Log Messages
-**Files:**
-- `src/utils/myrhythmToast.ts`
-- `src/utils/security/mockSecureLogger.ts`
-- `src/utils/calendarIntegration.ts`
-- `src/utils/empoweringGlossary.ts`
+- Backend/data changes, RLS, edge functions.
+- Marketing landing (`/`) — already covered by separate brand pass.
+- Auth flow logic — visual only.
 
-**Action:** Remove emoji prefixes from toast messages. Use icon + text or text-only.
+## Reversibility
 
-### 8. Onboarding & Assessment
-**Files:**
-- `src/components/onboarding/empowerment/WellnessAssessmentStep.tsx`
-- `src/pages/MoodTracking.tsx`
-
-**Already covered in #1.** Ensure no emojis leak through on any onboarding path.
-
----
-
-## Technical Approach
-
-### Phase 1: Audit & Map (this plan)
-Full inventory complete above.
-
-### Phase 2: Build Replacement Components
-1. **`MoodStateSelector`** — Reusable 5-state mood picker using Lucide icons + diamond markers.
-2. **`EnergyLevelSelector`** — Reusable 5-level energy picker using vertical bar progression + ring indicators.
-3. **`CelebrationBadge`** — Reusable achievement badge using starburst SVG + icon, no emoji.
-4. **`PromptTypeIcon`** — Map gratitude/activity types to Lucide icons.
-
-### Phase 3: Swap & Verify
-Replace emoji usage in each file with new components or direct Lucide icons.
-Verify with `rg` that zero user-facing emoji characters remain in `src/`.
-
-### Phase 4: Visual Polish
-- Ensure icon sizing is 24-32px, never oversized.
-- Use `strokeWidth={1.5}` for refined line weight.
-- Colour: map to existing brand tokens (teal, purple, orange, magenta).
-- Dark mode compatibility maintained.
-
----
-
-## Exclusions (Emojis Stay)
-- **Developer logs / mock security logger** — internal only, not user-facing.
-- **Test files / edge function HTML** — not production UI.
-- **Public-facing PPT / documents** — outside app codebase.
-
----
-
-## Deliverables
-- [ ] `MoodStateSelector.tsx` component
-- [ ] `EnergyLevelSelector.tsx` component
-- [ ] `CelebrationBadge.tsx` component
-- [ ] `PromptTypeIcon.tsx` utility
-- [ ] All 12+ files updated with zero emojis
-- [ ] `rg` verification: no emojis in `src/components`, `src/pages`, `src/data`
-- [ ] Screenshot verification of Energy, Mood, and Celebration UIs
-
-## Success Criteria
-User taps "How do you feel?" and sees a palette of refined icons and geometric shapes that would not look out of place in a BCG Digital Ventures product.
+All edits are presentational. Shared primitives are additive; existing components remain importable. No file deletions.
