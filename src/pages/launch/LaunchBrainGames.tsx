@@ -3,7 +3,7 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
-import { Gamepad2, Brain, Zap, Target, Clock, Lock, Trophy } from 'lucide-react';
+import { Gamepad2, Brain, Zap, Target, Clock, Lock, Trophy, Flame } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export default function LaunchBrainGames() {
