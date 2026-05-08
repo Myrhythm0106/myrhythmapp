@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, Sparkles, Target, Star, CheckCircle2, Circle, ChevronRight } from 'lucide-react';
+import { X, Sparkles, Target, Star, CheckCircle2, Circle, ChevronRight, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
