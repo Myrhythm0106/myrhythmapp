@@ -16,7 +16,6 @@ export interface UserVision {
   pillarId: string;
   title: string;
   why?: string;
-  emoji?: string;
   imageUrl?: string;
   progress: number;
   linkedGoalId?: string;
@@ -28,7 +27,7 @@ export const visionPillars: VisionPillar[] = [
   {
     id: 'mind-growth',
     name: 'Mind & Growth',
-    icon: '🧠',
+    icon: 'Brain',
     question: 'What would make you proud to learn or achieve?',
     suggestions: [
       'Learn a new language',
@@ -43,7 +42,7 @@ export const visionPillars: VisionPillar[] = [
   {
     id: 'health-body',
     name: 'Health & Body',
-    icon: '💪',
+    icon: 'Activity',
     question: 'How do you want to feel in your body?',
     suggestions: [
       'Stronger and more energetic',
@@ -58,7 +57,7 @@ export const visionPillars: VisionPillar[] = [
   {
     id: 'relationships',
     name: 'Relationships',
-    icon: '❤️',
+    icon: 'HeartHandshake',
     question: 'Who do you want to be for the people you love?',
     suggestions: [
       'Be more present with family',
@@ -73,7 +72,7 @@ export const visionPillars: VisionPillar[] = [
   {
     id: 'financial',
     name: 'Financial Security',
-    icon: '💰',
+    icon: 'TrendingUp',
     question: 'What would you do with financial freedom?',
     suggestions: [
       'Build an emergency fund',
@@ -88,8 +87,8 @@ export const visionPillars: VisionPillar[] = [
   {
     id: 'purpose-joy',
     name: 'Purpose & Joy',
-    icon: '🌟',
-    question: 'What brings you deep fulfillment?',
+    icon: 'Compass',
+    question: 'What brings you deep fulfilment?',
     suggestions: [
       'Start a creative project',
       'Find my purpose',
@@ -138,12 +137,4 @@ export const defaultVisions: Record<string, UserVision> = {
     progress: 0,
     createdAt: new Date().toISOString()
   }
-};
-
-export const pillarEmojis: Record<string, string[]> = {
-  'mind-growth': ['🧠', '📚', '🎓', '💡', '🧩', '🎯', '📖', '✍️'],
-  'health-body': ['💪', '🏃', '🧘', '🥗', '💚', '🌱', '😴', '❤️‍🩹'],
-  'relationships': ['❤️', '👨‍👩‍👧', '🤝', '💕', '👥', '🫂', '💝', '🏠'],
-  'financial': ['💰', '📈', '🏦', '💎', '🎯', '🏡', '💳', '📊'],
-  'purpose-joy': ['🌟', '✨', '🎨', '🎭', '🙏', '🌈', '🦋', '🌻']
 };
