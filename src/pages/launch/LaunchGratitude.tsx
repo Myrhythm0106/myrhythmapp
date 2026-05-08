@@ -113,10 +113,10 @@ export default function LaunchGratitude() {
 
             <div>
               <label className="text-sm font-medium text-gray-700 mb-1 block">
-                🧠 Why does this matter? <span className="text-rose-500">*</span>
+                Why does this matter? <span className="text-rose-500">*</span>
               </label>
               <p className="text-xs text-gray-500 mb-2">
-                Reflecting on "why" activates deeper brain pathways!
+                Reflecting on the "why" deepens the experience.
               </p>
               <textarea
                 value={whyGrateful}

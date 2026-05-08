@@ -74,7 +74,7 @@ export function LaunchYearView({
 
       {/* Year Summary Card */}
       <LaunchCard className="p-4 mt-4">
-        <h3 className="font-semibold text-gray-900 mb-2">🎯 Year at a Glance</h3>
+        <h3 className="font-semibold text-gray-900 mb-2">Year at a glance</h3>
         <p className="text-sm text-gray-600">
           Set your yearly vision above, then break it down into monthly focuses. 
           Each month brings you closer to your goals.

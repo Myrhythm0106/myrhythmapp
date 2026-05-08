@@ -77,7 +77,7 @@ export default function LaunchDashboard() {
                 </div>
                 <div>
                   <h3 className="font-bold text-memory-emerald-800">My Path Forward</h3>
-                  <p className="text-sm text-memory-emerald-600">3 power moves this week 💪</p>
+                  <p className="text-sm text-memory-emerald-600">3 power moves this week</p>
                 </div>
               </div>
               <ChevronRight className="h-5 w-5 text-memory-emerald-500" />

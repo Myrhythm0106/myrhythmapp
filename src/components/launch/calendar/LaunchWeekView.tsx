@@ -38,7 +38,7 @@ export function LaunchWeekView({
 
   // Build breadcrumb
   const breadcrumbParts = [];
-  if (inheritedVision) breadcrumbParts.push(`🌟 ${inheritedVision}`);
+  if (inheritedVision) breadcrumbParts.push(inheritedVision);
   if (inheritedMonthFocus) breadcrumbParts.push(inheritedMonthFocus);
 
   return (

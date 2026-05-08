@@ -58,7 +58,7 @@ export function LaunchMonthView({
       {/* Vision Cascade Breadcrumb */}
       {inheritedVision && (
         <div className="text-sm text-brand-teal-600 flex items-center gap-2 px-1">
-          <span>🌟 {inheritedVision}</span>
+          <span>{inheritedVision}</span>
         </div>
       )}
 

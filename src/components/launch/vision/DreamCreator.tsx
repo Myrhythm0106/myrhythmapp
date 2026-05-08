@@ -42,7 +42,7 @@ export function DreamCreator({
   const [why, setWhy] = useState('');
   const [affirmation, setAffirmation] = useState('');
   const [category, setCategory] = useState('personal');
-  const [emoji, setEmoji] = useState('✨');
+  const [emoji, setEmoji] = useState('');
   const [imageUrl, setImageUrl] = useState<string | undefined>();
 
   const totalSteps = 4; // Title, Why, Affirmation, Image/Emoji
@@ -64,7 +64,7 @@ export function DreamCreator({
     setWhy('');
     setAffirmation('');
     setCategory('personal');
-    setEmoji('✨');
+    setEmoji('');
     setImageUrl(undefined);
     setStep(0);
     onClose();

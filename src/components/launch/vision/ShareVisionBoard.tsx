@@ -103,10 +103,10 @@ export function ShareVisionBoard({
         ctx.roundRect(x, y, cardWidth, cardHeight, 24);
         ctx.fill();
 
-        // Emoji
+        // (Symbol mark omitted — sophisticated wordmark only)
         ctx.font = '56px system-ui, sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText(dream.emoji || '✨', x + 30, y + 70);
+        ctx.fillText('', x + 30, y + 70);
 
         // Title
         ctx.fillStyle = '#ffffff';
@@ -142,7 +142,7 @@ export function ShareVisionBoard({
 
         ctx.font = '56px system-ui, sans-serif';
         ctx.textAlign = 'left';
-        ctx.fillText(dream.emoji || '🌟', startX + 40, fullY + 80);
+        ctx.fillText('', startX + 40, fullY + 80);
         
         ctx.fillStyle = '#ffffff';
         ctx.font = 'bold 36px system-ui, sans-serif';
@@ -251,7 +251,7 @@ export function ShareVisionBoard({
                       className="rounded-lg p-2 flex flex-col justify-between"
                       style={{ background: `linear-gradient(135deg, ${colors?.from || '#8B5CF6'}, ${colors?.to || '#3B82F6'})` }}
                     >
-                      <span className="text-sm">{dream.emoji || '✨'}</span>
+                      <span className="block w-1.5 h-1.5 rounded-full bg-white/80" />
                       <span className="text-[7px] font-medium text-white truncate">
                         {dream.title}
                       </span>
@@ -268,7 +268,7 @@ export function ShareVisionBoard({
                     background: `linear-gradient(135deg, ${pillarColors[dreams[4].category || 'purpose-joy']?.from || '#3B82F6'}, ${pillarColors[dreams[4].category || 'purpose-joy']?.to || '#14B8A6'})` 
                   }}
                 >
-                  <span className="text-sm">{dreams[4].emoji || '🌟'}</span>
+                  <span className="block w-1.5 h-1.5 rounded-full bg-white/80" />
                   <span className="text-[8px] font-medium text-white truncate">
                     {dreams[4].title}
                   </span>

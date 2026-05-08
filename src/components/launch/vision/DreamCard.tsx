@@ -50,7 +50,7 @@ export function DreamCard({
   index = 0
 }: DreamCardProps) {
   const category = dreamCategories.find(c => c.id === dream.category);
-  const displayEmoji = dream.emoji || category?.emoji || "✨";
+  const displayEmoji = dream.emoji || category?.emoji || "";
 
   return (
     <motion.div
