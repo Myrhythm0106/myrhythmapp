@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const messages = [
-  "Your rhythm, your rules 🎵",
-  "Every small step builds momentum 🌱",
-  "Progress, not perfection ✨",
-  "You're building something meaningful 💫",
-  "One moment at a time 🌊",
-  "Trust your journey 🧭",
-  "Small wins add up 🏆",
-  "You've got this 💪",
+  "Your rhythm, your rules.",
+  "Every small step builds momentum.",
+  "Progress, not perfection.",
+  "You're building something meaningful.",
+  "One moment at a time.",
+  "Trust your journey.",
+  "Small wins add up.",
+  "You've got this.",
 ];
 
 interface LaunchEmpoweringMessageProps {

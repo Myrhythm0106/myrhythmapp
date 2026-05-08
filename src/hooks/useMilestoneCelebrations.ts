@@ -8,54 +8,45 @@ interface MilestoneMessages {
   [key: string]: {
     title: string;
     description: string;
-    emoji: string;
   };
 }
 
 const MILESTONE_MESSAGES: MilestoneMessages = {
   launch: {
-    title: 'Journey Launched!',
-    description: 'You took the first step toward empowerment',
-    emoji: '🚀'
+    title: 'Journey Launched',
+    description: 'You took the first step toward empowerment.'
   },
   discover: {
-    title: 'Identity Discovered!',
-    description: 'Your profile is ready to personalize your experience',
-    emoji: '👤'
+    title: 'Identity Discovered',
+    description: 'Your profile is ready to personalise your experience.'
   },
   path: {
-    title: 'Path Chosen!',
-    description: 'Your unique journey awaits',
-    emoji: '🛤️'
+    title: 'Path Chosen',
+    description: 'Your route is set.'
   },
   profile: {
-    title: 'Rhythm Profile Built!',
-    description: 'Your cognitive patterns are mapped',
-    emoji: '🧠'
+    title: 'Rhythm Profile Built',
+    description: 'Your cognitive patterns are mapped.'
   },
   foundation: {
-    title: 'Foundation Built!',
-    description: 'Your support network is activated',
-    emoji: '💪'
+    title: 'Foundation Built',
+    description: 'Your support network is activated.'
   },
   voice: {
-    title: 'Voice Activated!',
-    description: 'Your words now become actions',
-    emoji: '🎤'
+    title: 'Voice Activated',
+    description: 'Your words now become actions.'
   },
   victory: {
-    title: 'VICTORY CLAIMED!',
-    description: "You're officially empowered!",
-    emoji: '🏆'
+    title: 'Victory Claimed',
+    description: 'You are officially empowered.'
   }
 };
 
 export function useMilestoneCelebrations() {
   const celebrateMilestone = useCallback((type: CelebrationType, stepId: string) => {
     const message = MILESTONE_MESSAGES[stepId] || {
-      title: 'Milestone Complete!',
-      description: 'Keep building momentum',
-      emoji: '✨'
+      title: 'Milestone Complete',
+      description: 'Keep building momentum.'
     };
 
     switch (type) {
@@ -82,7 +73,7 @@ export function useMilestoneCelebrations() {
         break;
     }
 
-    toast.success(`${message.emoji} ${message.title}`, {
+    toast.success(message.title, {
       description: message.description,
       duration: 4000,
     });

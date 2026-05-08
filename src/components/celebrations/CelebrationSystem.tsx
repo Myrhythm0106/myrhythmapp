@@ -35,9 +35,9 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
   // Milestone celebration function
   const celebrateMilestone = (goalId: string, goalTitle: string, milestone: number) => {
     const milestoneMessages = {
-      25: `You're off to a great start with "${goalTitle}"! Quarter of the way there! 🚀`,
-      50: `Halfway there on "${goalTitle}"! Your dedication is inspiring! 💪`,
-      75: `You're so close! Three-quarters complete on "${goalTitle}"! The finish line is in sight! ⭐`
+      25: `Strong start on "${goalTitle}". Quarter of the way there.`,
+      50: `Halfway through "${goalTitle}". Your consistency is showing.`,
+      75: `Three-quarters complete on "${goalTitle}". The finish line is in view.`
     };
 
     const milestoneData: Milestone = {
@@ -51,7 +51,7 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
     onGoalMilestone?.(goalId, milestone);
 
     // Also show toast notification
-    toast.success(`${milestone}% Complete! 🎉`, {
+    toast.success(`${milestone}% Complete`, {
       description: milestoneData.message,
       duration: 6000
     });
@@ -63,7 +63,7 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
     onGoalComplete?.(completion.goalId);
 
     // Show immediate toast
-    toast.success("🎉 GOAL ACHIEVED! 🎉", {
+    toast.success("Goal Achieved", {
       description: `Congratulations on completing "${completion.goalTitle}"!`,
       duration: 8000
     });
@@ -72,11 +72,11 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
   // Action completion micro-celebrations
   const celebrateActionCompletion = (actionTitle: string, goalTitle?: string) => {
     const celebrations = [
-      "Great work! ✨",
-      "You nailed it! 💪", 
-      "Fantastic! 🌟",
-      "Well done! 🎯",
-      "Amazing! 🚀"
+      "Well executed.",
+      "Done. Forward.",
+      "Strong work.",
+      "Precise. Complete.",
+      "Momentum confirmed."
     ];
     
     const celebration = celebrations[Math.floor(Math.random() * celebrations.length)];
@@ -94,15 +94,15 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
     if (completedActions === 0) return;
 
     const encouragements = [
-      `You crushed ${completedActions} actions today! Keep that momentum going! 🔥`,
-      `${completedActions} actions completed! You're building incredible habits! ⭐`,
-      `Fantastic day! ${completedActions} actions done! Your consistency is paying off! 💪`,
-      `${completedActions} actions in the books! You're making real progress! 🚀`
+      `${completedActions} actions completed today. Momentum is compounding.`,
+      `${completedActions} actions in the books. Habits are forming.`,
+      `Strong day — ${completedActions} actions delivered.`,
+      `${completedActions} actions complete. Real progress, measured.`
     ];
 
     const message = encouragements[Math.floor(Math.random() * encouragements.length)];
     
-    toast.success("Daily Wins Summary! 🏆", {
+    toast.success("Daily Summary", {
       description: message,
       duration: 6000
     });
@@ -112,7 +112,7 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
   const showWeeklySummary = (weeklyData: { goalProgress: any[], actionsCompleted: number }) => {
     const message = `Fantastic week! You completed ${weeklyData.actionsCompleted} actions and made progress on ${weeklyData.goalProgress.length} goals. Your rhythm is getting stronger!`;
     
-    toast.success("Weekly Achievement! 📈", {
+    toast.success("Weekly Summary", {
       description: message,
       duration: 8000
     });
@@ -192,8 +192,8 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
               </div>
               
               <div>
-                <h1 className="text-3xl font-bold text-green-700 mb-2">
-                  🎉 CONGRATULATIONS! 🎉
+                <h1 className="text-3xl font-semibold tracking-tight text-green-700 mb-2">
+                  Goal Achieved
                 </h1>
                 <p className="text-xl text-gray-700">
                   You've achieved your goal!
@@ -248,7 +248,7 @@ export function CelebrationSystem({ onGoalMilestone, onGoalComplete }: Celebrati
                   onClick={() => {
                     setShowCompletion(null);
                     // Share achievement functionality
-                    toast.success("Achievement shared! 📢");
+                    toast.success("Achievement shared");
                   }}
                 >
                   Share Achievement
@@ -292,7 +292,7 @@ export const celebrationUtils = {
   },
   
   celebrateActionCompletion: (actionTitle: string, goalTitle?: string) => {
-    const celebrations = ["Great work! ✨", "You nailed it! 💪", "Fantastic! 🌟"];
+    const celebrations = ["Well executed.", "Done. Forward.", "Strong work."];
     const celebration = celebrations[Math.floor(Math.random() * celebrations.length)];
     
     toast.success(celebration, {
