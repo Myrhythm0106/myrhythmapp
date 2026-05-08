@@ -18,11 +18,11 @@ export function MomentumCelebration({
   const navigate = useNavigate();
 
   const getStreakMessage = (days: number) => {
-    if (days >= 30) return "Legendary! You're unstoppable! 👑";
-    if (days >= 14) return "Amazing consistency! 🌟";
-    if (days >= 7) return "On fire! Keep it burning! 🔥";
-    if (days >= 3) return "Building momentum! 💪";
-    return "Every day counts! 🌱";
+    if (days >= 30) return "Exceptional consistency.";
+    if (days >= 14) return "Strong consistency.";
+    if (days >= 7) return "Solid week of practice.";
+    if (days >= 3) return "Building momentum.";
+    return "Every day counts.";
   };
 
   const getStreakColor = (days: number) => {
@@ -133,7 +133,7 @@ export function MomentumCelebration({
               </div>
             </div>
             <p className="text-xs text-rose-600 font-medium mt-2">
-              Training your brain for joy! 💜
+              Building a daily practice of gratitude.
             </p>
           </div>
         </LaunchCard>

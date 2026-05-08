@@ -18,11 +18,11 @@ export function WinningWeekTracker({
   const completedCount = completedDays.length;
 
   const getWeekMessage = () => {
-    if (completedCount === 7) return "PERFECT WEEK! You're a legend! 👑";
-    if (completedCount >= 5) return "Incredible week! Your brain is thriving! 🧠✨";
-    if (completedCount >= 3) return "Strong momentum! Keep it going! 💪";
-    if (completedCount > 0) return "Building your winning streak! 🌱";
-    return "A fresh week of possibilities awaits! 🚀";
+    if (completedCount === 7) return "A complete week of practice.";
+    if (completedCount >= 5) return "Strong week of practice.";
+    if (completedCount >= 3) return "Steady progress this week.";
+    if (completedCount > 0) return "Building this week's rhythm.";
+    return "A fresh week ahead.";
   };
 
   const currentDayIndex = (new Date().getDay() + 6) % 7; // Convert Sunday=0 to Monday=0
@@ -133,7 +133,7 @@ export function WinningWeekTracker({
               className="mt-4 p-3 rounded-xl bg-gradient-to-r from-amber-100/50 via-memory-emerald-100/50 to-clarity-teal-100/50 border border-amber-200/30 text-center"
             >
               <p className="text-sm font-medium text-amber-700">
-                🏆 You're building a championship week!
+                You are building a strong week of practice.
               </p>
             </motion.div>
           )}

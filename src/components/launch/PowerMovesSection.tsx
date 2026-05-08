@@ -29,11 +29,11 @@ export function PowerMovesSection({
   const completionPercentage = Math.round((completedCount / totalCount) * 100);
 
   const getCelebrationMessage = () => {
-    if (completionPercentage === 100) return "You crushed it! All power moves complete! 🎉";
-    if (completionPercentage >= 75) return "Almost there! You're on fire! 🔥";
-    if (completionPercentage >= 50) return "Halfway champion! Keep pushing! 💪";
-    if (completionPercentage > 0) return "Great start! Momentum is building! 🚀";
-    return "Ready to conquer today? Let's go! ⚡";
+    if (completionPercentage === 100) return "All power moves complete.";
+    if (completionPercentage >= 75) return "Almost there.";
+    if (completionPercentage >= 50) return "Halfway through — steady pace.";
+    if (completionPercentage > 0) return "Momentum is building.";
+    return "Ready when you are.";
   };
 
   return (
@@ -63,8 +63,8 @@ export function PowerMovesSection({
             transition={{ duration: 1, repeat: completionPercentage === 100 ? Infinity : 0 }}
           >
             <Sparkles className="h-4 w-4 text-memory-emerald-600" />
-            <span className="text-sm font-bold text-memory-emerald-700">
-              {completedCount}/{totalCount} crushed!
+            <span className="text-sm font-semibold text-memory-emerald-700 tabular-nums">
+              {completedCount}/{totalCount} complete
             </span>
           </motion.div>
         </div>
@@ -122,9 +122,9 @@ export function PowerMovesSection({
                 <motion.span
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="text-xs text-memory-emerald-600 font-medium"
+                  className="text-[11px] uppercase tracking-wider text-memory-emerald-600 font-semibold"
                 >
-                  ✨ Done!
+                  Done
                 </motion.span>
               )}
             </motion.div>
