@@ -65,7 +65,7 @@ export function TodayQuadrant() {
         ) : (
           <div className="text-center py-2">
             <CheckCircle2 className="h-6 w-6 text-green-500 mx-auto mb-1" />
-            <p className="text-xs text-blue-700">All done! 🎉</p>
+            <p className="text-xs text-blue-700">All complete.</p>
           </div>
         )}
       </div>
@@ -79,7 +79,7 @@ export function TodayQuadrant() {
       <div className="pt-2 border-t border-blue-200">
         <div className="flex items-center justify-center gap-2 text-xs text-blue-600">
           <Zap className="h-3 w-3" />
-          <span>Keep going! 💪</span>
+          <span>Steady momentum.</span>
         </div>
       </div>
     </div>
