@@ -100,7 +100,7 @@ export function VisionBoardHeader({
             >
               {yearlyTheme || "Tap to set your theme..."}
               <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity text-sm text-brain-health-500">
-                ✏️ Edit
+                Edit
               </span>
             </button>
           )}

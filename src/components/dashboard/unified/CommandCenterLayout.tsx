@@ -244,8 +244,8 @@ export function CommandCenterLayout() {
           
           {/* Encouragement Messages */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
-              💝 Messages of Strength
+            <h3 className="text-lg font-semibold text-slate-800">
+              Messages from your circle
             </h3>
             <EncouragementMessages messages={encouragementMessages} />
           </div>

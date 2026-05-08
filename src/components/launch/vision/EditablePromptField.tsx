@@ -124,9 +124,8 @@ export function EditablePromptField({
 
       {/* Edit Hint */}
       {selectedSuggestion && value === selectedSuggestion.text && (
-        <p className="text-xs text-brain-health-600 flex items-center gap-1">
-          <span>✏️</span>
-          <span>Feel free to edit and personalize this!</span>
+        <p className="text-xs text-brain-health-600">
+          Feel free to edit and personalise this.
         </p>
       )}
     </div>
