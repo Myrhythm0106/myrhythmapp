@@ -24,16 +24,16 @@ export function LaunchLayout({
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col">
+    <div className="min-h-screen bg-[hsl(var(--background))] flex flex-col">
       {/* Top Header Bar */}
       {showHeader && (
-        <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-brand-teal-200/50 px-4 py-3">
+        <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-brain-health-100 px-4 py-3">
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">M</span>
+              <div className="w-8 h-8 bg-brand-teal-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-semibold text-sm">M</span>
               </div>
-              <span className="font-semibold text-lg bg-gradient-to-r from-brand-teal-600 to-brand-emerald-600 bg-clip-text text-transparent">
+              <span className="font-semibold text-lg text-brain-health-900 tracking-tight">
                 MyRhythm
               </span>
             </div>
