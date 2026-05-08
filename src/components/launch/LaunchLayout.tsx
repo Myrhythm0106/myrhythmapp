@@ -24,7 +24,7 @@ export function LaunchLayout({
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))] flex flex-col">
+    <div className="min-h-screen bg-[#fafbfc] flex flex-col">
       {/* Top Header Bar */}
       {showHeader && (
         <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-brain-health-100 px-4 py-3">

@@ -22,23 +22,16 @@ interface HeroSectionProps {
 export function HeroSection({ onUpgradeClick, userType }: HeroSectionProps) {
   return (
     <div className="space-y-6 mb-8">
-      {/* Personalized Commanding Headlines */}
-      <div className="text-center space-y-4 p-8 bg-gradient-to-br from-neural-purple-50/40 via-neural-indigo-50/30 to-neural-blue-50/40 rounded-2xl border-2 border-neural-indigo-200/50 shadow-xl backdrop-blur-sm">
-        <div className="space-y-2">
-          <p className="text-lg text-neural-indigo-700 font-medium">
-            Hello {userType ? userType.charAt(0).toUpperCase() + userType.slice(1) : 'Champion'}, Today will be about
-          </p>
-          <div className="text-xl text-brain-health-600 font-semibold mb-2">
-            {getMonthlyFocus()}
-          </div>
-          <h1 className="text-4xl md:text-6xl font-black">
-            <span className="bg-gradient-to-r from-neural-purple-600 via-neural-indigo-600 to-neural-blue-600 bg-clip-text text-transparent">
-              YOUR COMMAND CENTER
-            </span>
-          </h1>
-        </div>
-        <p className="text-lg md:text-xl text-neural-indigo-700 font-medium">
-          Everything you need to feel empowered, in control, and unstoppable
+      {/* Personalized headline */}
+      <div className="text-left p-8 bg-white border border-brain-health-100 rounded-2xl">
+        <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-brain-health-500">
+          {getMonthlyFocus()}
+        </p>
+        <h1 className="mt-3 text-3xl md:text-4xl font-semibold text-brain-health-900 leading-tight tracking-tight">
+          {userType ? userType.charAt(0).toUpperCase() + userType.slice(1) : 'Your'} command centre
+        </h1>
+        <p className="mt-2 text-base text-brain-health-600 max-w-xl">
+          Everything you need to feel in control today — calmly, in one place.
         </p>
       </div>
 
