@@ -100,7 +100,7 @@ export const discoveryPrompts: DreamPrompt[] = [
 ];
 
 // Dream categories for organization
-export const dreamCategories = [
+export const dreamCategories: { id: string; label: string; color: string; emoji?: string }[] = [
   { id: "health",        label: "Health & Wellness",  color: "brain-health" },
   { id: "relationships", label: "Relationships",      color: "neural-magenta" },
   { id: "career",        label: "Career & Work",      color: "neural-blue" },
