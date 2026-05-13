@@ -10,7 +10,7 @@ import { KpiCard } from '@/components/launch/chrome/KpiCard';
 type Tone = 'teal' | 'emerald' | 'orange' | 'purple' | 'neutral';
 
 export interface Capability {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   label: string;
   description: string;
 }
@@ -37,7 +37,7 @@ export interface CapabilityPageProps {
   eyebrow: string;
   title: string;
   lede: string;
-  heroIcon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  heroIcon: LucideIcon;
   tone?: Tone;
   metaPills?: { label: string; tone?: 'neutral' | 'success' | 'attention' | 'info' }[];
   whyTitle?: string;
