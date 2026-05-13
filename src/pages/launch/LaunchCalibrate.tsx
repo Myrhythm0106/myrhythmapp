@@ -1,96 +1,55 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Activity, ArrowRight, Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { BackButton } from '@/components/ui/BackButton';
-
-const calibrateDetails = {
-  title: 'Calibrate — Mood & Energy Check-ins',
-  color: 'from-clarity-teal-500 to-sunrise-amber-500',
-  description: 'Personalized wellness tracking that understands your unique rhythm and helps optimize your daily patterns.',
-  detailedDescription: 'Understand your emotional landscape and energy levels throughout the day. Our gentle check-in system helps you recognize patterns and optimize your personal rhythm.',
-  benefits: [
-    'Daily mood and energy tracking',
-    'Pattern recognition insights',
-    'Personalized wellness recommendations',
-    'Gentle, non-judgmental approach',
-    'Progress visualization',
-    'Rhythm optimization suggestions'
-  ]
-};
+import {
+  Activity,
+  HeartPulse,
+  LineChart,
+  Compass,
+  HandHeart,
+  BarChart3,
+  Sparkle,
+} from 'lucide-react';
+import { CapabilityPage } from '@/components/launch/chrome/CapabilityPage';
 
 export default function LaunchCalibrate() {
-  const navigate = useNavigate();
-
-  const handleRegisterNow = () => {
-    navigate("/launch/register");
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white to-brain-health-50/30">
-      {/* Back Button */}
-      <div className="p-4">
-        <BackButton onClick={() => navigate('/launch')} />
-      </div>
-
-      <div className="max-w-2xl mx-auto px-6 py-8">
-        {/* Header */}
-        <div className="text-center space-y-4 mb-8">
-          <div className="flex items-center justify-center">
-            <div className={`w-16 h-16 rounded-full bg-gradient-to-r ${calibrateDetails.color} flex items-center justify-center shadow-lg`}>
-              <Activity className="h-8 w-8 text-white" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-brain-health-900">
-            {calibrateDetails.title}
-          </h1>
-          <p className="text-lg text-brain-health-700 font-medium">
-            {calibrateDetails.description}
-          </p>
-        </div>
-
-        {/* Content */}
-        <div className="space-y-6">
-          <Card className="border-brain-health-200/50 bg-white/50">
-            <CardContent className="p-6">
-              <p className="text-brain-health-700 leading-relaxed mb-6">
-                {calibrateDetails.detailedDescription}
-              </p>
-              
-              <div className="space-y-3">
-                <h4 className="font-semibold text-brain-health-900 mb-3">What you can expect to experience:</h4>
-                <div className="grid gap-2">
-                  {calibrateDetails.benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${calibrateDetails.color}`} />
-                      <span className="text-brain-health-700">{benefit}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="text-center space-y-4">
-            <p className="text-brain-health-600 font-medium">
-              Ready to experience the difference?
-            </p>
-            <Button 
-              onClick={handleRegisterNow}
-              size="lg"
-              className={`bg-gradient-to-r ${calibrateDetails.color} hover:opacity-90 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200 rounded-full`}
-            >
-              <Sparkles className="h-5 w-5 mr-2" />
-              Register Now - 7 Day Free Trial
-              <ArrowRight className="h-5 w-5 ml-2" />
-            </Button>
-            <p className="text-sm text-brain-health-500">
-              No commitment. Cancel anytime. Start your journey today.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <CapabilityPage
+      eyebrow="Capability 03 · Calibrate"
+      title="A quiet, honest read on how you're really doing."
+      lede="Calibrate turns short daily check-ins into a clear picture of mood, energy, and recovery — without judgement, without gamification."
+      heroIcon={Activity}
+      tone="purple"
+      metaPills={[
+        { label: 'Available on Plus', tone: 'info' },
+        { label: '30-second check-in', tone: 'neutral' },
+        { label: 'Pattern-aware', tone: 'success' },
+      ]}
+      whyParagraphs={[
+        'Wellbeing rarely shifts in headlines; it drifts in patterns. Most tools either over-quantify or look away entirely.',
+        'Calibrate keeps the cadence light and the insight serious — surfacing the patterns that quietly shape your week, before they shape your year.',
+      ]}
+      capabilities={[
+        { icon: HeartPulse, label: 'Daily mood check-in', description: 'Three taps. No scoring, no streaks.' },
+        { icon: LineChart, label: 'Pattern recognition', description: 'Surfaces drift across days, weeks, and contexts.' },
+        { icon: Compass, label: 'Personal recommendations', description: 'Small, specific suggestions tied to your rhythm.' },
+        { icon: HandHeart, label: 'Non-judgemental design', description: 'No red zones, no shame loops, no comparisons.' },
+        { icon: BarChart3, label: 'Progress visualisation', description: 'Plain charts. Real signal. Easy to share.' },
+        { icon: Sparkle, label: 'Rhythm tuning', description: 'Calibrate quietly informs Capture and Commit.' },
+      ]}
+      rhythmSteps={[
+        { step: '01', title: 'Check in', description: 'A 30-second pulse on mood and energy.' },
+        { step: '02', title: 'Notice', description: 'Patterns gather into clear, readable signals.' },
+        { step: '03', title: 'Adjust', description: 'Apply one small change; let the rhythm settle.' },
+      ]}
+      kpis={[
+        { label: 'Daily check-in', value: '30s', caption: 'Designed for low-energy days' },
+        { label: 'History', value: '12 mo', caption: 'Trends and exports included' },
+        { label: 'Tier', value: 'Plus +', caption: 'Included with Plus and above' },
+      ]}
+      related={[
+        { label: 'Analytics', caption: 'Long-form view of your trends', to: '/launch/analytics' },
+        { label: 'Mood tracking', caption: 'Daily ritual surface', to: '/launch/home' },
+        { label: 'Clinical Brief', caption: 'Share signal with your team', to: '/launch/clinical-brief' },
+      ]}
+    />
   );
 }
