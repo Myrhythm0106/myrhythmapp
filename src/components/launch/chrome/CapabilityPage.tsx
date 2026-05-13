@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BackButton } from '@/components/ui/BackButton';
 import { CapabilityHero } from '@/components/launch/chrome/CapabilityHero';
