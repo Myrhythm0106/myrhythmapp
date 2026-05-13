@@ -6,7 +6,7 @@ type Tone = 'neutral' | 'success' | 'attention' | 'info';
 interface StatusPillProps {
   tone?: Tone;
   children: React.ReactNode;
-  icon?: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon?: LucideIcon;
   className?: string;
 }
 

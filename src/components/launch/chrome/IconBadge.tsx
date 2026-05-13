@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 type Tone = 'teal' | 'emerald' | 'orange' | 'purple' | 'neutral';
 
 interface IconBadgeProps {
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   tone?: Tone;
   size?: 'sm' | 'md' | 'lg';
   className?: string;

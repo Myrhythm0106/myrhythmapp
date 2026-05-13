@@ -14,7 +14,7 @@ interface CapabilityHeroProps {
   eyebrow: string;
   title: string;
   lede?: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
   tone?: Tone;
   meta?: MetaPill[];
   className?: string;
