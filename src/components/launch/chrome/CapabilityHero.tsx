@@ -1,4 +1,5 @@
 import React from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { IconBadge } from './IconBadge';
 import { StatusPill } from './StatusPill';
 import { cn } from '@/lib/utils';
