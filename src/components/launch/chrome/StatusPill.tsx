@@ -1,4 +1,5 @@
 import React from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 type Tone = 'neutral' | 'success' | 'attention' | 'info';
@@ -6,7 +7,7 @@ type Tone = 'neutral' | 'success' | 'attention' | 'info';
 interface StatusPillProps {
   tone?: Tone;
   children: React.ReactNode;
-  icon?: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon?: LucideIcon;
   className?: string;
 }
 

@@ -1,88 +1,112 @@
-# Plan v5.9 — McKinsey-Grade Polish for Launch Pages
+## Plan v6.0 — Elite (McKinsey / Google / Deloitte) treatment for /launch surfaces
 
-Goal: every `/launch/*` surface should feel as poised as a top-tier consulting deliverable — calm, confident, icon-led, never childish. No emojis, no exclamation-heavy copy, no toy gradients.
+You're standing on `/launch/capture` — a marketing-style "feature explainer" page that still uses gradient orbs, rounded pill CTAs, generic bullets, and a `from-memory-emerald-500 to-brain-health-500` gradient header. It does not yet match the McKinsey-grade chrome (`SectionHeader`, `KpiCard`, `StatusPill`, `IconBadge`) we built for the Quiet Power dashboard. The same applies to its three siblings (Commit, Calibrate, Clinical Brief) and to several Launch utility pages that were missed in v5.9.
 
-## Principles (applied uniformly)
+This plan promotes those pages to consulting-deliverable quality while keeping logic, routes, and copy intent intact.
 
-1. **No user-facing emojis.** Replace with Lucide icons (stroke 1.75) or geometric shapes/initials.
-2. **Restrained typography.** One display weight per surface, sentence case headings, no ALL-CAPS shouting except small eyebrow labels.
-3. **Disciplined color.** Brand tokens only; muted surfaces, single accent per card. No rainbow gradients.
-4. **Editorial spacing.** Generous whitespace, 8pt rhythm, max content width ~1100px on desktop.
-5. **Quiet motion.** Subtle fades/slide-up only; no bounces, no confetti spray.
-6. **Sober copy.** Replace "You're amazing!" / "Let's crush it!" with calm, capable language ("Well executed.", "Ready when you are.").
+### Visual language (re-confirmed)
 
-## Scope — 21 files identified, grouped by surface
+- Background: flat `#fafbfc`, no orb gradients.
+- Header: `IconBadge` (40 px, ring-1, brand tone) + sentence-case H1 + lede ≤ 24 words.
+- Eyebrow label above H1 in 11 px / `tracking-[0.18em]` uppercase, e.g. `CAPABILITY 02 · CAPTURE`.
+- Type: one display weight, sentence case. No exclamation marks. Tabular nums for any metric.
+- Cards: `rounded-2xl`, hairline `border-brain-health-100`, `shadow-none` to `shadow-sm`. No gradient fills.
+- Accent: a single brand-tone vertical bar (`w-0.5 bg-brand-teal-600`) instead of decorative dots.
+- Buttons: solid `brand-teal-600` primary, ghost outline secondary. No pill-radius gradient buttons.
+- Motion: 200 ms fade + 8 px rise only.
 
-### A. Dashboard & Hero surfaces
-- `LaunchDashboardLegacy.tsx`, `HeroSection.tsx` (referenced by legacy)
-  - Replace "YOUR COMMAND CENTER" shout-headline with sentence-case "Your day, organised."
-  - Strip emojis, downgrade gradient to single-tone wash.
-- `QuietHome.tsx` (already calm) — minor copy polish, ensure tier pill uses neutral grey.
+### Pages in scope
 
-### B. Calendar suite
-- `LaunchCalendar.tsx`, `calendar/Launch{Day,Week,Month,Year}View.tsx`, `LaunchCommitmentBanner.tsx`
-  - Remove emoji event markers; use coloured 6px dots and Lucide category icons.
-  - Banner: drop celebratory emojis, use `BadgeCheck` icon + concise status.
+```text
+src/pages/launch/
+  LaunchCapture.tsx          → full elite rebuild (currently on screen)
+  LaunchCommit.tsx           → mirror of Capture, same rebuild
+  LaunchCalibrate.tsx        → mirror of Capture, same rebuild
+  LaunchClinicalBrief.tsx    → elite rebuild (shorter)
+  LaunchSettings.tsx         → chrome sweep (SectionHeader, IconBadge, StatusPill)
+  LaunchSupportCircle.tsx    → chrome sweep + KpiCard for member counts
+  LaunchFeatureStore.tsx     → chrome sweep + KpiCard for usage tier
+  LaunchRoadmap.tsx          → chrome sweep + StatusPill for status column
+  LaunchWhatsNew.tsx         → chrome sweep + eyebrow per release
+  LaunchHelp.tsx             → chrome sweep, replace card emojis with IconBadge
+  LaunchAssessment.tsx       → chrome sweep, KpiCard for progress
+  LaunchProfile.tsx          → chrome sweep
+  LaunchAnalytics.tsx        → KpiCard wiring (already partly done)
+  LaunchMemoryBridge.tsx     → header + section bands only (logic untouched)
+```
 
-### C. Goals / Vision / Gratitude
-- `LaunchGoals.tsx`, `LaunchGratitude.tsx`, `vision/{DreamCard,DreamCreator,JourneyView,ShareVisionBoard}.tsx`
-  - Replace heart/star emojis with `Target`, `Compass`, `Bookmark`, `Quote` icons.
-  - Vision board export: keep brand gradient but remove emoji decorations.
+### New shared primitive (one addition)
 
-### D. Brain Games & Analytics
-- `LaunchBrainGames.tsx`, `LaunchAnalytics.tsx`
-  - Game tiles: Lucide icons + monochrome covers, no emoji thumbnails.
-  - Analytics: tabular KPI cards (label · value · delta arrow), sparkline accents only.
+`src/components/launch/chrome/CapabilityHero.tsx` — reusable header block used by Capture / Commit / Calibrate / Clinical Brief:
 
-### E. Celebrations & motivational
-- `CompletionCelebration.tsx`, `MomentumCelebration.tsx`, `PowerMovesSection.tsx`, `WinningWeekTracker.tsx`, `LaunchAppTour.tsx`, `GrowthFooter.tsx`
-  - Replace party/rocket emojis with `CheckCircle2`, `TrendingUp`, `Award` SVG glyphs.
-  - Reduce animation amplitude; single fade + 8px rise.
-  - Rewrite copy to executive-summary tone.
+- `eyebrow` (e.g. `CAPABILITY 02 · CAPTURE`)
+- `title`, `lede`
+- `tone` ('teal' | 'emerald' | 'orange' | 'purple') — drives `IconBadge`
+- `icon` Lucide
+- optional `meta` row (e.g. `Available on Plus`, `Avg. setup 4 min`) rendered with `StatusPill`s
 
-### F. Shared chrome
-- `LaunchLayout.tsx`, `LaunchNav.tsx`, `LaunchCard.tsx`
-  - Header logo: keep monogram; switch to single brand-teal flat (no tri-gradient).
-  - Card variants: tighten radii (3xl → 2xl), softer shadows, hairline borders `border-brain-health-100`.
-  - Nav active state: underline + neutral fill instead of green pill.
+This guarantees the four sibling pages cannot drift apart again.
 
-### G. Auth / onboarding entry pages
-- `LaunchLanding.tsx`, `LaunchWelcome.tsx`, `LaunchRegister.tsx`, `LaunchSignIn.tsx`, `LaunchUserType.tsx`, `LaunchAssessment.tsx`, `LaunchPayment.tsx`
-  - Reframe headlines as outcome statements ("A clearer rhythm, day by day.").
-  - Replace emoji bullet lists with icon + label rows.
-  - Buttons: solid brand-teal primary, outline secondary; remove gradient buttons.
+### Capture / Commit / Calibrate / Clinical Brief — new structure
 
-### H. Settings / Profile / Help / Roadmap / WhatsNew / FeatureStore / SupportCircle / MemoryBridge / Capture / Commit / Calibrate / ClinicalBrief
-  - Audit pass: emoji strip, copy de-shouting, consistent section header pattern (`<Eyebrow>` + `<H2>` + `<Lede>`), Lucide-only iconography.
+```text
+[ BackButton ]
+[ CapabilityHero — eyebrow / H1 / lede / status pills ]
 
-## New shared primitives (added once, reused)
+  ┌──────────────── 12-col grid ───────────────────────────┐
+  │ Left 8 col                            Right 4 col      │
+  │                                                        │
+  │ ‘Why it matters’ panel               ‘At a glance’     │
+  │  - 2 short paragraphs                 KpiCard ×3       │
+  │  - hairline border, single accent     (Setup time,     │
+  │    bar on the left                    Privacy, Tier)   │
+  │                                                        │
+  │ ‘What it does’ — 2-col list           ‘Where it lives’ │
+  │  IconBadge + label + 1-line desc       link rows with  │
+  │  6 capabilities, no bullet dots        ArrowUpRight    │
+  │                                                        │
+  │ ‘How it fits the rhythm’ — 3-step                      │
+  │  numbered band (01 / 02 / 03)                          │
+  └────────────────────────────────────────────────────────┘
 
-- `src/components/launch/chrome/SectionHeader.tsx` — eyebrow + title + optional lede.
-- `src/components/launch/chrome/KpiCard.tsx` — label, value, delta, optional sparkline slot.
-- `src/components/launch/chrome/StatusPill.tsx` — neutral, success, attention variants.
-- `src/components/launch/chrome/IconBadge.tsx` — 40px rounded square hosting a Lucide icon in a brand tone.
+[ Engagement footer ]
+  Single brand-teal CTA (rect, 12 px radius) + secondary ghost
+  Mandatory medical disclaimer in muted 12 px text
+```
 
-These replace ad-hoc inline cards across the surfaces above to guarantee consistency.
+Copy stays the same intent but is rewritten to executive tone:
+- "Never lose precious moments." → "A reliable record of the conversations that matter."
+- "Register Now - 7 Day Free Trial" → "Begin 7-day trial".
+- "Ready to experience the difference?" → "Ready when you are."
 
-## Copy guidelines (applied during sweep)
+### Utility pages — chrome sweep rules
 
-- Headings: sentence case, no exclamation marks.
-- CTAs: verbs + object ("Begin assessment", "Open clinical brief"). Avoid "Let's…", "Crush…", "You got this".
-- Empty states: 1 sentence + 1 action. No mascot phrasing.
-- Disclaimers: keep mandatory medical disclaimer wording verbatim.
+For each page in scope, replace ad-hoc headers with:
 
-## Verification
+```tsx
+<SectionHeader
+  eyebrow="SETTINGS"
+  title="Configure how MyRhythm supports you"
+  lede="Calendars, reminders, and retention — all in one place."
+  actions={...}
+/>
+```
 
-1. `rg "🎉|✨|💪|🧠|❤️|🌟|🚀|👋|😊|🙌|🎯|💡|⭐|🔥|👍|🌈|☀️|🌙|🎊|🏆|💎|🤝|👏|💚|💙|💜" src/pages/launch src/components/launch` returns 0 hits.
-2. Manual screenshot pass (Dashboard, Calendar, Goals, Analytics, Support Circle, Settings) at 1430px and 390px to confirm consistent chrome.
-3. No regression in routes — `?quiet=0` legacy fallback still works.
+Inline emoji or coloured-circle accents → `IconBadge tone=…`. Status text → `StatusPill`. Numeric summaries → `KpiCard`. Buttons normalised to solid teal / ghost outline.
 
-## Out of scope
+### Verification
 
-- Backend/data changes, RLS, edge functions.
-- Marketing landing (`/`) — already covered by separate brand pass.
-- Auth flow logic — visual only.
+1. `rg -n "from-[a-z-]+-500 to-[a-z-]+-500" src/pages/launch` → 0 hits in scoped pages.
+2. `rg -n "🎉|🚀|✨|💪|🧠|❤️|🌟|💡|⭐" src/pages/launch src/components/launch` → still 0.
+3. Visual pass on `/launch/capture`, `/launch/commit`, `/launch/calibrate`, `/launch/clinical-brief`, `/launch/settings`, `/launch/support`, `/launch/feature-store`, `/launch/roadmap`, `/launch/whats-new`, `/launch/help` at 1430 px.
+4. No route or business-logic changes. `?quiet=0` legacy fallback untouched.
 
-## Reversibility
+### Out of scope
 
-All edits are presentational. Shared primitives are additive; existing components remain importable. No file deletions.
+- Backend, RLS, edge functions, data shape.
+- `/launch/home` Quiet Power dashboard (already elite).
+- Marketing landing `/`.
+
+### Reversibility
+
+All edits are presentational. New `CapabilityHero` is additive. No deletions; old components remain importable.
