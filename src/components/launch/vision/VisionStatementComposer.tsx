@@ -3,7 +3,7 @@ import { Save, Volume2, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { fivePrompts } from '@/data/fivePrompts';
-import { speakText } from '@/utils/speechSynthesis';
+import { speechService } from '@/utils/speechSynthesis';
 
 interface Props {
   answers: Record<string, string>;
