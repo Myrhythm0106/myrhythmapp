@@ -128,6 +128,7 @@ import {
   LaunchHelp,
   LaunchRoadmap,
   LaunchClinicalBrief,
+  LaunchVisionStatement,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
