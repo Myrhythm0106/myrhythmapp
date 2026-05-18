@@ -84,7 +84,7 @@ export function VisionStatementComposer({
         </Button>
         <Button
           variant="outline"
-          onClick={() => statement && speakText(statement)}
+          onClick={() => statement && speechService.speak(statement)}
           disabled={empty}
           className="min-h-[44px]"
         >
