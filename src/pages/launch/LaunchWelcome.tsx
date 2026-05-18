@@ -1,55 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ArrowRight, Users, Brain, Target } from 'lucide-react';
+import { Sparkles, ArrowRight, Users, Brain, Target, Briefcase, BookOpen, HeartHandshake } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
+import { mapToPersona, type Persona } from '@/launch/persona/usePersona';
 
 export default function LaunchWelcome() {
   const navigate = useNavigate();
-  const [assessmentResults, setAssessmentResults] = useState<any>(null);
+  const [persona, setPersona] = useState<Persona>('recovery');
 
   useEffect(() => {
-    const saved = localStorage.getItem('myrhythm_launch_mode');
-    if (saved) {
-      const data = JSON.parse(saved);
-      setAssessmentResults(data.assessmentResults);
+    const direct = localStorage.getItem('myrhythm_user_type');
+    let raw: string | null = direct;
+    if (!raw) {
+      const saved = localStorage.getItem('myrhythm_launch_mode');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          raw = data?.assessmentResults?.userType ?? data?.selectedUserType ?? null;
+        } catch { /* noop */ }
+      }
     }
+    setPersona(mapToPersona(raw));
   }, []);
 
-  const isRecovery = assessmentResults?.userType === 'recovery';
-  const isCaregiver = assessmentResults?.userType === 'caregiver';
-
   const getMessage = () => {
-    if (isRecovery) {
-      return {
-        headline: "Your Path Forward Starts Now",
-        subtitle: "We've customized MyRhythm for your recovery journey. Your support circle will be central to everything you do.",
-        highlights: [
-          { icon: Users, text: "Support Circle front and center" },
-          { icon: Brain, text: "Memory Bridge for capturing conversations" },
-          { icon: Target, text: "My Path Forward to track your progress" },
-        ],
-      };
+    switch (persona) {
+      case 'recovery':
+        return {
+          headline: 'Your path forward starts now',
+          subtitle: "We've shaped MyRhythm around recovery. Your support circle stays close to everything you do.",
+          highlights: [
+            { icon: Users, text: 'Support circle, front and centre' },
+            { icon: Brain, text: 'Memory Bridge for clinical conversations' },
+            { icon: Target, text: 'A gentle path to track real progress' },
+          ],
+        };
+      case 'caregiver':
+        return {
+          headline: "You're not in this alone",
+          subtitle: "We'll help you support someone you love, while protecting your own rhythm too.",
+          highlights: [
+            { icon: HeartHandshake, text: 'Coordinate care without losing your day' },
+            { icon: Brain, text: 'Capture appointments accurately, together' },
+            { icon: Users, text: 'A switch between self and supporting view' },
+          ],
+        };
+      case 'productivity':
+        return {
+          headline: "Let's build clear, defended days",
+          subtitle: "We've set MyRhythm up for leverage — vision down to the daily focus block, signal over noise.",
+          highlights: [
+            { icon: Target, text: 'Vision → quarter → week → day' },
+            { icon: Briefcase, text: 'Protect deep work on the calendar' },
+            { icon: Brain, text: 'Capture meetings as a searchable record' },
+          ],
+        };
+      case 'student':
+        return {
+          headline: "Let's pace the term well",
+          subtitle: "We've set MyRhythm up for study — lectures captured, revision paced, recall protected.",
+          highlights: [
+            { icon: BookOpen, text: 'Study blocks that respect energy' },
+            { icon: Brain, text: 'Capture lectures and revision notes' },
+            { icon: Target, text: 'Quietly see which subjects are gaining ground' },
+          ],
+        };
     }
-    if (isCaregiver) {
-      return {
-        headline: "You're Not Alone in This",
-        subtitle: "We'll help you support your loved one while taking care of yourself too.",
-        highlights: [
-          { icon: Users, text: "Connect with their care team" },
-          { icon: Brain, text: "Track appointments and tasks together" },
-          { icon: Target, text: "Celebrate every win" },
-        ],
-      };
-    }
-    return {
-      headline: "Let's Build Your Momentum",
-      subtitle: "We've set up MyRhythm to help you crush your goals, from big-picture yearly vision to daily wins.",
-      highlights: [
-        { icon: Target, text: "Year → Month → Week → Day planning" },
-        { icon: Brain, text: "Memory Bridge captures action items" },
-        { icon: Users, text: "Accountability partners keep you on track" },
-      ],
-    };
   };
 
   const content = getMessage();

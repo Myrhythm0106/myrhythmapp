@@ -13,6 +13,7 @@ import { CapabilityPage } from '@/components/launch/chrome/CapabilityPage';
 export default function LaunchCapture() {
   return (
     <CapabilityPage
+      capabilityKey="capture"
       eyebrow="Capability 01 · Capture"
       title="A reliable record of the conversations that matter."
       lede="Capture turns spoken moments — clinical visits, family check-ins, fleeting ideas — into a private, searchable record you can return to with confidence."
