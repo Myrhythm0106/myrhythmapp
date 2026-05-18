@@ -79,7 +79,13 @@ export function CapabilityPage(props: CapabilityPageProps) {
     related,
     primaryCta = { label: 'Begin 7-day trial', to: '/launch/register' },
     secondaryCta = { label: 'Return overview', to: '/launch' },
+    capabilityKey,
   } = props;
+
+  const { persona } = usePersona();
+  const lensText = capabilityKey && persona !== 'recovery'
+    ? getPersonaCopy(persona).capabilityLens[capabilityKey]
+    : undefined;
 
   const accentBar =
     tone === 'emerald'
@@ -107,6 +113,8 @@ export function CapabilityPage(props: CapabilityPageProps) {
           tone={tone}
           meta={metaPills}
         />
+        <PersonaLensChip text={lensText} />
+
 
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* LEFT — 8 cols */}
