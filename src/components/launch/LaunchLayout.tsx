@@ -7,6 +7,9 @@ import { AccountDropdown } from './AccountDropdown';
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { LaunchQuickActions } from './LaunchQuickActions';
 import { HelpCircle } from 'lucide-react';
+import { usePersona } from '@/launch/persona/usePersona';
+import { SubjectProvider } from '@/launch/persona/SubjectContext';
+import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 
 interface LaunchLayoutProps {
   children: ReactNode;
