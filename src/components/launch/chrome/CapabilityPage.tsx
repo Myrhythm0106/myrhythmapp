@@ -7,6 +7,7 @@ import { CapabilityHero } from '@/components/launch/chrome/CapabilityHero';
 import { IconBadge } from '@/components/launch/chrome/IconBadge';
 import { KpiCard } from '@/components/launch/chrome/KpiCard';
 import { PersonaLensChip } from '@/components/launch/chrome/PersonaLensChip';
+import { StageLensChip } from '@/launch/stage/StageLensChip';
 import { usePersona } from '@/launch/persona/usePersona';
 import { getPersonaCopy } from '@/launch/persona/copy';
 
