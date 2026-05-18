@@ -13,6 +13,7 @@ import { CapabilityPage } from '@/components/launch/chrome/CapabilityPage';
 export default function LaunchCommit() {
   return (
     <CapabilityPage
+      capabilityKey="commit"
       eyebrow="Capability 02 · Commit"
       title="A calendar that adapts to your energy, not the other way around."
       lede="Commit organises the day around your cognitive load — protecting focus when it's high, and protecting you when it isn't."
