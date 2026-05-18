@@ -6,6 +6,9 @@ import { BackButton } from '@/components/ui/BackButton';
 import { CapabilityHero } from '@/components/launch/chrome/CapabilityHero';
 import { IconBadge } from '@/components/launch/chrome/IconBadge';
 import { KpiCard } from '@/components/launch/chrome/KpiCard';
+import { PersonaLensChip } from '@/components/launch/chrome/PersonaLensChip';
+import { usePersona } from '@/launch/persona/usePersona';
+import { getPersonaCopy } from '@/launch/persona/copy';
 
 type Tone = 'teal' | 'emerald' | 'orange' | 'purple' | 'neutral';
 
@@ -51,6 +54,8 @@ export interface CapabilityPageProps {
   related?: RelatedLink[];
   primaryCta?: { label: string; to: string };
   secondaryCta?: { label: string; to: string };
+  /** Optional persona-specific framing rendered as a small lens chip under the hero. */
+  capabilityKey?: 'capture' | 'commit' | 'calibrate';
 }
 
 export function CapabilityPage(props: CapabilityPageProps) {
