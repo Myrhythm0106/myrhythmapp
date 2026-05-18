@@ -13,6 +13,7 @@ import { CapabilityPage } from '@/components/launch/chrome/CapabilityPage';
 export default function LaunchCalibrate() {
   return (
     <CapabilityPage
+      capabilityKey="calibrate"
       eyebrow="Capability 03 · Calibrate"
       title="A quiet, honest read on how you're really doing."
       lede="Calibrate turns short daily check-ins into a clear picture of mood, energy, and recovery — without judgement, without gamification."
