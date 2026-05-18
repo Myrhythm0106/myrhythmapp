@@ -1,88 +1,102 @@
-# Plan v6.1 — Vision Statement (the "5 Fs")
+## Plan v6.2 — Persona-aware Launch (Light)
 
-## Goal
-Give the user one quiet, McKinsey-grade place to articulate their **ultimate vision** — a single, personal paragraph — guided by light prompts across five life domains. No checklists, no patronising copy, no overwhelm. Just enough scaffolding to spark thought.
+Brain-injury-first stays the foundation. Other personas get tuned strings on the same surfaces, plus caregivers get a "Self / Supporting" switch. No new pages, no schema, no business logic.
 
-## The "5 Fs" framing
-The classic five (we use the warm, secular-friendly set; user can rename any of them):
+### 1. Persona resolver
 
-1. **Family** — the people closest to you
-2. **Friends** — the wider circle who lifts you
-3. **Fitness** — body, energy, brain health
-4. **Finances** — security and freedom
-5. **Future** — purpose, contribution, the legacy you'd be proud of
+Create `src/launch/persona/usePersona.ts`.
 
-(The fifth "F" you were searching for is most often **Future**, sometimes **Faith** or **Fulfilment** — we offer all three as an editable label so the user picks what fits.)
+- Reads `myrhythm_launch_mode.assessmentResults.userType` and `myrhythm_user_type` from localStorage.
+- Maps 9 raw types → 4 **tone buckets**:
+  - `recovery` — brain-injury, post-recovery, long-covid, ms-cognitive (default fallback)
+  - `caregiver` — caregiver, medical-professional
+  - `productivity` — executive, wellness, cognitive-optimization, adhd
+  - `student` — student
+- Returns `{ persona, label, isCaregiver }`. SSR-safe.
 
-## What the user sees
+### 2. Persona copy pack
 
-Route: **`/launch/vision-statement`** (new, linked from the Vision Board page and the Goals page sidebar).
+Create `src/launch/persona/copy.ts` — a single typed dictionary:
 
-Single scrollable page, three light sections:
+```text
+copy[persona] = {
+  greeting: { morning, afternoon, evening }
+  subgreeting               // replaces "No catching up. Just this moment."
+  scaffoldsTitle            // replaces "Today's scaffolds"
+  winsTitle                 // replaces "Today's gentle wins"
+  ichooseLede               // one-line frame above #IChoose
+  capabilityLens: {
+    capture, commit, calibrate   // one sentence each — "For you:" chip
+  }
+}
+```
 
-### 1. Hero — `CapabilityHero`
-- Eyebrow: `VISION`
-- H1: *"Your ultimate vision, in your own words."*
-- Lede: *"One short paragraph. Five gentle prompts. No right answer — just the one that feels true today."*
-- Icon: `Compass` (brand-teal tone)
-- Status pill: *"Private · Editable any time"*
+Tone targets:
+- **recovery** — keep current copy verbatim. No regression.
+- **caregiver** — "supporting someone takes a rhythm of its own", scaffolds → "Today's anchors", wins → "Today's quiet wins for both of you".
+- **productivity** — "Today's focus blocks", "Today's wins". Lens chips talk about leverage, deep work, signal vs noise. Never gamified.
+- **student** — "Today's study blocks", "Today's wins". Lens chips talk about lectures, revision, recall.
 
-### 2. The Five Prompts — five stacked, collapsible cards
-Each card uses the existing `IconBadge` + a single open question + 2–3 *thought-starter chips* (not answers — sparks). Tapping a chip pre-fills a sentence stem the user can rewrite. Free-text area, ~280 char soft limit, no required fields.
+No emojis. No medical claims. No "fix / transform". Disclaimers untouched.
 
-| F | Icon | Question | Sample sparks (≤3) |
-|---|---|---|---|
-| Family | `Users` | *"Who do you want to be for the people closest to you?"* | "Present at dinner", "Patient on hard days", "The one who listens" |
-| Friends | `HeartHandshake` | *"What kind of friend do you want to be — and to be near?"* | "Easy to call", "Quietly loyal", "First to show up" |
-| Fitness | `Activity` | *"How do you want your body and brain to feel a year from now?"* | "Steady energy", "Sleep that restores", "Strong enough to keep up" |
-| Finances | `TrendingUp` | *"What would 'enough' look like — and what would it free you to do?"* | "No quiet money worry", "Choices, not pressure", "Generous without strain" |
-| Future (editable label → Faith / Fulfilment / Purpose) | `Compass` | *"When you look back in ten years, what would make you proud?"* | "I kept showing up", "I left things better", "I lived on purpose" |
+### 3. Wire into existing surfaces (string-level only)
 
-Each card collapses to a single line once written, showing the first ~80 chars — so the page stays calm.
+- `src/components/launch/quiet/QuietHome.tsx`
+  - Replace hardcoded greeting suffix and "No catching up…" with copy pack values.
+  - Replace `Today's gentle wins` title with `copy.winsTitle`.
+- `src/components/launch/quiet/Scaffolds.tsx` — title from copy pack.
+- `src/components/launch/quiet/IChooseHeart.tsx` — optional one-line lede above the heart.
+- `src/pages/launch/LaunchCapture.tsx`, `LaunchCommit.tsx`, `LaunchCalibrate.tsx`
+  - Add a small `PersonaLensChip` (new, 30-line component) directly under the hero showing `copy.capabilityLens[…]`. Recovery persona → chip hidden (no regression).
 
-### 3. The Statement — `VisionStatementComposer`
-A single textarea pre-seeded by stitching the five answers into one paragraph (only the F's the user filled in — never patronising blanks). Editable. Below it:
-- **Save** (solid `brand-teal-600`)
-- **Read aloud** (ghost, reuses existing `speechSynthesis` util)
-- **Export as wallpaper** (reuses `ShareVisionBoard` 9:16 export)
-- Last-saved timestamp (anchored to 28 April 2026 in demo mode)
+### 4. Caregiver subject switch
 
-Persistence: `localStorage` key `myrhythm.visionStatement.v1` for now (matches current vision board pattern; no backend changes).
+New `src/launch/persona/SubjectSwitch.tsx` — pill-style toggle: **Self · Supporting [name]**.
 
-## Tone & guard-rails
-- No medical claims, no "fix", no "transform your life".
-- No emojis in copy. Lucide icons only.
-- Max 3 sparks per prompt (per Core memory).
-- Sparks are *stems*, not finished sentences — they invite editing.
-- One soft disclaimer at the foot: *"This is yours. Nothing here is shared, scored, or judged."*
+- Context: `src/launch/persona/SubjectContext.tsx` provides `{ subject: 'self' | 'supporting', supportedName, setSubject }`. Persists in localStorage.
+- Mounted in `LaunchLayout` header **only when `isCaregiver`**.
+- `QuietHome` reads `subject`:
+  - `self` → caregiver copy (their wellbeing)
+  - `supporting` → recovery copy with name interpolation ("Today is Mum's. We've kept it light.") and a small "Co-pilot view" status pill.
+- Fixtures: pull `supportedName` from existing `fixtures.name` for demo; fallback "the person you support".
 
-## Files
+No data swap on backend — demo fixtures only. Marked with a one-line note in the component.
 
-**New**
-- `src/pages/launch/LaunchVisionStatement.tsx` — page shell using `LaunchLayout` + `CapabilityHero`
-- `src/components/launch/vision/FivePromptCard.tsx` — one collapsible prompt card
-- `src/components/launch/vision/VisionStatementComposer.tsx` — stitch + edit + save
-- `src/data/fivePrompts.ts` — the five F definitions (label, icon, question, sparks, editable label options for the 5th)
+### 5. Persona-aware welcome
 
-**Edited**
-- `src/App.tsx` — add `/launch/vision-statement` route
-- `src/pages/launch/index.ts` — export `LaunchVisionStatement`
-- `src/components/launch/LaunchNav.tsx` — add a Vision link (or surface from the existing Vision Board page header — see Open question)
-- `src/pages/launch/LaunchGoals.tsx` — small "Start with a vision" link card pointing to the new page
-- `src/components/launch/vision/VisionBoardHeader.tsx` — add a quiet "Write vision statement" secondary action
+`src/pages/launch/LaunchWelcome.tsx` already branches on `recovery` / `caregiver`. Extend the same `getMessage()` switch to `productivity` and `student` — three highlight rows each, tone matched to the copy pack. No layout change.
 
-No backend, no schema, no business-logic changes. Pure presentation + localStorage.
+### 6. QA matrix (manual, before close)
 
-## Verification
-- Visual pass at 1430px and 375px.
-- `rg "from-.*-500 to-.*-500"` returns 0 hits in the new files.
-- No emojis in the new files.
-- Tab order: prompt 1 → 5 → composer → Save.
+Walk each of the 4 personas through: Welcome → Home → Capture → Commit → Calibrate. Confirm:
+- No recovery-coded phrase leaks into productivity/student.
+- Caregiver switch toggles cleanly and persists across routes.
+- Brain-injury path is byte-identical to today.
 
-## Open question (one)
-**Where should the entry point live?** Three options:
-- **A.** Add a new "Vision" tab in `LaunchNav` (most discoverable, costs one nav slot).
-- **B.** Surface only inside the existing Vision Board page header (keeps nav clean).
-- **C.** Both — nav tab + Vision Board entry.
+### Files
 
-I'll default to **B** unless you say otherwise.
+**New** (5)
+- `src/launch/persona/usePersona.ts`
+- `src/launch/persona/copy.ts`
+- `src/launch/persona/SubjectContext.tsx`
+- `src/launch/persona/SubjectSwitch.tsx`
+- `src/components/launch/chrome/PersonaLensChip.tsx`
+
+**Edited** (6)
+- `src/components/launch/quiet/QuietHome.tsx`
+- `src/components/launch/quiet/Scaffolds.tsx`
+- `src/components/launch/quiet/IChooseHeart.tsx`
+- `src/components/launch/LaunchLayout.tsx` (mount SubjectSwitch when caregiver)
+- `src/pages/launch/LaunchWelcome.tsx`
+- `src/pages/launch/LaunchCapture.tsx`, `LaunchCommit.tsx`, `LaunchCalibrate.tsx` (one prop each on `CapabilityPage` for the lens chip — single new optional prop `personaLens?: string`)
+
+### Out of scope (deliberately)
+
+- No new dashboards, no persona-specific KPIs, no new routes.
+- No changes to Capture/Commit/Calibrate capability lists.
+- No backend, no schema, no auth.
+- No re-theming of brand colours.
+
+### Risk
+
+Low. All changes are additive strings + one optional chip + one caregiver-only header control. Recovery path unchanged by design.
