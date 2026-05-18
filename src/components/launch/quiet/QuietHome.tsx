@@ -26,6 +26,9 @@ export function QuietHome() {
   const { fixtures } = useDemoOrLive();
   const { persona, isCaregiver } = usePersona();
   const { subject, supportedName } = useSubject();
+  const { isPause } = useStage();
+
+  if (isPause) return <QuietHomePause />;
 
   // Caregivers in "supporting" mode see the recovery-toned home for the person they support.
   const effectivePersona = isCaregiver && subject === 'supporting' ? 'recovery' : persona;
