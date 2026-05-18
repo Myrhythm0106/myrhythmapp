@@ -8,16 +8,27 @@ import { Scaffolds } from './Scaffolds';
 import { Composer } from './Composer';
 import { CognitiveLoadMeter } from './CognitiveLoadMeter';
 import { TierSwitcherPill } from './TierSwitcherPill';
+import { usePersona } from '@/launch/persona/usePersona';
+import { getPersonaCopy } from '@/launch/persona/copy';
+import { useSubject } from '@/launch/persona/SubjectContext';
 
-function greeting(): string {
+function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 12) return 'morning';
+  if (h < 18) return 'afternoon';
+  return 'evening';
 }
 
 export function QuietHome() {
   const { fixtures } = useDemoOrLive();
+  const { persona, isCaregiver } = usePersona();
+  const { subject, supportedName } = useSubject();
+
+  // Caregivers in "supporting" mode see the recovery-toned home for the person they support.
+  const effectivePersona = isCaregiver && subject === 'supporting' ? 'recovery' : persona;
+  const copy = getPersonaCopy(effectivePersona);
+  const greetName = isCaregiver && subject === 'supporting' ? supportedName : fixtures.name;
+  const greeting = copy.greeting[timeBucket()];
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
