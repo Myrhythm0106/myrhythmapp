@@ -11,6 +11,9 @@ import { TierSwitcherPill } from './TierSwitcherPill';
 import { usePersona } from '@/launch/persona/usePersona';
 import { getPersonaCopy } from '@/launch/persona/copy';
 import { useSubject } from '@/launch/persona/SubjectContext';
+import { useStage } from '@/launch/stage/useStage';
+import { StagePicker } from '@/launch/stage/StagePicker';
+import { QuietHomePause } from './QuietHomePause';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -23,6 +26,9 @@ export function QuietHome() {
   const { fixtures } = useDemoOrLive();
   const { persona, isCaregiver } = usePersona();
   const { subject, supportedName } = useSubject();
+  const { isPause } = useStage();
+
+  if (isPause) return <QuietHomePause />;
 
   // Caregivers in "supporting" mode see the recovery-toned home for the person they support.
   const effectivePersona = isCaregiver && subject === 'supporting' ? 'recovery' : persona;
@@ -41,6 +47,9 @@ export function QuietHome() {
         <div>
           <p className="text-sm text-brain-health-600">{greeting}, {greetName}.</p>
           <p className="text-xs text-brain-health-500 mt-0.5">{copy.subgreeting}</p>
+          <div className="mt-1.5">
+            <StagePicker />
+          </div>
         </div>
         <span className="text-xs px-2 py-1 rounded-full bg-white/60 border border-brain-health-100 text-brain-health-700 capitalize">
           {isCaregiver && subject === 'supporting' ? 'Co-pilot view' : fixtures.tier}

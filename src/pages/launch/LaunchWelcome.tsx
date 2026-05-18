@@ -84,8 +84,11 @@ export default function LaunchWelcome() {
           {content.headline}
         </h1>
         
-        <p className="text-lg text-gray-600 text-center max-w-md mb-10">
+        <p className="text-lg text-gray-600 text-center max-w-md mb-3">
           {content.subtitle}
+        </p>
+        <p className="text-sm text-gray-500 text-center max-w-md mb-10 italic">
+          We'll meet you wherever you are in your rhythm.
         </p>
 
         {/* Personalized Highlights */}
