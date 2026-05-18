@@ -115,6 +115,8 @@ export function CapabilityPage(props: CapabilityPageProps) {
           meta={metaPills}
         />
         <PersonaLensChip text={lensText} />
+        <StageLensChip className="ml-2" />
+
 
 
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
