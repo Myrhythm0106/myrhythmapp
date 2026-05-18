@@ -11,6 +11,9 @@ import { TierSwitcherPill } from './TierSwitcherPill';
 import { usePersona } from '@/launch/persona/usePersona';
 import { getPersonaCopy } from '@/launch/persona/copy';
 import { useSubject } from '@/launch/persona/SubjectContext';
+import { useStage } from '@/launch/stage/useStage';
+import { StagePicker } from '@/launch/stage/StagePicker';
+import { QuietHomePause } from './QuietHomePause';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
