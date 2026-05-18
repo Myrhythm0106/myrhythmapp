@@ -47,6 +47,9 @@ export function QuietHome() {
         <div>
           <p className="text-sm text-brain-health-600">{greeting}, {greetName}.</p>
           <p className="text-xs text-brain-health-500 mt-0.5">{copy.subgreeting}</p>
+          <div className="mt-1.5">
+            <StagePicker />
+          </div>
         </div>
         <span className="text-xs px-2 py-1 rounded-full bg-white/60 border border-brain-health-100 text-brain-health-700 capitalize">
           {isCaregiver && subject === 'supporting' ? 'Co-pilot view' : fixtures.tier}
