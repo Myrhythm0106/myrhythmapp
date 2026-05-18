@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Download, Settings } from 'lucide-react';
+import { Sparkles, Download, Settings, PenLine } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -60,15 +61,28 @@ export function VisionBoardHeader({
             </div>
           </div>
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onExportWallpaper}
-            className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-brain-health-200 hover:bg-brain-health-50"
-          >
-            <Download className="h-4 w-4" />
-            <span className="hidden sm:inline">Save Wallpaper</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              asChild
+              variant="ghost"
+              size="sm"
+              className="text-brain-health-700 hover:bg-brain-health-50"
+            >
+              <Link to="/launch/vision-statement" className="flex items-center gap-2">
+                <PenLine className="h-4 w-4" />
+                <span className="hidden sm:inline">Write vision statement</span>
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onExportWallpaper}
+              className="flex items-center gap-2 bg-white/80 backdrop-blur-sm border-brain-health-200 hover:bg-brain-health-50"
+            >
+              <Download className="h-4 w-4" />
+              <span className="hidden sm:inline">Save Wallpaper</span>
+            </Button>
+          </div>
         </div>
 
         {/* Yearly Theme */}

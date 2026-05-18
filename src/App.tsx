@@ -128,6 +128,7 @@ import {
   LaunchHelp,
   LaunchRoadmap,
   LaunchClinicalBrief,
+  LaunchVisionStatement,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
@@ -370,6 +371,7 @@ function App() {
                        <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
                        <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
                        <Route path="/launch/clinical-brief" element={<LaunchModeProvider><LaunchClinicalBrief /></LaunchModeProvider>} />
+                       <Route path="/launch/vision-statement" element={<LaunchModeProvider><LaunchVisionStatement /></LaunchModeProvider>} />
                        
                        {/* Founder-only financial dashboard — admin role required */}
                        <Route path="/founder/financials" element={<AdminRoute><FounderFinancialsPage /></AdminRoute>} />
