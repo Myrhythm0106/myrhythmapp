@@ -1,112 +1,88 @@
-## Plan v6.0 — Elite (McKinsey / Google / Deloitte) treatment for /launch surfaces
+# Plan v6.1 — Vision Statement (the "5 Fs")
 
-You're standing on `/launch/capture` — a marketing-style "feature explainer" page that still uses gradient orbs, rounded pill CTAs, generic bullets, and a `from-memory-emerald-500 to-brain-health-500` gradient header. It does not yet match the McKinsey-grade chrome (`SectionHeader`, `KpiCard`, `StatusPill`, `IconBadge`) we built for the Quiet Power dashboard. The same applies to its three siblings (Commit, Calibrate, Clinical Brief) and to several Launch utility pages that were missed in v5.9.
+## Goal
+Give the user one quiet, McKinsey-grade place to articulate their **ultimate vision** — a single, personal paragraph — guided by light prompts across five life domains. No checklists, no patronising copy, no overwhelm. Just enough scaffolding to spark thought.
 
-This plan promotes those pages to consulting-deliverable quality while keeping logic, routes, and copy intent intact.
+## The "5 Fs" framing
+The classic five (we use the warm, secular-friendly set; user can rename any of them):
 
-### Visual language (re-confirmed)
+1. **Family** — the people closest to you
+2. **Friends** — the wider circle who lifts you
+3. **Fitness** — body, energy, brain health
+4. **Finances** — security and freedom
+5. **Future** — purpose, contribution, the legacy you'd be proud of
 
-- Background: flat `#fafbfc`, no orb gradients.
-- Header: `IconBadge` (40 px, ring-1, brand tone) + sentence-case H1 + lede ≤ 24 words.
-- Eyebrow label above H1 in 11 px / `tracking-[0.18em]` uppercase, e.g. `CAPABILITY 02 · CAPTURE`.
-- Type: one display weight, sentence case. No exclamation marks. Tabular nums for any metric.
-- Cards: `rounded-2xl`, hairline `border-brain-health-100`, `shadow-none` to `shadow-sm`. No gradient fills.
-- Accent: a single brand-tone vertical bar (`w-0.5 bg-brand-teal-600`) instead of decorative dots.
-- Buttons: solid `brand-teal-600` primary, ghost outline secondary. No pill-radius gradient buttons.
-- Motion: 200 ms fade + 8 px rise only.
+(The fifth "F" you were searching for is most often **Future**, sometimes **Faith** or **Fulfilment** — we offer all three as an editable label so the user picks what fits.)
 
-### Pages in scope
+## What the user sees
 
-```text
-src/pages/launch/
-  LaunchCapture.tsx          → full elite rebuild (currently on screen)
-  LaunchCommit.tsx           → mirror of Capture, same rebuild
-  LaunchCalibrate.tsx        → mirror of Capture, same rebuild
-  LaunchClinicalBrief.tsx    → elite rebuild (shorter)
-  LaunchSettings.tsx         → chrome sweep (SectionHeader, IconBadge, StatusPill)
-  LaunchSupportCircle.tsx    → chrome sweep + KpiCard for member counts
-  LaunchFeatureStore.tsx     → chrome sweep + KpiCard for usage tier
-  LaunchRoadmap.tsx          → chrome sweep + StatusPill for status column
-  LaunchWhatsNew.tsx         → chrome sweep + eyebrow per release
-  LaunchHelp.tsx             → chrome sweep, replace card emojis with IconBadge
-  LaunchAssessment.tsx       → chrome sweep, KpiCard for progress
-  LaunchProfile.tsx          → chrome sweep
-  LaunchAnalytics.tsx        → KpiCard wiring (already partly done)
-  LaunchMemoryBridge.tsx     → header + section bands only (logic untouched)
-```
+Route: **`/launch/vision-statement`** (new, linked from the Vision Board page and the Goals page sidebar).
 
-### New shared primitive (one addition)
+Single scrollable page, three light sections:
 
-`src/components/launch/chrome/CapabilityHero.tsx` — reusable header block used by Capture / Commit / Calibrate / Clinical Brief:
+### 1. Hero — `CapabilityHero`
+- Eyebrow: `VISION`
+- H1: *"Your ultimate vision, in your own words."*
+- Lede: *"One short paragraph. Five gentle prompts. No right answer — just the one that feels true today."*
+- Icon: `Compass` (brand-teal tone)
+- Status pill: *"Private · Editable any time"*
 
-- `eyebrow` (e.g. `CAPABILITY 02 · CAPTURE`)
-- `title`, `lede`
-- `tone` ('teal' | 'emerald' | 'orange' | 'purple') — drives `IconBadge`
-- `icon` Lucide
-- optional `meta` row (e.g. `Available on Plus`, `Avg. setup 4 min`) rendered with `StatusPill`s
+### 2. The Five Prompts — five stacked, collapsible cards
+Each card uses the existing `IconBadge` + a single open question + 2–3 *thought-starter chips* (not answers — sparks). Tapping a chip pre-fills a sentence stem the user can rewrite. Free-text area, ~280 char soft limit, no required fields.
 
-This guarantees the four sibling pages cannot drift apart again.
+| F | Icon | Question | Sample sparks (≤3) |
+|---|---|---|---|
+| Family | `Users` | *"Who do you want to be for the people closest to you?"* | "Present at dinner", "Patient on hard days", "The one who listens" |
+| Friends | `HeartHandshake` | *"What kind of friend do you want to be — and to be near?"* | "Easy to call", "Quietly loyal", "First to show up" |
+| Fitness | `Activity` | *"How do you want your body and brain to feel a year from now?"* | "Steady energy", "Sleep that restores", "Strong enough to keep up" |
+| Finances | `TrendingUp` | *"What would 'enough' look like — and what would it free you to do?"* | "No quiet money worry", "Choices, not pressure", "Generous without strain" |
+| Future (editable label → Faith / Fulfilment / Purpose) | `Compass` | *"When you look back in ten years, what would make you proud?"* | "I kept showing up", "I left things better", "I lived on purpose" |
 
-### Capture / Commit / Calibrate / Clinical Brief — new structure
+Each card collapses to a single line once written, showing the first ~80 chars — so the page stays calm.
 
-```text
-[ BackButton ]
-[ CapabilityHero — eyebrow / H1 / lede / status pills ]
+### 3. The Statement — `VisionStatementComposer`
+A single textarea pre-seeded by stitching the five answers into one paragraph (only the F's the user filled in — never patronising blanks). Editable. Below it:
+- **Save** (solid `brand-teal-600`)
+- **Read aloud** (ghost, reuses existing `speechSynthesis` util)
+- **Export as wallpaper** (reuses `ShareVisionBoard` 9:16 export)
+- Last-saved timestamp (anchored to 28 April 2026 in demo mode)
 
-  ┌──────────────── 12-col grid ───────────────────────────┐
-  │ Left 8 col                            Right 4 col      │
-  │                                                        │
-  │ ‘Why it matters’ panel               ‘At a glance’     │
-  │  - 2 short paragraphs                 KpiCard ×3       │
-  │  - hairline border, single accent     (Setup time,     │
-  │    bar on the left                    Privacy, Tier)   │
-  │                                                        │
-  │ ‘What it does’ — 2-col list           ‘Where it lives’ │
-  │  IconBadge + label + 1-line desc       link rows with  │
-  │  6 capabilities, no bullet dots        ArrowUpRight    │
-  │                                                        │
-  │ ‘How it fits the rhythm’ — 3-step                      │
-  │  numbered band (01 / 02 / 03)                          │
-  └────────────────────────────────────────────────────────┘
+Persistence: `localStorage` key `myrhythm.visionStatement.v1` for now (matches current vision board pattern; no backend changes).
 
-[ Engagement footer ]
-  Single brand-teal CTA (rect, 12 px radius) + secondary ghost
-  Mandatory medical disclaimer in muted 12 px text
-```
+## Tone & guard-rails
+- No medical claims, no "fix", no "transform your life".
+- No emojis in copy. Lucide icons only.
+- Max 3 sparks per prompt (per Core memory).
+- Sparks are *stems*, not finished sentences — they invite editing.
+- One soft disclaimer at the foot: *"This is yours. Nothing here is shared, scored, or judged."*
 
-Copy stays the same intent but is rewritten to executive tone:
-- "Never lose precious moments." → "A reliable record of the conversations that matter."
-- "Register Now - 7 Day Free Trial" → "Begin 7-day trial".
-- "Ready to experience the difference?" → "Ready when you are."
+## Files
 
-### Utility pages — chrome sweep rules
+**New**
+- `src/pages/launch/LaunchVisionStatement.tsx` — page shell using `LaunchLayout` + `CapabilityHero`
+- `src/components/launch/vision/FivePromptCard.tsx` — one collapsible prompt card
+- `src/components/launch/vision/VisionStatementComposer.tsx` — stitch + edit + save
+- `src/data/fivePrompts.ts` — the five F definitions (label, icon, question, sparks, editable label options for the 5th)
 
-For each page in scope, replace ad-hoc headers with:
+**Edited**
+- `src/App.tsx` — add `/launch/vision-statement` route
+- `src/pages/launch/index.ts` — export `LaunchVisionStatement`
+- `src/components/launch/LaunchNav.tsx` — add a Vision link (or surface from the existing Vision Board page header — see Open question)
+- `src/pages/launch/LaunchGoals.tsx` — small "Start with a vision" link card pointing to the new page
+- `src/components/launch/vision/VisionBoardHeader.tsx` — add a quiet "Write vision statement" secondary action
 
-```tsx
-<SectionHeader
-  eyebrow="SETTINGS"
-  title="Configure how MyRhythm supports you"
-  lede="Calendars, reminders, and retention — all in one place."
-  actions={...}
-/>
-```
+No backend, no schema, no business-logic changes. Pure presentation + localStorage.
 
-Inline emoji or coloured-circle accents → `IconBadge tone=…`. Status text → `StatusPill`. Numeric summaries → `KpiCard`. Buttons normalised to solid teal / ghost outline.
+## Verification
+- Visual pass at 1430px and 375px.
+- `rg "from-.*-500 to-.*-500"` returns 0 hits in the new files.
+- No emojis in the new files.
+- Tab order: prompt 1 → 5 → composer → Save.
 
-### Verification
+## Open question (one)
+**Where should the entry point live?** Three options:
+- **A.** Add a new "Vision" tab in `LaunchNav` (most discoverable, costs one nav slot).
+- **B.** Surface only inside the existing Vision Board page header (keeps nav clean).
+- **C.** Both — nav tab + Vision Board entry.
 
-1. `rg -n "from-[a-z-]+-500 to-[a-z-]+-500" src/pages/launch` → 0 hits in scoped pages.
-2. `rg -n "🎉|🚀|✨|💪|🧠|❤️|🌟|💡|⭐" src/pages/launch src/components/launch` → still 0.
-3. Visual pass on `/launch/capture`, `/launch/commit`, `/launch/calibrate`, `/launch/clinical-brief`, `/launch/settings`, `/launch/support`, `/launch/feature-store`, `/launch/roadmap`, `/launch/whats-new`, `/launch/help` at 1430 px.
-4. No route or business-logic changes. `?quiet=0` legacy fallback untouched.
-
-### Out of scope
-
-- Backend, RLS, edge functions, data shape.
-- `/launch/home` Quiet Power dashboard (already elite).
-- Marketing landing `/`.
-
-### Reversibility
-
-All edits are presentational. New `CapabilityHero` is additive. No deletions; old components remain importable.
+I'll default to **B** unless you say otherwise.
