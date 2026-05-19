@@ -19,6 +19,7 @@ export default function PrototypeCapture() {
   const bypass = isBypassAuth();
 
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
@@ -28,6 +29,8 @@ export default function PrototypeCapture() {
   const timerRef = useRef<number | null>(null);
   const recogRef = useRef<AnySpeechRecognition | null>(null);
   const finalRef = useRef<string>('');
+  const pausedRef = useRef<boolean>(false);
+  const recordingRef = useRef<boolean>(false);
 
   useEffect(() => () => {
     if (timerRef.current) clearInterval(timerRef.current);
