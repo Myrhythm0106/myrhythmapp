@@ -210,28 +210,79 @@ export default function PrototypeCapture() {
 
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="flex flex-col items-center">
-          <div className={`relative mb-6 ${isRecording ? 'animate-pulse' : ''}`}>
-            <button
-              onClick={isRecording ? stopAndProcess : startRecording}
-              disabled={processing}
-              className={`w-32 h-32 rounded-full flex items-center justify-center text-white shadow-xl transition-all ${
-                isRecording
-                  ? 'bg-red-500 hover:bg-red-600 shadow-red-500/40'
-                  : 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/40'
-              } disabled:opacity-50`}
+          {/* Status indicator (non-interactive) */}
+          <div className="relative mb-6" aria-hidden="true">
+            <div
+              className={`w-32 h-32 rounded-full flex items-center justify-center text-white shadow-xl transition-colors ${
+                isPaused
+                  ? 'bg-amber-500 shadow-amber-500/40'
+                  : isRecording
+                    ? 'bg-red-500 shadow-red-500/40 animate-pulse'
+                    : 'bg-slate-300 shadow-slate-300/40'
+              }`}
             >
-              {isRecording ? <Square className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
-            </button>
-            {isRecording && (
+              {isPaused ? <Pause className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
+            </div>
+            {isRecording && !isPaused && (
               <div className="absolute -inset-2 rounded-full border-4 border-red-300 animate-ping" />
             )}
           </div>
 
           <div className="text-2xl font-mono font-semibold text-slate-900">{mm}:{ss}</div>
-          <div className="text-sm text-slate-500 mt-1">
+          <div className="text-sm text-slate-500 mt-1 min-h-[20px]">
             {processing ? 'Extracting actions…'
-              : isRecording ? 'Listening — tap to finish'
-              : 'Tap the mic to start recording'}
+              : isPaused ? 'Paused — your transcript is safe'
+              : isRecording ? "Listening — I'm catching every action"
+              : 'Tap Start to begin'}
+          </div>
+
+          {/* Controls */}
+          <div className="mt-6 w-full flex flex-col sm:flex-row gap-3 justify-center">
+            {processing ? (
+              <div className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-slate-100 text-slate-600 font-medium">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Extracting actions…
+              </div>
+            ) : !isRecording ? (
+              <button
+                onClick={startRecording}
+                aria-label="Start recording"
+                className="inline-flex items-center justify-center gap-2 min-h-[56px] px-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 transition"
+              >
+                <Mic className="w-5 h-5" />
+                Start recording
+              </button>
+            ) : (
+              <>
+                {isPaused ? (
+                  <button
+                    onClick={resumeRecording}
+                    aria-label="Resume recording"
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 transition"
+                  >
+                    <Play className="w-5 h-5" />
+                    Resume
+                  </button>
+                ) : (
+                  <button
+                    onClick={pauseRecording}
+                    aria-label="Pause recording"
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition"
+                  >
+                    <Pause className="w-5 h-5" />
+                    Pause
+                  </button>
+                )}
+                <button
+                  onClick={stopAndProcess}
+                  aria-label="Stop recording and extract actions"
+                  className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-red-600 hover:bg-red-700 text-white font-semibold shadow-lg shadow-red-500/30 transition"
+                >
+                  <Square className="w-5 h-5" />
+                  Stop & extract actions
+                </button>
+              </>
+            )}
           </div>
 
           {(transcript || partial) && (
