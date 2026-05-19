@@ -122,8 +122,11 @@ export default function PrototypeCapture() {
   };
 
   const stopAndProcess = async () => {
+    recordingRef.current = false;
+    pausedRef.current = false;
     setIsRecording(false);
-    if (timerRef.current) clearInterval(timerRef.current);
+    setIsPaused(false);
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
     try { recogRef.current?.stop(); } catch {}
 
     const fullTranscript = (finalRef.current + ' ' + partial).trim();
