@@ -1,70 +1,59 @@
-# Real Capture, Extraction & SMART Reminders for the MVP Prototype
+## Problem
 
-## The problem
+On `/prototype/capture` the recording control is a single circle that silently morphs into a stop button. There is no visible **Pause**, no visible **Stop**, and no labels — so users don't know how to end the capture. For an assistant that's meant to remove the cognitive burden of "did I follow through?", the controls themselves must be unmissable, single-tap, and self-explanatory.
 
-The `/prototype/*` flow today is a **visual mock**:
-- `PrototypeCapture` runs a fake timer and writes `getSampleActs()` — nothing is recorded, transcribed, or extracted from what you actually say.
-- Review always shows the same sample ACTs.
-- Schedule has no real reminders — no notifications, no escalation, no SMART rules.
+## Principles applied
 
-You wanted a real personal assistant: **say it → it hears it → it extracts it → it schedules it → it reminds you intelligently**.
+- **SMART**: each control has one clear job, one tap, no hidden state.
+- **Professional**: labelled buttons, not mystery icons.
+- **Fewest clicks**: Stop also extracts (no separate "process" step) — already true, but the label must say so.
+- **Reduce burden**: paused state is visually obvious so the user never wonders "is it still listening?".
 
-## What already exists we can reuse
+## Fix
 
-- `supabase/functions/assemblyai-token` + `assemblyai-webhook` — real transcription
-- `supabase/functions/extract-acts-incremental` — real LLM extraction
-- `useMemoryBridge`, `useRealtimeACTs`, `useRealtimeTranscription` — orchestration
-- `useSmartReminders` + `event_reminders` + `cross_device_notifications` + `SmartReminderToast` — reminder backbone
+Below the mic indicator, show a clear control row that changes with state.
 
-The prototype just needs to call these, not reinvent them.
+### States
 
-## Plan
+- **Idle** — one large pill button: **"Start recording"** with mic icon. (Replaces the unlabelled circle as the primary action.) The circle becomes a passive visual.
+- **Recording** — two side-by-side buttons:
+  - **Pause** (outline, secondary) — pauses speech recognition + timer, keeps transcript.
+  - **Stop & extract actions** (solid red, primary) — runs existing `stopAndProcess()`, goes straight to Review. One tap = done.
+- **Paused** — two side-by-side buttons:
+  - **Resume** (solid orange) — restarts recognition + timer, transcript continues appending.
+  - **Stop & extract actions** (solid red) — same as above.
+- **Processing** — both buttons hidden, replaced by a single disabled "Extracting actions…" pill with spinner.
 
-### Step 1 — Real recording in `PrototypeCapture`
-- Replace fake timer with `MediaRecorder` capturing mic audio.
-- Upload blob to `voice-recordings` bucket; create `voice_recordings` row.
-- Start meeting via `useMemoryBridge.startMeetingRecording`.
-- Stream to AssemblyAI via existing `assemblyai-token` function, show live partial transcript on screen.
+### Visual indicator (the existing circle)
 
-### Step 2 — Real extraction → prototype store
-- On stop, finalize transcript and invoke `extract-acts-incremental`.
-- Map `ExtractedAction[]` into `PrototypeAct` shape so Review/Schedule keep working unchanged.
-- Real "Extracting…" state tied to the function call.
+Stays as a status light only — no click handler:
+- Idle: grey mic icon.
+- Recording: red pulsing with ping ring.
+- Paused: amber, no pulse, "Paused" caption.
 
-### Step 3 — SMART reminders on Schedule
-On confirm-schedule for an ACT:
-- Insert `calendar_events` row.
-- Use `useSmartReminders.createDefaultReminders(eventId)` for default 15-min-before + morning-of.
-- Add per-card reminder editor with SMART defaults:
-  - **High priority** → also add 1-day-before
-  - **Low priority** → only morning-of
-  - **Low-energy window** → extra 30-min-before nudge
-  - **Attendees > 0** → 1-hour-before
-- Channels: in-app toast (already wired) + push/email checkboxes.
-- Snooze 5/15/60 min + Done actions (already supported).
+### Helper text under timer
 
-### Step 4 — New `/prototype/reminders` screen
-- Shows every reminder that will fire, grouped by ACT.
-- Edit time, channel, remove. "Looks good →" to Done.
+State-specific, one short line: "Tap Start to begin" / "Listening — I'm catching every action" / "Paused — your transcript is safe" / "Extracting actions…".
 
-### Step 5 — Done screen update
-- Counts: ACTs scheduled, reminders armed, people invited.
-- "Test a reminder now" fires a sample notification so you see the toast live.
+### Accessibility / touch targets
 
-## Auth gate with always-on override
-
-- `/prototype/capture` checks `useAuth()`. If no session, redirect to `/auth?next=/prototype/capture`.
-- **Bypass mechanisms** (so you never get friction):
-  1. **Query flag** — `?bypass=1` on any `/prototype/*` URL skips auth and forces the sample-meeting path.
-  2. **Persistent dev toggle** — small "Bypass auth" switch in the prototype top bar (next to "← Full app"). Toggle state is stored in `localStorage` under `prototype:bypassAuth`. While ON, no auth gate, no redirects — sample data is used for capture/extraction so the rest of the flow stays demoable.
-  3. **Env fallback** — if `VITE_MOCK_SECURITY === 'true'` the gate is automatically off (matches existing mock-auth pattern).
-- When bypass is active, a small amber chip "Bypass ON — using sample data" is shown so it's obvious why real recording isn't running.
+- All buttons ≥ 56px height (project core rule).
+- `aria-label`s match visible text.
+- Buttons keyboard-focusable in tab order.
 
 ## Technical details
 
-- Frontend: edit `PrototypeCapture.tsx`, `PrototypeSchedule.tsx`, `PrototypeDone.tsx`, `PrototypeLayout.tsx` (add bypass toggle + auth guard); new `PrototypeReminders.tsx` + small `ReminderEditor` under `src/components/prototype/`.
-- Hooks reused: `useMemoryBridge`, `useRealtimeTranscription`, `useRealtimeACTs`, `useSmartReminders`, `useAuth`.
-- No new edge functions. No schema migrations — all required tables already exist.
-- No deletions — existing prototype files are extended.
+- Single file: `src/pages/prototype/PrototypeCapture.tsx`. Pure UI/state, no store or backend changes.
+- New local state: `isPaused: boolean`; new ref: `pausedRef` to gate the existing `recog.onend` auto-restart so a pause doesn't immediately re-start the recogniser.
+- Split current toggle into four handlers: `startRecording` (existing logic), `pauseRecording`, `resumeRecording`, `stopAndProcess` (existing).
+  - `pauseRecording`: set `pausedRef.current = true`, `setIsPaused(true)`, `clearInterval(timerRef.current)`, `recogRef.current?.stop()`.
+  - `resumeRecording`: `pausedRef.current = false`, `setIsPaused(false)`, restart 1s interval, `recogRef.current?.start()` (recreate via the existing constructor block if `start()` throws because the instance is already ended).
+- Existing `recog.onend` guard becomes `if (!pausedRef.current && isRecording) try { recog.start() } catch {}`.
+- No changes to `prototypeStore`, `prototype-extract-acts` edge function, Review/Schedule/Reminders/Done, or routes.
+- No changes to the "Try a sample meeting" escape hatch or the bypass-auth toggle.
 
-Ready to build on approval.
+## Out of scope
+
+- No schema or edge function work.
+- No new screens.
+- No copy changes elsewhere in the prototype flow.

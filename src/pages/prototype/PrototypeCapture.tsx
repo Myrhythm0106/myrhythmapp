@@ -5,7 +5,7 @@ import {
   saveActs, getSampleActs, saveTranscript, smartReminderDefaults,
   isBypassAuth, type PrototypeAct,
 } from '@/prototype/prototypeStore';
-import { Mic, Square, Sparkles, AlertTriangle } from 'lucide-react';
+import { Mic, Square, Sparkles, AlertTriangle, Pause, Play, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
