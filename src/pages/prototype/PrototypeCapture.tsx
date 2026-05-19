@@ -5,7 +5,7 @@ import {
   saveActs, getSampleActs, saveTranscript, smartReminderDefaults,
   isBypassAuth, type PrototypeAct,
 } from '@/prototype/prototypeStore';
-import { Mic, Square, Sparkles, AlertTriangle } from 'lucide-react';
+import { Mic, Square, Sparkles, AlertTriangle, Pause, Play, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -19,6 +19,7 @@ export default function PrototypeCapture() {
   const bypass = isBypassAuth();
 
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [transcript, setTranscript] = useState('');
@@ -28,6 +29,8 @@ export default function PrototypeCapture() {
   const timerRef = useRef<number | null>(null);
   const recogRef = useRef<AnySpeechRecognition | null>(null);
   const finalRef = useRef<string>('');
+  const pausedRef = useRef<boolean>(false);
+  const recordingRef = useRef<boolean>(false);
 
   useEffect(() => () => {
     if (timerRef.current) clearInterval(timerRef.current);
@@ -37,20 +40,7 @@ export default function PrototypeCapture() {
   const supportsSpeech = typeof window !== 'undefined' &&
     (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window));
 
-  const startRecording = async () => {
-    setError(null);
-    if (!supportsSpeech) {
-      setError('Your browser does not support live transcription. Try Chrome or Edge — or use the sample meeting.');
-      return;
-    }
-    try {
-      // Prompt mic permission first for a clearer UX.
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
-      setError('Microphone permission was denied. Enable it in browser settings, or use the sample meeting.');
-      return;
-    }
-
+  const buildRecogniser = (): AnySpeechRecognition => {
     const Ctor: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recog: AnySpeechRecognition = new Ctor();
     recog.continuous = true;
@@ -76,22 +66,67 @@ export default function PrototypeCapture() {
       else if (e.error !== 'no-speech') setError(`Transcription error: ${e.error}`);
     };
     recog.onend = () => {
-      // If we are still in "recording" state, the API auto-stopped; restart.
-      if (isRecording) { try { recog.start(); } catch {} }
+      // Auto-restart only if actively recording and not paused.
+      if (recordingRef.current && !pausedRef.current) {
+        try { recog.start(); } catch {}
+      }
     };
+    return recog;
+  };
 
+  const startRecording = async () => {
+    setError(null);
+    if (!supportsSpeech) {
+      setError('Your browser does not support live transcription. Try Chrome or Edge — or use the sample meeting.');
+      return;
+    }
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      setError('Microphone permission was denied. Enable it in browser settings, or use the sample meeting.');
+      return;
+    }
+
+    const recog = buildRecogniser();
     recogRef.current = recog;
     finalRef.current = '';
+    pausedRef.current = false;
+    recordingRef.current = true;
     setTranscript(''); setPartial('');
     setElapsed(0);
+    setIsPaused(false);
     setIsRecording(true);
     timerRef.current = window.setInterval(() => setElapsed(e => e + 1), 1000);
     try { recog.start(); } catch (e) { console.error(e); }
   };
 
+  const pauseRecording = () => {
+    pausedRef.current = true;
+    setIsPaused(true);
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    try { recogRef.current?.stop(); } catch {}
+  };
+
+  const resumeRecording = () => {
+    pausedRef.current = false;
+    setIsPaused(false);
+    timerRef.current = window.setInterval(() => setElapsed(e => e + 1), 1000);
+    // Recogniser may have ended — rebuild if needed.
+    try {
+      recogRef.current?.start();
+    } catch {
+      const recog = buildRecogniser();
+      recogRef.current = recog;
+      try { recog.start(); } catch (e) { console.error(e); }
+    }
+  };
+
   const stopAndProcess = async () => {
+    recordingRef.current = false;
+    pausedRef.current = false;
     setIsRecording(false);
-    if (timerRef.current) clearInterval(timerRef.current);
+    setIsPaused(false);
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
     try { recogRef.current?.stop(); } catch {}
 
     const fullTranscript = (finalRef.current + ' ' + partial).trim();
@@ -175,28 +210,79 @@ export default function PrototypeCapture() {
 
       <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
         <div className="flex flex-col items-center">
-          <div className={`relative mb-6 ${isRecording ? 'animate-pulse' : ''}`}>
-            <button
-              onClick={isRecording ? stopAndProcess : startRecording}
-              disabled={processing}
-              className={`w-32 h-32 rounded-full flex items-center justify-center text-white shadow-xl transition-all ${
-                isRecording
-                  ? 'bg-red-500 hover:bg-red-600 shadow-red-500/40'
-                  : 'bg-orange-500 hover:bg-orange-600 shadow-orange-500/40'
-              } disabled:opacity-50`}
+          {/* Status indicator (non-interactive) */}
+          <div className="relative mb-6" aria-hidden="true">
+            <div
+              className={`w-32 h-32 rounded-full flex items-center justify-center text-white shadow-xl transition-colors ${
+                isPaused
+                  ? 'bg-amber-500 shadow-amber-500/40'
+                  : isRecording
+                    ? 'bg-red-500 shadow-red-500/40 animate-pulse'
+                    : 'bg-slate-300 shadow-slate-300/40'
+              }`}
             >
-              {isRecording ? <Square className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
-            </button>
-            {isRecording && (
+              {isPaused ? <Pause className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
+            </div>
+            {isRecording && !isPaused && (
               <div className="absolute -inset-2 rounded-full border-4 border-red-300 animate-ping" />
             )}
           </div>
 
           <div className="text-2xl font-mono font-semibold text-slate-900">{mm}:{ss}</div>
-          <div className="text-sm text-slate-500 mt-1">
+          <div className="text-sm text-slate-500 mt-1 min-h-[20px]">
             {processing ? 'Extracting actions…'
-              : isRecording ? 'Listening — tap to finish'
-              : 'Tap the mic to start recording'}
+              : isPaused ? 'Paused — your transcript is safe'
+              : isRecording ? "Listening — I'm catching every action"
+              : 'Tap Start to begin'}
+          </div>
+
+          {/* Controls */}
+          <div className="mt-6 w-full flex flex-col sm:flex-row gap-3 justify-center">
+            {processing ? (
+              <div className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-slate-100 text-slate-600 font-medium">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Extracting actions…
+              </div>
+            ) : !isRecording ? (
+              <button
+                onClick={startRecording}
+                aria-label="Start recording"
+                className="inline-flex items-center justify-center gap-2 min-h-[56px] px-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 transition"
+              >
+                <Mic className="w-5 h-5" />
+                Start recording
+              </button>
+            ) : (
+              <>
+                {isPaused ? (
+                  <button
+                    onClick={resumeRecording}
+                    aria-label="Resume recording"
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 transition"
+                  >
+                    <Play className="w-5 h-5" />
+                    Resume
+                  </button>
+                ) : (
+                  <button
+                    onClick={pauseRecording}
+                    aria-label="Pause recording"
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition"
+                  >
+                    <Pause className="w-5 h-5" />
+                    Pause
+                  </button>
+                )}
+                <button
+                  onClick={stopAndProcess}
+                  aria-label="Stop recording and extract actions"
+                  className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-red-600 hover:bg-red-700 text-white font-semibold shadow-lg shadow-red-500/30 transition"
+                >
+                  <Square className="w-5 h-5" />
+                  Stop & extract actions
+                </button>
+              </>
+            )}
           </div>
 
           {(transcript || partial) && (
