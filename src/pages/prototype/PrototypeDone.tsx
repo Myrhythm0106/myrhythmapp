@@ -1,17 +1,26 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
-import { loadActs, clearActs } from '@/prototype/prototypeStore';
-import { CheckCircle2, Calendar, Users, RotateCcw } from 'lucide-react';
+import { loadActs, clearActs, REMINDER_LABEL } from '@/prototype/prototypeStore';
+import { CheckCircle2, Calendar, Users, RotateCcw, BellRing } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function PrototypeDone() {
   const navigate = useNavigate();
   const acts = useMemo(() => loadActs().filter(a => a.status === 'scheduled'), []);
   const totalInvites = acts.reduce((n, a) => n + (a.attendees?.length || 0), 0);
+  const totalReminders = acts.reduce((n, a) => n + (a.reminders?.length || 0), 0);
 
-  const restart = () => {
-    clearActs();
-    navigate('/prototype/capture');
+  const restart = () => { clearActs(); navigate('/prototype/capture'); };
+
+  const testReminder = () => {
+    const first = acts[0];
+    if (!first) return;
+    toast(`🔔 Reminder: ${first.text}`, {
+      description: `${first.proposedDate} at ${first.proposedTime}${first.attendees?.length ? ` · with ${first.attendees.join(', ')}` : ''}`,
+      duration: 6000,
+      action: { label: 'Done', onClick: () => toast.success('Marked done') },
+    });
   };
 
   return (
@@ -24,22 +33,35 @@ export default function PrototypeDone() {
           Done. Your assistant handled it.
         </h1>
         <p className="mt-3 text-slate-600">
-          You captured a conversation. We did the admin.
+          You captured a conversation. We did the admin — and we'll nudge you at the right moment.
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-6">
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center">
-          <Calendar className="w-6 h-6 text-orange-500 mx-auto mb-2" />
-          <div className="text-3xl font-bold text-slate-900">{acts.length}</div>
-          <div className="text-xs text-slate-500 uppercase tracking-wider mt-1">Scheduled</div>
+      <div className="grid grid-cols-3 gap-3 mb-6">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 text-center">
+          <Calendar className="w-5 h-5 text-orange-500 mx-auto mb-2" />
+          <div className="text-2xl font-bold text-slate-900">{acts.length}</div>
+          <div className="text-[10px] text-slate-500 uppercase tracking-wider mt-1">Scheduled</div>
         </div>
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 text-center">
-          <Users className="w-6 h-6 text-teal-500 mx-auto mb-2" />
-          <div className="text-3xl font-bold text-slate-900">{totalInvites}</div>
-          <div className="text-xs text-slate-500 uppercase tracking-wider mt-1">Invited</div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 text-center">
+          <BellRing className="w-5 h-5 text-purple-500 mx-auto mb-2" />
+          <div className="text-2xl font-bold text-slate-900">{totalReminders}</div>
+          <div className="text-[10px] text-slate-500 uppercase tracking-wider mt-1">Reminders</div>
+        </div>
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 text-center">
+          <Users className="w-5 h-5 text-teal-500 mx-auto mb-2" />
+          <div className="text-2xl font-bold text-slate-900">{totalInvites}</div>
+          <div className="text-[10px] text-slate-500 uppercase tracking-wider mt-1">Invited</div>
         </div>
       </div>
+
+      <button
+        onClick={testReminder}
+        className="w-full mb-6 min-h-[44px] rounded-2xl border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 text-sm font-medium flex items-center justify-center gap-2"
+      >
+        <BellRing className="w-4 h-4" /> Test a reminder now
+      </button>
+
 
       <div className="rounded-2xl border border-slate-200 bg-white p-4 mb-8">
         <div className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-3">In your diary</div>
