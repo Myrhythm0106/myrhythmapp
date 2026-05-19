@@ -176,6 +176,12 @@ function App() {
                         <SetupProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
+     {/* ===== MVP Prototype (parallel route tree — see .lovable/plan.md) ===== */}
+                     <Route path="/prototype" element={<PrototypeLanding />} />
+                     <Route path="/prototype/capture" element={<PrototypeCapture />} />
+                     <Route path="/prototype/review" element={<PrototypeReview />} />
+                     <Route path="/prototype/schedule" element={<PrototypeSchedule />} />
+                     <Route path="/prototype/done" element={<PrototypeDone />} />
      {/* Landing and Discovery Routes */}
                      <Route path="/" element={<Navigate to="/mvp" replace />} />
                      <Route path="/auth" element={<Auth />} />
