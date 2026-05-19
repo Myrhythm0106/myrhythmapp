@@ -80,6 +80,98 @@ export function smartReminderDefaults(act: PrototypeAct): PrototypeReminder[] {
   return reminders.filter(r => (seen.has(r.offset) ? false : seen.add(r.offset)));
 }
 
+// Energy profile — in production this comes from the user's MYRHYTHM assessment.
+// TODO: replace with read from assessment table.
+export const ENERGY_PROFILE = {
+  peakStart: 9,        // 09:00
+  peakEnd: 11,         // 11:00
+  dipStart: 14,        // 14:00 (avoid)
+  dipEnd: 15.5,        // 15:30
+  lunchStart: 12.5,    // 12:30
+  lunchEnd: 13.5,      // 13:30
+  workStart: 9,
+  workEnd: 18,
+};
+
+// Pure SMART placement. Frontend-only prototype logic — no backend call.
+// TODO: replace with calendar-google-sync availability for production.
+export function autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[] {
+  const sorted = [...acts].sort((a, b) => {
+    const rank = { high: 0, medium: 1, low: 2 } as const;
+    return rank[a.priority] - rank[b.priority];
+  });
+
+  const usedByDay = new Map<string, number[]>(); // date -> hours used (decimal)
+  const today = new Date();
+  const nowHour = today.getHours();
+
+  const fmtDate = (d: Date) => d.toISOString().slice(0, 10);
+  const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
+  const hourToTime = (h: number) => {
+    const hh = Math.floor(h).toString().padStart(2, '0');
+    const mm = Math.round((h - Math.floor(h)) * 60).toString().padStart(2, '0');
+    return `${hh}:${mm}`;
+  };
+
+  const pickWindow = (act: PrototypeAct): number[] => {
+    const heavy = act.priority === 'high' || (act.attendees?.length || 0) > 0;
+    if (heavy) return [9, 9.5, 10, 10.5];
+    if (act.priority === 'medium') return [10.5, 11, 15.5, 16, 16.5];
+    return [17, 17.5, 18];
+  };
+
+  const placed: PrototypeAct[] = [];
+  let dayCursor = new Date(today);
+
+  for (const act of sorted) {
+    // High priority: tomorrow earliest if it's already late today.
+    let start = new Date(dayCursor);
+    if (act.priority === 'high' && nowHour >= 16) {
+      start.setDate(start.getDate() + 1);
+    }
+
+    let attempts = 0;
+    let chosenDate = '';
+    let chosenHour = 0;
+
+    while (attempts < 14) {
+      if (isWeekend(start)) { start.setDate(start.getDate() + 1); attempts++; continue; }
+      const key = fmtDate(start);
+      const used = usedByDay.get(key) || [];
+      if (used.length >= 2) { start.setDate(start.getDate() + 1); attempts++; continue; }
+
+      const candidates = pickWindow(act).filter(h => {
+        if (h >= ENERGY_PROFILE.lunchStart && h < ENERGY_PROFILE.lunchEnd) return false;
+        if (h >= ENERGY_PROFILE.dipStart && h < ENERGY_PROFILE.dipEnd) return false;
+        // 30-min buffer from any used slot that day
+        return used.every(u => Math.abs(u - h) >= 0.5);
+      });
+
+      if (candidates.length > 0) {
+        chosenHour = candidates[0];
+        chosenDate = key;
+        used.push(chosenHour);
+        usedByDay.set(key, used);
+        break;
+      }
+      start.setDate(start.getDate() + 1);
+      attempts++;
+    }
+
+    const next: PrototypeAct = {
+      ...act,
+      proposedDate: chosenDate || act.proposedDate,
+      proposedTime: chosenDate ? hourToTime(chosenHour) : act.proposedTime,
+    };
+    next.reminders = smartReminderDefaults(next);
+    placed.push(next);
+  }
+
+  // Preserve original act order for display stability
+  const byId = new Map(placed.map(a => [a.id, a]));
+  return acts.map(a => byId.get(a.id) || a);
+}
+
 export const REMINDER_LABEL: Record<ReminderOffset, string> = {
   '5_min_before': '5 min before',
   '15_min_before': '15 min before',
