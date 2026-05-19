@@ -1,11 +1,13 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Mic, ListChecks, CalendarClock, CheckCircle2 } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Mic, ListChecks, CalendarClock, BellRing, CheckCircle2, ShieldOff, Shield } from 'lucide-react';
+import { isBypassAuth, setBypassAuth } from './prototypeStore';
 
 const STEPS = [
   { path: '/prototype/capture', label: 'Capture', icon: Mic },
   { path: '/prototype/review', label: 'Review', icon: ListChecks },
   { path: '/prototype/schedule', label: 'Schedule', icon: CalendarClock },
+  { path: '/prototype/reminders', label: 'Reminders', icon: BellRing },
   { path: '/prototype/done', label: 'Done', icon: CheckCircle2 },
 ];
 
@@ -17,31 +19,51 @@ interface Props {
 
 export function PrototypeLayout({ children, title, subtitle }: Props) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const activeIdx = STEPS.findIndex(s => pathname.startsWith(s.path));
+  const [bypass, setBypass] = useState<boolean>(false);
+
+  useEffect(() => { setBypass(isBypassAuth()); }, [pathname]);
+
+  const toggleBypass = () => {
+    const next = !bypass;
+    setBypassAuth(next);
+    setBypass(next);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
-      {/* Top bar */}
       <header className="sticky top-0 z-30 backdrop-blur-md bg-white/80 border-b border-slate-200">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
           <Link to="/prototype" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-orange-500 flex items-center justify-center text-white font-bold text-sm">
-              M
-            </div>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-orange-500 flex items-center justify-center text-white font-bold text-sm">M</div>
             <div className="leading-tight">
               <div className="font-semibold text-slate-900 text-sm">MyRhythm</div>
               <div className="text-[10px] uppercase tracking-wider text-orange-600 font-medium">MVP Prototype</div>
             </div>
           </Link>
-          <Link
-            to="/launch/home"
-            className="text-xs text-slate-500 hover:text-slate-900 transition-colors px-3 py-1.5 rounded-full border border-slate-200 hover:border-slate-300"
-          >
-            ← Full app
-          </Link>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleBypass}
+              title={bypass ? 'Auth bypass ON — using sample data, no login required' : 'Auth bypass OFF — real recording requires login'}
+              className={`text-[11px] px-2.5 py-1 rounded-full border flex items-center gap-1 transition ${
+                bypass
+                  ? 'bg-amber-100 border-amber-300 text-amber-800 hover:bg-amber-200'
+                  : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
+              }`}
+            >
+              {bypass ? <ShieldOff className="w-3 h-3" /> : <Shield className="w-3 h-3" />}
+              Bypass {bypass ? 'ON' : 'OFF'}
+            </button>
+            <Link
+              to="/launch/home"
+              className="text-xs text-slate-500 hover:text-slate-900 transition-colors px-3 py-1.5 rounded-full border border-slate-200 hover:border-slate-300"
+            >
+              ← Full app
+            </Link>
+          </div>
         </div>
 
-        {/* Step indicator */}
         {activeIdx >= 0 && (
           <div className="max-w-3xl mx-auto px-4 pb-3">
             <div className="flex items-center gap-1">
@@ -66,6 +88,12 @@ export function PrototypeLayout({ children, title, subtitle }: Props) {
                 );
               })}
             </div>
+          </div>
+        )}
+
+        {bypass && (
+          <div className="bg-amber-50 border-t border-amber-200 px-4 py-1.5 text-[11px] text-amber-800 text-center">
+            Auth bypass is on — friction-free demo. Real recording is skipped; sample meeting is used.
           </div>
         )}
       </header>
