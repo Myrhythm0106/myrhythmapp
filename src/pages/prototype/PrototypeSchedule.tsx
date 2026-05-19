@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
-import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS } from '@/prototype/prototypeStore';
-import { Calendar, Clock, UserPlus, ArrowRight, X } from 'lucide-react';
+import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS, smartReminderDefaults } from '@/prototype/prototypeStore';
+import { Calendar, Clock, UserPlus, ArrowRight, X, BellRing } from 'lucide-react';
 
 function formatDate(iso?: string) {
   if (!iso) return '—';
@@ -49,8 +49,14 @@ export default function PrototypeSchedule() {
   };
 
   const scheduleAll = () => {
-    update(acts.map(a => ({ ...a, status: 'scheduled' as const })));
-    navigate('/prototype/done');
+    // Refresh SMART reminder defaults based on the (possibly edited) schedule + attendees.
+    const next = acts.map(a => ({
+      ...a,
+      status: 'scheduled' as const,
+      reminders: smartReminderDefaults(a),
+    }));
+    update(next);
+    navigate('/prototype/reminders');
   };
 
   return (
@@ -75,7 +81,8 @@ export default function PrototypeSchedule() {
           onClick={scheduleAll}
           className="w-full min-h-[56px] rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 flex items-center justify-center gap-2 transition-all"
         >
-          Add {acts.length} to my calendar
+          <BellRing className="w-5 h-5" />
+          Set smart reminders ({acts.length})
           <ArrowRight className="w-5 h-5" />
         </button>
       </div>
