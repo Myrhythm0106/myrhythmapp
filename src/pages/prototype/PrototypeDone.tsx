@@ -75,6 +75,15 @@ export default function PrototypeDone() {
                   {a.proposedDate} at {a.proposedTime}
                   {a.attendees && a.attendees.length > 0 && ` · with ${a.attendees.join(', ')}`}
                 </div>
+                {a.reminders && a.reminders.length > 0 && (
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {a.reminders.map(r => (
+                      <span key={r.id} className="text-[10px] px-1.5 py-0.5 rounded-full bg-purple-50 text-purple-700 border border-purple-200">
+                        🔔 {REMINDER_LABEL[r.offset]}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             </li>
           ))}
