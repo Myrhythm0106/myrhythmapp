@@ -138,6 +138,14 @@ import { LaunchModeProvider } from "./hooks/useLaunchMode";
 // Brain Injury Journey Routes
 import { JourneyRegister, JourneyEnergyCheck, JourneyAssessment, JourneySupportCircle, JourneyReady } from "./pages/journey/brain-injury";
 
+// MVP Prototype (parallel route tree)
+import PrototypeLanding from "./pages/prototype/PrototypeLanding";
+import PrototypeCapture from "./pages/prototype/PrototypeCapture";
+import PrototypeReview from "./pages/prototype/PrototypeReview";
+import PrototypeSchedule from "./pages/prototype/PrototypeSchedule";
+import PrototypeDone from "./pages/prototype/PrototypeDone";
+
+
 const queryClient = new QueryClient();
 
 // Network status component
