@@ -81,7 +81,8 @@ export default function PrototypeSchedule() {
           onClick={scheduleAll}
           className="w-full min-h-[56px] rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 flex items-center justify-center gap-2 transition-all"
         >
-          Add {acts.length} to my calendar
+          <BellRing className="w-5 h-5" />
+          Set smart reminders ({acts.length})
           <ArrowRight className="w-5 h-5" />
         </button>
       </div>
