@@ -40,20 +40,7 @@ export default function PrototypeCapture() {
   const supportsSpeech = typeof window !== 'undefined' &&
     (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window));
 
-  const startRecording = async () => {
-    setError(null);
-    if (!supportsSpeech) {
-      setError('Your browser does not support live transcription. Try Chrome or Edge — or use the sample meeting.');
-      return;
-    }
-    try {
-      // Prompt mic permission first for a clearer UX.
-      await navigator.mediaDevices.getUserMedia({ audio: true });
-    } catch {
-      setError('Microphone permission was denied. Enable it in browser settings, or use the sample meeting.');
-      return;
-    }
-
+  const buildRecogniser = (): AnySpeechRecognition => {
     const Ctor: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     const recog: AnySpeechRecognition = new Ctor();
     recog.continuous = true;
@@ -79,17 +66,59 @@ export default function PrototypeCapture() {
       else if (e.error !== 'no-speech') setError(`Transcription error: ${e.error}`);
     };
     recog.onend = () => {
-      // If we are still in "recording" state, the API auto-stopped; restart.
-      if (isRecording) { try { recog.start(); } catch {} }
+      // Auto-restart only if actively recording and not paused.
+      if (recordingRef.current && !pausedRef.current) {
+        try { recog.start(); } catch {}
+      }
     };
+    return recog;
+  };
 
+  const startRecording = async () => {
+    setError(null);
+    if (!supportsSpeech) {
+      setError('Your browser does not support live transcription. Try Chrome or Edge — or use the sample meeting.');
+      return;
+    }
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch {
+      setError('Microphone permission was denied. Enable it in browser settings, or use the sample meeting.');
+      return;
+    }
+
+    const recog = buildRecogniser();
     recogRef.current = recog;
     finalRef.current = '';
+    pausedRef.current = false;
+    recordingRef.current = true;
     setTranscript(''); setPartial('');
     setElapsed(0);
+    setIsPaused(false);
     setIsRecording(true);
     timerRef.current = window.setInterval(() => setElapsed(e => e + 1), 1000);
     try { recog.start(); } catch (e) { console.error(e); }
+  };
+
+  const pauseRecording = () => {
+    pausedRef.current = true;
+    setIsPaused(true);
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    try { recogRef.current?.stop(); } catch {}
+  };
+
+  const resumeRecording = () => {
+    pausedRef.current = false;
+    setIsPaused(false);
+    timerRef.current = window.setInterval(() => setElapsed(e => e + 1), 1000);
+    // Recogniser may have ended — rebuild if needed.
+    try {
+      recogRef.current?.start();
+    } catch {
+      const recog = buildRecogniser();
+      recogRef.current = recog;
+      try { recog.start(); } catch (e) { console.error(e); }
+    }
   };
 
   const stopAndProcess = async () => {
