@@ -1,151 +1,105 @@
-# Plan v6.4 — Universal 7-Stage Rhythm Timeline
+# MVP Prototype — Scope Confirmation & Branching Strategy
 
-Brain-injury-first foundation. Seven stages give every persona a sense of *where they are* without prescribing a timetable. Stage 0 (Pause) gives permission to do nothing. Recovery users see typical duration anchors; everyone else sees verbs only.
+## Your Question, Answered Directly
 
-## Locked decisions
+**Yes.** The MVP prototype must include the full personal-assistant loop:
 
-1. **Default stage** for unselected users → **Steady** (safe middle, never assumes recent trauma).
-2. **Picker visibility** → quiet "Where am I in my rhythm?" link on home, not a 6-pill row.
-3. **Duration anchors** → shown **only** to the recovery persona.
-4. **Pause is opt-in**, not a default. A user (or caregiver-in-Supporting-view) deliberately chooses it.
+1. **Capture** — Record a meeting / conversation (voice)
+2. **Extract** — AI pulls out Actions, Commitments, Tasks (ACTs) automatically
+3. **Review** — User sees ACTs as a tidy list with confidence + context
+4. **Schedule** — Each ACT gets a **proposed date/time** based on energy + calendar gaps; user one-taps to confirm
+5. **Invite** — If the ACT involves another person, the prototype auto-suggests attendees from the user's **Support Circle / Contact List** and prepares a calendar invite
 
-## The 7 stages
+This is the **"replaces a personal assistant"** thesis. Strip any of these four and the MVP fails its own problem statement.
 
-| # | Label | Recovery anchor (recovery persona only) | Intent |
-|---|---|---|---|
-| 0 | Pause | Days 0–14 (incl. pre-discharge) | Stillness. No tasks. Acknowledgement. |
-| 1 | Ready | Days 14–28 | Willing to begin. Set things up gently. |
-| 2 | Steady | Month 1–6 | Daily rhythm taking shape. |
-| 3 | Strengthen | Month 6–12 | Consolidation, stretching capacity. |
-| 4 | Stretch | Year 1–2 | Bigger commitments, deeper work. |
-| 5 | Return | Year 2–3 | Return to work / study / public life. |
-| 6 | Sustain | Year 3+ | Long-term maintenance. |
+All the building blocks already exist in the codebase — we're not inventing them:
 
-Each stage carries a **persona-specific lens** (one sentence) so it reads correctly to recovery, caregiver, productivity, and student users.
+| MVP Capability | Existing code to reuse |
+|---|---|
+| Voice capture | `src/routes/MemoryBridge.tsx`, `useMemoryBridge.ts` |
+| Real-time transcription | `supabase/functions/assemblyai-token`, `assemblyai-webhook` |
+| ACT extraction | `supabase/functions/extract-acts-incremental`, `useRealtimeACTs.ts` |
+| ACT review list | `src/components/nextStepsHub/NextStepsHub.tsx` + `ACTConfirmationPanel.tsx` |
+| Proposed dates / Smart scheduling | `src/components/memoryBridge/ActionSchedulingModal.tsx`, Smart Schedule Card logic (memory) |
+| Suggested attendees | `useMeetingDetection.ts` + Support Circle + Contact List fuzzy match |
+| Calendar invite | `src/utils/ics.ts`, Google/Outlook sync edge functions |
 
-No auto-progression. No countdowns. No badges or streaks tied to stages.
+The MVP prototype = a **stripped, sequenced UI** over these same backend pieces.
 
-## Pause — what's different
+## Branching Strategy (no deletion)
 
-Pause is a deliberate variant of the home surface. When the active stage is `pause`:
-
-- `QuietHome` hides scaffolds, wins list, composer, and capture prompts.
-- It shows only: greeting, #IChoose heart, and one sentence — *"Today, the only thing is rest."*
-- A small muted control: "When you're ready, move to Ready." (One tap, no nag.)
-- Caregivers in Supporting view can place the person they support in Pause on their behalf.
-
-## Persona × Stage lens copy
+The MVP will be built as a parallel route tree at **`/prototype/*`**. Nothing in the current app gets deleted or modified.
 
 ```text
-Pause
-  recovery     You've been through something. No tasks today — just rest, and let people help.
-  caregiver    The first days are a lot. Breathe. The system can wait until next week.
-  productivity A real pause. No optimisation, no planning — just stop.
-  student      A genuine break. The next term will still be there when you're ready.
-
-Ready
-  recovery     Ready to start gently. Capture what matters, protect your energy.
-  caregiver    Ready to put a system in place. Small anchors first.
-  productivity Ready to set the baseline. Clear the decks, then build.
-  student      Ready for the term. Set up the scaffolding.
-
-Steady
-  recovery     Early recovery. Build daily rhythm, low-cost wins.
-  caregiver    Settle into the caring rhythm without burning out.
-  productivity First quarter. Lock in routines that compound.
-  student      First semester. Lectures + revision cadence.
-
-Strengthen
-  recovery     Consolidation. Stretch capacity gently.
-  caregiver    Confidence in the routine. Reclaim your own time.
-  productivity Year-1 momentum. Bigger commitments, deeper work.
-  student      Exams + projects. Recall under pressure.
-
-Stretch
-  recovery     Re-integration. Reintroduce harder roles.
-  caregiver    Plan for transitions (treatment phases, school changes).
-  productivity Year-2 ambition. Lead, ship, raise the ceiling.
-  student      Specialisation. Internships, research, thesis.
-
-Return
-  recovery     Return to work, study, or public life.
-  caregiver    Transition out of intensive caring, or hand off.
-  productivity Senior role, multi-project leadership.
-  student      Graduation, first role.
-
-Sustain
-  recovery     Long-term maintenance. Catch dips early.
-  caregiver    Sustainable support over years.
-  productivity Mastery. Defend the rhythm against drift.
-  student      Continuous learning, career rhythm.
+Current app (untouched)          MVP Prototype (new, parallel)
+────────────────────────         ──────────────────────────────
+/                                /prototype                ← landing / problem
+/launch/home                     /prototype/capture        ← record meeting
+/memory-bridge                   /prototype/review         ← extracted ACTs list
+/launch/calendar                 /prototype/schedule       ← proposed times + invites
+/launch/support-circle           /prototype/circle         ← minimal contacts
+... 130+ routes preserved        /prototype/done           ← confirmation
 ```
 
-Tone rules: no medical claims, no "fix/transform", no gamification. Plain, calm, dignified.
+Switch any time:
+- Current full app → use existing links
+- MVP prototype → go to `/prototype`
+- Earlier version → use chat **revert** buttons or **History** tab
 
-## What gets built
+## MVP Route Tree (the four-step assistant loop)
 
-### 1. Source of truth — `src/launch/stage/stages.ts`
-- `Stage = 'pause' | 'ready' | 'steady' | 'strengthen' | 'stretch' | 'return' | 'sustain'`
-- `stages[]` with: `id`, `label`, `order`, `recoveryAnchor`, `lensByPersona { recovery, caregiver, productivity, student }`.
-- Pure data. No React, no localStorage.
+### 1. `/prototype/capture` — Record
+- One big "Start recording" button (energy badge optional)
+- Live transcript appears
+- ACTs surface in real time on the side (already wired via `useRealtimeACTs`)
 
-### 2. Stage resolver — `src/launch/stage/useStage.ts`
-- Reads `myrhythm_launch_stage` from localStorage. Default `steady`.
-- Exposes `{ stage, setStage, stageData, isPause }`. SSR-safe. Persists on change.
+### 2. `/prototype/review` — Extracted ACTs
+- Tidy list of ACTs grouped by priority
+- Each ACT shows: action text, who it's for, due context, confidence
+- Inline confirm / modify / reject (reuse `ACTConfirmationPanel`)
 
-### 3. Quiet picker — `src/launch/stage/StagePicker.tsx`
-- Surface: a small text link "Where am I in my rhythm?" under the greeting in `QuietHome`.
-- Opens a sheet listing all 7 stages with label + persona-appropriate lens.
-- Recovery persona: each row shows the duration anchor as a small muted caption.
-- One-tap to switch. Closes on selection. Never auto-opens.
+### 3. `/prototype/schedule` — Proposed Diary Slots
+- Each confirmed ACT gets a **proposed date + time** chip
+- Slot picked by: due context + user's energy windows + existing calendar gaps
+- One-tap "Accept" writes to `daily_actions` + syncs to Google/Outlook
+- "Reschedule" opens a 3-option picker (max 3 — per design memory)
 
-### 4. Stage-aware lens chip — `src/launch/stage/StageLensChip.tsx`
-- Optional small chip on Capture / Commit / Calibrate hero areas: "Stage: [label] — [lens]".
-- Hidden until the user has engaged with the picker once (so recovery users in Pause aren't constantly reminded).
+### 4. `/prototype/invite` (inline in step 3) — Attendees
+- If the ACT mentions a person, role, or meeting verb (detected by `useMeetingDetection`):
+  - Auto-suggest matching names from Support Circle + Contact List (fuzzy match)
+  - Show 1-tap chips: `[+ Sarah] [+ Dr. Patel] [+ Mum]`
+  - On accept → generates `.ics` invite + sends via existing `send-invitation-email`
 
-### 5. Pause home variant — `src/components/launch/quiet/QuietHomePause.tsx`
-- Minimal variant rendered by `QuietHome` when `isPause` is true.
-- Greeting + #IChoose heart + single rest sentence + quiet "Move to Ready" control.
-- No scaffolds, wins, composer, or capture surfaces.
+### 5. `/prototype/done` — Confirmation
+- "Your assistant scheduled 5 actions, invited 3 people, blocked 2 hours of focus time"
+- Single button back to `/prototype/capture` for the next loop
 
-### 6. Light touch in existing surfaces
-- `QuietHome.tsx` — branch on `isPause`; otherwise add "Where am I?" link under greeting.
-- `CapabilityPage.tsx` — accept optional `stageLens?: boolean` prop to mount `StageLensChip`.
-- `LaunchCapture.tsx`, `LaunchCommit.tsx`, `LaunchCalibrate.tsx` — pass `stageLens`.
-- `LaunchWelcome.tsx` — one optional line on first visit: "We'll meet you wherever you are in your rhythm."
+## What is intentionally OUT of the MVP
 
-## Files
+- Vision board, gratitude journal, brain games, analytics, roadmap, founder dashboard, MFA setup, persona-switching, multiple onboarding paths, etc.
+- These remain available in the full app at their existing routes — just not in `/prototype/*`.
 
-**New (5)**
-- `src/launch/stage/stages.ts`
-- `src/launch/stage/useStage.ts`
-- `src/launch/stage/StagePicker.tsx`
-- `src/launch/stage/StageLensChip.tsx`
-- `src/components/launch/quiet/QuietHomePause.tsx`
+## What stays exactly the same
 
-**Edited (5)**
-- `src/components/launch/quiet/QuietHome.tsx`
-- `src/components/launch/chrome/CapabilityPage.tsx`
-- `src/pages/launch/LaunchCapture.tsx`, `LaunchCommit.tsx`, `LaunchCalibrate.tsx`
-- `src/pages/launch/LaunchWelcome.tsx`
+- All existing files, routes, components, hooks, edge functions, Supabase tables, RLS policies
+- All demo mode, tier switcher, persona logic
+- Only **one** file is modified: the router, to add the `/prototype/*` block
 
-## Out of scope
+## Safety guarantees
 
-- No new dashboards, KPIs, routes, schema, or backend.
-- No automatic stage progression.
-- No medical claims, no countdowns, no badges, no streaks.
-- No changes to Capture/Commit/Calibrate capability lists.
-- No brand re-theming.
+1. No deletions — only new files under `src/pages/prototype/` and `src/components/prototype/`
+2. Router isolation — `/prototype/*` is a separate Route block; failures don't cascade
+3. Shared backend — same Supabase tables, so real data flows through both versions
+4. Revertible — every step is a separate AI message you can roll back individually
 
-## QA matrix
+## Decision needed
 
-Walk each of 4 personas through Welcome → Home → Picker → Pause variant → Capture → Commit → Calibrate. Confirm:
-- Default lands in Steady; recovery anchors only show for recovery persona.
-- Picker is one quiet link, never auto-opens.
-- Pause variant suppresses all task surfaces and shows only the rest sentence.
-- Lens chip stays hidden until the user has engaged with the picker once.
-- Recovery path remains calm and dignified end-to-end.
+Confirm and I will build it in this order:
+1. Add `/prototype/*` route tree + `PrototypeLayout` shell
+2. Build `/prototype/capture` (wraps existing Memory Bridge recording)
+3. Build `/prototype/review` (wraps existing ACT list + confirmation)
+4. Build `/prototype/schedule` with proposed slots + attendee suggestions
+5. Build `/prototype/done` confirmation screen
+6. Add a small dev-only "Switch to Prototype" floating button for easy toggling
 
-## Risk
-
-Low. All additive. One link, one sheet, one chip, one minimal home variant, one data file. No regressions to current Launch surfaces.
+Estimated: 5–6 focused build messages, each independently revertible.

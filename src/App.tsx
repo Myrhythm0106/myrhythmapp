@@ -138,6 +138,14 @@ import { LaunchModeProvider } from "./hooks/useLaunchMode";
 // Brain Injury Journey Routes
 import { JourneyRegister, JourneyEnergyCheck, JourneyAssessment, JourneySupportCircle, JourneyReady } from "./pages/journey/brain-injury";
 
+// MVP Prototype (parallel route tree)
+import PrototypeLanding from "./pages/prototype/PrototypeLanding";
+import PrototypeCapture from "./pages/prototype/PrototypeCapture";
+import PrototypeReview from "./pages/prototype/PrototypeReview";
+import PrototypeSchedule from "./pages/prototype/PrototypeSchedule";
+import PrototypeDone from "./pages/prototype/PrototypeDone";
+
+
 const queryClient = new QueryClient();
 
 // Network status component
@@ -176,6 +184,12 @@ function App() {
                         <SetupProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
+     {/* ===== MVP Prototype (parallel route tree — see .lovable/plan.md) ===== */}
+                     <Route path="/prototype" element={<PrototypeLanding />} />
+                     <Route path="/prototype/capture" element={<PrototypeCapture />} />
+                     <Route path="/prototype/review" element={<PrototypeReview />} />
+                     <Route path="/prototype/schedule" element={<PrototypeSchedule />} />
+                     <Route path="/prototype/done" element={<PrototypeDone />} />
      {/* Landing and Discovery Routes */}
                      <Route path="/" element={<Navigate to="/mvp" replace />} />
                      <Route path="/auth" element={<Auth />} />
