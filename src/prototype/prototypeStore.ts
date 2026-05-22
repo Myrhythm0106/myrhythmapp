@@ -241,7 +241,7 @@ export function setBypassAuth(on: boolean) {
 
 // Apply context-derived defaults to an extracted ACT.
 // Pure: no mutation, no side effects. Run once after extraction.
-import { CONTEXTS, inferCognitiveLoad, type ContextId } from './prototypeContexts';
+import { CONTEXTS, inferCognitiveLoad } from './prototypeContexts';
 
 export function applyContextDefaults(act: PrototypeAct, contextId: ContextId): PrototypeAct {
   const cfg = CONTEXTS[contextId];
