@@ -9,9 +9,12 @@ export default function PrototypeLanding() {
   return (
     <PrototypeLayout>
       <div className="mb-10">
+        <div className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500 mb-3">
+          For anyone carrying a heavy cognitive load
+        </div>
         <h1 className="text-3xl sm:text-[40px] leading-[1.1] font-semibold text-slate-900 tracking-tight">
-          Your personal assistant<br className="hidden sm:block" />
-          after a brain injury.
+          Think clearly.<br className="hidden sm:block" />
+          Live fully.
         </h1>
         <p className="mt-4 text-[15px] text-slate-600 max-w-xl leading-relaxed">
           Record a conversation. We extract the actions, propose times in your diary,
