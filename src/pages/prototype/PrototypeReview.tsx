@@ -31,6 +31,8 @@ export default function PrototypeReview() {
   const [acts, setActs] = useState<PrototypeAct[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [contextId, setContextId] = useState<ContextId>('general');
+  const [showContextPicker, setShowContextPicker] = useState(false);
 
   useEffect(() => {
     const loaded = loadActs();
@@ -39,11 +41,20 @@ export default function PrototypeReview() {
       return;
     }
     setActs(loaded);
+    setContextId(loadContextId() ?? loaded[0]?.contextId ?? 'general');
   }, [navigate]);
 
   const update = (next: PrototypeAct[]) => {
     setActs(next);
     saveActs(next);
+  };
+
+  const changeContext = (next: ContextId) => {
+    setContextId(next);
+    saveContextId(next);
+    const reshaped = acts.map(a => applyContextDefaults(a, next));
+    update(reshaped);
+    setShowContextPicker(false);
   };
 
   const confirm = (id: string) =>
@@ -58,12 +69,44 @@ export default function PrototypeReview() {
 
   const visible = acts.filter(a => a.status !== 'rejected');
   const confirmedCount = acts.filter(a => a.status === 'confirmed').length;
+  const ctxCfg = CONTEXTS[contextId];
 
   return (
     <PrototypeLayout
       title="Your assistant found these actions"
       subtitle="Tap ✓ to confirm, ✎ to edit, ✗ to drop. We'll propose times next."
     >
+      {/* Inferred-context pill — silent unless not 'general' */}
+      {contextId !== 'general' && (
+        <div className="mb-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs text-slate-600">
+          <Stethoscope className="w-3.5 h-3.5 text-slate-400" />
+          <span>Looks like a {ctxCfg.label}</span>
+          <button
+            onClick={() => setShowContextPicker(v => !v)}
+            className="font-medium text-teal-700 hover:text-teal-800 flex items-center gap-0.5"
+          >
+            not right? change <ChevronDown className={`w-3 h-3 transition ${showContextPicker ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+      )}
+      {showContextPicker && (
+        <div className="mb-3 flex flex-wrap gap-1.5">
+          {CONTEXT_OPTIONS.map(id => (
+            <button
+              key={id}
+              onClick={() => changeContext(id)}
+              className={`px-2.5 py-1 rounded-full text-xs font-medium border transition ${
+                id === contextId
+                  ? 'bg-teal-600 text-white border-teal-600'
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-teal-300'
+              }`}
+            >
+              {CONTEXTS[id].label}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="space-y-3">
         {visible.map((a) => (
           <div
