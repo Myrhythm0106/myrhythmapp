@@ -8,10 +8,10 @@ import {
 import { CONTEXTS, CONTEXT_OPTIONS, type ContextId, type ActType } from '@/prototype/prototypeContexts';
 import { Check, X, Pencil, ArrowRight, Stethoscope, ChevronDown } from 'lucide-react';
 
-const priorityStyles: Record<string, string> = {
-  high: 'bg-orange-100 text-orange-700 border-orange-200',
-  medium: 'bg-amber-100 text-amber-700 border-amber-200',
-  low: 'bg-slate-100 text-slate-600 border-slate-200',
+const priorityDot: Record<string, string> = {
+  high: 'bg-slate-900',
+  medium: 'bg-slate-500',
+  low: 'bg-slate-300',
 };
 
 const ACT_TYPE_LABELS: Record<ActType, string> = {
@@ -78,14 +78,14 @@ export default function PrototypeReview() {
     >
       {/* Inferred-context pill — silent unless not 'general' */}
       {contextId !== 'general' && (
-        <div className="mb-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs text-slate-600">
+        <div className="mb-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600">
           <Stethoscope className="w-3.5 h-3.5 text-slate-400" />
-          <span>Looks like a {ctxCfg.label}</span>
+          <span>looks like a {ctxCfg.label.toLowerCase()}</span>
           <button
             onClick={() => setShowContextPicker(v => !v)}
-            className="font-medium text-teal-700 hover:text-teal-800 flex items-center gap-0.5"
+            className="font-medium text-slate-900 hover:text-slate-700 flex items-center gap-0.5"
           >
-            not right? change <ChevronDown className={`w-3 h-3 transition ${showContextPicker ? 'rotate-180' : ''}`} />
+            change <ChevronDown className={`w-3 h-3 transition ${showContextPicker ? 'rotate-180' : ''}`} />
           </button>
         </div>
       )}
@@ -97,8 +97,8 @@ export default function PrototypeReview() {
               onClick={() => changeContext(id)}
               className={`px-2.5 py-1 rounded-full text-xs font-medium border transition ${
                 id === contextId
-                  ? 'bg-teal-600 text-white border-teal-600'
-                  : 'bg-white text-slate-700 border-slate-200 hover:border-teal-300'
+                  ? 'bg-slate-900 text-white border-slate-900'
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-slate-300'
               }`}
             >
               {CONTEXTS[id].label}
@@ -111,19 +111,19 @@ export default function PrototypeReview() {
         {visible.map((a) => (
           <div
             key={a.id}
-            className={`rounded-2xl border bg-white p-4 transition-all ${
-              a.status === 'confirmed' ? 'border-teal-300 bg-teal-50/40' : 'border-slate-200'
-            }`}
+            className="rounded-xl border border-slate-200 bg-white p-4"
           >
             <div className="flex items-start gap-3">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-2 flex-wrap">
-                  <span className={`text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-full border ${priorityStyles[a.priority]}`}>
+                <div className="flex items-center gap-2 mb-2 flex-wrap text-xs text-slate-500">
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className={`w-1.5 h-1.5 rounded-full ${priorityDot[a.priority]}`} />
                     {a.priority}
                   </span>
-                  <span className="text-xs text-slate-500">due {a.dueContext}</span>
-                  <span className="text-xs text-slate-400">·</span>
-                  <span className="text-xs text-slate-500">{Math.round(a.confidence * 100)}% confidence</span>
+                  <span className="text-slate-300">·</span>
+                  <span>due {a.dueContext}</span>
+                  <span className="text-slate-300">·</span>
+                  <span>{Math.round(a.confidence * 100)}% confidence</span>
                 </div>
                 {editingId === a.id ? (
                   <div className="flex gap-2">
@@ -135,7 +135,7 @@ export default function PrototypeReview() {
                     />
                     <button
                       onClick={() => saveEdit(a.id)}
-                      className="px-3 rounded-lg bg-teal-600 text-white text-sm font-medium"
+                      className="px-3 rounded-lg bg-slate-900 text-white text-sm font-medium"
                     >
                       Save
                     </button>
@@ -150,19 +150,17 @@ export default function PrototypeReview() {
                 )}
                 {/* Context-shaped extras — only render when populated */}
                 {(a.actType || a.clinician || (a.shareWith && a.shareWith.length > 0)) && (
-                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
                     {a.actType && a.actType !== 'general' && (
-                      <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                      <span className="px-2 py-0.5 rounded-full bg-white text-slate-700 border border-slate-200 lowercase">
                         {ACT_TYPE_LABELS[a.actType as ActType] || a.actType}
                       </span>
                     )}
                     {a.clinician && (
-                      <span className="text-xs text-slate-600">· {a.clinician}</span>
+                      <span>· {a.clinician}</span>
                     )}
                     {a.shareWith && a.shareWith.length > 0 && (
-                      <span className="text-xs text-slate-500">
-                        · share with {a.shareWith.join(', ')}
-                      </span>
+                      <span>· share with {a.shareWith.join(', ')}</span>
                     )}
                   </div>
                 )}
@@ -173,24 +171,24 @@ export default function PrototypeReview() {
               <div className="flex gap-2 mt-3">
                 <button
                   onClick={() => confirm(a.id)}
-                  className={`min-h-[44px] flex-1 rounded-lg flex items-center justify-center gap-1.5 text-sm font-medium transition ${
+                  className={`min-h-[44px] flex-1 rounded-lg flex items-center justify-center gap-1.5 text-sm font-medium transition border ${
                     a.status === 'confirmed'
-                      ? 'bg-teal-600 text-white'
-                      : 'bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-700'
+                      ? 'bg-slate-900 border-slate-900 text-white'
+                      : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
                   }`}
                 >
                   <Check className="w-4 h-4" /> {a.status === 'confirmed' ? 'Confirmed' : 'Confirm'}
                 </button>
                 <button
                   onClick={() => startEdit(a)}
-                  className="min-h-[44px] px-4 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center"
+                  className="min-h-[44px] px-4 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-slate-700 flex items-center justify-center"
                   aria-label="Edit"
                 >
                   <Pencil className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => reject(a.id)}
-                  className="min-h-[44px] px-4 rounded-lg bg-slate-100 hover:bg-red-100 text-slate-700 hover:text-red-700 flex items-center justify-center"
+                  className="min-h-[44px] px-4 rounded-lg bg-white border border-slate-200 hover:border-slate-300 text-slate-700 flex items-center justify-center"
                   aria-label="Reject"
                 >
                   <X className="w-4 h-4" />
@@ -205,10 +203,10 @@ export default function PrototypeReview() {
         <button
           onClick={() => navigate('/prototype/schedule')}
           disabled={confirmedCount === 0}
-          className="w-full min-h-[56px] rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all"
+          className="w-full min-h-[56px] rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-colors"
         >
           Schedule {confirmedCount} action{confirmedCount === 1 ? '' : 's'}
-          <ArrowRight className="w-5 h-5" />
+          <ArrowRight className="w-4 h-4" />
         </button>
       </div>
     </PrototypeLayout>

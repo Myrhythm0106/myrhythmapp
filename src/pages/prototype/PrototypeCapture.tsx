@@ -5,7 +5,7 @@ import {
   saveActs, getSampleActs, saveTranscript, smartReminderDefaults,
   isBypassAuth, applyContextDefaults, saveContextId, type PrototypeAct,
 } from '@/prototype/prototypeStore';
-import { Mic, Square, Sparkles, AlertTriangle, Pause, Play, Loader2 } from 'lucide-react';
+import { Mic, Square, AlertTriangle, Pause, Play, Loader2, PlayCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
@@ -196,16 +196,16 @@ export default function PrototypeCapture() {
       subtitle="Press record. Your assistant listens, then extracts every action, commitment, and follow-up."
     >
       {needsLogin && (
-        <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5" />
+        <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-slate-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1 text-sm">
-            <div className="font-medium text-amber-900">Sign in to record</div>
-            <div className="text-amber-800 mt-0.5">
-              Real recording works best signed in. Or flip the <strong>Bypass</strong> toggle at the top to demo with sample data — no login.
+            <div className="font-medium text-slate-900">Sign in to record</div>
+            <div className="text-slate-600 mt-0.5 leading-relaxed">
+              Real recording works best signed in. Or flip the <strong>bypass</strong> toggle at the top to demo with sample data — no login.
             </div>
             <button
               onClick={() => navigate('/auth?next=/prototype/capture')}
-              className="mt-2 px-3 py-1.5 rounded-full bg-amber-600 hover:bg-amber-700 text-white text-xs font-medium"
+              className="mt-2 px-3 py-1.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium"
             >
               Sign in →
             </button>
@@ -213,48 +213,45 @@ export default function PrototypeCapture() {
         </div>
       )}
 
-      <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+      <div className="rounded-xl border border-slate-200 bg-white p-8">
         <div className="flex flex-col items-center">
           {/* Status indicator (non-interactive) */}
           <div className="relative mb-6" aria-hidden="true">
             <div
-              className={`w-32 h-32 rounded-full flex items-center justify-center text-white shadow-xl transition-colors ${
+              className={`w-28 h-28 rounded-full flex items-center justify-center transition-colors ${
                 isPaused
-                  ? 'bg-amber-500 shadow-amber-500/40'
+                  ? 'bg-slate-100 text-slate-500 border border-slate-200'
                   : isRecording
-                    ? 'bg-red-500 shadow-red-500/40 animate-pulse'
-                    : 'bg-slate-300 shadow-slate-300/40'
+                    ? 'bg-slate-900 text-white animate-pulse'
+                    : 'bg-slate-50 text-slate-400 border border-slate-200'
               }`}
             >
-              {isPaused ? <Pause className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
+              {isPaused ? <Pause className="w-9 h-9" /> : <Mic className="w-9 h-9" />}
             </div>
-            {isRecording && !isPaused && (
-              <div className="absolute -inset-2 rounded-full border-4 border-red-300 animate-ping" />
-            )}
           </div>
 
-          <div className="text-2xl font-mono font-semibold text-slate-900">{mm}:{ss}</div>
+          <div className="text-2xl font-mono font-semibold text-slate-900 tabular-nums">{mm}:{ss}</div>
           <div className="text-sm text-slate-500 mt-1 min-h-[20px]">
-            {processing ? 'Extracting actions…'
-              : isPaused ? 'Paused — your transcript is safe'
-              : isRecording ? "Listening — I'm catching every action"
-              : 'Tap Start to begin'}
+            {processing ? 'extracting actions…'
+              : isPaused ? 'paused — transcript is safe'
+              : isRecording ? 'listening — catching every action'
+              : 'tap start to begin'}
           </div>
 
           {/* Controls */}
           <div className="mt-6 w-full flex flex-col sm:flex-row gap-3 justify-center">
             {processing ? (
-              <div className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-slate-100 text-slate-600 font-medium">
-                <Loader2 className="w-5 h-5 animate-spin" />
+              <div className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-xl bg-slate-100 text-slate-600 font-medium">
+                <Loader2 className="w-4 h-4 animate-spin" />
                 Extracting actions…
               </div>
             ) : !isRecording ? (
               <button
                 onClick={startRecording}
                 aria-label="Start recording"
-                className="inline-flex items-center justify-center gap-2 min-h-[56px] px-8 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 transition"
+                className="inline-flex items-center justify-center gap-2 min-h-[56px] px-8 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium transition-colors"
               >
-                <Mic className="w-5 h-5" />
+                <Mic className="w-4 h-4" />
                 Start recording
               </button>
             ) : (
@@ -263,28 +260,28 @@ export default function PrototypeCapture() {
                   <button
                     onClick={resumeRecording}
                     aria-label="Resume recording"
-                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-lg shadow-orange-500/30 transition"
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium transition-colors"
                   >
-                    <Play className="w-5 h-5" />
+                    <Play className="w-4 h-4" />
                     Resume
                   </button>
                 ) : (
                   <button
                     onClick={pauseRecording}
                     aria-label="Pause recording"
-                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full border-2 border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-semibold transition"
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-medium transition-colors"
                   >
-                    <Pause className="w-5 h-5" />
+                    <Pause className="w-4 h-4" />
                     Pause
                   </button>
                 )}
                 <button
                   onClick={stopAndProcess}
                   aria-label="Stop recording and extract actions"
-                  className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-full bg-red-600 hover:bg-red-700 text-white font-semibold shadow-lg shadow-red-500/30 transition"
+                  className="inline-flex items-center justify-center gap-2 min-h-[56px] px-6 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium transition-colors"
                 >
-                  <Square className="w-5 h-5" />
-                  Stop & extract actions
+                  <Square className="w-4 h-4" />
+                  Stop & extract
                 </button>
               </>
             )}
@@ -303,17 +300,17 @@ export default function PrototypeCapture() {
         </div>
       </div>
 
-      <div className="mt-6 rounded-2xl bg-teal-50 border border-teal-200 p-4">
+      <div className="mt-6 rounded-xl border border-slate-200 bg-white p-4">
         <div className="flex items-start gap-3">
-          <Sparkles className="w-5 h-5 text-teal-600 flex-shrink-0 mt-0.5" />
+          <PlayCircle className="w-[18px] h-[18px] text-slate-500 flex-shrink-0 mt-0.5" />
           <div className="flex-1">
-            <div className="font-medium text-teal-900 text-sm">Skip the recording</div>
-            <div className="text-xs text-teal-700 mt-0.5">
+            <div className="font-medium text-slate-900 text-sm">Skip the recording</div>
+            <div className="text-xs text-slate-600 mt-0.5 leading-relaxed">
               See the full flow in 30 seconds with a sample meeting.
             </div>
             <button
               onClick={useSample}
-              className="mt-3 min-h-[44px] px-4 py-2 rounded-full bg-teal-600 hover:bg-teal-700 text-white text-sm font-medium"
+              className="mt-3 min-h-[44px] px-4 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 text-sm font-medium"
             >
               Try a sample meeting →
             </button>
