@@ -5,9 +5,10 @@ import {
   saveAssessmentProfile, type PrototypePersona, type FocusWindow,
   type SupportStyle, type LoadPattern,
 } from '@/prototype/prototypeAssessment';
-import { ArrowRight, Sparkles, HeartPulse, Brain, Users } from 'lucide-react';
+import { addMember, loadCircle, type CircleRelationship, type CircleRole } from '@/prototype/prototypeSupportCircle';
+import { ArrowRight, Sparkles, HeartPulse, Brain, Users, Plus, Check, SkipForward } from 'lucide-react';
 
-type StepId = 'persona' | 'hardest' | 'best' | 'low' | 'support';
+type StepId = 'persona' | 'hardest' | 'best' | 'low' | 'support' | 'circle';
 
 interface Choice<T extends string> {
   value: T;
