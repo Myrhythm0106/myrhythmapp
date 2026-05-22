@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
 import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS, smartReminderDefaults, autoScheduleActs, isLowEnergyDay } from '@/prototype/prototypeStore';
-import { Calendar, Clock, UserPlus, ArrowRight, X, BellRing, ChevronDown, Check, Loader2, Wand2 } from 'lucide-react';
+import { loadAssessmentProfile, windowLabel, personaLabel } from '@/prototype/prototypeAssessment';
+import { Calendar, Clock, UserPlus, ArrowRight, X, BellRing, ChevronDown, Check, Loader2, Wand2, Target, Sunrise } from 'lucide-react';
 
 function formatDate(iso?: string) {
   if (!iso) return '—';
@@ -72,15 +73,54 @@ export default function PrototypeSchedule() {
   };
 
   const highCount = acts.filter(a => a.priority === 'high').length;
+  const profile = loadAssessmentProfile();
 
   const lowEnergy = isLowEnergyDay();
   const deferredCount = lowEnergy ? acts.filter(a => a.priority !== 'high').length : 0;
 
   return (
     <PrototypeLayout
-      title="Proposed diary slots"
-      subtitle="Let your assistant place every action in your best-fit window — or review them yourself."
+      title="Your MyRhythm calendar"
+      subtitle="Each action placed in the window your brain shows up best — vision, week, day, action."
     >
+      {/* Vision cascade strip — same model as the launch calendar */}
+      <div className="rounded-xl border border-slate-200 bg-white p-4 mb-4">
+        <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500 mb-3">
+          Vision → week → today
+        </div>
+        <div className="space-y-2.5">
+          <div className="flex items-start gap-2.5">
+            <div className="w-6 h-6 rounded-md bg-slate-100 flex items-center justify-center text-slate-700 flex-shrink-0">
+              <Target className="w-3 h-3" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Vision</div>
+              <div className="text-[13px] text-slate-900 leading-snug">Live with more ease, and follow through on what matters.</div>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5">
+            <div className="w-6 h-6 rounded-md bg-slate-100 flex items-center justify-center text-slate-700 flex-shrink-0">
+              <Calendar className="w-3 h-3" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-medium uppercase tracking-wider text-slate-500">This week</div>
+              <div className="text-[13px] text-slate-900 leading-snug">Protect energy. Complete the essentials. Stay connected.</div>
+            </div>
+          </div>
+          <div className="flex items-start gap-2.5">
+            <div className="w-6 h-6 rounded-md bg-slate-100 flex items-center justify-center text-slate-700 flex-shrink-0">
+              <Sunrise className="w-3 h-3" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="text-[10px] font-medium uppercase tracking-wider text-slate-500">Today</div>
+              <div className="text-[13px] text-slate-900 leading-snug">
+                {highCount} high-priority action{highCount === 1 ? '' : 's'} placed in your best-focus window.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {lowEnergy && deferredCount > 0 && (
         <div className="mb-3 rounded-xl bg-slate-50 border border-slate-200 px-4 py-3 text-sm text-slate-700 leading-relaxed">
           Today's a lower-energy day. I've kept the urgent {acts.length - deferredCount === 1 ? 'one' : `${acts.length - deferredCount}`} and moved the other {deferredCount} to tomorrow morning when you tend to focus best — continuity preserved.
