@@ -148,6 +148,24 @@ export default function PrototypeReview() {
                     with {a.attendees.join(', ')}
                   </div>
                 )}
+                {/* Context-shaped extras — only render when populated */}
+                {(a.actType || a.clinician || (a.shareWith && a.shareWith.length > 0)) && (
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                    {a.actType && a.actType !== 'general' && (
+                      <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                        {ACT_TYPE_LABELS[a.actType as ActType] || a.actType}
+                      </span>
+                    )}
+                    {a.clinician && (
+                      <span className="text-xs text-slate-600">· {a.clinician}</span>
+                    )}
+                    {a.shareWith && a.shareWith.length > 0 && (
+                      <span className="text-xs text-slate-500">
+                        · share with {a.shareWith.join(', ')}
+                      </span>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
