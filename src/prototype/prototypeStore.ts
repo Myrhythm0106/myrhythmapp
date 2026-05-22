@@ -137,6 +137,9 @@ export function autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[] {
   };
 
   const pickWindow = (act: PrototypeAct): number[] => {
+    // Brain-health filter: cognitiveLoad wins over priority where set.
+    if (act.cognitiveLoad === 'high') return [9, 9.5, 10, 10.5];
+    if (act.cognitiveLoad === 'low') return [17, 17.5, 18];
     const heavy = act.priority === 'high' || (act.attendees?.length || 0) > 0;
     if (heavy) return [9, 9.5, 10, 10.5];
     if (act.priority === 'medium') return [10.5, 11, 15.5, 16, 16.5];
