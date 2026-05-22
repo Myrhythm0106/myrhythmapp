@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
 import {
   saveActs, getSampleActs, saveTranscript, smartReminderDefaults,
-  isBypassAuth, type PrototypeAct,
+  isBypassAuth, applyContextDefaults, saveContextId, type PrototypeAct,
 } from '@/prototype/prototypeStore';
 import { Mic, Square, Sparkles, AlertTriangle, Pause, Play, Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
