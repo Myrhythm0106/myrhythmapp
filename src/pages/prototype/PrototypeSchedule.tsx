@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
-import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS, smartReminderDefaults, autoScheduleActs } from '@/prototype/prototypeStore';
+import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS, smartReminderDefaults, autoScheduleActs, isLowEnergyDay } from '@/prototype/prototypeStore';
 import { Calendar, Clock, UserPlus, ArrowRight, X, BellRing, Sparkles, ChevronDown, Check, Loader2 } from 'lucide-react';
 
 function formatDate(iso?: string) {
