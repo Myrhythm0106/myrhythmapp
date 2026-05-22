@@ -4,9 +4,10 @@ import { ShieldOff, Shield } from 'lucide-react';
 import { isBypassAuth, setBypassAuth } from './prototypeStore';
 
 const STEPS = [
+  { path: '/prototype/assessment', label: 'Rhythm check' },
   { path: '/prototype/capture', label: 'Capture' },
   { path: '/prototype/review', label: 'Review' },
-  { path: '/prototype/schedule', label: 'Schedule' },
+  { path: '/prototype/schedule', label: 'Calendar' },
   { path: '/prototype/reminders', label: 'Reminders' },
   { path: '/prototype/done', label: 'Done' },
 ];

@@ -117,14 +117,21 @@ export const ENERGY_PROFILE = {
 };
 
 // Pure SMART placement. Frontend-only prototype logic — no backend call.
-// TODO: replace with calendar-google-sync availability for production.
+// Now reads the user's assessment profile (best/low energy windows) when available.
+import { loadAssessmentProfile, focusWindowHours } from './prototypeAssessment';
+
 export function autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[] {
+  const profile = loadAssessmentProfile();
+  const bestHours = profile ? focusWindowHours(profile.bestFocusWindow) : [9, 9.5, 10, 10.5];
+  const lowHours  = profile ? focusWindowHours(profile.lowEnergyWindow) : [14, 14.5, 15];
+  const lightHours = [16, 16.5, 17, 17.5, 18];
+
   const sorted = [...acts].sort((a, b) => {
     const rank = { high: 0, medium: 1, low: 2 } as const;
     return rank[a.priority] - rank[b.priority];
   });
 
-  const usedByDay = new Map<string, number[]>(); // date -> hours used (decimal)
+  const usedByDay = new Map<string, number[]>();
   const today = new Date();
   const nowHour = today.getHours();
 
@@ -137,21 +144,19 @@ export function autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[] {
   };
 
   const pickWindow = (act: PrototypeAct): number[] => {
-    // Brain-health filter: cognitiveLoad wins over priority where set.
-    if (act.cognitiveLoad === 'high') return [9, 9.5, 10, 10.5];
-    if (act.cognitiveLoad === 'low') return [17, 17.5, 18];
+    if (act.cognitiveLoad === 'high') return bestHours;
+    if (act.cognitiveLoad === 'low')  return lightHours;
     const heavy = act.priority === 'high' || (act.attendees?.length || 0) > 0;
-    if (heavy) return [9, 9.5, 10, 10.5];
-    if (act.priority === 'medium') return [10.5, 11, 15.5, 16, 16.5];
-    return [17, 17.5, 18];
+    if (heavy) return bestHours;
+    if (act.priority === 'medium') return [...bestHours.slice(-2), ...lightHours.slice(0, 3)];
+    return lightHours;
   };
 
   const placed: PrototypeAct[] = [];
-  let dayCursor = new Date(today);
+  const dayCursor = new Date(today);
 
   for (const act of sorted) {
-    // High priority: tomorrow earliest if it's already late today.
-    let start = new Date(dayCursor);
+    const start = new Date(dayCursor);
     if (act.priority === 'high' && nowHour >= 16) {
       start.setDate(start.getDate() + 1);
     }
@@ -168,8 +173,8 @@ export function autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[] {
 
       const candidates = pickWindow(act).filter(h => {
         if (h >= ENERGY_PROFILE.lunchStart && h < ENERGY_PROFILE.lunchEnd) return false;
-        if (h >= ENERGY_PROFILE.dipStart && h < ENERGY_PROFILE.dipEnd) return false;
-        // 30-min buffer from any used slot that day
+        // Avoid the user's declared low-energy window
+        if (lowHours.includes(h)) return false;
         return used.every(u => Math.abs(u - h) >= 0.5);
       });
 
@@ -193,7 +198,6 @@ export function autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[] {
     placed.push(next);
   }
 
-  // Preserve original act order for display stability
   const byId = new Map(placed.map(a => [a.id, a]));
   return acts.map(a => byId.get(a.id) || a);
 }
