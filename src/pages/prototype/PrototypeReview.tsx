@@ -206,6 +206,56 @@ export default function PrototypeReview() {
                 </button>
               </div>
             )}
+
+            {editingId !== a.id && circle.length > 0 && (
+              <div className="mt-3 pt-3 border-t border-slate-100">
+                <div className="flex items-center justify-between mb-2">
+                  <div className="text-[11px] font-medium text-slate-500 uppercase tracking-wide">
+                    Loop in {(a.attendees?.length || 0) > 0 && (
+                      <span className="text-slate-700">· {a.attendees!.length} invited</span>
+                    )}
+                  </div>
+                  <button
+                    onClick={() => setInvitingId(invitingId === a.id ? null : a.id)}
+                    className="text-[11px] text-slate-700 hover:text-slate-900 font-medium flex items-center gap-1"
+                  >
+                    <UserPlus className="w-3 h-3" /> {invitingId === a.id ? 'Close' : 'Invite'}
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {(a.attendees || []).map(name => (
+                    <span key={name} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-900 text-white text-[11px] font-medium">
+                      <span className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-[9px]">{initials(name)}</span>
+                      {name}
+                    </span>
+                  ))}
+                </div>
+                {invitingId === a.id && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {circle.map(m => {
+                      const picked = (a.attendees || []).includes(m.name);
+                      const suggested = suggestForAct(a).some(s => s.id === m.id);
+                      return (
+                        <button
+                          key={m.id}
+                          onClick={() => toggleAttendee(a.id, m.name)}
+                          className={`px-2.5 py-1 rounded-full text-[11px] font-medium border transition ${
+                            picked
+                              ? 'bg-slate-900 border-slate-900 text-white'
+                              : suggested
+                                ? 'bg-amber-50 border-amber-200 text-amber-800 hover:border-amber-300'
+                                : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
+                          }`}
+                        >
+                          {picked ? '✓ ' : '+ '}{m.name}
+                          {suggested && !picked && <span className="ml-1 text-amber-600">suggested</span>}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
