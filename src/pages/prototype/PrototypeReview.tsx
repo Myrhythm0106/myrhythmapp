@@ -6,7 +6,8 @@ import {
   loadContextId, saveContextId, applyContextDefaults,
 } from '@/prototype/prototypeStore';
 import { CONTEXTS, CONTEXT_OPTIONS, type ContextId, type ActType } from '@/prototype/prototypeContexts';
-import { Check, X, Pencil, ArrowRight, Stethoscope, ChevronDown } from 'lucide-react';
+import { Check, X, Pencil, ArrowRight, Stethoscope, ChevronDown, UserPlus } from 'lucide-react';
+import { loadCircle, suggestForAct, initials } from '@/prototype/prototypeSupportCircle';
 
 const priorityDot: Record<string, string> = {
   high: 'bg-slate-900',
@@ -33,6 +34,8 @@ export default function PrototypeReview() {
   const [editText, setEditText] = useState('');
   const [contextId, setContextId] = useState<ContextId>('general');
   const [showContextPicker, setShowContextPicker] = useState(false);
+  const [invitingId, setInvitingId] = useState<string | null>(null);
+  const circle = loadCircle();
 
   useEffect(() => {
     const loaded = loadActs();
@@ -65,6 +68,14 @@ export default function PrototypeReview() {
   const saveEdit = (id: string) => {
     update(acts.map(a => a.id === id ? { ...a, text: editText, status: 'confirmed' } : a));
     setEditingId(null);
+  };
+
+  const toggleAttendee = (id: string, name: string) => {
+    const act = acts.find(a => a.id === id);
+    if (!act) return;
+    const cur = new Set(act.attendees || []);
+    if (cur.has(name)) cur.delete(name); else cur.add(name);
+    update(acts.map(a => a.id === id ? { ...a, attendees: Array.from(cur) } : a));
   };
 
   const visible = acts.filter(a => a.status !== 'rejected');
