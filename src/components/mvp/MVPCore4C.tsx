@@ -276,6 +276,9 @@ export function MVPCore4C() {
             <p className="text-brain-health-600 font-medium max-w-2xl mx-auto">
               The complete MyRhythm system - Capture memories and conversations, Commit to your rhythm and follow through, Calibrate your well being and Celebrate with your community.
             </p>
+            <p className="text-xs text-brain-health-500 mt-4 tracking-wide uppercase">
+              Operating layer: Cognitive Continuity
+            </p>
           </div>
 
           {/* Prominent CTA */}
