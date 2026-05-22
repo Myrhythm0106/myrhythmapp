@@ -1,13 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
-import { loadActs, saveActs, PrototypeAct } from '@/prototype/prototypeStore';
-import { Check, X, Pencil, ArrowRight } from 'lucide-react';
+import {
+  loadActs, saveActs, PrototypeAct,
+  loadContextId, saveContextId, applyContextDefaults,
+} from '@/prototype/prototypeStore';
+import { CONTEXTS, CONTEXT_OPTIONS, type ContextId, type ActType } from '@/prototype/prototypeContexts';
+import { Check, X, Pencil, ArrowRight, Stethoscope, ChevronDown } from 'lucide-react';
 
 const priorityStyles: Record<string, string> = {
   high: 'bg-orange-100 text-orange-700 border-orange-200',
   medium: 'bg-amber-100 text-amber-700 border-amber-200',
   low: 'bg-slate-100 text-slate-600 border-slate-200',
+};
+
+const ACT_TYPE_LABELS: Record<ActType, string> = {
+  medication: 'Medication',
+  follow_up: 'Follow-up',
+  test: 'Test',
+  referral: 'Referral',
+  lifestyle: 'Lifestyle',
+  question: 'Question',
+  homework: 'Homework',
+  reflection: 'Reflection',
+  general: 'General',
 };
 
 export default function PrototypeReview() {
