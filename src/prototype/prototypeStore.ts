@@ -13,6 +13,8 @@ export interface PrototypeReminder {
   channels: ReminderChannel[];
 }
 
+import type { ContextId, ActType } from './prototypeContexts';
+
 export interface PrototypeAct {
   id: string;
   text: string;
@@ -25,6 +27,27 @@ export interface PrototypeAct {
   attendees?: string[];
   reminders?: PrototypeReminder[];
   status: 'pending' | 'confirmed' | 'rejected' | 'scheduled';
+  // v7.12 SMART context fields — all optional, render only when set.
+  contextId?: ContextId;
+  actType?: ActType;
+  clinician?: string;
+  shareWith?: string[];
+  cognitiveLoad?: 'high' | 'medium' | 'low';
+}
+
+const CONTEXT_KEY = 'prototype:contextId';
+export function saveContextId(id: ContextId) {
+  sessionStorage.setItem(CONTEXT_KEY, id);
+}
+export function loadContextId(): ContextId | null {
+  const v = sessionStorage.getItem(CONTEXT_KEY);
+  return (v as ContextId | null) ?? null;
+}
+
+// Quiet brain-health flag — production reads from the MYRHYTHM assessment.
+// TODO: replace with EnergyProfile.lowEnergyToday from /prototype/rhythm.
+export function isLowEnergyDay(): boolean {
+  return sessionStorage.getItem('prototype:lowEnergyDay') === '1';
 }
 
 const KEY = 'prototype:acts';
