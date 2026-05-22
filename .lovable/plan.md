@@ -1,72 +1,87 @@
-Plan to fix the prototype flow and landing page:
+# Plan v7.17 — Support Circle + MVP Conversion Hooks
 
-1. Add the missing assessment before capture
-- Create a new `/prototype/assessment` step and make the landing CTA go there instead of directly to `/prototype/capture`.
-- Add “Assessment” into the prototype progress header so the visible flow becomes:
+## Goal
+Close two gaps the user just flagged:
+1. **No way to add people / Support Circle** in the prototype flow.
+2. **Not gripping enough to buy** — missing the emotional + proof hooks.
 
-```text
-Assessment -> Capture -> Review -> Calendar -> Reminders -> Done
+Scope: prototype only (`/prototype/*`). No DB, no `/launch/*` changes, no edge functions.
+
+---
+
+## Part A — Support Circle in the prototype
+
+### A1. New session-scoped store: `prototypeSupportCircle.ts`
 ```
-
-- Keep it quick and brain-friendly: one question per screen, maximum 3 answer choices, 56px+ touch targets.
-
-2. Make the questions identify the person and branch appropriately
-- Start with a persona-identifying question such as:
-  - “I’m rebuilding after a brain health event or injury”
-  - “I’m managing daily cognitive load, focus, or fatigue”
-  - “I’m supporting someone else”
-- Then ask a tailored micro-set based on that answer. Each branch will capture:
-  - what feels hardest right now
-  - what support style they need
-  - their best/most productive time of day
-  - their lower-energy time to avoid
-  - whether they need reminders, accountability, or shared support
-- Wording will stay empowering and non-diagnostic. Include the required disclaimer that MyRhythm does not diagnose, treat, or cure conditions.
-
-3. Store assessment answers in the prototype session
-- Extend `src/prototype/prototypeStore.ts` with a lightweight `PrototypeAssessmentProfile`.
-- Store persona, cognitive-load pattern, best focus window, low-energy window, reminder style, support preference, and recommended next step.
-- Replace the current hardcoded schedule note “peak 09:00–11:00...” with the actual assessment-derived profile.
-
-4. Correlate assessment -> capture -> calendar
-- Update `autoScheduleActs()` so action placement uses the assessment profile:
-  - cognitively heavy/high-priority tasks go into the user’s best productive window
-  - low-priority/admin tasks go into lighter windows
-  - low-energy periods are avoided
-  - support/caregiver tasks suggest inviting the right person
-- Update the “How this was decided” section to explicitly show the chain:
-
-```text
-Your assessment -> your best brain-health window -> available calendar space -> action priority
+PrototypeCircleMember {
+  id, name, relationship ('partner'|'family'|'friend'|'clinician'|'caregiver'|'other'),
+  role ('cheerleader'|'accountability'|'logistics'|'clinical'),
+  notifyByDefault: boolean
+}
 ```
+Helpers: `loadCircle / saveCircle / addMember / removeMember / suggestForAct(act)`.
 
-5. Bring in the richer MVP-style landing page
-- Rework `src/pages/prototype/PrototypeLanding.tsx` to feel closer to the previous MVP landing page: stronger visual hierarchy, warmer empowerment copy, richer sections, and more immediate value.
-- Keep the title: “Think clearly. Live fully.”
-- Add instantly engaging sections:
-  - a high-impact hero with CTA: “Start my rhythm check”
-  - 3 pain-to-relief cards: forgetting conversations, overwhelm, missed follow-through
-  - data/value tiles showing what the prototype will demonstrate, e.g. “90-second rhythm check”, “actions extracted automatically”, “scheduled around your best time”, “support people invited when helpful”
-  - 4C loop cards: Capture, Commit, Calibrate, Celebrate
-  - a mini calendar preview showing Vision -> week -> day -> action
-- Avoid unverifiable medical claims; use product demonstration data and benefit framing instead.
+### A2. Assessment step adds a 6th screen
+After Support Style, ask: *"Add 1–2 people to your circle now? (optional, skippable)"* — 2 quick rows: name + relationship + a chip for role. Skip = empty circle.
 
-6. Use the calendar with vision included
-- Rename the prototype schedule step visually from “Schedule” to “Calendar”.
-- Add a vision strip/calendar context to the schedule page so users see the same concept from the MVP/launch calendar:
+### A3. New "Circle" chip in `PrototypeLayout` header
+Small badge showing `n` people, opens a sheet to add/remove. Available on every prototype screen so users can add people anytime.
 
-```text
-Vision: Live with more ease and follow-through
-This week: Protect energy and complete the essentials
-Today: 2 high-priority actions placed in best-focus windows
-```
+### A4. Review screen — per-action "Invite" affordance
+On each action card, a subtle `+ invite` button → mini-picker of circle members → writes to `act.shareWith`. Auto-suggest based on act type:
+- `medication`, `follow_up`, `test` → clinical role members
+- `lifestyle`, `homework` → accountability role
+- High-priority actions → notifyByDefault members preselected
 
-- Keep the current scheduling controls, but make it feel like MyRhythm’s calendar, not a generic slot picker.
+### A5. Schedule screen — show who's looped in
+On each scheduled block, render avatar initials of `shareWith`. "How this was decided" line gains: *"…and we suggested looping in <Name> because they're your accountability partner."*
 
-7. Routing and acceptance criteria
-- Add route: `/prototype/assessment`.
-- Landing CTA opens assessment.
-- Assessment completion opens capture.
-- Capture/review/schedule uses the saved assessment profile.
-- Calendar explanation reflects the user’s selected best time and low-energy time.
-- Landing page feels visually closer to the earlier MVP page while preserving the prototype route tree and no-medical-claims policy.
+### A6. Done / Reminders screen — circle preview message
+Show the exact (mocked) message that would go out: *"Sarah will get a heads-up 10 min before your 10:00 focus block."* Reinforces the "I'm not alone" hook.
+
+---
+
+## Part B — Conversion hooks (the "want to buy" gap)
+
+### B1. Hook 1 — Belonging (covered by Part A)
+The Support Circle is the belonging hook.
+
+### B2. Hook 2 — Proof / payoff on the Done screen
+Rebuild `PrototypeDone.tsx` from a flat thank-you into a **"Your week, transformed"** summary:
+- Big number: `N actions captured in 90 seconds`
+- `N scheduled in your best focus window (late morning)`
+- `N protected from your low-energy window (afternoon)`
+- `N people looped in` (only if circle > 0)
+- Streak seed: *"Day 1 of your rhythm. Day 7 unlocks your first weekly review."*
+
+### B3. Hook 3 — A keepable artifact
+Add a **"Save my week"** button on Done that downloads a clean PNG/PDF "Week on a Page" (vision strip on top, scheduled actions, energy windows colored). Uses existing canvas/export pattern. Gives the free trial a tangible takeaway.
+
+### B4. Landing reinforcement
+Add one new pain→relief card on `PrototypeLanding.tsx`:
+*"You don't have to do this alone."* → *"Loop in family, friends, or your care team — only when it helps."*
+And add one value tile: *"Built for you — and the people standing with you."*
+
+---
+
+## Part C — Acceptance criteria
+- Assessment now has 6 steps, last one optional.
+- Header Circle chip visible on every `/prototype/*` screen.
+- Review screen lets me attach a circle member to any action in ≤ 2 taps.
+- Schedule screen shows initials of attached members on each block.
+- Done screen shows the "transformed week" summary and a working "Save my week" download.
+- Landing has the new belonging messaging.
+- All copy honors the no-diagnosis disclaimer.
+
+---
+
+## Out of scope
+- No real invites/emails (mocked preview only).
+- No Supabase tables, no `support_circle_members` writes.
+- No changes to `/launch/*`, `TBICalendarApp`, or MVP code.
+- No payments wiring (separate decision).
+
+## Files touched (estimate)
+- new: `src/prototype/prototypeSupportCircle.ts`
+- new: `src/prototype/CircleChip.tsx`, `src/prototype/CircleSheet.tsx`
+- edited: `PrototypeAssessment.tsx`, `PrototypeLayout.tsx`, `PrototypeReview.tsx`, `PrototypeSchedule.tsx`, `PrototypeDone.tsx`, `PrototypeLanding.tsx`, `prototypeStore.ts` (attach helper), `prototypeAssessment.ts` (step count)
