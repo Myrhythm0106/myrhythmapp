@@ -150,6 +150,7 @@ export default function PrototypeCapture() {
         setProcessing(false);
         return;
       }
+      const detectedContext = (data?.contextId as any) || 'general';
       const acts: PrototypeAct[] = rawActs.map((a) => {
         const act: PrototypeAct = {
           id: crypto.randomUUID(),
@@ -161,11 +162,15 @@ export default function PrototypeCapture() {
           attendees: Array.isArray(a.attendees) ? a.attendees : [],
           proposedDate: a.proposedDate || undefined,
           proposedTime: a.proposedTime || undefined,
+          actType: a.actType || undefined,
+          clinician: a.clinician || undefined,
           status: 'pending',
         };
-        act.reminders = smartReminderDefaults(act);
-        return act;
+        const shaped = applyContextDefaults(act, detectedContext);
+        shaped.reminders = smartReminderDefaults(shaped);
+        return shaped;
       });
+      saveContextId(detectedContext);
       saveActs(acts);
       navigate('/prototype/review');
     } catch (e: any) {
