@@ -1,75 +1,93 @@
-# Plan v7.8 — SMART auto-schedule (one tap)
+# Plan v7.12 — SMART Context Presets, brain-health aware, assistant-quiet
 
-## Problem
-`/prototype/schedule` currently forces the user to eyeball each ACT, pick a date, pick a time, pick attendees, then confirm. That's manual, slow, and contradicts the "reduce cognitive burden" promise. People will bounce.
+## Two non-negotiables (from user)
+1. **MYRHYTHM brain-health intake runs first.** Every downstream suggestion (ACT type, owner, time, invitees) is filtered through the user's energy profile from the 8-question MYRHYTHM assessment (Phase A of v7.11). No context preset overrides energy fit.
+2. **The assistant stays invisible.** No "pick a mode", no "choose a template", no settings screens, no jargon. The user records. We infer. We propose one obvious next tap. Everything clever happens behind a single confirm.
 
-## Goal
-Make **Auto-schedule (SMART)** the default path. Manual editing stays available but secondary.
+So the v7.12 SMART context work is **inferred, not asked**. The capture screen does not grow a chip row.
 
-## UX
-
-**Top of `/prototype/schedule`** — a single hero card:
+## Flow (unchanged surface, smarter brain)
 
 ```
-✨ Smart Schedule  (recommended)
-We'll place all 4 actions in your best-fit windows
-based on your energy pattern, urgency, and free time
-in your calendar.
-
-  [ Auto-schedule all 4 actions → ]   ← orange primary, 56px
-
-  See how this was decided ▾
+/prototype/welcome
+   → /prototype/rhythm        (8-question MYRHYTHM, ~90s, once)
+   → /prototype/capture       (one big record button, nothing else)
+   → /prototype/review        (context inferred, ACTs already shaped)
+   → /prototype/schedule      (one tap: "Looks good, send invites")
+   → /prototype/done
 ```
 
-When expanded ("See how this was decided"), show 3–4 short bullets:
-- Energy pattern: peak 09:00–11:00, dip 14:00–15:30 (from your assessment)
-- Calendar: 6 free windows found in next 7 days
-- Urgency: 2 high-priority placed first
-- Buffers: 15 min between back-to-back actions
+## How context is inferred (silently)
 
-**Secondary affordance** below the hero:
-`Prefer to place them yourself? Review slots manually ▾`
-→ expands the existing per-card editor (current UI, untouched).
+After transcription, before extraction, a lightweight classifier runs on the transcript inside `prototype-extract-acts`:
+- Medical vocabulary (mg, dose, scan, referral, follow-up, Dr / Doctor / Nurse / GP / consultant) → **doctor visit**
+- Family-name density + home vocabulary (school, dinner, weekend, mum/dad/son/daughter) → **family meeting**
+- Project / deliverable / deadline / client / Q3 → **work call**
+- Feelings vocabulary + first-person dominance + therapist name → **therapy**
+- Otherwise → **general**
 
-**After tapping Auto-schedule:**
-1. Brief inline "Placing…" state (~600ms, simulated; no backend).
-2. Cards animate into their new slots with a small green check + the chosen time.
-3. Sticky bottom CTA becomes `Set smart reminders (4) →` (unchanged behaviour) and the user is one tap from `/prototype/reminders`.
+The inferred context is shown as a small, non-blocking pill at the top of `/prototype/review`:
 
-So the happy path is **two taps**: Auto-schedule → Set reminders.
+```
+Looks like a doctor visit · not right? change ▾
+```
 
-## SMART placement logic (frontend-only, prototype-grade)
+One tap to override, never required. This is the only surfacing of the preset — the rest is just better defaults on the cards the user already expects.
 
-New helper `autoScheduleActs(acts)` in `src/prototype/prototypeStore.ts`. Pure function, deterministic, no backend.
+## Brain-health filter sits above context
 
-Inputs per ACT: `priority`, `attendees`, current `proposedDate/Time` (used as a hint only).
+Every ACT, regardless of inferred context, is scored for cognitive load (high / medium / low) and routed by the v7.11 `autoScheduleActs()`:
+- High-load medical follow-ups → MYRHYTHM **peak window**
+- Medication reminders, simple admin → **low-load window**
+- Family / social ACTs → **social window**
 
-Rules, applied in order:
-1. **Sort by urgency**: high → medium → low. Within same priority, keep original order.
-2. **Energy windows** (hard-coded prototype assessment result):
-   - High-cognitive (priority=high, or attendees>0): place in **peak window 09:00–11:00**.
-   - Medium: **10:30–12:00 or 15:30–17:00**.
-   - Low / solo admin: **17:00–18:30**.
-3. **Day spread**: never put more than 2 ACTs on the same day. Roll to next weekday.
-4. **Calendar awareness (simulated)**: assume working hours Mon–Fri 09:00–18:00. Skip 12:30–13:30 (lunch) and 14:00–15:30 (energy dip from assessment). No real Google/Outlook call in the prototype — leave a `// TODO: replace with calendar-google-sync availability` comment so the production wiring is obvious.
-5. **Buffer**: minimum 30 min gap between two ACTs on the same day.
-6. **Earliest viable**: high-priority starts tomorrow if possible, never today after 16:00.
+If the user's MYRHYTHM profile says they have **no peak window today** (low energy day flag from the intake), the schedule screen quietly defers non-urgent ACTs to tomorrow and says:
 
-Output: same ACTs with refreshed `proposedDate` / `proposedTime`, then `smartReminderDefaults()` re-run (already exists).
+```
+Today's a lower-energy day. I've kept the urgent one and
+moved the other 3 to tomorrow morning when you tend to focus best.
+```
+
+That single sentence is the entire visible expression of "we used your brain-health data". No charts, no scores, no MYRHYTHM letters shown to the user mid-flow.
+
+## What changes per inferred context (silently, on the review card)
+
+All context-specific behaviour is **defaults**, never new questions:
+
+| Inferred | Owner default | Auto-invitees | ACT shape |
+|---|---|---|---|
+| Doctor visit | Named clinician if detected, else "me" | GP + caregiver pre-ticked for medication ACTs only | Adds clinician name + type chip (Medication / Follow-up / Test / Referral / Question) |
+| Family meeting | Named family member | Everyone named in transcript | Standard ACT, owner chip prominent |
+| Work call | Named colleague or "me" | None auto-added | Optional project tag |
+| Therapy | "me" | None — privacy on | Homework vs reflection split |
+| General | "me" | None | Today's card, untouched |
+
+Each card still has Confirm / Edit / Reject. The extra fields are visible but pre-filled — the user only touches them if something is wrong.
 
 ## Files
 
-- **Edit** `src/prototype/prototypeStore.ts` — add `autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[]` and an `ENERGY_PROFILE` const (peak/dip windows) with a comment that production reads this from the assessment table.
-- **Edit** `src/pages/prototype/PrototypeSchedule.tsx` — add the hero "Smart Schedule" card at the top, the "How this was decided" disclosure, the placing animation, and an `isManualOpen` state that hides the existing per-card list behind a collapsible. Wire the hero button to `autoScheduleActs` → `setActs` → scroll cards into view.
+- **Edit** `supabase/functions/prototype-extract-acts/index.ts` — add a `classifyContext(transcript)` helper that returns `{ contextId, confidence }`; include it in the response. Inject a context-specific addendum into the extraction prompt so the model fills `actType`, `clinician`, `shareWith` where relevant.
+- **New** `src/prototype/prototypeContexts.ts` — `CONTEXTS` config: id, label, defaultShareWith, actCardExtras. No UI strings the user sees during recording — only on the review card.
+- **Edit** `src/prototype/prototypeStore.ts` — extend `PrototypeAct` with optional `actType`, `clinician`, `shareWith: string[]`, `cognitiveLoad`, `contextId`. Add `applyContextDefaults()` and feed `cognitiveLoad` into the existing `autoScheduleActs()` (v7.11 Phase C).
+- **Edit** `src/pages/prototype/PrototypeReview.tsx` — render the inferred-context pill at the top with a one-tap override sheet; render the small extra rows on each card when `contextId !== 'general'`. No new screen, no new step.
+- **Edit** `src/pages/prototype/PrototypeSchedule.tsx` — read `shareWith`, render invitee chips, render the "lower-energy day" sentence when MYRHYTHM profile flags it. ICS dispatch via existing `src/utils/ics.ts` and `send-invitation-email`.
+- **Do not touch** `src/pages/prototype/PrototypeCapture.tsx`. Capture screen stays one button.
 
 ## Out of scope
-- No real Google/Outlook availability call (prototype only — flagged with TODO).
-- No assessment-table read (energy profile hard-coded for prototype).
-- No changes to `/prototype/reminders`, `/prototype/review`, `/prototype/capture`, edge functions, schema, or bypass-auth.
-- No copy changes outside this page.
+- No context picker UI, no settings screen, no "modes".
+- No new edge functions, no schema changes, no new tables.
+- No EHR / FHIR / real medical data. Clinician matching is name-only against `prototypeContacts`.
+- No changes to `/launch/*`, auth, Support Circle, or pricing.
+- MYRHYTHM intake itself, rewind buffer, and wake word stay scheduled per v7.11 Phases A and D — unchanged here.
 
 ## Acceptance
-1. Land on `/prototype/schedule` → hero "Auto-schedule all N actions" is the first and most obvious control.
-2. One tap places every ACT into a sensible slot (high priority in AM peak, lunch + dip avoided, ≤2 per day, ≥30 min apart).
-3. Manual per-card editing still reachable in one tap via the "Review slots manually" disclosure.
-4. Sticky `Set smart reminders` CTA still works and routes to `/prototype/reminders`.
+1. Recording a doctor-visit transcript with "Dr Patel said start metformin 500mg and book a follow-up in 6 weeks" produces, with **zero extra taps before recording**, two ACTs on review: one tagged Medication change with pharmacy + caregiver pre-ticked, one Follow-up appointment with Dr Patel as clinician. The inferred-context pill reads "Looks like a doctor visit" and is one tap to change.
+2. Recording a casual family transcript produces general/family-shaped ACTs with no medical fields visible.
+3. On a low-energy MYRHYTHM day, `/prototype/schedule` shows the single "Today's a lower-energy day…" sentence and defers non-urgent ACTs to tomorrow's peak window.
+4. The capture screen still shows one record button and nothing else.
+5. Confirming dispatch produces one `.ics` per ACT with the right `ATTENDEE` lines for every invitee with an email.
+
+## Build order
+1. `classifyContext` + extraction prompt addenda in the edge function (no UI change, testable from existing flow).
+2. `prototypeContexts.ts` + ACT card extras + inferred-context pill on review.
+3. `cognitiveLoad` field + low-energy-day sentence on schedule; wire invitees into ICS.
