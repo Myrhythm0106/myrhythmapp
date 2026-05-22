@@ -155,10 +155,20 @@ export default function PrototypeSchedule() {
         </button>
         {showWhy && (
           <ul className="mt-2 space-y-1 text-xs text-slate-600 pl-1 leading-relaxed">
-            <li>• Energy pattern: peak 09:00–11:00, dip 14:00–15:30 (from your assessment)</li>
-            <li>• Calendar: working hours Mon–Fri, lunch and low-energy windows skipped</li>
-            <li>• Urgency: {highCount} high-priority placed first in your peak window</li>
-            <li>• Buffers: at least 30 min between actions, max 2 per day</li>
+            {profile ? (
+              <>
+                <li>• You ({personaLabel(profile.persona)}): best window <strong>{windowLabel(profile.bestFocusWindow)}</strong>, protect <strong>{windowLabel(profile.lowEnergyWindow)}</strong></li>
+                <li>• Heavy/high-priority actions land in your best window; light actions go later</li>
+                <li>• Your low-energy window is kept clear — no heavy lifts there</li>
+                <li>• Buffers: at least 30 min between actions, max 2 per day</li>
+              </>
+            ) : (
+              <>
+                <li>• No rhythm check yet — using a generic peak (09:00–11:00). <a href="/prototype/assessment" className="underline">Take it now</a></li>
+                <li>• Urgency: {highCount} high-priority placed first in the default peak window</li>
+                <li>• Buffers: at least 30 min between actions, max 2 per day</li>
+              </>
+            )}
           </ul>
         )}
 
