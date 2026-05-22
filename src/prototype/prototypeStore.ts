@@ -238,3 +238,23 @@ export function isBypassAuth(): boolean {
 export function setBypassAuth(on: boolean) {
   localStorage.setItem(BYPASS_KEY, on ? '1' : '0');
 }
+
+// Apply context-derived defaults to an extracted ACT.
+// Pure: no mutation, no side effects. Run once after extraction.
+import { CONTEXTS, inferCognitiveLoad, type ContextId } from './prototypeContexts';
+
+export function applyContextDefaults(act: PrototypeAct, contextId: ContextId): PrototypeAct {
+  const cfg = CONTEXTS[contextId];
+  const attendees = act.attendees || [];
+  // Pre-tick share-with people for medication-style ACTs in doctor context.
+  const shareWith = contextId === 'doctor' && act.actType === 'medication'
+    ? Array.from(new Set([...attendees, ...cfg.defaultShareWith]))
+    : (act.shareWith || attendees);
+  const cognitiveLoad = act.cognitiveLoad ?? inferCognitiveLoad({
+    contextId,
+    actType: act.actType,
+    priority: act.priority,
+    attendeesCount: attendees.length,
+  });
+  return { ...act, contextId, shareWith, cognitiveLoad };
+}
