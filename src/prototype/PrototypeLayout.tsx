@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ShieldOff, Shield } from 'lucide-react';
 import { isBypassAuth, setBypassAuth } from './prototypeStore';
+import { CircleChip } from './CircleChip';
 
 const STEPS = [
   { path: '/prototype/assessment', label: 'Rhythm check' },
@@ -40,6 +41,7 @@ export function PrototypeLayout({ children, title, subtitle }: Props) {
             <span className="text-[10px] uppercase tracking-wider text-slate-400">Prototype</span>
           </Link>
           <div className="flex items-center gap-2">
+            <CircleChip />
             <button
               onClick={toggleBypass}
               title={bypass ? 'Auth bypass on — sample data, no login' : 'Auth bypass off — real recording requires login'}

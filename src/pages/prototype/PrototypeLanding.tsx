@@ -53,7 +53,7 @@ export default function PrototypeLanding() {
       {/* PAIN -> RELIEF */}
       <section className="mb-12">
         <div className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500 mb-4">If any of this sounds familiar…</div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {[
             { from: 'Conversations slip away the moment they end.',
               to: 'Every action is captured the first time.' },
@@ -61,6 +61,8 @@ export default function PrototypeLanding() {
               to: 'Heavy work lands in your best brain-window.' },
             { from: 'You meant to follow up — and didn\'t.',
               to: 'Reminders show up before the moment matters.' },
+            { from: "You feel like you're doing this alone.",
+              to: 'Loop in family, friends, or your care team — only when it helps.' },
           ].map((p, i) => (
             <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
               <div className="text-[13px] text-slate-500 leading-relaxed">{p.from}</div>
