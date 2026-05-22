@@ -55,9 +55,10 @@ export default function PrototypeAssessment() {
   const [low, setLow] = useState<FocusWindow | null>(null);
   const [support, setSupport] = useState<SupportStyle | null>(null);
 
-  const stepIndex = ['persona', 'hardest', 'best', 'low', 'support'].indexOf(step) + 1;
+  const stepIndex = ['persona', 'hardest', 'best', 'low', 'support', 'circle'].indexOf(step) + 1;
+  const TOTAL = 6;
 
-  const finish = (sup: SupportStyle) => {
+  const saveProfile = (sup: SupportStyle) => {
     if (!persona || !hardest || !best || !low) return;
     saveAssessmentProfile({
       persona,
@@ -68,8 +69,9 @@ export default function PrototypeAssessment() {
       recommendedNext: 'capture',
       completedAt: new Date().toISOString(),
     });
-    navigate('/prototype/capture');
   };
+
+  const finish = () => navigate('/prototype/capture');
 
   const renderStep = () => {
     switch (step) {
