@@ -122,9 +122,11 @@ export default function PrototypeAssessment() {
             title="How should the assistant show up?"
             sub="You can change this anytime in settings."
             choices={SUPPORT_CHOICES}
-            onPick={(v) => { setSupport(v); finish(v); }}
+            onPick={(v) => { setSupport(v); saveProfile(v); setStep('circle'); }}
           />
         );
+      case 'circle':
+        return <CircleStep onDone={finish} />;
     }
   };
 
@@ -133,12 +135,12 @@ export default function PrototypeAssessment() {
       <div className="mb-6">
         <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500 mb-3">
           <Sparkles className="w-3 h-3" />
-          Step {stepIndex} of 5 — Rhythm check
+          Step {stepIndex} of {TOTAL} — Rhythm check
         </div>
         <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-slate-900 transition-all duration-300"
-            style={{ width: `${(stepIndex / 5) * 100}%` }}
+            style={{ width: `${(stepIndex / TOTAL) * 100}%` }}
           />
         </div>
       </div>
@@ -147,6 +149,97 @@ export default function PrototypeAssessment() {
         MyRhythm is not a medical device. It does not diagnose, treat, or cure any condition.
       </p>
     </PrototypeLayout>
+  );
+}
+
+interface CircleStepProps { onDone: () => void; }
+
+function CircleStep({ onDone }: CircleStepProps) {
+  const [rows, setRows] = useState(loadCircle());
+  const [name, setName] = useState('');
+  const [rel, setRel] = useState<CircleRelationship>('family');
+  const [role, setRole] = useState<CircleRole>('cheerleader');
+
+  const handleAdd = () => {
+    if (!name.trim()) return;
+    addMember({ name: name.trim(), relationship: rel, role, notifyByDefault: false });
+    setName('');
+    setRows(loadCircle());
+  };
+
+  return (
+    <div>
+      <div className="text-xs font-medium uppercase tracking-[0.14em] text-slate-500 mb-2">Your circle (optional)</div>
+      <h1 className="text-2xl sm:text-3xl leading-tight font-semibold text-slate-900 tracking-tight">
+        Who's standing with you?
+      </h1>
+      <p className="mt-2 text-[15px] text-slate-600 leading-relaxed">
+        Add 1–2 people now if you like — partner, family, clinician. We'll suggest looping them in
+        only when an action calls for it. You can skip and add later.
+      </p>
+
+      {rows.length > 0 && (
+        <div className="mt-5 space-y-2">
+          {rows.map(m => (
+            <div key={m.id} className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white">
+              <div className="w-8 h-8 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center">
+                {m.name.slice(0, 2).toUpperCase()}
+              </div>
+              <div className="flex-1 text-sm text-slate-900">{m.name} <span className="text-slate-500 text-xs">· {m.relationship}</span></div>
+              <Check className="w-4 h-4 text-slate-400" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Name"
+          className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm mb-2 bg-white"
+        />
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <select value={rel} onChange={(e) => setRel(e.target.value as CircleRelationship)} className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm bg-white">
+            <option value="partner">Partner</option>
+            <option value="family">Family</option>
+            <option value="friend">Friend</option>
+            <option value="clinician">Clinician</option>
+            <option value="caregiver">Caregiver</option>
+            <option value="other">Other</option>
+          </select>
+          <select value={role} onChange={(e) => setRole(e.target.value as CircleRole)} className="px-3 py-2.5 rounded-lg border border-slate-200 text-sm bg-white">
+            <option value="cheerleader">Cheerleader</option>
+            <option value="accountability">Accountability</option>
+            <option value="logistics">Logistics</option>
+            <option value="clinical">Clinical</option>
+          </select>
+        </div>
+        <button
+          onClick={handleAdd}
+          disabled={!name.trim()}
+          className="w-full min-h-[48px] rounded-lg bg-white border border-slate-300 hover:border-slate-900 text-slate-800 text-sm font-medium flex items-center justify-center gap-1.5 disabled:opacity-40 transition"
+        >
+          <Plus className="w-4 h-4" /> Add to circle
+        </button>
+      </div>
+
+      <div className="mt-6 flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={onDone}
+          className="flex-1 min-h-[56px] rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-medium inline-flex items-center justify-center gap-2 transition-colors"
+        >
+          Continue {rows.length > 0 && `with ${rows.length}`}
+          <ArrowRight className="w-4 h-4" />
+        </button>
+        <button
+          onClick={onDone}
+          className="min-h-[56px] px-6 rounded-xl border border-slate-200 hover:border-slate-300 bg-white text-slate-600 text-sm font-medium inline-flex items-center justify-center gap-2 transition-colors"
+        >
+          <SkipForward className="w-4 h-4" /> Skip for now
+        </button>
+      </div>
+    </div>
   );
 }
 
