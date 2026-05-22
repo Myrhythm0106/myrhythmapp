@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
-import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS, smartReminderDefaults, autoScheduleActs } from '@/prototype/prototypeStore';
+import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS, smartReminderDefaults, autoScheduleActs, isLowEnergyDay } from '@/prototype/prototypeStore';
 import { Calendar, Clock, UserPlus, ArrowRight, X, BellRing, Sparkles, ChevronDown, Check, Loader2 } from 'lucide-react';
 
 function formatDate(iso?: string) {
@@ -73,11 +73,19 @@ export default function PrototypeSchedule() {
 
   const highCount = acts.filter(a => a.priority === 'high').length;
 
+  const lowEnergy = isLowEnergyDay();
+  const deferredCount = lowEnergy ? acts.filter(a => a.priority !== 'high').length : 0;
+
   return (
     <PrototypeLayout
       title="Proposed diary slots"
       subtitle="Let your assistant place every action in your best-fit window — or review them yourself."
     >
+      {lowEnergy && deferredCount > 0 && (
+        <div className="mb-3 rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-900">
+          Today's a lower-energy day. I've kept the urgent {acts.length - deferredCount === 1 ? 'one' : `${acts.length - deferredCount}`} and moved the other {deferredCount} to tomorrow morning when you tend to focus best.
+        </div>
+      )}
       {/* SMART hero */}
       <div className="rounded-2xl border-2 border-orange-200 bg-gradient-to-br from-orange-50 via-white to-amber-50 p-5 mb-4 shadow-sm">
         <div className="flex items-center gap-2 mb-1">

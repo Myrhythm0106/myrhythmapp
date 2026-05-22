@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
-import { loadActs, saveActs, PrototypeAct } from '@/prototype/prototypeStore';
-import { Check, X, Pencil, ArrowRight } from 'lucide-react';
+import {
+  loadActs, saveActs, PrototypeAct,
+  loadContextId, saveContextId, applyContextDefaults,
+} from '@/prototype/prototypeStore';
+import { CONTEXTS, CONTEXT_OPTIONS, type ContextId, type ActType } from '@/prototype/prototypeContexts';
+import { Check, X, Pencil, ArrowRight, Stethoscope, ChevronDown } from 'lucide-react';
 
 const priorityStyles: Record<string, string> = {
   high: 'bg-orange-100 text-orange-700 border-orange-200',
@@ -10,11 +14,25 @@ const priorityStyles: Record<string, string> = {
   low: 'bg-slate-100 text-slate-600 border-slate-200',
 };
 
+const ACT_TYPE_LABELS: Record<ActType, string> = {
+  medication: 'Medication',
+  follow_up: 'Follow-up',
+  test: 'Test',
+  referral: 'Referral',
+  lifestyle: 'Lifestyle',
+  question: 'Question',
+  homework: 'Homework',
+  reflection: 'Reflection',
+  general: 'General',
+};
+
 export default function PrototypeReview() {
   const navigate = useNavigate();
   const [acts, setActs] = useState<PrototypeAct[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [contextId, setContextId] = useState<ContextId>('general');
+  const [showContextPicker, setShowContextPicker] = useState(false);
 
   useEffect(() => {
     const loaded = loadActs();
@@ -23,11 +41,20 @@ export default function PrototypeReview() {
       return;
     }
     setActs(loaded);
+    setContextId(loadContextId() ?? loaded[0]?.contextId ?? 'general');
   }, [navigate]);
 
   const update = (next: PrototypeAct[]) => {
     setActs(next);
     saveActs(next);
+  };
+
+  const changeContext = (next: ContextId) => {
+    setContextId(next);
+    saveContextId(next);
+    const reshaped = acts.map(a => applyContextDefaults(a, next));
+    update(reshaped);
+    setShowContextPicker(false);
   };
 
   const confirm = (id: string) =>
@@ -42,12 +69,44 @@ export default function PrototypeReview() {
 
   const visible = acts.filter(a => a.status !== 'rejected');
   const confirmedCount = acts.filter(a => a.status === 'confirmed').length;
+  const ctxCfg = CONTEXTS[contextId];
 
   return (
     <PrototypeLayout
       title="Your assistant found these actions"
       subtitle="Tap ✓ to confirm, ✎ to edit, ✗ to drop. We'll propose times next."
     >
+      {/* Inferred-context pill — silent unless not 'general' */}
+      {contextId !== 'general' && (
+        <div className="mb-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-slate-200 text-xs text-slate-600">
+          <Stethoscope className="w-3.5 h-3.5 text-slate-400" />
+          <span>Looks like a {ctxCfg.label}</span>
+          <button
+            onClick={() => setShowContextPicker(v => !v)}
+            className="font-medium text-teal-700 hover:text-teal-800 flex items-center gap-0.5"
+          >
+            not right? change <ChevronDown className={`w-3 h-3 transition ${showContextPicker ? 'rotate-180' : ''}`} />
+          </button>
+        </div>
+      )}
+      {showContextPicker && (
+        <div className="mb-3 flex flex-wrap gap-1.5">
+          {CONTEXT_OPTIONS.map(id => (
+            <button
+              key={id}
+              onClick={() => changeContext(id)}
+              className={`px-2.5 py-1 rounded-full text-xs font-medium border transition ${
+                id === contextId
+                  ? 'bg-teal-600 text-white border-teal-600'
+                  : 'bg-white text-slate-700 border-slate-200 hover:border-teal-300'
+              }`}
+            >
+              {CONTEXTS[id].label}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="space-y-3">
         {visible.map((a) => (
           <div
@@ -87,6 +146,24 @@ export default function PrototypeReview() {
                 {a.attendees && a.attendees.length > 0 && (
                   <div className="text-xs text-slate-500 mt-1">
                     with {a.attendees.join(', ')}
+                  </div>
+                )}
+                {/* Context-shaped extras — only render when populated */}
+                {(a.actType || a.clinician || (a.shareWith && a.shareWith.length > 0)) && (
+                  <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                    {a.actType && a.actType !== 'general' && (
+                      <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 border border-teal-200">
+                        {ACT_TYPE_LABELS[a.actType as ActType] || a.actType}
+                      </span>
+                    )}
+                    {a.clinician && (
+                      <span className="text-xs text-slate-600">· {a.clinician}</span>
+                    )}
+                    {a.shareWith && a.shareWith.length > 0 && (
+                      <span className="text-xs text-slate-500">
+                        · share with {a.shareWith.join(', ')}
+                      </span>
+                    )}
                   </div>
                 )}
               </div>

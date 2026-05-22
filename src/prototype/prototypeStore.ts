@@ -13,6 +13,8 @@ export interface PrototypeReminder {
   channels: ReminderChannel[];
 }
 
+import type { ContextId, ActType } from './prototypeContexts';
+
 export interface PrototypeAct {
   id: string;
   text: string;
@@ -25,6 +27,27 @@ export interface PrototypeAct {
   attendees?: string[];
   reminders?: PrototypeReminder[];
   status: 'pending' | 'confirmed' | 'rejected' | 'scheduled';
+  // v7.12 SMART context fields — all optional, render only when set.
+  contextId?: ContextId;
+  actType?: ActType;
+  clinician?: string;
+  shareWith?: string[];
+  cognitiveLoad?: 'high' | 'medium' | 'low';
+}
+
+const CONTEXT_KEY = 'prototype:contextId';
+export function saveContextId(id: ContextId) {
+  sessionStorage.setItem(CONTEXT_KEY, id);
+}
+export function loadContextId(): ContextId | null {
+  const v = sessionStorage.getItem(CONTEXT_KEY);
+  return (v as ContextId | null) ?? null;
+}
+
+// Quiet brain-health flag — production reads from the MYRHYTHM assessment.
+// TODO: replace with EnergyProfile.lowEnergyToday from /prototype/rhythm.
+export function isLowEnergyDay(): boolean {
+  return sessionStorage.getItem('prototype:lowEnergyDay') === '1';
 }
 
 const KEY = 'prototype:acts';
@@ -114,6 +137,9 @@ export function autoScheduleActs(acts: PrototypeAct[]): PrototypeAct[] {
   };
 
   const pickWindow = (act: PrototypeAct): number[] => {
+    // Brain-health filter: cognitiveLoad wins over priority where set.
+    if (act.cognitiveLoad === 'high') return [9, 9.5, 10, 10.5];
+    if (act.cognitiveLoad === 'low') return [17, 17.5, 18];
     const heavy = act.priority === 'high' || (act.attendees?.length || 0) > 0;
     if (heavy) return [9, 9.5, 10, 10.5];
     if (act.priority === 'medium') return [10.5, 11, 15.5, 16, 16.5];
@@ -211,4 +237,24 @@ export function isBypassAuth(): boolean {
 }
 export function setBypassAuth(on: boolean) {
   localStorage.setItem(BYPASS_KEY, on ? '1' : '0');
+}
+
+// Apply context-derived defaults to an extracted ACT.
+// Pure: no mutation, no side effects. Run once after extraction.
+import { CONTEXTS, inferCognitiveLoad } from './prototypeContexts';
+
+export function applyContextDefaults(act: PrototypeAct, contextId: ContextId): PrototypeAct {
+  const cfg = CONTEXTS[contextId];
+  const attendees = act.attendees || [];
+  // Pre-tick share-with people for medication-style ACTs in doctor context.
+  const shareWith = contextId === 'doctor' && act.actType === 'medication'
+    ? Array.from(new Set([...attendees, ...cfg.defaultShareWith]))
+    : (act.shareWith || attendees);
+  const cognitiveLoad = act.cognitiveLoad ?? inferCognitiveLoad({
+    contextId,
+    actType: act.actType,
+    priority: act.priority,
+    attendeesCount: attendees.length,
+  });
+  return { ...act, contextId, shareWith, cognitiveLoad };
 }
