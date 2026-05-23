@@ -8,6 +8,9 @@ import {
 import { CONTEXTS, CONTEXT_OPTIONS, type ContextId, type ActType } from '@/prototype/prototypeContexts';
 import { Check, X, Pencil, ArrowRight, Stethoscope, ChevronDown, UserPlus } from 'lucide-react';
 import { loadCircle, suggestForAct, initials } from '@/prototype/prototypeSupportCircle';
+import { ensureFullDemo } from '@/prototype/prototypeDemoSeed';
+import { DemoDataPill } from '@/prototype/DemoDataPill';
+import { CircleRail } from '@/prototype/CircleRail';
 
 const priorityDot: Record<string, string> = {
   high: 'bg-slate-900',
@@ -38,11 +41,9 @@ export default function PrototypeReview() {
   const circle = loadCircle();
 
   useEffect(() => {
+    // Seed brain-injury demo if user landed here cold.
+    ensureFullDemo();
     const loaded = loadActs();
-    if (loaded.length === 0) {
-      navigate('/prototype/capture', { replace: true });
-      return;
-    }
     setActs(loaded);
     setContextId(loadContextId() ?? loaded[0]?.contextId ?? 'general');
   }, [navigate]);
@@ -87,6 +88,8 @@ export default function PrototypeReview() {
       title="Your assistant found these actions"
       subtitle="Tap ✓ to confirm, ✎ to edit, ✗ to drop. We'll propose times next."
     >
+      <DemoDataPill />
+      <CircleRail />
       {/* Inferred-context pill — silent unless not 'general' */}
       {contextId !== 'general' && (
         <div className="mb-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-slate-600">

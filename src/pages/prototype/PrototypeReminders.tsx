@@ -6,6 +6,9 @@ import {
   ReminderChannel, REMINDER_LABEL, smartReminderDefaults,
 } from '@/prototype/prototypeStore';
 import { BellRing, Plus, X, ArrowRight, RotateCcw } from 'lucide-react';
+import { ensureFullDemo } from '@/prototype/prototypeDemoSeed';
+import { DemoDataPill } from '@/prototype/DemoDataPill';
+import { CircleRail } from '@/prototype/CircleRail';
 
 const ALL_OFFSETS: ReminderOffset[] = [
   '5_min_before', '15_min_before', '30_min_before',
@@ -22,13 +25,14 @@ export default function PrototypeReminders() {
   const [acts, setActs] = useState<PrototypeAct[]>([]);
 
   useEffect(() => {
-    const loaded = loadActs().filter(a => a.status === 'scheduled');
-    if (loaded.length === 0) { navigate('/prototype/schedule', { replace: true }); return; }
-    // Ensure every scheduled act has reminders.
-    const seeded = loaded.map(a => a.reminders?.length ? a : { ...a, reminders: smartReminderDefaults(a) });
-    setActs(seeded);
+    ensureFullDemo();
+    // Promote any pending/confirmed acts to scheduled so this screen is alive on cold land.
     const all = loadActs();
-    saveActs(all.map(a => seeded.find(s => s.id === a.id) || a));
+    const promoted = all.map(a => a.status !== 'rejected'
+      ? { ...a, status: 'scheduled' as const, reminders: a.reminders?.length ? a.reminders : smartReminderDefaults(a) }
+      : a);
+    saveActs(promoted);
+    setActs(promoted.filter(a => a.status === 'scheduled'));
   }, [navigate]);
 
   const persist = (next: PrototypeAct[]) => {
@@ -71,6 +75,8 @@ export default function PrototypeReminders() {
       title="Your assistant's reminder plan"
       subtitle="A real personal assistant nudges you at the right time, through the right channel. Tweak anything below — or trust the SMART defaults."
     >
+      <DemoDataPill />
+      <CircleRail />
       <div className="mb-5 rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700 leading-relaxed">
         <strong className="text-slate-900">{total} reminders</strong> armed across {acts.length} commitments — chosen from priority, attendees, and the time of day.
       </div>

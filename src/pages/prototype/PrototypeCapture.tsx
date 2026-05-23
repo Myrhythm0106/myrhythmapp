@@ -9,6 +9,8 @@ import { Mic, Square, AlertTriangle, Pause, Play, Loader2, PlayCircle } from 'lu
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
+import { ensureDemoAssessment, ensureDemoCircle } from '@/prototype/prototypeDemoSeed';
+import { CircleRail } from '@/prototype/CircleRail';
 
 // Minimal typing for Web Speech API.
 type AnySpeechRecognition = any;
@@ -32,9 +34,15 @@ export default function PrototypeCapture() {
   const pausedRef = useRef<boolean>(false);
   const recordingRef = useRef<boolean>(false);
 
-  useEffect(() => () => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    try { recogRef.current?.stop(); } catch {}
+  useEffect(() => {
+    // Seed circle + assessment so the value prop is visible from the very first screen,
+    // but do NOT seed acts here — capture must remain a blank canvas to record into.
+    ensureDemoAssessment();
+    ensureDemoCircle();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      try { recogRef.current?.stop(); } catch {}
+    };
   }, []);
 
   const supportsSpeech = typeof window !== 'undefined' &&
@@ -195,6 +203,7 @@ export default function PrototypeCapture() {
       title="Capture the conversation"
       subtitle="Press record. Your assistant listens, then extracts every action, commitment, and follow-up."
     >
+      <CircleRail />
       {needsLogin && (
         <div className="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4 flex items-start gap-3">
           <AlertTriangle className="w-5 h-5 text-slate-600 flex-shrink-0 mt-0.5" />

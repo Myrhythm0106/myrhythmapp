@@ -1,15 +1,27 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
-import { loadActs, clearActs, REMINDER_LABEL } from '@/prototype/prototypeStore';
+import { loadActs, clearActs, REMINDER_LABEL, saveActs, smartReminderDefaults, type PrototypeAct } from '@/prototype/prototypeStore';
 import { loadAssessmentProfile, windowLabel } from '@/prototype/prototypeAssessment';
 import { loadCircle, initials } from '@/prototype/prototypeSupportCircle';
+import { ensureFullDemo } from '@/prototype/prototypeDemoSeed';
+import { DemoDataPill } from '@/prototype/DemoDataPill';
+import { CircleRail } from '@/prototype/CircleRail';
 import { CheckCircle2, Calendar, Users, RotateCcw, BellRing, Download, Sparkles, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function PrototypeDone() {
   const navigate = useNavigate();
-  const acts = useMemo(() => loadActs().filter(a => a.status === 'scheduled'), []);
+  const [acts, setActs] = useState<PrototypeAct[]>([]);
+  useEffect(() => {
+    ensureFullDemo();
+    const all = loadActs();
+    const promoted = all.map(a => a.status !== 'rejected'
+      ? { ...a, status: 'scheduled' as const, reminders: a.reminders?.length ? a.reminders : smartReminderDefaults(a) }
+      : a);
+    saveActs(promoted);
+    setActs(promoted.filter(a => a.status === 'scheduled'));
+  }, []);
   const profile = loadAssessmentProfile();
   const circle = loadCircle();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -61,6 +73,8 @@ export default function PrototypeDone() {
 
   return (
     <PrototypeLayout>
+      <DemoDataPill />
+      <CircleRail />
       <div className="mb-8">
         <div className="inline-flex w-12 h-12 rounded-full bg-slate-900 items-center justify-center text-white mb-5">
           <CheckCircle2 className="w-6 h-6" />
