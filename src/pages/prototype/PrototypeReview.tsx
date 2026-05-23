@@ -38,11 +38,9 @@ export default function PrototypeReview() {
   const circle = loadCircle();
 
   useEffect(() => {
+    // Seed brain-injury demo if user landed here cold.
+    ensureFullDemo();
     const loaded = loadActs();
-    if (loaded.length === 0) {
-      navigate('/prototype/capture', { replace: true });
-      return;
-    }
     setActs(loaded);
     setContextId(loadContextId() ?? loaded[0]?.contextId ?? 'general');
   }, [navigate]);
