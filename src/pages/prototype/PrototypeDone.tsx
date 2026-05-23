@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
 import { loadActs, clearActs, REMINDER_LABEL, saveActs, smartReminderDefaults, type PrototypeAct } from '@/prototype/prototypeStore';
