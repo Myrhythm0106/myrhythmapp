@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
 import { loadActs, saveActs, PrototypeAct, SUGGESTED_CONTACTS, smartReminderDefaults, autoScheduleActs, isLowEnergyDay } from '@/prototype/prototypeStore';
 import { loadAssessmentProfile, windowLabel, personaLabel } from '@/prototype/prototypeAssessment';
+import { ensureFullDemo } from '@/prototype/prototypeDemoSeed';
+import { DemoDataPill } from '@/prototype/DemoDataPill';
+import { CircleRail } from '@/prototype/CircleRail';
+import { initials } from '@/prototype/prototypeSupportCircle';
 import { Calendar, Clock, UserPlus, ArrowRight, X, BellRing, ChevronDown, Check, Loader2, Wand2, Target, Sunrise } from 'lucide-react';
 
 function formatDate(iso?: string) {
@@ -20,12 +24,12 @@ export default function PrototypeSchedule() {
   const [autoPlaced, setAutoPlaced] = useState(false);
 
   useEffect(() => {
-    const loaded = loadActs().filter(a => a.status === 'confirmed' || a.status === 'scheduled');
-    if (loaded.length === 0) {
-      navigate('/prototype/review', { replace: true });
-      return;
-    }
-    setActs(loaded);
+    ensureFullDemo();
+    // Auto-confirm all pending acts on cold land so Schedule has something to show.
+    const all = loadActs();
+    const promoted = all.map(a => a.status === 'pending' ? { ...a, status: 'confirmed' as const } : a);
+    if (promoted.some((a, i) => a.status !== all[i].status)) saveActs(promoted);
+    setActs(promoted.filter(a => a.status === 'confirmed' || a.status === 'scheduled'));
   }, [navigate]);
 
   const persist = (next: PrototypeAct[]) => {
@@ -83,6 +87,8 @@ export default function PrototypeSchedule() {
       title="Your MyRhythm calendar"
       subtitle="Each action placed in the window your brain shows up best — vision, week, day, action."
     >
+      <DemoDataPill />
+      <CircleRail />
       {/* Vision cascade strip — same model as the launch calendar */}
       <div className="rounded-xl border border-slate-200 bg-white p-4 mb-4">
         <div className="text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500 mb-3">
