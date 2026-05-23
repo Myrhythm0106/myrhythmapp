@@ -6,7 +6,7 @@ import { loadAssessmentProfile, windowLabel, personaLabel } from '@/prototype/pr
 import { ensureFullDemo } from '@/prototype/prototypeDemoSeed';
 import { DemoDataPill } from '@/prototype/DemoDataPill';
 import { CircleRail } from '@/prototype/CircleRail';
-import { initials } from '@/prototype/prototypeSupportCircle';
+
 import { Calendar, Clock, UserPlus, ArrowRight, X, BellRing, ChevronDown, Check, Loader2, Wand2, Target, Sunrise } from 'lucide-react';
 
 function formatDate(iso?: string) {
