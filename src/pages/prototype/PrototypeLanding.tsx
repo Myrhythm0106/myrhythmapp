@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PrototypeLayout } from '@/prototype/PrototypeLayout';
+import { BrainInjuryWeekSample } from '@/prototype/BrainInjuryWeekSample';
 import {
   Mic, ListChecks, CalendarClock, Users, ArrowRight, Sparkles,
   Brain, HeartPulse, Clock, ShieldCheck, Target, Sunrise,
@@ -15,16 +16,16 @@ export default function PrototypeLanding() {
       <section className="mb-12">
         <div className="inline-flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.14em] text-slate-500 mb-4 px-2.5 py-1 rounded-full bg-slate-100">
           <Sparkles className="w-3 h-3" />
-          For anyone carrying a heavy cognitive load
+          Built first with brain-injury survivors — and the people who love them
         </div>
         <h1 className="text-4xl sm:text-[52px] leading-[1.05] font-semibold text-slate-900 tracking-tight">
-          Think clearly.<br />
-          <span className="text-slate-500">Live fully.</span>
+          Bridge the discharge cliff.<br />
+          <span className="text-slate-500">Find your rhythm again.</span>
         </h1>
         <p className="mt-5 text-[17px] text-slate-700 max-w-xl leading-relaxed">
-          Record a conversation. MyRhythm extracts every action, places each one in your
-          best brain-window, and invites the people who need to be there — so nothing
-          falls through the cracks again.
+          After stroke, TBI, concussion or surgery, every conversation matters — and every one
+          slips. MyRhythm captures the appointment, the homework, the symptom log, places each
+          one in your sharpest brain-window, and quietly loops in the people standing with you.
         </p>
 
         <div className="mt-7 flex flex-col sm:flex-row gap-3">
@@ -73,6 +74,9 @@ export default function PrototypeLanding() {
           ))}
         </div>
       </section>
+
+      {/* BRAIN-INJURY SAMPLE — keepable artifact preview */}
+      <BrainInjuryWeekSample />
 
       {/* VALUE TILES */}
       <section className="mb-12">
