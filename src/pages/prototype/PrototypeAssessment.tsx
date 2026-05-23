@@ -49,7 +49,7 @@ const SUPPORT_CHOICES: Choice<SupportStyle>[] = [
 export default function PrototypeAssessment() {
   const navigate = useNavigate();
   const [step, setStep] = useState<StepId>('persona');
-  const [persona, setPersona] = useState<PrototypePersona | null>(null);
+  const [persona, setPersona] = useState<PrototypePersona | null>('rebuilding');
   const [hardest, setHardest] = useState<LoadPattern | null>(null);
   const [best, setBest] = useState<FocusWindow | null>(null);
   const [low, setLow] = useState<FocusWindow | null>(null);
