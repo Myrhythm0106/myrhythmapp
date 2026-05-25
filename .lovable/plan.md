@@ -1,37 +1,45 @@
 ## Goal
 
-Create `MyRhythm_MVP_UseCases_v3.docx` by extending the existing v2 doc with four new personas. The v2 file currently in `/mnt/documents/` does NOT contain these — that's why you don't see them.
+Add a new caregiver-facing capability statement — **"Build a caregiver dashboard that lets me manage shared tasks, track needs, and schedule supportive check-ins"** — to both vision documents, bumping each to a new version.
 
-(The After-Effects Timeline doc stays at v2 — no changes requested there.)
+## Files Produced
 
-## New Personas Added
+- `/mnt/documents/MyRhythm_MVP_UseCases_v4.docx` (extends v3)
+- `/mnt/documents/MyRhythm_ABI_TBI_AfterEffects_Timeline_v3.docx` (extends v2)
 
-Grouped under a new section **"Adjacent & Universal Personas"** (placed after ABI/TBI personas, before Bridge Pathway):
+(v1–v3 files preserved as history.)
 
-1. **Dementia / Early-Stage Cognitive Decline** — Recording for "what did we agree?" replay; Support Circle for caregiver visibility; Calendar with high-buffer pacing; simplified 4Cs (daily Capture + Celebrate). Framed as supportive/compensatory, not therapeutic.
-2. **Healthy Ageing / Cognitive Maintenance (55+)** — Daily 4Cs as cognitive hygiene; energy-paced Calendar; Recording for medical/financial recall; Support Circle for adult children.
-3. **Memory Decline (non-clinical / sub-threshold)** — Capture–Calibrate loop to externalise memory load; Recording as evidence base; trend visibility over time.
-4. **Productivity Guru / High-Performer** — Energy-aware Calendar; Recording for meeting recall + ACT extraction; weekly 4Cs cadence; Support Circle as accountability.
+## Use Cases v3 → v4
 
-Each persona follows the existing v2 schema: context · pain points · MVP features used + mechanic · how it builds cognition/independence · universal parallel.
+Placement: inside the existing **Caregiver persona** block (under ABI/TBI personas), appended to its "MVP features used" list as a dedicated row:
 
-## Other Document Changes
+- **Caregiver Dashboard** — Manage shared tasks across the household, track the supported person's needs (energy, missed actions, upcoming appointments), and schedule supportive check-ins via Support Circle messaging + Calendar.
+- Mechanic: surfaces actions assigned/shared with the caregiver, pulls needs signal from energy check-ins and missed-action alerts, and offers one-tap check-in scheduling.
+- How it builds independence: reduces caregiver cognitive load, prevents missed-handoff failures, and keeps the supported person on their rhythm without over-monitoring.
+- Universal parallel: anyone coordinating care for a family member.
 
-- Cover: version → **v3**, date refresh.
-- Market Impact: brief stat refresh (dementia: 55M global / 7M US per CDC/WHO; high-performer/burnout reference).
-- Bridge Pathway intro: one-line note that dementia uses a modified maintenance-and-pacing reading (not a recovery curve).
-- All existing v2 content preserved verbatim (ABI/TBI personas, 8-stage Bridge Pathway, Cognitive Domains Legend, Universal Benefit Matrix, Stats Anchor, Sources, 3pt confidentiality footer, medical disclaimer).
+Cover: version → **v4**, date refresh. All other v3 content preserved verbatim.
+
+## After-Effects Timeline v2 → v3
+
+Placement: in the **Caregiver Impact** column of the timeline (or equivalent caregiver-track section), add a short capability block tied to the **post-discharge → community reintegration** stages, where shared-task load and check-in cadence matter most:
+
+- **Caregiver Dashboard (post-discharge onward)** — Shared task management, needs tracking (energy, missed actions, appointment adherence), and scheduled supportive check-ins.
+- Anchored to the existing Bridge Pathway stages where caregiver burden peaks (discharge cliff → home routines → community reintegration).
+- Framed as supportive/compensatory; no clinical claim.
+
+Cover: version → **v3**, date refresh. All other v2 content preserved verbatim.
 
 ## Out of Scope
 
-- No edits to v1 or v2 files (kept as history).
-- No changes to the After-Effects Timeline doc.
+- No edits to v1/v2/v3 files (kept as history).
 - No app code, DB, or `/launch/*` changes.
-- No clinical claims.
+- No clinical claims; caregiver dashboard described as coordination + visibility, not treatment.
 
 ## Technical
 
-- Single `docx-js` script in `/tmp/`, output `MyRhythm_MVP_UseCases_v3.docx` to `/mnt/documents/`.
+- Two `docx-js` scripts in `/tmp/`, outputting to `/mnt/documents/`.
 - US Letter, 1" margins, Arial, `WidthType.DXA` tables with matching `columnWidths`, `ShadingType.CLEAR` headers, `LevelFormat.BULLET` lists.
-- QA: convert to PDF + per-page JPEG, inspect every page, regenerate if clipping/overflow.
-- Return one `<presentation-artifact>` tag for the new file.
+- 3pt confidentiality footer on every page (per Document Confidentiality Standard).
+- QA: convert each to PDF + per-page JPEG, inspect every page, regenerate on clipping/overflow.
+- Return two `<presentation-artifact>` tags.
