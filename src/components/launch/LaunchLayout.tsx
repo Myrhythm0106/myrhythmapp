@@ -6,6 +6,7 @@ import { AccountDropdown } from './AccountDropdown';
 
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { LaunchQuickActions } from './LaunchQuickActions';
+import { EditionBadge } from './EditionBadge';
 import { HelpCircle } from 'lucide-react';
 import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
@@ -41,6 +42,7 @@ export function LaunchLayout({
                 <span className="font-semibold text-lg text-brain-health-900 tracking-tight">
                   MyRhythm
                 </span>
+                <EditionBadge variant="chip" className="hidden sm:inline-flex ml-1" />
               </div>
 
               {isCaregiver && (
