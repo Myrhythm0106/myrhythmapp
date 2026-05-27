@@ -129,6 +129,7 @@ import {
   LaunchRoadmap,
   LaunchClinicalBrief,
   LaunchVisionStatement,
+  LaunchEditionAbout,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
@@ -381,6 +382,7 @@ function App() {
                        <Route path="/launch/store" element={<LaunchModeProvider><LaunchFeatureStore /></LaunchModeProvider>} />
                        <Route path="/launch/profile" element={<LaunchModeProvider><LaunchProfile /></LaunchModeProvider>} />
                        <Route path="/launch/settings" element={<LaunchModeProvider><LaunchSettings /></LaunchModeProvider>} />
+                       <Route path="/launch/settings/edition" element={<LaunchModeProvider><LaunchEditionAbout /></LaunchModeProvider>} />
                        <Route path="/launch/goals" element={<LaunchModeProvider><LaunchGoals /></LaunchModeProvider>} />
                        <Route path="/launch/analytics" element={<LaunchModeProvider><LaunchAnalytics /></LaunchModeProvider>} />
                        <Route path="/launch/whats-new" element={<LaunchModeProvider><LaunchWhatsNew /></LaunchModeProvider>} />
