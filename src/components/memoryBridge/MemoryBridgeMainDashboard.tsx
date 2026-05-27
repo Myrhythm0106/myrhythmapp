@@ -31,7 +31,9 @@ import {
 export function MemoryBridgeMainDashboard() {
   const { extractedActions, currentMeeting, isRecording } = useMemoryBridge();
   const { hasFeature, tier } = useSubscription();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('actions');
+  const [exportOpen, setExportOpen] = useState(false);
   
   const hasMemoryBridgeAccess = tier === 'smart_pro' || tier === 'family_smart';
   
