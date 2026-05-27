@@ -1,95 +1,105 @@
-# Plan v14 — MVP Hardening (Locked Scope)
+# Plan v15 — MyRhythm Founding Edition: Make It Ready
 
-Confirmed:
-1. Reorder Welcome before Payment ✅
-2. Record-on-behalf OFF by default for everyone ✅
-3. All 7 friction fixes in Phase 1 ✅
-4. Clinical export in MVP ✅
-5. Pull in accessibility baseline (G6-min) + GDPR data export (G9) ✅
-6. Document deferred items in strategy + features docs ✅
+Lock the v0.1 release as **"MyRhythm Founding Edition"**, surface that identity consistently across the app, give founding members a one-tap feedback channel, set honest expectations about what's in vs. deferred, and ship a QA checklist the cohort lead can tick through before invites go out.
 
 ---
 
-## Phase 1 — Friction, UI consistency, accessibility baseline (frontend)
+## 1. Edition identity
 
-| # | Change | Files |
-|---|---|---|
-| F1 | "Skip" on UserType routes to neutral default + 1-line preview under each identity | `LaunchUserType.tsx` |
-| F2 | Reorder flow: `UserType → Welcome → Payment` | `LaunchUserType.tsx`, `LaunchWelcome.tsx`, `LaunchPayment.tsx` |
-| F3 | First-run 3-card overlay on `/launch/home` (Capture / Add Anchor / See your day), dismissible via `mr:first-run-done` flag | New `src/components/launch/FirstRunOverlay.tsx`, mounted in `LaunchDashboard.tsx` |
-| F4 | Persistent "Need a hand?" pill bottom-right on every Launch page | `LaunchLayout.tsx` (mount existing `FloatingGuideButton`) |
-| F5 | SC Capture: hide Tap/Hold toggle behind ⋯ until first capture; Online chip only when offline | `LaunchSCCapture.tsx` |
-| F6 | 4-dot onboarding progress rail (Identity → Welcome → First capture → Invite circle) | New `src/components/launch/OnboardingProgressRail.tsx`, conditional in `LaunchLayout.tsx` |
-| F7 | Bump persona definitions to `text-base text-stone-700` | `LaunchUserType.tsx` |
-| Visual | Unify Dashboard + UserType with Welcome's editorial language: bone bg `#FDFCFB`, single teal `#0D9488`, Playfair Display headlines | `LaunchUserType.tsx`, `LaunchDashboard.tsx`, `index.css` token check |
-| **G6-min** | Accessibility baseline: 18px min body, `focus-visible` rings on all interactive elements, high-contrast toggle in Settings, respect `prefers-reduced-motion`, alt text audit on hero/persona images | `index.css`, `LaunchSettings.tsx`, sweep across launch pages |
+**Official name:** `MyRhythm Founding Edition`  
+**Short label (chips/badges):** `Founding Edition`  
+**Version string:** `v0.1`  
+**Tagline (where space allows):** *"Shaped with our founding members."*
+
+Single source of truth: `src/config/edition.ts` exporting `EDITION_NAME`, `EDITION_SHORT`, `EDITION_VERSION`, `EDITION_TAGLINE`. Every surface imports from here so future rename is one file.
 
 ---
 
-## Phase 2 — Support Circle "Record on behalf" (frontend + permission flag)
+## 2. Surface the label across the app
 
-**Default: OFF for every member, every role.**
+New `EditionBadge` component (glass-morphism chip, brand-teal outline, 12px text, respects min-touch only when interactive). Insert on:
 
-| Change | Files |
-|---|---|
-| 7th permission toggle `can_record_on_behalf` with explicit copy ("…recordings appear in your Memory Bridge for you to review and accept. OFF by default.") | `EnhancedSupportCirclePermissions.tsx` |
-| Anchor-side "Record meeting for [name]" button on `/launch/support-circle`, disabled with tooltip when permission OFF | `LaunchSupportCircle.tsx` |
-| `MemoryBridgeRecorder` accepts `subjectUserId` + `onBehalf` props; banner "Recording on behalf of [name]" | `MemoryBridgeRecorder.tsx`, `routes/MemoryBridge.tsx` |
-| Persist `recorded_by` in recording metadata JSONB (no schema change) | `useVoiceRecorder.ts`, `processSavedRecording.ts` |
-
----
-
-## Phase 3 — Clinical Export (MVP critical)
-
-| Change | Files |
-|---|---|
-| "Share with my clinician" button on each Memory Bridge meeting + dashboard "Last 7 days" | `MemoryBridgeMainDashboard.tsx`, `LaunchDashboard.tsx` |
-| 1-page PDF: header (patient name, optional DOB, date range), summary, key captures, extracted actions, medications mentioned, 3pt confidentiality footer per `mem://brand/document-confidentiality-standard` | New `src/utils/clinicalExport.ts` (jspdf) |
-| Outputs: (a) Download PDF, (b) Email to clinician via existing Resend `send-email` edge function | Reuse `send-email` |
-| Pre-export consent dialog: itemised checkboxes, explicit "nothing is shared until you confirm" | New `src/components/launch/ClinicalExportDialog.tsx` |
-| Audit log row per export | `accountability_alerts` insert |
+1. `LaunchWelcome` — subtitle line under hero
+2. `LaunchDashboard` — header right-side chip
+3. `LaunchSettings` — new "About this edition" row
+4. `FirstRunOverlay` — header line
+5. `clinicalExport.ts` PDF — footer next to confidentiality line
+6. `gdprExport.ts` PDF — footer next to confidentiality line
+7. Auth/landing entry point — small footer mention so testers know what they're entering
 
 ---
 
-## Phase 4 — Backend hardening for record-on-behalf (separate migration)
+## 3. In-app feedback channel
 
-- Promote `recorded_by_user_id uuid` from metadata to column on `voice_recordings`
-- RLS: support member can INSERT when target user's `support_circle_members.permissions->>'can_record_on_behalf' = 'true'`
-- Trigger: notify owner via `accountability_alerts` type `recording_on_behalf`
+New `FeedbackDialog` component triggered from:
+- `LaunchSettings` → "Send feedback to the team" row
+- `FirstRunOverlay` → secondary link "Tell us how this felt"
+- Dashboard header → small `MessageCircle` icon next to EditionBadge
 
----
+Backend: new `founding_feedback` table (Supabase migration) with `user_id`, `category` (bug | idea | confusion | praise), `message`, `route` (auto-captured), `edition_version`, `created_at`. RLS: users insert/select their own; service_role full access for the team. Grants to `authenticated` + `service_role` only.
 
-## Phase 5 — GDPR Data Export (legal baseline)
-
-| Change | Files |
-|---|---|
-| Settings → "Download my data" button | `LaunchSettings.tsx` |
-| Bundles: JSON (raw rows the user owns across profiles, recordings metadata, actions, mood, goals, support_circle_members) + human-readable PDF summary | New `src/utils/gdprExport.ts`, new edge function `gdpr-export` |
-| Confirmation modal with what's included + 24h re-request rate-limit | Modal in `LaunchSettings.tsx` |
+Dialog fields: category (3 chips, max-3 rule), free-text message (500 char), optional "OK to contact me" checkbox. Confirmation toast on submit.
 
 ---
 
-## Documentation updates
+## 4. "What's in this Founding Edition" transparency page
 
-| Doc | Addition |
-|---|---|
-| `strategic-documents/Founding-Member-Launch-Strategy.md` | New section **"v1.1 Roadmap (Post-Founding-Member Launch)"** — lists deferred items with trigger conditions: G5 Weekly Anchor digest (trigger: ≥50 active Anchors), G6 formal WCAG 2.2 AA certification (trigger: pre-NHS pilot), persona switcher mid-journey (trigger: ≥10% of users request it) |
-| `docs/v0.1-features.md` | New section **"Deferred / Out-of-Scope for v0.1"** mirroring the above, linking to strategy doc |
-| New `strategic-documents/Memory-Bridge-Positioning-Decision.md` | One-pager capturing the proposal to lead marketing with "Memory Bridge" as the hero feature; awaits founder sign-off |
+New route `/launch/settings/edition` reached from Settings → "About this edition".
+
+Two clearly labeled lists:
+
+**Live in Founding Edition (v0.1)**
+- 4C loop with Smart Schedule + energy badges
+- Memory Bridge recorder with 30-day retention
+- Support Circle with permissions (incl. record-on-behalf, OFF default)
+- Clinical Export PDF (share with clinician)
+- GDPR Data Export (download my data)
+- Vision Board, Assessment, Persona paths
+- Calendar sync (Google, Outlook)
+- MFA, RLS, Vault security baseline
+
+**Coming after Founding Edition (v1.1)**
+- Weekly Anchor digest (G5)
+- Formal WCAG 2.2 AA certification (G6 baseline already in place)
+- Mid-journey persona switcher
+- Backend hardening for record-on-behalf (`recorded_by_user_id` column + accountability alerts)
+- Provider Directory marketplace expansion
+
+Plus the standing no-medical-claims disclaimer block at the bottom.
 
 ---
 
-## Execution order
+## 5. QA / test-readiness checklist
 
-```text
-Phase 1   Friction + UI + a11y baseline       (~9 files, 1 commit)
-Phase 2   Record-on-behalf frontend           (~4 files, 1 commit)
-Phase 3   Clinical export PDF + email         (~5 files + reuse edge fn)
-Phase 5   GDPR data export                    (~3 files + 1 edge fn)
-Docs      Strategy + features + positioning   (3 docs)
-Phase 4   Backend migration for on-behalf     (separate approval)
-```
+New doc `docs/v0.1-test-readiness.md` — markdown checklist for the cohort lead:
 
-Phases 1–3, 5, and Docs ship in a single build pass. Phase 4 follows as its own migration cycle.
+- [ ] All 9 persona paths reach `/launch/welcome` without dead-end
+- [ ] FirstRunOverlay dismissal persists across logout/login
+- [ ] Clinical Export PDF renders on a real meeting (not sample)
+- [ ] GDPR export 24h rate-limit verified across session cycle
+- [ ] `can_record_on_behalf` toggle round-trips through Supabase
+- [ ] EditionBadge visible on all 7 surfaces
+- [ ] Feedback dialog writes to `founding_feedback` and shows confirmation
+- [ ] Edition page lists live vs. deferred accurately
+- [ ] All PDF footers carry confidentiality + edition string
+- [ ] No-medical-claims disclaimer present on Welcome, Assessment, Memory Bridge, Clinical Export
+- [ ] Min 56px touch targets on primary CTAs
+- [ ] Reduced-motion respected on FirstRunOverlay animations
+- [ ] Bone background + teal primary consistent across UserType / Welcome / Dashboard
 
-Ready to build on approval.
+---
+
+## 6. Execution order
+
+1. **Migration first** (separate call): create `founding_feedback` table with RLS + grants.
+2. **Build pass:** `edition.ts`, `EditionBadge`, `FeedbackDialog`, edition page, badge insertions on 7 surfaces, PDF footer updates, QA doc.
+3. **Memory update:** add `mem://brand/founding-edition` entry recording the name, version, and label-everywhere rule.
+
+## Technical notes
+
+- `src/config/edition.ts` — single export module, no React deps.
+- `src/components/launch/EditionBadge.tsx` — `variant: "chip" | "inline" | "footer"`.
+- `src/components/launch/FeedbackDialog.tsx` — uses existing shadcn Dialog + Textarea; Supabase insert via existing client.
+- `src/pages/launch/LaunchEditionAbout.tsx` — route under existing `LaunchSettings` shell.
+- PDF utilities (`clinicalExport.ts`, `gdprExport.ts`) — append `EDITION_NAME · EDITION_VERSION` to existing 3pt confidentiality footer.
+- No changes to onboarding flow, persona logic, scheduling, or Memory Bridge core — labeling and feedback only.
