@@ -1,81 +1,41 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Users, Briefcase, BookOpen, Heart, Star, Sparkles, ArrowRight, Stethoscope, Zap, Cloud, Activity } from 'lucide-react';
+import { Compass, Anchor, Target, BookOpen, Sparkles, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
 const userTypes = [
   {
     id: 'brain-injury',
-    title: 'Brain Injury Navigator',
-    description: 'Rebuilding cognitive skills after TBI, stroke, or concussion',
-    icon: Brain,
+    title: 'Pathfinders',
+    definition:
+      'People rebuilding cognitive ground after a neurological event or condition — brain injury, stroke, dementia, long COVID, MS. Bridging clinical-ready and life-ready, one steady step at a time.',
+    icon: Compass,
     color: 'from-brand-emerald-500 to-brand-teal-500',
-    bgColor: 'bg-brand-emerald-50',
   },
   {
     id: 'caregiver',
-    title: 'Family Member / Caregiver',
-    description: 'Supporting a loved one on their cognitive journey',
-    icon: Heart,
+    title: 'Anchors',
+    definition:
+      'The people who hold the line for someone else — family carers, spouses, adult children, professional carers. Coordinating care without losing your own day.',
+    icon: Anchor,
     color: 'from-rose-500 to-pink-500',
-    bgColor: 'bg-rose-50',
-  },
-  {
-    id: 'medical-professional',
-    title: 'Medical Professional',
-    description: 'Healthcare provider supporting patient outcomes',
-    icon: Stethoscope,
-    color: 'from-blue-500 to-indigo-500',
-    bgColor: 'bg-blue-50',
-  },
-  {
-    id: 'student',
-    title: 'Student',
-    description: 'Managing academic life and study productivity',
-    icon: BookOpen,
-    color: 'from-cyan-500 to-blue-500',
-    bgColor: 'bg-cyan-50',
   },
   {
     id: 'executive',
-    title: 'Executive / Professional',
-    description: 'High-performer optimizing productivity',
-    icon: Briefcase,
+    title: 'Operators',
+    definition:
+      'High-output professionals and focus-seekers protecting their best thinking. Defending deep work, converting meetings into leverage, keeping signal above noise.',
+    icon: Target,
     color: 'from-amber-500 to-orange-500',
-    bgColor: 'bg-amber-50',
   },
   {
-    id: 'wellness',
-    title: 'General Wellness',
-    description: 'Improving overall cognitive health and daily rhythm',
-    icon: Star,
-    color: 'from-purple-500 to-pink-500',
-    bgColor: 'bg-purple-50',
-  },
-  {
-    id: 'adhd',
-    title: 'ADHD Support',
-    description: 'Focus tools and impulse capture for fast-moving minds',
-    icon: Zap,
-    color: 'from-purple-500 to-violet-500',
-    bgColor: 'bg-purple-50',
-  },
-  {
-    id: 'long-covid',
-    title: 'Long COVID Support',
-    description: 'Energy-paced scheduling and brain fog support tools',
-    icon: Cloud,
-    color: 'from-slate-500 to-blue-500',
-    bgColor: 'bg-slate-50',
-  },
-  {
-    id: 'ms-cognitive',
-    title: 'MS Cognitive Support',
-    description: 'Fatigue-aware scheduling and cognitive load management',
-    icon: Activity,
-    color: 'from-teal-500 to-emerald-500',
-    bgColor: 'bg-teal-50',
+    id: 'student',
+    title: 'Scholars',
+    definition:
+      'Students and lifelong learners pacing themselves toward recall, not burnout. Turning lectures and revision into a searchable record across the week.',
+    icon: BookOpen,
+    color: 'from-cyan-500 to-blue-500',
   },
 ];
 
