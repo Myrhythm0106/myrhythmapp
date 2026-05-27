@@ -72,6 +72,9 @@ export function mapToPersona(raw: string | null | undefined): Persona {
 export interface PersonaInfo {
   persona: Persona;
   label: string;
+  labelPlural: string;
+  definition: string;
+  definitionShort: string;
   isCaregiver: boolean;
   rawType: string | null;
 }
@@ -89,6 +92,9 @@ export function usePersona(): PersonaInfo {
   return {
     persona,
     label: PERSONA_LABEL[persona],
+    labelPlural: PERSONA_LABEL_PLURAL[persona],
+    definition: PERSONA_DEFINITION[persona],
+    definitionShort: PERSONA_DEFINITION_SHORT[persona],
     isCaregiver: persona === 'caregiver',
     rawType,
   };
