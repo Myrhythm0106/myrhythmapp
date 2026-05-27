@@ -17,7 +17,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import {
   Bell, Shield, Palette, Globe, Calendar, HardDrive,
-  ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus, Download
+  ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus, Download,
+  Sparkles, MessageCircle, ChevronRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCalendarIntegration } from '@/hooks/useCalendarIntegration';
@@ -26,6 +27,9 @@ import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
 import { canRequestExport, exportUserData } from '@/utils/gdprExport';
+import { EditionBadge } from '@/components/launch/EditionBadge';
+import { FeedbackDialog } from '@/components/launch/FeedbackDialog';
+import { EDITION_SHORT, EDITION_VERSION } from '@/config/edition';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
@@ -34,6 +38,7 @@ export default function LaunchSettings() {
   const [autoDeleteAfterTranscription, setAutoDeleteAfterTranscription] = useState(false);
   const [exportConfirmOpen, setExportConfirmOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const handleConfirmExport = async () => {
     if (!user) {
