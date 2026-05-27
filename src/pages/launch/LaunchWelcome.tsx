@@ -80,10 +80,10 @@ export default function LaunchWelcome() {
 
             <div className="flex flex-col items-start gap-5">
               <button
-                onClick={() => navigate('/launch/home')}
+                onClick={() => navigate('/launch/payment')}
                 className="bg-[#0D9488] hover:bg-[#0B7A70] text-white px-10 py-4 font-medium text-sm tracking-[0.12em] transition-colors rounded-[2px] shadow-sm min-h-[56px]"
               >
-                LET'S BEGIN
+                CONTINUE
               </button>
               <button
                 onClick={() => navigate('/auth')}
