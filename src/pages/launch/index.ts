@@ -22,3 +22,4 @@ export { default as LaunchHelp } from './LaunchHelp';
 export { default as LaunchRoadmap } from './LaunchRoadmap';
 export { default as LaunchClinicalBrief } from './LaunchClinicalBrief';
 export { default as LaunchVisionStatement } from './LaunchVisionStatement';
+export { default as LaunchEditionAbout } from './LaunchEditionAbout';
