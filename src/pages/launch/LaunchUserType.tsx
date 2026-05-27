@@ -90,7 +90,7 @@ export default function LaunchUserType() {
                       </div>
                       <div className="flex-1">
                         <h3 className="font-semibold text-gray-900 mb-1">{type.title}</h3>
-                        <p className="text-sm text-gray-600">{type.description}</p>
+                        <p className="text-sm text-gray-600 leading-relaxed">{type.definition}</p>
                       </div>
                       <ArrowRight className="h-5 w-5 text-gray-400 mt-1" />
                     </div>
