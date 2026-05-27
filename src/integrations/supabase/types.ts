@@ -1099,6 +1099,39 @@ export type Database = {
           },
         ]
       }
+      founding_feedback: {
+        Row: {
+          category: string
+          created_at: string
+          edition_version: string
+          id: string
+          message: string
+          ok_to_contact: boolean
+          route: string | null
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          edition_version?: string
+          id?: string
+          message: string
+          ok_to_contact?: boolean
+          route?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          edition_version?: string
+          id?: string
+          message?: string
+          ok_to_contact?: boolean
+          route?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       goals: {
         Row: {
           annual_priority_id: string | null

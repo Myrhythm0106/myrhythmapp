@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, Users, CalendarCheck, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { EditionBadge } from './EditionBadge';
+import { FeedbackDialog } from './FeedbackDialog';
 
 const STORAGE_KEY = 'mr:first-run-done';
 
@@ -32,6 +34,7 @@ const steps = [
 export function FirstRunOverlay() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -74,9 +77,12 @@ export function FirstRunOverlay() {
           </button>
 
           <div className="mb-8">
-            <p className="text-[10px] tracking-[0.3em] uppercase text-stone-400 mb-2">
-              Your first 3 minutes
-            </p>
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
+              <p className="text-[10px] tracking-[0.3em] uppercase text-stone-400">
+                Your first 3 minutes
+              </p>
+              <EditionBadge variant="chip" />
+            </div>
             <h2 className="text-2xl md:text-3xl font-semibold text-stone-900">
               Three things and you're set
             </h2>
@@ -110,16 +116,23 @@ export function FirstRunOverlay() {
             ))}
           </div>
 
-          <div className="mt-8 text-center">
+          <div className="mt-8 flex items-center justify-between flex-wrap gap-3">
             <button
               onClick={dismiss}
-              className="text-xs text-stone-400 hover:text-stone-600 tracking-[0.15em] uppercase"
+              className="text-xs text-stone-400 hover:text-stone-600 tracking-[0.15em] uppercase min-h-[44px]"
             >
               Skip — I'll explore on my own
+            </button>
+            <button
+              onClick={() => setFeedbackOpen(true)}
+              className="text-xs text-teal-700 hover:text-teal-800 tracking-[0.15em] uppercase font-medium min-h-[44px]"
+            >
+              Tell us how this felt →
             </button>
           </div>
         </motion.div>
       </motion.div>
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
     </AnimatePresence>
   );
 }

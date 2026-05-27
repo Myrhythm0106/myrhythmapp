@@ -17,7 +17,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import {
   Bell, Shield, Palette, Globe, Calendar, HardDrive,
-  ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus, Download
+  ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus, Download,
+  Sparkles, MessageCircle, ChevronRight
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCalendarIntegration } from '@/hooks/useCalendarIntegration';
@@ -26,6 +27,9 @@ import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
 import { canRequestExport, exportUserData } from '@/utils/gdprExport';
+import { EditionBadge } from '@/components/launch/EditionBadge';
+import { FeedbackDialog } from '@/components/launch/FeedbackDialog';
+import { EDITION_SHORT, EDITION_VERSION } from '@/config/edition';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
@@ -34,6 +38,7 @@ export default function LaunchSettings() {
   const [autoDeleteAfterTranscription, setAutoDeleteAfterTranscription] = useState(false);
   const [exportConfirmOpen, setExportConfirmOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const handleConfirmExport = async () => {
     if (!user) {
@@ -86,6 +91,42 @@ export default function LaunchSettings() {
       </div>
 
       <div className="space-y-4 pb-24">
+        {/* About this edition */}
+        <LaunchCard>
+          <button
+            onClick={() => navigate('/launch/settings/edition')}
+            className="w-full flex items-center gap-3 text-left min-h-[56px]"
+          >
+            <div className="w-10 h-10 rounded-xl bg-teal-100 flex items-center justify-center">
+              <Sparkles className="h-5 w-5 text-teal-700" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-900">About this edition</h3>
+              <p className="text-xs text-gray-500">
+                {EDITION_SHORT} · {EDITION_VERSION} — what's live and what's coming
+              </p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-gray-400" />
+          </button>
+        </LaunchCard>
+
+        {/* Send feedback */}
+        <LaunchCard>
+          <button
+            onClick={() => setFeedbackOpen(true)}
+            className="w-full flex items-center gap-3 text-left min-h-[56px]"
+          >
+            <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+              <MessageCircle className="h-5 w-5 text-amber-700" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-900">Send feedback to the team</h3>
+              <p className="text-xs text-gray-500">Founding-member notes shape the next release</p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-gray-400" />
+          </button>
+        </LaunchCard>
+
         {/* Connected Calendars Section */}
         <LaunchCard>
           <div className="flex items-center gap-3 mb-4">
@@ -388,7 +429,13 @@ export default function LaunchSettings() {
             </p>
           </div>
         </LaunchCard>
+
+        <div className="pt-4 flex justify-center">
+          <EditionBadge variant="footer" />
+        </div>
       </div>
+
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
 
       <AlertDialog open={exportConfirmOpen} onOpenChange={setExportConfirmOpen}>
         <AlertDialogContent>

@@ -1,4 +1,5 @@
 import jsPDF from 'jspdf';
+import { EDITION_FOOTER } from '@/config/edition';
 
 export interface ClinicalExportItem {
   date: string;
@@ -115,7 +116,7 @@ export function buildClinicalExportPdf(data: ClinicalExportData): jsPDF {
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(STONE_500);
     const footer =
-      'CONFIDENTIAL — Prepared by patient via MyRhythm. Not a clinical record. MyRhythm does not diagnose, treat, or cure any condition.';
+      `CONFIDENTIAL — Prepared by patient via MyRhythm. Not a clinical record. MyRhythm does not diagnose, treat, or cure any condition.  ·  ${EDITION_FOOTER}`;
     doc.text(footer, pageWidth / 2, pageHeight - 12, { align: 'center' });
   }
 
