@@ -5,19 +5,58 @@ import { LaunchButton } from '@/components/launch/LaunchButton';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Bell, Shield, Palette, Globe, Calendar, HardDrive, 
-  ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
+  Bell, Shield, Palette, Globe, Calendar, HardDrive,
+  ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus, Download
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCalendarIntegration } from '@/hooks/useCalendarIntegration';
+import { useAuth } from '@/hooks/useAuth';
 import { Badge } from '@/components/ui/badge';
 import { formatDistanceToNow } from 'date-fns';
+import { toast } from 'sonner';
+import { canRequestExport, exportUserData } from '@/utils/gdprExport';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [retentionDays, setRetentionDays] = useState('30');
   const [autoDeleteAfterTranscription, setAutoDeleteAfterTranscription] = useState(false);
+  const [exportConfirmOpen, setExportConfirmOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
+
+  const handleConfirmExport = async () => {
+    if (!user) {
+      toast.error('Please sign in to export your data.');
+      return;
+    }
+    const gate = canRequestExport();
+    if (!gate.ok) {
+      toast.error(`You can request another export after ${gate.nextAvailable?.toLocaleString()}.`);
+      return;
+    }
+    setExporting(true);
+    try {
+      await exportUserData(user.id, user.email || 'unknown');
+      toast.success('Your data has been downloaded.');
+      setExportConfirmOpen(false);
+    } catch (err: any) {
+      console.error('GDPR export failed:', err);
+      toast.error(err?.message || 'Export failed. Please try again.');
+    } finally {
+      setExporting(false);
+    }
+  };
   
   const {
     integrations,
@@ -336,12 +375,52 @@ export default function LaunchSettings() {
               <Label className="text-sm text-gray-900">Usage Analytics</Label>
               <Switch defaultChecked />
             </div>
-            <LaunchButton variant="outline" className="w-full">
+            <LaunchButton
+              variant="outline"
+              className="w-full"
+              onClick={() => setExportConfirmOpen(true)}
+            >
+              <Download className="h-4 w-4 mr-2" />
               Download My Data
             </LaunchButton>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Get a copy of everything MyRhythm holds about you (UK GDPR Art. 20). Includes a JSON file and a PDF summary.
+            </p>
           </div>
         </LaunchCard>
       </div>
+
+      <AlertDialog open={exportConfirmOpen} onOpenChange={setExportConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Download your data</AlertDialogTitle>
+            <AlertDialogDescription>
+              You'll receive two files: a complete JSON bundle of your records, and a one-page PDF summary listing how many items of each type are included. Nothing is shared with anyone else.
+              <br /><br />
+              You can request another export after 24 hours.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={exporting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleConfirmExport();
+              }}
+              disabled={exporting}
+            >
+              {exporting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Preparing…
+                </>
+              ) : (
+                'Download now'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </LaunchLayout>
   );
 }

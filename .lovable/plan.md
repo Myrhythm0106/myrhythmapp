@@ -1,63 +1,95 @@
+# Plan v14 — MVP Hardening (Locked Scope)
 
-## Empowering Labels + Definitions
+Confirmed:
+1. Reorder Welcome before Payment ✅
+2. Record-on-behalf OFF by default for everyone ✅
+3. All 7 friction fixes in Phase 1 ✅
+4. Clinical export in MVP ✅
+5. Pull in accessibility baseline (G6-min) + GDPR data export (G9) ✅
+6. Document deferred items in strategy + features docs ✅
 
-Replace the four clinical/functional category names with identity-led labels. Each label is paired with a short, professionally written definition that appears directly beneath it wherever the category is presented (onboarding selection, welcome screen, settings, persona switcher, copy adapters).
+---
 
-### The four categories
+## Phase 1 — Friction, UI consistency, accessibility baseline (frontend)
 
-**1. Pathfinders** *(replaces: Recovery / Brain Injury / Long COVID / MS / Stroke / Dementia)*
-> People rebuilding cognitive ground after a neurological event or condition — brain injury, stroke, dementia, long COVID, MS. Pathfinders use MyRhythm to bridge the gap between clinical-ready and life-ready, one steady step at a time.
+| # | Change | Files |
+|---|---|---|
+| F1 | "Skip" on UserType routes to neutral default + 1-line preview under each identity | `LaunchUserType.tsx` |
+| F2 | Reorder flow: `UserType → Welcome → Payment` | `LaunchUserType.tsx`, `LaunchWelcome.tsx`, `LaunchPayment.tsx` |
+| F3 | First-run 3-card overlay on `/launch/home` (Capture / Add Anchor / See your day), dismissible via `mr:first-run-done` flag | New `src/components/launch/FirstRunOverlay.tsx`, mounted in `LaunchDashboard.tsx` |
+| F4 | Persistent "Need a hand?" pill bottom-right on every Launch page | `LaunchLayout.tsx` (mount existing `FloatingGuideButton`) |
+| F5 | SC Capture: hide Tap/Hold toggle behind ⋯ until first capture; Online chip only when offline | `LaunchSCCapture.tsx` |
+| F6 | 4-dot onboarding progress rail (Identity → Welcome → First capture → Invite circle) | New `src/components/launch/OnboardingProgressRail.tsx`, conditional in `LaunchLayout.tsx` |
+| F7 | Bump persona definitions to `text-base text-stone-700` | `LaunchUserType.tsx` |
+| Visual | Unify Dashboard + UserType with Welcome's editorial language: bone bg `#FDFCFB`, single teal `#0D9488`, Playfair Display headlines | `LaunchUserType.tsx`, `LaunchDashboard.tsx`, `index.css` token check |
+| **G6-min** | Accessibility baseline: 18px min body, `focus-visible` rings on all interactive elements, high-contrast toggle in Settings, respect `prefers-reduced-motion`, alt text audit on hero/persona images | `index.css`, `LaunchSettings.tsx`, sweep across launch pages |
 
-**2. Anchors** *(replaces: Caregiver / Family Member / Medical Professional supporting a loved one)*
-> The people who hold the line for someone else — family carers, spouses, adult children, professional carers. Anchors use MyRhythm to coordinate care without losing their own day, and to protect themselves from burnout.
+---
 
-**3. Operators** *(replaces: Executive / Professional / ADHD / Cognitive Optimization / Wellness)*
-> High-output professionals and focus-seekers protecting their best thinking. Operators use MyRhythm to defend deep work, convert meetings into leverage, and keep signal above noise.
+## Phase 2 — Support Circle "Record on behalf" (frontend + permission flag)
 
-**4. Scholars** *(replaces: Student)*
-> Students and lifelong learners pacing themselves toward recall, not burnout. Scholars use MyRhythm to turn lectures and revision into a searchable record, and to compound study across the week.
+**Default: OFF for every member, every role.**
 
-### Presentation pattern (used everywhere a category appears)
+| Change | Files |
+|---|---|
+| 7th permission toggle `can_record_on_behalf` with explicit copy ("…recordings appear in your Memory Bridge for you to review and accept. OFF by default.") | `EnhancedSupportCirclePermissions.tsx` |
+| Anchor-side "Record meeting for [name]" button on `/launch/support-circle`, disabled with tooltip when permission OFF | `LaunchSupportCircle.tsx` |
+| `MemoryBridgeRecorder` accepts `subjectUserId` + `onBehalf` props; banner "Recording on behalf of [name]" | `MemoryBridgeRecorder.tsx`, `routes/MemoryBridge.tsx` |
+| Persist `recorded_by` in recording metadata JSONB (no schema change) | `useVoiceRecorder.ts`, `processSavedRecording.ts` |
+
+---
+
+## Phase 3 — Clinical Export (MVP critical)
+
+| Change | Files |
+|---|---|
+| "Share with my clinician" button on each Memory Bridge meeting + dashboard "Last 7 days" | `MemoryBridgeMainDashboard.tsx`, `LaunchDashboard.tsx` |
+| 1-page PDF: header (patient name, optional DOB, date range), summary, key captures, extracted actions, medications mentioned, 3pt confidentiality footer per `mem://brand/document-confidentiality-standard` | New `src/utils/clinicalExport.ts` (jspdf) |
+| Outputs: (a) Download PDF, (b) Email to clinician via existing Resend `send-email` edge function | Reuse `send-email` |
+| Pre-export consent dialog: itemised checkboxes, explicit "nothing is shared until you confirm" | New `src/components/launch/ClinicalExportDialog.tsx` |
+| Audit log row per export | `accountability_alerts` insert |
+
+---
+
+## Phase 4 — Backend hardening for record-on-behalf (separate migration)
+
+- Promote `recorded_by_user_id uuid` from metadata to column on `voice_recordings`
+- RLS: support member can INSERT when target user's `support_circle_members.permissions->>'can_record_on_behalf' = 'true'`
+- Trigger: notify owner via `accountability_alerts` type `recording_on_behalf`
+
+---
+
+## Phase 5 — GDPR Data Export (legal baseline)
+
+| Change | Files |
+|---|---|
+| Settings → "Download my data" button | `LaunchSettings.tsx` |
+| Bundles: JSON (raw rows the user owns across profiles, recordings metadata, actions, mood, goals, support_circle_members) + human-readable PDF summary | New `src/utils/gdprExport.ts`, new edge function `gdpr-export` |
+| Confirmation modal with what's included + 24h re-request rate-limit | Modal in `LaunchSettings.tsx` |
+
+---
+
+## Documentation updates
+
+| Doc | Addition |
+|---|---|
+| `strategic-documents/Founding-Member-Launch-Strategy.md` | New section **"v1.1 Roadmap (Post-Founding-Member Launch)"** — lists deferred items with trigger conditions: G5 Weekly Anchor digest (trigger: ≥50 active Anchors), G6 formal WCAG 2.2 AA certification (trigger: pre-NHS pilot), persona switcher mid-journey (trigger: ≥10% of users request it) |
+| `docs/v0.1-features.md` | New section **"Deferred / Out-of-Scope for v0.1"** mirroring the above, linking to strategy doc |
+| New `strategic-documents/Memory-Bridge-Positioning-Decision.md` | One-pager capturing the proposal to lead marketing with "Memory Bridge" as the hero feature; awaits founder sign-off |
+
+---
+
+## Execution order
 
 ```text
-┌────────────────────────────────────────────┐
-│  [icon]  Pathfinders                       │
-│          People rebuilding cognitive       │
-│          ground after a neurological       │
-│          event or condition.               │
-└────────────────────────────────────────────┘
+Phase 1   Friction + UI + a11y baseline       (~9 files, 1 commit)
+Phase 2   Record-on-behalf frontend           (~4 files, 1 commit)
+Phase 3   Clinical export PDF + email         (~5 files + reuse edge fn)
+Phase 5   GDPR data export                    (~3 files + 1 edge fn)
+Docs      Strategy + features + positioning   (3 docs)
+Phase 4   Backend migration for on-behalf     (separate approval)
 ```
 
-- Label: display weight, brand-emerald
-- Definition: one or two sentences, muted-foreground, max ~160 chars on selection cards (full version on welcome/settings)
+Phases 1–3, 5, and Docs ship in a single build pass. Phase 4 follows as its own migration cycle.
 
-### Files to update
-
-**Selection & onboarding**
-- `src/pages/launch/LaunchUserType.tsx` — collapse 9 cards into 4 (Pathfinders, Anchors, Operators, Scholars), each with label + definition beneath
-- `src/pages/launch/LaunchWelcome.tsx` — update persona greeting line to use the new label ("We've shaped MyRhythm around Pathfinders")
-
-**Persona system**
-- `src/launch/persona/usePersona.ts` — rename `Persona` union values and `PERSONA_LABEL` map; keep `mapToPersona` mapping legacy raw types to the new four
-- `src/launch/persona/copy.ts` — update keys (`recovery → pathfinder`, `caregiver → anchor`, `productivity → operator`, `student → scholar`) and add a `definition` field to `PersonaCopy`
-- `src/utils/personaLanguage.ts` — same key rename + add definition string per persona
-- `src/components/memoryBridge/PersonaSwitcher.tsx` — replace Recovery/Executive toggle labels with Pathfinder/Operator (and surface the definition on hover/below)
-- `src/hooks/usePersona.ts` — rename mode values and update `personaConfigs` keys
-
-**Type surface**
-- `src/types/user.ts` — keep raw `UserType` strings as-is (data layer), but introduce a `PersonaIdentity = 'pathfinder' | 'anchor' | 'operator' | 'scholar'` derived type used for display
-
-### Backwards compatibility
-
-- Existing localStorage values (`brain-injury`, `caregiver`, `executive`, etc.) continue to map correctly via `mapToPersona` — no data migration needed.
-- Database `persona_mode` column keeps `'recovery' | 'executive'` for now; display layer translates to Pathfinder / Operator. A follow-up migration can rename column values later if desired.
-
-### Out of scope
-
-- No database migrations in this pass
-- No change to assessment logic, scheduling, or behaviour loop
-- "Anchors vs Keepers" decision: locked to **Anchors** per prior discussion; flag if you want Keepers instead before build
-
-### Open question
-
-Confirm definitions read right to you, or edit any of the four before I implement. Definitions are the part users will actually read — worth getting them in your voice.
+Ready to build on approval.

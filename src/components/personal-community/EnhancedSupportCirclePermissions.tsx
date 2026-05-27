@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Heart, Activity, Target, Sparkles, Mic } from 'lucide-react';
+import { Calendar, Heart, Activity, Target, Sparkles, Mic, MicVocal } from 'lucide-react';
 
 interface EnhancedSupportCirclePermissionsProps {
   member: any; // Replace with actual type
@@ -64,6 +64,13 @@ export function EnhancedSupportCirclePermissions({ member, onUpdate }: EnhancedS
       description: 'Access voice notes and audio recordings shared with healthcare',
       icon: Mic,
       color: 'text-purple-600'
+    },
+    {
+      key: 'can_record_on_behalf',
+      label: 'Record meetings on my behalf',
+      description: 'Allow this person to record an appointment or meeting on your behalf (e.g. an appointment they attended for you). Recordings appear in your Memory Bridge for you to review and accept. OFF by default.',
+      icon: MicVocal,
+      color: 'text-rose-600'
     }
   ];
 

@@ -9,26 +9,31 @@ import { CrisisPreventionSystem } from './CrisisPreventionSystem';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { MemoryBridgeFloatingButton } from './MemoryBridgeFloatingButton';
+import { ClinicalExportDialog } from '@/components/launch/ClinicalExportDialog';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
-import { 
-  Brain, 
-  Users, 
-  MessageCircle, 
-  Shield, 
-  List, 
+import { useAuth } from '@/hooks/useAuth';
+import {
+  Brain,
+  Users,
+  MessageCircle,
+  Shield,
+  List,
   Mic,
   Crown,
   ArrowRight,
   Heart,
   Zap,
-  Target
+  Target,
+  ShieldCheck,
 } from 'lucide-react';
 
 export function MemoryBridgeMainDashboard() {
   const { extractedActions, currentMeeting, isRecording } = useMemoryBridge();
   const { hasFeature, tier } = useSubscription();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('actions');
+  const [exportOpen, setExportOpen] = useState(false);
   
   const hasMemoryBridgeAccess = tier === 'smart_pro' || tier === 'family_smart';
   
@@ -132,14 +137,24 @@ export function MemoryBridgeMainDashboard() {
             <p className="text-muted-foreground">Preserve relationships, never forget commitments</p>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4 flex-wrap">
             {isRecording && (
               <Badge variant="destructive" className="animate-pulse">
                 <Mic className="h-3 w-3 mr-1" />
                 Recording Active
               </Badge>
             )}
-            
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setExportOpen(true)}
+              className="border-teal-200 text-teal-800 hover:bg-teal-50"
+            >
+              <ShieldCheck className="h-4 w-4 mr-1.5" />
+              Share with my clinician
+            </Button>
+
             <Badge variant="secondary" className="bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800">
               <Crown className="h-3 w-3 mr-1" />
               Premium Active
@@ -246,6 +261,20 @@ export function MemoryBridgeMainDashboard() {
 
       {/* Floating Action Button */}
       <MemoryBridgeFloatingButton />
+
+      <ClinicalExportDialog
+        open={exportOpen}
+        onOpenChange={setExportOpen}
+        patientName={user?.user_metadata?.name || user?.email || 'Patient'}
+        dateRangeLabel="Last 7 days"
+        summary={`Summary of ${stats.totalCommitments} captured commitment${stats.totalCommitments === 1 ? '' : 's'} from Memory Bridge. ${stats.completedCommitments} completed, ${stats.pendingCommitments} pending, ${stats.highPriorityCommitments} flagged high priority.`}
+        items={extractedActions.slice(0, 30).map((a: any) => ({
+          date: a.created_at ? new Date(a.created_at).toLocaleDateString() : '',
+          title: a.action_text || a.title || 'Untitled item',
+          detail: a.completion_notes || a.context || undefined,
+          category: 'action' as const,
+        }))}
+      />
     </div>
   );
 }

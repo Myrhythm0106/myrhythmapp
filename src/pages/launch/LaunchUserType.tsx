@@ -44,7 +44,7 @@ export default function LaunchUserType() {
 
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
-    navigate('/launch/payment');
+    navigate('/launch/welcome');
   };
 
   return (
@@ -89,8 +89,8 @@ export default function LaunchUserType() {
                         <type.icon className="h-6 w-6 text-white" />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-1">{type.title}</h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">{type.definition}</p>
+                        <h3 className="font-semibold text-gray-900 mb-2 text-lg">{type.title}</h3>
+                        <p className="text-base text-stone-700 leading-relaxed">{type.definition}</p>
                       </div>
                       <ArrowRight className="h-5 w-5 text-gray-400 mt-1" />
                     </div>
@@ -104,16 +104,17 @@ export default function LaunchUserType() {
 
       {/* Sticky Footer */}
       <div className="flex-shrink-0 px-4 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
-        <div className="text-center">
+        <div className="text-center space-y-1">
           <button
             onClick={() => {
               localStorage.setItem('myrhythm_user_type', 'wellness');
-              navigate('/launch/payment');
+              navigate('/launch/welcome');
             }}
-            className="text-sm text-gray-500 hover:text-gray-700"
+            className="text-sm text-gray-600 hover:text-gray-900 underline underline-offset-4"
           >
-            Skip for now
+            I'm not sure yet — show me around
           </button>
+          <p className="text-xs text-stone-400">You can change this any time in Settings.</p>
         </div>
       </div>
     </div>

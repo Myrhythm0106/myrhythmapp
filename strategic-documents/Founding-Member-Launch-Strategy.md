@@ -116,3 +116,22 @@ This strategy maintains affordability while creating urgency and positioning for
 
 *Confidential – Not for Distribution*
 *© 2026 Annabel Aaron. All rights reserved.*
+---
+
+## v1.1 Roadmap (Post-Founding-Member Launch)
+
+The following items are intentionally **deferred from MVP** and tracked here so nothing is lost. Each has an explicit trigger condition for promotion into a build cycle.
+
+| Item | Description | Trigger to build |
+|---|---|---|
+| **G5 — Weekly Anchor digest** | Email summary to Anchors: "what changed for [name] this week" — captures, completed actions, missed actions, mood trend. | ≥50 active Anchors with permission ≥2 weeks. |
+| **G6 — Formal WCAG 2.2 AA certification** | Third-party accessibility audit + remediation. (MVP ships with the in-house accessibility baseline: 18px min body, focus-visible rings, reduced-motion respect, alt text.) | Pre-NHS pilot, or first enterprise/clinical buyer enquiry. |
+| **Persona switcher mid-journey** | Allow users to switch identity (Pathfinder ↔ Anchor ↔ Operator ↔ Scholar) after onboarding without re-running assessment. | ≥10% of users request it, or product analytics show repeat re-onboarding attempts. |
+| **Phase 4 — Record-on-behalf backend hardening** | Promote `recorded_by_user_id` from JSONB metadata to dedicated column on `voice_recordings`, with RLS + audit trigger. | After Phase 2 (frontend permission flag) sees real usage. |
+| **Support Circle "Record meeting for [name]" UI** | Anchor-initiated recording flow with subject-context banner in `MemoryBridgeRecorder`. | Permission toggle (Phase 2) adoption ≥20% of Anchors. |
+
+### Confirmed in MVP (Plan v14)
+- Phase 1: 7 friction fixes (reorder UserType→Welcome→Payment, first-run overlay, smarter Skip, definition typography) + accessibility baseline
+- Phase 2: `can_record_on_behalf` permission toggle (OFF by default)
+- Phase 3: Clinical Export PDF ("Share with my clinician")
+- Phase 5: GDPR data export (Settings → Download My Data)
