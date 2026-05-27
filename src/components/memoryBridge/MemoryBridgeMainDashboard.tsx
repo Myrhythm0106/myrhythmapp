@@ -9,20 +9,23 @@ import { CrisisPreventionSystem } from './CrisisPreventionSystem';
 import { ExtractedActionsReview } from './ExtractedActionsReview';
 import { MemoryBridgeRecorder } from './MemoryBridgeRecorder';
 import { MemoryBridgeFloatingButton } from './MemoryBridgeFloatingButton';
+import { ClinicalExportDialog } from '@/components/launch/ClinicalExportDialog';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/contexts/SubscriptionContext';
-import { 
-  Brain, 
-  Users, 
-  MessageCircle, 
-  Shield, 
-  List, 
+import { useAuth } from '@/hooks/useAuth';
+import {
+  Brain,
+  Users,
+  MessageCircle,
+  Shield,
+  List,
   Mic,
   Crown,
   ArrowRight,
   Heart,
   Zap,
-  Target
+  Target,
+  ShieldCheck,
 } from 'lucide-react';
 
 export function MemoryBridgeMainDashboard() {
