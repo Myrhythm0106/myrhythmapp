@@ -1,75 +1,51 @@
-# Plan v8 — Frictionless Capture MVP + Positioning Surface
+# Plan: Finish SC Capture + Elevate Launch Welcome (v2)
 
-Locks the build scope from Plan v7 with the competitor-driven refinements, and adds a small positioning layer so the moat is visible from the outside.
+Decision on open question: **run the 3-direction picker** for the Welcome redesign.
 
-## A. MVP Build Scope (locked)
+Rationale — competitive context:
+- Otter, Voicenotes, Rev all ship a "friendly pastel sparkle" welcome. If we copy that register, we look like another consumer notes app.
+- Brain in Hand and MapHabit lean clinical/utilitarian — credible but cold. Families don't fall in love with them.
+- The gap MyRhythm needs to occupy on first paint is **clinical-grade seriousness + human warmth** — the register Headspace for Work, Calm Health, and Hinge Health used to break out of consumer-wellness into enterprise/clinical trust. That's a register choice that benefits from seeing options side-by-side rather than my single guess.
+- The Welcome screen is the first authenticated impression. Investors, NHS pilot leads, and family members all land here. Getting it wrong costs more than one extra step costs.
 
-### A1. Frictionless capture core (5 items)
-1. **Live transcription preview** — words appear as the user/SC speaks; reduces "did it hear me?" anxiety.
-2. **Offline-first queue** — capture works with no signal (hospital, clinic, basement); syncs on reconnect with a visible queue badge.
-3. **Undo, not confirm** — captures save instantly; a 6s "Undo" toast replaces modal confirmation. User stays sovereign.
-4. **Voice-only Support Circle mode** — SC app surface defaults to one large mic button + name of the person they're capturing for. No typing required.
-5. **Status-at-a-glance dot** — single coloured dot per capture: grey (queued), amber (awaiting review), green (accepted), faded (declined). No nagging, no badges-of-shame.
-
-### A2. Competitor-driven additions (2 items)
-6. **"Why am I seeing this?" provenance chip** — every circle-originated capture shows a one-tap chip revealing: who sent it, when, which permission allowed it, and a "revoke this permission" shortcut.
-7. **Weekly capture digest** — Sunday roll-up to the user: "Your circle sent N captures this week, you accepted M. [Name] sends most. Adjust permissions?" Turns the feature into a relationship instrument.
-
-### A3. First-send coachmark (frictionless polish)
-8. **One-time SC coachmark on first send** — 8 words: "Sent. [Name] will review and accept." Shown once per SC member, never again. Solves the trust gap at zero cost.
-
-### A4. Schema-only (no UI)
-9. `created_via` field on captures — enum: `app`, `sc_app`, future `sms`, `wearable`, `email`. Forward-compatible.
-
-### Explicitly deferred to Phase 2
-Zero-state big-button, auto-save partials, one-handed reachability, pre-filled calendar context, haptics, shake-to-capture, long-press FAB, "request a capture" flow. All nice; none move the competitive needle.
+So: capture the current Welcome, run `design--create_directions` with three locked-taste variants, let you pick, then build.
 
 ---
 
-## B. Positioning Surface (new)
+## 1. Finish `/launch/sc/capture/:subjectId`
+(unchanged from v1 plan — deterministic, no picker needed)
 
-The build alone is enough to stand out. It is **not** enough to be *seen* standing out. These three small additions make the moat visible in 5 seconds.
+- Recipient header card with avatar, relationship, last-capture timestamp
+- Live transcript ribbon under the mic (partials grey, finals dark)
+- Waveform / level meter ring around mic
+- Hold-to-talk option (long-press = PTT, tap = toggle); pref stored in localStorage
+- Post-send confirmation panel (green check + Undo + "Send another"), toast becomes secondary
+- Queued drawer (chip opens bottom sheet of pending captures)
+- Empty-permission guard with "Request permission" deep link
+- A11y: aria-live transcript, focus ring, reduced-motion, safe-area, real meta title
+- Route cleanup: drop `:subjectName` from URL (PII), fetch from subject context
 
-### B1. Landing page section: "The Circle Loop"
-A new section on `/launch` (and `/`) showing the four-frame loop:
-SC captures → provenance chip shown → user accepts → weekly digest closes the loop.
-Static frames + short caption. No video required for v1.
+New files: `RecipientHeader.tsx`, `LiveTranscriptRibbon.tsx`, `QueuedDrawer.tsx`, `SendConfirmation.tsx` under `src/components/launch/circle/`.
 
-### B2. Provenance chip as a marketing asset
-A clean isolated screenshot (or animated GIF) of the chip, usable on landing, social, investor deck, press kit. One asset, many surfaces.
+## 2. Redesign `/launch/welcome`
 
-### B3. Name the workflow
-Give the SC→user→accept→digest loop a 2-word name so press, clinicians, and investors have language to repeat. Three candidates to choose from in implementation:
-- **Consent Capture**
-- **Circle Bridge**
-- **Proxy Notes**
+**Flow:**
+1. Capture current Welcome screenshot at 1430×780 desktop and a mobile crop
+2. `design--create_directions` with three variants, locked taste = serious + warm + brand-teal accent:
+   - **Editorial Clinical** — oversized serif headline, off-white canvas, asymmetric 60/40 split, one quiet abstract hero, hairline rules, numbered persona highlights (register: New Yorker × Mayo Clinic)
+   - **Mono Minimal** — single column, mono-display headline, generous negative space, brand-teal as a single line, micro-typography (register: Linear × Stripe)
+   - **Soft Corporate** — calm gradient mesh hero, sans display, card-free highlights with monoline icons, gentle motion (register: Headspace for Work × Notion)
+3. Show all three via `ask_questions` type `prototype`
+4. Build the chosen direction; copy its tokens verbatim into the project
 
-(User picks during build; default to "Consent Capture" if undecided.)
+Persona content (4 personas × 3 highlights) preserved; only treatment changes. Bouncing Sparkle emoji removed in all directions.
 
----
+## Technical notes
+- New files: `src/components/launch/welcome/WelcomeHero.tsx`, `WelcomeHighlights.tsx`, `WelcomeAside.tsx` (final names depend on chosen direction)
+- Edits: `src/pages/launch/LaunchWelcome.tsx`, `src/pages/launch/LaunchSCCapture.tsx`, `src/App.tsx` (route change drops `:subjectName`)
+- No backend, schema, or dependency changes
+- All colours via existing semantic tokens; add `--surface-canvas` and `--rule-hairline` tokens if not present
 
-## C. Sequencing
-
-```text
-Week 1: A1 items 1–3 (live preview, offline queue, undo toast) on user side
-Week 2: A1 item 4 (voice-only SC mode) + A1 item 5 (status dot)
-Week 3: A2 items 6–7 (provenance chip + weekly digest) + A3 coachmark
-Week 4: B1–B3 positioning surface + QA + schema field
-```
-
----
-
-## D. Technical Notes (for reference)
-
-- **Offline queue:** IndexedDB via existing `prototypeStore` pattern; sync worker on `online` event.
-- **Provenance chip:** reads from `support_circle_members.permissions` JSONB; revoke shortcut calls existing `revoke_invitation` flow extended for per-permission revoke.
-- **Weekly digest:** new edge function `weekly-capture-digest` on cron; reuses `send-email` and Resend.
-- **Voice-only SC mode:** new route `/launch/sc/capture/:subjectId`; conditional render in existing SC dashboard.
-- **`created_via`:** migration adds enum column to captures/acts table; defaults to `app`.
-- **Status dot:** derived from existing accept/decline state; no schema change.
-
----
-
-## E. Open Question Before Build
-
-Pick the workflow name (Consent Capture / Circle Bridge / Proxy Notes / other) — affects landing copy, chip tooltip, and digest subject line.
+## Sequencing
+1. SC Capture polish (deterministic — ship first)
+2. Capture Welcome screenshot → directions → picker → build chosen variant
