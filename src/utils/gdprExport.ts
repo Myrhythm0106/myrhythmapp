@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import { supabase } from '@/integrations/supabase/client';
+import { EDITION_FOOTER } from '@/config/edition';
 
 /**
  * Tables this user owns directly via `user_id`. Add to this list when new
@@ -106,7 +107,7 @@ function buildSummaryPdf(userId: string, email: string, bundle: Record<string, a
     doc.setFontSize(3);
     doc.setTextColor('#78716C');
     doc.text(
-      'CONFIDENTIAL — Personal data export. You are the data controller for this file.',
+      `CONFIDENTIAL — Personal data export. You are the data controller for this file.  ·  ${EDITION_FOOTER}`,
       pageWidth / 2,
       pageHeight - 12,
       { align: 'center' }
