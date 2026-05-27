@@ -2,6 +2,7 @@ import React from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { DemoModeProvider } from '@/contexts/DemoModeContext';
 import { QuietHome } from '@/components/launch/quiet/QuietHome';
+import { FirstRunOverlay } from '@/components/launch/FirstRunOverlay';
 import LaunchDashboardLegacy from './LaunchDashboardLegacy';
 
 export default function LaunchDashboard() {
@@ -17,6 +18,7 @@ export default function LaunchDashboard() {
     <DemoModeProvider>
       <LaunchLayout>
         <QuietHome />
+        <FirstRunOverlay />
       </LaunchLayout>
     </DemoModeProvider>
   );
