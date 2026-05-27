@@ -261,6 +261,20 @@ export function MemoryBridgeMainDashboard() {
 
       {/* Floating Action Button */}
       <MemoryBridgeFloatingButton />
+
+      <ClinicalExportDialog
+        open={exportOpen}
+        onOpenChange={setExportOpen}
+        patientName={user?.user_metadata?.name || user?.email || 'Patient'}
+        dateRangeLabel="Last 7 days"
+        summary={`Summary of ${stats.totalCommitments} captured commitment${stats.totalCommitments === 1 ? '' : 's'} from Memory Bridge. ${stats.completedCommitments} completed, ${stats.pendingCommitments} pending, ${stats.highPriorityCommitments} flagged high priority.`}
+        items={extractedActions.slice(0, 30).map((a: any) => ({
+          date: a.created_at ? new Date(a.created_at).toLocaleDateString() : '',
+          title: a.action_text || a.title || 'Untitled item',
+          detail: a.completion_notes || a.context || undefined,
+          category: 'action' as const,
+        }))}
+      />
     </div>
   );
 }
