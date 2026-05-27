@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { mapToPersona, type Persona } from '@/launch/persona/usePersona';
+import { EditionBadge } from '@/components/launch/EditionBadge';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
@@ -39,9 +40,12 @@ export default function LaunchWelcome() {
             className="md:col-span-6 flex flex-col"
           >
             <header className="mb-10 lg:mb-12">
-              <span className="block text-[10px] tracking-[0.3em] uppercase font-medium text-stone-400 mb-6 lg:mb-8">
-                Welcome to MyRhythm
-              </span>
+              <div className="flex items-center gap-3 mb-6 lg:mb-8">
+                <span className="block text-[10px] tracking-[0.3em] uppercase font-medium text-stone-400">
+                  Welcome to MyRhythm
+                </span>
+                <EditionBadge variant="chip" />
+              </div>
               <h1
                 style={SERIF}
                 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] text-stone-900 mb-6 lg:mb-8"

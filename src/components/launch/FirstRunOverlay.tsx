@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Mic, Users, CalendarCheck, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { EditionBadge } from './EditionBadge';
+import { FeedbackDialog } from './FeedbackDialog';
 
 const STORAGE_KEY = 'mr:first-run-done';
 
