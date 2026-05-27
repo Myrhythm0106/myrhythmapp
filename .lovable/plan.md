@@ -1,51 +1,63 @@
-# Plan: Finish SC Capture + Elevate Launch Welcome (v2)
 
-Decision on open question: **run the 3-direction picker** for the Welcome redesign.
+## Empowering Labels + Definitions
 
-Rationale — competitive context:
-- Otter, Voicenotes, Rev all ship a "friendly pastel sparkle" welcome. If we copy that register, we look like another consumer notes app.
-- Brain in Hand and MapHabit lean clinical/utilitarian — credible but cold. Families don't fall in love with them.
-- The gap MyRhythm needs to occupy on first paint is **clinical-grade seriousness + human warmth** — the register Headspace for Work, Calm Health, and Hinge Health used to break out of consumer-wellness into enterprise/clinical trust. That's a register choice that benefits from seeing options side-by-side rather than my single guess.
-- The Welcome screen is the first authenticated impression. Investors, NHS pilot leads, and family members all land here. Getting it wrong costs more than one extra step costs.
+Replace the four clinical/functional category names with identity-led labels. Each label is paired with a short, professionally written definition that appears directly beneath it wherever the category is presented (onboarding selection, welcome screen, settings, persona switcher, copy adapters).
 
-So: capture the current Welcome, run `design--create_directions` with three locked-taste variants, let you pick, then build.
+### The four categories
 
----
+**1. Pathfinders** *(replaces: Recovery / Brain Injury / Long COVID / MS / Stroke / Dementia)*
+> People rebuilding cognitive ground after a neurological event or condition — brain injury, stroke, dementia, long COVID, MS. Pathfinders use MyRhythm to bridge the gap between clinical-ready and life-ready, one steady step at a time.
 
-## 1. Finish `/launch/sc/capture/:subjectId`
-(unchanged from v1 plan — deterministic, no picker needed)
+**2. Anchors** *(replaces: Caregiver / Family Member / Medical Professional supporting a loved one)*
+> The people who hold the line for someone else — family carers, spouses, adult children, professional carers. Anchors use MyRhythm to coordinate care without losing their own day, and to protect themselves from burnout.
 
-- Recipient header card with avatar, relationship, last-capture timestamp
-- Live transcript ribbon under the mic (partials grey, finals dark)
-- Waveform / level meter ring around mic
-- Hold-to-talk option (long-press = PTT, tap = toggle); pref stored in localStorage
-- Post-send confirmation panel (green check + Undo + "Send another"), toast becomes secondary
-- Queued drawer (chip opens bottom sheet of pending captures)
-- Empty-permission guard with "Request permission" deep link
-- A11y: aria-live transcript, focus ring, reduced-motion, safe-area, real meta title
-- Route cleanup: drop `:subjectName` from URL (PII), fetch from subject context
+**3. Operators** *(replaces: Executive / Professional / ADHD / Cognitive Optimization / Wellness)*
+> High-output professionals and focus-seekers protecting their best thinking. Operators use MyRhythm to defend deep work, convert meetings into leverage, and keep signal above noise.
 
-New files: `RecipientHeader.tsx`, `LiveTranscriptRibbon.tsx`, `QueuedDrawer.tsx`, `SendConfirmation.tsx` under `src/components/launch/circle/`.
+**4. Scholars** *(replaces: Student)*
+> Students and lifelong learners pacing themselves toward recall, not burnout. Scholars use MyRhythm to turn lectures and revision into a searchable record, and to compound study across the week.
 
-## 2. Redesign `/launch/welcome`
+### Presentation pattern (used everywhere a category appears)
 
-**Flow:**
-1. Capture current Welcome screenshot at 1430×780 desktop and a mobile crop
-2. `design--create_directions` with three variants, locked taste = serious + warm + brand-teal accent:
-   - **Editorial Clinical** — oversized serif headline, off-white canvas, asymmetric 60/40 split, one quiet abstract hero, hairline rules, numbered persona highlights (register: New Yorker × Mayo Clinic)
-   - **Mono Minimal** — single column, mono-display headline, generous negative space, brand-teal as a single line, micro-typography (register: Linear × Stripe)
-   - **Soft Corporate** — calm gradient mesh hero, sans display, card-free highlights with monoline icons, gentle motion (register: Headspace for Work × Notion)
-3. Show all three via `ask_questions` type `prototype`
-4. Build the chosen direction; copy its tokens verbatim into the project
+```text
+┌────────────────────────────────────────────┐
+│  [icon]  Pathfinders                       │
+│          People rebuilding cognitive       │
+│          ground after a neurological       │
+│          event or condition.               │
+└────────────────────────────────────────────┘
+```
 
-Persona content (4 personas × 3 highlights) preserved; only treatment changes. Bouncing Sparkle emoji removed in all directions.
+- Label: display weight, brand-emerald
+- Definition: one or two sentences, muted-foreground, max ~160 chars on selection cards (full version on welcome/settings)
 
-## Technical notes
-- New files: `src/components/launch/welcome/WelcomeHero.tsx`, `WelcomeHighlights.tsx`, `WelcomeAside.tsx` (final names depend on chosen direction)
-- Edits: `src/pages/launch/LaunchWelcome.tsx`, `src/pages/launch/LaunchSCCapture.tsx`, `src/App.tsx` (route change drops `:subjectName`)
-- No backend, schema, or dependency changes
-- All colours via existing semantic tokens; add `--surface-canvas` and `--rule-hairline` tokens if not present
+### Files to update
 
-## Sequencing
-1. SC Capture polish (deterministic — ship first)
-2. Capture Welcome screenshot → directions → picker → build chosen variant
+**Selection & onboarding**
+- `src/pages/launch/LaunchUserType.tsx` — collapse 9 cards into 4 (Pathfinders, Anchors, Operators, Scholars), each with label + definition beneath
+- `src/pages/launch/LaunchWelcome.tsx` — update persona greeting line to use the new label ("We've shaped MyRhythm around Pathfinders")
+
+**Persona system**
+- `src/launch/persona/usePersona.ts` — rename `Persona` union values and `PERSONA_LABEL` map; keep `mapToPersona` mapping legacy raw types to the new four
+- `src/launch/persona/copy.ts` — update keys (`recovery → pathfinder`, `caregiver → anchor`, `productivity → operator`, `student → scholar`) and add a `definition` field to `PersonaCopy`
+- `src/utils/personaLanguage.ts` — same key rename + add definition string per persona
+- `src/components/memoryBridge/PersonaSwitcher.tsx` — replace Recovery/Executive toggle labels with Pathfinder/Operator (and surface the definition on hover/below)
+- `src/hooks/usePersona.ts` — rename mode values and update `personaConfigs` keys
+
+**Type surface**
+- `src/types/user.ts` — keep raw `UserType` strings as-is (data layer), but introduce a `PersonaIdentity = 'pathfinder' | 'anchor' | 'operator' | 'scholar'` derived type used for display
+
+### Backwards compatibility
+
+- Existing localStorage values (`brain-injury`, `caregiver`, `executive`, etc.) continue to map correctly via `mapToPersona` — no data migration needed.
+- Database `persona_mode` column keeps `'recovery' | 'executive'` for now; display layer translates to Pathfinder / Operator. A follow-up migration can rename column values later if desired.
+
+### Out of scope
+
+- No database migrations in this pass
+- No change to assessment logic, scheduling, or behaviour loop
+- "Anchors vs Keepers" decision: locked to **Anchors** per prior discussion; flag if you want Keepers instead before build
+
+### Open question
+
+Confirm definitions read right to you, or edit any of the four before I implement. Definitions are the part users will actually read — worth getting them in your voice.

@@ -147,17 +147,17 @@ function getMessage(persona: Persona) {
     case 'recovery':
       return {
         headline: 'Your path forward starts now',
-        subtitle: "We've shaped MyRhythm around recovery. Your support circle stays close to everything you do.",
+        subtitle: "We've shaped MyRhythm around Pathfinders — people rebuilding cognitive ground after a neurological event. Your support circle stays close to everything you do.",
         highlights: [
           'Support circle, front and centre',
           'Memory Bridge for clinical conversations',
-          'A gentle path to track real progress',
+          'A steady path to track real progress',
         ],
       };
     case 'caregiver':
       return {
         headline: "You're not in this alone",
-        subtitle: "We'll help you support someone you love, while protecting your own rhythm too.",
+        subtitle: "We've shaped MyRhythm around Anchors — the people who hold the line for someone else, while protecting their own rhythm too.",
         highlights: [
           'Coordinate care without losing your day',
           'Capture appointments accurately, together',
@@ -167,7 +167,7 @@ function getMessage(persona: Persona) {
     case 'productivity':
       return {
         headline: 'Clear, defended days',
-        subtitle: "We've set MyRhythm up for leverage — vision down to the daily focus block, signal over noise.",
+        subtitle: "We've shaped MyRhythm around Operators — high-output professionals protecting their best thinking. Vision down to the daily focus block, signal over noise.",
         highlights: [
           'Vision through quarter, week, and day',
           'Protect deep work on the calendar',
@@ -177,7 +177,7 @@ function getMessage(persona: Persona) {
     case 'student':
       return {
         headline: 'Pace the term well',
-        subtitle: "We've set MyRhythm up for study — lectures captured, revision paced, recall protected.",
+        subtitle: "We've shaped MyRhythm around Scholars — pacing study toward recall, not burnout. Lectures captured, revision paced.",
         highlights: [
           'Study blocks that respect your energy',
           'Capture lectures and revision notes',
