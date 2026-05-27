@@ -375,12 +375,52 @@ export default function LaunchSettings() {
               <Label className="text-sm text-gray-900">Usage Analytics</Label>
               <Switch defaultChecked />
             </div>
-            <LaunchButton variant="outline" className="w-full">
+            <LaunchButton
+              variant="outline"
+              className="w-full"
+              onClick={() => setExportConfirmOpen(true)}
+            >
+              <Download className="h-4 w-4 mr-2" />
               Download My Data
             </LaunchButton>
+            <p className="text-xs text-gray-500 leading-relaxed">
+              Get a copy of everything MyRhythm holds about you (UK GDPR Art. 20). Includes a JSON file and a PDF summary.
+            </p>
           </div>
         </LaunchCard>
       </div>
+
+      <AlertDialog open={exportConfirmOpen} onOpenChange={setExportConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Download your data</AlertDialogTitle>
+            <AlertDialogDescription>
+              You'll receive two files: a complete JSON bundle of your records, and a one-page PDF summary listing how many items of each type are included. Nothing is shared with anyone else.
+              <br /><br />
+              You can request another export after 24 hours.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={exporting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                handleConfirmExport();
+              }}
+              disabled={exporting}
+            >
+              {exporting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Preparing…
+                </>
+              ) : (
+                'Download now'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </LaunchLayout>
   );
 }
