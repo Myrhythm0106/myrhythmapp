@@ -29,8 +29,34 @@ import { canRequestExport, exportUserData } from '@/utils/gdprExport';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [retentionDays, setRetentionDays] = useState('30');
   const [autoDeleteAfterTranscription, setAutoDeleteAfterTranscription] = useState(false);
+  const [exportConfirmOpen, setExportConfirmOpen] = useState(false);
+  const [exporting, setExporting] = useState(false);
+
+  const handleConfirmExport = async () => {
+    if (!user) {
+      toast.error('Please sign in to export your data.');
+      return;
+    }
+    const gate = canRequestExport();
+    if (!gate.ok) {
+      toast.error(`You can request another export after ${gate.nextAvailable?.toLocaleString()}.`);
+      return;
+    }
+    setExporting(true);
+    try {
+      await exportUserData(user.id, user.email || 'unknown');
+      toast.success('Your data has been downloaded.');
+      setExportConfirmOpen(false);
+    } catch (err: any) {
+      console.error('GDPR export failed:', err);
+      toast.error(err?.message || 'Export failed. Please try again.');
+    } finally {
+      setExporting(false);
+    }
+  };
   
   const {
     integrations,
