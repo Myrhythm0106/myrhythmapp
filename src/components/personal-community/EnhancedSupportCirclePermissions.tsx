@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Heart, Activity, Target, Sparkles, Mic } from 'lucide-react';
+import { Calendar, Heart, Activity, Target, Sparkles, Mic, MicVocal } from 'lucide-react';
 
 interface EnhancedSupportCirclePermissionsProps {
   member: any; // Replace with actual type
