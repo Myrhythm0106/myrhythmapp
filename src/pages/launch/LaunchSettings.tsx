@@ -429,7 +429,13 @@ export default function LaunchSettings() {
             </p>
           </div>
         </LaunchCard>
+
+        <div className="pt-4 flex justify-center">
+          <EditionBadge variant="footer" />
+        </div>
       </div>
+
+      <FeedbackDialog open={feedbackOpen} onOpenChange={setFeedbackOpen} />
 
       <AlertDialog open={exportConfirmOpen} onOpenChange={setExportConfirmOpen}>
         <AlertDialogContent>
