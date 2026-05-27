@@ -44,7 +44,7 @@ export default function LaunchUserType() {
 
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
-    navigate('/launch/payment');
+    navigate('/launch/welcome');
   };
 
   return (
