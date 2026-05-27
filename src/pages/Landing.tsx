@@ -14,6 +14,7 @@ import { FloatingRegisterButton } from "@/components/landing/FloatingRegisterBut
 import LandingFooter from "@/components/landing/LandingFooter";
 import { BreakingTheCycleSection } from "@/components/landing/BreakingTheCycleSection";
 import { MemoryBridgeSection } from "@/components/landing/MemoryBridgeSection";
+import { CircleLoopSection } from "@/components/landing/CircleLoopSection";
 import { FoundingMemberBanner } from "@/components/landing/FoundingMemberBanner";
 import { FoundingMemberPricingCard } from "@/components/landing/FoundingMemberPricingCard";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
@@ -115,6 +116,7 @@ const Landing = () => {
           <FoundingMemberPricingCard onGetStarted={handleGetStarted} />
           <BreakingTheCycleSection />
           <MemoryBridgeSection />
+          <CircleLoopSection />
           <WhyItHelpsSection />
           <StatisticsSection />
           <InteractiveDemo />

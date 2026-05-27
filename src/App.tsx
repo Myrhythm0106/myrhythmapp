@@ -133,6 +133,7 @@ import {
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
 import LaunchCommit from "./pages/launch/LaunchCommit";
+import LaunchSCCapture from "./pages/launch/LaunchSCCapture";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
 
 // Brain Injury Journey Routes
@@ -388,6 +389,8 @@ function App() {
                        <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
                        <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
                        <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
+                       <Route path="/launch/sc/capture/:subjectId/:subjectName" element={<LaunchModeProvider><LaunchSCCapture /></LaunchModeProvider>} />
+                       <Route path="/launch/sc/capture/:subjectId" element={<LaunchModeProvider><LaunchSCCapture /></LaunchModeProvider>} />
                        <Route path="/launch/clinical-brief" element={<LaunchModeProvider><LaunchClinicalBrief /></LaunchModeProvider>} />
                        <Route path="/launch/vision-statement" element={<LaunchModeProvider><LaunchVisionStatement /></LaunchModeProvider>} />
                        
