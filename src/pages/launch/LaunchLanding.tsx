@@ -1,401 +1,360 @@
-import React, { useEffect } from 'react';
+// @version 0.1
+// LaunchLanding - Storytelling marketing page for /launch (unauthenticated visitors).
+// Authenticated users are redirected straight to /launch/home.
+// Mirrors the /mvp storytelling structure but routes all CTAs into the Launch funnel.
+
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
-  ArrowRight,
   Brain,
-  MessageCircleQuestion,
-  CalendarClock,
+  Crown,
+  Heart,
   Sparkles,
-  Mic,
-  CheckCircle2,
-  Compass,
-  Trophy,
-  ShieldCheck,
-  Lock,
+  Calendar,
+  BookOpen,
+  Award,
+  TrendingUp,
+  Activity,
+  ArrowRight,
 } from 'lucide-react';
-import { LaunchButton } from '@/components/launch/LaunchButton';
+import { FounderStorySection } from '@/components/memory-first/sections/FounderStorySection';
+import { YourRhythmSection } from '@/components/founders-story/YourRhythmSection';
+import { PainPointImageCard } from '@/components/mvp/PainPointImageCard';
 import { EditionBadge } from '@/components/launch/EditionBadge';
-import {
-  EDITION_NAME,
-  EDITION_SHORT,
-  EDITION_VERSION,
-  EDITION_FOOTER,
-} from '@/config/edition';
+import { useAuth } from '@/hooks/useAuth';
 
-const questions = [
-  {
-    icon: MessageCircleQuestion,
-    question:
-      'Ever walked out of an important conversation already forgetting half of it?',
-    reply: "You're not broken. Memory just isn't built for moments that big.",
-    recognise: [
-      'a hospital discharge that felt like a blur',
-      "a doctor's appointment that turned into a folder you haven't opened",
-      'a packed week of meetings where you can\'t recall what you actually agreed to',
-      "a family update that needs repeating because it didn't stick the first time",
-    ],
-    tint: 'from-brand-orange-100 to-sunrise-amber-100',
-    iconColor: 'text-brand-orange-600',
-  },
-  {
-    icon: CalendarClock,
-    question:
-      'Do you ever know what matters this week — but not what to actually do on Monday?',
-    reply:
-      "Big plans rarely survive contact with a normal day. That's where we come in.",
-    recognise: [
-      'you left somewhere with advice but no plan',
-      "you're holding someone else's calendar in your head as well as your own",
-      'your to-do list keeps getting longer instead of done',
-      'you keep starting fresh on Mondays and losing momentum by Wednesday',
-    ],
-    tint: 'from-clarity-teal-100 to-memory-emerald-100',
-    iconColor: 'text-clarity-teal-700',
-  },
-  {
-    icon: Trophy,
-    question:
-      'Are you doing the right things, but somehow still losing the wins?',
-    reply: 'Progress that isn\'t noticed quietly disappears. We help it stick.',
-    recognise: [
-      "small improvements aren't getting noticed",
-      'the household needs the same reminders again and again',
-      "effort at work isn't translating into visible progress",
-      "good days happen but you can't tell why",
-    ],
-    tint: 'from-brain-health-100 to-memory-emerald-100',
-    iconColor: 'text-brain-health-700',
-  },
-];
+interface Feature {
+  id: number;
+  title: string;
+  description: string;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  category: string;
+  fullWord: string;
+}
 
-const fourC = [
-  {
-    icon: Mic,
-    title: 'Capture',
-    blurb: 'Speak it once. The moment is kept, not lost.',
-    example: 'Record a hospital conversation, family call, or meeting.',
-  },
-  {
-    icon: CheckCircle2,
-    title: 'Commit',
-    blurb: 'Turn talk into one or two doable next steps.',
-    example: 'Auto-suggested actions, sized to your energy.',
-  },
-  {
-    icon: Compass,
-    title: 'Calibrate',
-    blurb: 'Adjust as the day moves. No guilt, no reset.',
-    example: 'Smart Schedule re-flows around real life.',
-  },
-  {
-    icon: Sparkles,
-    title: 'Celebrate',
-    blurb: 'See the wins you would have otherwise missed.',
-    example: 'Daily and weekly momentum, made visible.',
-  },
-];
-
-const liveNow = [
-  'Memory Bridge — record & extract actions',
-  '4C daily loop',
-  'Smart Schedule with energy badges',
-  'Clinical Export (PDF)',
-  'GDPR data export',
-];
-
-const comingNext = [
-  'Anchor digests for your Support Circle',
-  'Persona switcher (survivor / carer / professional)',
-  'Provider directory & matching',
+const features: Feature[] = [
+  { id: 1, title: 'Memory Lane', description: 'Relive precious moments with our interactive memory journal.', icon: BookOpen, category: 'memory', fullWord: 'memory' },
+  { id: 2, title: 'Focus Flow', description: 'Sharpen your concentration with personalized focus exercises.', icon: Brain, category: 'focus', fullWord: 'focus' },
+  { id: 3, title: 'Energy Surge', description: 'Boost your vitality with revitalizing activities and routines.', icon: Activity, category: 'energy', fullWord: 'energy' },
+  { id: 4, title: 'Clarity Zone', description: 'Find mental clarity through guided mindfulness and meditation.', icon: Activity, category: 'clarity', fullWord: 'clarity' },
+  { id: 5, title: 'Rhythm Calendar', description: 'Plan your days around your peak performance times.', icon: Calendar, category: 'rhythm', fullWord: 'rhythm' },
+  { id: 6, title: 'Goal Mastery', description: 'Achieve your ambitions with structured goal-setting tools.', icon: Activity, category: 'goals', fullWord: 'goals' },
+  { id: 7, title: 'Triumph Tracker', description: 'Celebrate your successes and track your progress over time.', icon: Award, category: 'progress', fullWord: 'progress' },
+  { id: 8, title: 'Social Spark', description: 'Connect with a supportive community and share your journey.', icon: Heart, category: 'community', fullWord: 'community' },
+  { id: 9, title: 'Mood Lifter', description: 'Elevate your spirits with uplifting content and activities.', icon: Heart, category: 'mood', fullWord: 'mood' },
+  { id: 10, title: 'Confidence Shield', description: 'Build resilience and self-assurance with proven techniques.', icon: Activity, category: 'confidence', fullWord: 'confidence' },
+  { id: 11, title: 'Habit Hero', description: 'Form positive habits and break free from negative patterns.', icon: TrendingUp, category: 'habits', fullWord: 'habits' },
+  { id: 12, title: 'Sparkle Sanctuary', description: 'Indulge in moments of joy and creativity to ignite your passion.', icon: Sparkles, category: 'joy', fullWord: 'joy' },
 ];
 
 export default function LaunchLanding() {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeFeatureFilter, setActiveFeatureFilter] = useState('all');
 
+  // Registered users skip the landing story and go straight to their home.
   useEffect(() => {
-    const prevTitle = document.title;
-    document.title = `${EDITION_NAME} — Bridge the discharge cliff. Reclaim your rhythm.`;
-    const meta = document.querySelector('meta[name="description"]');
-    const prevDesc = meta?.getAttribute('content') ?? '';
-    meta?.setAttribute(
-      'content',
-      'MyRhythm Founding Edition turns important conversations into a calm, doable plan — so progress sticks and momentum returns.',
+    if (!loading && user) {
+      navigate('/launch/home', { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  const filteredFeatures = features.filter(
+    (feature) =>
+      feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      feature.fullWord.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+
+  const handleGetStarted = () => navigate('/launch/register');
+  const handleSignIn = () => navigate('/launch/signin');
+
+  // Avoid a brief flash of the marketing page for already-authed users.
+  if (loading || user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+        <div className="text-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-memory-emerald-500 mx-auto" />
+          <p className="text-sm text-brain-health-600">Loading MyRhythm…</p>
+        </div>
+      </div>
     );
-    return () => {
-      document.title = prevTitle;
-      if (meta && prevDesc) meta.setAttribute('content', prevDesc);
-    };
-  }, []);
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50">
-      {/* Utility strip */}
-      <div className="w-full border-b border-brain-health-100/60 bg-white/60 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            <EditionBadge variant="chip" />
-            <span className="hidden sm:inline text-[11px] text-stone-500 truncate">
-              Shaped with our founding members · {EDITION_VERSION}
-            </span>
+    <div className="min-h-screen bg-gradient-to-br from-background via-brain-health-50/20 to-clarity-teal-50/15">
+      {/* Navigation Header */}
+      <nav className="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-3">
+              <Brain className="h-8 w-8 text-memory-emerald-600" />
+              <span className="text-2xl font-bold text-brain-health-900">MyRhythm</span>
+              <EditionBadge variant="chip" className="hidden sm:inline-flex ml-1" />
+            </div>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" onClick={handleSignIn} className="text-brain-health-700">
+                Sign in
+              </Button>
+              <Button
+                onClick={handleGetStarted}
+                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white"
+              >
+                Get started
+              </Button>
+            </div>
           </div>
-          <button
-            onClick={() => navigate('/auth')}
-            className="text-sm font-medium text-brain-health-700 hover:text-brain-health-900"
-          >
-            Sign in
-          </button>
+        </div>
+      </nav>
+
+      {/* Empowering Hero Statement */}
+      <div className="relative overflow-hidden bg-gradient-to-r from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 border-b border-brain-health-200/50">
+        <div className="absolute inset-0 bg-gradient-to-r from-memory-emerald-100/20 via-brain-health-100/20 to-clarity-teal-100/20" />
+        <div className="relative max-w-7xl mx-auto px-6 py-12">
+          <div className="text-center space-y-6">
+            <div className="space-y-4 mb-8">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-black">
+                <span className="bg-gradient-to-r from-memory-emerald-600 via-brain-health-600 to-clarity-teal-600 bg-clip-text text-transparent">
+                  EMPOWER YOUR BRAIN.
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-clarity-teal-600 via-sunrise-amber-500 to-memory-emerald-600 bg-clip-text text-transparent">
+                  RECLAIM YOUR POWER.
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-brain-health-700 font-semibold max-w-4xl mx-auto">
+                Transform cognitive challenges into unstoppable strength with science-backed tools designed for your journey.
+              </p>
+            </div>
+
+            <Badge className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white border-0 px-4 py-2">
+              <Crown className="h-4 w-4 mr-2" />
+              MYRHYTHM Founding Edition
+            </Badge>
+
+            {/* Pain Points */}
+            <div className="grid md:grid-cols-3 gap-6 mt-12">
+              <PainPointImageCard
+                title="Forgetting important conversations?"
+                imageUrl="/lovable-uploads/a6888d46-3b47-49fa-aeeb-5cfee5c53bc2.png"
+                imageAlt="Woman touching her forehead looking thoughtful and concerned about memory issues"
+                description="Missing precious moments and connections"
+              />
+              <PainPointImageCard
+                title="Feeling overwhelmed by simple tasks?"
+                imageUrl="/lovable-uploads/f435bac1-8fc3-474b-add2-1f378bd3ebab.png"
+                imageAlt="Person with head down on desk showing exhaustion and overwhelm"
+                description="When everyday activities feel impossible"
+              />
+              <PainPointImageCard
+                title="Struggling to stay organized?"
+                imageUrl="/lovable-uploads/f8374cd9-e953-4247-8410-b9e5c4f403c2.png"
+                imageAlt="Woman overwhelmed throwing papers in air with disorganized workspace"
+                description="Losing track of what matters most"
+              />
+            </div>
+
+            {/* Memory-First Design Highlight */}
+            <div className="mt-8 mb-4 max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-memory-emerald-50/80 via-brain-health-50/60 to-clarity-teal-50/80 border border-memory-emerald-200/50 rounded-2xl p-6 text-center">
+                <Badge className="bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 text-white border-0 mb-3">
+                  <Brain className="h-4 w-4 mr-2" />
+                  Memory-First Design
+                </Badge>
+                <p className="text-brain-health-800 font-medium">
+                  The Only App Built <span className="font-bold">BY</span> and <span className="font-bold">FOR</span> People with Memory Challenges
+                </p>
+                <p className="text-xs text-brain-health-600 mt-2">
+                  MyRhythm supports your rhythm — it does not diagnose, treat, or replace clinical care.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center space-y-6 mt-8">
+              <div className="text-center space-y-2">
+                <h2 className="text-3xl md:text-4xl font-bold text-brain-health-800">
+                  You're Not Broken. You're{' '}
+                  <span className="bg-gradient-to-r from-memory-emerald-600 to-clarity-teal-600 bg-clip-text text-transparent">
+                    Rebuilding
+                  </span>
+                  .
+                </h2>
+                <p className="font-semibold text-sm text-brain-health-700">Your Rhythm</p>
+              </div>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                onClick={handleGetStarted}
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Start your journey
+              </Button>
+              <button
+                onClick={handleSignIn}
+                className="text-sm text-brain-health-600 underline-offset-4 hover:underline"
+              >
+                Already a member? Sign in
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Hero */}
-      <section className="px-4 sm:px-6 pt-12 pb-16 sm:pt-20 sm:pb-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl bg-gradient-to-br from-brand-orange-500 via-sunrise-amber-500 to-brand-orange-400 shadow-lg mb-6">
-              <Brain className="h-8 w-8 text-white" aria-hidden="true" />
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-stone-900 leading-tight">
-              When life gets loud,
-              <br className="hidden sm:block" />
-              <span className="bg-gradient-to-r from-brand-orange-600 via-sunrise-amber-600 to-clarity-teal-600 bg-clip-text text-transparent">
-                {' '}your rhythm gets lost.
-              </span>
-            </h1>
-
-            <p className="mt-6 text-lg sm:text-xl text-stone-600 max-w-2xl mx-auto">
-              MyRhythm turns the conversations that matter — at the hospital, at home, at work —
-              into a calm, doable plan you can actually follow on a Monday.
-            </p>
-
-            <div className="mt-9 flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center">
-              <LaunchButton
-                size="lg"
-                onClick={() => navigate('/launch/register')}
-                className="gap-2 px-8 min-h-[56px] bg-brand-orange-500 hover:bg-brand-orange-600"
-              >
-                Join the Founding Cohort
-                <ArrowRight className="h-5 w-5" />
-              </LaunchButton>
-              <button
-                onClick={() => navigate('/launch/settings/edition')}
-                className="min-h-[56px] px-6 rounded-full border border-brain-health-200 bg-white/70 backdrop-blur text-brain-health-800 font-medium hover:bg-white"
-              >
-                See what's inside {EDITION_VERSION}
-              </button>
-            </div>
-
-            <p className="mt-5 text-sm text-stone-500 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-              <span className="inline-flex items-center gap-1.5"><Lock className="h-3.5 w-3.5" />No card for 7 days</span>
-              <span aria-hidden>·</span>
-              <span>Cancel anytime</span>
-              <span aria-hidden>·</span>
-              <span>Your data stays yours</span>
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Question triptych */}
-      <section className="px-4 sm:px-6 pb-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl font-bold text-stone-900">
-              Does any of this sound familiar?
+      {/* Core Solution Features Section */}
+      <section className="py-16 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
+        <div className="container mx-auto text-center">
+          <div className="mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
+              Three Core Solutions for Your Journey
             </h2>
-            <p className="mt-3 text-stone-600 max-w-xl mx-auto">
-              If you nod at even one of these, you're in the right place.
+            <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
+              Designed specifically for cognitive wellness and memory empowerment
             </p>
           </div>
 
-          <div className="grid gap-5 md:grid-cols-3">
-            {questions.map((q, i) => {
-              const Icon = q.icon;
-              return (
-                <motion.article
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ duration: 0.45, delay: i * 0.08 }}
-                  className="bg-white/70 backdrop-blur border border-brain-health-100 rounded-3xl shadow-sm p-6 flex flex-col"
-                >
-                  <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${q.tint} flex items-center justify-center mb-4`}>
-                    <Icon className={`h-6 w-6 ${q.iconColor}`} aria-hidden="true" />
-                  </div>
-                  <p className="text-lg font-semibold text-stone-900 leading-snug">
-                    {q.question}
-                  </p>
-                  <p className="mt-3 text-stone-600 italic">{q.reply}</p>
-                  <div className="mt-5 pt-4 border-t border-brain-health-100/70">
-                    <p className="text-[11px] uppercase tracking-wider text-stone-400 mb-2">
-                      You might recognise this if…
-                    </p>
-                    <ul className="space-y-1.5 text-sm text-stone-600">
-                      {q.recognise.map((line, j) => (
-                        <li key={j} className="flex gap-2">
-                          <span className="text-brand-orange-400 mt-1.5">·</span>
-                          <span>{line}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </motion.article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* 4C loop */}
-      <section className="px-4 sm:px-6 pb-20">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl sm:text-4xl font-bold text-stone-900">
-              A gentle daily loop, built for cognitive continuity.
-            </h2>
-            <p className="mt-3 text-stone-600 max-w-2xl mx-auto">
-              Four small steps. One quiet rhythm. The same loop whether today is heavy or light.
-            </p>
-          </div>
-
-          <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
-            {fourC.map((c, i) => {
-              const Icon = c.icon;
-              return (
-                <div
-                  key={c.title}
-                  className="bg-white/70 backdrop-blur border border-brain-health-100 rounded-3xl p-5 shadow-sm"
-                >
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="text-[11px] font-semibold text-brand-orange-600">
-                      0{i + 1}
-                    </span>
-                    <Icon className="h-5 w-5 text-clarity-teal-700" aria-hidden="true" />
-                  </div>
-                  <h3 className="text-lg font-bold text-stone-900">{c.title}</h3>
-                  <p className="text-sm text-stone-600 mt-1">{c.blurb}</p>
-                  <p className="text-xs text-stone-500 mt-3 italic">{c.example}</p>
+          <div className="grid md:grid-cols-3 gap-8 mb-16 px-6">
+            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-memory-emerald-50/50 border-memory-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 flex items-center justify-center">
+                  <Brain className="h-8 w-8 text-white" />
                 </div>
-              );
-            })}
+                <CardTitle className="text-xl font-bold text-brain-health-900">
+                  Capture — Your Memory Bridge
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <p className="text-brain-health-700 mb-6">
+                  Never lose precious moments. Intelligent capture for conversations, appointments, and memories.
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white"
+                  onClick={handleGetStarted}
+                >
+                  Explore Capture
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-brain-health-50/50 border-brain-health-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 flex items-center justify-center">
+                  <Calendar className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold text-brain-health-900">
+                  Commit — Your MyRhythm Calendar
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <p className="text-brain-health-700 mb-6">
+                  Transform overwhelm into organized action. Adapts to your energy and cognitive patterns.
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white"
+                  onClick={handleGetStarted}
+                >
+                  Explore Calendar
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-clarity-teal-50/50 border-clarity-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <CardHeader className="relative z-10">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 flex items-center justify-center">
+                  <Heart className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="font-bold text-brain-health-900 text-sm">
+                  Celebrate — Memory Bank & Gratitude
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10">
+                <p className="text-brain-health-700 mb-6">
+                  Build unshakeable confidence. Track progress, store wins, cultivate gratitude.
+                </p>
+                <Button
+                  className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white"
+                  onClick={handleGetStarted}
+                >
+                  Explore Gratitude
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* Transparency strip */}
-      <section className="px-4 sm:px-6 pb-20">
-        <div className="max-w-5xl mx-auto bg-white/70 backdrop-blur border border-brain-health-100 rounded-3xl shadow-sm p-6 sm:p-10">
-          <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-            <div>
-              <p className="text-[11px] uppercase tracking-[0.2em] text-stone-400">
-                Full transparency
-              </p>
-              <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 mt-1">
-                What's in the {EDITION_SHORT}.
-              </h2>
-            </div>
-            <EditionBadge variant="chip" />
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <p className="text-sm font-semibold text-memory-emerald-700 mb-3">
-                Live in {EDITION_VERSION}
-              </p>
-              <ul className="space-y-2">
-                {liveNow.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-stone-700 text-sm">
-                    <CheckCircle2 className="h-4 w-4 text-memory-emerald-600 mt-0.5 flex-shrink-0" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-brain-health-700 mb-3">
-                Coming after v1.1
-              </p>
-              <ul className="space-y-2">
-                {comingNext.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-stone-600 text-sm">
-                    <Sparkles className="h-4 w-4 text-brain-health-500 mt-0.5 flex-shrink-0" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
-            <button
-              onClick={() => navigate('/launch/settings/edition')}
-              className="text-sm font-medium text-clarity-teal-700 hover:text-clarity-teal-900 inline-flex items-center gap-1"
-            >
-              Read the full {EDITION_VERSION} features <ArrowRight className="h-4 w-4" />
-            </button>
-            <p className="text-xs text-stone-500 inline-flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5" />
-              MyRhythm does not diagnose, treat, or cure any condition.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Founding proof band */}
-      <section className="px-4 sm:px-6 pb-20">
-        <div className="max-w-5xl mx-auto rounded-3xl bg-gradient-to-r from-brand-orange-500 via-sunrise-amber-500 to-brand-orange-600 text-white p-6 sm:p-8 shadow-lg">
-          <div className="flex flex-wrap items-center justify-between gap-4 text-center sm:text-left">
-            <div>
-              <p className="text-2xl font-bold">873 spots remaining</p>
-              <p className="text-white/90 text-sm mt-1">
-                Founding pricing locked for life · Direct line to the founder via in-app feedback
-              </p>
-            </div>
-            <LaunchButton
-              size="lg"
-              onClick={() => navigate('/launch/register')}
-              className="bg-white text-brand-orange-700 hover:bg-white/90 min-h-[56px] px-6 gap-2"
-            >
-              Claim your spot <ArrowRight className="h-5 w-5" />
-            </LaunchButton>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA footer */}
-      <section className="px-4 sm:px-6 pb-16">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-stone-900">
-            Reclaim your rhythm — one small loop at a time.
+      {/* All Features Section */}
+      <section className="py-16">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl font-bold text-brain-health-900 mb-8">
+            All Features to Supercharge Your Mind
           </h2>
-          <div className="mt-7 flex flex-col sm:flex-row gap-3 items-center justify-center">
-            <LaunchButton
-              size="lg"
-              onClick={() => navigate('/launch/register')}
-              className="gap-2 px-8 min-h-[56px] bg-brand-orange-500 hover:bg-brand-orange-600"
-            >
-              Join the Founding Cohort
-              <ArrowRight className="h-5 w-5" />
-            </LaunchButton>
-            <button
-              onClick={() => navigate('/auth')}
-              className="text-sm font-medium text-brain-health-700 hover:text-brain-health-900 min-h-[44px] px-2"
-            >
-              Already a member? Sign in
-            </button>
+
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 px-6">
+            <div className="w-full md:w-1/2 mb-4 md:mb-0">
+              <Input
+                type="search"
+                placeholder="Search features..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 rounded-md border-gray-300 shadow-sm focus:border-brain-health-500 focus:ring focus:ring-brain-health-200 focus:ring-opacity-50"
+              />
+            </div>
+
+            <div className="space-x-2">
+              <Button variant={activeFeatureFilter === 'all' ? 'default' : 'outline'} onClick={() => setActiveFeatureFilter('all')}>
+                All Features
+              </Button>
+              <Button variant={activeFeatureFilter === 'memory' ? 'default' : 'outline'} onClick={() => setActiveFeatureFilter('memory')}>
+                Memory
+              </Button>
+              <Button variant={activeFeatureFilter === 'focus' ? 'default' : 'outline'} onClick={() => setActiveFeatureFilter('focus')}>
+                Focus
+              </Button>
+            </div>
           </div>
-          <div className="mt-10 pt-6 border-t border-brain-health-100/70 flex flex-col items-center gap-2">
-            <EditionBadge variant="footer" />
-            <p className="text-[10px] text-stone-400">
-              {EDITION_FOOTER} · Confidential — shared in trust with founding members.
-            </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-6">
+            {filteredFeatures.map((feature) => (
+              <Card key={feature.id} className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+                <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+                  <CardTitle className="text-sm font-medium">{feature.title}</CardTitle>
+                  <feature.icon className="h-4 w-4 text-gray-500" />
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 text-sm">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
+        </div>
+      </section>
+
+      {/* Founders Story */}
+      <FounderStorySection />
+
+      {/* Your Rhythm */}
+      <YourRhythmSection />
+
+      {/* Call to Action Footer */}
+      <section className="bg-gray-100 py-12">
+        <div className="container mx-auto text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+            Ready to Transform Your Cognitive Wellness?
+          </h2>
+          <p className="text-gray-600 mb-6">Start your personalized journey with MyRhythm today.</p>
+          <Button
+            className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-3 text-lg"
+            onClick={handleGetStarted}
+          >
+            Get Started Now
+          </Button>
         </div>
       </section>
     </div>
