@@ -190,6 +190,36 @@ export function MVPCore4C() {
         </div>
       </section>
 
+      {/* How MyRhythm answers it — numbered strip */}
+      <section className="py-16 bg-gradient-to-b from-white to-brain-health-50/30">
+        <div className="container mx-auto max-w-6xl px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl md:text-3xl font-bold text-brain-health-900">
+              Here&apos;s how MyRhythm answers that
+            </h2>
+            <p className="text-brain-health-700 mt-2">Three quiet shifts that change the week.</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { n: '01', title: 'Vision through quarter, week, and day', body: 'One thread runs from where you want to be, down to what today asks of you.' },
+              { n: '02', title: 'Protect deep work on the calendar', body: 'Your best hours are defended on purpose — not given away by accident.' },
+              { n: '03', title: 'Capture meetings as a searchable record', body: 'Conversations become notes, decisions and next steps you can find again.' },
+            ].map((item) => (
+              <div
+                key={item.n}
+                className="relative rounded-2xl border border-brain-health-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-md transition-all"
+              >
+                <div className="text-5xl font-black bg-gradient-to-br from-memory-emerald-500 to-clarity-teal-500 bg-clip-text text-transparent leading-none mb-3">
+                  {item.n}
+                </div>
+                <h3 className="text-lg font-bold text-brain-health-900 mb-2">{item.title}</h3>
+                <p className="text-sm text-brain-health-700 leading-relaxed">{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Four Core Solutions Section */}
       <section className="py-20 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
         <div className="container mx-auto max-w-6xl px-6">
