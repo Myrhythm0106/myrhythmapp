@@ -10,10 +10,13 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { BackButton } from '@/components/ui/BackButton';
 
+// TEMP: open registration. Flip to false to restore real Supabase signup + email verification.
+const BYPASS_REGISTRATION = true;
+
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50),
   email: z.string().email('Please enter a valid email'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(BYPASS_REGISTRATION ? 1 : 8, 'Password must be at least 8 characters'),
 });
 
 export default function LaunchRegister() {
@@ -50,6 +53,20 @@ export default function LaunchRegister() {
 
     setIsLoading(true);
     try {
+      if (BYPASS_REGISTRATION) {
+        // Open registration: skip Supabase, store locally, continue.
+        localStorage.setItem(
+          'myrhythm_mock_user',
+          JSON.stringify({ name, email, createdAt: new Date().toISOString() })
+        );
+        if (prefilledUserType) {
+          localStorage.setItem('myrhythm_user_type', prefilledUserType);
+        }
+        toast.success("Account ready — let's get you set up.");
+        navigate(prefilledUserType ? '/launch/payment' : '/launch/user-type');
+        return;
+      }
+
       const { error } = await signUp(email, password, name);
       if (error) {
         if (error.message?.includes('already registered')) {
