@@ -7,33 +7,33 @@ import { motion } from 'framer-motion';
 const userTypes = [
   {
     id: 'brain-injury',
-    title: 'Pathfinders',
+    title: 'Rebuilding after a brain change',
     definition:
-      'People rebuilding cognitive ground after a neurological event or condition — brain injury, stroke, dementia, long COVID, MS. Bridging clinical-ready and life-ready, one steady step at a time.',
+      'Brain injury, stroke, dementia, long COVID, MS — finding your rhythm again, one steady step at a time.',
     icon: Compass,
     color: 'from-brand-emerald-500 to-brand-teal-500',
   },
   {
     id: 'caregiver',
-    title: 'Anchors',
+    title: 'Caring for someone I love',
     definition:
-      'The people who hold the line for someone else — family carers, spouses, adult children, professional carers. Coordinating care without losing your own day.',
+      'Family carer, spouse, adult child — holding it together for them, without losing your own day.',
     icon: Anchor,
     color: 'from-rose-500 to-pink-500',
   },
   {
     id: 'executive',
-    title: 'Operators',
+    title: 'Protecting my focus at work',
     definition:
-      'High-output professionals and focus-seekers protecting their best thinking. Defending deep work, converting meetings into leverage, keeping signal above noise.',
+      'Busy professional defending deep work, clear thinking and your best hours from the noise.',
     icon: Target,
     color: 'from-amber-500 to-orange-500',
   },
   {
     id: 'student',
-    title: 'Scholars',
+    title: 'Studying and learning',
     definition:
-      'Students and lifelong learners pacing themselves toward recall, not burnout. Turning lectures and revision into a searchable record across the week.',
+      'Student or lifelong learner pacing yourself toward recall and confidence — not burnout.',
     icon: BookOpen,
     color: 'from-cyan-500 to-blue-500',
   },

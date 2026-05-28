@@ -124,14 +124,41 @@ export function MVPCore4C() {
                   Your Rhythm
                 </p>
               </div>
-                 <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
-                  onClick={() => navigate('/launch/register')}
+              <form
+                onSubmit={handleHeroEmailSubmit}
+                className="w-full max-w-md flex flex-col sm:flex-row gap-2"
+              >
+                <div className="relative flex-1">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brain-health-400" />
+                  <Input
+                    type="email"
+                    value={heroEmail}
+                    onChange={(e) => setHeroEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    aria-label="Email to reserve your spot"
+                    className="pl-9 h-12 bg-white/90 border-brain-health-200"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="h-12 bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white"
                 >
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Register Now
+                  Reserve my spot
+                  <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
+              </form>
+              <p className="text-xs text-brain-health-600">
+                or tap below to start your journey
+              </p>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                onClick={() => navigate('/launch/register')}
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Start Your Journey
+              </Button>
             </div>
           </div>
         </div>
