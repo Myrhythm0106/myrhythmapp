@@ -367,6 +367,7 @@ function App() {
                        
                        {/* V1 Launch Mode Routes */}
                        <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
+                       <Route path="/launch/landingpage" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
                        <Route path="/launch/register" element={<LaunchModeProvider><LaunchRegister /></LaunchModeProvider>} />
                        <Route path="/launch/signin" element={<LaunchModeProvider><LaunchSignIn /></LaunchModeProvider>} />
                        <Route path="/launch/user-type" element={<LaunchModeProvider><LaunchUserType /></LaunchModeProvider>} />
