@@ -53,6 +53,20 @@ export default function LaunchRegister() {
 
     setIsLoading(true);
     try {
+      if (BYPASS_REGISTRATION) {
+        // Open registration: skip Supabase, store locally, continue.
+        localStorage.setItem(
+          'myrhythm_mock_user',
+          JSON.stringify({ name, email, createdAt: new Date().toISOString() })
+        );
+        if (prefilledUserType) {
+          localStorage.setItem('myrhythm_user_type', prefilledUserType);
+        }
+        toast.success("Account ready — let's get you set up.");
+        navigate(prefilledUserType ? '/launch/payment' : '/launch/user-type');
+        return;
+      }
+
       const { error } = await signUp(email, password, name);
       if (error) {
         if (error.message?.includes('already registered')) {
