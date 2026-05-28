@@ -1,48 +1,63 @@
-# Plan v17 — Let made-up accounts through `/launch/register`
+# Make /launch feel like /mvp — story-led, plain language, register-now
 
-## Goal
-Until you say otherwise, anyone can fill in name / email / password on `/launch/register` and immediately proceed into the app. No real Supabase sign-up, no email verification, no "already registered" blocks.
+You like /mvp because it tells a story (Empower Your Brain → relatable pain-point images → 4C solutions → founder story → final CTA). The current `/launch` rewrite is a stripped-down imitation that lost the emotional pull, and downstream the "Pathfinders / Anchors / Operators / Scholars" labels read as jargon. Fix both.
 
-## Scope
-Single file change: `src/pages/launch/LaunchRegister.tsx`.
+## What changes
 
-## Behaviour after change
-1. User fills the form (or even partial form — minimum: a non-empty name and an `@`-shaped email).
-2. On submit:
-   - Skip `signUp()` entirely.
-   - Save to `localStorage`:
-     - `myrhythm_mock_user` → `{ name, email, createdAt }`
-     - `myrhythm_user_type` → `prefilledUserType` (if present in URL)
-   - Toast: "Account ready — let's get you set up."
-   - Navigate straight to `/launch/payment` (if `userType` was prefilled) or `/launch/user-type` (otherwise).
-3. The "Check your email" success card is **not shown** in bypass mode.
-4. Existing form validation stays in place but is relaxed (password length drop to 1 char so any string works); zod schema kept for shape only.
+### 1. `/launch` becomes the real /mvp story page
 
-## How the bypass is gated
-Top of file:
+`src/pages/launch/LaunchLanding.tsx` is rewritten to render the existing `MVPCore4C` component (the exact /mvp page) instead of the diluted custom version. CTAs in `MVPCore4C` already route to `/launch/register`, so the Launch funnel stays intact.
 
-```ts
-// TEMP: open registration. Flip to false to restore real Supabase signup + email verification.
-const BYPASS_REGISTRATION = true;
+Two small touch-ups inside `src/components/mvp/MVPCore4C.tsx`:
+- Authed redirect target changes from `/dashboard` to `/launch/home` (matches Launch Mode routing rule).
+- "Log In" link routes to `/launch/signin` (already does); "Sign Out" returns to `/launch` instead of `/`.
+
+Net effect: visiting `/launch` shows the same story the user loves, with the Launch funnel preserved.
+
+### 2. Immediate register opportunity on the landing hero
+
+Add a single-field email capture directly in the MVPCore4C hero, above the existing "Start Your Journey" button:
+
+```text
+[ your@email.com ] [ Reserve my spot → ]
+        or just tap "Start Your Journey" below
 ```
 
-When `BYPASS_REGISTRATION === false`, the file behaves exactly as it does today (current `signUp` + verification card flow untouched).
+Submitting the field stores the email in `localStorage.myrhythm_prefill_email` and navigates to `/launch/register`. `LaunchRegister.tsx` already has the bypass flow; it reads the prefill on mount and drops the email straight into the form. No backend changes.
 
-When `true`:
-- `signUp` is not called.
-- `registrationSuccess` branch is unreachable.
-- `handleSubmit` just stores + navigates.
+This satisfies "immediate or at least the opportunity to register on the landing page" without a second click.
 
-This keeps the switch back to a one-line edit when you're ready.
+### 3. Plain-language labels on `/launch/user-type`
+
+`src/pages/launch/LaunchUserType.tsx` currently uses Pathfinders / Anchors / Operators / Scholars. Replace with everyday language people self-identify with:
+
+| Old | New title | New one-liner |
+|---|---|---|
+| Pathfinders | Rebuilding after a brain change | Brain injury, stroke, dementia, long COVID, MS — finding your rhythm again. |
+| Anchors | Caring for someone I love | Family carer, spouse, adult child — holding it together for them and you. |
+| Operators | Protecting my focus at work | Busy professional defending deep work and clear thinking. |
+| Scholars | Studying and learning | Student or lifelong learner pacing toward recall, not burnout. |
+| (fallback) | Not sure yet — show me around | unchanged |
+
+Icons and colours stay; only copy changes. The clinical-style descriptions are replaced with the shorter, first-person lines above.
+
+### 4. Authed users still skip the story
+
+The redirect rule "authenticated users land on `/launch/home`" is preserved. The check moves inside `MVPCore4C` (already there) — `LaunchLanding.tsx` just renders the component, no separate redirect.
 
 ## Out of scope
-- No change to `useAuth`, `AuthContext`, `MockAuthWrapper`, or `.env` (`VITE_MOCK_SECURITY` stays as-is).
-- No change to `/launch/signin`, `/launch/payment`, onboarding, or any downstream guard.
-- No DB migrations, no Supabase calls, no edge functions.
-- No visual redesign of the page — just the submit behaviour.
 
-## Risks / notes
-- Anything downstream that reads `useAuth().user` will still see `null`, because we are not creating a real session. If `/launch/payment` or `/launch/user-type` hard-require an authenticated user, we'll see it the moment we test and can add a follow-up (e.g. flip `VITE_MOCK_SECURITY=true` to get a mock session). Calling out so we don't get surprised.
-- `localStorage` only — clears with browser data. Fine for "made-up accounts".
+- No changes to `LaunchRegister.tsx` beyond reading the `myrhythm_prefill_email` value (the bypass flow stays).
+- No backend / Supabase / RLS changes.
+- No new components or routes.
+- No visual redesign of MVPCore4C — only the two-line redirect tweak and the email-capture insertion in the hero.
+- No changes to `/launch/welcome`, `/launch/home`, onboarding, or downstream.
+
+## Files touched
+
+- `src/pages/launch/LaunchLanding.tsx` — replace body with `<MVPCore4C />`.
+- `src/components/mvp/MVPCore4C.tsx` — change authed redirect target, add inline email-capture in hero.
+- `src/pages/launch/LaunchUserType.tsx` — swap titles + one-liners to everyday language.
+- `src/pages/launch/LaunchRegister.tsx` — on mount, prefill email from `localStorage.myrhythm_prefill_email` then clear it.
 
 Ready to build on approval.

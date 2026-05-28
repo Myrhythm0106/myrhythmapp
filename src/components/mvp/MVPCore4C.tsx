@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle, Mail } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PainPointImageCard } from './PainPointImageCard';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
@@ -20,12 +21,23 @@ export function MVPCore4C() {
   const [activeFeatureModal, setActiveFeatureModal] = useState<'capture' | 'calendar' | 'calibrate' | 'community' | null>(null);
   const { user } = useAuth();
   
-  // Auto-redirect logged-in users to dashboard
+  const [heroEmail, setHeroEmail] = useState('');
+
+  // Auto-redirect logged-in users into the Launch home.
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate('/launch/home', { replace: true });
     }
   }, [user, navigate]);
+
+  const handleHeroEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = heroEmail.trim();
+    if (trimmed && trimmed.includes('@')) {
+      localStorage.setItem('myrhythm_prefill_email', trimmed);
+    }
+    navigate('/launch/register');
+  };
   
   // Check if we should auto-open the modal on mount
   useEffect(() => {
@@ -43,9 +55,8 @@ export function MVPCore4C() {
   
   const handleAuthAction = async () => {
     if (user) {
-      // Sign out the user
       await signOut();
-      navigate('/');
+      navigate('/launch');
     } else {
       navigate('/launch/signin');
     }
@@ -113,14 +124,41 @@ export function MVPCore4C() {
                   Your Rhythm
                 </p>
               </div>
-                 <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200" 
-                  onClick={() => navigate('/launch/register')}
+              <form
+                onSubmit={handleHeroEmailSubmit}
+                className="w-full max-w-md flex flex-col sm:flex-row gap-2"
+              >
+                <div className="relative flex-1">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brain-health-400" />
+                  <Input
+                    type="email"
+                    value={heroEmail}
+                    onChange={(e) => setHeroEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    aria-label="Email to reserve your spot"
+                    className="pl-9 h-12 bg-white/90 border-brain-health-200"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="h-12 bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white"
                 >
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Register Now
+                  Reserve my spot
+                  <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
+              </form>
+              <p className="text-xs text-brain-health-600">
+                or tap below to start your journey
+              </p>
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                onClick={() => navigate('/launch/register')}
+              >
+                <Sparkles className="h-5 w-5 mr-2" />
+                Start Your Journey
+              </Button>
             </div>
           </div>
         </div>

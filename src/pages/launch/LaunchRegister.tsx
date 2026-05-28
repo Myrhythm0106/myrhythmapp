@@ -34,6 +34,16 @@ export default function LaunchRegister() {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   const [isResending, setIsResending] = useState(false);
 
+  // Prefill email captured on the landing hero, then clear it.
+  React.useEffect(() => {
+    const prefill = localStorage.getItem('myrhythm_prefill_email');
+    if (prefill) {
+      setEmail(prefill);
+      localStorage.removeItem('myrhythm_prefill_email');
+    }
+  }, []);
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
