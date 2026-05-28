@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle, Mail } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PainPointImageCard } from './PainPointImageCard';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
@@ -20,12 +21,23 @@ export function MVPCore4C() {
   const [activeFeatureModal, setActiveFeatureModal] = useState<'capture' | 'calendar' | 'calibrate' | 'community' | null>(null);
   const { user } = useAuth();
   
-  // Auto-redirect logged-in users to dashboard
+  const [heroEmail, setHeroEmail] = useState('');
+
+  // Auto-redirect logged-in users into the Launch home.
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate('/launch/home', { replace: true });
     }
   }, [user, navigate]);
+
+  const handleHeroEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = heroEmail.trim();
+    if (trimmed && trimmed.includes('@')) {
+      localStorage.setItem('myrhythm_prefill_email', trimmed);
+    }
+    navigate('/launch/register');
+  };
   
   // Check if we should auto-open the modal on mount
   useEffect(() => {
@@ -43,9 +55,8 @@ export function MVPCore4C() {
   
   const handleAuthAction = async () => {
     if (user) {
-      // Sign out the user
       await signOut();
-      navigate('/');
+      navigate('/launch');
     } else {
       navigate('/launch/signin');
     }
