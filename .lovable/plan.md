@@ -1,105 +1,90 @@
-# Plan v15 — MyRhythm Founding Edition: Make It Ready
+# Redesign `/launch` — engaging, transparent, audience-relatable
 
-Lock the v0.1 release as **"MyRhythm Founding Edition"**, surface that identity consistently across the app, give founding members a one-tap feedback channel, set honest expectations about what's in vs. deferred, and ship a QA checklist the cohort lead can tick through before invites go out.
+## Goal
+Bring `/launch` (`src/pages/launch/LaunchLanding.tsx`) up to the engagement level of `/mvp`, while staying on-message for the **MyRhythm Founding Edition (v0.1)** and the Bridge Pathway thesis. Frontend only.
 
----
+## Audiences this page must hook
+Each visitor should see themselves in the first scroll:
+- **Brain injury / stroke / concussion survivors** (post-discharge, "what now?")
+- **Family members & caregivers** (juggling appointments, instructions, emotions)
+- **Cognitively-overloaded professionals** (busy minds losing the thread)
+- **Aging adults / early cognitive change** (worried about slipping)
 
-## 1. Edition identity
+We will NOT call these segments out by name on this page. The copy must feel universal enough that everyone nods, and specific enough that each group quietly thinks "that's me."
 
-**Official name:** `MyRhythm Founding Edition`  
-**Short label (chips/badges):** `Founding Edition`  
-**Version string:** `v0.1`  
-**Tagline (where space allows):** *"Shaped with our founding members."*
+## New page structure
 
-Single source of truth: `src/config/edition.ts` exporting `EDITION_NAME`, `EDITION_SHORT`, `EDITION_VERSION`, `EDITION_TAGLINE`. Every surface imports from here so future rename is one file.
+1. **Top utility strip** — slim band using `EDITION_*` from `src/config/edition.ts`; right-aligned "Sign in".
 
----
+2. **Hero**
+   - `EditionBadge` chip.
+   - Gradient headline, e.g. **"When life gets loud, your rhythm gets lost."**
+   - Sub-headline (one line, no medical claims): about turning everyday conversations into a calm, doable plan.
+   - Primary CTA (brand-orange-500): "Join the Founding Cohort" → `/launch/register`.
+   - Secondary ghost CTA: "See what's inside v0.1" → `/launch/settings/edition`.
+   - Trust line: "No card for 7 days · Cancel anytime · Your data stays yours."
 
-## 2. Surface the label across the app
+3. **"Does any of this sound familiar?" — universal-yet-relatable question triptych** *(this is the section the user is steering)*
+   - Heading: **"Does any of this sound familiar?"**
+   - Three glass cards. Each card is a single second-person question written so that a survivor, a caregiver, a busy professional, and an older adult can all answer "yes" — without any clinical or persona-specific language.
+   - Each question is followed by a one-line, gentle "you're not alone" reply and a tiny "you might recognise this if…" micro-list of 2–3 plain-language situations spanning audiences. The micro-list is what makes a universal question land personally for each group.
 
-New `EditionBadge` component (glass-morphism chip, brand-teal outline, 12px text, respects min-touch only when interactive). Insert on:
+   Draft (final wording tuned in build):
 
-1. `LaunchWelcome` — subtitle line under hero
-2. `LaunchDashboard` — header right-side chip
-3. `LaunchSettings` — new "About this edition" row
-4. `FirstRunOverlay` — header line
-5. `clinicalExport.ts` PDF — footer next to confidentiality line
-6. `gdprExport.ts` PDF — footer next to confidentiality line
-7. Auth/landing entry point — small footer mention so testers know what they're entering
+   - **Card 1 — the overload moment**
+     *"Ever walked out of an important conversation already forgetting half of it?"*
+     Reply: "You're not broken. Memory just isn't built for moments that big."
+     You might recognise this if… a hospital discharge felt like a blur · a doctor's appointment turned into a folder you haven't opened · a packed week of meetings left you unsure what you actually agreed to · a family update needs repeating because it didn't stick the first time.
 
----
+   - **Card 2 — the "now what?" moment**
+     *"Do you ever know what matters this week — but not what to actually do on Monday?"*
+     Reply: "Big plans rarely survive contact with a normal day. That's where we come in."
+     You might recognise this if… you left somewhere with advice but no plan · you're caring for someone and holding their calendar in your head · your to-do list keeps getting longer instead of done · you keep starting fresh on Mondays and losing momentum by Wednesday.
 
-## 3. In-app feedback channel
+   - **Card 3 — the lost-progress moment**
+     *"Are you doing the right things, but somehow still losing the wins?"*
+     Reply: "Progress that isn't noticed quietly disappears. We help it stick."
+     You might recognise this if… small improvements aren't getting noticed · the household needs the same reminders again · effort at work isn't translating into visible progress · good days happen but you can't tell why.
 
-New `FeedbackDialog` component triggered from:
-- `LaunchSettings` → "Send feedback to the team" row
-- `FirstRunOverlay` → secondary link "Tell us how this felt"
-- Dashboard header → small `MessageCircle` icon next to EditionBadge
+   Constraints on this section:
+   - No labels like "Discharge Cliff", "Caregiver Burden", "Cognitive Overload" on screen.
+   - No diagnoses, no clinical terms, no age references.
+   - Second person, warm, plain language. Each question must be answerable "yes" by all four audiences.
+   - The micro-list under each card is the only place we lean into specifics — and it deliberately mixes audiences in one card so no one feels singled out, but everyone finds at least one line that fits.
 
-Backend: new `founding_feedback` table (Supabase migration) with `user_id`, `category` (bug | idea | confusion | praise), `message`, `route` (auto-captured), `edition_version`, `created_at`. RLS: users insert/select their own; service_role full access for the team. Grants to `authenticated` + `service_role` only.
+4. **The 4C Loop** — heading "A gentle daily loop, built for cognitive continuity." Four cards: **Capture · Commit · Calibrate · Celebrate** (4-up at md+, 2×2 mobile). Each: icon, one-line value, micro-example.
 
-Dialog fields: category (3 chips, max-3 rule), free-text message (500 char), optional "OK to contact me" checkbox. Confirmation toast on submit.
+5. **What's in the Founding Edition (transparency strip)** — two columns:
+   - **Live in v0.1:** Memory Bridge, 4C loop, Smart Schedule, Clinical Export, GDPR export.
+   - **Coming after v1.1:** Anchor digests, persona switcher, provider directory.
+   - Link "Read the full v0.1 features" → `/launch/settings/edition`.
+   - Disclaimer line: "MyRhythm does not diagnose, treat, or cure any condition."
 
----
+6. **Founding-member proof band** — "873 spots remaining · Founding pricing locked for life · Direct line to the founder via in-app feedback."
 
-## 4. "What's in this Founding Edition" transparency page
+7. **Final CTA footer** — repeat primary CTA + "Already a member? Sign in" + `EDITION_FOOTER` and confidentiality line per memory.
 
-New route `/launch/settings/edition` reached from Settings → "About this edition".
+## Visual / technical notes
+- Use existing semantic tokens (`brand-orange-*`, `brain-health-*`, `memory-emerald-*`, `clarity-teal-*`, `sunrise-amber-*`); no new colors.
+- Glass cards: `bg-white/70 backdrop-blur border border-brain-health-100 rounded-3xl shadow-sm`.
+- One tasteful `framer-motion` hero fade/slide-in; no scattered micro-animations.
+- Reuse: `EditionBadge`, `LaunchButton`, lucide icons. No new dependencies.
+- Mobile: hero stacks, 4C → 2×2, question cards stack. Min 56px touch targets.
+- Page is self-contained (no `LaunchLayout`) so it stays a true public landing.
+- SEO: single H1, inline `<title>` + `<meta description>`, semantic sections.
 
-Two clearly labeled lists:
+## Files touched
+- **Rewrite:** `src/pages/launch/LaunchLanding.tsx`
+- Split into small presentational subcomponents under `src/components/launch/landing/` only if the file exceeds ~250 LOC.
 
-**Live in Founding Edition (v0.1)**
-- 4C loop with Smart Schedule + energy badges
-- Memory Bridge recorder with 30-day retention
-- Support Circle with permissions (incl. record-on-behalf, OFF default)
-- Clinical Export PDF (share with clinician)
-- GDPR Data Export (download my data)
-- Vision Board, Assessment, Persona paths
-- Calendar sync (Google, Outlook)
-- MFA, RLS, Vault security baseline
+## Out of scope
+- No changes to `/launch/register`, auth, onboarding, Memory Bridge, or backend.
+- No new tables, no business logic.
+- No persona-specific variants of this page.
+- No new generated imagery; icons + gradients only.
 
-**Coming after Founding Edition (v1.1)**
-- Weekly Anchor digest (G5)
-- Formal WCAG 2.2 AA certification (G6 baseline already in place)
-- Mid-journey persona switcher
-- Backend hardening for record-on-behalf (`recorded_by_user_id` column + accountability alerts)
-- Provider Directory marketplace expansion
-
-Plus the standing no-medical-claims disclaimer block at the bottom.
-
----
-
-## 5. QA / test-readiness checklist
-
-New doc `docs/v0.1-test-readiness.md` — markdown checklist for the cohort lead:
-
-- [ ] All 9 persona paths reach `/launch/welcome` without dead-end
-- [ ] FirstRunOverlay dismissal persists across logout/login
-- [ ] Clinical Export PDF renders on a real meeting (not sample)
-- [ ] GDPR export 24h rate-limit verified across session cycle
-- [ ] `can_record_on_behalf` toggle round-trips through Supabase
-- [ ] EditionBadge visible on all 7 surfaces
-- [ ] Feedback dialog writes to `founding_feedback` and shows confirmation
-- [ ] Edition page lists live vs. deferred accurately
-- [ ] All PDF footers carry confidentiality + edition string
-- [ ] No-medical-claims disclaimer present on Welcome, Assessment, Memory Bridge, Clinical Export
-- [ ] Min 56px touch targets on primary CTAs
-- [ ] Reduced-motion respected on FirstRunOverlay animations
-- [ ] Bone background + teal primary consistent across UserType / Welcome / Dashboard
-
----
-
-## 6. Execution order
-
-1. **Migration first** (separate call): create `founding_feedback` table with RLS + grants.
-2. **Build pass:** `edition.ts`, `EditionBadge`, `FeedbackDialog`, edition page, badge insertions on 7 surfaces, PDF footer updates, QA doc.
-3. **Memory update:** add `mem://brand/founding-edition` entry recording the name, version, and label-everywhere rule.
-
-## Technical notes
-
-- `src/config/edition.ts` — single export module, no React deps.
-- `src/components/launch/EditionBadge.tsx` — `variant: "chip" | "inline" | "footer"`.
-- `src/components/launch/FeedbackDialog.tsx` — uses existing shadcn Dialog + Textarea; Supabase insert via existing client.
-- `src/pages/launch/LaunchEditionAbout.tsx` — route under existing `LaunchSettings` shell.
-- PDF utilities (`clinicalExport.ts`, `gdprExport.ts`) — append `EDITION_NAME · EDITION_VERSION` to existing 3pt confidentiality footer.
-- No changes to onboarding flow, persona logic, scheduling, or Memory Bridge core — labeling and feedback only.
+## Verification
+- Visual check at 1430×780 and at mobile width.
+- Confirm Founding Edition label appears in hero + footer.
+- Confirm CTAs route correctly (`/launch/register`, `/launch/settings/edition`, `/auth`).
+- Confirm the three questions contain no clinical/persona labels and that each card's micro-list spans at least three of the four audiences.
