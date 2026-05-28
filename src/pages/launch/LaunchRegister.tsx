@@ -10,10 +10,13 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 import { BackButton } from '@/components/ui/BackButton';
 
+// TEMP: open registration. Flip to false to restore real Supabase signup + email verification.
+const BYPASS_REGISTRATION = true;
+
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50),
   email: z.string().email('Please enter a valid email'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(BYPASS_REGISTRATION ? 1 : 8, 'Password must be at least 8 characters'),
 });
 
 export default function LaunchRegister() {
