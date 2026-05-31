@@ -128,9 +128,7 @@ export async function commitAllRecommended(
     if (a.scheduled?.calendarEventId) { skipped++; continue; }
     const top = a.suggestions?.find(s => s.isRecommended) || a.suggestions?.[0];
     if (!top) { skipped++; continue; }
-    const reminders = (await import('./scheduleActions')).defaultReminders(
-      a.priority, a.dueDate?.date, top.date,
-    );
+    const reminders = defaultReminders(a.priority, a.dueDate?.date, top.date);
     const res = await commitAction(a, {
       startDate: top.date,
       startTime: top.time,
