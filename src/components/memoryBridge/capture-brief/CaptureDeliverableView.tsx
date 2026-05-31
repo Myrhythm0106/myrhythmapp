@@ -22,6 +22,7 @@ export function CaptureDeliverableView() {
   const [model, setModel] = useState<CaptureBriefModel | null>(null);
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState(DEFAULT_SECTIONS);
+  const [includeSchedule, setIncludeSchedule] = useState(true);
   const [exporting, setExporting] = useState<null | 'pdf' | 'docx' | 'xlsx'>(null);
 
   useEffect(() => {
@@ -43,6 +44,13 @@ export function CaptureDeliverableView() {
     };
   }, [meetingId]);
 
+  const handleActionUpdate = (id: string, updates: Partial<typeof model.actions[number]>) => {
+    setModel(prev => prev ? {
+      ...prev,
+      actions: prev.actions.map(a => a.id === id ? { ...a, ...updates } : a),
+    } : prev);
+  };
+
   const filename = useMemo(() => {
     if (!model) return 'capture-brief';
     const safe = model.title.replace(/[^a-z0-9-_ ]+/gi, '').replace(/\s+/g, '-').toLowerCase();
@@ -54,7 +62,7 @@ export function CaptureDeliverableView() {
     if (!model) return;
     try {
       setExporting(kind);
-      const opts = { sections, filename };
+      const opts = { sections, filename, includeSchedule };
       if (kind === 'pdf') {
         const { exportCaptureBriefPdf } = await import('./exporters/pdf');
         await exportCaptureBriefPdf(model, opts);
