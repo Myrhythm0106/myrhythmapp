@@ -1,5 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { BriefAction, ActionReminder, PersonPick } from './types';
+import { defaultReminders } from './scheduleActions';
+
 
 export interface CommitInput {
   startDate: string;
