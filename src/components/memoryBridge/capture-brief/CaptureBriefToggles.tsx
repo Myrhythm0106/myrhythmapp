@@ -4,11 +4,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SectionKey } from './model/types';
-import { FileText, ListChecks, Lightbulb, HelpCircle, ScrollText } from 'lucide-react';
+import { FileText, ListChecks, Lightbulb, HelpCircle, ScrollText, CalendarClock } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 interface Props {
   sections: Record<SectionKey, boolean>;
   onChange: (s: Record<SectionKey, boolean>) => void;
+  includeSchedule?: boolean;
+  onIncludeScheduleChange?: (v: boolean) => void;
 }
 
 const ITEMS: { key: SectionKey; label: string; desc: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -26,7 +29,12 @@ const QUICK_MODES = {
   everything: { summary: true, actions: true, decisions: true, questions: true, transcript: true } as Record<SectionKey, boolean>,
 };
 
-export function CaptureBriefToggles({ sections, onChange }: Props) {
+export function CaptureBriefToggles({
+  sections,
+  onChange,
+  includeSchedule = true,
+  onIncludeScheduleChange,
+}: Props) {
   const currentMode = (Object.entries(QUICK_MODES).find(([, v]) =>
     (Object.keys(v) as SectionKey[]).every(k => v[k] === sections[k]),
   )?.[0]) || 'custom';
@@ -86,6 +94,25 @@ export function CaptureBriefToggles({ sections, onChange }: Props) {
               </div>
             </Label>
           ))}
+        </div>
+      </Card>
+
+      <Card className="p-5 backdrop-blur-sm bg-card/80 border-border">
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+          Smart scheduling
+        </Label>
+        <div className="mt-3 flex items-start gap-3 p-3 rounded-lg border border-border">
+          <CalendarClock className="h-4 w-4 text-brand-orange-600 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-semibold text-foreground">AI scheduling suggestions</div>
+            <div className="text-xs text-muted-foreground">
+              Inline Start · Remind · Due slot per action, with one-tap commit.
+            </div>
+          </div>
+          <Switch
+            checked={includeSchedule}
+            onCheckedChange={(v) => onIncludeScheduleChange?.(v)}
+          />
         </div>
       </Card>
     </div>

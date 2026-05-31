@@ -7,6 +7,7 @@ import {
   extractThemes,
   parseTranscriptTurns,
 } from './synthesize';
+import { enrichWithSchedulingSuggestions } from './scheduleActions';
 
 function priorityLabel(level?: number | null): 'High' | 'Medium' | 'Low' {
   if (!level) return 'Medium';
@@ -71,6 +72,11 @@ export async function buildCaptureBrief(meetingId: string): Promise<CaptureBrief
     themes,
   });
 
+  const { actions: enrichedActions, supportMembers } = await enrichWithSchedulingSuggestions(
+    actions,
+    rawTranscript,
+  );
+
   return {
     meetingId,
     title: meeting.meeting_title || 'Capture Session',
@@ -78,11 +84,12 @@ export async function buildCaptureBrief(meetingId: string): Promise<CaptureBrief
     participants,
     context: meeting.meeting_context || undefined,
     summary,
-    actions,
+    actions: enrichedActions,
     decisions,
     themes,
     openQuestions,
     transcript,
     rawTranscript,
+    supportMembers,
   };
 }
