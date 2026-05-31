@@ -7,8 +7,9 @@ import { ExtractedAction } from '@/types/memoryBridge';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { ActionSchedulingModal } from './ActionSchedulingModal';
 import { useSchedulePreferences } from '@/hooks/useSchedulePreferences';
-import { CheckCircle, Calendar, Share2, Brain, Heart, Target, Sparkles, ArrowRight, Clock, Zap } from 'lucide-react';
+import { CheckCircle, Calendar, Share2, Brain, Heart, Target, Sparkles, ArrowRight, Clock, Zap, FileDown } from 'lucide-react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 interface MemoryBridgeResultsModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -26,6 +27,7 @@ export function MemoryBridgeResultsModal({
   const [extractedActions, setExtractedActions] = useState<ExtractedAction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showScheduling, setShowScheduling] = useState(false);
+  const navigate = useNavigate();
   const {
     fetchExtractedActions,
     confirmAction
@@ -200,19 +202,26 @@ export function MemoryBridgeResultsModal({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-between items-center pt-4 border-t">
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 pt-4 border-t">
               <Button variant="outline" onClick={onClose}>
                 Review Later
               </Button>
-              <div className="flex gap-2">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Share2 className="h-4 w-4" />
-                  Share with Circle
+              <div className="flex flex-wrap gap-2 justify-end">
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2"
+                  onClick={() => {
+                    onClose();
+                    navigate(`/launch/memory/result/${meetingId}`);
+                  }}
+                >
+                  <FileDown className="h-4 w-4" />
+                  Open Capture Brief
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
                 <Button className="flex items-center gap-2 bg-primary" onClick={() => setShowScheduling(true)} disabled={extractedActions.length === 0}>
                   <Calendar className="h-4 w-4" />
                   Schedule Actions
-                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>
