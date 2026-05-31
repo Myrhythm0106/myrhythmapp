@@ -29,7 +29,12 @@ const QUICK_MODES = {
   everything: { summary: true, actions: true, decisions: true, questions: true, transcript: true } as Record<SectionKey, boolean>,
 };
 
-export function CaptureBriefToggles({ sections, onChange }: Props) {
+export function CaptureBriefToggles({
+  sections,
+  onChange,
+  includeSchedule = true,
+  onIncludeScheduleChange,
+}: Props) {
   const currentMode = (Object.entries(QUICK_MODES).find(([, v]) =>
     (Object.keys(v) as SectionKey[]).every(k => v[k] === sections[k]),
   )?.[0]) || 'custom';
