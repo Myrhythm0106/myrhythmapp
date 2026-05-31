@@ -155,7 +155,12 @@ export function CaptureDeliverableView() {
       {/* Body */}
       <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
         <aside className="lg:sticky lg:top-20 lg:self-start">
-          <CaptureBriefToggles sections={sections} onChange={setSections} />
+          <CaptureBriefToggles
+            sections={sections}
+            onChange={setSections}
+            includeSchedule={includeSchedule}
+            onIncludeScheduleChange={setIncludeSchedule}
+          />
           <p className="text-[10px] text-muted-foreground mt-4 leading-relaxed px-1">
             Exports run locally — your transcript never leaves your device for this step. The .docx
             opens cleanly in Google Docs and the .xlsx in Google Sheets.
@@ -163,7 +168,13 @@ export function CaptureDeliverableView() {
         </aside>
 
         <main className="min-w-0">
-          <CaptureBriefPreview model={model} sections={sections} />
+          <CaptureBriefPreview
+            model={model}
+            sections={sections}
+            includeSchedule={includeSchedule}
+            onActionUpdate={handleActionUpdate}
+          />
+
         </main>
       </div>
     </div>
