@@ -144,7 +144,7 @@ export async function enrichWithSchedulingSuggestions(
   const enriched = await Promise.all(
     actions.map(async (a) => {
       const haystack = `${a.text} ${a.due || ''} ${a.sourceQuote || ''}`;
-      const mention = hasDateMention(haystack) || hasDateMention(rawTranscript.includes(a.text) ? '' : '');
+      const mention = hasDateMention(haystack);
       const next: BriefAction = {
         ...a,
         dateMentionedInMeeting: mention.matched,
