@@ -136,29 +136,31 @@ export async function exportCaptureBriefPdf(model: CaptureBriefModel, opts: Expo
 
   if (opts.sections.actions && model.actions.length) {
     y = sectionTitle(doc, 'Action register', y);
+    const sched = !!opts.includeSchedule;
+    const head = sched
+      ? [['#', 'Action', 'Owner', 'Start', 'Due', 'Reminders', 'People', 'Pri', 'Conf.']]
+      : [['#', 'Action', 'Owner', 'Due', 'Priority', 'Conf.']];
+    const body = model.actions.map((a, i) => {
+      if (!sched) {
+        return [String(i + 1), a.text, a.owner, a.due || '—', a.priorityLabel, `${Math.round(a.confidence * 100)}%`];
+      }
+      const top = a.scheduled
+        ? { date: a.scheduled.startDate, time: a.scheduled.startTime }
+        : a.suggestions?.find(s => s.isRecommended) || a.suggestions?.[0];
+      const start = top ? `${top.date} ${top.time}` : '—';
+      const dueLabel = a.dueDate?.label || a.dueDate?.date || a.due || '—';
+      const reminders = (a.scheduled?.reminders || []).map(r => `${r.minutesBefore}m`).join(', ') || '—';
+      const people = (a.people || []).filter(p => p.role !== 'none').map(p => `${p.name} (${p.role})`).join(', ') || '—';
+      return [String(i + 1), a.text, a.owner, start, dueLabel, reminders, people, a.priorityLabel, `${Math.round(a.confidence * 100)}%`];
+    });
     autoTable(doc, {
       startY: y,
       margin: { left: 40, right: 40 },
-      head: [['#', 'Action', 'Owner', 'Due', 'Priority', 'Conf.']],
-      body: model.actions.map((a, i) => [
-        String(i + 1),
-        a.text,
-        a.owner,
-        a.due || '—',
-        a.priorityLabel,
-        `${Math.round(a.confidence * 100)}%`,
-      ]),
-      styles: { font: 'helvetica', fontSize: 9, cellPadding: 6, textColor: INK },
+      head,
+      body,
+      styles: { font: 'helvetica', fontSize: 8.5, cellPadding: 5, textColor: INK },
       headStyles: { fillColor: BRAND_ORANGE, textColor: [255, 255, 255], fontStyle: 'bold' },
       alternateRowStyles: { fillColor: [250, 250, 250] },
-      columnStyles: {
-        0: { cellWidth: 22 },
-        1: { cellWidth: 'auto' },
-        2: { cellWidth: 70 },
-        3: { cellWidth: 70 },
-        4: { cellWidth: 50 },
-        5: { cellWidth: 40, halign: 'right' },
-      },
       didDrawPage: () => {
         header(doc, model.title);
         footer(doc);
