@@ -53,17 +53,29 @@ export async function exportCaptureBriefXlsx(model: CaptureBriefModel, opts: Exp
   // ----- Actions -----
   if (opts.sections.actions) {
     const ws = wb.addWorksheet('Actions', { views: [{ state: 'frozen', ySplit: 1 }] });
+    const schedColumns = opts.includeSchedule
+      ? [
+          { header: 'Start', key: 'start', width: 22 },
+          { header: 'Reminders', key: 'reminders', width: 22 },
+          { header: 'Due', key: 'dueScheduled', width: 18 },
+          { header: 'People', key: 'people', width: 30 },
+        ]
+      : [];
     ws.columns = [
       { header: '#', key: 'i', width: 6 },
-      { header: 'Action', key: 'text', width: 60 },
+      { header: 'Action', key: 'text', width: 50 },
       { header: 'Owner', key: 'owner', width: 18 },
-      { header: 'Due', key: 'due', width: 18 },
+      { header: 'Due (mentioned)', key: 'due', width: 18 },
       { header: 'Priority', key: 'priority', width: 12 },
       { header: 'Confidence', key: 'conf', width: 14 },
+      ...schedColumns,
       { header: 'Category', key: 'category', width: 16 },
-      { header: 'Source quote', key: 'quote', width: 60 },
+      { header: 'Source quote', key: 'quote', width: 50 },
     ];
     model.actions.forEach((a, i) => {
+      const top = a.scheduled
+        ? { date: a.scheduled.startDate, time: a.scheduled.startTime }
+        : a.suggestions?.find(s => s.isRecommended) || a.suggestions?.[0];
       ws.addRow({
         i: i + 1,
         text: a.text,
@@ -71,13 +83,22 @@ export async function exportCaptureBriefXlsx(model: CaptureBriefModel, opts: Exp
         due: a.due || '',
         priority: a.priorityLabel,
         conf: a.confidence,
+        start: opts.includeSchedule ? (top ? `${top.date} ${top.time}` : '') : undefined,
+        reminders: opts.includeSchedule
+          ? (a.scheduled?.reminders || []).map(r => `${r.minutesBefore}m`).join(', ')
+          : undefined,
+        dueScheduled: opts.includeSchedule
+          ? (a.dueDate?.label || a.dueDate?.date || '')
+          : undefined,
+        people: opts.includeSchedule
+          ? (a.people || []).filter(p => p.role !== 'none').map(p => `${p.name} (${p.role})`).join(', ')
+          : undefined,
         category: a.category || '',
         quote: a.sourceQuote || '',
       });
     });
     styleHeader(ws.getRow(1));
     ws.getColumn('conf').numFmt = '0%';
-    ws.autoFilter = { from: 'A1', to: 'H1' };
     ws.eachRow((row, n) => {
       if (n === 1) return;
       row.alignment = { vertical: 'top', wrapText: true };
