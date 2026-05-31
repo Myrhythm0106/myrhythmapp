@@ -96,6 +96,25 @@ export function CaptureBriefToggles({
           ))}
         </div>
       </Card>
+
+      <Card className="p-5 backdrop-blur-sm bg-card/80 border-border">
+        <Label className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+          Smart scheduling
+        </Label>
+        <div className="mt-3 flex items-start gap-3 p-3 rounded-lg border border-border">
+          <CalendarClock className="h-4 w-4 text-brand-orange-600 mt-0.5 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-semibold text-foreground">AI scheduling suggestions</div>
+            <div className="text-xs text-muted-foreground">
+              Inline Start · Remind · Due slot per action, with one-tap commit.
+            </div>
+          </div>
+          <Switch
+            checked={includeSchedule}
+            onCheckedChange={(v) => onIncludeScheduleChange?.(v)}
+          />
+        </div>
+      </Card>
     </div>
   );
 }
