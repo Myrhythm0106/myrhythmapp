@@ -202,9 +202,9 @@ export function MVPCore4C() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { n: '01', title: 'Vision through quarter, week, and day', body: 'One thread runs from where you want to be, down to what today asks of you.' },
-              { n: '02', title: 'Protect deep work on the calendar', body: 'Your best hours are defended on purpose — not given away by accident.' },
-              { n: '03', title: 'Capture meetings as a searchable record', body: 'Conversations become notes, decisions and next steps you can find again.' },
+              { n: '01', title: 'Never lose a conversation again', body: 'Memory Bridge listens so you don\u2019t have to. Record any chat, meeting or appointment and MyRhythm turns it into a searchable record with the decisions, names and next steps pulled out for you.' },
+              { n: '02', title: 'Today shrinks to one calm next step', body: 'A quick Energy Check tunes the day around how you actually feel. Smart Schedule then surfaces just the next right thing \u2014 with built-in buffers and a gentle reshuffle when it\u2019s too much.' },
+              { n: '03', title: 'One thread from dream to today', body: 'Vision \u2192 Goals \u2192 Priorities \u2192 Daily Actions, all linked. Every task today traces back to something that matters, and every win is celebrated through the Capture \u2192 Commit \u2192 Calibrate \u2192 Celebrate loop.' },
             ].map((item) => (
               <div
                 key={item.n}
