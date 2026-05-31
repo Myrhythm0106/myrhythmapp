@@ -1,14 +1,48 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CaptureBriefModel, SectionKey } from './model/types';
+import { Button } from '@/components/ui/button';
+import { Loader2, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
+import { BriefAction, CaptureBriefModel, SectionKey } from './model/types';
+import { SmartCommitSlot } from './SmartCommitSlot';
+import { commitAllRecommended } from './model/commitActions';
 
 interface Props {
   model: CaptureBriefModel;
   sections: Record<SectionKey, boolean>;
+  includeSchedule?: boolean;
+  onActionUpdate?: (id: string, updates: Partial<BriefAction>) => void;
 }
 
-export function CaptureBriefPreview({ model, sections }: Props) {
+export function CaptureBriefPreview({ model, sections, includeSchedule = true, onActionUpdate }: Props) {
+  const [bulkRunning, setBulkRunning] = useState(false);
+  const pendingRecommended = useMemo(
+    () => model.actions.filter(a => !a.scheduled?.calendarEventId && (a.suggestions?.length || 0) > 0),
+    [model.actions],
+  );
+
+  const handleAcceptAll = async () => {
+    if (pendingRecommended.length === 0) return;
+    setBulkRunning(true);
+    const res = await commitAllRecommended(pendingRecommended, (id, calId) => {
+      onActionUpdate?.(id, {
+        scheduled: {
+          startDate: pendingRecommended.find(a => a.id === id)?.suggestions?.[0]?.date || '',
+          startTime: pendingRecommended.find(a => a.id === id)?.suggestions?.[0]?.time || '',
+          dueDate: pendingRecommended.find(a => a.id === id)?.dueDate?.date,
+          reminders: [],
+          invitedMemberIds: [],
+          watcherMemberIds: [],
+          calendarEventId: calId,
+        },
+      });
+    });
+    setBulkRunning(false);
+    toast.success(`Scheduled ${res.committed} · skipped ${res.skipped}${res.failed ? ` · failed ${res.failed}` : ''}`);
+  };
+
+
   return (
     <div className="bg-background rounded-2xl shadow-xl border border-border overflow-hidden">
       {/* Cover */}
