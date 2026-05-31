@@ -106,21 +106,25 @@ export async function exportCaptureBriefDocx(model: CaptureBriefModel, opts: Exp
 
   if (opts.sections.actions && model.actions.length) {
     children.push(h('Action register', HeadingLevel.HEADING_1));
+    const sched = !!opts.includeSchedule;
     const tableWidth = 9000;
-    const cols = [400, 3500, 1200, 1300, 1100, 1500];
+    const cols = sched
+      ? [400, 2400, 900, 1200, 1200, 1200, 900, 800]
+      : [400, 3500, 1200, 1300, 1100, 1500];
+    const headers = sched
+      ? ['#', 'Action', 'Owner', 'Start', 'Due', 'People', 'Reminders', 'Pri']
+      : ['#', 'Action', 'Owner', 'Due', 'Priority', 'Confidence'];
     const table = new Table({
       width: { size: tableWidth, type: WidthType.DXA },
       columnWidths: cols,
       rows: [
         new TableRow({
           tableHeader: true,
-          children: ['#', 'Action', 'Owner', 'Due', 'Priority', 'Confidence'].map((t, i) =>
-            cell(t, { head: true, width: cols[i] }),
-          ),
+          children: headers.map((t, i) => cell(t, { head: true, width: cols[i] })),
         }),
-        ...model.actions.map(
-          (a, i) =>
-            new TableRow({
+        ...model.actions.map((a, i) => {
+          if (!sched) {
+            return new TableRow({
               children: [
                 cell(String(i + 1), { width: cols[0] }),
                 cell(a.text, { width: cols[1] }),
@@ -129,8 +133,28 @@ export async function exportCaptureBriefDocx(model: CaptureBriefModel, opts: Exp
                 cell(a.priorityLabel, { width: cols[4], bold: true }),
                 cell(`${Math.round(a.confidence * 100)}%`, { width: cols[5] }),
               ],
-            }),
-        ),
+            });
+          }
+          const top = a.scheduled
+            ? { date: a.scheduled.startDate, time: a.scheduled.startTime }
+            : a.suggestions?.find(s => s.isRecommended) || a.suggestions?.[0];
+          const start = top ? `${top.date} ${top.time}` : '—';
+          const dueLabel = a.dueDate?.label || a.dueDate?.date || a.due || '—';
+          const people = (a.people || []).filter(p => p.role !== 'none').map(p => `${p.name} (${p.role})`).join(', ') || '—';
+          const reminders = (a.scheduled?.reminders || []).map(r => `${r.minutesBefore}m`).join(', ') || '—';
+          return new TableRow({
+            children: [
+              cell(String(i + 1), { width: cols[0] }),
+              cell(a.text, { width: cols[1] }),
+              cell(a.owner, { width: cols[2] }),
+              cell(start, { width: cols[3] }),
+              cell(dueLabel, { width: cols[4] }),
+              cell(people, { width: cols[5] }),
+              cell(reminders, { width: cols[6] }),
+              cell(a.priorityLabel, { width: cols[7], bold: true }),
+            ],
+          });
+        }),
       ],
     });
     children.push(new Paragraph({ children: [], spacing: { after: 0 } }));
