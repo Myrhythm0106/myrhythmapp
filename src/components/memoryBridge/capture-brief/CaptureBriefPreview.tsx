@@ -86,47 +86,102 @@ export function CaptureBriefPreview({ model, sections, includeSchedule = true, o
 
         {sections.actions && model.actions.length > 0 && (
           <Section title="Action register">
-            <div className="overflow-x-auto -mx-2">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-brand-orange-600 text-white">
-                    <th className="text-left px-3 py-2 font-semibold w-8">#</th>
-                    <th className="text-left px-3 py-2 font-semibold">Action</th>
-                    <th className="text-left px-3 py-2 font-semibold">Owner</th>
-                    <th className="text-left px-3 py-2 font-semibold">Due</th>
-                    <th className="text-left px-3 py-2 font-semibold">Priority</th>
-                    <th className="text-right px-3 py-2 font-semibold">Conf.</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {model.actions.map((a, i) => (
-                    <tr key={a.id} className={i % 2 ? 'bg-muted/30' : ''}>
-                      <td className="px-3 py-2 text-muted-foreground">{i + 1}</td>
-                      <td className="px-3 py-2 text-foreground">{a.text}</td>
-                      <td className="px-3 py-2 text-foreground">{a.owner}</td>
-                      <td className="px-3 py-2 text-foreground">{a.due || '—'}</td>
-                      <td className="px-3 py-2">
-                        <Badge
-                          variant={a.priorityLabel === 'High' ? 'default' : 'secondary'}
-                          className={
-                            a.priorityLabel === 'High'
-                              ? 'bg-brand-orange-600 text-white'
-                              : ''
-                          }
-                        >
-                          {a.priorityLabel}
-                        </Badge>
-                      </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+            {includeSchedule && pendingRecommended.length > 0 && (
+              <div className="mb-4 flex items-center justify-between gap-3 p-3 rounded-xl bg-brand-orange-50 border border-brand-orange-200">
+                <div className="flex items-center gap-2 text-sm">
+                  <Sparkles className="h-4 w-4 text-brand-orange-600" />
+                  <span className="text-brand-orange-700 font-semibold">
+                    {pendingRecommended.length} actions ready · smart reminders included
+                  </span>
+                </div>
+                <Button
+                  onClick={handleAcceptAll}
+                  disabled={bulkRunning}
+                  className="min-h-[44px] bg-brand-orange-600 hover:bg-brand-orange-700 text-white"
+                  size="sm"
+                >
+                  {bulkRunning ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                  Accept all recommended
+                </Button>
+              </div>
+            )}
+
+            {includeSchedule ? (
+              <div className="space-y-3">
+                {model.actions.map((a, i) => (
+                  <div key={a.id} className="p-4 rounded-xl border border-border bg-card">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs text-muted-foreground tabular-nums">#{i + 1}</span>
+                          <Badge
+                            variant="secondary"
+                            className={a.priorityLabel === 'High' ? 'bg-brand-orange-600 text-white' : ''}
+                          >
+                            {a.priorityLabel}
+                          </Badge>
+                          {a.dateMentionedInMeeting && (
+                            <Badge variant="outline" className="text-brand-orange-700 border-brand-orange-300">
+                              From meeting
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="text-sm font-semibold text-foreground">{a.text}</div>
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Owner: {a.owner}{a.due ? ` · ${a.due}` : ''}
+                        </div>
+                      </div>
+                      <div className="text-xs text-muted-foreground tabular-nums shrink-0">
                         {Math.round(a.confidence * 100)}%
-                      </td>
+                      </div>
+                    </div>
+                    <SmartCommitSlot
+                      action={a}
+                      onUpdated={(updates) => onActionUpdate?.(a.id, updates)}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="overflow-x-auto -mx-2">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="bg-brand-orange-600 text-white">
+                      <th className="text-left px-3 py-2 font-semibold w-8">#</th>
+                      <th className="text-left px-3 py-2 font-semibold">Action</th>
+                      <th className="text-left px-3 py-2 font-semibold">Owner</th>
+                      <th className="text-left px-3 py-2 font-semibold">Due</th>
+                      <th className="text-left px-3 py-2 font-semibold">Priority</th>
+                      <th className="text-right px-3 py-2 font-semibold">Conf.</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {model.actions.map((a, i) => (
+                      <tr key={a.id} className={i % 2 ? 'bg-muted/30' : ''}>
+                        <td className="px-3 py-2 text-muted-foreground">{i + 1}</td>
+                        <td className="px-3 py-2 text-foreground">{a.text}</td>
+                        <td className="px-3 py-2 text-foreground">{a.owner}</td>
+                        <td className="px-3 py-2 text-foreground">{a.due || '—'}</td>
+                        <td className="px-3 py-2">
+                          <Badge
+                            variant={a.priorityLabel === 'High' ? 'default' : 'secondary'}
+                            className={a.priorityLabel === 'High' ? 'bg-brand-orange-600 text-white' : ''}
+                          >
+                            {a.priorityLabel}
+                          </Badge>
+                        </td>
+                        <td className="px-3 py-2 text-right tabular-nums text-muted-foreground">
+                          {Math.round(a.confidence * 100)}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </Section>
         )}
+
 
         {sections.decisions && (
           <Section title="Decisions & themes">
