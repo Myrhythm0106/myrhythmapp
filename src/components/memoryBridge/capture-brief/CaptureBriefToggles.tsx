@@ -4,11 +4,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { SectionKey } from './model/types';
-import { FileText, ListChecks, Lightbulb, HelpCircle, ScrollText } from 'lucide-react';
+import { FileText, ListChecks, Lightbulb, HelpCircle, ScrollText, CalendarClock } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 interface Props {
   sections: Record<SectionKey, boolean>;
   onChange: (s: Record<SectionKey, boolean>) => void;
+  includeSchedule?: boolean;
+  onIncludeScheduleChange?: (v: boolean) => void;
 }
 
 const ITEMS: { key: SectionKey; label: string; desc: string; icon: React.ComponentType<{ className?: string }> }[] = [
