@@ -7,6 +7,7 @@ import {
   extractThemes,
   parseTranscriptTurns,
 } from './synthesize';
+import { enrichWithSchedulingSuggestions } from './scheduleActions';
 
 function priorityLabel(level?: number | null): 'High' | 'Medium' | 'Low' {
   if (!level) return 'Medium';
