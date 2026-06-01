@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,9 +19,15 @@ import {
   X,
   Sparkles,
   Undo2,
+  Flag,
+  RefreshCw,
+  Pencil,
+  HeartPulse,
+  ListTree,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type {
+  ActionMilestone,
   BriefAction,
   PersonPick,
   SchedulingSuggestion,
@@ -34,6 +39,15 @@ import {
   validatePostpone,
 } from './model/scheduleActions';
 import { commitAction, undoCommit } from './model/commitActions';
+import {
+  generateMilestones,
+  recalculateMilestones,
+} from './model/milestones';
+import { applyHealthAwareAdjustments } from './model/healthAwareScheduler';
+import {
+  useSchedulingPreferences,
+  resolveSchedulingPrefs,
+} from '@/hooks/useSchedulingPreferences';
 
 interface Props {
   action: BriefAction;
@@ -51,12 +65,20 @@ const REMINDER_OPTIONS: { label: string; minutes: number }[] = [
 
 export function SmartCommitSlot({ action, onUpdated }: Props) {
   const isScheduled = Boolean(action.scheduled?.calendarEventId);
+  const { prefs: globalPrefs, update: setGlobalPrefs } = useSchedulingPreferences();
+  const prefs = useMemo(
+    () => resolveSchedulingPrefs(globalPrefs, action.schedulingOverride),
+    [globalPrefs, action.schedulingOverride],
+  );
+
   const recommended = useMemo(
     () => action.suggestions?.find(s => s.isRecommended) || action.suggestions?.[0],
     [action.suggestions],
   );
 
-  const [selected, setSelected] = useState<SchedulingSuggestion | null>(recommended || null);
+  const [selected, setSelected] = useState<SchedulingSuggestion | null>(
+    prefs.smartSchedulingEnabled ? recommended || null : null,
+  );
   const [reminders, setReminders] = useState<ActionReminder[]>(() =>
     defaultReminders(action.priority, action.dueDate?.date, recommended?.date),
   );
@@ -66,11 +88,49 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
   const [committing, setCommitting] = useState(false);
   const [warning, setWarning] = useState<string | null>(null);
 
-  const start = selected?.date && selected?.time
-    ? { date: selected.date, time: selected.time }
-    : action.dateMentionedInMeeting && action.dueDate
-      ? { date: action.dueDate.date, time: '09:00' }
-      : null;
+  // Manual Start override
+  const [manualStartDate, setManualStartDate] = useState<string | undefined>(
+    prefs.smartSchedulingEnabled ? undefined : recommended?.date,
+  );
+  const [manualStartTime, setManualStartTime] = useState<string | undefined>(
+    prefs.smartSchedulingEnabled ? undefined : recommended?.time || '10:30',
+  );
+  const startWasEdited = !!(manualStartDate || manualStartTime);
+
+  // Milestones (kept in local state so edits persist while user works)
+  const [milestones, setMilestones] = useState<ActionMilestone[]>(
+    () => action.milestones || [],
+  );
+
+  // (Re)generate milestones when toggles change or due date changes
+  useEffect(() => {
+    if (!prefs.milestonesEnabled) {
+      setMilestones([]);
+      return;
+    }
+    const next = recalculateMilestones({ ...action, dueDate: dueDate ? { ...(action.dueDate || { source: 'user', locked: false }), date: dueDate } : action.dueDate, milestones } as BriefAction);
+    const adjusted = prefs.healthAwareEnabled
+      ? applyHealthAwareAdjustments(next, {})
+      : next;
+    setMilestones(adjusted);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prefs.milestonesEnabled, prefs.healthAwareEnabled, dueDate]);
+
+  const start = useMemo(() => {
+    if (manualStartDate || manualStartTime) {
+      return {
+        date: manualStartDate || selected?.date || dueDate || isoToday(),
+        time: manualStartTime || selected?.time || '10:30',
+      };
+    }
+    if (prefs.smartSchedulingEnabled && selected?.date && selected?.time) {
+      return { date: selected.date, time: selected.time };
+    }
+    if (action.dateMentionedInMeeting && action.dueDate) {
+      return { date: action.dueDate.date, time: '09:00' };
+    }
+    return null;
+  }, [manualStartDate, manualStartTime, selected, prefs.smartSchedulingEnabled, dueDate, action.dateMentionedInMeeting, action.dueDate]);
 
   if (isScheduled) {
     return (
@@ -138,6 +198,7 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
         watcherMemberIds: people.filter(p => p.role === 'watch').map(p => p.memberId),
         calendarEventId: res.calendarEventId,
       },
+      milestones,
     });
     toast.success('Scheduled', { duration: 4000 });
   };
@@ -146,21 +207,61 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
     setPeople(prev => prev.map(p => (p.memberId === memberId ? { ...p, role } : p)));
   };
 
+  const togglePref = (key: 'smartSchedulingEnabled' | 'milestonesEnabled' | 'healthAwareEnabled') => {
+    const next = { ...(action.schedulingOverride || {}), [key]: !prefs[key] };
+    onUpdated({ schedulingOverride: next });
+  };
+
+  const resetStart = () => {
+    setManualStartDate(undefined);
+    setManualStartTime(undefined);
+    if (recommended) setSelected(recommended);
+  };
+
   return (
     <div className="mt-3 p-4 rounded-xl bg-card border border-border space-y-3">
+      {/* Toggle chips */}
+      <div className="flex items-center gap-1.5 flex-wrap">
+        <ToggleChip
+          icon={<Sparkles className="h-3 w-3" />}
+          label="SMART"
+          on={prefs.smartSchedulingEnabled}
+          onClick={() => togglePref('smartSchedulingEnabled')}
+        />
+        <ToggleChip
+          icon={<ListTree className="h-3 w-3" />}
+          label="Milestones"
+          on={prefs.milestonesEnabled}
+          onClick={() => togglePref('milestonesEnabled')}
+        />
+        <ToggleChip
+          icon={<HeartPulse className="h-3 w-3" />}
+          label="Health-aware"
+          on={prefs.healthAwareEnabled}
+          onClick={() => togglePref('healthAwareEnabled')}
+        />
+        <button
+          onClick={() => setGlobalPrefs(prefs)}
+          className="ml-auto text-[10px] uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          title="Save these as my defaults"
+        >
+          Save as default
+        </button>
+      </div>
+
       {/* Suggestions row */}
-      {action.suggestions && action.suggestions.length > 0 && (
+      {prefs.smartSchedulingEnabled && action.suggestions && action.suggestions.length > 0 && (
         <div className="flex items-center gap-2 flex-wrap">
           <Sparkles className="h-3.5 w-3.5 text-brand-orange-600 shrink-0" />
           <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
             AI suggested
           </span>
           {action.suggestions.map(s => {
-            const isActive = selected?.id === s.id;
+            const isActive = selected?.id === s.id && !startWasEdited;
             return (
               <button
                 key={s.id}
-                onClick={() => setSelected(s)}
+                onClick={() => { setSelected(s); resetStart(); }}
                 className={[
                   'px-3 py-1.5 rounded-full text-xs font-medium border transition-colors',
                   isActive
@@ -176,16 +277,41 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
           })}
         </div>
       )}
-      {selected?.reason && (
+      {prefs.smartSchedulingEnabled && selected?.reason && !startWasEdited && (
         <p className="text-xs text-muted-foreground italic">{selected.reason}</p>
       )}
 
       {/* 3-field SMART grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
         <Field icon={<CalendarIcon className="h-3.5 w-3.5" />} label="Start">
-          <span className="text-sm font-semibold text-foreground">
-            {start ? `${formatDateLabel(start.date)} · ${start.time}` : 'Pick a slot'}
-          </span>
+          <div className="flex items-center gap-1.5">
+            <input
+              type="date"
+              value={manualStartDate || start?.date || ''}
+              onChange={e => setManualStartDate(e.target.value || undefined)}
+              className="text-xs font-semibold text-foreground bg-transparent border-0 p-0 focus:outline-none w-[110px]"
+            />
+            <input
+              type="time"
+              value={manualStartTime || start?.time || ''}
+              onChange={e => setManualStartTime(e.target.value || undefined)}
+              className="text-xs font-semibold text-foreground bg-transparent border-0 p-0 focus:outline-none w-[70px]"
+            />
+            {startWasEdited && (
+              <button
+                onClick={resetStart}
+                className="text-[10px] text-brand-orange-600 hover:text-brand-orange-700"
+                title="Reset to SMART"
+              >
+                <RefreshCw className="h-3 w-3" />
+              </button>
+            )}
+          </div>
+          {startWasEdited && (
+            <span className="text-[10px] text-brand-orange-600 font-semibold inline-flex items-center gap-1 mt-0.5">
+              <Pencil className="h-2.5 w-2.5" /> Edited
+            </span>
+          )}
         </Field>
 
         <Field icon={<Bell className="h-3.5 w-3.5" />} label="Remind">
@@ -235,6 +361,41 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
         </Field>
       </div>
 
+      {/* Milestone ladder */}
+      {prefs.milestonesEnabled && milestones.length > 0 && (
+        <div className="pt-2 border-t border-border/50">
+          <div className="flex items-center justify-between mb-1.5">
+            <div className="flex items-center gap-1.5">
+              <Flag className="h-3.5 w-3.5 text-brand-teal-600" />
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+                Milestones — keep you on track
+              </span>
+            </div>
+            <button
+              onClick={() => setMilestones(recalculateMilestones({ ...action, dueDate: dueDate ? { ...(action.dueDate || { source: 'user', locked: false }), date: dueDate } : action.dueDate } as BriefAction))}
+              className="text-[10px] text-brand-teal-600 hover:text-brand-teal-700 inline-flex items-center gap-1"
+            >
+              <RefreshCw className="h-2.5 w-2.5" /> Recalculate
+            </button>
+          </div>
+          <div className="space-y-1.5">
+            {milestones.map((m, idx) => (
+              <MilestoneRow
+                key={m.id}
+                milestone={m}
+                onChange={(updated) => {
+                  setMilestones(prev => prev.map((x, i) => i === idx ? { ...updated, userEdited: true } : x));
+                }}
+                onReset={() => {
+                  const fresh = generateMilestones({ ...action, dueDate: dueDate ? { ...(action.dueDate || { source: 'user', locked: false }), date: dueDate } : action.dueDate } as BriefAction);
+                  setMilestones(prev => prev.map((x, i) => i === idx ? (fresh[idx] || x) : x));
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
       {warning && (
         <div className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-md p-2">
           {warning}
@@ -270,6 +431,73 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
   );
 }
 
+function ToggleChip({ icon, label, on, onClick }: { icon: React.ReactNode; label: string; on: boolean; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className={[
+        'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border transition-colors',
+        on
+          ? 'bg-brand-orange-50 text-brand-orange-700 border-brand-orange-300'
+          : 'bg-muted text-muted-foreground border-border line-through opacity-70',
+      ].join(' ')}
+      title={on ? `${label}: ON · tap to turn off for this action` : `${label}: OFF · tap to turn on`}
+    >
+      {icon}
+      {label}
+      <span className={on ? 'text-brand-orange-600' : 'text-muted-foreground'}>{on ? 'ON' : 'OFF'}</span>
+    </button>
+  );
+}
+
+function MilestoneRow({
+  milestone,
+  onChange,
+  onReset,
+}: {
+  milestone: ActionMilestone;
+  onChange: (m: ActionMilestone) => void;
+  onReset: () => void;
+}) {
+  const dot =
+    milestone.conflictLevel === 'high' ? 'bg-red-400'
+    : milestone.conflictLevel === 'low' ? 'bg-amber-400'
+    : 'bg-emerald-400';
+
+  return (
+    <div className="flex items-center gap-2 text-xs p-2 rounded-md bg-muted/40 border border-border/40">
+      <span className={`w-1.5 h-1.5 rounded-full ${dot}`} />
+      <span className="flex-1 font-medium text-foreground truncate">{milestone.label}</span>
+      <input
+        type="date"
+        value={milestone.date}
+        onChange={(e) => onChange({ ...milestone, date: e.target.value })}
+        className="text-xs bg-transparent border-0 p-0 focus:outline-none w-[110px]"
+      />
+      <input
+        type="time"
+        value={milestone.time || ''}
+        onChange={(e) => onChange({ ...milestone, time: e.target.value })}
+        className="text-xs bg-transparent border-0 p-0 focus:outline-none w-[70px]"
+      />
+      {milestone.userEdited && (
+        <button
+          onClick={onReset}
+          className="text-brand-orange-600 hover:text-brand-orange-700"
+          title="Reset to SMART"
+        >
+          <RefreshCw className="h-3 w-3" />
+        </button>
+      )}
+      {milestone.scheduleReason && !milestone.userEdited && (
+        <span className="text-[10px] text-muted-foreground italic truncate max-w-[150px]" title={milestone.scheduleReason}>
+          {milestone.scheduleReason}
+        </span>
+      )}
+    </div>
+  );
+}
+
 function Field({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
   return (
     <div className="p-2.5 rounded-lg bg-muted/40 border border-border/60">
@@ -285,6 +513,10 @@ function Field({ icon, label, children }: { icon: React.ReactNode; label: string
 function labelForMinutes(min: number): string {
   const found = REMINDER_OPTIONS.find(o => o.minutes === min);
   return found?.label || `${min} min before`;
+}
+
+function isoToday(): string {
+  return new Date().toISOString().slice(0, 10);
 }
 
 function PersonChip({ person, onChange }: { person: PersonPick; onChange: (r: PersonPick['role']) => void }) {
