@@ -61,6 +61,8 @@ import LifeEmpowermentGuidePage from "./pages/LifeEmpowermentGuidePage";
 import SetupWizard from "./pages/SetupWizard";
 import { IndividualSetupItem } from "./components/setup/IndividualSetupItem";
 import { RedirectToStart } from "./components/redirects/RedirectToStart";
+import LaunchStart from "./pages/launch/LaunchStart";
+
 import SubscribePage from "./pages/SubscribePage";
 
 const InvestorDeckPage = lazy(() => import("./pages/InvestorDeckPage"));
@@ -198,7 +200,7 @@ function App() {
                     <Route path="/prototype/reminders" element={<PrototypeReminders />} />
                     <Route path="/prototype/done" element={<PrototypeDone />} />
      {/* Landing and Discovery Routes */}
-                     <Route path="/" element={<Navigate to="/mvp" replace />} />
+                     <Route path="/" element={<Navigate to="/start" replace />} />
                      <Route path="/auth" element={<Auth />} />
                      <Route path="/dashboard" element={<Navigate to="/launch/home" replace />} />
                      <Route path="/landing" element={<Landing />} />
@@ -311,7 +313,9 @@ function App() {
                     />
                     
                      {/* Warm Onboarding Flow */}
-                     <Route path="/start" element={<StartPage />} />
+                     <Route path="/start" element={<LaunchStart />} />
+                     <Route path="/launch/start" element={<LaunchStart />} />
+
                      <Route path="/mvp/memory-first-welcome" element={<MemoryFirstWelcomePage />} />
                      <Route path="/mvp/brain-health-welcome" element={<BrainHealthWelcomePage />} />
                      <Route path="/mvp/caregiver-welcome" element={<CaregiverWelcomePage />} />
@@ -343,7 +347,7 @@ function App() {
                     <Route path="/mvp-dashboard" element={<ProtectedRoute><MVPDashboardPage /></ProtectedRoute>} />
                     <Route path="/mvp-assessment" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
                     <Route path="/assessment-protected" element={<ProtectedRoute><MVPAssessmentPage /></ProtectedRoute>} />
-                     <Route path="/mvp" element={<MVPCore4CPage />} />
+                     <Route path="/mvp" element={<Navigate to="/start" replace />} />
                      <Route path="/mvp/user-selection" element={<GetStartedPage />} />
                      <Route path="/mvp/preview-4c" element={<MVPCore4CPage />} />
                       <Route path="/brain-friendly-dashboard" element={
