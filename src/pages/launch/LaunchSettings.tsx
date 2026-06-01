@@ -131,7 +131,72 @@ export default function LaunchSettings() {
           </button>
         </LaunchCard>
 
+        {/* Scheduling — SMART · Milestones · Health-aware */}
+        <LaunchCard>
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
+              <Sparkles className="h-5 w-5 text-orange-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">Scheduling</h3>
+              <p className="text-xs text-gray-500">How MyRhythm picks dates and times</p>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between py-2">
+              <div className="pr-3">
+                <Label className="text-sm text-gray-900 flex items-center gap-1.5">
+                  <Sparkles className="h-3.5 w-3.5 text-orange-600" /> SMART scheduling
+                </Label>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Suggest dates and times using calendar, energy and preferences. You can always override.
+                </p>
+              </div>
+              <Switch
+                checked={schedulingPrefs.smartSchedulingEnabled}
+                onCheckedChange={(v) => updateScheduling({ smartSchedulingEnabled: v })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between py-2">
+              <div className="pr-3">
+                <Label className="text-sm text-gray-900 flex items-center gap-1.5">
+                  <ListTree className="h-3.5 w-3.5 text-teal-600" /> Auto-generate milestones
+                </Label>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Break big actions into scheduled checkpoints working back from the due date.
+                </p>
+              </div>
+              <Switch
+                checked={schedulingPrefs.milestonesEnabled}
+                onCheckedChange={(v) => updateScheduling({ milestonesEnabled: v })}
+              />
+            </div>
+
+            <div className="flex items-center justify-between py-2">
+              <div className="pr-3">
+                <Label className="text-sm text-gray-900 flex items-center gap-1.5">
+                  <HeartPulse className="h-3.5 w-3.5 text-rose-600" /> Health-aware adjustments
+                </Label>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Protect recovery windows after appointments, respect sleep and medication windows.
+                </p>
+              </div>
+              <Switch
+                checked={schedulingPrefs.healthAwareEnabled}
+                onCheckedChange={(v) => updateScheduling({ healthAwareEnabled: v })}
+              />
+            </div>
+
+            <p className="text-[11px] text-gray-500 italic leading-relaxed pt-1 border-t border-gray-100">
+              MyRhythm uses your logged signals to suggest timing. It does not diagnose, treat, or replace clinical advice.
+            </p>
+          </div>
+        </LaunchCard>
+
         {/* Connected Calendars Section */}
+
         <LaunchCard>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
