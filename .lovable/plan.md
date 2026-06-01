@@ -1,123 +1,206 @@
-# Premium Capture Deliverable — Plan v23
+## Objective
 
-Turn the post-recording experience into a Deloitte-grade briefing pack the user can download as **PDF**, **DOCX** (opens in Google Docs), or **XLSX** (opens in Google Sheets), with a clean toggle for **Actions only / Transcript only / Full pack**.
+Ship the MVP around one shareable testing link with a single headline flow:
 
-## 1. Scope
+**Capture → Actions → Decisions → Smart Commit (optional milestones + optional health-aware SMART scheduling, always user-overridable) → Support Circle visibility & remote record.**
 
-- Keep marketing `/launch/capture` untouched.
-- Upgrade the authenticated post-recording surface — `MemoryBridgeResultsModal` + a new full-screen `CaptureDeliverableView` at `/launch/memory-bridge/result/:meetingId`.
-- Google Drive sync is **deferred** (follow-up). Today we ship local downloads only — files open natively in Google Docs/Sheets via upload.
+Then stop building and start testing.
 
-## 2. The deliverable (default shape)
+## Shareable testing link
 
-A single branded "Capture Brief" with five sections, each independently includable in the export:
-
-1. **Cover + 1-page Executive Summary** — context, date, participants, decisions, owners, risks, confidentiality footer (per Document Confidentiality Standard memory).
-2. **Action Register** — owner, due, priority, energy badge, confidence %, source quote.
-3. **Decisions & Themes** — synthesized decision log + recurring themes.
-4. **Open Questions** — unresolved items needing follow-up.
-5. **Annotated Transcript** — speaker turns, timestamps, action markers highlighted.
-
-Medical disclaimer line on every page footer (per Medical Disclaimer Policy memory).
-
-## 3. Results screen UX
-
-Replace the current modal body with a two-pane layout:
-
-```text
-┌─────────────────────────────────────────────────────────┐
-│  Capture Brief · [Meeting title]      [✕]               │
-├──────────────┬──────────────────────────────────────────┤
-│ Include:     │   Live preview of the brief              │
-│ ☑ Summary    │   (renders the selected sections)        │
-│ ☑ Actions    │                                          │
-│ ☑ Decisions  │                                          │
-│ ☑ Questions  │                                          │
-│ ☐ Transcript │                                          │
-│              │                                          │
-│ Quick mode:  │                                          │
-│ ◉ Full pack  │                                          │
-│ ○ Actions    │                                          │
-│ ○ Transcript │                                          │
-├──────────────┴──────────────────────────────────────────┤
-│  [ Download PDF ]  [ Download .docx ]  [ Download .xlsx]│
-│                              [ Schedule actions →  ]    │
-└─────────────────────────────────────────────────────────┘
-```
-
-- Quick-mode radios are shortcuts that flip the checkboxes.
-- Live preview re-renders instantly as toggles change — feels Linear-fast.
-- Primary CTA stays orange-500; secondary download buttons are glass-morphism per design memory.
-
-## 4. Export engines (client-side, no new edge function needed v1)
-
-| Format | Library | Output |
-|---|---|---|
-| **PDF** | `@react-pdf/renderer` (already common in stack) | Branded multi-page PDF, identical to preview |
-| **DOCX** | `docx` (npm) | Native Word doc; opens cleanly in Google Docs after upload |
-| **XLSX** | `exceljs` | Multi-sheet workbook: `Summary`, `Actions`, `Decisions`, `Questions`, `Transcript` |
-
-All three share one normalized `CaptureBriefModel` so a section toggled off in the UI is also absent from every export.
-
-Typography: Inter for body, IBM Plex Serif for headings — consultancy register. Brand-orange accent rule across cover and section dividers. Footer on every page: `MyRhythm · Confidential — Not medical advice. v0.1 Founding Edition.`
-
-## 5. Data model
-
-No DB migration required. Builds entirely from existing tables:
-
-- `meeting_recordings` (transcript, confidence, participants, dates)
-- `extracted_actions` (owner, priority, due, confidence, source quote, context)
-
-A new client-side adapter `buildCaptureBrief(meetingId)` fetches both, runs light synthesis:
-- **Decisions** = extracted_actions where `category = 'decision'` OR action_text matches decision verbs.
-- **Themes** = top-N noun phrases (simple frequency, no LLM call needed for v1).
-- **Open questions** = transcript sentences ending in `?` not already resolved by an action.
-
-If we later want LLM-quality synthesis, the adapter has a single seam to call an edge function — out of scope for this build.
-
-## 6. File layout
-
-```text
-src/components/memoryBridge/capture-brief/
-  CaptureDeliverableView.tsx        ← full-screen result page
-  CaptureBriefPreview.tsx            ← live preview pane
-  CaptureBriefToggles.tsx            ← left pane controls
-  exporters/
-    pdf.tsx                          ← @react-pdf/renderer document
-    docx.ts                          ← docx builder
-    xlsx.ts                          ← exceljs builder
-  model/
-    buildCaptureBrief.ts             ← adapter (DB → CaptureBriefModel)
-    types.ts                         ← CaptureBriefModel, SectionKey
-    synthesize.ts                    ← decisions/themes/questions extraction
-src/pages/launch/LaunchCaptureResult.tsx   ← route wrapper
-```
-
-`MemoryBridgeResultsModal` gains a primary CTA **"Open Capture Brief →"** that routes to the new view; the modal stays as the quick-glance summary.
-
-## 7. Out of scope (explicit)
-
-- Per-user Google OAuth + Drive push (planned follow-up).
-- LLM-based theme/decision synthesis (current heuristics are good enough for v1).
-- Editable rich-text brief inside the app (export is the editing surface — open the .docx in Docs).
-- New tables, RLS changes, edge functions.
-
-## 8. Acceptance criteria
-
-- Toggles update preview in < 100ms.
-- Three downloads succeed offline (pure client export).
-- DOCX opens in Google Docs without layout breakage; XLSX opens in Google Sheets with frozen header rows and filter on the Actions sheet.
-- PDF passes visual QA: cover page, no clipped text, footer on every page, action table fits portrait A4.
-- "Actions only" quick mode produces a 1–2 page PDF and a single-sheet XLSX.
-- Disclaimer + confidentiality footer present in every export.
-
-## 9. Technical notes
-
-- Install: `bun add docx exceljs @react-pdf/renderer file-saver`.
-- All exports run in browser; no server round-trip → instant downloads, no edge cost.
-- Color tokens via existing semantic tokens (brand-orange-500, etc.) — no hex literals in components.
-- Lazy-load the three exporter modules so the result page stays light.
+`https://myrhythmapp.lovable.app/start` → 1-screen "Test in 4 minutes" → `/launch/home`.
 
 ---
 
-Approve to build, or tell me what to change (e.g., swap library, drop a section, add OAuth Drive push now).
+## 1. Smart Commit — opt-in SMART + always overridable
+
+### User control (new)
+
+Three independent toggles, available **per action** AND as **global defaults** in Settings → Scheduling:
+
+| Toggle | Default | What it does |
+|---|---|---|
+| **Auto-generate milestones** | ON | Builds the milestone ladder backwards from the due date. OFF = just start + due date, no sub-tasks. |
+| **SMART scheduling** | ON | Lets MyRhythm pick date/time using calendar + energy + health layers. OFF = blank slots, user picks everything. |
+| **Health-aware adjustments** | ON | Applies brain-health and overall-health rules (post-therapy buffer, low-sleep shift, med windows). OFF = SMART runs without health layer. |
+
+Per-action UI on `SmartCommitSlot.tsx`:
+
+```text
+[ Smart scheduling: ●ON  ] [ Milestones: ●ON ] [ Health-aware: ●ON ]   ⓘ
+```
+
+Tap any chip → toggles off for this action only. "Make this my default" link writes back to Settings.
+
+### Override on every suggested date/time
+
+Every milestone row and the parent Start/Due fields are **directly editable**:
+
+```text
+[●] First draft   [ Wed 10 Jun ▾ ]  [ 10:30 ▾ ]   🔔 1d ▾   ●ok
+                  ↑ tap = native date picker
+                                    ↑ tap = time picker
+```
+
+- Edited rows get a small "edited" pill and lock against auto-recalculation until the user taps "Reset to SMART".
+- "Recalculate from today" never overwrites edited rows unless the user confirms.
+- Any user-entered date/time bypasses the health layer with no warning beyond a soft hint chip ("outside your usual focus window") — never a block.
+
+### Milestone generation rules (only when "Milestones" is ON)
+
+```text
+lead = dueDate − today
+≥ 14d → 4 milestones at 25/50/75/90%
+ 7–13d → 3 milestones at 33/66/90%
+ 3–6d  → 2 milestones at 50/90%
+ ≤ 2d  → 1 "Start now" + dueDate
+```
+
+Labels by action type (Deliverable, Decision, External meeting, Follow-up, Generic).
+
+### Health-aware SMART scheduling (only when both "SMART" and "Health-aware" are ON)
+
+Layered scorer; each layer can shift, downgrade, or reject a slot:
+
+1. Calendar conflicts (hard reject)
+2. `user_schedule_preferences` (most/least productive, unavailable)
+3. Energy windows (`useEnergyTracking`)
+4. **Brain-health:** post-clinical 2h buffer; symptom severity cap; 3-high-load/day cap; recovery-stage modifier
+5. **Overall health:** `<6h` sleep → +90min shift + lower load; med windows blocked; clinical pre/post buffers
+6. SMART preferences (preferred start, max sessions/day, min break)
+
+User-facing reason chips ("Strong-focus window, post-therapy buffer respected"). Never medical language. Settings disclaimer: *"MyRhythm uses your logged signals to suggest timing. It does not diagnose, treat, or replace clinical advice."*
+
+### Data model
+
+```ts
+export interface SchedulingPreferences {
+  smartSchedulingEnabled: boolean;     // default true
+  milestonesEnabled: boolean;          // default true
+  healthAwareEnabled: boolean;         // default true
+}
+
+export interface ActionMilestone {
+  id: string;
+  label: string;
+  date: string;
+  time?: string;
+  percentOfLeadTime: number;
+  status: 'pending' | 'done' | 'missed';
+  reminderMinutesBefore: number;
+  scheduleReason?: string;
+  conflictLevel?: 'none' | 'low' | 'high';
+  loadTier?: 'low' | 'med' | 'high';
+  healthAdjustments?: string[];
+  userEdited?: boolean;                // locks against auto-recalc
+}
+
+export interface BriefAction {
+  // existing…
+  milestones?: ActionMilestone[];
+  milestonePlanSource?: 'auto' | 'user' | 'mixed';
+  schedulingPreferences?: Partial<SchedulingPreferences>;  // per-action override
+}
+```
+
+### UI changes
+
+- `SmartCommitSlot.tsx`: three toggle chips; editable date/time on every row; "edited" pill; "Reset to SMART" per row; "Why this time?" expander.
+- `LaunchSettings.tsx` → Scheduling section: three global toggles, disclaimer, per-layer notes.
+- Exports unchanged: render whatever the user committed to (auto or edited), with reason column when present.
+
+---
+
+## 2. Support Circle visibility + remote-record permission
+
+(Unchanged.)
+
+- New permission `permissions.can_request_recording: boolean`.
+- "Upcoming events {owner} may want recorded" card for members with `actions` permission.
+- **Remind {owner}** (always) and **Start recording on her behalf** (with permission).
+- Remote-start → `meeting_recordings` row for owner + `cross_device_notifications` + realtime banner with Take over / Let helper record / Cancel.
+- Owner gets a non-dismissable active-recording banner; `accountability_alerts` audit row on every remote start.
+- Helper's device captures audio (no cross-device streaming in MVP).
+
+### One migration
+
+```sql
+CREATE POLICY "Support members can start recordings with permission"
+ON public.meeting_recordings FOR INSERT TO authenticated
+WITH CHECK (
+  EXISTS (
+    SELECT 1 FROM public.support_circle_members scm
+    WHERE scm.user_id = meeting_recordings.user_id
+      AND scm.member_email = public.get_current_user_email()
+      AND scm.status = 'active'
+      AND COALESCE((scm.permissions ->> 'can_request_recording')::boolean, false) = true
+  )
+);
+
+CREATE POLICY "Support members can view owner calendar"
+ON public.calendar_events FOR SELECT TO authenticated
+USING (
+  EXISTS (
+    SELECT 1 FROM public.support_circle_members scm
+    WHERE scm.user_id = calendar_events.user_id
+      AND scm.member_email = public.get_current_user_email()
+      AND scm.status = 'active'
+      AND COALESCE((scm.permissions ->> 'actions')::boolean, false) = true
+  )
+);
+```
+
+---
+
+## 3. Locked from prior plans
+
+- Nav (5): Home · Capture · Commit · Support · Settings.
+- Trust strip: Edition badge · "Private by default · 30-day retention · Not a medical device."
+- `/start` route; `/` and `/mvp` redirect to `/start`.
+- `/prototype` kept with "Open MyRhythm for daily use" banner.
+- One Record FAB (`MemoryBridgeFloatingButton` with `quickStart`).
+- PWA manifest: `start_url: /launch/memory?quick=1` → 2 taps cold → recording.
+- Hidden from nav: Analytics, Roadmap, What's New, Vision, Feature Store, Goals dashboard, capability marketing, persona/stage switching, Founder financials.
+
+---
+
+## Acceptance criteria
+
+1. New tester finishes a capture brief in <4 min from `/start`.
+2. Each of the three scheduling toggles (Smart / Milestones / Health-aware) can be flipped globally **and** per-action; state persists.
+3. Turning SMART off leaves blank date/time fields the user fills manually; nothing else changes.
+4. Turning Milestones off leaves only start + due; the action saves cleanly.
+5. Turning Health-aware off makes SMART schedule with calendar + energy + preferences only (no health rules) — verifiable via reason chip.
+6. Every suggested date and time is directly editable; edits stick and are not overwritten by "Recalculate" unless confirmed.
+7. "Reset to SMART" on an edited row restores the recommendation.
+8. Settings has a clear disclaimer; no medical-claim language anywhere.
+9. Support member with `can_request_recording = true` starts a recording for the owner; owner gets realtime banner within 3s.
+10. Nav has exactly 5 items.
+
+## Files likely touched
+
+- `src/App.tsx` — `/start`, redirects.
+- `src/pages/launch/{LaunchStart,LaunchSettings,LaunchSupport}.tsx`.
+- `src/components/launch/{LaunchNav,LaunchLayout}.tsx`.
+- `src/components/memoryBridge/MemoryBridgeFloatingButton.tsx`.
+- `src/components/memoryBridge/capture-brief/model/{types.ts,milestones.ts (new),healthAwareScheduler.ts (new),scheduleActions.ts}`.
+- `src/components/memoryBridge/capture-brief/SmartCommitSlot.tsx` — toggle chips, inline editors, override pills.
+- `src/hooks/useSchedulingPreferences.ts` (new) — read/write the three toggles.
+- `src/utils/smartScheduler.ts` — accept `{ healthAware: boolean }` flag.
+- `src/components/support-circle/*` — upcoming-events card, permission toggle, active-recording banner.
+- `src/hooks/memoryBridge/useMemoryBridge.ts` — realtime `recording_started_remotely`.
+- `public/manifest.webmanifest` + `index.html`.
+- `src/routes/MemoryBridge.tsx` — read `?quick=1`.
+- One migration (two RLS policies above).
+
+## Out of scope
+
+- Native shells, lock-screen widgets, hot-word capture.
+- Cross-device live audio streaming.
+- Custom-domain TLS fix.
+- New symptom/sleep/medication logging UI (uses existing signals; missing signals silently no-op).
+- Visual redesign beyond a restraint pass.
+
+## Test today
+
+`https://myrhythmapp.lovable.app/launch/memory` — Capture → Actions → Decisions → Smart Commit already runs. Toggles, milestones, health-aware scheduling, remote record and PWA install land with this build.
