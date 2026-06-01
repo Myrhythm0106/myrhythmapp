@@ -54,6 +54,27 @@ export interface ActionScheduledState {
   calendarEventId?: string;
 }
 
+export interface ActionMilestone {
+  id: string;
+  label: string;
+  date: string;            // YYYY-MM-DD
+  time?: string;           // HH:mm
+  percentOfLeadTime: number;
+  status: 'pending' | 'done' | 'missed';
+  reminderMinutesBefore: number;
+  scheduleReason?: string;
+  conflictLevel?: 'none' | 'low' | 'high';
+  loadTier?: 'low' | 'med' | 'high';
+  healthAdjustments?: string[];
+  userEdited?: boolean;
+}
+
+export interface PerActionSchedulingOverride {
+  smartSchedulingEnabled?: boolean;
+  milestonesEnabled?: boolean;
+  healthAwareEnabled?: boolean;
+}
+
 export interface BriefAction {
   id: string;
   text: string;
@@ -73,7 +94,13 @@ export interface BriefAction {
   suggestions?: SchedulingSuggestion[];
   people?: PersonPick[];
   scheduled?: ActionScheduledState;
+
+  // Milestones + per-action overrides
+  milestones?: ActionMilestone[];
+  milestonePlanSource?: 'auto' | 'user' | 'mixed';
+  schedulingOverride?: PerActionSchedulingOverride;
 }
+
 
 export interface TranscriptTurn {
   speaker: string;
