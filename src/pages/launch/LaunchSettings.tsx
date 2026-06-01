@@ -18,8 +18,10 @@ import {
 import {
   Bell, Shield, Palette, Globe, Calendar, HardDrive,
   ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus, Download,
-  Sparkles, MessageCircle, ChevronRight
+  Sparkles, MessageCircle, ChevronRight, ListTree, HeartPulse,
 } from 'lucide-react';
+import { useSchedulingPreferences } from '@/hooks/useSchedulingPreferences';
+
 import { useNavigate } from 'react-router-dom';
 import { useCalendarIntegration } from '@/hooks/useCalendarIntegration';
 import { useAuth } from '@/hooks/useAuth';
@@ -39,6 +41,8 @@ export default function LaunchSettings() {
   const [exportConfirmOpen, setExportConfirmOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const { prefs: schedulingPrefs, update: updateScheduling } = useSchedulingPreferences();
+
 
   const handleConfirmExport = async () => {
     if (!user) {
