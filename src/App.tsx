@@ -132,6 +132,7 @@ import {
   LaunchClinicalBrief,
   LaunchVisionStatement,
   LaunchEditionAbout,
+  LaunchContinuity,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
@@ -402,6 +403,8 @@ function App() {
                        <Route path="/launch/clinical-brief" element={<LaunchModeProvider><LaunchClinicalBrief /></LaunchModeProvider>} />
                        <Route path="/launch/memory/result/:meetingId" element={<LaunchModeProvider><LaunchCaptureResult /></LaunchModeProvider>} />
                        <Route path="/launch/vision-statement" element={<LaunchModeProvider><LaunchVisionStatement /></LaunchModeProvider>} />
+                       <Route path="/launch/continuity" element={<LaunchModeProvider><LaunchContinuity /></LaunchModeProvider>} />
+                       
                        
                        {/* Founder-only financial dashboard — admin role required */}
                        <Route path="/founder/financials" element={<AdminRoute><FounderFinancialsPage /></AdminRoute>} />
