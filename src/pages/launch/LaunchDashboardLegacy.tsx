@@ -11,6 +11,8 @@ import { WinningWeekTracker } from '@/components/launch/WinningWeekTracker';
 import { MonthlyIChooseWidget } from '@/components/dashboard/hero/MonthlyIChooseWidget';
 import { EmpowermentSignature } from '@/components/shared/EmpowermentSignature';
 import { Target, ChevronRight } from 'lucide-react';
+import { ContinuityRail } from '@/launch/continuity/ContinuityRail';
+import { ReentryCard } from '@/launch/continuity/ReentryCard';
 
 export default function LaunchDashboard() {
   const navigate = useNavigate();
@@ -44,6 +46,12 @@ export default function LaunchDashboard() {
     <LaunchLayout>
       {/* App Tour Dialog */}
       <LaunchAppTour isOpen={showTour} onClose={handleTourClose} />
+
+      {/* Cognitive continuity rail — persists context across personas, time, and interruptions */}
+      <ContinuityRail className="mb-3" />
+
+      {/* Re-entry prompt after gaps */}
+      <ReentryCard className="mb-4" />
 
       {/* Empowering Hero Section */}
       <EmpoweringDashboardHero className="mb-6" />

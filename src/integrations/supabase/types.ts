@@ -435,6 +435,39 @@ export type Database = {
         }
         Relationships: []
       }
+      continuity_thread: {
+        Row: {
+          carry_forward: Json
+          created_at: string
+          id: string
+          persona: string
+          snapshot: Json
+          thread_date: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          carry_forward?: Json
+          created_at?: string
+          id?: string
+          persona: string
+          snapshot?: Json
+          thread_date?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          carry_forward?: Json
+          created_at?: string
+          id?: string
+          persona?: string
+          snapshot?: Json
+          thread_date?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversation_contexts: {
         Row: {
           communication_preferences: string | null
