@@ -1,206 +1,102 @@
-## Objective
+## Cognitive Continuity Layer — Three Connected Features
 
-Ship the MVP around one shareable testing link with a single headline flow:
-
-**Capture → Actions → Decisions → Smart Commit (optional milestones + optional health-aware SMART scheduling, always user-overridable) → Support Circle visibility & remote record.**
-
-Then stop building and start testing.
-
-## Shareable testing link
-
-`https://myrhythmapp.lovable.app/start` → 1-screen "Test in 4 minutes" → `/launch/home`.
+These features make MyRhythm explicitly support **sustained functioning across time, contexts, interruptions, and competing demands**. They're sequenced because each depends on the same underlying *continuity thread* data.
 
 ---
 
-## 1. Smart Commit — opt-in SMART + always overridable
+### Phase 1 — Cross-Persona Continuity Thread *(foundation)*
 
-### User control (new)
+A single rolling record that follows the user across Pathfinder / Anchor / Driver / Scholar modes so switching personas doesn't reset state.
 
-Three independent toggles, available **per action** AND as **global defaults** in Settings → Scheduling:
+**What it captures (per user, per day):**
+- Active persona at each moment of the day
+- Open commitments still in-flight (not yet calibrated)
+- Energy band, symptom flag (if logged), cognitive load reading
+- Last 3 wins, last 3 misses, last voice capture
+- "Carry-forward" items: anything the user explicitly marks "bring this with me"
 
-| Toggle | Default | What it does |
+**Where it shows up:**
+- New `ContinuityRail` strip at the top of `/launch/today` — one line: *"Coming from Anchor mode · 2 open commits · energy steady · Maya's appt in 90 min"*
+- Persona switcher (`SubjectSwitch`) shows a "carrying forward" preview before the swap so nothing feels lost.
+
+**Data:** new `continuity_thread` table (user_id, date, persona, snapshot jsonb, carry_forward jsonb). One row per persona-session per day; latest = source of truth for the rail.
+
+---
+
+### Phase 2 — Re-entry Step After Missed Days
+
+When the continuity thread detects a gap (≥2 days with no commits/check-ins, or a skipped key commitment), the app proposes the **smallest possible re-entry action** instead of resuming the full schedule.
+
+**Detection rules (additive, deterministic):**
+- ≥2 consecutive days with 0 commits → "Soft re-entry"
+- ≥5 days → "Reset re-entry" (offer to archive stale commits)
+- Missed clinical/anchor event → context-specific re-entry ("Reschedule Maya's OT — pick a window")
+
+**What the user sees:**
+- A single `ReentryCard` on `/launch/today` replacing the normal Smart Schedule until acknowledged
+- One CTA, one action, one energy badge — no list
+- Phrasing matches medical-disclaimer policy ("Let's start small — not catching up.")
+- Skipping the card never penalises; the rail just notes "Re-entry skipped".
+
+**No new table** — derived from `daily_actions` + `continuity_thread` + existing `extracted_actions`.
+
+---
+
+### Phase 3 — Continuity Summary Export
+
+Shareable snapshot for handoff to a new clinician, therapist, employer, or caregiver. **Not a medical record** — a *life-readiness* summary.
+
+**Contents (user picks what to include):**
+- Current vision + top 3 priorities
+- Last 14 days: energy pattern, commit-completion rate, top wins
+- Active support circle (names + roles, no contact details unless toggled)
+- Persona mix (e.g., "70% Pathfinder, 30% Driver this fortnight")
+- Open carry-forward items
+- Mandatory 3pt confidentiality footer (per existing Document Confidentiality Standard)
+- Explicit non-medical disclaimer on page 1
+
+**Two output formats:**
+- **PDF** (generated client-side, brand-aligned, A4) — for sharing
+- **JSON** — for portability / future provider directory matchmaking
+
+**Where it lives:** new `/launch/continuity` page + entry point from Launch Settings → "Share my continuity summary".
+
+---
+
+### Technical Section
+
+**New files:**
+- `src/launch/continuity/useContinuityThread.ts` — reads/writes `continuity_thread`, derives carry-forward
+- `src/launch/continuity/ContinuityRail.tsx` — rail on `/launch/today`
+- `src/launch/continuity/ReentryCard.tsx` — re-entry UI
+- `src/launch/continuity/reentryDetector.ts` — pure rules engine
+- `src/launch/continuity/summary/buildContinuitySummary.ts` — assembles the export payload
+- `src/launch/continuity/summary/ContinuitySummaryPdf.tsx` — react-pdf renderer
+- `src/pages/launch/LaunchContinuity.tsx` — page with preview + Export PDF / Download JSON
+
+**Edits:**
+- `src/launch/persona/SubjectSwitch.tsx` — carry-forward preview before swap
+- `src/pages/launch/LaunchSettings.tsx` — link to Continuity Summary
+- `src/App.tsx` — register `/launch/continuity` route
+
+**Migration:** one new table `continuity_thread` with RLS scoped to `auth.uid()`, plus `GRANT`s for `authenticated` and `service_role` (per public-schema grants rule).
+
+**Out of scope (intentionally):**
+- No new AI calls — derived from existing data
+- No edge functions — PDF built client-side
+- No changes to 4C loop, persona logic, or scheduling engine
+- No medical claims; disclaimer reused from existing policy
+
+---
+
+### Sequencing & size
+
+| Phase | Effort | Independently shippable? |
 |---|---|---|
-| **Auto-generate milestones** | ON | Builds the milestone ladder backwards from the due date. OFF = just start + due date, no sub-tasks. |
-| **SMART scheduling** | ON | Lets MyRhythm pick date/time using calendar + energy + health layers. OFF = blank slots, user picks everything. |
-| **Health-aware adjustments** | ON | Applies brain-health and overall-health rules (post-therapy buffer, low-sleep shift, med windows). OFF = SMART runs without health layer. |
+| 1 — Thread + Rail | Medium | Yes (rail-only is useful) |
+| 2 — Re-entry Card | Small | Needs Phase 1 |
+| 3 — Summary Export | Medium | Needs Phase 1 |
 
-Per-action UI on `SmartCommitSlot.tsx`:
+I'd ship Phase 1 first, validate the rail, then 2 and 3 in either order.
 
-```text
-[ Smart scheduling: ●ON  ] [ Milestones: ●ON ] [ Health-aware: ●ON ]   ⓘ
-```
-
-Tap any chip → toggles off for this action only. "Make this my default" link writes back to Settings.
-
-### Override on every suggested date/time
-
-Every milestone row and the parent Start/Due fields are **directly editable**:
-
-```text
-[●] First draft   [ Wed 10 Jun ▾ ]  [ 10:30 ▾ ]   🔔 1d ▾   ●ok
-                  ↑ tap = native date picker
-                                    ↑ tap = time picker
-```
-
-- Edited rows get a small "edited" pill and lock against auto-recalculation until the user taps "Reset to SMART".
-- "Recalculate from today" never overwrites edited rows unless the user confirms.
-- Any user-entered date/time bypasses the health layer with no warning beyond a soft hint chip ("outside your usual focus window") — never a block.
-
-### Milestone generation rules (only when "Milestones" is ON)
-
-```text
-lead = dueDate − today
-≥ 14d → 4 milestones at 25/50/75/90%
- 7–13d → 3 milestones at 33/66/90%
- 3–6d  → 2 milestones at 50/90%
- ≤ 2d  → 1 "Start now" + dueDate
-```
-
-Labels by action type (Deliverable, Decision, External meeting, Follow-up, Generic).
-
-### Health-aware SMART scheduling (only when both "SMART" and "Health-aware" are ON)
-
-Layered scorer; each layer can shift, downgrade, or reject a slot:
-
-1. Calendar conflicts (hard reject)
-2. `user_schedule_preferences` (most/least productive, unavailable)
-3. Energy windows (`useEnergyTracking`)
-4. **Brain-health:** post-clinical 2h buffer; symptom severity cap; 3-high-load/day cap; recovery-stage modifier
-5. **Overall health:** `<6h` sleep → +90min shift + lower load; med windows blocked; clinical pre/post buffers
-6. SMART preferences (preferred start, max sessions/day, min break)
-
-User-facing reason chips ("Strong-focus window, post-therapy buffer respected"). Never medical language. Settings disclaimer: *"MyRhythm uses your logged signals to suggest timing. It does not diagnose, treat, or replace clinical advice."*
-
-### Data model
-
-```ts
-export interface SchedulingPreferences {
-  smartSchedulingEnabled: boolean;     // default true
-  milestonesEnabled: boolean;          // default true
-  healthAwareEnabled: boolean;         // default true
-}
-
-export interface ActionMilestone {
-  id: string;
-  label: string;
-  date: string;
-  time?: string;
-  percentOfLeadTime: number;
-  status: 'pending' | 'done' | 'missed';
-  reminderMinutesBefore: number;
-  scheduleReason?: string;
-  conflictLevel?: 'none' | 'low' | 'high';
-  loadTier?: 'low' | 'med' | 'high';
-  healthAdjustments?: string[];
-  userEdited?: boolean;                // locks against auto-recalc
-}
-
-export interface BriefAction {
-  // existing…
-  milestones?: ActionMilestone[];
-  milestonePlanSource?: 'auto' | 'user' | 'mixed';
-  schedulingPreferences?: Partial<SchedulingPreferences>;  // per-action override
-}
-```
-
-### UI changes
-
-- `SmartCommitSlot.tsx`: three toggle chips; editable date/time on every row; "edited" pill; "Reset to SMART" per row; "Why this time?" expander.
-- `LaunchSettings.tsx` → Scheduling section: three global toggles, disclaimer, per-layer notes.
-- Exports unchanged: render whatever the user committed to (auto or edited), with reason column when present.
-
----
-
-## 2. Support Circle visibility + remote-record permission
-
-(Unchanged.)
-
-- New permission `permissions.can_request_recording: boolean`.
-- "Upcoming events {owner} may want recorded" card for members with `actions` permission.
-- **Remind {owner}** (always) and **Start recording on her behalf** (with permission).
-- Remote-start → `meeting_recordings` row for owner + `cross_device_notifications` + realtime banner with Take over / Let helper record / Cancel.
-- Owner gets a non-dismissable active-recording banner; `accountability_alerts` audit row on every remote start.
-- Helper's device captures audio (no cross-device streaming in MVP).
-
-### One migration
-
-```sql
-CREATE POLICY "Support members can start recordings with permission"
-ON public.meeting_recordings FOR INSERT TO authenticated
-WITH CHECK (
-  EXISTS (
-    SELECT 1 FROM public.support_circle_members scm
-    WHERE scm.user_id = meeting_recordings.user_id
-      AND scm.member_email = public.get_current_user_email()
-      AND scm.status = 'active'
-      AND COALESCE((scm.permissions ->> 'can_request_recording')::boolean, false) = true
-  )
-);
-
-CREATE POLICY "Support members can view owner calendar"
-ON public.calendar_events FOR SELECT TO authenticated
-USING (
-  EXISTS (
-    SELECT 1 FROM public.support_circle_members scm
-    WHERE scm.user_id = calendar_events.user_id
-      AND scm.member_email = public.get_current_user_email()
-      AND scm.status = 'active'
-      AND COALESCE((scm.permissions ->> 'actions')::boolean, false) = true
-  )
-);
-```
-
----
-
-## 3. Locked from prior plans
-
-- Nav (5): Home · Capture · Commit · Support · Settings.
-- Trust strip: Edition badge · "Private by default · 30-day retention · Not a medical device."
-- `/start` route; `/` and `/mvp` redirect to `/start`.
-- `/prototype` kept with "Open MyRhythm for daily use" banner.
-- One Record FAB (`MemoryBridgeFloatingButton` with `quickStart`).
-- PWA manifest: `start_url: /launch/memory?quick=1` → 2 taps cold → recording.
-- Hidden from nav: Analytics, Roadmap, What's New, Vision, Feature Store, Goals dashboard, capability marketing, persona/stage switching, Founder financials.
-
----
-
-## Acceptance criteria
-
-1. New tester finishes a capture brief in <4 min from `/start`.
-2. Each of the three scheduling toggles (Smart / Milestones / Health-aware) can be flipped globally **and** per-action; state persists.
-3. Turning SMART off leaves blank date/time fields the user fills manually; nothing else changes.
-4. Turning Milestones off leaves only start + due; the action saves cleanly.
-5. Turning Health-aware off makes SMART schedule with calendar + energy + preferences only (no health rules) — verifiable via reason chip.
-6. Every suggested date and time is directly editable; edits stick and are not overwritten by "Recalculate" unless confirmed.
-7. "Reset to SMART" on an edited row restores the recommendation.
-8. Settings has a clear disclaimer; no medical-claim language anywhere.
-9. Support member with `can_request_recording = true` starts a recording for the owner; owner gets realtime banner within 3s.
-10. Nav has exactly 5 items.
-
-## Files likely touched
-
-- `src/App.tsx` — `/start`, redirects.
-- `src/pages/launch/{LaunchStart,LaunchSettings,LaunchSupport}.tsx`.
-- `src/components/launch/{LaunchNav,LaunchLayout}.tsx`.
-- `src/components/memoryBridge/MemoryBridgeFloatingButton.tsx`.
-- `src/components/memoryBridge/capture-brief/model/{types.ts,milestones.ts (new),healthAwareScheduler.ts (new),scheduleActions.ts}`.
-- `src/components/memoryBridge/capture-brief/SmartCommitSlot.tsx` — toggle chips, inline editors, override pills.
-- `src/hooks/useSchedulingPreferences.ts` (new) — read/write the three toggles.
-- `src/utils/smartScheduler.ts` — accept `{ healthAware: boolean }` flag.
-- `src/components/support-circle/*` — upcoming-events card, permission toggle, active-recording banner.
-- `src/hooks/memoryBridge/useMemoryBridge.ts` — realtime `recording_started_remotely`.
-- `public/manifest.webmanifest` + `index.html`.
-- `src/routes/MemoryBridge.tsx` — read `?quick=1`.
-- One migration (two RLS policies above).
-
-## Out of scope
-
-- Native shells, lock-screen widgets, hot-word capture.
-- Cross-device live audio streaming.
-- Custom-domain TLS fix.
-- New symptom/sleep/medication logging UI (uses existing signals; missing signals silently no-op).
-- Visual redesign beyond a restraint pass.
-
-## Test today
-
-`https://myrhythmapp.lovable.app/launch/memory` — Capture → Actions → Decisions → Smart Commit already runs. Toggles, milestones, health-aware scheduling, remote record and PWA install land with this build.
+Approve to start with **Phase 1** (or tell me to bundle all three).
