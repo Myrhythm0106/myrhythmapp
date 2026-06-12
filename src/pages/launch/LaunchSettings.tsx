@@ -18,7 +18,7 @@ import {
 import {
   Bell, Shield, Palette, Globe, Calendar, HardDrive,
   ChevronLeft, Trash2, RefreshCw, CheckCircle2, Loader2, Plus, Download,
-  Sparkles, MessageCircle, ChevronRight, ListTree, HeartPulse,
+  Sparkles, MessageCircle, ChevronRight, ListTree, HeartPulse, Activity,
 } from 'lucide-react';
 import { useSchedulingPreferences } from '@/hooks/useSchedulingPreferences';
 
@@ -109,6 +109,23 @@ export default function LaunchSettings() {
               <p className="text-xs text-gray-500">
                 {EDITION_SHORT} · {EDITION_VERSION} — what's live and what's coming
               </p>
+            </div>
+            <ChevronRight className="h-5 w-5 text-gray-400" />
+          </button>
+        </LaunchCard>
+
+        {/* Continuity summary */}
+        <LaunchCard>
+          <button
+            onClick={() => navigate('/launch/continuity')}
+            className="w-full flex items-center gap-3 text-left min-h-[56px]"
+          >
+            <div className="w-10 h-10 rounded-xl bg-brain-health-100 flex items-center justify-center">
+              <Activity className="h-5 w-5 text-brain-health-700" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-gray-900">Share my continuity summary</h3>
+              <p className="text-xs text-gray-500">A life-readiness snapshot for a new clinician, employer, or caregiver</p>
             </div>
             <ChevronRight className="h-5 w-5 text-gray-400" />
           </button>
