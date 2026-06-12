@@ -56,7 +56,7 @@ export function ReentryCard({ className, missedAnchorTitle = null }: Props) {
           </div>
           <p className="text-sm text-gray-600 mt-1">{decision.body}</p>
           <div className="mt-3 flex items-center gap-2">
-            <LaunchButton onClick={handleAccept} size="sm" className="min-h-[44px]">
+            <LaunchButton onClick={handleAccept} className="min-h-[44px]">
               {decision.ctaLabel}
             </LaunchButton>
             <button
