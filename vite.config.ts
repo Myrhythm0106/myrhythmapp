@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => ({
       },
     },
     chunkSizeWarningLimit: 1000,
-    sourcemap: mode === 'development',
+    sourcemap: false,
   },
   optimizeDeps: {
     include: [
