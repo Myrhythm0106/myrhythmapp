@@ -1,102 +1,99 @@
-## Cognitive Continuity Layer — Three Connected Features
+# MyRhythm User Guide — Founder's Edition (Quick Start + Full Manual)
 
-These features make MyRhythm explicitly support **sustained functioning across time, contexts, interruptions, and competing demands**. They're sequenced because each depends on the same underlying *continuity thread* data.
+A commercial-grade user guide for Founding Edition (v0.1) buyers, written from the founder's voice. Delivered as PDF + DOCX, with a tiered structure: a short Quick Start booklet and a longer Full Manual. Designed to evolve quickly as feedback arrives.
 
----
+## Deliverables
 
-### Phase 1 — Cross-Persona Continuity Thread *(foundation)*
+Four files in `/mnt/documents/`:
 
-A single rolling record that follows the user across Pathfinder / Anchor / Driver / Scholar modes so switching personas doesn't reset state.
+1. `MyRhythm_QuickStart_FoundersEdition_v1.pdf`
+2. `MyRhythm_QuickStart_FoundersEdition_v1.docx`
+3. `MyRhythm_UserManual_FoundersEdition_v1.pdf`
+4. `MyRhythm_UserManual_FoundersEdition_v1.docx`
 
-**What it captures (per user, per day):**
-- Active persona at each moment of the day
-- Open commitments still in-flight (not yet calibrated)
-- Energy band, symptom flag (if logged), cognitive load reading
-- Last 3 wins, last 3 misses, last voice capture
-- "Carry-forward" items: anything the user explicitly marks "bring this with me"
+All four carry the standard 3pt confidentiality footer and the medical disclaimer block.
 
-**Where it shows up:**
-- New `ContinuityRail` strip at the top of `/launch/today` — one line: *"Coming from Anchor mode · 2 open commits · energy steady · Maya's appt in 90 min"*
-- Persona switcher (`SubjectSwitch`) shows a "carrying forward" preview before the swap so nothing feels lost.
+## Voice and framing (founder's perspective)
 
-**Data:** new `continuity_thread` table (user_id, date, persona, snapshot jsonb, carry_forward jsonb). One row per persona-session per day; latest = source of truth for the rail.
+- First-person founder voice ("I built this because…", "Here's what works today, here's what's coming").
+- Honest about v0.1 — what's polished, what's rough, what's intentionally minimal.
+- Treats the reader as a co-builder. Every section ends with a "Tell me what's broken" prompt and the feedback channel.
+- No medical claims. Explicit disclaimer: MyRhythm does not diagnose, treat, or fix any condition.
+- All personas addressed equally, with a short "Read this first if you are a…" matrix up front (Survivor, Caregiver, Clinician, Executive, Student, Long COVID, MS, ADHD, Post-Recovery).
 
----
+## Quick Start booklet (≈18 pages)
 
-### Phase 2 — Re-entry Step After Missed Days
+1. Welcome from the founder — why this exists, the Discharge Cliff, the Clinical-Ready vs Life-Ready Gap.
+2. What you bought — Founding Edition v0.1 promise.
+3. Read this first if you are a… (persona matrix, 1 page).
+4. The 30-minute first run — Sign in → Energy Check → Pick a persona → Capture one thing → Commit one thing.
+5. The 4C loop in plain language — Capture, Commit, Calibrate, Celebrate.
+6. The Continuity layer — why returning users see a Re-entry card, what carry-forward means.
+7. Your daily 5 minutes — the smallest viable routine.
+8. Safety, privacy, disclaimers.
+9. How to send feedback (and what I'll do with it).
 
-When the continuity thread detects a gap (≥2 days with no commits/check-ins, or a skipped key commitment), the app proposes the **smallest possible re-entry action** instead of resuming the full schedule.
+## Full Manual (≈55 pages)
 
-**Detection rules (additive, deterministic):**
-- ≥2 consecutive days with 0 commits → "Soft re-entry"
-- ≥5 days → "Reset re-entry" (offer to archive stale commits)
-- Missed clinical/anchor event → context-specific re-entry ("Reschedule Maya's OT — pick a window")
+Section A — Foundations
+- Founder's letter (longer version).
+- The thesis: Discharge Cliff, Life-Readiness Gap, Bridge Pathway.
+- The MYRHYTHM framework (8 clusters → Smart Scheduling).
+- Glass-morphism UI conventions, 3-options-max rule, 56px touch targets.
 
-**What the user sees:**
-- A single `ReentryCard` on `/launch/today` replacing the normal Smart Schedule until acknowledged
-- One CTA, one action, one energy badge — no list
-- Phrasing matches medical-disclaimer policy ("Let's start small — not catching up.")
-- Skipping the card never penalises; the rail just notes "Re-entry skipped".
+Section B — Getting in
+- Account, MFA, security settings.
+- Persona selection and the 9 onboarding flows.
+- Assessment system (per persona) and what the score means (and does not mean).
+- Vision Board (5 pillars, quadrant export 9:16).
 
-**No new table** — derived from `daily_actions` + `continuity_thread` + existing `extracted_actions`.
+Section C — Daily use (the 4C loop, screen by screen)
+- Capture (voice + text, 30-day retention, 5/25 day reminders).
+- Commit (Smart Schedule cards, energy badges, auto-suggested invites).
+- Calibrate (energy check, adjustments).
+- Celebrate (wins, gratitude, streaks — without gamification pressure).
 
----
+Section D — Cognitive Continuity layer
+- Continuity Rail (persona, energy, open commits).
+- Re-entry card rules (2–4 days soft, 5+ reset).
+- Continuity Summary export (PDF + JSON) for handoff.
+- Subject Switch carry-forward preview.
 
-### Phase 3 — Continuity Summary Export
+Section E — People and support
+- Support Circle vs Contact List.
+- Calendar invitations and SMART showup fuzzy-matching.
+- Memory Bridge assistant-first flow.
 
-Shareable snapshot for handoff to a new clinician, therapist, employer, or caregiver. **Not a medical record** — a *life-readiness* summary.
+Section F — Integrations and settings
+- Google Calendar and Outlook sync.
+- Timezone, voice retention, notification cadence.
+- Data export (GDPR), account deletion.
 
-**Contents (user picks what to include):**
-- Current vision + top 3 priorities
-- Last 14 days: energy pattern, commit-completion rate, top wins
-- Active support circle (names + roles, no contact details unless toggled)
-- Persona mix (e.g., "70% Pathfinder, 30% Driver this fortnight")
-- Open carry-forward items
-- Mandatory 3pt confidentiality footer (per existing Document Confidentiality Standard)
-- Explicit non-medical disclaimer on page 1
+Section G — Personas in depth
+- One short chapter each: Brain Injury (foundation), Caregiver, Clinician, Executive, Student, Long COVID, MS, ADHD, Post-Recovery.
+- For each: what to ignore in v0.1, what to lean on, one sample week.
 
-**Two output formats:**
-- **PDF** (generated client-side, brand-aligned, A4) — for sharing
-- **JSON** — for portability / future provider directory matchmaking
+Section H — Founder's notes
+- What's in v0.1, what's deferred, why.
+- Roadmap snapshot (anchored to 28 Apr 2026).
+- How to file feedback into `founding_feedback`.
+- Confidentiality and medical disclaimer (full text).
 
-**Where it lives:** new `/launch/continuity` page + entry point from Launch Settings → "Share my continuity summary".
+## Production approach (technical, for your reference)
 
----
+- Build with the `docx` skill via Node + `docx-js` to generate the DOCX masters, then convert to PDF with LibreOffice (`run_libreoffice.py --convert-to pdf`).
+- US Letter, 1" margins, Arial body 12pt, Calibri/Arial Black headers, brand-orange accent for H1, semantic heading styles so the TOC works.
+- Standard 3pt confidentiality footer per the Document Confidentiality Standard memory; EditionBadge "Founding Edition v0.1" on the cover.
+- No live screenshots in v1 (the UI will shift fast); use simple labeled flow diagrams and screen-frame placeholders described in text.
+- Visual QA: render each page to JPEG via `pdftoppm` and inspect before delivery; fix overflow/contrast issues; re-render.
+- Files versioned `_v1`; future revisions become `_v2`, `_v3` so you can compare.
 
-### Technical Section
+## Out of scope (v1)
 
-**New files:**
-- `src/launch/continuity/useContinuityThread.ts` — reads/writes `continuity_thread`, derives carry-forward
-- `src/launch/continuity/ContinuityRail.tsx` — rail on `/launch/today`
-- `src/launch/continuity/ReentryCard.tsx` — re-entry UI
-- `src/launch/continuity/reentryDetector.ts` — pure rules engine
-- `src/launch/continuity/summary/buildContinuitySummary.ts` — assembles the export payload
-- `src/launch/continuity/summary/ContinuitySummaryPdf.tsx` — react-pdf renderer
-- `src/pages/launch/LaunchContinuity.tsx` — page with preview + Export PDF / Download JSON
+- No in-app `/launch/user-guide` route (you chose PDF + DOCX).
+- No screenshots, no video, no translations.
+- No changes to app code, schema, routes, or features.
 
-**Edits:**
-- `src/launch/persona/SubjectSwitch.tsx` — carry-forward preview before swap
-- `src/pages/launch/LaunchSettings.tsx` — link to Continuity Summary
-- `src/App.tsx` — register `/launch/continuity` route
+## Open question I'll assume unless you say otherwise
 
-**Migration:** one new table `continuity_thread` with RLS scoped to `auth.uid()`, plus `GRANT`s for `authenticated` and `service_role` (per public-schema grants rule).
-
-**Out of scope (intentionally):**
-- No new AI calls — derived from existing data
-- No edge functions — PDF built client-side
-- No changes to 4C loop, persona logic, or scheduling engine
-- No medical claims; disclaimer reused from existing policy
-
----
-
-### Sequencing & size
-
-| Phase | Effort | Independently shippable? |
-|---|---|---|
-| 1 — Thread + Rail | Medium | Yes (rail-only is useful) |
-| 2 — Re-entry Card | Small | Needs Phase 1 |
-| 3 — Summary Export | Medium | Needs Phase 1 |
-
-I'd ship Phase 1 first, validate the rail, then 2 and 3 in either order.
-
-Approve to start with **Phase 1** (or tell me to bundle all three).
+I'll write the founder's voice as **yours** (first person, "I"), signed simply "— The Founder, MyRhythm". If you want a specific name, byline, photo, or signature block on the cover, tell me before I build.
