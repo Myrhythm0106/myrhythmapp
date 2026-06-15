@@ -23,13 +23,8 @@ export function MVPCore4C() {
   
   const [heroEmail, setHeroEmail] = useState('');
 
-  // Auto-redirect logged-in users into the Launch home, unless they explicitly
-  // open the story page at /launch/landingpage (presentation mode for authed users).
-  useEffect(() => {
-    if (user && window.location.pathname !== '/launch/landingpage') {
-      navigate('/launch/home', { replace: true });
-    }
-  }, [user, navigate]);
+
+
 
   const handleHeroEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
