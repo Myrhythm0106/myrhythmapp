@@ -12,6 +12,7 @@ import { useDeleteConfirmation } from '@/hooks/useDeleteConfirmation';
 import { DeleteConfirmationDialog } from '@/components/ui/DeleteConfirmationDialog';
 import { VoiceRecordingACTs } from './VoiceRecordingACTs';
 import { VoiceRecording } from '@/types/voiceRecording';
+import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
