@@ -12,6 +12,7 @@ import { useDeleteConfirmation } from '@/hooks/useDeleteConfirmation';
 import { DeleteConfirmationDialog } from '@/components/ui/DeleteConfirmationDialog';
 import { VoiceRecordingACTs } from './VoiceRecordingACTs';
 import { VoiceRecording } from '@/types/voiceRecording';
+import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
 import { formatDistanceToNow } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -265,7 +266,12 @@ export function VoiceRecordingsList() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2 flex-wrap">
-                          <h3 className="font-medium">{recording.title}</h3>
+                          <CaptureTitleEditor
+                            recordingId={recording.id}
+                            title={recording.title}
+                            shortId={(recording as any).short_id ?? null}
+                            onSaved={() => fetchRecordings()}
+                          />
                           <Badge
                             variant="outline"
                             className={getCategoryColor(recording.category)}

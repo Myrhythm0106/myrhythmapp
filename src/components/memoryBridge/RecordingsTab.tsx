@@ -19,6 +19,7 @@ import {
   Eye
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
 
 interface RecordingsTabProps {
   onProcessComplete?: (meetingId: string, actionsCount: number) => void;
@@ -148,7 +149,13 @@ export function RecordingsTab({ onProcessComplete }: RecordingsTabProps) {
                       </div>
                       
                       <div className="flex-1 min-w-0">
-                        <h4 className="font-medium truncate">{recording.title}</h4>
+                        <CaptureTitleEditor
+                          recordingId={recording.id}
+                          title={recording.title}
+                          shortId={(recording as any).short_id ?? null}
+                          titleClassName="font-medium"
+                          onSaved={() => fetchRecordings()}
+                        />
                         {recording.description && (
                           <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
                             {recording.description}
