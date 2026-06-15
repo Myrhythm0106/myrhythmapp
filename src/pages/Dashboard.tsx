@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { SidebarProvider } from "@/components/layout/Sidebar/SidebarContext";
@@ -18,7 +18,7 @@ import { TodaysViewDashboard } from "@/components/dashboard/TodaysViewDashboard"
 import { ConnectionMoments } from "@/components/ecosystem/ConnectionMoments";
 import { ReportsWidget } from "@/components/dashboard/widgets/ReportsWidget";
 import { BackButton } from "@/components/ui/BackButton";
-import CalendarPage from "./CalendarPage";
+const CalendarPage = lazy(() => import("./CalendarPage"));
 import GoalsPage from "./GoalsPage";
 import GratitudePage from "./GratitudePage";
 import AnalyticsPage from "./AnalyticsPage";
@@ -69,7 +69,9 @@ const Dashboard = () => {
               case '/calendar':
                 return (
                   <DailyActionsProvider>
-                    <CalendarPage />
+                    <Suspense fallback={<div className="p-8 text-center text-muted-foreground">Loading calendar…</div>}>
+                      <CalendarPage />
+                    </Suspense>
                   </DailyActionsProvider>
                 );
               case '/goals':
