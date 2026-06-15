@@ -19,6 +19,7 @@ import {
   Eye
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { CaptureTitleEditor } from '@/components/capture/CaptureTitleEditor';
 
 interface RecordingsTabProps {
   onProcessComplete?: (meetingId: string, actionsCount: number) => void;
