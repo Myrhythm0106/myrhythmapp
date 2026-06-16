@@ -991,8 +991,40 @@ function Slide20() {
   );
 }
 
+/* ─── SLIDE 21: THE PROBLEM, BY THE NUMBERS (BRIDGE) ─── */
+function Slide21() {
+  const truths = [
+    { stat: "50%", label: "of a conversation lost within the hour", gap: "Memory continuity gap" },
+    { stat: "35,000", label: "decisions per day for the average adult", gap: "Cognitive load / overwhelm" },
+    { stat: "92%", label: "of personal goals never reach completion", gap: "Vision-to-action gap" },
+  ];
+  return (
+    <Slide bg="#0a0a0f">
+      <div className="flex-1 flex flex-col justify-center px-[160px]" style={{ color: "white" }}>
+        <SectionLabel>The Problem, By The Numbers</SectionLabel>
+        <h2 className="mt-[24px] text-[60px] font-bold leading-[1.1]">
+          Three shared human truths.<br />
+          <span style={{ color: "#f97316" }}>One bridge.</span>
+        </h2>
+        <div className="mt-[80px] grid grid-cols-3 gap-[60px]">
+          {truths.map((t) => (
+            <div key={t.gap}>
+              <div className="text-[88px] font-black leading-none" style={{ color: "#f97316" }}>{t.stat}</div>
+              <div className="mt-[16px] text-[22px]" style={{ color: "rgba(255,255,255,0.8)" }}>{t.label}</div>
+              <div className="mt-[20px] text-[16px] font-semibold uppercase tracking-widest" style={{ color: "#a855f7" }}>{t.gap}</div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-[80px] text-[32px] font-light italic" style={{ color: "rgba(255,255,255,0.7)" }}>
+          MyRhythm is the bridge across all three.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
 /* ─── SLIDE RENDERER ─── */
-const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19, Slide20];
+const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19, Slide20, Slide21];
 
 export function InvestorSlides({ currentSlide }: { currentSlide: number }) {
   const SlideComponent = slides[currentSlide] || Slide01;
