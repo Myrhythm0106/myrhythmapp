@@ -48,6 +48,18 @@ const SECTIONS: EvidenceSection[] = [
       "Every task you see today traces back to something that matters. Every win is celebrated through the Capture \u2192 Commit \u2192 Calibrate \u2192 Celebrate loop.",
     featureHref: "/launch/goals",
   },
+  {
+    problem: "Doing it alone is the hardest part.",
+    stat: "2\u20133\u00d7",
+    caption: "more likely to follow through when a plan is visible to a trusted person",
+    frame:
+      "Isolation and invisible effort hurt recovery \u2014 and they hurt anyone trying to keep a hard week on track. When the people who care can see the plan, follow-through stops depending on willpower alone. Around 65% of brain injury survivors report loneliness, and ~40% of caregivers say they don\u2019t know what would actually help.",
+    source: "Behavioural follow-through, post-injury loneliness, and caregiver uncertainty figures [citations to be confirmed]",
+    featureTitle: "Support Circle + Shared Calendar",
+    featureBlurb:
+      "Invite family, friends or clinicians into a permissioned view of your plan. Shared calendar invites and gentle nudges turn good intentions into kept commitments \u2014 without handing over control.",
+    featureHref: "/launch/support-circle",
+  },
 ];
 
 export default function LaunchScience() {

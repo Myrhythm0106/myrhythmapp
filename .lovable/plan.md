@@ -1,100 +1,84 @@
-Three coordinated surfaces, one truth — empathy on the app, evidence in the science page, market-sizing in the deck.
+# Plan v50 — /launch upgrade with universal framing
 
----
+Builds on v49, but widens the scope so `/launch` lands the differentiator AND signals "this is for anyone whose life feels heavier than their plan."
 
-## 1. Rewrite the three shift cards in `src/components/mvp/MVPCore4C.tsx` (lines 198-215)
+## Guiding principle (new, addresses your concern)
 
-Replace stat-led problem titles with **generic, empathetic problem statements** + the orange italic "One..." tagline. No numbers on the card face.
+The page must read as **"built rigorously for brain injury and memory recovery — and that's exactly why it works for anyone juggling a heavy life."** No persona gating on the surface. The clinical depth becomes a *quality signal*, not a *gatekeeper*.
 
-### Card 01 — Memory
-- **Problem (h3):** `Conversations fade faster than they should.`
-- **Tagline (orange italic):** `One conversation/memory you can always find`
-- **Body:** unchanged ("Memory Bridge listens so you don't have to...")
+Voice rules applied everywhere on `/launch`:
+- Lead with a universal human moment (overwhelm, dropped plans, isolation, invisible effort).
+- Name brain injury / memory recovery as the **proving ground**, not the **audience filter**.
+- Use inclusive phrasing: "anyone carrying a lot," "anyone whose responsibilities outrun their energy," "built for recovery, useful for real life."
+- Evidence and clinical rigor sit one layer deeper (Science page, deck), not in the headline.
+- **No unverified claims.** Clinician involvement is not claimed anywhere on `/launch`.
 
-### Card 02 — Overwhelm
-- **Problem (h3):** `Some days, choosing what to do next is the hardest part.`
-- **Tagline (orange italic):** `One calm next step defined daily`
-- **Body:** unchanged ("A quick Energy Check tunes the day...")
+## A. Differentiator line above the cards (new)
 
-### Card 03 — Vision to Action
-- **Problem (h3):** `Goals that matter often never reach today.`
-- **Tagline (orange italic):** `One thread from dream to today`
-- **Body:** unchanged ("Vision → Goals → Priorities → Daily Actions...")
+Single short block above the shift cards on `MVPCore4C.tsx`:
 
-### Quiet evidence link below the grid
-Under the 3-card grid, add a single understated line, centered:
-`The evidence behind this →` linking to `/launch/science`.
-Styling: `text-sm text-brain-health-600 hover:text-brand-orange-500 underline-offset-4 hover:underline`.
+- Eyebrow: `Built for the discharge cliff. Useful for anyone carrying a lot.`
+- Headline: `The gap between clinically ready and life-ready is where people fall.`
+- Sub: `MyRhythm was built to close that gap for brain injury and memory recovery — and the same three shifts help anyone whose responsibilities outrun their energy.`
 
-### Styling reminders
-- Problem `h3` keeps `text-lg font-bold text-brain-health-900`.
-- Tagline: `text-base font-semibold italic text-brand-orange-500 mb-2`, placed between h3 and body.
-- No other layout/spacing/color changes.
+This names the thesis (Discharge Cliff / Clinical-Ready vs Life-Ready) without making non-clinical users feel excluded.
 
----
+## B. Four shift cards, reordered (revised from v49)
 
-## 2. New page: `src/pages/launch/LaunchScience.tsx` (route `/launch/science`)
+Grid becomes `md:grid-cols-2 lg:grid-cols-4`. New order so accountability reframes the rest:
 
-A calm, evidence-led page that holds the stats removed from the cards. Three sections mirroring the three cards, each with:
-- Section title (the generic problem from the card)
-- Stat block (large numeral + 1-line caption)
-- 2-3 sentence plain-language explanation, framed as a shared human challenge — never as the user's deficit
-- Citation footnote (study / source name; we'll mark `[citation needed]` where we don't yet have a verified source so the user can fill in)
-- A small "What MyRhythm does about it" panel that points back to the matching feature
+1. **Memory Bridge** — existing copy, lightly softened so it reads for "anyone who loses the thread," not only post-injury.
+2. **You're never alone** *(new — moved from card 4 to card 2)*
+   - Problem: `The people who care often don't know how to help.`
+   - Tagline (brand-orange-500 italic): `Family, friends, clinicians — in the loop, on the day.`
+   - Icon: `Users`
+   - Micro-line: `Whether you're recovering, caregiving, or just stretched thin — a shared calendar means follow-through stops depending on willpower alone.`
+3. **Energy Check** — existing copy, light tweak to universal language.
+4. **Vision → Daily** — existing copy, light tweak.
 
-### Stat content per section
+Quiet evidence link (`See the evidence →` to `/launch/science`) stays under the grid.
 
-**Section 1 — Conversations fade faster than they should**
-- Stat: `~50%` lost within an hour
-- Frame: the forgetting curve is universal; brain injury and cognitive overload steepen it. The cost isn't the forgetting itself — it's the names, promises and next steps that go with it.
-- Source placeholder: Ebbinghaus forgetting curve research [citation to be confirmed]
-- Feature link: Memory Bridge
+Note: this is a marketing grid, not a decision screen — the "max 3 options" rule doesn't apply.
 
-**Section 2 — Some days, choosing what to do next is the hardest part**
-- Stat: `~35,000` decisions per day (commonly cited figure for adults)
-- Frame: every decision spends energy. After brain injury, the energy budget is smaller and every choice costs more — so "what next?" can be the heaviest question on the list.
-- Source placeholder: Cornell / decision fatigue research [citation to be confirmed]
-- Feature link: Energy Check + Smart Schedule
+## C. Trust strip below the grid (new, thin, honest)
 
-**Section 3 — Goals that matter often never reach today**
-- Stat: `~92%` of personal goals never reach completion (commonly cited Statistic Brain figure)
-- Frame: the will is there. The bridge between vision and today's action is what's missing — for everyone, and especially when cognitive load is high.
-- Source placeholder: goal-completion research [citation to be confirmed]
-- Feature link: Vision → Goals → Priorities → Daily Actions
+One row, low-visual-weight. Two items only — no unverified claims:
+- `Founding Edition` badge (existing `EditionBadge`).
+- `For recovery. For caregivers. For anyone carrying a lot.` ← the inclusivity signal in plain sight.
 
-### Page chrome
-- Header: `The evidence behind MyRhythm`
-- Subhead: `These are shared human challenges — not personal failings. Here's the research, and what we do about it.`
-- Medical disclaimer footer (per project policy): "MyRhythm does not diagnose, treat, or cure any condition."
-- Document confidentiality 3pt footer per project standard.
+No "built with clinicians," no "clinical input," no fake testimonials. Placeholders are honest, not fabricated.
 
-### Wire up
-- Add route in the router (find where other `/launch/*` routes are registered, add `science` route pointing at `LaunchScience`).
-- Add export in `src/pages/launch/index.ts`.
+## D. Science page — 4th section (from v49, framing tightened)
 
----
+`LaunchScience.tsx` gets a new section:
+- Generic problem: `Doing it alone is the hardest part.`
+- Universal lead sentence: `Isolation and invisible effort hurt recovery — and they hurt anyone trying to keep a hard week on track.`
+- Three placeholder stats with `[citation pending]`: ~65% loneliness, 2–3× follow-through with visibility, ~40% caregivers don't know what would help.
+- "What MyRhythm does about it" panel: Support Circle, shared calendar invites, permissioned views, gentle nudges.
+- Medical disclaimer + confidentiality footer unchanged.
 
-## 3. Investor deck update — `src/pages/InvestorDeckPage.tsx`
+## E. Investor deck — Slide 22 (from v49, unchanged)
 
-Add (or update if a problem slide exists) a **"The problem, by the numbers"** slide using the stat-led voice — same three truths, framed for investors:
-- `50% of a conversation lost within the hour` → memory continuity gap
-- `35,000 decisions per day` → cognitive load / overwhelm market
-- `92% of personal goals never completed` → vision-to-action gap
-- Closing line: `MyRhythm is the bridge across all three.`
+`InvestorSlides.tsx` + `InvestorDeckPage.tsx`:
+- "Accountability is the moat" — stat-led.
+- Headline: `2–3× follow-through` when plans are visible to a trusted person.
+- Bullets: caregiver burnout, clinician handoff failures, isolation as relapse driver.
+- Positioning: competitors solve cognition in isolation; MyRhythm extends the loop to family, friends, clinicians with permissioned calendar visibility.
+- `TOTAL_SLIDES` 21 → 22.
 
-Keep existing deck styling; insert as a new slide in the existing flow (I'll find the right index when implementing).
+The deck stays sharper / more clinical than `/launch` — investors want the wedge; users want the welcome.
 
----
+## Out of scope
+- No data model changes (Support Circle stays as-is).
+- No new imagery.
+- No real testimonials or pilot numbers — placeholders only, clearly marked.
+- No persona routing changes.
+- **No claims of clinical partnership, clinician review, or medical endorsement.**
 
-## 4. Verification
-- Reload `/launch` → cards show generic empathetic problems + orange "One..." taglines, no numbers visible, quiet "evidence behind this →" link present.
-- Click the link → lands on `/launch/science` with three stat sections + disclaimer.
-- Open `/investor-deck` (or wherever `InvestorDeckPage` mounts) → new stat slide present.
-- No console errors; no layout regressions on the MVPCore4C page.
+## Technical notes
+- Files touched: `src/components/mvp/MVPCore4C.tsx`, `src/pages/launch/LaunchScience.tsx`, `src/components/investor/InvestorSlides.tsx`, `src/pages/InvestorDeckPage.tsx`.
+- Re-uses `EditionBadge`, lucide `Users` icon, existing card primitives and design tokens. No new dependencies.
+- All copy uses brand-orange-500 italic only on taglines, matching the established three-voice pattern.
 
----
-
-## Out of scope (intentionally)
-- No copy changes to the existing `PainPointImageCard` row above (lines 167-184) — leaving those alone unless you ask.
-- No design system changes.
-- No new images generated for the science page in this pass (clean typographic layout). Can add hero imagery in a follow-up if you want.
+## How this answers your worry
+The Discharge Cliff and brain-injury origin become a **credibility story** ("this was built where the stakes are highest"), while every card, the trust strip, and the science intro explicitly extend the invitation to caregivers, busy professionals, ADHD-adjacent users, and anyone stretched thin. No surface on `/launch` says "only for brain injury" — but every surface says "rigorous enough for brain injury." And no claims are made that aren't true right now.
