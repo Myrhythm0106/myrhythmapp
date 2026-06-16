@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { InvestorSlides } from "@/components/investor/InvestorSlides";
 import { ChevronLeft, ChevronRight, Maximize, Minimize } from "lucide-react";
 
-const TOTAL_SLIDES = 20;
+const TOTAL_SLIDES = 21;
 
 export default function InvestorDeckPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
