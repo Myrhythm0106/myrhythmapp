@@ -1023,8 +1023,48 @@ function Slide21() {
   );
 }
 
+/* ─── SLIDE 22: ACCOUNTABILITY IS THE MOAT ─── */
+function Slide22() {
+  const bullets = [
+    { label: "Caregiver burnout", detail: "~40% of brain injury caregivers report clinical depression \u2014 mostly from carrying the cognitive load alone." },
+    { label: "Clinician handoff failures", detail: "Discharge plans rarely reach the family and friends who actually run the week." },
+    { label: "Isolation as relapse driver", detail: "Loneliness is one of the strongest predictors of disengagement from recovery routines." },
+  ];
+  return (
+    <Slide bg="#0a0a0f">
+      <div className="flex-1 flex flex-col justify-center px-[160px]" style={{ color: "white" }}>
+        <SectionLabel>Accountability Is The Moat</SectionLabel>
+        <h2 className="mt-[24px] text-[60px] font-bold leading-[1.1]">
+          Plans don\u2019t fail from lack of effort.<br />
+          <span style={{ color: "#f97316" }}>They fail in private.</span>
+        </h2>
+
+        <div className="mt-[60px] flex items-baseline gap-[40px]">
+          <div className="text-[120px] font-black leading-none" style={{ color: "#f97316" }}>2\u20133\u00d7</div>
+          <div className="text-[28px] max-w-[700px]" style={{ color: "rgba(255,255,255,0.85)" }}>
+            follow-through when a plan is visible to a trusted person.
+          </div>
+        </div>
+
+        <div className="mt-[60px] grid grid-cols-3 gap-[40px]">
+          {bullets.map((b) => (
+            <div key={b.label}>
+              <div className="text-[16px] font-semibold uppercase tracking-widest" style={{ color: "#a855f7" }}>{b.label}</div>
+              <div className="mt-[12px] text-[20px] leading-relaxed" style={{ color: "rgba(255,255,255,0.75)" }}>{b.detail}</div>
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-[60px] text-[26px] font-light italic" style={{ color: "rgba(255,255,255,0.7)" }}>
+          Competitors solve cognition in isolation. MyRhythm extends the loop to family, friends and clinicians \u2014 with permissioned calendar visibility.
+        </p>
+      </div>
+    </Slide>
+  );
+}
+
 /* ─── SLIDE RENDERER ─── */
-const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19, Slide20, Slide21];
+const slides = [Slide01, Slide02, Slide03, Slide04, Slide05, Slide06, Slide07, Slide08, Slide09, Slide10, Slide11, Slide12, Slide13, Slide14, Slide15, Slide16, Slide17, Slide18, Slide19, Slide20, Slide21, Slide22];
 
 export function InvestorSlides({ currentSlide }: { currentSlide: number }) {
   const SlideComponent = slides[currentSlide] || Slide01;

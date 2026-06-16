@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle, Mail } from 'lucide-react';
+import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle, Mail, Users } from 'lucide-react';
+import { EditionBadge } from '@/components/launch/EditionBadge';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PainPointImageCard } from './PainPointImageCard';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
@@ -189,30 +190,54 @@ export function MVPCore4C() {
       {/* How MyRhythm answers it — numbered strip */}
       <section className="py-16 bg-gradient-to-b from-white to-brain-health-50/30">
         <div className="container mx-auto max-w-6xl px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-brain-health-900">
-              Here&apos;s how MyRhythm answers that
+          {/* Differentiator block */}
+          <div className="max-w-3xl mx-auto text-center mb-10">
+            <p className="text-xs md:text-sm font-semibold tracking-[0.18em] uppercase text-brand-orange-500">
+              Built for the discharge cliff. Useful for anyone carrying a lot.
+            </p>
+            <h2 className="mt-3 text-2xl md:text-3xl font-bold text-brain-health-900 leading-tight">
+              The gap between clinically ready and life-ready is where people fall.
             </h2>
-            <p className="text-brain-health-700 mt-2">Three quiet shifts that change the week.</p>
+            <p className="mt-3 text-base md:text-lg text-brain-health-700 leading-relaxed">
+              MyRhythm was built to close that gap for brain injury and memory recovery &mdash; and the same shifts help anyone whose responsibilities outrun their energy.
+            </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-6">
+
+          <div className="text-center mb-12">
+            <h3 className="text-xl md:text-2xl font-bold text-brain-health-900">
+              Here&apos;s how MyRhythm answers that
+            </h3>
+            <p className="text-brain-health-700 mt-2">Four quiet shifts that change the week.</p>
+          </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { n: '01', problem: 'Conversations fade faster than they should.', tagline: 'One conversation/memory you can always find', body: 'Memory Bridge listens so you don\u2019t have to. Record any chat, meeting or appointment and MyRhythm turns it into a searchable record with the decisions, names and next steps pulled out for you.' },
-              { n: '02', problem: 'Some days, choosing what to do next is the hardest part.', tagline: 'One calm next step defined daily', body: 'A quick Energy Check tunes the day around how you actually feel. Smart Schedule then surfaces just the next right thing \u2014 with built-in buffers and a gentle reshuffle when it\u2019s too much.' },
-              { n: '03', problem: 'Goals that matter often never reach today.', tagline: 'One thread from dream to today', body: 'Vision \u2192 Goals \u2192 Priorities \u2192 Daily Actions, all linked. Every task today traces back to something that matters, and every win is celebrated through the Capture \u2192 Commit \u2192 Calibrate \u2192 Celebrate loop.' },
-            ].map((item) => (
-              <div
-                key={item.n}
-                className="relative rounded-2xl border border-brain-health-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-md transition-all"
-              >
-                <div className="text-5xl font-black bg-gradient-to-br from-memory-emerald-500 to-clarity-teal-500 bg-clip-text text-transparent leading-none mb-3">
-                  {item.n}
+              { n: '01', icon: null, problem: 'Conversations fade faster than they should.', tagline: 'One conversation you can always find', body: 'Memory Bridge listens so you don\u2019t have to. Record any chat, meeting or appointment and MyRhythm turns it into a searchable record with the decisions, names and next steps pulled out for you.' },
+              { n: '02', icon: Users, problem: 'The people who care often don\u2019t know how to help.', tagline: 'Family, friends, clinicians \u2014 in the loop, on the day', body: 'Whether you\u2019re recovering, caregiving, or just stretched thin, your Support Circle sees the plan with you. Shared calendar invites mean follow-through stops depending on willpower alone.' },
+              { n: '03', icon: null, problem: 'Some days, choosing what to do next is the hardest part.', tagline: 'One calm next step defined daily', body: 'A quick Energy Check tunes the day around how you actually feel. Smart Schedule then surfaces just the next right thing \u2014 with built-in buffers and a gentle reshuffle when it\u2019s too much.' },
+              { n: '04', icon: null, problem: 'Goals that matter often never reach today.', tagline: 'One thread from dream to today', body: 'Vision \u2192 Goals \u2192 Priorities \u2192 Daily Actions, all linked. Every task today traces back to something that matters, and every win is celebrated through the Capture \u2192 Commit \u2192 Calibrate \u2192 Celebrate loop.' },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div
+                  key={item.n}
+                  className="relative rounded-2xl border border-brain-health-200/60 bg-white/80 backdrop-blur-sm p-6 shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="text-5xl font-black bg-gradient-to-br from-memory-emerald-500 to-clarity-teal-500 bg-clip-text text-transparent leading-none">
+                      {item.n}
+                    </div>
+                    {Icon && (
+                      <div className="w-10 h-10 rounded-full bg-brand-orange-50 flex items-center justify-center">
+                        <Icon className="h-5 w-5 text-brand-orange-500" />
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-bold text-brain-health-900 mb-1">{item.problem}</h3>
+                  <p className="text-base font-semibold italic text-brand-orange-500 mb-2">{item.tagline}</p>
+                  <p className="text-sm text-brain-health-700 leading-relaxed">{item.body}</p>
                 </div>
-                <h3 className="text-lg font-bold text-brain-health-900 mb-1">{item.problem}</h3>
-                <p className="text-base font-semibold italic text-brand-orange-500 mb-2">{item.tagline}</p>
-                <p className="text-sm text-brain-health-700 leading-relaxed">{item.body}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="mt-8 text-center">
             <a
@@ -221,6 +246,13 @@ export function MVPCore4C() {
             >
               The evidence behind this &rarr;
             </a>
+          </div>
+
+          {/* Trust strip */}
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-sm text-brain-health-600">
+            <EditionBadge variant="chip" />
+            <span className="hidden sm:inline text-brain-health-300">&middot;</span>
+            <span className="italic">For recovery. For caregivers. For anyone carrying a lot.</span>
           </div>
         </div>
       </section>
