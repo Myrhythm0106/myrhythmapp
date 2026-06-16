@@ -24,3 +24,4 @@ export { default as LaunchClinicalBrief } from './LaunchClinicalBrief';
 export { default as LaunchVisionStatement } from './LaunchVisionStatement';
 export { default as LaunchEditionAbout } from './LaunchEditionAbout';
 export { default as LaunchContinuity } from './LaunchContinuity';
+export { default as LaunchScience } from './LaunchScience';
