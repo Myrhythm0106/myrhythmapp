@@ -197,9 +197,9 @@ export function MVPCore4C() {
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { n: '01', title: 'Never lose a conversation again', body: 'Memory Bridge listens so you don\u2019t have to. Record any chat, meeting or appointment and MyRhythm turns it into a searchable record with the decisions, names and next steps pulled out for you.' },
-              { n: '02', title: 'Today shrinks to one calm next step', body: 'A quick Energy Check tunes the day around how you actually feel. Smart Schedule then surfaces just the next right thing \u2014 with built-in buffers and a gentle reshuffle when it\u2019s too much.' },
-              { n: '03', title: 'One thread from dream to today', body: 'Vision \u2192 Goals \u2192 Priorities \u2192 Daily Actions, all linked. Every task today traces back to something that matters, and every win is celebrated through the Capture \u2192 Commit \u2192 Calibrate \u2192 Celebrate loop.' },
+              { n: '01', problem: 'Conversations fade faster than they should.', tagline: 'One conversation/memory you can always find', body: 'Memory Bridge listens so you don\u2019t have to. Record any chat, meeting or appointment and MyRhythm turns it into a searchable record with the decisions, names and next steps pulled out for you.' },
+              { n: '02', problem: 'Some days, choosing what to do next is the hardest part.', tagline: 'One calm next step defined daily', body: 'A quick Energy Check tunes the day around how you actually feel. Smart Schedule then surfaces just the next right thing \u2014 with built-in buffers and a gentle reshuffle when it\u2019s too much.' },
+              { n: '03', problem: 'Goals that matter often never reach today.', tagline: 'One thread from dream to today', body: 'Vision \u2192 Goals \u2192 Priorities \u2192 Daily Actions, all linked. Every task today traces back to something that matters, and every win is celebrated through the Capture \u2192 Commit \u2192 Calibrate \u2192 Celebrate loop.' },
             ].map((item) => (
               <div
                 key={item.n}
@@ -208,10 +208,19 @@ export function MVPCore4C() {
                 <div className="text-5xl font-black bg-gradient-to-br from-memory-emerald-500 to-clarity-teal-500 bg-clip-text text-transparent leading-none mb-3">
                   {item.n}
                 </div>
-                <h3 className="text-lg font-bold text-brain-health-900 mb-2">{item.title}</h3>
+                <h3 className="text-lg font-bold text-brain-health-900 mb-1">{item.problem}</h3>
+                <p className="text-base font-semibold italic text-brand-orange-500 mb-2">{item.tagline}</p>
                 <p className="text-sm text-brain-health-700 leading-relaxed">{item.body}</p>
               </div>
             ))}
+          </div>
+          <div className="mt-8 text-center">
+            <a
+              href="/launch/science"
+              className="text-sm text-brain-health-600 hover:text-brand-orange-500 underline-offset-4 hover:underline"
+            >
+              The evidence behind this &rarr;
+            </a>
           </div>
         </div>
       </section>
