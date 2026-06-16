@@ -22,7 +22,7 @@ const SECTIONS: EvidenceSection[] = [
     featureTitle: "Memory Bridge",
     featureBlurb:
       "Record any conversation, meeting or appointment. MyRhythm turns it into a searchable record with the decisions, names and next steps pulled out for you.",
-    featureHref: "/launch/memory-bridge",
+    featureHref: "/launch/memory",
   },
   {
     problem: "Some days, choosing what to do next is the hardest part.",
@@ -58,7 +58,7 @@ const SECTIONS: EvidenceSection[] = [
     featureTitle: "Support Circle + Shared Calendar",
     featureBlurb:
       "Invite family, friends or clinicians into a permissioned view of your plan. Shared calendar invites and gentle nudges turn good intentions into kept commitments \u2014 without handing over control.",
-    featureHref: "/launch/support-circle",
+    featureHref: "/launch/support",
   },
 ];
 
