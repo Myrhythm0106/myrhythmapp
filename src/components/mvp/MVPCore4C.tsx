@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Brain, Calendar, Heart, Activity, ArrowRight, Sparkles, User, HelpCircle, Mail, Users } from 'lucide-react';
 import { EditionBadge } from '@/components/launch/EditionBadge';
+import { FoundingTrustStrip } from '@/components/launch/FoundingTrustStrip';
+import { DayInTheLifeStrip } from '@/components/launch/DayInTheLifeStrip';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { PainPointImageCard } from './PainPointImageCard';
 import preciousMomentsImg from '@/assets/precious-moments.jpg';
@@ -193,13 +195,13 @@ export function MVPCore4C() {
           {/* Differentiator block */}
           <div className="max-w-3xl mx-auto text-center mb-10">
             <p className="text-xs md:text-sm font-semibold tracking-[0.18em] uppercase text-brand-orange-500">
-              Built for the discharge cliff. Useful for anyone carrying a lot.
+              Built for Life Empowerment &mdash; brain injury, memory and cognitive challenges. And Productivity &mdash; useful for anyone carrying a lot.
             </p>
             <h2 className="mt-3 text-2xl md:text-3xl font-bold text-brain-health-900 leading-tight">
               The gap between clinically ready and life-ready is where people fall.
             </h2>
             <p className="mt-3 text-base md:text-lg text-brain-health-700 leading-relaxed">
-              MyRhythm was built to close that gap for brain injury and memory recovery &mdash; and the same shifts help anyone whose responsibilities outrun their energy.
+              MyRhythm is shaped for the weeks after the folder closes, and for anyone whose responsibilities outrun their energy.
             </p>
           </div>
 
@@ -260,6 +262,7 @@ export function MVPCore4C() {
       {/* Four Core Solutions Section */}
       <section className="py-20 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
         <div className="container mx-auto max-w-6xl px-6">
+          <FoundingTrustStrip />
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
               Four Core Solutions for Your Journey
@@ -411,6 +414,8 @@ export function MVPCore4C() {
           </div>
         </div>
       </section>
+
+      <DayInTheLifeStrip />
 
       {/* Feel the Difference Section */}
       <section className="py-20 bg-gradient-to-br from-white via-brain-health-50/10 to-memory-emerald-50/10">

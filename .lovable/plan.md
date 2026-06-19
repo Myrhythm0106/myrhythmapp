@@ -1,84 +1,82 @@
-# Plan v50 — /launch upgrade with universal framing
 
-Builds on v49, but widens the scope so `/launch` lands the differentiator AND signals "this is for anyone whose life feels heavier than their plan."
+# Plan v53 — Launch page: Life Empowerment + Productivity framing, 50% Founding strip, Calendar-led Day-in-the-life
 
-## Guiding principle (new, addresses your concern)
+## Item 1 — Life Empowerment & Productivity differentiator
+File: `src/components/mvp/MVPCore4C.tsx` (label/sub-line edit only)
 
-The page must read as **"built rigorously for brain injury and memory recovery — and that's exactly why it works for anyone juggling a heavy life."** No persona gating on the surface. The clinical depth becomes a *quality signal*, not a *gatekeeper*.
+- **Top label (replaces current differentiator label):**
+  "Built for Life Empowerment — brain injury, memory and cognitive challenges. And Productivity — useful for anyone carrying a lot."
+- **H2 (kept):** "The gap between clinically ready and life-ready is where people fall."
+- **Sub-line (revised):**
+  "MyRhythm is shaped for the weeks after the folder closes, and for anyone whose responsibilities outrun their energy."
+- **Hero H1:** unchanged.
+- "Discharge cliff" stays internal-only. No medical claims.
 
-Voice rules applied everywhere on `/launch`:
-- Lead with a universal human moment (overwhelm, dropped plans, isolation, invisible effort).
-- Name brain injury / memory recovery as the **proving ground**, not the **audience filter**.
-- Use inclusive phrasing: "anyone carrying a lot," "anyone whose responsibilities outrun their energy," "built for recovery, useful for real life."
-- Evidence and clinical rigor sit one layer deeper (Science page, deck), not in the headline.
-- **No unverified claims.** Clinician involvement is not claimed anywhere on `/launch`.
+## Item 2 — Founding 50% trust strip
+New: `src/components/launch/FoundingTrustStrip.tsx`, mounted in `MVPCore4C` above the 4C cards.
 
-## A. Differentiator line above the cards (new)
+- Glass-morphism pill, dot-separated micro-claims, no CTA.
+- Copy: "Founding Edition · v0.1 — 50% off for life for founding members · Funds founder-led development · No card required to start · Your data stays yours."
+- Uses `EditionBadge` + brand tokens (no hardcoded colors).
+- Free access for you + your husband stays an admin/data task; not surfaced in public copy.
 
-Single short block above the shift cards on `MVPCore4C.tsx`:
+## Item 3 — "A day you actually run" calendar-led day-in-the-life strip (REVISED)
 
-- Eyebrow: `Built for the discharge cliff. Useful for anyone carrying a lot.`
-- Headline: `The gap between clinically ready and life-ready is where people fall.`
-- Sub: `MyRhythm was built to close that gap for brain injury and memory recovery — and the same three shifts help anyone whose responsibilities outrun their energy.`
+New: `src/components/launch/DayInTheLifeStrip.tsx`, mounted in `MVPCore4C` below the 4C cards.
 
-This names the thesis (Discharge Cliff / Clinical-Ready vs Life-Ready) without making non-clinical users feel excluded.
+The calendar is now the **center of the strip**, not one card among five. The story is: *you stay in control of your day because MyRhythm shows you your most-productive windows, your Brain Health score, and lets you flex when energy or availability shifts.*
 
-## B. Four shift cards, reordered (revised from v49)
+**Heading:** "A day you actually run."
+**Sub:** "Your calendar, your call — informed by your peak windows, your Brain Health score, and what's already on your plate."
 
-Grid becomes `md:grid-cols-2 lg:grid-cols-4`. New order so accountability reframes the rest:
+**Layout (desktop `md:grid-cols-[1fr_2fr_1fr]`, stacks on mobile):**
 
-1. **Memory Bridge** — existing copy, lightly softened so it reads for "anyone who loses the thread," not only post-injury.
-2. **You're never alone** *(new — moved from card 4 to card 2)*
-   - Problem: `The people who care often don't know how to help.`
-   - Tagline (brand-orange-500 italic): `Family, friends, clinicians — in the loop, on the day.`
-   - Icon: `Users`
-   - Micro-line: `Whether you're recovering, caregiving, or just stretched thin — a shared calendar means follow-through stops depending on willpower alone.`
-3. **Energy Check** — existing copy, light tweak to universal language.
-4. **Vision → Daily** — existing copy, light tweak.
+```
+┌──────────────────┐  ┌──────────────────────────────┐  ┌──────────────────┐
+│  Left rail       │  │  Center: Today's calendar    │  │  Right rail      │
+│  (signals that   │  │  (mini day view, 08–20)      │  │  (flex actions)  │
+│   shape the day) │  │                              │  │                  │
+└──────────────────┘  └──────────────────────────────┘  └──────────────────┘
+```
 
-Quiet evidence link (`See the evidence →` to `/launch/science`) stays under the grid.
+**Left rail — "What MyRhythm knows this morning":**
+- Energy Check chip: "Today: steady · 3/5"
+- Peak window chip: "Your peak: 09:30–11:30"
+- Brain Health score chip: "Brain Health 72 · from your initial assessment"
+- Tiny caption under rail: "Signals, not instructions."
 
-Note: this is a marketing grid, not a decision screen — the "max 3 options" rule doesn't apply.
+**Center — mini calendar day view (static, illustrative):**
+- Vertical timeline 08:00 → 20:00 with 4 blocks rendered as glass cards:
+  - 08:30 Energy Check (low-load chip)
+  - 10:00 Deep focus — Memory Bridge review (peak-window chip, brand-orange-500)
+  - 13:00 Lunch + walk (recovery chip)
+  - 16:00 Family call — Support Circle (medium-load chip)
+- Peak-window band shaded behind 09:30–11:30.
+- Small footer line: "Synced with Google / Outlook in Settings."
 
-## C. Trust strip below the grid (new, thin, honest)
+**Right rail — "You're in control":**
+- "Reschedule with one tap" — example: "Moved 16:00 → 17:30 because energy dipped."
+- "Flex by availability" — "Skips blocks your calendar already owns."
+- "Flex by Brain Health" — "Lighter load on lower-score days."
+- Closing line: "MyRhythm proposes. You commit."
 
-One row, low-visual-weight. Two items only — no unverified claims:
-- `Founding Edition` badge (existing `EditionBadge`).
-- `For recovery. For caregivers. For anyone carrying a lot.` ← the inclusivity signal in plain sight.
+**Visual rules:**
+- Glass cards, brand tokens only (no hardcoded colors).
+- Peak-window band uses `brand-orange-500/10` with `brand-orange-500` left border.
+- Brain Health chip uses existing brain-health tokens.
+- Static illustrative data — no live calendar fetch, no real Brain Health pull.
+- No medical claims; Brain Health score is described as "from your initial assessment", not as a diagnosis.
 
-No "built with clinicians," no "clinical input," no fake testimonials. Placeholders are honest, not fabricated.
-
-## D. Science page — 4th section (from v49, framing tightened)
-
-`LaunchScience.tsx` gets a new section:
-- Generic problem: `Doing it alone is the hardest part.`
-- Universal lead sentence: `Isolation and invisible effort hurt recovery — and they hurt anyone trying to keep a hard week on track.`
-- Three placeholder stats with `[citation pending]`: ~65% loneliness, 2–3× follow-through with visibility, ~40% caregivers don't know what would help.
-- "What MyRhythm does about it" panel: Support Circle, shared calendar invites, permissioned views, gentle nudges.
-- Medical disclaimer + confidentiality footer unchanged.
-
-## E. Investor deck — Slide 22 (from v49, unchanged)
-
-`InvestorSlides.tsx` + `InvestorDeckPage.tsx`:
-- "Accountability is the moat" — stat-led.
-- Headline: `2–3× follow-through` when plans are visible to a trusted person.
-- Bullets: caregiver burnout, clinician handoff failures, isolation as relapse driver.
-- Positioning: competitors solve cognition in isolation; MyRhythm extends the loop to family, friends, clinicians with permissioned calendar visibility.
-- `TOTAL_SLIDES` 21 → 22.
-
-The deck stays sharper / more clinical than `/launch` — investors want the wedge; users want the welcome.
+## Files touched
+- `src/components/mvp/MVPCore4C.tsx` — label + sub-line edit; mount both new strips.
+- `src/components/launch/FoundingTrustStrip.tsx` — new.
+- `src/components/launch/DayInTheLifeStrip.tsx` — new (calendar-led 3-column layout).
 
 ## Out of scope
-- No data model changes (Support Circle stays as-is).
-- No new imagery.
-- No real testimonials or pilot numbers — placeholders only, clearly marked.
-- No persona routing changes.
-- **No claims of clinical partnership, clinician review, or medical endorsement.**
+- Real Google/Outlook fetch in this strip (already lives in Settings).
+- Live Brain Health score lookup on the landing page.
+- Stripe/Paddle 50% coupon wiring.
+- Comping your + husband's accounts (separate admin task).
+- Testimonials, new imagery, Science page edits, `/launch` routing changes.
 
-## Technical notes
-- Files touched: `src/components/mvp/MVPCore4C.tsx`, `src/pages/launch/LaunchScience.tsx`, `src/components/investor/InvestorSlides.tsx`, `src/pages/InvestorDeckPage.tsx`.
-- Re-uses `EditionBadge`, lucide `Users` icon, existing card primitives and design tokens. No new dependencies.
-- All copy uses brand-orange-500 italic only on taglines, matching the established three-voice pattern.
-
-## How this answers your worry
-The Discharge Cliff and brain-injury origin become a **credibility story** ("this was built where the stakes are highest"), while every card, the trust strip, and the science intro explicitly extend the invitation to caregivers, busy professionals, ADHD-adjacent users, and anyone stretched thin. No surface on `/launch` says "only for brain injury" — but every surface says "rigorous enough for brain injury." And no claims are made that aren't true right now.
+Approve to build all three items as written, or tell me what to adjust.
