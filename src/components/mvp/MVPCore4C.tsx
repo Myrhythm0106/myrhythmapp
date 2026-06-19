@@ -262,6 +262,7 @@ export function MVPCore4C() {
       {/* Four Core Solutions Section */}
       <section className="py-20 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
         <div className="container mx-auto max-w-6xl px-6">
+          <FoundingTrustStrip />
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
               Four Core Solutions for Your Journey
