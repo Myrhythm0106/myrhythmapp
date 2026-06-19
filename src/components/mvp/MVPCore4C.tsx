@@ -415,6 +415,8 @@ export function MVPCore4C() {
         </div>
       </section>
 
+      <DayInTheLifeStrip />
+
       {/* Feel the Difference Section */}
       <section className="py-20 bg-gradient-to-br from-white via-brain-health-50/10 to-memory-emerald-50/10">
         <div className="container mx-auto max-w-6xl px-6">
