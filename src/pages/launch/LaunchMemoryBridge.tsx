@@ -16,6 +16,7 @@ import { EnhancedBackgroundEffects } from '@/components/ui/EnhancedBackgroundEff
 import { Badge } from '@/components/ui/badge';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { NextStepsItem } from '@/types/memoryBridge';
+import { OutputActions } from '@/components/shared/OutputActions';
 
 type RecordingState = 'idle' | 'recording' | 'paused' | 'reviewing';
 
