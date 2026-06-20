@@ -16,6 +16,7 @@ import { EnhancedBackgroundEffects } from '@/components/ui/EnhancedBackgroundEff
 import { Badge } from '@/components/ui/badge';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { NextStepsItem } from '@/types/memoryBridge';
+import { OutputActions } from '@/components/shared/OutputActions';
 
 type RecordingState = 'idle' | 'recording' | 'paused' | 'reviewing';
 
@@ -636,6 +637,21 @@ export default function LaunchMemoryBridge() {
                         </button>
                       )}
                     </div>
+
+                    {/* Output toolbar: Copy / Email / Download — cognitive-load-safe takeaway */}
+                    <OutputActions
+                      text={[
+                        `Recording: ${recording.title}`,
+                        `Saved: ${formatRecordingDate(recording.created_at)}`,
+                        recording.duration_seconds ? `Length: ${formatDuration(recording.duration_seconds)}` : '',
+                        actionsCount > 0 ? `Actions found: ${actionsCount}` : '',
+                        recording.transcription ? `\nTranscript:\n${recording.transcription}` : '',
+                        '\n— Sent from MyRhythm (Founding Edition · v0.1)',
+                      ].filter(Boolean).join('\n')}
+                      subject={`MyRhythm — ${recording.title}`}
+                      size="compact"
+                      className="pt-1"
+                    />
                   </div>
                 </div>
               );
