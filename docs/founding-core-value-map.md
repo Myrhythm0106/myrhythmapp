@@ -3,6 +3,8 @@
 **Audience:** marketing, support, investors, the founder.
 **Purpose:** in one page, show what a Founding Member actually gets for £7–£20/mo and why each piece is worth more than the price.
 
+> For the end-to-end user journey across these 9 routes, see [`docs/v0.1-founding-core-flow.md`](./v0.1-founding-core-flow.md).
+
 ---
 
 ## For £7–£20/month, a Founding Member gets:
