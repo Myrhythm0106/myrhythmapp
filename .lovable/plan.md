@@ -1,148 +1,109 @@
 
-# Memory Bridge AI Overhaul + Memory Library (MVP)
+# Documentation Update — Founding Core Scope & Value Justification
 
-Goal: make Memory Bridge dramatically more **accurate, easy, and dependable**, and give every recording (plus its transcript, summary, and actions) a **single, searchable home** with one-tap **copy / edit / email / export**.
+Approved scope confirmed. Before any code changes, update the project's reference documents so the full feature inventory **and** the chosen launch scope are recorded in one place, with explicit value-for-money framing for each Founding Core route.
 
-Constraints kept: medical-disclaimer policy, 30-day voice retention, Vault/RLS, human-in-the-loop, no auto-send.
-
----
-
-## 1. Smarter transcription (accuracy & reliability)
-
-`process-meeting-audio` + realtime path upgraded:
-
-- Primary STT: **AssemblyAI Universal-2** with diarization, custom vocab (medical / family / brand), word-level confidence, auto punctuation.
-- **Fallback chain:** AssemblyAI → `openai/gpt-4o-transcribe` via Lovable AI Gateway → mark job `needs_review`.
-- Sentences below confidence threshold rendered with a subtle underline in `TranscriptEditor`.
-- Long recordings auto-chunked server-side and stitched.
-
-## 2. Smarter action extraction (multi-pass AI)
-
-New edge function `mb-synthesize` (AI SDK + Lovable AI Gateway, default `google/gemini-3-flash-preview`, escalate to `gemini-3.1-pro-preview` for long transcripts). Four passes with structured (Zod) output:
-
-1. **Summary** — exec summary, themes, decisions.
-2. **Actions** — `text, owner, due, priority, confidence, dependencies[], watch_outs[], source_quote, transcript_offset`.
-3. **Follow-ups** — open questions, suggested next captures, suggested Support Circle invitees.
-4. **Schedule-fit** — proposes time using Energy Check + Brain Health score + calendar availability (illustrative when no live signal).
-
-Every field carries confidence + a `source_quote` deep-linking back to the transcript.
-
-## 3. Easier capture → commit
-
-- **One-tap record** floating mic on Launch home; auto-title from first ~6s; auto-detect participants from Support Circle.
-- **Live transcript + actions rail** while recording (`useRealtimeTranscription` wired to incremental extraction).
-- **Commit Sheet**: per-action Confirm / Edit / Skip with energy badge, suggested time, pre-ticked invitees.
-- "Low confidence — review?" nudge when avg confidence < 0.8.
-
-## 4. Dependability (never lose a recording)
-
-- **Offline-safe capture** — chunks to IndexedDB; resumable upload to `voice-recordings` with retry/backoff.
-- **Background jobs** — `transcription_jobs` state machine: `queued → transcribing → extracting → ready → needs_review → failed`.
-- **Cron retry** (`pg_cron`, every 2 min) for jobs stuck > 5 min, up to 3 attempts.
-- Persistent "Processing" pill in Launch header; per-recording status with retry / re-extract / download.
-
-## 5. Memory Library — the centralised home (NEW)
-
-Route: `/launch/memory-library` (replaces scattered access; existing VoiceNotes, MemoryBridge list views point here).
-
-**Layout**
-- Left: filters (Date range, Participant, Tag, Status: ready/needs review, Has actions, Energy/Brain-Health context).
-- Center: **searchable list** of recordings (full-text search over title + transcript + actions via `tsvector`).
-- Right: detail pane with 4 tabs — **Summary · Transcript · Actions · Follow-ups**.
-
-**Per recording, one-tap actions** (visible in list row and in detail header):
-- **Copy** — copy summary / transcript / actions list / single action to clipboard.
-- **Edit** — inline edit of title, summary, any action; re-extract button.
-- **Email** — opens email composer (new edge function `mb-send-recap`) with prefilled subject + body (summary + actions + disclaimer footer). Sends via Resend. Recipient picker = Support Circle + free-type. No auto-send; user reviews + clicks Send.
-- **Export** — Markdown (.md), PDF (uses existing `continuitySummaryPdf` style), .ics for any scheduled action.
-- **Share to Support Circle** — posts as a `memory_bridge_comments` thread; recipients see it in their feed (existing infra).
-- **Download audio** while still within 30-day retention.
-- **Delete** (respects `legal_retention_required`).
-
-**Reliability indicators in the list**
-- Confidence chip (High / Med / Low), job status, action count, "Needs review" badge.
-
-**Empty / safe states**
-- Disclaimer footer on every emailed / exported artifact: *"MyRhythm organises — it doesn't diagnose or treat. Please review before acting."*
-
-## 6. Trust & safety (all 4 non-negotiables)
-
-- Medical-disclaimer footer on every AI output, email, and export.
-- Confidence chip + "View source" on every action.
-- Nothing auto-scheduled or auto-sent; everything is a proposal.
-- 30-day voice retention preserved; AI runs inside existing Vault/RLS.
+No code or routing changes in this pass — documentation only. The actual route flagging / legacy redirects ship in the next plan.
 
 ---
 
-## Files & infra (technical)
+## Files to update / create
 
-**New edge functions**
-- `supabase/functions/mb-synthesize/index.ts` — multi-pass AI pipeline.
-- `supabase/functions/mb-send-recap/index.ts` — Resend email of summary/actions, validates recipients, writes audit row.
-- `supabase/functions/mb-retry-stuck-jobs/index.ts` — cron worker.
-- `supabase/functions/_shared/ai-gateway.ts` — provider helper (per AI SDK gateway pattern).
+### 1. `docs/v0.1-features.md` — rewrite
+Replace the stale "Ready for Testing / v0.1" inventory (which still lists `/dashboard`, `/memory-bridge`, `/calendar` as the surfaces) with a current, accurate inventory split into three sections:
 
-**New frontend**
-- `src/routes/MemoryLibrary.tsx` + nested `src/components/memoryLibrary/{LibraryList,LibraryFilters,RecordingDetail,SummaryTab,TranscriptTab,ActionsTab,FollowupsTab,CopyMenu,EmailRecapDialog,ExportMenu}.tsx`.
-- `src/components/memoryBridge/{ConfidenceChip,SourceQuotePopover,ProcessingPill,CommitSheet}.tsx`.
-- `src/hooks/memoryBridge/{useTranscriptionJob,useMemoryLibrary,useRecapEmail}.ts`.
-- `src/utils/memoryBridge/offlineQueue.ts` (IndexedDB + resumable upload).
+- **A. Full feature inventory** — every `/launch/*` route that exists today (34), every `/mvp/*` funnel route, every legacy route still wired, every edge function, every key table. Source of truth for "what's in the build."
+- **B. Founding Core (shipping for cohort)** — the 9 routes listed below, each with: route, one-line purpose, key components, **"Why it earns the £7–£20/mo"** value line.
+- **C. Hidden behind `FOUNDING_CORE_ONLY` flag (v0.2 queue)** — every route built but not exposed to cohort, with reason for deferral.
 
-**Edited**
-- `process-meeting-audio`, `extract-acts-incremental` — fallback chain, write `transcription_jobs`, call `mb-synthesize`.
-- `useMemoryBridge`, `MemoryBridgeLayout`, `TranscriptEditor`, `VoiceNotesPage` — point list views at Memory Library, surface confidence + source links + commit sheet.
-- Launch top nav — add **Memory Library** entry.
+### 2. `docs/v0.1-test-readiness.md` — extend
+Add a new top section: **"Founding Core scope lock"** — the 9 routes, the legacy redirects required, and a tick-box that scope has been frozen for the cohort. Existing checklist stays intact below it.
 
-**DB migration**
-- `extracted_actions` add: `source_quote text, transcript_offset int, confidence_breakdown jsonb, dependencies text[], watch_outs text[]`.
-- `transcription_jobs` add: `attempts int default 0, last_error text, avg_confidence numeric`.
-- `meeting_recordings` add: `search_tsv tsvector` + GIN index + trigger.
-- New table `recap_emails`: `id, user_id, meeting_recording_id, recipients[], subject, body_preview, sent_at` (RLS: user-owns-row; GRANTs to `authenticated` + `service_role`).
-- Enable `pg_cron` + schedule `mb-retry-stuck-jobs` every 2 min.
-
-**Secrets** — all present: `LOVABLE_API_KEY`, `ASSEMBLYAI_API_KEY`, `OPENAI_API_KEY`, `RESEND_API_KEY`.
-
----
-
-## MVP scope check
-
-In scope (v0.1):
-- Everything above.
-
-Out of scope (post-MVP):
-- Live Google/Outlook fetch inside Schedule-fit pass (still illustrative).
-- Real-time Brain Health re-scoring (uses last assessment if present).
-- Per-speaker voice fingerprints / cross-recording speaker identity.
-- Team / multi-user shared libraries.
-- Auto-send of recaps without review.
-- Stripe Founding-50% wiring.
-
----
-
-## ASCII flow
+### 3. `docs/founding-core-value-map.md` — new
+Single-page value map the team can hand to marketing, support, and investors. Structure:
 
 ```text
- mic ─► IndexedDB ─► resumable upload ─► voice-recordings bucket
-                                              │
-                                              ▼
-                                    transcription_jobs (queued)
-                                              │
-                  ┌───────────────────────────┼───────────────────────────┐
-                  ▼                           ▼                           ▼
-          AssemblyAI Universal-2   fallback gpt-4o-transcribe    cron retry (stuck)
-                  │                           │
-                  └────► transcript + word-confidence ──┐
-                                                        ▼
-                                                mb-synthesize
-                                summary → actions → follow-ups → schedule-fit
-                                                        │
-                                              extracted_actions
-                                                        │
-                                                        ▼
-                                            ┌───────────────────┐
-                                            │  Memory Library   │
-                                            │  search · filter  │
-                                            │ copy·edit·email·  │
-                                            │   export·share    │
-                                            └───────────────────┘
+For £7–£20/month, a Founding Member gets:
+
+  Capture        — never lose a clinical/family conversation again
+  Commit         — turn captured moments into actions you'll actually do
+  Calibrate      — schedule against real energy, not wishful thinking
+  Memory Bridge  — one private, searchable home for everything captured
+  Calendar       — day-of view that respects cognitive load
+  Support Circle — invite family/clinician; nothing auto-shared
+  Settings       — retention, MFA, calendar links, edition transparency
+  Profile        — identity + persona
+  Home           — the 4C loop, one screen, every day
+
+Plus the Founding promise:
+  • Locked introductory pricing (6 months)
+  • Automatic upgrade to every new capability as it ships
+  • Direct line to the founder via in-app Feedback
+  • Founding Edition badge + early access to v0.2 (Memory Library, AI overhaul)
 ```
+
+Each row expands to 2–3 sentences explaining the concrete benefit and the cost-pain it removes (missed appointments, repeated explanations to clinicians, lost actions, caregiver burnout, etc.). Includes the no-medical-claims disclaimer footer.
+
+### 4. `strategic-documents/Founding-Member-Launch-Strategy.md` — append section
+Add a new section **"Founding Core — what £7–£20/mo actually buys"** that mirrors the value map and explicitly states:
+
+- The 9 routes are the **only** surfaces the cohort sees.
+- Everything else (Brain Games, Feature Store, Analytics, Roadmap, Science, What's New, Clinical Brief, Continuity, Vision Statement, Goals, Gratitude, SC-Capture, Edition-About-as-standalone) is built and queued for v0.2 — not lost, just sequenced.
+- Why this scope is enough to "move the dial": each Core route maps to one of the four founding pain-points (lost conversations, dropped actions, energy-blind scheduling, isolated caregiving). If any one of those is solved, the £7–£20/mo is already paid back versus the alternative (private OT, lost work hours, repeated clinical visits).
+
+### 5. `mem://features/founding-core` — new memory file
+Persist the scope decision so future sessions don't re-propose hidden routes as if they were live:
+
+```text
+---
+name: Founding Core scope (v0.1)
+description: The 9 /launch/* routes exposed to the Founding cohort; everything else is built but flagged off for v0.2.
+type: feature
+---
+Cohort sees only: /launch/home, /launch/capture, /launch/commit, /launch/calibrate,
+/launch/memory, /launch/calendar, /launch/support, /launch/settings, /launch/profile.
+Public funnel: /, /mvp/user-type, /mvp/assessment, /mvp/payment, /auth, /privacy-policy, /terms.
+Hidden behind FOUNDING_CORE_ONLY flag (built, not exposed): games, store, analytics, roadmap,
+science, whats-new, clinical-brief, continuity, vision-statement, goals, gratitude, sc-capture,
+edition-about (linked from Settings only).
+Legacy /dashboard, /memory-bridge, /calendar, /command-center, /gratitude redirect to /launch/*.
+```
+
+Index entry added under `mem://index.md` → Memories.
+
+---
+
+## The Founding Core — value lines (will appear verbatim in docs)
+
+| Route | One-line purpose | Why it earns the price |
+|---|---|---|
+| `/launch/home` | 4C loop in one screen | Every day starts and ends in one calm place — no app-hunting under cognitive load. |
+| `/launch/capture` | One-tap voice/text capture | Replaces £40/hr private-OT note-taking and the 3am "what did the consultant actually say?" panic. |
+| `/launch/commit` | Turn captures into committed actions | Stops the 70%+ drop-off between "good intention" and "thing actually done." |
+| `/launch/calibrate` | Schedule against real energy | Prevents the crash-and-burn cycle that costs working days and family time. |
+| `/launch/memory` | Memory Bridge — searchable record | One trustworthy place; no losing the clinical conversation that mattered. |
+| `/launch/calendar` | Day-of cognitive-load view | Plans the day a brain-injured / ADHD / burnt-out user can actually execute. |
+| `/launch/support` | Support Circle invites + permissions | Family/clinician informed without the user repeating themselves; nothing auto-shared. |
+| `/launch/settings` | Retention, MFA, calendars, edition, feedback | Trust controls in plain sight — privacy, MFA, 30-day voice retention, direct feedback to founder. |
+| `/launch/profile` | Identity + persona | Persona-correct experience across all 9 founding personas. |
+
+---
+
+## Out of scope for this pass
+
+- No routing changes, no flag implementation, no legacy redirects.
+- No edits to `src/App.tsx`, no nav changes, no component edits.
+- Those land in the **next** plan ("Founding Core enforcement"): apply `FOUNDING_CORE_ONLY` flag to nav + route table, add legacy `<Navigate>` redirects, run the readiness checklist sweep.
+
+---
+
+## Approval needed
+
+Approve this doc-only pass and I will:
+1. Rewrite `docs/v0.1-features.md`.
+2. Extend `docs/v0.1-test-readiness.md` with the scope-lock section.
+3. Create `docs/founding-core-value-map.md`.
+4. Append the value section to `strategic-documents/Founding-Member-Launch-Strategy.md`.
+5. Save the `mem://features/founding-core` memory and update `mem://index.md`.
+
+Then I'll queue the **"Founding Core enforcement"** code plan as the immediate follow-up.

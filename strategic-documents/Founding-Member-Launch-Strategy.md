@@ -135,3 +135,35 @@ The following items are intentionally **deferred from MVP** and tracked here so 
 - Phase 2: `can_record_on_behalf` permission toggle (OFF by default)
 - Phase 3: Clinical Export PDF ("Share with my clinician")
 - Phase 5: GDPR data export (Settings → Download My Data)
+
+---
+
+## Founding Core — what £7–£20/mo actually buys
+
+The cohort sees a **deliberately narrow nine-route product** plus the public funnel. Everything else in the codebase (Brain Games, Feature Store, Analytics, Roadmap, Science, What's New, Clinical Brief, Continuity, Vision Statement, Goals, Gratitude, SC-Capture, Edition-About-as-standalone) is built and queued for v0.2 — not lost, just sequenced.
+
+### The nine Founding Core routes
+
+| Route | What it does | Cost it removes |
+|---|---|---|
+| `/launch/home` | 4C loop in one calm screen | 15–30 min/day of "where do I start?" |
+| `/launch/capture` | One-tap voice/text capture | £40–£80/hr scribe; lost clinical conversations |
+| `/launch/commit` | Commit captures to actions | 70%+ drop-off between intent and done |
+| `/launch/calibrate` | Energy-aware day plan | 2–3 recovery days per over-scheduled day |
+| `/launch/memory` | Searchable Memory Bridge | "Where did I save that?" tax |
+| `/launch/calendar` | Cognitive-load calendar | Double-booking, missed appointments |
+| `/launch/support` | Support Circle with permissions | Repeat-explanation fatigue, caregiver isolation |
+| `/launch/settings` | Retention, MFA, edition, feedback | Trust deficit |
+| `/launch/profile` | Identity + persona | "This isn't for me" friction |
+
+### Why this scope is enough to move the dial
+
+The Founding promise is built on four pain-points: **lost conversations, dropped actions, energy-blind scheduling, isolated caregiving**. Each Founding Core route maps directly to one of those. If the cohort experience solves even **one** pain-point in a single month, the £7–£20/mo subscription has paid for itself versus the alternative (private OT, lost work hours, repeat clinical visits, caregiver burnout).
+
+Adding more routes at v0.1 dilutes that message and adds support burden without raising willingness-to-pay. The discipline is the product.
+
+### v0.2 unlock (post-cohort)
+
+Memory Library overhaul, multi-pass AI synthesis with source quotes and confidence chips, offline capture queue, cron retry for stuck jobs, live Brain Health / energy / calendar signals, real Clinical Export PDF, Stripe Founding-50% wiring. Founding Members get all of this at locked pricing — the promise the £7–£20/mo is buying.
+
+*Full feature inventory: `docs/v0.1-features.md`. One-page value map: `docs/founding-core-value-map.md`.*
