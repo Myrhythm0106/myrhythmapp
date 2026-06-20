@@ -1,105 +1,59 @@
 
-# Plan v59 — Cognitive-Accessibility Sweep + Weekend Self-Test Readiness
+# Plan v60 — Document the Founding Core flow (docs only, no code)
 
-Goal: by end of this pass, every Founding Core surface is **safe and usable under cognitive load**, broadly valuable beyond brain-injury, and you can sit down this weekend and run through the full flow with confidence.
+Goal: before touching navigation or redirects, give you one document you can read top-to-bottom and feel confident about exactly how a Founding Member moves through the app — from first landing on the marketing page, through payment, into the 9 Core routes, through the daily 4C loop, and back out via Settings/Support.
 
-Scope is locked to the 9 Founding Core routes from `mem://features/founding-core`:
-`home, capture, commit, calibrate, memory, calendar, support, settings, profile`
-plus the public funnel needed to reach them (`/`, `/mvp/user-type-selection`, `/mvp/assessment`, `/mvp/payment`, `/auth`).
+## Scope
 
----
+- **No code changes.** No route hiding, no redirects, no feature flag wiring.
+- **One new doc + two small updates** to existing docs so they all point at the same source of truth.
 
-## Part 1 — Cognitive-accessibility audit (read-only)
+## Files
 
-Spawn parallel sub-agents (one per route) to walk each Founding Core page and score it against a **Cognitive Load Rubric**, then produce one consolidated report at `docs/v0.1-cognitive-accessibility-audit.md`.
+### 1. NEW — `docs/v0.1-founding-core-flow.md`
 
-Rubric (each item Pass / Soft-fail / Hard-fail):
+Single source of truth for the Founding Core user flow. Sections:
 
-1. **One decision per screen** — max 3 primary options visible; secondary actions tucked under "More".
-2. **Plain language** — Flesch reading ease ≥ 70; no jargon ("synthesise", "calibrate" need a plain sub-label); no double-negatives.
-3. **Re-entry safety** — if user leaves mid-task and returns, the screen shows "Here's where you were" not a blank state.
-4. **Output legibility** — summaries, action lists, transcripts: body ≥ 18px, line-height ≥ 1.5, max 70ch, no all-caps blocks.
-5. **Copy / amend / send affordances** — every output (transcript, summary, action, brief) has visible Copy + Edit + Email/Share buttons (your earlier ask).
-6. **Touch targets ≥ 56px** on every primary CTA.
-7. **Reversibility** — destructive actions confirm; "Undo" toast where possible.
-8. **No medical claims** — disclaimer present where the surface touches symptoms, energy, or clinical export.
-9. **Energy-honest defaults** — nothing demands the user during a Pause/low-energy stage; QuietHome / Pause states respected.
-10. **Universally useful** — copy works for a tired parent, a busy professional, an older adult — not just brain-injury survivors.
+1. **Map at a glance** — ASCII diagram of the full journey:
+   ```
+   Public funnel        Onboarding             Daily loop (4C)         Trust & people
+   /  →  /mvp/user-    /launch/register  →    /launch/home  ⇄          /launch/support
+   type-selection  →   /launch/user-type →    /launch/capture  →       /launch/settings
+   /mvp/assessment →   /launch/assessment→    /launch/commit   →       /launch/profile
+   /mvp/payment    →   /launch/payment   →    /launch/calibrate→
+                       /launch/welcome   →    /launch/memory   ⇄
+                                              /launch/calendar
+   ```
+2. **First-time flow (Day 0)** — step-by-step: discover → assess → pay → welcome → land on `/launch/home`. What the user sees, what they decide, what writes to the DB.
+3. **Daily loop (Day 1+)** — the 4C loop as the user actually walks it:
+   - Home shows today's energy + 1 next action
+   - Capture (voice/text) → Memory Bridge entry
+   - Commit (turn capture into action) → Calendar slot
+   - Calibrate (end-of-day reflection) → tomorrow's energy estimate
+   - Memory Bridge as the always-on index
+4. **Re-entry safety** — what happens when a cognitively-loaded user opens the app mid-flow, mid-recording, mid-day. Which screens resume vs restart.
+5. **People & trust flow** — Support Circle invites, Settings (retention, MFA, calendars), Profile/persona. What is shared, what is never shared.
+6. **What the user does NOT see in v0.1** — the 13 deferred `/launch/*` routes, with the one-line reason each is hidden and where it surfaces instead (e.g. Gratitude folded into Calibrate prompt).
+7. **Legacy redirects (planned, not yet wired)** — `/dashboard`, `/memory-bridge`, `/calendar`, `/gratitude`, `/command-center` → their Core equivalents.
+8. **State & data touchpoints** — for each Core route, which tables it reads/writes (`voice_recordings`, `extracted_actions`, `calendar_events`, `support_circle_members`, `founding_feedback`, etc.) so you can sanity-check there are no orphaned screens.
+9. **Failure & offline behaviour** — what the user sees if mic permission denied, network drops mid-upload, or transcription job is still pending.
+10. **Open questions** — anything I'm not 100% sure of, listed for you to confirm before we enforce scope in code.
 
-Output per route: rubric scorecard + list of concrete fixes ranked Critical / Important / Nice.
+### 2. UPDATE — `docs/v0.1-features.md`
+Add a one-line pointer at the top of section B: *"For the end-to-end user journey across these 9 routes, see `docs/v0.1-founding-core-flow.md`."*
 
-## Part 2 — Make-it-better fixes (build pass, only after you approve audit)
+### 3. UPDATE — `docs/founding-core-value-map.md`
+Add the same pointer under the intro so marketing/support land on the flow doc too.
 
-I'll group fixes into 3 small commits so you can stop at any point:
+## What this plan does NOT do
 
-**Commit A — Output handling (your weekend must-have):**
-- Add a shared `<OutputActions>` toolbar (Copy / Edit / Email / Download) and drop it onto: capture transcripts, capture brief, commit action lists, calibrate reflections, memory entries.
-- Wire Email to `mailto:` with prefilled subject + body (no backend needed for v0.1).
-- "Copy" uses `navigator.clipboard.writeText` with success toast.
+- Does not hide any `/launch/*` route from navigation.
+- Does not add redirects from legacy routes.
+- Does not change `MVPTopNav`, `MobileBottomNav`, or `LaunchNav`.
+- Does not touch the `FOUNDING_CORE_ONLY` flag (still un-wired).
 
-**Commit B — Centralised, SMART Memory Library (your earlier ask):**
-- Promote `/launch/memory` to the single index of every recording, summary, and action across the app.
-- Filters: date, persona, has-actions, starred, search-by-quote.
-- Each row exposes the `<OutputActions>` toolbar inline.
-- No new tables needed — read from `meeting_recordings` + `extracted_actions` + `memory_entries`.
+Those become Plan v61 once you've read the flow doc and confirmed it matches your mental model.
 
-**Commit C — Cognitive-load polish:**
-- Apply Critical fixes from audit (typography bumps, primary-CTA size, re-entry banners, plain-language rewrites, missing disclaimers).
-- Add `aria-label` to every icon-only button found.
-- Verify QuietHome / Pause stage respected everywhere.
+## Deliverable
 
-## Part 3 — Weekend self-test readiness
-
-Produce `docs/v0.1-weekend-self-test.md` — a 30-minute scripted run-through **you** can follow Saturday morning. Sections:
-
-1. **Pre-flight (5 min):** sign out, clear localStorage, confirm seed account, confirm preview URL.
-2. **Funnel run (5 min):** `/` → persona pick → assessment → payment (test mode) → `/launch/welcome`.
-3. **4C loop (10 min):** Capture a 60-second voice note → review brief → Copy + Email the summary → promote 1 action to Commit → mark complete in Calibrate → see it in Celebrate strip.
-4. **Memory Library (5 min):** open `/launch/memory`, find the recording, copy a quote, email a summary.
-5. **Support Circle (3 min):** invite a fake email, verify pending state, toggle `can_record_on_behalf`.
-6. **Safety net (2 min):** confirm disclaimer text on Capture + Calibrate, run GDPR "Download my data", confirm Clinical Export PDF renders with footer.
-
-Each step has a tick-box and an "If this breaks, look here" pointer.
-
-Also tick through `docs/v0.1-test-readiness.md` Founding Core scope-lock section and mark blockers.
-
----
-
-## Deliverables
-
-| File | Type |
-|---|---|
-| `docs/v0.1-cognitive-accessibility-audit.md` | new — audit report |
-| `docs/v0.1-weekend-self-test.md` | new — your Saturday script |
-| `src/components/shared/OutputActions.tsx` | new — Copy/Edit/Email/Download toolbar |
-| Memory Library upgrades to `src/pages/launch/LaunchMemory*.tsx` | edit |
-| Targeted copy/typography/aria fixes per audit Critical list | edit |
-| `docs/v0.1-test-readiness.md` | append weekend-test cross-link |
-| `.lovable/plan.md` | append v59 |
-
-## Out of scope (deferred to v0.2)
-
-- AI multi-pass overhaul, offline queue, cron retry, source-quote chips
-- Hidden routes behind `FOUNDING_CORE_ONLY` flag
-- Live Brain Health / energy / calendar signals
-- Any new database tables
-
-## Approval gate
-
-Approve and I'll run Part 1 first (read-only audit, ~1 batch of parallel sub-agents) and come back with the scorecard before touching code. If you'd rather I batch Part 1 + Commit A together for speed, say "do A with the audit" and I'll fold them.
-
----
-
-## v59 — Executed (build pass 1)
-
-Shipped:
-- `src/components/shared/OutputActions.tsx` — Copy / Email / Download / Edit toolbar with 44–56px targets, aria-labels, plain-language toasts.
-- Wired `<OutputActions>` into `LaunchMemoryBridge` recording rows.
-- `docs/v0.1-cognitive-accessibility-audit.md` — 10-rule rubric, per-route scorecards, ranked fix queue.
-- `docs/v0.1-weekend-self-test.md` — 30-min Saturday script with pass/hold gates.
-
-Deferred to next pass (still in scope of Plan v59):
-- Wire `<OutputActions>` into `LaunchCaptureResult`, `LaunchCommit` daily list, `LaunchCalibrate` reflection.
-- 🟧 plain sub-labels ("Calibrate" → "How did today land?", etc.).
-- 🟧 sticky medical-disclaimer on `/mvp/assessment` + `/launch/calibrate`.
-- Centralised filterable Memory Library (search-by-quote, starred, has-actions filter).
+After approval: one read-through of `docs/v0.1-founding-core-flow.md` should be enough for you to either say "ship it, now enforce in code" or "this step is wrong, fix the flow first."
