@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { RefreshCw, Heart, Share2, Send } from 'lucide-react';
+import { RefreshCw, Heart, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getDailyStatement, getNextStatement, todayStorageKey } from '@/data/iChooseStatements';
 import { IChoosePickerSheet } from './IChoosePickerSheet';
-import { generateAndShareIChoose } from './IChooseShareCard';
-import { useDemoOrLive } from '@/contexts/DemoModeContext';
-import { toast } from 'sonner';
+import { IChooseShareSheet } from './IChooseShareSheet';
 
 export function IChooseHeart() {
-  const { fixtures } = useDemoOrLive();
-  const supporter = fixtures.supportCircle[0];
   const [statement, setStatement] = useState<string>('');
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
 
   useEffect(() => {
     const key = todayStorageKey();
@@ -28,16 +25,6 @@ export function IChooseHeart() {
   const handleCycle = () => persist(getNextStatement(statement || getDailyStatement()));
   const handleUseTodays = () => persist(getDailyStatement());
   const handlePick = (s: string) => persist(s);
-
-  const handleShare = async () => {
-    await generateAndShareIChoose(statement);
-  };
-
-  const handleSendToPerson = async () => {
-    if (!supporter) return;
-    await generateAndShareIChoose(statement, supporter.name);
-    toast.success(`Sent to ${supporter.name}`, { description: 'They\'ll know you\'re showing up today.' });
-  };
 
   if (!statement) return null;
 
@@ -76,6 +63,7 @@ export function IChooseHeart() {
               size="sm"
               onClick={handleCycle}
               className="text-white hover:bg-white/15 hover:text-white"
+              aria-label="Show me a different statement"
             >
               <RefreshCw className="h-4 w-4 mr-1.5" /> New one
             </Button>
@@ -84,27 +72,18 @@ export function IChooseHeart() {
               size="sm"
               onClick={() => setPickerOpen(true)}
               className="text-white hover:bg-white/15 hover:text-white"
+              aria-label="Choose my own statement"
             >
               Choose my own
             </Button>
             <Button
-              variant="ghost"
               size="sm"
-              onClick={handleShare}
-              className="text-white hover:bg-white/15 hover:text-white"
+              onClick={() => setShareOpen(true)}
+              className="bg-white text-brand-orange-700 hover:bg-white/90 min-h-[44px] px-4 font-semibold"
+              aria-label="Share today's choice with someone"
             >
-              <Share2 className="h-4 w-4 mr-1.5" /> Share
+              <Send className="h-4 w-4 mr-1.5" /> Share with someone
             </Button>
-            {supporter && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSendToPerson}
-                className="text-white hover:bg-white/15 hover:text-white"
-              >
-                <Send className="h-4 w-4 mr-1.5" /> Send to {supporter.name}
-              </Button>
-            )}
           </div>
         </div>
       </motion.div>

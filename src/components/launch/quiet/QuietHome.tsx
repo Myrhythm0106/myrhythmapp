@@ -14,6 +14,7 @@ import { useSubject } from '@/launch/persona/SubjectContext';
 import { useStage } from '@/launch/stage/useStage';
 import { StagePicker } from '@/launch/stage/StagePicker';
 import { QuietHomePause } from './QuietHomePause';
+import { useDisplayName } from '@/launch/profile/useDisplayName';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -33,7 +34,8 @@ export function QuietHome() {
   // Caregivers in "supporting" mode see the recovery-toned home for the person they support.
   const effectivePersona = isCaregiver && subject === 'supporting' ? 'recovery' : persona;
   const copy = getPersonaCopy(effectivePersona);
-  const greetName = isCaregiver && subject === 'supporting' ? supportedName : fixtures.name;
+  const realName = useDisplayName(fixtures.name);
+  const greetName = isCaregiver && subject === 'supporting' ? supportedName : realName;
   const greeting = copy.greeting[timeBucket()];
 
   return (
