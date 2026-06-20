@@ -87,3 +87,19 @@ Also tick through `docs/v0.1-test-readiness.md` Founding Core scope-lock section
 ## Approval gate
 
 Approve and I'll run Part 1 first (read-only audit, ~1 batch of parallel sub-agents) and come back with the scorecard before touching code. If you'd rather I batch Part 1 + Commit A together for speed, say "do A with the audit" and I'll fold them.
+
+---
+
+## v59 — Executed (build pass 1)
+
+Shipped:
+- `src/components/shared/OutputActions.tsx` — Copy / Email / Download / Edit toolbar with 44–56px targets, aria-labels, plain-language toasts.
+- Wired `<OutputActions>` into `LaunchMemoryBridge` recording rows.
+- `docs/v0.1-cognitive-accessibility-audit.md` — 10-rule rubric, per-route scorecards, ranked fix queue.
+- `docs/v0.1-weekend-self-test.md` — 30-min Saturday script with pass/hold gates.
+
+Deferred to next pass (still in scope of Plan v59):
+- Wire `<OutputActions>` into `LaunchCaptureResult`, `LaunchCommit` daily list, `LaunchCalibrate` reflection.
+- 🟧 plain sub-labels ("Calibrate" → "How did today land?", etc.).
+- 🟧 sticky medical-disclaimer on `/mvp/assessment` + `/launch/calibrate`.
+- Centralised filterable Memory Library (search-by-quote, starred, has-actions filter).
