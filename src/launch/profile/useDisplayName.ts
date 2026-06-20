@@ -29,12 +29,20 @@ export function useDisplayName(fallback: string = 'friend'): string {
 
       // 1. profiles.name
       try {
-        const { data } = await supabase
+        const { data } = await (supabase as unknown as {
+          from: (t: string) => {
+            select: (c: string) => {
+              eq: (c: string, v: string) => {
+                maybeSingle: () => Promise<{ data: { name?: string } | null }>;
+              };
+            };
+          };
+        })
           .from('profiles')
           .select('name')
           .eq('user_id', user.id)
           .maybeSingle();
-        const fromProfile = firstWord((data as { name?: string } | null)?.name ?? null);
+        const fromProfile = firstWord(data?.name ?? null);
         if (fromProfile && !cancelled) {
           setName(fromProfile);
           return;

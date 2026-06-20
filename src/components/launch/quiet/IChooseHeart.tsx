@@ -94,6 +94,12 @@ export function IChooseHeart() {
         onPick={handlePick}
         onUseTodays={handleUseTodays}
       />
+
+      <IChooseShareSheet
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        statement={statement}
+      />
     </>
   );
 }
