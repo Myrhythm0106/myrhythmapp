@@ -106,6 +106,38 @@ export default function LaunchWelcome() {
               ))}
             </div>
 
+            {bhs && (
+              <div className="mb-10 lg:mb-12 p-5 border border-stone-200 rounded-sm bg-stone-50/50">
+                <div className="flex items-baseline justify-between mb-3">
+                  <span className="text-[10px] tracking-[0.3em] uppercase font-medium text-stone-500">
+                    Your starting MYRHYTHM snapshot
+                  </span>
+                  <span style={SERIF} className="text-3xl text-teal-700">{bhs.total}<span className="text-sm text-stone-400">/100</span></span>
+                </div>
+                <div className="grid grid-cols-8 gap-1.5">
+                  {LETTER_ORDER.map((l, i) => {
+                    const v = bhs.letters[l.id] ?? 0;
+                    const pct = Math.round((v / 3) * 100);
+                    return (
+                      <div key={i} className="flex flex-col items-center gap-1">
+                        <div className="w-full h-12 bg-stone-200 rounded-sm relative overflow-hidden">
+                          <div
+                            className="absolute bottom-0 left-0 right-0 bg-teal-600/70"
+                            style={{ height: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-[10px] font-semibold text-stone-600">{l.letter}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-[10px] text-stone-400 mt-3 leading-relaxed">
+                  A snapshot only — not a clinical score. We'll track how this shifts as you build your rhythm.
+                </p>
+              </div>
+            )}
+
+
             <div className="flex flex-col items-start gap-5">
               <button
                 onClick={() => navigate('/launch/payment')}
