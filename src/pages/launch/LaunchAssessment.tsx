@@ -66,12 +66,24 @@ export default function LaunchAssessment() {
 
   const handleNext = () => {
     if (isLast) {
+      const brainHealthScore = computeBrainHealthScore(bank, answers);
       const results = {
         userType: persona,
-        rhythmPreference: answers.rhythmPreference as string,
-        keyStruggles: (answers.keyStruggles as string[]) || [],
-        goals: (answers.goals as string[]) || [],
-        hasSupport: resolveHasSupport(answers.hasSupport as string),
+        // New MYRHYTHM-anchored answers (one per letter).
+        mindset: answers.mindset as string,
+        yesReality: answers.yesReality as string,
+        rhythm: answers.rhythm as string,
+        harnessSupport: answers.harnessSupport as string,
+        yourVictories: (answers.yourVictories as string[]) || [],
+        transform: (answers.transform as string[]) || [],
+        heal: answers.heal as string,
+        multiply: answers.multiply as string,
+        // Legacy derived fields kept for downstream compatibility.
+        rhythmPreference: answers.rhythm as string,
+        keyStruggles: (answers.transform as string[]) || [],
+        goals: (answers.yourVictories as string[]) || [],
+        hasSupport: resolveHasSupport(answers.harnessSupport as string),
+        brainHealthScore,
       };
       localStorage.setItem(
         'myrhythm_launch_mode',
@@ -79,6 +91,7 @@ export default function LaunchAssessment() {
           isLaunchMode: true,
           assessmentCompleted: true,
           assessmentResults: results,
+          brainHealthScore,
           lastViewedWhatsNew: null,
           purchasedFeatures: [],
         })
