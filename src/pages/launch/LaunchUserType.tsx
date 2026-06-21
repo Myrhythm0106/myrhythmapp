@@ -53,8 +53,10 @@ export default function LaunchUserType() {
   return (
     <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto py-12 px-4">
+      <div className="flex-1 overflow-y-auto py-6 px-4">
         <div className="max-w-4xl mx-auto">
+          <LaunchPageHeader fallbackPath="/launch/register" />
+
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
