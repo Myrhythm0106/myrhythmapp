@@ -1,16 +1,32 @@
-// Persona-specific assessment banks for /launch/assessment.
+// Persona-specific MYRHYTHM assessment banks for /launch/assessment.
+// 8 questions, one per letter of M-Y-R-H-Y-T-H-M, each framed around brain health.
 // Persona comes from localStorage('myrhythm_user_type'), written by /launch/user-type.
 
 export type PersonaKey = 'brain-injury' | 'caregiver' | 'executive' | 'student';
+
+export type LetterId =
+  | 'mindset'        // M  — Mindset
+  | 'yesReality'     // Y  — Yes to Reality
+  | 'rhythm'         // R  — Rhythm
+  | 'harnessSupport' // H  — Harness Support
+  | 'yourVictories'  // Y  — Your Victories
+  | 'transform'      // T  — Transform
+  | 'heal'           // H  — Heal
+  | 'multiply';      // M  — Multiply / Meaning
 
 export interface AssessmentOption {
   value: string;
   label: string;
   description?: string;
+  /** 0 = high friction, 3 = strong brain-health alignment. */
+  score: 0 | 1 | 2 | 3;
 }
 
 export interface AssessmentQuestion {
-  id: 'rhythmPreference' | 'keyStruggles' | 'goals' | 'hasSupport';
+  id: LetterId;
+  letter: 'M' | 'Y' | 'R' | 'H' | 'T';
+  word: string;
+  brainHealthLens: string;
   title: string;
   subtitle?: string;
   multiSelect?: boolean;
@@ -19,224 +35,425 @@ export interface AssessmentQuestion {
 
 export interface AssessmentBank {
   persona: PersonaKey;
-  intro: string; // short line shown above progress bar
-  questions: AssessmentQuestion[];
+  intro: string;
+  questions: AssessmentQuestion[]; // always 8, in MYRHYTHM order
 }
 
-/** Values for Q4 (hasSupport) that should resolve to `hasSupport: false`. */
+/** Legacy derivation: which harnessSupport values mean "no support". */
 const NO_SUPPORT_VALUES = new Set(['solo', 'on-my-own', 'not-yet', 'just-me']);
-
 export function resolveHasSupport(answerValue: string | undefined): boolean {
   if (!answerValue) return false;
   return !NO_SUPPORT_VALUES.has(answerValue);
 }
 
+/* ------------------------------------------------------------------ */
+/*  Brain-injury persona                                              */
+/* ------------------------------------------------------------------ */
 const brainInjury: AssessmentBank = {
   persona: 'brain-injury',
-  intro: 'A few gentle questions so we can shape your rhythm.',
+  intro: 'Eight gentle questions, one per letter of MYRHYTHM.',
   questions: [
     {
-      id: 'rhythmPreference',
+      id: 'mindset', letter: 'M', word: 'Mindset',
+      brainHealthLens: 'Cognitive confidence & self-talk',
+      title: 'How do you feel about your brain right now?',
+      subtitle: 'Honest is best — no wrong answer.',
+      options: [
+        { value: 'fragile', label: 'Fragile and frustrated', score: 0 },
+        { value: 'cautious', label: 'Cautious but curious', score: 1 },
+        { value: 'rebuilding', label: 'Actively rebuilding', score: 2 },
+        { value: 'capable', label: 'Capable, just different', score: 3 },
+      ],
+    },
+    {
+      id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      brainHealthLens: 'Honest baseline of current state',
+      title: 'Where are you in your recovery?',
+      options: [
+        { value: 'early', label: 'Early — finding my feet', score: 0 },
+        { value: 'mid', label: 'Mid — stitching routine back together', score: 1 },
+        { value: 'steady', label: 'Steady — most days work', score: 2 },
+        { value: 'thriving', label: 'Thriving on my own terms', score: 3 },
+      ],
+    },
+    {
+      id: 'rhythm', letter: 'R', word: 'Rhythm',
+      brainHealthLens: 'Energy / cognitive peak window',
       title: 'When does your brain feel clearest?',
-      subtitle: "We'll suggest the important things in that window.",
+      subtitle: "We'll suggest important things in that window.",
       options: [
-        { value: 'morning', label: 'Morning', description: 'Clearest before noon' },
-        { value: 'afternoon', label: 'Afternoon', description: 'Mid-day is best' },
-        { value: 'evening', label: 'Evening', description: 'Later in the day' },
-        { value: 'varies', label: 'It varies', description: 'Different every day' },
+        { value: 'varies', label: 'It varies day to day', score: 0 },
+        { value: 'evening', label: 'Evening', score: 2 },
+        { value: 'afternoon', label: 'Afternoon', score: 2 },
+        { value: 'morning', label: 'Morning', score: 3 },
       ],
     },
     {
-      id: 'keyStruggles',
-      title: "What's hardest right now?",
-      subtitle: 'Pick anything that fits.',
-      multiSelect: true,
+      id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      brainHealthLens: 'Social scaffolding',
+      title: "Who's in your corner?",
       options: [
-        { value: 'memory', label: 'Remembering appointments', description: 'Things slip past me' },
-        { value: 'fatigue', label: 'Fatigue and overwhelm', description: 'Energy runs out fast' },
-        { value: 'starting', label: 'Starting tasks', description: 'I freeze before I begin' },
-        { value: 'conversations', label: 'Following conversations', description: 'Hard to keep up live' },
+        { value: 'solo', label: 'Prefer solo for now', score: 0 },
+        { value: 'building', label: 'Building my circle', score: 1 },
+        { value: 'one-person', label: 'One key person', score: 2 },
+        { value: 'few-people', label: 'A few trusted people', score: 3 },
       ],
     },
     {
-      id: 'goals',
+      id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      brainHealthLens: 'Reward & momentum',
       title: 'What would a good week look like?',
       subtitle: 'Pick anything that fits.',
       multiSelect: true,
       options: [
-        { value: 'steadier-routine', label: 'A steadier routine' },
-        { value: 'fewer-missed', label: 'Fewer missed things' },
-        { value: 'more-energy', label: 'More energy left over' },
-        { value: 'feel-like-me', label: 'Feeling more like myself' },
+        { value: 'steadier-routine', label: 'A steadier routine', score: 2 },
+        { value: 'fewer-missed', label: 'Fewer missed things', score: 2 },
+        { value: 'more-energy', label: 'More energy left over', score: 3 },
+        { value: 'feel-like-me', label: 'Feeling more like myself', score: 3 },
       ],
     },
     {
-      id: 'hasSupport',
-      title: "Who's in your corner?",
-      subtitle: 'Just so we know how much to lean on them.',
+      id: 'transform', letter: 'T', word: 'Transform',
+      brainHealthLens: 'Cognitive load to reduce',
+      title: "What's hardest right now?",
+      subtitle: 'Pick anything that fits.',
+      multiSelect: true,
       options: [
-        { value: 'few-people', label: 'A few people', description: 'Family and friends nearby' },
-        { value: 'one-person', label: 'One key person', description: 'My anchor' },
-        { value: 'building', label: 'Building it', description: 'Working on my circle' },
-        { value: 'solo', label: 'Prefer solo for now', description: 'Just me for the moment' },
+        { value: 'memory', label: 'Remembering appointments', score: 0 },
+        { value: 'fatigue', label: 'Fatigue and overwhelm', score: 0 },
+        { value: 'starting', label: 'Starting tasks', score: 1 },
+        { value: 'conversations', label: 'Following conversations', score: 1 },
+      ],
+    },
+    {
+      id: 'heal', letter: 'H', word: 'Heal',
+      brainHealthLens: 'Restorative habits',
+      title: 'What helps your brain reset?',
+      options: [
+        { value: 'none-yet', label: "Haven't found it yet", score: 0 },
+        { value: 'rest', label: 'Quiet rest / nap', score: 2 },
+        { value: 'nature', label: 'Time outside / nature', score: 3 },
+        { value: 'gentle-movement', label: 'Gentle movement', score: 3 },
+      ],
+    },
+    {
+      id: 'multiply', letter: 'M', word: 'Meaning',
+      brainHealthLens: 'Purpose & long-term motivation',
+      title: 'What would "feeling like yourself" unlock?',
+      options: [
+        { value: 'just-cope', label: 'Just to cope each day', score: 1 },
+        { value: 'connect', label: 'Reconnect with people I love', score: 2 },
+        { value: 'work', label: 'Get back to work or study', score: 2 },
+        { value: 'help-others', label: 'Help others on this path', score: 3 },
       ],
     },
   ],
 };
 
+/* ------------------------------------------------------------------ */
+/*  Caregiver persona                                                 */
+/* ------------------------------------------------------------------ */
 const caregiver: AssessmentBank = {
   persona: 'caregiver',
-  intro: "A few quick questions so we can match your reality.",
+  intro: 'Eight questions shaped around your reality as a carer.',
   questions: [
     {
-      id: 'rhythmPreference',
-      title: 'When do you have your own bandwidth?',
-      subtitle: "We'll protect that window for you.",
+      id: 'mindset', letter: 'M', word: 'Mindset',
+      brainHealthLens: 'Cognitive confidence & self-talk',
+      title: 'How is your own headspace right now?',
       options: [
-        { value: 'morning', label: 'Early morning' },
-        { value: 'afternoon', label: 'Nap windows / mid-day' },
-        { value: 'evening', label: 'Evening' },
-        { value: 'varies', label: 'Rarely — it varies' },
+        { value: 'burnt-out', label: 'Burnt out', score: 0 },
+        { value: 'stretched', label: 'Stretched but coping', score: 1 },
+        { value: 'steady', label: 'Mostly steady', score: 2 },
+        { value: 'resourced', label: 'Resourced and clear', score: 3 },
       ],
     },
     {
-      id: 'keyStruggles',
+      id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      brainHealthLens: 'Honest baseline of current state',
+      title: 'How intense is the caring load this season?',
+      options: [
+        { value: 'crisis', label: 'In crisis mode', score: 0 },
+        { value: 'heavy', label: 'Heavy and constant', score: 1 },
+        { value: 'manageable', label: 'Manageable most days', score: 2 },
+        { value: 'settled', label: 'Settled into a rhythm', score: 3 },
+      ],
+    },
+    {
+      id: 'rhythm', letter: 'R', word: 'Rhythm',
+      brainHealthLens: 'Your own peak window',
+      title: 'When do you have your own bandwidth?',
+      subtitle: "We'll protect that window for you.",
+      options: [
+        { value: 'varies', label: 'Rarely — it varies', score: 0 },
+        { value: 'evening', label: 'Evening', score: 2 },
+        { value: 'afternoon', label: 'Nap windows / mid-day', score: 2 },
+        { value: 'morning', label: 'Early morning', score: 3 },
+      ],
+    },
+    {
+      id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      brainHealthLens: 'Social scaffolding',
+      title: 'Are other people helping?',
+      options: [
+        { value: 'not-yet', label: 'Not yet', score: 0 },
+        { value: 'want-to-ask', label: "I want to ask but haven't", score: 1 },
+        { value: 'occasionally', label: 'Occasionally', score: 2 },
+        { value: 'regularly', label: 'Yes, regularly', score: 3 },
+      ],
+    },
+    {
+      id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      brainHealthLens: 'Reward & momentum',
+      title: 'What would help most this week?',
+      subtitle: 'Pick anything that fits.',
+      multiSelect: true,
+      options: [
+        { value: 'shared-calendar', label: 'A shared calendar with them', score: 2 },
+        { value: 'capture-events', label: 'Quick capture of what happened', score: 2 },
+        { value: 'gentler-reminders', label: 'Gentler reminders for them', score: 3 },
+        { value: 'clinician-record', label: 'A record I can show the clinician', score: 3 },
+      ],
+    },
+    {
+      id: 'transform', letter: 'T', word: 'Transform',
+      brainHealthLens: 'Cognitive load to reduce',
       title: 'What drains you most?',
       subtitle: 'Pick anything that fits.',
       multiSelect: true,
       options: [
-        { value: 'appointments', label: 'Appointment juggling' },
-        { value: 'repeating', label: 'Repeating myself' },
-        { value: 'sleep', label: 'My own sleep' },
-        { value: 'no-me-time', label: 'No time for me' },
+        { value: 'appointments', label: 'Appointment juggling', score: 0 },
+        { value: 'repeating', label: 'Repeating myself', score: 0 },
+        { value: 'sleep', label: 'My own sleep', score: 0 },
+        { value: 'no-me-time', label: 'No time for me', score: 1 },
       ],
     },
     {
-      id: 'goals',
-      title: 'What would help most?',
-      subtitle: 'Pick anything that fits.',
-      multiSelect: true,
+      id: 'heal', letter: 'H', word: 'Heal',
+      brainHealthLens: 'Restorative habits',
+      title: 'What restores you?',
       options: [
-        { value: 'shared-calendar', label: 'Shared calendar with them' },
-        { value: 'capture-events', label: 'Quick capture of what happened' },
-        { value: 'gentler-reminders', label: 'Gentler reminders for them' },
-        { value: 'clinician-record', label: 'A record I can show the clinician' },
+        { value: 'none-yet', label: "Haven't found it yet", score: 0 },
+        { value: 'solo-time', label: 'Solo quiet time', score: 2 },
+        { value: 'friends', label: 'Time with friends', score: 3 },
+        { value: 'movement', label: 'Exercise or movement', score: 3 },
       ],
     },
     {
-      id: 'hasSupport',
-      title: 'Are other people helping?',
-      subtitle: 'Family, friends or paid support.',
+      id: 'multiply', letter: 'M', word: 'Meaning',
+      brainHealthLens: 'Purpose & long-term motivation',
+      title: 'What keeps you going as a carer?',
       options: [
-        { value: 'regularly', label: 'Yes, regularly' },
-        { value: 'occasionally', label: 'Occasionally' },
-        { value: 'not-yet', label: 'Not yet' },
-        { value: 'want-to-ask', label: 'I want to ask but haven\'t' },
+        { value: 'duty', label: "It's just duty right now", score: 1 },
+        { value: 'love', label: 'Love for the person', score: 2 },
+        { value: 'their-progress', label: 'Seeing them progress', score: 3 },
+        { value: 'shared-purpose', label: 'Shared purpose with others', score: 3 },
       ],
     },
   ],
 };
 
+/* ------------------------------------------------------------------ */
+/*  Executive persona                                                 */
+/* ------------------------------------------------------------------ */
 const executive: AssessmentBank = {
   persona: 'executive',
-  intro: 'Four questions to shape your focus.',
+  intro: 'Eight questions to shape your focus and defend your best thinking.',
   questions: [
     {
-      id: 'rhythmPreference',
+      id: 'mindset', letter: 'M', word: 'Mindset',
+      brainHealthLens: 'Cognitive confidence & self-talk',
+      title: 'How is your cognitive sharpness lately?',
+      options: [
+        { value: 'foggy', label: 'Foggy and reactive', score: 0 },
+        { value: 'inconsistent', label: 'Inconsistent', score: 1 },
+        { value: 'mostly-sharp', label: 'Mostly sharp', score: 2 },
+        { value: 'on-it', label: 'On it, deliberate', score: 3 },
+      ],
+    },
+    {
+      id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      brainHealthLens: 'Honest baseline of current state',
+      title: 'How loaded is your week right now?',
+      options: [
+        { value: 'overloaded', label: 'Overloaded', score: 0 },
+        { value: 'busy', label: 'Busy but moving', score: 1 },
+        { value: 'demanding', label: 'Demanding, manageable', score: 2 },
+        { value: 'paced', label: 'Well-paced', score: 3 },
+      ],
+    },
+    {
+      id: 'rhythm', letter: 'R', word: 'Rhythm',
+      brainHealthLens: 'Deep-work window',
       title: 'When is your deep-work window?',
       subtitle: "We'll defend that block on your calendar.",
       options: [
-        { value: 'morning', label: 'Early morning' },
-        { value: 'late-morning', label: 'Late morning' },
-        { value: 'afternoon', label: 'Afternoon' },
-        { value: 'evening', label: 'Evening' },
+        { value: 'evening', label: 'Evening', score: 2 },
+        { value: 'afternoon', label: 'Afternoon', score: 2 },
+        { value: 'late-morning', label: 'Late morning', score: 3 },
+        { value: 'morning', label: 'Early morning', score: 3 },
       ],
     },
     {
-      id: 'keyStruggles',
-      title: 'What erodes your focus?',
-      subtitle: 'Pick anything that fits.',
-      multiSelect: true,
+      id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      brainHealthLens: 'Social scaffolding',
+      title: 'Who do you sync with?',
       options: [
-        { value: 'meetings', label: 'Meeting overload' },
-        { value: 'context-switch', label: 'Context-switching' },
-        { value: 'decision-fatigue', label: 'Decision fatigue' },
-        { value: 'after-hours', label: 'After-hours pings' },
+        { value: 'just-me', label: 'Just me', score: 0 },
+        { value: 'partner', label: 'Partner / spouse', score: 2 },
+        { value: 'team', label: 'My team', score: 3 },
+        { value: 'ea', label: 'EA or chief of staff', score: 3 },
       ],
     },
     {
-      id: 'goals',
+      id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      brainHealthLens: 'Reward & momentum',
       title: 'What would a winning week deliver?',
       subtitle: 'Pick anything that fits.',
       multiSelect: true,
       options: [
-        { value: 'focus-blocks', label: 'Protected focus blocks' },
-        { value: 'fewer-dropped', label: 'Fewer dropped follow-ups' },
-        { value: 'daily-top-3', label: 'A clear daily top-3' },
-        { value: 'recovery-time', label: 'Real recovery time' },
+        { value: 'focus-blocks', label: 'Protected focus blocks', score: 3 },
+        { value: 'fewer-dropped', label: 'Fewer dropped follow-ups', score: 2 },
+        { value: 'daily-top-3', label: 'A clear daily top-3', score: 3 },
+        { value: 'recovery-time', label: 'Real recovery time', score: 3 },
       ],
     },
     {
-      id: 'hasSupport',
-      title: 'Who do you sync with?',
-      subtitle: 'So invites and digests land in the right place.',
+      id: 'transform', letter: 'T', word: 'Transform',
+      brainHealthLens: 'Cognitive load to reduce',
+      title: 'What erodes your focus?',
+      subtitle: 'Pick anything that fits.',
+      multiSelect: true,
       options: [
-        { value: 'team', label: 'My team' },
-        { value: 'ea', label: 'EA or chief of staff' },
-        { value: 'partner', label: 'Partner / spouse' },
-        { value: 'just-me', label: 'Just me' },
+        { value: 'meetings', label: 'Meeting overload', score: 0 },
+        { value: 'context-switch', label: 'Context-switching', score: 0 },
+        { value: 'decision-fatigue', label: 'Decision fatigue', score: 0 },
+        { value: 'after-hours', label: 'After-hours pings', score: 1 },
+      ],
+    },
+    {
+      id: 'heal', letter: 'H', word: 'Heal',
+      brainHealthLens: 'Restorative habits',
+      title: 'What actually recharges you?',
+      options: [
+        { value: 'nothing', label: "Nothing reliably yet", score: 0 },
+        { value: 'screens-off', label: 'Screens off / quiet', score: 2 },
+        { value: 'sleep', label: 'Proper sleep', score: 3 },
+        { value: 'exercise', label: 'Hard exercise', score: 3 },
+      ],
+    },
+    {
+      id: 'multiply', letter: 'M', word: 'Meaning',
+      brainHealthLens: 'Purpose & long-term motivation',
+      title: 'What is this season of work really for?',
+      options: [
+        { value: 'survival', label: 'Survival mode', score: 1 },
+        { value: 'ambition', label: 'Personal ambition', score: 2 },
+        { value: 'team-impact', label: 'Building my team', score: 3 },
+        { value: 'legacy', label: 'Long-term legacy', score: 3 },
       ],
     },
   ],
 };
 
+/* ------------------------------------------------------------------ */
+/*  Student persona                                                   */
+/* ------------------------------------------------------------------ */
 const student: AssessmentBank = {
   persona: 'student',
-  intro: 'Four questions to pace your term.',
+  intro: 'Eight questions to pace your term.',
   questions: [
     {
-      id: 'rhythmPreference',
+      id: 'mindset', letter: 'M', word: 'Mindset',
+      brainHealthLens: 'Cognitive confidence & self-talk',
+      title: 'How confident do you feel about learning right now?',
+      options: [
+        { value: 'doubting', label: 'Doubting myself', score: 0 },
+        { value: 'mixed', label: 'Mixed', score: 1 },
+        { value: 'getting-there', label: 'Getting there', score: 2 },
+        { value: 'capable', label: 'I know I can do this', score: 3 },
+      ],
+    },
+    {
+      id: 'yesReality', letter: 'Y', word: 'Yes to Reality',
+      brainHealthLens: 'Honest baseline of current state',
+      title: 'Where are you in the term?',
+      options: [
+        { value: 'behind', label: 'Behind and stressed', score: 0 },
+        { value: 'catching-up', label: 'Catching up', score: 1 },
+        { value: 'on-track', label: 'On track', score: 2 },
+        { value: 'ahead', label: 'Ahead of schedule', score: 3 },
+      ],
+    },
+    {
+      id: 'rhythm', letter: 'R', word: 'Rhythm',
+      brainHealthLens: 'When learning sticks best',
       title: 'When do you study best?',
       subtitle: "We'll suggest study blocks in that window.",
       options: [
-        { value: 'morning', label: 'Morning' },
-        { value: 'afternoon', label: 'Afternoon' },
-        { value: 'evening', label: 'Evening' },
-        { value: 'late-night', label: 'Late night' },
+        { value: 'late-night', label: 'Late night', score: 1 },
+        { value: 'evening', label: 'Evening', score: 2 },
+        { value: 'afternoon', label: 'Afternoon', score: 2 },
+        { value: 'morning', label: 'Morning', score: 3 },
       ],
     },
     {
-      id: 'keyStruggles',
-      title: "What's getting in the way?",
-      subtitle: 'Pick anything that fits.',
-      multiSelect: true,
+      id: 'harnessSupport', letter: 'H', word: 'Harness Support',
+      brainHealthLens: 'Accountability scaffolding',
+      title: 'Who keeps you accountable?',
       options: [
-        { value: 'procrastination', label: 'Procrastination' },
-        { value: 'recall', label: 'Recall under pressure' },
-        { value: 'volume', label: 'Overwhelm with volume' },
-        { value: 'energy', label: 'Sleep and energy' },
+        { value: 'on-my-own', label: 'On my own', score: 0 },
+        { value: 'family', label: 'Family', score: 2 },
+        { value: 'study-group', label: 'Study group', score: 3 },
+        { value: 'tutor', label: 'Tutor or mentor', score: 3 },
       ],
     },
     {
-      id: 'goals',
+      id: 'yourVictories', letter: 'Y', word: 'Your Victories',
+      brainHealthLens: 'Reward & momentum',
       title: "What's the goal this term?",
       subtitle: 'Pick anything that fits.',
       multiSelect: true,
       options: [
-        { value: 'study-rhythm', label: 'Steadier study rhythm' },
-        { value: 'better-recall', label: 'Better recall' },
-        { value: 'finish-on-time', label: 'Finish on time' },
-        { value: 'reduce-stress', label: 'Reduce stress' },
+        { value: 'study-rhythm', label: 'Steadier study rhythm', score: 3 },
+        { value: 'better-recall', label: 'Better recall', score: 3 },
+        { value: 'finish-on-time', label: 'Finish on time', score: 2 },
+        { value: 'reduce-stress', label: 'Reduce stress', score: 3 },
       ],
     },
     {
-      id: 'hasSupport',
-      title: 'Who keeps you accountable?',
+      id: 'transform', letter: 'T', word: 'Transform',
+      brainHealthLens: 'Cognitive load to reduce',
+      title: "What's getting in the way?",
+      subtitle: 'Pick anything that fits.',
+      multiSelect: true,
       options: [
-        { value: 'study-group', label: 'Study group' },
-        { value: 'tutor', label: 'Tutor or mentor' },
-        { value: 'family', label: 'Family' },
-        { value: 'on-my-own', label: 'On my own' },
+        { value: 'procrastination', label: 'Procrastination', score: 0 },
+        { value: 'recall', label: 'Recall under pressure', score: 0 },
+        { value: 'volume', label: 'Overwhelm with volume', score: 0 },
+        { value: 'energy', label: 'Sleep and energy', score: 1 },
+      ],
+    },
+    {
+      id: 'heal', letter: 'H', word: 'Heal',
+      brainHealthLens: 'Restorative habits',
+      title: 'What actually recharges your brain?',
+      options: [
+        { value: 'none-yet', label: "Haven't found it yet", score: 0 },
+        { value: 'friends', label: 'Time with friends', score: 2 },
+        { value: 'sleep', label: 'Proper sleep', score: 3 },
+        { value: 'movement', label: 'Exercise / sport', score: 3 },
+      ],
+    },
+    {
+      id: 'multiply', letter: 'M', word: 'Meaning',
+      brainHealthLens: 'Purpose & long-term motivation',
+      title: 'Why does this study matter to you?',
+      options: [
+        { value: 'have-to', label: 'I just have to do it', score: 1 },
+        { value: 'qualification', label: 'For the qualification', score: 2 },
+        { value: 'career', label: 'For the career I want', score: 3 },
+        { value: 'change-world', label: 'To change something I care about', score: 3 },
       ],
     },
   ],
@@ -251,7 +468,6 @@ const banks: Record<PersonaKey, AssessmentBank> = {
 
 export function getAssessmentBank(persona: string | null | undefined): AssessmentBank | null {
   if (!persona) return null;
-  // Legacy values from earlier onboarding builds.
   const legacyMap: Record<string, PersonaKey> = {
     recovery: 'brain-injury',
     'goal-achiever': 'executive',
@@ -269,3 +485,52 @@ export const PERSONA_LABEL: Record<PersonaKey, string> = {
   executive: 'Protecting my focus at work',
   student: 'Studying and learning',
 };
+
+/* ------------------------------------------------------------------ */
+/*  Scoring                                                           */
+/* ------------------------------------------------------------------ */
+
+export type LetterScores = Record<LetterId, number>;
+
+export interface BrainHealthScore {
+  /** Normalised 0-100. */
+  total: number;
+  /** Raw per-letter score, 0-3 each. */
+  letters: LetterScores;
+  /** Snapshot version — bump when question banks change. */
+  version: 1;
+}
+
+/**
+ * Compute the Brain Health Score from raw answers.
+ * Multi-select: average of selected option scores.
+ * Total normalised: sum(letters) / (8 * 3) * 100, rounded.
+ */
+export function computeBrainHealthScore(
+  bank: AssessmentBank,
+  answers: Record<string, string | string[]>
+): BrainHealthScore {
+  const letters = {} as LetterScores;
+  let raw = 0;
+  for (const q of bank.questions) {
+    const ans = answers[q.id];
+    let score = 0;
+    if (q.multiSelect) {
+      const arr = (ans as string[]) || [];
+      if (arr.length) {
+        const sum = arr.reduce((s, v) => {
+          const opt = q.options.find((o) => o.value === v);
+          return s + (opt?.score ?? 0);
+        }, 0);
+        score = sum / arr.length;
+      }
+    } else {
+      const opt = q.options.find((o) => o.value === ans);
+      score = opt?.score ?? 0;
+    }
+    letters[q.id] = Math.round(score * 10) / 10;
+    raw += score;
+  }
+  const total = Math.round((raw / (bank.questions.length * 3)) * 100);
+  return { total, letters, version: 1 };
+}

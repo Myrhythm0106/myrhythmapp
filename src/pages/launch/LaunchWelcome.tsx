@@ -8,21 +8,40 @@ import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
+interface BHSnapshot {
+  total: number;
+  letters: Record<string, number>;
+}
+
+const LETTER_ORDER: Array<{ id: string; letter: string }> = [
+  { id: 'mindset', letter: 'M' },
+  { id: 'yesReality', letter: 'Y' },
+  { id: 'rhythm', letter: 'R' },
+  { id: 'harnessSupport', letter: 'H' },
+  { id: 'yourVictories', letter: 'Y' },
+  { id: 'transform', letter: 'T' },
+  { id: 'heal', letter: 'H' },
+  { id: 'multiply', letter: 'M' },
+];
+
 export default function LaunchWelcome() {
   const navigate = useNavigate();
   const [persona, setPersona] = useState<Persona>('recovery');
+  const [bhs, setBhs] = useState<BHSnapshot | null>(null);
 
   useEffect(() => {
     const direct = localStorage.getItem('myrhythm_user_type');
     let raw: string | null = direct;
-    if (!raw) {
-      const saved = localStorage.getItem('myrhythm_launch_mode');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          raw = data?.assessmentResults?.userType ?? data?.selectedUserType ?? null;
-        } catch { /* noop */ }
-      }
+    const saved = localStorage.getItem('myrhythm_launch_mode');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (!raw) raw = data?.assessmentResults?.userType ?? data?.selectedUserType ?? null;
+        const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
+        if (score && typeof score.total === 'number') {
+          setBhs({ total: score.total, letters: score.letters || {} });
+        }
+      } catch { /* noop */ }
     }
     setPersona(mapToPersona(raw));
   }, []);
@@ -86,6 +105,38 @@ export default function LaunchWelcome() {
                 </motion.div>
               ))}
             </div>
+
+            {bhs && (
+              <div className="mb-10 lg:mb-12 p-5 border border-stone-200 rounded-sm bg-stone-50/50">
+                <div className="flex items-baseline justify-between mb-3">
+                  <span className="text-[10px] tracking-[0.3em] uppercase font-medium text-stone-500">
+                    Your starting MYRHYTHM snapshot
+                  </span>
+                  <span style={SERIF} className="text-3xl text-teal-700">{bhs.total}<span className="text-sm text-stone-400">/100</span></span>
+                </div>
+                <div className="grid grid-cols-8 gap-1.5">
+                  {LETTER_ORDER.map((l, i) => {
+                    const v = bhs.letters[l.id] ?? 0;
+                    const pct = Math.round((v / 3) * 100);
+                    return (
+                      <div key={i} className="flex flex-col items-center gap-1">
+                        <div className="w-full h-12 bg-stone-200 rounded-sm relative overflow-hidden">
+                          <div
+                            className="absolute bottom-0 left-0 right-0 bg-teal-600/70"
+                            style={{ height: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-[10px] font-semibold text-stone-600">{l.letter}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+                <p className="text-[10px] text-stone-400 mt-3 leading-relaxed">
+                  A snapshot only — not a clinical score. We'll track how this shifts as you build your rhythm.
+                </p>
+              </div>
+            )}
+
 
             <div className="flex flex-col items-start gap-5">
               <button
