@@ -8,6 +8,7 @@ import { LiveTranscriptRibbon } from '@/components/launch/circle/LiveTranscriptR
 import { SendConfirmation } from '@/components/launch/circle/SendConfirmation';
 import { QueuedDrawer, type QueuedCapture } from '@/components/launch/circle/QueuedDrawer';
 import { FirstSendCoachmark } from '@/components/launch/circle/FirstSendCoachmark';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 type Mode = 'tap' | 'hold';
 const MODE_KEY = 'mr:sc-capture-mode';
@@ -243,6 +244,7 @@ export default function LaunchSCCapture() {
       {confirmation && (
         <FirstSendCoachmark recipientName={recipientName} recipientId={subjectId} />
       )}
+      <LaunchQuickActions />
     </div>
   );
 }

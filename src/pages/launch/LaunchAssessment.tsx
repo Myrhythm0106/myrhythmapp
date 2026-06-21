@@ -1,86 +1,42 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, ArrowLeft, User, Clock, Target, Heart, Users, Check } from 'lucide-react';
+import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
-import { LaunchCard } from '@/components/launch/LaunchCard';
+import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
-
-interface Question {
-  id: string;
-  title: string;
-  subtitle: string;
-  icon: React.ElementType;
-  options: { value: string; label: string; description: string }[];
-  multiSelect?: boolean;
-}
-
-const questions: Question[] = [
-  {
-    id: 'userType',
-    title: "What brings you here?",
-    subtitle: "This helps us personalize your experience",
-    icon: User,
-    options: [
-      { value: 'recovery', label: "Recovery Journey", description: "Post-rehabilitation, building new routines" },
-      { value: 'goal-achiever', label: "Achieving Goals", description: "Organizing life, hitting targets" },
-      { value: 'caregiver', label: "Supporting Someone", description: "Helping a family member or friend" },
-    ],
-  },
-  {
-    id: 'rhythmPreference',
-    title: "When's your best time?",
-    subtitle: "We'll suggest tasks during your peak hours",
-    icon: Clock,
-    options: [
-      { value: 'morning', label: "Morning Person", description: "I'm sharpest before noon" },
-      { value: 'afternoon', label: "Afternoon Focus", description: "I hit my stride mid-day" },
-      { value: 'evening', label: "Night Owl", description: "I do my best work later" },
-    ],
-  },
-  {
-    id: 'keyStruggles',
-    title: "What's your biggest challenge?",
-    subtitle: "Select all that apply",
-    icon: Target,
-    multiSelect: true,
-    options: [
-      { value: 'memory', label: "Remembering things", description: "Forgetting appointments, tasks" },
-      { value: 'motivation', label: "Staying motivated", description: "Starting and finishing tasks" },
-      { value: 'overwhelm', label: "Feeling overwhelmed", description: "Too much to do" },
-      { value: 'routine', label: "Building routines", description: "Creating consistent habits" },
-    ],
-  },
-  {
-    id: 'goals',
-    title: "What do you want to achieve?",
-    subtitle: "Select all that apply",
-    icon: Heart,
-    multiSelect: true,
-    options: [
-      { value: 'organize', label: "Get organized", description: "Clear head, clear schedule" },
-      { value: 'follow-through', label: "Follow through", description: "Actually do what I plan" },
-      { value: 'connect', label: "Stay connected", description: "Keep my support team in loop" },
-      { value: 'progress', label: "Track progress", description: "See how far I've come" },
-    ],
-  },
-  {
-    id: 'hasSupport',
-    title: "Do you have support people?",
-    subtitle: "Family, friends, caregivers, or medical team",
-    icon: Users,
-    options: [
-      { value: 'yes', label: "Yes, I do", description: "I have people who help me" },
-      { value: 'no', label: "Not yet", description: "I'm building my network" },
-    ],
-  },
-];
+import {
+  getAssessmentBank,
+  resolveHasSupport,
+  PERSONA_LABEL,
+  type PersonaKey,
+} from '@/data/launchAssessmentBanks';
 
 export default function LaunchAssessment() {
   const navigate = useNavigate();
+  const [persona, setPersona] = useState<PersonaKey | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({});
 
+  // Load persona once; redirect to /launch/user-type if missing.
+  useEffect(() => {
+    const stored = localStorage.getItem('myrhythm_user_type');
+    const bank = getAssessmentBank(stored);
+    if (!bank) {
+      navigate('/launch/user-type', { replace: true });
+      return;
+    }
+    setPersona(bank.persona);
+  }, [navigate]);
+
+  const bank = useMemo(() => getAssessmentBank(persona), [persona]);
+
+  if (!bank) {
+    return null; // redirecting
+  }
+
+  const questions = bank.questions;
   const question = questions[currentQuestion];
   const isLast = currentQuestion === questions.length - 1;
   const progress = ((currentQuestion + 1) / questions.length) * 100;
@@ -89,7 +45,7 @@ export default function LaunchAssessment() {
     if (question.multiSelect) {
       const current = (answers[question.id] as string[]) || [];
       const updated = current.includes(value)
-        ? current.filter(v => v !== value)
+        ? current.filter((v) => v !== value)
         : [...current, value];
       setAnswers({ ...answers, [question.id]: updated });
     } else {
@@ -110,47 +66,54 @@ export default function LaunchAssessment() {
 
   const handleNext = () => {
     if (isLast) {
-      // Store in localStorage for useLaunchMode
       const results = {
-        userType: answers.userType as string,
+        userType: persona,
         rhythmPreference: answers.rhythmPreference as string,
-        keyStruggles: answers.keyStruggles as string[],
-        goals: answers.goals as string[],
-        hasSupport: answers.hasSupport === 'yes',
+        keyStruggles: (answers.keyStruggles as string[]) || [],
+        goals: (answers.goals as string[]) || [],
+        hasSupport: resolveHasSupport(answers.hasSupport as string),
       };
-      localStorage.setItem('myrhythm_launch_mode', JSON.stringify({
-        isLaunchMode: true,
-        assessmentCompleted: true,
-        assessmentResults: results,
-        lastViewedWhatsNew: null,
-        purchasedFeatures: [],
-      }));
-      
-      // Celebration!
+      localStorage.setItem(
+        'myrhythm_launch_mode',
+        JSON.stringify({
+          isLaunchMode: true,
+          assessmentCompleted: true,
+          assessmentResults: results,
+          lastViewedWhatsNew: null,
+          purchasedFeatures: [],
+        })
+      );
+
       confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-      
       setTimeout(() => navigate('/launch/welcome'), 500);
     } else {
-      setCurrentQuestion(prev => prev + 1);
+      setCurrentQuestion((prev) => prev + 1);
     }
   };
 
   const handleBack = () => {
     if (currentQuestion > 0) {
-      setCurrentQuestion(prev => prev - 1);
+      setCurrentQuestion((prev) => prev - 1);
     } else {
-      navigate('/launch');
+      navigate('/launch/user-type');
     }
   };
 
   return (
     <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto px-6 py-8">
+      <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="max-w-md mx-auto w-full">
+          <LaunchPageHeader
+            fallbackPath="/launch/user-type"
+            subtitle={PERSONA_LABEL[bank.persona]}
+          />
+        </div>
+
         {/* Progress Bar */}
-        <div className="max-w-md mx-auto w-full mb-8">
+        <div className="max-w-md mx-auto w-full mb-6">
           <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
@@ -162,12 +125,11 @@ export default function LaunchAssessment() {
 
         {/* Question */}
         <div className="max-w-md mx-auto w-full">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 mx-auto mb-4 bg-brand-emerald-100 rounded-2xl flex items-center justify-center">
-              <question.icon className="h-8 w-8 text-brand-emerald-600" />
-            </div>
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">{question.title}</h2>
-            <p className="text-gray-600">{question.subtitle}</p>
+            {question.subtitle && (
+              <p className="text-gray-600">{question.subtitle}</p>
+            )}
           </div>
 
           {/* Options */}
@@ -177,24 +139,28 @@ export default function LaunchAssessment() {
                 key={option.value}
                 onClick={() => handleSelect(option.value)}
                 className={cn(
-                  "w-full p-4 rounded-2xl border-2 text-left transition-all",
+                  'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px]',
                   isSelected(option.value)
-                    ? "border-brand-emerald-500 bg-brand-emerald-50"
-                    : "border-gray-200 bg-white hover:border-brand-emerald-200"
+                    ? 'border-brand-emerald-500 bg-brand-emerald-50'
+                    : 'border-gray-200 bg-white hover:border-brand-emerald-200'
                 )}
               >
                 <div className="flex items-start gap-3">
-                  <div className={cn(
-                    "w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5",
-                    isSelected(option.value)
-                      ? "border-brand-emerald-500 bg-brand-emerald-500"
-                      : "border-gray-300"
-                  )}>
+                  <div
+                    className={cn(
+                      'w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5',
+                      isSelected(option.value)
+                        ? 'border-brand-emerald-500 bg-brand-emerald-500'
+                        : 'border-gray-300'
+                    )}
+                  >
                     {isSelected(option.value) && <Check className="h-4 w-4 text-white" />}
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">{option.label}</p>
-                    <p className="text-sm text-gray-600">{option.description}</p>
+                    {option.description && (
+                      <p className="text-sm text-gray-600">{option.description}</p>
+                    )}
                   </div>
                 </div>
               </button>
@@ -206,24 +172,19 @@ export default function LaunchAssessment() {
       {/* Sticky Navigation Footer */}
       <div className="flex-shrink-0 px-6 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
         <div className="max-w-md mx-auto w-full flex gap-3">
-          <LaunchButton
-            variant="outline"
-            onClick={handleBack}
-            className="flex-1"
-          >
+          <LaunchButton variant="outline" onClick={handleBack} className="flex-1">
             <ArrowLeft className="h-5 w-5" />
             Back
           </LaunchButton>
-          <LaunchButton
-            onClick={handleNext}
-            disabled={!canContinue}
-            className="flex-1"
-          >
+          <LaunchButton onClick={handleNext} disabled={!canContinue} className="flex-1">
             {isLast ? 'Complete' : 'Continue'}
             <ArrowRight className="h-5 w-5" />
           </LaunchButton>
         </div>
       </div>
+
+      {/* Persistent dial */}
+      <LaunchQuickActions />
     </div>
   );
 }

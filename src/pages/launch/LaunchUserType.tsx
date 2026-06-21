@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Compass, Anchor, Target, BookOpen, Sparkles, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 const userTypes = [
   {
@@ -44,14 +46,17 @@ export default function LaunchUserType() {
 
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
-    navigate('/launch/welcome');
+    navigate('/launch/assessment');
   };
+
 
   return (
     <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto py-12 px-4">
+      <div className="flex-1 overflow-y-auto py-6 px-4">
         <div className="max-w-4xl mx-auto">
+          <LaunchPageHeader fallbackPath="/launch/register" />
+
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -107,8 +112,8 @@ export default function LaunchUserType() {
         <div className="text-center space-y-1">
           <button
             onClick={() => {
-              localStorage.setItem('myrhythm_user_type', 'wellness');
-              navigate('/launch/welcome');
+              localStorage.setItem('myrhythm_user_type', 'brain-injury');
+              navigate('/launch/assessment');
             }}
             className="text-sm text-gray-600 hover:text-gray-900 underline underline-offset-4"
           >
@@ -117,6 +122,7 @@ export default function LaunchUserType() {
           <p className="text-xs text-stone-400">You can change this any time in Settings.</p>
         </div>
       </div>
+      <LaunchQuickActions />
     </div>
   );
 }

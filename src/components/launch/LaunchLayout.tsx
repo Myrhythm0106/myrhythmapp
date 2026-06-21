@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LaunchNav } from './LaunchNav';
 import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
@@ -7,6 +7,7 @@ import { AccountDropdown } from './AccountDropdown';
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { LaunchQuickActions } from './LaunchQuickActions';
 import { EditionBadge } from './EditionBadge';
+import { LaunchPageHeader } from './LaunchPageHeader';
 import { HelpCircle } from 'lucide-react';
 import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
@@ -26,7 +27,12 @@ export function LaunchLayout({
   showHeader = true 
 }: LaunchLayoutProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isCaregiver } = usePersona();
+
+  const showBack =
+    location.pathname !== '/launch/home' && location.pathname !== '/launch';
+
 
   return (
     <SubjectProvider>
@@ -78,6 +84,7 @@ export function LaunchLayout({
         {/* Main Content */}
         <main className="flex-1 pb-20 md:pb-6">
           <div className="max-w-7xl mx-auto px-4 py-6">
+            {showBack && <LaunchPageHeader />}
             {children}
           </div>
         </main>

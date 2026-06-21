@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { mapToPersona, type Persona } from '@/launch/persona/usePersona';
 import { EditionBadge } from '@/components/launch/EditionBadge';
+import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
@@ -29,6 +31,9 @@ export default function LaunchWelcome() {
 
   return (
     <div className="min-h-screen bg-[#FDFCFB] text-[#1C1917] antialiased">
+      <div className="max-w-6xl mx-auto px-6 lg:px-10 pt-4">
+        <LaunchPageHeader fallbackPath="/launch/assessment" />
+      </div>
       <div className="max-w-6xl mx-auto px-6 lg:px-10 py-12 lg:py-20 min-h-screen flex items-center">
         <div className="w-full grid grid-cols-1 md:grid-cols-10 gap-10 lg:gap-16 items-center">
 
@@ -142,6 +147,7 @@ export default function LaunchWelcome() {
 
         </div>
       </div>
+      <LaunchQuickActions />
     </div>
   );
 }
