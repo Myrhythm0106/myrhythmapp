@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { LaunchNav } from './LaunchNav';
 import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
@@ -7,6 +7,7 @@ import { AccountDropdown } from './AccountDropdown';
 import { WhatsNewBadge } from './WhatsNewBadge';
 import { LaunchQuickActions } from './LaunchQuickActions';
 import { EditionBadge } from './EditionBadge';
+import { LaunchPageHeader } from './LaunchPageHeader';
 import { HelpCircle } from 'lucide-react';
 import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
