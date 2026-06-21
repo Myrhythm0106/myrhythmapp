@@ -27,7 +27,12 @@ export function LaunchLayout({
   showHeader = true 
 }: LaunchLayoutProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { isCaregiver } = usePersona();
+
+  const showBack =
+    location.pathname !== '/launch/home' && location.pathname !== '/launch';
+
 
   return (
     <SubjectProvider>
