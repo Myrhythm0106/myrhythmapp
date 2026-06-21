@@ -2,8 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
-import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
-import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
+import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
 import {
