@@ -112,8 +112,8 @@ export default function LaunchUserType() {
         <div className="text-center space-y-1">
           <button
             onClick={() => {
-              localStorage.setItem('myrhythm_user_type', 'wellness');
-              navigate('/launch/welcome');
+              localStorage.setItem('myrhythm_user_type', 'brain-injury');
+              navigate('/launch/assessment');
             }}
             className="text-sm text-gray-600 hover:text-gray-900 underline underline-offset-4"
           >
