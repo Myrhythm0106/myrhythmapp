@@ -243,6 +243,7 @@ export default function LaunchSCCapture() {
       {confirmation && (
         <FirstSendCoachmark recipientName={recipientName} recipientId={subjectId} />
       )}
+      <LaunchQuickActions />
     </div>
   );
 }
