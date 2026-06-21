@@ -8,21 +8,40 @@ import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
+interface BHSnapshot {
+  total: number;
+  letters: Record<string, number>;
+}
+
+const LETTER_ORDER: Array<{ id: string; letter: string }> = [
+  { id: 'mindset', letter: 'M' },
+  { id: 'yesReality', letter: 'Y' },
+  { id: 'rhythm', letter: 'R' },
+  { id: 'harnessSupport', letter: 'H' },
+  { id: 'yourVictories', letter: 'Y' },
+  { id: 'transform', letter: 'T' },
+  { id: 'heal', letter: 'H' },
+  { id: 'multiply', letter: 'M' },
+];
+
 export default function LaunchWelcome() {
   const navigate = useNavigate();
   const [persona, setPersona] = useState<Persona>('recovery');
+  const [bhs, setBhs] = useState<BHSnapshot | null>(null);
 
   useEffect(() => {
     const direct = localStorage.getItem('myrhythm_user_type');
     let raw: string | null = direct;
-    if (!raw) {
-      const saved = localStorage.getItem('myrhythm_launch_mode');
-      if (saved) {
-        try {
-          const data = JSON.parse(saved);
-          raw = data?.assessmentResults?.userType ?? data?.selectedUserType ?? null;
-        } catch { /* noop */ }
-      }
+    const saved = localStorage.getItem('myrhythm_launch_mode');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (!raw) raw = data?.assessmentResults?.userType ?? data?.selectedUserType ?? null;
+        const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
+        if (score && typeof score.total === 'number') {
+          setBhs({ total: score.total, letters: score.letters || {} });
+        }
+      } catch { /* noop */ }
     }
     setPersona(mapToPersona(raw));
   }, []);
