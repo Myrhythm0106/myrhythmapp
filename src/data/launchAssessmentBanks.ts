@@ -12,7 +12,7 @@ export interface AssessmentOption {
 export interface AssessmentQuestion {
   id: 'rhythmPreference' | 'keyStruggles' | 'goals' | 'hasSupport';
   title: string;
-  subtitle: string;
+  subtitle?: string;
   multiSelect?: boolean;
   options: AssessmentOption[];
 }
