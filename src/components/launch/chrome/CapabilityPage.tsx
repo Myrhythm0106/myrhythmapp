@@ -262,6 +262,7 @@ export function CapabilityPage(props: CapabilityPageProps) {
           </p>
         </section>
       </div>
+      <LaunchQuickActions />
     </div>
   );
 }
