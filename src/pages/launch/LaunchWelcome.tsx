@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { mapToPersona, type Persona } from '@/launch/persona/usePersona';
 import { EditionBadge } from '@/components/launch/EditionBadge';
+import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
