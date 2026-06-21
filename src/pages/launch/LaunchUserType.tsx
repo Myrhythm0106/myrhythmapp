@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Compass, Anchor, Target, BookOpen, Sparkles, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
+import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 
 const userTypes = [
   {
