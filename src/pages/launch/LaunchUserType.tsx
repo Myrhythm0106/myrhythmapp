@@ -122,6 +122,7 @@ export default function LaunchUserType() {
           <p className="text-xs text-stone-400">You can change this any time in Settings.</p>
         </div>
       </div>
+      <LaunchQuickActions />
     </div>
   );
 }
