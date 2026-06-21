@@ -128,8 +128,21 @@ export default function LaunchAssessment() {
             />
           </div>
           <p className="text-xs text-gray-500 mt-2 text-center">
-            Question {currentQuestion + 1} of {questions.length}
+            Letter {currentQuestion + 1} of {questions.length} · MYRHYTHM
           </p>
+        </div>
+
+        {/* Letter chip */}
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <span
+            aria-hidden="true"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-orange-500 text-white font-bold text-lg shadow-sm"
+          >
+            {question.letter}
+          </span>
+          <span className="text-sm font-semibold tracking-wide uppercase text-gray-700">
+            {question.word}
+          </span>
         </div>
 
         {/* Question */}
@@ -138,7 +151,11 @@ export default function LaunchAssessment() {
           {question.subtitle && (
             <p className="text-gray-600">{question.subtitle}</p>
           )}
+          <p className="text-xs italic text-brain-health-600 mt-3">
+            Brain-health lens: {question.brainHealthLens}
+          </p>
         </div>
+
 
         {/* Options */}
         <div className="space-y-3 pb-4">
