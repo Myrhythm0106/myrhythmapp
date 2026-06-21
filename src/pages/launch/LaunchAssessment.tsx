@@ -8,6 +8,7 @@ import confetti from 'canvas-confetti';
 import {
   getAssessmentBank,
   resolveHasSupport,
+  computeBrainHealthScore,
   PERSONA_LABEL,
   type PersonaKey,
 } from '@/data/launchAssessmentBanks';
