@@ -46,8 +46,9 @@ export default function LaunchUserType() {
 
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
-    navigate('/launch/welcome');
+    navigate('/launch/assessment');
   };
+
 
   return (
     <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
