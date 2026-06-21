@@ -251,7 +251,15 @@ const banks: Record<PersonaKey, AssessmentBank> = {
 
 export function getAssessmentBank(persona: string | null | undefined): AssessmentBank | null {
   if (!persona) return null;
-  if (persona in banks) return banks[persona as PersonaKey];
+  // Legacy values from earlier onboarding builds.
+  const legacyMap: Record<string, PersonaKey> = {
+    recovery: 'brain-injury',
+    'goal-achiever': 'executive',
+    productivity: 'executive',
+    wellness: 'brain-injury',
+  };
+  const key = (persona in banks ? persona : legacyMap[persona]) as PersonaKey | undefined;
+  if (key && key in banks) return banks[key];
   return null;
 }
 
