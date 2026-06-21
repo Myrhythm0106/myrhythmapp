@@ -147,6 +147,7 @@ export default function LaunchWelcome() {
 
         </div>
       </div>
+      <LaunchQuickActions />
     </div>
   );
 }
