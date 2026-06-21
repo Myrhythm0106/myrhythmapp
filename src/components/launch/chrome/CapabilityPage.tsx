@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 import { ArrowRight, ArrowUpRight, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BackButton } from '@/components/ui/BackButton';
