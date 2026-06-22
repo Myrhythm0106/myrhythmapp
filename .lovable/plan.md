@@ -1,74 +1,56 @@
 ## Goal
+Reduce assessment stress by letting users pick a **primary** answer and optionally tag any other options that **also fit**, instead of forcing a single choice.
 
-Make `/launch/assessment` carry real meaning: each of the 8 questions maps to one letter of **M-Y-R-H-Y-T-H-M**, every letter is framed around **brain health**, and every question is **tailored to the chosen persona**. Lay the foundation for a longitudinal **Brain Health Score** that grows over time.
+## UX pattern (per question)
+- Question + brain-health lens caption (unchanged).
+- Each option becomes a two-state row:
+  1. **Primary** — exactly one, selected by tapping the option body (large 56px target). Shows a filled brand-orange ring + "Primary" chip.
+  2. **Also fits** — a secondary "+ Also fits" pill on the right of every non-primary option. Tapping toggles it on/off. Selected ones show a soft teal outline + check.
+- Helper copy under the question: *"Pick the one that fits best. Tap '+ Also fits' on any others that also feel true — there are no wrong answers."*
+- Continue button enabled as soon as a primary is chosen; "also fits" is always optional.
+- Tapping a different option promotes it to primary; the previous primary stays selected as "also fits" automatically (so users never lose a tap), with a subtle toast: *"Switched primary — your earlier pick is kept as 'also fits'."*
 
-## Letter → Question intent (brain-health framed)
+## Data model
+Extend the per-question answer stored in `myrhythm_launch_mode.answers`:
 
-| # | Letter | Word | Question intent | Brain-health lens |
-|---|--------|------|-----------------|-------------------|
-| 1 | **M** | Mindset | How you view your brain & capacity | Cognitive confidence / self-talk |
-| 2 | **Y** | Yes to Reality | What's true right now, without judgment | Honest baseline |
-| 3 | **R** | Rhythm | When your brain is clearest | Energy / peak window |
-| 4 | **H** | Harness Support | Who's in your corner | Social scaffolding |
-| 5 | **Y** | Your Victories | The kind of win that would feel meaningful | Reward & momentum |
-| 6 | **T** | Transform | Biggest daily friction draining your brain | Cognitive load targets |
-| 7 | **H** | Heal | What helps your brain reset | Restorative habits |
-| 8 | **M** | Multiply / Meaning | What "feeling like myself" unlocks | Purpose & long-term motivation |
+```ts
+// before
+{ [questionId]: optionId }
+// after
+{ [questionId]: { primary: optionId, alsoFits: optionId[] } }
+```
 
-Each question stays single-tap (≤4 options, 56px targets), persona-specific wording, identical letter + lens across personas.
+Backward-compat read helper: if value is a string, treat as `{ primary: value, alsoFits: [] }`.
 
-## Persona alignment (examples)
+## Scoring (BHS) update
+- Primary option score counts at **full weight** (0–3 as today).
+- Each "also fits" option contributes **+0.5** to that letter's score (capped at the letter max of 3) — rewards nuance without inflating.
+- Letter score formula:
+  `letterScore = min(3, primary.score + 0.5 * sum(alsoFits.score >= primary.score ? 1 : 0.5))`
+  Simpler v1: `letterScore = min(3, primary.score + 0.5 * alsoFits.length)`.
+- BHS normalization unchanged (sum / 24 * 100).
+- Store both `primary` and `alsoFits` per letter in `letterScores` for future analytics.
 
-- **Brain-injury** — R: "When does your brain feel clearest?" · T: "What drains you fastest?"
-- **Caregiver** — R: "When do you have your own bandwidth?" · T: "What drains you most as a carer?"
-- **Executive** — R: "When is your deep-work window?" · T: "What erodes your focus?"
-- **Student** — R: "When do you study best?" · T: "What gets in the way of learning?"
+## Files to change
+1. **`src/data/launchAssessmentBanks.ts`**
+   - Update `AssessmentAnswer` type to `{ primary: string; alsoFits: string[] }`.
+   - Update `computeBrainHealthScore` to use the new formula and remain tolerant of legacy string answers.
+   - Add `normalizeAnswer(raw)` helper.
 
-All 8 letters are authored per persona — no shared/generic fallback.
+2. **`src/pages/launch/LaunchAssessment.tsx`**
+   - Replace single-select radio behavior with primary + "also fits" toggles.
+   - Add helper copy line under the question.
+   - Update continue-gate to require only `primary`.
+   - Persist new shape; keep legacy `selectedOptionId` mirror (= primary) for any downstream readers.
+   - Add the auto-demote-to-alsoFits behavior + toast.
 
-## Scoring system (v0.1, introduced now)
+3. **`src/pages/launch/LaunchWelcome.tsx`**
+   - No structural change; mini-bars already read `letterScores`. Add a tiny caption *"Includes any 'also fits' answers"* under the BHS number.
 
-- Each option carries a `score` 0–3 (0 = high friction, 3 = strong brain-health alignment).
-- Per-letter score = the option's score (multi-select = average).
-- **Brain Health Score (BHS) = sum of 8 letter scores, normalised to 0–100.**
-- Persisted in `myrhythm_launch_mode.brainHealthScore` plus a per-letter breakdown `letterScores: { M1, Y1, R, H1, Y2, T, H2, M2 }`.
-- Shown on `/launch/welcome` as a single number + 8 mini-bars (one per letter). No medical claims — labelled "Your starting MYRHYTHM snapshot".
+## Out of scope
+- Changing question wording, persona mapping, or the 8-letter structure.
+- New visualisations or trend history (still v0.2+).
+- Reassessment flow.
 
-## File changes
-
-1. **`src/data/launchAssessmentBanks.ts`** — rewrite to 8 letter-anchored questions × 4 personas, add `letter`, `word`, `brainHealthLens`, and per-option `score`. Keep `resolveHasSupport` + legacy persona map.
-2. **`src/pages/launch/LaunchAssessment.tsx`** — render letter chip + word, brain-health lens caption, progress label "Letter {n} of 8 · MYRHYTHM". On finish, compute BHS + letter breakdown, store both new + legacy fields, navigate to `/launch/welcome`.
-3. **`src/pages/launch/LaunchWelcome.tsx`** — surface the BHS snapshot (number + 8 bars + disclaimer).
-
-No schema / routing / Supabase changes in this pass.
-
-## Future development (added per request)
-
-**Longitudinal Brain Health Score — doubling cadence**
-
-- Every **6 months**, the question set per letter **doubles** (8 → 16 → 32 …) so the BHS becomes progressively more sensitive and capture-rich without overwhelming new users.
-- Each wave is versioned: `assessment_version: 1 | 2 | 3 …`, with `wave_started_at` and `next_wave_due_at` on the user record.
-- Scores are stored as time-series rows so we can show **trend lines per letter** (e.g. "Your R-Rhythm score climbed from 1.8 → 2.6 over 12 months").
-- Reassessment is invitation-based (gentle nudge on Home, never blocking) and supports partial completion — user can answer one letter at a time.
-
-**Future scope checklist**
-
-- Supabase tables: `assessment_waves`, `assessment_responses`, `brain_health_scores` (RLS: user owns rows; clinician/support-circle read only if explicitly shared).
-- Edge function `score-assessment` so weighting can evolve without client redeploys.
-- Per-letter trendline component on `/launch/analytics` and a "MYRHYTHM Report" export (3pt confidentiality footer per project standard).
-- Sync-Point: prompt for reassessment on meaningful life events (new diagnosis, role change, new caregiver) not just calendar 6-month tick.
-
-## My thoughts / ideas (for your steer)
-
-1. **Score language matters.** Avoid "good/bad". Use "your current rhythm signal" + neutral colour bars. Reinforces the no-medical-claims rule.
-2. **Letter weighting may not stay equal.** Brain-injury cohort likely benefits from heavier R (Rhythm) and H (Heal) weights; executive cohort from T (Transform) and M-Mindset. Worth A/B-ing after wave 2.
-3. **Tie BHS to the 4C loop.** Each letter could surface a default Capture/Commit prompt — e.g. low R score auto-suggests "Commit to a 20-min energy check-in". Makes the score *actionable* not just diagnostic.
-4. **Caregiver duality.** Caregivers should be able to answer the 8 letters for **themselves AND** (optionally) for the person they care for — two parallel BHS tracks under one account. Aligns with existing `SubjectSwitch`.
-5. **Doubling cadence risk.** 32+ questions can fatigue. Mitigate by chunking (1 letter per day for 8 days) and gamifying completion as a "MYRHYTHM tune-up".
-6. **Clinical bridge.** Once BHS history exists, the Clinical Brief export becomes far more powerful — quantified self-report that complements clinician assessments without claiming to replace them.
-7. **Privacy default.** BHS and per-letter scores should be **private by default**, with explicit per-letter share toggles to Support Circle. Brain-health data is sensitive.
-
-## Out of scope (this pass)
-
-- Reassessment UI, Supabase tables, trend visualisations, edge function, export — all parked for v0.2+ under the future-development plan above.
-- Changes to personas, user-type page, Home copy, or Smart Schedule beyond the 4 legacy derived fields.
+## Plan doc
+Append a "Primary + Also Fits" subsection under Plan v63 in `.lovable/plan.md` summarising the above so the longitudinal-doubling roadmap stays aligned (future waves keep the same answer shape).
