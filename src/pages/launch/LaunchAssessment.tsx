@@ -34,8 +34,27 @@ export default function LaunchAssessment() {
     setPersona(bank.persona);
   }, [navigate]);
 
+  // Restore prior answers on mount.
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('myrhythm_launch_mode');
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      const prior = saved?.assessmentResults?.answers;
+      if (prior && typeof prior === 'object') {
+        const normalised: AnswerMap = {};
+        for (const k of Object.keys(prior)) {
+          const n = normalizeAnswer(prior[k]);
+          if (n) normalised[k] = n;
+        }
+        if (Object.keys(normalised).length) setAnswers(normalised);
+      }
+    } catch {/* noop */}
+  }, []);
+
   const bank = useMemo(() => getAssessmentBank(persona), [persona]);
   if (!bank) return null;
+
 
   const questions = bank.questions;
   const question = questions[currentQuestion];
