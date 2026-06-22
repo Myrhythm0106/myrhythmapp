@@ -163,6 +163,7 @@ export default function LaunchAssessment() {
         purchasedFeatures: [],
       })
     );
+    localStorage.removeItem(PROGRESS_KEY);
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
     setTimeout(() => navigate('/launch/welcome'), 500);
   };
