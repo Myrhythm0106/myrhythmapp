@@ -225,34 +225,38 @@ export default function LaunchAssessment() {
             return (
               <div
                 key={option.value}
-                role="button"
-                tabIndex={0}
-                onClick={() => setPrimary(option.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setPrimary(option.value); }
-                }}
                 className={cn(
-                  'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px] cursor-pointer',
+                  'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px]',
                   isPrimary
                     ? 'border-brand-orange-500 bg-brand-orange-50 ring-2 ring-brand-orange-200'
                     : isAlso
                       ? 'border-brand-teal-400 bg-brand-teal-50/60'
-                      : 'border-gray-200 bg-white hover:border-brand-emerald-200'
+                      : 'border-gray-200 bg-white'
                 )}
               >
                 <div className="flex items-start gap-3">
-                  <div
+                  <button
+                    type="button"
+                    onClick={() => setPrimary(option.value)}
+                    aria-label={isPrimary ? 'Primary answer' : 'Set as primary answer'}
+                    aria-pressed={isPrimary}
                     className={cn(
-                      'w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 mt-0.5',
-                      isPrimary
-                        ? 'border-brand-orange-500 bg-brand-orange-500'
-                        : isAlso
-                          ? 'border-brand-teal-500 bg-brand-teal-500'
-                          : 'border-gray-300'
+                      'w-10 h-10 -m-2 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer'
                     )}
                   >
-                    {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
-                  </div>
+                    <span
+                      className={cn(
+                        'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
+                        isPrimary
+                          ? 'border-brand-orange-500 bg-brand-orange-500'
+                          : isAlso
+                            ? 'border-brand-teal-500 bg-brand-teal-500'
+                            : 'border-gray-300 hover:border-brand-orange-400'
+                      )}
+                    >
+                      {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
+                    </span>
+                  </button>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <p className="font-semibold text-gray-900">{option.label}</p>
@@ -284,7 +288,7 @@ export default function LaunchAssessment() {
                       aria-pressed={isAlso}
                     >
                       <Plus className="h-3.5 w-3.5" />
-                      {isAlso ? 'Also fits' : 'Also fits'}
+                      Also fits
                     </button>
                   )}
                 </div>

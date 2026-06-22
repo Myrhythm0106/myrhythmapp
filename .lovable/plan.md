@@ -1,27 +1,40 @@
-## Goal
-Stop the assessment from snapping back to letter 1 mid-flow.
+## Plan: Primary / "Also fits" selection model
 
-## Root cause
-- `LaunchAssessment` keeps `currentQuestion` and `answers` only in component state.
-- `LaunchModeProvider` writes its own `state` to the SAME localStorage key (`myrhythm_launch_mode`) on every render, with `assessmentResults: defaultAssessment` until the assessment is marked complete. So mid-flow our key holds no `answers`.
-- If anything remounts `LaunchAssessment` (auth `SIGNED_IN` event observed in console at the time of the bug, route transitions, HMR, parent re-keying), local state is wiped and we restore nothing — user lands back on letter 1.
+### Goal
+Make the Launch Assessment answer-selection model explicit: the **radio tick** selects the primary answer, the **+Also fits** button toggles secondary answers, and the primary answer stays pinned until the user chooses a different tick.
 
-## Fix
-Persist the in-progress assessment to a **dedicated key** that the launch-mode provider does not touch, and rehydrate from it on every mount.
+### Current behaviour to change
+In `src/pages/launch/LaunchAssessment.tsx`, clicking anywhere on an option card (except the +Also fits button) currently calls `setPrimary`. This makes it too easy to switch primary by accident.
 
-### Changes to `src/pages/launch/LaunchAssessment.tsx`
-1. New storage key: `myrhythm_assessment_progress` holding `{ persona, currentQuestion, answers, updatedAt }`.
-2. Lazy-init `useState` for `persona`, `currentQuestion`, and `answers` from that key (synchronous, so first render already shows the right question — no flash).
-3. New `useEffect` that writes `{ persona, currentQuestion, answers }` to that key whenever any of them changes.
-4. Remove the existing restore-from-`myrhythm_launch_mode` effect (obsolete and was the source of the "nothing to restore" gap).
-5. On `Complete`: keep writing the full results to `myrhythm_launch_mode` as today, then `localStorage.removeItem('myrhythm_assessment_progress')` so a fresh start next time begins at letter 1.
-6. Keep the existing persona-resolution effect, but only `setPersona` if it actually changes (guard against the redundant set that adds churn).
+### Proposed changes
 
-### Out of scope
-- Changing `LaunchModeProvider` (its broad persistence behaviour is reused elsewhere; safer to isolate the assessment's own progress key).
-- Any visual changes, scoring changes, or new fields.
-- Server-side persistence (still v0.2+).
+1. **Split the tap targets** in each option row:
+   - **Card body**: no-op (or purely visual hover). It does NOT change selection.
+   - **Radio tick/circle**: calls `setPrimary(value)`. This is the only way to select or change the primary answer.
+   - **+Also fits button**: calls `toggleAlsoFits(value)` as today. If there is no primary yet, it still promotes the tapped option to primary.
+
+2. **Preserve existing primary behaviour**:
+   - Tapping the same radio tick again does nothing (primary stays).
+   - Selecting a new primary moves the old primary to "Also fits" and removes the new one from "Also fits".
+   - Primary never becomes empty until a different tick is selected.
+
+3. **Keep visual clarity**:
+   - Primary option: orange border, orange tick, "Primary" badge.
+   - Also fits: teal border, teal tick, "Also fits" badge.
+   - Unselected: grey border, empty circle.
+
+4. **Accessibility & touch**:
+   - The radio tick keeps `role="button"` and a clear `aria-label` such as `Set as primary answer`.
+   - The +Also fits button keeps its label and `aria-pressed` state.
+   - Both tap targets meet the 56 px minimum touch target requirement.
+
+5. **No change to persistence, scoring, or navigation**:
+   - The `myrhythm_assessment_progress` localStorage logic remains as-is.
+   - Back/Next/Complete and the `handleNext` results payload remain unchanged.
 
 ### Verification
-- Answer through letter H, force a remount (e.g. click somewhere that triggers an auth refresh, or hard-refresh) → assessment resumes on the same letter with prior answers intact.
-- Reach "Complete" → progress key is cleared; revisiting `/launch/assessment` starts fresh at letter 1.
+- Open `/launch/assessment`, select a primary answer via the radio tick, then tap +Also fits on another option. The primary remains unchanged and the second option becomes "Also fits".
+- Tap the radio tick on a different option. The first option moves to "Also fits" and the new option becomes primary.
+- Tap the same radio tick again. Primary stays.
+- Tap the card body (outside tick or +Also fits button). Nothing changes.
+- Continue through to Complete; progress persistence still works across remounts.
