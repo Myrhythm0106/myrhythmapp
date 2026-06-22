@@ -215,7 +215,7 @@ export default function LaunchAssessment() {
         </div>
 
         <p className="text-sm text-gray-600 text-center mb-4 px-2">
-          Pick the one that fits best. Tap <span className="font-semibold">+ Also fits</span> on any others that also feel true — there are no wrong answers.
+          Tap the <span className="font-semibold">circle</span> on the one that fits best — that's your primary. Tap <span className="font-semibold">+ Also fits</span> on any others that also feel true.
         </p>
 
         <div className="space-y-3 pb-4">
