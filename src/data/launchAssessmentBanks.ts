@@ -492,45 +492,57 @@ export const PERSONA_LABEL: Record<PersonaKey, string> = {
 
 export type LetterScores = Record<LetterId, number>;
 
+export interface AssessmentAnswer {
+  primary: string;
+  alsoFits: string[];
+}
+
 export interface BrainHealthScore {
   /** Normalised 0-100. */
   total: number;
   /** Raw per-letter score, 0-3 each. */
   letters: LetterScores;
-  /** Snapshot version — bump when question banks change. */
-  version: 1;
+  /** Snapshot version — bump when question banks or scoring change. */
+  version: 2;
+}
+
+/** Accept legacy string/string[] answers and normalise to {primary, alsoFits}. */
+export function normalizeAnswer(raw: unknown): AssessmentAnswer | null {
+  if (!raw) return null;
+  if (typeof raw === 'string') return { primary: raw, alsoFits: [] };
+  if (Array.isArray(raw)) {
+    if (!raw.length) return null;
+    return { primary: raw[0], alsoFits: raw.slice(1) };
+  }
+  if (typeof raw === 'object' && 'primary' in (raw as any)) {
+    const r = raw as AssessmentAnswer;
+    return { primary: r.primary, alsoFits: Array.isArray(r.alsoFits) ? r.alsoFits : [] };
+  }
+  return null;
 }
 
 /**
- * Compute the Brain Health Score from raw answers.
- * Multi-select: average of selected option scores.
- * Total normalised: sum(letters) / (8 * 3) * 100, rounded.
+ * Compute the Brain Health Score.
+ * Primary option contributes its full 0-3 score.
+ * Each "also fits" option adds +0.5, capped at the letter max of 3.
  */
 export function computeBrainHealthScore(
   bank: AssessmentBank,
-  answers: Record<string, string | string[]>
+  answers: Record<string, unknown>
 ): BrainHealthScore {
   const letters = {} as LetterScores;
   let raw = 0;
   for (const q of bank.questions) {
-    const ans = answers[q.id];
+    const ans = normalizeAnswer(answers[q.id]);
     let score = 0;
-    if (q.multiSelect) {
-      const arr = (ans as string[]) || [];
-      if (arr.length) {
-        const sum = arr.reduce((s, v) => {
-          const opt = q.options.find((o) => o.value === v);
-          return s + (opt?.score ?? 0);
-        }, 0);
-        score = sum / arr.length;
-      }
-    } else {
-      const opt = q.options.find((o) => o.value === ans);
-      score = opt?.score ?? 0;
+    if (ans) {
+      const primaryOpt = q.options.find((o) => o.value === ans.primary);
+      score = primaryOpt?.score ?? 0;
+      score = Math.min(3, score + 0.5 * ans.alsoFits.length);
     }
     letters[q.id] = Math.round(score * 10) / 10;
     raw += score;
   }
   const total = Math.round((raw / (bank.questions.length * 3)) * 100);
-  return { total, letters, version: 1 };
+  return { total, letters, version: 2 };
 }
