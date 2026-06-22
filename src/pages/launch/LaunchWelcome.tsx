@@ -114,6 +114,7 @@ export default function LaunchWelcome() {
                   </span>
                   <span style={SERIF} className="text-3xl text-teal-700">{bhs.total}<span className="text-sm text-stone-400">/100</span></span>
                 </div>
+                <p className="text-[11px] text-stone-500 mb-3 -mt-1">Includes any "also fits" answers you tapped.</p>
                 <div className="grid grid-cols-8 gap-1.5">
                   {LETTER_ORDER.map((l, i) => {
                     const v = bhs.letters[l.id] ?? 0;
