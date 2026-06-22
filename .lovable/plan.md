@@ -1,56 +1,27 @@
 ## Goal
-Reduce assessment stress by letting users pick a **primary** answer and optionally tag any other options that **also fit**, instead of forcing a single choice.
+Stop the assessment from snapping back to letter 1 mid-flow.
 
-## UX pattern (per question)
-- Question + brain-health lens caption (unchanged).
-- Each option becomes a two-state row:
-  1. **Primary** — exactly one, selected by tapping the option body (large 56px target). Shows a filled brand-orange ring + "Primary" chip.
-  2. **Also fits** — a secondary "+ Also fits" pill on the right of every non-primary option. Tapping toggles it on/off. Selected ones show a soft teal outline + check.
-- Helper copy under the question: *"Pick the one that fits best. Tap '+ Also fits' on any others that also feel true — there are no wrong answers."*
-- Continue button enabled as soon as a primary is chosen; "also fits" is always optional.
-- Tapping a different option promotes it to primary; the previous primary stays selected as "also fits" automatically (so users never lose a tap), with a subtle toast: *"Switched primary — your earlier pick is kept as 'also fits'."*
+## Root cause
+- `LaunchAssessment` keeps `currentQuestion` and `answers` only in component state.
+- `LaunchModeProvider` writes its own `state` to the SAME localStorage key (`myrhythm_launch_mode`) on every render, with `assessmentResults: defaultAssessment` until the assessment is marked complete. So mid-flow our key holds no `answers`.
+- If anything remounts `LaunchAssessment` (auth `SIGNED_IN` event observed in console at the time of the bug, route transitions, HMR, parent re-keying), local state is wiped and we restore nothing — user lands back on letter 1.
 
-## Data model
-Extend the per-question answer stored in `myrhythm_launch_mode.answers`:
+## Fix
+Persist the in-progress assessment to a **dedicated key** that the launch-mode provider does not touch, and rehydrate from it on every mount.
 
-```ts
-// before
-{ [questionId]: optionId }
-// after
-{ [questionId]: { primary: optionId, alsoFits: optionId[] } }
-```
+### Changes to `src/pages/launch/LaunchAssessment.tsx`
+1. New storage key: `myrhythm_assessment_progress` holding `{ persona, currentQuestion, answers, updatedAt }`.
+2. Lazy-init `useState` for `persona`, `currentQuestion`, and `answers` from that key (synchronous, so first render already shows the right question — no flash).
+3. New `useEffect` that writes `{ persona, currentQuestion, answers }` to that key whenever any of them changes.
+4. Remove the existing restore-from-`myrhythm_launch_mode` effect (obsolete and was the source of the "nothing to restore" gap).
+5. On `Complete`: keep writing the full results to `myrhythm_launch_mode` as today, then `localStorage.removeItem('myrhythm_assessment_progress')` so a fresh start next time begins at letter 1.
+6. Keep the existing persona-resolution effect, but only `setPersona` if it actually changes (guard against the redundant set that adds churn).
 
-Backward-compat read helper: if value is a string, treat as `{ primary: value, alsoFits: [] }`.
+### Out of scope
+- Changing `LaunchModeProvider` (its broad persistence behaviour is reused elsewhere; safer to isolate the assessment's own progress key).
+- Any visual changes, scoring changes, or new fields.
+- Server-side persistence (still v0.2+).
 
-## Scoring (BHS) update
-- Primary option score counts at **full weight** (0–3 as today).
-- Each "also fits" option contributes **+0.5** to that letter's score (capped at the letter max of 3) — rewards nuance without inflating.
-- Letter score formula:
-  `letterScore = min(3, primary.score + 0.5 * sum(alsoFits.score >= primary.score ? 1 : 0.5))`
-  Simpler v1: `letterScore = min(3, primary.score + 0.5 * alsoFits.length)`.
-- BHS normalization unchanged (sum / 24 * 100).
-- Store both `primary` and `alsoFits` per letter in `letterScores` for future analytics.
-
-## Files to change
-1. **`src/data/launchAssessmentBanks.ts`**
-   - Update `AssessmentAnswer` type to `{ primary: string; alsoFits: string[] }`.
-   - Update `computeBrainHealthScore` to use the new formula and remain tolerant of legacy string answers.
-   - Add `normalizeAnswer(raw)` helper.
-
-2. **`src/pages/launch/LaunchAssessment.tsx`**
-   - Replace single-select radio behavior with primary + "also fits" toggles.
-   - Add helper copy line under the question.
-   - Update continue-gate to require only `primary`.
-   - Persist new shape; keep legacy `selectedOptionId` mirror (= primary) for any downstream readers.
-   - Add the auto-demote-to-alsoFits behavior + toast.
-
-3. **`src/pages/launch/LaunchWelcome.tsx`**
-   - No structural change; mini-bars already read `letterScores`. Add a tiny caption *"Includes any 'also fits' answers"* under the BHS number.
-
-## Out of scope
-- Changing question wording, persona mapping, or the 8-letter structure.
-- New visualisations or trend history (still v0.2+).
-- Reassessment flow.
-
-## Plan doc
-Append a "Primary + Also Fits" subsection under Plan v63 in `.lovable/plan.md` summarising the above so the longitudinal-doubling roadmap stays aligned (future waves keep the same answer shape).
+### Verification
+- Answer through letter H, force a remount (e.g. click somewhere that triggers an auth refresh, or hard-refresh) → assessment resumes on the same letter with prior answers intact.
+- Reach "Complete" → progress key is cleared; revisiting `/launch/assessment` starts fresh at letter 1.
