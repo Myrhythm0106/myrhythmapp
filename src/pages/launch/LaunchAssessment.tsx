@@ -18,12 +18,44 @@ import {
 
 type AnswerMap = Record<string, AssessmentAnswer>;
 
+const PROGRESS_KEY = 'myrhythm_assessment_progress';
+
+type StoredProgress = {
+  persona: PersonaKey | null;
+  currentQuestion: number;
+  answers: AnswerMap;
+};
+
+function loadProgress(): StoredProgress | null {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object') return null;
+    const answersIn = parsed.answers && typeof parsed.answers === 'object' ? parsed.answers : {};
+    const answers: AnswerMap = {};
+    for (const k of Object.keys(answersIn)) {
+      const n = normalizeAnswer(answersIn[k]);
+      if (n) answers[k] = n;
+    }
+    return {
+      persona: parsed.persona ?? null,
+      currentQuestion: Number.isFinite(parsed.currentQuestion) ? parsed.currentQuestion : 0,
+      answers,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export default function LaunchAssessment() {
   const navigate = useNavigate();
-  const [persona, setPersona] = useState<PersonaKey | null>(null);
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<AnswerMap>({});
+  const initial = useMemo(() => loadProgress(), []);
+  const [persona, setPersona] = useState<PersonaKey | null>(initial?.persona ?? null);
+  const [currentQuestion, setCurrentQuestion] = useState<number>(initial?.currentQuestion ?? 0);
+  const [answers, setAnswers] = useState<AnswerMap>(initial?.answers ?? {});
 
+  // Resolve persona from stored user-type; only update if it actually changed.
   useEffect(() => {
     const stored = localStorage.getItem('myrhythm_user_type');
     const bank = getAssessmentBank(stored);
@@ -31,28 +63,22 @@ export default function LaunchAssessment() {
       navigate('/launch/user-type', { replace: true });
       return;
     }
-    setPersona(bank.persona);
+    setPersona((prev) => (prev === bank.persona ? prev : bank.persona));
   }, [navigate]);
 
-  // Restore prior answers on mount.
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem('myrhythm_launch_mode');
-      if (!raw) return;
-      const saved = JSON.parse(raw);
-      const prior = saved?.assessmentResults?.answers;
-      if (prior && typeof prior === 'object') {
-        const normalised: AnswerMap = {};
-        for (const k of Object.keys(prior)) {
-          const n = normalizeAnswer(prior[k]);
-          if (n) normalised[k] = n;
-        }
-        if (Object.keys(normalised).length) setAnswers(normalised);
-      }
-    } catch {/* noop */}
-  }, []);
-
   const bank = useMemo(() => getAssessmentBank(persona), [persona]);
+
+  // Persist in-progress assessment to a dedicated key so remounts don't reset progress.
+  useEffect(() => {
+    if (!persona) return;
+    try {
+      localStorage.setItem(
+        PROGRESS_KEY,
+        JSON.stringify({ persona, currentQuestion, answers, updatedAt: Date.now() })
+      );
+    } catch {/* noop */}
+  }, [persona, currentQuestion, answers]);
+
   if (!bank) return null;
 
 
