@@ -1,63 +1,74 @@
-# Plan: Update Founders Edition Quick Start + User Manual (v2)
+# Plan: MyRhythm GTM Playbook v3 — Three-Horizon, Easily Amendable
 
-Two new versioned files written to `/mnt/documents/` — originals preserved.
+Rebuild the GTM Playbook as **one document with three selectable tracks** (5-week / 6-month / 1-year), all starting **Tuesday 23 June 2026**. Designed first and foremost to be **easy for you to amend week-to-week** without going back through me.
 
-## 1. User Manual v2 — C1 Capture retention warnings
+## 1. "Easily amendable" — the core requirement
 
-In the **C1 Capture** section, expand the deletion-warning subsection so the countdown reads:
+Two parallel deliverables so you always have an editable surface:
 
-- **Day 5 before deletion** — first heads-up reminder (extract any keepers).
-- **Day 25 of retention / Day 5 before deletion** — banner + email.
-- **Day 3 before deletion** — escalated warning (amber banner, in-app + email).
-- **Day 2 before deletion** — urgent warning (red banner, push + email).
-- **Day 1 before deletion** — final warning (red banner, push + email, "deleting tomorrow").
-- **Day 30** — permanent deletion; transcripts/extracted ACTs are retained, audio is not.
+**A. Editable master — `.docx`**
+- Plain Arial, no locked styles, no images embedded in tables.
+- Every track section uses **simple Word tables** (Week / Goal / Daily actions / KPI / Owner / RAG status / Notes) — click any cell, type, done.
+- A single **"Change log" table** on page 2 (Date / Version / What changed / By whom) so amendments are tracked in the doc itself.
+- Front-matter **"How to amend this playbook"** box: 4 bullets — update the cell, bump version, add a changelog row, re-export PDF.
+- All dates rendered as text (not Word date fields) so you can edit freely.
+- Placeholders like `[Partner name]`, `[£ target]`, `[Owner]` used consistently so find-and-replace works.
 
-Add a callout: "Tap **Save Forever** (Taste & See tier) at any warning to preserve the recording."
+**B. Read-only share — `.pdf`**
+- Generated from the same `.docx` for clients/investors/Founders.
+- Footer notes "Living document — see .docx for latest".
 
-Also update `mem://data/retention-policy` to reflect the 5/3/2/1-day cadence.
+Optional companion (default OFF unless you say yes): a **Google Docs / Notion-ready Markdown export** (`.md`) so the playbook can live online as your central link.
 
-## 2. Quick Start v2 — Tiered user journey + time-based milestones
+## 2. Document structure
 
-Replace the existing "Day 1 / Week 1 / Month 1" section with a **two-axis matrix**:
+**Front matter**
+- Cover: "GTM Playbook v3 — Founding Edition", anchor date Tue 23 Jun 2026.
+- How to amend this playbook (4 bullets).
+- Change log table.
+- How to pick a track (5-week vs 6-month vs 1-year decision guide).
+- Central-source-of-truth usage: shared link convention, weekly Monday 30-min review ritual, audience-to-section map (Founders / charities / clinicians / investors), monthly version bump.
 
-### Axis A — User Level (Basic / Intermediate / Advanced)
+**Five GTM pillars carried through every track:**
+1. Positioning & narrative (Discharge Cliff / Clinical-Ready vs Life-Ready Gap)
+2. Channels & outreach
+3. Founding cohort growth
+4. Product proof points
+5. Revenue & investment
 
-| Level | Who | Features they maximise | Benefit |
-|---|---|---|---|
-| **Basic** | Just discharged, caregiver-supported, low cognitive load | Energy Check-in, Daily Action card, Smart Schedule (auto-suggested), Voice Capture | Reduce overwhelm; one decision per moment; never miss a medication or appointment |
-| **Intermediate** | 2–6 weeks in, building routine | + Memory Bridge (Capture → Commit → Calibrate → Celebrate), Support Circle invites, Vision Board (1 pillar), Weekly Review | Build trusted routine; loop family in; see weekly wins |
-| **Advanced** | 2+ months, self-directed | + Full 5-pillar Vision Board, Goals → Priorities → Actions traceability, Calendar sync (Google/Outlook), Continuity Rail re-entry, Founder Feedback loop | Run life as a system; export to clinicians; coach other Founders |
+## 3. Track A — 5-Week Sprint (23 Jun – 27 Jul 2026)
 
-This table is dual-purpose: onboarding **and** investor/sales pitch (shows expanding LTV per tier).
+One editable table per week (Goal / Daily actions Mon–Fri / KPI / Owner / RAG / Notes).
+- W1 launch to warm list, 10 demos
+- W2 25 Founders, 3 clinician convos
+- W3 first Memory Bridge case study, charity #1
+- W4 50 Founders, first Taste & See conversions, investor teaser
+- W5 retro + graduate decision
 
-### Axis B — Time-based competency milestones ("What you'll know how to do")
+## 4. Track B — 6-Month Playbook (Jun – Dec 2026)
 
-Included in **both the short Quick Start and the comprehensive User Manual**:
+One editable table per month: Objective / 3 priorities / KPIs / Content / Partners / Investor milestone / RAG / Notes.
+- M1 cohort to 50 · M2 clinician design partners · M3 charity channel + 150 Founders · M4 paid test + pre-seed convos · M5 300 Founders + outcomes data · M6 pre-seed close.
 
-- **After 1 hour** — Log Energy Check, accept one Smart Schedule suggestion, record one Voice Capture.
-- **After 1 day** — Complete the 4C loop once (Capture → Commit → Calibrate → Celebrate); review tomorrow's schedule.
-- **After 1 week** — Invite one Support Circle member; set one Vision pillar; complete first Weekly Review.
-- **After 1 month** — Full 5-pillar Vision board; Goals → Priorities → Actions traced; Calendar sync active; first Founder Feedback submitted.
-- **After 3 months** — Self-directed Memory Bridge mastery; clinician export ready; mentoring a new Founder.
+## 5. Track C — 1-Year Playbook (Jun 2026 – Jun 2027)
 
-## 3. Sync between docs
+One editable table per quarter: Theme / Objectives / Hiring / Partnerships / Revenue / Fundraise / RAG / Notes.
+- Q1 cohort + design partners · Q2 paid + pre-seed · Q3 clinical pilots + outcomes paper · Q4 seed raise + UK regional.
 
-- Short version (Quick Start v2): condensed level matrix + milestone bullets.
-- Comprehensive version (User Manual v2): full matrix + milestone bullets + retention warning expansion + cross-references to feature chapters.
+## 6. Deliverables
 
-## 4. Deliverables
+- `MyRhythm_GTM_Playbook_v3.docx` (editable master)
+- `MyRhythm_GTM_Playbook_v3.pdf` (share copy)
+- v2 left in place
 
-- `MyRhythm_QuickStart_FoundersEdition_v2.docx` + `.pdf`
-- `MyRhythm_UserManual_FoundersEdition_v2.docx` + `.pdf`
-- Updated `mem://data/retention-policy`
+## 7. Technical notes
 
-## 5. Technical notes
+- Generate with `docx-js`: US Letter, Arial, brand-orange #EA580C H1s, teal #0F766E accents, DXA tables, no unicode bullets, simple borders to keep tables editable.
+- Confidentiality footer (3pt) + "Founding Edition v0.1 — Living document" on every page.
+- PDF via LibreOffice; QA every page as JPEG, fix overflow, re-run until clean.
 
-- Generate `.docx` with `docx-js` (US Letter, Arial, brand-orange H1s, proper tables with DXA widths, bullet numbering config — no unicode bullets).
-- Convert to PDF via LibreOffice; QA every page as JPEG before delivering; fix overflow/clipping and re-run if needed.
-- Footer on every page: confidentiality line (3pt) per project standard; "Founding Edition v0.1" label.
+## Open questions (will default if no answer)
 
-## Open question
-
-Should I keep the **existing structure/branding** of v1 (same cover, section order, fonts) and only add the new content, or take the chance to refresh layout? Default: keep v1 structure, add new content only.
+1. Add the **Markdown (`.md`) companion** for Notion/Google Docs hosting? Default: **no**.
+2. Hard-code any **named partners/charities/clinicians/£ targets**, or leave as `[placeholders]`? Default: **placeholders** (easier to amend).
+3. Keep all three tracks in **one document** (default) or split into three files?
