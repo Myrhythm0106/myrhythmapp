@@ -54,8 +54,8 @@ export const AuthTabs = ({
             </TabsContent>
           </Tabs>
           
-          {/* Debug helper for development */}
-          {process.env.NODE_ENV === 'development' && (
+          {/* Debug helpers — only rendered in local dev, never in preview or production */}
+          {import.meta.env.DEV && import.meta.env.MODE === 'development' && (
             <div className="space-y-4 mt-6">
               <AuthDebugHelper />
               <AuthTestHelper />
