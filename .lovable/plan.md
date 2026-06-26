@@ -1,74 +1,55 @@
-# Plan: MyRhythm GTM Playbook v3 — Three-Horizon, Easily Amendable
+## Goal
 
-Rebuild the GTM Playbook as **one document with three selectable tracks** (5-week / 6-month / 1-year), all starting **Tuesday 23 June 2026**. Designed first and foremost to be **easy for you to amend week-to-week** without going back through me.
+Keep "Confirm email" ON in Supabase so sign-ups stay verified — without spending money and without depending on the broken custom SMTP (Resend 535 auth error).
 
-## 1. "Easily amendable" — the core requirement
+## Why the current setup is failing
 
-Two parallel deliverables so you always have an editable surface:
+Supabase is configured to send confirmation emails through a custom SMTP (Resend) using credentials that are no longer valid. Every sign-up hits `535 Authentication credentials invalid` → Supabase returns `500 Error sending confirmation email` → the UI shows "Sign up failed." Nothing in the app code can fix this; it's a Supabase Auth setting.
 
-**A. Editable master — `.docx`**
-- Plain Arial, no locked styles, no images embedded in tables.
-- Every track section uses **simple Word tables** (Week / Goal / Daily actions / KPI / Owner / RAG status / Notes) — click any cell, type, done.
-- A single **"Change log" table** on page 2 (Date / Version / What changed / By whom) so amendments are tracked in the doc itself.
-- Front-matter **"How to amend this playbook"** box: 4 bullets — update the cell, bump version, add a changelog row, re-export PDF.
-- All dates rendered as text (not Word date fields) so you can edit freely.
-- Placeholders like `[Partner name]`, `[£ target]`, `[Owner]` used consistently so find-and-replace works.
+## Recommended path: Lovable Managed Auth Emails
 
-**B. Read-only share — `.pdf`**
-- Generated from the same `.docx` for clients/investors/Founders.
-- Footer notes "Living document — see .docx for latest".
+Lovable has a built-in auth email system that:
+- Uses the platform's own sending infrastructure (no Resend key, no SMTP config, no extra cost)
+- Is automatically credentialed via `LOVABLE_API_KEY` (already in your secrets)
+- Lets you keep "Confirm email" ON
+- Sends branded templates (signup confirmation, password reset, magic link, invite, email change, reauth)
 
-Optional companion (default OFF unless you say yes): a **Google Docs / Notion-ready Markdown export** (`.md`) so the playbook can live online as your central link.
+This replaces the broken custom SMTP entirely with a working, free, in-platform sender.
 
-## 2. Document structure
+## Steps
 
-**Front matter**
-- Cover: "GTM Playbook v3 — Founding Edition", anchor date Tue 23 Jun 2026.
-- How to amend this playbook (4 bullets).
-- Change log table.
-- How to pick a track (5-week vs 6-month vs 1-year decision guide).
-- Central-source-of-truth usage: shared link convention, weekly Monday 30-min review ritual, audience-to-section map (Founders / charities / clinicians / investors), monthly version bump.
+1. **Set up an email sender domain** (one-time, via the in-chat email setup dialog). You can use a Lovable-provided subdomain — no domain purchase or DNS work required from you if you don't have one ready. If you do want emails to come from `@myrhythmapp.com`, we add 2 NS records at your registrar and Lovable manages the rest.
+2. **Scaffold the auth email templates** — creates 6 branded React Email templates + the `auth-email-hook` edge function, all wired up automatically.
+3. **Brand the templates** to match MyRhythm (orange/purple palette, logo, tone). Reads `src/index.css` and applies your colors/fonts to each template.
+4. **Deploy** the `auth-email-hook` edge function.
+5. **In Supabase Auth → SMTP Settings:** disable the broken custom Resend SMTP so Supabase routes through the new hook instead. Keep "Confirm email" **ON**.
+6. **Verify end-to-end:** run a live Playwright sweep — register a fresh test account, confirm the email arrives, click the link, land in onboarding.
 
-**Five GTM pillars carried through every track:**
-1. Positioning & narrative (Discharge Cliff / Clinical-Ready vs Life-Ready Gap)
-2. Channels & outreach
-3. Founding cohort growth
-4. Product proof points
-5. Revenue & investment
+## What you have to do vs what I do
 
-## 3. Track A — 5-Week Sprint (23 Jun – 27 Jul 2026)
+**You:**
+- Click "Set up email domain" when the dialog appears
+- Choose: use a Lovable subdomain (instant, zero config) **or** delegate `mail.myrhythmapp.com` (paste 2 NS records at your registrar — ~5 min)
+- Toggle off the custom Resend SMTP in Supabase Auth settings (I'll give you the exact link)
 
-One editable table per week (Goal / Daily actions Mon–Fri / KPI / Owner / RAG / Notes).
-- W1 launch to warm list, 10 demos
-- W2 25 Founders, 3 clinician convos
-- W3 first Memory Bridge case study, charity #1
-- W4 50 Founders, first Taste & See conversions, investor teaser
-- W5 retro + graduate decision
+**I do:**
+- Scaffold + brand + deploy the templates and edge function
+- Re-run the live registration sweep to confirm the husband + 5 friends will get working confirmation emails
 
-## 4. Track B — 6-Month Playbook (Jun – Dec 2026)
+## Cost
 
-One editable table per month: Objective / 3 priorities / KPIs / Content / Partners / Investor milestone / RAG / Notes.
-- M1 cohort to 50 · M2 clinician design partners · M3 charity channel + 150 Founders · M4 paid test + pre-seed convos · M5 300 Founders + outcomes data · M6 pre-seed close.
+£0. Lovable Managed Auth Emails are included — no Resend, no SendGrid, no per-email charge at this volume.
 
-## 5. Track C — 1-Year Playbook (Jun 2026 – Jun 2027)
+## Trade-offs vs Option A (disable confirmation)
 
-One editable table per quarter: Theme / Objectives / Hiring / Partnerships / Revenue / Fundraise / RAG / Notes.
-- Q1 cohort + design partners · Q2 paid + pre-seed · Q3 clinical pilots + outcomes paper · Q4 seed raise + UK regional.
+| | Managed Auth Emails (this plan) | Disable confirmation (previous suggestion) |
+|---|---|---|
+| Cost | £0 | £0 |
+| Setup time | ~10 min (mostly your domain choice) | 5 seconds |
+| Email verification | ✅ Kept ON | ❌ Off |
+| Ready for public launch | ✅ Yes — same system scales | ❌ Must redo before launch |
+| Risk | Low — managed by Lovable | Medium — anyone can sign up with any email |
 
-## 6. Deliverables
+## Open question before I proceed
 
-- `MyRhythm_GTM_Playbook_v3.docx` (editable master)
-- `MyRhythm_GTM_Playbook_v3.pdf` (share copy)
-- v2 left in place
-
-## 7. Technical notes
-
-- Generate with `docx-js`: US Letter, Arial, brand-orange #EA580C H1s, teal #0F766E accents, DXA tables, no unicode bullets, simple borders to keep tables editable.
-- Confidentiality footer (3pt) + "Founding Edition v0.1 — Living document" on every page.
-- PDF via LibreOffice; QA every page as JPEG, fix overflow, re-run until clean.
-
-## Open questions (will default if no answer)
-
-1. Add the **Markdown (`.md`) companion** for Notion/Google Docs hosting? Default: **no**.
-2. Hard-code any **named partners/charities/clinicians/£ targets**, or leave as `[placeholders]`? Default: **placeholders** (easier to amend).
-3. Keep all three tracks in **one document** (default) or split into three files?
+Do you want emails to come from a **Lovable subdomain** (instant, no DNS) or from **your own `myrhythmapp.com`** (5-min DNS setup, more professional)? If unsure, I recommend the Lovable subdomain for the founding circle, then switching to your domain pre-public-launch.
