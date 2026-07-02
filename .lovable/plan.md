@@ -1,67 +1,63 @@
 ## Goal
-1. Lock the two approved app descriptions (user-facing + investor-facing) into every relevant document so wording stays consistent.
-2. Unblock live sign-up so you and your husband can start using and testing the app **today**, without waiting on the Resend/SMTP domain setup.
+Seed two founding test accounts (`annabelaaron@gmail.com`, `annabelaaron@yahoo.com`) and mark them as `founding_comped` so payment/trial gating is skipped everywhere.
+
+Current state (checked):
+- `annabelaaron@gmail.com` **already exists** in `auth.users` (id `cee95ac5-…`).
+- `annabelaaron@yahoo.com` **does not exist** yet.
+- `profiles` has no `founding_comped` column yet.
+- `subscriptions` has no comped concept — everything runs off `status` + `trial_end`.
 
 ---
 
-## Part 1 — Documentation updates (wording lock)
+## Step 1 — Schema: add the comped flag (migration)
 
-**Canonical wording to be inserted:**
+Add a single source of truth on `profiles`:
 
-- **User-facing (primary):**
-  > MyRhythm is a digital life empowerment and productivity companion for planning, prioritisation, reminders, emotional check-ins, and everyday follow-through. Designed for people who carry a lot — including those with memory and cognitive challenges.
+- `founding_comped boolean not null default false`
+- `founding_member boolean not null default false` (for the badge / UI, separate from comped)
 
-- **Investor / About (secondary):**
-  > Built with project scoping, user-centred design, requirements thinking, and continuous improvement — a wellness, productivity and cognitive support tool. Not a medical device, diagnosis, or treatment.
+Update `public.get_user_subscription_status(uuid)` so that if `profiles.founding_comped = true` it returns `'founding_comped'` before any other status check. This means every existing gate that calls this RPC (or checks the subscription table) will treat these users as fully entitled without touching Stripe.
 
-**Files to update:**
-- `docs/v0.1-features.md` — replace opening description block.
-- `docs/founding-core-value-map.md` — add "How we describe MyRhythm" section at top.
-- `docs/v0.1-friends-family-testing-guide.md` — update the "What is MyRhythm" intro.
-- `docs/v0.1-test-readiness.md` — add wording reference at top.
-- `README.md` — replace project blurb.
-- `index.html` — update `<title>` and `<meta name="description">` to the user-facing version (SEO-trimmed to <160 chars).
-- `src/config/disclaimer.ts` (new) — export `APP_DESCRIPTION_USER`, `APP_DESCRIPTION_INVESTOR`, and `DISCLAIMER_TEXT` so future UI reads from one source.
-- `mem://brand/app-description` (new memory) — persist both versions + rule "emotional regulation" is banned wording; use "emotional check-ins".
-- `mem://index.md` — add reference to the new memory.
+No RLS policy changes needed — users already read their own profile row.
 
-Founders Edition Word/PDF docs (Quick Start v2, User Manual v2, GTM Playbook v3) will be regenerated with the same wording on the same pass.
+## Step 2 — Seed the Gmail account (already exists)
+
+Data-only changes (insert tool):
+
+1. `UPDATE public.profiles SET founding_comped = true, founding_member = true, name = COALESCE(name,'Annabel') WHERE id = 'cee95ac5-eeea-49c5-8a88-571199ef0f2d';`
+2. Upsert a `subscriptions` row for that user:
+   - `status = 'active'`, `plan_type = 'founding_comped'`
+   - `current_period_start = today`, `current_period_end = today + 5 years`
+   - no Stripe IDs.
+
+## Step 3 — Seed the Yahoo account (does NOT exist)
+
+Auth users can't be created from a SQL migration safely (password hashing, identities row, confirmation state). Two options — pick one:
+
+**Option A (recommended): one-shot edge function `seed-founding-account`.**
+- Uses `SUPABASE_SERVICE_ROLE_KEY` server-side.
+- Calls `supabase.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: { name: 'Annabel (Yahoo)' } })`.
+- Then runs the same profile + subscription updates as Step 2 for the new user id.
+- I invoke it once from the sandbox with a temp password you choose (or auto-generated and returned to you once, never logged).
+- Then the function is deleted so it can't be reused.
+
+**Option B: you create the Yahoo user manually in Supabase Dashboard → Auth → Users → "Add user" (check "Auto Confirm"), then I run the profile + subscription update.**
+
+Either way you end up with an immediately-usable login. Option A is one click for you (I run it); Option B needs 30 seconds in the dashboard.
+
+## Step 4 — Verify
+
+Run a read query confirming both users show:
+- `profiles.founding_comped = true`
+- `profiles.founding_member = true`
+- `subscriptions.status = 'active'` and `plan_type = 'founding_comped'`
+- `get_user_subscription_status(user_id)` returns `'founding_comped'`
+
+Then a quick Playwright login sweep on both accounts to confirm no paywall appears on the 9 Founding Core routes.
 
 ---
-
-## Part 2 — Make the app testable NOW (bypass the email block)
-
-The Resend SMTP is still broken and the managed-email domain isn't set up yet. To get you and your husband in **today** without waiting for DNS, use a two-step unblock:
-
-**Step A — Temporary: disable "Confirm email" in Supabase Auth**
-- I'll walk you through the exact toggle (Supabase → Auth → Providers → Email → "Confirm email" OFF).
-- Effect: sign-up completes instantly, no email needed.
-- Scope: keeps this ON only until managed email is wired. Only shared with you, your husband, and 5 vetted friends — access controlled by the Founding Core invite flow.
-
-**Step B — Seed your two accounts directly (belt & braces)**
-- Insert your two accounts via Supabase Auth admin so you can log in immediately even if UI sign-up hiccups.
-- Mark both as `founding_comped` in `profiles` so payment gating skips.
-- Confirm the Founding Core routes load cleanly for both.
-
-**Step C — Live verification sweep (Playwright)**
-- Run the weekend self-test script against both accounts:
-  - Register → Assessment (persona-appropriate MYRHYTHM questions) → Welcome (Brain Health snapshot) → Home (name greeting + #IChoose share) → Capture → Commit → Calibrate → Memory Library → Support Circle → Settings.
-- Capture screenshots + console/network logs. Report any breakage before you start real use.
-
-**Step D — Restore email confirmation later**
-- Once the managed email domain is verified (separate short task), flip "Confirm email" back ON and re-run the sweep. No code changes required at that point.
-
----
-
-## Order of execution
-1. Write/refresh all doc files + new memory (Part 1).
-2. Regenerate Founders Edition Word/PDF exports with new wording.
-3. Guide you through the Supabase "Confirm email OFF" toggle (30 seconds).
-4. Seed you + husband accounts; verify login.
-5. Run Playwright sweep across the 9 Founding Core routes.
-6. Hand back with a green/red checklist so you know exactly what's testable this weekend.
 
 ## Open confirmations before I build
-- **Confirm email OFF (temporarily)** — OK to proceed? (Only alternative is waiting on DNS.)
-- **Seed accounts** — give me the two email addresses to seed (or I can create `you@myrhythmapp.com` + `husband@myrhythmapp.com` placeholders you rename later).
-- **Founders Edition PDFs** — regenerate now, or only after the app sweep passes?
+1. **Yahoo account creation** — Option A (I run a one-shot edge function) or Option B (you add it in the Supabase dashboard)?
+2. **Temp password for Yahoo** — pick one you'll change on first login, or let me auto-generate and show once?
+3. OK to store `founding_comped` on `profiles` (vs a separate `founding_comped_users` table)? Profiles is simpler; a separate table is only worth it if you plan to track history of who was comped and when.
