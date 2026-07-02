@@ -3,6 +3,16 @@
 **Audience:** marketing, support, investors, the founder.
 **Purpose:** in one page, show what a Founding Member actually gets for £7–£20/mo and why each piece is worth more than the price.
 
+## How we describe MyRhythm (locked wording)
+
+**User-facing:**
+> MyRhythm is a digital life empowerment and productivity companion for planning, prioritisation, reminders, emotional check-ins, and everyday follow-through. Designed for people who carry a lot — including those with memory and cognitive challenges.
+
+**Investor / About:**
+> Built with project scoping, user-centred design, requirements thinking, and continuous improvement — a wellness, productivity and cognitive support tool. Not a medical device, diagnosis, or treatment.
+
+Never say "emotional regulation" in customer copy — it reads as a medical claim. Use "emotional check-ins" or "mood tracking". Source of truth: `src/config/appDescription.ts` and `mem://brand/app-description`.
+
 > For the end-to-end user journey across these 9 routes, see [`docs/v0.1-founding-core-flow.md`](./v0.1-founding-core-flow.md).
 
 ---
