@@ -1,4 +1,8 @@
-# Welcome to your Lovable project
+# MyRhythm
+
+> A digital life empowerment and productivity companion for planning, prioritisation, reminders, emotional check-ins, and everyday follow-through. Designed for people who carry a lot — including those with memory and cognitive challenges.
+>
+> _MyRhythm is a wellness, productivity and cognitive support tool. It is not a medical device, diagnosis, or treatment._
 
 ## Project info
 
