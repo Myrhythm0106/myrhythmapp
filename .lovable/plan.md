@@ -1,55 +1,67 @@
 ## Goal
+1. Lock the two approved app descriptions (user-facing + investor-facing) into every relevant document so wording stays consistent.
+2. Unblock live sign-up so you and your husband can start using and testing the app **today**, without waiting on the Resend/SMTP domain setup.
 
-Keep "Confirm email" ON in Supabase so sign-ups stay verified — without spending money and without depending on the broken custom SMTP (Resend 535 auth error).
+---
 
-## Why the current setup is failing
+## Part 1 — Documentation updates (wording lock)
 
-Supabase is configured to send confirmation emails through a custom SMTP (Resend) using credentials that are no longer valid. Every sign-up hits `535 Authentication credentials invalid` → Supabase returns `500 Error sending confirmation email` → the UI shows "Sign up failed." Nothing in the app code can fix this; it's a Supabase Auth setting.
+**Canonical wording to be inserted:**
 
-## Recommended path: Lovable Managed Auth Emails
+- **User-facing (primary):**
+  > MyRhythm is a digital life empowerment and productivity companion for planning, prioritisation, reminders, emotional check-ins, and everyday follow-through. Designed for people who carry a lot — including those with memory and cognitive challenges.
 
-Lovable has a built-in auth email system that:
-- Uses the platform's own sending infrastructure (no Resend key, no SMTP config, no extra cost)
-- Is automatically credentialed via `LOVABLE_API_KEY` (already in your secrets)
-- Lets you keep "Confirm email" ON
-- Sends branded templates (signup confirmation, password reset, magic link, invite, email change, reauth)
+- **Investor / About (secondary):**
+  > Built with project scoping, user-centred design, requirements thinking, and continuous improvement — a wellness, productivity and cognitive support tool. Not a medical device, diagnosis, or treatment.
 
-This replaces the broken custom SMTP entirely with a working, free, in-platform sender.
+**Files to update:**
+- `docs/v0.1-features.md` — replace opening description block.
+- `docs/founding-core-value-map.md` — add "How we describe MyRhythm" section at top.
+- `docs/v0.1-friends-family-testing-guide.md` — update the "What is MyRhythm" intro.
+- `docs/v0.1-test-readiness.md` — add wording reference at top.
+- `README.md` — replace project blurb.
+- `index.html` — update `<title>` and `<meta name="description">` to the user-facing version (SEO-trimmed to <160 chars).
+- `src/config/disclaimer.ts` (new) — export `APP_DESCRIPTION_USER`, `APP_DESCRIPTION_INVESTOR`, and `DISCLAIMER_TEXT` so future UI reads from one source.
+- `mem://brand/app-description` (new memory) — persist both versions + rule "emotional regulation" is banned wording; use "emotional check-ins".
+- `mem://index.md` — add reference to the new memory.
 
-## Steps
+Founders Edition Word/PDF docs (Quick Start v2, User Manual v2, GTM Playbook v3) will be regenerated with the same wording on the same pass.
 
-1. **Set up an email sender domain** (one-time, via the in-chat email setup dialog). You can use a Lovable-provided subdomain — no domain purchase or DNS work required from you if you don't have one ready. If you do want emails to come from `@myrhythmapp.com`, we add 2 NS records at your registrar and Lovable manages the rest.
-2. **Scaffold the auth email templates** — creates 6 branded React Email templates + the `auth-email-hook` edge function, all wired up automatically.
-3. **Brand the templates** to match MyRhythm (orange/purple palette, logo, tone). Reads `src/index.css` and applies your colors/fonts to each template.
-4. **Deploy** the `auth-email-hook` edge function.
-5. **In Supabase Auth → SMTP Settings:** disable the broken custom Resend SMTP so Supabase routes through the new hook instead. Keep "Confirm email" **ON**.
-6. **Verify end-to-end:** run a live Playwright sweep — register a fresh test account, confirm the email arrives, click the link, land in onboarding.
+---
 
-## What you have to do vs what I do
+## Part 2 — Make the app testable NOW (bypass the email block)
 
-**You:**
-- Click "Set up email domain" when the dialog appears
-- Choose: use a Lovable subdomain (instant, zero config) **or** delegate `mail.myrhythmapp.com` (paste 2 NS records at your registrar — ~5 min)
-- Toggle off the custom Resend SMTP in Supabase Auth settings (I'll give you the exact link)
+The Resend SMTP is still broken and the managed-email domain isn't set up yet. To get you and your husband in **today** without waiting for DNS, use a two-step unblock:
 
-**I do:**
-- Scaffold + brand + deploy the templates and edge function
-- Re-run the live registration sweep to confirm the husband + 5 friends will get working confirmation emails
+**Step A — Temporary: disable "Confirm email" in Supabase Auth**
+- I'll walk you through the exact toggle (Supabase → Auth → Providers → Email → "Confirm email" OFF).
+- Effect: sign-up completes instantly, no email needed.
+- Scope: keeps this ON only until managed email is wired. Only shared with you, your husband, and 5 vetted friends — access controlled by the Founding Core invite flow.
 
-## Cost
+**Step B — Seed your two accounts directly (belt & braces)**
+- Insert your two accounts via Supabase Auth admin so you can log in immediately even if UI sign-up hiccups.
+- Mark both as `founding_comped` in `profiles` so payment gating skips.
+- Confirm the Founding Core routes load cleanly for both.
 
-£0. Lovable Managed Auth Emails are included — no Resend, no SendGrid, no per-email charge at this volume.
+**Step C — Live verification sweep (Playwright)**
+- Run the weekend self-test script against both accounts:
+  - Register → Assessment (persona-appropriate MYRHYTHM questions) → Welcome (Brain Health snapshot) → Home (name greeting + #IChoose share) → Capture → Commit → Calibrate → Memory Library → Support Circle → Settings.
+- Capture screenshots + console/network logs. Report any breakage before you start real use.
 
-## Trade-offs vs Option A (disable confirmation)
+**Step D — Restore email confirmation later**
+- Once the managed email domain is verified (separate short task), flip "Confirm email" back ON and re-run the sweep. No code changes required at that point.
 
-| | Managed Auth Emails (this plan) | Disable confirmation (previous suggestion) |
-|---|---|---|
-| Cost | £0 | £0 |
-| Setup time | ~10 min (mostly your domain choice) | 5 seconds |
-| Email verification | ✅ Kept ON | ❌ Off |
-| Ready for public launch | ✅ Yes — same system scales | ❌ Must redo before launch |
-| Risk | Low — managed by Lovable | Medium — anyone can sign up with any email |
+---
 
-## Open question before I proceed
+## Order of execution
+1. Write/refresh all doc files + new memory (Part 1).
+2. Regenerate Founders Edition Word/PDF exports with new wording.
+3. Guide you through the Supabase "Confirm email OFF" toggle (30 seconds).
+4. Seed you + husband accounts; verify login.
+5. Run Playwright sweep across the 9 Founding Core routes.
+6. Hand back with a green/red checklist so you know exactly what's testable this weekend.
 
-Do you want emails to come from a **Lovable subdomain** (instant, no DNS) or from **your own `myrhythmapp.com`** (5-min DNS setup, more professional)? If unsure, I recommend the Lovable subdomain for the founding circle, then switching to your domain pre-public-launch.
+## Open confirmations before I build
+- **Confirm email OFF (temporarily)** — OK to proceed? (Only alternative is waiting on DNS.)
+- **Seed accounts** — give me the two email addresses to seed (or I can create `you@myrhythmapp.com` + `husband@myrhythmapp.com` placeholders you rename later).
+- **Founders Edition PDFs** — regenerate now, or only after the app sweep passes?
