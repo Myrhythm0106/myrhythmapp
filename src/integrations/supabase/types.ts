@@ -1818,6 +1818,8 @@ export type Database = {
           created_at: string
           custom_user_type: string | null
           email: string
+          founding_comped: boolean
+          founding_member: boolean
           id: string
           mfa_enabled: boolean | null
           name: string
@@ -1835,6 +1837,8 @@ export type Database = {
           created_at?: string
           custom_user_type?: string | null
           email: string
+          founding_comped?: boolean
+          founding_member?: boolean
           id: string
           mfa_enabled?: boolean | null
           name: string
@@ -1852,6 +1856,8 @@ export type Database = {
           created_at?: string
           custom_user_type?: string | null
           email?: string
+          founding_comped?: boolean
+          founding_member?: boolean
           id?: string
           mfa_enabled?: boolean | null
           name?: string
