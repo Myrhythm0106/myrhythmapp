@@ -1,53 +1,58 @@
-# Regenerate GTM Playbook + User Manual with the latest thesis
+# Extend GTM Playbook to cover the already-discharged
 
 ## Why
-The PDFs you're viewing are stale:
-- `MyRhythm_GTM_Playbook_v3.pdf` — last written **23 June 2026**
-- `MyRhythm_UserManual_FoundersEdition_v2.pdf` — last written **23 June 2026**
+The current v4 Playbook frames the Bridge Pathway as starting **pre-discharge on the ward**. That leaves out a large, urgent audience: people (and families) who were discharged months or years ago and are still living inside the Discharge Cliff — no structured support, lost routines, isolated caregivers.
 
-The recent work updated **markdown source files and `appDescription.ts` only**. These two PDFs were generated directly (no markdown source in `docs/`), so they never picked up:
-- The third problem — **"The Ideal-Brain Assumption"**
-- The **4R framework** (Remove / Reduce / Return / Reconnect)
-- Verified stats (WHO 57M/78M/139M dementia; Song et al. 2021 adult ADHD 2.58%/6.76%; Gallup 2024 stress; Hubstaff 2026 + Dropbox 2023 focus)
-- The 4R feature map (Capture, Commit, Calibrate, Celebrate, Memory Bridge, Support Circle, Assessments)
+They are not a different problem. They are the **same three failures**, just entered late:
+- Discharge Cliff — still falling, just further down
+- Clinical-Ready vs Life-Ready Gap — never closed
+- Ideal-Brain Assumption — compounded by years of tools that assumed a brain that never forgets
 
 ## What I'll produce
 
-Two new versioned artifacts written to `/mnt/documents/` (originals kept untouched):
+A new versioned artifact (v4 kept untouched):
 
-1. **`MyRhythm_GTM_Playbook_v4.pdf`** (+ `.docx`)
-2. **`MyRhythm_UserManual_FoundersEdition_v3.pdf`** (+ `.docx`)
+- **`MyRhythm_GTM_Playbook_v5.pdf`** (+ `.docx`) in `/mnt/documents/`
+- Confidential 3pt footer preserved
 
-Both will carry the standard 3pt confidentiality footer per project memory.
+## Content changes vs v4
 
-## Content changes
+1. **Reframe the Bridge Pathway entry points** — two on-ramps, same pathway:
+   - **Pre-discharge** (ward-initiated) — existing flow
+   - **Post-discharge / retrospective** (self- or family-initiated at any point after discharge) — new flow
 
-**GTM Playbook v4** — add/refresh:
-- "The Three Problems MyRhythm Solves" section (Discharge Cliff, Clinical-Ready vs Life-Ready Gap, **Ideal-Brain Assumption**) with cited stats
-- Audience blocks: ADHD, Dementia/MCI, Stress/Burnout, Focus/Productivity — each mapped to which 4Rs apply
-- 4R feature matrix table (feature × Remove/Reduce/Return/Reconnect)
-- Refreshed positioning line + "No one walks alone" Reconnect callout
-- Keep existing GTM channels/pricing/rollout sections; edits are additive
+2. **New audience block: "Already Discharged"** — for survivors and families who are months/years past discharge. Mapped to all 4Rs:
+   - *Remove* isolation, guesswork, single-point-of-failure caregiving
+   - *Reduce* caregiver overload and repeat-explanation fatigue
+   - *Return* routine, follow-through, shared history
+   - *Reconnect* the Support Circle — no one walks alone, even if the walk started years ago
 
-**User Manual Founders Edition v3** — add/refresh:
-- "How MyRhythm helps" reframed as the 4Rs, with one-line examples per feature
-- "Who this is for" audience blocks matching the docs
-- Feature walkthroughs (Capture, Commit, Calibrate, Celebrate, Memory Bridge, Support Circle) tagged with their 4R contributions
-- Support Circle section highlights **Reconnect** and "No one walks alone"
-- Medical disclaimer preserved verbatim
+3. **New GTM channels for this audience** (additive, not replacing existing):
+   - Brain injury / stroke / dementia charities and peer communities
+   - Long-term rehab & community neuro-rehab teams
+   - Caregiver support groups (in-person and online)
+   - Social media communities and lived-experience creators
+   - GP / primary care follow-up touchpoints
 
-## Sources of truth I'll pull from (already in the repo)
-- `mem://brand/third-problem-ideal-brain`
+4. **Messaging additions**:
+   - "It's not too late to start" callout
+   - Reframed positioning line so it doesn't imply the ward is the only entry
+   - One-line testimonial-style placeholder for a late-entry persona (marked as illustrative)
+
+5. **Feature matrix** — unchanged 4R mapping, but examples now include a post-discharge scenario per feature (Capture, Commit, Calibrate, Celebrate, Memory Bridge, Support Circle, Assessments).
+
+## Sources of truth I'll pull from
 - `mem://brand/clinical-life-ready-gap`
-- `src/config/appDescription.ts` (`THREE_PROBLEMS_SHORT`, `THIRD_PROBLEM_STATS`, `FEATURE_4R_MAP`)
-- `docs/myrhythm-one-page-pitch.md`
+- `mem://brand/third-problem-ideal-brain`
+- `src/config/appDescription.ts` (unchanged — no new stats needed)
 - `docs/founding-core-value-map.md`
-- `docs/v0.1-features.md`
+- Existing v4 Playbook content (carry forward, don't rewrite what works)
 
 ## QA
-Convert every page of both PDFs to images and visually inspect each one for clipping, overflow, missing footer, broken tables. Fix and re-run until clean before handing over.
+Render every page of v5 to images and visually inspect for clipping, overflow, missing footer, broken tables. Iterate until clean.
 
 ## Out of scope
-- Regenerating the CCM/Productivity investor decks (say the word and I'll do those next as v5 / v2)
-- Any code, UI, or `docs/*.md` changes — those are already done
 - New stats beyond the already-cited set
+- Regenerating the User Manual v3 (say the word and I'll mirror the "already discharged" framing there as v4)
+- CCM / Productivity investor decks
+- Any code, UI, or `docs/*.md` changes
