@@ -1,6 +1,10 @@
 # MyRhythm
 
-> A digital life empowerment and productivity companion for planning, prioritisation, reminders, emotional check-ins, and everyday follow-through. Designed for people who carry a lot — including those with memory and cognitive challenges.
+> **Built with Memory-First Design.**
+>
+> MyRhythm is designed for memory challenges first — for people rebuilding after a brain injury or stroke. Secondly for the older population. Thirdly so that anyone with a busy or tired brain benefits. Planning, prioritisation, reminders, emotional check-ins, and everyday follow-through. Works on any phone, tablet, or laptop.
+>
+> **Why this matters.** We designed for the hardest case first: someone rebuilding after a brain injury, stroke, or living with memory challenges. Then for the older population managing full lives. Then for anyone with a busy or tired brain. If it works clearly for them, it works beautifully for everyone. That is our moat — a design philosophy, not a feature list.
 >
 > _MyRhythm is a wellness, productivity and cognitive support tool. It is not a medical device, diagnosis, or treatment._
 
