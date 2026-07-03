@@ -21,10 +21,11 @@ export function PreviewHeroSection() {
     }
   };
 
-  const handleStartJourney = () => {
-    console.log("PreviewHeroSection: Register Here button clicked");
+  // Founding-stage CTA. Restore "Start Your Journey" free path in v0.2 when free tier reopens.
+  const handleBecomeFoundingMember = () => {
+    console.log("PreviewHeroSection: Become a Founding Member clicked");
     try {
-      navigate("/onboarding");
+      navigate("/subscribe");
     } catch (error) {
       console.error("PreviewHeroSection: Navigation error:", error);
     }
@@ -139,11 +140,11 @@ export function PreviewHeroSection() {
                     size="lg" 
                     variant="premium"
                     className="text-lg px-8 py-6 flex items-center gap-3 rounded-full shadow-xl hover:shadow-2xl" 
-                    onClick={handleStartJourney}
+                    onClick={handleBecomeFoundingMember}
                   >
                     <UserPlus className="h-5 w-5 flex-shrink-0" />
                     <span className="text-center leading-tight">
-                      Start Your Journey
+                      Become a Founding Member
                       <br />
                       <span className="text-sm opacity-90">7-Day Free Trial</span>
                     </span>

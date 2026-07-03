@@ -34,7 +34,7 @@ const SplashScreen = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-center bg-gradient-to-r from-beacon-600 to-beacon-800 bg-clip-text text-transparent">
             MyRhythm
           </h1>
-          <p className="text-sm text-beacon-600/70 font-medium tracking-wide mt-1">Powered by LEAP-OS</p>
+          <p className="text-sm text-beacon-600/70 font-medium tracking-wide mt-1">Memory-First Design™</p>
         </div>
 
         {/* Taglines and Description */}
@@ -82,11 +82,12 @@ const SplashScreen = () => {
             showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
+          {/* Founding-stage CTA. Restore "Start Your Journey" free path in v0.2 when free tier reopens. */}
           <Button 
-            onClick={() => navigate("/customization")} 
+            onClick={() => navigate("/subscribe")} 
             className="w-full py-6 text-lg font-medium rounded-xl bg-gradient-to-r from-beacon-600 to-beacon-800 shadow-lg hover:shadow-xl transition-all"
           >
-            <span>Start Your Journey</span>
+            <span>Become a Founding Member</span>
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>

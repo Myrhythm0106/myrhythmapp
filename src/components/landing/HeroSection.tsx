@@ -53,8 +53,9 @@ export function HeroSection() {
     }
   };
 
-  const handleStartJourney = () => {
-    navigate("/auth");
+  // Founding-stage CTA. Restore "Start Your Journey" free path in v0.2 when free tier reopens.
+  const handleBecomeFoundingMember = () => {
+    navigate("/subscribe");
   };
 
   return (
@@ -152,13 +153,13 @@ export function HeroSection() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button 
                     size="lg" 
-                    onClick={handleStartJourney}
+                    onClick={handleBecomeFoundingMember}
                     className="text-lg px-10 py-7 h-auto bg-gradient-to-r from-purple-600 via-blue-600 to-teal-600 hover:from-purple-700 hover:via-blue-700 hover:to-teal-700 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 font-semibold rounded-2xl group relative overflow-hidden"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     <div className="relative flex items-center gap-3">
                       <Play className="w-5 h-5" />
-                      <span>Start Your Journey Today</span>
+                      <span>Become a Founding Member</span>
                     </div>
                   </Button>
                   <Button 
@@ -214,7 +215,7 @@ export function HeroSection() {
                       
                       <div className="text-center py-4">
                         <Button 
-                          onClick={handleStartJourney}
+                          onClick={handleBecomeFoundingMember}
                           className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg transition-all duration-300 hover:scale-105 px-6 py-3"
                         >
                           Complete Full Assessment Free

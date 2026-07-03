@@ -125,12 +125,12 @@ const PricingSection = ({ onSelectPlan }: PricingSectionProps) => {
               size="lg"
               className="w-full bg-primary hover:bg-primary/90 text-lg py-6"
             >
-              Start Your Free Trial
+              Become a Founding Member
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
 
             <p className="text-center text-xs text-muted-foreground">
-              No payment required to start • Cancel anytime • 30-day money-back guarantee
+              7-day free trial · Cancel anytime · 30-day money-back guarantee
             </p>
           </CardContent>
         </Card>
