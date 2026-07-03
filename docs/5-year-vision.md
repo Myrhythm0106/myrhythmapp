@@ -80,7 +80,7 @@ I've drafted three flavours. They're not mutually exclusive but the emphasis cha
 
 ---
 
-## 3 · Year-by-year shape (assuming Option A)
+## 4 · Year-by-year shape (assuming Option A)
 
 Each year has **one theme**, **one proof point**, **one thing we do not do**.
 
@@ -115,7 +115,7 @@ Each year has **one theme**, **one proof point**, **one thing we do not do**.
 
 ---
 
-## 4 · What has to be true in the product
+## 5 · What has to be true in the product
 
 Traceable to the three failures, not features for their own sake.
 
@@ -130,7 +130,7 @@ Traceable to the three failures, not features for their own sake.
 
 ---
 
-## 5 · Guardrails that hold across all 5 years
+## 6 · Guardrails that hold across all 5 years
 
 Non-negotiable — repeat these when we're tempted to drift.
 
@@ -142,7 +142,7 @@ Non-negotiable — repeat these when we're tempted to drift.
 
 ---
 
-## 6 · Open questions the founder needs to answer
+## 7 · Open questions the founder needs to answer
 
 1. Which end-state (A / B / C) do we commit to?
 2. Do we take institutional money before 2028, and if so, at what stage?
@@ -151,7 +151,7 @@ Non-negotiable — repeat these when we're tempted to drift.
 
 ---
 
-## 7 · Files this doc supersedes / links to
+## 8 · Files this doc supersedes / links to
 
 - Supersedes: nothing (this is the first 5-year artifact).
 - Links to: `docs/90-day-sprint.md`, `strategic-documents/24-Month-Master-Execution-Plan.md`, `src/data/roadmapData.ts`, `strategic-documents/Feature-Release-Calendar.md`.
