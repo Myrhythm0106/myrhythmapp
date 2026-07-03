@@ -68,11 +68,12 @@ export default function LaunchWelcome() {
             className="md:col-span-6 flex flex-col"
           >
             <header className="mb-10 lg:mb-12">
-              <div className="flex items-center gap-3 mb-6 lg:mb-8">
+              <div className="flex flex-wrap items-center gap-3 mb-6 lg:mb-8">
                 <span className="block text-[10px] tracking-[0.3em] uppercase font-medium text-stone-400">
                   Welcome to MyRhythm
                 </span>
                 <EditionBadge variant="chip" />
+                <MemoryFirstChip />
               </div>
               <h1
                 style={SERIF}
