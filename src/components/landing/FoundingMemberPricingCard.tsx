@@ -128,7 +128,7 @@ export function FoundingMemberPricingCard({ onGetStarted }: FoundingMemberPricin
                     size="lg"
                     className="w-full bg-brand-emerald-600 hover:bg-brand-emerald-700 text-white font-semibold"
                   >
-                    Start Free Trial
+                    Become a Founding Member
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
 

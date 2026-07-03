@@ -24,7 +24,7 @@ export default function PlanSelectionPage() {
           </h1>
           <p className="text-xl text-brain-health-700 max-w-2xl mx-auto">
             {userData?.fullName && `Welcome ${userData.fullName.split(' ')[0]}! `}
-            Start your journey with a 7-day free trial. No charges until your trial ends.
+            Start your Founding Member trial — 7 days free, no charges until it ends.
           </p>
         </div>
 

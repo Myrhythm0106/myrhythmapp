@@ -10,8 +10,9 @@ interface CallToActionProps {
 export function CallToAction({ onGetStarted }: CallToActionProps) {
   const navigate = useNavigate();
   
+  // Founding-stage CTA. Restore free-tier path in v0.2 when free tier reopens.
   const handleRegister = () => {
-    navigate("/mvp/user-type-selection");
+    navigate("/subscribe");
   };
   
   return (
@@ -30,7 +31,7 @@ export function CallToAction({ onGetStarted }: CallToActionProps) {
             onClick={handleRegister}
           >
             <UserPlus className="h-5 w-5" />
-            Start Your MYRHYTHM Journey
+            Become a Founding Member
             <ArrowRight className="h-4 w-4" />
           </Button>
           
