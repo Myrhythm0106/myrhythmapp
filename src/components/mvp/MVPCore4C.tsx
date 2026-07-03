@@ -157,7 +157,7 @@ export function MVPCore4C() {
               </p>
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 text-white px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-200"
                 onClick={() => navigate('/launch/register')}
               >
                 <Sparkles className="h-5 w-5 mr-2" />
