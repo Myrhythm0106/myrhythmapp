@@ -269,13 +269,7 @@ function App() {
                     <Route path="/in-app-purchase" element={<InAppPurchase />} />
                     <Route path="/memory-bank" element={<ProtectedRoute requireAuth={false}><MemoryBank /></ProtectedRoute>} />
                     <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                     <Route path="/calendar" element={
-                       <ProtectedRoute requireAuth={false}>
-                         <PriorityProvider>
-                           <CalendarPage />
-                         </PriorityProvider>
-                       </ProtectedRoute>
-                     } />
+                     <Route path="/calendar" element={<Navigate to="/launch/calendar" replace />} />
                      <Route path="/vision" element={
                        <ProtectedRoute requireAuth={false}>
                          <VisionPage />
