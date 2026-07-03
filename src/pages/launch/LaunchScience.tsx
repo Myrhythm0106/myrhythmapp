@@ -140,6 +140,7 @@ export default function LaunchScience() {
           </p>
         </footer>
       </div>
+      <LaunchQuickActions />
     </div>
   );
 }
