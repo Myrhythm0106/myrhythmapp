@@ -137,6 +137,9 @@ Each feature release is strategically timed to:
 ## PHASE 2: CLINICAL VALIDATION FEATURES (Month 4-6)
 ### Theme: "Medical-Grade Capabilities & Professional Integration"
 
+> **v0.2 addition — Brain Games & Cognitive Tools (Aug–Sep 2026):** Memory, focus, and spatial exercises with progress analytics and achievement system. Exposes `/launch/games` in the Founding Core nav once v0.1 cohort feedback is folded in. See `src/data/roadmapData.ts` → `brain-games`.
+
+
 #### MONTH 4: CLINICAL PROFESSIONAL FEATURES
 
 **Week 13-14: Professional Dashboard**
