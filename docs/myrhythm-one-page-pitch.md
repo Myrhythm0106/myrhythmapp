@@ -270,6 +270,10 @@ Unlike generic productivity tools, LEAP-OS:
 18. McKinsey & Company (2022) *The Future of Digital Health: Creating a Robust Ecosystem*. McKinsey Global Institute.
 19. Maas, A.I.R. et al. (2022) 'Traumatic brain injury: progress and challenges in prevention, clinical care, and research', *The Lancet Neurology*, 21(11), pp. 1004–1060.
 20. Wilson, L. et al. (2017) 'The chronic and evolving neurological consequences of traumatic brain injury', *The Lancet Neurology*, 16(10), pp. 813–825.
+21. Song, P., Zha, M., Yang, Q., Zhang, Y., Li, X. and Rudan, I. (2021) 'The prevalence of adult attention-deficit hyperactivity disorder: A global systematic review and meta-analysis', *Journal of Global Health*, 11, 04009. doi:10.7189/jogh.11.04009
+22. Gallup (2024) *State of the Global Workplace: 2024 Report*. Washington, DC: Gallup Inc.
+23. Hubstaff (2026) *Workplace Productivity Report 2026*. Available at: hubstaff.com/workplace-productivity-report
+24. Economist Impact / Dropbox (2023) *The Distraction Economy: The Cost of Interruption in Knowledge Work*. Available at: impact.economist.com
 
 ---
 
