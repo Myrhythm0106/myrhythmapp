@@ -5,6 +5,8 @@ import { mapToPersona, type Persona } from '@/launch/persona/usePersona';
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
+import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
+import type { LetterId } from '@/data/launchAssessmentBanks';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
@@ -13,7 +15,7 @@ interface BHSnapshot {
   letters: Record<string, number>;
 }
 
-const LETTER_ORDER: Array<{ id: string; letter: string }> = [
+const LETTER_ORDER: Array<{ id: LetterId; letter: string }> = [
   { id: 'mindset', letter: 'M' },
   { id: 'yesReality', letter: 'Y' },
   { id: 'rhythm', letter: 'R' },
@@ -114,23 +116,16 @@ export default function LaunchWelcome() {
                   </span>
                   <span style={SERIF} className="text-3xl text-teal-700">{bhs.total}<span className="text-sm text-stone-400">/100</span></span>
                 </div>
-                <p className="text-[11px] text-stone-500 mb-3 -mt-1">Includes any "also fits" answers you tapped.</p>
+                <p className="text-[11px] text-stone-500 mb-3 -mt-1">Tap any letter for what it means and how to raise it.</p>
                 <div className="grid grid-cols-8 gap-1.5">
-                  {LETTER_ORDER.map((l, i) => {
-                    const v = bhs.letters[l.id] ?? 0;
-                    const pct = Math.round((v / 3) * 100);
-                    return (
-                      <div key={i} className="flex flex-col items-center gap-1">
-                        <div className="w-full h-12 bg-stone-200 rounded-sm relative overflow-hidden">
-                          <div
-                            className="absolute bottom-0 left-0 right-0 bg-teal-600/70"
-                            style={{ height: `${pct}%` }}
-                          />
-                        </div>
-                        <span className="text-[10px] font-semibold text-stone-600">{l.letter}</span>
-                      </div>
-                    );
-                  })}
+                  {LETTER_ORDER.map((l, i) => (
+                    <MyRhythmLetterBar
+                      key={i}
+                      id={l.id}
+                      letter={l.letter}
+                      score={bhs.letters[l.id] ?? 0}
+                    />
+                  ))}
                 </div>
                 <p className="text-[10px] text-stone-400 mt-3 leading-relaxed">
                   A snapshot only — not a clinical score. We'll track how this shifts as you build your rhythm.
