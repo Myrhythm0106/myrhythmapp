@@ -68,7 +68,7 @@ export function FoundingMemberPricingCard({ onGetStarted }: FoundingMemberPricin
               Choose Your Plan
             </h2>
             <p className="text-xl text-gray-600 font-light">
-              First 1,000 members get founding rates. 873 spots remaining.
+              Founding spots are limited — join the first 1,000
             </p>
           </div>
         </ScrollReveal>

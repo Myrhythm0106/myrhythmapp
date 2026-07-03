@@ -1,57 +1,49 @@
-## Full-flow audit plan
+## Plan: Landing Page Messaging Simplification (v9)
 
-You've asked me to verify the app is testable end-to-end. This is an **audit / verification pass**, not a code change. If any issue is found I'll report it and we can decide fixes together in a follow-up.
+### Goal
+Reduce cognitive overload on the `/launch` landing page by shortening copy, clarifying the founder CTA, hiding the clinical-vs-life-ready strip behind a toggle, recolouring distracting orange body text, and making scarcity feel real.
 
-### Scope — 5 checks
+---
 
-**1. Full flow walk-through (`/launch/*`)**
-Trace the intended journey and flag broken hand-offs:
-```
-/launch/landingpage → register → signin → user-type
-   → assessment → payment → welcome → /launch/home
-   → capture / commit / calibrate / celebrate loop
-   → calendar, memory, gratitude, support, goals, profile, settings
-```
-Method: read each page's primary CTAs and confirm the `navigate(...)` targets exist as routes and render.
+### Changes
 
-**2. Landing-page link check**
-`LaunchLanding` reuses `MVPCore4C`. I'll enumerate every `<a>`, `<Link>`, and `onClick(navigate)` on that page + `LaunchWelcome` and verify each destination is a live route. Report any dead/legacy links (e.g. anything still pointing to `/dashboard`, `/mvp/...`, `/get-started`).
+#### 1. Hero sub-line (MVPCore4C.tsx, line 113)
+- **From:** `Transform cognitive challenges into unstoppable strength with science-backed tools designed for your journey.`
+- **To:** `Transform cognitive challenges into unstoppable strength.`
 
-**3. Data-save readiness**
-For the write paths that matter for cohort testing:
-- Auth (Supabase `profiles` on signup)
-- Capture → `daily_actions` / `extracted_actions`
-- Commit priorities → `priorities`
-- Calibrate → `mood_entries`
-- Celebrate → `victory_celebrations` / `gratitude_entries`
-- Memory Bridge recording → `voice_recordings` bucket + `meeting_recordings`
-- Settings (timezone, calendars) → `user_schedule_preferences` / `calendar_integrations`
+#### 2. Founder email CTA — clearer identity (MVPCore4C.tsx, lines 127-149)
+- **Button text:** `Reserve my spot` → `Become a Founding Member`
+- **Add micro-heading above email input:** `Founding Member — limited to first 1,000`
+- **Add helper line below button:** `Founding spots are limited — join the first 1,000`
+- Keep email capture logic unchanged.
 
-Method: for each, confirm the hook actually calls `supabase.from(...).insert/upsert`, RLS policies exist, and the table has the columns the code writes. I'll list any writer that is stubbed/localStorage-only.
+#### 3. Collapsible "How MyRhythm answers it" strip (MVPCore4C.tsx, lines 192-260)
+- Wrap the differentiator block, numbered 01-04 cards, "The evidence behind this" link, and trust strip inside the existing `@/components/ui/collapsible`.
+- **Default state:** Closed.
+- **Trigger button:** `See how MyRhythm answers this ↓`
+- **Close button:** `Show less ↑`
+- Pain-point image cards (lines 166-190) and 4C loop cards (lines 262-415) remain fully visible.
 
-**4. Older-generation design check**
-Against `mem://ux/inclusive-design-first` guardrails:
-- Body text ≥16px on mobile
-- Primary tap targets ≥56px (currently the launch quick-action FAB uses `min-h-[48px]` — will flag)
-- Line-height ≥1.5
-- Max 3 primary choices per screen
-- WCAG AA contrast on key surfaces (welcome, home, capture, commit)
-- Plain-English labels visible where the 4C words appear
+#### 4. Recolour orange body text (keep words)
+- Line 197 eyebrow (`text-brand-orange-500`) → `text-brain-health-600`
+- Line 238 card taglines (`text-brand-orange-500`) → `text-memory-emerald-700`
+- Orange stays on primary buttons and icon accents only.
 
-Method: spot-check the 6 highest-traffic launch pages (welcome, home, capture, commit, calendar, memory) and list violations with file + line.
+#### 5. Scarcity messaging on banner + pricing card
+- **FoundingMemberBanner.tsx:** Replace `873 spots remaining` with `Founding spots are limited — join the first 1,000`
+- **FoundingMemberPricingCard.tsx:** Replace `First 1,000 members get founding rates. 873 spots remaining.` with `Founding spots are limited — join the first 1,000`
 
-**5. "Never lost" — global compass/back visibility**
-Confirm `LaunchQuickActions` (compass FAB) and `LaunchPageHeader` (back button) render on **every** `/launch/*` route:
-- Compass is mounted inside `LaunchLayout`. I'll grep every launch page for `LaunchLayout` usage and list any page that renders bare (no layout wrapper → no FAB, no back).
-- Verify the FAB is not hidden behind modals/overlays (`z-40` currently — check for higher-z overlays).
-- Verify the back button shows on all non-home routes.
+---
 
-### Deliverable
+### Files touched
+1. `src/components/mvp/MVPCore4C.tsx`
+2. `src/components/landing/FoundingMemberBanner.tsx`
+3. `src/components/landing/FoundingMemberPricingCard.tsx`
 
-A single report with 5 sections, each ending in **PASS** / **PASS with notes** / **FAIL — needs fix**, plus a prioritised fix list. No code changes in this pass.
+No new dependencies. Uses existing `@radix-ui/react-collapsible` wrapper.
 
 ### Out of scope
-- Runtime Playwright walkthrough of authenticated flows (can add if you want an interactive smoke test after the static audit).
-- Fixing anything found — that comes as a follow-up plan.
-
-Approve and I'll run the audit and post the report.
+- Hero visual redesign
+- Changes to `/launch/register` or `/launch/science` copy
+- Consolidating the 3 end-of-page CTAs into one
+- Fixing non-text `sunrise-amber` gradient tokens
