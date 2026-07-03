@@ -8,8 +8,10 @@ export default function MVPPaymentPage() {
   const userType = searchParams.get('userType') || 'general-wellness';
 
   const handlePaymentComplete = () => {
-    // After payment completion, navigate to welcome or onboarding
-    navigate('/welcome');
+    // After payment completion, hand off to the Founding Core welcome (v0.1 canonical entry).
+    localStorage.setItem('mvp_trial_started', 'true');
+    localStorage.setItem('mvp_trial_start_date', new Date().toISOString());
+    navigate('/launch/welcome');
   };
 
   const handleBack = () => {
