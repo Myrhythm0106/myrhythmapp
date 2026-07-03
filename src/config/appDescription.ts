@@ -20,6 +20,23 @@ export const DISCLAIMER_TEXT =
   "MyRhythm is a wellness, productivity and cognitive support tool. It is not a medical device, diagnosis, or treatment.";
 
 /**
+ * Memory-First Design™ — the visible brand descriptor.
+ * See mem://brand/memory-first-design.
+ * Priority order (verbatim in docs/About/Cheat Sheet): memory challenges first,
+ * older population second, anyone with a busy or tired brain third.
+ * In-app functional labels (Capture/Commit/Calibrate/Celebrate, doors, persona
+ * copy) never carry this phrase. It appears only as a chip near the logo, a
+ * footer tagline, and one About-page section.
+ */
+export const APP_DESCRIPTION_INCLUSIVE =
+  "MyRhythm is designed for memory challenges first — for people rebuilding after a brain injury or stroke. Secondly for the older population. Thirdly so that anyone with a busy or tired brain benefits. Planning, prioritisation, reminders, emotional check-ins, and everyday follow-through. Works on any phone, tablet, or laptop.";
+
+export const MEMORY_FIRST_DESIGN_TAGLINE = "Built with Memory-First Design.";
+
+export const MEMORY_FIRST_DESIGN_EXPLAINER =
+  "Memory-First Design means we designed for the hardest case first: someone rebuilding after a brain injury, stroke, or living with memory challenges. Then for the older population managing full lives. Then for anyone with a busy or tired brain. If it works clearly for them, it works beautifully for everyone.";
+
+/**
  * Three problems MyRhythm exists to fix.
  * See mem://brand/clinical-life-ready-gap and mem://brand/third-problem-ideal-brain.
  * Do not paraphrase for investor or landing surfaces — import these strings.
