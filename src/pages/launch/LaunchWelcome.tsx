@@ -155,6 +155,9 @@ export default function LaunchWelcome() {
             <p className="text-[10px] text-stone-300 mt-12 max-w-md leading-relaxed">
               MyRhythm does not diagnose, treat, or cure any condition. It is a daily-life support tool that keeps you in control of who can act on your behalf.
             </p>
+            <p className="text-[10px] text-stone-400 mt-3 max-w-md tracking-[0.08em]">
+              {MEMORY_FIRST_DESIGN_TAGLINE}
+            </p>
           </motion.div>
 
           {/* Visual (40%) */}
