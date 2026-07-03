@@ -1,75 +1,53 @@
-## Goal
+# Regenerate GTM Playbook + User Manual with the latest thesis
 
-Add **"The Ideal-Brain Assumption"** as the named third problem across all brand, investor, and feature documentation, with verifiable stats and an explicit **4R feature map** (Remove / Reduce / Return / Reconnect) showing how every Founding Core feature addresses each problem group. No UI changes.
+## Why
+The PDFs you're viewing are stale:
+- `MyRhythm_GTM_Playbook_v3.pdf` — last written **23 June 2026**
+- `MyRhythm_UserManual_FoundersEdition_v2.pdf` — last written **23 June 2026**
 
-## The 4Rs (canonical vocabulary, used verbatim everywhere)
+The recent work updated **markdown source files and `appDescription.ts` only**. These two PDFs were generated directly (no markdown source in `docs/`), so they never picked up:
+- The third problem — **"The Ideal-Brain Assumption"**
+- The **4R framework** (Remove / Reduce / Return / Reconnect)
+- Verified stats (WHO 57M/78M/139M dementia; Song et al. 2021 adult ADHD 2.58%/6.76%; Gallup 2024 stress; Hubstaff 2026 + Dropbox 2023 focus)
+- The 4R feature map (Capture, Commit, Calibrate, Celebrate, Memory Bridge, Support Circle, Assessments)
 
-- **Remove** — stops the problem from happening (e.g. Capture removes "I forgot what the consultant said")
-- **Reduce** — shrinks frequency, severity or cost (e.g. Calibrate reduces crash days)
-- **Return** — helps recover ground already lost (e.g. Memory Bridge returns a conversation you thought was gone)
-- **Reconnect** — rebuilds the support network and shared load, aligned with "No one walks alone" (Support Circle reconnects family, clinicians and caregivers around the person)
+## What I'll produce
 
-## Verified stats (locked, with primary sources)
+Two new versioned artifacts written to `/mnt/documents/` (originals kept untouched):
 
-- **Dementia:** 57M globally (2021); 78M by 2030; 139M by 2050 — WHO Global Status Report on Dementia (2021) + WHO Dementia fact sheet (2023–2025).
-- **Adult ADHD:** 2.58% persistent (~139M) / 6.76% symptomatic (~366M) — Song et al., *Journal of Global Health*, 2021, doi:10.7189/jogh.11.04009.
-- **Workplace stress:** 41% report high stress the previous day; 20% daily loneliness — Gallup *State of the Global Workplace* 2024.
-- **Focus loss:** 2–3 hours uninterrupted focus/day; ~581 hours/year lost to distraction — Hubstaff 2026 + Economist Impact / Dropbox 2023.
+1. **`MyRhythm_GTM_Playbook_v4.pdf`** (+ `.docx`)
+2. **`MyRhythm_UserManual_FoundersEdition_v3.pdf`** (+ `.docx`)
 
-Any claim without a citation in this list is cut.
+Both will carry the standard 3pt confidentiality footer per project memory.
 
-## Deliverables (no UI changes)
+## Content changes
 
-1. **New memory** `mem://brand/third-problem-ideal-brain`
-   - Standard wording block for "The Ideal-Brain Assumption"
-   - Four audience blocks (ADHD, Dementia/MCI, Stress & Burnout, Productivity & Focus), each with: 2-line problem statement, cited stat, 4R feature map.
+**GTM Playbook v4** — add/refresh:
+- "The Three Problems MyRhythm Solves" section (Discharge Cliff, Clinical-Ready vs Life-Ready Gap, **Ideal-Brain Assumption**) with cited stats
+- Audience blocks: ADHD, Dementia/MCI, Stress/Burnout, Focus/Productivity — each mapped to which 4Rs apply
+- 4R feature matrix table (feature × Remove/Reduce/Return/Reconnect)
+- Refreshed positioning line + "No one walks alone" Reconnect callout
+- Keep existing GTM channels/pricing/rollout sections; edits are additive
 
-2. **Update `mem://brand/clinical-life-ready-gap`**
-   - Add Problem 3 section
-   - Add 4R consistency note (Reconnect is Support Circle's home column)
+**User Manual Founders Edition v3** — add/refresh:
+- "How MyRhythm helps" reframed as the 4Rs, with one-line examples per feature
+- "Who this is for" audience blocks matching the docs
+- Feature walkthroughs (Capture, Commit, Calibrate, Celebrate, Memory Bridge, Support Circle) tagged with their 4R contributions
+- Support Circle section highlights **Reconnect** and "No one walks alone"
+- Medical disclaimer preserved verbatim
 
-3. **Update `mem://index.md` Core**
-   - Core thesis names all three problems and references the 4Rs.
+## Sources of truth I'll pull from (already in the repo)
+- `mem://brand/third-problem-ideal-brain`
+- `mem://brand/clinical-life-ready-gap`
+- `src/config/appDescription.ts` (`THREE_PROBLEMS_SHORT`, `THIRD_PROBLEM_STATS`, `FEATURE_4R_MAP`)
+- `docs/myrhythm-one-page-pitch.md`
+- `docs/founding-core-value-map.md`
+- `docs/v0.1-features.md`
 
-4. **Rewrite `docs/myrhythm-one-page-pitch.md`** (investor)
-   - Problem 3 block with cited stats table (superscript refs)
-   - Canonical **4R feature matrix** (rows = features, cols = Remove/Reduce/Return/Reconnect)
-   - Updated references section listing WHO, Song et al., Gallup, Hubstaff, Dropbox.
+## QA
+Convert every page of both PDFs to images and visually inspect each one for clipping, overflow, missing footer, broken tables. Fix and re-run until clean before handing over.
 
-5. **Update `docs/founding-core-value-map.md`**
-   - 4R canonical matrix (source of truth for all other docs)
-   - Per-route paragraphs rewritten to use Remove / Reduce / Return / Reconnect verbs explicitly
-   - Pain-to-price rows for the four new audiences.
-
-6. **Update feature docs** (`docs/v0.1-features.md`, `docs/v0.1-friends-family-testing-guide.md`, `docs/v0.1-test-readiness.md`)
-   - "Who this is for" paragraph (all three problems)
-   - 4R tags on each Founding Core feature.
-
-7. **Update GTM & user manual source markdown** with the same three-problem framing and 4R language. (PDFs regenerated out-of-band.)
-
-8. **Update `src/config/appDescription.ts`** — content-only exports:
-   - `THREE_PROBLEMS_SHORT`
-   - `THIRD_PROBLEM_STATS` (with citation strings)
-   - `FEATURE_4R_MAP` (Remove / Reduce / Return / Reconnect)
-   No components consume these yet — landing-page UI is out of scope.
-
-## 4R feature map (preview — full version lands in `founding-core-value-map.md`)
-
-```text
-Feature            Remove              Reduce              Return              Reconnect
-Capture            missed info         recall effort       lost details        shares notes to Circle
-Commit             decision paralysis  overwhelm           follow-through      aligns Circle on plan
-Calibrate          crash days          symptom severity    good-day frequency  signals Circle early
-Celebrate          demoralisation      dropout risk        sense of progress   Circle sees wins
-Memory Bridge      "it's gone" moments retrieval time      lost conversations  family shares memory
-Support Circle     isolation           caregiver overload  shared history      rebuilds the network
-Assessments        guesswork           mis-scheduling      self-awareness      Circle understands needs
-```
-
-## Explicitly out of scope
-
-New features, personas, assessments, UI changes, PDF regeneration, uncited stats.
-
-## Open item
-
-Name is **"The Ideal-Brain Assumption"** — say the word if you want a different label before I start.
+## Out of scope
+- Regenerating the CCM/Productivity investor decks (say the word and I'll do those next as v5 / v2)
+- Any code, UI, or `docs/*.md` changes — those are already done
+- New stats beyond the already-cited set
