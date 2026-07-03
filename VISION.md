@@ -266,6 +266,25 @@ Unlike competitors who digitise cognition in isolation, LEAP-OS wraps every feat
 
 ---
 
+## FUTURE — POST-DISCHARGE RESOURCE HUB (Parked)
+
+A `/launch/resources` route inside the app addressing the **Discharge Cliff** directly. Three tabs:
+
+1. **Local support** — regional brain-injury associations, community rehab, respite services, transport, benefits guidance.
+2. **For the person supporting you** — caregiver materials: burnout signs, boundary-setting, when to call the GP, sample scripts for hard conversations.
+3. **What next** — suggested next steps by week/month post-discharge, decision prompts, "when to escalate" flags.
+
+**Design intent:** Memory-First Design (see `mem://brand/memory-first-design`) — designed for someone in the first fortnight after a brain injury or stroke, then useful for everyone else navigating a life change.
+
+**Parked pending:**
+- A curation model — partner with regional brain-injury associations, NHS ICBs, or state agencies (Dallas pilot data preserved in `src/data/localServicesData.ts`).
+- A maintenance model — dated content with clear "last verified" dates. Never claim clinical advice; always route to `DISCLAIMER_TEXT`.
+- v0.2 sequencing — revisit after Founding Core stabilises.
+
+No code changes yet. Vision-only entry.
+
+---
+
 *This document is the single source of truth for MyRhythm's 5-year strategic direction. All investor materials, pitch documents, and operational plans should align to this vision.*
 
 ---

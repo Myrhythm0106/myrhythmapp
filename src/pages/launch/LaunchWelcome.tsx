@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { mapToPersona, type Persona } from '@/launch/persona/usePersona';
 import { EditionBadge } from '@/components/launch/EditionBadge';
+import { MemoryFirstChip } from '@/components/launch/MemoryFirstChip';
+import { MEMORY_FIRST_DESIGN_TAGLINE } from '@/config/appDescription';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
@@ -66,11 +68,12 @@ export default function LaunchWelcome() {
             className="md:col-span-6 flex flex-col"
           >
             <header className="mb-10 lg:mb-12">
-              <div className="flex items-center gap-3 mb-6 lg:mb-8">
+              <div className="flex flex-wrap items-center gap-3 mb-6 lg:mb-8">
                 <span className="block text-[10px] tracking-[0.3em] uppercase font-medium text-stone-400">
                   Welcome to MyRhythm
                 </span>
                 <EditionBadge variant="chip" />
+                <MemoryFirstChip />
               </div>
               <h1
                 style={SERIF}
@@ -151,6 +154,9 @@ export default function LaunchWelcome() {
 
             <p className="text-[10px] text-stone-300 mt-12 max-w-md leading-relaxed">
               MyRhythm does not diagnose, treat, or cure any condition. It is a daily-life support tool that keeps you in control of who can act on your behalf.
+            </p>
+            <p className="text-[10px] text-stone-400 mt-3 max-w-md tracking-[0.08em]">
+              {MEMORY_FIRST_DESIGN_TAGLINE}
             </p>
           </motion.div>
 

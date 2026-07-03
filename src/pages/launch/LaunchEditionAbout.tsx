@@ -7,6 +7,10 @@ import { LaunchButton } from '@/components/launch/LaunchButton';
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { FeedbackDialog } from '@/components/launch/FeedbackDialog';
 import { EDITION_NAME, EDITION_VERSION, EDITION_TAGLINE } from '@/config/edition';
+import {
+  APP_DESCRIPTION_INCLUSIVE,
+  MEMORY_FIRST_DESIGN_EXPLAINER,
+} from '@/config/appDescription';
 
 const LIVE = [
   '4C loop — Capture, Commit, Calibrate, Celebrate',
@@ -51,6 +55,22 @@ export default function LaunchEditionAbout() {
       </div>
 
       <div className="space-y-4 pb-24">
+        <LaunchCard>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-teal-200/70 bg-teal-50/60 text-[10px] tracking-[0.14em] uppercase font-medium text-teal-800">
+              <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-teal-500" />
+              Memory-First Design
+            </span>
+          </div>
+          <h3 className="font-semibold text-stone-900 mb-2">Why MyRhythm is different</h3>
+          <p className="text-sm text-stone-700 leading-relaxed mb-3">
+            {APP_DESCRIPTION_INCLUSIVE}
+          </p>
+          <p className="text-sm text-stone-600 leading-relaxed">
+            {MEMORY_FIRST_DESIGN_EXPLAINER}
+          </p>
+        </LaunchCard>
+
         <LaunchCard>
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-teal-100 flex items-center justify-center">
