@@ -20,7 +20,7 @@ export default function LaunchCapture() {
       heroIcon={Brain}
       tone="emerald"
       metaPills={[
-        { label: 'Available on Plus', tone: 'info' },
+        { label: 'Overview page — go to Memory Bridge to record', tone: 'info' },
         { label: 'Avg. setup · 4 min', tone: 'neutral' },
         { label: 'On-device first', tone: 'success' },
       ]}

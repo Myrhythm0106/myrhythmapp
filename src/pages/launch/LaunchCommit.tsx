@@ -20,7 +20,7 @@ export default function LaunchCommit() {
       heroIcon={CalendarRange}
       tone="teal"
       metaPills={[
-        { label: 'Available on Plus', tone: 'info' },
+        { label: 'Overview page — go to Home to plan today', tone: 'info' },
         { label: 'Syncs with Google & Outlook', tone: 'neutral' },
         { label: 'Energy-aware', tone: 'success' },
       ]}

@@ -56,7 +56,7 @@ export function LaunchQuickActions() {
               <button
                 key={action.label}
                 onClick={() => handleAction(action)}
-                className="flex items-center gap-3 bg-white shadow-lg rounded-full pl-4 pr-5 py-3 hover:shadow-xl transition-shadow min-h-[48px]"
+                className="flex items-center gap-3 bg-white shadow-lg rounded-full pl-4 pr-5 py-3 hover:shadow-xl transition-shadow min-h-[56px]"
               >
                 <div className={cn("w-8 h-8 rounded-full flex items-center justify-center", action.color)}>
                   <action.icon className="h-4 w-4 text-white" />
