@@ -18,7 +18,41 @@ Everything on the 5-year plan must be traceable to closing at least one of those
 
 ---
 
-## 2 · End-state options for 2031 (pick one)
+## 2 · What we are (and what we're not)
+
+- **Product form:** cross-platform app (React/Vite + Capacitor + Supabase). MyRhythm runs *on* an operating system; it is not one.
+- **Operating role (internal only):** a **Collaborative Cognitive Continuity operating layer** running the **4C loop** (Capture → Commit → Calibrate → Celebrate), with the **Bridge Pathway** as its clinical on-ramp. Short form: *Collaborative Cognitive Continuity layer.*
+- **Why "Collaborative" is load-bearing:** continuity is not solo. The Support Circle, clinicians, and family are first-class participants in the layer — not notification recipients. This is the moat and the answer to "why not Notion / Apple Notes / Google Keep?"
+- **Category we are earning (external):** **Memory-First Design™** — the design discipline for brains that fluctuate.
+
+### Language ladder by audience
+
+| Audience | Say this |
+|---|---|
+| User-facing (landing, app store, onboarding) | *"the Memory-First app for brain-injury recovery, MCI, and cognitive load"* |
+| Clinical | *"a post-discharge cognitive-support companion; not a medical device"* |
+| Investor (narrative) | *"the default post-discharge companion for brain-injury and MCI, with a clinical bridge into NHS and US rehab networks"* |
+| Investor (architecture slide only) | *"a Collaborative Cognitive Continuity operating layer running the 4C loop"* |
+| Internal / engineering / strategy docs | any of the allowed internal terms below |
+
+### Allowed internal vocabulary (priority order)
+
+1. **Collaborative Cognitive Continuity layer** — primary short form.
+2. **Collaborative Cognitive Continuity operating layer running the 4C loop** — full form (architecture / investor technical slide).
+3. **4C loop** — Capture → Commit → Calibrate → Celebrate.
+4. **Bridge Pathway** — pre-discharge → life-ready on-ramp.
+
+### Banned externally (and why)
+
+- "OS", "brain OS", "operating system for your brain" — regulatory drift toward medical-device claims, buyer confusion.
+- "Second brain" — wrong category (personal knowledge management); we are not Notion/Roam.
+- "Brain gym app" — wrong category (cognitive training/games); dismissed as unserious by clinicians.
+
+Category creation is expensive; we don't pay that cost when *Memory-First Design™* already lands.
+
+---
+
+## 3 · End-state options for 2031 (pick one)
 
 I've drafted three flavours. They're not mutually exclusive but the emphasis changes what we build in years 2–3.
 
