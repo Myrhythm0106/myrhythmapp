@@ -63,7 +63,7 @@ Our standard is simple: if you can think it, LEAP-OS helps you do it — at the 
 
 ### THE PROBLEM
 
-**Every professional, student, and parent** juggles more commitments than their memory can hold. **69 million people** experience traumatic brain injury globally each year. **366 million adults** live with ADHD. **67% of workers** report burnout. Existing productivity tools fail them because they're designed for ideal brains — not real ones.
+**Every professional, student, family, and survivor** juggles more commitments than their memory can hold. **69M people** experience traumatic brain injury globally each year¹. **~366M adults** show symptomatic ADHD (6.76%)²¹. **57M people** live with dementia globally, projected to reach **139M by 2050**¹⁶. **41% of employees** report high stress the previous day²². Existing productivity tools fail them because they're designed for ideal brains — not real ones. That is the Ideal-Brain Assumption, and it is Problem 3.
 
 **The gap:** One notification, easily dismissed, no context = forgotten promises, strained relationships, eroded trust.
 
