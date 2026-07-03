@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { LaunchQuickActions } from "@/components/launch/LaunchQuickActions";
 
 interface EvidenceSection {
   problem: string;
