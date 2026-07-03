@@ -20,7 +20,7 @@ export default function LaunchCalibrate() {
       heroIcon={Activity}
       tone="purple"
       metaPills={[
-        { label: 'Available on Plus', tone: 'info' },
+        { label: 'Overview page — go to Home to check in', tone: 'info' },
         { label: '30-second check-in', tone: 'neutral' },
         { label: 'Pattern-aware', tone: 'success' },
       ]}
