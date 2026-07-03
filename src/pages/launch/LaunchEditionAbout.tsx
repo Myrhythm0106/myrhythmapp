@@ -7,6 +7,10 @@ import { LaunchButton } from '@/components/launch/LaunchButton';
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { FeedbackDialog } from '@/components/launch/FeedbackDialog';
 import { EDITION_NAME, EDITION_VERSION, EDITION_TAGLINE } from '@/config/edition';
+import {
+  APP_DESCRIPTION_INCLUSIVE,
+  MEMORY_FIRST_DESIGN_EXPLAINER,
+} from '@/config/appDescription';
 
 const LIVE = [
   '4C loop — Capture, Commit, Calibrate, Celebrate',
