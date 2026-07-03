@@ -1,63 +1,59 @@
 ## Goal
-Seed two founding test accounts (`annabelaaron@gmail.com`, `annabelaaron@yahoo.com`) and mark them as `founding_comped` so payment/trial gating is skipped everywhere.
+On `/launch/welcome` MYRHYTHM snapshot, make each of the 8 letter bars explain itself:
+- **Hover (desktop):** short summary — letter word, what it measures, the score you got, one-line meaning of that score.
+- **Click / tap (all devices):** full description with what the score means in depth and 2-3 concrete suggestions to raise it.
 
-Current state (checked):
-- `annabelaaron@gmail.com` **already exists** in `auth.users` (id `cee95ac5-…`).
-- `annabelaaron@yahoo.com` **does not exist** yet.
-- `profiles` has no `founding_comped` column yet.
-- `subscriptions` has no comped concept — everything runs off `status` + `trial_end`.
+Only affects the snapshot block in `LaunchWelcome.tsx`. No changes to scoring logic or the assessment itself.
 
 ---
 
-## Step 1 — Schema: add the comped flag (migration)
+## Files
 
-Add a single source of truth on `profiles`:
+### 1. New — `src/data/myrhythmLetterInsights.ts`
+Single source of truth for letter copy. Keyed by cluster id (so the two Ys and two Hs stay distinct):
 
-- `founding_comped boolean not null default false`
-- `founding_member boolean not null default false` (for the badge / UI, separate from comped)
+```ts
+export interface LetterInsight {
+  id: LetterId;              // mindset | yesReality | ...
+  letter: 'M'|'Y'|'R'|'H'|'T';
+  word: string;              // e.g. "Mindset"
+  lens: string;              // brain-health lens (from launchAssessmentBanks)
+  short: string;             // one-line description of the cluster
+  bands: [string, string, string, string]; // meaning for scores 0..3
+  suggestions: [string[], string[], string[], string[]]; // 2-3 suggestions per band
+}
+```
 
-Update `public.get_user_subscription_status(uuid)` so that if `profiles.founding_comped = true` it returns `'founding_comped'` before any other status check. This means every existing gate that calls this RPC (or checks the subscription table) will treat these users as fully entitled without touching Stripe.
+All 8 clusters filled with plain-English content aligned to the existing `launchAssessmentBanks` lenses (Mindset, Yes to Reality, Rhythm, Harness Support, Your Victories, Transform, Heal, Multiply). Suggestions link to Founding Core routes where relevant (Capture, Commit, Calibrate, Support Circle) using plain URLs — no route changes.
 
-No RLS policy changes needed — users already read their own profile row.
+### 2. New — `src/components/launch/MyRhythmLetterBar.tsx`
+Renders one bar. Composes:
+- shadcn `HoverCard` — desktop hover shows: letter · word · lens · your score `X/3` · one-line band meaning · "Tap for more".
+- shadcn `Dialog` — opens on click/Enter/Space. Contains: word + lens, big score, current-band description, "Ways to raise this" list (bulleted suggestions for the current band), a small "Not a clinical score" reminder, and a Close button.
+- Button wrapper with `aria-label="M — Mindset, score 2 of 3. Tap to learn more."` for accessibility.
+- Visual keeps the existing teal-fill bar; adds a subtle focus/hover ring so it looks interactive.
 
-## Step 2 — Seed the Gmail account (already exists)
+Score 0 gets "start here" suggestions; score 3 gets "keep it going" suggestions.
 
-Data-only changes (insert tool):
+### 3. Edit — `src/pages/launch/LaunchWelcome.tsx`
+Replace the inline bar loop (lines 118–134) with `<MyRhythmLetterBar />` per cluster, passing `id`, `letter`, `score` (0–3, from `bhs.letters[id] ?? 0`). Update the small caption under the grid to: *"Tap any letter for what it means and how to raise it."*
 
-1. `UPDATE public.profiles SET founding_comped = true, founding_member = true, name = COALESCE(name,'Annabel') WHERE id = 'cee95ac5-eeea-49c5-8a88-571199ef0f2d';`
-2. Upsert a `subscriptions` row for that user:
-   - `status = 'active'`, `plan_type = 'founding_comped'`
-   - `current_period_start = today`, `current_period_end = today + 5 years`
-   - no Stripe IDs.
-
-## Step 3 — Seed the Yahoo account (does NOT exist)
-
-Auth users can't be created from a SQL migration safely (password hashing, identities row, confirmation state). Two options — pick one:
-
-**Option A (recommended): one-shot edge function `seed-founding-account`.**
-- Uses `SUPABASE_SERVICE_ROLE_KEY` server-side.
-- Calls `supabase.auth.admin.createUser({ email, password, email_confirm: true, user_metadata: { name: 'Annabel (Yahoo)' } })`.
-- Then runs the same profile + subscription updates as Step 2 for the new user id.
-- I invoke it once from the sandbox with a temp password you choose (or auto-generated and returned to you once, never logged).
-- Then the function is deleted so it can't be reused.
-
-**Option B: you create the Yahoo user manually in Supabase Dashboard → Auth → Users → "Add user" (check "Auto Confirm"), then I run the profile + subscription update.**
-
-Either way you end up with an immediately-usable login. Option A is one click for you (I run it); Option B needs 30 seconds in the dashboard.
-
-## Step 4 — Verify
-
-Run a read query confirming both users show:
-- `profiles.founding_comped = true`
-- `profiles.founding_member = true`
-- `subscriptions.status = 'active'` and `plan_type = 'founding_comped'`
-- `get_user_subscription_status(user_id)` returns `'founding_comped'`
-
-Then a quick Playwright login sweep on both accounts to confirm no paywall appears on the 9 Founding Core routes.
+No other changes on the page.
 
 ---
 
-## Open confirmations before I build
-1. **Yahoo account creation** — Option A (I run a one-shot edge function) or Option B (you add it in the Supabase dashboard)?
-2. **Temp password for Yahoo** — pick one you'll change on first login, or let me auto-generate and show once?
-3. OK to store `founding_comped` on `profiles` (vs a separate `founding_comped_users` table)? Profiles is simpler; a separate table is only worth it if you plan to track history of who was comped and when.
+## UX details
+- Hover card: ~280px wide, appears above bar, closes on mouseleave; delay 100ms open, 80ms close (Radix defaults are fine).
+- Dialog: standard shadcn `Dialog` size, scroll on overflow, ESC to close, focus returns to the bar button.
+- Touch devices: HoverCard is pointer-only in Radix, so on mobile a tap goes straight to the dialog — exactly what we want.
+- Colour: keep existing teal palette; no new tokens.
+
+## Out of scope
+- Persona-specific suggestion variants (can layer on later using existing `mapToPersona`).
+- Editing the assessment itself or the total-score calculation.
+- Any change to `MVPCore4C`, Home, or other routes.
+
+## Verification
+1. Type-check.
+2. Playwright: load `/launch/welcome` with a seeded snapshot in localStorage, hover each letter (screenshot the popover for M and R), click the H bar, screenshot the dialog, ESC-close and confirm focus returns.
+3. Mobile viewport (390×844): tap a letter, confirm dialog opens without hover flicker.
