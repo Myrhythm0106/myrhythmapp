@@ -5,16 +5,49 @@
 
 ---
 
-## ⚡ THE TWO FAILURES WE EXIST TO FIX
+## ⚡ THE THREE FAILURES WE EXIST TO FIX
 *(Core thesis — anchor for every conversation, slide, and feature. Approved 28 April 2026.)*
 
 **1. The Discharge Cliff** — At discharge, every support structure (nurses, routines, prompts, observation, peer presence) disappears at once. There is no graded step-down. Survivors and families fall silently into missed medications, missed appointments, isolation, re-admission, depression, relationship breakdown, and job loss. The NHS knows this gap exists; nothing currently fills it at the patient's daily-life layer.
 
 **2. The Clinical-Ready vs Life-Ready Gap** — A discharge letter confirms a patient is *clinically ready* (vitals stable, scans clear, no acute care needed). It does **not** confirm they are *life ready* (able to manage medications, appointments, energy, intentions, relationships, and work without ward structure). Clinical readiness is a checkbox; life readiness is a capability — and no one currently owns the gap between them.
 
-**MyRhythm is the clinically co-owned operating system that bridges both.** The Bridge Pathway begins **pre-discharge on the ward** and continues through five life-readiness stages — Prepare → Stabilise → Structure → Strengthen → Stretch → Sustain → Discharged from app — each with clinician-defined entry criteria, exit criteria, and patient-visible milestones. Clinical team prescribes and monitors the bridge; patient walks it; support circle holds the rails.
+**3. The Ideal-Brain Assumption** — Mainstream productivity, calendar and reminder tools are built for an idealised brain that never forgets, fatigues, or gets overwhelmed. Real brains — under ADHD, dementia/MCI, chronic stress, burnout, or ordinary distraction — do not behave that way. MyRhythm was purpose-built to bridge the Discharge Cliff and close the Life-Readiness Gap; the same design — external memory, energy-aware scheduling, gentle escalation, and a support circle — is exactly what everyone else with a real, load-bearing brain also needs.
 
-> **Investor one-liner:** *"Discharge confirms clinically ready — not life ready. Survivors fall off the Discharge Cliff into that gap. MyRhythm is the clinically co-owned operating system that bridges both."*
+| Audience | Verified scale | Source |
+|---|---|---|
+| Dementia (globally) | 57M in 2021; 78M by 2030; 139M by 2050 | WHO Global Status Report on Dementia (2021); WHO fact sheet (2023–2025)¹⁶ |
+| Adult ADHD — persistent | 2.58% of adults (~139M) | Song et al., *J Glob Health* 2021, doi:10.7189/jogh.11.04009²¹ |
+| Adult ADHD — symptomatic | 6.76% of adults (~366M) | Song et al., 2021²¹ |
+| Workplace stress & loneliness | 41% report high stress yesterday; 20% daily loneliness | Gallup *State of the Global Workplace 2024*²² |
+| Focus loss | 2–3 hours uninterrupted focus/day; ~581 hours/year lost | Hubstaff 2026²³; Economist Impact / Dropbox 2023²⁴ |
+
+**MyRhythm is the clinically co-owned operating system that fixes all three.** The Bridge Pathway begins **pre-discharge on the ward** and continues through five life-readiness stages — Prepare → Stabilise → Structure → Strengthen → Stretch → Sustain → Discharged from app. Clinical team prescribes and monitors the bridge; patient walks it; support circle holds the rails. The same 4R design (see below) serves the everyday cognitive load audience without a clinical gateway.
+
+> **Investor one-liner:** *"Discharge confirms clinically ready — not life ready. Survivors fall off the Discharge Cliff into that gap; everyone else falls into the Ideal-Brain Assumption gap. MyRhythm is the clinically co-owned operating system that Removes, Reduces, Returns, and Reconnects across all three."*
+
+---
+
+### THE 4R DESIGN — HOW FEATURES ADDRESS EVERY PROBLEM
+
+Every Founding Core feature is designed to do one or more of four things — a vocabulary we use verbatim in product, marketing, and clinical conversations:
+
+- **Remove** — stop the problem from happening.
+- **Reduce** — shrink its frequency, severity, or cost.
+- **Return** — recover ground already lost.
+- **Reconnect** — rebuild the support network so no one walks alone. *(Reconnect is Support Circle's home column, aligned with the "No one walks alone" brand promise.)*
+
+| Feature | Remove | Reduce | Return | Reconnect |
+|---|---|---|---|---|
+| **Capture** | Missed information | Recall effort & mental load | Details lost minutes later | Shares notes to Support Circle |
+| **Commit** | Decision paralysis | Overwhelm | Follow-through | Aligns Circle on the plan |
+| **Calibrate** | Crash days | Symptom severity | Frequency of good days | Signals Circle early |
+| **Celebrate** | Demoralisation | Dropout risk | Felt sense of progress | Circle sees & shares wins |
+| **Memory Bridge** | "It's gone" moments | Search-time tax | Lost conversations | Family replays a shared memory |
+| **Support Circle** | Isolation | Caregiver overload | Shared history | Rebuilds the network — no one walks alone |
+| **Assessments** | Scheduling guesswork | Mis-scheduling crashes | Self-awareness of rhythm | Circle understands needs |
+
+The matrix is the same whether the user is a post-discharge TBI survivor, an adult with ADHD, a family navigating early dementia, a burnt-out professional, or a distracted knowledge worker. The problem language changes; the 4Rs and the features that deliver them do not.
 
 ---
 
@@ -30,7 +63,7 @@ Our standard is simple: if you can think it, LEAP-OS helps you do it — at the 
 
 ### THE PROBLEM
 
-**Every professional, student, and parent** juggles more commitments than their memory can hold. **69 million people** experience traumatic brain injury globally each year. **366 million adults** live with ADHD. **67% of workers** report burnout. Existing productivity tools fail them because they're designed for ideal brains — not real ones.
+**Every professional, student, family, and survivor** juggles more commitments than their memory can hold. **69M people** experience traumatic brain injury globally each year¹. **~366M adults** show symptomatic ADHD (6.76%)²¹. **57M people** live with dementia globally, projected to reach **139M by 2050**¹⁶. **41% of employees** report high stress the previous day²². Existing productivity tools fail them because they're designed for ideal brains — not real ones. That is the Ideal-Brain Assumption, and it is Problem 3.
 
 **The gap:** One notification, easily dismissed, no context = forgotten promises, strained relationships, eroded trust.
 
@@ -237,6 +270,10 @@ Unlike generic productivity tools, LEAP-OS:
 18. McKinsey & Company (2022) *The Future of Digital Health: Creating a Robust Ecosystem*. McKinsey Global Institute.
 19. Maas, A.I.R. et al. (2022) 'Traumatic brain injury: progress and challenges in prevention, clinical care, and research', *The Lancet Neurology*, 21(11), pp. 1004–1060.
 20. Wilson, L. et al. (2017) 'The chronic and evolving neurological consequences of traumatic brain injury', *The Lancet Neurology*, 16(10), pp. 813–825.
+21. Song, P., Zha, M., Yang, Q., Zhang, Y., Li, X. and Rudan, I. (2021) 'The prevalence of adult attention-deficit hyperactivity disorder: A global systematic review and meta-analysis', *Journal of Global Health*, 11, 04009. doi:10.7189/jogh.11.04009
+22. Gallup (2024) *State of the Global Workplace: 2024 Report*. Washington, DC: Gallup Inc.
+23. Hubstaff (2026) *Workplace Productivity Report 2026*. Available at: hubstaff.com/workplace-productivity-report
+24. Economist Impact / Dropbox (2023) *The Distraction Economy: The Cost of Interruption in Knowledge Work*. Available at: impact.economist.com
 
 ---
 

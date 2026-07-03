@@ -18,3 +18,100 @@ export const APP_DESCRIPTION_SHORT =
 
 export const DISCLAIMER_TEXT =
   "MyRhythm is a wellness, productivity and cognitive support tool. It is not a medical device, diagnosis, or treatment.";
+
+/**
+ * Three problems MyRhythm exists to fix.
+ * See mem://brand/clinical-life-ready-gap and mem://brand/third-problem-ideal-brain.
+ * Do not paraphrase for investor or landing surfaces — import these strings.
+ */
+export const THREE_PROBLEMS_SHORT = {
+  dischargeCliff:
+    "The Discharge Cliff — at discharge, every support structure disappears at once. Survivors fall silently into re-admission, isolation, depression, and lost livelihoods.",
+  lifeReadyGap:
+    "The Clinical-Ready vs Life-Ready Gap — a discharge letter confirms clinical readiness, not life readiness. No one currently owns the gap between them.",
+  idealBrainAssumption:
+    "The Ideal-Brain Assumption — productivity and reminder tools are built for brains that never forget, fatigue or overwhelm. Real brains — under ADHD, dementia, stress or ordinary load — need external memory, energy-aware scheduling and a support circle.",
+} as const;
+
+/**
+ * Verified stats for Problem 3. Every entry is cited to a primary source.
+ * If a claim is not in this map, it does not go into a doc or the UI.
+ */
+export const THIRD_PROBLEM_STATS = {
+  dementia: {
+    figure: "57M globally (2021); 78M by 2030; 139M by 2050",
+    source:
+      "WHO, Global Status Report on the Public Health Response to Dementia (2021); WHO Dementia fact sheet (2023–2025)",
+  },
+  adhdPersistent: {
+    figure: "2.58% of adults (~139M) live with persistent ADHD",
+    source:
+      "Song et al., Journal of Global Health, 2021, doi:10.7189/jogh.11.04009",
+  },
+  adhdSymptomatic: {
+    figure: "6.76% of adults (~366M) show symptomatic ADHD",
+    source:
+      "Song et al., Journal of Global Health, 2021, doi:10.7189/jogh.11.04009",
+  },
+  stress: {
+    figure:
+      "41% of employees report a lot of stress the previous day; 20% experience daily loneliness",
+    source: "Gallup, State of the Global Workplace 2024",
+  },
+  focus: {
+    figure:
+      "Workers get ~2–3 hours of uninterrupted focus per day; distraction costs a typical knowledge worker ~581 hours/year",
+    source:
+      "Hubstaff Workplace Productivity Report 2026; Economist Impact / Dropbox 2023",
+  },
+} as const;
+
+/**
+ * 4R vocabulary — Remove / Reduce / Return / Reconnect.
+ * Canonical mapping of Founding Core features to the four outcomes.
+ * See docs/founding-core-value-map.md for the canonical rendered matrix.
+ */
+export const FEATURE_4R_MAP = {
+  Capture: {
+    remove: "missed information from clinical & family conversations",
+    reduce: "recall effort and mental load of holding open loops",
+    return: "details that would otherwise be lost minutes later",
+    reconnect: "shares captured notes with the Support Circle",
+  },
+  Commit: {
+    remove: "decision paralysis between capture and action",
+    reduce: "overwhelm by breaking intent into owned, dated steps",
+    return: "follow-through on things you meant to do",
+    reconnect: "aligns the Support Circle on the plan without extra effort",
+  },
+  Calibrate: {
+    remove: "crash days from over-scheduling against real energy",
+    reduce: "symptom severity by respecting cognitive peaks",
+    return: "frequency of good, high-function days",
+    reconnect: "signals the Support Circle early when energy is low",
+  },
+  Celebrate: {
+    remove: "demoralisation loops after setbacks",
+    reduce: "dropout risk in week two and beyond",
+    return: "a felt sense of progress that burnout erases",
+    reconnect: "lets the Support Circle see and share the wins",
+  },
+  MemoryBridge: {
+    remove: "'it's gone' moments after clinical or family conversations",
+    reduce: "time spent hunting across Notes, WhatsApp, email and paper",
+    return: "conversations the person thought were lost",
+    reconnect: "lets family replay a shared memory together",
+  },
+  SupportCircle: {
+    remove: "isolation and single-point-of-failure caregiving",
+    reduce: "caregiver overload and repeat-explanation fatigue",
+    return: "shared history so no one has to start from scratch",
+    reconnect: "rebuilds the network of family, clinicians and carers around the person — no one walks alone",
+  },
+  Assessments: {
+    remove: "guesswork about when to schedule demanding work",
+    reduce: "mis-scheduling that triggers avoidable crashes",
+    return: "self-awareness of personal rhythm",
+    reconnect: "gives the Support Circle a shared understanding of needs",
+  },
+} as const;
