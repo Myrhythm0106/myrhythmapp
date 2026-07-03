@@ -118,14 +118,14 @@ export const roadmapTasks: RoadmapTask[] = [
   },
   {
     id: 'brain-games',
-    title: 'Brain Games & Cognitive Tools',
+    title: 'Brain Games & Cognitive Tools (v0.2)',
     phase: 'full-launch',
     startDate: '2026-08-04',
     endDate: '2026-09-19',
     status: 'not-started',
     color: 'from-brain-health-500 to-brain-health-600',
-    description: 'Cognitive exercises, progress tracking, gamification',
-    subtasks: ['Memory exercises', 'Focus training', 'Progress analytics', 'Achievement system'],
+    description: 'Cognitive exercises, progress tracking, gamification — launches in v0.2 once Founding Core (v0.1) is validated.',
+    subtasks: ['Memory exercises', 'Focus training', 'Progress analytics', 'Achievement system', 'Expose /launch/games in nav'],
   },
   {
     id: 'analytics-dashboard',

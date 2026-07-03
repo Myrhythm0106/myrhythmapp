@@ -243,7 +243,7 @@ function App() {
                      <Route path="/path-selection" element={<ProtectedRoute requireAuth={false}><PathSelectionPage /></ProtectedRoute>} />
                      <Route path="/explorer" element={<ProtectedRoute requireAuth={false}><ExplorerPage /></ProtectedRoute>} />
                     
-                    <Route path="/memory-bridge" element={<ProtectedRoute requireAuth={false}><MemoryBridge /></ProtectedRoute>} />
+                    <Route path="/memory-bridge" element={<Navigate to="/launch/memory" replace />} />
                     <Route path="/memory-bridge/test" element={<ProtectedRoute><TestMemoryBridge /></ProtectedRoute>} />
                     <Route path="/debug-next-steps" element={
                       <ProtectedRoute requireAuth={false}>
@@ -269,13 +269,7 @@ function App() {
                     <Route path="/in-app-purchase" element={<InAppPurchase />} />
                     <Route path="/memory-bank" element={<ProtectedRoute requireAuth={false}><MemoryBank /></ProtectedRoute>} />
                     <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                     <Route path="/calendar" element={
-                       <ProtectedRoute requireAuth={false}>
-                         <PriorityProvider>
-                           <CalendarPage />
-                         </PriorityProvider>
-                       </ProtectedRoute>
-                     } />
+                     <Route path="/calendar" element={<Navigate to="/launch/calendar" replace />} />
                      <Route path="/vision" element={
                        <ProtectedRoute requireAuth={false}>
                          <VisionPage />
@@ -284,11 +278,11 @@ function App() {
                      <Route path="/ecosystem" element={<ProtectedRoute requireAuth={false}><EcosystemPage /></ProtectedRoute>} />
                      <Route path="/next-steps" element={<ProtectedRoute requireAuth={false}><div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"><NextStepsHub /></div></ProtectedRoute>} />
                      <Route path="/next-steps-hub" element={<ProtectedRoute requireAuth={false}><div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"><NextStepsHub /></div></ProtectedRoute>} />
-                     <Route path="/command-center" element={<ProtectedRoute requireAuth={false}><CommandCenter /></ProtectedRoute>} />
+                     <Route path="/command-center" element={<Navigate to="/launch/support" replace />} />
                     <Route path="/organizations" element={<ProtectedRoute requireAuth={false}><OrganizationsDirectory /></ProtectedRoute>} />
                     <Route path="/tracking" element={<ProtectedRoute requireAuth={false}><SymptomTracking /></ProtectedRoute>} />
                     <Route path="/goals" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/gratitude" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+                    <Route path="/gratitude" element={<Navigate to="/launch/calibrate" replace />} />
                     <Route path="/analytics" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/brain-games" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
                     <Route path="/accountability" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
