@@ -134,6 +134,8 @@ import {
   LaunchEditionAbout,
   LaunchContinuity,
   LaunchScience,
+  LaunchDischargeBridge,
+  LaunchDischargeBridgeHandout,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
 import LaunchCapture from "./pages/launch/LaunchCapture";
