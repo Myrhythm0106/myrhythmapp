@@ -67,18 +67,18 @@ Weeks are Mon–Sun. Week 1 = 6 Jul – 12 Jul.
 
 | Week | Dates | Milestone |
 |---|---|---|
-| 1 | 6–12 Jul | Weekend self-test 100% green · husband walkthrough clean · sprint doc published |
-| 2 | 13–19 Jul | First 10 paying Founding Members onboarded · founder story email 1 live |
-| 3 | 20–26 Jul | Support Circle invite tested with 3 real users · referral loop shipped |
-| 4 | 27 Jul – 2 Aug | 25 paying members · founder story emails 2–3 live · Brain Games spec locked |
-| 5 | 3–9 Aug | Brain Games dev starts · first clinician conversation booked |
-| 6 | 10–16 Aug | 40 paying members · podcast 1 recorded · Brain Games memory module in review |
-| 7 | 17–23 Aug | Clinician conversation 2 · Brain Games focus module in review · NPS survey drafted |
-| 8 | 24–30 Aug | 60 paying members · Founding Edition retro (what's holding retention?) |
-| 9 | 31 Aug – 6 Sep | Brain Games progress analytics + achievements in review · LOI 1 signed |
+| 1 | 6–12 Jul | Weekend self-test 100% green · husband walkthrough clean · sprint doc + Kit spec published |
+| 2 | 13–19 Jul | First 10 paying Founding Members onboarded · founder story email 1 live · Kit copy locked |
+| 3 | 20–26 Jul | Support Circle invite tested with 3 real users · Kit route scaffold live behind flag · clinician list of 10 drafted |
+| 4 | 27 Jul – 2 Aug | 25 paying members · founder story emails 2–3 live · **LOI 1 signed** (pulled forward) · Kit 7-day path in review |
+| 5 | 3–9 Aug | Kit handover PDF working · printable one-pager print-tested on A4 |
+| 6 | 10–16 Aug | **Discharge Bridge Kit ships to `/launch/discharge-bridge` (15 Aug)** · 40 paying members |
+| 7 | 17–23 Aug | Investor Loom recorded · clinician conversation 2 · NPS survey drafted |
+| 8 | 24–30 Aug | 60 paying members · Loom sent to first 10 investors · retro on Kit adoption |
+| 9 | 31 Aug – 6 Sep | LOI 2 signed · Kit adoption ≥ 30% of new members · referral loop shipped |
 | 10 | 7–13 Sep | NPS survey sent · 75 paying members · podcast 2 released |
-| 11 | 14–20 Sep | **Brain Games ships to `/launch/games` (19 Sep)** · LOI 2 signed |
-| 12 | 21–27 Sep | 90 paying members · v0.2 announcement email · press push |
+| 11 | 14–20 Sep | Loom re-recorded with LOI 2 traction · retention fix from Kit data ships |
+| 12 | 21–27 Sep | 90 paying members · v0.2 planning (Brain Games returns) begins |
 | 13 | 28 Sep – 1 Oct | **100 paying members · LOI 3 signed · sprint retro + next-90 kickoff** |
 
 ---
