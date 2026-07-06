@@ -8,7 +8,7 @@
 
 ## 1 · The one sentence
 
-By **1 October 2026**, MyRhythm has **100 paying Founding Members** using the 4C loop weekly, **v0.2 Brain Games shipped**, and **3 clinical letters of intent** on file — enough evidence to open the 2027 clinical-bridge conversation.
+By **1 October 2026**, MyRhythm has **100 paying Founding Members** using the 4C loop weekly, the **Discharge Bridge Kit shipped and in use**, and **3 clinical letters of intent** on file — enough evidence to open the 2027 clinical-bridge conversation.
 
 If we hit two of three, the sprint was a win. If we hit one or none, we stop and re-plan before starting the next 90.
 
