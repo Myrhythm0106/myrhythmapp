@@ -33,7 +33,7 @@ interface DaySpec {
   description: string;
   cta: string;
   ctaRoute: string;
-  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  icon: LucideIcon;
 }
 
 const DAYS: DaySpec[] = [
