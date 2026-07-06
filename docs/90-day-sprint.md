@@ -50,12 +50,14 @@ Owner: Founder · Runs weeks 2–13
 - Referral loop live in-app (invite → free month for both)
 - Weekly office hours for Founding Members (Fridays 4pm UK)
 
-### Workstream C — Ship v0.2 Brain Games + open clinical door
-Owner: Founder + Lovable · Runs weeks 6–13
-- Brain Games spec locked (memory, focus, progress analytics, achievements)
-- `/launch/games` route unhidden in Founding Core nav
-- 3 clinician conversations → 3 letters of intent
-- Outcomes-friendly export shape agreed with at least 1 clinician
+### Workstream C — Ship the Discharge Bridge Kit + open clinical door
+Owner: Founder + Lovable · Runs weeks 3–13
+- Discharge Bridge Kit spec locked (see [`docs/discharge-bridge-kit.md`](./discharge-bridge-kit.md))
+- `/launch/discharge-bridge` 7-day path + `/launch/discharge-bridge/handout` printable one-pager live by **15 Aug (week 6)**
+- Discharge Handover PDF variant working end-to-end from Day 7
+- 3 clinician conversations → 3 letters of intent (LOI 1 pulled forward to week 4)
+- 5-minute investor Loom recorded once the Kit is live (see [`docs/investor-loom-script.md`](./investor-loom-script.md))
+- **Deferred to post-sprint:** Brain Games v0.2. Code stays in place at `/launch/games`, removed from v0.1 headline. Reason: the Kit is a wedge; Brain Games is retention. Wedge first.
 
 ---
 
