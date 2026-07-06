@@ -37,6 +37,16 @@ export const MEMORY_FIRST_DESIGN_EXPLAINER =
   "Memory-First Design means we designed for the hardest case first: someone rebuilding after a brain injury, stroke, or living with memory challenges. Then for the older population managing full lives. Then for anyone with a busy or tired brain. If it works clearly for them, it works beautifully for everyone.";
 
 /**
+ * Discharge Bridge Kit — canonical public wording.
+ * See docs/discharge-bridge-kit.md. Do not paraphrase in UI or on the printed
+ * one-pager; import from here.
+ */
+export const DISCHARGE_BRIDGE_KIT_DESCRIPTION =
+  "The Discharge Bridge Kit is a printed one-pager, a seven-day in-app path, and a clinician handover PDF — designed to meet a brain-injury survivor and their family in the first 30 days home.";
+
+export const DISCHARGE_BRIDGE_KIT_TAGLINE = "First 30 Days Home — you don\u2019t walk this alone.";
+
+/**
  * Three problems MyRhythm exists to fix.
  * See mem://brand/clinical-life-ready-gap and mem://brand/third-problem-ideal-brain.
  * Do not paraphrase for investor or landing surfaces — import these strings.
