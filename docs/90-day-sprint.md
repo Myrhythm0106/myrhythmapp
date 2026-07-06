@@ -93,6 +93,7 @@ Say no with a reason.
 - **Rebuilding the marketing site.** Landing page tune-up only.
 - **New pricing tiers.** Founding Edition price holds until 1 Oct review.
 - **Paid ads.** Founder-led acquisition until we know retention holds.
+- **Brain Games v0.2.** Deferred to post-LOI sprint. Code stays in place at `/launch/games`; it is not the v0.1 headline. The Discharge Bridge Kit replaces it as the sprint wedge.
 
 ---
 
