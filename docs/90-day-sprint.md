@@ -142,7 +142,7 @@ _(continue weekly)_
 ## 9 · Definition of "sprint complete" on 1 Oct 2026
 
 - [ ] 100 paying Founding Members
-- [ ] Brain Games shipped and used by ≥ 30% of active members
+- [ ] Discharge Bridge Kit live and used by ≥ 30% of new Founding Members
 - [ ] 3 clinical LOIs signed
 - [ ] NPS ≥ 40
 - [ ] Weekend self-test still passes end-to-end
