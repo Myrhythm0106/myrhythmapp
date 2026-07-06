@@ -114,7 +114,7 @@ Same 6 questions every Monday. Answer in a running log in this file (Section 8).
 | Risk | Likelihood | If it happens | Mitigation |
 |---|---|---|---|
 | Retention < 40% weekly-active | Med | Sprint fails M2 → replan | Retro at week 8, ship one retention fix by week 10 |
-| Brain Games slips past 19 Sep | Med | v0.2 headline gone | Cut scope to memory + focus modules only; ship progress/achievements in v0.3 |
+| Discharge Bridge Kit slips past 15 Aug | Med | Loom + LOI momentum stalls | Cut Day-6 Memory Bridge step from v0.1 path; ship handout + 7-day core only |
 | Clinician conversations stall | Med | LOI target missed | Widen from NHS to independent neuropsychs |
 | Founder burnout | High | Everything slips | Fridays after office hours = protected. No sprint work Sat/Sun. |
 | Payment/onboarding gap surfaces | Low | Refunds + trust hit | Weekend self-test + husband walkthrough are the guard |
