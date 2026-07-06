@@ -20,7 +20,7 @@ If we hit two of three, the sprint was a win. If we hit one or none, we stop and
 |---|---|---|---|---|
 | M1 | Paying Founding Members | ~[TBC — fill in] | **100** | Stripe dashboard |
 | M2 | Weekly-active users completing a full 4C loop | [TBC] | **≥ 40%** of paying members | Supabase event query |
-| M3 | v0.2 Brain Games live in `/launch/games` nav | Flagged off | **Shipped by 19 Sep** | Feature flag flipped |
+| M3 | Discharge Bridge Kit live at `/launch/discharge-bridge` | Not built | **Shipped by 15 Aug** and used by ≥ 30% of new members | Feature route live + Loom weekly log |
 | M4 | Clinical letters of intent | 0 | **3 signed** | Founder folder |
 | M5 | NPS from Founding Members | — | **≥ 40** | In-app survey wk 10 |
 | M6 | Weekend self-test pass rate | Partial | **100% green on 6 sections** | `docs/v0.1-weekend-self-test.md` |
