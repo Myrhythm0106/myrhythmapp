@@ -23,6 +23,7 @@ export function MVPCore4C() {
   const location = useLocation();
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [activeFeatureModal, setActiveFeatureModal] = useState<'capture' | 'calendar' | 'calibrate' | 'community' | null>(null);
+  const [openCard, setOpenCard] = useState<null | 'capture' | 'commit' | 'calibrate' | 'celebrate'>(null);
   const [isAnswersOpen, setIsAnswersOpen] = useState(false);
   const { user } = useAuth();
   
