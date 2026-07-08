@@ -1,97 +1,93 @@
-# Confirmed actions + build plan for #2 then #3
 
-## 1 · Confirmed — the 3 needle-movers
+## What you'll see
 
-Re-stating so we're aligned before I build:
+Replace the current bland "Explore Memory Bridge / Calendar / Calibrate / Community" row on `/launch` with a refined, progressively-revealed card set that carries supporting facts and clear expectations — with facts and value framed for **everyone**, not just people living with a brain injury.
 
-1. **Signed clinical LOI in 30 days** (pull LOI 1 forward from week 9 → week 4). Founder-led, not a build task.
-2. **Replace Brain Games v0.2 headline with a Discharge Bridge Kit** — physical + digital handover artefact. Build task. **← Doing now.**
-3. **5-minute investor Loom** as the distributable narrative asset (not a deck). Build task. **← Doing after #2.**
+**Default (calm & scannable):** each card shows only
+- Soft icon medallion (kept in current brand-tinted gradients)
+- Numbered eyebrow (01 · Capture, 02 · Commit, 03 · Calibrate, 04 · Celebrate)
+- Short headline ("Your Memory Bridge", etc.)
+- One evocative, universal hook line
+- Subtle "See how it works ⌄" affordance
 
-Actions #1 and #3 both depend on artefacts from #2 (the Kit is what the clinician actually hands to a patient, and it's the demo moment in the Loom). So #2 first is the correct order.
+**On tap/click (roll-up reveal):** the card expands in place using `Collapsible` + height/opacity transition. Content is grouped so the universal value is on top and the clinical context sits beneath, clearly labelled:
 
----
+1. **Who it's for** — one line: "For anyone juggling a busy brain — parents, professionals, students, carers, and people recovering from injury, ADHD, MCI, or burnout."
+2. **What it does for you** — 3 short icon+phrase bullets in everyday language.
+3. **The facts behind it** — 2–3 evidence chips split into two sub-labels:
+   - `Everyday brains` — general-population facts (memory, attention, stress, sleep, social support).
+   - `Also helpful if…` — the brain-injury / ADHD / MCI / caregiver stats already approved in `THIRD_PROBLEM_STATS` and the discharge-cliff doc.
+4. **What you can expect** — 2–3 concrete, universal outcome lines (no cure/treatment promises).
 
-## 2 · Discharge Bridge Kit — what I'll build
+Then the existing primary CTA ("Explore Memory Bridge" → `/launch/capture`, etc.), styled softer.
 
-### 2a · New doc: `docs/discharge-bridge-kit.md`
-Single source of truth for the Kit. Sections:
-- What it is (1 sentence) + who it's for (survivor + family member at discharge)
-- The 3 artefacts (printed 1-pager, in-app 7-day path, clinician handover PDF)
-- Positioning: this IS the Clinical-Ready → Life-Ready bridge, made tangible
-- Scope-in / scope-out for v0.1 vs v0.2
-- Success metric: % of new Founding Members who complete Day 1 within 48h of signup
+Accordion behaviour — only one card open at a time. Fully keyboard + screen-reader accessible (`aria-expanded`, focus ring, 56px+ tap target preserved).
 
-### 2b · New route: `/launch/discharge-bridge` (in-app 7-day path)
-- New page `src/pages/launch/LaunchDischargeBridge.tsx`
-- 7 day-cards, one action per day (Day 1 = invite one Support Circle member; Day 2 = first Capture; Day 3 = first Commit; Day 4 = first Calibrate check-in; Day 5 = share first win with Circle; Day 6 = first Memory Bridge replay; Day 7 = review + clinical export)
-- Uses existing `LaunchLayout`, `LaunchCard`, `LaunchButton`
-- Progress persisted to Supabase (new table `discharge_bridge_progress` with proper GRANTs + RLS)
-- Add route to `src/App.tsx` (or wherever launch routes register) and export from `src/pages/launch/index.ts`
+Above the grid, section subheading softens to one line: **"Built for every busy brain — and strong enough for the hardest days."** Small hint: "Tap a card to see the facts and what to expect."
 
-### 2c · New landing entry: printable 1-pager
-- New route `/launch/discharge-bridge/handout` — print-optimised page (A4, 1 page, QR to `/subscribe`)
-- Headline: "First 30 Days Home — you don't walk this alone"
-- 5 bullets + QR + MyRhythm mark + medical disclaimer footer
+## Copy (routes/CTA labels unchanged)
 
-### 2d · Clinician handover PDF
-- Reuse existing `src/utils/clinicalExport.ts`
-- Add a new export variant: "Discharge Handover" (patient name, discharge date, Support Circle list, first-week plan, clinician contact block)
-- Footer already correct per confidentiality standard
+**01 Capture — Memory Bridge**
+- Hook: "Never lose the conversation that mattered."
+- Who it's for: meetings, doctor visits, school pickups, family plans — anyone who can't hold every detail in their head.
+- Does for you: records any chat • pulls out names, decisions and next steps • searchable months later.
+- Facts — Everyday brains: "People forget ~50% of new information within an hour, and ~70% within 24 hours (Ebbinghaus)."¹ · "Knowledge workers lose ~2 hrs/day to interruptions and context-switching."²
+- Facts — Also helpful if…: "~40–80% of medical information is forgotten immediately after a consultation; nearly half of what's remembered is remembered incorrectly."³
+- Expect: a rolling recorder, a plain-English summary per recording, and a follow-up list you can act on.
 
-### 2e · Sprint doc updates: `docs/90-day-sprint.md`
-- Section 3, Workstream C: replace "Brain Games spec locked / dev / ships 19 Sep" with "Discharge Bridge Kit ships by 15 Aug (week 6)"
-- Week-by-week table: swap Brain Games milestones for Kit milestones weeks 5–8; free up weeks 9–13 for LOI work + retention
-- Section 5 "not doing": add "Brain Games v0.2 — deferred to post-LOI sprint"
-- Section 9 "sprint complete": swap Brain Games checkbox for "Discharge Bridge Kit live and used by ≥ 30% of new members"
-- Add note that this change was made to prioritise the clinical-bridge wedge over retention features
+**02 Commit — MyRhythm Calendar**
+- Hook: "A day that fits the brain you have today."
+- Who it's for: anyone whose calendar keeps winning against them — new parents, shift workers, founders, students, carers.
+- Does for you: energy-aware planning • gentle nudges • one thread from vision → today.
+- Facts — Everyday brains: "Cognitive performance can swing 20–30% across the day based on chronotype and sleep."⁴ · "Task-switching can cost up to 40% of productive time."²
+- Facts — Also helpful if…: "Cognitive fatigue peaks in the first 6 months after brain injury; 1 in 3 survivors are readmitted within 90 days of discharge."⁵
+- Expect: your goals broken into low-effort actions, scheduled around your energy pattern, not against it.
 
-### 2f · Memory + brand alignment
-- Update `src/config/appDescription.ts` — add `DISCHARGE_BRIDGE_KIT_DESCRIPTION` constant so the Kit's public wording is single-sourced
-- Save memory `mem://features/discharge-bridge-kit` describing scope + why it replaced Brain Games in v0.1
+**03 Calibrate — Check-ins**
+- Hook: "A 20-second check-in. A clearer week."
+- Who it's for: anyone who wants to feel their week instead of just survive it.
+- Does for you: mood + energy in one tap • quiet pattern insight • no scoring, no streaks to fail.
+- Facts — Everyday brains: "Brief daily self-monitoring is linked with 2–3× better follow-through on personal goals."⁶ · "Naming a feeling ('affect labeling') measurably reduces stress reactivity."⁷
+- Facts — Also helpful if…: "Up to 1 in 2 stroke survivors experience depression in the first year; early self-monitoring supports earlier support-seeking."⁸
+- Expect: a weekly Lens view of your rhythm, gentle flags when patterns shift, never a score you can 'fail'.
 
----
+**04 Celebrate — Support Community**
+- Hook: "No one walks alone."
+- Who it's for: anyone who does better with a small, honest circle — friends, family, colleagues, or a care team.
+- Does for you: share wins • ask the circle • encouragement, not advice.
+- Facts — Everyday brains: "Strong social connection is associated with a ~50% lower risk of early mortality (Holt-Lunstad meta-analysis)."⁹ · "Loneliness raises the risk of depression roughly 2×."¹⁰
+- Facts — Also helpful if…: "Engaged support circles are linked to lower caregiver burnout and better 12-month recovery outcomes."¹¹
+- Expect: a private circle of 1–5 people, one-tap wins, and templates for the messages that are hardest to write.
 
-## 3 · Investor Loom script — what I'll build after #2
+All 11 footnotes render once below the grid in `text-xs text-brain-health-500`, sourced from `THIRD_PROBLEM_STATS`, `docs/discharge-bridge-kit.md`, and widely-cited public research (Ebbinghaus, Holt-Lunstad, APA on task-switching, Lieberman on affect labeling). No new medical claims about MyRhythm itself.
 
-### 3a · New doc: `docs/investor-loom-script.md`
-- 5-minute tight script with timestamps (0:00–0:45 Discharge Cliff, 0:45–1:30 Life-Ready Gap, 1:30–2:30 Ideal-Brain + TAM, 2:30–3:30 product demo including the new Discharge Bridge Kit as the demo moment, 3:30–4:15 traction, 4:15–5:00 ask + moat)
-- Verbatim spoken lines (not bullets) — memorisable, conversational, front-loaded with the Founding Member number and 1 LOI target
-- Cited stats pulled from `THIRD_PROBLEM_STATS` in `src/config/appDescription.ts` — no new numbers invented
-- Shot list: which route/screen to record for each 30-second segment
-- Recording checklist (screen resolution, mic, one-take rules, thumbnail frame)
+## Visual refinements
 
-### 3b · New doc: `docs/investor-loom-distribution.md`
-- Where the Loom lives (unlisted YouTube + Loom link)
-- Who gets sent it and in what wording (3 templates: cold investor, warm intro, clinician)
-- Tracking: Loom's built-in view analytics = the metric
+- Remove `hover:scale-105`; use soft shadow lift + 1px inner ring on hover/expand.
+- Left-aligned composition inside each card (editorial, not template).
+- Numbered eyebrow in the same uppercase tracked style as `SectionHeader` / `CapabilityHero`.
+- Fact chips: `bg-brain-health-50 border border-brain-health-100 text-brain-health-700 text-xs`. Sub-label ("Everyday brains" / "Also helpful if…") in tiny uppercase tracked text above each chip group.
+- Expectations rendered with a check-glyph in the card's own accent colour.
+- New universal-value badge on each card header: small pill "For every busy brain" to make the non-clinical audience obvious at a glance.
 
-### 3c · Optional in-app surface (small)
-- Add "For Investors" link on `/launch/roadmap` or `/launch/about` that opens the Loom (external link, no build cost beyond an anchor tag). Only if founder wants it public — otherwise keep it private-share only.
+## Scope
 
----
+- **Edit only:** `src/components/mvp/MVPCore4C.tsx` — the "Four Core Solutions" block.
+- **Reuse:** `Collapsible`, `Card`, `Button`, lucide icons, existing brand-token gradients, existing fact strings from `THIRD_PROBLEM_STATS` / `docs/discharge-bridge-kit.md`.
+- **Preserve:** all four onClicks — `/launch/capture`, `/launch/commit`, `/launch/calibrate`, `setActiveFeatureModal('community')`.
+- **Untouched:** routing, other sections, memory files, medical-disclaimer policy.
 
-## What I am NOT touching in this build
+## Technical notes
 
-- Brain Games code (`src/components/brain-games/*`, `LaunchBrainGames.tsx`) — left in place, still accessible; just removed from the sprint headline and roadmap v0.2 milestone
-- `roadmapData.ts` £500K ARR target — separate reconciliation conversation
-- Marketing site rebuild
-- Trademark / Section 10 budget
-- Any medical-claim-adjacent copy (Kit language is "companion", "handover", "first 30 days home" — never treatment/rehabilitation as a claim)
+- Local state: `const [openCard, setOpenCard] = useState<null | 'capture' | 'commit' | 'calibrate' | 'celebrate'>(null)`.
+- Extract a local `SolutionCard` sub-component: props `id`, `eyebrow`, `title`, `hook`, `audience`, `bullets`, `factsEveryday`, `factsAlsoHelpful`, `expectations`, `icon`, `gradient`, `ctaLabel`, `onCta`, `open`, `onToggle`.
+- `Collapsible` / `CollapsibleTrigger` / `CollapsibleContent` from `@/components/ui/collapsible`; chevron rotates via `group-data-[state=open]:rotate-180`.
+- Grid stays `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start`.
+- One footnote list rendered beneath the grid; superscripts inside cards link (`<a href="#fact-1">…`) to those anchors.
+- No new dependencies, no new colour utilities.
 
----
+## Not doing
 
-## Order of operations when you approve
-
-1. Write `docs/discharge-bridge-kit.md`
-2. Update `docs/90-day-sprint.md`
-3. Create Supabase migration for `discharge_bridge_progress` (with GRANTs + RLS)
-4. Build `/launch/discharge-bridge` page + register route
-5. Build `/launch/discharge-bridge/handout` print page
-6. Extend `clinicalExport.ts` with Discharge Handover variant
-7. Update `src/config/appDescription.ts` + save memory
-8. Write `docs/investor-loom-script.md`
-9. Write `docs/investor-loom-distribution.md`
-10. Short summary at end with what to record first and who to send LOI outreach to
-
-Approve this and I'll switch to build and ship it in this order.
+- No new medical/statistical claims about MyRhythm's outcomes.
+- No new animation libraries.
+- No changes to CTA destinations, community modal, other sections, or roadmap.
