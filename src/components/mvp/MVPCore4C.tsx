@@ -288,155 +288,248 @@ export function MVPCore4C() {
       <section className="py-20 bg-gradient-to-br from-memory-emerald-50/30 via-brain-health-50/20 to-clarity-teal-50/30">
         <div className="container mx-auto max-w-6xl px-6">
           <FoundingTrustStrip />
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
+            <p className="text-xs uppercase tracking-[0.2em] text-brain-health-500 mb-3">The Four Core Solutions</p>
             <h2 className="text-3xl md:text-4xl font-bold text-brain-health-900 mb-4">
-              Four Core Solutions for Your Journey
+              Built for every busy brain — and strong enough for the hardest days.
             </h2>
-            <p className="text-xl text-brain-health-700 max-w-3xl mx-auto">
-              A complete system designed specifically for cognitive wellness and memory empowerment
+            <p className="text-brain-health-600 max-w-2xl mx-auto text-sm">
+              Tap a card to see the facts and what you can expect.
             </p>
           </div>
 
-          {/* Compact 4-card grid - MVP style */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-            {/* Capture */}
-            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-memory-emerald-50/50 border-memory-emerald-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <CardHeader className="relative z-10 pb-4">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 flex items-center justify-center">
-                  <Brain className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
-                  Capture — Your Memory Bridge
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-4 text-center text-sm">
-                  Never lose precious moments. Intelligent capture system for conversations, appointments, and memories.
-                </p>
-                <Button 
-                  size="sm"
-                  className="w-full bg-gradient-to-r from-memory-emerald-500 to-brain-health-500 hover:from-memory-emerald-600 hover:to-brain-health-600 text-white" 
-                  onClick={() => navigate('/launch/capture')}
-                >
-                  Explore Memory Bridge
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </CardContent>
-              <div className="absolute inset-0 bg-gradient-to-br from-memory-emerald-500/10 to-brain-health-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Card>
+          {(() => {
+            const solutions = [
+              {
+                id: 'capture' as const,
+                eyebrow: '01 · Capture',
+                title: 'Your Memory Bridge',
+                hook: 'Never lose the conversation that mattered.',
+                audience: 'For meetings, doctor visits, school pickups, family plans — anyone who can\'t hold every detail in their head.',
+                bullets: ['Records any chat', 'Pulls out names, decisions and next steps', 'Searchable months later'],
+                factsEveryday: [
+                  'People forget ~50% of new information within an hour, and ~70% within 24 hours (Ebbinghaus).',
+                  'Knowledge workers lose ~2 hrs/day to interruptions and context-switching.',
+                ],
+                factsClinical: [
+                  '~40–80% of medical information is forgotten immediately after a consultation; nearly half of what is remembered is remembered incorrectly.',
+                ],
+                expectations: [
+                  'A rolling recorder you can start in one tap',
+                  'A plain-English summary per recording',
+                  'A follow-up list you can act on',
+                ],
+                icon: Brain,
+                gradient: 'from-memory-emerald-500 to-brain-health-500',
+                cardBg: 'from-white to-memory-emerald-50/50',
+                border: 'border-memory-emerald-200/50',
+                chipBg: 'bg-memory-emerald-50 border-memory-emerald-100 text-memory-emerald-800',
+                cta: 'Explore Memory Bridge',
+                onCta: () => navigate('/launch/capture'),
+              },
+              {
+                id: 'commit' as const,
+                eyebrow: '02 · Commit',
+                title: 'Your MyRhythm Calendar',
+                hook: 'A day that fits the brain you have today.',
+                audience: 'For anyone whose calendar keeps winning against them — new parents, shift workers, founders, students, carers.',
+                bullets: ['Energy-aware planning', 'Gentle nudges, not guilt', 'One thread from vision → today'],
+                factsEveryday: [
+                  'Cognitive performance can swing 20–30% across the day based on chronotype and sleep.',
+                  'Task-switching can cost up to 40% of productive time (APA).',
+                ],
+                factsClinical: [
+                  'Cognitive fatigue peaks in the first 6 months after brain injury; ~1 in 3 survivors are readmitted within 90 days of discharge.',
+                ],
+                expectations: [
+                  'Your goals broken into low-effort actions',
+                  'Scheduling that works with your energy, not against it',
+                  'One quiet view of the week ahead',
+                ],
+                icon: Calendar,
+                gradient: 'from-brain-health-500 to-clarity-teal-500',
+                cardBg: 'from-white to-brain-health-50/50',
+                border: 'border-brain-health-200/50',
+                chipBg: 'bg-brain-health-50 border-brain-health-100 text-brain-health-700',
+                cta: 'Explore Calendar',
+                onCta: () => navigate('/launch/commit'),
+              },
+              {
+                id: 'calibrate' as const,
+                eyebrow: '03 · Calibrate',
+                title: 'Mood & Energy Check-ins',
+                hook: 'A 20-second check-in. A clearer week.',
+                audience: 'For anyone who wants to feel their week instead of just survive it.',
+                bullets: ['Mood + energy in one tap', 'Quiet pattern insight', 'No scoring, no streaks to fail'],
+                factsEveryday: [
+                  'Brief daily self-monitoring is linked with 2–3× better follow-through on personal goals.',
+                  'Naming a feeling (“affect labeling”) measurably reduces stress reactivity (Lieberman, UCLA).',
+                ],
+                factsClinical: [
+                  'Up to 1 in 2 stroke survivors experience depression in the first year; early self-monitoring supports earlier support-seeking.',
+                ],
+                expectations: [
+                  'A weekly Lens view of your rhythm',
+                  'Gentle flags when patterns shift',
+                  'Never a score you can “fail”',
+                ],
+                icon: Activity,
+                gradient: 'from-clarity-teal-500 to-sunrise-amber-500',
+                cardBg: 'from-white to-clarity-teal-50/50',
+                border: 'border-clarity-teal-200/50',
+                chipBg: 'bg-clarity-teal-50 border-clarity-teal-100 text-clarity-teal-800',
+                cta: 'Explore Calibrate',
+                onCta: () => navigate('/launch/calibrate'),
+              },
+              {
+                id: 'celebrate' as const,
+                eyebrow: '04 · Celebrate',
+                title: 'Support Community',
+                hook: 'No one walks alone.',
+                audience: 'For anyone who does better with a small, honest circle — friends, family, colleagues, or a care team.',
+                bullets: ['Share wins', 'Ask the circle', 'Encouragement, not advice'],
+                factsEveryday: [
+                  'Strong social connection is associated with a ~50% lower risk of early mortality (Holt-Lunstad meta-analysis).',
+                  'Loneliness roughly doubles the risk of depression.',
+                ],
+                factsClinical: [
+                  'Engaged support circles are linked to lower caregiver burnout and better 12-month recovery outcomes.',
+                ],
+                expectations: [
+                  'A private circle of 1–5 people',
+                  'One-tap wins you can share',
+                  'Templates for the messages that are hardest to write',
+                ],
+                icon: Heart,
+                gradient: 'from-sunrise-amber-500 to-memory-emerald-500',
+                cardBg: 'from-white to-sunrise-amber-50/50',
+                border: 'border-sunrise-amber-200/50',
+                chipBg: 'bg-sunrise-amber-50 border-sunrise-amber-100 text-sunrise-amber-800',
+                cta: 'Explore Community',
+                onCta: () => setActiveFeatureModal('community'),
+              },
+            ];
 
-            {/* Commit */}
-            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-brain-health-50/50 border-brain-health-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <CardHeader className="relative z-10 pb-4">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 flex items-center justify-center">
-                  <Calendar className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
-                  Commit — Your MyRhythm Calendar
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-4 text-center text-sm">
-                  Transform overwhelm into organized action. Adapts to your energy and cognitive patterns.
-                </p>
-                <Button 
-                  size="sm"
-                  className="w-full bg-gradient-to-r from-brain-health-500 to-clarity-teal-500 hover:from-brain-health-600 hover:to-clarity-teal-600 text-white" 
-                  onClick={() => navigate('/launch/commit')}
-                >
-                  Explore Calendar
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </CardContent>
-              <div className="absolute inset-0 bg-gradient-to-br from-brain-health-500/10 to-clarity-teal-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Card>
+            return (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto items-start">
+                {solutions.map((s) => {
+                  const Icon = s.icon;
+                  const isOpen = openCard === s.id;
+                  return (
+                    <Collapsible
+                      key={s.id}
+                      open={isOpen}
+                      onOpenChange={(o) => setOpenCard(o ? s.id : null)}
+                      asChild
+                    >
+                      <Card
+                        className={`group relative overflow-hidden bg-gradient-to-br ${s.cardBg} ${s.border} shadow-md hover:shadow-xl transition-all duration-300 ${isOpen ? 'ring-1 ring-inset ring-brain-health-200 shadow-xl' : ''}`}
+                      >
+                        <CardHeader className="relative z-10 pb-3 text-left">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className={`w-11 h-11 rounded-2xl bg-gradient-to-br ${s.gradient} flex items-center justify-center shadow-sm`}>
+                              <Icon className="h-5 w-5 text-white" />
+                            </div>
+                            <span className="text-[10px] uppercase tracking-[0.15em] font-medium text-brain-health-500 bg-white/70 border border-brain-health-100 rounded-full px-2 py-1">
+                              For every busy brain
+                            </span>
+                          </div>
+                          <p className="text-[11px] uppercase tracking-[0.18em] text-brain-health-500 font-medium">
+                            {s.eyebrow}
+                          </p>
+                          <CardTitle className="text-base font-semibold text-brain-health-900 mt-1">
+                            {s.title}
+                          </CardTitle>
+                          <p className="text-sm text-brain-health-700 mt-2 leading-relaxed">
+                            {s.hook}
+                          </p>
+                        </CardHeader>
 
-            {/* Calibrate */}
-            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-clarity-teal-50/50 border-clarity-teal-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <CardHeader className="relative z-10 pb-4">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 flex items-center justify-center">
-                  <Activity className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
-                  Calibrate — Mood & Energy Check-ins
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-4 text-center text-sm">
-                  Track your emotional landscape and energy levels. Understand patterns to optimize your rhythm.
-                </p>
-                <Button 
-                  size="sm"
-                  className="w-full bg-gradient-to-r from-clarity-teal-500 to-sunrise-amber-500 hover:from-clarity-teal-600 hover:to-sunrise-amber-600 text-white" 
-                  onClick={() => navigate('/launch/calibrate')}
-                >
-                  Explore Calibrate
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </CardContent>
-              <div className="absolute inset-0 bg-gradient-to-br from-clarity-teal-500/10 to-sunrise-amber-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Card>
+                        <CardContent className="relative z-10 pt-0 text-left">
+                          <CollapsibleTrigger asChild>
+                            <button
+                              className="group/trigger flex items-center gap-1.5 text-xs text-brain-health-600 hover:text-brain-health-900 mt-1 mb-2 min-h-[44px] focus:outline-none focus-visible:ring-2 focus-visible:ring-brain-health-400 rounded-md"
+                              aria-expanded={isOpen}
+                            >
+                              <span>{isOpen ? 'Hide details' : 'See how it works'}</span>
+                              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+                            </button>
+                          </CollapsibleTrigger>
 
-            {/* Celebrate */}
-            <Card className="group relative overflow-hidden bg-gradient-to-br from-white to-sunrise-amber-50/50 border-sunrise-amber-200/50 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <CardHeader className="relative z-10 pb-4">
-                <div className="w-12 h-12 mx-auto mb-4 rounded-full bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 flex items-center justify-center">
-                  <Heart className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-lg font-bold text-brain-health-900 text-center">
-                  Celebrate — Support Community
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="relative z-10 pt-0">
-                <p className="text-brain-health-700 mb-4 text-center text-sm">
-                  Find strength together. Share wins, ask questions, and get encouragement — you're not walking alone.
-                </p>
-                <Button 
-                  size="sm"
-                  className="w-full bg-gradient-to-r from-sunrise-amber-500 to-memory-emerald-500 hover:from-sunrise-amber-600 hover:to-memory-emerald-600 text-white" 
-                  onClick={() => setActiveFeatureModal('community')}
-                >
-                  Explore Community
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </CardContent>
-              <div className="absolute inset-0 bg-gradient-to-br from-sunrise-amber-500/10 to-memory-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </Card>
-          </div>
+                          <CollapsibleContent className="overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
+                            <div className="space-y-4 pt-2 pb-3 border-t border-brain-health-100">
+                              <div>
+                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-1.5 mt-3">Who it's for</p>
+                                <p className="text-xs text-brain-health-700 leading-relaxed">{s.audience}</p>
+                              </div>
 
-          {/* Supporting Text */}
-          <div className="text-center mt-12">
-            <p className="text-brain-health-600 font-medium max-w-2xl mx-auto">
-              The complete MyRhythm system - Capture memories and conversations, Commit to your rhythm and follow through, Calibrate your well being and Celebrate with your community.
-            </p>
-            <p className="text-xs text-brain-health-500 mt-4 tracking-wide uppercase">
-              Operating layer: Cognitive Continuity
-            </p>
-          </div>
+                              <div>
+                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-2">What it does for you</p>
+                                <ul className="space-y-1.5">
+                                  {s.bullets.map((b) => (
+                                    <li key={b} className="flex items-start gap-2 text-xs text-brain-health-800">
+                                      <Sparkles className="h-3 w-3 mt-0.5 text-brain-health-400 flex-shrink-0" />
+                                      <span>{b}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
 
-          {/* Prominent CTA */}
-          <div className="mt-16 text-center">
-            <div className="inline-flex flex-col items-center p-8 bg-gradient-to-br from-memory-emerald-500/10 via-brain-health-500/10 to-clarity-teal-500/10 rounded-3xl border border-memory-emerald-200/50">
-              <h3 className="text-2xl md:text-3xl font-bold text-brain-health-900 mb-3">
-                Ready to Transform Your Journey?
-              </h3>
-              <p className="text-brain-health-700 mb-6 max-w-lg">
-                Start your 7-day free trial today. No commitment, cancel anytime.
-              </p>
-              <Button 
-                size="lg" 
-                className="bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 hover:from-memory-emerald-600 hover:to-clarity-teal-600 text-white px-10 py-6 text-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105" 
-                onClick={() => navigate('/launch/register')}
-              >
-                <Sparkles className="h-6 w-6 mr-3" />
-                Start 7-Day Free Trial
-                <ArrowRight className="h-6 w-6 ml-3" />
-              </Button>
-              <p className="text-sm text-brain-health-500 mt-4">
-                ✓ No charge until trial ends &nbsp;•&nbsp; ✓ Cancel anytime
-              </p>
-            </div>
-          </div>
+                              <div>
+                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-2">The facts behind it</p>
+                                <p className="text-[10px] uppercase tracking-wider text-brain-health-400 mb-1">Everyday brains</p>
+                                <div className="flex flex-col gap-1.5 mb-2">
+                                  {s.factsEveryday.map((f, i) => (
+                                    <span key={i} className={`text-[11px] leading-snug rounded-lg border px-2.5 py-1.5 ${s.chipBg}`}>
+                                      {f}
+                                    </span>
+                                  ))}
+                                </div>
+                                <p className="text-[10px] uppercase tracking-wider text-brain-health-400 mb-1">Also helpful if…</p>
+                                <div className="flex flex-col gap-1.5">
+                                  {s.factsClinical.map((f, i) => (
+                                    <span key={i} className="text-[11px] leading-snug rounded-lg border border-brain-health-100 bg-white/70 text-brain-health-700 px-2.5 py-1.5">
+                                      {f}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div>
+                                <p className="text-[10px] uppercase tracking-[0.15em] text-brain-health-500 font-medium mb-2">What you can expect</p>
+                                <ul className="space-y-1.5">
+                                  {s.expectations.map((e) => (
+                                    <li key={e} className="flex items-start gap-2 text-xs text-brain-health-800">
+                                      <span className={`mt-1 h-1.5 w-1.5 rounded-full bg-gradient-to-r ${s.gradient} flex-shrink-0`} />
+                                      <span>{e}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            </div>
+                          </CollapsibleContent>
+
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className={`w-full mt-3 border-brain-health-200 text-brain-health-800 hover:bg-gradient-to-r hover:${s.gradient} hover:text-white hover:border-transparent transition-all`}
+                            onClick={s.onCta}
+                          >
+                            {s.cta}
+                            <ArrowRight className="h-4 w-4 ml-2" />
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </Collapsible>
+                  );
+                })}
+              </div>
+            );
+          })()}
+
+          <p className="text-center text-xs text-brain-health-500 mt-8 max-w-2xl mx-auto italic">
+            Facts sourced from public research (Ebbinghaus; APA on task-switching; Lieberman on affect labeling; Holt-Lunstad on social connection) and clinical literature summarised in our discharge-bridge references. MyRhythm supports cognitive wellness — it does not diagnose or treat any condition.
+          </p>
         </div>
       </section>
 
