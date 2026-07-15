@@ -272,29 +272,25 @@ function App() {
                     <Route path="/founders-story" element={<FoundersMemoryStory />} />
                     <Route path="/in-app-purchase" element={<InAppPurchase />} />
                     <Route path="/memory-bank" element={<ProtectedRoute requireAuth={false}><MemoryBank /></ProtectedRoute>} />
-                    <Route path="/dashboard/*" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+                    <Route path="/dashboard/*" element={<Navigate to="/launch/home" replace />} />
                      <Route path="/calendar" element={<Navigate to="/launch/calendar" replace />} />
-                     <Route path="/vision" element={
-                       <ProtectedRoute requireAuth={false}>
-                         <VisionPage />
-                       </ProtectedRoute>
-                     } />
+                     <Route path="/vision" element={<Navigate to="/launch/vision-statement" replace />} />
                      <Route path="/ecosystem" element={<ProtectedRoute requireAuth={false}><EcosystemPage /></ProtectedRoute>} />
-                     <Route path="/next-steps" element={<ProtectedRoute requireAuth={false}><div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"><NextStepsHub /></div></ProtectedRoute>} />
-                     <Route path="/next-steps-hub" element={<ProtectedRoute requireAuth={false}><div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"><NextStepsHub /></div></ProtectedRoute>} />
+                     <Route path="/next-steps" element={<Navigate to="/launch/commit" replace />} />
+                     <Route path="/next-steps-hub" element={<Navigate to="/launch/commit" replace />} />
                      <Route path="/command-center" element={<Navigate to="/launch/support" replace />} />
                     <Route path="/organizations" element={<ProtectedRoute requireAuth={false}><OrganizationsDirectory /></ProtectedRoute>} />
                     <Route path="/tracking" element={<ProtectedRoute requireAuth={false}><SymptomTracking /></ProtectedRoute>} />
-                    <Route path="/goals" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/gratitude" element={<Navigate to="/launch/calibrate" replace />} />
-                    <Route path="/analytics" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/brain-games" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/accountability" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/support" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/support-circle" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/profile" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/settings" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
-                    <Route path="/testing" element={<ProtectedRoute requireAuth={false}><Dashboard /></ProtectedRoute>} />
+                    <Route path="/goals" element={<Navigate to="/launch/goals" replace />} />
+                    <Route path="/gratitude" element={<Navigate to="/launch/celebrate" replace />} />
+                    <Route path="/analytics" element={<Navigate to="/launch/analytics" replace />} />
+                    <Route path="/brain-games" element={<Navigate to="/launch/games" replace />} />
+                    <Route path="/accountability" element={<Navigate to="/launch/commit" replace />} />
+                    <Route path="/support" element={<Navigate to="/launch/support" replace />} />
+                    <Route path="/support-circle" element={<Navigate to="/launch/support" replace />} />
+                    <Route path="/profile" element={<Navigate to="/launch/profile" replace />} />
+                    <Route path="/settings" element={<Navigate to="/launch/settings" replace />} />
+                    <Route path="/testing" element={<Navigate to="/launch/home" replace />} />
                     <Route
                       path="/onboarding"
                       element={
