@@ -381,7 +381,8 @@ function App() {
                        <Route path="/launch/calendar" element={<LaunchModeProvider><LaunchCalendar /></LaunchModeProvider>} />
                        <Route path="/launch/memory" element={<LaunchModeProvider><LaunchMemoryBridge /></LaunchModeProvider>} />
                        <Route path="/launch/games" element={<LaunchModeProvider><LaunchBrainGames /></LaunchModeProvider>} />
-                       <Route path="/launch/gratitude" element={<LaunchModeProvider><LaunchGratitude /></LaunchModeProvider>} />
+                       <Route path="/launch/celebrate" element={<LaunchModeProvider><LaunchGratitude /></LaunchModeProvider>} />
+                       <Route path="/launch/gratitude" element={<Navigate to="/launch/celebrate" replace />} />
                        <Route path="/launch/support" element={<LaunchModeProvider><LaunchSupportCircle /></LaunchModeProvider>} />
                        <Route path="/launch/store" element={<LaunchModeProvider><LaunchFeatureStore /></LaunchModeProvider>} />
                        <Route path="/launch/profile" element={<LaunchModeProvider><LaunchProfile /></LaunchModeProvider>} />
