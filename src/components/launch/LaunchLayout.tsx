@@ -88,6 +88,7 @@ export function LaunchLayout({
         <main className="flex-1 pb-20 md:pb-6">
           <div className="max-w-7xl mx-auto px-4 py-6">
             {showBack && <LaunchPageHeader />}
+            <OnboardingProgressBar />
             {children}
           </div>
         </main>
