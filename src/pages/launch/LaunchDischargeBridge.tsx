@@ -43,7 +43,7 @@ const DAYS: DaySpec[] = [
     loopStage: 'Reconnect',
     description: 'Invite one person to your Support Circle. Just one. Someone who already knows you\u2019re on this path.',
     cta: 'Invite one person',
-    ctaRoute: '/launch/support-circle',
+    ctaRoute: '/launch/support',
     icon: Users,
   },
   {
@@ -88,7 +88,7 @@ const DAYS: DaySpec[] = [
     loopStage: 'Continuity',
     description: 'Open Memory Bridge. Listen back to one capture. Notice what past-you wanted future-you to know.',
     cta: 'Open Memory Bridge',
-    ctaRoute: '/launch/memory-bridge',
+    ctaRoute: '/launch/memory',
     icon: Repeat,
   },
   {

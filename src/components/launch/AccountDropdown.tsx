@@ -53,7 +53,7 @@ export function AccountDropdown() {
         </DropdownMenuItem>
         
         <DropdownMenuItem 
-          onClick={() => navigate('/launch/features')}
+          onClick={() => navigate('/launch/store')}
           className="gap-2 py-2.5 cursor-pointer"
         >
           <Sparkles className="h-4 w-4" />

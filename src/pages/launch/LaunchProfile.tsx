@@ -78,7 +78,7 @@ export default function LaunchProfile() {
       </LaunchCard>
 
       {/* Current Plan */}
-      <LaunchCard variant="featured" className="mb-6" onClick={() => navigate('/launch/features')}>
+      <LaunchCard variant="featured" className="mb-6" onClick={() => navigate('/launch/store')}>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-200 flex items-center justify-center">
