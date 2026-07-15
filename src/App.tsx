@@ -194,6 +194,7 @@ function App() {
                       <SmartReminderToast />
                       <NavProvider>
                         <SetupProgressBar />
+                        <OnboardingProgressBar />
                         <Suspense fallback={<PageSkeleton />}>
                           <Routes>
      {/* ===== MVP Prototype (parallel route tree — see .lovable/plan.md) ===== */}
