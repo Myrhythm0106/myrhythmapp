@@ -333,7 +333,7 @@ export default function JourneyRegister() {
             Already have an account?{' '}
             <button
               type="button"
-              onClick={() => navigate('/launch/sign-in')}
+              onClick={() => navigate('/launch/signin')}
               className="text-brain-health-600 hover:text-brain-health-700 font-medium underline-offset-4 hover:underline transition-colors"
             >
               Sign in

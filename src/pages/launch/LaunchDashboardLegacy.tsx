@@ -105,7 +105,7 @@ export default function LaunchDashboard() {
           { title: 'Review calendar', done: true },
           { title: 'Call Dr. Smith', done: false },
         ]}
-        onViewAll={() => navigate('/launch/actions')}
+        onViewAll={() => navigate('/launch/commit')}
       />
 
       {/* Winning Week Tracker */}

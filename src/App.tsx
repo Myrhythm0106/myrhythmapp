@@ -403,6 +403,19 @@ function App() {
                        <Route path="/launch/memory/result/:meetingId" element={<LaunchModeProvider><LaunchCaptureResult /></LaunchModeProvider>} />
                        <Route path="/launch/vision-statement" element={<LaunchModeProvider><LaunchVisionStatement /></LaunchModeProvider>} />
                        <Route path="/launch/continuity" element={<LaunchModeProvider><LaunchContinuity /></LaunchModeProvider>} />
+
+                       {/* Alias redirects — safety net for legacy/typoed /launch/* paths */}
+                       <Route path="/launch/memory-bridge" element={<Navigate to="/launch/memory" replace />} />
+                       <Route path="/launch/support-circle" element={<Navigate to="/launch/support" replace />} />
+                       <Route path="/launch/brain-games" element={<Navigate to="/launch/games" replace />} />
+                       <Route path="/launch/sign-in" element={<Navigate to="/launch/signin" replace />} />
+                       <Route path="/launch/features" element={<Navigate to="/launch/store" replace />} />
+                       <Route path="/launch/actions" element={<Navigate to="/launch/commit" replace />} />
+                       <Route path="/launch/account/*" element={<Navigate to="/launch/profile" replace />} />
+                       {/* Catch-all for unknown /launch/* deep paths — must be last */}
+                       <Route path="/launch/*" element={<Navigate to="/launch/home" replace />} />
+
+                        
                        
                        
                        {/* Founder-only financial dashboard — admin role required */}
