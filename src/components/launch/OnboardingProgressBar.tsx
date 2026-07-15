@@ -28,12 +28,14 @@ export function OnboardingProgressBar() {
   if (currentIndex === -1) return null;
 
   return (
-    <div className="mb-4 border-b border-brain-health-100 pb-3">
-      <LaunchStepLocator
-        steps={ONBOARDING_STEPS}
-        currentIndex={currentIndex}
-        ariaLabel="Onboarding progress"
-      />
+    <div className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-brain-health-100">
+      <div className="max-w-7xl mx-auto px-4 py-2">
+        <LaunchStepLocator
+          steps={ONBOARDING_STEPS}
+          currentIndex={currentIndex}
+          ariaLabel="Onboarding progress"
+        />
+      </div>
     </div>
   );
 }
