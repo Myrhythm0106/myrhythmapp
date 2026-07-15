@@ -143,6 +143,7 @@ import LaunchCaptureResult from "./pages/launch/LaunchCaptureResult";
 import LaunchCommit from "./pages/launch/LaunchCommit";
 import LaunchSCCapture from "./pages/launch/LaunchSCCapture";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
+import { OnboardingProgressBar } from "./components/launch/OnboardingProgressBar";
 
 // Brain Injury Journey Routes
 import { JourneyRegister, JourneyEnergyCheck, JourneyAssessment, JourneySupportCircle, JourneyReady } from "./pages/journey/brain-injury";
