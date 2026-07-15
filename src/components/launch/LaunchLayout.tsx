@@ -9,7 +9,6 @@ import { LaunchQuickActions } from './LaunchQuickActions';
 import { EditionBadge } from './EditionBadge';
 import { LaunchPageHeader } from './LaunchPageHeader';
 import { LaunchYouAreHereDial } from './LaunchYouAreHereDial';
-import { OnboardingProgressBar } from './OnboardingProgressBar';
 import { HelpCircle } from 'lucide-react';
 import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
