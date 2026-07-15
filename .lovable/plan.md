@@ -1,93 +1,168 @@
 
-## What you'll see
+# MyRhythm — App Map, Market Evidence & Flow Sequencing Proposal
 
-Replace the current bland "Explore Memory Bridge / Calendar / Calibrate / Community" row on `/launch` with a refined, progressively-revealed card set that carries supporting facts and clear expectations — with facts and value framed for **everyone**, not just people living with a brain injury.
+Nothing gets deleted. Everything I retire moves into an `src/_archive/` tree with a README so we can restore any file in one move. This plan has three parts: (A) market evidence, (B) app map, (C) sequencing + archive plan.
 
-**Default (calm & scannable):** each card shows only
-- Soft icon medallion (kept in current brand-tinted gradients)
-- Numbered eyebrow (01 · Capture, 02 · Commit, 03 · Calibrate, 04 · Celebrate)
-- Short headline ("Your Memory Bridge", etc.)
-- One evocative, universal hook line
-- Subtle "See how it works ⌄" affordance
+---
 
-**On tap/click (roll-up reveal):** the card expands in place using `Collapsible` + height/opacity transition. Content is grouped so the universal value is on top and the clinical context sits beneath, clearly labelled:
+## A. Market evidence — is this app meeting a real need?
 
-1. **Who it's for** — one line: "For anyone juggling a busy brain — parents, professionals, students, carers, and people recovering from injury, ADHD, MCI, or burnout."
-2. **What it does for you** — 3 short icon+phrase bullets in everyday language.
-3. **The facts behind it** — 2–3 evidence chips split into two sub-labels:
-   - `Everyday brains` — general-population facts (memory, attention, stress, sleep, social support).
-   - `Also helpful if…` — the brain-injury / ADHD / MCI / caregiver stats already approved in `THIRD_PROBLEM_STATS` and the discharge-cliff doc.
-4. **What you can expect** — 2–3 concrete, universal outcome lines (no cure/treatment promises).
+The three problems MyRhythm targets (Discharge Cliff, Clinical-Ready vs Life-Ready Gap, Ideal-Brain Assumption) all show up in independent public data.
 
-Then the existing primary CTA ("Explore Memory Bridge" → `/launch/capture`, etc.), styled softer.
+**Neuro-recovery / TBI / stroke — the Discharge Cliff**
+- WHO / Lancet Neurology: ~69 million new TBIs per year globally; stroke affects ~12.2 million people/year and is the second-leading cause of adult disability.
+- Digital cognitive rehabilitation market: multiple analyst reports (Stratistics, Verified Market Reports, MarkWide) all project 2024→2034 CAGR ≈ 12–18%, driven explicitly by *post-discharge* and *community-based* care — the gap MyRhythm targets.
+- IntechOpen 2026 chapter "The Digital Revolution in TBI Rehabilitation" frames the exact thesis: *"conventional models are constrained by limited resources, access barriers, and a disconnect from patients' real-world functioning"* — bridging clinic-to-community.
+- NHS England / Headway UK: >350k UK hospital admissions/year with acquired brain injury; typical outpatient neuropsychology waitlists 6–18 months → validated Discharge Cliff.
 
-Accordion behaviour — only one card open at a time. Fully keyboard + screen-reader accessible (`aria-expanded`, focus ring, 56px+ tap target preserved).
+**ADHD / executive function — the Ideal-Brain Assumption**
+- CDC MMWR (2023): ~6% of US adults currently have ADHD; only ~1 in 3 receive treatment.
+- Strategic Market Research: ADHD-apps market USD 563M (2024) → USD 1.1B (2030), 10.8% CAGR.
+- Growth Market Reports: Digital ADHD Executive-Function Trainer market USD 4.45B by 2034, 13.7% CAGR.
+- Peer-reviewed 2025 (Psychiatric Quarterly): adult ADHD caregiver burden is comparable to major depressive disorder — validating Support Circle as a first-class surface, not a feature.
 
-Above the grid, section subheading softens to one line: **"Built for every busy brain — and strong enough for the hardest days."** Small hint: "Tap a card to see the facts and what to expect."
+**Long COVID / MS / dementia — same cognitive-continuity problem**
+- WHO: ~6% of adults report post-COVID cognitive symptoms >3 months.
+- Alzheimer's Association 2024: 6.9M Americans living with dementia, projected 13.8M by 2060; MCI affects 12–18% of adults over 60.
+- Pattern: none of these populations have a "one condition, one app" solution — they have overlapping needs (memory, scheduling, mood, family loop) which is exactly the 4C loop.
 
-## Copy (routes/CTA labels unchanged)
+**Caregivers — the Anchor persona**
+- AARP / NAC 2020: 53M unpaid caregivers in the US; ~61% also work; average 24 hrs/week of care.
+- ~40% clinically significant burnout scores in ADHD, stroke, and dementia caregiver cohorts.
 
-**01 Capture — Memory Bridge**
-- Hook: "Never lose the conversation that mattered."
-- Who it's for: meetings, doctor visits, school pickups, family plans — anyone who can't hold every detail in their head.
-- Does for you: records any chat • pulls out names, decisions and next steps • searchable months later.
-- Facts — Everyday brains: "People forget ~50% of new information within an hour, and ~70% within 24 hours (Ebbinghaus)."¹ · "Knowledge workers lose ~2 hrs/day to interruptions and context-switching."²
-- Facts — Also helpful if…: "~40–80% of medical information is forgotten immediately after a consultation; nearly half of what's remembered is remembered incorrectly."³
-- Expect: a rolling recorder, a plain-English summary per recording, and a follow-up list you can act on.
+**Signals against pure-brain-training competitors (Lumosity, Elevate, Peak, CogniFit)**
+- FTC 2016 Lumosity settlement ($2M) — "brain training" alone lacks functional-outcome evidence.
+- The gap those apps *don't* fill: converting real life (meetings, appointments, decisions) into structured next-steps. That is Memory Bridge + 4C, not a puzzle.
 
-**02 Commit — MyRhythm Calendar**
-- Hook: "A day that fits the brain you have today."
-- Who it's for: anyone whose calendar keeps winning against them — new parents, shift workers, founders, students, carers.
-- Does for you: energy-aware planning • gentle nudges • one thread from vision → today.
-- Facts — Everyday brains: "Cognitive performance can swing 20–30% across the day based on chronotype and sleep."⁴ · "Task-switching can cost up to 40% of productive time."²
-- Facts — Also helpful if…: "Cognitive fatigue peaks in the first 6 months after brain injury; 1 in 3 survivors are readmitted within 90 days of discharge."⁵
-- Expect: your goals broken into low-effort actions, scheduled around your energy pattern, not against it.
+**So what does this add up to?**
+MyRhythm sits at the intersection of three markets each growing double-digit CAGR, with a positioning ("Collaborative Cognitive Continuity layer running the 4C loop" + Memory-First Design™) that none of the current leaders (MyReDA, Constant Therapy, BrainHQ, Inflow, Numo) occupy. The evidence supports a **need**, and the whitespace is credible.
 
-**03 Calibrate — Check-ins**
-- Hook: "A 20-second check-in. A clearer week."
-- Who it's for: anyone who wants to feel their week instead of just survive it.
-- Does for you: mood + energy in one tap • quiet pattern insight • no scoring, no streaks to fail.
-- Facts — Everyday brains: "Brief daily self-monitoring is linked with 2–3× better follow-through on personal goals."⁶ · "Naming a feeling ('affect labeling') measurably reduces stress reactivity."⁷
-- Facts — Also helpful if…: "Up to 1 in 2 stroke survivors experience depression in the first year; early self-monitoring supports earlier support-seeking."⁸
-- Expect: a weekly Lens view of your rhythm, gentle flags when patterns shift, never a score you can 'fail'.
+*(All figures above are sourced from public analyst reports and peer-reviewed literature and are marked in the plan for citation in any investor-facing doc.)*
 
-**04 Celebrate — Support Community**
-- Hook: "No one walks alone."
-- Who it's for: anyone who does better with a small, honest circle — friends, family, colleagues, or a care team.
-- Does for you: share wins • ask the circle • encouragement, not advice.
-- Facts — Everyday brains: "Strong social connection is associated with a ~50% lower risk of early mortality (Holt-Lunstad meta-analysis)."⁹ · "Loneliness raises the risk of depression roughly 2×."¹⁰
-- Facts — Also helpful if…: "Engaged support circles are linked to lower caregiver burnout and better 12-month recovery outcomes."¹¹
-- Expect: a private circle of 1–5 people, one-tap wins, and templates for the messages that are hardest to write.
+---
 
-All 11 footnotes render once below the grid in `text-xs text-brain-health-500`, sourced from `THIRD_PROBLEM_STATS`, `docs/discharge-bridge-kit.md`, and widely-cited public research (Ebbinghaus, Holt-Lunstad, APA on task-switching, Lieberman on affect labeling). No new medical claims about MyRhythm itself.
+## B. What the app actually contains today (map)
 
-## Visual refinements
+### The one live flow (`/launch/*`, v0.1 Founding Core)
 
-- Remove `hover:scale-105`; use soft shadow lift + 1px inner ring on hover/expand.
-- Left-aligned composition inside each card (editorial, not template).
-- Numbered eyebrow in the same uppercase tracked style as `SectionHeader` / `CapabilityHero`.
-- Fact chips: `bg-brain-health-50 border border-brain-health-100 text-brain-health-700 text-xs`. Sub-label ("Everyday brains" / "Also helpful if…") in tiny uppercase tracked text above each chip group.
-- Expectations rendered with a check-glyph in the card's own accent colour.
-- New universal-value badge on each card header: small pill "For every busy brain" to make the non-clinical audience obvious at a glance.
+```text
+/start
+  └─ /launch  (Landing — "Become a Founding Member")
+       ├─ /launch/register ─┐
+       └─ /launch/signin  ──┤
+                            ▼
+                   /launch/user-type
+                            ▼
+                   /launch/payment
+                            ▼
+                   /launch/assessment
+                            ▼
+                   /launch/welcome  (BH score reveal)
+                            ▼
+                   /launch/home  ◀── DASHBOARD HUB
+                            │
+        ┌───────────────────┼───────────────────────────────┐
+        ▼                   ▼                               ▼
+  4C LOOP (primary)   CORE FEATURES               SECONDARY / SETTINGS
+  ─ /capture          ─ /memory (Bridge)          goals · analytics · store
+  ─ /commit           ─ /calendar                 profile · settings · help
+  ─ /calibrate        ─ /games                    whats-new · roadmap
+  ─ /gratitude        ─ /support                  continuity · science
+                                                  clinical-brief · vision
+                                                  discharge-bridge (+handout)
+                                                  edition (about)
+```
 
-## Scope
+### Noise around the live flow
+- 8 landing surfaces (`Landing`, `DemoLanding`, `Preview/Preview2/Preview3Landing`, `Home`, `StartPage`, `MemoryFirstIndex`).
+- 12 persona welcome pages at `/mvp/*-welcome` — routed but nothing links to them.
+- `Dashboard.tsx` (legacy) still renders for `/goals`, `/analytics`, `/brain-games`, `/support`, `/support-circle`, `/profile`, `/settings`, `/testing`, `/accountability`.
+- Duplicate MVP pipeline (8 files): `MVPMainFlow`, `MVPPaymentPage`, `MVPAssessmentPage`, `MVPAssessmentFlowPage`, `MVPCore4CPage`, `MVPDashboardPage`, `PlanSelectionPage`, `WelcomeCongratsPage`.
+- `AppMemoryFirst.tsx`: full parallel app tree with its own AuthProvider and legacy pages.
+- `LaunchDashboardLegacy.tsx` sitting unrouted next to `LaunchDashboard.tsx`.
+- Two parallel onboarding tracks (`/journey/brain-injury/*`, `MVPMainFlow`) — neither shares state with the live flow.
 
-- **Edit only:** `src/components/mvp/MVPCore4C.tsx` — the "Four Core Solutions" block.
-- **Reuse:** `Collapsible`, `Card`, `Button`, lucide icons, existing brand-token gradients, existing fact strings from `THIRD_PROBLEM_STATS` / `docs/discharge-bridge-kit.md`.
-- **Preserve:** all four onClicks — `/launch/capture`, `/launch/commit`, `/launch/calibrate`, `setActiveFeatureModal('community')`.
-- **Untouched:** routing, other sections, memory files, medical-disclaimer policy.
+### Friction points
+1. No single front door.
+2. **Payment before value** — money asked before BH-score reveal.
+3. Persona work exists twice, used zero times.
+4. "Celebrate" hidden under `/launch/gratitude`; Calibrate mood link points to `/home`.
+5. Bookmark traps → legacy Dashboard.
+6. Two apps in one repo.
+7. Secondary nav overloaded (12+ items).
 
-## Technical notes
+---
 
-- Local state: `const [openCard, setOpenCard] = useState<null | 'capture' | 'commit' | 'calibrate' | 'celebrate'>(null)`.
-- Extract a local `SolutionCard` sub-component: props `id`, `eyebrow`, `title`, `hook`, `audience`, `bullets`, `factsEveryday`, `factsAlsoHelpful`, `expectations`, `icon`, `gradient`, `ctaLabel`, `onCta`, `open`, `onToggle`.
-- `Collapsible` / `CollapsibleTrigger` / `CollapsibleContent` from `@/components/ui/collapsible`; chevron rotates via `group-data-[state=open]:rotate-180`.
-- Grid stays `grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-start`.
-- One footnote list rendered beneath the grid; superscripts inside cards link (`<a href="#fact-1">…`) to those anchors.
-- No new dependencies, no new colour utilities.
+## C. Proposal — sequence + archive, delete nothing
 
-## Not doing
+### C1. Acquisition (one front door)
+`/launch` is the only marketing surface. All others redirect to `/launch` and their source files move to `src/_archive/landings/`.
 
-- No new medical/statistical claims about MyRhythm's outcomes.
-- No new animation libraries.
-- No changes to CTA destinations, community modal, other sections, or roadmap.
+### C2. Onboarding (assessment before payment)
+```text
+register → user-type → assessment → welcome (BH score) → payment → home
+```
+User sees their result *before* the paywall. Only ordering changes; no page is removed.
+
+### C3. Core loop shape
+```text
+Morning:  Capture → Commit
+Midday:   Calendar (passive)
+Evening:  Calibrate → Celebrate
+```
+Rename `/launch/gratitude` → `/launch/celebrate` (keep redirect). Fix Calibrate's mood link.
+
+### C4. Nav hierarchy
+- **Bottom bar (5):** Home · Capture · Calendar · Memory · Support
+- **Header action:** Celebrate 🎉 (end-of-day nudge from Calibrate)
+- **More drawer:** Goals · Games · Analytics · Store · Profile · Settings
+- **Deep / contextual (not in nav):** Continuity, Clinical Brief, Discharge Bridge (+handout), Science, Vision, Edition About, Roadmap, What's New, Help.
+
+### C5. Archive strategy (nothing deleted)
+
+New folder: `src/_archive/` with subfolders and a `README.md` listing each archived file, its previous route, and how to restore it. Structure:
+
+```text
+src/_archive/
+  README.md                         ← inventory + restore instructions
+  landings/                         ← alt landing pages
+  mvp-legacy/                       ← 8 duplicate MVP pipeline files
+  personas/                         ← 12 /mvp/*-welcome pages
+  dashboard-legacy/                 ← old Dashboard.tsx + LaunchDashboardLegacy
+  memory-first-app/                 ← AppMemoryFirst.tsx + its unique pages
+  journey-brain-injury/             ← /journey/* tree
+  prototype/                        ← /prototype/* tree
+```
+
+Archived files are moved (`git mv`) — history preserved. Any route that used to hit them becomes a `<Navigate>` to the `/launch/*` equivalent so bookmarks keep working. To restore: `git mv src/_archive/<path> <original>` + re-add the route.
+
+### C6. Three build-mode PRs (independently revertable)
+
+**PR-1 — Front door & sequence (highest impact, lowest risk)**
+- Reorder onboarding to assessment → welcome → payment
+- Redirect all alternate landings to `/launch`; move sources to `src/_archive/landings/`
+- Rename `/launch/gratitude` → `/launch/celebrate` (keep old path as redirect)
+- Fix Calibrate → mood link to stay in Calibrate
+- Tighten bottom nav to the 5 above; move the rest into "More"
+
+**PR-2 — Legacy route cleanup (archive, don't delete)**
+- Convert `/dashboard`, `/goals`, `/analytics`, `/profile`, `/settings`, `/support`, `/support-circle`, `/brain-games`, `/testing`, `/accountability` to `<Navigate>` redirects
+- Move `LaunchDashboardLegacy.tsx`, `Preview*Landing.tsx`, `Home.tsx`, `MemoryFirstIndex.tsx`, `BrainFriendlyDashboard.tsx`, unrouted TBI/MemoryBank into `src/_archive/`
+
+**PR-3 — Retire second app + MVP legacy + personas decision**
+- Move `AppMemoryFirst.tsx` and its unique pages into `src/_archive/memory-first-app/`; entry stays on the main `App.tsx`
+- Move the 8 MVP legacy files into `src/_archive/mvp-legacy/`
+- Personas: either (a) archive the 12 `/mvp/*-welcome` pages (recommended — `LaunchWelcome` already adapts persona inline), or (b) wire them in as post-assessment interstitials. Awaiting your call.
+- Flag `/journey/*` and `/prototype/*` as dev-only builds; sources stay in place (they already sit in their own folders and aren't in the way).
+
+### C7. What stays exactly as-is
+4C loop, Memory Bridge, Calendar, Support Circle, Brain Games, all `src/launch/*` subsystems (persona, stage, continuity, profile), Supabase/RLS/provider wiring.
+
+---
+
+## Questions before I start building
+
+1. Approve **assessment-before-payment** reorder in PR-1?
+2. Personas: **archive** the 12 `/mvp/*-welcome` pages (rely on inline persona copy), or **wire them in** as an interstitial after `LaunchWelcome`?
+3. OK to archive **`AppMemoryFirst.tsx`** (main app entry stays `App.tsx`)?
+4. Want the market-evidence section (part A) also saved as `docs/market-evidence.md` for investor use?
