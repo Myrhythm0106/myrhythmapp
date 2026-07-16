@@ -140,6 +140,11 @@ export default function LaunchWelcome() {
                     /100
                   </span>
                 </div>
+                {bhs && (
+                  <p className="mt-3 inline-block text-[10px] uppercase tracking-[0.24em] font-bold px-2.5 py-1 border" style={{ color: GOLD, borderColor: `${GOLD}55` }}>
+                    {bandLabel(bhs.total)}
+                  </p>
+                )}
                 <p className="mt-4 text-xs leading-relaxed" style={{ color: `${CREAM}99` }}>
                   Each letter is a facet of your rhythm.
                 </p>
@@ -148,24 +153,40 @@ export default function LaunchWelcome() {
               {/* Letter bars */}
               {bhs && (
                 <div className="flex-1">
-                  <div className="grid grid-cols-8 gap-2 md:gap-3 h-48 md:h-56 items-end">
-                    {LETTER_ORDER.map((l, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
-                        className="h-full flex"
-                      >
-                        <MyRhythmLetterBar
-                          id={l.id}
-                          letter={l.letter}
-                          score={bhs.letters[l.id] ?? 0}
-                          tone="dark"
-                          height="h-full"
+                  <div className="relative">
+                    {/* Guide ticks */}
+                    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+                      {[1, 2, 3].map((n) => (
+                        <div
+                          key={n}
+                          className="absolute left-0 right-0 border-t border-dashed"
+                          style={{ bottom: `${(n / 3) * 100}%`, borderColor: `${GOLD}22` }}
                         />
-                      </motion.div>
-                    ))}
+                      ))}
+                    </div>
+                    <div className="relative grid grid-cols-8 gap-2 md:gap-3 h-48 md:h-56 items-end">
+                      {LETTER_ORDER.map((l, i) => {
+                        const score = bhs.letters[l.id] ?? 0;
+                        const isExtreme = score === lowestScore || score === highestScore;
+                        return (
+                          <motion.div
+                            key={i}
+                            initial={{ opacity: 0, y: 8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
+                            className={`h-full flex ${isExtreme ? 'animate-pulse-once' : ''}`}
+                          >
+                            <MyRhythmLetterBar
+                              id={l.id}
+                              letter={l.letter}
+                              score={score}
+                              tone="dark"
+                              height="h-full"
+                            />
+                          </motion.div>
+                        );
+                      })}
+                    </div>
                   </div>
                   <motion.p
                     initial={{ opacity: 0 }}
@@ -175,13 +196,12 @@ export default function LaunchWelcome() {
                     style={{ color: GOLD }}
                   >
                     <span
-                      className="inline-block w-6 h-6 rounded-full flex items-center justify-center text-[10px]"
+                      className="inline-block px-2 py-0.5 rounded-full text-[9px] tracking-[0.24em]"
                       style={{ backgroundColor: GOLD, color: INK }}
-                      aria-hidden="true"
                     >
-                      ↑
+                      8 facets · tap to explore
                     </span>
-                    Tap any letter — reveal what it means &amp; how to raise it
+                    <span>Tap a letter for your personal read →</span>
                   </motion.p>
                 </div>
               )}
@@ -195,6 +215,36 @@ export default function LaunchWelcome() {
               A snapshot only — not a clinical score. We'll track how this shifts as you build your rhythm.
             </p>
           </div>
+
+          {/* "One thing to focus on" — locked teaser */}
+          {bhs && lowestLetter && (
+            <div className="px-8 md:px-12 py-6 border-b border-[#064e3b]/5 bg-white">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <span className="text-[10px] uppercase tracking-[0.3em] font-bold px-2 py-1 border" style={{ color: GOLD, borderColor: `${GOLD}55`, ...SORA }}>
+                    Focus this week
+                  </span>
+                  <div>
+                    <p className="text-sm font-semibold leading-snug" style={{ color: INK, ...SORA }}>
+                      {lowestLetter.word} — your softest facet right now.
+                    </p>
+                    <p className="text-xs mt-1 italic" style={{ color: `${INK}99` }}>
+                      Your personalized 3-step raise-it plan is behind the paywall.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => navigate('/launch/payment')}
+                  className="text-[10px] uppercase tracking-[0.24em] font-bold px-5 py-3 min-h-[44px] whitespace-nowrap transition-colors"
+                  style={{ backgroundColor: GOLD, color: INK, ...SORA }}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = INK, e.currentTarget.style.color = CREAM)}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GOLD, e.currentTarget.style.color = INK)}
+                >
+                  Unlock plan →
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Main body — magazine two-column */}
           <div className="grid grid-cols-1 md:grid-cols-12">
