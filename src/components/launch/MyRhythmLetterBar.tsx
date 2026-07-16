@@ -10,13 +10,16 @@ interface Props {
   id: LetterId;
   letter: string;
   score: number; // 0..3
+  tone?: 'light' | 'dark';
+  height?: string; // tailwind height class for the bar track
 }
 
-export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score }) => {
+export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = 'light', height = 'h-12' }) => {
   const insight = getLetterInsight(id);
   const band = bandFor(score);
   const pct = Math.round((band / 3) * 100);
   const [open, setOpen] = useState(false);
+  const isDark = tone === 'dark';
 
   const label = `${letter} — ${insight.word}, score ${band} of 3. Tap for what it means and how to raise it.`;
 
@@ -25,15 +28,34 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score }) => {
       type="button"
       onClick={() => setOpen(true)}
       aria-label={label}
-      className="group flex flex-col items-center gap-1 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 rounded-sm"
+      className={`group flex flex-col items-center gap-2 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 rounded-sm ${
+        isDark ? 'focus-visible:ring-[#c9a84c] focus-visible:ring-offset-[#064e3b]' : 'focus-visible:ring-teal-600'
+      }`}
     >
-      <div className="w-full h-12 bg-stone-200 rounded-sm relative overflow-hidden transition-shadow group-hover:shadow-sm ring-1 ring-transparent group-hover:ring-teal-600/30">
+      <div
+        className={`w-full ${height} rounded-sm relative overflow-hidden transition-shadow ring-1 ring-transparent ${
+          isDark
+            ? 'bg-[#f5f0e0]/10 group-hover:ring-[#c9a84c]/50'
+            : 'bg-stone-200 group-hover:shadow-sm group-hover:ring-teal-600/30'
+        }`}
+      >
         <div
-          className="absolute bottom-0 left-0 right-0 bg-teal-600/70 transition-[height]"
+          className={`absolute bottom-0 left-0 right-0 transition-[height] duration-700 ease-out ${
+            isDark
+              ? 'bg-[#c9a84c] shadow-[0_0_15px_rgba(201,168,76,0.35)]'
+              : 'bg-teal-600/70'
+          }`}
           style={{ height: `${pct}%` }}
         />
       </div>
-      <span className="text-[10px] font-semibold text-stone-600 group-hover:text-teal-700">{letter}</span>
+      <span
+        className={`text-xs font-bold uppercase tracking-wide ${
+          isDark ? 'text-[#f5f0e0]' : 'text-stone-600 group-hover:text-teal-700'
+        }`}
+        style={isDark ? { fontFamily: "'Sora', sans-serif" } : undefined}
+      >
+        {letter}
+      </span>
     </button>
   );
 
