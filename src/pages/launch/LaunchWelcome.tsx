@@ -192,7 +192,6 @@ export default function LaunchWelcome() {
                     <div className="relative grid grid-cols-8 gap-2 md:gap-3 h-48 md:h-56 items-end">
                       {LETTER_ORDER.map((l, i) => {
                         const score = bhs.letters[l.id] ?? 0;
-                        const isExtreme = score === lowestScore || score === highestScore;
                         return (
                           <motion.div
                             key={i}
