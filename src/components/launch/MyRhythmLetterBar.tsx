@@ -6,6 +6,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import type { LetterId } from '@/data/launchAssessmentBanks';
 import { bandFor, getLetterInsight } from '@/data/myrhythmLetterInsights';
 import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
+import type { Persona } from '@/launch/persona/usePersona';
+import { getSnapshotTeaser } from '@/launch/persona/snapshotTeasers';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
@@ -15,9 +17,10 @@ interface Props {
   score: number; // 0..3
   tone?: 'light' | 'dark';
   height?: string; // tailwind height class for the bar track
+  persona?: Persona;
 }
 
-export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = 'light', height = 'h-12' }) => {
+export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = 'light', height = 'h-12', persona = 'recovery' }) => {
   const insight = getLetterInsight(id);
   const band = bandFor(score);
   const pct = Math.round((band / 3) * 100);
@@ -30,6 +33,10 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
     : foundingMemberConfig.regularPrice.monthly.toFixed(0);
 
   const label = `${letter} — ${insight.word}, score ${band} of 3. Tap for your personal read.`;
+  const teaser = getSnapshotTeaser(persona, id);
+  const ctaLabel = isFoundingMemberActive()
+    ? `Become a Founding Member — £${price}/mo`
+    : `Unlock your full plan — £${price}/mo`;
 
   const trigger = (
     <button
@@ -107,53 +114,57 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
           </DialogHeader>
 
           <div className="space-y-5 pt-2">
-            {/* FREE TIER — teaser */}
+            {/* FREE TIER — band meaning + persona line */}
             <div>
               <h4 className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500 mb-2">
                 What this facet means
               </h4>
               <p className="text-sm text-stone-800 leading-relaxed">{insight.bands[band]}</p>
+              <p className="mt-3 text-xs text-teal-700 leading-relaxed border-l-2 border-teal-600/30 pl-3 italic">
+                {teaser}
+              </p>
             </div>
 
-            {/* PREMIUM TIER — locked */}
-            <div className="relative rounded-sm border border-[#c9a84c]/40 bg-[#f5f0e0]/40 p-4 overflow-hidden">
-              <div className="pointer-events-none select-none blur-[5px] opacity-70 space-y-3" aria-hidden="true">
-                <p className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500">
+            {/* PREMIUM TIER — structured teaser, not blur */}
+            <div className="rounded-sm border border-[#c9a84c]/40 bg-[#f5f0e0]/40 p-4 space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500">
                   Your personal read
-                </p>
-                <p className="text-sm text-stone-800 leading-relaxed italic">{insight.short}</p>
-                <p className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500 pt-1">
-                  {band === 3 ? 'Ways to protect this' : 'Ways to raise this'}
-                </p>
-                <ul className="space-y-2">
-                  {insight.suggestions[band].map((s, i) => (
-                    <li key={i} className="flex gap-3 text-sm text-stone-800 leading-relaxed">
-                      <span style={SERIF} className="italic text-teal-700 shrink-0">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span>{s}</span>
-                    </li>
-                  ))}
-                </ul>
+                </h4>
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#064e3b] text-[#f5f0e0] text-[9px] uppercase tracking-[0.18em] font-bold">
+                  <Lock className="w-2.5 h-2.5" /> Premium
+                </span>
               </div>
 
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-center">
-                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#064e3b] text-[#f5f0e0] text-[10px] uppercase tracking-[0.22em] font-bold">
-                  <Lock className="w-3 h-3" /> Premium
-                </span>
-                <p className="text-sm font-semibold text-[#064e3b] max-w-xs" style={{ fontFamily: "'Sora', sans-serif" }}>
-                  Unlock your personal read &amp; the {band === 3 ? 'protect' : 'raise'}-it playbook.
-                </p>
+              <div className="space-y-3">
+                <TeaserRow
+                  number="01"
+                  title="Your pattern"
+                  teaser={`Based on your ${persona} context, this facet tends to show up in a specific way.`}
+                />
+                <TeaserRow
+                  number="02"
+                  title="What's driving your score"
+                  teaser={`There are usually 2-3 forces behind a ${band}/3 score. Your personalised breakdown explains them.`}
+                />
+                <TeaserRow
+                  number="03"
+                  title={band === 3 ? 'How to protect this' : 'Your first move this week'}
+                  teaser={`A focused ${band === 3 ? 'protect' : 'raise'}-it playbook with steps matched to your rhythm.`}
+                />
+              </div>
+
+              <div className="pt-3 border-t border-[#c9a84c]/30 flex flex-col sm:flex-row items-center gap-3">
                 <button
                   type="button"
                   onClick={() => {
                     setOpen(false);
                     navigate('/launch/payment');
                   }}
-                  className="mt-1 px-5 py-3 bg-[#064e3b] hover:bg-[#0d7a5f] text-[#f5f0e0] text-[10px] uppercase tracking-[0.24em] font-bold transition-colors min-h-[44px]"
+                  className="px-5 py-3 bg-[#064e3b] hover:bg-[#0d7a5f] text-[#f5f0e0] text-[10px] uppercase tracking-[0.24em] font-bold transition-colors min-h-[44px] w-full sm:w-auto"
                   style={{ fontFamily: "'Sora', sans-serif" }}
                 >
-                  Unlock full plan — £{price}/mo →
+                  {ctaLabel} →
                 </button>
                 <button
                   type="button"
@@ -177,5 +188,19 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
     </>
   );
 };
+
+function TeaserRow({ number, title, teaser }: { number: string; title: string; teaser: string }) {
+  return (
+    <div className="flex gap-3">
+      <span style={{ fontFamily: "'Playfair Display', Georgia, serif" }} className="text-xs italic text-teal-700 shrink-0 pt-0.5">
+        {number}
+      </span>
+      <div>
+        <p className="text-sm font-semibold text-stone-800">{title}</p>
+        <p className="text-xs text-stone-500 leading-relaxed">{teaser}</p>
+      </div>
+    </div>
+  );
+}
 
 export default MyRhythmLetterBar;

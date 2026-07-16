@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { mapToPersona, type Persona } from '@/launch/persona/usePersona';
+import { usePersona, type Persona } from '@/launch/persona/usePersona';
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { MemoryFirstChip } from '@/components/launch/MemoryFirstChip';
 import { MEMORY_FIRST_DESIGN_TAGLINE } from '@/config/appDescription';
@@ -57,25 +57,21 @@ function bandLabel(total: number): string {
 
 export default function LaunchWelcome() {
   const navigate = useNavigate();
-  const [persona, setPersona] = useState<Persona>('recovery');
+  const { persona } = usePersona();
   const [bhs, setBhs] = useState<BHSnapshot | null>(null);
   const [displayTotal, setDisplayTotal] = useState(0);
 
   useEffect(() => {
-    const direct = localStorage.getItem('myrhythm_user_type');
-    let raw: string | null = direct;
     const saved = localStorage.getItem('myrhythm_launch_mode');
     if (saved) {
       try {
         const data = JSON.parse(saved);
-        if (!raw) raw = data?.assessmentResults?.userType ?? data?.selectedUserType ?? null;
         const score = data?.brainHealthScore ?? data?.assessmentResults?.brainHealthScore;
         if (score && typeof score.total === 'number') {
           setBhs({ total: score.total, letters: score.letters || {} });
         }
       } catch { /* noop */ }
     }
-    setPersona(mapToPersona(raw));
   }, []);
 
   // Tick the /100 number up from 0
@@ -204,6 +200,7 @@ export default function LaunchWelcome() {
                               score={score}
                               tone="dark"
                               height="h-full"
+                              persona={persona}
                             />
                           </motion.div>
                         );
@@ -262,7 +259,7 @@ export default function LaunchWelcome() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = INK, e.currentTarget.style.color = CREAM)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = GOLD, e.currentTarget.style.color = INK)}
                 >
-                  Unlock plan →
+                  {isFoundingMemberActive() ? 'Become a Founding Member' : 'Unlock plan'} →
                 </button>
               </div>
             </div>

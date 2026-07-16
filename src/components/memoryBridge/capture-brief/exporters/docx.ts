@@ -123,11 +123,14 @@ export async function exportCaptureBriefDocx(model: CaptureBriefModel, opts: Exp
           children: headers.map((t, i) => cell(t, { head: true, width: cols[i] })),
         }),
         ...model.actions.map((a, i) => {
+          const actionText = a.twoMinuteStarter
+            ? `${a.text}\n\n2-min starter: ${a.twoMinuteStarter}`
+            : a.text;
           if (!sched) {
             return new TableRow({
               children: [
                 cell(String(i + 1), { width: cols[0] }),
-                cell(a.text, { width: cols[1] }),
+                cell(actionText, { width: cols[1] }),
                 cell(a.owner, { width: cols[2] }),
                 cell(a.due || '—', { width: cols[3] }),
                 cell(a.priorityLabel, { width: cols[4], bold: true }),
@@ -145,7 +148,7 @@ export async function exportCaptureBriefDocx(model: CaptureBriefModel, opts: Exp
           return new TableRow({
             children: [
               cell(String(i + 1), { width: cols[0] }),
-              cell(a.text, { width: cols[1] }),
+              cell(actionText, { width: cols[1] }),
               cell(a.owner, { width: cols[2] }),
               cell(start, { width: cols[3] }),
               cell(dueLabel, { width: cols[4] }),

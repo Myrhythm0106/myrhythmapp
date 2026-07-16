@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2, Sparkles, Lightbulb, AlertTriangle, Users } from 'lucide-react';
 import { toast } from 'sonner';
 import { BriefAction, CaptureBriefModel, SectionKey } from './model/types';
 import { SmartCommitSlot } from './SmartCommitSlot';
@@ -71,6 +71,9 @@ export function CaptureBriefPreview({ model, sections, includeSchedule = true, o
           <Stat label="Open questions" value={model.openQuestions.length} />
         </div>
       </div>
+
+      {/* So what? lead card */}
+      <SoWhatCard model={model} />
 
       <div className="p-10 space-y-10">
         {sections.summary && (
@@ -248,6 +251,71 @@ function Stat({ label, value }: { label: string; value: number }) {
       <div className="text-3xl font-bold text-brand-orange-600 tabular-nums">{value}</div>
       <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">{label}</div>
     </Card>
+  );
+}
+
+function SoWhatCard({ model }: { model: CaptureBriefModel }) {
+  const topAction = useMemo(() => {
+    if (!model.actions.length) return null;
+    return [...model.actions].sort((a, b) => b.priority - a.priority || b.confidence - a.confidence)[0];
+  }, [model.actions]);
+
+  const remember = useMemo(() => {
+    if (model.summary) {
+      const sentences = model.summary.split(/(?<=[.!?])\s+/);
+      return sentences[0]?.length > 20 ? sentences[0] : model.summary;
+    }
+    if (topAction) return `The key action is "${topAction.text}" — ${topAction.owner} is owning it.`;
+    return 'No clear takeaway was captured. You can re-record or add a note.';
+  }, [model.summary, topAction]);
+
+  const watchOut = useMemo(() => {
+    if (model.openQuestions.length) return model.openQuestions[0];
+    const lowConf = model.actions.find(a => a.confidence < 0.5);
+    if (lowConf) return `Low-confidence action: "${lowConf.text}" — worth double-checking.`;
+    return 'No obvious watch-outs surfaced.';
+  }, [model.openQuestions, model.actions]);
+
+  const person = useMemo(() => {
+    if (model.supportMembers?.length) return model.supportMembers[0].name;
+    const mentioned = topAction?.people?.find(p => p.role !== 'none');
+    if (mentioned) return mentioned.name;
+    return null;
+  }, [model.supportMembers, topAction]);
+
+  return (
+    <div className="px-10 py-6 border-b border-border bg-brand-orange-50/60">
+      <div className="flex items-center gap-2 mb-4">
+        <Lightbulb className="h-4 w-4 text-brand-orange-600" />
+        <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-orange-700">So what?</h2>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <SoWhatItem icon={<Lightbulb className="h-4 w-4" />} label="The one thing to remember" text={remember} />
+        <SoWhatItem
+          icon={<Sparkles className="h-4 w-4" />}
+          label="The one action to take"
+          text={topAction ? `"${topAction.text}" — ${topAction.owner}${topAction.due ? ` · ${topAction.due}` : ''}` : 'No actions captured yet.'}
+        />
+        <SoWhatItem icon={<AlertTriangle className="h-4 w-4" />} label="One watch-out" text={watchOut} />
+        <SoWhatItem
+          icon={<Users className="h-4 w-4" />}
+          label="One person to loop in"
+          text={person || 'No one was mentioned. Add a Support Circle member if useful.'}
+        />
+      </div>
+    </div>
+  );
+}
+
+function SoWhatItem({ icon, label, text }: { icon: React.ReactNode; label: string; text: string }) {
+  return (
+    <div className="flex items-start gap-3 p-3 rounded-xl bg-white border border-brand-orange-100">
+      <div className="mt-0.5 text-brand-orange-600">{icon}</div>
+      <div>
+        <p className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground mb-1">{label}</p>
+        <p className="text-sm text-foreground leading-relaxed">{text}</p>
+      </div>
+    </div>
   );
 }
 

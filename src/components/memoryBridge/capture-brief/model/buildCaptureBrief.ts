@@ -43,6 +43,7 @@ export async function buildCaptureBrief(meetingId: string): Promise<CaptureBrief
     category: a.category,
     sourceQuote: a.transcript_excerpt || undefined,
     context: a.intent_behind || a.relationship_impact || undefined,
+    twoMinuteStarter: a.two_minute_starter || undefined,
   }));
 
   const rawTranscript: string = meeting.transcript || '';

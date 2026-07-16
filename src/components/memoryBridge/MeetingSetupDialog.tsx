@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { MeetingSetupData } from '@/types/memoryBridge';
-import { X, Plus, Users, MapPin, Heart, Clock } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { loadSetupSuggestions, SetupSuggestion } from './capture-brief/model/suggestSetup';
+import { X, Plus, Users, MapPin, Heart, Clock, Sparkles } from 'lucide-react';
 
 interface MeetingSetupDialogProps {
   open: boolean;
@@ -16,6 +18,7 @@ interface MeetingSetupDialogProps {
 }
 
 export function MeetingSetupDialog({ open, onClose, onStart }: MeetingSetupDialogProps) {
+  const { user } = useAuth();
   const [setupData, setSetupData] = useState<MeetingSetupData>({
     title: '',
     participants: [],
@@ -26,7 +29,38 @@ export function MeetingSetupDialog({ open, onClose, onStart }: MeetingSetupDialo
     emotionalContext: ''
   });
 
+  const [suggestions, setSuggestions] = useState<SetupSuggestion[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+
   const [newParticipant, setNewParticipant] = useState({ name: '', relationship: '' });
+
+  useEffect(() => {
+    if (!open || !user?.id) return;
+    let cancelled = false;
+    setSuggestionsLoading(true);
+    loadSetupSuggestions(user.id).then(sugs => {
+      if (!cancelled) setSuggestions(sugs);
+    }).finally(() => {
+      if (!cancelled) setSuggestionsLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [open, user?.id]);
+
+  const applySuggestion = (s: SetupSuggestion) => {
+    if (s.field === 'title') {
+      setSetupData(prev => ({ ...prev, title: s.value }));
+    } else if (s.field === 'context') {
+      setSetupData(prev => ({ ...prev, context: prev.context ? `${prev.context}\n${s.value}` : s.value }));
+    } else if (s.field === 'participant') {
+      const [name, relationship] = s.value.includes(' · ') ? s.value.split(' · ') : [s.value, 'Support'];
+      setSetupData(prev => ({
+        ...prev,
+        participants: prev.participants.some(p => p.name === name)
+          ? prev.participants
+          : [...prev.participants, { name: name.trim(), relationship: relationship?.trim() || 'Support' }],
+      }));
+    }
+  };
 
   const addParticipant = () => {
     if (newParticipant.name && newParticipant.relationship) {
@@ -73,6 +107,30 @@ export function MeetingSetupDialog({ open, onClose, onStart }: MeetingSetupDialo
         </DialogHeader>
 
         <div className="space-y-6 py-4">
+          {/* Smart suggestions */}
+          {suggestions.length > 0 && (
+            <div className="p-4 rounded-xl bg-brand-orange-50 border border-brand-orange-200 space-y-3">
+              <div className="flex items-center gap-2 text-brand-orange-700">
+                <Sparkles className="h-4 w-4" />
+                <span className="text-[10px] uppercase tracking-wider font-bold">Tap to add</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {suggestions.map(s => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => applySuggestion(s)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-brand-orange-300 bg-white text-brand-orange-800 hover:bg-brand-orange-100 transition-colors"
+                    title={s.reason}
+                  >
+                    <span className="text-[10px] uppercase tracking-wider opacity-70">{s.field}</span>
+                    <span className="max-w-[200px] truncate">{s.value}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Meeting Title */}
           <div className="space-y-2">
             <Label htmlFor="title">Meeting Title *</Label>
