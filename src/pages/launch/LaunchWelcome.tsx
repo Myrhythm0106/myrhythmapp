@@ -199,7 +199,7 @@ export default function LaunchWelcome() {
                             initial={{ opacity: 0, y: 8 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
-                            className={`h-full flex ${isExtreme ? 'animate-pulse-once' : ''}`}
+                            className="h-full flex"
                           >
                             <MyRhythmLetterBar
                               id={l.id}
