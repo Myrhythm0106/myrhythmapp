@@ -141,32 +141,51 @@ export default function LaunchWelcome() {
                   </span>
                 </div>
                 <p className="mt-4 text-xs leading-relaxed" style={{ color: `${CREAM}99` }}>
-                  Tap any letter for what it means and how to raise it.
+                  Each letter is a facet of your rhythm.
                 </p>
               </div>
 
               {/* Letter bars */}
               {bhs && (
-                <div className="flex-1 grid grid-cols-8 gap-2 md:gap-3 h-48 md:h-56 items-end">
-                  {LETTER_ORDER.map((l, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
-                      className="h-full flex"
+                <div className="flex-1">
+                  <div className="grid grid-cols-8 gap-2 md:gap-3 h-48 md:h-56 items-end">
+                    {LETTER_ORDER.map((l, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.2 + i * 0.06 }}
+                        className="h-full flex"
+                      >
+                        <MyRhythmLetterBar
+                          id={l.id}
+                          letter={l.letter}
+                          score={bhs.letters[l.id] ?? 0}
+                          tone="dark"
+                          height="h-full"
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.9 }}
+                    className="mt-5 text-[11px] font-bold uppercase tracking-[0.22em] flex items-center gap-2"
+                    style={{ color: GOLD }}
+                  >
+                    <span
+                      className="inline-block w-6 h-6 rounded-full flex items-center justify-center text-[10px]"
+                      style={{ backgroundColor: GOLD, color: INK }}
+                      aria-hidden="true"
                     >
-                      <MyRhythmLetterBar
-                        id={l.id}
-                        letter={l.letter}
-                        score={bhs.letters[l.id] ?? 0}
-                        tone="dark"
-                        height="h-full"
-                      />
-                    </motion.div>
-                  ))}
+                      ↑
+                    </span>
+                    Tap any letter — reveal what it means &amp; how to raise it
+                  </motion.p>
                 </div>
               )}
+
             </div>
 
             <p
