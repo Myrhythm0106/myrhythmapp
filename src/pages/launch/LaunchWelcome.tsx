@@ -212,28 +212,66 @@ export default function LaunchWelcome() {
               <p className="text-lg leading-relaxed italic mb-8" style={{ color: MOSS }}>
                 {content.subtitle}
               </p>
-              <p className="text-[11px] uppercase tracking-[0.2em] font-bold mb-10" style={{ color: `${INK}80` }}>
+              <p className="text-[11px] uppercase tracking-[0.2em] font-bold mb-8" style={{ color: `${INK}80` }}>
                 We'll meet you wherever you are in your rhythm.
               </p>
 
-              <div className="flex flex-col gap-4 max-w-sm">
+              {/* Founding Member offer */}
+              <div
+                className="mb-6 p-5 border-l-4 max-w-md"
+                style={{ borderColor: GOLD, backgroundColor: `${GOLD}0f` }}
+              >
+                <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-2" style={{ color: GOLD }}>
+                  {isFoundingMemberActive() ? foundingMemberConfig.badge : 'MyRhythm Premium'} · £
+                  {isFoundingMemberActive()
+                    ? foundingMemberConfig.currentPrice.monthly.toFixed(0)
+                    : foundingMemberConfig.regularPrice.monthly.toFixed(0)}
+                  /month
+                </p>
+                <p className="text-sm font-semibold leading-snug" style={{ color: INK, ...SORA }}>
+                  Lock in founding pricing and unlock your full personalized plan.
+                </p>
+                {isFoundingMemberActive() && (
+                  <p className="text-[11px] mt-2 italic" style={{ color: MOSS }}>
+                    Reg. £{foundingMemberConfig.regularPrice.monthly.toFixed(0)}/month — save £
+                    {(
+                      foundingMemberConfig.regularPrice.monthly -
+                      foundingMemberConfig.currentPrice.monthly
+                    ).toFixed(0)}
+                    /month, forever.
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-4 max-w-md">
                 <button
                   onClick={() => navigate('/launch/payment')}
-                  className="w-full py-5 px-8 font-bold text-xs tracking-[0.3em] uppercase transition-all cursor-pointer shadow-lg min-h-[56px]"
+                  className="w-full py-5 px-8 font-bold text-xs tracking-[0.3em] uppercase transition-all cursor-pointer shadow-lg min-h-[56px] flex items-center justify-center gap-3"
                   style={{ backgroundColor: INK, color: CREAM, ...SORA }}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = MOSS)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = INK)}
                 >
-                  Continue
+                  Register &amp; Unlock Your Plan
+                  <span aria-hidden="true">→</span>
                 </button>
-                <button
-                  onClick={() => navigate('/launch/signin')}
-                  className="text-center text-[10px] uppercase tracking-[0.2em] font-bold transition-colors min-h-[44px] hover:text-[#064e3b]"
-                  style={{ color: `${INK}66` }}
-                >
-                  Sign in to existing account
-                </button>
+                <div className="flex items-center justify-between gap-4 pt-1">
+                  <button
+                    onClick={() => navigate('/launch/payment')}
+                    className="text-[10px] uppercase tracking-[0.2em] font-bold transition-colors min-h-[44px] hover:text-[#064e3b] underline underline-offset-4 decoration-[#c9a84c]/40"
+                    style={{ color: `${INK}99` }}
+                  >
+                    See what's included
+                  </button>
+                  <button
+                    onClick={() => navigate('/launch/signin')}
+                    className="text-[10px] uppercase tracking-[0.2em] font-bold transition-colors min-h-[44px] hover:text-[#064e3b]"
+                    style={{ color: `${INK}66` }}
+                  >
+                    Sign in
+                  </button>
+                </div>
               </div>
+
             </div>
 
             {/* Right: numbered highlights */}
