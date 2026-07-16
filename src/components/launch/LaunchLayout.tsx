@@ -39,9 +39,11 @@ export function LaunchLayout({
   const navigate = useNavigate();
   const location = useLocation();
   const { isCaregiver } = usePersona();
+  const { user } = useAuth();
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
+  const showDial = !!user && !PRE_ACCOUNT_PATHS.has(location.pathname);
 
 
   return (
