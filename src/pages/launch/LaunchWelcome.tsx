@@ -37,6 +37,24 @@ const LETTER_ORDER: Array<{ id: LetterId; letter: string }> = [
   { id: 'multiply', letter: 'M' },
 ];
 
+const LETTER_WORDS: Record<LetterId, string> = {
+  mindset: 'Mindset',
+  yesReality: 'Yes to Reality',
+  rhythm: 'Rhythm',
+  harnessSupport: 'Harness Support',
+  yourVictories: 'Your Victories',
+  transform: 'Transform',
+  heal: 'Heal',
+  multiply: 'Multiply',
+};
+
+function bandLabel(total: number): string {
+  if (total >= 80) return 'Strong footing';
+  if (total >= 60) return 'Steady';
+  if (total >= 40) return 'Building';
+  return 'Early days';
+}
+
 export default function LaunchWelcome() {
   const navigate = useNavigate();
   const [persona, setPersona] = useState<Persona>('recovery');
