@@ -13,6 +13,15 @@ import { HelpCircle } from 'lucide-react';
 import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
+import { useAuth } from '@/hooks/useAuth';
+
+const PRE_ACCOUNT_PATHS = new Set([
+  '/launch/welcome',
+  '/launch/signin',
+  '/launch/signup',
+  '/launch/user-type',
+  '/launch/assessment',
+]);
 
 interface LaunchLayoutProps {
   children: ReactNode;
