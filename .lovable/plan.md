@@ -1,55 +1,32 @@
-## Goal
-Every `/launch/*` link in the app must land on a working screen — no 404s, no dead buttons. Fix broken outbound links, add safety-net redirects for known aliases, and add a `/launch/*` catch-all so unknown deep paths (like the current `/launch/account/profile`) recover gracefully instead of hitting NotFound.
+## Two small changes
 
-## Audit findings
+### 1. Gate the You-Are-Here dial behind auth
 
-Cross-checked every `/launch/...` string referenced in `src/**` against the routes defined in `src/App.tsx`. Broken outbound links found:
+**File:** `src/components/launch/LaunchLayout.tsx`
 
-| Where | Broken link | Should go to |
-|---|---|---|
-| `src/components/launch/AccountDropdown.tsx:56` | `/launch/features` | `/launch/store` |
-| `src/pages/launch/LaunchProfile.tsx:81` | `/launch/features` | `/launch/store` |
-| `src/pages/launch/LaunchDashboardLegacy.tsx:108` | `/launch/actions` | `/launch/commit` |
-| `src/pages/journey/brain-injury/JourneyRegister.tsx:336` | `/launch/sign-in` | `/launch/signin` |
-| `src/pages/launch/LaunchDischargeBridge.tsx:46` | `/launch/support-circle` | `/launch/support` |
-| `src/pages/launch/LaunchDischargeBridge.tsx:91` | `/launch/memory-bridge` | `/launch/memory` |
+Wrap `<LaunchYouAreHereDial />` (line 62) so it only renders when the user is authenticated. Use `useAuth()` from `@/hooks/useAuth`; render the dial only when `user` is truthy AND we're not on the pre-account onboarding routes (`/launch/welcome`, `/launch/signin`, `/launch/signup`, `/launch/user-type`, `/launch/assessment`).
 
-Also: the user is currently on `/launch/account/profile`, which is not defined anywhere and currently falls through to `NotFound`. No component navigates there — likely typed/bookmarked — but it exposes the fact that unknown `/launch/*` deep paths 404 today.
+Rationale: on these pages the dial exposes destinations the user hasn't earned yet. Once they land on `/launch/welcome` post-assessment (still pre-signin) OR on any authenticated route, the dial appears.
 
-Every route referenced in `src/launch/routes.ts` (the You-Are-Here dial source of truth) is defined in `App.tsx` and confirmed working.
+Net effect the user asked for: dial hidden until sign-in / registration is complete.
 
-## Changes
+### 2. Allow deselecting an answer on the assessment page
 
-**1. Fix the 6 broken outbound links** in the 5 files above — one-line `navigate(...)` / `ctaRoute` swaps to the correct existing route.
+**File:** `src/pages/launch/LaunchAssessment.tsx`
 
-**2. Add safety-net redirects in `src/App.tsx`** for known `/launch/*` aliases so any hand-typed or historical link recovers instead of 404-ing:
+Two tiny tweaks inside the existing primary/also-fits model — the "primary vs secondary" identification stays exactly as it is:
 
-```tsx
-<Route path="/launch/memory-bridge"  element={<Navigate to="/launch/memory" replace />} />
-<Route path="/launch/support-circle" element={<Navigate to="/launch/support" replace />} />
-<Route path="/launch/brain-games"    element={<Navigate to="/launch/games" replace />} />
-<Route path="/launch/sign-in"        element={<Navigate to="/launch/signin" replace />} />
-<Route path="/launch/features"       element={<Navigate to="/launch/store" replace />} />
-<Route path="/launch/actions"        element={<Navigate to="/launch/commit" replace />} />
-<Route path="/launch/account/*"      element={<Navigate to="/launch/profile" replace />} />
-```
+- **`setPrimary` (line 92):** if the tapped option is already the current primary, clear it (`primary: ''`) instead of returning `prev`. That lets the user untick a primary they've changed their mind on.
+- **`toggleAlsoFits` (line 105):** when the user taps "Also fits" on the current primary, demote it — clear `primary` and add the value to `alsoFits`. (Currently that tap is a no-op.)
 
-**3. Add a `/launch/*` catch-all** just before the global `NotFound` route so any other unknown `/launch/...` deep path lands on Home instead of 404:
+The Continue button already requires a primary (`canContinue = !!current.primary`), so if the user untick everything they simply can't advance until they re-pick — matching the "freedom to change their mind" ask.
 
-```tsx
-<Route path="/launch/*" element={<Navigate to="/launch/home" replace />} />
-```
+### Out of scope
 
-This must be the **last** `/launch/*` route (React Router matches in order) so it never shadows a real route.
+No route changes, no dial-config changes, no assessment scoring changes, no visual redesign. Non-`/launch/*` code untouched.
 
-## Verification
+### Verification
 
-- Typecheck via `tsgo` (auto-run).
-- Manually confirm the 7 alias redirects and 6 fixed links resolve to real screens: click through AccountDropdown → Features & Add-ons, LaunchProfile featured card, Discharge Bridge CTAs, and legacy JourneyRegister sign-in link.
-- Confirm `/launch/account/profile` (current URL) now redirects to `/launch/profile` instead of 404.
-
-## Out of scope
-
-- No changes to `src/launch/routes.ts` (dial config) — already correct.
-- No new pages, no design changes, no route renames of existing working paths.
-- Non-`/launch/*` routes untouched (PR-2 legacy redirects already shipped).
+- `tsgo` typecheck.
+- Manual: visit `/launch/assessment` while signed out → no dial in header; sign in and visit `/launch/home` → dial present.
+- On assessment: tap primary A → tick appears. Tap A again → tick clears, Continue disables. Tap A, then tap "Also fits" on A → A becomes also-fits, primary cleared. Tap B primary → B primary, A stays as also-fits (existing behaviour).
