@@ -92,7 +92,10 @@ export default function LaunchAssessment() {
   const setPrimary = (value: string) => {
     setAnswers((prev) => {
       const existing = prev[question.id] ?? { primary: '', alsoFits: [] };
-      if (existing.primary === value) return prev;
+      // Tapping the current primary again clears it (deselect).
+      if (existing.primary === value) {
+        return { ...prev, [question.id]: { primary: '', alsoFits: existing.alsoFits } };
+      }
       let alsoFits = existing.alsoFits.filter((v) => v !== value);
       if (existing.primary && existing.primary !== value) {
         if (!alsoFits.includes(existing.primary)) alsoFits = [existing.primary, ...alsoFits];
@@ -110,7 +113,13 @@ export default function LaunchAssessment() {
         // No primary yet — promote this tap to primary instead.
         return { ...prev, [question.id]: { primary: value, alsoFits: [] } };
       }
-      if (value === existing.primary) return prev;
+      if (value === existing.primary) {
+        // Demote current primary to "also fits".
+        const alsoFits = existing.alsoFits.includes(value)
+          ? existing.alsoFits
+          : [...existing.alsoFits, value];
+        return { ...prev, [question.id]: { primary: '', alsoFits } };
+      }
       const has = existing.alsoFits.includes(value);
       const alsoFits = has
         ? existing.alsoFits.filter((v) => v !== value)
