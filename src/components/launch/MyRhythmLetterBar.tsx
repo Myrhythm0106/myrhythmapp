@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Lock } from 'lucide-react';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import type { LetterId } from '@/data/launchAssessmentBanks';
 import { bandFor, getLetterInsight } from '@/data/myrhythmLetterInsights';
+import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
 
 const SERIF: React.CSSProperties = { fontFamily: "'Playfair Display', Georgia, serif" };
 
@@ -19,9 +22,14 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
   const band = bandFor(score);
   const pct = Math.round((band / 3) * 100);
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
   const isDark = tone === 'dark';
 
-  const label = `${letter} — ${insight.word}, score ${band} of 3. Tap for what it means and how to raise it.`;
+  const price = isFoundingMemberActive()
+    ? foundingMemberConfig.currentPrice.monthly.toFixed(0)
+    : foundingMemberConfig.regularPrice.monthly.toFixed(0);
+
+  const label = `${letter} — ${insight.word}, score ${band} of 3. Tap for your personal read.`;
 
   const trigger = (
     <button
@@ -56,6 +64,9 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
         style={isDark ? { fontFamily: "'Sora', sans-serif" } : undefined}
       >
         {letter}
+        <span className={isDark ? 'ml-1 text-[9px] opacity-60' : 'ml-1 text-[9px] text-stone-400'}>
+          {band}/3
+        </span>
       </span>
     </button>
   );
@@ -75,7 +86,7 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
           </div>
           <p className="text-[10px] tracking-[0.16em] uppercase text-stone-400 mb-2">{insight.lens}</p>
           <p className="text-sm text-stone-700 leading-relaxed mb-2">{insight.bands[band]}</p>
-          <p className="text-[10px] text-stone-400 uppercase tracking-[0.14em]">Tap for more</p>
+          <p className="text-[10px] text-teal-700 uppercase tracking-[0.14em] font-bold">Tap for your personal read →</p>
         </HoverCardContent>
       </HoverCard>
 
@@ -96,27 +107,65 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
           </DialogHeader>
 
           <div className="space-y-5 pt-2">
-            <p className="text-sm text-stone-600 italic">{insight.short}</p>
-
+            {/* FREE TIER — teaser */}
             <div>
               <h4 className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500 mb-2">
-                What your score means
+                What this facet means
               </h4>
               <p className="text-sm text-stone-800 leading-relaxed">{insight.bands[band]}</p>
             </div>
 
-            <div>
-              <h4 className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500 mb-2">
-                {band === 3 ? 'Ways to protect this' : 'Ways to raise this'}
-              </h4>
-              <ul className="space-y-2">
-                {insight.suggestions[band].map((s, i) => (
-                  <li key={i} className="flex gap-3 text-sm text-stone-800 leading-relaxed">
-                    <span style={SERIF} className="italic text-teal-700 shrink-0">{String(i + 1).padStart(2, '0')}</span>
-                    <span>{s}</span>
-                  </li>
-                ))}
-              </ul>
+            {/* PREMIUM TIER — locked */}
+            <div className="relative rounded-sm border border-[#c9a84c]/40 bg-[#f5f0e0]/40 p-4 overflow-hidden">
+              <div className="pointer-events-none select-none blur-[5px] opacity-70 space-y-3" aria-hidden="true">
+                <p className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500">
+                  Your personal read
+                </p>
+                <p className="text-sm text-stone-800 leading-relaxed italic">{insight.short}</p>
+                <p className="text-[10px] tracking-[0.18em] uppercase font-medium text-stone-500 pt-1">
+                  {band === 3 ? 'Ways to protect this' : 'Ways to raise this'}
+                </p>
+                <ul className="space-y-2">
+                  {insight.suggestions[band].map((s, i) => (
+                    <li key={i} className="flex gap-3 text-sm text-stone-800 leading-relaxed">
+                      <span style={SERIF} className="italic text-teal-700 shrink-0">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span>{s}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-center">
+                <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#064e3b] text-[#f5f0e0] text-[10px] uppercase tracking-[0.22em] font-bold">
+                  <Lock className="w-3 h-3" /> Premium
+                </span>
+                <p className="text-sm font-semibold text-[#064e3b] max-w-xs" style={{ fontFamily: "'Sora', sans-serif" }}>
+                  Unlock your personal read &amp; the {band === 3 ? 'protect' : 'raise'}-it playbook.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate('/launch/payment');
+                  }}
+                  className="mt-1 px-5 py-3 bg-[#064e3b] hover:bg-[#0d7a5f] text-[#f5f0e0] text-[10px] uppercase tracking-[0.24em] font-bold transition-colors min-h-[44px]"
+                  style={{ fontFamily: "'Sora', sans-serif" }}
+                >
+                  Unlock full plan — £{price}/mo →
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpen(false);
+                    navigate('/launch/payment');
+                  }}
+                  className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#064e3b]/70 hover:text-[#064e3b] underline underline-offset-4 decoration-[#c9a84c]/60"
+                >
+                  See what's included
+                </button>
+              </div>
             </div>
 
             <p className="text-[10px] text-stone-400 leading-relaxed border-t border-stone-100 pt-3">
