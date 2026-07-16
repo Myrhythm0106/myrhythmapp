@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, FileDown, FileSpreadsheet, FileText, Loader2 } from 'lucide-react';
+import { ArrowLeft, FileDown, FileSpreadsheet, FileText, Loader2, Stethoscope } from 'lucide-react';
 import { toast } from 'sonner';
 import { buildCaptureBrief } from './model/buildCaptureBrief';
 import { CaptureBriefModel, SectionKey } from './model/types';
@@ -23,7 +23,7 @@ export function CaptureDeliverableView() {
   const [loading, setLoading] = useState(true);
   const [sections, setSections] = useState(DEFAULT_SECTIONS);
   const [includeSchedule, setIncludeSchedule] = useState(true);
-  const [exporting, setExporting] = useState<null | 'pdf' | 'docx' | 'xlsx'>(null);
+  const [exporting, setExporting] = useState<null | 'pdf' | 'docx' | 'xlsx' | 'clinician'>(null);
 
   useEffect(() => {
     if (!meetingId) return;
@@ -58,24 +58,29 @@ export function CaptureDeliverableView() {
     return `${safe || 'capture-brief'}-${date}`;
   }, [model]);
 
-  async function handleExport(kind: 'pdf' | 'docx' | 'xlsx') {
+  async function handleExport(kind: 'pdf' | 'docx' | 'xlsx' | 'clinician') {
     if (!model) return;
     try {
       setExporting(kind);
-      const opts = { sections, filename, includeSchedule };
-      if (kind === 'pdf') {
-        const { exportCaptureBriefPdf } = await import('./exporters/pdf');
-        await exportCaptureBriefPdf(model, opts);
-      } else if (kind === 'docx') {
-        const { exportCaptureBriefDocx } = await import('./exporters/docx');
-        await exportCaptureBriefDocx(model, opts);
+      if (kind === 'clinician') {
+        const { exportClinicianPdf } = await import('./exporters/clinicianPdf');
+        await exportClinicianPdf(model, filename);
       } else {
-        const { exportCaptureBriefXlsx } = await import('./exporters/xlsx');
-        await exportCaptureBriefXlsx(model, opts);
+        const opts = { sections, filename, includeSchedule };
+        if (kind === 'pdf') {
+          const { exportCaptureBriefPdf } = await import('./exporters/pdf');
+          await exportCaptureBriefPdf(model, opts);
+        } else if (kind === 'docx') {
+          const { exportCaptureBriefDocx } = await import('./exporters/docx');
+          await exportCaptureBriefDocx(model, opts);
+        } else {
+          const { exportCaptureBriefXlsx } = await import('./exporters/xlsx');
+          await exportCaptureBriefXlsx(model, opts);
+        }
       }
-      toast.success(`Downloaded ${kind.toUpperCase()}`);
+      toast.success(`Downloaded ${kind === 'clinician' ? 'clinician summary' : kind.toUpperCase()}`);
     } catch (e: any) {
-      toast.error(e?.message || `Could not export ${kind.toUpperCase()}`);
+      toast.error(e?.message || `Could not export ${kind === 'clinician' ? 'clinician summary' : kind.toUpperCase()}`);
     } finally {
       setExporting(null);
     }
@@ -138,6 +143,16 @@ export function CaptureDeliverableView() {
             >
               {exporting === 'docx' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <FileText className="h-4 w-4 mr-2" />}
               .docx
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="min-h-[44px]"
+              onClick={() => handleExport('clinician')}
+              disabled={!!exporting}
+            >
+              {exporting === 'clinician' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Stethoscope className="h-4 w-4 mr-2" />}
+              Clinician
             </Button>
             <Button
               size="sm"

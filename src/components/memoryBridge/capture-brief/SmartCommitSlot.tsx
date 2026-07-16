@@ -24,6 +24,7 @@ import {
   Pencil,
   HeartPulse,
   ListTree,
+  Play,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import type {
@@ -220,6 +221,16 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
 
   return (
     <div className="mt-3 p-4 rounded-xl bg-card border border-border space-y-3">
+      {/* 2-minute starter */}
+      {action.twoMinuteStarter && (
+        <div className="p-3 rounded-lg bg-brand-orange-50 border border-brand-orange-200 space-y-2">
+          <div className="flex items-center gap-2 text-brand-orange-700">
+            <Play className="h-3.5 w-3.5 fill-current" />
+            <span className="text-[10px] uppercase tracking-wider font-bold">2-minute starter</span>
+          </div>
+          <p className="text-sm text-foreground leading-relaxed">{action.twoMinuteStarter}</p>
+        </div>
+      )}
       {/* Toggle chips */}
       <div className="flex items-center gap-1.5 flex-wrap">
         <ToggleChip

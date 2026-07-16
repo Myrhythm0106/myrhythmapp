@@ -86,6 +86,7 @@ export interface BriefAction {
   category?: string;
   sourceQuote?: string;
   context?: string;
+  twoMinuteStarter?: string;
 
   // SMART scheduling
   dateMentionedInMeeting?: boolean;

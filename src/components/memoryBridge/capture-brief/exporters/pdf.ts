@@ -1,7 +1,7 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { saveAs } from 'file-saver';
-import { CaptureBriefModel, ExportOptions } from '../model/types';
+import { BriefAction, CaptureBriefModel, ExportOptions } from '../model/types';
 
 const BRAND_ORANGE: [number, number, number] = [234, 88, 12]; // tailwind orange-600
 const INK: [number, number, number] = [17, 24, 39];
@@ -140,9 +140,13 @@ export async function exportCaptureBriefPdf(model: CaptureBriefModel, opts: Expo
     const head = sched
       ? [['#', 'Action', 'Owner', 'Start', 'Due', 'Reminders', 'People', 'Pri', 'Conf.']]
       : [['#', 'Action', 'Owner', 'Due', 'Priority', 'Conf.']];
+    const actionText = (a: BriefAction) => {
+      if (!a.twoMinuteStarter) return a.text;
+      return `${a.text}\n\n2-min starter: ${a.twoMinuteStarter}`;
+    };
     const body = model.actions.map((a, i) => {
       if (!sched) {
-        return [String(i + 1), a.text, a.owner, a.due || '—', a.priorityLabel, `${Math.round(a.confidence * 100)}%`];
+        return [String(i + 1), actionText(a), a.owner, a.due || '—', a.priorityLabel, `${Math.round(a.confidence * 100)}%`];
       }
       const top = a.scheduled
         ? { date: a.scheduled.startDate, time: a.scheduled.startTime }
@@ -151,7 +155,7 @@ export async function exportCaptureBriefPdf(model: CaptureBriefModel, opts: Expo
       const dueLabel = a.dueDate?.label || a.dueDate?.date || a.due || '—';
       const reminders = (a.scheduled?.reminders || []).map(r => `${r.minutesBefore}m`).join(', ') || '—';
       const people = (a.people || []).filter(p => p.role !== 'none').map(p => `${p.name} (${p.role})`).join(', ') || '—';
-      return [String(i + 1), a.text, a.owner, start, dueLabel, reminders, people, a.priorityLabel, `${Math.round(a.confidence * 100)}%`];
+      return [String(i + 1), actionText(a), a.owner, start, dueLabel, reminders, people, a.priorityLabel, `${Math.round(a.confidence * 100)}%`];
     });
     autoTable(doc, {
       startY: y,
