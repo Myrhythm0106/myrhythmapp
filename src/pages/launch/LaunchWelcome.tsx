@@ -98,9 +98,7 @@ export default function LaunchWelcome() {
   const content = getMessage(persona);
 
   const letterScores = bhs ? LETTER_ORDER.map((l) => bhs.letters[l.id] ?? 0) : [];
-  const lowestScore = letterScores.length ? Math.min(...letterScores) : 0;
-  const highestScore = letterScores.length ? Math.max(...letterScores) : 0;
-  const lowestIdx = letterScores.indexOf(lowestScore);
+  const lowestIdx = letterScores.length ? letterScores.indexOf(Math.min(...letterScores)) : -1;
   const lowestEntry = lowestIdx >= 0 ? LETTER_ORDER[lowestIdx] : null;
   const lowestLetter = lowestEntry ? { ...lowestEntry, word: LETTER_WORDS[lowestEntry.id] } : null;
 
