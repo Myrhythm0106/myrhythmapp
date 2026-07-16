@@ -28,10 +28,11 @@ export const MyRhythmLetterBar: React.FC<Props> = ({ id, letter, score, tone = '
       type="button"
       onClick={() => setOpen(true)}
       aria-label={label}
-      className={`group flex flex-col items-center gap-2 w-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 rounded-sm ${
+      className={`group flex flex-col items-center gap-2 w-full cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 rounded-sm transition-transform hover:-translate-y-0.5 ${
         isDark ? 'focus-visible:ring-[#c9a84c] focus-visible:ring-offset-[#064e3b]' : 'focus-visible:ring-teal-600'
       }`}
     >
+
       <div
         className={`w-full ${height} rounded-sm relative overflow-hidden transition-shadow ring-1 ring-transparent ${
           isDark
