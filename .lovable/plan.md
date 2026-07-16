@@ -1,44 +1,25 @@
+## Changes to `src/pages/launch/LaunchWelcome.tsx`
 
-## Chosen direction: Topographic Pulse (dark hero)
+### 1. Make the click-to-reveal on letter bars discoverable
+The `MyRhythmLetterBar` component already opens a full detail dialog on click (letter meaning, score band, ways to raise/protect it) — same as the pre-redesign version. It just doesn't look tappable in the dark hero. Fix by:
 
-Locked design tokens: Emerald Prestige palette (`#064e3b` deep emerald, `#0d7a5f` mid emerald, `#c9a84c` warm gold, `#f5f0e0` cream), Sora headings + Manrope body, Magazine layout with snapshot as the top hero band.
+- Change the hero helper copy from "Tap any letter for what it means and how to raise it." → **"Tap any letter → see what it means & how to raise it"** with an inline gold arrow, moved directly under the letter-bar grid so it sits with what it describes.
+- Add a subtle gold underline + `cursor-pointer` hover lift on each bar (via `MyRhythmLetterBar` dark tone) so it reads as interactive.
+- Add a tiny "TAP" pill above the first bar on load (fades out after 3s) as an affordance hint.
 
-## What I'll build
+No changes to the dialog content itself — the rich reveal already works.
 
-### 1. Rewrite `src/pages/launch/LaunchWelcome.tsx`
-Replace the current stone-neutral layout with a framed white card on a cream (`#f5f0e0`) canvas, containing four stacked bands:
+### 2. Add a Register / package CTA
+Right now the primary button says "Continue" and silently routes to `/launch/payment`. Replace the CTA block (left column, lines ~198–215) with a clearer sign-up offer:
 
-1. **Chip row** — `Welcome to MyRhythm` (filled emerald), `Founding Edition · v0.1` (mid-emerald outline), `Memory-First Design` (gold-tinted).
-2. **Dark hero snapshot band** (deep emerald `#064e3b`) — this is the "map on top". Contains:
-   - Left: gold eyebrow "Your starting MYRHYTHM snapshot", the `/100` total set in Sora 7xl on cream, plus the "Tap any letter…" helper in cream/60.
-   - Right: the 8 MYRHYTHM letter bars in a dark-tone variant (gold fills with a soft gold glow, cream letter labels), driven by the real `bhs` data.
-   - Faint gold topographic contour SVG behind the whole band at 10% opacity.
-   - Bottom-of-band caveat: "A snapshot only — not a clinical score…" in cream/30 italic uppercase, above a hairline separator.
-3. **Two-column magazine body**:
-   - Left 7/12: persona headline in Sora uppercase deep emerald, italic mid-emerald subtitle, gold uppercase micro-tag "We'll meet you wherever you are in your rhythm", then the primary `CONTINUE` button (deep emerald fill, cream text, min-h 56px) and the tiny "Sign in to existing account" link below it.
-   - Right 5/12 on cream/30 bg: the three persona highlights as `01 / 02 / 03` in gold Sora with the highlight text in deep emerald and a gold-underline decoration.
-4. **Footer strip** — medical disclaimer left, "Built with Memory-First Design" tag right, tiny uppercase.
+- **Primary button:** `Register & Unlock Your Full Plan →` — deep emerald, routes to `/launch/payment`.
+- **Supporting line above button:** small gold eyebrow "Founding Member · £10/month" (pulled from `foundingMemberConfig` in `src/config/pricing.ts` so it stays truthful), plus one-line value: "Lock in founding pricing and get your full personalized plan."
+- **Secondary link below:** keep "Sign in to existing account" → `/launch/signin`.
+- Add a third micro-link: "See what's included" → also `/launch/payment` (same destination, lower-commitment label) for users who want to browse before committing.
 
-### 2. Extend `src/components/launch/MyRhythmLetterBar.tsx`
-Add `tone?: 'light' | 'dark'` and `height?: string` props. `dark` swaps to a `#f5f0e0/10` track, `#c9a84c` fill with a soft gold glow, and cream Sora letter labels. Existing light usage is unchanged. Dialog/HoverCard content stays as-is (they open on their own surface).
+### 3. Keep everything else unchanged
+Hero, magazine layout, persona copy, disclaimer, and animation timings stay as-is. No changes to `MyRhythmLetterBar` beyond the light hover affordance in dark tone. No pricing logic changes — only reading the existing founding price for display.
 
-### 3. Motion (framer-motion, already in project)
-On mount: card fades up 12px; the `/100` number ticks 0 → total over 900ms; letter bars fill left-to-right with a 60ms stagger. No looping motion.
-
-### 4. Preserved verbatim
-- All persona-driven copy from `getMessage()` (headline, italic subtitle, three highlights).
-- `LETTER_ORDER` + `bhs` data flow — no scoring changes.
-- Chips: `EditionBadge` + `MemoryFirstChip` + welcome eyebrow.
-- Medical disclaimer text and `MEMORY_FIRST_DESIGN_TAGLINE`.
-- Primary CTA → `/launch/payment`. Secondary "Sign in" → `/launch/signin` (fixed from the current `/auth`).
-- `LaunchPageHeader` + `LaunchQuickActions` remain.
-
-### 5. Out of scope for this turn
-The returning-user guard (auth + `assessmentCompleted` → redirect to `/launch/home`) — user's current message is scoped to the visual redesign only. Happy to add it next.
-
-## Technical notes
-
-- No new dependencies. Colours applied via inline Tailwind `[#hex]` classes matching the locked palette (component-scoped, kept out of shared tokens because this page is a unique moment).
-- Sora + Manrope loaded via a Google Fonts `<link>` injected once from the component (or `index.html`, TBD during build — cheaper to keep the `<link>` inside the component for scope).
-- No touch-target regressions: `CONTINUE` remains min-h 56px, letter bars remain full-column tappable buttons.
-- Typecheck via `tsgo`; Playwright verify with a seeded `myrhythm_launch_mode` localStorage entry so the snapshot renders.
+### Out of scope
+- Building a new pricing/packages page (already exists at `/launch/payment`).
+- Auth-aware "returning user → /launch/home" redirect (still deferred per prior plan).
