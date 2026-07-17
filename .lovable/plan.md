@@ -1,160 +1,115 @@
-# v0.1 Plan — Freemium Reveal + Memory Bridge SMARTness + Clinician PDF
+## Scope
 
-## Goals
-1. Make the free assessment teaser feel generous and specific, not withholding.
-2. Make Memory Bridge the clearest, easiest capture-to-action flow in the category.
-3. Repackage capture output into a one-page clinician format that proves the Clinical-Ready vs Life-Ready Gap.
-
-## Out of scope for this plan
-- "Bring a witness" live/async co-listen (flagged for v0.2; saved to memory).
-- New backend tables or realtime plumbing beyond existing schema.
-- Changes to `/launch/payment` pricing logic.
-- Radar/spider chart toggle for MYRHYTHM snapshot.
+Three new items only. Already-shipped v0.1 work (freemium reveal, Memory Bridge upgrades, clinician PDF, `useLaunchMode` fix, "Bring a witness" v0.2 flag) stays as-is.
 
 ---
 
-## 1. Revised freemium reveal on `/launch/welcome`
+## 1. Sign-in fix (blocker)
 
-### Current state
-- `LaunchWelcome.tsx` shows the 8-letter MYRHYTHM bar chart with a `/100` score and band label.
-- `MyRhythmLetterBar.tsx` opens a dialog with a free band-summary paragraph and a frosted/blurred premium section.
-- The "focus this week" card and guide ticks are already in place.
+**Root cause:** `LaunchRegister.tsx` has `BYPASS_REGISTRATION = true` — signup only writes `myrhythm_mock_user` to `localStorage`; no real Supabase user exists, so `LaunchSignIn` correctly rejects the login.
 
-### Changes
-
-#### A. Replace the frosted blur with a structured teaser
-In `MyRhythmLetterBar.tsx`:
-- Remove the blurred overlay pattern.
-- The free tier shows:
-  - Letter + word + band score.
-  - The band meaning paragraph (already free).
-  - A new **persona-specific line** drawn from `usePersona` / `mapToPersona`, e.g. for recovery: "This matters for your rhythm because clear windows can shift after a brain injury." (copy to be added per persona).
-  - The **headings** of the locked personal read, with placeholder copy that proves specificity:
-    - "Your pattern"
-    - "What's driving your score"
-    - "Your first move this week"
-- The premium section is not blurred; instead, each heading shows a one-line teaser like "Based on your answers and your [persona context], this is personal to you." and a lock chip + CTA.
-- CTA button copy changes from generic "Unlock full plan" to **"Become a Founding Member — £{price}/mo"** when `isFoundingMemberActive()` is true, matching the locked landing CTA rule.
-
-#### B. Hero refinements (keep existing, tighten)
-- Keep guide ticks, `/3` labels, band label, and "focus this week" card.
-- Ensure the "focus this week" card shows the **lowest facet word** and a specific teaser: "Your personalized 3-step raise-it plan is behind the paywall."
-- Keep the primary CTA as "Register & Unlock Your Plan" but align secondary copy with Founding Member framing.
-
-#### C. Add persona-specific free teaser line
-- Add a small helper in `src/launch/persona/copy.ts` or a new `src/launch/persona/snapshotTeasers.ts` that returns one sentence per `Persona` per `LetterId`.
-- Wire it into `MyRhythmLetterBar` so the free tier always includes one line that competitors cannot copy.
-
-### Files touched
-- `src/components/launch/MyRhythmLetterBar.tsx`
-- `src/pages/launch/LaunchWelcome.tsx`
-- `src/launch/persona/copy.ts` (or new `snapshotTeasers.ts`)
+**Changes**
+- `src/pages/launch/LaunchRegister.tsx`: flip `BYPASS_REGISTRATION = false`; keep the "Check your email" screen; add an **"I've verified — sign in now"** CTA that navigates to `/launch/signin` with `state: { email }`.
+- `src/pages/launch/LaunchSignIn.tsx`:
+  - Read `location.state.email` on mount and prefill the email field.
+  - Match Supabase's `"Email not confirmed"` string to trigger the existing resend block.
+  - On `"Invalid login credentials"`, show inline helpers: **"No account? Create one"** + **"Registered but not verified? Resend verification"**. Keep the Magic Link button.
+- **Supabase Auth setting (dashboard toggle, no code):** recommend turning **off** "Confirm email" in Auth → Providers → Email during testing so signup → sign-in is instant. Turn back on before public launch.
 
 ---
 
-## 2. Memory Bridge v0.1 upgrades — pre-capture context, "So what?" card, two-minute starter
+## 2. Zero-cost payment path (Access Code gate)
 
-### 2.1 Pre-capture one-tap context
+No Stripe, no real cards during testing. Payment surface stays; it just checks a code.
 
-#### Current state
-- `MeetingSetupDialog.tsx` opens with empty fields for title, participants, context, location, energy, emotional context.
+**Data (single migration)**
+- `founding_access_codes`: `code` (unique), `max_uses`, `uses_remaining`, `active`, timestamps. RLS: no direct client SELECT; only the RPC reads.
+- `redeem_founding_code(p_code text)` SECURITY DEFINER: validates code, decrements `uses_remaining`, sets `profiles.founding_comped = true`, inserts `subscriptions` row (`plan_type='founding_comped'`, `status='active'`). Returns `{ success, error? }`.
+- Seed codes (e.g. `FOUNDING2026`, `TESTER01`–`TESTER10`) via `supabase--insert`.
 
-#### Changes
-In `MeetingSetupDialog.tsx` and a new helper `src/components/memoryBridge/capture-brief/model/suggestSetup.ts`:
-- Auto-suggest the **title** from the user's next calendar event in the next 2 hours (if calendar integration exists), or from recent recording titles.
-- Auto-suggest **participants** from:
-  - The Support Circle.
-  - People mentioned in the last 2 recordings with the same title pattern.
-- Auto-suggest **context** from a one-line template based on meeting type + persona + last recording topic.
-- Surface these as **chips above the form**, not pre-filled inputs. One tap applies the suggestion. This keeps the form fast while making the AI output 3× more relevant.
-- Energy level defaults to the most recent Energy Check if today, otherwise stays at 5.
+**UI**
+- Payment surface (`LaunchPayment.tsx` / `MVPPaymentPage.tsx` — confirm on read): replace Stripe CTA with an **Access Code** input + "Unlock Founding Access" button that calls the RPC. Success → route to `/launch/welcome`. Invalid/exhausted → inline error.
+- Existing `get_user_subscription_status()` already returns `founding_comped`; downstream gating just works.
 
-### 2.2 "So what?" lead card in Capture Brief
+**Founding pricing copy**
+- `src/config/pricing.ts`: bump `launchDate` forward (e.g. `2026-08-01`) so `isFoundingMemberActive()` returns true and reveal + payment screens render **"Become a Founding Member — £{price}/mo"**.
 
-#### Current state
-- `CaptureBriefPreview.tsx` opens with a cover, stats, and an "Executive summary" section.
-
-#### Changes
-- Add a new "So what?" card immediately below the stats row (always visible, even when summary is toggled off):
-  - **The one thing to remember** — one sentence, derived from the executive summary or the highest-confidence action.
-  - **The one action to take** — top-priority action with owner and due.
-  - **One watch-out** — from open questions or low-confidence actions.
-  - **One person to loop in** — from `supportMembers` or `people` on the top action.
-- Keep the existing sections; this card is a lead, not a replacement.
-
-### 2.3 Surface `two_minute_starter` on every action
-
-#### Current state
-- `BriefAction` does not currently carry `two_minute_starter`. The database field exists on `extracted_actions` (`two_minute_starter`).
-- `SmartCommitSlot.tsx` shows scheduling suggestions but not the starter.
-
-#### Changes
-- Update `buildCaptureBrief.ts` to map `two_minute_starter` from `extracted_actions` into `BriefAction`.
-- Update `SmartCommitSlot.tsx` to show the starter as a small card below the action text:
-  - Label: "2-minute starter"
-  - The starter text.
-  - A "Start now" button that marks the action as `in_progress`.
-- Update the PDF and DOCX exporters to include the starter in the action register.
-
-### Files touched
-- `src/components/memoryBridge/MeetingSetupDialog.tsx`
-- `src/components/memoryBridge/capture-brief/model/suggestSetup.ts` (new)
-- `src/components/memoryBridge/capture-brief/CaptureBriefPreview.tsx`
-- `src/components/memoryBridge/capture-brief/SmartCommitSlot.tsx`
-- `src/components/memoryBridge/capture-brief/model/buildCaptureBrief.ts`
-- `src/components/memoryBridge/capture-brief/model/types.ts`
-- `src/components/memoryBridge/capture-brief/exporters/pdf.ts`
-- `src/components/memoryBridge/capture-brief/exporters/docx.ts`
+**When v1 ships:** swap the access-code panel for real Stripe checkout. Same `subscriptions` row shape, no other code changes.
 
 ---
 
-## 3. Clinician one-page PDF redesign
+## 3. Deloitte/Bain-tier capture + transcripts
 
-### Current state
-- `exporters/pdf.ts` produces a multi-page Capture Brief with executive summary, action register, decisions, questions, and optional transcript.
-- Clinicians rarely need all of that; they need symptoms, commitments, and red flags.
+Plumbing exists (`meeting_recordings`, `extracted_actions`, `TranscriptEditor`, `buildCaptureBrief`, PDF/DOCX/XLSX/Clinician exporters, AssemblyAI live). This tier is deliverable quality + export options + reliability — not new AI.
 
-### Changes
-- Add a new export option/kind: `clinician`.
-- In `CaptureDeliverableView.tsx`, add a fourth export button: **"Clinician summary (PDF)"**.
-- Create `src/components/memoryBridge/capture-brief/exporters/clinicianPdf.ts`:
-  - One page, A4.
-  - Header: patient identifier (first name only + date), MyRhythm logo line, confidentiality footer.
-  - Three sections:
-    1. **Symptoms / concerns mentioned** — extracted from transcript via keyword/heuristic list (fatigue, headache, confusion, anxiety, sleep, etc.) plus source quotes.
-    2. **Commitments made / actions agreed** — top actions with owner, due, and confidence.
-    3. **Red flags / open questions** — unresolved questions plus any explicitly urgent language.
-  - Footer: "MyRhythm · Confidential — Not medical advice. v0.1 Founding Edition."
-- Reuse existing `buildCaptureBrief` output; no new AI call needed for v0.1. Use simple keyword matching for symptoms.
+**A. Recording reliability**
+- `src/hooks/memoryBridge/useRealtimeTranscription.ts`: switch capture from `MediaRecorder` timeslices to Web Audio API PCM → WAV upload. Kills iOS Safari corrupted-webm 400s.
+- Surface AssemblyAI **speaker diarization** ("Speaker 1 / Speaker 2") in `parseTranscriptTurns`.
+- `TranscriptEditor` already has a confidence badge (keep) and low-confidence warning (keep). Add a small **"Edit history (last 5)"** dropdown backed by the new `transcript_revisions` table.
 
-### Files touched
-- `src/components/memoryBridge/capture-brief/CaptureDeliverableView.tsx`
-- `src/components/memoryBridge/capture-brief/exporters/clinicianPdf.ts` (new)
-- `src/components/memoryBridge/capture-brief/exporters/pdf.ts` (minor, if shared helpers)
+**B. Deliverable formats — Word / Excel / Google-ready**
+
+Existing `.docx` files open natively in **Microsoft Word AND Google Docs** (File → Open → Upload). Existing `.xlsx` files open natively in **Microsoft Excel AND Google Sheets** the same way. No new export code is needed for cross-suite compatibility — only the UI needs to say so.
+
+Format picker in `CaptureDeliverableView`:
+1. **Executive Summary — Word / Google Docs (.docx)** — 1-page polish over existing DOCX exporter. "So what?" card + top 3 decisions + top 3 actions with owners/dates. Persona-aware register via `usePersona`.
+2. **Full Annotated Transcript — PDF** — new exporter. Verbatim, speaker-labelled, timestamped, with margin colour codes: decisions (blue), actions (green), open questions (amber), watch-outs (red). Colours mapped from existing `extracted_actions.category`. *(New: `exporters/annotatedTranscriptPdf.ts`.)*
+3. **Action Register — Excel / Google Sheets (.xlsx)** — polish the existing `xlsx.ts` exporter: Action, Owner, Due, Priority, Confidence, Two-minute starter, Source quote. Already opens in both suites.
+4. **Clinician One-Pager — PDF** — already shipped; unchanged.
+5. **Copy actions as table (clipboard)** — new small button. Tab-separated `Action \t Owner \t Due \t Priority` — pastes straight into Word, Excel, Google Docs, Google Sheets, Slack, email. No download, no auth, instant.
+
+**Helper text under the export panel:**
+> *"Word and Excel files download to your device. To use them in Google Docs or Google Sheets, open Drive and upload the file (File → Open → Upload)."*
+
+**Deliberately NOT in v0.1:** per-user Google Drive OAuth ("Send to my Drive"). Wrong shape for testing (each tester would need to authorise Google), adds an auth surface, and adds no capability beyond File → Open. Deferred to v1.
+
+**C. Defensible edits**
+- New `transcript_revisions` table (`meeting_id`, `user_id`, `previous_transcript`, `new_transcript`, `created_at`) + RLS scoped to owner.
+- `TranscriptEditor` writes a revision row on save; "Edit history (last 5)" dropdown reads it.
+
+**D. Professional footer**
+- All four exports render a footer strip: `Prepared by MyRhythm · Confidence {avg}% · {date}` above the existing 3pt confidentiality line (per project standard).
+
+---
+
+## Files touched
+
+- `src/pages/launch/LaunchRegister.tsx`
+- `src/pages/launch/LaunchSignIn.tsx`
+- `src/pages/launch/LaunchPayment.tsx` (or `MVPPaymentPage.tsx` — confirm on read)
+- `src/config/pricing.ts` (launchDate bump)
+- `src/hooks/memoryBridge/useRealtimeTranscription.ts` (WAV/PCM path)
+- `src/components/memoryBridge/TranscriptEditor.tsx` (Edit history dropdown; revision write on save)
+- `src/components/memoryBridge/capture-brief/CaptureDeliverableView.tsx` (renamed export buttons + helper text + "Copy actions as table")
+- `src/components/memoryBridge/capture-brief/exporters/pdf.ts`, `docx.ts`, `xlsx.ts` (exec-summary polish + footer strip)
+- `src/components/memoryBridge/capture-brief/exporters/annotatedTranscriptPdf.ts` (new)
+- `src/components/memoryBridge/capture-brief/exporters/copyActionsTable.ts` (new — tab-separated clipboard writer)
+
+**Migrations**
+- `founding_access_codes` + `redeem_founding_code()` RPC + seed codes.
+- `transcript_revisions` table + RLS.
+
+---
+
+## Out of scope
+
+- Real Stripe integration (v1).
+- Per-user Google Drive / Docs / Sheets OAuth (v1).
+- New AI models beyond AssemblyAI diarization already available.
+- "Bring a witness" co-listen (v0.2, already flagged).
 
 ---
 
 ## Acceptance criteria
 
-### Freemium reveal
-- [ ] Tapping a letter opens a dialog with free band summary + persona line + structured premium teaser (no blur).
-- [ ] Premium CTA reads "Become a Founding Member — £{price}/mo" during founding period.
-- [ ] "Focus this week" card still surfaces the lowest facet with unlock CTA.
-
-### Memory Bridge
-- [ ] Meeting setup dialog shows suggestion chips for title, participants, and context when data is available.
-- [ ] Capture Brief preview shows a "So what?" card with one remember/action/watch-out/person.
-- [ ] Each action card shows a "2-minute starter" when the field is populated.
-
-### Clinician PDF
-- [ ] A "Clinician summary (PDF)" button exists in Capture Deliverable view.
-- [ ] Exported PDF is one page with symptoms, commitments, and red flags sections.
-- [ ] Footer contains the required confidentiality / not-medical-advice disclaimer.
-
----
-
-## Technical notes
-- No new Supabase migrations required; all data fields already exist.
-- `two_minute_starter` may be null for older recordings; UI handles missing gracefully.
-- Persona teaser copy should be short (< 120 chars) and avoid medical claims.
-- Keep all primary tap targets ≥ 56px and max 3 primary choices per screen per existing design rules.
+- [ ] Register → sign out → sign in works end-to-end against real Supabase (with "Confirm email" off in dashboard during test).
+- [ ] "Email not confirmed" shows resend block; "Invalid credentials" shows create-account + resend helpers with prefilled email.
+- [ ] A valid access code on the payment screen unlocks `/launch/welcome` and downstream gated surfaces; no Stripe call fires.
+- [ ] Invalid/exhausted codes show a clear inline error.
+- [ ] Founding Member CTA copy renders on reveal + payment screens after `launchDate` bump.
+- [ ] iOS Safari recording uploads WAV successfully; transcript shows speaker labels + confidence badge.
+- [ ] Deliverable view shows 4 export options with the new labels ("Word / Google Docs", "Excel / Google Sheets"), plus "Copy actions as table" and the helper line about File → Open.
+- [ ] Downloaded `.docx` opens correctly in Microsoft Word and, after upload, in Google Docs. Downloaded `.xlsx` opens in Microsoft Excel and, after upload, in Google Sheets. (Manual smoke test on one tester machine.)
+- [ ] "Copy actions as table" places a tab-separated table on the clipboard that pastes cleanly into Word, Excel, Google Docs, Google Sheets.
+- [ ] Editing a transcript writes a `transcript_revisions` row visible in "Edit history".
+- [ ] All exports render the `Prepared by MyRhythm · Confidence {avg}% · {date}` footer above the 3pt confidentiality line.
