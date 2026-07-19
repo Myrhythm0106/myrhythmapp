@@ -1,115 +1,66 @@
-## Scope
+## Goal
+Let testers walk through the **real** end-to-end app — including the payment screen — with fake data, so every button, redirect, and confirmation fires exactly as it will in production, but £0 ever moves.
 
-Three new items only. Already-shipped v0.1 work (freemium reveal, Memory Bridge upgrades, clinician PDF, `useLaunchMode` fix, "Bring a witness" v0.2 flag) stays as-is.
+## Full bundle (option A)
 
----
+Five changes shipped together so testers can hit every path at zero cost.
 
-## 1. Sign-in fix (blocker)
+### 1. Sign-in fix
+Remove the dev bypass in `useAuth.ts` (`VITE_MOCK_SECURITY` path) for the launch flow. Real Supabase auth handles sign-in / sign-up / password reset. Existing `useAuthOperations.ts` already has friendly error messages — keep them.
 
-**Root cause:** `LaunchRegister.tsx` has `BYPASS_REGISTRATION = true` — signup only writes `myrhythm_mock_user` to `localStorage`; no real Supabase user exists, so `LaunchSignIn` correctly rejects the login.
+### 2. Founding pricing date bump
+`src/config/pricing.ts` → `foundingMemberConfig.triggers.launchDate` currently `2024-12-01` with a 6-month window, so it has expired and the CTA falls back to £15. Bump to `2026-07-01` (or the date you choose) so the £10 Founding price shows during testing and early launch.
 
-**Changes**
-- `src/pages/launch/LaunchRegister.tsx`: flip `BYPASS_REGISTRATION = false`; keep the "Check your email" screen; add an **"I've verified — sign in now"** CTA that navigates to `/launch/signin` with `state: { email }`.
-- `src/pages/launch/LaunchSignIn.tsx`:
-  - Read `location.state.email` on mount and prefill the email field.
-  - Match Supabase's `"Email not confirmed"` string to trigger the existing resend block.
-  - On `"Invalid login credentials"`, show inline helpers: **"No account? Create one"** + **"Registered but not verified? Resend verification"**. Keep the Magic Link button.
-- **Supabase Auth setting (dashboard toggle, no code):** recommend turning **off** "Confirm email" in Auth → Providers → Email during testing so signup → sign-in is instant. Turn back on before public launch.
+### 3. Access-code gate (£0, skips Stripe entirely)
+- New table `access_codes` (code, max_uses, uses, expires_at, active).
+- New RPC `redeem_access_code(code)` — marks the caller as a Founding Member via `profiles.founding_comped = true` and increments usage. Existing `get_user_subscription_status` already reads `founding_comped` and returns `'founding_comped'`, so downstream gating just works.
+- New panel on `/launch/payment`: **"Have an access code?"** → input + Redeem button → success toast → straight to `/launch/welcome`.
+- Seed codes: `TESTER01` (10 uses), `FOUNDING2026` (50 uses), `FRIENDS` (unlimited, expires 30 Sep 2026).
 
----
+### 4. Stripe Test Mode + tester banner + test-card panel
+- Add `VITE_STRIPE_MODE = 'test' | 'live'` to `.env`. One flag flips the entire payment flow between test and live.
+- The `create-checkout` edge function reads it and picks between `STRIPE_TEST_SECRET_KEY` (test) and `STRIPE_SECRET_KEY` (live), plus the corresponding price IDs from `pricing.ts`.
+- The `stripe-webhook` function accepts both `STRIPE_TEST_WEBHOOK_SECRET` and `STRIPE_WEBHOOK_SECRET`.
+- **Amber "TEST MODE" banner** on `/launch/payment` when in test mode, hidden in live.
+- **Collapsible "Show test cards" panel** listing Stripe's standard test cards with one-click copy:
+  - `4242 4242 4242 4242` → success
+  - `4000 0000 0000 0002` → declined
+  - `4000 0025 0000 3155` → 3D-Secure challenge
+  - `4000 0000 0000 9995` → insufficient funds
+- All test cards use any future expiry + any 3-digit CVC. Zero real money moves.
 
-## 2. Zero-cost payment path (Access Code gate)
+### 5. Export button polish + tester docs
+- Rename Capture Brief export buttons to plain English: "Send to my clinician (PDF)", "Save my notes (PDF)", "Copy actions to clipboard".
+- New `docs/tester-guide.md`: one-page plain-English guide covering sign-up → access-code path → OR test-card path → where to report bugs.
 
-No Stripe, no real cards during testing. Payment surface stays; it just checks a code.
+## Secrets you'll need to provide
 
-**Data (single migration)**
-- `founding_access_codes`: `code` (unique), `max_uses`, `uses_remaining`, `active`, timestamps. RLS: no direct client SELECT; only the RPC reads.
-- `redeem_founding_code(p_code text)` SECURITY DEFINER: validates code, decrements `uses_remaining`, sets `profiles.founding_comped = true`, inserts `subscriptions` row (`plan_type='founding_comped'`, `status='active'`). Returns `{ success, error? }`.
-- Seed codes (e.g. `FOUNDING2026`, `TESTER01`–`TESTER10`) via `supabase--insert`.
+I'll open the secure form for each — no values pasted in chat:
+1. `STRIPE_TEST_SECRET_KEY` — from Stripe dashboard → Developers → API keys → **Test mode toggle ON** → "Secret key"
+2. `STRIPE_TEST_WEBHOOK_SECRET` — Stripe dashboard → Developers → Webhooks → **Test mode** → your webhook endpoint → "Signing secret"
 
-**UI**
-- Payment surface (`LaunchPayment.tsx` / `MVPPaymentPage.tsx` — confirm on read): replace Stripe CTA with an **Access Code** input + "Unlock Founding Access" button that calls the RPC. Success → route to `/launch/welcome`. Invalid/exhausted → inline error.
-- Existing `get_user_subscription_status()` already returns `founding_comped`; downstream gating just works.
+Live keys (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`) stay as-is for go-live.
 
-**Founding pricing copy**
-- `src/config/pricing.ts`: bump `launchDate` forward (e.g. `2026-08-01`) so `isFoundingMemberActive()` returns true and reveal + payment screens render **"Become a Founding Member — £{price}/mo"**.
+## What testers experience after this ships
 
-**When v1 ships:** swap the access-code panel for real Stripe checkout. Same `subscriptions` row shape, no other code changes.
+| Path | Steps | Cost |
+|---|---|---|
+| **Access code** | Sign up → payment page → paste `TESTER01` → in the app | £0 |
+| **Stripe test card** | Sign up → payment page → paste `4242…` → full Stripe checkout → in the app | £0 |
+| **Failure paths** | Sign up → payment page → paste `4000 0000 0000 0002` → see decline UX | £0 |
+| **Live (later)** | Flip `VITE_STRIPE_MODE=live` — no code change | Real £ |
 
----
+## Reversibility
+- Access-code system: 1 table + 1 RPC + 1 UI panel. 10-minute deletion if unwanted.
+- Stripe test mode: one env var flip to go live. Banner + test-card panel auto-hide.
+- Nothing touches the 4C loop, Memory Bridge, Calendar, You-Are-Here dial, or any core feature.
 
-## 3. Deloitte/Bain-tier capture + transcripts
+## Order of build
+1. Pricing date bump + sign-in bypass removal (2 min, no secrets needed)
+2. Request Stripe test-mode secrets
+3. Access-code migration + RPC + payment-page panel
+4. Test-mode banner + test-card cheat sheet + edge-function mode switch
+5. Export button relabel + tester docs
+6. Playwright smoke test: access code path + test-card success path
 
-Plumbing exists (`meeting_recordings`, `extracted_actions`, `TranscriptEditor`, `buildCaptureBrief`, PDF/DOCX/XLSX/Clinician exporters, AssemblyAI live). This tier is deliverable quality + export options + reliability — not new AI.
-
-**A. Recording reliability**
-- `src/hooks/memoryBridge/useRealtimeTranscription.ts`: switch capture from `MediaRecorder` timeslices to Web Audio API PCM → WAV upload. Kills iOS Safari corrupted-webm 400s.
-- Surface AssemblyAI **speaker diarization** ("Speaker 1 / Speaker 2") in `parseTranscriptTurns`.
-- `TranscriptEditor` already has a confidence badge (keep) and low-confidence warning (keep). Add a small **"Edit history (last 5)"** dropdown backed by the new `transcript_revisions` table.
-
-**B. Deliverable formats — Word / Excel / Google-ready**
-
-Existing `.docx` files open natively in **Microsoft Word AND Google Docs** (File → Open → Upload). Existing `.xlsx` files open natively in **Microsoft Excel AND Google Sheets** the same way. No new export code is needed for cross-suite compatibility — only the UI needs to say so.
-
-Format picker in `CaptureDeliverableView`:
-1. **Executive Summary — Word / Google Docs (.docx)** — 1-page polish over existing DOCX exporter. "So what?" card + top 3 decisions + top 3 actions with owners/dates. Persona-aware register via `usePersona`.
-2. **Full Annotated Transcript — PDF** — new exporter. Verbatim, speaker-labelled, timestamped, with margin colour codes: decisions (blue), actions (green), open questions (amber), watch-outs (red). Colours mapped from existing `extracted_actions.category`. *(New: `exporters/annotatedTranscriptPdf.ts`.)*
-3. **Action Register — Excel / Google Sheets (.xlsx)** — polish the existing `xlsx.ts` exporter: Action, Owner, Due, Priority, Confidence, Two-minute starter, Source quote. Already opens in both suites.
-4. **Clinician One-Pager — PDF** — already shipped; unchanged.
-5. **Copy actions as table (clipboard)** — new small button. Tab-separated `Action \t Owner \t Due \t Priority` — pastes straight into Word, Excel, Google Docs, Google Sheets, Slack, email. No download, no auth, instant.
-
-**Helper text under the export panel:**
-> *"Word and Excel files download to your device. To use them in Google Docs or Google Sheets, open Drive and upload the file (File → Open → Upload)."*
-
-**Deliberately NOT in v0.1:** per-user Google Drive OAuth ("Send to my Drive"). Wrong shape for testing (each tester would need to authorise Google), adds an auth surface, and adds no capability beyond File → Open. Deferred to v1.
-
-**C. Defensible edits**
-- New `transcript_revisions` table (`meeting_id`, `user_id`, `previous_transcript`, `new_transcript`, `created_at`) + RLS scoped to owner.
-- `TranscriptEditor` writes a revision row on save; "Edit history (last 5)" dropdown reads it.
-
-**D. Professional footer**
-- All four exports render a footer strip: `Prepared by MyRhythm · Confidence {avg}% · {date}` above the existing 3pt confidentiality line (per project standard).
-
----
-
-## Files touched
-
-- `src/pages/launch/LaunchRegister.tsx`
-- `src/pages/launch/LaunchSignIn.tsx`
-- `src/pages/launch/LaunchPayment.tsx` (or `MVPPaymentPage.tsx` — confirm on read)
-- `src/config/pricing.ts` (launchDate bump)
-- `src/hooks/memoryBridge/useRealtimeTranscription.ts` (WAV/PCM path)
-- `src/components/memoryBridge/TranscriptEditor.tsx` (Edit history dropdown; revision write on save)
-- `src/components/memoryBridge/capture-brief/CaptureDeliverableView.tsx` (renamed export buttons + helper text + "Copy actions as table")
-- `src/components/memoryBridge/capture-brief/exporters/pdf.ts`, `docx.ts`, `xlsx.ts` (exec-summary polish + footer strip)
-- `src/components/memoryBridge/capture-brief/exporters/annotatedTranscriptPdf.ts` (new)
-- `src/components/memoryBridge/capture-brief/exporters/copyActionsTable.ts` (new — tab-separated clipboard writer)
-
-**Migrations**
-- `founding_access_codes` + `redeem_founding_code()` RPC + seed codes.
-- `transcript_revisions` table + RLS.
-
----
-
-## Out of scope
-
-- Real Stripe integration (v1).
-- Per-user Google Drive / Docs / Sheets OAuth (v1).
-- New AI models beyond AssemblyAI diarization already available.
-- "Bring a witness" co-listen (v0.2, already flagged).
-
----
-
-## Acceptance criteria
-
-- [ ] Register → sign out → sign in works end-to-end against real Supabase (with "Confirm email" off in dashboard during test).
-- [ ] "Email not confirmed" shows resend block; "Invalid credentials" shows create-account + resend helpers with prefilled email.
-- [ ] A valid access code on the payment screen unlocks `/launch/welcome` and downstream gated surfaces; no Stripe call fires.
-- [ ] Invalid/exhausted codes show a clear inline error.
-- [ ] Founding Member CTA copy renders on reveal + payment screens after `launchDate` bump.
-- [ ] iOS Safari recording uploads WAV successfully; transcript shows speaker labels + confidence badge.
-- [ ] Deliverable view shows 4 export options with the new labels ("Word / Google Docs", "Excel / Google Sheets"), plus "Copy actions as table" and the helper line about File → Open.
-- [ ] Downloaded `.docx` opens correctly in Microsoft Word and, after upload, in Google Docs. Downloaded `.xlsx` opens in Microsoft Excel and, after upload, in Google Sheets. (Manual smoke test on one tester machine.)
-- [ ] "Copy actions as table" places a tab-separated table on the clipboard that pastes cleanly into Word, Excel, Google Docs, Google Sheets.
-- [ ] Editing a transcript writes a `transcript_revisions` row visible in "Edit history".
-- [ ] All exports render the `Prepared by MyRhythm · Confidence {avg}% · {date}` footer above the 3pt confidentiality line.
+Approve to build.
