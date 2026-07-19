@@ -156,7 +156,9 @@ export default function LaunchCalendar() {
         </div>
       </div>
 
-      <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} className="mb-6" />
+      <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} className="mb-4" />
+
+      <LaunchSyncBar />
 
       <div className="mb-24">
         {currentView === 'day' && (
