@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
@@ -8,88 +8,78 @@ import { LaunchWeekView } from '@/components/launch/calendar/LaunchWeekView';
 import { LaunchMonthView } from '@/components/launch/calendar/LaunchMonthView';
 import { LaunchYearView } from '@/components/launch/calendar/LaunchYearView';
 import { LaunchAddEventModal } from '@/components/launch/calendar/LaunchAddEventModal';
-import { format, addDays, subDays, addMonths, subMonths, addYears, subYears } from 'date-fns';
-import { toast } from 'sonner';
-
-interface CalendarEvent {
-  id: string;
-  time: string;
-  title: string;
-  type: string;
-  date: Date;
-  status?: 'pending' | 'done' | 'cancelled' | 'carried';
-  carriedFrom?: Date;
-}
+import { LaunchRescheduleModal } from '@/components/launch/calendar/LaunchRescheduleModal';
+import {
+  format,
+  addDays,
+  subDays,
+  addMonths,
+  subMonths,
+  addYears,
+  subYears,
+  startOfMonth,
+  endOfMonth,
+  startOfYear,
+  endOfYear,
+  startOfWeek,
+  endOfWeek,
+} from 'date-fns';
+import { useLaunchCalendarEvents, LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 
 export default function LaunchCalendar() {
   const [currentView, setCurrentView] = useState<CalendarView>('day');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddModal, setShowAddModal] = useState(false);
-  
+  const [rescheduleTarget, setRescheduleTarget] = useState<LaunchCalendarEvent | null>(null);
+
   // Vision cascade state
   const [yearVision, setYearVision] = useState('');
   const [monthFocus, setMonthFocus] = useState('');
   const [weekFocus, setWeekFocus] = useState('');
-  
-  const [events, setEvents] = useState<CalendarEvent[]>([
-    { id: '1', time: '09:00', title: 'Morning routine', type: 'routine', date: new Date(), status: 'pending' },
-    { id: '2', time: '10:30', title: 'Call Dr. Smith', type: 'appointment', date: new Date(), status: 'pending' },
-    { id: '3', time: '14:00', title: 'Physical therapy', type: 'medical', date: new Date(), status: 'pending' },
-    { id: '4', time: '16:00', title: 'Brain game session', type: 'activity', date: new Date(), status: 'pending' },
-  ]);
+
+  const { rangeStart, rangeEnd } = useMemo(() => {
+    switch (currentView) {
+      case 'day':
+        return { rangeStart: selectedDate, rangeEnd: selectedDate };
+      case 'week':
+        return { rangeStart: startOfWeek(selectedDate), rangeEnd: endOfWeek(selectedDate) };
+      case 'month':
+        return { rangeStart: startOfMonth(selectedDate), rangeEnd: endOfMonth(selectedDate) };
+      case 'year':
+        return { rangeStart: startOfYear(selectedDate), rangeEnd: endOfYear(selectedDate) };
+    }
+  }, [currentView, selectedDate]);
+
+  const { events, addEvent, updateStatus, carryOver, reschedule } = useLaunchCalendarEvents(
+    rangeStart,
+    rangeEnd
+  );
+
+  const filteredDayEvents = events.filter(
+    (e) => format(e.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
+  );
 
   const handleAddEvent = (event: { title: string; time: string; type: string }) => {
-    const newEvent: CalendarEvent = {
-      id: Date.now().toString(),
-      ...event,
-      date: selectedDate,
-      status: 'pending'
-    };
-    setEvents(prev => [...prev, newEvent]);
+    addEvent({ ...event, date: selectedDate });
   };
 
-  const handleEventStatusChange = (eventIndex: number, status: CalendarEvent['status']) => {
-    const filteredEvents = events.filter(e => 
-      e.date && format(e.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
-    );
-    const event = filteredEvents[eventIndex];
-    if (event) {
-      setEvents(prev => prev.map(e => 
-        e.id === event.id ? { ...e, status } : e
-      ));
-    }
+  const handleEventStatusChange = (idx: number, status: LaunchCalendarEvent['status']) => {
+    const evt = sortedDayEvents()[idx];
+    if (evt && status) updateStatus(evt.id, status);
   };
 
-  const handleEventCarryOver = (eventIndex: number) => {
-    const filteredEvents = events.filter(e => 
-      e.date && format(e.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
-    );
-    const event = filteredEvents[eventIndex];
-    if (event) {
-      // Mark original as carried
-      setEvents(prev => prev.map(e => 
-        e.id === event.id ? { ...e, status: 'carried' } : e
-      ));
-      // Create new event for tomorrow
-      const newEvent: CalendarEvent = {
-        id: Date.now().toString(),
-        time: event.time,
-        title: event.title,
-        type: event.type,
-        date: addDays(selectedDate, 1),
-        status: 'pending',
-        carriedFrom: selectedDate
-      };
-      setEvents(prev => [...prev, newEvent]);
-    }
+  const handleEventCarryOver = (idx: number) => {
+    const evt = sortedDayEvents()[idx];
+    if (evt) carryOver(evt);
   };
 
-  const handleEventReschedule = (eventIndex: number) => {
-    // For now, show a toast. In future, open a date picker modal
-    toast.info('Reschedule feature coming soon!', {
-      description: 'You\'ll be able to pick a new date and time.'
-    });
+  const handleEventReschedule = (idx: number) => {
+    const evt = sortedDayEvents()[idx];
+    if (evt) setRescheduleTarget(evt);
   };
+
+  const sortedDayEvents = () =>
+    [...filteredDayEvents].sort((a, b) => a.time.localeCompare(b.time));
 
   const handleNavigate = (direction: 'prev' | 'next') => {
     switch (currentView) {
@@ -131,16 +121,12 @@ export default function LaunchCalendar() {
     }
   };
 
-  const filteredDayEvents = events.filter(e => 
-    e.date && format(e.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
-  );
-
   return (
     <LaunchLayout>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={() => handleNavigate('prev')}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
@@ -149,7 +135,7 @@ export default function LaunchCalendar() {
           <div>
             <h1 className="text-xl font-bold text-gray-900">{getHeaderTitle()}</h1>
           </div>
-          <button 
+          <button
             onClick={() => handleNavigate('next')}
             className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
           >
@@ -157,7 +143,7 @@ export default function LaunchCalendar() {
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <button 
+          <button
             onClick={() => setShowAddModal(true)}
             className="text-sm text-brand-emerald-600 font-medium hover:text-brand-emerald-700"
           >
@@ -169,19 +155,13 @@ export default function LaunchCalendar() {
         </div>
       </div>
 
-      {/* View Switcher */}
-      <LaunchViewSwitcher 
-        currentView={currentView} 
-        onViewChange={setCurrentView}
-        className="mb-6"
-      />
+      <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} className="mb-6" />
 
-      {/* Calendar Views */}
       <div className="mb-24">
         {currentView === 'day' && (
-          <LaunchDayView 
-            date={selectedDate} 
-            events={filteredDayEvents}
+          <LaunchDayView
+            date={selectedDate}
+            events={sortedDayEvents()}
             inheritedVision={yearVision}
             inheritedMonthFocus={monthFocus}
             inheritedWeekFocus={weekFocus}
@@ -191,8 +171,8 @@ export default function LaunchCalendar() {
           />
         )}
         {currentView === 'week' && (
-          <LaunchWeekView 
-            date={selectedDate} 
+          <LaunchWeekView
+            date={selectedDate}
             events={events}
             onDaySelect={handleDaySelect}
             inheritedVision={yearVision}
@@ -200,15 +180,15 @@ export default function LaunchCalendar() {
           />
         )}
         {currentView === 'month' && (
-          <LaunchMonthView 
-            date={selectedDate} 
+          <LaunchMonthView
+            date={selectedDate}
             events={events}
             onDaySelect={handleDaySelect}
             inheritedVision={yearVision}
           />
         )}
         {currentView === 'year' && (
-          <LaunchYearView 
+          <LaunchYearView
             date={selectedDate}
             onMonthSelect={handleMonthSelect}
             yearVision={yearVision}
@@ -217,13 +197,25 @@ export default function LaunchCalendar() {
         )}
       </div>
 
-      {/* Add Event Modal */}
       <LaunchAddEventModal
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddEvent}
         selectedDate={selectedDate}
       />
+
+      {rescheduleTarget && (
+        <LaunchRescheduleModal
+          isOpen={!!rescheduleTarget}
+          onClose={() => setRescheduleTarget(null)}
+          onSubmit={async (newDate, newTime) => {
+            await reschedule(rescheduleTarget.id, newDate, newTime);
+          }}
+          eventTitle={rescheduleTarget.title}
+          initialDate={rescheduleTarget.date}
+          initialTime={rescheduleTarget.time}
+        />
+      )}
     </LaunchLayout>
   );
 }

@@ -312,13 +312,17 @@ export type Database = {
       }
       calendar_events: {
         Row: {
+          carried_from: string | null
           category: string | null
           created_at: string
           date: string
           description: string | null
+          end_time: string | null
           id: string
           is_system_generated: boolean
           requires_acceptance: boolean
+          source: string
+          status: string
           time: string
           title: string
           type: string
@@ -326,13 +330,17 @@ export type Database = {
           watchers: string[] | null
         }
         Insert: {
+          carried_from?: string | null
           category?: string | null
           created_at?: string
           date: string
           description?: string | null
+          end_time?: string | null
           id?: string
           is_system_generated?: boolean
           requires_acceptance?: boolean
+          source?: string
+          status?: string
           time: string
           title: string
           type?: string
@@ -340,13 +348,17 @@ export type Database = {
           watchers?: string[] | null
         }
         Update: {
+          carried_from?: string | null
           category?: string | null
           created_at?: string
           date?: string
           description?: string | null
+          end_time?: string | null
           id?: string
           is_system_generated?: boolean
           requires_acceptance?: boolean
+          source?: string
+          status?: string
           time?: string
           title?: string
           type?: string

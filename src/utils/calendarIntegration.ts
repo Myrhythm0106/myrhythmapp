@@ -78,6 +78,8 @@ export async function convertActionToCalendarEvent(
         time: finalTime,
         type: 'action_item',
         category: 'memory_bridge',
+        source: 'memory_bridge',
+        status: 'pending',
         requires_acceptance: false,
         is_system_generated: true,
         watchers: action.assigned_watchers || []

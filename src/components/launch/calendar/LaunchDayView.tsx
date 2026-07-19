@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Clock, MoreVertical, Check, X, ArrowRight, Calendar } from 'lucide-react';
+import React from 'react';
+import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles } from 'lucide-react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
+import { LaunchDailyBrief } from './LaunchDailyBrief';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -17,7 +18,8 @@ interface Event {
   title: string;
   type: string;
   status?: 'pending' | 'done' | 'cancelled' | 'carried';
-  carriedFrom?: Date;
+  carriedFrom?: Date | null;
+  source?: string;
 }
 
 interface LaunchDayViewProps {
@@ -120,6 +122,12 @@ export function LaunchDayView({
         </div>
       )}
 
+      <LaunchDailyBrief
+        date={date}
+        eventCount={sortedEvents.filter(e => e.status !== 'cancelled' && e.status !== 'carried').length}
+        focusTitle={sortedEvents.find(e => e.status !== 'done' && e.status !== 'cancelled' && e.status !== 'carried')?.title}
+      />
+
       <LaunchCommitmentBanner 
         scope="day" 
         date={date} 
@@ -163,11 +171,17 @@ export function LaunchDayView({
                     {event.status === 'cancelled' && <X className="inline h-4 w-4 mr-1 text-gray-400" />}
                     {event.title}
                   </p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-xs text-gray-500 capitalize">{event.type}</p>
+                    {event.source === 'memory_bridge' && (
+                      <span className="text-xs bg-brand-teal-100 text-brand-teal-700 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                        <Sparkles className="h-3 w-3" />
+                        From Memory Bridge
+                      </span>
+                    )}
                     {event.carriedFrom && (
                       <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                        Carried from yesterday
+                        Carried over
                       </span>
                     )}
                   </div>
