@@ -18,6 +18,7 @@ import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
+import { useRecordingCountdownAlerts } from '@/hooks/memoryBridge/useRecordingCountdownAlerts';
 import { useAuth } from '@/hooks/useAuth';
 import { useSessionMonitor } from '@/hooks/useSessionMonitor';
 import { VoiceCoach } from './VoiceCoach';
