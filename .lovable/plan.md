@@ -1,33 +1,34 @@
+# Recording length: 20 min free, 4 hours premium
 
-# Memory Bridge + Calendar — PA-Readiness Build
+## Current state (verified)
+- `useRecordingLimits.ts` `DAILY_LIMITS.free = 30` min; paid tiers unlimited.
+- `MemoryBridgeRecorder.tsx` premium per-recording cap = **180 min** (bottleneck).
+- `QuickCaptureRecorder.tsx` premium cap already **240 min**, free = 30 min.
+- MediaRecorder + IndexedDB chunk path already handles multi-hour blobs; AssemblyAI supports multi-hour audio. No backend change required.
 
-Ship PR-A + PR-B + PR-C in one pass. Google/Outlook sync surfacing follows in a separate pass after user confirmation.
+## Changes
 
-## PR-A · Wire calendar to real data (critical)
-- **Migration** on `calendar_events`: add `status` (text, default 'pending'), `carried_from` (date), `end_time` (time), `source` (text, default 'manual'), plus index on `(user_id, date)`.
-- Update `src/utils/calendarIntegration.ts` `convertActionToCalendarEvent` to set `source = 'memory_bridge'` when writing extracted-action events.
-- New hook `src/hooks/useLaunchCalendarEvents.ts`: fetch events for visible date range from `calendar_events`, plus `addEvent`, `updateStatus`, `carryOver`, `reschedule` mutations.
-- Refactor `src/pages/launch/LaunchCalendar.tsx` to use the hook (remove hardcoded mock array; wire mutations to Supabase).
-- Update `LaunchDayView` event card to show a small "From Memory Bridge" chip when `source === 'memory_bridge'`.
+1. **`src/hooks/memoryBridge/useRecordingLimits.ts`**
+   - `DAILY_LIMITS.free`: `30` → **`20`** minutes/day.
 
-## PR-B · Daily Brief header (PA feel)
-- New component `src/components/launch/calendar/LaunchDailyBrief.tsx`:
-  - "Good morning, {first name}. Today you have {N} things. Focus: {top-priority title}. Energy: {latest mood/energy entry, if any}."
-  - Reads from `profiles` (name), current-day `calendar_events`, latest `mood_entries` row. Read-only, one render.
-- Render only on day view (top of `LaunchDayView`, above the commitment banner).
+2. **`src/components/memoryBridge/MemoryBridgeRecorder.tsx`**
+   - Free per-recording cap: `30` → **`20`** min.
+   - Premium per-recording cap: `180` → **`240`** min (4 hours).
 
-## PR-C · Real reschedule modal
-- New component `src/components/launch/calendar/LaunchRescheduleModal.tsx`: date + time picker (shadcn Popover + Calendar + native `<input type="time">`).
-- Wire `handleEventReschedule` in `LaunchCalendar.tsx` to open it and call `useLaunchCalendarEvents.reschedule(eventId, newDate, newTime)` on submit.
-- Remove the "coming soon" toast.
+3. **`src/components/memoryBridge/QuickCaptureRecorder.tsx`**
+   - Free per-recording cap: `30` → **`20`** min. Premium stays at 240.
 
-## Out of scope for this pass
-- Google/Outlook sync surfacing inside `/launch/calendar` — will follow immediately after user confirms PR-A/B/C.
-- Drag-to-reschedule on week view.
+4. **Copy / UX polish**
+   - "Approaching limit" toast reads "4 hours" (not "240 minutes") for premium, "20 minutes" for free.
+   - At 3h30m mark for premium, subtle inline hint: "You can keep going up to 4 hours."
+   - Free-tier upgrade nudge on `RecordingFeatureGate` / `RecordingLimitsWarning` updated to reference "20 minutes/day" and "record up to 4 hours per session on premium".
 
-## Technical notes
-- No changes to Memory Bridge, routing, dial, or auth.
-- One migration; existing rows get `status='pending'`, `source='manual'` automatically via defaults.
-- Realtime not added — refetch on view/date change and after mutations is sufficient for launch.
+## Not changing
+- Founding-comped users resolve to premium → get full 4h automatically.
+- 48-hour transcript retention window unchanged.
+- Storage / edge function code unchanged.
 
-Proceeding now.
+## Verification
+- Premium/founding-comped user: timer runs past 3h without auto-stop; stops at 4h.
+- Free user: timer stops at 20 min with upgrade prompt.
+- Daily free cap enforced at 20 min across recordings.
