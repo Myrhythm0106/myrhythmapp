@@ -65,8 +65,8 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   
   const { extractACTs } = useRealtimeACTs(currentMeetingId);
 
-  // Get subscription limits - remove 2-hour limit for premium, extend for all users
-  const maxDurationMinutes = subscription?.plan_type === 'premium' ? 240 : 30; // 4 hours premium, 30 min free
+  // Subscription-based caps: 4 hours premium, 20 min free
+  const maxDurationMinutes = subscription?.plan_type === 'premium' ? 240 : 20;
   const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;

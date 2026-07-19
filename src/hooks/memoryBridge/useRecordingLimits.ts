@@ -6,7 +6,7 @@ import { SUBSCRIPTION_LIMITS, RecordingUsageTracking } from '@/types/memoryBridg
 
 // Daily recording limits by tier (in minutes)
 const DAILY_LIMITS = {
-  free: 30,      // 30 minutes per day
+  free: 20,      // 20 minutes per day
   starter: -1,   // Unlimited
   premium: -1,   // Unlimited
   smart_pro: -1, // Unlimited
