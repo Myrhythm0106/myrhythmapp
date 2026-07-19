@@ -122,6 +122,7 @@ export function useRecordingLimits() {
         }
 
         setUsage(currentUsage);
+        if (user && currentUsage) writeCachedUsage(user.id, currentUsage);
       }
     } catch (error) {
       console.error('Error fetching usage:', error);
