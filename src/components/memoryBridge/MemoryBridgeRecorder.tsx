@@ -9,6 +9,7 @@ import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRecordingLimits } from '@/hooks/memoryBridge/useRecordingLimits';
+import { useRecordingCountdownAlerts } from '@/hooks/memoryBridge/useRecordingCountdownAlerts';
 import { useRealtimeTranscription } from '@/hooks/memoryBridge/useRealtimeTranscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
 import { DailyLimitReachedModal } from './DailyLimitReachedModal';
