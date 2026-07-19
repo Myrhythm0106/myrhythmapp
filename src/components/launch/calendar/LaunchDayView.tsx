@@ -171,11 +171,17 @@ export function LaunchDayView({
                     {event.status === 'cancelled' && <X className="inline h-4 w-4 mr-1 text-gray-400" />}
                     {event.title}
                   </p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-xs text-gray-500 capitalize">{event.type}</p>
+                    {event.source === 'memory_bridge' && (
+                      <span className="text-xs bg-brand-teal-100 text-brand-teal-700 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                        <Sparkles className="h-3 w-3" />
+                        From Memory Bridge
+                      </span>
+                    )}
                     {event.carriedFrom && (
                       <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
-                        Carried from yesterday
+                        Carried over
                       </span>
                     )}
                   </div>
