@@ -34,7 +34,7 @@ export function LaunchDailyBrief({ date, eventCount, focusTitle, className }: La
         supabase.from('profiles').select('name').eq('id', user.id).maybeSingle(),
         supabase
           .from('mood_entries')
-          .select('energy_level, mood_score, created_at')
+          .select('energy_level, created_at')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(1),
@@ -45,16 +45,12 @@ export function LaunchDailyBrief({ date, eventCount, focusTitle, className }: La
       const raw = (profile?.name || '').trim();
       setFirstName(raw ? raw.split(' ')[0] : '');
 
-      const latest = moods?.[0];
-      if (latest) {
-        const e = (latest as any).energy_level as number | null;
-        const m = (latest as any).mood_score as number | null;
-        if (typeof e === 'number' && e <= 2) {
+      const latest = moods?.[0] as { energy_level: number | null } | undefined;
+      if (latest && typeof latest.energy_level === 'number') {
+        if (latest.energy_level <= 2) {
           setEnergyNote('Energy is low — protect one high-value task, park the rest.');
-        } else if (typeof e === 'number' && e >= 4) {
+        } else if (latest.energy_level >= 4) {
           setEnergyNote('Energy is strong — tackle your focus item first.');
-        } else if (typeof m === 'number' && m <= 2) {
-          setEnergyNote('Go gentle today — one thing done well beats three rushed.');
         } else {
           setEnergyNote(null);
         }
