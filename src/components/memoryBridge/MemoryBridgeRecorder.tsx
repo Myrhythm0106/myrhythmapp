@@ -60,11 +60,11 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   const dailyUsageMinutes = getDailyUsage();
   const hasReachedDailyLimit = !canRecordToday();
   
-  // Dynamic max duration based on remaining daily time for free tier
-  const maxDurationMinutes = tier === 'free' 
-    ? Math.min(remainingDailyMinutes === -1 ? 30 : remainingDailyMinutes, 30)
-    : (subscription?.plan_type === 'premium' ? 180 : 30);
-  
+  // Dynamic max duration: free = 20 min/day, premium = 4 hours per recording
+  const maxDurationMinutes = tier === 'free'
+    ? Math.min(remainingDailyMinutes === -1 ? 20 : remainingDailyMinutes, 20)
+    : 240;
+
   const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
@@ -73,9 +73,10 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   useEffect(() => {
     if (isNearLimit && !showLimitWarning) {
       setShowLimitWarning(true);
-      toast.warning(`Approaching ${maxDurationMinutes} minute limit`);
+      const label = tier === 'free' ? '20 minute' : '4 hour';
+      toast.warning(`Approaching ${label} limit`);
     }
-  }, [isNearLimit, showLimitWarning, maxDurationMinutes]);
+  }, [isNearLimit, showLimitWarning, tier]);
 
   // Auto-stop when limit reached
   useEffect(() => {
