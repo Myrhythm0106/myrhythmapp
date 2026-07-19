@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      access_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          max_uses: number | null
+          note: string | null
+          updated_at: string
+          uses: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          note?: string | null
+          updated_at?: string
+          uses?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          note?: string | null
+          updated_at?: string
+          uses?: number
+        }
+        Relationships: []
+      }
       accountability_alerts: {
         Row: {
           acknowledged_by: string[] | null
@@ -2975,6 +3011,7 @@ export type Database = {
         }
         Returns: string
       }
+      redeem_access_code: { Args: { p_code: string }; Returns: Json }
       revoke_invitation: {
         Args: { p_member_id: string; p_user_id: string }
         Returns: boolean
