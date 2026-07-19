@@ -318,8 +318,13 @@ export type Database = {
           date: string
           description: string | null
           end_time: string | null
+          google_event_id: string | null
           id: string
           is_system_generated: boolean
+          last_push_error: string | null
+          outlook_event_id: string | null
+          pushed_to_google_at: string | null
+          pushed_to_outlook_at: string | null
           requires_acceptance: boolean
           source: string
           status: string
@@ -336,8 +341,13 @@ export type Database = {
           date: string
           description?: string | null
           end_time?: string | null
+          google_event_id?: string | null
           id?: string
           is_system_generated?: boolean
+          last_push_error?: string | null
+          outlook_event_id?: string | null
+          pushed_to_google_at?: string | null
+          pushed_to_outlook_at?: string | null
           requires_acceptance?: boolean
           source?: string
           status?: string
@@ -354,8 +364,13 @@ export type Database = {
           date?: string
           description?: string | null
           end_time?: string | null
+          google_event_id?: string | null
           id?: string
           is_system_generated?: boolean
+          last_push_error?: string | null
+          outlook_event_id?: string | null
+          pushed_to_google_at?: string | null
+          pushed_to_outlook_at?: string | null
           requires_acceptance?: boolean
           source?: string
           status?: string

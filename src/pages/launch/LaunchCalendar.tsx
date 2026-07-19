@@ -9,6 +9,7 @@ import { LaunchMonthView } from '@/components/launch/calendar/LaunchMonthView';
 import { LaunchYearView } from '@/components/launch/calendar/LaunchYearView';
 import { LaunchAddEventModal } from '@/components/launch/calendar/LaunchAddEventModal';
 import { LaunchRescheduleModal } from '@/components/launch/calendar/LaunchRescheduleModal';
+import { LaunchSyncBar } from '@/components/launch/calendar/LaunchSyncBar';
 import {
   format,
   addDays,
@@ -155,7 +156,9 @@ export default function LaunchCalendar() {
         </div>
       </div>
 
-      <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} className="mb-6" />
+      <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} className="mb-4" />
+
+      <LaunchSyncBar />
 
       <div className="mb-24">
         {currentView === 'day' && (
