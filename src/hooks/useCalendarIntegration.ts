@@ -130,6 +130,35 @@ export function useCalendarIntegration() {
     }
   }, [integrations, fetchIntegrations]);
 
+  const pushUpcoming = useCallback(async () => {
+    setIsSyncing(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        toast.error('Please log in to push events');
+        return;
+      }
+      const { data, error } = await supabase.functions.invoke('calendar-push-upcoming', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (error) throw error;
+      const d = (data ?? {}) as { pushed_google?: number; pushed_outlook?: number; skipped?: number; errors?: string[] };
+      const total = (d.pushed_google ?? 0) + (d.pushed_outlook ?? 0);
+      if (total === 0 && (d.skipped ?? 0) === 0) {
+        toast.info('No upcoming events to push');
+      } else {
+        toast.success(`Pushed ${total} event${total === 1 ? '' : 's'} (${d.skipped ?? 0} already synced)`);
+      }
+      if (d.errors && d.errors.length) console.warn('Push errors:', d.errors);
+      await fetchIntegrations();
+    } catch (err) {
+      console.error('Error pushing events:', err);
+      toast.error('Failed to push events');
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [fetchIntegrations]);
+
   const disconnectCalendar = useCallback(async (integrationId: string) => {
     try {
       const { error } = await supabase
