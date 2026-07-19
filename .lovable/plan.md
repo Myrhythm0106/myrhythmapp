@@ -1,66 +1,71 @@
-## Goal
-Let testers walk through the **real** end-to-end app — including the payment screen — with fake data, so every button, redirect, and confirmation fires exactly as it will in production, but £0 ever moves.
 
-## Full bundle (option A)
+# Memory Bridge + Calendar — PA-Readiness Audit
 
-Five changes shipped together so testers can hit every path at zero cost.
+## TL;DR
 
-### 1. Sign-in fix
-Remove the dev bypass in `useAuth.ts` (`VITE_MOCK_SECURITY` path) for the launch flow. Real Supabase auth handles sign-in / sign-up / password reset. Existing `useAuthOperations.ts` already has friendly error messages — keep them.
+- **Memory Bridge: READY.** It already behaves like a PA — record, auto-transcribe, auto-extract actions, one-tap "Accept & Schedule All", notify Support Circle. This is your hero flow and it works end-to-end.
+- **Calendar: NOT READY.** One critical bug breaks the "PA loop" between the two features, plus two polish gaps stop it feeling like a PA. All three are small fixes.
 
-### 2. Founding pricing date bump
-`src/config/pricing.ts` → `foundingMemberConfig.triggers.launchDate` currently `2024-12-01` with a 6-month window, so it has expired and the CTA falls back to £15. Bump to `2026-07-01` (or the date you choose) so the £10 Founding price shows during testing and early launch.
+---
 
-### 3. Access-code gate (£0, skips Stripe entirely)
-- New table `access_codes` (code, max_uses, uses, expires_at, active).
-- New RPC `redeem_access_code(code)` — marks the caller as a Founding Member via `profiles.founding_comped = true` and increments usage. Existing `get_user_subscription_status` already reads `founding_comped` and returns `'founding_comped'`, so downstream gating just works.
-- New panel on `/launch/payment`: **"Have an access code?"** → input + Redeem button → success toast → straight to `/launch/welcome`.
-- Seed codes: `TESTER01` (10 uses), `FOUNDING2026` (50 uses), `FRIENDS` (unlimited, expires 30 Sep 2026).
+## What I verified
 
-### 4. Stripe Test Mode + tester banner + test-card panel
-- Add `VITE_STRIPE_MODE = 'test' | 'live'` to `.env`. One flag flips the entire payment flow between test and live.
-- The `create-checkout` edge function reads it and picks between `STRIPE_TEST_SECRET_KEY` (test) and `STRIPE_SECRET_KEY` (live), plus the corresponding price IDs from `pricing.ts`.
-- The `stripe-webhook` function accepts both `STRIPE_TEST_WEBHOOK_SECRET` and `STRIPE_WEBHOOK_SECRET`.
-- **Amber "TEST MODE" banner** on `/launch/payment` when in test mode, hidden in live.
-- **Collapsible "Show test cards" panel** listing Stripe's standard test cards with one-click copy:
-  - `4242 4242 4242 4242` → success
-  - `4000 0000 0000 0002` → declined
-  - `4000 0025 0000 3155` → 3D-Secure challenge
-  - `4000 0000 0000 9995` → insufficient funds
-- All test cards use any future expiry + any 3-digit CVC. Zero real money moves.
+### Memory Bridge (`/launch/memory-bridge`) — Working at PA level ✅
+Confirmed in `src/pages/launch/LaunchMemoryBridge.tsx`:
+- Tap-to-record → pause/resume/stop → auto-save → auto-extract actions (no extra button click).
+- After extraction, `PostExtractionDialog` offers **"Accept & Schedule All"** (writes to `calendar_events` via `convertActionToCalendarEvent`) or **"Review individually"**.
+- `notifySupport` toggle notifies Support Circle when saving.
+- Past recordings list with play/reprocess/view-actions.
+- PA feel: **strong.** User speaks, the app extracts, decides dates/times, and schedules. That's the PA promise.
 
-### 5. Export button polish + tester docs
-- Rename Capture Brief export buttons to plain English: "Send to my clinician (PDF)", "Save my notes (PDF)", "Copy actions to clipboard".
-- New `docs/tester-guide.md`: one-page plain-English guide covering sign-up → access-code path → OR test-card path → where to report bugs.
+### Calendar (`/launch/calendar`) — Three gaps 🚨
 
-## Secrets you'll need to provide
+**Gap 1 (CRITICAL — breaks the PA loop):**
+`LaunchCalendar.tsx` lines 34–39 render **hardcoded mock events** stored in local React state. It does **not read from the `calendar_events` table**.
 
-I'll open the secure form for each — no values pasted in chat:
-1. `STRIPE_TEST_SECRET_KEY` — from Stripe dashboard → Developers → API keys → **Test mode toggle ON** → "Secret key"
-2. `STRIPE_TEST_WEBHOOK_SECRET` — Stripe dashboard → Developers → Webhooks → **Test mode** → your webhook endpoint → "Signing secret"
+Consequence: When Memory Bridge "Accept & Schedule All" writes real events into `calendar_events`, **they never appear on the user's calendar.** The two flagship features are visually disconnected. A tester will record a meeting, tap "Schedule all", get a success toast — then open the calendar and see the same four fake events ("Morning routine", "Call Dr. Smith"…). That will read as broken.
 
-Live keys (`STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`) stay as-is for go-live.
+**Gap 2 (PA polish):** No daily briefing on the calendar. A PA opens the day with "Here's what's on for today, energy-tagged, one thing to focus on." Today the calendar just lists times.
 
-## What testers experience after this ships
+**Gap 3 (PA polish):** Reschedule is a "coming soon" toast (line 89). A PA reschedules for you.
 
-| Path | Steps | Cost |
-|---|---|---|
-| **Access code** | Sign up → payment page → paste `TESTER01` → in the app | £0 |
-| **Stripe test card** | Sign up → payment page → paste `4242…` → full Stripe checkout → in the app | £0 |
-| **Failure paths** | Sign up → payment page → paste `4000 0000 0000 0002` → see decline UX | £0 |
-| **Live (later)** | Flip `VITE_STRIPE_MODE=live` — no code change | Real £ |
+---
 
-## Reversibility
-- Access-code system: 1 table + 1 RPC + 1 UI panel. 10-minute deletion if unwanted.
-- Stripe test mode: one env var flip to go live. Banner + test-card panel auto-hide.
-- Nothing touches the 4C loop, Memory Bridge, Calendar, You-Are-Here dial, or any core feature.
+## Proposed fix (small, scoped — this is the launch minimum)
 
-## Order of build
-1. Pricing date bump + sign-in bypass removal (2 min, no secrets needed)
-2. Request Stripe test-mode secrets
-3. Access-code migration + RPC + payment-page panel
-4. Test-mode banner + test-card cheat sheet + edge-function mode switch
-5. Export button relabel + tester docs
-6. Playwright smoke test: access code path + test-card success path
+### PR-A · Wire the calendar to real data *(critical)*
+- Replace the hardcoded events array with a `useEffect` + Supabase query against `calendar_events` filtered by `user_id` and the visible date range.
+- `handleAddEvent`, `handleEventStatusChange`, `handleEventCarryOver` write to `calendar_events` instead of local state.
+- Show a small badge on events that originated from Memory Bridge (already stored via `calendar_event_id` on `extracted_actions`) — reinforces "your PA scheduled this from your conversation."
+- Keep the four sample rows as a *first-run seed only* (insert once, per user, if the table is empty) so new users don't see an empty grid.
 
-Approve to build.
+### PR-B · Daily brief header on day view *(PA feel)*
+- Add a compact strip at the top of `LaunchDayView`:
+  - "Good morning, [name]. Today: 3 items. Focus: {highest-priority title}. Energy tip: {based on user's last mood/energy entry}."
+- Pure read-only, one query, no new tables. Uses data that already exists (`daily_actions`, `mood_entries`).
+
+### PR-C · Real reschedule *(remove the "coming soon")*
+- Replace the toast in `handleEventReschedule` with a lightweight date/time picker modal (reuse `LaunchAddEventModal` structure).
+- Updates the `start_time` / `end_time` on `calendar_events`.
+
+### Out of scope for launch (park for v0.2)
+- Drag-to-reschedule on week view.
+- Google/Outlook sync surfacing inside `/launch/calendar` (integration code exists but wire-through can wait).
+- Smart auto-scheduling of unscheduled extracted actions by energy window.
+
+---
+
+## Technical notes
+
+- Table already exists: `calendar_events` (12 cols, 3 RLS policies) — no migration needed.
+- `convertActionToCalendarEvent` in `src/utils/calendarIntegration.ts` already writes the right shape; PR-A just needs to read it back.
+- Realtime is optional. Simple `fetchEvents` on view/date change is enough for launch; add a Supabase channel subscription later if needed.
+- No new dependencies. No changes to Memory Bridge. No changes to routing, dial, or auth.
+
+---
+
+## Recommendation
+
+Ship **PR-A + PR-B + PR-C** before opening tester access. Without PR-A specifically, the app's most impressive moment ("I just spoke and it scheduled everything") silently fails at the calendar view — that's the one thing that will kill first impressions.
+
+Approve and I'll build all three in one pass.
