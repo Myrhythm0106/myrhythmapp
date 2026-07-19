@@ -21,9 +21,12 @@ serve(async (req) => {
   try {
     logStep("Function started");
 
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
-    logStep("Stripe key verified");
+    const stripeMode = (Deno.env.get("STRIPE_MODE") || "live").toLowerCase();
+    const stripeKey = stripeMode === "test"
+      ? (Deno.env.get("STRIPE_TEST_SECRET_KEY") || Deno.env.get("STRIPE_SECRET_KEY"))
+      : Deno.env.get("STRIPE_SECRET_KEY");
+    if (!stripeKey) throw new Error("Stripe secret key is not set");
+    logStep("Stripe key verified", { mode: stripeMode });
 
     // Get founding member config from environment
     const foundingMemberEnabled = Deno.env.get("FOUNDING_MEMBER_ENABLED") === "true";

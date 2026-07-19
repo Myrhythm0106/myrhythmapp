@@ -94,8 +94,8 @@ export const foundingMemberConfig = {
   maxUsers: 500,
   triggers: {
     userCount: 500,
-    monthsAfterLaunch: 6,
-    launchDate: '2024-12-01'
+    monthsAfterLaunch: 12,
+    launchDate: '2026-07-01'
   },
   benefits: [
     'Lock in £10/month pricing forever',
