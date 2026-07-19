@@ -456,21 +456,46 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
               )}
             </motion.div>
 
-            {/* Daily Usage Info (Free Tier Only) */}
-            {tier === 'free' && dailyLimit !== -1 && (
-              <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">Daily Recording Time</span>
-                  <Badge variant={remainingDailyMinutes <= 5 ? "destructive" : "secondary"}>
-                    {remainingDailyMinutes} min remaining
-                  </Badge>
+            {/* Live Countdown — free (daily) or premium (per-session) */}
+            {(() => {
+              const isFree = tier === 'free' && dailyLimit !== -1;
+              const remainingSec = isFree
+                ? Math.max(0, remainingDailyMinutes * 60 - duration)
+                : Math.max(0, maxDuration - duration);
+              const progressPct = isFree
+                ? ((dailyUsageMinutes * 60 + duration) / (dailyLimit * 60)) * 100
+                : (duration / maxDuration) * 100;
+              const fmt = (s: number) => {
+                const h = Math.floor(s / 3600);
+                const m = Math.floor((s % 3600) / 60);
+                const sec = Math.floor(s % 60);
+                const pad = (n: number) => n.toString().padStart(2, '0');
+                return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`;
+              };
+              const warnSec = isFree ? 5 * 60 : 30 * 60;
+              const dangerSec = isFree ? 60 : 5 * 60;
+              const variant: 'secondary' | 'destructive' =
+                remainingSec <= dangerSec ? 'destructive' : 'secondary';
+              const isAmber = remainingSec > dangerSec && remainingSec <= warnSec;
+              const label = isFree ? 'Free time left today' : 'Session time left';
+
+              return (
+                <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium">{label}</span>
+                    <Badge
+                      variant={variant}
+                      className={`font-mono tabular-nums ${
+                        remainingSec <= dangerSec ? 'animate-pulse' : ''
+                      } ${isAmber ? 'bg-amber-500 text-white hover:bg-amber-500' : ''}`}
+                    >
+                      {fmt(remainingSec)} remaining
+                    </Badge>
+                  </div>
+                  <Progress value={Math.min(progressPct, 100)} className="h-2" />
                 </div>
-                <Progress 
-                  value={(dailyUsageMinutes / dailyLimit) * 100} 
-                  className="h-2"
-                />
-              </div>
-            )}
+              );
+            })()}
 
             {/* Recording Controls */}
             <div className="space-y-6">
