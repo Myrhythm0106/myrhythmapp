@@ -9,6 +9,7 @@ import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRecordingLimits } from '@/hooks/memoryBridge/useRecordingLimits';
+import { useRecordingCountdownAlerts } from '@/hooks/memoryBridge/useRecordingCountdownAlerts';
 import { useRealtimeTranscription } from '@/hooks/memoryBridge/useRealtimeTranscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
 import { DailyLimitReachedModal } from './DailyLimitReachedModal';
@@ -38,7 +39,8 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     getDailyUsage,
     getHoursUntilReset,
     getMinutesUntilReset,
-    dailyLimit 
+    dailyLimit,
+    isLoading: isLimitsLoading,
   } = useRecordingLimits();
   const { transcript, isTranscribing, startTranscription, stopTranscription, resetTranscript } = useRealtimeTranscription();
   const { acts, isExtracting, extractACTs, clearACTs } = useRealtimeACTs(currentMeeting?.id);
@@ -69,14 +71,18 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
-  // Show warning when approaching limit
-  useEffect(() => {
-    if (isNearLimit && !showLimitWarning) {
-      setShowLimitWarning(true);
-      const label = tier === 'free' ? '20 minute' : '4 hour';
-      toast.warning(`Approaching ${label} limit`);
-    }
-  }, [isNearLimit, showLimitWarning, tier]);
+  // Live remaining seconds — mirrors the countdown pill logic below.
+  const isFreeTier = tier === 'free' && dailyLimit !== -1;
+  const liveRemainingSec = isFreeTier
+    ? Math.max(0, remainingDailyMinutes * 60 - duration)
+    : Math.max(0, maxDuration - duration);
+
+  // Threshold alerts (5 min / 1 min / 10 s / 0) + soft chime
+  useRecordingCountdownAlerts({
+    active: isVoiceRecording && !isPaused,
+    remainingSec: liveRemainingSec,
+    sessionKey: currentMeeting?.id ?? (isVoiceRecording ? 'live' : null),
+  });
 
   // Auto-stop when limit reached
   useEffect(() => {
@@ -480,17 +486,26 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
               const label = isFree ? 'Free time left today' : 'Session time left';
 
               return (
-                <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                <div
+                  className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20"
+                  aria-live={remainingSec <= 60 ? 'assertive' : 'polite'}
+                >
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium">{label}</span>
-                    <Badge
-                      variant={variant}
-                      className={`font-mono tabular-nums ${
-                        remainingSec <= dangerSec ? 'animate-pulse' : ''
-                      } ${isAmber ? 'bg-amber-500 text-white hover:bg-amber-500' : ''}`}
-                    >
-                      {fmt(remainingSec)} remaining
-                    </Badge>
+                    {isLimitsLoading && !isVoiceRecording ? (
+                      <Badge variant="outline" className="font-mono tabular-nums text-muted-foreground">
+                        Syncing…
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant={variant}
+                        className={`font-mono tabular-nums ${
+                          remainingSec <= dangerSec ? 'animate-pulse' : ''
+                        } ${isAmber ? 'bg-amber-500 text-white hover:bg-amber-500' : ''}`}
+                      >
+                        {fmt(remainingSec)} remaining
+                      </Badge>
+                    )}
                   </div>
                   <Progress value={Math.min(progressPct, 100)} className="h-2" />
                 </div>

@@ -18,6 +18,7 @@ import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
+import { useRecordingCountdownAlerts } from '@/hooks/memoryBridge/useRecordingCountdownAlerts';
 import { useAuth } from '@/hooks/useAuth';
 import { useSessionMonitor } from '@/hooks/useSessionMonitor';
 import { VoiceCoach } from './VoiceCoach';
@@ -70,6 +71,14 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
+
+  // Threshold alerts (5 min / 1 min / 10 s / 0) + soft chime
+  useRecordingCountdownAlerts({
+    active: isVoiceRecording && !isPaused,
+    remainingSec: Math.max(0, maxDuration - duration),
+    sessionKey: currentMeetingId || (isVoiceRecording ? 'live' : null),
+  });
+
 
   // Debug auth state
   useEffect(() => {
@@ -563,7 +572,10 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
                     ? 'text-amber-600'
                     : 'text-brain-health-600';
                 return (
-                  <div className={`text-xs font-mono tabular-nums ${tone}`}>
+                  <div
+                    className={`text-xs font-mono tabular-nums ${tone}`}
+                    aria-live={remainingSec <= 60 ? 'assertive' : 'polite'}
+                  >
                     {label} remaining {isPremium ? '(this session)' : '(today)'}
                   </div>
                 );

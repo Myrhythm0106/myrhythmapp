@@ -13,14 +13,59 @@ const DAILY_LIMITS = {
   family_smart: -1 // Unlimited
 };
 
+const cacheKey = (userId: string) => `mb_daily_usage_${userId}`;
+
+function readCachedUsage(userId: string): RecordingUsageTracking | null {
+  try {
+    const raw = localStorage.getItem(cacheKey(userId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as RecordingUsageTracking;
+    // Invalidate cache if it's from a previous day
+    const today = new Date().toDateString();
+    const lastDate = parsed.last_recording_date
+      ? new Date(parsed.last_recording_date).toDateString()
+      : '';
+    if (lastDate && lastDate !== today) {
+      return { ...parsed, daily_duration_minutes: 0 };
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedUsage(userId: string, usage: RecordingUsageTracking | null) {
+  try {
+    if (!usage) return;
+    localStorage.setItem(cacheKey(userId), JSON.stringify(usage));
+  } catch {
+    /* noop */
+  }
+}
+
 export function useRecordingLimits() {
   const { user } = useAuth();
   const { tier } = useSubscription();
-  const [usage, setUsage] = useState<RecordingUsageTracking | null>(null);
+  const [usage, setUsage] = useState<RecordingUsageTracking | null>(() => {
+    // Hydrate synchronously from localStorage so the countdown never
+    // flashes the full daily limit on refresh.
+    return null;
+  });
   const [isLoading, setIsLoading] = useState(true);
 
   const limits = SUBSCRIPTION_LIMITS[tier];
   const dailyLimit = DAILY_LIMITS[tier] || DAILY_LIMITS.free;
+
+  // Hydrate from cache when user becomes available
+  useEffect(() => {
+    if (user && !usage) {
+      const cached = readCachedUsage(user.id);
+      if (cached) setUsage(cached);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+
 
   const fetchUsage = useCallback(async () => {
     if (!user) {
@@ -77,6 +122,7 @@ export function useRecordingLimits() {
         }
 
         setUsage(currentUsage);
+        if (user && currentUsage) writeCachedUsage(user.id, currentUsage);
       }
     } catch (error) {
       console.error('Error fetching usage:', error);
@@ -107,7 +153,11 @@ export function useRecordingLimits() {
       );
 
       if (response.ok) {
-        setUsage(prev => prev ? { ...prev, ...updates } : null);
+        setUsage(prev => {
+          const next = prev ? { ...prev, ...updates } : null;
+          if (user && next) writeCachedUsage(user.id, next);
+          return next;
+        });
       }
     } catch (error) {
       console.error('Error updating usage:', error);
