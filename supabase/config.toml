@@ -83,3 +83,6 @@ verify_jwt = false
 
 [functions.calendar-outlook-sync]
 verify_jwt = true
+
+[functions.calendar-push-upcoming]
+verify_jwt = true
