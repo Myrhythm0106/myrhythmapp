@@ -184,6 +184,7 @@ export function useCalendarIntegration() {
     connectGoogle,
     connectOutlook,
     syncCalendar,
+    pushUpcoming,
     disconnectCalendar,
     refresh: fetchIntegrations,
   };
