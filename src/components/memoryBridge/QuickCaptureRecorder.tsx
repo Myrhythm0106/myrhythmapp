@@ -72,6 +72,14 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
+  // Threshold alerts (5 min / 1 min / 10 s / 0) + soft chime
+  useRecordingCountdownAlerts({
+    active: isVoiceRecording && !isPaused,
+    remainingSec: Math.max(0, maxDuration - duration),
+    sessionKey: currentMeetingId || (isVoiceRecording ? 'live' : null),
+  });
+
+
   // Debug auth state
   useEffect(() => {
     console.log('🔐 QuickCaptureRecorder AUTH STATE:', {
