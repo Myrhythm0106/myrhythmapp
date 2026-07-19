@@ -153,7 +153,11 @@ export function useRecordingLimits() {
       );
 
       if (response.ok) {
-        setUsage(prev => prev ? { ...prev, ...updates } : null);
+        setUsage(prev => {
+          const next = prev ? { ...prev, ...updates } : null;
+          if (user && next) writeCachedUsage(user.id, next);
+          return next;
+        });
       }
     } catch (error) {
       console.error('Error updating usage:', error);
