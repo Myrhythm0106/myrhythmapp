@@ -39,7 +39,8 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
     getDailyUsage,
     getHoursUntilReset,
     getMinutesUntilReset,
-    dailyLimit 
+    dailyLimit,
+    isLoading: isLimitsLoading,
   } = useRecordingLimits();
   const { transcript, isTranscribing, startTranscription, stopTranscription, resetTranscript } = useRealtimeTranscription();
   const { acts, isExtracting, extractACTs, clearACTs } = useRealtimeACTs(currentMeeting?.id);
