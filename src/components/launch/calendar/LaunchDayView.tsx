@@ -122,6 +122,12 @@ export function LaunchDayView({
         </div>
       )}
 
+      <LaunchDailyBrief
+        date={date}
+        eventCount={sortedEvents.filter(e => e.status !== 'cancelled' && e.status !== 'carried').length}
+        focusTitle={sortedEvents.find(e => e.status !== 'done' && e.status !== 'cancelled' && e.status !== 'carried')?.title}
+      />
+
       <LaunchCommitmentBanner 
         scope="day" 
         date={date} 
