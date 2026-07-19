@@ -545,7 +545,30 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
                 value={getProgressValue()} 
                 className="h-2"
               />
-              
+
+              {(() => {
+                const remainingSec = Math.max(0, maxDuration - duration);
+                const isPremium = subscription?.plan_type === 'premium';
+                const warnSec = isPremium ? 30 * 60 : 5 * 60;
+                const dangerSec = isPremium ? 5 * 60 : 60;
+                const h = Math.floor(remainingSec / 3600);
+                const m = Math.floor((remainingSec % 3600) / 60);
+                const s = Math.floor(remainingSec % 60);
+                const pad = (n: number) => n.toString().padStart(2, '0');
+                const label = h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+                const tone =
+                  remainingSec <= dangerSec
+                    ? 'text-red-600 animate-pulse'
+                    : remainingSec <= warnSec
+                    ? 'text-amber-600'
+                    : 'text-brain-health-600';
+                return (
+                  <div className={`text-xs font-mono tabular-nums ${tone}`}>
+                    {label} remaining {isPremium ? '(this session)' : '(today)'}
+                  </div>
+                );
+              })()}
+
               {isNearLimit && (
                 <div className="flex items-center justify-center gap-1 text-sm text-orange-600">
                   <AlertTriangle className="h-3 w-3" />
