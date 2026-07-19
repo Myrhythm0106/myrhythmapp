@@ -486,17 +486,26 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
               const label = isFree ? 'Free time left today' : 'Session time left';
 
               return (
-                <div className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20">
+                <div
+                  className="mb-4 p-3 bg-primary/5 rounded-lg border border-primary/20"
+                  aria-live={remainingSec <= 60 ? 'assertive' : 'polite'}
+                >
                   <div className="flex justify-between items-center mb-2">
                     <span className="text-sm font-medium">{label}</span>
-                    <Badge
-                      variant={variant}
-                      className={`font-mono tabular-nums ${
-                        remainingSec <= dangerSec ? 'animate-pulse' : ''
-                      } ${isAmber ? 'bg-amber-500 text-white hover:bg-amber-500' : ''}`}
-                    >
-                      {fmt(remainingSec)} remaining
-                    </Badge>
+                    {isLimitsLoading && !isVoiceRecording ? (
+                      <Badge variant="outline" className="font-mono tabular-nums text-muted-foreground">
+                        Syncing…
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant={variant}
+                        className={`font-mono tabular-nums ${
+                          remainingSec <= dangerSec ? 'animate-pulse' : ''
+                        } ${isAmber ? 'bg-amber-500 text-white hover:bg-amber-500' : ''}`}
+                      >
+                        {fmt(remainingSec)} remaining
+                      </Badge>
+                    )}
                   </div>
                   <Progress value={Math.min(progressPct, 100)} className="h-2" />
                 </div>
