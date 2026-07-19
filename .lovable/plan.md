@@ -1,51 +1,67 @@
-# Live recording countdown — free (20 min/day) and premium (4h/session)
+## Goal
 
-## Current state (verified)
-- `MemoryBridgeRecorder.tsx` (lines 460–473) shows a **static** "X min remaining" badge for free tier only — hidden for premium.
-- The value comes from `getRemainingDailyTime()` in `useRecordingLimits.ts`, computed from stored daily usage. It does NOT decrement while recording.
-- `duration` (seconds elapsed) already ticks live from `useVoiceRecorder`.
-- Premium users currently see only `MM:SS / MM:SS` at the top — no explicit "remaining" surfacing.
+Make the free-tier countdown trustworthy across refreshes, and warn the user with on-screen alerts + a soft chime as they approach zero — so important thoughts can be finished before time runs out.
 
-## Change
+Scope is deliberately small: **no service workers, no web push, no schema changes.** The countdown already reads from Supabase; we just need to make it hydrate cleanly on refresh and layer alerts on top.
 
-Turn the block into a **live countdown that ticks every second while recording** and show it for both tiers.
+## What changes
 
-### Free tier (20 min/day cap)
-- Label: **"Free time left today"**
-- Live remaining = `max(0, remainingDailyMinutes*60 − duration)`
-- Progress = `((dailyUsageMinutes*60 + duration) / (dailyLimit*60)) * 100`
-- Display badge: `MM:SS` (so seconds visibly tick).
-- Colour thresholds:
-  - `> 5:00` → secondary
-  - `1:00–5:00` → amber
-  - `< 1:00` → destructive + pulse
+### 1. Trustworthy countdown across refresh / restart
 
-### Premium / founding-comped (4h per-session cap)
-- Show the same block (previously hidden).
-- Label: **"Session time left"**
-- Live remaining = `max(0, maxDuration − duration)` where `maxDuration = 240 min`.
-- Progress = `duration / maxDuration * 100`.
-- Display badge: `HH:MM:SS` for values ≥ 1h, else `MM:SS`.
-- Colour thresholds:
-  - `> 30:00` → secondary
-  - `5:00–30:00` → amber
-  - `< 5:00` → destructive + pulse
-- No daily-usage bar (premium is per-session, unlimited daily).
+Current state (verified by reading `useRecordingLimits.ts` + `useVoiceRecorder.ts`):
+- Daily usage is already stored in Supabase (`recording_usage_tracking.daily_duration_minutes`).
+- On save, `useVoiceRecorder.ts` writes the new total.
+- On refresh, `useRecordingLimits` refetches it.
 
-### Shared behaviour
-- Pause → counter freezes (duration stops incrementing — already handled).
-- Auto-stop at zero uses existing `isOverLimit` guard.
-- Idle (not recording): show the static full allowance so users see the cap up-front.
+Gap: while the hook is loading, the recorder UI briefly shows the full 20:00 as if nothing had been used, then snaps to the real remaining time. That flicker is what makes the countdown feel untrustworthy.
+
+Fix (frontend only, in `MemoryBridgeRecorder.tsx` and `QuickCaptureRecorder.tsx`):
+- Render a subtle "Syncing…" placeholder in the countdown pill while `isLoading` is true, instead of the full daily limit.
+- Cache the last-known `daily_duration_minutes` in `localStorage` under a user-scoped key so the countdown hydrates instantly on refresh with the last known value, then reconciles when Supabase responds.
+- Keep the "charge on save" behaviour you chose — mid-recording minutes remain uncommitted until Stop & Save.
+
+Result: after any refresh or app restart the pill shows the true remaining time within one paint, and matches the server once it responds.
+
+### 2. On-screen alerts as time runs out
+
+Add a small `useRecordingCountdownAlerts` hook used by both recorders. It watches the live remaining seconds and fires exactly once per threshold per recording:
+
+| Trigger | Free tier | Premium (4 h session) | Surface |
+| --- | --- | --- | --- |
+| 5 min left | ✅ | ✅ | Amber toast: "5 minutes left — wrap up your thought" |
+| 1 min left | ✅ | ✅ | Red toast with pulse: "1 minute left — recording will auto-stop" + soft chime |
+| 10 s left | ✅ | ✅ | Red toast countdown "10… 9… 8" + second chime |
+| At 0 | ✅ | ✅ | Auto-stop (already wired) + final toast: "Time's up — your recording has been saved" |
+
+Toasts use `sonner` (already in the stack). The chime is a short WebAudio beep generated in-code (no asset needed, ~200 ms, respects the tab's mute state). A "Silence chime" link in the toast writes `mb_chime_muted=1` to localStorage so power users can turn it off per device.
+
+Each threshold fires only once per session using a ref — no spamming if the user pauses and resumes.
+
+### 3. Small polish
+
+- The existing amber/red pill classes get a matching `aria-live="polite"` (5 min) and `aria-live="assertive"` (1 min) so screen readers announce the change.
+- On the free-tier "Daily limit reached" modal, add "Time resets in X h Y min" using the existing `getHoursUntilReset` / `getMinutesUntilReset` helpers — makes the limit feel finite instead of punitive.
+
+## Out of scope (deliberately)
+
+- **Web Push / service worker / VAPID** — not building. Alerts fire only while the tab is open.
+- **Native push (Capacitor / FCM / APNs)** — not building.
+- **Mid-recording persistence to DB** — you chose "charge on save"; no periodic writes, no schema change.
+- **Recording resume after crash** — audio recovery is a separate feature.
 
 ## Files touched
-- `src/components/memoryBridge/MemoryBridgeRecorder.tsx` — un-gate the block from `tier === 'free'`, branch label / math / formatter by tier.
-- `src/components/memoryBridge/QuickCaptureRecorder.tsx` — mirror the same block (add if absent) for consistency.
 
-## Not changing
-- Hook API (`useRecordingLimits`) — math stays in the component so it re-renders each second with `duration`.
-- Daily-limit modal, upgrade prompts, storage/retention logic — untouched.
+- `src/hooks/memoryBridge/useRecordingLimits.ts` — add `localStorage` hydration for `daily_duration_minutes`, scoped by `user.id`.
+- `src/hooks/memoryBridge/useRecordingCountdownAlerts.ts` — **new**, threshold-based toasts + chime.
+- `src/components/memoryBridge/MemoryBridgeRecorder.tsx` — wire the hook, add "Syncing…" placeholder, aria-live on the pill.
+- `src/components/memoryBridge/QuickCaptureRecorder.tsx` — same wiring.
+- `src/components/memoryBridge/DailyLimitReachedModal.tsx` — add "resets in X h Y min" line.
+
+No migrations, no edge functions, no new dependencies.
 
 ## Verification
-- Free user recording: badge counts `20:00 → 19:59 → …`; turns red under 1 min; auto-stops at 0.
-- Premium user recording: badge counts `4:00:00 → 3:59:59 → …`; amber at 30 min left; red at 5 min; auto-stops at 4h.
-- Pause freezes both. Resume continues.
+
+After build, I'll:
+1. Open the recorder as a free-tier user, start a session, watch the pill tick down.
+2. Fast-forward the local `duration` state via the browser console to hit the 5:00, 1:00, and 0:10 thresholds and confirm each toast + chime fires exactly once.
+3. Refresh the page mid-cooldown and confirm the pill hydrates to the correct remaining value without flashing 20:00 first.
