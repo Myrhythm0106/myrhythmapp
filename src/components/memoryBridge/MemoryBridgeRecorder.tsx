@@ -70,14 +70,18 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
-  // Show warning when approaching limit
-  useEffect(() => {
-    if (isNearLimit && !showLimitWarning) {
-      setShowLimitWarning(true);
-      const label = tier === 'free' ? '20 minute' : '4 hour';
-      toast.warning(`Approaching ${label} limit`);
-    }
-  }, [isNearLimit, showLimitWarning, tier]);
+  // Live remaining seconds — mirrors the countdown pill logic below.
+  const isFreeTier = tier === 'free' && dailyLimit !== -1;
+  const liveRemainingSec = isFreeTier
+    ? Math.max(0, remainingDailyMinutes * 60 - duration)
+    : Math.max(0, maxDuration - duration);
+
+  // Threshold alerts (5 min / 1 min / 10 s / 0) + soft chime
+  useRecordingCountdownAlerts({
+    active: isVoiceRecording && !isPaused,
+    remainingSec: liveRemainingSec,
+    sessionKey: currentMeeting?.id ?? (isVoiceRecording ? 'live' : null),
+  });
 
   // Auto-stop when limit reached
   useEffect(() => {
