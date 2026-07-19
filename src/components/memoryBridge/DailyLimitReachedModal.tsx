@@ -37,7 +37,7 @@ export function DailyLimitReachedModal({
         
         <div className="space-y-4">
           <p className="text-muted-foreground">
-            You've used all <strong>30 minutes</strong> of recording time today on the Free plan.
+            You've used all <strong>20 minutes</strong> of recording time today on the Free plan.
           </p>
           
           {/* Countdown to next day */}
