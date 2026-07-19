@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Clock, MoreVertical, Check, X, ArrowRight, Calendar } from 'lucide-react';
+import React from 'react';
+import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles } from 'lucide-react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
+import { LaunchDailyBrief } from './LaunchDailyBrief';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -17,7 +18,8 @@ interface Event {
   title: string;
   type: string;
   status?: 'pending' | 'done' | 'cancelled' | 'carried';
-  carriedFrom?: Date;
+  carriedFrom?: Date | null;
+  source?: string;
 }
 
 interface LaunchDayViewProps {
