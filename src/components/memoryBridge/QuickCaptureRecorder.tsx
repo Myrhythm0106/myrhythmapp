@@ -572,7 +572,10 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
                     ? 'text-amber-600'
                     : 'text-brain-health-600';
                 return (
-                  <div className={`text-xs font-mono tabular-nums ${tone}`}>
+                  <div
+                    className={`text-xs font-mono tabular-nums ${tone}`}
+                    aria-live={remainingSec <= 60 ? 'assertive' : 'polite'}
+                  >
                     {label} remaining {isPremium ? '(this session)' : '(today)'}
                   </div>
                 );
