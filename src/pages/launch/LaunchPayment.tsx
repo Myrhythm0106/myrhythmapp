@@ -1,29 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Check, Shield, CreditCard, ArrowRight, Loader2, Sparkles } from 'lucide-react';
+import { Brain, Check, Shield, CreditCard, ArrowRight, Loader2, Sparkles, KeyRound, Copy, ChevronDown, FlaskConical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
+const STRIPE_MODE = (import.meta.env.VITE_STRIPE_MODE || 'live').toLowerCase();
+const IS_TEST_MODE = STRIPE_MODE === 'test';
+
 const plans = [
-  {
-    id: 'monthly',
-    name: 'Monthly',
-    price: '£10',
-    interval: 'month',
-    popular: false,
-  },
-  {
-    id: 'yearly',
-    name: 'Yearly',
-    price: '£84',
-    interval: 'year',
-    popular: true,
-    savings: 'Save 30%',
-  },
+  { id: 'monthly', name: 'Monthly', price: '£10', interval: 'month', popular: false },
+  { id: 'yearly', name: 'Yearly', price: '£84', interval: 'year', popular: true, savings: 'Save 30%' },
 ];
 
 const features = [
@@ -36,35 +28,74 @@ const features = [
   'Unlimited recordings & storage',
 ];
 
+const testCards = [
+  { label: 'Success', number: '4242 4242 4242 4242' },
+  { label: 'Declined', number: '4000 0000 0000 0002' },
+  { label: '3D Secure challenge', number: '4000 0025 0000 3155' },
+  { label: 'Insufficient funds', number: '4000 0000 0000 9995' },
+];
+
+const redeemErrorCopy: Record<string, string> = {
+  not_authenticated: 'Please sign in first, then try again.',
+  invalid_code: "That code doesn't look right. Check spelling and try again.",
+  inactive_code: 'That code has been switched off.',
+  expired_code: 'That code has expired.',
+  code_exhausted: 'That code has already been used the maximum number of times.',
+};
+
 export default function LaunchPayment() {
   const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState('monthly');
   const [isLoading, setIsLoading] = useState(false);
+  const [code, setCode] = useState('');
+  const [isRedeeming, setIsRedeeming] = useState(false);
+
+  const handleRedeemCode = async () => {
+    const trimmed = code.trim();
+    if (!trimmed) {
+      toast.error('Enter an access code first');
+      return;
+    }
+    setIsRedeeming(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        toast.error('Please sign in first');
+        navigate('/launch/register');
+        return;
+      }
+      const { data, error } = await supabase.rpc('redeem_access_code', { p_code: trimmed });
+      if (error) throw error;
+      const result = data as { success: boolean; error?: string };
+      if (!result?.success) {
+        toast.error(redeemErrorCopy[result?.error || ''] || 'Could not redeem that code.');
+        return;
+      }
+      toast.success("You're in! Welcome, Founding Member.");
+      navigate('/launch/welcome');
+    } catch (err: any) {
+      console.error('Redeem error:', err);
+      toast.error(err.message || 'Could not redeem that code.');
+    } finally {
+      setIsRedeeming(false);
+    }
+  };
 
   const handleStartTrial = async () => {
     setIsLoading(true);
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (!session) {
         toast.error('Please sign in to continue');
         navigate('/launch/register');
         return;
       }
-
       const userType = localStorage.getItem('myrhythm_user_type') || 'wellness';
       const interval = selectedPlan === 'yearly' ? 'year' : 'month';
-
       const { data, error } = await supabase.functions.invoke('create-checkout', {
-        body: {
-          plan: 'premium',
-          interval,
-          userType,
-        },
+        body: { plan: 'premium', interval, userType },
       });
-
       if (error) throw error;
-
       if (data?.url) {
         window.location.href = data.url;
       } else {
@@ -78,21 +109,44 @@ export default function LaunchPayment() {
     }
   };
 
+  const copyCard = async (num: string) => {
+    try {
+      await navigator.clipboard.writeText(num.replace(/\s/g, ''));
+      toast.success('Card number copied');
+    } catch {
+      toast.error('Copy failed — select and copy manually');
+    }
+  };
+
   return (
     <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
-      {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto py-12 px-4">
+      <div className="flex-1 overflow-y-auto py-8 px-4">
         <div className="max-w-3xl mx-auto">
-          {/* Header */}
+          {IS_TEST_MODE && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-6 rounded-xl border-2 border-amber-400 bg-amber-50 px-4 py-3 flex items-start gap-3"
+              role="status"
+              aria-live="polite"
+            >
+              <FlaskConical className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-amber-900">
+                <p className="font-semibold">Test Mode — no real money moves</p>
+                <p>Use an access code to skip payment, or use a Stripe test card below. Real cards will be declined.</p>
+              </div>
+            </motion.div>
+          )}
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-10"
+            className="text-center mb-8"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
               <Brain className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
               Start Your 7-Day Free Trial
             </h1>
             <p className="text-lg text-gray-600 max-w-xl mx-auto">
@@ -100,12 +154,11 @@ export default function LaunchPayment() {
             </p>
           </motion.div>
 
-          {/* Plan Selection */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="grid md:grid-cols-2 gap-4 mb-8"
+            className="grid md:grid-cols-2 gap-4 mb-6"
           >
             {plans.map((plan) => (
               <Card
@@ -121,9 +174,7 @@ export default function LaunchPayment() {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-gray-900">{plan.name}</h3>
                     {plan.popular && (
-                      <Badge className="bg-brand-emerald-100 text-brand-emerald-700">
-                        {plan.savings}
-                      </Badge>
+                      <Badge className="bg-brand-emerald-100 text-brand-emerald-700">{plan.savings}</Badge>
                     )}
                   </div>
                   <div className="flex items-baseline gap-1">
@@ -131,42 +182,117 @@ export default function LaunchPayment() {
                     <span className="text-gray-500">/{plan.interval}</span>
                   </div>
                   {plan.id === 'yearly' && (
-                    <p className="text-sm text-brand-emerald-600 mt-1">
-                      £7/month when billed yearly
-                    </p>
+                    <p className="text-sm text-brand-emerald-600 mt-1">£7/month when billed yearly</p>
                   )}
                 </CardContent>
               </Card>
             ))}
           </motion.div>
 
-          {/* Features */}
+          {/* Access code panel */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+          >
+            <Card className="bg-white/90 backdrop-blur-sm border-2 border-brand-emerald-200 shadow-md mb-6">
+              <CardContent className="p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <KeyRound className="h-5 w-5 text-brand-emerald-600" />
+                  <h3 className="font-semibold text-gray-900">Have an access code?</h3>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">
+                  Skip payment and unlock full access as a Founding Member.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Input
+                    value={code}
+                    onChange={(e) => setCode(e.target.value.toUpperCase())}
+                    placeholder="e.g. TESTER01"
+                    className="uppercase tracking-wide"
+                    aria-label="Access code"
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleRedeemCode(); }}
+                  />
+                  <Button
+                    onClick={handleRedeemCode}
+                    disabled={isRedeeming || !code.trim()}
+                    className="bg-brand-emerald-600 hover:bg-brand-emerald-700 text-white sm:min-w-[140px]"
+                  >
+                    {isRedeeming ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Redeem code'}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl mb-8">
+            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl mb-6">
               <CardContent className="p-6">
                 <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                   <Sparkles className="h-5 w-5 text-brand-emerald-500" />
                   Everything included in your trial:
                 </h3>
                 <div className="grid md:grid-cols-2 gap-3">
-                  {features.map((feature, index) => (
-                    <div key={index} className="flex items-center gap-2">
+                  {features.map((f, i) => (
+                    <div key={i} className="flex items-center gap-2">
                       <Check className="h-4 w-4 text-brand-emerald-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">{feature}</span>
+                      <span className="text-sm text-gray-700">{f}</span>
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
           </motion.div>
+
+          {IS_TEST_MODE && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.25 }}
+              className="mb-4"
+            >
+              <Collapsible>
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline" className="w-full justify-between border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-50">
+                    <span className="flex items-center gap-2 text-amber-900">
+                      <FlaskConical className="h-4 w-4" />
+                      Show Stripe test cards
+                    </span>
+                    <ChevronDown className="h-4 w-4 text-amber-700" />
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-2">
+                  <Card className="bg-amber-50/70 border border-amber-200">
+                    <CardContent className="p-4 space-y-2">
+                      <p className="text-xs text-amber-900 mb-2">
+                        Any future expiry date, any 3-digit CVC, any postcode. Tap to copy.
+                      </p>
+                      {testCards.map((c) => (
+                        <button
+                          key={c.number}
+                          onClick={() => copyCard(c.number)}
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-md bg-white hover:bg-amber-100/60 border border-amber-200 text-left transition"
+                        >
+                          <div>
+                            <p className="font-mono text-sm text-gray-900">{c.number}</p>
+                            <p className="text-xs text-gray-500">{c.label}</p>
+                          </div>
+                          <Copy className="h-4 w-4 text-amber-700" />
+                        </button>
+                      ))}
+                    </CardContent>
+                  </Card>
+                </CollapsibleContent>
+              </Collapsible>
+            </motion.div>
+          )}
         </div>
       </div>
 
-      {/* Sticky Footer */}
       <div className="flex-shrink-0 px-4 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -190,7 +316,6 @@ export default function LaunchPayment() {
             )}
           </Button>
 
-          {/* Trust signals */}
           <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
             <div className="flex items-center gap-1">
               <Shield className="h-4 w-4 text-green-500" />
