@@ -325,6 +325,9 @@ export type Database = {
           outlook_event_id: string | null
           pushed_to_google_at: string | null
           pushed_to_outlook_at: string | null
+          recurrence_end_date: string | null
+          recurrence_interval: number
+          recurrence_pattern: string
           reminder_level: string
           reminder_offsets_minutes: number[]
           requires_acceptance: boolean
@@ -350,6 +353,9 @@ export type Database = {
           outlook_event_id?: string | null
           pushed_to_google_at?: string | null
           pushed_to_outlook_at?: string | null
+          recurrence_end_date?: string | null
+          recurrence_interval?: number
+          recurrence_pattern?: string
           reminder_level?: string
           reminder_offsets_minutes?: number[]
           requires_acceptance?: boolean
@@ -375,6 +381,9 @@ export type Database = {
           outlook_event_id?: string | null
           pushed_to_google_at?: string | null
           pushed_to_outlook_at?: string | null
+          recurrence_end_date?: string | null
+          recurrence_interval?: number
+          recurrence_pattern?: string
           reminder_level?: string
           reminder_offsets_minutes?: number[]
           requires_acceptance?: boolean

@@ -1,10 +1,21 @@
 import React, { useMemo, useState } from 'react';
-import { X, Calendar, Clock, ChevronDown, ChevronRight, Users, Bell, Mail, Plus } from 'lucide-react';
+import { X, Calendar, Clock, ChevronDown, ChevronRight, Users, Bell, Mail, Plus, Repeat } from 'lucide-react';
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { useSupportCircle } from '@/hooks/use-support-circle';
 
 export type ReminderLevel = 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
+export type RecurrencePattern = 'none' | 'daily' | 'weekdays' | 'weekly' | 'fortnightly' | 'monthly' | 'yearly';
+
+const RECURRENCE_OPTIONS: { key: RecurrencePattern; label: string; blurb: string }[] = [
+  { key: 'none', label: 'One-off', blurb: 'Just this once.' },
+  { key: 'daily', label: 'Every day', blurb: 'Repeats each day.' },
+  { key: 'weekdays', label: 'Weekdays', blurb: 'Monday to Friday.' },
+  { key: 'weekly', label: 'Weekly', blurb: 'Same day every week.' },
+  { key: 'fortnightly', label: 'Fortnightly', blurb: 'Every 2 weeks.' },
+  { key: 'monthly', label: 'Monthly', blurb: 'Same date each month.' },
+  { key: 'yearly', label: 'Yearly', blurb: 'Same date each year.' },
+];
 
 export const REMINDER_PRESETS: Record<Exclude<ReminderLevel, 'custom' | 'off'>, { label: string; blurb: string; offsets: number[] }> = {
   gentle: { label: 'Gentle', blurb: 'A single nudge, close to the time.', offsets: [15] },
@@ -34,6 +45,9 @@ interface LaunchAddEventModalProps {
     watchers: string[];
     reminder_level: ReminderLevel;
     reminder_offsets_minutes: number[];
+    recurrence_pattern: RecurrencePattern;
+    recurrence_interval: number;
+    recurrence_end_date?: string | null;
   }) => void;
   selectedDate?: Date;
 }
@@ -79,6 +93,11 @@ export function LaunchAddEventModal({
   const [reminderLevel, setReminderLevel] = useState<ReminderLevel>('steady');
   const [customOffsets, setCustomOffsets] = useState<number[]>([1440, 30]);
   const [fineTuneOpen, setFineTuneOpen] = useState(false);
+
+  // Frequency / recurrence
+  const [freqOpen, setFreqOpen] = useState(false);
+  const [recurrence, setRecurrence] = useState<RecurrencePattern>('none');
+  const [recurrenceEndDate, setRecurrenceEndDate] = useState<string>('');
 
   const activeOffsets = useMemo(() => {
     if (reminderLevel === 'off') return [];
@@ -130,6 +149,9 @@ export function LaunchAddEventModal({
       watchers,
       reminder_level: reminderLevel,
       reminder_offsets_minutes: activeOffsets,
+      recurrence_pattern: recurrence,
+      recurrence_interval: recurrence === 'fortnightly' ? 2 : 1,
+      recurrence_end_date: recurrenceEndDate || null,
     });
     // reset
     setTitle('');
@@ -142,6 +164,9 @@ export function LaunchAddEventModal({
     setReminderOpen(false);
     setReminderLevel('steady');
     setCustomOffsets([1440, 30]);
+    setFreqOpen(false);
+    setRecurrence('none');
+    setRecurrenceEndDate('');
     onClose();
   };
 
@@ -460,6 +485,74 @@ export function LaunchAddEventModal({
               </div>
             )}
           </div>
+
+          {/* Frequency reveal */}
+          <div className="border-t border-gray-100 pt-4">
+            <button
+              type="button"
+              onClick={() => setFreqOpen((v) => !v)}
+              className="w-full flex items-center justify-between text-left"
+            >
+              <span className="flex items-center gap-2 text-sm font-medium text-gray-800">
+                <Repeat className="h-4 w-4 text-gray-500" />
+                Frequency
+                <span className="ml-2 inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-2 py-0.5 text-xs font-semibold">
+                  {RECURRENCE_OPTIONS.find((o) => o.key === recurrence)?.label}
+                </span>
+              </span>
+              {freqOpen ? (
+                <ChevronDown className="h-4 w-4 text-gray-400" />
+              ) : (
+                <ChevronRight className="h-4 w-4 text-gray-400" />
+              )}
+            </button>
+
+            {freqOpen && (
+              <div className="mt-3 space-y-3">
+                <p className="text-sm text-gray-600">
+                  How often should this repeat?
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {RECURRENCE_OPTIONS.map((o) => {
+                    const active = recurrence === o.key;
+                    return (
+                      <button
+                        key={o.key}
+                        type="button"
+                        onClick={() => setRecurrence(o.key)}
+                        className={cn(
+                          'px-3 py-2 rounded-full text-sm border transition-all min-h-[44px]',
+                          active
+                            ? 'bg-indigo-600 text-white border-indigo-600'
+                            : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'
+                        )}
+                        title={o.blurb}
+                      >
+                        {o.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                {recurrence !== 'none' && (
+                  <div className="rounded-lg bg-gray-50 p-3">
+                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">
+                      Stop repeating on (optional)
+                    </label>
+                    <input
+                      type="date"
+                      value={recurrenceEndDate}
+                      onChange={(e) => setRecurrenceEndDate(e.target.value)}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Leave blank to keep repeating — you can change it any time.
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+
 
           <button
             type="submit"
