@@ -15,6 +15,7 @@ import { useStage } from '@/launch/stage/useStage';
 import { StagePicker } from '@/launch/stage/StagePicker';
 import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
+import { LaunchWeeklyPlanningCard } from '@/components/launch/LaunchWeeklyPlanningCard';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
