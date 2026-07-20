@@ -1,67 +1,116 @@
-## Goal
 
-Make the free-tier countdown trustworthy across refreshes, and warn the user with on-screen alerts + a soft chime as they approach zero — so important thoughts can be finished before time runs out.
+# Daily Rhythm → Weekly / Monthly / Yearly Planning (with AI Plan Assist)
 
-Scope is deliberately small: **no service workers, no web push, no schema changes.** The countdown already reads from Supabase; we just need to make it hydrate cleanly on refresh and layer alerts on top.
+Turn the existing scope switcher on `/launch/calendar` into a real planning loop that persists, cascades **top-down** (Year → Month → Week → Day) and rolls up **bottom-up** (Day wins → Week review → Month theme → Year vision). Includes a user-chosen **Planning Day** (default Sunday, editable) and an **AI Plan Assist** for people who feel overwhelmed or don't know where to start.
 
-## What changes
+## What's already in place
+- `LaunchCalendar.tsx` has Day / Week / Month / Year views with local `yearVision`, `monthFocus`, `weekFocus` state.
+- `LaunchCommitmentBanner.tsx` captures **Core / Key / Stretch** per scope.
+- Tables: `annual_priorities`, `monthly_themes`, `priorities`, `daily_actions`, `mood_entries` — but the four Commitment scopes don't have a shared persistence layer.
 
-### 1. Trustworthy countdown across refresh / restart
+Problem: state is local — the plan evaporates on refresh, and a blank Core/Key/Stretch banner is exactly what triggers overwhelm.
 
-Current state (verified by reading `useRecordingLimits.ts` + `useVoiceRecorder.ts`):
-- Daily usage is already stored in Supabase (`recording_usage_tracking.daily_duration_minutes`).
-- On save, `useVoiceRecorder.ts` writes the new total.
-- On refresh, `useRecordingLimits` refetches it.
+## Proposed model
 
-Gap: while the hook is loading, the recorder UI briefly shows the full 20:00 as if nothing had been used, then snaps to the real remaining time. That flicker is what makes the countdown feel untrustworthy.
+```text
+Year Vision  ─┐
+              ├→ Monthly Theme ─┐
+              │                 ├→ Weekly Focus (Core/Key/Stretch) ─┐
+              │                 │                                    ├→ Daily Rhythm (today's 3)
+              └─────────────────┴────────────────────────────────────┘
+                                              ↑ bottom-up rollup feeds AI + weekly review
+```
 
-Fix (frontend only, in `MemoryBridgeRecorder.tsx` and `QuickCaptureRecorder.tsx`):
-- Render a subtle "Syncing…" placeholder in the countdown pill while `isLoading` is true, instead of the full daily limit.
-- Cache the last-known `daily_duration_minutes` in `localStorage` under a user-scoped key so the countdown hydrates instantly on refresh with the last known value, then reconciles when Supabase responds.
-- Keep the "charge on save" behaviour you chose — mid-recording minutes remain uncommitted until Stop & Save.
+## Build (4 PRs)
 
-Result: after any refresh or app restart the pill shows the true remaining time within one paint, and matches the server once it responds.
+### PR-1 — Persistence layer
+New table `planning_scopes` (one table, all four scopes):
 
-### 2. On-screen alerts as time runs out
+| column | type | notes |
+|---|---|---|
+| id | uuid | pk |
+| user_id | uuid | RLS: `auth.uid()` |
+| scope | text | `'day'\|'week'\|'month'\|'year'` |
+| period_start | date | week-start (user's planning day), 1st of month, Jan 1, or exact day |
+| vision_text | text | free-text focus / vision |
+| core / key / stretch | text | the three commitments |
+| parent_id | uuid | FK to enclosing scope (nullable for year) |
+| source | text | `'user'` or `'ai_assisted'` |
+| updated_at | timestamptz | |
 
-Add a small `useRecordingCountdownAlerts` hook used by both recorders. It watches the live remaining seconds and fires exactly once per threshold per recording:
+Unique on `(user_id, scope, period_start)`. RLS: user reads/writes own rows only. GRANTs for `authenticated` + `service_role`. Hook: `usePlanningScope(scope, date)`.
 
-| Trigger | Free tier | Premium (4 h session) | Surface |
-| --- | --- | --- | --- |
-| 5 min left | ✅ | ✅ | Amber toast: "5 minutes left — wrap up your thought" |
-| 1 min left | ✅ | ✅ | Red toast with pulse: "1 minute left — recording will auto-stop" + soft chime |
-| 10 s left | ✅ | ✅ | Red toast countdown "10… 9… 8" + second chime |
-| At 0 | ✅ | ✅ | Auto-stop (already wired) + final toast: "Time's up — your recording has been saved" |
+Also extend `profiles`:
+- `planning_day_of_week` `smallint` default `0` (**0 = Sunday**, 1 = Monday, … 6 = Saturday). Nullable safe.
+- All "week starts on…" logic app-wide reads this instead of hard-coding Monday/Sunday.
 
-Toasts use `sonner` (already in the stack). The chime is a short WebAudio beep generated in-code (no asset needed, ~200 ms, respects the tab's mute state). A "Silence chime" link in the toast writes `mb_chime_muted=1` to localStorage so power users can turn it off per device.
+### PR-2 — Wire the banner
+- `LaunchCommitmentBanner` becomes controlled by `usePlanningScope` with 400ms debounced autosave.
+- Inherited breadcrumb becomes live: Day banner shows Week's Core → Month's theme → Year vision.
+- Empty parent → soft nudge: "Set a focus for this week first?" with a one-tap jump.
 
-Each threshold fires only once per session using a ref — no spamming if the user pauses and resumes.
+### PR-3 — "Plan the Week" surface (day-of-week configurable)
+- **Weekly Planning Card** on `/launch/home`, shown on the user's chosen **Planning Day** and any day the coming week is still unplanned.
+- Card shows:
+  - Read-only: Year vision + Month theme (top-down context).
+  - Last week's rollup: captures, actions completed, top mood (bottom-up).
+  - Three inputs (Core / Key / Stretch) → `planning_scopes`.
+  - Two CTAs: **"I'll plan it myself"** and **"✨ Help me plan this week"** (opens PR-4).
+- **Choose your planning day** — small settings row directly on the card ("Plan on ▾ Sunday"), also mirrored under `/launch/settings`. Options: any day of the week + "Whenever I open the app on a new week". Writing this updates `profiles.planning_day_of_week`.
+- **Week view** gains a "Last week you…" strip with one-tap "Carry Stretch → next week's Key".
+- **Month view** shows 4 mini week-cards (core text + completion %).
+- **Year view** gets 12 month-tiles.
 
-### 3. Small polish
+The card's trigger logic: `dayOfWeek(today) === profiles.planning_day_of_week` **OR** no `planning_scopes` row exists for the upcoming week. So a Wednesday planner sees it on Wednesday; someone who missed their day still sees it until they've planned.
 
-- The existing amber/red pill classes get a matching `aria-live="polite"` (5 min) and `aria-live="assertive"` (1 min) so screen readers announce the change.
-- On the free-tier "Daily limit reached" modal, add "Time resets in X h Y min" using the existing `getHoursUntilReset` / `getMinutesUntilReset` helpers — makes the limit feel finite instead of punitive.
+### PR-4 — ✨ AI Plan Assist (the overwhelm-buster)
 
-## Out of scope (deliberately)
+The answer to "planning overwhelms me". A calm, one-question-at-a-time drawer that produces a *draft* plan the user then edits — never a scary blank form.
 
-- **Web Push / service worker / VAPID** — not building. Alerts fire only while the tab is open.
-- **Native push (Capacitor / FCM / APNs)** — not building.
-- **Mid-recording persistence to DB** — you chose "charge on save"; no periodic writes, no schema change.
-- **Recording resume after crash** — audio recovery is a separate feature.
+**Surface.** New drawer `LaunchAiPlanAssist.tsx` opened from:
+- The Planning Card ("Help me plan this week")
+- Any empty CommitmentBanner scope (Day / Week / Month / Year) via a small "✨ Help me start" button
 
-## Files touched
+**Flow (max 3 gentle prompts, all skippable):**
+1. "How are you feeling about this week? Low / Steady / Strong" — tap or voice.
+2. "One thing you'd love to be true by [end of scope]?" — free text or 🎤 voice (reuses Memory Bridge recorder — natural for brain-injury users).
+3. "Anything you're already committed to?" — optional.
 
-- `src/hooks/memoryBridge/useRecordingLimits.ts` — add `localStorage` hydration for `daily_duration_minutes`, scoped by `user.id`.
-- `src/hooks/memoryBridge/useRecordingCountdownAlerts.ts` — **new**, threshold-based toasts + chime.
-- `src/components/memoryBridge/MemoryBridgeRecorder.tsx` — wire the hook, add "Syncing…" placeholder, aria-live on the pill.
-- `src/components/memoryBridge/QuickCaptureRecorder.tsx` — same wiring.
-- `src/components/memoryBridge/DailyLimitReachedModal.tsx` — add "resets in X h Y min" line.
+Then shows a **suggested draft** — Core / Key / Stretch pre-filled — with:
+- Plain-English rationale ("Because you said energy is low, I kept Core to one small win.")
+- Each field individually **editable** and **regenerable** (small ↻ per field).
+- Buttons: **"Use this plan"** (saves with `source='ai_assisted'`) · **"Edit first"** · **"Start over"**.
 
-No migrations, no edge functions, no new dependencies.
+**Model call.** New edge function `plan-assist` via Lovable AI Gateway (see `connecting-to-ai-models-classic-stack`):
+- Model: `google/gemini-3.5-flash` — fast, cheap, plenty for 3 short strings.
+- Structured output via `Output.object` → `{ core, key, stretch, rationale }`.
+- Server-only system prompt hard-codes:
+  - Brain-injury-aware tone (short sentences, no jargon, no medical claims — respects `mem://brand/medical-disclaimer-policy`).
+  - Cognitive-load rules: Core / Key / Stretch each ≤ 8 words; rationale ≤ 2 sentences.
+  - Scope-aware context: walks `parent_id` chain (Year vision + Month theme) + last period's completion count + latest mood, so suggestions cascade from top-down context.
+  - Never diagnose, never promise outcomes, never mention conditions.
+- Rate limit: 20 calls/user/day (soft cap; overage returns a friendly "let's try tomorrow").
+- 402/429 handled with Lovable Cloud copy.
 
-## Verification
+**Safety & consent.**
+- First-use dialog: "MyRhythm can suggest a plan based on your recent activity. You always decide. Nothing is shared." One-tap agree; stored on `profiles`.
+- All AI outputs labelled with a small ✨ chip and "Suggested — edit anything" microcopy.
+- Voice is transcribed via the existing recorder pipeline; only the resulting text goes to the model.
 
-After build, I'll:
-1. Open the recorder as a free-tier user, start a session, watch the pill tick down.
-2. Fast-forward the local `duration` state via the browser console to hit the 5:00, 1:00, and 0:10 thresholds and confirm each toast + chime fires exactly once.
-3. Refresh the page mid-cooldown and confirm the pill hydrates to the correct remaining value without flashing 20:00 first.
+**Success criteria.**
+- Overwhelmed user opens the Planning Card on their chosen day, taps ✨ Help me plan, answers 2 taps + optional voice, receives a 3-line draft in <3s, edits Stretch, hits Use → refresh → plan is on today's Daily Brief and cascades to Day view.
+- Confident user ignores ✨ entirely; existing manual flow unchanged.
+- Metric: % of weekly plans with `source='ai_assisted'` (via founding-member cohort).
+
+## Non-goals
+- No new routes. Everything lives in `/launch/calendar`, `/launch/home`, `/launch/settings`.
+- No chat interface — this is a one-shot assist, not an AI companion.
+- No changes to `calendar_events` or Google/Outlook sync.
+- Legacy `/mvp` and `/dashboard` planning stays archived.
+
+## Technical notes
+- Single `planning_scopes` table keeps parent resolution simple.
+- Planning-day preference lives on `profiles` (already user-scoped), so no new lookup surface.
+- AI stays in an edge function; `LOVABLE_API_KEY` never ships to client; system prompt never ships to client.
+- `source` column enables A/B on "AI-assisted weeks" vs manual weeks for completion rate.
+- Voice reuses the recorder — no new hardware/permissions prompts.
