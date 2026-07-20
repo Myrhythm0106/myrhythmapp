@@ -562,3 +562,47 @@ export default function LaunchSettings() {
     </LaunchLayout>
   );
 }
+
+const DAY_OPTIONS = [
+  { value: 0, label: 'Sunday' },
+  { value: 1, label: 'Monday' },
+  { value: 2, label: 'Tuesday' },
+  { value: 3, label: 'Wednesday' },
+  { value: 4, label: 'Thursday' },
+  { value: 5, label: 'Friday' },
+  { value: 6, label: 'Saturday' },
+];
+
+function PlanningDayCard() {
+  const { dayOfWeek, setDayOfWeek, loading } = usePlanningDay();
+  return (
+    <LaunchCard>
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-xl bg-brand-emerald-100 flex items-center justify-center">
+          <Sparkles className="h-5 w-5 text-brand-emerald-600" />
+        </div>
+        <div>
+          <h3 className="font-semibold text-gray-900">Planning day</h3>
+          <p className="text-xs text-gray-500">The day MyRhythm nudges you to plan the coming week</p>
+        </div>
+      </div>
+      <Select
+        value={String(dayOfWeek ?? 0)}
+        onValueChange={(v) => setDayOfWeek(Number(v))}
+        disabled={loading}
+      >
+        <SelectTrigger className="w-full min-h-[48px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          {DAY_OPTIONS.map((d) => (
+            <SelectItem key={d.value} value={String(d.value)}>{d.label}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <p className="text-xs text-gray-500 mt-3">
+        A gentle nudge appears on your Home on this day. You can plan any day — this just sets the reminder.
+      </p>
+    </LaunchCard>
+  );
+}
