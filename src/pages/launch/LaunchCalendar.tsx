@@ -241,6 +241,29 @@ export default function LaunchCalendar() {
           initialTime={rescheduleTarget.time}
         />
       )}
+
+      <LaunchAiPlanAssist
+        isOpen={assistOpen}
+        onClose={() => {
+          setAssistOpen(false);
+          if (searchParams.get('assist')) {
+            const next = new URLSearchParams(searchParams);
+            next.delete('assist');
+            setSearchParams(next, { replace: true });
+          }
+        }}
+        scope="week"
+        periodStart={periodStartFor('week', selectedDate, dayOfWeek)}
+        onAccept={(draft) => {
+          weekScope.save({
+            core: draft.core,
+            key: draft.key,
+            stretch: draft.stretch,
+            source: 'ai_assisted',
+          });
+        }}
+      />
     </LaunchLayout>
   );
 }
+
