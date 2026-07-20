@@ -1814,6 +1814,59 @@ export type Database = {
         }
         Relationships: []
       }
+      planning_scopes: {
+        Row: {
+          core: string | null
+          created_at: string
+          id: string
+          key: string | null
+          parent_id: string | null
+          period_start: string
+          scope: string
+          source: string
+          stretch: string | null
+          updated_at: string
+          user_id: string
+          vision_text: string | null
+        }
+        Insert: {
+          core?: string | null
+          created_at?: string
+          id?: string
+          key?: string | null
+          parent_id?: string | null
+          period_start: string
+          scope: string
+          source?: string
+          stretch?: string | null
+          updated_at?: string
+          user_id: string
+          vision_text?: string | null
+        }
+        Update: {
+          core?: string | null
+          created_at?: string
+          id?: string
+          key?: string | null
+          parent_id?: string | null
+          period_start?: string
+          scope?: string
+          source?: string
+          stretch?: string | null
+          updated_at?: string
+          user_id?: string
+          vision_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planning_scopes_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "planning_scopes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       priorities: {
         Row: {
           created_at: string
@@ -1892,6 +1945,7 @@ export type Database = {
           persona_mode: string | null
           phone_number: string | null
           phone_verified: boolean | null
+          planning_day_of_week: number | null
           require_mfa_for_sensitive_actions: boolean | null
           updated_at: string
           user_type: string | null
@@ -1911,6 +1965,7 @@ export type Database = {
           persona_mode?: string | null
           phone_number?: string | null
           phone_verified?: boolean | null
+          planning_day_of_week?: number | null
           require_mfa_for_sensitive_actions?: boolean | null
           updated_at?: string
           user_type?: string | null
@@ -1930,6 +1985,7 @@ export type Database = {
           persona_mode?: string | null
           phone_number?: string | null
           phone_verified?: boolean | null
+          planning_day_of_week?: number | null
           require_mfa_for_sensitive_actions?: boolean | null
           updated_at?: string
           user_type?: string | null
