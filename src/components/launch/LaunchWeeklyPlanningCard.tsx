@@ -36,21 +36,28 @@ export function LaunchWeeklyPlanningCard() {
               ? "You've started this week's rhythm. Want to refine it?"
               : 'A gentle 3-minute check-in. One Core, one Key, one Stretch.'}
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-3 grid sm:grid-cols-2 gap-2">
             <Link
               to="/launch/calendar?view=week"
-              className="inline-flex items-center gap-1 text-sm font-medium px-4 py-2 rounded-xl bg-brand-emerald-500 text-white hover:bg-brand-emerald-600 min-h-[44px]"
+              className="flex flex-col items-start gap-0.5 text-sm font-medium px-4 py-2.5 rounded-xl bg-brand-emerald-500 text-white hover:bg-brand-emerald-600 min-h-[56px] justify-center"
             >
-              {hasPlan ? 'Review my week' : 'Plan my week'}
-              <ArrowRight className="h-4 w-4" />
+              <span className="inline-flex items-center gap-1">
+                {hasPlan ? 'Review my week' : 'Plan my week'}
+                <ArrowRight className="h-4 w-4" />
+              </span>
+              <span className="text-xs font-normal text-white/80">I'll write it myself</span>
             </Link>
             <Link
               to="/launch/calendar?view=week&assist=1"
-              className="inline-flex items-center gap-1 text-sm font-medium px-4 py-2 rounded-xl bg-white/80 text-brand-emerald-700 border border-brand-emerald-200 hover:bg-white min-h-[44px]"
+              className="flex flex-col items-start gap-0.5 text-sm font-medium px-4 py-2.5 rounded-xl bg-white/80 text-brand-emerald-700 border border-brand-emerald-200 hover:bg-white min-h-[56px] justify-center"
             >
-              <Sparkles className="h-4 w-4" /> Help me plan
+              <span className="inline-flex items-center gap-1">
+                <Sparkles className="h-4 w-4" /> Help me plan
+              </span>
+              <span className="text-xs font-normal text-brand-emerald-700/70">Guided 3-minute draft</span>
             </Link>
           </div>
+
         </div>
       </div>
     </div>
