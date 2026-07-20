@@ -27,9 +27,11 @@ import {
   endOfWeek,
 } from 'date-fns';
 import { useLaunchCalendarEvents, LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
+import { LaunchAiPlanAssist } from '@/components/launch/calendar/LaunchAiPlanAssist';
+import { usePlanningDay, usePlanningScope, periodStartFor } from '@/hooks/usePlanningScope';
 
 export default function LaunchCalendar() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const initialView = (searchParams.get('view') as CalendarView) || 'day';
   const [currentView, setCurrentView] = useState<CalendarView>(
     (['day', 'week', 'month', 'year'] as CalendarView[]).includes(initialView) ? initialView : 'day'
@@ -37,10 +39,15 @@ export default function LaunchCalendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddModal, setShowAddModal] = useState(false);
   const [rescheduleTarget, setRescheduleTarget] = useState<LaunchCalendarEvent | null>(null);
+  const [assistOpen, setAssistOpen] = useState(searchParams.get('assist') === '1');
+
+  const { dayOfWeek } = usePlanningDay();
+  const weekScope = usePlanningScope('week', selectedDate, dayOfWeek);
 
   // If ?assist=1, scroll the commitment banner into view on mount
   useEffect(() => {
     if (searchParams.get('assist') === '1') {
+      setAssistOpen(true);
       requestAnimationFrame(() => {
         document.getElementById('commitment-banner')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
@@ -51,6 +58,7 @@ export default function LaunchCalendar() {
   const [yearVision, setYearVision] = useState('');
   const [monthFocus, setMonthFocus] = useState('');
   const [weekFocus, setWeekFocus] = useState('');
+
 
   const { rangeStart, rangeEnd } = useMemo(() => {
     switch (currentView) {
@@ -233,6 +241,29 @@ export default function LaunchCalendar() {
           initialTime={rescheduleTarget.time}
         />
       )}
+
+      <LaunchAiPlanAssist
+        isOpen={assistOpen}
+        onClose={() => {
+          setAssistOpen(false);
+          if (searchParams.get('assist')) {
+            const next = new URLSearchParams(searchParams);
+            next.delete('assist');
+            setSearchParams(next, { replace: true });
+          }
+        }}
+        scope="week"
+        periodStart={periodStartFor('week', selectedDate, dayOfWeek)}
+        onAccept={(draft) => {
+          weekScope.save({
+            core: draft.core,
+            key: draft.key,
+            stretch: draft.stretch,
+            source: 'ai_assisted',
+          });
+        }}
+      />
     </LaunchLayout>
   );
 }
+
