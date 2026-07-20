@@ -1,30 +1,28 @@
-## Why the two buttons look identical today
+## Reveal-on-demand definitions for Low / Steady / Strong
 
-Both links land on `/launch/calendar?view=week`. The only extra thing "Help me plan" does today is `?assist=1`, which merely **scrolls** to the commitment banner (`LaunchCalendar.tsx` lines 41–48). It does not open the AI Plan Assist drawer — so visually the two views are the same page in the same state.
+Keep the three feeling buttons visually clean (just the words), but add a small, obvious "What do these mean?" affordance that reveals plain-language descriptions only when the user wants them.
 
-## Intended difference
+### Change (in `src/components/launch/calendar/LaunchAiPlanAssist.tsx`, feeling step only)
 
-- **Plan my week** → open Week view of the calendar, blank commitment banner ready for the user to type Core / Key / Stretch themselves. No AI.
-- **Help me plan** → open Week view **and immediately open the AI Plan Assist drawer** (`LaunchAiPlanAssist`) so the user is walked through a gentle one-question-at-a-time flow that drafts Core / Key / Stretch for them.
+1. Leave the three `Low / Steady / Strong` buttons as they are today — single word, capitalize, 56px min-height, current selected/hover styles.
+2. Directly under the button grid, add a small inline toggle:
+   - Icon + text link: `HelpCircle` icon + "What do these mean?"
+   - Style: `text-sm text-brand-emerald-700 hover:text-brand-emerald-800 underline-offset-2 hover:underline`, left-aligned, `flex items-center gap-1.5`, min tap area 44px.
+   - Clicking flips a local `showHints` boolean; label toggles to "Hide" when open; chevron rotates.
+3. When `showHints` is true, render a soft panel (`rounded-xl bg-brand-emerald-50/60 border border-brand-emerald-100 p-3 text-sm text-gray-700 space-y-1.5`) below the toggle, with three lines:
+   - **Low** — Tired, foggy, or stretched. Plan stays tiny and kind.
+   - **Steady** — Okay-ish. A realistic, normal plan.
+   - **Strong** — Clear and energised. Ready to lean in.
+4. Preserve the existing "Skip this" button below.
 
-## Changes
+No copy or behaviour changes elsewhere. No backend, hook, or schema changes.
 
-1. **`src/pages/launch/LaunchCalendar.tsx`**
-   - Add local state `assistOpen` initialised from `searchParams.get('assist') === '1'`.
-   - Render `<LaunchAiPlanAssist open={assistOpen} onOpenChange={setAssistOpen} scope="week" date={selectedDate} />` (drawer already exists).
-   - On accept/apply from the drawer, the existing `usePlanningScope` autosave in `LaunchCommitmentBanner` will pick up the new values.
-   - Keep the scroll-into-view behaviour so the banner is visible behind the drawer when it closes.
+### Why this shape
 
-2. **`src/components/launch/LaunchWeeklyPlanningCard.tsx`** — copy tightening only, so the two buttons read as clearly different:
-   - Primary: **"Plan my week"** — subtext "I'll write it myself"
-   - Secondary: **"Help me plan"** — subtext "Guided 3-minute draft" + Sparkles icon
+- Meets the "obvious it's there" bar via the inline link right under the buttons, so users never hunt for it.
+- Meets the "only when needed" bar by keeping the panel collapsed by default — the choice screen stays uncluttered and honours the max-3-choices guardrail.
+- Aligns with the existing progressive-reveal pattern used on the 4C cards.
 
-3. **Verify** `LaunchAiPlanAssist` already accepts `open` / `onOpenChange` props; if it currently self-manages a trigger, expose a controlled mode (small prop addition, no behaviour change for other callers).
+### Files touched
 
-## Out of scope
-
-- No schema changes.
-- No changes to the AI prompt or `plan-assist` edge function.
-- No change to the Sunday-only visibility rule of the home card.
-
-After this, "Help me plan" will land on the same Week view **with the AI drawer already open**, which is the visible difference the user expects.
+- `src/components/launch/calendar/LaunchAiPlanAssist.tsx`

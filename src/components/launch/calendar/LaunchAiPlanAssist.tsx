@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Loader2, X, RefreshCw } from 'lucide-react';
+import { Sparkles, Loader2, X, RefreshCw, HelpCircle, ChevronDown } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { cn } from '@/lib/utils';
@@ -38,6 +38,7 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
   const [draft, setDraft] = useState<Draft | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showHints, setShowHints] = useState(false);
 
   if (!isOpen) return null;
 
@@ -129,6 +130,25 @@ export function LaunchAiPlanAssist({ isOpen, onClose, scope, periodStart, onAcce
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                onClick={() => setShowHints((v) => !v)}
+                aria-expanded={showHints}
+                className="min-h-[44px] flex items-center gap-1.5 text-sm text-brand-emerald-700 hover:text-brand-emerald-800 underline-offset-2 hover:underline"
+              >
+                <HelpCircle className="h-4 w-4" />
+                {showHints ? 'Hide' : 'What do these mean?'}
+                <ChevronDown
+                  className={cn('h-4 w-4 transition-transform', showHints && 'rotate-180')}
+                />
+              </button>
+              {showHints && (
+                <div className="rounded-xl bg-brand-emerald-50/60 border border-brand-emerald-100 p-3 text-sm text-gray-700 space-y-1.5">
+                  <p><span className="font-semibold text-gray-900">Low</span> — Tired, foggy, or stretched. Plan stays tiny and kind.</p>
+                  <p><span className="font-semibold text-gray-900">Steady</span> — Okay-ish. A realistic, normal plan.</p>
+                  <p><span className="font-semibold text-gray-900">Strong</span> — Clear and energised. Ready to lean in.</p>
+                </div>
+              )}
               <button
                 onClick={() => setStep('aspiration')}
                 className="w-full text-sm text-gray-500 hover:text-gray-700 py-2"
