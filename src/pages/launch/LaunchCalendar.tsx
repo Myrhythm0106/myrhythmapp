@@ -82,7 +82,14 @@ export default function LaunchCalendar() {
     (e) => format(e.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
   );
 
-  const handleAddEvent = (event: { title: string; time: string; type: string }) => {
+  const handleAddEvent = (event: {
+    title: string;
+    time: string;
+    type: string;
+    watchers?: string[];
+    reminder_level?: 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
+    reminder_offsets_minutes?: number[];
+  }) => {
     addEvent({ ...event, date: selectedDate });
   };
 
