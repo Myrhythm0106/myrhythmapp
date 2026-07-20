@@ -59,6 +59,9 @@ export function QuietHome() {
         </span>
       </motion.div>
 
+      {/* Weekly planning nudge (only on the user's planning day) */}
+      <LaunchWeeklyPlanningCard />
+
       {/* #IChoose centerpiece */}
       <IChooseHeart />
 
