@@ -94,6 +94,11 @@ export function LaunchAddEventModal({
   const [customOffsets, setCustomOffsets] = useState<number[]>([1440, 30]);
   const [fineTuneOpen, setFineTuneOpen] = useState(false);
 
+  // Frequency / recurrence
+  const [freqOpen, setFreqOpen] = useState(false);
+  const [recurrence, setRecurrence] = useState<RecurrencePattern>('none');
+  const [recurrenceEndDate, setRecurrenceEndDate] = useState<string>('');
+
   const activeOffsets = useMemo(() => {
     if (reminderLevel === 'off') return [];
     if (reminderLevel === 'custom') return [...customOffsets].sort((a, b) => b - a);
