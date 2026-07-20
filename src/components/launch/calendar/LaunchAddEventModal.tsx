@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { X, Calendar, Clock, ChevronDown, ChevronRight, Users, Bell, Mail, Plus } from 'lucide-react';
+import { X, Calendar, Clock, ChevronDown, ChevronRight, Users, Bell, Mail, Plus, Repeat } from 'lucide-react';
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import { useSupportCircle } from '@/hooks/use-support-circle';
