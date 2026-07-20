@@ -89,6 +89,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
       watchers?: string[];
       reminder_level?: 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
       reminder_offsets_minutes?: number[];
+      recurrence_pattern?: 'none' | 'daily' | 'weekdays' | 'weekly' | 'fortnightly' | 'monthly' | 'yearly';
+      recurrence_interval?: number;
+      recurrence_end_date?: string | null;
     }) => {
       if (!user) return;
       const { error } = await supabase.from('calendar_events').insert({
@@ -104,6 +107,9 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
         watchers: input.watchers ?? [],
         reminder_level: input.reminder_level ?? 'steady',
         reminder_offsets_minutes: input.reminder_offsets_minutes ?? [1440, 30],
+        recurrence_pattern: input.recurrence_pattern ?? 'none',
+        recurrence_interval: input.recurrence_interval ?? 1,
+        recurrence_end_date: input.recurrence_end_date ?? null,
       } as any);
       if (error) {
         console.error(error);
