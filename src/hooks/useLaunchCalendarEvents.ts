@@ -81,7 +81,15 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
   }, [fetchEvents]);
 
   const addEvent = useCallback(
-    async (input: { title: string; time: string; type: string; date: Date }) => {
+    async (input: {
+      title: string;
+      time: string;
+      type: string;
+      date: Date;
+      watchers?: string[];
+      reminder_level?: 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
+      reminder_offsets_minutes?: number[];
+    }) => {
       if (!user) return;
       const { error } = await supabase.from('calendar_events').insert({
         user_id: user.id,
@@ -93,7 +101,10 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
         source: 'manual',
         requires_acceptance: false,
         is_system_generated: false,
-      });
+        watchers: input.watchers ?? [],
+        reminder_level: input.reminder_level ?? 'steady',
+        reminder_offsets_minutes: input.reminder_offsets_minutes ?? [1440, 30],
+      } as any);
       if (error) {
         console.error(error);
         toast.error('Could not add event');
