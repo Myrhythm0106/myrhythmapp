@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
@@ -28,10 +29,23 @@ import {
 import { useLaunchCalendarEvents, LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
 
 export default function LaunchCalendar() {
-  const [currentView, setCurrentView] = useState<CalendarView>('day');
+  const [searchParams] = useSearchParams();
+  const initialView = (searchParams.get('view') as CalendarView) || 'day';
+  const [currentView, setCurrentView] = useState<CalendarView>(
+    (['day', 'week', 'month', 'year'] as CalendarView[]).includes(initialView) ? initialView : 'day'
+  );
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddModal, setShowAddModal] = useState(false);
   const [rescheduleTarget, setRescheduleTarget] = useState<LaunchCalendarEvent | null>(null);
+
+  // If ?assist=1, scroll the commitment banner into view on mount
+  useEffect(() => {
+    if (searchParams.get('assist') === '1') {
+      requestAnimationFrame(() => {
+        document.getElementById('commitment-banner')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+  }, [searchParams]);
 
   // Vision cascade state
   const [yearVision, setYearVision] = useState('');
