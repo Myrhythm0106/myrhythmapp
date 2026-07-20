@@ -5,6 +5,17 @@ import { cn } from '@/lib/utils';
 import { useSupportCircle } from '@/hooks/use-support-circle';
 
 export type ReminderLevel = 'gentle' | 'steady' | 'strong' | 'custom' | 'off';
+export type RecurrencePattern = 'none' | 'daily' | 'weekdays' | 'weekly' | 'fortnightly' | 'monthly' | 'yearly';
+
+const RECURRENCE_OPTIONS: { key: RecurrencePattern; label: string; blurb: string }[] = [
+  { key: 'none', label: 'One-off', blurb: 'Just this once.' },
+  { key: 'daily', label: 'Every day', blurb: 'Repeats each day.' },
+  { key: 'weekdays', label: 'Weekdays', blurb: 'Monday to Friday.' },
+  { key: 'weekly', label: 'Weekly', blurb: 'Same day every week.' },
+  { key: 'fortnightly', label: 'Fortnightly', blurb: 'Every 2 weeks.' },
+  { key: 'monthly', label: 'Monthly', blurb: 'Same date each month.' },
+  { key: 'yearly', label: 'Yearly', blurb: 'Same date each year.' },
+];
 
 export const REMINDER_PRESETS: Record<Exclude<ReminderLevel, 'custom' | 'off'>, { label: string; blurb: string; offsets: number[] }> = {
   gentle: { label: 'Gentle', blurb: 'A single nudge, close to the time.', offsets: [15] },
