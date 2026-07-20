@@ -213,7 +213,11 @@ export default function LaunchSettings() {
           </div>
         </LaunchCard>
 
+        {/* Planning Day Section */}
+        <PlanningDayCard />
+
         {/* Connected Calendars Section */}
+
 
         <LaunchCard>
           <div className="flex items-center gap-3 mb-4">
