@@ -325,6 +325,8 @@ export type Database = {
           outlook_event_id: string | null
           pushed_to_google_at: string | null
           pushed_to_outlook_at: string | null
+          reminder_level: string
+          reminder_offsets_minutes: number[]
           requires_acceptance: boolean
           source: string
           status: string
@@ -348,6 +350,8 @@ export type Database = {
           outlook_event_id?: string | null
           pushed_to_google_at?: string | null
           pushed_to_outlook_at?: string | null
+          reminder_level?: string
+          reminder_offsets_minutes?: number[]
           requires_acceptance?: boolean
           source?: string
           status?: string
@@ -371,6 +375,8 @@ export type Database = {
           outlook_event_id?: string | null
           pushed_to_google_at?: string | null
           pushed_to_outlook_at?: string | null
+          reminder_level?: string
+          reminder_offsets_minutes?: number[]
           requires_acceptance?: boolean
           source?: string
           status?: string
