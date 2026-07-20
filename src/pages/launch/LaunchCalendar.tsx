@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
