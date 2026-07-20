@@ -45,6 +45,9 @@ interface LaunchAddEventModalProps {
     watchers: string[];
     reminder_level: ReminderLevel;
     reminder_offsets_minutes: number[];
+    recurrence_pattern: RecurrencePattern;
+    recurrence_interval: number;
+    recurrence_end_date?: string | null;
   }) => void;
   selectedDate?: Date;
 }
