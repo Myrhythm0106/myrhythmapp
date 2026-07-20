@@ -21,6 +21,7 @@ import {
   Sparkles, MessageCircle, ChevronRight, ListTree, HeartPulse, Activity,
 } from 'lucide-react';
 import { useSchedulingPreferences } from '@/hooks/useSchedulingPreferences';
+import { usePlanningDay } from '@/hooks/usePlanningScope';
 
 import { useNavigate } from 'react-router-dom';
 import { useCalendarIntegration } from '@/hooks/useCalendarIntegration';
