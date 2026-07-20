@@ -149,6 +149,9 @@ export function LaunchAddEventModal({
       watchers,
       reminder_level: reminderLevel,
       reminder_offsets_minutes: activeOffsets,
+      recurrence_pattern: recurrence,
+      recurrence_interval: recurrence === 'fortnightly' ? 2 : 1,
+      recurrence_end_date: recurrenceEndDate || null,
     });
     // reset
     setTitle('');
@@ -161,6 +164,9 @@ export function LaunchAddEventModal({
     setReminderOpen(false);
     setReminderLevel('steady');
     setCustomOffsets([1440, 30]);
+    setFreqOpen(false);
+    setRecurrence('none');
+    setRecurrenceEndDate('');
     onClose();
   };
 
