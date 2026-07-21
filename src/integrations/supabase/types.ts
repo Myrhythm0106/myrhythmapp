@@ -1041,6 +1041,7 @@ export type Database = {
         Row: {
           action_text: string
           action_type: string
+          adhoc_loop_ins: Json
           alternative_phrasings: Json | null
           assigned_to: string | null
           assigned_watchers: string[] | null
@@ -1095,6 +1096,7 @@ export type Database = {
         Insert: {
           action_text: string
           action_type?: string
+          adhoc_loop_ins?: Json
           alternative_phrasings?: Json | null
           assigned_to?: string | null
           assigned_watchers?: string[] | null
@@ -1149,6 +1151,7 @@ export type Database = {
         Update: {
           action_text?: string
           action_type?: string
+          adhoc_loop_ins?: Json
           alternative_phrasings?: Json | null
           assigned_to?: string | null
           assigned_watchers?: string[] | null
