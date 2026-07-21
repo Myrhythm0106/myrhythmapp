@@ -12,11 +12,11 @@ interface IconBadgeProps {
 }
 
 const toneClasses: Record<Tone, string> = {
-  teal: 'bg-clarity-teal-50 text-clarity-teal-700 ring-clarity-teal-100',
-  emerald: 'bg-memory-emerald-50 text-memory-emerald-700 ring-memory-emerald-100',
-  orange: 'bg-brand-orange-50 text-brand-orange-700 ring-brand-orange-100',
-  purple: 'bg-neural-purple-50 text-neural-purple-700 ring-neural-purple-100',
-  neutral: 'bg-brain-health-50 text-brain-health-700 ring-brain-health-100',
+  teal: 'bg-launch-gold/10 text-launch-gold ring-launch-gold/30',
+  emerald: 'bg-launch-gold/10 text-launch-gold ring-launch-gold/30',
+  orange: 'bg-launch-ember/10 text-launch-ember ring-launch-ember/30',
+  purple: 'bg-launch-gold/10 text-launch-gold ring-launch-gold/30',
+  neutral: 'bg-launch-ink/5 text-launch-ink ring-launch-ink/10',
 };
 
 const sizes = {
