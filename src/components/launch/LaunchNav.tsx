@@ -18,7 +18,7 @@ export function LaunchNav() {
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-t border-brain-health-100 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-launch-ivory/95 backdrop-blur-md border-t border-launch-gold/20 md:hidden">
       <div className="flex items-center justify-around px-2 py-2">
         {navItems.map((item) => (
           <NavLink
@@ -27,8 +27,8 @@ export function LaunchNav() {
             className={cn(
               "flex flex-col items-center gap-1 px-3 py-2 rounded-xl transition-all min-w-[56px] min-h-[56px] justify-center relative",
               isActive(item.url)
-                ? "text-brain-health-900"
-                : "text-brain-health-400 hover:text-brain-health-700"
+                ? "text-launch-ink"
+                : "text-launch-ink/40 hover:text-launch-ink/80"
             )}
           >
             <item.icon className="h-5 w-5" strokeWidth={1.75} />
@@ -39,7 +39,7 @@ export function LaunchNav() {
               {item.title}
             </span>
             {isActive(item.url) && (
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-[hsl(var(--launch-ember))]" />
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-launch-ember" />
             )}
           </NavLink>
         ))}
@@ -47,3 +47,4 @@ export function LaunchNav() {
     </nav>
   );
 }
+
