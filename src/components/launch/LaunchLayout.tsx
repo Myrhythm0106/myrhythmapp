@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import { LaunchNav } from './LaunchNav';
 import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
@@ -14,6 +15,7 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAuth } from '@/hooks/useAuth';
+
 
 const PRE_ACCOUNT_PATHS = new Set([
   '/launch/welcome',
