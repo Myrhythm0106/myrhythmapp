@@ -574,39 +574,36 @@ export default function LaunchMemoryBridge() {
               const actionsCount = actionsCountMap[recording.id] || 0;
 
               return (
-                <div 
-                  key={recording.id} 
-                  className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl p-4 transition-all duration-300 hover:shadow-2xl hover:-translate-y-0.5"
+                <LaunchCard
+                  key={recording.id}
+                  className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 p-4"
                 >
-                  {/* Glass reflection */}
-                  <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/50 to-transparent pointer-events-none" />
-                  
                   {/* Left accent bar */}
                   <div className={cn(
                     "absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl",
-                    isProcessed 
-                      ? "bg-gradient-to-b from-memory-emerald-500 to-clarity-teal-500" 
-                      : "bg-gradient-to-b from-brand-orange-500 to-brand-orange-600"
+                    isProcessed
+                      ? "bg-launch-moss"
+                      : "bg-launch-ember"
                   )} />
-                  
+
                   <div className="relative z-10 flex flex-col gap-3 pl-3">
                     {/* Header row */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className={cn(
-                          "w-11 h-11 rounded-xl flex items-center justify-center shadow-lg",
+                          "w-11 h-11 rounded-xl flex items-center justify-center",
                           isProcessed
-                            ? "bg-gradient-to-br from-memory-emerald-100 to-clarity-teal-100"
-                            : "bg-gradient-to-br from-brand-orange-100 to-brand-orange-50"
+                            ? "bg-launch-moss/10"
+                            : "bg-launch-ember/10"
                         )}>
                           <Mic className={cn(
                             "h-5 w-5",
-                            isProcessed ? "text-memory-emerald-600" : "text-brand-orange-600"
+                            isProcessed ? "text-launch-moss" : "text-launch-ember"
                           )} />
                         </div>
                         <div>
-                          <p className="font-semibold text-foreground">{recording.title}</p>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
+                          <p className="font-semibold text-launch-ink">{recording.title}</p>
+                          <p className="text-xs text-launch-ink/60 flex items-center gap-1">
                             <Clock className="h-3 w-3" />
                             {formatRecordingDate(recording.created_at)}
                             {recording.duration_seconds && (
@@ -617,7 +614,7 @@ export default function LaunchMemoryBridge() {
                       </div>
 
                       {isProcessed && (
-                        <Badge className="bg-gradient-to-r from-memory-emerald-100 to-clarity-teal-100 text-memory-emerald-700 border border-memory-emerald-200 shadow-md">
+                        <Badge className="bg-launch-moss/10 text-launch-moss border-launch-moss/30">
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Actions Ready
                         </Badge>
@@ -625,14 +622,14 @@ export default function LaunchMemoryBridge() {
                     </div>
 
                     {/* Action buttons */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 flex-wrap">
                       <button
                         onClick={() => handlePlayRecording(recording)}
                         className={cn(
-                          "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all shadow-md",
+                          "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all",
                           isPlaying
-                            ? "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white"
-                            : "bg-white/90 hover:bg-white border border-white/60 text-foreground hover:shadow-lg"
+                            ? "bg-launch-ember text-white"
+                            : "bg-white border border-launch-gold/30 text-launch-ink hover:bg-launch-gold/5"
                         )}
                       >
                         {isPlaying ? (
@@ -651,7 +648,7 @@ export default function LaunchMemoryBridge() {
                       {isProcessed ? (
                         <button
                           onClick={() => handleViewActions(recording)}
-                          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium bg-gradient-to-r from-memory-emerald-500 to-clarity-teal-500 text-white hover:from-memory-emerald-600 hover:to-clarity-teal-600 transition-all shadow-lg shadow-memory-emerald-500/30"
+                          className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium bg-launch-moss text-white hover:bg-launch-moss/90 transition-all"
                         >
                           <Eye className="h-4 w-4" />
                           View {actionsCount} Action{actionsCount !== 1 ? 's' : ''}
@@ -661,10 +658,10 @@ export default function LaunchMemoryBridge() {
                           onClick={() => handleProcessRecording(recording)}
                           disabled={isCurrentlyProcessing}
                           className={cn(
-                            "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all shadow-lg",
+                            "flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-all",
                             isCurrentlyProcessing
-                              ? "bg-muted text-muted-foreground cursor-not-allowed"
-                              : "bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 text-white hover:from-brand-orange-600 hover:to-brand-orange-700 shadow-brand-orange-500/30"
+                              ? "bg-launch-ink/10 text-launch-ink/50 cursor-not-allowed"
+                              : "bg-launch-ember text-white hover:bg-launch-ember/90"
                           )}
                         >
                           {isCurrentlyProcessing ? (
@@ -697,8 +694,9 @@ export default function LaunchMemoryBridge() {
                       className="pt-1"
                     />
                   </div>
-                </div>
+                </LaunchCard>
               );
+
             })
           )}
         </div>
