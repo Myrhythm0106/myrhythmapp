@@ -203,7 +203,7 @@ export default function LaunchRegister() {
             </Card>
 
             {/* Sign in link */}
-            <p className="mt-6 text-sm text-gray-600 pb-8">
+            <p className="mt-6 text-sm text-launch-ink/60 pb-8">
               Already verified?{' '}
               <button
                 onClick={() => navigate('/launch/signin')}
@@ -212,6 +212,7 @@ export default function LaunchRegister() {
                 Sign in
               </button>
             </p>
+
           </div>
         </div>
       </div>
