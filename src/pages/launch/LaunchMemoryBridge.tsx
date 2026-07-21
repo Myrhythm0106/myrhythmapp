@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
+import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
+import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
 import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle } from 'lucide-react';
@@ -12,12 +14,12 @@ import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
 import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDialog';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { EnhancedBackgroundEffects } from '@/components/ui/EnhancedBackgroundEffects';
 import { Badge } from '@/components/ui/badge';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
+
 
 type RecordingState = 'idle' | 'recording' | 'paused' | 'reviewing';
 
