@@ -1,55 +1,72 @@
-## Why you can't add anyone right now
 
-I traced all four surfaces you flagged. In every case the UI is either mocked, points to a dead route, or the "add" control has been hidden.
+# Discharge Summary → Life-Ready Plan
 
-### 1. Support Circle page (`/launch/support`) — invite form is a dummy
-`src/pages/launch/LaunchSupportCircle.tsx` renders **mock members** and an Invite tab whose inputs and "Send Invitation" button have **no state and no `onClick`**. Nothing is wired to the DB. The working invite form (`SimpleInviteForm`, which calls `useAccountabilitySystem().addSupportMember`) already exists and is used on the legacy `/support-circle` page — but auth users are redirected away from that route into the launch page, so they never reach it.
+A new flow that turns a rehab discharge summary into a reviewable, nurse-approved schedule inside MyRhythm. Lives inside the Discharge Bridge Kit (Stage 02 of the Bridge Pathway) so it reinforces the Clinical-Ready → Life-Ready thesis, not a new pillar.
 
-### 2. Add Event modal — invite section is hidden behind a collapsed row
-`LaunchAddEventModal.tsx` does have a working invite block (Support Circle chips + email add, up to 5), but it's collapsed under a small "Invite someone" row inside a bordered divider. On your screen it reads as a plain label, not a control. Also, when there are no members yet, the fallback link points to `/launch/support-circle` — which redirects to `/launch/support` — which is the broken page from #1, so the loop is closed.
+Route: `/launch/discharge-bridge/plan`
+Entry points: Day 1 card of the existing 7-day Bridge path, and a new "Have a discharge summary?" tile on `/launch/home` for post-discharge users.
 
-### 3. Action card ("in the loop" on a Next Step) — no add button at all
-`ActionDetailCard` / `MemoryBridgeActionReport` display existing watchers via `WatchersDisplay`, but there's no "Add someone" trigger next to them. `SupportCircleQuickAssign` exists but isn't mounted in the action detail surface, and there's no UI for ad-hoc email loop-ins (the `adhoc_loop_ins` column we added has no writer).
+## User flow (4 quiet steps, max 3 choices per screen)
 
-### 4. Memory Bridge quick capture (`/launch/memory?quick=1`) — no loop-in field
-The quick capture screen has no invite/loop-in control, so nothing to add.
+1. **Upload / paste** — user uploads PDF/image or pastes text of the discharge summary. Voice dictation fallback via existing Memory Bridge recorder.
+2. **Review extracted items** — AI returns a structured list: medications, follow-up appointments, therapy exercises, red-flag symptoms to watch, activity restrictions, rest guidance. Each item is editable and can be removed. Nothing is scheduled yet.
+3. **Draft plan** — user picks a horizon (First 7 days / First 30 days). AI proposes a gentle schedule using existing energy-aware Smart Scheduling (respects cognitive load, rest windows, MyRHYTHM-G states). User can accept, tweak, or regenerate one section at a time.
+4. **Send for approval** — user picks discharge nurse / clinician from Support Circle or types an email. A PDF ("Proposed Home Plan — for your review") is emailed with an approve/decline link. Nothing hits the calendar until approval (or user overrides with "Add to my schedule anyway").
 
-## What to build
+On approval: items become real `calendar_events` (source: `discharge_plan`, status: `approved`), reminders auto-set per user's Gentle/Steady/Strong preference, Support Circle looped in per item.
 
-### A. Fix `/launch/support` so it actually manages the roster
-Replace the mocked page with a real implementation:
-- Members tab: pull from `useAccountabilitySystem().supportCircle` (already loads active + pending from DB), show relationship + role chips, allow remove/edit permissions.
-- Invite tab: mount `SimpleInviteForm` (already wired to `addSupportMember` → DB + invitation email). Keep launch styling (glass cards, brand-emerald), but use the working form's logic verbatim.
-- Delete the four mock arrays. Keep Messages/Path tabs as-is for now (out of scope).
-- Update the modal's fallback link from `/launch/support-circle` → `/launch/support` (or keep the existing redirect, but drop the extra hop).
+## Guardrails (non-negotiable)
 
-### B. Make the Add Event invite section visible by default
-- In `LaunchAddEventModal.tsx`, default `inviteOpen` to `true` so the Support Circle chips + email input are shown immediately. Keep the collapse control for users who want to hide it.
-- When `members.length === 0`, keep the "Add someone to your Support Circle" link (now working after A).
+- Zero medical claims. Copy: "MyRhythm helps you organise what your clinician wrote — it does not diagnose, treat, or replace clinical judgement." Present on every screen + PDF footer.
+- The AI **never invents** clinical items. If a field is uncertain it's flagged "please confirm with your clinician" rather than guessed.
+- Nurse email is opt-in; users can skip and self-approve, with a clear banner that the plan is unreviewed.
+- All uploads encrypted at rest (Supabase storage, private bucket) and auto-purged after 90 days unless user pins them.
+- Fits the D0–D4 core-surface guardrails: one primary CTA per step, progressive reveal for detail, 56px targets.
 
-### C. Add "In the loop" control to action cards
-In `ActionDetailCard.tsx` (inside the existing "More details" reveal, next to `WatchersDisplay`):
-- Add a **"Loop someone in"** button that opens a small popover with:
-  - Support Circle multi-select (writes into `extracted_actions.assigned_watchers`)
-  - "Or by email" input (writes into `extracted_actions.adhoc_loop_ins` as `[{ email, name? }]`) — up to 5, same validation as the Add Event modal
-- Render existing ad-hoc loop-ins as chips with a remove (×).
-- Reuse `WatchersDisplay` for members and add a lightweight chip renderer for email loop-ins with `ariaLabel="in the loop"`.
+## Technical outline
 
-### D. Add "Loop someone in (optional)" to Memory Bridge quick capture
-On the quick-capture screen (`LaunchCapture` / `LaunchMemoryBridge` capture panel), add one collapsed row **"Loop someone in (optional)"** using the same component as C. The chosen members/emails are attached to the resulting extracted actions after Save & Extract (default watchers for every action from that capture) — stored on the meeting record and applied when actions are created.
+**DB (migration):**
+- `discharge_summaries` — id, user_id, source_type (upload/paste/voice), file_path, raw_text, extracted_json, created_at. RLS: owner only. GRANTs for authenticated + service_role.
+- `discharge_plans` — id, user_id, summary_id, horizon (7d/30d), draft_json, status (draft/awaiting_approval/approved/declined/self_approved), reviewer_email, reviewer_name, approval_token, approved_at, created_at. RLS: owner + token-based read for reviewer.
+- `calendar_events.source` extended to include `discharge_plan`; link column `discharge_plan_id`.
 
-### E. Terminology pass
-Everywhere a user-facing label still says "Watchers", change it to **"In the loop"** (and keep "Support Circle" for the roster itself). Non-user-facing DB column names stay.
+**Edge functions:**
+- `discharge-extract` — accepts file or text, calls Lovable AI Gateway (Gemini 3.x flash for extraction, strict JSON schema via `Output.object`), returns structured items. OCR for images via existing pipeline.
+- `discharge-draft-plan` — takes edited items + horizon + user's schedule preferences + MyRHYTHM-G recent states, returns a proposed schedule (JSON). Uses same gateway.
+- `discharge-send-for-approval` — generates PDF (reuses `clinicalExport.ts` with new `buildProposedHomePlanPdf` variant), emails via existing Resend integration, creates signed approval URL.
+- `discharge-approval` — public endpoint validated by signed token; marks plan approved/declined, triggers calendar materialisation, notifies user.
 
-## Technical notes
+**Frontend (`src/pages/launch/`):**
+- `LaunchDischargePlan.tsx` — 4-step wizard, reuses `LaunchAiPlanAssist` patterns and `LoopInPicker`.
+- `LaunchDischargePlanReview.tsx` — public page (no auth) for the reviewer to see and approve/decline.
+- Card on `LaunchDischargeBridge.tsx` and `LaunchHome.tsx` pointing here.
 
-- No schema changes needed. `support_circle_members`, `extracted_actions.assigned_watchers` (uuid[]), and `extracted_actions.adhoc_loop_ins` (jsonb) already exist.
-- Reuse existing hooks: `useAccountabilitySystem` (roster + `addSupportMember`), `useSupportCircle` (list for pickers), and the email regex from `LaunchAddEventModal`.
-- The launch redirect (`/support-circle` → `/launch/support`) stays; we're fixing the destination, not the routing.
-- The shared loop-in popover should live at `src/components/shared/LoopInPicker.tsx` so C, D, and the Add Event modal can all use one component (Add Event can migrate to it later; not required this pass to avoid regressions).
+**Copy source of truth:** add `DISCHARGE_PLAN_COPY` block to `src/config/appDescription.ts`, per the memory rule.
 
-## Out of scope
+## Success signals
 
-- Messages and Path tabs on `/launch/support` (kept mocked; separate task).
-- Notification/email delivery to ad-hoc loop-ins beyond what already exists for Support Circle invites.
-- Renaming DB columns.
+- % of Founding Members with a discharge summary who reach step 3 (draft plan): target 70%.
+- % of drafts sent to a clinician: target 40%.
+- % of sent drafts approved within 7 days: target 30% — proves the loop closes.
+- Anecdotal: at least one nurse from LOI 1 replies "approve".
+
+## Out of scope for v0.1
+
+- Direct EHR/HL7 integration (defer to v0.3+; hospital-side work).
+- Multi-clinician review threads.
+- In-app chat with the nurse (email is enough for the wedge).
+- Non-English discharge summaries (English-first; German/Spanish later).
+
+## Risk / mitigation
+
+| Risk | Mitigation |
+|---|---|
+| AI misreads dose/frequency | Every med row shows raw source quote + "confirm with clinician" flag; user must tick before it can be scheduled |
+| Nurse won't click a link from an unknown domain | PDF attachment is the primary artefact; approval link is secondary convenience |
+| Feels like a medical device | Explicit disclaimer on every screen + PDF; framed as "your notes, organised" |
+| Scope creep into treatment plans | Locked template: schedule + reminders only, never dosages calculated by us |
+
+## Rollout
+
+- Ships as part of the Discharge Bridge Kit sprint (target 15 Aug 2026).
+- Behind a `discharge_plan_v1` feature flag for the first 2 weeks; enabled for Founding Members with the `brain_injury` persona first, then all personas.
