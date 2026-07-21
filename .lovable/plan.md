@@ -1,96 +1,74 @@
-# Plan: Unify /launch/* pages with /launch/welcome visual language
+# Continue Emerald Prestige theming + Memory Bridge transcript & action-scheduling home
 
-## Goal
-Make every `/launch/*` page feel like it belongs to the same premium, calm, brain-healthy app family that `/launch/welcome` establishes. Keep `/launch/welcome` exactly as-is (its cream is the locked baseline); apply a lighter complementary cream to all other launch pages.
+Two workstreams in one pass. First finishes the visual continuation from the last turn; second answers "where do the transcripts live, and how are the actions structured with suggested dates?"
 
-## What the baseline looks like
-`/launch/welcome` uses:
-- **INK** hero band (`#064e3b`) with gold eyebrow, title, hairline, and topographic contour lines
-- **CREAM** page/cards (`#f5f0e0`) with dark emerald type
-- **GOLD** (`#c9a84c`) for accents, borders, and focus
-- **Sora** headings + **Manrope** body
-- Generous whitespace, sharp edges on the hero card, restrained shadows
+---
 
-## Current gap (verified from screenshots)
-Other `/launch` pages (Home, Settings, Calendar, Memory Bridge) currently sit on the same darker cream with plain white cards and no ink hero band. They look utilitarian and do not carry the prestige feel of `/launch/welcome`.
+## 1) Continue Emerald Prestige across authenticated /launch/* screens
 
-## Selected design direction
-**Emerald ivory refinement** — lighter page background (`#faf6ea`), ivory card surfaces (`#fdfcf7`) with gold hairline borders, and an ink emerald hero band on each page. This matches the user's choice from the prototype preview.
+Audit and repaint any leftover legacy purple/indigo/grey on screens the user hits after sign-in.
 
-## Deliverables
+**In scope (visual only, no logic changes):**
+- `LaunchHome`, `LaunchCalendar`, `LaunchMemoryBridge`, `LaunchCalibrate`, `LaunchCommit`, `LaunchCapture`, `LaunchCaptureResult`, `LaunchSupportCircle`, `LaunchGoals`, `LaunchVisionStatement`, `LaunchGratitude`, `LaunchAnalytics`, `LaunchRoadmap`, `LaunchProfile`, `LaunchSettings`, `LaunchWhatsNew`, `LaunchHelp`.
+- Swap hardcoded `bg-purple-*`, `from-indigo-*`, `text-slate-*` etc. for launch tokens (`launch-ink`, `launch-moss`, `launch-gold`, `launch-ember`, `launch-cream`, `launch-ivory`).
+- Headings use serif display class already defined in `launch-theme`; body stays on the theme's sans.
+- Cards: cream surface + moss border + gold accents. Primary CTAs: ember. Secondary: moss outline.
+- Preserve MyRHYTHM-G chip colors and assessment letter colors — those are semantic, not decorative.
 
-### 1. Theme token update (`src/index.css`)
-Add two scoped tokens inside `.launch-theme`:
-- `--launch-cream-light: 45 50% 96%` (~`#faf6ea`) — page background for non-welcome launch pages
-- `--launch-ivory: 45 60% 98%` (~`#fdfcf7`) — elevated card surfaces
-- Utility classes: `.bg-launch-cream-light`, `.bg-launch-ivory`, `.border-launch-gold/30`
+Verify with Playwright screenshots of Home, Calendar, Memory Bridge, Calibrate.
 
-Leave `--launch-cream` (`#f5f0e0`) untouched so `/launch/welcome` stays identical.
+---
 
-### 2. Reusable `LaunchHeroBand` component
-Create `src/components/launch/LaunchHeroBand.tsx` with:
-- Optional gold eyebrow text
-- Page title (Sora, white)
-- Optional subtitle (cream/white muted)
-- Gold horizontal hairline divider
-- Optional topographic SVG contour overlay (same as welcome)
-- Prop to hide back button when used inside `LaunchLayout`
+## 2) Transcript Library + Action Scheduling home (Memory Bridge)
 
-### 3. `LaunchLayout` background logic
-Update `LaunchLayout` so:
-- `/launch/welcome` keeps `bg-[hsl(var(--launch-cream))]`
-- All other `/launch/*` pages use `bg-[hsl(var(--launch-cream-light))]`
-- The sticky header remains white/ivory with gold ring on the logo mark
+Today the transcript is saved on `meeting_recordings.transcription` but is only reachable through a download button on the recording card. There's an unused `TranscriptsTab` component. Actions extracted from a recording go to `extracted_actions` / `daily_actions` but the user can't see the suggested start/finish dates in one place.
 
-### 4. `LaunchPageHeader` refinement
-Keep the existing back-button row, but restyle it for the lighter cream:
-- Use `text-launch-ink` / `hover:bg-launch-ivory`
-- Ensure 56px touch target
-- Add an optional `hero` prop that renders the page title inside `LaunchHeroBand` instead of inline
+### 2a. New route `/launch/memory-bridge/library`
 
-### 5. Page-by-page restyling — v0.1 Core 9 routes
-Apply the new visual language to each page. For each: add a `LaunchHeroBand`, switch cards to `bg-launch-ivory border border-launch-gold/30`, and update headings to Sora.
+Tabbed view inside `LaunchMemoryBridge` (or a linked sub-page) with three tabs:
 
-1. **`/launch/home`** (QuietHome / LaunchDashboard)
-   - Replace the current gradient hero with an ink hero band + gold eyebrow
-   - Restyle the daily focus / momentum cards to ivory surfaces with gold hairlines
-2. **`/launch/capture`**
-   - Ink hero band: "Capture your moment"
-   - Recorder / quick-capture card on ivory surface
-3. **`/launch/commit`**
-   - Ink hero band: "Commit to your rhythm"
-   - Action cards on ivory surfaces
-4. **`/launch/calibrate`**
-   - Ink hero band: "Calibrate"
-   - MyRHYTHM-G growth-state picker on ivory card
-5. **`/launch/memory`** (Memory Bridge)
-   - Ink hero band: "Memory Bridge"
-   - Recorder card becomes ivory with gold border; timer/status chips use gold accents
-6. **`/launch/calendar`**
-   - Ink hero band: "Calendar"
-   - Today's focus / day view cards on ivory surfaces
-7. **`/launch/support`** (Support Circle)
-   - Ink hero band: "Support Circle"
-   - Member cards on ivory surfaces
-8. **`/launch/settings`**
-   - Ink hero band: "Settings"
-   - Settings cards become ivory with gold section dividers
-9. **`/launch/profile`**
-   - Ink hero band: "Profile"
-   - Profile cards on ivory surfaces
+1. **Recordings** — existing list.
+2. **Transcripts** — wire up `TranscriptsTab` + `TranscriptViewer`. Search across transcripts, filter by date and participants, open full transcript in a modal, copy/download, "Re-extract actions" button.
+3. **Actions** — grouped by recording, showing every extracted action with:
+   - Title, owner, "in the loop" chips
+   - **Suggested Start** and **Suggested Complete By** (see 2b)
+   - Status (draft / scheduled / done)
+   - Row actions: Edit, Reschedule, Send to Calendar, Mark done
 
-### 6. Hidden / legacy routes (time permitting)
-Apply the same treatment to still-reachable hidden routes (`/launch/settings/edition`, `/launch/discharge-bridge`, etc.) so no launch page visually contradicts the family.
+Each recording card gets a "View transcript" and "View actions" link so the entry point is obvious.
 
-### 7. Verification
-- Capture screenshots of all 9 core routes
-- Compare side-by-side with `/launch/welcome`
-- Run build/typecheck to catch regressions
+### 2b. Suggested dates based on Brain Health make-up + real availability
+
+Add two columns to `extracted_actions` (nullable): `suggested_start_date date`, `suggested_due_date date`, `suggested_time_of_day text` (morning/mid/afternoon/evening), `suggested_reason text`.
+
+Populate them at extraction time inside the existing `process-meeting-audio` edge function using:
+
+- **Assessment snapshot** (`assessment_results` latest row) — MYRHYTHM letter scores drive lead-time. Lower M/H/Y (memory/focus/energy) → longer lead-time, shorter sessions, morning slots. Higher R (rhythm) → tighter cadence acceptable.
+- **User schedule preferences** (`user_schedule_preferences`) — working hours, energy peaks, days off.
+- **Actual calendar availability** (`calendar_events` + `external_calendar_events`) — first free slot ≥ 30 min that matches the preferred time-of-day, within the next 7/14/30 days depending on action urgency keywords.
+- **MyRHYTHM-G state** (`growth_states` last 7 days) — if user is in "messy middle" states, push non-urgent items out and cap to 1 new commitment per day.
+
+Return a short human reason ("Placed Tue morning — your steadiest window this week") saved in `suggested_reason` and shown in the Actions tab as a small caption. This keeps the "personal PA" tone without medical claims.
+
+### 2c. Send-to-calendar respects suggestions
+
+When the user clicks "Send to Calendar" on an action row, prefill the event modal with `suggested_start_date` + `suggested_time_of_day` mapped to a concrete time. User can accept or edit before saving. The existing invite/reminder/recurrence UI stays.
+
+### 2d. Home surfaces new location
+
+Add a "Your Memory Bridge library" card on `/launch/home` showing counts: recordings this week, unread transcripts, actions awaiting scheduling. Click → `/launch/memory-bridge` opened on the relevant tab.
+
+---
+
+## Technical notes
+
+- Migration: add `suggested_start_date`, `suggested_due_date`, `suggested_time_of_day`, `suggested_reason` to `public.extracted_actions`. No new table. Reuse existing RLS.
+- New helper `src/lib/scheduling/suggestActionDates.ts` — pure function used both in edge function (via inline copy or shared logic) and client-side "Re-suggest" button.
+- Do not rename existing columns. `daily_actions` remains the source of truth once scheduled.
+- No changes to MyRHYTHM-G, Support Circle roles, or 4C loop copy.
 
 ## Out of scope
-- No functional changes to recording, calendar events, scheduling, or support-circle logic
-- No new routes or features
-- No changes to public landing pages (`/`, `/mvp/*`)
 
-## Success criteria
-Every `/launch/*` page (except `/launch/welcome`) loads with the lighter cream background, an ink hero band, and ivory/gold cards that clearly belong to the same visual family as `/launch/welcome`.
+- Discharge Bridge Kit v0.2 (already deferred).
+- New AI models. Reuse current Lovable AI Gateway wiring.
+- Any change to pricing / access-code / Stripe test surface.
