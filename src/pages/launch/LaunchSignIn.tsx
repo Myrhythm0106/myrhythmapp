@@ -198,7 +198,7 @@ export default function LaunchSignIn() {
               </form>
 
               {/* Magic link option */}
-              <div className="mt-6 pt-6 border-t border-gray-100">
+              <div className="mt-6 pt-6 border-t border-launch-gold/20">
                 <p className="text-sm text-launch-ink/50 text-center mb-3">
                   Or sign in without a password
                 </p>
@@ -222,7 +222,7 @@ export default function LaunchSignIn() {
                       toast.error(e?.message || 'Failed to send magic link.');
                     }
                   }}
-                  className="w-full"
+                  className="w-full border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10 hover:text-launch-ink"
                   disabled={isLoading}
                 >
                   <Mail className="h-4 w-4 mr-2" />
@@ -233,7 +233,7 @@ export default function LaunchSignIn() {
           </Card>
 
           {/* Sign up link */}
-          <p className="mt-6 text-sm text-gray-600 pb-8">
+          <p className="mt-6 text-sm text-launch-ink/60 pb-8">
             Don't have an account?{' '}
             <button
               onClick={() => navigate('/launch/register')}
@@ -242,6 +242,7 @@ export default function LaunchSignIn() {
               Create one
             </button>
           </p>
+
         </div>
       </div>
       
