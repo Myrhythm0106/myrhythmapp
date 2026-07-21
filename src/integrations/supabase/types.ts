@@ -2498,6 +2498,57 @@ export type Database = {
         }
         Relationships: []
       }
+      time_blocks: {
+        Row: {
+          block_type: string
+          color: string
+          created_at: string
+          date: string | null
+          day_of_week: number | null
+          end_time: string
+          id: string
+          is_active: boolean
+          meetings_allowed: boolean
+          name: string
+          repeat_rule: string
+          start_time: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          block_type?: string
+          color?: string
+          created_at?: string
+          date?: string | null
+          day_of_week?: number | null
+          end_time: string
+          id?: string
+          is_active?: boolean
+          meetings_allowed?: boolean
+          name: string
+          repeat_rule?: string
+          start_time: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          block_type?: string
+          color?: string
+          created_at?: string
+          date?: string | null
+          day_of_week?: number | null
+          end_time?: string
+          id?: string
+          is_active?: boolean
+          meetings_allowed?: boolean
+          name?: string
+          repeat_rule?: string
+          start_time?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       transcription_jobs: {
         Row: {
           completed_at: string | null
@@ -2769,33 +2820,75 @@ export type Database = {
       user_schedule_preferences: {
         Row: {
           auto_accept_scheduling: boolean | null
+          auto_insert_breaks: boolean
+          brain_healthy_enabled: boolean
+          break_length_minutes: number
+          break_style: string
+          break_style_custom_label: string | null
           created_at: string
+          daily_meeting_cap: number
           energy_level: number | null
           id: string
+          longer_break_length_minutes: number
+          longer_break_trigger_minutes: number
+          min_meeting_gap_minutes: number
+          no_daily_cap: boolean
           notes: string | null
           preference_type: string
+          protected_windows: Json
+          reminder_buffer_minutes: number
+          time_block_template: string
+          time_blocking_enabled: boolean
           time_slots: Json
           updated_at: string
           user_id: string
         }
         Insert: {
           auto_accept_scheduling?: boolean | null
+          auto_insert_breaks?: boolean
+          brain_healthy_enabled?: boolean
+          break_length_minutes?: number
+          break_style?: string
+          break_style_custom_label?: string | null
           created_at?: string
+          daily_meeting_cap?: number
           energy_level?: number | null
           id?: string
+          longer_break_length_minutes?: number
+          longer_break_trigger_minutes?: number
+          min_meeting_gap_minutes?: number
+          no_daily_cap?: boolean
           notes?: string | null
           preference_type: string
+          protected_windows?: Json
+          reminder_buffer_minutes?: number
+          time_block_template?: string
+          time_blocking_enabled?: boolean
           time_slots?: Json
           updated_at?: string
           user_id: string
         }
         Update: {
           auto_accept_scheduling?: boolean | null
+          auto_insert_breaks?: boolean
+          brain_healthy_enabled?: boolean
+          break_length_minutes?: number
+          break_style?: string
+          break_style_custom_label?: string | null
           created_at?: string
+          daily_meeting_cap?: number
           energy_level?: number | null
           id?: string
+          longer_break_length_minutes?: number
+          longer_break_trigger_minutes?: number
+          min_meeting_gap_minutes?: number
+          no_daily_cap?: boolean
           notes?: string | null
           preference_type?: string
+          protected_windows?: Json
+          reminder_buffer_minutes?: number
+          time_block_template?: string
+          time_blocking_enabled?: boolean
           time_slots?: Json
           updated_at?: string
           user_id?: string
