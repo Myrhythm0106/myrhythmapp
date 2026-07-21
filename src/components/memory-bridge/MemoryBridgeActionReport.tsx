@@ -322,7 +322,7 @@ export function MemoryBridgeActionReport() {
               <div className="text-2xl font-bold text-purple-600">
                 {actions.filter(a => a.assigned_watchers && a.assigned_watchers.length > 0).length}
               </div>
-              <p className="text-sm text-purple-700">With Support Circle</p>
+              <p className="text-sm text-purple-700">With people in the loop</p>
             </div>
             <div className="text-center p-4 bg-orange-50 rounded-lg border border-orange-200">
               <div className="text-2xl font-bold text-orange-600">

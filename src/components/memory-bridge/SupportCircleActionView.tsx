@@ -264,7 +264,7 @@ export function SupportCircleActionView({ actions, onBack }: SupportCircleAction
                                   {action.assigned_to === selectedMember ? (
                                     <span className="text-blue-600">Assigned to them</span>
                                   ) : (
-                                    <span className="text-purple-600">Watching progress</span>
+                                    <span className="text-purple-600">In the loop</span>
                                   )}
                                 </div>
                                 
@@ -354,7 +354,7 @@ export function SupportCircleActionView({ actions, onBack }: SupportCircleAction
                         {action.assigned_watchers && action.assigned_watchers.length > 0 && (
                           <div className="flex items-center gap-1 text-xs text-purple-600">
                             <Bell className="h-3 w-3" />
-                            {action.assigned_watchers.length} watchers
+                            {action.assigned_watchers.length === 1 ? '1 in the loop' : `${action.assigned_watchers.length} in the loop`}
                           </div>
                         )}
                       </div>
