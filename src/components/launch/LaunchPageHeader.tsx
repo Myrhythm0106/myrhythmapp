@@ -44,7 +44,7 @@ export function LaunchPageHeader({
       className={cn(
         inline
           ? 'flex items-center gap-3 mb-4'
-          : 'flex items-center gap-3 mb-4',
+          : 'flex items-center gap-3 mb-5',
         className
       )}
     >
@@ -52,7 +52,7 @@ export function LaunchPageHeader({
         type="button"
         onClick={handleBack}
         aria-label="Go back"
-        className="inline-flex items-center gap-2 min-h-[44px] min-w-[44px] px-3 py-2 rounded-xl text-sm font-medium text-brain-health-700 hover:bg-brain-health-50 active:scale-[0.98] transition"
+        className="inline-flex items-center gap-2 min-h-[44px] min-w-[44px] px-3 py-2 rounded-xl text-sm font-medium text-launch-ink hover:bg-launch-ivory active:scale-[0.98] transition"
       >
         <ArrowLeft className="h-5 w-5" />
         <span>Back</span>
@@ -60,12 +60,12 @@ export function LaunchPageHeader({
       {(title || subtitle) && (
         <div className="min-w-0">
           {title && (
-            <h1 className="text-base sm:text-lg font-semibold text-brain-health-900 leading-tight truncate">
+            <h1 className="text-base sm:text-lg font-semibold text-launch-ink leading-tight truncate font-display">
               {title}
             </h1>
           )}
           {subtitle && (
-            <p className="text-xs text-brain-health-500 truncate">{subtitle}</p>
+            <p className="text-xs text-launch-ink/60 truncate">{subtitle}</p>
           )}
         </div>
       )}
@@ -74,3 +74,4 @@ export function LaunchPageHeader({
 }
 
 export default LaunchPageHeader;
+
