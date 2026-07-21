@@ -221,11 +221,13 @@ export default function LaunchSupportCircle() {
 
         <TabsContent value="invite">
           <SimpleInviteForm />
-          <p className="text-xs text-center text-gray-500 mt-4">
+          <p className="text-xs text-center text-launch-ink/50 mt-4">
             Invitations expire in 48 hours. Your circle member decides whether to accept.
           </p>
         </TabsContent>
       </Tabs>
+      </div>
     </LaunchLayout>
   );
 }
+
