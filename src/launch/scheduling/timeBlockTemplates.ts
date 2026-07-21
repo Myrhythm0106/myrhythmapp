@@ -44,12 +44,23 @@ export function buildTemplate(key: TemplateKey): NewTimeBlock[] {
       mk(d, '16:00', '16:30', 'Reset', 'rest', 'ember'),
     ]);
   }
+  if (key === 'desktime_52_17') {
+    return weekdays.flatMap(d => [
+      mk(d, '09:00', '09:52', 'Deep work', 'focus', 'moss'),
+      mk(d, '09:52', '10:09', 'Reset', 'rest', 'ember'),
+      mk(d, '10:09', '11:01', 'Deep work', 'focus', 'moss'),
+      mk(d, '11:15', '12:30', 'Meetings', 'meetings', 'gold', true),
+      mk(d, '14:00', '14:52', 'Deep work', 'focus', 'moss'),
+      mk(d, '14:52', '15:09', 'Reset', 'rest', 'ember'),
+    ]);
+  }
   // recovery_friendly
   return weekdays.flatMap(d => [
-    mk(d, '09:30', '10:30', 'Gentle start', 'focus', 'moss'),
-    mk(d, '10:30', '10:45', 'Reset', 'rest', 'ember'),
-    mk(d, '11:00', '12:30', 'Meetings (light)', 'meetings', 'gold', true),
-    mk(d, '14:00', '15:00', 'Focus', 'focus', 'moss'),
-    mk(d, '15:00', '15:15', 'Reset', 'rest', 'ember'),
+    mk(d, '09:30', '09:45', 'Gentle start', 'focus', 'moss'),
+    mk(d, '09:45', '09:55', 'Reset', 'rest', 'ember'),
+    mk(d, '10:00', '10:15', 'Focus', 'focus', 'moss'),
+    mk(d, '11:00', '12:00', 'Meetings (light)', 'meetings', 'gold', true),
+    mk(d, '14:00', '14:15', 'Focus', 'focus', 'moss'),
+    mk(d, '14:15', '14:25', 'Reset', 'rest', 'ember'),
   ]);
 }
