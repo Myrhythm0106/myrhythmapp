@@ -1,8 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
+import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
+
 import { 
   User, Mail, Bell, Shield, Sparkles, 
   ChevronRight, LogOut, RefreshCw, HelpCircle
