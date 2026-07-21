@@ -49,17 +49,18 @@ export function QuietHome() {
         className="flex items-center justify-between"
       >
         <div>
-          <p className="text-sm text-brain-health-600">{greeting}, {greetName}.</p>
-          <p className="text-xs text-brain-health-500 mt-0.5">{copy.subgreeting}</p>
+          <p className="text-sm text-launch-ink/80">{greeting}, {greetName}.</p>
+          <p className="text-xs text-launch-ink/60 mt-0.5">{copy.subgreeting}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-2">
             <StagePicker />
             <MyRhythmGHomeChip />
           </div>
         </div>
-        <span className="text-xs px-2 py-1 rounded-full bg-white/60 border border-brain-health-100 text-brain-health-700 capitalize">
+        <span className="text-xs px-2 py-1 rounded-full bg-launch-ivory border border-launch-gold/30 text-launch-ink capitalize">
           {isCaregiver && subject === 'supporting' ? 'Co-pilot view' : fixtures.tier}
         </span>
       </motion.div>
+
 
       {/* Weekly planning nudge (only on the user's planning day) */}
       <LaunchWeeklyPlanningCard />
