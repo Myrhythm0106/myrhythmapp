@@ -175,8 +175,8 @@ export default function LaunchSignIn() {
 
                 {/* Resend verification option */}
                 {showResendOption && (
-                  <div className="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
-                    <p className="text-sm text-amber-800 mb-3">
+                  <div className="mt-4 p-4 bg-launch-ember/10 rounded-lg border border-launch-ember/30">
+                    <p className="text-sm text-launch-ink mb-3">
                       Your email may not be verified yet. Check your inbox or resend the verification email.
                     </p>
                     <Button
@@ -184,7 +184,7 @@ export default function LaunchSignIn() {
                       variant="outline"
                       onClick={handleResendVerification}
                       disabled={isResending}
-                      className="w-full border-amber-300 text-amber-700 hover:bg-amber-100"
+                      className="w-full border-launch-ember/40 text-launch-ink hover:bg-launch-ember/20"
                     >
                       {isResending ? (
                         <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -195,6 +195,7 @@ export default function LaunchSignIn() {
                     </Button>
                   </div>
                 )}
+
               </form>
 
               {/* Magic link option */}
