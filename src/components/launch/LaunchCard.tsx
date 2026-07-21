@@ -15,10 +15,10 @@ export function LaunchCard({
   onClick 
 }: LaunchCardProps) {
   const variants = {
-    default: 'bg-white border border-brain-health-100',
-    elevated: 'bg-white shadow-sm border border-brain-health-100',
-    featured: 'bg-white border border-brand-emerald-200',
-    glass: 'bg-white/70 backdrop-blur border border-brain-health-100',
+    default: 'bg-launch-ivory border border-launch-gold/30',
+    elevated: 'bg-launch-ivory shadow-sm border border-launch-gold/30',
+    featured: 'bg-launch-ivory border border-launch-gold/50',
+    glass: 'bg-launch-ivory/70 backdrop-blur border border-launch-gold/30',
   };
 
   return (
@@ -26,11 +26,12 @@ export function LaunchCard({
       className={cn(
         "rounded-2xl p-6 transition-all duration-200",
         variants[variant],
-        onClick && "cursor-pointer hover:border-brain-health-200 hover:shadow-sm active:scale-[0.99]",
+        onClick && "cursor-pointer hover:border-launch-gold/60 hover:shadow-sm active:scale-[0.99]",
         className
       )}
       onClick={onClick}
     >
+
       {children}
     </div>
   );
