@@ -13,7 +13,8 @@ const userTypes = [
     definition:
       'Brain injury, stroke, dementia, long COVID, MS — finding your rhythm again, one steady step at a time.',
     icon: Compass,
-    color: 'from-brand-emerald-500 to-brand-teal-500',
+    color: 'bg-launch-ink',
+    iconColor: 'text-launch-gold',
   },
   {
     id: 'caregiver',
@@ -21,7 +22,8 @@ const userTypes = [
     definition:
       'Family carer, spouse, adult child — holding it together for them, without losing your own day.',
     icon: Anchor,
-    color: 'from-rose-500 to-pink-500',
+    color: 'bg-launch-moss',
+    iconColor: 'text-launch-cream',
   },
   {
     id: 'executive',
@@ -29,7 +31,8 @@ const userTypes = [
     definition:
       'Busy professional defending deep work, clear thinking and your best hours from the noise.',
     icon: Target,
-    color: 'from-amber-500 to-orange-500',
+    color: 'bg-launch-ember',
+    iconColor: 'text-launch-cream',
   },
   {
     id: 'student',
@@ -37,7 +40,8 @@ const userTypes = [
     definition:
       'Student or lifelong learner pacing yourself toward recall and confidence — not burnout.',
     icon: BookOpen,
-    color: 'from-cyan-500 to-blue-500',
+    color: 'bg-launch-gold',
+    iconColor: 'text-launch-ink',
   },
 ];
 
@@ -51,7 +55,8 @@ export default function LaunchUserType() {
 
 
   return (
-    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
+
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto py-6 px-4">
         <div className="max-w-4xl mx-auto">
