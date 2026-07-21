@@ -1,106 +1,146 @@
-# Brain-Healthy Scheduling + Time-Blocking — editable defaults with safe ranges
+# Founders-Launch Readiness Plan
 
-Every field ships with a sensible default **and** a user-adjustable range. Nothing is locked. Users can nudge, reset, or turn any rule off.
+Four parts as requested: (1) Pomodoro-alignment of Brain-Healthy Scheduling, (2) app status rating, (3) problem-fit + competitive read, (4) exact gap-close actions to ship to Founders.
 
-## 1. Settings → Rhythm → Brain-Healthy Scheduling (live-saved)
+---
 
-Card at `/launch/settings`. Each row: label · current value · stepper/slider (range shown) · **Reset to default** · inline help.
+## 1. Anchor Brain-Healthy Scheduling + Time-Blocking to the Pomodoro evidence base
 
-| Field | Default | Editable range | Control |
-|---|---|---|---|
-| Protect my day from back-to-back meetings | On | On / Off | Toggle |
-| Min gap between meetings | **15 min** | 0–60 min, 5-min steps | Stepper + slider |
-| Longer-break trigger (max consecutive meeting time) | **2 h** | 30 min – 4 h, 15-min steps | Stepper |
-| Daily meeting cap | **5** | 1–20 or "No cap" | Stepper + "No cap" toggle |
-| Auto-insert Recovery breaks | On | On / Off | Toggle |
-| Recovery break length | **10 min** | 5–30 min, 5-min steps | Stepper |
-| Break style | Quiet reset | `Quiet reset · Walk / move · Hydrate & breathe · Choose each time · Custom` | Select + free-text when Custom |
-| Longer-break length (after trigger) | **20 min** | 10–60 min | Stepper |
-| Reminder buffer before meetings | **10 min** | 0–60 min | Stepper |
+Right now `BRAIN_HEALTHY_DEFAULTS` (15-min gaps, 10-min breaks, 120-min longer-break trigger, 20-min longer break) is sensible but presented as MyRhythm opinion. Grounding it in Pomodoro + ultradian-rhythm research gives testers and clinicians something to trust and stops it reading as arbitrary.
 
-**Protected windows** (fully add/edit/remove):
-- Seeded: Morning start-up 07:30–08:30, Lunch 12:30–13:15, Wind-down 21:00–22:00
-- Each editable: name · start · end · days (Mon–Sun chips) · active toggle · delete
-- Time ranges: any 15-min slot 00:00–23:45; length 15 min – 4 h
-- "Add window" · "Restore seeded windows" · "Clear all"
+**Evidence base we'll cite (short, non-medical, in tooltips + Handbook):**
+- Classic Pomodoro (Cirillo): 25 min focus / 5 min break, long break 15–30 min every 4 cycles.
+- Ultradian BRAC (Kleitman): ~90-min work cycles with recovery dips — supports our 120-min "longer break trigger".
+- DeskTime study: highest-performing 10% average 52 min on / 17 min off — supports the "Classic Focus" and "Recovery-friendly" templates.
+- Meeting-fatigue research (Microsoft Human Factors Lab, 2021): 10-min gaps between back-to-back meetings measurably reduce cumulative stress markers — supports the meeting-gap rule.
 
-Validation is soft: values outside range clamp to the nearest allowed value and show a hint ("Set to 60 min — the max"), never a red error.
+**Concrete changes (build-mode work):**
 
-## 2. Time-blocking (opt-in, template-seeded, fully editable)
+1. **Add a `pomodoroPreset` to defaults** in `src/launch/scheduling/defaults.ts`:
+   - `classic_pomodoro` → work 25 / short 5 / long 15 / long-every 4
+   - `long_focus` → 50 / 10 / 20 / 4 (aligns with existing `cognitive-optimization` preset in `PomodoroSetupFlow.tsx`)
+   - `gentle_recovery` → 15 / 10 / 20 / 2 (aligns with existing `brain-injury` preset)
+   - `desktime_52_17` → 52 / 17 / 25 / 3
+2. **Unify the two Pomodoro sources.** Today `src/contexts/PomodoroContext.tsx` (hard-coded 25 min) and `src/components/pomodoro/types.ts` (`DEFAULT_SETTINGS`) are duplicative and neither talks to Brain-Healthy prefs. Make `PomodoroContext` read from `useBrainHealthyPrefs` so a single knob drives the timer, the auto-inserted breaks, and the "longer break" trigger.
+3. **Add a "Focus cycle" section to `BrainHealthySettingsCard`** with the 4 presets above + a "Custom" that exposes the same steppers already built. Label each preset with a one-line evidence chip (e.g. "Pomodoro · Cirillo 1987").
+4. **Auto-insert breaks in `ensureRecoveryBreaks`** using the preset's short/long rules, not just the flat `break_length_minutes`.
+5. **Template alignment.** Rename time-block templates in `src/launch/scheduling/timeBlockTemplates.ts` so the mapping is obvious:
+   - `classic_focus` → "Pomodoro Classic (25/5)"
+   - `meeting_heavy` → "Meeting-heavy + micro-resets"
+   - `recovery_friendly` → "Gentle recovery (15/10)"
+   - add `desktime_52_17` → "Deep work 52/17"
+6. **Handbook + tooltips.** Add a "Why these numbers?" reveal on the settings card (progressive-reveal pattern already used in Memory Bridge) with the 4 citations above. Update `docs/tester-guide.md` accordingly.
 
-| Field | Default | Range |
+---
+
+## 2. Current status rating
+
+Scored 1–5 against what a Founders cohort actually judges.
+
+| Area | Score | Note |
 |---|---|---|
-| Use time-blocks | Off | On / Off |
-| Starting template | Blank | `Classic Focus · Meeting-heavy · Recovery-friendly · Blank` |
-| Block name | template value | Free text, 1–40 chars |
-| Block start / end | template value | 00:00–23:45, 15-min grid, min length 15 min, max 8 h |
-| Block type | Focus | `Focus · Meetings · Admin · Rest · Personal · Custom` |
-| Meetings allowed inside | depends on type | Toggle per block |
-| Colour | type default | Palette: MOSS · GOLD · EMBER · INK · slate |
-| Repeat | Weekdays | `None · Daily · Weekdays · Weekly · Custom days` |
-| Active | On | Toggle |
+| Core loop (Capture → Commit → Calibrate → Celebrate) | **4.5** | End-to-end works; extract + schedule proven this week. |
+| Memory Bridge | **4** | Recorder, transcription, action extraction, 4-hr cap, quota countdown all live. Missing: co-listen ("Bring a Witness") — already scoped v0.2. |
+| Calendar / PA feel | **4** | Daily Brief, reschedule, Google + Outlook push/pull, event modal with invites + reminders + recurrence. Missing: time-block **visual lanes** on the calendar. |
+| Brain-Healthy Scheduling | **3.5** | Settings shipped this turn. Enforcement banners in Add-Event / Reschedule modals + Daily Brief nudge still open (listed in working state). |
+| MyRHYTHM-G growth layer | **4** | Picker, chip, states, Amen/Leaf alignment documented. |
+| Support Circle / Loop-in | **4** | Roles + presets shipped; invite round-trip works. |
+| Discharge Bridge Kit | **3** | Handout + clinician PDF live; full Discharge-Summary→Plan feature correctly deferred to v0.2. |
+| Onboarding + You-Are-Here dial | **4** | 9 persona paths land on Welcome; dial gated post-auth. |
+| Payments + access-code tester bundle | **4** | Stripe test mode + `founding_access_codes` gate. |
+| Visual system (Emerald Prestige + Ember) | **4.5** | Consistent across /launch. |
+| Accessibility (16px floor, 56px targets, focus rings) | **3.5** | Baseline met; needs a final sweep. |
+| SEO / meta / social preview | **3** | Not verified this cycle. |
+| Security posture (RLS, MFA, Vault) | **4** | Linter warnings on unrelated tables still open. |
+| Docs (Handbook, Tester Guide, In-app Guide) | **3.5** | Handbook refresh pending Pomodoro citations + Brain-Healthy Scheduling section. |
 
-Every block: **Edit · Duplicate to other days · Delete · Deactivate**. Drag to move/resize on the weekly grid. "Restore template" and "Clear all" at the footer. Templates only seed the grid — after that, everything is user-owned.
+**Overall Founders-launch readiness: 3.9 / 5.** Shippable to a small, hand-held cohort in ~5–7 working days once section 4 is closed.
 
-Persist:
-- Extend `public.user_schedule_preferences` with the fields above (all nullable with defaults so existing rows keep working).
-- New table `public.time_blocks` (user_id, day_of_week, date nullable, start_time, end_time, name, block_type, color, meetings_allowed, repeat_rule, is_active) + GRANTs + RLS on `auth.uid() = user_id` + `updated_at` trigger.
+---
 
-## 3. Enforcement at booking (editable in the moment)
+## 3. Problem-fit and competitive read
 
-Add + Reschedule modals call `evaluateBrainHealthyFit(event, dayEvents, prefs, blocks)`. Calm EMBER-accent banner (never blocking):
+**Your three-failure problem definition — how MyRhythm now answers each:**
 
-- "This lands inside your **Deep Focus** block. Shift to **13:45**?"
-- Actions: **Shift to suggested time** · **Book anyway** · **Loosen this rule** → mini popover that edits the exact rule that fired (e.g. drop gap 15 → 10 min, allow meetings in this block). Saves back to prefs immediately, so the same nudge won't fire again unless the user wants it to.
+1. **The Discharge Cliff.** Addressed by the Discharge Bridge Kit v0.1 (handout + clinician PDF at `/launch/discharge-bridge`) and the Pre/Post-discharge on-ramps. Full AI-drafted Life-Ready Plan lands v0.2 — this is the right sequencing.
+2. **Clinical-Ready vs Life-Ready Gap.** Answered by Memory Bridge (record → extract → schedule → share) + Calendar PA layer + Support Circle. This is the demo-in-10-seconds moat.
+3. **Ideal-Brain Assumption.** Answered by Brain-Healthy Scheduling + Time-Blocking + MyRHYTHM-G (honest "messy middle" states) + Inclusive-Design guardrails (16px / 56px / max-3 choices). Pomodoro grounding (section 1) closes the last credibility gap here — it says out loud "we designed for real brains, and here's the science".
 
-Overrides log to `analytics_events`.
+**Competitive read (same-category tools):**
+- Calendly / Motion / Reclaim: strong AI scheduling, zero cognitive-continuity or clinical layer.
+- Otter / Fireflies: strong transcription, no scheduling, no Support Circle, no life-readiness framing.
+- Headway / BrainHQ / Constant Therapy: cognitive exercises, no daily-life PA.
+- Rehab-specific apps (Brain in Hand, MindMate): closest peers; weaker on AI + calendar sync + growth-mindset layer, no discharge-bridge.
 
-## 4. Blocks on the calendar (editable in place)
+**MyRhythm's defensible position:** the only product that stitches capture → schedule → share-with-clinician → grow-with-circle behind Memory-First Design™ and the 4C loop on a Collaborative Cognitive Continuity layer. Nothing in this plan contradicts that thesis.
 
-`/launch/calendar` shows active blocks as translucent lanes with a name pill. Header toggle **Show blocks**. Click a lane → mini editor (name · times · meetings_allowed · delete). Drag to move/resize. Blocks stay local — never pushed to Google/Outlook.
+---
 
-## 5. Auto-insert recovery breaks (editable + reversible)
+## 4. Exact actions to close before Founders launch
 
-After each save, `ensureRecoveryBreaks(date, prefs, blocks)` inserts `calendar_events` rows (`type='break'`, `source='auto_break'`, `is_system_generated=true`) when the gap rule is violated. Idempotent cleanup removes stale auto breaks. Each auto break is a normal event: retitle, move, extend, or delete. A "Keep this one always" toggle promotes it to `source='manual'` so cleanup ignores it.
+Grouped by must-ship vs nice-to-have. Every item names the file(s) and the acceptance check.
 
-## 6. Daily Brief + Weekly Planning
+### A. Must-ship (blocks Founders invite emails)
 
-- Daily Brief: if today has ≥3 meetings and no breaks → "Today looks meeting-heavy. Add two short resets?" → **Yes** (uses current settings) / **Customise** (opens the settings card) / **Not today**.
-- `plan-assist` weekly plan receives `prefs` + active `time_blocks` so it drafts inside allowed windows. Every AI-proposed slot is editable before it's accepted.
+**A1. Finish Brain-Healthy enforcement (the reason section 1 exists).**
+- Read `src/components/launch/calendar/LaunchAddEventModal.tsx` and insert an EMBER-accent banner using a new `evaluateBrainHealthyFit(event, prefs, blocks)` helper. Actions: "Shift to suggested time" and "Loosen this rule".
+- Same in `src/components/launch/calendar/LaunchRescheduleModal.tsx`.
+- Create `src/components/launch/calendar/TimeBlockLanes.tsx` and mount in `src/pages/launch/LaunchCalendar.tsx` — translucent lanes behind events, drag-to-resize.
+- Add meeting-heavy nudge to `LaunchDailyBrief.tsx` ("You have 5 back-to-back — insert 2 resets?").
+- Acceptance: booking a meeting into a Protected Window or over the daily cap shows a non-blocking banner with a one-tap fix.
 
-## Copy & guardrails
+**A2. Pomodoro grounding (section 1 items 1–6).** Acceptance: settings card shows 4 presets with evidence chips; Handbook has "Why these numbers?" section.
 
-- Language: "your rhythm", "focus time", "reset". No medical framing.
-- Emerald + EMBER accents. Banner uses `launch-accent-l`. Lanes at low opacity.
-- 56 px targets. All ranges chosen to keep the UI calm — no infinite spinners.
+**A3. Test-readiness checklist sweep.** Run `docs/v0.1-test-readiness.md` end-to-end on a real device. Every unchecked box either gets ticked or gets a v0.2 tag. No half-states.
 
-## Technical section
+**A4. Legal + disclaimer surfaces.** Confirm no-medical-claims disclaimer on: Welcome, Assessment, Memory Bridge, Clinical Export, Discharge Bridge Kit, new Pomodoro tooltips.
 
-**Files to add**
-- `src/launch/scheduling/brainHealthy.ts` — pure evaluator + suggester
-- `src/launch/scheduling/ensureRecoveryBreaks.ts` — idempotent inserter
-- `src/launch/scheduling/timeBlockTemplates.ts`
-- `src/launch/scheduling/defaults.ts` — defaults + ranges in one place, imported by settings + evaluator
-- `src/components/launch/BrainHealthySettingsCard.tsx`
-- `src/components/launch/TimeBlockingSettingsCard.tsx`
-- `src/components/launch/ProtectedWindowsEditor.tsx`
-- `src/components/launch/TimeBlockLanes.tsx`
-- `src/components/launch/RuleOverridePopover.tsx`
-- `src/hooks/useBrainHealthyPrefs.ts`
-- `src/hooks/useTimeBlocks.ts`
+**A5. Payments dry-run in test mode.** One tester per tier (Founding / Premium / Family) round-trips subscribe → cancel → resubscribe using access codes. Screenshot each state.
 
-**Files to edit**
-- `src/pages/launch/LaunchAddEventModal.tsx`
-- `src/pages/launch/LaunchRescheduleModal.tsx`
-- `src/pages/launch/LaunchCalendar.tsx`
-- `src/components/launch/LaunchDailyBrief.tsx`
-- Settings page (mount both new cards)
-- `supabase/functions/plan-assist/index.ts` (pass prefs + blocks into prompt)
+**A6. Auth + routing regression.** Signed-in users on `/` route to `/launch/home` or `/launch/welcome` per rules in memory. Sign-out clears the You-Are-Here dial. Legacy redirects (`/dashboard`, `/memory-bridge`, `/calendar`, `/gratitude`) all resolve.
 
-**DB (single migration)**
-- ALTER `public.user_schedule_preferences` add: `brain_healthy_enabled bool default true`, `min_meeting_gap_minutes int default 15`, `longer_break_trigger_minutes int default 120`, `longer_break_length_minutes int default 20`, `daily_meeting_cap int`, `no_daily_cap bool default false`, `auto_insert_breaks bool default true`, `break_length_minutes int default 10`, `break_style text default 'quiet_reset'`, `break_style_custom_label text`, `reminder_buffer_minutes int default 10`, `protected_windows jsonb default '[]'`, `time_blocking_enabled bool default false`, `time_block_template text default 'blank'`.
-- CREATE TABLE `public.time_blocks` (columns above) + GRANT to `authenticated`, `service_role` + RLS + `updated_at` trigger.
+**A7. SEO + share preview.** Update `index.html` title / meta description / og:title / og:description / twitter:card with locked app description from `src/config/appDescription.ts`. Verify social preview on WhatsApp, LinkedIn, iMessage.
 
-**Non-goals**
-- No auto-cancel or auto-move of existing meetings.
-- Blocks are local; no provider push. Auto breaks flow through the existing push pipeline.
+**A8. Founders comms pack.** In `docs/`:
+- `founders-welcome-email.md` — invite copy + access code + tester guide link.
+- `founders-day-1-checklist.md` — what to try in the first 15 minutes.
+- Update `docs/tester-guide.md` with new Brain-Healthy + Pomodoro sections.
+
+### B. Should-ship (visible polish, low risk)
+
+**B1. Accessibility sweep.** Automated axe pass on `/launch/welcome`, `/launch/home`, `/launch/capture`, `/launch/commit`, `/launch/calendar`, `/launch/memory`, `/launch/settings`. Fix any AA contrast fails inside the Emerald Prestige tokens — do not hardcode colours.
+
+**B2. Empty-state pass.** Every core surface (Home, Calendar, Memory Bridge, Support Circle, Growth) has a warm empty state with one primary CTA. No blank grids.
+
+**B3. Handbook refresh (all three).** Printable Handbook, in-app User Guide, Tester Handbook — add Brain-Healthy + Pomodoro + Time-Blocking + MyRHYTHM-G sections. Confidentiality footer + `Founding Edition · v0.1` on every page.
+
+**B4. Analytics smoke test.** Confirm `analytics_events` captures: assessment_completed, subscribe_started, capture_saved, action_extracted, event_created, block_created, growth_state_selected. Founders debrief depends on this.
+
+### C. Defer to v0.2 (already documented)
+
+- Discharge Summary → Life-Ready Plan
+- Memory Bridge "Bring a Witness" co-listen
+- Provider Directory Marketplace
+- Free-account "Start Your Journey" CTA return
+
+### Suggested sequencing (5 working days)
+
+```text
+Day 1  A1 (enforcement + lanes)             + A2 (Pomodoro presets)
+Day 2  A1 finish (Daily Brief nudge)        + B3 Handbook refresh
+Day 3  A3 checklist sweep                   + A4 disclaimers
+Day 4  A5 payments + A6 auth regression     + B1 a11y sweep
+Day 5  A7 SEO + A8 Founders comms           + B2 empty states + B4 analytics
+```
+
+At end of Day 5 you send the Founders invite email.
+
+---
+
+## Technical details
+
+- **Files to create:** `src/components/launch/calendar/TimeBlockLanes.tsx`, `src/launch/scheduling/evaluateBrainHealthyFit.ts`, `docs/founders-welcome-email.md`, `docs/founders-day-1-checklist.md`.
+- **Files to edit:** `src/launch/scheduling/defaults.ts` (add `pomodoroPreset` + presets), `src/launch/scheduling/timeBlockTemplates.ts` (rename + add `desktime_52_17`), `src/contexts/PomodoroContext.tsx` (bind to `useBrainHealthyPrefs`), `src/components/launch/BrainHealthySettingsCard.tsx` (Focus-cycle section + evidence chips), `src/components/launch/calendar/LaunchAddEventModal.tsx`, `src/components/launch/calendar/LaunchRescheduleModal.tsx`, `src/components/launch/calendar/LaunchDailyBrief.tsx`, `src/pages/launch/LaunchCalendar.tsx`, `index.html` (SEO), `docs/tester-guide.md`, `docs/v0.1-test-readiness.md`, `src/docs/UserGuide.tsx`.
+- **No new tables required.** `time_blocks` and extended `user_schedule_preferences` already migrated.
+- **Memories to add on approval:** `mem://features/brain-healthy-scheduling` (Pomodoro grounding + 4 presets + citations), `mem://features/founders-launch-checklist` (Day-1..Day-5 sequencing).
+- **Guardrails preserved:** no medical claims, Memory-First Design™ external / 4C internal, max 3 primary choices, 56px targets, Founding-Core route lock.
