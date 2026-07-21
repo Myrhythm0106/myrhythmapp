@@ -89,23 +89,23 @@ export default function LaunchSignIn() {
   };
 
   return (
-    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto px-6 py-12">
         <div className="flex flex-col items-center justify-center min-h-full">
           {/* Logo */}
-          <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+          <div className="w-16 h-16 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mb-6 shadow-lg">
             <Brain className="h-8 w-8 text-white" />
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+          <h1 className="text-3xl font-bold text-launch-ink mb-2 text-center font-display">
             Welcome Back
           </h1>
-          <p className="text-gray-600 mb-8 text-center max-w-sm">
+          <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
             Sign in to continue your cognitive wellness journey
           </p>
 
-          <Card className="w-full max-w-md bg-white/80 backdrop-blur-sm border-0 shadow-xl">
+          <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
             <CardContent className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -116,11 +116,11 @@ export default function LaunchSignIn() {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={errors.email ? 'border-red-500' : ''}
+                    className={errors.email ? 'border-launch-ember' : ''}
                     disabled={isLoading}
                   />
                   {errors.email && (
-                    <p className="text-sm text-red-500">{errors.email}</p>
+                    <p className="text-sm text-launch-ember">{errors.email}</p>
                   )}
                 </div>
 
@@ -130,7 +130,7 @@ export default function LaunchSignIn() {
                     <button
                       type="button"
                       onClick={handleForgotPassword}
-                      className="text-sm text-brand-emerald-600 hover:text-brand-emerald-700"
+                      className="text-sm text-launch-moss hover:text-launch-moss/80"
                     >
                       Forgot password?
                     </button>
@@ -142,25 +142,25 @@ export default function LaunchSignIn() {
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                      className={errors.password ? 'border-launch-ember pr-10' : 'pr-10'}
                       disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-launch-ink/40 hover:text-launch-ink/70"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-sm text-red-500">{errors.password}</p>
+                    <p className="text-sm text-launch-ember">{errors.password}</p>
                   )}
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 hover:from-brand-emerald-600 hover:to-brand-teal-600 text-white py-6"
+                  className="w-full bg-launch-ink hover:bg-launch-ink/90 text-launch-cream py-6"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -199,7 +199,7 @@ export default function LaunchSignIn() {
 
               {/* Magic link option */}
               <div className="mt-6 pt-6 border-t border-gray-100">
-                <p className="text-sm text-gray-500 text-center mb-3">
+                <p className="text-sm text-launch-ink/50 text-center mb-3">
                   Or sign in without a password
                 </p>
                 <Button
@@ -237,7 +237,7 @@ export default function LaunchSignIn() {
             Don't have an account?{' '}
             <button
               onClick={() => navigate('/launch/register')}
-              className="text-brand-emerald-600 hover:text-brand-emerald-700 font-medium"
+              className="text-launch-moss hover:text-launch-moss/80 font-medium"
             >
               Create one
             </button>
