@@ -173,7 +173,28 @@ export const roadmapTasks: RoadmapTask[] = [
     isMilestone: true,
     description: '1,000+ active subscribers at £500K annual run rate',
   },
+  {
+    id: 'discharge-plan-v0-2',
+    title: 'Discharge Summary → Life-Ready Plan (v0.2)',
+    phase: 'full-launch',
+    startDate: '2026-09-01',
+    endDate: '2026-10-15',
+    status: 'not-started',
+    color: 'from-brand-teal-500 to-brand-teal-600',
+    description: 'Upload/paste a rehab discharge summary, AI extracts items, drafts a gentle 7/30-day plan, emails it to the discharge nurse for approval, then materialises approved items into the calendar. Sits inside the Discharge Bridge Kit.',
+    subtasks: [
+      'discharge_summaries + discharge_plans tables with RLS',
+      'discharge-extract edge function (Lovable AI Gateway, strict JSON)',
+      'discharge-draft-plan edge function (energy-aware, MyRHYTHM-G-aware)',
+      'discharge-send-for-approval (PDF + Resend + signed link)',
+      'discharge-approval public endpoint',
+      '4-step wizard at /launch/discharge-bridge/plan',
+      'Reviewer approve/decline page (no auth)',
+      'Materialise approved items into calendar_events',
+    ],
+  },
 ];
+
 
 export const milestones = [
   { date: '2026-04-01', label: 'Development Kickoff', icon: '🚀', phase: 'mvp' as TaskPhase },
