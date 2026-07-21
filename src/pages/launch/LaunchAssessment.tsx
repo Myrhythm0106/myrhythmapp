@@ -186,19 +186,19 @@ export default function LaunchAssessment() {
 
   return (
     <LaunchLayout>
-      <div className="max-w-md mx-auto w-full">
-        <p className="text-xs text-brain-health-500 mb-4 -mt-2">
+      <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
+        <p className="text-xs text-launch-ink/50 mb-4 -mt-2">
           {PERSONA_LABEL[bank.persona]}
         </p>
 
         <div className="mb-6">
-          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+          <div className="h-2 bg-launch-ink/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 transition-all duration-500"
+              className="h-full bg-gradient-to-r from-launch-moss to-launch-gold transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-gray-500 mt-2 text-center">
+          <p className="text-xs text-launch-ink/50 mt-2 text-center">
             Letter {currentQuestion + 1} of {questions.length} · MYRHYTHM
           </p>
         </div>
@@ -206,24 +206,24 @@ export default function LaunchAssessment() {
         <div className="flex items-center justify-center gap-3 mb-4">
           <span
             aria-hidden="true"
-            className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-brand-orange-500 text-white font-bold text-lg shadow-sm"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-launch-ember text-launch-cream font-bold text-lg shadow-sm"
           >
             {question.letter}
           </span>
-          <span className="text-sm font-semibold tracking-wide uppercase text-gray-700">
+          <span className="text-sm font-semibold tracking-wide uppercase text-launch-ink/80">
             {question.word}
           </span>
         </div>
 
         <div className="text-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">{question.title}</h2>
-          {question.subtitle && <p className="text-gray-600">{question.subtitle}</p>}
-          <p className="text-xs italic text-brain-health-600 mt-3">
+          <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">{question.title}</h2>
+          {question.subtitle && <p className="text-launch-ink/70">{question.subtitle}</p>}
+          <p className="text-xs italic text-launch-ink/60 mt-3">
             Brain-health lens: {question.brainHealthLens}
           </p>
         </div>
 
-        <p className="text-sm text-gray-600 text-center mb-4 px-2">
+        <p className="text-sm text-launch-ink/60 text-center mb-4 px-2">
           Tap the <span className="font-semibold">circle</span> on the one that fits best — that's your primary. Tap <span className="font-semibold">+ Also fits</span> on any others that also feel true.
         </p>
 
@@ -237,10 +237,10 @@ export default function LaunchAssessment() {
                 className={cn(
                   'w-full p-4 rounded-2xl border-2 text-left transition-all min-h-[56px]',
                   isPrimary
-                    ? 'border-brand-orange-500 bg-brand-orange-50 ring-2 ring-brand-orange-200'
+                    ? 'border-launch-ember bg-launch-ember/10 ring-2 ring-launch-ember/20'
                     : isAlso
-                      ? 'border-brand-teal-400 bg-brand-teal-50/60'
-                      : 'border-gray-200 bg-white'
+                      ? 'border-launch-moss/60 bg-launch-moss/10'
+                      : 'border-launch-gold/30 bg-launch-ivory'
                 )}
               >
                 <div className="flex items-start gap-3">
@@ -257,10 +257,10 @@ export default function LaunchAssessment() {
                       className={cn(
                         'w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors',
                         isPrimary
-                          ? 'border-brand-orange-500 bg-brand-orange-500'
+                          ? 'border-launch-ember bg-launch-ember'
                           : isAlso
-                            ? 'border-brand-teal-500 bg-brand-teal-500'
-                            : 'border-gray-300 hover:border-brand-orange-400'
+                            ? 'border-launch-moss bg-launch-moss'
+                            : 'border-launch-ink/20 hover:border-launch-ember'
                       )}
                     >
                       {(isPrimary || isAlso) && <Check className="h-4 w-4 text-white" />}
@@ -268,20 +268,20 @@ export default function LaunchAssessment() {
                   </button>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-gray-900">{option.label}</p>
+                      <p className="font-semibold text-launch-ink">{option.label}</p>
                       {isPrimary && (
-                        <span className="text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full bg-brand-orange-500 text-white">
+                        <span className="text-[10px] uppercase tracking-wide font-bold px-2 py-0.5 rounded-full bg-launch-ember text-launch-cream">
                           Primary
                         </span>
                       )}
                       {isAlso && !isPrimary && (
-                        <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-brand-teal-100 text-brand-teal-800">
+                        <span className="text-[10px] uppercase tracking-wide font-semibold px-2 py-0.5 rounded-full bg-launch-moss/20 text-launch-moss">
                           Also fits
                         </span>
                       )}
                     </div>
                     {option.description && (
-                      <p className="text-sm text-gray-600 mt-1">{option.description}</p>
+                      <p className="text-sm text-launch-ink/60 mt-1">{option.description}</p>
                     )}
                   </div>
                   {!isPrimary && (
@@ -291,8 +291,8 @@ export default function LaunchAssessment() {
                       className={cn(
                         'shrink-0 inline-flex items-center gap-1 text-xs font-semibold px-3 py-2 rounded-full border transition-colors min-h-[36px]',
                         isAlso
-                          ? 'border-brand-teal-500 bg-white text-brand-teal-700'
-                          : 'border-gray-300 bg-white text-gray-600 hover:border-brand-teal-400 hover:text-brand-teal-700'
+                          ? 'border-launch-moss bg-launch-ivory text-launch-moss'
+                          : 'border-launch-gold/40 bg-launch-ivory text-launch-ink/60 hover:border-launch-moss hover:text-launch-moss'
                       )}
                       aria-pressed={isAlso}
                     >
@@ -307,7 +307,7 @@ export default function LaunchAssessment() {
         </div>
 
         <div className="flex gap-3 pt-2 pb-8">
-          <LaunchButton variant="outline" onClick={handleBack} className="flex-1">
+          <LaunchButton variant="outline" onClick={handleBack} className="flex-1 border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10">
             <ArrowLeft className="h-5 w-5" />
             Back
           </LaunchButton>
@@ -320,3 +320,4 @@ export default function LaunchAssessment() {
     </LaunchLayout>
   );
 }
+
