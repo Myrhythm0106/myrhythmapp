@@ -104,19 +104,24 @@ export async function processSavedRecording(
     
     console.log('processSavedRecording: Edge function response:', { data, error: processError });
 
-    if (processError) {
-      console.error('processSavedRecording: Edge function error:', processError);
-      
+    if (processError || (data && data.success === false)) {
+      const errMsg =
+        (processError as any)?.message ||
+        (data as any)?.error ||
+        'Edge function failed to start processing';
+      console.error('processSavedRecording: Edge function error:', processError || data);
+
       // Update meeting record with error status
       await supabase
         .from('meeting_recordings')
-        .update({ 
-          processing_status: 'error',
-          processing_error: processError.message || 'Processing failed'
+        .update({
+          processing_status: 'failed',
+          processing_error: errMsg,
         })
         .eq('id', meetingRecord.id);
-      
-      throw processError;
+
+      toast.error(`Could not start processing: ${errMsg}`);
+      return { success: false, meetingId: meetingRecord.id, hasTranscript: false };
     }
 
     console.log('processSavedRecording: Processing initiated successfully');
