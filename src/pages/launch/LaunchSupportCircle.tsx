@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
+import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import { Button } from '@/components/ui/button';
 import {
   Users, UserPlus, Stethoscope, Home, User, HeartHandshake,
