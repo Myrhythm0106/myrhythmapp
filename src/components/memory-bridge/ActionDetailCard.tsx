@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { toast } from 'sonner';
+import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ActionDetailCardProps {
   action: NextStepsItem;
@@ -37,6 +39,33 @@ export function ActionDetailCard({ action, onStatusUpdate, onBack, onSupportCirc
   const [notes, setNotes] = useState(action.user_notes || '');
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string>(action.status);
+  const [circleIds, setCircleIds] = useState<string[]>(action.assigned_watchers || []);
+  const [adhoc, setAdhoc] = useState<AdhocLoopIn[]>(
+    Array.isArray((action as any).adhoc_loop_ins) ? ((action as any).adhoc_loop_ins as AdhocLoopIn[]) : []
+  );
+  const [savingLoop, setSavingLoop] = useState(false);
+
+  const saveLoopIns = async (next: { circleMemberIds: string[]; adhocLoopIns: AdhocLoopIn[] }) => {
+    setCircleIds(next.circleMemberIds);
+    setAdhoc(next.adhocLoopIns);
+    if (!action.id) return;
+    setSavingLoop(true);
+    try {
+      const { error } = await supabase
+        .from('extracted_actions')
+        .update({
+          assigned_watchers: next.circleMemberIds,
+          adhoc_loop_ins: next.adhocLoopIns as any,
+        })
+        .eq('id', action.id);
+      if (error) throw error;
+    } catch (err) {
+      console.error('Failed to save loop-ins', err);
+      toast.error('Could not update who is in the loop');
+    } finally {
+      setSavingLoop(false);
+    }
+  };
 
   const handleStatusUpdate = async (newStatus: string) => {
     setIsUpdating(true);
@@ -253,6 +282,25 @@ export function ActionDetailCard({ action, onStatusUpdate, onBack, onSupportCirc
             </CollapsibleContent>
           </Collapsible>
 
+
+          {/* Loop someone in */}
+          <div className="space-y-2 pt-4 border-t">
+            <div className="flex items-center justify-between">
+              <h4 className="font-medium flex items-center gap-2 text-sm">
+                <Users className="h-4 w-4 text-brand-emerald-600" />
+                Who's in the loop
+              </h4>
+              {savingLoop && <span className="text-xs text-muted-foreground">Saving…</span>}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Pick people from your Support Circle, or loop in someone by email — just for this action.
+            </p>
+            <LoopInPicker
+              circleMemberIds={circleIds}
+              adhocLoopIns={adhoc}
+              onChange={saveLoopIns}
+            />
+          </div>
 
           {/* Status Update Section */}
           <div className="space-y-4 pt-4 border-t">

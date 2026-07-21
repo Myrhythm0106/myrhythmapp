@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { OutputActions } from '@/components/shared/OutputActions';
+import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
 
 type RecordingState = 'idle' | 'recording' | 'paused' | 'reviewing';
 
@@ -39,6 +40,8 @@ export default function LaunchMemoryBridge() {
   const [notifySupport, setNotifySupport] = useState(true);
   const [recordingTitle, setRecordingTitle] = useState('');
   const audioBlobRef = useRef<Blob | null>(null);
+  const [loopCircleIds, setLoopCircleIds] = useState<string[]>([]);
+  const [loopAdhoc, setLoopAdhoc] = useState<AdhocLoopIn[]>([]);
 
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [processingId, setProcessingId] = useState<string | null>(null);
@@ -187,6 +190,18 @@ export default function LaunchMemoryBridge() {
       );
 
       if (result.success && result.actionsCount && result.actionsCount > 0) {
+        // Apply loop-ins to all newly extracted actions
+        if (result.meetingId && (loopCircleIds.length > 0 || loopAdhoc.length > 0)) {
+          const { error: loopErr } = await supabase
+            .from('extracted_actions')
+            .update({
+              assigned_watchers: loopCircleIds,
+              adhoc_loop_ins: loopAdhoc as any,
+            })
+            .eq('meeting_recording_id', result.meetingId);
+          if (loopErr) console.warn('Failed to apply loop-ins to actions', loopErr);
+        }
+
         setLastExtractionResult({
           meetingId: result.meetingId!,
           recordingId: saved.id,
@@ -196,6 +211,8 @@ export default function LaunchMemoryBridge() {
         setShowPostExtractionDialog(true);
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
         setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
+        setLoopCircleIds([]);
+        setLoopAdhoc([]);
       } else if (result.success) {
         // Success but no actions
         setShowCelebration(true);
@@ -500,6 +517,24 @@ export default function LaunchMemoryBridge() {
                     Notify Support Circle
                   </button>
                 </div>
+
+                <div className="max-w-xs mx-auto mb-4 text-left">
+                  <p className="text-xs font-medium text-muted-foreground mb-1.5 text-center">
+                    Loop someone in on the actions from this recording
+                  </p>
+                  <div className="flex justify-center">
+                    <LoopInPicker
+                      circleMemberIds={loopCircleIds}
+                      adhocLoopIns={loopAdhoc}
+                      onChange={(next) => {
+                        setLoopCircleIds(next.circleMemberIds);
+                        setLoopAdhoc(next.adhocLoopIns);
+                      }}
+                      triggerLabel="Loop someone in"
+                    />
+                  </div>
+                </div>
+
 
                 <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 shadow-lg shadow-brand-orange-500/30" disabled={isProcessing || isExtracting}>
                   {isProcessing || isExtracting ? (

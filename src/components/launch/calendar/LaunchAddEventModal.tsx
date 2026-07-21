@@ -81,7 +81,7 @@ export function LaunchAddEventModal({
   const [type, setType] = useState('routine');
 
   // Invitees
-  const [inviteOpen, setInviteOpen] = useState(false);
+  const [inviteOpen, setInviteOpen] = useState(true);
   const [selectedCircle, setSelectedCircle] = useState<string[]>([]);
   const [emails, setEmails] = useState<string[]>([]);
   const [emailDraft, setEmailDraft] = useState('');
