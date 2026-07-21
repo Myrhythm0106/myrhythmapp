@@ -9,6 +9,9 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAccountabilitySystem, SupportCircleMember } from '@/hooks/use-accountability-system';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 import { SimpleInviteForm } from '@/components/support-circle/SimpleInviteForm';
 
 const roleMeta: Record<string, { label: string; Icon: React.ElementType; badge: string }> = {
