@@ -9,10 +9,12 @@ import {
   Sparkle,
 } from 'lucide-react';
 import { CapabilityPage } from '@/components/launch/chrome/CapabilityPage';
+import { MyRhythmGCard } from '@/launch/growth/MyRhythmGCard';
 
 export default function LaunchCalibrate() {
   return (
     <CapabilityPage
+      topSlot={<MyRhythmGCard />}
       capabilityKey="calibrate"
       eyebrow="Capability 03 · Calibrate"
       title="A quiet, honest read on how you're really doing."

@@ -58,6 +58,8 @@ export interface CapabilityPageProps {
   secondaryCta?: { label: string; to: string };
   /** Optional persona-specific framing rendered as a small lens chip under the hero. */
   capabilityKey?: 'capture' | 'commit' | 'calibrate';
+  /** Optional content rendered above the "Why it matters" section (e.g. MyRHYTHM-G picker). */
+  topSlot?: React.ReactNode;
 }
 
 export function CapabilityPage(props: CapabilityPageProps) {
@@ -82,6 +84,7 @@ export function CapabilityPage(props: CapabilityPageProps) {
     primaryCta = { label: 'Begin 7-day trial', to: '/launch/register' },
     secondaryCta = { label: 'Return overview', to: '/launch' },
     capabilityKey,
+    topSlot,
   } = props;
 
   const { persona } = usePersona();
@@ -119,6 +122,8 @@ export function CapabilityPage(props: CapabilityPageProps) {
         <StageLensChip className="ml-2" />
 
 
+
+        {topSlot && <div className="mt-8">{topSlot}</div>}
 
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* LEFT — 8 cols */}

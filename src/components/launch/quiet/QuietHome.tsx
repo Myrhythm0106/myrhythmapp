@@ -16,6 +16,7 @@ import { StagePicker } from '@/launch/stage/StagePicker';
 import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { LaunchWeeklyPlanningCard } from '@/components/launch/LaunchWeeklyPlanningCard';
+import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -50,8 +51,9 @@ export function QuietHome() {
         <div>
           <p className="text-sm text-brain-health-600">{greeting}, {greetName}.</p>
           <p className="text-xs text-brain-health-500 mt-0.5">{copy.subgreeting}</p>
-          <div className="mt-1.5">
+          <div className="mt-1.5 flex flex-wrap items-center gap-2">
             <StagePicker />
+            <MyRhythmGHomeChip />
           </div>
         </div>
         <span className="text-xs px-2 py-1 rounded-full bg-white/60 border border-brain-health-100 text-brain-health-700 capitalize">

@@ -138,6 +138,7 @@ import {
   LaunchDischargeBridgeHandout,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
+import LaunchCircleGrowth from "./pages/launch/LaunchCircleGrowth";
 import LaunchCapture from "./pages/launch/LaunchCapture";
 import LaunchCaptureResult from "./pages/launch/LaunchCaptureResult";
 import LaunchCommit from "./pages/launch/LaunchCommit";
@@ -393,6 +394,7 @@ function App() {
                         <Route path="/launch/help" element={<LaunchModeProvider><LaunchHelp /></LaunchModeProvider>} />
                         <Route path="/launch/roadmap" element={<LaunchModeProvider><LaunchRoadmap /></LaunchModeProvider>} />
                        <Route path="/launch/calibrate" element={<LaunchModeProvider><LaunchCalibrate /></LaunchModeProvider>} />
+                       <Route path="/launch/circle/:memberId/growth" element={<LaunchModeProvider><LaunchCircleGrowth /></LaunchModeProvider>} />
                        <Route path="/launch/capture" element={<LaunchModeProvider><LaunchCapture /></LaunchModeProvider>} />
                        <Route path="/launch/commit" element={<LaunchModeProvider><LaunchCommit /></LaunchModeProvider>} />
                        <Route path="/launch/sc/capture/:subjectId/:subjectName" element={<LaunchModeProvider><LaunchSCCapture /></LaunchModeProvider>} />
