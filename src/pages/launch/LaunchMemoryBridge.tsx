@@ -518,6 +518,24 @@ export default function LaunchMemoryBridge() {
                   </button>
                 </div>
 
+                <div className="max-w-xs mx-auto mb-4 text-left">
+                  <p className="text-xs font-medium text-muted-foreground mb-1.5 text-center">
+                    Loop someone in on the actions from this recording
+                  </p>
+                  <div className="flex justify-center">
+                    <LoopInPicker
+                      circleMemberIds={loopCircleIds}
+                      adhocLoopIns={loopAdhoc}
+                      onChange={(next) => {
+                        setLoopCircleIds(next.circleMemberIds);
+                        setLoopAdhoc(next.adhocLoopIns);
+                      }}
+                      triggerLabel="Loop someone in"
+                    />
+                  </div>
+                </div>
+
+
                 <LaunchButton onClick={handleSave} className="w-full max-w-xs bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 shadow-lg shadow-brand-orange-500/30" disabled={isProcessing || isExtracting}>
                   {isProcessing || isExtracting ? (
                     <>
