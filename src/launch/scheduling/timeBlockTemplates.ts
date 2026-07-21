@@ -1,6 +1,14 @@
 import type { NewTimeBlock } from '@/hooks/useTimeBlocks';
 
-export type TemplateKey = 'blank' | 'classic_focus' | 'meeting_heavy' | 'recovery_friendly';
+export type TemplateKey = 'blank' | 'classic_focus' | 'meeting_heavy' | 'recovery_friendly' | 'desktime_52_17';
+
+export const TEMPLATE_LABELS: Record<TemplateKey, { label: string; evidence?: string }> = {
+  blank:             { label: 'Blank — I\'ll build my own' },
+  classic_focus:     { label: 'Pomodoro Classic (25 / 5)',   evidence: 'Cirillo, 1987' },
+  meeting_heavy:     { label: 'Meeting-heavy + micro-resets', evidence: 'MS Human Factors Lab, 2021' },
+  recovery_friendly: { label: 'Gentle Recovery (15 / 10)',   evidence: 'Rehab pacing guidance' },
+  desktime_52_17:    { label: 'Deep Work (52 / 17)',          evidence: 'DeskTime study, 2014' },
+};
 
 const weekdays = [1,2,3,4,5];
 
