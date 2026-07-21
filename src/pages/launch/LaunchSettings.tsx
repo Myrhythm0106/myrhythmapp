@@ -33,6 +33,8 @@ import { canRequestExport, exportUserData } from '@/utils/gdprExport';
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { FeedbackDialog } from '@/components/launch/FeedbackDialog';
 import { EDITION_SHORT, EDITION_VERSION } from '@/config/edition';
+import { BrainHealthySettingsCard } from '@/components/launch/BrainHealthySettingsCard';
+import { TimeBlockingSettingsCard } from '@/components/launch/TimeBlockingSettingsCard';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
