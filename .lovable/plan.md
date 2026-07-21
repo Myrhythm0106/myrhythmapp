@@ -1,130 +1,106 @@
+# Brain-Healthy Scheduling + Time-Blocking — editable defaults with safe ranges
 
-# Unify /launch/* under the Welcome page palette + burnt-orange accent
+Every field ships with a sensible default **and** a user-adjustable range. Nothing is locked. Users can nudge, reset, or turn any rule off.
 
-## The look we're matching
+## 1. Settings → Rhythm → Brain-Healthy Scheduling (live-saved)
 
-`/launch/welcome` uses a page-scoped **Emerald Prestige** palette with Sora + Manrope typography:
+Card at `/launch/settings`. Each row: label · current value · stepper/slider (range shown) · **Reset to default** · inline help.
 
-- INK `#064e3b` — deep emerald (headings, dark hero bands)
-- MOSS `#0d7a5f` — mid emerald (hover, secondary accents)
-- GOLD `#c9a84c` — warm gold (primary CTAs, letter bars)
-- CREAM `#f5f0e0` — page background, soft panels
-- **NEW — EMBER `#c65a2e`** — burnt orange, used sparingly as a professional accent
-- White cards with `border-[#064e3b]/10` hairlines
+| Field | Default | Editable range | Control |
+|---|---|---|---|
+| Protect my day from back-to-back meetings | On | On / Off | Toggle |
+| Min gap between meetings | **15 min** | 0–60 min, 5-min steps | Stepper + slider |
+| Longer-break trigger (max consecutive meeting time) | **2 h** | 30 min – 4 h, 15-min steps | Stepper |
+| Daily meeting cap | **5** | 1–20 or "No cap" | Stepper + "No cap" toggle |
+| Auto-insert Recovery breaks | On | On / Off | Toggle |
+| Recovery break length | **10 min** | 5–30 min, 5-min steps | Stepper |
+| Break style | Quiet reset | `Quiet reset · Walk / move · Hydrate & breathe · Choose each time · Custom` | Select + free-text when Custom |
+| Longer-break length (after trigger) | **20 min** | 10–60 min | Stepper |
+| Reminder buffer before meetings | **10 min** | 0–60 min | Stepper |
 
-Every other /launch page still uses the old tokens (`bg-[#fafbfc]`, `brand-teal-600`, `brain-health-*`), which is why they feel cheaper next to Welcome.
+**Protected windows** (fully add/edit/remove):
+- Seeded: Morning start-up 07:30–08:30, Lunch 12:30–13:15, Wind-down 21:00–22:00
+- Each editable: name · start · end · days (Mon–Sun chips) · active toggle · delete
+- Time ranges: any 15-min slot 00:00–23:45; length 15 min – 4 h
+- "Add window" · "Restore seeded windows" · "Clear all"
 
-## Where the burnt orange goes (sparing, intentional)
+Validation is soft: values outside range clamp to the nearest allowed value and show a hint ("Set to 60 min — the max"), never a red error.
 
-Burnt orange is a **third-tier accent** — never a primary surface, never a CTA background (GOLD keeps that job). Rules of use:
+## 2. Time-blocking (opt-in, template-seeded, fully editable)
 
-- Small, high-signal moments only — not decorative fills.
-- Never larger than ~10% of any screen's colored area.
-- Never adjacent to GOLD in the same interactive element (they'd fight); separate by white or cream.
-- Text/icon use on white or cream only (contrast passes AA); never orange text on gold.
+| Field | Default | Range |
+|---|---|---|
+| Use time-blocks | Off | On / Off |
+| Starting template | Blank | `Classic Focus · Meeting-heavy · Recovery-friendly · Blank` |
+| Block name | template value | Free text, 1–40 chars |
+| Block start / end | template value | 00:00–23:45, 15-min grid, min length 15 min, max 8 h |
+| Block type | Focus | `Focus · Meetings · Admin · Rest · Personal · Custom` |
+| Meetings allowed inside | depends on type | Toggle per block |
+| Colour | type default | Palette: MOSS · GOLD · EMBER · INK · slate |
+| Repeat | Weekdays | `None · Daily · Weekdays · Weekly · Custom days` |
+| Active | On | Toggle |
 
-Concrete placements:
+Every block: **Edit · Duplicate to other days · Delete · Deactivate**. Drag to move/resize on the weekly grid. "Restore template" and "Clear all" at the footer. Templates only seed the grid — after that, everything is user-owned.
 
-- **Live/active state indicators**: recording pulse dot on Memory Bridge/Capture, "syncing" spinner on the calendar sync bar, "in progress" chip on smart schedule cards.
-- **Countdown urgency tier**: the recorder countdown already goes color-coded at 5m / 1m / 10s — swap the mid-tier (5m warning) to EMBER, keeping red for the 10s critical state.
-- **Focus / hover rings** on secondary buttons and inputs (`ring-2 ring-[#c65a2e]/40` on focus-visible) — an emerald page with an ember focus ring reads confident, not corporate.
-- **Section accent bars**: 3-4px left border on select cards (Daily Brief "Today's focus", MyRHYTHM-G chip picker header, Support Circle "loop someone in" prompt).
-- **Underline swipes** on active nav item / You-Are-Here dial's current-route tick.
-- **Number/stat highlights**: streak counters, "n actions extracted" badges, remaining-minutes pill border when > 5m left.
-- **Link hover** in body copy: default INK → hover EMBER (never GOLD, which reads like a button).
+Persist:
+- Extend `public.user_schedule_preferences` with the fields above (all nullable with defaults so existing rows keep working).
+- New table `public.time_blocks` (user_id, day_of_week, date nullable, start_time, end_time, name, block_type, color, meetings_allowed, repeat_rule, is_active) + GRANTs + RLS on `auth.uid() = user_id` + `updated_at` trigger.
 
-That's it — no ember buttons, no ember card backgrounds, no ember hero bands.
+## 3. Enforcement at booking (editable in the moment)
 
-## Approach — theme once, touch a few
+Add + Reschedule modals call `evaluateBrainHealthyFit(event, dayEvents, prefs, blocks)`. Calm EMBER-accent banner (never blocking):
 
-Rather than rewrite 30+ pages one by one, promote the palette to a **launch theme layer** and let it cascade. Then hand-polish the highest-visibility screens so they look intentional.
+- "This lands inside your **Deep Focus** block. Shift to **13:45**?"
+- Actions: **Shift to suggested time** · **Book anyway** · **Loosen this rule** → mini popover that edits the exact rule that fired (e.g. drop gap 15 → 10 min, allow meetings in this block). Saves back to prefs immediately, so the same nudge won't fire again unless the user wants it to.
 
-### 1. Add tokens to the launch scope
+Overrides log to `analytics_events`.
 
-In `src/index.css`, add a `.launch-theme` scope:
+## 4. Blocks on the calendar (editable in place)
 
-```css
-.launch-theme {
-  --launch-ink:   158 84% 17%;   /* #064e3b */
-  --launch-moss:  158 80% 26%;   /* #0d7a5f */
-  --launch-gold:   43 55% 54%;   /* #c9a84c */
-  --launch-cream:  44 60% 92%;   /* #f5f0e0 */
-  --launch-ember:  17 63% 48%;   /* #c65a2e — burnt orange accent */
+`/launch/calendar` shows active blocks as translucent lanes with a name pill. Header toggle **Show blocks**. Click a lane → mini editor (name · times · meetings_allowed · delete). Drag to move/resize. Blocks stay local — never pushed to Google/Outlook.
 
-  --background: var(--launch-cream);
-  --foreground: var(--launch-ink);
-  --primary:    var(--launch-ink);
-  --primary-foreground: var(--launch-cream);
-  --accent:     var(--launch-gold);
-  --ring:       var(--launch-ember);
-  --border: 158 84% 17% / 0.10;
-  --card: 0 0% 100%;
-  --card-foreground: var(--launch-ink);
+## 5. Auto-insert recovery breaks (editable + reversible)
 
-  font-family: 'Manrope', system-ui, sans-serif;
-}
-.launch-theme h1, .launch-theme h2, .launch-theme h3,
-.launch-theme .font-display { font-family: 'Sora', system-ui, sans-serif; }
-```
+After each save, `ensureRecoveryBreaks(date, prefs, blocks)` inserts `calendar_events` rows (`type='break'`, `source='auto_break'`, `is_system_generated=true`) when the gap rule is violated. Idempotent cleanup removes stale auto breaks. Each auto break is a normal event: retitle, move, extend, or delete. A "Keep this one always" toggle promotes it to `source='manual'` so cleanup ignores it.
 
-Import Sora + Manrope once via `<link>` in `index.html` (currently pulled per-page inside Welcome).
+## 6. Daily Brief + Weekly Planning
 
-### 2. Apply the theme at `LaunchLayout`
+- Daily Brief: if today has ≥3 meetings and no breaks → "Today looks meeting-heavy. Add two short resets?" → **Yes** (uses current settings) / **Customise** (opens the settings card) / **Not today**.
+- `plan-assist` weekly plan receives `prefs` + active `time_blocks` so it drafts inside allowed windows. Every AI-proposed slot is editable before it's accepted.
 
-In `src/components/launch/LaunchLayout.tsx`:
+## Copy & guardrails
 
-- Add `launch-theme` class to the outermost wrapper.
-- Swap `bg-[#fafbfc]` → `bg-[hsl(var(--launch-cream))]`.
-- Header: cream-tinted white, border `border-[hsl(var(--launch-ink))]/10`, logo tile `bg-[hsl(var(--launch-ink))]` with GOLD "M", wordmark in INK. Active nav item gets an EMBER underline swipe.
-- `LaunchYouAreHereDial` trigger: INK ring; current-route tick in EMBER.
+- Language: "your rhythm", "focus time", "reset". No medical framing.
+- Emerald + EMBER accents. Banner uses `launch-accent-l`. Lanes at low opacity.
+- 56 px targets. All ranges chosen to keep the UI calm — no infinite spinners.
 
-### 3. Retire mismatched brand utilities inside /launch
+## Technical section
 
-Scoped sweep of `src/pages/launch/**`, `src/components/launch/**`, `src/launch/**`:
+**Files to add**
+- `src/launch/scheduling/brainHealthy.ts` — pure evaluator + suggester
+- `src/launch/scheduling/ensureRecoveryBreaks.ts` — idempotent inserter
+- `src/launch/scheduling/timeBlockTemplates.ts`
+- `src/launch/scheduling/defaults.ts` — defaults + ranges in one place, imported by settings + evaluator
+- `src/components/launch/BrainHealthySettingsCard.tsx`
+- `src/components/launch/TimeBlockingSettingsCard.tsx`
+- `src/components/launch/ProtectedWindowsEditor.tsx`
+- `src/components/launch/TimeBlockLanes.tsx`
+- `src/components/launch/RuleOverridePopover.tsx`
+- `src/hooks/useBrainHealthyPrefs.ts`
+- `src/hooks/useTimeBlocks.ts`
 
-- `bg-brand-teal-600` / `text-brand-teal-*` → INK
-- `bg-brain-health-*` surfaces → white cards with INK/10 hairlines
-- `text-brain-health-900` → INK
-- Primary CTAs → GOLD fill, INK text, hover INK/CREAM (Welcome-style)
-- Progress bars, letter chips → GOLD on cream, INK strokes
-- Focus rings → EMBER
+**Files to edit**
+- `src/pages/launch/LaunchAddEventModal.tsx`
+- `src/pages/launch/LaunchRescheduleModal.tsx`
+- `src/pages/launch/LaunchCalendar.tsx`
+- `src/components/launch/LaunchDailyBrief.tsx`
+- Settings page (mount both new cards)
+- `supabase/functions/plan-assist/index.ts` (pass prefs + blocks into prompt)
 
-Non-launch pages (`/`, marketing, admin) untouched.
+**DB (single migration)**
+- ALTER `public.user_schedule_preferences` add: `brain_healthy_enabled bool default true`, `min_meeting_gap_minutes int default 15`, `longer_break_trigger_minutes int default 120`, `longer_break_length_minutes int default 20`, `daily_meeting_cap int`, `no_daily_cap bool default false`, `auto_insert_breaks bool default true`, `break_length_minutes int default 10`, `break_style text default 'quiet_reset'`, `break_style_custom_label text`, `reminder_buffer_minutes int default 10`, `protected_windows jsonb default '[]'`, `time_blocking_enabled bool default false`, `time_block_template text default 'blank'`.
+- CREATE TABLE `public.time_blocks` (columns above) + GRANT to `authenticated`, `service_role` + RLS + `updated_at` trigger.
 
-### 4. Hand-polish the highest-visibility screens
-
-Theme swap is enough for utility pages, but these get a Welcome-quality pass with the ember placements above:
-
-- **LaunchHome** — Daily Brief card gets a 3px EMBER left-border on "Today's focus".
-- **LaunchCapture / LaunchMemoryBridge** — recorder pulse dot = EMBER; countdown pill border in EMBER when > 5m; mid-tier warning EMBER.
-- **LaunchCommit** — smart schedule "in progress" chip = EMBER on white.
-- **LaunchCalibrate** — MyRHYTHM-G chip picker: today's selected state gets an EMBER underline.
-- **LaunchCelebrate** — streak counter number in EMBER.
-- **LaunchCalendar** — sync bar "syncing" spinner in EMBER; Add Event modal focus rings EMBER.
-- **LaunchSupportCircle** — "Loop someone in" prompt card gets EMBER left-border; LoopInPicker focus ring EMBER.
-- **LaunchAssessment / LaunchPayment** — align buttons + cards to Welcome; "Back to your results" link hover in EMBER.
-
-### 5. Refactor Welcome to consume the tokens
-
-Replace hardcoded `INK/MOSS/GOLD/CREAM` constants in `LaunchWelcome.tsx` with the CSS variables and add EMBER to the "lowest letter" nudge dot so Welcome and the rest of /launch stay in sync.
-
-## Guardrails
-
-- Contrast: INK on CREAM ~10.5:1, GOLD on INK ~5.8:1, EMBER on CREAM ~4.8:1 — all pass AA. EMBER on white ~4.6:1 (AA normal text OK). Never EMBER on GOLD.
-- 56px touch targets + glass morphism rules stay intact.
-- No component API changes — pure visual layer.
-- Non-launch routes untouched.
-
-## Out of scope
-
-- Marketing/root landing (`/`) keeps current styling.
-- No copy changes, no new features.
-
-## Rollout order (single build session)
-
-1. Fonts + `.launch-theme` tokens (incl. EMBER) in `index.css` + `index.html`.
-2. `LaunchLayout` wrapper + header.
-3. Scoped find/replace of teal & brain-health utilities inside launch files.
-4. Refactor `LaunchWelcome` onto shared tokens.
-5. Hand-polish pass with EMBER placements on the 8 high-visibility screens.
-6. Visual QA on `/launch/home`, `/launch/capture`, `/launch/calendar`, `/launch/support`, `/launch/payment`.
+**Non-goals**
+- No auto-cancel or auto-move of existing meetings.
+- Blocks are local; no provider push. Auto breaks flow through the existing push pipeline.
