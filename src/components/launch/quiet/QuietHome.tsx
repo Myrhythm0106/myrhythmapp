@@ -78,20 +78,21 @@ export function QuietHome() {
       <Composer />
 
       {/* Today's wins */}
-      <div className="rounded-3xl bg-white/80 backdrop-blur border border-memory-emerald-100 p-5">
+      <div className="rounded-3xl bg-launch-ivory border border-launch-gold/30 p-5">
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="h-4 w-4 text-memory-emerald-600" />
-          <h3 className="font-semibold text-memory-emerald-900">{copy.winsTitle}</h3>
+          <Sparkles className="h-4 w-4 text-launch-ember" />
+          <h3 className="font-semibold text-launch-ink">{copy.winsTitle}</h3>
         </div>
         <ul className="space-y-2">
           {fixtures.wins.map((w) => (
             <li key={w.id} className="flex items-center justify-between text-sm">
-              <span className="text-brain-health-800">{w.text}</span>
-              <span className="text-xs text-brain-health-500">{w.time}</span>
+              <span className="text-launch-ink/80">{w.text}</span>
+              <span className="text-xs text-launch-ink/50">{w.time}</span>
             </li>
           ))}
         </ul>
       </div>
+
 
       {/* Cognitive Load (Plus+) */}
       <CognitiveLoadMeter />
