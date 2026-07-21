@@ -39,6 +39,33 @@ export function ActionDetailCard({ action, onStatusUpdate, onBack, onSupportCirc
   const [notes, setNotes] = useState(action.user_notes || '');
   const [isUpdating, setIsUpdating] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string>(action.status);
+  const [circleIds, setCircleIds] = useState<string[]>(action.assigned_watchers || []);
+  const [adhoc, setAdhoc] = useState<AdhocLoopIn[]>(
+    Array.isArray((action as any).adhoc_loop_ins) ? ((action as any).adhoc_loop_ins as AdhocLoopIn[]) : []
+  );
+  const [savingLoop, setSavingLoop] = useState(false);
+
+  const saveLoopIns = async (next: { circleMemberIds: string[]; adhocLoopIns: AdhocLoopIn[] }) => {
+    setCircleIds(next.circleMemberIds);
+    setAdhoc(next.adhocLoopIns);
+    if (!action.id) return;
+    setSavingLoop(true);
+    try {
+      const { error } = await supabase
+        .from('extracted_actions')
+        .update({
+          assigned_watchers: next.circleMemberIds,
+          adhoc_loop_ins: next.adhocLoopIns as any,
+        })
+        .eq('id', action.id);
+      if (error) throw error;
+    } catch (err) {
+      console.error('Failed to save loop-ins', err);
+      toast.error('Could not update who is in the loop');
+    } finally {
+      setSavingLoop(false);
+    }
+  };
 
   const handleStatusUpdate = async (newStatus: string) => {
     setIsUpdating(true);
