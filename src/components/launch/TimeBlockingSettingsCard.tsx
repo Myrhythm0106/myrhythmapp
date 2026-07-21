@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Blocks, Plus, Trash2, RotateCcw, Copy } from 'lucide-react';
 import { useBrainHealthyPrefs } from '@/hooks/useBrainHealthyPrefs';
 import { useTimeBlocks, TimeBlock } from '@/hooks/useTimeBlocks';
-import { buildTemplate, TemplateKey } from '@/launch/scheduling/timeBlockTemplates';
+import { buildTemplate, TemplateKey, TEMPLATE_LABELS } from '@/launch/scheduling/timeBlockTemplates';
 import { DAY_LABELS, DAY_LABELS_FULL, BlockType, BlockColor, RepeatRule } from '@/launch/scheduling/defaults';
 import { toast } from 'sonner';
 
@@ -110,10 +110,15 @@ export function TimeBlockingSettingsCard() {
               <Select value={seedingTpl} onValueChange={(v) => setSeedingTpl(v as TemplateKey)}>
                 <SelectTrigger className="h-9 rounded-xl flex-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="blank">Blank</SelectItem>
-                  <SelectItem value="classic_focus">Classic Focus</SelectItem>
-                  <SelectItem value="meeting_heavy">Meeting-heavy</SelectItem>
-                  <SelectItem value="recovery_friendly">Recovery-friendly</SelectItem>
+                  {(Object.keys(TEMPLATE_LABELS) as TemplateKey[]).map((k) => {
+                    const t = TEMPLATE_LABELS[k];
+                    return (
+                      <SelectItem key={k} value={k}>
+                        {t.label}
+                        {t.evidence ? <span className="text-[10px] text-gray-500 ml-2">· {t.evidence}</span> : null}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
               <button

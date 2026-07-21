@@ -2834,6 +2834,7 @@ export type Database = {
           min_meeting_gap_minutes: number
           no_daily_cap: boolean
           notes: string | null
+          pomodoro_preset: string
           preference_type: string
           protected_windows: Json
           reminder_buffer_minutes: number
@@ -2859,6 +2860,7 @@ export type Database = {
           min_meeting_gap_minutes?: number
           no_daily_cap?: boolean
           notes?: string | null
+          pomodoro_preset?: string
           preference_type: string
           protected_windows?: Json
           reminder_buffer_minutes?: number
@@ -2884,6 +2886,7 @@ export type Database = {
           min_meeting_gap_minutes?: number
           no_daily_cap?: boolean
           notes?: string | null
+          pomodoro_preset?: string
           preference_type?: string
           protected_windows?: Json
           reminder_buffer_minutes?: number
