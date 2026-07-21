@@ -82,12 +82,13 @@ export function LaunchLayout({
                 {/* Help Button */}
                 <button
                   onClick={() => navigate('/help/getting-started')}
-                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-launch-gold/10 hover:bg-launch-gold/20 flex items-center justify-center transition-colors"
                   title="How to use MyRhythm"
                   aria-label="Help and guides"
                 >
-                  <HelpCircle className="h-5 w-5 text-gray-600" />
+                  <HelpCircle className="h-5 w-5 text-launch-ink/70" />
                 </button>
+
 
                 <AccountDropdown />
               </div>
