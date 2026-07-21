@@ -183,8 +183,9 @@ export default function LaunchPayment() {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-launch-ink">{plan.name}</h3>
                     {plan.popular && (
-                      <Badge className="bg-launch-gold/20 text-launch-ink border border-launch-gold/40 hover:bg-launch-gold/30">{plan.savings}</Badge>
+                      <Badge variant="outline" className="bg-launch-gold/20 text-launch-ink border-launch-gold/40 hover:bg-launch-gold/30">{plan.savings}</Badge>
                     )}
+
 
                   </div>
                   <div className="flex items-baseline gap-1">
