@@ -56,28 +56,32 @@ export default function LaunchProfile() {
 
   return (
     <LaunchLayout>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
-      </div>
+      <LaunchHeroBand
+        eyebrow="Account"
+        title="Profile"
+        subtitle="Your identity, plan and preferences in one place."
+      />
 
+      <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
       {/* User Info */}
-      <LaunchCard className="mb-6">
+      <LaunchCard className="mb-6 bg-launch-ivory border-launch-gold/30">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-emerald-400 to-brand-teal-500 flex items-center justify-center">
-            <User className="h-8 w-8 text-white" />
+          <div className="w-16 h-16 rounded-2xl bg-launch-ink flex items-center justify-center ring-1 ring-launch-gold/50">
+            <User className="h-8 w-8 text-launch-gold" />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-gray-900">
+            <h2 className="text-xl font-bold text-launch-ink font-display">
               {user?.email?.split('@')[0] || 'Guest User'}
             </h2>
-            <p className="text-sm text-gray-500 flex items-center gap-1">
+            <p className="text-sm text-launch-ink/60 flex items-center gap-1">
               <Mail className="h-3 w-3" />
               {user?.email || 'Not signed in'}
             </p>
           </div>
-          <button className="text-sm text-brand-emerald-600 font-medium">Edit</button>
+          <button className="text-sm text-launch-ember font-medium">Edit</button>
         </div>
       </LaunchCard>
+
 
       {/* Current Plan */}
       <LaunchCard variant="featured" className="mb-6" onClick={() => navigate('/launch/store')}>
