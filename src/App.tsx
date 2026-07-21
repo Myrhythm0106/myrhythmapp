@@ -138,6 +138,7 @@ import {
   LaunchDischargeBridgeHandout,
 } from "./pages/launch";
 import LaunchCalibrate from "./pages/launch/LaunchCalibrate";
+import LaunchCircleGrowth from "./pages/launch/LaunchCircleGrowth";
 import LaunchCapture from "./pages/launch/LaunchCapture";
 import LaunchCaptureResult from "./pages/launch/LaunchCaptureResult";
 import LaunchCommit from "./pages/launch/LaunchCommit";
