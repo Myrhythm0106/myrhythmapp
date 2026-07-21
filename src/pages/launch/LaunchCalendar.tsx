@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
+import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
+import { LaunchCard } from '@/components/launch/LaunchCard';
 import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
+
 import { LaunchViewSwitcher, CalendarView } from '@/components/launch/calendar/LaunchViewSwitcher';
 import { LaunchDayView } from '@/components/launch/calendar/LaunchDayView';
 import { LaunchWeekView } from '@/components/launch/calendar/LaunchWeekView';
