@@ -281,7 +281,7 @@ export function MemoryBridgeActionReport() {
                             {action.assigned_watchers && action.assigned_watchers.length > 0 && (
                               <div className="flex items-center gap-1 text-xs text-purple-600">
                                 <Users className="h-3 w-3" />
-                                {action.assigned_watchers.length} watchers
+                                {action.assigned_watchers.length === 1 ? '1 in the loop' : `${action.assigned_watchers.length} in the loop`}
                               </div>
                             )}
                           </div>
