@@ -111,6 +111,7 @@ export const BRAIN_HEALTHY_DEFAULTS: BrainHealthyPrefs = {
   ],
   time_blocking_enabled: false,
   time_block_template: 'blank',
+  pomodoro_preset: 'classic_pomodoro',
 };
 
 export interface NumRange { min: number; max: number; step: number; unit: string }
