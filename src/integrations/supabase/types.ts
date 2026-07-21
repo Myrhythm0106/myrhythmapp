@@ -1326,6 +1326,44 @@ export type Database = {
         }
         Relationships: []
       }
+      growth_states: {
+        Row: {
+          created_at: string
+          goal_id: string | null
+          id: string
+          letter: Database["public"]["Enums"]["growth_letter"]
+          logged_at: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          letter: Database["public"]["Enums"]["growth_letter"]
+          logged_at?: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          letter?: Database["public"]["Enums"]["growth_letter"]
+          logged_at?: string
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "growth_states_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meeting_recordings: {
         Row: {
           created_at: string
@@ -1962,6 +2000,7 @@ export type Database = {
           phone_verified: boolean | null
           planning_day_of_week: number | null
           require_mfa_for_sensitive_actions: boolean | null
+          support_circle_can_view_growth: boolean
           updated_at: string
           user_type: string | null
         }
@@ -1982,6 +2021,7 @@ export type Database = {
           phone_verified?: boolean | null
           planning_day_of_week?: number | null
           require_mfa_for_sensitive_actions?: boolean | null
+          support_circle_can_view_growth?: boolean
           updated_at?: string
           user_type?: string | null
         }
@@ -2002,6 +2042,7 @@ export type Database = {
           phone_verified?: boolean | null
           planning_day_of_week?: number | null
           require_mfa_for_sensitive_actions?: boolean | null
+          support_circle_can_view_growth?: boolean
           updated_at?: string
           user_type?: string | null
         }
@@ -3083,6 +3124,10 @@ export type Database = {
         Args: { user_uuid: string }
         Returns: string
       }
+      has_growth_view_access: {
+        Args: { _owner: string; _viewer: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -3147,6 +3192,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      growth_letter: "M1" | "Y1" | "R" | "H1" | "Y2" | "T" | "H2" | "M2"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -3275,6 +3321,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      growth_letter: ["M1", "Y1", "R", "H1", "Y2", "T", "H2", "M2"],
     },
   },
 } as const
