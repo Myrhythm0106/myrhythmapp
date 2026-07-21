@@ -242,9 +242,10 @@ export default function LaunchCalendar() {
             onYearVisionChange={setYearVision}
           />
         )}
-      </div>
+      </LaunchCard>
 
       <LaunchAddEventModal
+
         isOpen={showAddModal}
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddEvent}
