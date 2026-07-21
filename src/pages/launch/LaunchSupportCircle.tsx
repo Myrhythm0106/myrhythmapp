@@ -37,17 +37,29 @@ function statusPill(status: SupportCircleMember['status']) {
 }
 
 export default function LaunchSupportCircle() {
-  const { supportCircle, isLoading, removeSupportMember } = useAccountabilitySystem();
+  const { supportCircle, isLoading, loadSupportCircle } = useAccountabilitySystem() as any;
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'team' | 'invite'>('team');
   const [removingId, setRemovingId] = useState<string | null>(null);
 
-  const active = supportCircle.filter((m) => m.status === 'active');
-  const pending = supportCircle.filter((m) => m.status === 'pending');
+  const active = supportCircle.filter((m: SupportCircleMember) => m.status === 'active');
+  const pending = supportCircle.filter((m: SupportCircleMember) => m.status === 'pending');
 
   const handleRemove = async (id: string) => {
+    if (!user) return;
     setRemovingId(id);
     try {
-      await removeSupportMember?.(id);
+      const { error } = await supabase
+        .from('support_circle_members')
+        .update({ status: 'revoked', invitation_token: null })
+        .eq('id', id)
+        .eq('user_id', user.id);
+      if (error) throw error;
+      toast.success('Removed from your circle');
+      if (typeof loadSupportCircle === 'function') await loadSupportCircle();
+    } catch (err) {
+      console.error(err);
+      toast.error('Could not remove that person');
     } finally {
       setRemovingId(null);
     }
