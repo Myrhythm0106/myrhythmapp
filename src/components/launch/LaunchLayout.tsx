@@ -48,16 +48,16 @@ export function LaunchLayout({
 
   return (
     <SubjectProvider>
-      <div className="min-h-screen bg-[#fafbfc] flex flex-col">
+      <div className="launch-theme min-h-screen bg-[hsl(var(--launch-cream))] flex flex-col">
         {/* Top Header Bar */}
         {showHeader && (
-          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-brain-health-100 px-4 py-3">
+          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3">
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 shrink-0">
-                <div className="w-8 h-8 bg-brand-teal-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-semibold text-sm">M</span>
+                <div className="w-8 h-8 bg-[hsl(var(--launch-ink))] rounded-lg flex items-center justify-center ring-1 ring-[hsl(var(--launch-gold)/0.55)]">
+                  <span className="text-[hsl(var(--launch-gold))] font-semibold text-sm" style={{ fontFamily: "'Sora', sans-serif" }}>M</span>
                 </div>
-                <span className="font-semibold text-lg text-brain-health-900 tracking-tight">
+                <span className="font-semibold text-lg text-[hsl(var(--launch-ink))] tracking-tight" style={{ fontFamily: "'Sora', sans-serif" }}>
                   MyRhythm
                 </span>
                 <EditionBadge variant="chip" className="hidden sm:inline-flex ml-1" />
