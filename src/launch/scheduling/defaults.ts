@@ -12,6 +12,59 @@ export type BlockType = 'focus' | 'meetings' | 'admin' | 'rest' | 'personal' | '
 export type BlockColor = 'moss' | 'gold' | 'ember' | 'ink' | 'slate';
 export type RepeatRule = 'none' | 'daily' | 'weekdays' | 'weekly' | 'custom';
 
+export type PomodoroPreset =
+  | 'classic_pomodoro'
+  | 'long_focus'
+  | 'gentle_recovery'
+  | 'desktime_52_17'
+  | 'custom';
+
+export interface PomodoroPresetConfig {
+  value: PomodoroPreset;
+  label: string;
+  workMinutes: number;
+  shortBreakMinutes: number;
+  longBreakMinutes: number;
+  longBreakEvery: number; // cycles
+  evidence: string; // one-line citation chip
+  blurb: string;
+}
+
+export const POMODORO_PRESETS: PomodoroPresetConfig[] = [
+  {
+    value: 'classic_pomodoro',
+    label: 'Pomodoro Classic (25 / 5)',
+    workMinutes: 25, shortBreakMinutes: 5, longBreakMinutes: 15, longBreakEvery: 4,
+    evidence: 'Pomodoro Technique · Cirillo, 1987',
+    blurb: '25 min focus, 5 min break, 15 min long break every 4 cycles.',
+  },
+  {
+    value: 'long_focus',
+    label: 'Deep Focus (50 / 10)',
+    workMinutes: 50, shortBreakMinutes: 10, longBreakMinutes: 20, longBreakEvery: 4,
+    evidence: 'Ultradian BRAC · Kleitman',
+    blurb: 'Longer cycles for sustained cognitive work. Break every ~90 min.',
+  },
+  {
+    value: 'desktime_52_17',
+    label: 'Deep Work (52 / 17)',
+    workMinutes: 52, shortBreakMinutes: 17, longBreakMinutes: 25, longBreakEvery: 3,
+    evidence: 'DeskTime productivity study, 2014',
+    blurb: 'Ratio observed in the highest-performing 10% of knowledge workers.',
+  },
+  {
+    value: 'gentle_recovery',
+    label: 'Gentle Recovery (15 / 10)',
+    workMinutes: 15, shortBreakMinutes: 10, longBreakMinutes: 20, longBreakEvery: 2,
+    evidence: 'Brain-injury rehab pacing guidance',
+    blurb: 'Short focus bursts with generous resets. Kind on a tired brain.',
+  },
+];
+
+export function getPomodoroPreset(v: PomodoroPreset): PomodoroPresetConfig | undefined {
+  return POMODORO_PRESETS.find(p => p.value === v);
+}
+
 export interface ProtectedWindow {
   id: string;
   name: string;
