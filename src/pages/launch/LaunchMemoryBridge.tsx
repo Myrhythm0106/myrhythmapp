@@ -378,19 +378,17 @@ export default function LaunchMemoryBridge() {
 
   return (
     <LaunchLayout>
-      {/* Premium background */}
-      <div className="fixed inset-0 -z-10">
-        <EnhancedBackgroundEffects />
-      </div>
+      <LaunchHeroBand
+        eyebrow="Capture"
+        title="Memory Bridge"
+        subtitle="Record conversations, we'll extract the actions — so nothing important is left to recall under pressure."
+        align="center"
+      />
 
-      <div className="relative z-10">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-foreground">Memory Bridge</h1>
-          <p className="text-muted-foreground">Record conversations, we'll extract the actions</p>
-        </div>
+      <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
+        {/* Recording Interface */}
+        <LaunchCard className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 mb-6 text-center py-10 px-6">
 
-        {/* Premium Recording Interface */}
-        <div className="relative overflow-hidden rounded-3xl bg-white/80 backdrop-blur-xl border border-white/40 shadow-2xl mb-6 text-center py-10 px-6">
           {/* Glass reflection */}
           <div className="absolute top-0 left-0 right-0 h-1/3 bg-gradient-to-b from-white/50 to-transparent pointer-events-none" />
           
