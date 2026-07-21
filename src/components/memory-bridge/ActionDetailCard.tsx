@@ -283,6 +283,25 @@ export function ActionDetailCard({ action, onStatusUpdate, onBack, onSupportCirc
           </Collapsible>
 
 
+          {/* Loop someone in */}
+          <div className="space-y-2 pt-4 border-t">
+            <div className="flex items-center justify-between">
+              <h4 className="font-medium flex items-center gap-2 text-sm">
+                <Users className="h-4 w-4 text-brand-emerald-600" />
+                Who's in the loop
+              </h4>
+              {savingLoop && <span className="text-xs text-muted-foreground">Saving…</span>}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Pick people from your Support Circle, or loop in someone by email — just for this action.
+            </p>
+            <LoopInPicker
+              circleMemberIds={circleIds}
+              adhocLoopIns={adhoc}
+              onChange={saveLoopIns}
+            />
+          </div>
+
           {/* Status Update Section */}
           <div className="space-y-4 pt-4 border-t">
             <div className="flex items-center justify-between">
