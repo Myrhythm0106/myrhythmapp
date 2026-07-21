@@ -119,12 +119,12 @@ export default function LaunchPayment() {
   };
 
   return (
-    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto py-8 px-4">
         <div className="max-w-3xl mx-auto">
           <button
             onClick={() => navigate('/launch/welcome')}
-            className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            className="mb-4 flex items-center gap-2 text-sm font-medium text-launch-ink/70 hover:text-launch-ink transition-colors"
             aria-label="Back to your results"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -135,12 +135,12 @@ export default function LaunchPayment() {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 rounded-xl border-2 border-amber-400 bg-amber-50 px-4 py-3 flex items-start gap-3"
+              className="mb-6 rounded-xl border-2 border-launch-ember/40 bg-launch-ember/10 px-4 py-3 flex items-start gap-3"
               role="status"
               aria-live="polite"
             >
-              <FlaskConical className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-              <div className="text-sm text-amber-900">
+              <FlaskConical className="h-5 w-5 text-launch-ember mt-0.5 flex-shrink-0" />
+              <div className="text-sm text-launch-ink">
                 <p className="font-semibold">Test Mode — no real money moves</p>
                 <p>Use an access code to skip payment, or use a Stripe test card below. Real cards will be declined.</p>
               </div>
@@ -152,13 +152,13 @@ export default function LaunchPayment() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg">
+            <div className="w-16 h-16 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mx-auto mb-5 shadow-lg">
               <Brain className="h-8 w-8 text-white" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-launch-ink mb-2 font-display">
               Start Your 7-Day Free Trial
             </h1>
-            <p className="text-lg text-gray-600 max-w-xl mx-auto">
+            <p className="text-lg text-launch-ink/70 max-w-xl mx-auto">
               Try MyRhythm risk-free. Your card won't be charged for 7 days. Cancel anytime.
             </p>
           </motion.div>
@@ -174,24 +174,26 @@ export default function LaunchPayment() {
                 key={plan.id}
                 className={`cursor-pointer transition-all duration-300 ${
                   selectedPlan === plan.id
-                    ? 'border-2 border-brand-emerald-500 shadow-lg bg-white'
-                    : 'border-2 border-transparent hover:border-gray-200 bg-white/80'
+                    ? 'border-2 border-launch-moss shadow-lg bg-launch-ivory'
+                    : 'border-2 border-transparent hover:border-launch-gold/40 bg-launch-ivory'
                 }`}
                 onClick={() => setSelectedPlan(plan.id)}
               >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold text-gray-900">{plan.name}</h3>
+                    <h3 className="font-semibold text-launch-ink">{plan.name}</h3>
                     {plan.popular && (
-                      <Badge className="bg-brand-emerald-100 text-brand-emerald-700">{plan.savings}</Badge>
+                      <Badge variant="outline" className="bg-launch-gold/20 text-launch-ink border-launch-gold/40 hover:bg-launch-gold/30">{plan.savings}</Badge>
                     )}
+
+
                   </div>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-gray-900">{plan.price}</span>
-                    <span className="text-gray-500">/{plan.interval}</span>
+                    <span className="text-3xl font-bold text-launch-ink">{plan.price}</span>
+                    <span className="text-launch-ink/50">/{plan.interval}</span>
                   </div>
                   {plan.id === 'yearly' && (
-                    <p className="text-sm text-brand-emerald-600 mt-1">£7/month when billed yearly</p>
+                    <p className="text-sm text-launch-moss mt-1">£7/month when billed yearly</p>
                   )}
                 </CardContent>
               </Card>
@@ -204,13 +206,13 @@ export default function LaunchPayment() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
           >
-            <Card className="bg-white/90 backdrop-blur-sm border-2 border-brand-emerald-200 shadow-md mb-6">
+            <Card className="bg-launch-ivory border-2 border-launch-gold/30 shadow-md mb-6">
               <CardContent className="p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <KeyRound className="h-5 w-5 text-brand-emerald-600" />
-                  <h3 className="font-semibold text-gray-900">Have an access code?</h3>
+                  <KeyRound className="h-5 w-5 text-launch-moss" />
+                  <h3 className="font-semibold text-launch-ink">Have an access code?</h3>
                 </div>
-                <p className="text-sm text-gray-600 mb-3">
+                <p className="text-sm text-launch-ink/70 mb-3">
                   Skip payment and unlock full access as a Founding Member.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-2">
@@ -225,7 +227,7 @@ export default function LaunchPayment() {
                   <Button
                     onClick={handleRedeemCode}
                     disabled={isRedeeming || !code.trim()}
-                    className="bg-brand-emerald-600 hover:bg-brand-emerald-700 text-white sm:min-w-[140px]"
+                    className="bg-launch-ink hover:bg-launch-ink/90 text-launch-cream sm:min-w-[140px]"
                   >
                     {isRedeeming ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Redeem code'}
                   </Button>
@@ -239,17 +241,17 @@ export default function LaunchPayment() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl mb-6">
+            <Card className="bg-launch-ivory border border-launch-gold/30 shadow-xl mb-6">
               <CardContent className="p-6">
-                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-brand-emerald-500" />
+                <h3 className="font-semibold text-launch-ink mb-4 flex items-center gap-2">
+                  <Sparkles className="h-5 w-5 text-launch-moss" />
                   Everything included in your trial:
                 </h3>
                 <div className="grid md:grid-cols-2 gap-3">
                   {features.map((f, i) => (
                     <div key={i} className="flex items-center gap-2">
-                      <Check className="h-4 w-4 text-brand-emerald-500 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">{f}</span>
+                      <Check className="h-4 w-4 text-launch-moss flex-shrink-0" />
+                      <span className="text-sm text-launch-ink/80">{f}</span>
                     </div>
                   ))}
                 </div>
@@ -266,31 +268,31 @@ export default function LaunchPayment() {
             >
               <Collapsible>
                 <CollapsibleTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between border-dashed border-amber-300 bg-amber-50/50 hover:bg-amber-50">
-                    <span className="flex items-center gap-2 text-amber-900">
+                  <Button variant="outline" className="w-full justify-between border-dashed border-launch-ember/40 bg-launch-ember/10 hover:bg-launch-ember/20">
+                    <span className="flex items-center gap-2 text-launch-ink">
                       <FlaskConical className="h-4 w-4" />
                       Show Stripe test cards
                     </span>
-                    <ChevronDown className="h-4 w-4 text-amber-700" />
+                    <ChevronDown className="h-4 w-4 text-launch-ember" />
                   </Button>
                 </CollapsibleTrigger>
                 <CollapsibleContent className="mt-2">
-                  <Card className="bg-amber-50/70 border border-amber-200">
+                  <Card className="bg-launch-ivory border border-launch-gold/30">
                     <CardContent className="p-4 space-y-2">
-                      <p className="text-xs text-amber-900 mb-2">
+                      <p className="text-xs text-launch-ink mb-2">
                         Any future expiry date, any 3-digit CVC, any postcode. Tap to copy.
                       </p>
                       {testCards.map((c) => (
                         <button
                           key={c.number}
                           onClick={() => copyCard(c.number)}
-                          className="w-full flex items-center justify-between px-3 py-2 rounded-md bg-white hover:bg-amber-100/60 border border-amber-200 text-left transition"
+                          className="w-full flex items-center justify-between px-3 py-2 rounded-md bg-launch-cream-light hover:bg-launch-gold/10 border border-launch-gold/30 text-left transition"
                         >
                           <div>
-                            <p className="font-mono text-sm text-gray-900">{c.number}</p>
-                            <p className="text-xs text-gray-500">{c.label}</p>
+                            <p className="font-mono text-sm text-launch-ink">{c.number}</p>
+                            <p className="text-xs text-launch-ink/50">{c.label}</p>
                           </div>
-                          <Copy className="h-4 w-4 text-amber-700" />
+                          <Copy className="h-4 w-4 text-launch-ember" />
                         </button>
                       ))}
                     </CardContent>
@@ -302,7 +304,7 @@ export default function LaunchPayment() {
         </div>
       </div>
 
-      <div className="flex-shrink-0 px-4 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
+      <div className="flex-shrink-0 px-4 py-4 pb-8 bg-launch-cream-light border-t border-launch-gold/10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -312,7 +314,7 @@ export default function LaunchPayment() {
           <Button
             onClick={handleStartTrial}
             disabled={isLoading}
-            className="w-full md:w-auto bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 hover:from-brand-emerald-600 hover:to-brand-teal-600 text-white px-12 py-6 text-lg shadow-lg"
+            className="w-full md:w-auto bg-launch-ink hover:bg-launch-ink/90 text-launch-cream px-12 py-6 text-lg shadow-lg"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -325,17 +327,17 @@ export default function LaunchPayment() {
             )}
           </Button>
 
-          <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-gray-500">
+          <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-sm text-launch-ink/50">
             <div className="flex items-center gap-1">
-              <Shield className="h-4 w-4 text-green-500" />
+              <Shield className="h-4 w-4 text-launch-moss" />
               <span>SSL Secure</span>
             </div>
             <div className="flex items-center gap-1">
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-launch-moss" />
               <span>No charge for 7 days</span>
             </div>
             <div className="flex items-center gap-1">
-              <Check className="h-4 w-4 text-green-500" />
+              <Check className="h-4 w-4 text-launch-moss" />
               <span>Cancel anytime</span>
             </div>
           </div>

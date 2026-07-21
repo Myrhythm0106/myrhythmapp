@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
+import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { Switch } from '@/components/ui/switch';
+
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
@@ -85,21 +87,16 @@ export default function LaunchSettings() {
 
   return (
     <LaunchLayout showHeader={true}>
-      <div className="mb-6">
-        <button 
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-600 mb-4"
-        >
-          <ChevronLeft className="h-5 w-5" />
-          Back
-        </button>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500 text-sm mt-1">Customize your experience</p>
-      </div>
+      <LaunchHeroBand
+        eyebrow="Preferences"
+        title="Settings"
+        subtitle="Customize your rhythm, privacy, connections and brain-healthy scheduling."
+      />
 
-      <div className="space-y-4 pb-24">
+      <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24 space-y-4">
+
         {/* About this edition */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <button
             onClick={() => navigate('/launch/settings/edition')}
             className="w-full flex items-center gap-3 text-left min-h-[56px]"
@@ -118,7 +115,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Continuity summary */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <button
             onClick={() => navigate('/launch/continuity')}
             className="w-full flex items-center gap-3 text-left min-h-[56px]"
@@ -135,7 +132,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Send feedback */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <button
             onClick={() => setFeedbackOpen(true)}
             className="w-full flex items-center gap-3 text-left min-h-[56px]"
@@ -152,7 +149,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Scheduling — SMART · Milestones · Health-aware */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center">
               <Sparkles className="h-5 w-5 text-orange-600" />
@@ -228,7 +225,7 @@ export default function LaunchSettings() {
         {/* Connected Calendars Section */}
 
 
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
               <Calendar className="h-5 w-5 text-blue-600" />
@@ -332,7 +329,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Storage Management */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center">
               <HardDrive className="h-5 w-5 text-purple-600" />
@@ -376,7 +373,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Language & Region */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-green-100 flex items-center justify-center">
               <Globe className="h-5 w-5 text-green-600" />
@@ -448,7 +445,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Notifications */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
               <Bell className="h-5 w-5 text-amber-600" />
@@ -480,7 +477,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Appearance */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-pink-100 flex items-center justify-center">
               <Palette className="h-5 w-5 text-pink-600" />
@@ -500,7 +497,7 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Privacy & Security */}
-        <LaunchCard>
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
               <Shield className="h-5 w-5 text-red-600" />
@@ -585,7 +582,7 @@ const DAY_OPTIONS = [
 function PlanningDayCard() {
   const { dayOfWeek, setDayOfWeek, loading } = usePlanningDay();
   return (
-    <LaunchCard>
+    <LaunchCard className="bg-launch-ivory border-launch-gold/30">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl bg-brand-emerald-100 flex items-center justify-center">
           <Sparkles className="h-5 w-5 text-brand-emerald-600" />

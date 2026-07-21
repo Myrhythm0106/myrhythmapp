@@ -144,7 +144,9 @@ import LaunchCaptureResult from "./pages/launch/LaunchCaptureResult";
 import LaunchCommit from "./pages/launch/LaunchCommit";
 import LaunchSCCapture from "./pages/launch/LaunchSCCapture";
 import { LaunchModeProvider } from "./hooks/useLaunchMode";
+import { LaunchLayout } from "./components/launch/LaunchLayout";
 import { OnboardingProgressBar } from "./components/launch/OnboardingProgressBar";
+
 
 // Brain Injury Journey Routes
 import { JourneyRegister, JourneyEnergyCheck, JourneyAssessment, JourneySupportCircle, JourneyReady } from "./pages/journey/brain-injury";
@@ -370,12 +372,13 @@ function App() {
                        {/* V1 Launch Mode Routes */}
                        <Route path="/launch" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
                        <Route path="/launch/landingpage" element={<LaunchModeProvider><LaunchLanding /></LaunchModeProvider>} />
-                       <Route path="/launch/register" element={<LaunchModeProvider><LaunchRegister /></LaunchModeProvider>} />
-                       <Route path="/launch/signin" element={<LaunchModeProvider><LaunchSignIn /></LaunchModeProvider>} />
-                       <Route path="/launch/user-type" element={<LaunchModeProvider><LaunchUserType /></LaunchModeProvider>} />
-                       <Route path="/launch/payment" element={<LaunchModeProvider><LaunchPayment /></LaunchModeProvider>} />
-                       <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchAssessment /></LaunchModeProvider>} />
-                       <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchWelcome /></LaunchModeProvider>} />
+                        <Route path="/launch/register" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchRegister /></LaunchLayout></LaunchModeProvider>} />
+                        <Route path="/launch/signin" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchSignIn /></LaunchLayout></LaunchModeProvider>} />
+                        <Route path="/launch/user-type" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchUserType /></LaunchLayout></LaunchModeProvider>} />
+                        <Route path="/launch/payment" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchPayment /></LaunchLayout></LaunchModeProvider>} />
+                        <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchAssessment /></LaunchLayout></LaunchModeProvider>} />
+                        <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchWelcome /></LaunchModeProvider>} />
+
                        <Route path="/launch/home" element={<LaunchModeProvider><LaunchDashboard /></LaunchModeProvider>} />
                        <Route path="/launch/calendar" element={<LaunchModeProvider><LaunchCalendar /></LaunchModeProvider>} />
                        <Route path="/launch/memory" element={<LaunchModeProvider><LaunchMemoryBridge /></LaunchModeProvider>} />

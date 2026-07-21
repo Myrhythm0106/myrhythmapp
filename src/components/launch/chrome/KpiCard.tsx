@@ -15,16 +15,16 @@ export function KpiCard({ label, value, delta, caption, className, children }: K
   const DeltaIcon = delta?.direction === 'up' ? ArrowUpRight : delta?.direction === 'down' ? ArrowDownRight : Minus;
   const deltaTone =
     delta?.direction === 'up'
-      ? 'text-memory-emerald-700'
+      ? 'text-launch-moss'
       : delta?.direction === 'down'
-      ? 'text-brand-orange-700'
-      : 'text-brain-health-500';
+      ? 'text-launch-ember'
+      : 'text-launch-ink/50';
 
   return (
-    <div className={cn('rounded-2xl bg-white border border-brain-health-100 p-5', className)}>
-      <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-brain-health-500">{label}</p>
+    <div className={cn('rounded-2xl bg-launch-ivory border border-launch-gold/30 p-5', className)}>
+      <p className="text-[11px] font-semibold tracking-[0.16em] uppercase text-launch-gold">{label}</p>
       <div className="mt-2 flex items-baseline gap-2">
-        <span className="text-3xl font-semibold text-brain-health-900 tabular-nums">{value}</span>
+        <span className="text-3xl font-semibold text-launch-ink font-display tabular-nums">{value}</span>
         {delta && (
           <span className={cn('inline-flex items-center gap-0.5 text-xs font-medium', deltaTone)}>
             <DeltaIcon className="h-3.5 w-3.5" strokeWidth={2} />
@@ -32,7 +32,7 @@ export function KpiCard({ label, value, delta, caption, className, children }: K
           </span>
         )}
       </div>
-      {caption && <p className="mt-1 text-xs text-brain-health-500">{caption}</p>}
+      {caption && <p className="mt-1 text-xs text-launch-ink/60">{caption}</p>}
       {children && <div className="mt-3">{children}</div>}
     </div>
   );

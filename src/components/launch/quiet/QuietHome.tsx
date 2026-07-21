@@ -49,17 +49,18 @@ export function QuietHome() {
         className="flex items-center justify-between"
       >
         <div>
-          <p className="text-sm text-brain-health-600">{greeting}, {greetName}.</p>
-          <p className="text-xs text-brain-health-500 mt-0.5">{copy.subgreeting}</p>
+          <p className="text-sm text-launch-ink/80">{greeting}, {greetName}.</p>
+          <p className="text-xs text-launch-ink/60 mt-0.5">{copy.subgreeting}</p>
           <div className="mt-1.5 flex flex-wrap items-center gap-2">
             <StagePicker />
             <MyRhythmGHomeChip />
           </div>
         </div>
-        <span className="text-xs px-2 py-1 rounded-full bg-white/60 border border-brain-health-100 text-brain-health-700 capitalize">
+        <span className="text-xs px-2 py-1 rounded-full bg-launch-ivory border border-launch-gold/30 text-launch-ink capitalize">
           {isCaregiver && subject === 'supporting' ? 'Co-pilot view' : fixtures.tier}
         </span>
       </motion.div>
+
 
       {/* Weekly planning nudge (only on the user's planning day) */}
       <LaunchWeeklyPlanningCard />
@@ -77,28 +78,30 @@ export function QuietHome() {
       <Composer />
 
       {/* Today's wins */}
-      <div className="rounded-3xl bg-white/80 backdrop-blur border border-memory-emerald-100 p-5">
+      <div className="rounded-3xl bg-launch-ivory border border-launch-gold/30 p-5">
         <div className="flex items-center gap-2 mb-3">
-          <Sparkles className="h-4 w-4 text-memory-emerald-600" />
-          <h3 className="font-semibold text-memory-emerald-900">{copy.winsTitle}</h3>
+          <Sparkles className="h-4 w-4 text-launch-ember" />
+          <h3 className="font-semibold text-launch-ink">{copy.winsTitle}</h3>
         </div>
         <ul className="space-y-2">
           {fixtures.wins.map((w) => (
             <li key={w.id} className="flex items-center justify-between text-sm">
-              <span className="text-brain-health-800">{w.text}</span>
-              <span className="text-xs text-brain-health-500">{w.time}</span>
+              <span className="text-launch-ink/80">{w.text}</span>
+              <span className="text-xs text-launch-ink/50">{w.time}</span>
             </li>
           ))}
         </ul>
       </div>
 
+
       {/* Cognitive Load (Plus+) */}
       <CognitiveLoadMeter />
 
       {/* Footer signature */}
-      <p className="text-center text-xs text-brain-health-500 pt-4 pb-8">
+      <p className="text-center text-xs text-launch-ink/50 pt-4 pb-8">
         Today is yours. #IChoose
       </p>
+
 
       {/* Dev-only tier switcher */}
       <TierSwitcherPill />

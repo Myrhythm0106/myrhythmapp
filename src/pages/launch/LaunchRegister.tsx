@@ -125,7 +125,7 @@ export default function LaunchRegister() {
   // Success state after registration
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+      <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
         {/* Back Button */}
         <div className="flex-shrink-0 p-4">
           <BackButton onClick={() => navigate('/launch')} />
@@ -135,33 +135,33 @@ export default function LaunchRegister() {
         <div className="flex-1 overflow-y-auto px-6 py-8">
           <div className="flex flex-col items-center justify-center min-h-full">
             {/* Logo */}
-            <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+            <div className="w-16 h-16 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mb-6 shadow-lg">
               <Mail className="h-8 w-8 text-white" />
             </div>
 
-            <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+            <h1 className="text-3xl font-bold text-launch-ink mb-2 text-center font-display">
               Check Your Email
             </h1>
-            <p className="text-gray-600 mb-8 text-center max-w-sm">
-              We've sent a verification link to <span className="font-semibold text-brand-emerald-600">{email}</span>
+            <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
+              We've sent a verification link to <span className="font-semibold text-launch-moss">{email}</span>
             </p>
 
-            <Card className="w-full max-w-md bg-white/80 backdrop-blur-sm border-0 shadow-xl">
+            <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
               <CardContent className="p-6 space-y-6">
                 {/* Instructions */}
                 <div className="space-y-3">
-                  <div className="flex items-start gap-3 p-3 bg-amber-50 rounded-lg border border-amber-200">
-                    <CheckCircle className="h-5 w-5 text-amber-600 mt-0.5 flex-shrink-0" />
-                    <div className="text-sm text-amber-800">
+                  <div className="flex items-start gap-3 p-3 bg-launch-ember/10 rounded-lg border border-launch-ember/30">
+                    <CheckCircle className="h-5 w-5 text-launch-ember mt-0.5 flex-shrink-0" />
+                    <div className="text-sm text-launch-ink">
                       <p className="font-medium">Check your spam/junk folder</p>
-                      <p className="text-amber-700">The email might be there if you don't see it in your inbox.</p>
+                      <p className="text-launch-ink/70">The email might be there if you don't see it in your inbox.</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Resend button */}
                 <div className="text-center">
-                  <p className="text-sm text-gray-500 mb-3">Didn't receive the email?</p>
+                  <p className="text-sm text-launch-ink/50 mb-3">Didn't receive the email?</p>
                   <Button
                     variant="outline"
                     onClick={handleResendVerification}
@@ -183,35 +183,36 @@ export default function LaunchRegister() {
                     <div className="w-full border-t border-gray-200" />
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-2 bg-white text-gray-500">or</span>
+                    <span className="px-2 bg-white text-launch-ink/50">or</span>
                   </div>
                 </div>
 
                 {/* Continue anyway button */}
                 <Button
                   onClick={handleContinue}
-                  className="w-full bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 hover:from-brand-emerald-600 hover:to-brand-teal-600 text-white py-6"
+                  className="w-full bg-launch-ink hover:bg-launch-ink/90 text-launch-cream py-6"
                 >
                   Continue to Setup
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
 
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-xs text-launch-ink/50 text-center">
                   You can verify your email later, but some features may be limited.
                 </p>
               </CardContent>
             </Card>
 
             {/* Sign in link */}
-            <p className="mt-6 text-sm text-gray-600 pb-8">
+            <p className="mt-6 text-sm text-launch-ink/60 pb-8">
               Already verified?{' '}
               <button
                 onClick={() => navigate('/launch/signin')}
-                className="text-brand-emerald-600 hover:text-brand-emerald-700 font-medium"
+                className="text-launch-moss hover:text-launch-moss/80 font-medium"
               >
                 Sign in
               </button>
             </p>
+
           </div>
         </div>
       </div>
@@ -219,7 +220,7 @@ export default function LaunchRegister() {
   }
 
   return (
-    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
       {/* Back Button */}
       <div className="flex-shrink-0 p-4">
         <BackButton onClick={() => navigate('/launch')} />
@@ -229,18 +230,18 @@ export default function LaunchRegister() {
       <div className="flex-1 overflow-y-auto px-6 py-8">
         <div className="flex flex-col items-center justify-center min-h-full">
           {/* Logo */}
-          <div className="w-16 h-16 bg-gradient-to-br from-brand-teal-500 via-brand-emerald-500 to-brand-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+          <div className="w-16 h-16 bg-launch-ink rounded-2xl ring-1 ring-launch-gold/50 flex items-center justify-center mb-6 shadow-lg">
             <Brain className="h-8 w-8 text-white" />
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-2 text-center">
+          <h1 className="text-3xl font-bold text-launch-ink mb-2 text-center font-display">
             Create Your Account
           </h1>
-          <p className="text-gray-600 mb-8 text-center max-w-sm">
+          <p className="text-launch-ink/70 mb-8 text-center max-w-sm">
             Start your 7-day free trial. No charge until your trial ends.
           </p>
 
-          <Card className="w-full max-w-md bg-white/80 backdrop-blur-sm border-0 shadow-xl">
+          <Card className="w-full max-w-md bg-launch-ivory border border-launch-gold/30 shadow-xl">
             <CardContent className="p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
@@ -251,11 +252,11 @@ export default function LaunchRegister() {
                     placeholder="John Doe"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className={errors.name ? 'border-red-500' : ''}
+                    className={errors.name ? 'border-launch-ember' : ''}
                     disabled={isLoading}
                   />
                   {errors.name && (
-                    <p className="text-sm text-red-500">{errors.name}</p>
+                    <p className="text-sm text-launch-ember">{errors.name}</p>
                   )}
                 </div>
 
@@ -267,11 +268,11 @@ export default function LaunchRegister() {
                     placeholder="you@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className={errors.email ? 'border-red-500' : ''}
+                    className={errors.email ? 'border-launch-ember' : ''}
                     disabled={isLoading}
                   />
                   {errors.email && (
-                    <p className="text-sm text-red-500">{errors.email}</p>
+                    <p className="text-sm text-launch-ember">{errors.email}</p>
                   )}
                 </div>
 
@@ -284,25 +285,25 @@ export default function LaunchRegister() {
                       placeholder="••••••••"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className={errors.password ? 'border-red-500 pr-10' : 'pr-10'}
+                      className={errors.password ? 'border-launch-ember pr-10' : 'pr-10'}
                       disabled={isLoading}
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-launch-ink/40 hover:text-launch-ink/70"
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-sm text-red-500">{errors.password}</p>
+                    <p className="text-sm text-launch-ember">{errors.password}</p>
                   )}
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-brand-emerald-500 to-brand-teal-500 hover:from-brand-emerald-600 hover:to-brand-teal-600 text-white py-6"
+                  className="w-full bg-launch-ink hover:bg-launch-ink/90 text-launch-cream py-6"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -318,7 +319,7 @@ export default function LaunchRegister() {
 
               {/* Trust signals */}
               <div className="mt-6 pt-6 border-t border-gray-100">
-                <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
+                <div className="flex items-center justify-center gap-4 text-sm text-launch-ink/50">
                   <div className="flex items-center gap-1">
                     <CheckCircle className="h-4 w-4 text-green-500" />
                     <span>7-day free trial</span>
@@ -333,15 +334,16 @@ export default function LaunchRegister() {
           </Card>
 
           {/* Sign in link */}
-          <p className="mt-6 text-sm text-gray-600 pb-8">
+          <p className="mt-6 text-sm text-launch-ink/60 pb-8">
             Already have an account?{' '}
             <button
               onClick={() => navigate('/launch/signin')}
-              className="text-brand-emerald-600 hover:text-brand-emerald-700 font-medium"
+              className="text-launch-moss hover:text-launch-moss/80 font-medium"
             >
               Sign in
             </button>
           </p>
+
         </div>
       </div>
     </div>

@@ -13,7 +13,8 @@ const userTypes = [
     definition:
       'Brain injury, stroke, dementia, long COVID, MS — finding your rhythm again, one steady step at a time.',
     icon: Compass,
-    color: 'from-brand-emerald-500 to-brand-teal-500',
+    color: 'bg-launch-ink',
+    iconColor: 'text-launch-gold',
   },
   {
     id: 'caregiver',
@@ -21,7 +22,8 @@ const userTypes = [
     definition:
       'Family carer, spouse, adult child — holding it together for them, without losing your own day.',
     icon: Anchor,
-    color: 'from-rose-500 to-pink-500',
+    color: 'bg-launch-moss',
+    iconColor: 'text-launch-cream',
   },
   {
     id: 'executive',
@@ -29,7 +31,8 @@ const userTypes = [
     definition:
       'Busy professional defending deep work, clear thinking and your best hours from the noise.',
     icon: Target,
-    color: 'from-amber-500 to-orange-500',
+    color: 'bg-launch-ember',
+    iconColor: 'text-launch-cream',
   },
   {
     id: 'student',
@@ -37,7 +40,8 @@ const userTypes = [
     definition:
       'Student or lifelong learner pacing yourself toward recall and confidence — not burnout.',
     icon: BookOpen,
-    color: 'from-cyan-500 to-blue-500',
+    color: 'bg-launch-gold',
+    iconColor: 'text-launch-ink',
   },
 ];
 
@@ -51,7 +55,8 @@ export default function LaunchUserType() {
 
 
   return (
-    <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
+    <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
+
       {/* Scrollable Content Area */}
       <div className="flex-1 overflow-y-auto py-6 px-4">
         <div className="max-w-4xl mx-auto">
@@ -63,14 +68,14 @@ export default function LaunchUserType() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-10"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-emerald-100 rounded-full mb-4">
-              <Sparkles className="h-4 w-4 text-brand-emerald-600" />
-              <span className="text-sm font-medium text-brand-emerald-700">Personalize Your Experience</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-launch-gold/10 rounded-full mb-4 border border-launch-gold/30">
+              <Sparkles className="h-4 w-4 text-launch-ember" />
+              <span className="text-sm font-medium text-launch-ink">Personalize Your Experience</span>
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-launch-ink mb-3 font-display">
               What brings you to MyRhythm?
             </h1>
-            <p className="text-lg text-gray-600 max-w-xl mx-auto">
+            <p className="text-lg text-launch-ink/70 max-w-xl mx-auto">
               We'll tailor your experience based on your unique needs
             </p>
           </motion.div>
@@ -85,19 +90,19 @@ export default function LaunchUserType() {
                 transition={{ delay: index * 0.1 }}
               >
                 <Card
-                  className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-brand-emerald-300 bg-white/80 backdrop-blur-sm"
+                  className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 border-transparent hover:border-launch-gold/50 bg-launch-ivory"
                   onClick={() => handleSelect(type.id)}
                 >
                   <CardContent className="p-5">
                     <div className="flex items-start gap-4">
-                      <div className={`w-12 h-12 bg-gradient-to-br ${type.color} rounded-xl flex items-center justify-center flex-shrink-0`}>
-                        <type.icon className="h-6 w-6 text-white" />
+                      <div className={`w-12 h-12 ${type.color} rounded-xl flex items-center justify-center flex-shrink-0 ring-1 ring-launch-gold/30`}>
+                        <type.icon className={`h-6 w-6 ${type.iconColor}`} />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900 mb-2 text-lg">{type.title}</h3>
-                        <p className="text-base text-stone-700 leading-relaxed">{type.definition}</p>
+                        <h3 className="font-semibold text-launch-ink mb-2 text-lg">{type.title}</h3>
+                        <p className="text-base text-launch-ink/70 leading-relaxed">{type.definition}</p>
                       </div>
-                      <ArrowRight className="h-5 w-5 text-gray-400 mt-1" />
+                      <ArrowRight className="h-5 w-5 text-launch-gold mt-1" />
                     </div>
                   </CardContent>
                 </Card>
@@ -108,21 +113,22 @@ export default function LaunchUserType() {
       </div>
 
       {/* Sticky Footer */}
-      <div className="flex-shrink-0 px-4 py-4 pb-8 bg-gradient-to-t from-memory-emerald-50 via-memory-emerald-50/95 to-transparent">
+      <div className="flex-shrink-0 px-4 py-4 pb-8 bg-launch-cream-light border-t border-launch-gold/10">
         <div className="text-center space-y-1">
           <button
             onClick={() => {
               localStorage.setItem('myrhythm_user_type', 'brain-injury');
               navigate('/launch/assessment');
             }}
-            className="text-sm text-gray-600 hover:text-gray-900 underline underline-offset-4"
+            className="text-sm text-launch-ink/70 hover:text-launch-ink underline underline-offset-4"
           >
             I'm not sure yet — show me around
           </button>
-          <p className="text-xs text-stone-400">You can change this any time in Settings.</p>
+          <p className="text-xs text-launch-ink/40">You can change this any time in Settings.</p>
         </div>
       </div>
       <LaunchQuickActions />
     </div>
   );
 }
+

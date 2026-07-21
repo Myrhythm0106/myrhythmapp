@@ -1,8 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
+import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
+import { LaunchCard } from '@/components/launch/LaunchCard';
 import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
+
 import { LaunchViewSwitcher, CalendarView } from '@/components/launch/calendar/LaunchViewSwitcher';
 import { LaunchDayView } from '@/components/launch/calendar/LaunchDayView';
 import { LaunchWeekView } from '@/components/launch/calendar/LaunchWeekView';
@@ -153,43 +156,55 @@ export default function LaunchCalendar() {
 
   return (
     <LaunchLayout>
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => handleNavigate('prev')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ChevronLeft className="h-5 w-5 text-gray-600" />
-          </button>
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">{getHeaderTitle()}</h1>
+      <LaunchHeroBand
+        eyebrow="Commit"
+        title="Calendar"
+        subtitle="Your day, week, month and year — planned around your energy, not the clock."
+      />
+
+      <div className="max-w-6xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
+        {/* Controls */}
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30 mb-4 p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleNavigate('prev')}
+                className="p-2 hover:bg-launch-gold/10 rounded-lg transition-colors"
+              >
+                <ChevronLeft className="h-5 w-5 text-launch-ink" />
+              </button>
+              <h1 className="text-lg md:text-xl font-semibold text-launch-ink font-display min-w-[10rem] text-center">
+                {getHeaderTitle()}
+              </h1>
+              <button
+                onClick={() => handleNavigate('next')}
+                className="p-2 hover:bg-launch-gold/10 rounded-lg transition-colors"
+              >
+                <ChevronRight className="h-5 w-5 text-launch-ink" />
+              </button>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setShowAddModal(true)}
+                className="text-sm text-launch-ember font-medium hover:text-launch-ember/80"
+              >
+                + Add
+              </button>
+              <LaunchButton variant="secondary" size="icon" className="border-launch-gold/30 text-launch-ink hover:bg-launch-gold/10">
+                <Share2 className="h-5 w-5" />
+              </LaunchButton>
+            </div>
           </div>
-          <button
-            onClick={() => handleNavigate('next')}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <ChevronRight className="h-5 w-5 text-gray-600" />
-          </button>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="text-sm text-brand-emerald-600 font-medium hover:text-brand-emerald-700"
-          >
-            + Add
-          </button>
-          <LaunchButton variant="secondary" size="icon">
-            <Share2 className="h-5 w-5" />
-          </LaunchButton>
-        </div>
-      </div>
 
-      <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} className="mb-4" />
+          <div className="mt-4">
+            <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} />
+          </div>
+        </LaunchCard>
 
-      <LaunchSyncBar />
+        <LaunchSyncBar />
 
-      <div className="mb-24">
+        <LaunchCard className="bg-launch-ivory border-launch-gold/30 min-h-[24rem] p-4 md:p-6">
+
         {currentView === 'day' && (
           <LaunchDayView
             date={selectedDate}
@@ -227,10 +242,13 @@ export default function LaunchCalendar() {
             onYearVisionChange={setYearVision}
           />
         )}
+      </LaunchCard>
       </div>
 
       <LaunchAddEventModal
+
         isOpen={showAddModal}
+
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddEvent}
         selectedDate={selectedDate}

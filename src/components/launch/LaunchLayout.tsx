@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import { LaunchNav } from './LaunchNav';
 import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
@@ -14,6 +15,7 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAuth } from '@/hooks/useAuth';
+
 
 const PRE_ACCOUNT_PATHS = new Set([
   '/launch/welcome',
@@ -44,11 +46,15 @@ export function LaunchLayout({
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
   const showDial = !!user && !PRE_ACCOUNT_PATHS.has(location.pathname);
-
+  const isWelcomePage = location.pathname === '/launch/welcome';
 
   return (
     <SubjectProvider>
-      <div className="launch-theme min-h-screen bg-[hsl(var(--launch-cream))] flex flex-col">
+      <div className={cn(
+        "launch-theme min-h-screen flex flex-col",
+        isWelcomePage ? "bg-[hsl(var(--launch-cream))]" : "bg-[hsl(var(--launch-cream-light))]"
+      )}>
+
         {/* Top Header Bar */}
         {showHeader && (
           <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3">
@@ -76,12 +82,13 @@ export function LaunchLayout({
                 {/* Help Button */}
                 <button
                   onClick={() => navigate('/help/getting-started')}
-                  className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                  className="w-9 h-9 rounded-full bg-launch-gold/10 hover:bg-launch-gold/20 flex items-center justify-center transition-colors"
                   title="How to use MyRhythm"
                   aria-label="Help and guides"
                 >
-                  <HelpCircle className="h-5 w-5 text-gray-600" />
+                  <HelpCircle className="h-5 w-5 text-launch-ink/70" />
                 </button>
+
 
                 <AccountDropdown />
               </div>
