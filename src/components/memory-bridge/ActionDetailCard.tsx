@@ -128,142 +128,56 @@ export function ActionDetailCard({ action, onStatusUpdate, onBack, onSupportCirc
             )}
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6">
-          
-          {/* Context Information */}
-          {action.transcript_excerpt && (
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <h4 className="font-medium text-blue-800 mb-2 flex items-center gap-2">
-                <MessageSquare className="h-4 w-4" />
-                Original Conversation Context
-              </h4>
-              <p className="text-blue-700 text-sm italic">
-                "{action.transcript_excerpt}"
-              </p>
-              {action.timestamp_in_recording && (
-                <p className="text-xs text-blue-600 mt-2">
-                  At {Math.floor(action.timestamp_in_recording / 60)}:{(action.timestamp_in_recording % 60).toString().padStart(2, '0')} in recording
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* Action Details Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            {/* Assignment Information */}
-            <div className="space-y-3">
-              <h4 className="font-medium flex items-center gap-2">
-                <Users className="h-4 w-4 text-purple-500" />
-                Assignment & Responsibility
-              </h4>
-              <div className="space-y-2 pl-6">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Assigned to:</span>
-                  <span className="text-sm font-medium">{action.assigned_to || 'Me'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Owner:</span>
-                  <span className="text-sm font-medium">{action.owner || 'Me'}</span>
-                </div>
-                {action.assigned_watchers && action.assigned_watchers.length > 0 && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Watchers:</span>
-                    <Badge variant="outline" className="text-xs">
-                      {action.assigned_watchers.length} support members
-                    </Badge>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Timing Information */}
-            <div className="space-y-3">
-              <h4 className="font-medium flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-green-500" />
-                Timing & Schedule
-              </h4>
-              <div className="space-y-2 pl-6">
-                {action.due_context && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Due:</span>
-                    <span className="text-sm font-medium">{action.due_context}</span>
-                  </div>
-                )}
-                {action.scheduled_date && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Scheduled:</span>
-                    <span className="text-sm font-medium">
-                      {new Date(action.scheduled_date).toLocaleDateString()}
-                      {action.scheduled_time && ` at ${action.scheduled_time}`}
-                    </span>
-                  </div>
-                )}
-                {action.completion_date && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Completed:</span>
-                    <span className="text-sm font-medium text-green-600">
-                      {new Date(action.completion_date).toLocaleDateString()}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
+        <CardContent className="space-y-4">
+          {/* Quick summary row */}
+          <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            {action.scheduled_date && (
+              <span className="flex items-center gap-1">
+                <Calendar className="h-3.5 w-3.5 text-green-600" />
+                {new Date(action.scheduled_date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
+                {action.scheduled_time && ` · ${action.scheduled_time}`}
+              </span>
+            )}
+            {!action.scheduled_date && action.due_context && (
+              <span className="flex items-center gap-1">
+                <Clock className="h-3.5 w-3.5" />
+                {action.due_context}
+              </span>
+            )}
+            <span className="flex items-center gap-1">
+              <Users className="h-3.5 w-3.5 text-purple-500" />
+              {action.assigned_to || 'Me'}
+            </span>
+            {action.assigned_watchers && action.assigned_watchers.length > 0 && (
+              <Badge variant="outline" className="text-[10px]">
+                {action.assigned_watchers.length} in the loop
+              </Badge>
+            )}
           </div>
 
-          {/* Motivation & Impact */}
-          {(action.motivation_statement || action.relationship_impact || action.emotional_stakes) && (
-            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-              <h4 className="font-medium text-purple-800 mb-3 flex items-center gap-2">
-                <Heart className="h-4 w-4" />
-                Motivation & Impact
-              </h4>
-              <div className="space-y-2">
-                {action.motivation_statement && (
-                  <div>
-                    <p className="text-xs text-purple-600 font-medium">Why this matters:</p>
-                    <p className="text-sm text-purple-700">{action.motivation_statement}</p>
-                  </div>
-                )}
-                {action.relationship_impact && (
-                  <div>
-                    <p className="text-xs text-purple-600 font-medium">Relationship impact:</p>
-                    <p className="text-sm text-purple-700">{action.relationship_impact}</p>
-                  </div>
-                )}
-                {action.emotional_stakes && (
-                  <div>
-                    <p className="text-xs text-purple-600 font-medium">Emotional significance:</p>
-                    <p className="text-sm text-purple-700">{action.emotional_stakes}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Success Criteria & Steps */}
-          {(action.success_criteria || action.what_outcome || action.how_steps) && (
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <h4 className="font-medium text-green-800 mb-3 flex items-center gap-2">
-                <Target className="h-4 w-4" />
-                Success Definition
-              </h4>
-              <div className="space-y-3">
+          {/* Reveal 1: You'll know you're done */}
+          {(action.success_criteria || action.what_outcome || (action.how_steps && action.how_steps.length > 0)) && (
+            <Collapsible>
+              <CollapsibleTrigger className="w-full flex items-center justify-between p-3 rounded-lg border border-green-200 bg-green-50 hover:bg-green-100 transition-colors group">
+                <span className="flex items-center gap-2 text-sm font-medium text-green-800">
+                  <Target className="h-4 w-4" />
+                  You'll know you're done when…
+                </span>
+                <ChevronDown className="h-4 w-4 text-green-700 transition-transform group-data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="px-3 pt-3 space-y-2">
                 {action.success_criteria && (
-                  <div>
-                    <p className="text-xs text-green-600 font-medium">Success looks like:</p>
-                    <p className="text-sm text-green-700">{action.success_criteria}</p>
-                  </div>
+                  <p className="text-sm text-green-800">{action.success_criteria}</p>
                 )}
                 {action.what_outcome && (
                   <div>
-                    <p className="text-xs text-green-600 font-medium">Expected outcome:</p>
+                    <p className="text-xs text-green-600 font-medium">Expected outcome</p>
                     <p className="text-sm text-green-700">{action.what_outcome}</p>
                   </div>
                 )}
                 {action.how_steps && action.how_steps.length > 0 && (
                   <div>
-                    <p className="text-xs text-green-600 font-medium">Steps to take:</p>
+                    <p className="text-xs text-green-600 font-medium">Steps</p>
                     <ul className="text-sm text-green-700 list-disc list-inside space-y-1">
                       {action.how_steps.map((step, index) => (
                         <li key={index}>{step}</li>
@@ -271,9 +185,74 @@ export function ActionDetailCard({ action, onStatusUpdate, onBack, onSupportCirc
                     </ul>
                   </div>
                 )}
-              </div>
-            </div>
+              </CollapsibleContent>
+            </Collapsible>
           )}
+
+          {/* Reveal 2: This will help */}
+          {(action.motivation_statement || action.relationship_impact || action.emotional_stakes) && (
+            <Collapsible>
+              <CollapsibleTrigger className="w-full flex items-center justify-between p-3 rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-100 transition-colors group">
+                <span className="flex items-center gap-2 text-sm font-medium text-purple-800">
+                  <Heart className="h-4 w-4" />
+                  This will help because…
+                </span>
+                <ChevronDown className="h-4 w-4 text-purple-700 transition-transform group-data-[state=open]:rotate-180" />
+              </CollapsibleTrigger>
+              <CollapsibleContent className="px-3 pt-3 space-y-2">
+                {action.motivation_statement && (
+                  <p className="text-sm text-purple-800">{action.motivation_statement}</p>
+                )}
+                {action.relationship_impact && (
+                  <div>
+                    <p className="text-xs text-purple-600 font-medium">Relationship impact</p>
+                    <p className="text-sm text-purple-700">{action.relationship_impact}</p>
+                  </div>
+                )}
+                {action.emotional_stakes && (
+                  <div>
+                    <p className="text-xs text-purple-600 font-medium">Why it matters</p>
+                    <p className="text-sm text-purple-700">{action.emotional_stakes}</p>
+                  </div>
+                )}
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+
+          {/* Reveal 3: More details */}
+          <Collapsible>
+            <CollapsibleTrigger className="w-full flex items-center justify-between p-3 rounded-lg border bg-muted/40 hover:bg-muted transition-colors group">
+              <span className="flex items-center gap-2 text-sm font-medium">
+                <MessageSquare className="h-4 w-4 text-blue-500" />
+                More details
+              </span>
+              <ChevronDown className="h-4 w-4 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="px-3 pt-3 space-y-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div className="flex justify-between"><span className="text-muted-foreground">Owner</span><span>{action.owner || 'Me'}</span></div>
+                <div className="flex justify-between"><span className="text-muted-foreground">Assigned to</span><span>{action.assigned_to || 'Me'}</span></div>
+                {action.completion_date && (
+                  <div className="flex justify-between"><span className="text-muted-foreground">Completed</span><span className="text-green-600">{new Date(action.completion_date).toLocaleDateString()}</span></div>
+                )}
+                {action.assigned_watchers && action.assigned_watchers.length > 0 && (
+                  <div className="flex justify-between"><span className="text-muted-foreground">In the loop</span><span>{action.assigned_watchers.length}</span></div>
+                )}
+              </div>
+              {action.transcript_excerpt && (
+                <div className="bg-blue-50 p-3 rounded border border-blue-200">
+                  <p className="text-xs text-blue-600 font-medium mb-1">From the recording</p>
+                  <p className="text-blue-700 text-sm italic">"{action.transcript_excerpt}"</p>
+                  {action.timestamp_in_recording && (
+                    <p className="text-xs text-blue-600 mt-1">
+                      At {Math.floor(action.timestamp_in_recording / 60)}:{(action.timestamp_in_recording % 60).toString().padStart(2, '0')}
+                    </p>
+                  )}
+                </div>
+              )}
+            </CollapsibleContent>
+          </Collapsible>
+
 
           {/* Status Update Section */}
           <div className="space-y-4 pt-4 border-t">
