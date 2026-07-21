@@ -44,11 +44,15 @@ export function LaunchLayout({
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
   const showDial = !!user && !PRE_ACCOUNT_PATHS.has(location.pathname);
-
+  const isWelcomePage = location.pathname === '/launch/welcome';
 
   return (
     <SubjectProvider>
-      <div className="launch-theme min-h-screen bg-[hsl(var(--launch-cream))] flex flex-col">
+      <div className={cn(
+        "launch-theme min-h-screen flex flex-col",
+        isWelcomePage ? "bg-[hsl(var(--launch-cream))]" : "bg-[hsl(var(--launch-cream-light))]"
+      )}>
+
         {/* Top Header Bar */}
         {showHeader && (
           <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3">
