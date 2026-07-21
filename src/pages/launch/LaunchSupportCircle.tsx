@@ -69,22 +69,25 @@ export default function LaunchSupportCircle() {
 
   return (
     <LaunchLayout>
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Support Circle</h1>
-        <p className="text-gray-600">The people who can be in the loop when you need them.</p>
-      </div>
+      <LaunchHeroBand
+        eyebrow="Reconnect"
+        title="Support Circle"
+        subtitle="The people who can be in the loop when you need them."
+      />
 
+      <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'team' | 'invite')} className="mb-24">
-        <TabsList className="grid grid-cols-2 mb-6 h-12 p-1 bg-gray-100 rounded-2xl">
-          <TabsTrigger value="team" className="rounded-xl data-[state=active]:bg-white">
+        <TabsList className="grid grid-cols-2 mb-6 h-12 p-1 bg-launch-ink/5 rounded-2xl">
+          <TabsTrigger value="team" className="rounded-xl data-[state=active]:bg-launch-ivory data-[state=active]:text-launch-ink data-[state=active]:shadow-sm">
             <Users className="h-4 w-4 mr-2" />
             My circle {supportCircle.length > 0 && `(${supportCircle.length})`}
           </TabsTrigger>
-          <TabsTrigger value="invite" className="rounded-xl data-[state=active]:bg-white">
+          <TabsTrigger value="invite" className="rounded-xl data-[state=active]:bg-launch-ivory data-[state=active]:text-launch-ink data-[state=active]:shadow-sm">
             <UserPlus className="h-4 w-4 mr-2" />
             Invite someone
           </TabsTrigger>
         </TabsList>
+
 
         <TabsContent value="team" className="space-y-3">
           {isLoading ? (
