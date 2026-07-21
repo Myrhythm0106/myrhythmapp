@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Blocks, Plus, Trash2, RotateCcw, Copy } from 'lucide-react';
 import { useBrainHealthyPrefs } from '@/hooks/useBrainHealthyPrefs';
 import { useTimeBlocks, TimeBlock } from '@/hooks/useTimeBlocks';
-import { buildTemplate, TemplateKey } from '@/launch/scheduling/timeBlockTemplates';
+import { buildTemplate, TemplateKey, TEMPLATE_LABELS } from '@/launch/scheduling/timeBlockTemplates';
 import { DAY_LABELS, DAY_LABELS_FULL, BlockType, BlockColor, RepeatRule } from '@/launch/scheduling/defaults';
 import { toast } from 'sonner';
 
