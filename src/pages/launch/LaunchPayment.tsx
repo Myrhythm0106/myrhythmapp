@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Check, Shield, CreditCard, ArrowRight, Loader2, Sparkles, KeyRound, Copy, ChevronDown, FlaskConical } from 'lucide-react';
+import { Brain, Check, Shield, CreditCard, ArrowRight, ArrowLeft, Loader2, Sparkles, KeyRound, Copy, ChevronDown, FlaskConical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
