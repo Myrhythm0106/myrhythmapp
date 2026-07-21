@@ -25,6 +25,8 @@ import {
 } from 'lucide-react';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { toast } from 'sonner';
+import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ActionDetailCardProps {
   action: NextStepsItem;
