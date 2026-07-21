@@ -621,17 +621,21 @@ html, body {
 .launch-theme .bg-launch-cream-light { background-color: hsl(var(--launch-cream-light)); }
 .launch-theme .bg-launch-ivory       { background-color: hsl(var(--launch-ivory)); }
 .launch-theme .bg-launch-ink         { background-color: hsl(var(--launch-ink)); }
+.launch-theme .bg-launch-moss        { background-color: hsl(var(--launch-moss)); }
 .launch-theme .bg-launch-gold        { background-color: hsl(var(--launch-gold)); }
 .launch-theme .bg-launch-ember       { background-color: hsl(var(--launch-ember)); }
+.launch-theme .text-launch-cream      { color: hsl(var(--launch-cream)); }
 .launch-theme .text-launch-ink        { color: hsl(var(--launch-ink)); }
 .launch-theme .text-launch-moss     { color: hsl(var(--launch-moss)); }
 .launch-theme .text-launch-gold     { color: hsl(var(--launch-gold)); }
 .launch-theme .text-launch-ember    { color: hsl(var(--launch-ember)); }
 .launch-theme .border-launch-ink     { border-color: hsl(var(--launch-ink) / 0.10); }
+.launch-theme .border-launch-moss    { border-color: hsl(var(--launch-moss)); }
 .launch-theme .border-launch-gold    { border-color: hsl(var(--launch-gold)); }
 .launch-theme .border-launch-gold\/30 { border-color: hsl(var(--launch-gold) / 0.30); }
 .launch-theme .border-launch-ember   { border-color: hsl(var(--launch-ember)); }
 .launch-theme .ring-launch-ember     { --tw-ring-color: hsl(var(--launch-ember) / 0.45); }
+
 
 /* Focus rings — ember accent on all interactive elements */
 .launch-theme button:focus-visible,
