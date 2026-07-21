@@ -253,6 +253,8 @@ async function pollForCompletion(
     attempts++;
   }
   
-  toast.error("Processing is taking longer than expected. Check back later.");
+  toast.error(
+    `Still processing after 45s (status: ${lastStatus ?? 'unknown'}). We'll keep working in the background — check back in a minute.`
+  );
   return { success: false, actionsCount: 0, hasTranscript: false };
 }
