@@ -39,7 +39,7 @@ export function LaunchNav() {
               {item.title}
             </span>
             {isActive(item.url) && (
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-brand-teal-600" />
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-6 h-0.5 rounded-full bg-[hsl(var(--launch-ember))]" />
             )}
           </NavLink>
         ))}
