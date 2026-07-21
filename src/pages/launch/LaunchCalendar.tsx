@@ -243,10 +243,12 @@ export default function LaunchCalendar() {
           />
         )}
       </LaunchCard>
+      </div>
 
       <LaunchAddEventModal
 
         isOpen={showAddModal}
+
         onClose={() => setShowAddModal(false)}
         onAdd={handleAddEvent}
         selectedDate={selectedDate}
