@@ -1,81 +1,55 @@
-# Next Step summary declutter + Support Circle as the single access roster
+## Why you can't add anyone right now
 
-## 1. Next Step summary — quieter card, richer on tap
+I traced all four surfaces you flagged. In every case the UI is either mocked, points to a dead route, or the "add" control has been hidden.
 
-Files: `src/components/memory-bridge/MemoryBridgeActionReport.tsx`, `src/components/memory-bridge/ActionDetailCard.tsx`.
+### 1. Support Circle page (`/launch/support`) — invite form is a dummy
+`src/pages/launch/LaunchSupportCircle.tsx` renders **mock members** and an Invite tab whose inputs and "Send Invitation" button have **no state and no `onClick`**. Nothing is wired to the DB. The working invite form (`SimpleInviteForm`, which calls `useAccountabilitySystem().addSupportMember`) already exists and is used on the legacy `/support-circle` page — but auth users are redirected away from that route into the launch page, so they never reach it.
 
-Default card shows only 3 lines: **title**, **status · when**, one primary CTA (**Mark done**). Everything else moves behind three collapsed reveals using the existing `Collapsible`:
+### 2. Add Event modal — invite section is hidden behind a collapsed row
+`LaunchAddEventModal.tsx` does have a working invite block (Support Circle chips + email add, up to 5), but it's collapsed under a small "Invite someone" row inside a bordered divider. On your screen it reads as a plain label, not a control. Also, when there are no members yet, the fallback link points to `/launch/support-circle` — which redirects to `/launch/support` — which is the broken page from #1, so the loop is closed.
 
-1. **"You'll know you're done when…"** — uses `next_steps_items.success_criteria`; a one-line fallback is generated at extraction time (prompt update to `process-meeting-audio`), never at view time.
-2. **"This will help because…"** — merges `motivation_statement`, `relationship_impact`, `emotional_stakes` into one short paragraph.
-3. **"More details"** — the current dense grid (transcript excerpt, timing, confidence, assignee, category).
+### 3. Action card ("in the loop" on a Next Step) — no add button at all
+`ActionDetailCard` / `MemoryBridgeActionReport` display existing watchers via `WatchersDisplay`, but there's no "Add someone" trigger next to them. `SupportCircleQuickAssign` exists but isn't mounted in the action detail surface, and there's no UI for ad-hoc email loop-ins (the `adhoc_loop_ins` column we added has no writer).
 
-Reveal state is per-action, session-only (no persistence). Same three named reveals live in the list card and the detail view so language never drifts.
+### 4. Memory Bridge quick capture (`/launch/memory?quick=1`) — no loop-in field
+The quick capture screen has no invite/loop-in control, so nothing to add.
 
-## 2. Support Circle = the single roster of access. "In the loop" = per-action tag.
+## What to build
 
-The model you want already fits the existing schema. No migration needed for the core split.
+### A. Fix `/launch/support` so it actually manages the roster
+Replace the mocked page with a real implementation:
+- Members tab: pull from `useAccountabilitySystem().supportCircle` (already loads active + pending from DB), show relationship + role chips, allow remove/edit permissions.
+- Invite tab: mount `SimpleInviteForm` (already wired to `addSupportMember` → DB + invitation email). Keep launch styling (glass cards, brand-emerald), but use the working form's logic verbatim.
+- Delete the four mock arrays. Keep Messages/Path tabs as-is for now (out of scope).
+- Update the modal's fallback link from `/launch/support-circle` → `/launch/support` (or keep the existing redirect, but drop the extra hop).
 
-### The rule
+### B. Make the Add Event invite section visible by default
+- In `LaunchAddEventModal.tsx`, default `inviteOpen` to `true` so the Support Circle chips + email input are shown immediately. Keep the collapse control for users who want to hide it.
+- When `members.length === 0`, keep the "Add someone to your Support Circle" link (now working after A).
 
-- **Support Circle** is the one place that answers "who has access to what." Every member has a **relationship**, a **role preset**, and per-area **permissions** (all three already exist as columns on `support_circle_members`).
-- **"In the loop"** on an action is a lightweight, per-action tag. A person can be in the loop **without** being in the Support Circle. If they are in the circle, we reuse their prefs; if they're not, we send a one-off notification for that action only.
+### C. Add "In the loop" control to action cards
+In `ActionDetailCard.tsx` (inside the existing "More details" reveal, next to `WatchersDisplay`):
+- Add a **"Loop someone in"** button that opens a small popover with:
+  - Support Circle multi-select (writes into `extracted_actions.assigned_watchers`)
+  - "Or by email" input (writes into `extracted_actions.adhoc_loop_ins` as `[{ email, name? }]`) — up to 5, same validation as the Add Event modal
+- Render existing ad-hoc loop-ins as chips with a remove (×).
+- Reuse `WatchersDisplay` for members and add a lightweight chip renderer for email loop-ins with `ariaLabel="in the loop"`.
 
-### Two ways to loop someone in (chosen in the Add/Edit action modal)
+### D. Add "Loop someone in (optional)" to Memory Bridge quick capture
+On the quick-capture screen (`LaunchCapture` / `LaunchMemoryBridge` capture panel), add one collapsed row **"Loop someone in (optional)"** using the same component as C. The chosen members/emails are attached to the resulting extracted actions after Save & Extract (default watchers for every action from that capture) — stored on the meeting record and applied when actions are created.
 
-| Option | Who they are | What they get | Where they're stored |
-|---|---|---|---|
-| **Pick from Support Circle** | Existing member | Notification per their `notification_preferences`, plus visibility on this action | `extracted_actions.assigned_watchers` = member id |
-| **Add just for this action** | Ad-hoc name + email | One-off email about *this action only*. No login, no dashboard, no permissions. | `extracted_actions.assigned_watchers` entry with `{ kind: 'adhoc', name, email }` (JSONB) |
-
-Copy shown under the ad-hoc row: *"They'll only be notified about this action. Add them to your Support Circle if you want them to see more."* One-tap link to "Add to Support Circle" that pre-fills the invite form with the same name/email.
-
-### Support Circle member card (in `PersonalCommunityPage` + `SupportCircle.tsx`)
-
-Always visible per member:
-- Name, avatar, email
-- **Relationship** chip — Family / Friend / Partner / Carer / Colleague / Clinician / Other (free text). Editable inline. Constants in new `src/config/supportCircle.ts`.
-- **Role preset** dropdown that writes `role` + `permissions` together:
-  - **Cheerleader** — sees your wins only. `{ growth: true }`
-  - **Everyday buddy** — calendar + actions. `{ calendar: true, actions: true }`
-  - **Family / co-planner** — calendar + actions + goals + growth.
-  - **Clinician** — everything + concern alerts. `role='medical'`.
-  - **Custom** — reveals raw per-area toggles (existing `EnhancedSupportCirclePermissions`).
-- Notify by email / SMS toggles (existing `notification_preferences`).
-
-### Copy retirement — "Watcher" out, "In the loop" in
-
-| Old | New |
-|---|---|
-| Watchers (badge/count) | In the loop |
-| 2 watchers | 2 in the loop |
-| Assigned Watchers (section title) | Keep in the loop |
-| Watch out (action category) | *unchanged — different concept* |
-
-`WatchersDisplay` stays as the visual component; only labels + icon change (Eye stays fine). No rename required to avoid churn.
-
-## Files touched
-
-- `src/components/memory-bridge/MemoryBridgeActionReport.tsx` — quiet card + 3 reveals + copy
-- `src/components/memory-bridge/ActionDetailCard.tsx` — same reveals + copy
-- `src/components/memory-bridge/SupportCircleActionView.tsx` — relationship chip + role preset + permissions
-- `src/components/memory-bridge/*ActionModal*.tsx` (Add/Edit action) — picker with "From your circle" and "Add just for this action" sections
-- `src/pages/SupportCircle.tsx`, `src/pages/PersonalCommunityPage.tsx` — role preset dropdown on each member row
-- `src/components/personal-community/EnhancedSupportCirclePermissions.tsx` — mount only under Custom
-- `src/components/shared/WatchersDisplay.tsx` — icon unchanged, tooltip copy → "In the loop"
-- `src/components/calendar/EventForm.tsx`, `src/pages/launch/LaunchAddEventModal.tsx`, `ActionItem.tsx`, `ActionItemDetailed.tsx`, `EventCard.tsx` — label pass
-- New: `src/config/supportCircle.ts` — `RELATIONSHIP_OPTIONS`, `ROLE_PRESETS`, `getLoopLabel(count)`
-
-## Out of scope / not changing
-
-- No schema change to `support_circle_members` — `relationship`, `role`, `permissions` already exist and are already read by `generate_accountability_alert` and `support_member_can_access_actions`.
-- `extracted_actions.assigned_watchers` is already an array; ad-hoc entries fit as JSON objects. If the column is currently `uuid[]` and won't accept a JSON blob, a small migration switches it to `jsonb` — will confirm with a read query at the start of build and only migrate if required.
-- Invitation flow, MFA, and email templates untouched.
+### E. Terminology pass
+Everywhere a user-facing label still says "Watchers", change it to **"In the loop"** (and keep "Support Circle" for the roster itself). Non-user-facing DB column names stay.
 
 ## Technical notes
 
-- Reveals: `useState<Record<string, { done?: boolean; why?: boolean; more?: boolean }>>`; no persistence.
-- Success criteria fallback is generated during extraction so the reveal is free at view time; no per-view AI call.
-- Role presets are pure UI sugar; picking one just writes `role` + `permissions`. RLS + helper functions keep working unchanged.
-- Ad-hoc "in the loop" notification uses the existing `send-invitation-email` function with a new template variant (`variant: 'action_loop_in'`) so no new secret / infra is needed.
-- QA: dark-mode contrast on the collapsed card, focus rings on reveal triggers, one manual pass through Clinician preset to confirm `generate_accountability_alert` still routes correctly, one manual pass adding an ad-hoc loop-in and confirming they receive the email but do not appear in the Support Circle roster.
+- No schema changes needed. `support_circle_members`, `extracted_actions.assigned_watchers` (uuid[]), and `extracted_actions.adhoc_loop_ins` (jsonb) already exist.
+- Reuse existing hooks: `useAccountabilitySystem` (roster + `addSupportMember`), `useSupportCircle` (list for pickers), and the email regex from `LaunchAddEventModal`.
+- The launch redirect (`/support-circle` → `/launch/support`) stays; we're fixing the destination, not the routing.
+- The shared loop-in popover should live at `src/components/shared/LoopInPicker.tsx` so C, D, and the Add Event modal can all use one component (Add Event can migrate to it later; not required this pass to avoid regressions).
+
+## Out of scope
+
+- Messages and Path tabs on `/launch/support` (kept mocked; separate task).
+- Notification/email delivery to ad-hoc loop-ins beyond what already exists for Support Circle invites.
+- Renaming DB columns.
