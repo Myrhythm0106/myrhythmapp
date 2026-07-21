@@ -98,9 +98,10 @@ export function QuietHome() {
       <CognitiveLoadMeter />
 
       {/* Footer signature */}
-      <p className="text-center text-xs text-brain-health-500 pt-4 pb-8">
+      <p className="text-center text-xs text-launch-ink/50 pt-4 pb-8">
         Today is yours. #IChoose
       </p>
+
 
       {/* Dev-only tier switcher */}
       <TierSwitcherPill />
