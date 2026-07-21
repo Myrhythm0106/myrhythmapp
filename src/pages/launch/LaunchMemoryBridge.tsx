@@ -190,6 +190,18 @@ export default function LaunchMemoryBridge() {
       );
 
       if (result.success && result.actionsCount && result.actionsCount > 0) {
+        // Apply loop-ins to all newly extracted actions
+        if (result.meetingId && (loopCircleIds.length > 0 || loopAdhoc.length > 0)) {
+          const { error: loopErr } = await supabase
+            .from('extracted_actions')
+            .update({
+              assigned_watchers: loopCircleIds,
+              adhoc_loop_ins: loopAdhoc as any,
+            })
+            .eq('meeting_recording_id', result.meetingId);
+          if (loopErr) console.warn('Failed to apply loop-ins to actions', loopErr);
+        }
+
         setLastExtractionResult({
           meetingId: result.meetingId!,
           recordingId: saved.id,
@@ -199,6 +211,8 @@ export default function LaunchMemoryBridge() {
         setShowPostExtractionDialog(true);
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
         setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
+        setLoopCircleIds([]);
+        setLoopAdhoc([]);
       } else if (result.success) {
         // Success but no actions
         setShowCelebration(true);
