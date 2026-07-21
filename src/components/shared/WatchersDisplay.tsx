@@ -16,6 +16,8 @@ interface WatchersDisplayProps {
   className?: string;
   compact?: boolean;
   showIcon?: boolean;
+  /** Screen-reader label; visible tooltip lists names. Defaults to "in the loop". */
+  ariaLabel?: string;
 }
 
 export function WatchersDisplay({ 
@@ -23,7 +25,8 @@ export function WatchersDisplay({
   maxVisible = 2,
   className,
   compact = false,
-  showIcon = true
+  showIcon = true,
+  ariaLabel = "in the loop",
 }: WatchersDisplayProps) {
   if (!watchers || watchers.length === 0) return null;
   
@@ -31,8 +34,8 @@ export function WatchersDisplay({
   const hiddenCount = Math.max(0, watchers.length - maxVisible);
   
   return (
-    <div className={cn("flex items-center gap-1 flex-wrap", className)}>
-      {showIcon && <Eye className="h-3.5 w-3.5 text-muted-foreground" />}
+    <div className={cn("flex items-center gap-1 flex-wrap", className)} aria-label={ariaLabel}>
+      {showIcon && <Eye className="h-3.5 w-3.5 text-muted-foreground" aria-hidden="true" />}
       
       {visibleWatchers.map((watcher, index) => (
         <Badge 
