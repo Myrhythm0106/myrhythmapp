@@ -27,6 +27,8 @@ export function LaunchHeroBand({
     <div
       className={cn(
         'relative overflow-hidden bg-launch-ink px-4 md:px-8 py-8 md:py-10',
+        // Break out of any constrained parent (LaunchLayout's max-w-7xl wrapper, etc.)
+        'w-screen relative left-1/2 right-1/2 -translate-x-1/2',
         className
       )}
     >
@@ -76,3 +78,4 @@ export function LaunchHeroBand({
     </div>
   );
 }
+
