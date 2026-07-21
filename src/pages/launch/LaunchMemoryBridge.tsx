@@ -552,21 +552,21 @@ export default function LaunchMemoryBridge() {
               </>
             )}
           </div>
-        </div>
+        </LaunchCard>
 
         {/* Recent Recordings */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-foreground">Recent Recordings</h2>
-          <button className="text-sm text-brand-orange-600 font-medium hover:text-brand-orange-700 transition-colors">View all</button>
+          <h2 className="font-semibold text-launch-ink">Recent Recordings</h2>
+          <button className="text-sm text-launch-ember font-medium hover:text-launch-ember/80 transition-colors">View all</button>
         </div>
 
         <div className="space-y-3 mb-24">
           {recordings.length === 0 ? (
-            <div className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl p-6 text-center">
-              <div className="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/50 to-transparent pointer-events-none" />
-              <p className="relative z-10 text-muted-foreground">No recordings yet. Start your first one!</p>
-            </div>
+            <LaunchCard className="bg-launch-ivory border-launch-gold/30 p-6 text-center">
+              <p className="text-launch-ink/70">No recordings yet. Start your first one!</p>
+            </LaunchCard>
           ) : (
+
             recordings.slice(0, 5).map((recording) => {
               const isProcessed = processedRecordings.has(recording.id);
               const isCurrentlyProcessing = processingId === recording.id;
