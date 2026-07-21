@@ -215,6 +215,13 @@ export default function LaunchSettings() {
           </div>
         </LaunchCard>
 
+        {/* Brain-Healthy Scheduling — editable defaults with ranges */}
+        <BrainHealthySettingsCard />
+
+        {/* Time-blocking — opt-in, template-seeded, fully editable */}
+        <TimeBlockingSettingsCard />
+
+
         {/* Planning Day Section */}
         <PlanningDayCard />
 
