@@ -187,6 +187,9 @@ async function pollForCompletion(
       .eq('id', meetingId)
       .single();
 
+    lastStatus = meeting?.processing_status;
+
+
     if (meeting?.processing_status === 'completed') {
       const actionsCount = actions?.length || 0;
       const hasTranscript = !!meeting.transcript;
