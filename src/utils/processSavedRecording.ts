@@ -152,7 +152,8 @@ async function pollForCompletion(
   estimatedTotalTime: number,
   onProgressUpdate?: (progress: ProcessingProgress) => void
 ): Promise<{ success: boolean; actionsCount?: number; hasTranscript?: boolean }> {
-  const maxAttempts = 60; // 2 minutes max
+  const maxAttempts = 22; // ~45 seconds max (22 × 2s)
+  let lastStatus: string | undefined;
   let attempts = 0;
   
   // Check for completion every 2 seconds, up to 2 minutes
