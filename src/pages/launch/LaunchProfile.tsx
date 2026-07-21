@@ -154,9 +154,11 @@ export default function LaunchProfile() {
       </LaunchButton>
 
       {/* Version */}
-      <p className="text-center text-xs text-gray-400 pb-4">
+      <p className="text-center text-xs text-launch-ink/40 pb-4">
         MyRhythm v0.2.0
       </p>
+      </div>
     </LaunchLayout>
   );
 }
+
