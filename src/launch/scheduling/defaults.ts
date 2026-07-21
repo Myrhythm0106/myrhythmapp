@@ -88,7 +88,8 @@ export interface BrainHealthyPrefs {
   reminder_buffer_minutes: number;
   protected_windows: ProtectedWindow[];
   time_blocking_enabled: boolean;
-  time_block_template: 'blank' | 'classic_focus' | 'meeting_heavy' | 'recovery_friendly';
+  time_block_template: 'blank' | 'classic_focus' | 'meeting_heavy' | 'recovery_friendly' | 'desktime_52_17';
+  pomodoro_preset: PomodoroPreset;
 }
 
 export const BRAIN_HEALTHY_DEFAULTS: BrainHealthyPrefs = {
