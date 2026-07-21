@@ -122,6 +122,15 @@ export default function LaunchPayment() {
     <div className="min-h-screen h-screen bg-gradient-to-br from-memory-emerald-50 via-brain-health-50/40 to-clarity-teal-50 flex flex-col overflow-hidden">
       <div className="flex-1 overflow-y-auto py-8 px-4">
         <div className="max-w-3xl mx-auto">
+          <button
+            onClick={() => navigate('/launch/welcome')}
+            className="mb-4 flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Back to your results"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to your results
+          </button>
+
           {IS_TEST_MODE && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
