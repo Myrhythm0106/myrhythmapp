@@ -590,3 +590,116 @@ html, body {
   }
 
 }
+
+/* ============================================================
+   Launch theme — Emerald Prestige + burnt-orange (EMBER) accent
+   Applied to LaunchLayout root so every /launch/* page inherits.
+   ============================================================ */
+.launch-theme {
+  --launch-ink:   158 84% 13%;   /* #064e3b */
+  --launch-moss:  158 80% 26%;   /* #0d7a5f */
+  --launch-gold:   43 55% 54%;   /* #c9a84c */
+  --launch-cream:  44 60% 92%;   /* #f5f0e0 */
+  --launch-ember:  17 63% 48%;   /* #c65a2e — burnt orange accent */
+
+  color: hsl(var(--launch-ink));
+  font-family: 'Manrope', system-ui, -apple-system, sans-serif;
+}
+
+.launch-theme h1,
+.launch-theme h2,
+.launch-theme h3,
+.launch-theme .font-display {
+  font-family: 'Sora', system-ui, -apple-system, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Utility helpers scoped to launch */
+.launch-theme .bg-launch-cream   { background-color: hsl(var(--launch-cream)); }
+.launch-theme .bg-launch-ink     { background-color: hsl(var(--launch-ink)); }
+.launch-theme .bg-launch-gold    { background-color: hsl(var(--launch-gold)); }
+.launch-theme .bg-launch-ember   { background-color: hsl(var(--launch-ember)); }
+.launch-theme .text-launch-ink   { color: hsl(var(--launch-ink)); }
+.launch-theme .text-launch-moss  { color: hsl(var(--launch-moss)); }
+.launch-theme .text-launch-gold  { color: hsl(var(--launch-gold)); }
+.launch-theme .text-launch-ember { color: hsl(var(--launch-ember)); }
+.launch-theme .border-launch-ink { border-color: hsl(var(--launch-ink) / 0.10); }
+.launch-theme .border-launch-ember { border-color: hsl(var(--launch-ember)); }
+.launch-theme .ring-launch-ember { --tw-ring-color: hsl(var(--launch-ember) / 0.45); }
+
+/* Focus rings — ember accent on all interactive elements */
+.launch-theme button:focus-visible,
+.launch-theme a:focus-visible,
+.launch-theme input:focus-visible,
+.launch-theme textarea:focus-visible,
+.launch-theme select:focus-visible,
+.launch-theme [role="button"]:focus-visible {
+  outline: 2px solid hsl(var(--launch-ember) / 0.6);
+  outline-offset: 2px;
+}
+
+/* Live/active state pulse dot (recording, syncing) */
+.launch-theme .launch-pulse-ember {
+  background-color: hsl(var(--launch-ember));
+  box-shadow: 0 0 0 0 hsl(var(--launch-ember) / 0.55);
+  animation: launch-ember-pulse 1.8s ease-out infinite;
+}
+@keyframes launch-ember-pulse {
+  0%   { box-shadow: 0 0 0 0 hsl(var(--launch-ember) / 0.55); }
+  70%  { box-shadow: 0 0 0 10px hsl(var(--launch-ember) / 0); }
+  100% { box-shadow: 0 0 0 0 hsl(var(--launch-ember) / 0); }
+}
+
+/* Section accent bar — 3px ember stripe on the left of a card */
+.launch-theme .launch-accent-l {
+  border-left: 3px solid hsl(var(--launch-ember));
+}
+
+/* Body link hover — INK -> EMBER */
+.launch-theme p a,
+.launch-theme .prose a {
+  color: hsl(var(--launch-ink));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--launch-ember) / 0.35);
+  text-underline-offset: 3px;
+  transition: color 150ms ease, text-decoration-color 150ms ease;
+}
+.launch-theme p a:hover,
+.launch-theme .prose a:hover {
+  color: hsl(var(--launch-ember));
+  text-decoration-color: hsl(var(--launch-ember));
+}
+
+/* Retire mismatched brand utilities inside the launch scope so
+   every legacy `brand-teal` / `brain-health-*` surface picks up
+   the Emerald palette without touching each file individually. */
+.launch-theme .bg-brand-teal-600,
+.launch-theme .bg-brand-teal-700,
+.launch-theme .bg-brand-teal-500 { background-color: hsl(var(--launch-ink)) !important; }
+.launch-theme .text-brand-teal-600,
+.launch-theme .text-brand-teal-700,
+.launch-theme .text-brand-teal-500,
+.launch-theme .text-brand-teal-800 { color: hsl(var(--launch-ink)) !important; }
+.launch-theme .border-brand-teal-600,
+.launch-theme .border-brand-teal-500,
+.launch-theme .border-brand-teal-200 { border-color: hsl(var(--launch-ink) / 0.15) !important; }
+
+.launch-theme .bg-brain-health-50,
+.launch-theme .bg-brain-health-100 { background-color: hsl(var(--launch-cream)) !important; }
+.launch-theme .bg-brain-health-500,
+.launch-theme .bg-brain-health-600,
+.launch-theme .bg-brain-health-700,
+.launch-theme .bg-brain-health-800,
+.launch-theme .bg-brain-health-900 { background-color: hsl(var(--launch-ink)) !important; }
+.launch-theme .text-brain-health-500,
+.launch-theme .text-brain-health-600,
+.launch-theme .text-brain-health-700,
+.launch-theme .text-brain-health-800,
+.launch-theme .text-brain-health-900 { color: hsl(var(--launch-ink)) !important; }
+.launch-theme .border-brain-health-100,
+.launch-theme .border-brain-health-200 { border-color: hsl(var(--launch-ink) / 0.10) !important; }
+
+/* Page background override — legacy screens use bg-[#fafbfc] */
+.launch-theme.bg-fafbfc,
+.launch-theme .bg-launch-page { background-color: hsl(var(--launch-cream)); }
+
