@@ -33,6 +33,8 @@ import { canRequestExport, exportUserData } from '@/utils/gdprExport';
 import { EditionBadge } from '@/components/launch/EditionBadge';
 import { FeedbackDialog } from '@/components/launch/FeedbackDialog';
 import { EDITION_SHORT, EDITION_VERSION } from '@/config/edition';
+import { BrainHealthySettingsCard } from '@/components/launch/BrainHealthySettingsCard';
+import { TimeBlockingSettingsCard } from '@/components/launch/TimeBlockingSettingsCard';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
@@ -212,6 +214,13 @@ export default function LaunchSettings() {
             </p>
           </div>
         </LaunchCard>
+
+        {/* Brain-Healthy Scheduling — editable defaults with ranges */}
+        <BrainHealthySettingsCard />
+
+        {/* Time-blocking — opt-in, template-seeded, fully editable */}
+        <TimeBlockingSettingsCard />
+
 
         {/* Planning Day Section */}
         <PlanningDayCard />
