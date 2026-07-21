@@ -64,7 +64,7 @@ export default function LaunchProfile() {
 
       <div className="max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
       {/* User Info */}
-      <LaunchCard className="mb-6 bg-launch-ivory border-launch-gold/30">
+      <LaunchCard className="bg-launch-ivory border-launch-gold/30 mb-6 bg-launch-ivory border-launch-gold/30">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-2xl bg-launch-ink flex items-center justify-center ring-1 ring-launch-gold/50">
             <User className="h-8 w-8 text-launch-gold" />
