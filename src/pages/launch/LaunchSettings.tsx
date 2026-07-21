@@ -87,19 +87,14 @@ export default function LaunchSettings() {
 
   return (
     <LaunchLayout showHeader={true}>
-      <div className="mb-6">
-        <button 
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-600 mb-4"
-        >
-          <ChevronLeft className="h-5 w-5" />
-          Back
-        </button>
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-500 text-sm mt-1">Customize your experience</p>
-      </div>
+      <LaunchHeroBand
+        eyebrow="Preferences"
+        title="Settings"
+        subtitle="Customize your rhythm, privacy, connections and brain-healthy scheduling."
+      />
 
-      <div className="space-y-4 pb-24">
+      <div className="max-w-4xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24 space-y-4">
+
         {/* About this edition */}
         <LaunchCard>
           <button
