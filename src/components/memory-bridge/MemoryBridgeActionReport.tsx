@@ -225,69 +225,52 @@ export function MemoryBridgeActionReport() {
                       </p>
                     </div>
                   ) : (
-                    categoryActions.map((action, index) => (
-                      <Card 
-                        key={action.id} 
-                        className="p-4 cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-purple-200"
-                        onClick={() => {
-                          setSelectedAction(action);
-                          setViewMode('detailed');
-                        }}
-                      >
-                        <div className="space-y-2">
-                          <div className="flex items-start justify-between">
-                            <h4 className="font-medium text-sm leading-tight">
+                    categoryActions.map((action) => {
+                      const inLoop = action.assigned_watchers?.length || 0;
+                      const adhoc = Array.isArray((action as any).adhoc_loop_ins)
+                        ? (action as any).adhoc_loop_ins.length
+                        : 0;
+                      const totalLoop = inLoop + adhoc;
+                      const when = action.scheduled_date
+                        ? new Date(action.scheduled_date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })
+                        : action.due_context || null;
+                      const isDone = ['completed', 'done', 'confirmed'].includes(action.status);
+                      return (
+                        <Card
+                          key={action.id}
+                          className="p-3 cursor-pointer hover:shadow-md transition-shadow border-l-4 border-l-purple-200"
+                          onClick={() => {
+                            setSelectedAction(action);
+                            setViewMode('detailed');
+                          }}
+                        >
+                          <div className="space-y-1.5">
+                            <h4 className="font-medium text-sm leading-snug line-clamp-2">
                               {action.action_text}
                             </h4>
-                            <Badge 
-                              variant="secondary" 
-                              className={`text-xs ${getStatusColor(action.status)}`}
-                            >
-                              {action.status.replace('_', ' ')}
-                            </Badge>
-                          </div>
-                          
-                          {action.due_context && (
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Clock className="h-3 w-3" />
-                              {action.due_context}
-                            </div>
-                          )}
-                          
-                          {action.assigned_to && action.assigned_to !== 'me' && (
-                            <div className="flex items-center gap-1 text-xs text-blue-600">
-                              <Users className="h-3 w-3" />
-                              Assigned to {action.assigned_to}
-                            </div>
-                          )}
-
-                          {action.scheduled_date && (
-                            <div className="flex items-center gap-1 text-xs text-green-600">
-                              <Calendar className="h-3 w-3" />
-                              {new Date(action.scheduled_date).toLocaleDateString()}
-                            </div>
-                          )}
-
-                          <div className="flex items-center justify-between pt-2">
-                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                              {action.confidence_score && (
-                                <>
-                                  <TrendingUp className="h-3 w-3" />
-                                  {Math.round(action.confidence_score * 100)}% confidence
-                                </>
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
+                              {when && (
+                                <span className="flex items-center gap-1">
+                                  <Clock className="h-3 w-3" />
+                                  {when}
+                                </span>
+                              )}
+                              {totalLoop > 0 && (
+                                <span className="flex items-center gap-1 text-purple-600">
+                                  <Users className="h-3 w-3" />
+                                  {totalLoop} in the loop
+                                </span>
+                              )}
+                              {isDone && (
+                                <Badge variant="secondary" className="ml-auto text-[10px] bg-green-100 text-green-800 border-green-200">
+                                  Done
+                                </Badge>
                               )}
                             </div>
-                            
-                            {action.assigned_watchers && action.assigned_watchers.length > 0 && (
-                              <div className="flex items-center gap-1 text-xs text-purple-600">
-                                <Users className="h-3 w-3" />
-                                {action.assigned_watchers.length === 1 ? '1 in the loop' : `${action.assigned_watchers.length} in the loop`}
-                              </div>
-                            )}
                           </div>
-                        </div>
-                      </Card>
-                    ))
+                        </Card>
+                      );
+                    })
                   )}
                 </div>
               </ScrollArea>
