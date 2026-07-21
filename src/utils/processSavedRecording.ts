@@ -104,19 +104,24 @@ export async function processSavedRecording(
     
     console.log('processSavedRecording: Edge function response:', { data, error: processError });
 
-    if (processError) {
-      console.error('processSavedRecording: Edge function error:', processError);
-      
+    if (processError || (data && data.success === false)) {
+      const errMsg =
+        (processError as any)?.message ||
+        (data as any)?.error ||
+        'Edge function failed to start processing';
+      console.error('processSavedRecording: Edge function error:', processError || data);
+
       // Update meeting record with error status
       await supabase
         .from('meeting_recordings')
-        .update({ 
-          processing_status: 'error',
-          processing_error: processError.message || 'Processing failed'
+        .update({
+          processing_status: 'failed',
+          processing_error: errMsg,
         })
         .eq('id', meetingRecord.id);
-      
-      throw processError;
+
+      toast.error(`Could not start processing: ${errMsg}`);
+      return { success: false, meetingId: meetingRecord.id, hasTranscript: false };
     }
 
     console.log('processSavedRecording: Processing initiated successfully');
@@ -147,7 +152,8 @@ async function pollForCompletion(
   estimatedTotalTime: number,
   onProgressUpdate?: (progress: ProcessingProgress) => void
 ): Promise<{ success: boolean; actionsCount?: number; hasTranscript?: boolean }> {
-  const maxAttempts = 60; // 2 minutes max
+  const maxAttempts = 22; // ~45 seconds max (22 × 2s)
+  let lastStatus: string | undefined;
   let attempts = 0;
   
   // Check for completion every 2 seconds, up to 2 minutes
@@ -180,6 +186,9 @@ async function pollForCompletion(
       .select('processing_status, processing_error, transcript')
       .eq('id', meetingId)
       .single();
+
+    lastStatus = meeting?.processing_status;
+
 
     if (meeting?.processing_status === 'completed') {
       const actionsCount = actions?.length || 0;
@@ -244,6 +253,8 @@ async function pollForCompletion(
     attempts++;
   }
   
-  toast.error("Processing is taking longer than expected. Check back later.");
+  toast.error(
+    `Still processing after 45s (status: ${lastStatus ?? 'unknown'}). We'll keep working in the background — check back in a minute.`
+  );
   return { success: false, actionsCount: 0, hasTranscript: false };
 }

@@ -159,32 +159,34 @@ export default function LaunchMemoryBridge() {
 
   const handleSave = async () => {
     if (!audioBlobRef.current || !user) return;
-    
+
     setIsExtracting(true);
     const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
-    
-    const saved = await saveRecording(
-      audioBlobRef.current,
-      title,
-      'memory-bridge',
-      undefined,
-      notifySupport
-    );
 
-    if (saved) {
+    try {
+      const saved = await saveRecording(
+        audioBlobRef.current,
+        title,
+        'memory-bridge',
+        undefined,
+        notifySupport
+      );
+
+      if (!saved) {
+        // saveRecording already surfaced a toast
+        return;
+      }
+
       audioBlobRef.current = null;
-      
+
       // Automatically start extraction
       const result = await processSavedRecording(
         saved.id,
         user.id,
         duration
       );
-      
-      setIsExtracting(false);
-      
+
       if (result.success && result.actionsCount && result.actionsCount > 0) {
-        // Show post-extraction dialog with Accept All / Review options
         setLastExtractionResult({
           meetingId: result.meetingId!,
           recordingId: saved.id,
@@ -194,19 +196,26 @@ export default function LaunchMemoryBridge() {
         setShowPostExtractionDialog(true);
         setProcessedRecordings(prev => new Set([...prev, saved.id]));
         setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
-      } else {
-        // No actions found - show regular celebration
+      } else if (result.success) {
+        // Success but no actions
         setShowCelebration(true);
         toast.info('Recording saved! No actionable items found.');
       }
-      
+      // On failure, processSavedRecording already shows a toast — nothing else to do.
+
       fetchRecordings();
       setState('idle');
       setRecordingTitle('');
-    } else {
+    } catch (err) {
+      console.error('handleSave: unexpected error', err);
+      toast.error(
+        `Could not save recording: ${err instanceof Error ? err.message : 'Unknown error'}`
+      );
+    } finally {
       setIsExtracting(false);
     }
   };
+
 
   const handleAcceptAndScheduleAll = async (notifyCircle: boolean) => {
     if (!lastExtractionResult || !user) return;

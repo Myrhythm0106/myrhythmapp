@@ -1,156 +1,46 @@
+# Fix: "Save & Extract Actions" spins forever
 
-# MyRHYTHM-G — the Growth-mindset layer
+## What we know
 
-**Name:** MyRHYTHM-G (the "G" is for Growth mindset). The assessment stays **MYRHYTHM** (identity/trait); MyRHYTHM-G is the daily **state** lens on the same 8 letters. One vocabulary, two lenses.
+- Route `/launch/memory` uses `LaunchMemoryBridge.tsx` → `handleSave` → `useVoiceRecorder.saveRecording` → `processSavedRecording` → invokes edge function **`process-meeting-audio`** → polls `meeting_recordings.processing_status`.
+- `meeting_recordings` has **no rows created today** (last row: 2026-07-20). So either the upload/insert is failing silently, or the edge function invoke is hanging with no meeting row ever reaching `completed`.
+- `process-meeting-audio` returns **no edge function logs at all** — strong signal it is either not currently deployed, failing on boot, or the client call is not reaching it.
+- Poll runs 60 × 2s = 2 min max before showing an error, so "spins forever" = long wait with no useful feedback.
 
-Wordmark rule: always styled `MyRHYTHM-G` (mixed case + hyphen + capital G).
+## Root cause (most likely, to confirm)
 
-## The 8 growth states (1:1 with MYRHYTHM letters)
+`process-meeting-audio` edge function is not producing logs, so the invoke resolves with a network/boot error that the current code swallows loosely, then falls through to `pollForCompletion`, which spins for 2 minutes because the row status never changes.
 
-| # | Letter | Chip | One-line prompt |
-|---|---|---|---|
-| 1 | M | **M · Mindset set** | "I've decided this matters." |
-| 2 | Y | **Y · Yes, begun** | "I've said yes and started." |
-| 3 | R | **R · Rhythm wobble** | "My rhythm's off — I'm rethinking." |
-| 4 | H | **H · Harnessing support** | "Leaning on my circle to keep going." |
-| 5 | Y | **Y · Yearning for a win** | "Feeling lost — I need one small win." |
-| 6 | T | **T · Transforming** | "Turning what happened into what's next." |
-| 7 | H | **H · Healing through habit** | "Practising — repetition is doing the work." |
-| 8 | M | **M · Mastered & multiplying** | "I've got this — ready to pass it on." |
+## Fix plan
 
-## Influences & intentional divergences (new — locked into brand memory)
+### 1. Instrument and surface real errors (frontend)
+- In `src/utils/processSavedRecording.ts`:
+  - When `supabase.functions.invoke('process-meeting-audio', …)` returns an error OR `data?.success === false`, stop the flow immediately: mark the `meeting_recordings` row as `failed` with the real error, show a toast with the actual message, and return `{ success: false }` — do NOT enter `pollForCompletion`.
+  - Reduce hang: shorten `pollForCompletion` timeout from 120s to 45s and surface the last known `processing_status` in the error toast.
+- In `src/pages/launch/LaunchMemoryBridge.tsx` `handleSave`:
+  - Wrap in `try/finally` so `setIsExtracting(false)` always runs (today it only clears on the happy path or when `saved` is falsy — an exception mid-flow leaves the button spinning).
+  - On `result.success === false`, show a clear toast and reset UI state.
 
-MyRHYTHM-G sits in the same intellectual neighbourhood as **Dr. Daniel Amen** (brain-healthy daily habits, non-shaming framing, "change your brain, change your life") and **Dr. Caroline Leaf** (neuroplasticity through repeated conscious attention, mind-management over mood-fixing, community as part of healing). The 8-state arc mirrors that plasticity loop in plain user language.
+### 2. Verify `process-meeting-audio` deployment
+- Re-check `supabase/config.toml` entry and re-deploy the function (its current `verify_jwt = true` combined with `functions.invoke` from an authed session should be fine — no change needed unless deployment is stale).
+- After redeploy, tail edge-function logs; the boot log `🚀 Starting process-meeting-audio function` should appear on the next click.
 
-**Language we will NOT borrow** (guardrails for all future copy):
-- No timelines or "days to rewire" numbers (Leaf's 21/63-day cycle, Amen's programme durations).
-- No supplements, diagnostics, SPECT/scan references.
-- No "toxic thoughts" or spiritual/theological framing.
-- No clinical-outcome claims, no "fix", no "cure", no "rewire your brain in X days".
-- Attribution: neither name appears in-app or in marketing — MyRHYTHM-G stands on its own vocabulary.
+### 3. Confirm required secrets are wired to the deployed function
+- `OPENAI_API_KEY`, `ASSEMBLYAI_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_URL` are all present in the project. The function's early check returns 400 if `OPENAI_API_KEY` is missing — with the fix in step 1 that 400 will now surface as a visible toast instead of a silent spinner.
 
-## What ships
-
-### 1. Data model
-New table `growth_states`:
-- `user_id`, `goal_id?` (nullable), `letter` enum `M1|Y1|R|H1|Y2|T|H2|M2`, `note text?`, `logged_at`, `created_at`.
-- New column `profiles.support_circle_can_view_growth boolean default false`.
-- RLS: owner full access; Support Circle members SELECT only when the toggle is on and the relationship is `active`, via security-definer helper `has_growth_view_access(_owner, _viewer)`.
-
-### 2. Calibrate surface — the daily MyRHYTHM-G log
-On `/launch/calibrate`, add a first-class card above the existing CapabilityPage:
-
-```
-MyRHYTHM-G · Where are you in your rhythm today?
-[M · Mindset set] [Y · Yes, begun] [R · Rhythm wobble] [H · Harnessing support]
-[Y · Yearning]    [T · Transforming] [H · Healing through habit] [M · Mastered & multiplying]
-                                                                 Optional note ▸
-```
-- One-tap logs today's state.
-- 30-day **path strip** of letters walked (e.g. `M → Y → R → H → T`). No scoring, no streaks.
-- Footer link: *"MyRHYTHM-G uses the same 8 letters as your MYRHYTHM assessment — one is who you are, the other is where you are today."*
-
-### 3. Home chip
-`QuietHome.tsx` gains a MyRHYTHM-G chip near the greeting:
-`MyRHYTHM-G today: R · Rhythm wobble — a small win will help.`
-If nothing logged: `Log your MyRHYTHM-G today ›`. Tap → Calibrate.
-
-### 4. Assessment result page handoff
-> *"Your strongest letters right now are **{top1}** and **{top2}**. When the middle gets messy, **MyRHYTHM-G** on Calibrate lets you name which letter needs attention today."*
-CTA: `Try MyRHYTHM-G →` deep-links to Calibrate with the picker focused.
-
-### 5. Support Circle view (permissioned, read-only)
-- New setting in `LaunchSettings` → Support Circle: **"Let my circle see my MyRHYTHM-G"** (default off).
-- New read-only route `/launch/circle/:memberId/growth` — today's chip + 30-day path strip. Gated by `has_growth_view_access`.
-- Add `growth` key to `EnhancedSupportCirclePermissions`, wired to the same profile toggle.
-
-### 6. Celebrate copy loop
-Weekly transition line in Celebrate when state shifts:
-> *"MyRHYTHM-G: you moved from **R · Rhythm wobble** to **T · Transforming** this week. That's the messy middle turning into momentum."*
-
-## What we intentionally do NOT do
-- No dashboard, analytics tab, scoring, streaks, or the phrase "growth mindset" anywhere in UI copy — the 8 letters carry the message.
-- No researcher/export UI yet (schema supports it; deferred).
-- No Amen/Leaf references or their signature phrases.
+### 4. Validate end-to-end
+- Record a short (~15s) memory, tap Save & Extract:
+  - Expected happy path: toast "Recording saved" → toast "Processing complete!" → Post-Extraction dialog OR celebration.
+  - Expected failure path (if edge function still errors): visible toast with the real reason within a few seconds — no infinite spinner.
+- Cross-check `meeting_recordings` row appears with `processing_status = completed` (or `failed` + `processing_error`).
 
 ## Files touched
 
-**Create**
-- `src/launch/growth/states.ts` — 8-letter constant + `MYRHYTHM_G` brand string.
-- `src/launch/growth/GrowthStatePicker.tsx` — 4×2 chip picker.
-- `src/launch/growth/GrowthPathStrip.tsx` — 30-day letter strip.
-- `src/hooks/useGrowthStates.ts` — read/write today's state.
-- `src/pages/launch/LaunchCircleGrowth.tsx` — read-only Support Circle view.
+- `src/utils/processSavedRecording.ts` — hard-fail on invoke error, shorter poll, better error propagation.
+- `src/pages/launch/LaunchMemoryBridge.tsx` — `try/finally` around `handleSave`, guaranteed spinner reset, toast on failure.
+- `supabase/functions/process-meeting-audio/index.ts` — no code change; redeploy to confirm boot logs appear. (If the redeploy log shows a boot error, we address it as a follow-up in the same turn.)
 
-**Edit**
-- `src/pages/launch/LaunchCalibrate.tsx` — mount MyRHYTHM-G card above CapabilityPage.
-- `src/components/launch/quiet/QuietHome.tsx` — Today chip.
-- `src/pages/launch/LaunchSettings.tsx` — permission toggle.
-- `src/components/personal-community/EnhancedSupportCirclePermissions.tsx` — add `growth` key.
-- Assessment results page — handoff line + CTA.
-- Celebrate copy — weekly transition line.
-- `src/launch/routes.ts` + `App.tsx` — register circle-growth route + You-Are-Here entry.
+## Out of scope
 
-**Memory writes on approval:**
-- `mem://brand/myrhythm-g` — wordmark rule + 8-letter mapping.
-- `mem://brand/myrhythm-g-influences` — Amen/Leaf alignment rationale and the banned-language list above.
-
-## Database migration (single call)
-
-```sql
-create type public.growth_letter as enum
-  ('M1','Y1','R','H1','Y2','T','H2','M2');
-
-create table public.growth_states (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references auth.users(id) on delete cascade,
-  goal_id uuid references public.goals(id) on delete set null,
-  letter public.growth_letter not null,
-  note text,
-  logged_at timestamptz not null default now(),
-  created_at timestamptz not null default now()
-);
-create index growth_states_user_logged_idx
-  on public.growth_states (user_id, logged_at desc);
-
-grant select, insert, update, delete on public.growth_states to authenticated;
-grant all on public.growth_states to service_role;
-alter table public.growth_states enable row level security;
-
-alter table public.profiles
-  add column if not exists support_circle_can_view_growth boolean not null default false;
-
-create or replace function public.has_growth_view_access(_owner uuid, _viewer uuid)
-returns boolean language sql stable security definer set search_path = public as $$
-  select exists (
-    select 1
-    from public.profiles p
-    join public.support_circle_members m
-      on m.user_id = p.id
-     and m.status = 'active'
-    where p.id = _owner
-      and p.support_circle_can_view_growth = true
-      and (
-        m.member_email = (select email from auth.users where id = _viewer)
-        or m.user_id = _viewer
-      )
-  );
-$$;
-
-create policy "Owners manage own growth states"
-  on public.growth_states for all
-  using (auth.uid() = user_id) with check (auth.uid() = user_id);
-
-create policy "Circle can read shared growth states"
-  on public.growth_states for select to authenticated
-  using (public.has_growth_view_access(user_id, auth.uid()));
-```
-
-## Guardrails respected
-- One-tap primary action; 4×2 grid but no ranking language.
-- Non-clinical, non-demeaning, secular wording throughout.
-- No new required daily action — logging optional.
-- 56px tap targets, MYRHYTHM letter colours.
-- Assessment vocabulary shared; only new token is the "G".
-
-Ready to build on approval.
+- Changing recorder UI, extraction quality, or Support-Circle wiring.
+- MyRHYTHM-G, calendar, or any unrelated launch surfaces.
