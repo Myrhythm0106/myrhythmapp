@@ -110,10 +110,15 @@ export function TimeBlockingSettingsCard() {
               <Select value={seedingTpl} onValueChange={(v) => setSeedingTpl(v as TemplateKey)}>
                 <SelectTrigger className="h-9 rounded-xl flex-1"><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="blank">Blank</SelectItem>
-                  <SelectItem value="classic_focus">Classic Focus</SelectItem>
-                  <SelectItem value="meeting_heavy">Meeting-heavy</SelectItem>
-                  <SelectItem value="recovery_friendly">Recovery-friendly</SelectItem>
+                  {(Object.keys(TEMPLATE_LABELS) as TemplateKey[]).map((k) => {
+                    const t = TEMPLATE_LABELS[k];
+                    return (
+                      <SelectItem key={k} value={k}>
+                        {t.label}
+                        {t.evidence ? <span className="text-[10px] text-gray-500 ml-2">· {t.evidence}</span> : null}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
               <button
