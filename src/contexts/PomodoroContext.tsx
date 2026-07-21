@@ -1,10 +1,12 @@
-
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useState, ReactNode } from 'react';
+import { useBrainHealthyPrefs } from '@/hooks/useBrainHealthyPrefs';
+import { getPomodoroPreset, POMODORO_PRESETS, PomodoroPresetConfig } from '@/launch/scheduling/defaults';
 
 interface PomodoroContextType {
   isRunning: boolean;
   timeLeft: number;
   currentSession: 'work' | 'break';
+  preset: PomodoroPresetConfig;
   startTimer: () => void;
   pauseTimer: () => void;
   resetTimer: () => void;
@@ -12,34 +14,43 @@ interface PomodoroContextType {
 
 const PomodoroContext = createContext<PomodoroContextType | undefined>(undefined);
 
+const FALLBACK = POMODORO_PRESETS[0]; // Pomodoro Classic
+
 export function PomodoroProvider({ children }: { children: ReactNode }) {
+  const { prefs } = useBrainHealthyPrefs();
+  const preset = useMemo(
+    () => getPomodoroPreset(prefs.pomodoro_preset) ?? FALLBACK,
+    [prefs.pomodoro_preset],
+  );
+
   const [isRunning, setIsRunning] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes in seconds
   const [currentSession, setCurrentSession] = useState<'work' | 'break'>('work');
+  const [timeLeft, setTimeLeft] = useState(preset.workMinutes * 60);
 
-  const startTimer = () => {
-    setIsRunning(true);
-  };
+  // Reset the timer whenever the preset changes and the timer isn't running.
+  useEffect(() => {
+    if (!isRunning) {
+      setTimeLeft(
+        currentSession === 'work'
+          ? preset.workMinutes * 60
+          : preset.shortBreakMinutes * 60,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [preset.value]);
 
-  const pauseTimer = () => {
-    setIsRunning(false);
-  };
-
+  const startTimer = () => setIsRunning(true);
+  const pauseTimer = () => setIsRunning(false);
   const resetTimer = () => {
     setIsRunning(false);
-    setTimeLeft(25 * 60);
     setCurrentSession('work');
+    setTimeLeft(preset.workMinutes * 60);
   };
 
   return (
-    <PomodoroContext.Provider value={{
-      isRunning,
-      timeLeft,
-      currentSession,
-      startTimer,
-      pauseTimer,
-      resetTimer
-    }}>
+    <PomodoroContext.Provider
+      value={{ isRunning, timeLeft, currentSession, preset, startTimer, pauseTimer, resetTimer }}
+    >
       {children}
     </PomodoroContext.Provider>
   );
