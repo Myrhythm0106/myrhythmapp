@@ -721,6 +721,7 @@ export default function LaunchMemoryBridge() {
         onClose={() => setShowPostExtractionDialog(false)}
         actionsCount={lastExtractionResult?.actionsCount || 0}
         meetingTitle={lastExtractionResult?.title || ''}
+        meetingId={lastExtractionResult?.meetingId}
         onAcceptAndScheduleAll={handleAcceptAndScheduleAll}
         onReviewIndividually={handleReviewIndividually}
       />
