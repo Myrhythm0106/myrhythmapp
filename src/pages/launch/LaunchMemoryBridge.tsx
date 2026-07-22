@@ -236,18 +236,25 @@ export default function LaunchMemoryBridge() {
   };
 
 
-  const handleAcceptAndScheduleAll = async (notifyCircle: boolean) => {
+  const handleAcceptAndScheduleAll = async (
+    notifyCircle: boolean,
+    actionIds?: string[],
+  ) => {
     if (!lastExtractionResult || !user) return;
-    
+
     try {
-      // Fetch all extracted actions for this meeting
-      const { data: actions, error } = await supabase
+      // Fetch actions for this meeting, filtered to the user's selection if provided
+      let query = supabase
         .from('extracted_actions')
         .select('*')
         .eq('meeting_recording_id', lastExtractionResult.meetingId);
-      
+      if (actionIds && actionIds.length > 0) {
+        query = query.in('id', actionIds);
+      }
+      const { data: actions, error } = await query;
+
       if (error) throw error;
-      
+
       let scheduled = 0;
       for (const action of actions || []) {
         try {
@@ -258,11 +265,11 @@ export default function LaunchMemoryBridge() {
             action.proposed_date,
             action.proposed_time
           );
-          
+
           if (eventId) {
             await supabase
               .from('extracted_actions')
-              .update({ 
+              .update({
                 status: 'scheduled',
                 calendar_event_id: eventId,
                 support_circle_notified: notifyCircle
@@ -274,11 +281,20 @@ export default function LaunchMemoryBridge() {
           console.error('Failed to schedule action:', err);
         }
       }
-      
-      toast.success(`Scheduled ${scheduled} actions to your calendar!`);
+
+      if (scheduled === 0) {
+        toast.info('No actions were scheduled.');
+      } else {
+        const total = actionIds?.length ?? (actions?.length || 0);
+        toast.success(
+          scheduled === total
+            ? `Scheduled ${scheduled} ${scheduled === 1 ? 'action' : 'actions'} to your calendar!`
+            : `Scheduled ${scheduled} of ${total} selected actions.`,
+        );
+      }
       setShowPostExtractionDialog(false);
       setShowCelebration(true);
-      
+
     } catch (error) {
       console.error('Error scheduling all actions:', error);
       toast.error('Failed to schedule actions');
