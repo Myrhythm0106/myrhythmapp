@@ -1,19 +1,14 @@
 # Continue Emerald Prestige theming + Memory Bridge transcript & action-scheduling home
 
-Two workstreams in one pass. First finishes the visual continuation from the last turn; second answers "where do the transcripts live, and how are the actions structured with suggested dates?"
+Adds a selectable "Send to Calendar" flow so users can pick which actions to schedule, or accept all.
 
 ---
 
 ## 1) Continue Emerald Prestige across authenticated /launch/* screens
 
-Audit and repaint any leftover legacy purple/indigo/grey on screens the user hits after sign-in.
+Visual repaint only — no logic changes — on: `LaunchHome`, `LaunchCalendar`, `LaunchMemoryBridge`, `LaunchCalibrate`, `LaunchCommit`, `LaunchCapture`, `LaunchCaptureResult`, `LaunchSupportCircle`, `LaunchGoals`, `LaunchVisionStatement`, `LaunchGratitude`, `LaunchAnalytics`, `LaunchRoadmap`, `LaunchProfile`, `LaunchSettings`, `LaunchWhatsNew`, `LaunchHelp`.
 
-**In scope (visual only, no logic changes):**
-- `LaunchHome`, `LaunchCalendar`, `LaunchMemoryBridge`, `LaunchCalibrate`, `LaunchCommit`, `LaunchCapture`, `LaunchCaptureResult`, `LaunchSupportCircle`, `LaunchGoals`, `LaunchVisionStatement`, `LaunchGratitude`, `LaunchAnalytics`, `LaunchRoadmap`, `LaunchProfile`, `LaunchSettings`, `LaunchWhatsNew`, `LaunchHelp`.
-- Swap hardcoded `bg-purple-*`, `from-indigo-*`, `text-slate-*` etc. for launch tokens (`launch-ink`, `launch-moss`, `launch-gold`, `launch-ember`, `launch-cream`, `launch-ivory`).
-- Headings use serif display class already defined in `launch-theme`; body stays on the theme's sans.
-- Cards: cream surface + moss border + gold accents. Primary CTAs: ember. Secondary: moss outline.
-- Preserve MyRHYTHM-G chip colors and assessment letter colors — those are semantic, not decorative.
+Swap hardcoded purple/indigo/slate for launch tokens (`launch-ink`, `launch-moss`, `launch-gold`, `launch-ember`, `launch-cream`, `launch-ivory`). Cards = cream + moss border + gold accents. Primary CTAs = ember. Secondary = moss outline. MyRHYTHM-G chips and assessment letter colors preserved (semantic).
 
 Verify with Playwright screenshots of Home, Calendar, Memory Bridge, Calibrate.
 
@@ -21,54 +16,44 @@ Verify with Playwright screenshots of Home, Calendar, Memory Bridge, Calibrate.
 
 ## 2) Transcript Library + Action Scheduling home (Memory Bridge)
 
-Today the transcript is saved on `meeting_recordings.transcription` but is only reachable through a download button on the recording card. There's an unused `TranscriptsTab` component. Actions extracted from a recording go to `extracted_actions` / `daily_actions` but the user can't see the suggested start/finish dates in one place.
+### 2a. Tabbed view on `/launch/memory-bridge`
+Three tabs: **Recordings**, **Transcripts** (wire up existing `TranscriptsTab` + `TranscriptViewer` with search/filter/edit), **Actions** (grouped by recording with title, owner, "in the loop", Suggested Start, Suggested Complete By, status, row actions).
 
-### 2a. New route `/launch/memory-bridge/library`
+### 2b. Full user editability
+- Inline edit `title`, `suggested_start_date`, `suggested_due_date`, `suggested_time_of_day`, `suggested_reason`, "in the loop" list.
+- Row-level Delete (soft archive: `status='archived'`, hidden with "Show archived" toggle).
+- "Add action manually" button per recording.
+- "Re-suggest dates" per row (doesn't overwrite user-edited fields — tracked via `user_edited` flag).
+- Transcript editor: pencil to correct; original preserved in `original_transcript`.
 
-Tabbed view inside `LaunchMemoryBridge` (or a linked sub-page) with three tabs:
+### 2c. Suggested dates derivation
+At extraction time, `process-meeting-audio` computes suggestions from: latest `assessment_results`, `user_schedule_preferences`, real availability in `calendar_events` + `external_calendar_events`, and last 7 days of `growth_states`. A human sentence saved to `suggested_reason` ("Placed Tuesday morning — your steadiest window this week"). No medical claims.
 
-1. **Recordings** — existing list.
-2. **Transcripts** — wire up `TranscriptsTab` + `TranscriptViewer`. Search across transcripts, filter by date and participants, open full transcript in a modal, copy/download, "Re-extract actions" button.
-3. **Actions** — grouped by recording, showing every extracted action with:
-   - Title, owner, "in the loop" chips
-   - **Suggested Start** and **Suggested Complete By** (see 2b)
-   - Status (draft / scheduled / done)
-   - Row actions: Edit, Reschedule, Send to Calendar, Mark done
+### 2d. Send to Calendar — selectable, with "select all"
+Every surface that sends actions to the calendar (Actions tab, `PostExtractionDialog`, per-recording bulk bar) shares one **SendToCalendarSheet** with:
 
-Each recording card gets a "View transcript" and "View actions" link so the entry point is obvious.
+- A checkbox list of the recording's actions. Each row shows title, suggested date/time, "in the loop" chips, and an inline edit pencil so the user can adjust before sending.
+- Header **"Select all"** / **"Select none"** toggle and a live count ("3 of 7 selected").
+- Per-row **Skip / Include** and a per-row **Edit date & time** popover (prefilled with suggestions).
+- Optional bulk override: "Apply the same reminder cadence to selected" (Gentle / Steady / Strong) and "Loop in the same people".
+- Primary CTA **"Send selected to Calendar"** (disabled until ≥1 selected). Secondary **"Send all"** shortcut that ticks everything.
+- On confirm: only checked rows create `calendar_events` (+ `event_reminders`, `event_invitations` where set); skipped rows stay in the Actions tab as `status='pending'` so the user can send them later.
+- The existing `PostExtractionDialog` "Accept & Schedule All" opens this sheet with everything preselected — the user can then untick any they don't agree with before confirming.
 
-### 2b. Suggested dates based on Brain Health make-up + real availability
-
-Add two columns to `extracted_actions` (nullable): `suggested_start_date date`, `suggested_due_date date`, `suggested_time_of_day text` (morning/mid/afternoon/evening), `suggested_reason text`.
-
-Populate them at extraction time inside the existing `process-meeting-audio` edge function using:
-
-- **Assessment snapshot** (`assessment_results` latest row) — MYRHYTHM letter scores drive lead-time. Lower M/H/Y (memory/focus/energy) → longer lead-time, shorter sessions, morning slots. Higher R (rhythm) → tighter cadence acceptable.
-- **User schedule preferences** (`user_schedule_preferences`) — working hours, energy peaks, days off.
-- **Actual calendar availability** (`calendar_events` + `external_calendar_events`) — first free slot ≥ 30 min that matches the preferred time-of-day, within the next 7/14/30 days depending on action urgency keywords.
-- **MyRHYTHM-G state** (`growth_states` last 7 days) — if user is in "messy middle" states, push non-urgent items out and cap to 1 new commitment per day.
-
-Return a short human reason ("Placed Tue morning — your steadiest window this week") saved in `suggested_reason` and shown in the Actions tab as a small caption. This keeps the "personal PA" tone without medical claims.
-
-### 2c. Send-to-calendar respects suggestions
-
-When the user clicks "Send to Calendar" on an action row, prefill the event modal with `suggested_start_date` + `suggested_time_of_day` mapped to a concrete time. User can accept or edit before saving. The existing invite/reminder/recurrence UI stays.
-
-### 2d. Home surfaces new location
-
-Add a "Your Memory Bridge library" card on `/launch/home` showing counts: recordings this week, unread transcripts, actions awaiting scheduling. Click → `/launch/memory-bridge` opened on the relevant tab.
+### 2e. Home surface
+New "Your Memory Bridge library" card on `/launch/home` showing recordings this week, unread transcripts, and actions awaiting scheduling. Click → `/launch/memory-bridge` on the relevant tab.
 
 ---
 
 ## Technical notes
 
-- Migration: add `suggested_start_date`, `suggested_due_date`, `suggested_time_of_day`, `suggested_reason` to `public.extracted_actions`. No new table. Reuse existing RLS.
-- New helper `src/lib/scheduling/suggestActionDates.ts` — pure function used both in edge function (via inline copy or shared logic) and client-side "Re-suggest" button.
-- Do not rename existing columns. `daily_actions` remains the source of truth once scheduled.
-- No changes to MyRHYTHM-G, Support Circle roles, or 4C loop copy.
+- Migration: add `suggested_start_date`, `suggested_due_date`, `suggested_time_of_day`, `suggested_reason`, `user_edited boolean default false` to `extracted_actions`; add `original_transcript text` to `meeting_recordings`. Reuse existing RLS.
+- New `src/lib/scheduling/suggestActionDates.ts` shared by edge function and client "Re-suggest".
+- New `src/components/memoryBridge/SendToCalendarSheet.tsx` — the shared selectable scheduler.
+- Refactor `commitAllRecommended` to accept an explicit `actionIds` array; existing single-action `commitAction` unchanged.
+- `daily_actions` remains source of truth once scheduled.
+- No changes to MyRHYTHM-G, Support Circle roles, 4C loop copy, pricing, or access-code flow.
 
 ## Out of scope
-
-- Discharge Bridge Kit v0.2 (already deferred).
-- New AI models. Reuse current Lovable AI Gateway wiring.
-- Any change to pricing / access-code / Stripe test surface.
+- Discharge Bridge Kit v0.2 (deferred).
+- New AI models — reuse Lovable AI Gateway wiring.
