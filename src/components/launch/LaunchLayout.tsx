@@ -43,10 +43,14 @@ export function LaunchLayout({
   const location = useLocation();
   const { isCaregiver } = usePersona();
   const { user } = useAuth();
+  const { hasMembership } = useMembershipStatus();
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
-  const showDial = !!user && !PRE_ACCOUNT_PATHS.has(location.pathname);
+  // Dial is a premium wayfinder — only surface once the user has a real
+  // membership (paid sub, active trial with card on file, or founding code).
+  const showDial =
+    !!user && hasMembership && !PRE_ACCOUNT_PATHS.has(location.pathname);
   const isWelcomePage = location.pathname === '/launch/welcome';
 
   return (
