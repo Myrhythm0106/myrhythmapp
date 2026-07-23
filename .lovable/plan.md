@@ -1,54 +1,32 @@
-# Two fixes: assessment header + document → calendar actions
+## Goal
+Add a hard-stop accuracy confirmation before actions are pushed to the MyRhythm calendar, and record an audit trail of document approval + deletion.
 
-## 1. Duplicate banner on `/launch/assessment`
+## 1. Accuracy confirmation checkbox (`PostExtractionDialog.tsx`)
+- Add local state `confirmedAccurate` (default `false`), shown only when `sourceFilePath` is present (i.e. the actions came from an uploaded document).
+- Render a required checkbox just above the "Send N to calendar" button:
+  - Label: **"I confirm these actions are accurate and match my document."**
+  - Helper line: "Ticking this approves the actions and permanently deletes the uploaded document."
+- Disable the "Send N to calendar" button when `sourceFilePath` is set and `confirmedAccurate` is `false` (in addition to the existing `noneSelected` / `isScheduling` guards).
+- Keep behaviour unchanged for non-document flows (voice-only extractions) — no checkbox required.
 
-**Cause:** `App.tsx` wraps `<LaunchAssessment />` in `<LaunchLayout>`, and `LaunchAssessment.tsx` also renders its own `<LaunchLayout>` internally — so the sticky header, Back row, and page chrome render twice.
+## 2. Audit log of approval + deletion
+- New table `public.document_import_audit` (RLS: user owns rows):
+  - `user_id`, `meeting_id`, `file_path`, `file_name` (nullable), `actions_sent_count`,
+  - `approved_at`, `deleted_at` (nullable), `deletion_status` (`deleted` | `failed` | `not_applicable`), `deletion_error` (nullable).
+- On "Send to calendar" in `PostExtractionDialog.handleSendSelected`:
+  1. Await `onAcceptAndScheduleAll(...)` as today.
+  2. Insert an audit row with `approved_at = now()` and `actions_sent_count = selectedIds.size`.
+  3. Attempt `storage.remove([sourceFilePath])`; update the same row with `deleted_at` + `deletion_status` (`deleted` or `failed` + error message).
+- Thread the source `file_name` from the extraction result through `LaunchMemoryBridge.tsx` and `LaunchCalendar.tsx` into the dialog so the audit row is human-readable. (`sourceFilePath` already flows through.)
 
-**Fix:**
-- Remove the outer `<LaunchLayout>` wrapper from the `/launch/assessment` route in `src/App.tsx` (keep the page's own layout, which is the richer one), OR remove the internal `<LaunchLayout>` from `LaunchAssessment.tsx` — whichever preserves the current visual. Pick the route-level unwrap so the page file stays self-contained like the other launch pages.
-- Also remove the in-content secondary "Back" buttons in the recency and questions phases (footer areas ~line 177 and questions footer) so `LaunchPageHeader` (from `LaunchLayout`) is the single Back control.
-- Leave the primary CTA ("Continue" / "Next" / "See my results") in place.
-
-No schema change, UI-only.
-
-## 2. Upload a schedule/report → extract actions → push to calendar
-
-Reuse the Memory Bridge extraction pipeline so behaviour, review dialog, and smart-scheduling logic stay identical.
-
-### Flow
-1. User uploads PDF / DOCX / image / plain text (drag-drop or picker), max 20 MB.
-2. Client uploads file to a new private storage bucket `document-imports`.
-3. Client invokes new edge function `import-schedule-actions` with the storage path + filename.
-4. Edge function:
-   - Parses text (pdf-parse for PDF, mammoth for DOCX, Gemini vision for images, raw text for txt/md).
-   - Calls Lovable AI Gateway (`google/gemini-2.5-flash`) with a strict JSON schema:
-     `{ actions: [{ title, description, suggested_date, suggested_time, duration_minutes, category, priority_level, source_quote }] }`.
-   - Inserts a parent row in `meeting_recordings` (`meeting_type='document_import'`, `meeting_title=filename`).
-   - For each action, checks the user's existing `calendar_events` for that suggested date and shifts the `suggested_time` to the next open slot within the user's active hours (reuse smart-scheduling helpers from Memory Bridge). Stores original vs adjusted time in metadata.
-   - Inserts each action into `extracted_actions` with `status='pending'`, `source_type='document'`, and the (possibly adjusted) schedule fields.
-5. Client opens the existing `PostExtractionDialog` — same select-all checklist, inline edits of date/time/duration, and "Send to Calendar". Skipped items stay in Actions tab.
-6. Confirmed items create `calendar_events` exactly like voice-captured actions.
-
-### New surface
-- Card **"Import from document"** at the top of `/launch/memory-bridge` (above the recorder).
-- Shortcut button **"Import schedule"** in `/launch/calendar` header that opens the same upload dialog and, on success, opens `PostExtractionDialog` in-place.
-
-### Files
-- new: `supabase/functions/import-schedule-actions/index.ts` (JWT-verify-in-code, CORS, Zod input validation, gateway 402/429 handling)
-- new: `src/components/memoryBridge/DocumentImportCard.tsx` (drag-drop + file picker, progress, error toast, reuses `FileValidator`)
-- edit: `src/pages/launch/LaunchMemoryBridge.tsx` — mount `DocumentImportCard` above the recorder; on success, feed extracted action IDs into the existing `PostExtractionDialog`.
-- edit: `src/pages/launch/LaunchCalendar.tsx` — add "Import schedule" header button that opens `DocumentImportCard` in a dialog.
-- migration:
-  - `ALTER TABLE public.extracted_actions ADD COLUMN source_type text NOT NULL DEFAULT 'voice';` (values: `voice` | `document`)
-  - Create private storage bucket `document-imports` (via storage tool) + RLS on `storage.objects` restricting to `auth.uid()` folder prefix.
-- secret: reuse `LOVABLE_API_KEY` (already present).
-
-## Out of scope (deferred)
-- Persistent `/launch/results` history page — will handle in a follow-up so this turn stays scoped.
-- Automatic recurring imports (e.g. weekly clinic email) — v0.2.
+## 3. Surface the audit (lightweight)
+- Add a small "Document approved and deleted on {date}" confirmation toast/line after successful send, so the user sees the audit event happened.
+- No new UI page in v0.1 — the table is queryable for support/compliance. A "Document history" view can land in v0.2 if you want it visible in-app.
 
 ## Technical notes
-- Edge function runs `verify_jwt = false` (Lovable default) but validates the caller's JWT via `getClaims()` — same pattern as `process-meeting-audio`.
-- Smart-scheduling collision check uses existing helpers; no new algorithm.
-- `PostExtractionDialog` needs no changes — it already renders whatever `extracted_actions` rows are passed in.
-- All existing RLS on `extracted_actions`, `calendar_events`, `meeting_recordings` continues to apply.
+- Migration includes the mandatory `GRANT` block (`authenticated` + `service_role`) and RLS policies scoped to `auth.uid() = user_id`.
+- Deletion still happens client-side (same code path as today); the audit row captures both success and failure so a failed delete is not silent.
+- No changes to the `import-schedule-actions` edge function.
+
+## Out of scope (defer to v0.2)
+- Clinician-facing approval log, signed PDFs, or in-app "Document history" page — these belong with the Discharge Bridge Kit.
