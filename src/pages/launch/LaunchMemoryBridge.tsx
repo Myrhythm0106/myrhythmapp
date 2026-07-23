@@ -418,6 +418,7 @@ export default function LaunchMemoryBridge() {
               actionsCount: res.actionsCount,
               title: res.title,
               sourceFilePath: res.filePath,
+              sourceFileName: res.fileName,
             });
             fetchRecordings();
             setShowPostExtractionDialog(true);
