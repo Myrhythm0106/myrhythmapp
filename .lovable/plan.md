@@ -1,53 +1,64 @@
-# Plan: Onboarding polish + card-on-file trial
+# Three fixes for /launch/assessment, document import, and results access
 
-## 1. Hide the You-Are-Here dial until membership is confirmed
+## 1. Duplicate banner on /launch/assessment
 
-Today `LaunchLayout.tsx` shows the dial to any signed-in user outside pre-account routes. We'll gate it behind actual membership (paid subscription, active trial with card on file, or redeemed founding code).
+**What's happening:** `LaunchLayout` renders `LaunchPageHeader` (a "Back" row) at the top of the main content on every non-home page. `LaunchAssessment` then renders its *own* Back button inside both the recency phase and the questions phase — so users see two "Back" controls stacked, plus the persona label above the progress bar reads like a second banner.
 
-- New `src/hooks/useMembershipStatus.ts` returns `{ hasMembership, isFoundingComped, trialActive, trialDaysLeft, loading }`, sourced from `check-subscription` + `profiles.founding_comped`.
-- In `LaunchLayout.tsx`, replace `showDial = !!user && !PRE_ACCOUNT_PATHS.has(...)` with `showDial = hasMembership && !PRE_ACCOUNT_PATHS.has(...)`.
-- Founding-code and card-on-file trial both count as membership; unpaid registered users see a clean header.
+**Fix:**
+- In `LaunchAssessment.tsx`, remove the in-content Back buttons in the recency phase footer (line ~177–194) and questions phase footer, letting `LaunchPageHeader` be the single Back control.
+- Replace the standalone footer with just the primary CTA ("Continue" / "Next" / "See my results").
+- Give `LaunchPageHeader` a proper title on this route so it becomes the single header: pass `title="Your MyRhythm assessment"` via a small wrapper, OR add an optional `pageTitle` prop the assessment sets.
+- Verify no other `/launch/*` page has the same double-header pattern; if it does, remove the duplicate there too.
 
-## 2. Assessment: fix the "where are you in recovery?" gap
+## 2. Upload a schedule/report → extract actions → push to calendar
 
-Split the stage question in `LaunchAssessment.tsx` + `launchAssessmentBanks.ts`:
-1. **"When did the experience happen?"** — chips: `Not sure / Not applicable`, `Last 3 months`, `3–12 months ago`, `1–3 years ago`, `3–10 years ago`, `10+ years ago`. Stored as `event_recency`.
-2. **"How does it feel today?"** keeps the Pause→Sustain lens, reframed as *"Pick what matches today — you can change this anytime."*
+Reuse the Memory Bridge extraction pipeline instead of building a parallel one.
 
-Auto-suggest a stage from recency (10+ years → Sustain) but leave it editable, so the 16-years-ago tester lands somewhere sensible without being forced.
+**New surface:** an "Import from document" card on `/launch/memory-bridge` (and a shortcut on `/launch/calendar` header).
 
-## 3. Assessment: "None of these fit me" escape hatch
+**Flow:**
+1. User uploads PDF / DOCX / image / plain text (drag-drop or file picker), max 20 MB.
+2. File is sent to a new edge function `import-schedule-actions` which:
+   - Parses text (pdf-parse for PDF, mammoth for DOCX, Tesseract via Lovable AI vision for images, raw text otherwise).
+   - Calls Lovable AI Gateway (`google/gemini-2.5-flash`) with a strict JSON schema: `{ actions: [{ title, description, suggested_date, suggested_time, duration_minutes, category, priority_level, source_quote }] }`.
+   - Inserts a lightweight row in `meeting_recordings` (type = `document_import`, `meeting_title` = filename) so extracted actions have a parent.
+   - Inserts each action into `extracted_actions` with `status='pending'` and the AI's suggested schedule fields.
+3. The existing `PostExtractionDialog` opens with the checklist ("Select all / X of Y selected") so the user reviews, edits inline, and clicks **Send to Calendar** — same flow already shipped for voice captures.
+4. Skipped actions stay in the Actions tab for later; scheduled ones create `calendar_events` rows exactly like today.
 
-Every multi-choice question gets:
-- A neutral **"None of these fit"** option at the bottom.
-- When chosen, a small optional textarea: *"Tell us in your own words."* Saved as `freeform_notes` on the response.
-- Scoring: counts as unanswered for MYRHYTHM letter scoring — we don't fabricate signal.
-- Results page shows a subtle "We tailored this from the questions that fit — tell us more anytime" line when ≥1 question was answered this way.
-- Same pattern for the primary/also-fits picker (free-text submit allowed with no chip selected).
+**Storage:** private Supabase bucket `document-imports` (create via storage tool), 30-day retention matching voice recordings.
 
-## 4. Trial model: card-on-file at trial start (approved)
+**Files:**
+- new: `supabase/functions/import-schedule-actions/index.ts`
+- new: `src/components/memoryBridge/DocumentImportCard.tsx`
+- edit: `src/pages/launch/LaunchMemoryBridge.tsx` (mount the new card above the recorder)
+- edit: `src/pages/launch/LaunchCalendar.tsx` (add "Import schedule" button in header that opens the same dialog)
+- migration: add `source_type` column to `extracted_actions` (`voice` | `document`) so history is filterable; add storage bucket + RLS.
 
-Standard for Calm, Headspace, Notion AI, Superhuman — higher conversion, one less friction moment at the point of value, and kinder for the Discharge-Cliff audience (no card re-entry on day 7).
+## 3. Assessment results: always available & editable
 
-**Flow**
-- `LaunchPayment.tsx` CTA becomes: **"Start 7-day free trial — card required, cancel anytime."**
-- Reassurance line above the card field: *"You won't be charged until [date]. Cancel anytime from Account."*
-- Stripe checkout session passes `subscription_data.trial_period_days: 7` and `payment_method_collection: 'always'`.
-- On return, `PaymentSuccessPage.tsx` writes `subscription_active` + `trial_start_date` and hands off to `/launch/welcome`.
-- Founding-code users skip card entry entirely (dial + full app unlock via `founding_comped`).
+Today results only appear once on `/launch/welcome` right after the assessment; there's no persistent home for them.
 
-**Guardrails (ethical, brain-health audience)**
-- Email reminder 2 days before conversion via existing `trial-reminder` edge function, pointed at the new `trial_end`.
-- One-tap cancel button in `/launch/profile` that opens Stripe Customer Portal (`customer-portal` function already exists).
-- Clear trial_end date visible in profile + header pill ("Trial: 5 days left").
+**Add:**
+- New route `/launch/results` (file `src/pages/launch/LaunchResults.tsx`) that:
+  - Lists every row in `assessment_results` for the user, newest first, with taken-on date and headline MYRHYTHM snapshot.
+  - Expands the latest into the same rich snapshot component already used on `/launch/welcome`.
+  - Buttons: **Retake assessment** → `/launch/assessment`, **Update recency / notes** (inline edit of `event_recency` and `freeform_notes` on the latest row), **Download PDF** (existing snapshot export).
+- Deep link from:
+  - Home dashboard card ("Your MyRhythm snapshot" → View / Retake)
+  - Profile page ("Assessment history")
+  - You-Are-Here dial
+  - Post-payment success screen ("Return to your results")
+- Route registered in `src/launch/routes.ts` so the dial and nav pick it up.
 
-**Backend touch points**
-- `supabase/functions/check-subscription/index.ts`: already returns `trial_days_left`; surface `trial_end` in the response so the dial gate and profile pill can render.
-- No schema changes needed — `subscriptions` already tracks `status`, `trial_start`, `trial_end`.
+## Technical notes
 
-## Technical summary
+- Edge function must use `LOVABLE_API_KEY` gateway (already project default), handle 429/402 with clear toast.
+- `import-schedule-actions` runs with `verify_jwt = false` but validates the caller's JWT in code, same pattern as `process-meeting-audio`.
+- Assessment page fix is UI-only; no schema change.
+- Results page reads existing `assessment_results` table (no new table). Inline edits use `.update()` on the latest row scoped by `auth.uid()` under existing RLS.
 
-- New file: `src/hooks/useMembershipStatus.ts`.
-- Edited: `LaunchLayout.tsx`, `LaunchAssessment.tsx`, `launchAssessmentBanks.ts`, `LaunchPayment.tsx`, `PaymentSuccessPage.tsx`, `LaunchProfile.tsx`, `check-subscription/index.ts`.
-- Migration: add `event_recency text` and `freeform_notes jsonb` columns to `assessment_results` (nullable, backwards-compatible) with `GRANT`s preserved.
-- No changes to 4C loop, Memory Bridge, or Calendar in this pass.
+## Out of scope (call out for later)
+
+- Automatic recurring imports (e.g. weekly clinic schedule email) — v0.2.
+- Multi-assessment comparison graph — noted, not built in this pass.
