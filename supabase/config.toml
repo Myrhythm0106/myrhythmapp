@@ -86,3 +86,6 @@ verify_jwt = true
 
 [functions.calendar-push-upcoming]
 verify_jwt = true
+
+[functions.import-schedule-actions]
+verify_jwt = true
