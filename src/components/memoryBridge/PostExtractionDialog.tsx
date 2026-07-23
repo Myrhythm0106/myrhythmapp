@@ -151,6 +151,11 @@ export function PostExtractionDialog({
           <p className="text-sm text-launch-ink/70 mt-1">
             From "{meetingTitle}" — pick which to send to your calendar.
           </p>
+          {sourceFilePath && (
+            <p className="text-xs text-launch-moss/80 mt-2 font-medium">
+              🔒 Your document is held until you confirm — then it's deleted. Expand "Show source" on any action to check the original wording.
+            </p>
+          )}
         </DialogHeader>
 
         {/* Select all bar */}
