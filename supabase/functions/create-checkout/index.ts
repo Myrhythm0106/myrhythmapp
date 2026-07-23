@@ -63,12 +63,14 @@ serve(async (req) => {
     // Parse request body
     const { plan, interval } = await req.json();
     if (!plan || !interval) throw new Error("Plan and interval are required");
-    if (!['reconnect', 'thrive', 'family', 'clinic_starter', 'clinic_pro', 'clinic_enterprise'].includes(plan)) throw new Error("Invalid plan");
+    if (!['premium', 'reconnect', 'thrive', 'family', 'clinic_starter', 'clinic_pro', 'clinic_enterprise'].includes(plan)) throw new Error("Invalid plan");
     if (!['month', 'year'].includes(interval)) throw new Error("Invalid interval");
     logStep("Request parsed", { plan, interval });
 
     // Base pricing in pence
     const basePricing = {
+      // Founding Core v0.1 pricing surfaced on /launch/payment (£10/month, £84/year)
+      premium: { month: 1000, year: 8400 },
       reconnect: { month: 1500, year: 15000 },
       thrive: { month: 2500, year: 25000 },
       family: { month: 4000, year: 40000 },
@@ -107,6 +109,7 @@ serve(async (req) => {
 
     // Plan names for display
     const planNames = {
+      premium: 'MyRhythm Premium',
       reconnect: 'MyReconnect',
       thrive: 'MyThrive',
       family: 'MyFamily',
@@ -123,7 +126,7 @@ serve(async (req) => {
         {
           price_data: {
             currency: "gbp",
-            product_data: { 
+            product_data: {
               name: `${(planNames as any)[plan as string]} - ${interval === 'month' ? 'Monthly' : 'Annual'} Plan`,
               description: isFoundingActive ? `Founding Member Special - ${foundingMemberDiscountPercent}% off!` : undefined
             },
@@ -134,9 +137,11 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      subscription_data: interval === 'month' ? {
+      // Card-on-file 7-day trial for every plan/interval — auto-converts unless cancelled.
+      subscription_data: {
         trial_period_days: 7,
-      } : undefined,
+      },
+      payment_method_collection: 'always',
       success_url: `${origin}/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=1`,
       cancel_url: `${origin}/subscribe/cancel`,
       metadata: metadata
@@ -144,8 +149,8 @@ serve(async (req) => {
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
 
-    // Save trial information to database for reminders (only for monthly plans)
-    if (interval === 'month') {
+    // Save trial information to database for reminders (all plans get 7-day card-on-file trial).
+    {
       const supabaseService = createClient(
         Deno.env.get("SUPABASE_URL") ?? "",
         Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",

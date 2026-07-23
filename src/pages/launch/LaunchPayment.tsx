@@ -156,10 +156,10 @@ export default function LaunchPayment() {
               <Brain className="h-8 w-8 text-white" />
             </div>
             <h1 className="text-3xl md:text-4xl font-bold text-launch-ink mb-2 font-display">
-              Start Your 7-Day Free Trial
+              Start your 7-day free trial
             </h1>
             <p className="text-lg text-launch-ink/70 max-w-xl mx-auto">
-              Try MyRhythm risk-free. Your card won't be charged for 7 days. Cancel anytime.
+              Card required to start — you won't be charged for 7 days, and you can cancel anytime from Account.
             </p>
           </motion.div>
 
