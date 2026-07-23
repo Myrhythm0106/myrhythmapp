@@ -1,32 +1,42 @@
 ## Goal
-Add a hard-stop accuracy confirmation before actions are pushed to the MyRhythm calendar, and record an audit trail of document approval + deletion.
+Produce a single strategic reference doc that ranks every feature shipped or improved in this sprint against (a) the value it delivers, (b) the three problem definitions (Discharge Cliff, Clinical-Ready vs Life-Ready Gap, Ideal-Brain Assumption), and (c) known competitors — so you can use it for founder decisions, investor conversations, and v0.2 prioritisation.
 
-## 1. Accuracy confirmation checkbox (`PostExtractionDialog.tsx`)
-- Add local state `confirmedAccurate` (default `false`), shown only when `sourceFilePath` is present (i.e. the actions came from an uploaded document).
-- Render a required checkbox just above the "Send N to calendar" button:
-  - Label: **"I confirm these actions are accurate and match my document."**
-  - Helper line: "Ticking this approves the actions and permanently deletes the uploaded document."
-- Disable the "Send N to calendar" button when `sourceFilePath` is set and `confirmedAccurate` is `false` (in addition to the existing `noneSelected` / `isScheduling` guards).
-- Keep behaviour unchanged for non-document flows (voice-only extractions) — no checkbox required.
+## Deliverable
+New file: `docs/feature-value-ranking.md` (living doc, updated per sprint). No code changes.
 
-## 2. Audit log of approval + deletion
-- New table `public.document_import_audit` (RLS: user owns rows):
-  - `user_id`, `meeting_id`, `file_path`, `file_name` (nullable), `actions_sent_count`,
-  - `approved_at`, `deleted_at` (nullable), `deletion_status` (`deleted` | `failed` | `not_applicable`), `deletion_error` (nullable).
-- On "Send to calendar" in `PostExtractionDialog.handleSendSelected`:
-  1. Await `onAcceptAndScheduleAll(...)` as today.
-  2. Insert an audit row with `approved_at = now()` and `actions_sent_count = selectedIds.size`.
-  3. Attempt `storage.remove([sourceFilePath])`; update the same row with `deleted_at` + `deletion_status` (`deleted` or `failed` + error message).
-- Thread the source `file_name` from the extraction result through `LaunchMemoryBridge.tsx` and `LaunchCalendar.tsx` into the dialog so the audit row is human-readable. (`sourceFilePath` already flows through.)
+## Structure of the doc
 
-## 3. Surface the audit (lightweight)
-- Add a small "Document approved and deleted on {date}" confirmation toast/line after successful send, so the user sees the audit event happened.
-- No new UI page in v0.1 — the table is queryable for support/compliance. A "Document history" view can land in v0.2 if you want it visible in-app.
+### 1. Scoring model (transparent, 1–5 each)
+- **Problem Fit** — how directly it closes Discharge Cliff / Life-Ready Gap / Ideal-Brain Assumption
+- **User Value** — "would a Founding Member notice if it disappeared tomorrow?"
+- **Competitive Moat** — can Calm/Headspace/MyReha/CogniFit/Neuronation replicate in <3 months?
+- **v0.1 Readiness** — is it demo-ready today, or still fragile?
+- **Composite** = sum, ranked into Tier S / A / B / Defer
 
-## Technical notes
-- Migration includes the mandatory `GRANT` block (`authenticated` + `service_role`) and RLS policies scoped to `auth.uid() = user_id`.
-- Deletion still happens client-side (same code path as today); the audit row captures both success and failure so a failed delete is not silent.
-- No changes to the `import-schedule-actions` edge function.
+### 2. Feature inventory (this sprint's shipped + improved)
+Grouped by 4C surface:
+- **Capture / Memory Bridge**: 4h recording cap, live countdown, Save & Extract fix, document import (ephemeral), source-quote reveal, accuracy checkbox + audit log, Loop-In picker, Support Circle CRUD
+- **Commit / Calendar**: LaunchDailyBrief, LaunchRescheduleModal, Google/Outlook sync bar, push tracking, Add Event upgrades (Meeting type, reminders, invites, recurrence), smart scheduling with MYRHYTHM-aware suggested dates
+- **Calibrate / Growth**: MyRHYTHM-G 8-state layer, Amen/Leaf alignment, home chip, Support Circle visibility
+- **Continuity / Navigation**: You-Are-Here dial (gated post-payment), assessment Phase 0 + "None of these fit me", results page redesign with interactive letter bars
+- **Trust / Commercial**: Emerald Prestige theming, Founding Member CTA, tester bundle (access codes + Stripe test mode), card-on-file trial, Back-to-results from payment
 
-## Out of scope (defer to v0.2)
-- Clinician-facing approval log, signed PDFs, or in-app "Document history" page — these belong with the Discharge Bridge Kit.
+### 3. The ranking table
+One row per feature with the 4 scores, composite, tier, and a one-line "why this rank". Sorted highest → lowest.
+
+### 4. Problem-coverage matrix
+Grid: rows = features, columns = the 3 problems. Marks direct / indirect / none. Shows at a glance where we're thin (expected: Ideal-Brain Assumption is under-served in v0.1 vs Discharge Cliff which is over-served).
+
+### 5. Competitor delta
+Short table: for each Tier S/A feature, name the closest competitor equivalent and what makes ours defensible (usually: Support Circle integration + clinical-export + Memory-First Design). Flags features where a competitor is genuinely ahead so we don't kid ourselves.
+
+### 6. Recommendations
+- Which Tier S features to hero in the investor Loom and landing copy
+- Which Tier B features to quietly de-emphasise until v0.2
+- Which gaps the ranking exposes that should reshape the v0.2 backlog (esp. Discharge Bridge Kit, Bring-a-Witness, Discharge Summary → Life-Ready Plan)
+- Honest call-outs where we've over-built vs the problem
+
+## Notes
+- Pure strategy artefact — no code, no schema, no UI changes.
+- Anchored to the locked problem definitions in `mem://brand/clinical-life-ready-gap` and `mem://brand/third-problem-ideal-brain`, and the competitor set in `docs/problem-fit-and-market.md` and `docs/market-evidence.md`.
+- I'll be candid where a shipped feature scores low — the point of the doc is decisions, not applause.
