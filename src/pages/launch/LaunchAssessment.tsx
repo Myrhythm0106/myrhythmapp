@@ -31,7 +31,7 @@ const RECENCY_OPTIONS: { value: RecencyValue; label: string; hint?: string }[] =
   { value: '3-12m', label: '3–12 months ago' },
   { value: '1-3y', label: '1–3 years ago' },
   { value: '3-10y', label: '3–10 years ago' },
-  { value: '10y+', label: '10+ years ago' },
+  { value: '10y+', label: '10 years or more' },
 ];
 
 type StoredProgress = {
