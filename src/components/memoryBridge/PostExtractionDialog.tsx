@@ -13,6 +13,9 @@ interface ActionRow {
   proposed_date: string | null;
   proposed_time: string | null;
   assigned_to: string | null;
+  source_quote: string | null;
+  duration_note: string | null;
+  is_from_document: boolean;
 }
 
 interface PostExtractionDialogProps {

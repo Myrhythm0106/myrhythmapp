@@ -155,7 +155,10 @@ export function DocumentImportCard({ onExtracted, compact = false }: Props) {
             Import from a document
           </p>
           <p className="text-sm text-launch-ink/70 mt-0.5">
-            Drop a schedule, discharge letter, care plan, or meeting note. We'll extract actions and slot them into free spaces on your calendar.
+            Drop a discharge letter, care plan, schedule, or meeting note. We'll extract every action with the exact line it came from — so you can check nothing was missed.
+          </p>
+          <p className="text-xs text-launch-moss/80 mt-1 font-medium">
+            🔒 Your file is read once and deleted straight after — only the extracted actions are kept.
           </p>
           <p className="text-xs text-launch-ink/50 mt-1">
             PDF, DOCX, images, or plain text · max {MAX_MB} MB
