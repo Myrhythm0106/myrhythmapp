@@ -48,6 +48,9 @@ export default function LaunchCalendar() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [rescheduleTarget, setRescheduleTarget] = useState<LaunchCalendarEvent | null>(null);
   const [assistOpen, setAssistOpen] = useState(searchParams.get('assist') === '1');
+  const [showImportCard, setShowImportCard] = useState(false);
+  const [importResult, setImportResult] = useState<DocumentImportResult | null>(null);
+  const [showImportDialog, setShowImportDialog] = useState(false);
 
   const { dayOfWeek } = usePlanningDay();
   const weekScope = usePlanningScope('week', selectedDate, dayOfWeek);
