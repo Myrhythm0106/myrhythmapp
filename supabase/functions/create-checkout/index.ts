@@ -109,6 +109,7 @@ serve(async (req) => {
 
     // Plan names for display
     const planNames = {
+      premium: 'MyRhythm Premium',
       reconnect: 'MyReconnect',
       thrive: 'MyThrive',
       family: 'MyFamily',
@@ -125,7 +126,7 @@ serve(async (req) => {
         {
           price_data: {
             currency: "gbp",
-            product_data: { 
+            product_data: {
               name: `${(planNames as any)[plan as string]} - ${interval === 'month' ? 'Monthly' : 'Annual'} Plan`,
               description: isFoundingActive ? `Founding Member Special - ${foundingMemberDiscountPercent}% off!` : undefined
             },
@@ -136,9 +137,11 @@ serve(async (req) => {
         },
       ],
       mode: "subscription",
-      subscription_data: interval === 'month' ? {
+      // Card-on-file 7-day trial for every plan/interval — auto-converts unless cancelled.
+      subscription_data: {
         trial_period_days: 7,
-      } : undefined,
+      },
+      payment_method_collection: 'always',
       success_url: `${origin}/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=1`,
       cancel_url: `${origin}/subscribe/cancel`,
       metadata: metadata
