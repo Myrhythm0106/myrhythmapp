@@ -24,6 +24,7 @@ export interface DocumentImportResult {
   meetingId: string;
   actionsCount: number;
   title: string;
+  filePath: string;
 }
 
 interface Props {
@@ -101,11 +102,12 @@ export function DocumentImportCard({ onExtracted, compact = false }: Props) {
         return;
       }
 
-      toast.success(`Found ${data.actionsCount} action${data.actionsCount === 1 ? '' : 's'} — review before adding to your calendar.`);
+      toast.success(`Found ${data.actionsCount} action${data.actionsCount === 1 ? '' : 's'} — review against the source, then send to your calendar.`);
       onExtracted({
         meetingId: data.meetingId,
         actionsCount: data.actionsCount,
         title: data.title || file.name,
+        filePath: data.filePath || filePath,
       });
     } catch (err: any) {
       console.error('DocumentImportCard failed', err);

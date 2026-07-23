@@ -61,7 +61,8 @@ export default function LaunchMemoryBridge() {
     meetingId: string; 
     recordingId: string; 
     actionsCount: number; 
-    title: string 
+    title: string;
+    sourceFilePath?: string;
   } | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
 
@@ -415,6 +416,7 @@ export default function LaunchMemoryBridge() {
               recordingId: '',
               actionsCount: res.actionsCount,
               title: res.title,
+              sourceFilePath: res.filePath,
             });
             fetchRecordings();
             setShowPostExtractionDialog(true);
@@ -739,6 +741,7 @@ export default function LaunchMemoryBridge() {
         actionsCount={lastExtractionResult?.actionsCount || 0}
         meetingTitle={lastExtractionResult?.title || ''}
         meetingId={lastExtractionResult?.meetingId}
+        sourceFilePath={lastExtractionResult?.sourceFilePath}
         onAcceptAndScheduleAll={handleAcceptAndScheduleAll}
         onReviewIndividually={handleReviewIndividually}
       />

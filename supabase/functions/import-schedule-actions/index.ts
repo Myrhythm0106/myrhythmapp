@@ -407,15 +407,18 @@ serve(async (req) => {
       }
     }
 
-    // Ephemeral upload — never keep the raw document, only the extracted
-    // action text + short source quotes (already stored in extracted_actions).
-    try {
-      await supabase.storage.from("document-imports").remove([filePath]);
-    } catch (cleanupErr) {
-      console.warn("Failed to remove imported file", cleanupErr);
-    }
+    // NOTE: we intentionally DO NOT delete the uploaded file here.
+    // The client deletes it after the user reviews & approves the extracted
+    // actions, so they can re-check the source if extraction looks off.
+    // A 30-day retention policy on the bucket sweeps any orphans.
 
     return jsonResponse({
+      success: true,
+      meetingId: meetingRow.id,
+      actionsCount: rows.length,
+      title: fileName,
+      filePath, // returned so client can delete it after user approves
+    });
       success: true,
       meetingId: meetingRow.id,
       actionsCount: rows.length,
