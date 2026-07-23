@@ -149,8 +149,8 @@ serve(async (req) => {
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
 
-    // Save trial information to database for reminders (only for monthly plans)
-    if (interval === 'month') {
+    // Save trial information to database for reminders (all plans get 7-day card-on-file trial).
+    {
       const supabaseService = createClient(
         Deno.env.get("SUPABASE_URL") ?? "",
         Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
