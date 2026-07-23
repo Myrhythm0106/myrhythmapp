@@ -1,41 +1,53 @@
-## 1. Export the reference doc
+# Plan: Onboarding polish + card-on-file trial
 
-Copy `docs/problem-fit-and-market.md` → `/mnt/documents/MyRhythm_Problem-Fit_and_Market_v1.md` and surface it as a downloadable artifact.
+## 1. Hide the You-Are-Here dial until membership is confirmed
 
-## 2. Investor-friendly infographic
+Today `LaunchLayout.tsx` shows the dial to any signed-in user outside pre-account routes. We'll gate it behind actual membership (paid subscription, active trial with card on file, or redeemed founding code).
 
-**Deliverable:** single high-resolution PNG (1600×1000) at `/mnt/documents/MyRhythm_Market_Wedge_Infographic_v1.png`, surfaced via `<presentation-artifact>`.
+- New `src/hooks/useMembershipStatus.ts` returns `{ hasMembership, isFoundingComped, trialActive, trialDaysLeft, loading }`, sourced from `check-subscription` + `profiles.founding_comped`.
+- In `LaunchLayout.tsx`, replace `showDial = !!user && !PRE_ACCOUNT_PATHS.has(...)` with `showDial = hasMembership && !PRE_ACCOUNT_PATHS.has(...)`.
+- Founding-code and card-on-file trial both count as membership; unpaid registered users see a clean header.
 
-**Concept — "The Wedge Inside the Market":**
+## 2. Assessment: fix the "where are you in recovery?" gap
 
-```text
-┌──────────────────────────────────────────────────────────┐
-│  60,000,000+  addressable adults (UK + US)               │
-│  ████████████████████████████████████████████████████    │
-│     ┌───────────────────────────────────────────┐        │
-│     │  500K–650K avoidable readmissions / year  │        │
-│     │  Stroke · TBI · Dementia                  │        │
-│     └───────────────────────────────────────────┘        │
-└──────────────────────────────────────────────────────────┘
-```
+Split the stage question in `LaunchAssessment.tsx` + `launchAssessmentBanks.ts`:
+1. **"When did the experience happen?"** — chips: `Not sure / Not applicable`, `Last 3 months`, `3–12 months ago`, `1–3 years ago`, `3–10 years ago`, `10+ years ago`. Stored as `event_recency`.
+2. **"How does it feel today?"** keeps the Pause→Sustain lens, reframed as *"Pick what matches today — you can change this anytime."*
 
-**Layout (Emerald Prestige palette — INK #0F2A24, MOSS #2F6B4F, GOLD #C9A24B, EMBER #C0554D, IVORY #F6F1E6):**
+Auto-suggest a stage from recency (10+ years → Sustain) but leave it editable, so the 16-years-ago tester lands somewhere sensible without being forced.
 
-- **Header:** "The Market MyRhythm Serves" · eyebrow "Problem-Fit v0.1"
-- **Left 60%:** Proportional nested-square viz
-  - Outer square = 60M+ soft-value market (moss fill)
-  - Inner square, sized to true ~1% ratio = 500–650K hard-dollar wedge (ember fill, gold outline)
-  - Callout lines with tabular-nums figures
-- **Right 40%:** Four stat cards
-  - 350K UK brain-injury admissions/yr
-  - 900K UK dementia/MCI adults
-  - 6.5M UK+US ADHD adults
-  - 74% working adults report cognitive overload
-- **Bottom strip:** Stroke 30-day ~12.4% · TBI 30-day 12–23% · Dementia 30-day ~20% · ~70% preventable · ~$13.5K avg US readmission cost
-- **Footer:** "Market context, not a clinical claim. MyRhythm does not diagnose or treat." + confidentiality line
+## 3. Assessment: "None of these fit me" escape hatch
 
-**Generation:** Python + Pillow using canvas-design bundled fonts (InstrumentSerif for display, WorkSans for body). All figures pulled verbatim from `docs/problem-fit-and-market.md` — no new numbers.
+Every multi-choice question gets:
+- A neutral **"None of these fit"** option at the bottom.
+- When chosen, a small optional textarea: *"Tell us in your own words."* Saved as `freeform_notes` on the response.
+- Scoring: counts as unanswered for MYRHYTHM letter scoring — we don't fabricate signal.
+- Results page shows a subtle "We tailored this from the questions that fit — tell us more anytime" line when ≥1 question was answered this way.
+- Same pattern for the primary/also-fits picker (free-text submit allowed with no chip selected).
 
-**QA:** render → view PNG → check overflow, contrast, wedge proportion, verify every stat matches source → fix and re-render until clean.
+## 4. Trial model: card-on-file at trial start (approved)
 
-**Files touched:** none in the app codebase. Outputs land in `/mnt/documents/` only.
+Standard for Calm, Headspace, Notion AI, Superhuman — higher conversion, one less friction moment at the point of value, and kinder for the Discharge-Cliff audience (no card re-entry on day 7).
+
+**Flow**
+- `LaunchPayment.tsx` CTA becomes: **"Start 7-day free trial — card required, cancel anytime."**
+- Reassurance line above the card field: *"You won't be charged until [date]. Cancel anytime from Account."*
+- Stripe checkout session passes `subscription_data.trial_period_days: 7` and `payment_method_collection: 'always'`.
+- On return, `PaymentSuccessPage.tsx` writes `subscription_active` + `trial_start_date` and hands off to `/launch/welcome`.
+- Founding-code users skip card entry entirely (dial + full app unlock via `founding_comped`).
+
+**Guardrails (ethical, brain-health audience)**
+- Email reminder 2 days before conversion via existing `trial-reminder` edge function, pointed at the new `trial_end`.
+- One-tap cancel button in `/launch/profile` that opens Stripe Customer Portal (`customer-portal` function already exists).
+- Clear trial_end date visible in profile + header pill ("Trial: 5 days left").
+
+**Backend touch points**
+- `supabase/functions/check-subscription/index.ts`: already returns `trial_days_left`; surface `trial_end` in the response so the dial gate and profile pill can render.
+- No schema changes needed — `subscriptions` already tracks `status`, `trial_start`, `trial_end`.
+
+## Technical summary
+
+- New file: `src/hooks/useMembershipStatus.ts`.
+- Edited: `LaunchLayout.tsx`, `LaunchAssessment.tsx`, `launchAssessmentBanks.ts`, `LaunchPayment.tsx`, `PaymentSuccessPage.tsx`, `LaunchProfile.tsx`, `check-subscription/index.ts`.
+- Migration: add `event_recency text` and `freeform_notes jsonb` columns to `assessment_results` (nullable, backwards-compatible) with `GRANT`s preserved.
+- No changes to 4C loop, Memory Bridge, or Calendar in this pass.
