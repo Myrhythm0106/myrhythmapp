@@ -27,6 +27,8 @@ interface PostExtractionDialogProps {
   /** When set, dialog deletes this file from the `document-imports` bucket
    *  after the user approves the extracted actions. */
   sourceFilePath?: string;
+  /** Human-readable original filename, recorded in the audit log. */
+  sourceFileName?: string;
   onAcceptAndScheduleAll: (notifyCircle: boolean, actionIds?: string[]) => Promise<void>;
   onReviewIndividually: () => void;
 }
