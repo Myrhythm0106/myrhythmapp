@@ -25,6 +25,7 @@ export interface DocumentImportResult {
   actionsCount: number;
   title: string;
   filePath: string;
+  fileName: string;
 }
 
 interface Props {
