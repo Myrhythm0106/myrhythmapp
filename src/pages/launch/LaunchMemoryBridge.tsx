@@ -63,6 +63,7 @@ export default function LaunchMemoryBridge() {
     actionsCount: number; 
     title: string;
     sourceFilePath?: string;
+    sourceFileName?: string;
   } | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
 
