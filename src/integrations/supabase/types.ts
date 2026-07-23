@@ -766,6 +766,48 @@ export type Database = {
         }
         Relationships: []
       }
+      document_import_audit: {
+        Row: {
+          actions_sent_count: number
+          approved_at: string
+          created_at: string
+          deleted_at: string | null
+          deletion_error: string | null
+          deletion_status: string
+          file_name: string | null
+          file_path: string | null
+          id: string
+          meeting_id: string | null
+          user_id: string
+        }
+        Insert: {
+          actions_sent_count?: number
+          approved_at?: string
+          created_at?: string
+          deleted_at?: string | null
+          deletion_error?: string | null
+          deletion_status?: string
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          meeting_id?: string | null
+          user_id: string
+        }
+        Update: {
+          actions_sent_count?: number
+          approved_at?: string
+          created_at?: string
+          deleted_at?: string | null
+          deletion_error?: string | null
+          deletion_status?: string
+          file_name?: string | null
+          file_path?: string | null
+          id?: string
+          meeting_id?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       email_verifications: {
         Row: {
           created_at: string

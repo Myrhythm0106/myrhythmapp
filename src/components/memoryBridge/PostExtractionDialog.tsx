@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Calendar, Users, Sparkles, Loader2, Eye, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 
 interface ActionRow {
@@ -27,6 +28,8 @@ interface PostExtractionDialogProps {
   /** When set, dialog deletes this file from the `document-imports` bucket
    *  after the user approves the extracted actions. */
   sourceFilePath?: string;
+  /** Human-readable original filename, recorded in the audit log. */
+  sourceFileName?: string;
   onAcceptAndScheduleAll: (notifyCircle: boolean, actionIds?: string[]) => Promise<void>;
   onReviewIndividually: () => void;
 }
@@ -38,11 +41,13 @@ export function PostExtractionDialog({
   meetingTitle,
   meetingId,
   sourceFilePath,
+  sourceFileName,
   onAcceptAndScheduleAll,
   onReviewIndividually,
 }: PostExtractionDialogProps) {
   const [isScheduling, setIsScheduling] = useState(false);
   const [notifyCircle, setNotifyCircle] = useState(true);
+  const [confirmedAccurate, setConfirmedAccurate] = useState(false);
   const [actions, setActions] = useState<ActionRow[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
@@ -101,15 +106,59 @@ export function PostExtractionDialog({
 
   const handleSendSelected = async () => {
     if (noneSelected) return;
+    if (sourceFilePath && !confirmedAccurate) return;
     setIsScheduling(true);
     try {
       await onAcceptAndScheduleAll(notifyCircle, Array.from(selectedIds));
-      // User has approved — safe to delete the source document now.
+      // User has approved — record audit + delete source document.
       if (sourceFilePath) {
+        const { data: userRes } = await supabase.auth.getUser();
+        const userId = userRes?.user?.id;
+        let auditId: string | undefined;
+        if (userId) {
+          const { data: auditRow } = await supabase
+            .from('document_import_audit')
+            .insert({
+              user_id: userId,
+              meeting_id: meetingId ?? null,
+              file_path: sourceFilePath,
+              file_name: sourceFileName ?? null,
+              actions_sent_count: selectedIds.size,
+              deletion_status: 'pending',
+            })
+            .select('id')
+            .single();
+          auditId = auditRow?.id as string | undefined;
+        }
+
+        let deletionStatus: 'deleted' | 'failed' = 'deleted';
+        let deletionError: string | null = null;
         try {
-          await supabase.storage.from('document-imports').remove([sourceFilePath]);
-        } catch (cleanupErr) {
+          const { error: rmErr } = await supabase.storage
+            .from('document-imports')
+            .remove([sourceFilePath]);
+          if (rmErr) throw rmErr;
+        } catch (cleanupErr: any) {
+          deletionStatus = 'failed';
+          deletionError = cleanupErr?.message ?? String(cleanupErr);
           console.warn('Failed to delete source document after approval', cleanupErr);
+        }
+
+        if (auditId) {
+          await supabase
+            .from('document_import_audit')
+            .update({
+              deleted_at: new Date().toISOString(),
+              deletion_status: deletionStatus,
+              deletion_error: deletionError,
+            })
+            .eq('id', auditId);
+        }
+
+        if (deletionStatus === 'deleted') {
+          toast.success('Actions approved. Source document deleted and logged.');
+        } else {
+          toast.warning('Actions approved and logged, but the source document could not be deleted automatically.');
         }
       }
     } finally {
@@ -246,10 +295,28 @@ export function PostExtractionDialog({
           </span>
         </label>
 
+        {/* Accuracy confirmation — required before deleting source document */}
+        {sourceFilePath && (
+          <label className="flex items-start gap-2 px-3 py-2 rounded-lg bg-launch-cream border border-launch-ember/40 cursor-pointer">
+            <Checkbox
+              checked={confirmedAccurate}
+              onCheckedChange={(v) => setConfirmedAccurate(v as boolean)}
+              className="mt-0.5"
+              aria-label="Confirm actions are accurate"
+            />
+            <span className="text-sm text-launch-ink leading-snug">
+              <span className="font-semibold">I confirm these actions are accurate and match my document.</span>
+              <span className="block text-xs text-launch-ink/70 mt-0.5">
+                Ticking this approves the actions and permanently deletes the uploaded document.
+              </span>
+            </span>
+          </label>
+        )}
+
         {/* Primary CTA */}
         <Button
           onClick={handleSendSelected}
-          disabled={isScheduling || noneSelected || loading}
+          disabled={isScheduling || noneSelected || loading || (!!sourceFilePath && !confirmedAccurate)}
           className="w-full bg-launch-ember hover:bg-launch-ember/90 text-launch-cream shadow-md py-5"
         >
           {isScheduling ? (
