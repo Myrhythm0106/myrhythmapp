@@ -744,6 +744,7 @@ export default function LaunchMemoryBridge() {
         meetingTitle={lastExtractionResult?.title || ''}
         meetingId={lastExtractionResult?.meetingId}
         sourceFilePath={lastExtractionResult?.sourceFilePath}
+        sourceFileName={lastExtractionResult?.sourceFileName}
         onAcceptAndScheduleAll={handleAcceptAndScheduleAll}
         onReviewIndividually={handleReviewIndividually}
       />
