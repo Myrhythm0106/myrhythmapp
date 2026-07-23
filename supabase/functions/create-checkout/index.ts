@@ -63,12 +63,14 @@ serve(async (req) => {
     // Parse request body
     const { plan, interval } = await req.json();
     if (!plan || !interval) throw new Error("Plan and interval are required");
-    if (!['reconnect', 'thrive', 'family', 'clinic_starter', 'clinic_pro', 'clinic_enterprise'].includes(plan)) throw new Error("Invalid plan");
+    if (!['premium', 'reconnect', 'thrive', 'family', 'clinic_starter', 'clinic_pro', 'clinic_enterprise'].includes(plan)) throw new Error("Invalid plan");
     if (!['month', 'year'].includes(interval)) throw new Error("Invalid interval");
     logStep("Request parsed", { plan, interval });
 
     // Base pricing in pence
     const basePricing = {
+      // Founding Core v0.1 pricing surfaced on /launch/payment (£10/month, £84/year)
+      premium: { month: 1000, year: 8400 },
       reconnect: { month: 1500, year: 15000 },
       thrive: { month: 2500, year: 25000 },
       family: { month: 4000, year: 40000 },
