@@ -19,6 +19,9 @@ import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
+import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
+
+
 
 
 type RecordingState = 'idle' | 'recording' | 'paused' | 'reviewing';
@@ -404,6 +407,20 @@ export default function LaunchMemoryBridge() {
       />
 
       <div className="max-w-3xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">
+        {/* Import from a document (schedule, discharge letter, care plan, notes) */}
+        <DocumentImportCard
+          onExtracted={(res: DocumentImportResult) => {
+            setLastExtractionResult({
+              meetingId: res.meetingId,
+              recordingId: '',
+              actionsCount: res.actionsCount,
+              title: res.title,
+            });
+            fetchRecordings();
+            setShowPostExtractionDialog(true);
+          }}
+        />
+
         {/* Recording Interface */}
         <LaunchCard className="relative overflow-hidden bg-launch-ivory border-launch-gold/30 mb-6 text-center py-10 px-6">
 
