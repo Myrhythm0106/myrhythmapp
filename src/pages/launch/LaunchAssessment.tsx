@@ -174,19 +174,11 @@ export default function LaunchAssessment() {
             })}
           </div>
 
-          <div className="flex gap-3 pt-2 pb-8">
-            <LaunchButton
-              variant="outline"
-              onClick={() => navigate('/launch/user-type')}
-              className="flex-1 border-launch-gold/40 text-launch-ink hover:bg-launch-gold/10"
-            >
-              <ArrowLeft className="h-5 w-5" />
-              Back
-            </LaunchButton>
+          <div className="pt-2 pb-8">
             <LaunchButton
               onClick={() => setPhase('questions')}
               disabled={!eventRecency}
-              className="flex-1"
+              className="w-full"
             >
               Continue
               <ArrowRight className="h-5 w-5" />

@@ -1,64 +1,54 @@
-# Three fixes for /launch/assessment, document import, and results access
+# Two fixes: assessment header + document → calendar actions
 
-## 1. Duplicate banner on /launch/assessment
+## 1. Duplicate banner on `/launch/assessment`
 
-**What's happening:** `LaunchLayout` renders `LaunchPageHeader` (a "Back" row) at the top of the main content on every non-home page. `LaunchAssessment` then renders its *own* Back button inside both the recency phase and the questions phase — so users see two "Back" controls stacked, plus the persona label above the progress bar reads like a second banner.
+**Cause:** `App.tsx` wraps `<LaunchAssessment />` in `<LaunchLayout>`, and `LaunchAssessment.tsx` also renders its own `<LaunchLayout>` internally — so the sticky header, Back row, and page chrome render twice.
 
 **Fix:**
-- In `LaunchAssessment.tsx`, remove the in-content Back buttons in the recency phase footer (line ~177–194) and questions phase footer, letting `LaunchPageHeader` be the single Back control.
-- Replace the standalone footer with just the primary CTA ("Continue" / "Next" / "See my results").
-- Give `LaunchPageHeader` a proper title on this route so it becomes the single header: pass `title="Your MyRhythm assessment"` via a small wrapper, OR add an optional `pageTitle` prop the assessment sets.
-- Verify no other `/launch/*` page has the same double-header pattern; if it does, remove the duplicate there too.
+- Remove the outer `<LaunchLayout>` wrapper from the `/launch/assessment` route in `src/App.tsx` (keep the page's own layout, which is the richer one), OR remove the internal `<LaunchLayout>` from `LaunchAssessment.tsx` — whichever preserves the current visual. Pick the route-level unwrap so the page file stays self-contained like the other launch pages.
+- Also remove the in-content secondary "Back" buttons in the recency and questions phases (footer areas ~line 177 and questions footer) so `LaunchPageHeader` (from `LaunchLayout`) is the single Back control.
+- Leave the primary CTA ("Continue" / "Next" / "See my results") in place.
+
+No schema change, UI-only.
 
 ## 2. Upload a schedule/report → extract actions → push to calendar
 
-Reuse the Memory Bridge extraction pipeline instead of building a parallel one.
+Reuse the Memory Bridge extraction pipeline so behaviour, review dialog, and smart-scheduling logic stay identical.
 
-**New surface:** an "Import from document" card on `/launch/memory-bridge` (and a shortcut on `/launch/calendar` header).
+### Flow
+1. User uploads PDF / DOCX / image / plain text (drag-drop or picker), max 20 MB.
+2. Client uploads file to a new private storage bucket `document-imports`.
+3. Client invokes new edge function `import-schedule-actions` with the storage path + filename.
+4. Edge function:
+   - Parses text (pdf-parse for PDF, mammoth for DOCX, Gemini vision for images, raw text for txt/md).
+   - Calls Lovable AI Gateway (`google/gemini-2.5-flash`) with a strict JSON schema:
+     `{ actions: [{ title, description, suggested_date, suggested_time, duration_minutes, category, priority_level, source_quote }] }`.
+   - Inserts a parent row in `meeting_recordings` (`meeting_type='document_import'`, `meeting_title=filename`).
+   - For each action, checks the user's existing `calendar_events` for that suggested date and shifts the `suggested_time` to the next open slot within the user's active hours (reuse smart-scheduling helpers from Memory Bridge). Stores original vs adjusted time in metadata.
+   - Inserts each action into `extracted_actions` with `status='pending'`, `source_type='document'`, and the (possibly adjusted) schedule fields.
+5. Client opens the existing `PostExtractionDialog` — same select-all checklist, inline edits of date/time/duration, and "Send to Calendar". Skipped items stay in Actions tab.
+6. Confirmed items create `calendar_events` exactly like voice-captured actions.
 
-**Flow:**
-1. User uploads PDF / DOCX / image / plain text (drag-drop or file picker), max 20 MB.
-2. File is sent to a new edge function `import-schedule-actions` which:
-   - Parses text (pdf-parse for PDF, mammoth for DOCX, Tesseract via Lovable AI vision for images, raw text otherwise).
-   - Calls Lovable AI Gateway (`google/gemini-2.5-flash`) with a strict JSON schema: `{ actions: [{ title, description, suggested_date, suggested_time, duration_minutes, category, priority_level, source_quote }] }`.
-   - Inserts a lightweight row in `meeting_recordings` (type = `document_import`, `meeting_title` = filename) so extracted actions have a parent.
-   - Inserts each action into `extracted_actions` with `status='pending'` and the AI's suggested schedule fields.
-3. The existing `PostExtractionDialog` opens with the checklist ("Select all / X of Y selected") so the user reviews, edits inline, and clicks **Send to Calendar** — same flow already shipped for voice captures.
-4. Skipped actions stay in the Actions tab for later; scheduled ones create `calendar_events` rows exactly like today.
+### New surface
+- Card **"Import from document"** at the top of `/launch/memory-bridge` (above the recorder).
+- Shortcut button **"Import schedule"** in `/launch/calendar` header that opens the same upload dialog and, on success, opens `PostExtractionDialog` in-place.
 
-**Storage:** private Supabase bucket `document-imports` (create via storage tool), 30-day retention matching voice recordings.
+### Files
+- new: `supabase/functions/import-schedule-actions/index.ts` (JWT-verify-in-code, CORS, Zod input validation, gateway 402/429 handling)
+- new: `src/components/memoryBridge/DocumentImportCard.tsx` (drag-drop + file picker, progress, error toast, reuses `FileValidator`)
+- edit: `src/pages/launch/LaunchMemoryBridge.tsx` — mount `DocumentImportCard` above the recorder; on success, feed extracted action IDs into the existing `PostExtractionDialog`.
+- edit: `src/pages/launch/LaunchCalendar.tsx` — add "Import schedule" header button that opens `DocumentImportCard` in a dialog.
+- migration:
+  - `ALTER TABLE public.extracted_actions ADD COLUMN source_type text NOT NULL DEFAULT 'voice';` (values: `voice` | `document`)
+  - Create private storage bucket `document-imports` (via storage tool) + RLS on `storage.objects` restricting to `auth.uid()` folder prefix.
+- secret: reuse `LOVABLE_API_KEY` (already present).
 
-**Files:**
-- new: `supabase/functions/import-schedule-actions/index.ts`
-- new: `src/components/memoryBridge/DocumentImportCard.tsx`
-- edit: `src/pages/launch/LaunchMemoryBridge.tsx` (mount the new card above the recorder)
-- edit: `src/pages/launch/LaunchCalendar.tsx` (add "Import schedule" button in header that opens the same dialog)
-- migration: add `source_type` column to `extracted_actions` (`voice` | `document`) so history is filterable; add storage bucket + RLS.
-
-## 3. Assessment results: always available & editable
-
-Today results only appear once on `/launch/welcome` right after the assessment; there's no persistent home for them.
-
-**Add:**
-- New route `/launch/results` (file `src/pages/launch/LaunchResults.tsx`) that:
-  - Lists every row in `assessment_results` for the user, newest first, with taken-on date and headline MYRHYTHM snapshot.
-  - Expands the latest into the same rich snapshot component already used on `/launch/welcome`.
-  - Buttons: **Retake assessment** → `/launch/assessment`, **Update recency / notes** (inline edit of `event_recency` and `freeform_notes` on the latest row), **Download PDF** (existing snapshot export).
-- Deep link from:
-  - Home dashboard card ("Your MyRhythm snapshot" → View / Retake)
-  - Profile page ("Assessment history")
-  - You-Are-Here dial
-  - Post-payment success screen ("Return to your results")
-- Route registered in `src/launch/routes.ts` so the dial and nav pick it up.
+## Out of scope (deferred)
+- Persistent `/launch/results` history page — will handle in a follow-up so this turn stays scoped.
+- Automatic recurring imports (e.g. weekly clinic email) — v0.2.
 
 ## Technical notes
-
-- Edge function must use `LOVABLE_API_KEY` gateway (already project default), handle 429/402 with clear toast.
-- `import-schedule-actions` runs with `verify_jwt = false` but validates the caller's JWT in code, same pattern as `process-meeting-audio`.
-- Assessment page fix is UI-only; no schema change.
-- Results page reads existing `assessment_results` table (no new table). Inline edits use `.update()` on the latest row scoped by `auth.uid()` under existing RLS.
-
-## Out of scope (call out for later)
-
-- Automatic recurring imports (e.g. weekly clinic schedule email) — v0.2.
-- Multi-assessment comparison graph — noted, not built in this pass.
+- Edge function runs `verify_jwt = false` (Lovable default) but validates the caller's JWT via `getClaims()` — same pattern as `process-meeting-audio`.
+- Smart-scheduling collision check uses existing helpers; no new algorithm.
+- `PostExtractionDialog` needs no changes — it already renders whatever `extracted_actions` rows are passed in.
+- All existing RLS on `extracted_actions`, `calendar_events`, `meeting_recordings` continues to apply.
