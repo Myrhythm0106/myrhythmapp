@@ -196,6 +196,14 @@ export default function LaunchCalendar() {
             </div>
             <div className="flex items-center gap-2">
               <button
+                onClick={() => setShowImportCard((s) => !s)}
+                className="text-sm text-launch-ink/80 font-medium hover:text-launch-ink inline-flex items-center gap-1"
+                title="Import schedule from a document"
+              >
+                <FileUp className="h-4 w-4" />
+                Import
+              </button>
+              <button
                 onClick={() => setShowAddModal(true)}
                 className="text-sm text-launch-ember font-medium hover:text-launch-ember/80"
               >
@@ -211,6 +219,16 @@ export default function LaunchCalendar() {
             <LaunchViewSwitcher currentView={currentView} onViewChange={setCurrentView} />
           </div>
         </LaunchCard>
+
+        {showImportCard && (
+          <DocumentImportCard
+            onExtracted={(res) => {
+              setImportResult(res);
+              setShowImportDialog(true);
+              setShowImportCard(false);
+            }}
+          />
+        )}
 
         <LaunchSyncBar />
 
