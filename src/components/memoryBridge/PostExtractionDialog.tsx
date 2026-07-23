@@ -40,11 +40,13 @@ export function PostExtractionDialog({
   meetingTitle,
   meetingId,
   sourceFilePath,
+  sourceFileName,
   onAcceptAndScheduleAll,
   onReviewIndividually,
 }: PostExtractionDialogProps) {
   const [isScheduling, setIsScheduling] = useState(false);
   const [notifyCircle, setNotifyCircle] = useState(true);
+  const [confirmedAccurate, setConfirmedAccurate] = useState(false);
   const [actions, setActions] = useState<ActionRow[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
