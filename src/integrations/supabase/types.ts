@@ -271,6 +271,8 @@ export type Database = {
           completed_at: string | null
           completion_status: string
           created_at: string
+          event_recency: string | null
+          freeform_notes: Json
           id: string
           payment_status: string
           raw_assessment_data: Json | null
@@ -285,6 +287,8 @@ export type Database = {
           completed_at?: string | null
           completion_status?: string
           created_at?: string
+          event_recency?: string | null
+          freeform_notes?: Json
           id?: string
           payment_status?: string
           raw_assessment_data?: Json | null
@@ -299,6 +303,8 @@ export type Database = {
           completed_at?: string | null
           completion_status?: string
           created_at?: string
+          event_recency?: string | null
+          freeform_notes?: Json
           id?: string
           payment_status?: string
           raw_assessment_data?: Json | null
