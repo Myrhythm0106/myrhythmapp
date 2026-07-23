@@ -80,6 +80,7 @@ serve(async (req) => {
     let subscribed = false;
     let trial_active = false;
     let trial_days_left = 0;
+    let trial_end: string | null = null;
     let subscription_tier = 'premium';
     let subscription_end = null;
     let status = 'trial_expired';
@@ -88,11 +89,12 @@ serve(async (req) => {
       const subscription = subscriptions.data[0];
       subscribed = subscription.status === 'active' || subscription.status === 'trialing';
       trial_active = subscription.status === 'trialing';
-      
+
       if (trial_active && subscription.trial_end) {
         const trialEndDate = new Date(subscription.trial_end * 1000);
         const now = new Date();
         trial_days_left = Math.max(0, Math.ceil((trialEndDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
+        trial_end = trialEndDate.toISOString();
         status = 'trial_active';
       } else if (subscribed) {
         status = 'active';
@@ -137,6 +139,7 @@ serve(async (req) => {
       subscribed,
       trial_active,
       trial_days_left,
+      trial_end,
       subscription_tier,
       subscription_end,
       status
