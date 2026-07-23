@@ -105,15 +105,59 @@ export function PostExtractionDialog({
 
   const handleSendSelected = async () => {
     if (noneSelected) return;
+    if (sourceFilePath && !confirmedAccurate) return;
     setIsScheduling(true);
     try {
       await onAcceptAndScheduleAll(notifyCircle, Array.from(selectedIds));
-      // User has approved — safe to delete the source document now.
+      // User has approved — record audit + delete source document.
       if (sourceFilePath) {
+        const { data: userRes } = await supabase.auth.getUser();
+        const userId = userRes?.user?.id;
+        let auditId: string | undefined;
+        if (userId) {
+          const { data: auditRow } = await supabase
+            .from('document_import_audit')
+            .insert({
+              user_id: userId,
+              meeting_id: meetingId ?? null,
+              file_path: sourceFilePath,
+              file_name: sourceFileName ?? null,
+              actions_sent_count: selectedIds.size,
+              deletion_status: 'pending',
+            })
+            .select('id')
+            .single();
+          auditId = auditRow?.id as string | undefined;
+        }
+
+        let deletionStatus: 'deleted' | 'failed' = 'deleted';
+        let deletionError: string | null = null;
         try {
-          await supabase.storage.from('document-imports').remove([sourceFilePath]);
-        } catch (cleanupErr) {
+          const { error: rmErr } = await supabase.storage
+            .from('document-imports')
+            .remove([sourceFilePath]);
+          if (rmErr) throw rmErr;
+        } catch (cleanupErr: any) {
+          deletionStatus = 'failed';
+          deletionError = cleanupErr?.message ?? String(cleanupErr);
           console.warn('Failed to delete source document after approval', cleanupErr);
+        }
+
+        if (auditId) {
+          await supabase
+            .from('document_import_audit')
+            .update({
+              deleted_at: new Date().toISOString(),
+              deletion_status: deletionStatus,
+              deletion_error: deletionError,
+            })
+            .eq('id', auditId);
+        }
+
+        if (deletionStatus === 'deleted') {
+          toast.success('Actions approved. Source document deleted and logged.');
+        } else {
+          toast.warning('Actions approved and logged, but the source document could not be deleted automatically.');
         }
       }
     } finally {
