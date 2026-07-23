@@ -50,7 +50,7 @@ export function PostExtractionDialog({
     (async () => {
       const { data, error } = await supabase
         .from('extracted_actions')
-        .select('id, action_text, what_outcome, proposed_date, proposed_time, assigned_to')
+        .select('id, action_text, what_outcome, proposed_date, proposed_time, assigned_to, due_context, user_notes, motivation_statement, extraction_method')
         .eq('meeting_recording_id', meetingId);
       if (cancelled) return;
       if (error) {
@@ -63,6 +63,9 @@ export function PostExtractionDialog({
           proposed_date: a.proposed_date,
           proposed_time: a.proposed_time,
           assigned_to: a.assigned_to,
+          source_quote: a.due_context || null,
+          duration_note: a.motivation_statement || null,
+          is_from_document: a.extraction_method === 'document_import',
         }));
         setActions(rows);
         // Preselect all — user unticks the ones they don't agree with.
