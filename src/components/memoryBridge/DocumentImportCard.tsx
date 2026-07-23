@@ -109,6 +109,7 @@ export function DocumentImportCard({ onExtracted, compact = false }: Props) {
         actionsCount: data.actionsCount,
         title: data.title || file.name,
         filePath: data.filePath || filePath,
+        fileName: file.name,
       });
     } catch (err: any) {
       console.error('DocumentImportCard failed', err);
