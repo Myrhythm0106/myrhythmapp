@@ -1084,6 +1084,7 @@ export type Database = {
           requires_review: boolean | null
           scheduled_date: string | null
           scheduled_time: string | null
+          source_type: string
           start_date: string | null
           status: string
           success_criteria: string | null
@@ -1139,6 +1140,7 @@ export type Database = {
           requires_review?: boolean | null
           scheduled_date?: string | null
           scheduled_time?: string | null
+          source_type?: string
           start_date?: string | null
           status?: string
           success_criteria?: string | null
@@ -1194,6 +1196,7 @@ export type Database = {
           requires_review?: boolean | null
           scheduled_date?: string | null
           scheduled_time?: string | null
+          source_type?: string
           start_date?: string | null
           status?: string
           success_criteria?: string | null
