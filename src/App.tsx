@@ -376,7 +376,7 @@ function App() {
                         <Route path="/launch/signin" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchSignIn /></LaunchLayout></LaunchModeProvider>} />
                         <Route path="/launch/user-type" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchUserType /></LaunchLayout></LaunchModeProvider>} />
                         <Route path="/launch/payment" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchPayment /></LaunchLayout></LaunchModeProvider>} />
-                        <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchLayout showFooter={false}><LaunchAssessment /></LaunchLayout></LaunchModeProvider>} />
+                        <Route path="/launch/assessment" element={<LaunchModeProvider><LaunchAssessment /></LaunchModeProvider>} />
                         <Route path="/launch/welcome" element={<LaunchModeProvider><LaunchWelcome /></LaunchModeProvider>} />
 
                        <Route path="/launch/home" element={<LaunchModeProvider><LaunchDashboard /></LaunchModeProvider>} />
