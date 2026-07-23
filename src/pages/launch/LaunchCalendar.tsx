@@ -325,6 +325,7 @@ export default function LaunchCalendar() {
           actionsCount={importResult.actionsCount}
           meetingTitle={importResult.title}
           meetingId={importResult.meetingId}
+          sourceFilePath={importResult.filePath}
           onAcceptAndScheduleAll={async (_notify, actionIds) => {
             if (!user) return;
             let query = supabase
