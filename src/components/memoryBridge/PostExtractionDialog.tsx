@@ -5,6 +5,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Calendar, Users, Sparkles, Loader2, Eye, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { format, parseISO } from 'date-fns';
 
 interface ActionRow {
