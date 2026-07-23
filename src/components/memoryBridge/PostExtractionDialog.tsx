@@ -295,10 +295,28 @@ export function PostExtractionDialog({
           </span>
         </label>
 
+        {/* Accuracy confirmation — required before deleting source document */}
+        {sourceFilePath && (
+          <label className="flex items-start gap-2 px-3 py-2 rounded-lg bg-launch-cream border border-launch-ember/40 cursor-pointer">
+            <Checkbox
+              checked={confirmedAccurate}
+              onCheckedChange={(v) => setConfirmedAccurate(v as boolean)}
+              className="mt-0.5"
+              aria-label="Confirm actions are accurate"
+            />
+            <span className="text-sm text-launch-ink leading-snug">
+              <span className="font-semibold">I confirm these actions are accurate and match my document.</span>
+              <span className="block text-xs text-launch-ink/70 mt-0.5">
+                Ticking this approves the actions and permanently deletes the uploaded document.
+              </span>
+            </span>
+          </label>
+        )}
+
         {/* Primary CTA */}
         <Button
           onClick={handleSendSelected}
-          disabled={isScheduling || noneSelected || loading}
+          disabled={isScheduling || noneSelected || loading || (!!sourceFilePath && !confirmedAccurate)}
           className="w-full bg-launch-ember hover:bg-launch-ember/90 text-launch-cream shadow-md py-5"
         >
           {isScheduling ? (
