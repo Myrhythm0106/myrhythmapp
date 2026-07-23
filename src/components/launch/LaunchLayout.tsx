@@ -15,6 +15,7 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAuth } from '@/hooks/useAuth';
+import { useMembershipStatus } from '@/hooks/useMembershipStatus';
 
 
 const PRE_ACCOUNT_PATHS = new Set([
