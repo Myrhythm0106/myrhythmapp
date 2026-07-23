@@ -3,8 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
-import { Share2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Share2, ChevronLeft, ChevronRight, FileUp } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
+import { useAuth } from '@/hooks/useAuth';
 
 import { LaunchViewSwitcher, CalendarView } from '@/components/launch/calendar/LaunchViewSwitcher';
 import { LaunchDayView } from '@/components/launch/calendar/LaunchDayView';
