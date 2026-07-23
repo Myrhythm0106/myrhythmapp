@@ -24,6 +24,9 @@ interface PostExtractionDialogProps {
   actionsCount: number;
   meetingTitle: string;
   meetingId?: string;
+  /** When set, dialog deletes this file from the `document-imports` bucket
+   *  after the user approves the extracted actions. */
+  sourceFilePath?: string;
   onAcceptAndScheduleAll: (notifyCircle: boolean, actionIds?: string[]) => Promise<void>;
   onReviewIndividually: () => void;
 }
@@ -34,6 +37,7 @@ export function PostExtractionDialog({
   actionsCount,
   meetingTitle,
   meetingId,
+  sourceFilePath,
   onAcceptAndScheduleAll,
   onReviewIndividually,
 }: PostExtractionDialogProps) {
@@ -100,6 +104,14 @@ export function PostExtractionDialog({
     setIsScheduling(true);
     try {
       await onAcceptAndScheduleAll(notifyCircle, Array.from(selectedIds));
+      // User has approved — safe to delete the source document now.
+      if (sourceFilePath) {
+        try {
+          await supabase.storage.from('document-imports').remove([sourceFilePath]);
+        } catch (cleanupErr) {
+          console.warn('Failed to delete source document after approval', cleanupErr);
+        }
+      }
     } finally {
       setIsScheduling(false);
     }
