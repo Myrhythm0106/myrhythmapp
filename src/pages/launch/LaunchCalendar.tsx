@@ -52,6 +52,8 @@ export default function LaunchCalendar() {
   const [showImportCard, setShowImportCard] = useState(false);
   const [importResult, setImportResult] = useState<DocumentImportResult | null>(null);
   const [showImportDialog, setShowImportDialog] = useState(false);
+  const { user } = useAuth();
+
 
   const { dayOfWeek } = usePlanningDay();
   const weekScope = usePlanningScope('week', selectedDate, dayOfWeek);
