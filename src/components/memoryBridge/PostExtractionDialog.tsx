@@ -190,10 +190,24 @@ export function PostExtractionDialog({
                             <Calendar className="h-3 w-3" />
                             {formatWhen(a)}
                           </span>
+                          {a.duration_note && (
+                            <span className="text-launch-ink/50">{a.duration_note.replace('Suggested duration: ', '~')}</span>
+                          )}
                           {a.assigned_to && (
                             <span>Owner: {a.assigned_to}</span>
                           )}
                         </div>
+                        {a.is_from_document && a.source_quote && (
+                          <details className="mt-1.5 group">
+                            <summary className="text-[11px] text-launch-moss cursor-pointer hover:underline list-none inline-flex items-center gap-1">
+                              <span className="group-open:hidden">📄 Show source</span>
+                              <span className="hidden group-open:inline">📄 Hide source</span>
+                            </summary>
+                            <blockquote className="mt-1 pl-2 border-l-2 border-launch-gold/50 text-[11px] italic text-launch-ink/70 leading-relaxed">
+                              "{a.source_quote}"
+                            </blockquote>
+                          </details>
+                        )}
                       </div>
                     </label>
                   </li>
