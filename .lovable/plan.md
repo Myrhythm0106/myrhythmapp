@@ -1,42 +1,25 @@
 ## Goal
-Produce a single strategic reference doc that ranks every feature shipped or improved in this sprint against (a) the value it delivers, (b) the three problem definitions (Discharge Cliff, Clinical-Ready vs Life-Ready Gap, Ideal-Brain Assumption), and (c) known competitors — so you can use it for founder decisions, investor conversations, and v0.2 prioritisation.
+Extend `docs/problem-fit-and-market.md` so it explicitly names **who** — across life stages and cohorts — MyRhythm creates opportunity for, without inflating the medical claim. Keeps every existing section intact.
 
-## Deliverable
-New file: `docs/feature-value-ranking.md` (living doc, updated per sprint). No code changes.
+## Change (single file)
+`docs/problem-fit-and-market.md` — insert **Section 4.3 "Opportunity across ages and groups"** immediately after §4.2 (the hard-dollar wedge), and add one sentence to §1 pointing forward to it. Renumber nothing else; existing §5–§7 stay as-is.
 
-## Structure of the doc
+## New Section 4.3 — structure
 
-### 1. Scoring model (transparent, 1–5 each)
-- **Problem Fit** — how directly it closes Discharge Cliff / Life-Ready Gap / Ideal-Brain Assumption
-- **User Value** — "would a Founding Member notice if it disappeared tomorrow?"
-- **Competitive Moat** — can Calm/Headspace/MyReha/CogniFit/Neuronation replicate in <3 months?
-- **v0.1 Readiness** — is it demo-ready today, or still fragile?
-- **Composite** = sum, ranked into Tier S / A / B / Defer
+A short intro line ("The 60M soft-value market isn't one audience — it's five life-stage cohorts sharing the same Ideal-Brain Assumption failure."), then a table with these rows. Each row: **Cohort · Age band · Why current tools fail them · MyRhythm opportunity (4C + Support Circle framing) · Non-medical-claim guardrail note**.
 
-### 2. Feature inventory (this sprint's shipped + improved)
-Grouped by 4C surface:
-- **Capture / Memory Bridge**: 4h recording cap, live countdown, Save & Extract fix, document import (ephemeral), source-quote reveal, accuracy checkbox + audit log, Loop-In picker, Support Circle CRUD
-- **Commit / Calendar**: LaunchDailyBrief, LaunchRescheduleModal, Google/Outlook sync bar, push tracking, Add Event upgrades (Meeting type, reminders, invites, recurrence), smart scheduling with MYRHYTHM-aware suggested dates
-- **Calibrate / Growth**: MyRHYTHM-G 8-state layer, Amen/Leaf alignment, home chip, Support Circle visibility
-- **Continuity / Navigation**: You-Are-Here dial (gated post-payment), assessment Phase 0 + "None of these fit me", results page redesign with interactive letter bars
-- **Trust / Commercial**: Emerald Prestige theming, Founding Member CTA, tester bundle (access codes + Stripe test mode), card-on-file trial, Back-to-results from payment
+1. **Students & young learners** (16–24) — exam load, ADHD tail, first time self-managing a calendar. Opportunity: Memory Bridge for lectures, weekly AI Plan Assist, "in the loop" study partner.
+2. **Early-career professionals** (25–39) — cognitive overload, sleep debt, first-child stage. Opportunity: 4C loop as a personal PA, reminder ladders (Gentle/Steady/Strong), meeting-type events with invites.
+3. **Mid-career + sandwich generation** (40–59) — peak work load *and* caring for a parent or child with cognitive needs. Opportunity: dual-subject use (self + Anchor persona), Support Circle coordination, calendar push to Google/Outlook.
+4. **Post-event adults — ABI, stroke, long-COVID, MS-cognitive** (any age, concentrated 30–70) — the Discharge Cliff cohort. Opportunity: Discharge Bridge Kit on-ramp, Memory Bridge capture of clinician instructions, MyRHYTHM-G growth states.
+5. **Older adults & dementia / MCI cohort** (60+) — memory volatility, high carer load, highest 30-day readmission rate. Opportunity: Memory-First Design (≤3 choices, 56px targets), Anchor-persona carer view, energy-aware scheduling. Explicit note that MyRhythm is not a dementia treatment.
+6. **Carers across all ages** (cross-cutting) — the Anchor persona. Opportunity: coordination without micromanagement, burnout-aware scheduling, "in the loop" invites replacing group-chat chaos.
 
-### 3. The ranking table
-One row per feature with the 4 scores, composite, tier, and a one-line "why this rank". Sorted highest → lowest.
+Close the section with one honest paragraph: not every cohort is equally served in v0.1 — the Discharge Cliff cohort and Anchors get the sharpest v0.1 fit; students and older-adult/dementia cohorts are strategically in-scope but their tailored surfaces (study mode, simplified carer dashboard) sit in v0.2. This mirrors the candid tone already in §5.
 
-### 4. Problem-coverage matrix
-Grid: rows = features, columns = the 3 problems. Marks direct / indirect / none. Shows at a glance where we're thin (expected: Ideal-Brain Assumption is under-served in v0.1 vs Discharge Cliff which is over-served).
+## Small edits elsewhere
+- §1 intro: add one sentence — "The same three failures show up differently across life stages; §4.3 maps the cohort-level opportunity."
+- §6 non-medical-claims guardrail: add one bullet — "Cohort framing in §4.3 describes market opportunity, not clinical suitability; MyRhythm is not indicated for dementia, ADHD, or post-stroke treatment."
 
-### 5. Competitor delta
-Short table: for each Tier S/A feature, name the closest competitor equivalent and what makes ours defensible (usually: Support Circle integration + clinical-export + Memory-First Design). Flags features where a competitor is genuinely ahead so we don't kid ourselves.
-
-### 6. Recommendations
-- Which Tier S features to hero in the investor Loom and landing copy
-- Which Tier B features to quietly de-emphasise until v0.2
-- Which gaps the ranking exposes that should reshape the v0.2 backlog (esp. Discharge Bridge Kit, Bring-a-Witness, Discharge Summary → Life-Ready Plan)
-- Honest call-outs where we've over-built vs the problem
-
-## Notes
-- Pure strategy artefact — no code, no schema, no UI changes.
-- Anchored to the locked problem definitions in `mem://brand/clinical-life-ready-gap` and `mem://brand/third-problem-ideal-brain`, and the competitor set in `docs/problem-fit-and-market.md` and `docs/market-evidence.md`.
-- I'll be candid where a shipped feature scores low — the point of the doc is decisions, not applause.
+## Out of scope
+No code changes. No new pages. No changes to §2 re-admission tax, §3 scorecard, §4.1/4.2 numbers, §5 gaps, or §7 citations. Memory files unchanged — this is a doc-only update.
