@@ -143,6 +143,7 @@ Per `mem://brand/medical-disclaimer-policy`:
 - MyRhythm does **not** claim to reduce readmissions, treat brain injury, cure ADHD, slow dementia, or replace clinical care.
 - MyRhythm is a **Memory-First Design™ app** that supports daily-life continuity through the Collaborative Cognitive Continuity layer running the 4C loop.
 - All investor, clinical, and marketing use of the numbers above must preserve this framing.
+- Cohort framing in §4.3 describes market opportunity, not clinical suitability; MyRhythm is not indicated for dementia, ADHD, or post-stroke treatment.
 
 ---
 
