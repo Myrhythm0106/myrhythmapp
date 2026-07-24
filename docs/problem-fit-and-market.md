@@ -108,6 +108,23 @@ Focusing only on the cohorts where readmission cost is documented (stroke, TBI, 
 
 _This is the wedge inside the 60M soft-value market where MyRhythm has the sharpest commercial and clinical story. Note: MyRhythm has not measured its own effect on readmissions; the figure is market context only._
 
+### 4.3 Opportunity across ages and groups
+
+The 60M soft-value market isn't one audience — it's overlapping life-stage cohorts sharing the same Ideal-Brain Assumption failure. This is where MyRhythm's opportunity extends beyond the clinical wedge.
+
+| Cohort | Age band | Why current tools fail them | MyRhythm opportunity | Guardrail |
+|---|---|---|---|---|
+| **Students & young learners** | 16–24 | First time self-managing calendar, exam-load spikes, undiagnosed ADHD tail, lecture-heavy recall demands. | Memory Bridge for lectures/tutorials, weekly AI Plan Assist, "in the loop" study partner, MyRHYTHM-G growth states normalise the messy middle. | Not a study-skills or ADHD treatment. |
+| **Early-career professionals** | 25–39 | Cognitive overload, sleep debt, new-parent stage, meeting sprawl. Ideal-Brain tools assume rest they don't have. | 4C loop as a personal PA (without naming it that), Gentle/Steady/Strong reminder ladders, Meeting-type events with invites, calendar push to Google/Outlook. | Productivity support, not a burnout intervention. |
+| **Mid-career + sandwich generation** | 40–59 | Peak work load *and* caring for a parent or child with cognitive needs. No single tool holds both lives. | Dual-subject use (self + Anchor persona), Support Circle coordination, energy-aware scheduling, shared visibility without micromanagement. | Coordination tool, not a care-plan replacement. |
+| **Post-event adults — ABI, stroke, long-COVID, MS-cognitive** | Any age, concentrated 30–70 | The Discharge Cliff cohort. Paper handouts, fragile memory, family with no plan. | Discharge Bridge Kit on-ramp, Memory Bridge capture of clinician instructions, smart-scheduled actions, MyRHYTHM-G growth states, Support Circle "in the loop". | Does not diagnose, treat, or replace rehab. |
+| **Older adults & dementia / MCI** | 60+ | Memory volatility, highest 30-day readmission rate, heavy carer load, most productivity apps are unusable. | Memory-First Design (≤3 choices, 56px targets, progressive reveal), Anchor-persona carer view, gentle reminders, energy-aware scheduling. | Explicitly not a dementia treatment or diagnostic. |
+| **Carers across all ages** (cross-cutting) | 18–75+ | Group-chat chaos, burnout, invisible labour, no shared source of truth with the person they support. | Anchor persona, Support Circle CRUD, "in the loop" invites replacing group chats, burnout-aware scheduling, subject-switch to see the day from the other side. | Coordination and self-protection, not clinical care management. |
+
+**Honest v0.1 fit call-out.** Not every cohort is equally served today. The **Discharge Cliff cohort and Anchors get the sharpest v0.1 fit** — the Discharge Bridge Kit, Memory Bridge, Support Circle and MyRHYTHM-G are built for them first. **Students, early-career professionals, and the older-adult/dementia cohort are strategically in-scope** but their tailored surfaces (study mode, exec focus mode, simplified carer dashboard, dementia-specific carer view) sit in v0.2. This mirrors the candid tone in §5 — the market is real across all six cohorts; the shipped surface is not yet.
+
+
+
 ---
 
 ## 5. Trial-blocking gaps flagged (not fixed in this pass)
