@@ -23,6 +23,8 @@ Ward-safe ≠ kitchen-table-safe. A patient can pass discharge criteria (vitals 
 ### 1.3 The Ideal-Brain Assumption
 Mainstream productivity apps (Notion, Todoist, Google Calendar, Apple Reminders) are built for a rested, uninjured, neurotypical, low-stress brain. They fail — identically — for ABI/stroke survivors, dementia/MCI, ADHD adults, and cognitively-overloaded working adults. Everyone gets punished by the same design assumption.
 
+The same three failures show up differently across life stages; §4.3 maps the cohort-level opportunity.
+
 Sources: `mem://brand/clinical-life-ready-gap`, `mem://brand/third-problem-ideal-brain`, `src/config/appDescription.ts` → `THIRD_PROBLEM_STATS`.
 
 ---
