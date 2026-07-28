@@ -1,8 +1,12 @@
 # MyRhythm — Market Evidence & Purpose Anchor
 
-**Status:** Living document
+**Status:** Living document · Last aligned 28 Jul 2026 with Problem-Fit v2
 **Audience:** Founder, sales, investors, clinicians, contributors
 **Purpose:** This document exists so MyRhythm never drifts from why it was built. It is a standalone strategic reference — it is NOT wired into the app UI, and users never see it.
+
+**Category (locked wording):** MyRhythm is an **app** — a *Collaborative Cognitive Continuity layer* running the 4C loop (Capture · Commit · Calibrate · Celebrate). External descriptor: **Memory-First Design™**. Never "brain OS", "second brain", or "operating system for your brain".
+
+**Cohort map:** See §4.3 of [`problem-fit-and-market.md`](./problem-fit-and-market.md) for the six-cohort opportunity map (students, early-career, sandwich generation, post-event adults, older adults/MCI, carers) and the MVP-readiness matrix that says which cohorts are sharply served in v0.1 vs v0.2.
 
 ---
 
