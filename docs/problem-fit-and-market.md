@@ -23,7 +23,7 @@ Ward-safe ≠ kitchen-table-safe. A patient can pass discharge criteria (vitals 
 ### 1.3 The Ideal-Brain Assumption
 Mainstream productivity apps (Notion, Todoist, Google Calendar, Apple Reminders) are built for a rested, uninjured, neurotypical, low-stress brain. They fail — identically — for ABI/stroke survivors, dementia/MCI, ADHD adults, and cognitively-overloaded working adults. Everyone gets punished by the same design assumption.
 
-The same three failures show up differently across life stages; §4.3 maps the cohort-level opportunity.
+MyRhythm therefore occupies a distinct category — **Memory-First Design™ for life-readiness** — sitting between episodic clinical rehab tools and generic productivity software that assumes an ideal brain. The same three failures show up differently across life stages; §4.3 maps the cohort-level opportunity.
 
 Sources: `mem://brand/clinical-life-ready-gap`, `mem://brand/third-problem-ideal-brain`, `src/config/appDescription.ts` → `THIRD_PROBLEM_STATS`.
 
@@ -121,7 +121,21 @@ The 60M soft-value market isn't one audience — it's overlapping life-stage coh
 | **Older adults & dementia / MCI** | 60+ | Memory volatility, highest 30-day readmission rate, heavy carer load, most productivity apps are unusable. | Memory-First Design (≤3 choices, 56px targets, progressive reveal), Anchor-persona carer view, gentle reminders, energy-aware scheduling. | Explicitly not a dementia treatment or diagnostic. |
 | **Carers across all ages** (cross-cutting) | 18–75+ | Group-chat chaos, burnout, invisible labour, no shared source of truth with the person they support. | Anchor persona, Support Circle CRUD, "in the loop" invites replacing group chats, burnout-aware scheduling, subject-switch to see the day from the other side. | Coordination and self-protection, not clinical care management. |
 
-**Honest v0.1 fit call-out.** Not every cohort is equally served today. The **Discharge Cliff cohort and Anchors get the sharpest v0.1 fit** — the Discharge Bridge Kit, Memory Bridge, Support Circle and MyRHYTHM-G are built for them first. **Students, early-career professionals, and the older-adult/dementia cohort are strategically in-scope** but their tailored surfaces (study mode, exec focus mode, simplified carer dashboard, dementia-specific carer view) sit in v0.2. This mirrors the candid tone in §5 — the market is real across all six cohorts; the shipped surface is not yet.
+**Why this stands out.** Most tools sit on one side of a false divide:
+
+- *Productivity apps* (Notion, Todoist, Obsidian) assume ideal executive function; MyRhythm assumes variable cognitive load and offers reminder ladders + energy-aware scheduling.
+- *Clinical/rehab tools* are discharge-bound and episodic; MyRhythm is daily continuity with a Support Circle.
+- *Dementia/carer apps* are often single-purpose; MyRhythm is one rhythm layer for self, Anchor, and circle.
+
+**MVP readiness matrix.** This table is market positioning, not a build commitment.
+
+| v0.1 readiness | Cohorts | What v0.1 already gives them | What waits for v0.2 |
+|---|---|---|---|
+| **Sharply served** | Post-event adults (ABI, stroke, long-COVID, MS-cognitive) and Carers / Anchors | Discharge Bridge Kit, Memory Bridge, Support Circle "in the loop", MyRHYTHM-G growth states, energy-aware scheduling. | Deeper clinical taxonomy, medication-adherence surface, nurse-approval loop. |
+| **Served with existing surfaces, not yet tailored** | Students & young learners; Early-career professionals; Mid-career + sandwich generation | 4C loop, AI Plan Assist, calendar + reminders, Meeting invites, Google/Outlook push. | Cohort-specific onboarding copy, study mode, exec-focus mode, dual-life templates. |
+| **Strategically in-scope, tailored surfaces in v0.2** | Older adults & dementia / MCI | Memory-First Design primitives already help (≤3 choices, 56px targets, progressive reveal). | Simplified carer dashboard, dementia-specific Anchor view, larger-target mode, more explicit non-diagnostic guardrails. |
+
+
 
 
 
