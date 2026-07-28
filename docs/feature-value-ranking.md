@@ -1,10 +1,12 @@
 # Feature Value Ranking — v0.1 Sprint
 
-**Status:** Living doc · Refresh at end of each sprint
+**Status:** Living doc · Refresh at end of each sprint · Last aligned 28 Jul 2026 with Problem-Fit v2
 **Anchor date:** 3 June 2026
-**Companion docs:** [`docs/problem-fit-and-market.md`](./problem-fit-and-market.md), [`docs/market-evidence.md`](./market-evidence.md), [`docs/discharge-bridge-kit.md`](./discharge-bridge-kit.md)
+**Companion docs:** [`docs/problem-fit-and-market.md`](./problem-fit-and-market.md), [`docs/market-evidence.md`](./market-evidence.md), [`docs/discharge-bridge-kit.md`](./discharge-bridge-kit.md), [`docs/founders-market-marketing-plan.md`](./founders-market-marketing-plan.md)
 
 Purpose: rank every feature shipped or improved in this sprint against (a) the value it delivers, (b) the three locked problem definitions, and (c) the competitor set. Used for founder decisions, investor conversations, and v0.2 backlog shaping.
+
+> **Cohort applicability of each feature:** see §4.3 (cohort map) and §4.4 (universal-benefit lens) of Problem-Fit v2. This file scores features against problems; that file maps features against audiences.
 
 ---
 
