@@ -1,9 +1,11 @@
 # MyRhythm Launch Strategy v2.0
-## December 2024 - Living Document
+## Living Document
 
-> **Last Updated:** December 2024  
-> **Version:** 2.0  
+> **Last Updated:** Aligned 28 Jul 2026 with Problem-Fit v2 and Founders-Market Marketing Plan v1
+> **Version:** 2.0
 > **Status:** Active
+>
+> **Role of this document:** phased launch narrative (Founding → Scale). For the **week-by-week action plan** for the immediate founders/warm market, use [`../docs/founders-market-marketing-plan.md`](../docs/founders-market-marketing-plan.md). For category positioning and cohort map, use [`../docs/problem-fit-and-market.md`](../docs/problem-fit-and-market.md). Legacy "LEAP-OS / Cognitive Operating System" phrasing in this file is being retired — MyRhythm is an **app**; external category is **Memory-First Design™**.
 
 ---
 

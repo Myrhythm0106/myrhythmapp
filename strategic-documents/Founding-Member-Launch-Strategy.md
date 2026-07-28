@@ -1,5 +1,8 @@
 # FOUNDING MEMBER LAUNCH STRATEGY - IMMEDIATE IMPLEMENTATION
 
+> **Role of this document (aligned 28 Jul 2026):** This is the **strategy layer** — pricing, messaging framework, distribution surfaces. The **operational, week-by-week action plan** for reaching the immediate founders/warm market lives in [`../docs/founders-market-marketing-plan.md`](../docs/founders-market-marketing-plan.md). When the two diverge, the operational plan wins for what to do this week; this document wins for pricing and positioning.
+
+
 ## CURRENT PRICING STRATEGY - IMPLEMENTED
 
 ### Founding Member Introductory Pricing
