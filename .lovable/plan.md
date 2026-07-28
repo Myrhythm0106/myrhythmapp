@@ -1,44 +1,108 @@
-## Candid assessment of the current plan
+## Goal
 
-**Is it market-defining?** The cohort table by itself is *audience segmentation*, not market definition. The market-defining work is already in §1 (the three-failure thesis + "Clinical-Ready vs Life-Ready Gap"). This plan makes that thesis concrete by naming who is underserved. So: **additive, not replacing; necessary, but not sufficient on its own.**
+Two deliverables, both document-only, no code changes:
 
-**Does it make me stand out?** Yes — but only because the cohort map exposes a gap competitors usually ignore: mainstream productivity tools pretend everyone has an ideal brain; clinical/rehab tools are episodic and discharge-bound. MyRhythm's positioning as a **daily continuity layer** for *both* ordinary and post-event brains is the differentiator. The table makes that visible.
+1. **Alignment sweep** — bring the existing strategy docs in line with the latest v2 problem-fit + infographic (category claim, cohort map, MVP-readiness matrix) so nothing contradicts.
+2. **Founders-market marketing plan** — a practical, maintainable action plan to circulate the MVP to your immediate founders/warm network (not paid acquisition, not public launch).
 
-**Is it too much for the MVP?** No — this is a **document-only** update. It does not add code, routes, or new v0.1 surfaces. The risk would be *implying* every cohort is fully served in v0.1. The plan already includes an honesty paragraph; the revision below hardens that into an explicit MVP readiness matrix so the doc cannot be misread as a build commitment.
+Anchor date: 28 July 2026. Founding-stage rules (single CTA "Become a Founding Member", no public broadcast of Loom, no medical claims) are respected.
 
-## Goal (unchanged)
-Extend `docs/problem-fit-and-market.md` so it explicitly names **who** — across life stages and cohorts — MyRhythm creates opportunity for, without inflating the medical claim. Keeps every existing section intact.
+---
 
-## Change 1 — Strengthen §1 with a category-claim sentence
-Add one sentence near the start of §1 (after the three-failure thesis, before the existing pointer to §4.3):
+## Part 1 — Alignment sweep (surgical edits only)
 
-> "MyRhythm therefore occupies a distinct category — **Memory-First Design™ for life-readiness** — sitting between episodic clinical rehab tools and generic productivity software that assumes an ideal brain."
+Only the docs that could contradict v2 get touched. Everything else stays.
 
-This makes the document market-defining at the top, while §4.3 supplies the proof.
+| Doc | Change |
+|---|---|
+| `docs/market-evidence.md` | Add one-line pointer to v2 category claim + cohort map so sales script matches the infographic. No stat changes. |
+| `docs/myrhythm-one-page-pitch.md` | Update the category sentence to the locked wording ("Collaborative Cognitive Continuity layer, externally Memory-First Design™"). Add the six-cohort strip as a single line. |
+| `docs/feature-value-ranking.md` | Add pointer row: "For cohort applicability of each feature, see §4.3 of problem-fit v2." |
+| `docs/founding-core-value-map.md` | Verify wording matches v2; fix any drift in category/cohort language. |
+| `strategic-documents/Founding-Member-Launch-Strategy.md` | Reconcile with new marketing plan (see Part 2) so the two don't diverge — this doc becomes the *strategy*, the new plan becomes the *operational action plan*. |
+| `strategic-documents/MyRhythm-Launch-Strategy-v2.md` | Same reconciliation; add pointer to new action plan. |
+| `docs/investor-loom-script.md` | Confirm category sentence in segment 2:30–3:30 matches locked wording; small edit if drifted. |
 
-## Change 2 — Insert new Section 4.3 "Opportunity across ages and groups"
-Placed immediately after §4.2. Structure:
+**Explicitly not touched:** `problem-fit-and-market.md` (already v2), `discharge-bridge-kit.md`, `v0.1-*` test docs, `5-year-vision.md`, `24-Month-Master-Execution-Plan.md`, `Revenue-Projections`, `Pricing-Evolution-Timeline`. These are either already current or downstream of decisions not being changed.
 
-- Short intro line: "The soft-value market isn't one audience — it's six overlapping cohorts sharing the same Ideal-Brain Assumption failure."
-- Table with rows: **Cohort · Age band · Why current tools fail them · MyRhythm opportunity (4C + Support Circle framing) · Non-medical-claim guardrail note**.
-  1. Students & young learners (16–24)
-  2. Early-career professionals (25–39)
-  3. Mid-career + sandwich generation (40–59)
-  4. Post-event adults — ABI, stroke, long-COVID, MS-cognitive (any age, concentrated 30–70)
-  5. Older adults & dementia / MCI cohort (60+)
-  6. Carers across all ages (cross-cutting Anchor persona)
-- **New: "Why this stands out" paragraph** (3 bullets):
-  - *Productivity apps* (Notion, Todoist, Obsidian) assume ideal executive function; MyRhythm assumes variable cognitive load and offers reminder ladders + energy-aware scheduling.
-  - *Clinical/rehab tools* are discharge-bound and episodic; MyRhythm is daily continuity with a Support Circle.
-  - *Dementia/carer apps* are often single-purpose; MyRhythm is one rhythm layer for self, Anchor, and circle.
-- **New: MVP readiness matrix** — maps each cohort to v0.1 feature fit vs v0.2, so the table is read as positioning, not a promise:
-  - **Sharply served in v0.1**: Post-event adults (Discharge Bridge Kit, Memory Bridge, 4C loop) and Carers (Support Circle invites, Anchor view).
-  - **Served with existing v0.1 surfaces but not tailored yet**: Students, early-career professionals, mid-career sandwich generation (AI Plan Assist, calendar, reminders work for them but lack cohort-specific onboarding copy).
-  - **Strategically in-scope, tailored surfaces in v0.2**: Older adults / dementia-MCI cohort (simplified carer dashboard, larger-target mode, more explicit non-diagnostic guardrails).
+---
 
-## Change 3 — One-line pointer in §1 and one guardrail bullet in §6
-- §1: add existing pointer — "The same three failures show up differently across life stages; §4.3 maps the cohort-level opportunity."
-- §6: add existing bullet — "Cohort framing in §4.3 describes market opportunity, not clinical suitability; MyRhythm is not indicated for dementia, ADHD, or post-stroke treatment."
+## Part 2 — Founders-market marketing plan
 
-## Out of scope (unchanged)
-No code changes. No new pages. No changes to §2 re-admission tax, §3 scorecard, §4.1/§4.2 numbers, §5 gaps, or §7 citations. Memory files unchanged — this is a doc-only update.
+New file: **`docs/founders-market-marketing-plan.md`**
+
+Scope: the **first 100 Founding Members** from your immediate warm network — no paid ads, no public LinkedIn/X broadcast (per founding-stage rules), no press.
+
+### Structure of the new doc
+
+1. **Objective** — 100 Founding Members + 3 clinical LOIs by 1 Oct 2026. One primary CTA everywhere: "Become a Founding Member" → `/subscribe`.
+
+2. **Audiences (4 concentric rings)**
+   - Ring 1: Personal warm list (family, friends, ex-colleagues who know the founder story)
+   - Ring 2: Brain-injury community contacts (Headway, ABI support groups, survivor peers)
+   - Ring 3: Clinicians / rehab contacts (for LOIs, not for member acquisition)
+   - Ring 4: Founder-of-founders (other early-stage founders, angels, advisors — for referrals, not direct sales)
+
+3. **Channels (only the ones a solo founder can actually maintain)**
+   - 1:1 personal email (primary — reuses Loom distribution templates)
+   - WhatsApp/Signal warm intros (Ring 1 + 2)
+   - Loom link (already documented in `investor-loom-distribution.md` — this plan reuses, doesn't rewrite)
+   - Printed Discharge Bridge Kit handouts for clinician meetings
+   - One monthly founder update email to everyone who's been contacted (opt-out, no automation platform)
+
+4. **12-week rolling action plan** (weeks of 3 Aug → 26 Oct 2026)
+   - Every week has: outreach target (N people per ring), content task (max 1), one metric to log
+   - Weekly rhythm anchored to Monday review already in `90-day-sprint.md` §8
+   - Deliberately capped at ~4 hours/week of marketing work so a solo founder can sustain it
+
+5. **Assets checklist** (what must exist before outreach starts)
+   - Loom recorded and unlisted ✓ (script already exists)
+   - Printed Bridge Kit PDFs ✓
+   - Founding Member landing (`/subscribe`) ✓
+   - Personal email templates for each ring (in the doc)
+   - Monthly-update template (in the doc)
+
+6. **Metrics — the only 5 numbers to track**
+   - New Founding Members this week
+   - Loom viewers past 3:30 (from Loom analytics)
+   - Reply rate by ring
+   - LOI conversations open / signed
+   - Weekly-active rate of existing members (from Supabase)
+
+   Logged in a single weekly line in `90-day-sprint.md` §8 — no new dashboard, no new tool.
+
+7. **Maintenance model** — how to keep this plan alive
+   - Owner: Founder (only)
+   - Review cadence: Monday 20-min review
+   - Update trigger: monthly, or when a metric target is missed 2 weeks running
+   - Version convention: `founders-market-marketing-plan_vN.md` when a material change lands
+
+8. **Guardrails (non-negotiable)**
+   - No medical claims in any outreach copy
+   - No public social broadcast during Founding phase
+   - No paid acquisition until 3 LOIs signed
+   - Every email personal, from the founder's address, never a "team@" alias
+   - "Memory-First Design™" is the external descriptor; "Collaborative Cognitive Continuity layer" stays internal
+
+9. **What this plan deliberately excludes** (so scope doesn't creep)
+   - SEO/content marketing
+   - Paid ads
+   - Influencer/podcast tour
+   - Press outreach
+   - Community platform (Discord/Slack)
+   - Referral program tech (too early; ask verbally)
+
+---
+
+## Out of scope
+
+- No code changes.
+- No new app routes or UI.
+- No changes to pricing, Founding Edition scope, or v0.1 feature set.
+- No changes to problem-fit v2 or the infographic.
+- No new automation tooling (CRM, email platform, analytics).
+
+## Deliverables
+
+1. Edits to the 7 docs listed in Part 1 (small, targeted).
+2. New file: `docs/founders-market-marketing-plan.md` (~600–900 lines of practical copy + templates + weekly grid).
