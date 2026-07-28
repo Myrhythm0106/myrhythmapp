@@ -2,6 +2,9 @@
 
 **Audience:** marketing, support, investors, the founder.
 **Purpose:** in one page, show what a Founding Member actually gets for £7–£20/mo and why each piece is worth more than the price.
+**Last aligned 28 Jul 2026 with Problem-Fit v2 and Founders-Market Marketing Plan v1.**
+
+**Category (locked wording):** MyRhythm is an **app** — a *Collaborative Cognitive Continuity layer* running the 4C loop. External descriptor: **Memory-First Design™**. Never "brain OS", "second brain", or "operating system for your brain".
 
 ## How we describe MyRhythm (locked wording)
 

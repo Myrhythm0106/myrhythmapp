@@ -1,7 +1,9 @@
 # MyRhythm
-## The World's First Cognitive Operating System
+## The Collaborative Cognitive Continuity layer — externally, Memory-First Design™
 
----
+> **Alignment note (28 Jul 2026):** This one-pager is being progressively re-aligned with the locked category wording. MyRhythm is an **app**, not an OS. Older references below to "Cognitive Operating System" / "LEAP-OS" are legacy phrasing and are being retired — do NOT reuse them in new external copy. Source of truth for external descriptors: `mem://brand/product-category-and-naming` and [`docs/problem-fit-and-market.md`](./problem-fit-and-market.md) §0 and §4.3.
+>
+> **Six-cohort strip (for anyone reading this cold):** Students · Early-career professionals · Sandwich-generation (40–59) · Post-event adults (ABI/stroke/long-COVID) · Older adults & MCI · Carers. Sharply served in v0.1: post-event adults + carers. Served via existing surfaces (no tailored copy yet): the other four. See §4.3 of Problem-Fit v2 for the readiness matrix.
 
 ---
 
