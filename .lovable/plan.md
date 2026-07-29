@@ -1,119 +1,89 @@
 
-# MyRhythm Launch Master Plan — v2.3 (v2.2 + dual MYRHYTHM / FIT Collective template pairs in Google Sheets & Docs)
+# Investor Finances, 5-Year Growth Plan & Founder Curriculum
 
-Delta from v2.2: v2.1 finance model + v2.2 replicability & founder-proof still stand. New requirement: **every reusable template ships as a matched pair** — one pre-filled `MYRHYTHM` version (yours, live, editable) and one neutral `FIT_COLLECTIVE` version (stripped, ready to hand to a FIT cohort member). Both live in **Google Sheets / Google Docs** so you can start using and amending them today.
-
-Anchor: 29 Jul 2026. Founders window: 3 Aug – 30 Sep 2026. Public paid launch: 1 Oct 2026.
+Three linked deliverables, all in `/mnt/documents/launch_v2_3/founder_pack/`, each in **MYRHYTHM** and **FIT_COLLECTIVE** versions so you can reuse them with the cohort.
 
 ---
 
-## 1. Delivery mechanism — Google Workspace via connector
+## Deliverable 1 — Investor-Grade Financial Pack
 
-Templates are created in your Google Drive using the **Google Sheets** and **Google Docs** connectors (already surfaced in this environment). For each template I:
+**File:** `F1_Investor_Financials_v1.xlsx` (MYRHYTHM + FIT versions)
 
-1. Create the `MYRHYTHM` version pre-filled with your data (from v2.2 workbook + existing docs).
-2. Create the `FIT_COLLECTIVE` version — identical structure, your data stripped, prompts inserted in every editable cell (e.g. `<your ARPU in USD>`, `<your first ring-1 contact>`).
-3. Return the Google Drive URLs in a single index doc so you have one starting point.
+Investor-ready workbook — the numbers a pre-seed/seed VC or angel actually reads. Extends the earlier internal P&L into an investor narrative.
 
-Both versions land in a Google Drive folder pair:
-```
-/MyRhythm — Launch Master (live)
-/FIT Collective — Launch Templates (blank, ship to members)
-```
+Tabs:
+1. **Cover & Ask** — round size ($30k–$55k pre-seed bridge → $750k seed target), use of funds, valuation cap ($4M–$6M SAFE), runway (18 months post-seed).
+2. **Assumptions** — single source of truth (ARPU £10/£15, CAC, gross margin 82%, churn 4%/mo Y1 → 2%/mo Y3, conversion 8% trial→paid).
+3. **5-Year P&L** — monthly Y1, quarterly Y2–Y5. Revenue by segment (Founding / Retail / Clinical B2B / FIT Collective licensing).
+4. **Unit Economics** — LTV, CAC, LTV:CAC ratio, payback period, contribution margin per cohort.
+5. **Cohort Retention** — monthly cohort survival curves, benchmarked against Calm (72% M1, 38% M12) and Headspace.
+6. **Cash Flow & Runway** — burn, runway under 3 scenarios (base/bull/bear), next-raise trigger points.
+7. **Cap Table** — founder, SAFE holders, option pool (10%), post-seed dilution.
+8. **KPI Dashboard** — MRR, ARR, NRR, magic number, Rule of 40 by Y3.
+9. **Comparable Exits** — Calm ($2B), Headspace ($3B merger), Big Health ($350M), Woebot ($90M Series B) — revenue-multiple table.
 
-If the Google Sheets or Google Docs connector isn't yet linked when build mode starts, I'll call `standard_connectors--connect` and pause until you approve — no silent failures.
-
----
-
-## 2. Template pairs to create
-
-Every row = one MYRHYTHM version + one FIT_COLLECTIVE version.
-
-### Google Sheets pairs
-| # | Template | Source in v2.2 | MYRHYTHM state | FIT_COLLECTIVE state |
-|---|---|---|---|---|
-| S1 | Launch Master Plan | tabs 01–22 of v2.2 xlsx | your dates, tasks, owners | dates as `LaunchDate+N` formulas, tasks tagged `[UNIVERSAL]` / `[BRAND-SPECIFIC: replace]` |
-| S2 | Financial Model | tabs 13–18 | your Lean/Expected/Safe tiers, £/$ rate | Assumptions tab reset to neutral defaults, ARPU/churn/conversion blank with prompts |
-| S3 | Assumptions (single source of truth) | tab 26 | your 12 driver cells | prompts + example values in comments |
-| S4 | Founder Usage Log | tab 23 | pre-seeded with actions taken to date | headers only + one worked example row |
-| S5 | Evidence Vault Index | tab 24 | your links to `/mnt/documents/evidence/` | headers + storage convention note |
-| S6 | Weekly Metrics Log | derived from `90-day-sprint.md` §8 | your live weekly numbers | blank grid with the 5 metric definitions |
-| S7 | Outreach CRM (light) | Ring 1–4 from marketing plan | your names, status, last touch | blank rows + ring definitions |
-| S8 | Clinical LOI Tracker | new | your 3 target sites, stage, next action | headers + example row |
-
-### Google Docs pairs
-| # | Template | Source | MYRHYTHM state | FIT_COLLECTIVE state |
-|---|---|---|---|---|
-| D1 | Investor Loom Script | `docs/investor-loom-script.md` | your verbatim script | placeholders for founder story, stats, ask |
-| D2 | Investor Loom Distribution — 3 email templates | `docs/investor-loom-distribution.md` §2 | your signature, your Loom URL | `[Loom link]`, `[Founder]`, `[Mutual]` prompts |
-| D3 | Founders-Market Outreach Emails (4 rings) | `docs/founders-market-marketing-plan.md` | your voice, your warm names referenced | neutral, `[brand]` / `[founder story hook]` markers |
-| D4 | Monthly Founder Update email | marketing plan §3 | your Aug update pre-drafted | blank monthly template with 5 section prompts |
-| D5 | Discharge Bridge Kit — clinician handout | `docs/discharge-bridge-kit.md` | MyRhythm branded | `[Product name]` / `[Category claim]` / `[Ask]` markers |
-| D6 | FIT Replication Playbook | new (was `FIT_Cohort_Playbook_v1.md`) | worked example = your own launch | the playbook itself + fork instructions |
-| D7 | One-Page Financial Summary | `MyRhythm_Financial_Summary_1page.pdf` source | your numbers | blank with prompts |
-| D8 | README / Index of all templates | new | links to both folders + how to use | same doc — this one is shared |
-
-Total: **16 Google files** (8 Sheets + 8 Docs), each in two versions → **32 files** in Drive, organised into the two folders above.
+**Doc companion:** `F1_Investor_Narrative.md` — the 2-page memo that goes with the workbook.
 
 ---
 
-## 3. Neutralisation rules for every FIT_COLLECTIVE version
+## Deliverable 2 — 5-Year Marketing & Growth Plan
 
-Applied consistently so a FIT member never has to guess:
+**File:** `G1_Five_Year_Growth_Plan_v1.xlsx` + `G1_Growth_Narrative.md` (both versions)
 
-- Brand text replaced with `[Product name]`.
-- Category claim replaced with `[Your category claim — one line]`.
-- Founder story replaced with `[2-sentence founder story: why you, why now]`.
-- Numeric values in formulas preserved; input cells cleared and given a comment prompt.
-- Dates converted to `Assumptions!LaunchDate + N` where possible; otherwise `[YYYY-MM-DD]`.
-- Rows tagged `[UNIVERSAL]` (keep as-is) or `[BRAND-SPECIFIC: rewrite]` in a leftmost `Type` column so a FIT member can filter.
-- Every doc has a top-of-file **"How to fork this"** callout (3 bullets) and a footer with the v2.2 confidentiality line.
+Five phases benchmarked against Calm, Headspace, Big Health/Sleepio, Woebot, and Insight Timer. Each phase has channels, targets, budget, and the specific competitor pattern being mirrored or inverted.
 
----
+- **Y1 (2026–27) — Founders Wedge.** 500 Founding Members, 3 clinical LOIs, single-hero-feature Loom outreach. Mirror: early Calm (founder-led, no paid). Invert: Lumosity (no medical claims).
+- **Y2 (2027–28) — Clinical Beachhead.** 5k paid, 3 NHS/US rehab pilots, Discharge Bridge Kit as B2B2C wedge. Mirror: Big Health's NHS route.
+- **Y3 (2028–29) — Category Ownership.** 50k paid, "Memory-First Design™" owned category, first paid channel (Meta + clinical podcast sponsorships). Mirror: Headspace's B2B pivot.
+- **Y4 (2029–30) — Geographic Expansion.** US launch depth + EU/AU. FIT Collective licensing revenue live. Mirror: Calm's Series C content-partnership model.
+- **Y5 (2030–31) — Platform.** SDK/API for clinical partners, ~$8M–$15M ARR base, Series A/B optionality or strategic acquisition posture.
 
-## 4. What still lives in `/mnt/documents/` (unchanged from v2.2)
-
-The local artifacts remain the master record and the offline fallback:
-1. `MyRhythm_Launch_Master_Plan_v2.3.xlsx` — canonical, source of truth for Sheets pair S1.
-2. `MyRhythm_Launch_Master_Plan_v2.3.csv`
-3. `MyRhythm_Launch_Master_Plan_v2.3_README.md` — now lists every Google Drive URL created.
-4. `MyRhythm_Financial_Summary_1page.pdf`
-5. `FIT_Cohort_Template_v1.xlsx` — offline mirror of the Google Sheets FIT pair.
-6. `FIT_Cohort_Playbook_v1.md` — offline mirror of D6.
-7. `evidence/` folder scaffold.
-8. **NEW** `Template_Index.md` — flat list of all 32 Google Drive URLs + local mirror paths, so if Drive access ever breaks you have offline fallbacks.
+Includes channel mix table, CAC by channel by year, content cadence, PR anchor moments, and a **"do-not-copy"** column of competitor mistakes to actively avoid.
 
 ---
 
-## 5. Build order (single pass)
+## Deliverable 3 — Founder Curriculum & Daily Ritual
 
-1. Verify Google Sheets + Google Docs connectors are linked; if not, `standard_connectors--connect` and pause.
-2. Create the two Drive folders.
-3. Build the local v2.3 xlsx (source of truth) with QA loop (recalc, zero formula errors, screenshot every tab).
-4. Push S1–S8 to Google Sheets as MYRHYTHM version, duplicate + strip for FIT_COLLECTIVE version.
-5. Create D1–D8 in Google Docs (both versions each).
-6. Generate `Template_Index.md` with all 32 URLs.
-7. Generate financial 1-page PDF.
-8. Deliver: single message with folder URLs + local artifact paths.
+**File:** `C1_Founder_Curriculum.md` + `C2_Daily_Founder_Plan.md` (both versions)
+
+### C1 — Who to learn from (world-wide, curated, not generic)
+
+Four tiers, each with the specific reason and the exact artefact to consume:
+
+1. **Category-defining founders** — Alex Tew & Michael Acton Smith (Calm), Andy Puddicombe (Headspace), Peter Hames (Big Health), Alison Darcy (Woebot), Kate Terry (Sleepio clinical).
+2. **Brain-health scientists you must sound fluent in** — Daniel Amen, Caroline Leaf, Lisa Feldman Barrett, Wendy Suzuki, Andrew Huberman (with the caveat: learn framing, not overclaim).
+3. **Operators & storytellers** — April Dunford (positioning), Rob Fitzpatrick (*The Mom Test*), Elena Verna (growth), Lenny Rachitsky (product ops), Julie Zhuo (design leadership).
+4. **Health-tech-specific voices** — Bijan Salehizadeh, Halle Tecco (Rock Health), Nikhil Krishnan (*Out-Of-Pocket*).
+
+### Podcast focus list (locked, not a dump)
+
+*a16z Bio+Health, Lenny's Podcast, Acquired, Huberman Lab (selectively), Out-Of-Pocket, The Diary of a CEO (health episodes), My First Million (distribution episodes only), The Knowledge Project.*
+
+### C2 — Daily Founder Plan
+
+A 90-minute daily ritual embedding these voices without becoming a passive consumer:
+
+| Block | Time | Practice |
+|---|---|---|
+| Morning input | 25 min | 1 podcast episode from focus list, single-note capture into `Founder_Log.md` |
+| Positioning drill | 15 min | Rewrite one MyRhythm sentence using Dunford's framework |
+| Customer voice | 20 min | One Founding Member conversation OR re-listen to a Memory Bridge testimonial |
+| Build ritual | 20 min | Ship one small artefact (email, doc edit, feature spec) |
+| Reflection | 10 min | 3-line log: What did I learn / What did I mirror / What did I invert |
+
+Plus weekly (Sunday 45 min) synthesis into the Founder Usage Log — becomes your FIT Collective proof.
 
 ---
 
-## 6. ⚠️ Human-only actions (adds to v2.2 §7)
+## Structure & branding
+- All files in `/mnt/documents/launch_v2_3/founder_pack/{myrhythm|fit_collective}/`.
+- Confidentiality footer applied per project standard.
+- Zero formula errors in xlsx (recalc via skill script).
+- FIT_COLLECTIVE versions neutralise brand-specific figures into formulas driven by an Assumptions tab.
 
-- [ ] Confirm the Google account you want these created in (the connected account owns the files by default). If you want them owned by a Google Workspace under `myrhythmapp.com`, connect that account first.
-- [ ] Decide sharing on the FIT_COLLECTIVE folder: **view-only for public link**, or **"Anyone with link can copy but not edit the master"** (recommended so members always fork clean).
-- [ ] Decide licence stamped in every FIT_COLLECTIVE file footer: `All rights reserved © MyRhythm 2026` vs `CC BY-NC 4.0`. Affects whether FIT members can commercialise their fork.
-- [ ] Any file with real names (Ring 1 contacts, LOI clinician names) stays in MYRHYTHM folder only — I will never copy real personal data into FIT_COLLECTIVE files.
+## Human actions flagged (not in the app build)
+- Confirm SAFE terms with US startup counsel before sharing F1 externally.
+- Do not publish 5-year revenue projections without a "forward-looking statements" disclaimer.
+- Podcast/mentor list is a learning curriculum — do not name-drop these people as endorsers.
 
----
-
-## 7. What v2.3 still does not do
-
-- No shared-drive workspace, no permission automation, no Zapier/Make hooks.
-- No auto-sync between local xlsx and Google Sheets — Google Sheets is the working copy after handoff; local xlsx is the point-in-time snapshot.
-- No branding kit / logo drop into Google Docs (you can apply your Google Docs theme after).
-- Still not financial, legal, tax, or immigration advice.
-
----
-
-Ready on approval + switch to build mode. Single pass: connector check → folders → local xlsx + QA → 16 Sheets (both versions) → 16 Docs (both versions) → index → PDF → delivery.
+Reply **approve** and I'll generate all 6 files (2 xlsx pairs + 2 doc pairs + curriculum pair) in one pass.
