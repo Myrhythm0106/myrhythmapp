@@ -10,6 +10,7 @@ import { PriorityProvider } from "@/contexts/PriorityContext";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { AdminRoute } from "@/components/auth/AdminRoute";
 import FounderFinancialsPage from "./pages/FounderFinancialsPage";
+import FounderDataRoomPage from "./pages/FounderDataRoomPage";
 import { SetupProgressProvider } from "@/contexts/SetupProgressContext";
 import { SetupProgressBar } from "@/components/progress/SetupProgressBar";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
@@ -425,6 +426,8 @@ function App() {
                        
                        {/* Founder-only financial dashboard — admin role required */}
                        <Route path="/founder/financials" element={<AdminRoute><FounderFinancialsPage /></AdminRoute>} />
+                       {/* Founder-only investor data room — admin role required */}
+                       <Route path="/founder/data-room" element={<AdminRoute><FounderDataRoomPage /></AdminRoute>} />
                    </Routes>
                         </Suspense>
                         <AuthenticatedBottomNav />
