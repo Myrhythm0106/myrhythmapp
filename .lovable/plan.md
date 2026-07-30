@@ -1,87 +1,96 @@
 
-# MVP 90-Day Document + Trackable Action Plans (90-Day & 5-Year) + IP Track
+# Where the M-Pack is
 
-Three new files in `/mnt/documents/launch_v2_3/founder_pack/`, in both **MYRHYTHM** and **FIT_COLLECTIVE** versions, sitting on top of the existing Founder Pack (F1 financials, G1 growth plan, C1/C2 curriculum).
+It's already generated, in your files panel under:
 
-Anchor date: **30 July 2026**. 90-day window: **3 Aug 2026 → 31 Oct 2026** (Founding cohort live → public paid launch).
+```text
+launch_v2_3/founder_pack/
+├── Founder_Pack_Index.md
+├── myrhythm/
+│   ├── MyRhythm_M1_MVP_90_Day_Plan.md
+│   ├── MyRhythm_M2_MVP_90_Day_Action_Plan.xlsx
+│   ├── MyRhythm_M3_Five_Year_Action_Plan.xlsx
+│   ├── MyRhythm_F1_Investor_Financials_v1.xlsx / F1_Investor_Narrative.md
+│   ├── MyRhythm_G1_Five_Year_Growth_Plan_v1.xlsx / G1_Growth_Narrative.md
+│   └── MyRhythm_C1_Founder_Curriculum.md / C2_Daily_Founder_Plan.md
+└── fit_collective/  (same 9 files, FIT-branded)
+```
 
----
-
-## Deliverable 1 — MVP 90-Day Document
-
-**File:** `M1_MVP_90_Day_Plan.md` (+ FIT version)
-
-1. **What the MVP is** — locked v0.1 scope: 9 `/launch/*` Founding Core routes, 4C loop, Memory Bridge, Calendar/PA layer, Discharge Bridge Kit. Explicit out-of-scope (v0.2: discharge-summary ingestion, Bring a Witness, clinical taxonomy).
-2. **Problem & wedge** — one page from `docs/MyRhythm_Problem-Fit_and_Market_v2.md`.
-3. **Definition of MVP success** — day-90 pass/fail bar: Founding Members, activation (assessment → first Commit), 7/30-day retention, weekly Memory Bridge captures, clinical LOIs, NPS.
-4. **The 90 days in 3 sprints** — Days 1–30 Harden & Gate; 31–60 Cohort Live; 61–90 Evidence & Paid Launch Readiness, each with entry/exit criteria.
-5. **IP & legal readiness** (new) — summary of what must be filed or secured before external circulation.
-6. **Risk register** — top 8 risks, mitigation, owner.
-7. **Investor readiness checklist** — what must be true at day 90; data room contents (now includes an IP schedule).
-8. **Human actions outside the app** — legal, entity, IP, counsel, forward-looking-statement disclaimer.
+Nothing is missing — it just isn't surfaced anywhere as a single index, which is exactly what deliverable 1 fixes.
 
 ---
 
-## Deliverable 2 — 90-Day Action Plan (Google Sheets ready)
+# Deliverable 1 — Investor Data Room
 
-**File:** `M2_MVP_90_Day_Action_Plan.xlsx` (+ FIT version)
+## 1a. Document index (source of truth)
 
-Columns: ID · Title · Definition of Success · Start Date · Finish Date · Status · Workstream · Owner · % Complete · Completed On · Notes · Human Action? (Y/N)
+**File:** `launch_v2_3/founder_pack/Investor_Data_Room.md` (+ FIT version)
 
-Status dropdown: Not Started / In Progress / Blocked / Done / Deferred.
-Workstreams: Product · **IP & Legal** · Entity & Finance · Marketing · Clinical · Founder.
+Replaces the thin `Founder_Pack_Index.md` with a real data-room index:
+
+- **Section 0 — How to use this room.** Reading order for a VC: narrative → financials → 90-day → 5-year → competitor pack.
+- **Tabled artefact register** — one row per artefact: ID, title, what it answers, format, status (Final / Draft / Human-action-pending), last updated, owner.
+- **Grouped sections** — Pitch narrative · Financial model · 90-day execution · Five-year plan · Market & problem fit · Competitor benchmarking · IP & legal · Product evidence.
+- **Key assumptions page** — pulled together in one place: pricing, conversion, CAC, churn, cohort size, clinical LOI timing, IP spend, FX, anchor dates. Each with value, source, and confidence (High/Medium/Low). This is the page investors go to first.
+- **Known gaps / human actions** — entity formation, US counsel, CPA review, trademark clearance, patent triage — stated openly rather than hidden.
+- Confidentiality footer per project standard; forward-looking-statements disclaimer.
+
+## 1b. In-app gated page
+
+**Route:** `/founder/data-room`, wrapped in the existing `AdminRoute` (same gate as `/founder/financials`).
+
+- Renders the same artefact register as cards grouped by section, with status chips and "what this answers" one-liners.
+- Key Assumptions rendered as a compact table with confidence badges.
+- Links across to the existing in-app founder surfaces (`/founder/financials`, investor deck, roadmap, clinical brief) so an investor call can be run entirely from the app.
+- Documents in `/mnt/documents` are not web-served, so each artefact row shows filename + location rather than a dead download link, with an optional "paste a Drive link" field stored in `localStorage` so you can attach real share URLs once uploaded.
+- Styling: launch Emerald Prestige palette, `LaunchCard`, semantic tokens only. Progressive reveal (accordion per section) so it never looks like a wall of text.
+
+Data lives in one file, `src/founder/dataRoom.ts`, so the page and the markdown index never drift.
+
+---
+
+# Deliverable 2 — Competitor Benchmarking Pack
+
+**Files:** `founder_pack/myrhythm/MyRhythm_B1_Competitor_Benchmarking.md` + `MyRhythm_B1_Competitor_Matrix.xlsx` (+ FIT versions)
+
+## Narrative (B1 .md)
+
+1. **Scope & method** — how comparables were chosen, what evidence is public vs estimated.
+2. **The five clusters:**
+   - Mindfulness/consumer scale — Calm, Headspace
+   - Brain training — Lumosity, Elevate, Peak, CogniFit
+   - Clinical/digital therapeutic — Constant Therapy, Akili/EndeavorRx, Neuro-Rehab VR, Sword/Hinge (arc model)
+   - Planning/executive-function — Todoist, Sunsama, Motion, Goblin Tools, Tiimo
+   - Care coordination — CaringBridge, Lotsa Helping Hands, Birdie, Jointly (UK)
+3. **Lessons learned, one per brand** — what worked, what it cost, what broke. Includes the Lumosity FTC anti-pattern on unproven cognitive claims, Calm's brand-led consumer motion, Headspace's payer/enterprise pivot economics, Akili's evidence-heavy but distribution-poor arc, Tiimo's neurodivergent-native positioning.
+4. **Why MyRhythm's GTM differs** — the four wedges nobody else holds together: begins pre-discharge on the ward; Collaborative Cognitive Continuity layer rather than a training game; Support Circle as a first-class surface ("no one walks alone"); universal by design, so the same product serves ADHD, stress, and ageing without a "senior mode".
+5. **Where we are genuinely weaker** — no clinical trial, no brand awareness, single-founder capacity. Stated plainly; VCs test for this.
+6. **Positioning statement + a one-paragraph "why now"** for the deck.
+7. **What we will NOT copy** — no cognitive-improvement claims, no streak-guilt mechanics, no gamified leaderboards. Ties back to the no-medical-claims policy.
+
+## Matrix (B1 .xlsx)
 
 Tabs:
-1. **README** — usage, Google Sheets upload, status conventions.
-2. **90_Day_Actions** — ~65–80 rows across the 3 sprints.
-3. **IP_Register** (new) — one row per asset: asset, type (trademark / copyright / patent / trade secret / domain), jurisdiction (UK, US, EU/Madrid), current status, filing target date, cost estimate, owner, evidence/notes.
-4. **Dashboard** — formula-driven: % complete by workstream, overdue count, days remaining.
-5. **Success_Metrics** — day-90 bar, target vs actual.
-6. **Assumptions** — drives the FIT version's neutralised figures.
+1. **README** — method, scoring key, refresh cadence.
+2. **Comparables** — ~18 brands × columns: cluster, HQ/market, founded, funding, est. users/revenue, pricing model, primary channel, clinical evidence level, care-network feature, discharge/transition support, claim posture, notes/source.
+3. **Scorecard** — formula-driven weighted score across 8 dimensions (problem fit, evidence, continuity, network, accessibility, pricing power, distribution, moat) for MyRhythm vs 6 closest comparables, with a computed gap column showing where the white space actually is.
+4. **Lessons** — one row per brand: lesson, evidence, what MyRhythm does instead, which artefact it affects.
+5. **Assumptions** — every estimated figure isolated here (drives the FIT version's neutralised numbers).
 
-Data validation on dropdowns (survives Sheets import) and conditional formatting for overdue/blocked.
+Blue = input, black = formula, green = cross-sheet, yellow = needs your input. Recalculated with the xlsx script to zero formula errors; every sheet rendered to image and QA'd. Landscape fit-to-width.
 
-### IP scope covered (drafted for counsel review, not legal advice)
-- **Trademarks** — `MYRHYTHM`, `Memory-First Design™`, `Discharge Bridge Kit`, `MyRHYTHM-G`, logo mark. UK IPO + USPTO (intent-to-use) with Madrid Protocol extension. Actions include clearance search → file → monitor, with the ™ → ® transition point flagged.
-- **Copyright** — source code, assessment instrument, curriculum, handbook, deck, infographics. Automatic on creation; actions cover authorship/ownership evidence, contributor IP-assignment agreements, US Copyright Office registration for the highest-value written works (needed to sue for statutory damages in the US), and a copyright notice standard across all artefacts.
-- **Patent — honest assessment.** Most of MyRhythm is software workflow and brand, which is weak patent territory in the UK/EU and expensive in the US. My recommendation is **not to file a full patent in the 90 days**. Instead the plan includes: a documented invention-disclosure log for the two candidate mechanisms (assessment-score-driven smart scheduling; discharge-summary → clinician-approved plan materialisation), a one-hour patent-attorney triage call to get a file/don't-file opinion, and an optional **US provisional patent** (~$150–$3,000) as a low-cost 12-month placeholder if the attorney says the mechanism is defensible. Non-provisional and any PCT decision sit in Year 2 of the 5-year plan.
-- **Trade secrets & defensive** — prompt/scoring logic kept unpublished, NDA template for cohort and clinical partners, domain and social-handle defensive registrations.
-- **Costs** are itemised per row so they roll into the existing F1 financial model.
+An abridged "top 6 comparables + why we differ" block also surfaces on the in-app data room page.
 
 ---
 
-## Deliverable 3 — 5-Year Action Plan (Google Sheets ready)
+# Technical notes
 
-**File:** `M3_Five_Year_Action_Plan.xlsx` (+ FIT version)
+- New: `src/founder/dataRoom.ts`, `src/pages/FounderDataRoomPage.tsx`, route registration in `src/App.tsx` behind `AdminRoute`. No database changes, no edge functions.
+- All figures in the pack are estimates from public sources — flagged as such, not presented as verified.
+- Nothing existing is deleted; `Founder_Pack_Index.md` is updated to point at the new data room index.
 
-Same column schema as the 90-day sheet, quarterly across Y1–Y5, mapped to the five G1 growth phases (Founders Wedge → Clinical Beachhead → Category Ownership → Geographic Expansion → Platform).
+# Human actions (outside the build)
 
-Tabs:
-1. **README**
-2. **Five_Year_Actions** — ~110–130 rows, quarter-bucketed.
-3. **IP_Roadmap** (new) — multi-year: ™ → ® registration completion, Madrid/EU extensions as markets open, non-provisional/PCT decision gate in Y2, renewal calendar (UK/US 10-year cycles, US §8/§15 declarations at years 5–6), enforcement/watch service, and IP schedule maintenance for due diligence.
-4. **Phase_Gates** — go/no-go criteria to exit each year.
-5. **Milestone_Timeline** — quarter-by-quarter grid.
-6. **Dashboard**
-7. **Assumptions**
-
-The 90-day sheet's final rows roll into Y1Q3/Q4, giving one continuous chain from day 1 to year 5.
-
----
-
-## Technical notes
-- openpyxl; every calculated cell is an Excel formula, never a hardcoded Python result.
-- Recalculated with the xlsx skill script; delivered with zero formula errors, and every sheet visually QA'd.
-- Arial; blue = input, black = formula, green = cross-sheet link, yellow fill = needs your input.
-- Confidentiality footer per project standard.
-- FIT_COLLECTIVE versions neutralise MyRhythm-specific figures and IP asset names into Assumptions-driven fields.
-- Google Sheets: `.xlsx` upload preserves formulas, validation and conditional formatting. To push directly into your Drive the Sheets connector needs a reconnect (it 403'd on scopes last time).
-
-## Human actions flagged (not part of the build)
-- Confirm the 90-day dates against your actual availability before I lock them.
-- Engage a UK/US trademark attorney for clearance searches before filing — the IP_Register rows are drafts, not legal advice.
-- One-hour patent-attorney triage before spending anything on a provisional.
-- US counsel/CPA review of figures; forward-looking-statements disclaimer on the 5-year sheet.
-- Signed IP-assignment agreements from any contractor or contributor, past and future.
-
-Reply **approve** and I'll generate all 6 files (3 pairs) in one pass.
+- Upload the pack to Drive and paste share links into the data-room page (or tell me and I'll hardcode them).
+- CPA/counsel sign-off on financial figures before any of this goes to an investor.
+- Sense-check the funding/user estimates for competitors — I'll cite sources, but they move fast.
