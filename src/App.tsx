@@ -426,6 +426,8 @@ function App() {
                        
                        {/* Founder-only financial dashboard — admin role required */}
                        <Route path="/founder/financials" element={<AdminRoute><FounderFinancialsPage /></AdminRoute>} />
+                       {/* Founder-only investor data room — admin role required */}
+                       <Route path="/founder/data-room" element={<AdminRoute><FounderDataRoomPage /></AdminRoute>} />
                    </Routes>
                         </Suspense>
                         <AuthenticatedBottomNav />
