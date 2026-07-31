@@ -1,96 +1,58 @@
+# The 90-day pack already exists — it just isn't in your hands yet
 
-# Where the M-Pack is
-
-It's already generated, in your files panel under:
+Confirmed on disk:
 
 ```text
-launch_v2_3/founder_pack/
-├── Founder_Pack_Index.md
-├── myrhythm/
-│   ├── MyRhythm_M1_MVP_90_Day_Plan.md
-│   ├── MyRhythm_M2_MVP_90_Day_Action_Plan.xlsx
-│   ├── MyRhythm_M3_Five_Year_Action_Plan.xlsx
-│   ├── MyRhythm_F1_Investor_Financials_v1.xlsx / F1_Investor_Narrative.md
-│   ├── MyRhythm_G1_Five_Year_Growth_Plan_v1.xlsx / G1_Growth_Narrative.md
-│   └── MyRhythm_C1_Founder_Curriculum.md / C2_Daily_Founder_Plan.md
-└── fit_collective/  (same 9 files, FIT-branded)
+launch_v2_3/founder_pack/myrhythm/
+├── MyRhythm_M1_MVP_90_Day_Plan.md              (narrative)
+├── MyRhythm_M2_MVP_90_Day_Action_Plan.xlsx     (6 tabs: README, 90_Day_Actions (57 actions),
+│                                                IP_Register, Success_Metrics, Dashboard, Assumptions)
+└── MyRhythm_M3_Five_Year_Action_Plan.xlsx
+launch_v2_3/founder_pack/fit_collective/  (FIT mirrors of all three)
 ```
 
-Nothing is missing — it just isn't surfaced anywhere as a single index, which is exactly what deliverable 1 fixes.
+Nothing needs rebuilding. What's missing is a downloadable handoff and a Google-Sheets-clean version.
 
 ---
 
-# Deliverable 1 — Investor Data Room
+## Deliverable 1 — 90-day plan, ready for Google Sheets today
 
-## 1a. Document index (source of truth)
+1. Re-surface `MyRhythm_M2_MVP_90_Day_Action_Plan.xlsx` and `MyRhythm_M1_MVP_90_Day_Plan.md` as downloadable artefacts in chat (plus FIT mirrors) so you can grab them immediately.
+2. Produce a **Google-Sheets-safe** variant, `MyRhythm_M2_MVP_90_Day_Action_Plan_GSHEETS.xlsx`:
+   - Formulas rewritten to functions Sheets supports natively (no volatile/Excel-only constructs), so the Dashboard still computes after import.
+   - Data-validation dropdowns on **Status** (Not started / In progress / Blocked / Done) and **Owner** — these survive the import and make it usable as a live tracker.
+   - Conditional formatting on Status and on overdue Finish dates versus today.
+   - Frozen header row, filter view on `90_Day_Actions`, dates as real dates (not text).
+3. Also export `90_Day_Actions.csv` as a fallback — a single-tab import that can never break.
+4. A one-page `HOW_TO_IMPORT.md`: File → Import → Upload → Replace spreadsheet, then how to share it, and which cells are yours to edit (blue) versus computed (black).
 
-**File:** `launch_v2_3/founder_pack/Investor_Data_Room.md` (+ FIT version)
-
-Replaces the thin `Founder_Pack_Index.md` with a real data-room index:
-
-- **Section 0 — How to use this room.** Reading order for a VC: narrative → financials → 90-day → 5-year → competitor pack.
-- **Tabled artefact register** — one row per artefact: ID, title, what it answers, format, status (Final / Draft / Human-action-pending), last updated, owner.
-- **Grouped sections** — Pitch narrative · Financial model · 90-day execution · Five-year plan · Market & problem fit · Competitor benchmarking · IP & legal · Product evidence.
-- **Key assumptions page** — pulled together in one place: pricing, conversion, CAC, churn, cohort size, clinical LOI timing, IP spend, FX, anchor dates. Each with value, source, and confidence (High/Medium/Low). This is the page investors go to first.
-- **Known gaps / human actions** — entity formation, US counsel, CPA review, trademark clearance, patent triage — stated openly rather than hidden.
-- Confidentiality footer per project standard; forward-looking-statements disclaimer.
-
-## 1b. In-app gated page
-
-**Route:** `/founder/data-room`, wrapped in the existing `AdminRoute` (same gate as `/founder/financials`).
-
-- Renders the same artefact register as cards grouped by section, with status chips and "what this answers" one-liners.
-- Key Assumptions rendered as a compact table with confidence badges.
-- Links across to the existing in-app founder surfaces (`/founder/financials`, investor deck, roadmap, clinical brief) so an investor call can be run entirely from the app.
-- Documents in `/mnt/documents` are not web-served, so each artefact row shows filename + location rather than a dead download link, with an optional "paste a Drive link" field stored in `localStorage` so you can attach real share URLs once uploaded.
-- Styling: launch Emerald Prestige palette, `LaunchCard`, semantic tokens only. Progressive reveal (accordion per section) so it never looks like a wall of text.
-
-Data lives in one file, `src/founder/dataRoom.ts`, so the page and the markdown index never drift.
+Start date currently in the workbook is 3 Aug 2026; today is 31 Jul 2026, so the schedule still lands. Say the word if you want it re-anchored to Mon 3 Aug explicitly.
 
 ---
 
-# Deliverable 2 — Competitor Benchmarking Pack
+## Deliverable 2 — Friends & Family £8/month for life
 
-**Files:** `founder_pack/myrhythm/MyRhythm_B1_Competitor_Benchmarking.md` + `MyRhythm_B1_Competitor_Matrix.xlsx` (+ FIT versions)
+My honest read: **yes, but bound it.** A lifetime price is a permanent liability on your margin and it appears in every investor model you've already built. £8 versus the £10 Founding Member rate is only a 20% discount — too small to feel special, big enough to muddy the ladder. Two things fix it:
 
-## Narrative (B1 .md)
+- **Cap it at 50 seats, invite-only, code-gated.** Scarcity makes it a gift rather than a discount tier, and it keeps the F1 financial model honest.
+- **Make it a distinct badge, not a cheaper Founding Member.** "Friends & Family — Founding Circle" with the expectation of feedback attached. People pay £8 for belonging, not for the £2.
 
-1. **Scope & method** — how comparables were chosen, what evidence is public vs estimated.
-2. **The five clusters:**
-   - Mindfulness/consumer scale — Calm, Headspace
-   - Brain training — Lumosity, Elevate, Peak, CogniFit
-   - Clinical/digital therapeutic — Constant Therapy, Akili/EndeavorRx, Neuro-Rehab VR, Sword/Hinge (arc model)
-   - Planning/executive-function — Todoist, Sunsama, Motion, Goblin Tools, Tiimo
-   - Care coordination — CaringBridge, Lotsa Helping Hands, Birdie, Jointly (UK)
-3. **Lessons learned, one per brand** — what worked, what it cost, what broke. Includes the Lumosity FTC anti-pattern on unproven cognitive claims, Calm's brand-led consumer motion, Headspace's payer/enterprise pivot economics, Akili's evidence-heavy but distribution-poor arc, Tiimo's neurodivergent-native positioning.
-4. **Why MyRhythm's GTM differs** — the four wedges nobody else holds together: begins pre-discharge on the ward; Collaborative Cognitive Continuity layer rather than a training game; Support Circle as a first-class surface ("no one walks alone"); universal by design, so the same product serves ADHD, stress, and ageing without a "senior mode".
-5. **Where we are genuinely weaker** — no clinical trial, no brand awareness, single-founder capacity. Stated plainly; VCs test for this.
-6. **Positioning statement + a one-paragraph "why now"** for the deck.
-7. **What we will NOT copy** — no cognitive-improvement claims, no streak-guilt mechanics, no gamified leaderboards. Ties back to the no-medical-claims policy.
+Alternative worth a thought: £8/month for life *or* £80/year for life, same cap. The annual version front-loads cash you need in the next 90 days.
 
-## Matrix (B1 .xlsx)
-
-Tabs:
-1. **README** — method, scoring key, refresh cadence.
-2. **Comparables** — ~18 brands × columns: cluster, HQ/market, founded, funding, est. users/revenue, pricing model, primary channel, clinical evidence level, care-network feature, discharge/transition support, claim posture, notes/source.
-3. **Scorecard** — formula-driven weighted score across 8 dimensions (problem fit, evidence, continuity, network, accessibility, pricing power, distribution, moat) for MyRhythm vs 6 closest comparables, with a computed gap column showing where the white space actually is.
-4. **Lessons** — one row per brand: lesson, evidence, what MyRhythm does instead, which artefact it affects.
-5. **Assumptions** — every estimated figure isolated here (drives the FIT version's neutralised numbers).
-
-Blue = input, black = formula, green = cross-sheet, yellow = needs your input. Recalculated with the xlsx script to zero formula errors; every sheet rendered to image and QA'd. Landscape fit-to-width.
-
-An abridged "top 6 comparables + why we differ" block also surfaces on the in-app data room page.
+Implementation:
+- Add a `friendsFamily` tier to `src/config/pricing.ts` (£8/mo, £80/yr, 50-seat cap, `lifetime: true`).
+- Redeemed via the existing `founding_access_codes` gate — a new code batch tagged `friends_family` rather than a new payment path.
+- Payment screen shows the F&F price and badge when a valid code is held; otherwise unchanged.
+- Add the tier and its 50-seat cap as a line in the M2 Assumptions tab and the F1 financial model so the numbers stay consistent.
 
 ---
 
-# Technical notes
+## Technical notes
 
-- New: `src/founder/dataRoom.ts`, `src/pages/FounderDataRoomPage.tsx`, route registration in `src/App.tsx` behind `AdminRoute`. No database changes, no edge functions.
-- All figures in the pack are estimates from public sources — flagged as such, not presented as verified.
-- Nothing existing is deleted; `Founder_Pack_Index.md` is updated to point at the new data room index.
+- Workbook generation uses the existing Python/openpyxl scripts; every output recalculated headless to zero formula errors and each page rendered to image and inspected before delivery.
+- No database changes for the plan files. The F&F tier touches `src/config/pricing.ts`, the payment screen, and the access-code batch only.
 
-# Human actions (outside the build)
+## Your decisions before I build
 
-- Upload the pack to Drive and paste share links into the data-room page (or tell me and I'll hardcode them).
-- CPA/counsel sign-off on financial figures before any of this goes to an investor.
-- Sense-check the funding/user estimates for competitors — I'll cite sources, but they move fast.
+- F&F: 50-seat cap, or a number you prefer?
+- Monthly £8 only, or offer £80/year for life alongside it?
