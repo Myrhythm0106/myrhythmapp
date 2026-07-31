@@ -271,10 +271,12 @@ export interface Assumption {
 }
 
 export const KEY_ASSUMPTIONS: Assumption[] = [
-  { key: 'Anchor date (Day 1)', value: '3 Aug 2026', source: 'Founder availability — to be confirmed', confidence: 'Medium' },
-  { key: 'Public paid launch', value: '31 Oct 2026 (Day 90)', source: 'M1 90-day plan', confidence: 'Medium' },
+  { key: 'Anchor date (Day 1)', value: '1 Aug 2026', source: 'M2 90-day plan v2 — re-baselined', confidence: 'High' },
+  { key: 'Public paid launch', value: '29 Oct 2026 (Day 90)', source: 'M1 90-day plan', confidence: 'Medium' },
   { key: 'Founding cohort target', value: '100 Founding Members', source: 'Founders market marketing plan', confidence: 'Medium' },
-  { key: 'Consumer price point', value: '£10 / month equivalent', source: 'F1 revenue build; benchmarked to Calm/Headspace tier', confidence: 'High' },
+  { key: 'Regular price', value: '£15 / month (£150 / year)', source: 'Pricing ladder — docs/pricing-rationale.md', confidence: 'High' },
+  { key: 'Founding Member price', value: '£10 / month for life, 500 seats', source: 'Pricing ladder; benchmarked to Calm/Headspace tier', confidence: 'High' },
+  { key: 'Friends & Family price', value: '£7.50 / month (£75 / year) for life, 50 seats, invite-only', source: 'Pricing ladder — 50% of regular, capped to protect the model', confidence: 'High' },
   { key: 'B2B partner price', value: '£249 / month per partner', source: 'F1 revenue build', confidence: 'Low' },
   { key: 'Provider listing price', value: '£99 / month per listing', source: 'F1 revenue build; directory not live in v0.1', confidence: 'Low' },
   { key: 'Monthly churn', value: '5%', source: 'Consumer wellbeing app category norm', confidence: 'Medium' },

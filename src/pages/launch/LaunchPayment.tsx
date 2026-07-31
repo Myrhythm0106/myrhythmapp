@@ -9,6 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { friendsFamilyConfig, isFriendsFamilyCode } from '@/config/pricing';
 
 const STRIPE_MODE = (import.meta.env.VITE_STRIPE_MODE || 'live').toLowerCase();
 const IS_TEST_MODE = STRIPE_MODE === 'test';
@@ -49,6 +50,9 @@ export default function LaunchPayment() {
   const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
+  const isFF = isFriendsFamilyCode(code);
+
+
 
   const handleRedeemCode = async () => {
     const trimmed = code.trim();
@@ -232,6 +236,27 @@ export default function LaunchPayment() {
                     {isRedeeming ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Redeem code'}
                   </Button>
                 </div>
+
+                {isFF && (
+                  <div
+                    className="mt-4 rounded-xl border-2 border-launch-moss/40 bg-launch-moss/10 px-4 py-3"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <Badge variant="outline" className="bg-launch-gold/20 text-launch-ink border-launch-gold/40">
+                        {friendsFamilyConfig.badge}
+                      </Badge>
+                      <span className="text-sm font-semibold text-launch-ink">
+                        £{friendsFamilyConfig.price.monthly.toFixed(2)}/month
+                        {' · '}£{friendsFamilyConfig.price.yearly.toFixed(0)}/year
+                      </span>
+                    </div>
+                    <p className="text-sm text-launch-ink/70">
+                      {friendsFamilyConfig.tagline}. Invite-only — {friendsFamilyConfig.maxSeats} seats in total.
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </motion.div>
