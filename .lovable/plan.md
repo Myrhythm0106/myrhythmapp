@@ -1,58 +1,49 @@
-# The 90-day pack already exists — it just isn't in your hands yet
+# Pricing: what to charge Founding Members, and what F&F should be
 
-Confirmed on disk:
+## Where competitors actually sit (monthly equivalent, GBP)
 
-```text
-launch_v2_3/founder_pack/myrhythm/
-├── MyRhythm_M1_MVP_90_Day_Plan.md              (narrative)
-├── MyRhythm_M2_MVP_90_Day_Action_Plan.xlsx     (6 tabs: README, 90_Day_Actions (57 actions),
-│                                                IP_Register, Success_Metrics, Dashboard, Assumptions)
-└── MyRhythm_M3_Five_Year_Action_Plan.xlsx
-launch_v2_3/founder_pack/fit_collective/  (FIT mirrors of all three)
-```
+| Band | Brands | Price | What the money buys |
+|---|---|---|---|
+| Commodity utility | Todoist, Goblin Tools | £0–£4 | A list. No judgement, no help. |
+| Neurodivergent-native | Tiimo | £7–£9 | Visual day structure, designed *for* someone |
+| Wellbeing habit | Calm, Headspace | £4–£6 (annual-led, ~£50–£70/yr) | Content library, not a day that holds |
+| Planning relief / AI | Sunsama, Motion | £16–£28 | Someone else runs your day. Premium, unapologetic. |
+| Clinical / rehab | Constant Therapy, CogniFit | £15–£25 | Exercises, clinician-backed, stops at the session |
 
-Nothing needs rebuilding. What's missing is a downloadable handoff and a Google-Sheets-clean version.
+Two things fall out of that table:
 
----
+1. Nobody credible sits below £7 while doing real daily work. Sub-£5 is where lists live, and lists shame people who miss a day.
+2. The £16–£28 band exists *purely* because people pay for planning relief. Sunsama charges £16+ to high performers with intact executive function. Our user needs that relief more, not less.
 
-## Deliverable 1 — 90-day plan, ready for Google Sheets today
+MyRhythm does clinical-adjacent work (Discharge Bridge), planning relief (4C loop, AI plan assist), and a care-network surface (Support Circle) — three bands at once. Priced at £10 it undersells all three.
 
-1. Re-surface `MyRhythm_M2_MVP_90_Day_Action_Plan.xlsx` and `MyRhythm_M1_MVP_90_Day_Plan.md` as downloadable artefacts in chat (plus FIT mirrors) so you can grab them immediately.
-2. Produce a **Google-Sheets-safe** variant, `MyRhythm_M2_MVP_90_Day_Action_Plan_GSHEETS.xlsx`:
-   - Formulas rewritten to functions Sheets supports natively (no volatile/Excel-only constructs), so the Dashboard still computes after import.
-   - Data-validation dropdowns on **Status** (Not started / In progress / Blocked / Done) and **Owner** — these survive the import and make it usable as a live tracker.
-   - Conditional formatting on Status and on overdue Finish dates versus today.
-   - Frozen header row, filter view on `90_Day_Actions`, dates as real dates (not text).
-3. Also export `90_Day_Actions.csv` as a fallback — a single-tab import that can never break.
-4. A one-page `HOW_TO_IMPORT.md`: File → Import → Upload → Replace spreadsheet, then how to share it, and which cells are yours to edit (blue) versus computed (black).
+## Recommendation
 
-Start date currently in the workbook is 3 Aug 2026; today is 31 Jul 2026, so the schedule still lands. Say the word if you want it re-anchored to Mon 3 Aug explicitly.
+**Regular price: £15/month, £150/year.** Keep it. It sits at the floor of the planning-relief band and below every clinical comparable. Defensible in one sentence: "less than Sunsama, and it holds the whole day, not just work."
 
----
+**Founding Member: £10/month or £100/year — locked for life, capped at 500 seats.** No change. It is a 33% discount, a round number, and the cap is what makes it a status rather than a sale. This is the number that already sits in F1, M2 and every investor artefact. Changing it now costs more in model rework than it gains.
 
-## Deliverable 2 — Friends & Family £8/month for life
+**Friends & Family: 50% off the £15 regular price → £7.50/month or £75/year.**
 
-My honest read: **yes, but bound it.** A lifetime price is a permanent liability on your margin and it appears in every investor model you've already built. £8 versus the £10 Founding Member rate is only a 20% discount — too small to feel special, big enough to muddy the ladder. Two things fix it:
+Why 50%-off-regular rather than 50%-off-founding:
 
-- **Cap it at 50 seats, invite-only, code-gated.** Scarcity makes it a gift rather than a discount tier, and it keeps the F1 financial model honest.
-- **Make it a distinct badge, not a cheaper Founding Member.** "Friends & Family — Founding Circle" with the expectation of feedback attached. People pay £8 for belonging, not for the £2.
+- £7.50 is still inside the credible band (above Tiimo's floor). £5 is not — it prices the product as a to-do list and, more importantly, it anchors the people closest to you at a third of list. Those are the people who will introduce you to others; you do not want them describing MyRhythm as "the fiver app".
+- The story is clean for investors and for the recipients: "friends and family pay half list." One sentence, no ladder confusion.
+- Blended ARPU stays honest. 50 seats at £7.50 against a £10 founding base is a ~£125/month give — visible, bounded, and easy to defend in the F1 model.
 
-Alternative worth a thought: £8/month for life *or* £80/year for life, same cap. The annual version front-loads cash you need in the next 90 days.
+**Duration: for life, capped at 50 seats, invite-only via `founding_access_codes`.** A lifetime rate is only dangerous when it is uncapped. Fifty seats is a rounding error on the model and a permanent, genuine thank-you to the people who carried you through the build. Offer £75/year alongside — it front-loads cash you need inside the 90-day window and roughly a third of them will take it.
 
-Implementation:
-- Add a `friendsFamily` tier to `src/config/pricing.ts` (£8/mo, £80/yr, 50-seat cap, `lifetime: true`).
-- Redeemed via the existing `founding_access_codes` gate — a new code batch tagged `friends_family` rather than a new payment path.
-- Payment screen shows the F&F price and badge when a valid code is held; otherwise unchanged.
-- Add the tier and its 50-seat cap as a line in the M2 Assumptions tab and the F1 financial model so the numbers stay consistent.
+What F&F is *not*: a cheaper Founding Member. Distinct badge — "Friends & Family, Founding Circle" — with an expectation of feedback attached. People pay £7.50 for belonging; the £2.50 is not the point.
 
----
+## What this changes in the build
 
-## Technical notes
+- `src/config/pricing.ts` — add a `friendsFamily` tier: £7.50/mo (750 pence), £75/yr (7500 pence), `lifetime: true`, `maxSeats: 50`, own badge and tagline. Regular and founding numbers unchanged.
+- Redemption rides the existing `founding_access_codes` gate — a new code batch tagged `friends_family`, not a new payment path.
+- `LaunchPayment.tsx` — when a valid F&F code is held, show £7.50/£75, the F&F badge, and the seats-remaining line. Otherwise the screen is untouched.
+- `src/founder/dataRoom.ts` — add the F&F tier and 50-seat cap to the assumptions so the in-app data room and the docs agree.
+- Assumptions rows added to `MyRhythm_F1_Investor_Financials_v1.xlsx` and the M2 `Assumptions` tab so the blended-ARPU line reflects 50 discounted lifetime seats.
+- A short `docs/pricing-rationale.md` capturing the competitor table above, so the £15 / £10 / £7.50 ladder can be defended without re-deriving it.
 
-- Workbook generation uses the existing Python/openpyxl scripts; every output recalculated headless to zero formula errors and each page rendered to image and inspected before delivery.
-- No database changes for the plan files. The F&F tier touches `src/config/pricing.ts`, the payment screen, and the access-code batch only.
+## Still outstanding from the previous plan
 
-## Your decisions before I build
-
-- F&F: 50-seat cap, or a number you prefer?
-- Monthly £8 only, or offer £80/year for life alongside it?
+The Google-Sheets-safe 90-day workbook (`..._GSHEETS.xlsx`), the `90_Day_Actions.csv` fallback and `HOW_TO_IMPORT.md` are unbuilt. They ship in the same pass.
