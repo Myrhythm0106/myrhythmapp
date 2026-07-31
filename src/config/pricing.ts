@@ -106,6 +106,39 @@ export const foundingMemberConfig = {
   ]
 };
 
+// Friends & Family Configuration — 50% of the regular £15 price, for life.
+// Invite-only: redeemed through the existing founding_access_codes gate
+// using a `friends_family` code batch. Capped at 50 seats to protect the model.
+export const friendsFamilyConfig = {
+  enabled: true,
+  price: {
+    monthly: 7.50,
+    yearly: 75.00,
+    monthlyPence: 750,
+    yearlyPence: 7500
+  },
+  regularPrice: {
+    monthly: 15.00,
+    yearly: 150.00
+  },
+  lifetime: true,
+  maxSeats: 50,
+  codePrefix: 'FF',
+  badge: 'Friends & Family',
+  tagline: '50% off the regular price — £7.50/month, for life',
+  benefits: [
+    'Half the regular price, locked for life',
+    'Everything in Founding Member',
+    'Friends & Family badge on profile',
+    'Your feedback shapes v0.2 directly'
+  ]
+};
+
+export function isFriendsFamilyCode(code: string): boolean {
+  return friendsFamilyConfig.enabled
+    && code.trim().toUpperCase().startsWith(friendsFamilyConfig.codePrefix);
+}
+
 export function isFoundingMemberActive(): boolean {
   if (!foundingMemberConfig.enabled) return false;
   
