@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { recordAction, SURFACES } from '@/lib/evidence/track';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
