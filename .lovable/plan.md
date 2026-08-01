@@ -70,6 +70,46 @@ The 5-year prize is a research asset. The part that must be done **now**, in v0.
 
 This is added to the 5-year plan as a distinct track (Research & Evidence), with the v0.1 consent and de-identification work pulled forward into the 90-day window as its first two items.
 
+## 5. What is actually worth capturing
+
+Not everything. The test for every signal is: *would losing this weaken either a product decision or a research claim?* If neither, it is noise and it is not collected.
+
+**Tier A — continuity signals (the core asset; collect from day one)**
+
+| Signal | Stored as | Why it matters to you | Why it matters to the neuro sector |
+|---|---|---|---|
+| Days active in a rolling 7 | integer 0–7 | Is the loop sticky? | Adherence to a self-management routine post-discharge — almost never measured outside clinics |
+| Capture → commit conversion | percentage | Does capture lead to action, or dead-end? | Whether intention translates into scheduled behaviour in cognitive impairment |
+| Commit → complete rate | percentage | Are plans realistic? | The prospective-memory gap, quantified in daily life |
+| Reschedules before completion | count band | Is the plan too heavy? | Cognitive load and pacing tolerance |
+| Time-of-day of completed actions | hour band | Powers smart scheduling | Real-world circadian/energy patterns after brain injury |
+| Days from signup to first completed action | integer | Onboarding health | Time-to-routine after discharge — a direct Discharge Cliff measure |
+| Re-entry after a gap (returned after 7+ idle days) | boolean | The forgiveness feature working? | Relapse-and-return patterns, rarely captured because most apps lose people silently |
+
+**Tier B — state and context (collect, coarse only)**
+
+MyRHYTHM-G growth state, energy band at check-in, assessment score bands (initial and each re-take), stage (pre-discharge / early / established / long-term), persona, months-since-event band, age band, Support Circle size band. These turn every Tier A number into a *cohort* number — which is where research value lives. A completion rate on its own is a product metric; a completion rate by stage and months-since-event is a finding.
+
+**Tier C — explicitly never collected into research**
+
+Transcripts, note text, action titles, names, emails, contact details, documents, audio, exact dates of birth, precise location, anything free-text. The rule is stated positively in the charter: **shape and rhythm travel; words never do.**
+
+### The value, stated plainly
+
+**To the product.** Every Keep/Fix/Cut call in section 3 gets a number behind it, and the smart-scheduling engine improves from real completion patterns rather than assumptions.
+
+**To the neuro sector.** There is a well-known gap: rehabilitation outcomes are measured in clinics, in sessions, at intervals — almost nothing measures what happens in the weeks after discharge, in the person's actual life, at daily resolution. MyRhythm sits exactly there. A consented, de-identified, longitudinal dataset of daily continuity behaviour across brain injury, ADHD, MCI and stress cohorts is a genuinely novel resource, and it is generated as a by-product of the app being useful — not by asking anyone to fill in a research form.
+
+**To the user.** Reciprocity is the deal: contributors see cohort context ("people at your stage typically take about this long"), which is itself reassurance the sector currently cannot give.
+
+**To the business.** It underwrites clinician trust, funder credibility and partnership conversations, and it is the asset an investor cannot easily replicate. It is never sold, and it never becomes a medical claim — publishing describes patterns, not outcomes or efficacy, unless and until a proper study with ethics approval says otherwise.
+
+### Claims discipline
+
+Anything published carries: consented sample only, self-reported, non-clinical, no control group, k≥20 cohorts, and the standing disclaimer that MyRhythm does not diagnose or treat. Overclaiming here would cost more credibility than the data earns.
+
+
+
 ## Technical notes
 
 - Migration: admin `SELECT` policies via `has_role(auth.uid(), 'admin')` on `analytics_events`, `founding_feedback`, `assessment_results`; new `product_decisions` table (feature, verdict, evidence, decided_at) with the standard GRANT + RLS block, admin-only.
