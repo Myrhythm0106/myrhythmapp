@@ -110,7 +110,64 @@ Anything published carries: consented sample only, self-reported, non-clinical, 
 
 
 
-## Technical notes
+## 6. Language discipline — how to talk about the evidence without overclaiming
+
+The evidence system is only valuable if the words that accompany it stay inside the space the standards admit they do not cover. MyRhythm is not a clinical intervention and it is not competing with rehab. It is the missing follow-through stage: the period after formal rehab ends when functional scores look acceptable on paper but the person is still rebuilding confidence, identity, daily behaviour and quality of life.
+
+### Permitted claim territory
+
+These are the four domains the product can speak to, and the evidence can support:
+
+- **Confidence** — "I trust myself to complete one thing today" and "I know where to look when I forget what matters."
+- **Identity** — "I am relearning who I am outside the patient role" and "my routine reflects me, not just my diagnosis."
+- **Behaviour** — "I captured an intention and followed it through" and "I returned to the loop after a bad day."
+- **Quality of life** — "I feel less scrambled," "my family knows how to support without taking over," "appointments stop surprising me."
+
+These map to what the evidence system actually measures: return rate, completion rate, capture-to-commit conversion, re-entry after gaps, Support Circle activity, and self-reported growth-state bands.
+
+### Forbidden claim territory
+
+Never imply, suggest or quote-out-of-context that MyRhythm:
+
+- improves functional independence measure (FIM) scores
+- restores, repairs, trains or enhances cognitive function
+- prevents relapse, readmission or medical deterioration
+- replaces, outperforms or shortens rehabilitation
+- diagnoses, treats or manages any medical condition
+
+This applies to investor copy, clinician outreach, the research snapshot, app store listings, social posts, pitch decks and any press quote. The moment the language drifts into clinical outcome territory, the evidence asset becomes a liability.
+
+### The positioning frame
+
+The correct frame is **"after rehab, before routine"**. MyRhythm does not fix the brain; it holds the structure while the person rebuilds their own rhythm. That is a large, defensible, emotionally real space that no incumbent owns.
+
+### Clinician outreach language
+
+Use this as a model for emails, LinkedIn messages and intro calls:
+
+> "I work with women in the months after their neuro rehab episode ends — where the functional scores look good on paper, but she's still relearning who she is and how to trust her own mind. I'd love fifteen minutes to explore whether that's a gap your discharged patients experience too."
+
+Why it works:
+- It acknowledges rehab's success (no "better than" signal).
+- It names the invisible gap the clinician already senses.
+- It centres the patient's lived experience, not the product.
+- It asks for exploration, not a pilot or purchase.
+
+### Evidence-to-claim mapping
+
+| Evidence | Safe way to describe it | Unsafe way (never use) |
+|---|---|---|
+| 60% of users complete a committed action within 24 hours | "Users are converting intentions into daily behaviour" | "MyRhythm improves task completion and executive function" |
+| Day-30 return rate of 45% | "Nearly half the cohort re-engages a month after signup" | "MyRhythm produces lasting cognitive adherence" |
+| Users with a Support Circle complete 2× more actions | "Support Circle presence correlates with sustained behaviour" | "MyRhythm doubles rehabilitation outcomes" |
+| Re-entry after a 7+ day gap | "The loop is forgiving enough to return to" | "MyRhythm prevents dropout and relapse" |
+| Self-reported growth-state shifts | "Users describe shifts in confidence and self-trust" | "MyRhythm improves emotional regulation and mental health" |
+
+### Governance
+
+Add a one-page `docs/claims-policy.md` that contains: the four permitted domains, the forbidden list, the clinician outreach template, and a pre-publish checklist. Any research snapshot, investor update or marketing asset must be run through the checklist before it ships. The evidence page itself carries a footer reminder of the policy.
+
+
 
 - Migration: admin `SELECT` policies via `has_role(auth.uid(), 'admin')` on `analytics_events`, `founding_feedback`, `assessment_results`; new `product_decisions` table (feature, verdict, evidence, decided_at) with the standard GRANT + RLS block, admin-only.
 - Aggregation runs as security-definer SQL functions returning pre-aggregated rows (funnel counts, feature usage, retention cohorts) so no raw per-user data is shipped to the browser.
