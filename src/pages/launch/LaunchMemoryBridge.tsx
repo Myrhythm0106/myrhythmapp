@@ -292,6 +292,10 @@ export default function LaunchMemoryBridge() {
         toast.info('No actions were scheduled.');
       } else {
         const total = actionIds?.length ?? (actions?.length || 0);
+        recordAction(SURFACES.commit, 'scheduled', {
+          value: scheduled,
+          data: { scheduled, total },
+        });
         toast.success(
           scheduled === total
             ? `Scheduled ${scheduled} ${scheduled === 1 ? 'action' : 'actions'} to your calendar!`
