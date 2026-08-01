@@ -375,7 +375,12 @@ export default function LaunchMemoryBridge() {
     if (result.success) {
       setProcessedRecordings(prev => new Set([...prev, recording.id]));
       setActionsCountMap(prev => ({ ...prev, [recording.id]: result.actionsCount || 0 }));
-      
+
+      recordAction(SURFACES.memoryBridge, 'extracted', {
+        value: result.actionsCount || 0,
+        data: { actions: result.actionsCount || 0 },
+      });
+
       if (result.actionsCount && result.actionsCount > 0) {
         toast.success(`Found ${result.actionsCount} actions!`);
       }
