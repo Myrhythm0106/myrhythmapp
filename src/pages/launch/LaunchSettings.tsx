@@ -37,6 +37,7 @@ import { FeedbackDialog } from '@/components/launch/FeedbackDialog';
 import { EDITION_SHORT, EDITION_VERSION } from '@/config/edition';
 import { BrainHealthySettingsCard } from '@/components/launch/BrainHealthySettingsCard';
 import { TimeBlockingSettingsCard } from '@/components/launch/TimeBlockingSettingsCard';
+import { ResearchConsentCard } from '@/components/launch/ResearchConsentCard';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
@@ -495,6 +496,9 @@ export default function LaunchSettings() {
             </div>
           </div>
         </LaunchCard>
+
+        {/* Contribute to research */}
+        <ResearchConsentCard />
 
         {/* Privacy & Security */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">

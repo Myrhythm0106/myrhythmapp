@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { recordAction, SURFACES } from '@/lib/evidence/track';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
@@ -291,6 +292,10 @@ export default function LaunchMemoryBridge() {
         toast.info('No actions were scheduled.');
       } else {
         const total = actionIds?.length ?? (actions?.length || 0);
+        recordAction(SURFACES.commit, 'scheduled', {
+          value: scheduled,
+          data: { scheduled, total },
+        });
         toast.success(
           scheduled === total
             ? `Scheduled ${scheduled} ${scheduled === 1 ? 'action' : 'actions'} to your calendar!`
@@ -375,7 +380,12 @@ export default function LaunchMemoryBridge() {
     if (result.success) {
       setProcessedRecordings(prev => new Set([...prev, recording.id]));
       setActionsCountMap(prev => ({ ...prev, [recording.id]: result.actionsCount || 0 }));
-      
+
+      recordAction(SURFACES.memoryBridge, 'extracted', {
+        value: result.actionsCount || 0,
+        data: { actions: result.actionsCount || 0 },
+      });
+
       if (result.actionsCount && result.actionsCount > 0) {
         toast.success(`Found ${result.actionsCount} actions!`);
       }

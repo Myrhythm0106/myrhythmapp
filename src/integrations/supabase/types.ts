@@ -2036,6 +2036,42 @@ export type Database = {
           },
         ]
       }
+      product_decisions: {
+        Row: {
+          created_at: string
+          decided_at: string
+          decided_by: string | null
+          evidence: string | null
+          feature: string
+          id: string
+          metric_value: number | null
+          notes: string | null
+          verdict: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string
+          decided_by?: string | null
+          evidence?: string | null
+          feature: string
+          id?: string
+          metric_value?: number | null
+          notes?: string | null
+          verdict?: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string
+          decided_by?: string | null
+          evidence?: string | null
+          feature?: string
+          id?: string
+          metric_value?: number | null
+          notes?: string | null
+          verdict?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -2224,6 +2260,87 @@ export type Database = {
           total_completions?: number | null
           updated_at?: string | null
           user_id?: string
+        }
+        Relationships: []
+      }
+      research_consent: {
+        Row: {
+          consent_version: string
+          granted: boolean
+          granted_at: string | null
+          updated_at: string
+          user_id: string
+          withdrawn_at: string | null
+        }
+        Insert: {
+          consent_version?: string
+          granted?: boolean
+          granted_at?: string | null
+          updated_at?: string
+          user_id: string
+          withdrawn_at?: string | null
+        }
+        Update: {
+          consent_version?: string
+          granted?: boolean
+          granted_at?: string | null
+          updated_at?: string
+          user_id?: string
+          withdrawn_at?: string | null
+        }
+        Relationships: []
+      }
+      research_events: {
+        Row: {
+          age_band: string | null
+          created_at: string
+          id: string
+          metric: string
+          metric_value: number | null
+          months_since_event_band: string | null
+          occurred_on: string
+          persona_band: string | null
+          pseudonym_id: string
+          stage_band: string | null
+        }
+        Insert: {
+          age_band?: string | null
+          created_at?: string
+          id?: string
+          metric: string
+          metric_value?: number | null
+          months_since_event_band?: string | null
+          occurred_on?: string
+          persona_band?: string | null
+          pseudonym_id: string
+          stage_band?: string | null
+        }
+        Update: {
+          age_band?: string | null
+          created_at?: string
+          id?: string
+          metric?: string
+          metric_value?: number | null
+          months_since_event_band?: string | null
+          occurred_on?: string
+          persona_band?: string | null
+          pseudonym_id?: string
+          stage_band?: string | null
+        }
+        Relationships: []
+      }
+      research_salt: {
+        Row: {
+          id: boolean
+          salt: string
+        }
+        Insert: {
+          id?: boolean
+          salt?: string
+        }
+        Update: {
+          id?: boolean
+          salt?: string
         }
         Relationships: []
       }
@@ -3248,6 +3365,30 @@ export type Database = {
         Args: { stripe_customer_id?: string; user_uuid: string }
         Returns: string
       }
+      founder_feature_usage: {
+        Args: { _days?: number }
+        Returns: {
+          surface: string
+          users: number
+          uses: number
+        }[]
+      }
+      founder_funnel: {
+        Args: { _days?: number }
+        Returns: {
+          events: number
+          step: string
+          step_order: number
+          users: number
+        }[]
+      }
+      founder_retention: {
+        Args: { _days?: number }
+        Returns: {
+          bucket: string
+          users: number
+        }[]
+      }
       generate_accountability_alert: {
         Args: {
           p_alert_type: string
@@ -3285,6 +3426,17 @@ export type Database = {
         }
         Returns: boolean
       }
+      log_research_event: {
+        Args: {
+          _age_band?: string
+          _metric: string
+          _metric_value?: number
+          _months_since_event_band?: string
+          _persona_band?: string
+          _stage_band?: string
+        }
+        Returns: boolean
+      }
       log_security_event: {
         Args: {
           p_event_data?: Json
@@ -3305,6 +3457,16 @@ export type Database = {
         Returns: string
       }
       redeem_access_code: { Args: { p_code: string }; Returns: Json }
+      research_aggregate: {
+        Args: { _days?: number; _metric: string }
+        Returns: {
+          avg_value: number
+          contributors: number
+          events: number
+          stage_band: string
+        }[]
+      }
+      research_pseudonym: { Args: { _user_id: string }; Returns: string }
       revoke_invitation: {
         Args: { p_member_id: string; p_user_id: string }
         Returns: boolean
@@ -3339,6 +3501,7 @@ export type Database = {
         Args: { p_code: string; p_user_id: string }
         Returns: boolean
       }
+      withdraw_research_consent: { Args: never; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
