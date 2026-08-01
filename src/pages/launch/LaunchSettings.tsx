@@ -496,6 +496,9 @@ export default function LaunchSettings() {
           </div>
         </LaunchCard>
 
+        {/* Contribute to research */}
+        <ResearchConsentCard />
+
         {/* Privacy & Security */}
         <LaunchCard className="bg-launch-ivory border-launch-gold/30">
           <div className="flex items-center gap-3 mb-4">
