@@ -114,6 +114,23 @@ Anything published carries: consented sample only, self-reported, non-clinical, 
 
 The evidence system is only valuable if the words that accompany it stay inside the space the standards admit they do not cover. MyRhythm is not a clinical intervention and it is not competing with rehab. It is the missing follow-through stage: the period after formal rehab ends when functional scores look acceptable on paper but the person is still rebuilding confidence, identity, daily behaviour and quality of life.
 
+### What MyRhythm actually does — say this, concretely
+
+When asked "what does it do?", answer with mechanics, not adjectives. These are the literal actions the product performs:
+
+1. **Captures what was said, so nothing depends on remembering it.** Record an appointment, a family conversation or a thought (up to 4 hours), get a transcript, and have the commitments pulled out of it as discrete actions with the original quote attached.
+2. **Turns those actions into dated, timed entries in one calendar.** Each extracted action gets a suggested start date and time based on the person's own energy pattern and existing commitments, and lands in the MyRhythm calendar once they approve it.
+3. **Reads a discharge summary or clinic letter and drafts the week from it.** Upload the document, see each extracted action next to the line of text it came from, confirm accuracy, send to calendar — the file is then deleted.
+4. **Runs one daily loop instead of a dashboard.** Capture what happened, commit to a small number of things, calibrate how the day actually felt, celebrate what got done. One primary action per screen.
+5. **Reminds at the intensity the person chooses.** Gentle, steady or strong — the same event can nudge once or repeatedly, because reminder tolerance differs enormously.
+6. **Lets chosen people into the loop, at a defined level.** Support Circle members can be invited to an event or simply kept informed, with permission per person, so help arrives without anyone taking over.
+7. **Forgives gaps.** After days away, the app opens with one small step and offers to quietly park stale commitments rather than presenting a backlog.
+8. **Reflects change back over time.** Assessment re-takes, growth states (MyRHYTHM-G) and completion patterns show movement in self-trust and routine — described as the person's own reported experience, never as a clinical measure.
+
+The one-sentence version: **MyRhythm captures what was said, turns it into a realistic dated plan, reminds at the right intensity, and lets chosen people help — so daily life holds together after formal support ends.**
+
+
+
 ### Permitted claim territory
 
 These are the four domains the product can speak to, and the evidence can support:
