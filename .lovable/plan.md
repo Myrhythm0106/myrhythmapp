@@ -65,6 +65,25 @@ So the plan is not a file you forget. A single page, same admin gate as `/founde
 
 State persists in a new `founder_launch_progress` table (admin-only RLS, one row per week) so ticks survive refresh and phone/desktop switches.
 
+### 5. Download as a Google Sheet — and keep it maintainable
+
+One **Download for Google Sheets** button on `/founder/launch-plan` produces a multi-tab workbook (`.xlsx`, opens straight in Google Sheets via File → Import, and a `.csv` option for the schedule tab alone):
+
+| Tab | Contents |
+|---|---|
+| Gates | G1/G2/G3 with dates, pass conditions, current status |
+| 20-Week Plan | Week no., dates, theme, 3 outcomes, target, owner, status, notes |
+| MVP Checklist | Every MVP item, group, done Y/N, date ticked |
+| IP & Legal Actions | Action, why, owner, cost estimate, due date, status |
+| Metrics | One row per Friday, six metric columns, ready to chart |
+
+**Why it stays maintainable rather than going stale:**
+
+- **One source of truth.** The weeks, gates, MVP items and IP actions live in a single typed file (`src/founder/launchPlan.ts`). The markdown docs, the in-app tracker, and the spreadsheet export are all generated from it — change it once, all three update.
+- **Live status baked in.** The export reads your current ticks and metric entries from `founder_launch_progress` at download time, so every download is today's state, not a stale snapshot. Re-download whenever you want a fresh copy to share.
+- **Editable both ways.** The Metrics and Notes columns are free text, so you can work in the Sheet during the week and paste the numbers back into the tracker on Friday — the tracker is the record, the Sheet is the working surface.
+- **Styling matches the existing exporters** (brand orange headers, frozen header row, confidentiality footer line), reusing the `exceljs` pattern already in `src/components/memoryBridge/capture-brief/exporters/xlsx.ts`.
+
 ## Technical notes
 
 - New docs are markdown in `docs/`, linked from the existing docs index and from `90-day-sprint.md` so there's one entry point, not two competing plans. The 90-day sprint dates (3 Jul → 1 Oct) are folded into the new 20-week schedule rather than left to drift.
