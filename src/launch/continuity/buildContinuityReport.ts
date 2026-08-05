@@ -211,13 +211,17 @@ export function buildContinuityReport(input: BuildContinuityReportInput): Contin
   });
 
   // Combine all follow-through items for hero and ribbon
-  const allItems: FollowThroughItem[] = [...dailyFollowThrough, ...goalRows.map(g => ({
-    id: g.id,
-    title: g.title,
-    source: 'goal' as const,
-    status: g.status,
-    date: undefined,
-  })), ...extractedRows];
+  const allItems: FollowThroughItem[] = [
+    ...dailyFollowThrough,
+    ...goalRows.map<FollowThroughItem>(g => ({
+      id: g.id,
+      title: g.title,
+      source: 'goal',
+      status: g.status,
+      date: undefined,
+    })),
+    ...extractedRows,
+  ];
 
   const committedTotal = allItems.length;
   const completedCount = allItems.filter(i => i.status === 'completed').length;
