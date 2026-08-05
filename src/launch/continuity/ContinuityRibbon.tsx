@@ -51,7 +51,7 @@ export function ContinuityRibbon({
               transition={{ duration: 0.4, delay: i * 0.05 }}
               onClick={() => setSelectedWeek(isSelected ? null : i)}
               className="flex-1 h-full flex flex-col justify-end group focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 rounded-sm"
-              style={{ focusVisibleRingColor: accentColor }}
+              style={{ outlineColor: accentColor }}
               aria-label={`Week ${i + 1}: ${b.completed} completed, ${b.partial} partial, ${b.notMet} not met`}
             >
               <div
