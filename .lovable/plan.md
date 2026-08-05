@@ -87,7 +87,7 @@ The locked internal term stays. This adds a **public-facing one-liner** a Friend
 
 **Primary:**
 
-> MyRhythm is the app that keeps your plan going after the appointment ends.
+> MyRhythm is the app that keeps your plan going after the appointment ends — or the commitment has been made.
 
 **Supporting sentence:**
 
