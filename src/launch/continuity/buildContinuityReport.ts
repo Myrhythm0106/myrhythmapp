@@ -91,6 +91,7 @@ export interface BuildContinuityReportInput {
   mode: ReportMode;
   windowDays: WindowDays;
   startDate: string; // yyyy-mm-dd
+  endDate: string; // yyyy-mm-dd
   dailyActions: DailyAction[];
   goals: Goal[];
   extractedActions: any[];
