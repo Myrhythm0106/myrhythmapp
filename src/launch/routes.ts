@@ -61,6 +61,7 @@ export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
   { path: '/launch/clinical-brief',   label: 'Clinical Brief',   icon: FileText,  ring: 'outer', group: 'clinical',  description: 'For clinicians' },
   { path: '/launch/discharge-bridge', label: 'Discharge Bridge', icon: GitBranch, ring: 'outer', group: 'clinical',  description: 'Discharge kit' },
   { path: '/launch/continuity',       label: 'Continuity',       icon: GitBranch, ring: 'outer', group: 'clinical',  description: 'Continuity thread' },
+  { path: '/launch/continuity-report',label: 'Report',           icon: FileText,  ring: 'outer', group: 'clinical',  description: '30/60/90-day continuity report' },
   { path: '/launch/settings/edition', label: 'Edition',          icon: Info,      ring: 'outer', group: 'about',     description: 'About this edition' },
   { path: '/launch/help',             label: 'Help',             icon: HelpCircle,ring: 'outer', group: 'account',   description: 'Get help' },
 ] as const;

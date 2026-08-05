@@ -135,6 +135,7 @@ import {
   LaunchVisionStatement,
   LaunchEditionAbout,
   LaunchContinuity,
+  LaunchContinuityReport,
   LaunchScience,
   LaunchDischargeBridge,
   LaunchDischargeBridgeHandout,
@@ -409,7 +410,8 @@ function App() {
                        <Route path="/launch/discharge-bridge/handout" element={<LaunchModeProvider><LaunchDischargeBridgeHandout /></LaunchModeProvider>} />
                        <Route path="/launch/memory/result/:meetingId" element={<LaunchModeProvider><LaunchCaptureResult /></LaunchModeProvider>} />
                        <Route path="/launch/vision-statement" element={<LaunchModeProvider><LaunchVisionStatement /></LaunchModeProvider>} />
-                       <Route path="/launch/continuity" element={<LaunchModeProvider><LaunchContinuity /></LaunchModeProvider>} />
+                        <Route path="/launch/continuity" element={<LaunchModeProvider><LaunchContinuity /></LaunchModeProvider>} />
+                        <Route path="/launch/continuity-report" element={<LaunchModeProvider><LaunchContinuityReport /></LaunchModeProvider>} />
 
                        {/* Alias redirects — safety net for legacy/typoed /launch/* paths */}
                        <Route path="/launch/memory-bridge" element={<Navigate to="/launch/memory" replace />} />
