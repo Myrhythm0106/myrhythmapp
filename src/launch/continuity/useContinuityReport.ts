@@ -6,6 +6,8 @@ import { useSupportCircle } from '@/hooks/use-support-circle';
 import { useContinuityThread } from './useContinuityThread';
 import { buildContinuityReport, type ContinuityReport, type ReportMode, type WindowDays } from './buildContinuityReport';
 
+export type { ReportMode, WindowDays };
+
 export interface UseContinuityReportOptions {
   windowDays: WindowDays;
   startDate?: string; // yyyy-mm-dd; defaults to account creation or today minus window
