@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronLeft, Download, FileJson, Shield } from 'lucide-react';
+import { ChevronLeft, Download, FileJson, Shield, FileText } from 'lucide-react';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
