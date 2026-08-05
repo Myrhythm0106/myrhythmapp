@@ -192,7 +192,7 @@ export function buildContinuityReport(input: BuildContinuityReportInput): Contin
   }));
 
   // Extracted actions (Memory Bridge / document import)
-  const extractedRows: FollowThroughItem[] = (input.extractedActions ?? []).map(a => {
+  const extractedRows: FollowThroughItem[] = (input.extractedActions ?? []).map<FollowThroughItem>(a => {
     const date = a.scheduled_date || a.proposed_date || a.start_date || a.created_at?.slice(0, 10);
     return {
       id: a.id,
