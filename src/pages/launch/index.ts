@@ -24,6 +24,7 @@ export { default as LaunchClinicalBrief } from './LaunchClinicalBrief';
 export { default as LaunchVisionStatement } from './LaunchVisionStatement';
 export { default as LaunchEditionAbout } from './LaunchEditionAbout';
 export { default as LaunchContinuity } from './LaunchContinuity';
+export { default as LaunchContinuityReport } from './LaunchContinuityReport';
 export { default as LaunchScience } from './LaunchScience';
 export { default as LaunchDischargeBridge } from './LaunchDischargeBridge';
 export { default as LaunchDischargeBridgeHandout } from './LaunchDischargeBridgeHandout';
