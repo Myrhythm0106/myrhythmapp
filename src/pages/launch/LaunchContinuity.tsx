@@ -119,6 +119,21 @@ export default function LaunchContinuity() {
         </LaunchCard>
 
         <LaunchCard>
+          <div className="flex items-start gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+              <FileText className="h-5 w-5 text-emerald-700" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-900">30 / 60 / 90-day continuity report</h3>
+              <p className="text-xs text-gray-500">A richer follow-through dossier with week-by-week ribbon.</p>
+            </div>
+          </div>
+          <LaunchButton onClick={() => navigate('/launch/continuity-report')} className="w-full min-h-[56px]">
+            Open report
+          </LaunchButton>
+        </LaunchCard>
+
+        <LaunchCard>
           <h3 className="font-semibold text-gray-900 mb-3">Preview</h3>
           <div className="text-sm text-gray-700 space-y-2">
             <div><span className="text-gray-500">Period:</span> {summary.periodLabel}</div>
