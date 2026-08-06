@@ -12,6 +12,7 @@ import { AdminRoute } from "@/components/auth/AdminRoute";
 import FounderFinancialsPage from "./pages/FounderFinancialsPage";
 import FounderDataRoomPage from "./pages/FounderDataRoomPage";
 import FounderEvidencePage from "./pages/FounderEvidencePage";
+import FounderPlaybookPage from "./pages/FounderPlaybookPage";
 import { SetupProgressProvider } from "@/contexts/SetupProgressContext";
 import { SetupProgressBar } from "@/components/progress/SetupProgressBar";
 import { ErrorBoundary } from "@/components/error/ErrorBoundary";
