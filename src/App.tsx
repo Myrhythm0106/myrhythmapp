@@ -438,6 +438,7 @@ function App() {
                         <Route path="/founder/playbook" element={<AdminRoute><FounderPlaybookPage /></AdminRoute>} />
                          {/* Convenience aliases */}
                          <Route path="/playbook" element={<Navigate to="/founder/playbook" replace />} />
+                          <Route path="/founderplaybook" element={<Navigate to="/founder/playbook" replace />} />
                          <Route path="/founder-playbook" element={<Navigate to="/founder/playbook" replace />} />
                    </Routes>
                         </Suspense>
