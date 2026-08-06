@@ -44,7 +44,7 @@ const statusClass: Record<string, string> = {
   Blocked: 'bg-destructive/10 text-destructive',
 };
 
-function Metric({ label, value, sub }: { label: string; value: React.ReactNode; sub?: string }) {
+function Metric({ label, value, sub }: { label: string; value: React.ReactNode; sub?: React.ReactNode }) {
   return (
     <div className="rounded-xl border border-border bg-card p-4">
       <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
