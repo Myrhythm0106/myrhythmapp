@@ -1264,6 +1264,42 @@ export type Database = {
           },
         ]
       }
+      founder_playbook_progress: {
+        Row: {
+          created_at: string
+          horizon: string
+          id: string
+          item_key: string
+          note: string | null
+          status: string | null
+          updated_at: string
+          updated_by: string | null
+          value: string | null
+        }
+        Insert: {
+          created_at?: string
+          horizon?: string
+          id?: string
+          item_key: string
+          note?: string | null
+          status?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          value?: string | null
+        }
+        Update: {
+          created_at?: string
+          horizon?: string
+          id?: string
+          item_key?: string
+          note?: string | null
+          status?: string | null
+          updated_at?: string
+          updated_by?: string | null
+          value?: string | null
+        }
+        Relationships: []
+      }
       founding_feedback: {
         Row: {
           category: string
