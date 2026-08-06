@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
-import { Brain, ArrowLeft } from "lucide-react";
+import { Brain, ArrowLeft, BookOpen } from "lucide-react";
 import { AuthTabs } from "@/components/auth/AuthTabs";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 import { PasswordRecoveryForm } from "@/components/auth/PasswordRecoveryForm";
@@ -26,7 +26,14 @@ const Auth = () => {
   // Use a ref to track recovery session state - persists across re-renders and prevents race conditions
   const isRecoverySession = useRef(false);
 
-  const from = (location.state as any)?.from?.pathname || "/dashboard";
+  const stateFrom = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname;
+  const requestedRedirect = searchParams.get('redirect');
+  const safeRedirect = requestedRedirect?.startsWith('/') && !requestedRedirect.startsWith('//')
+    ? requestedRedirect
+    : stateFrom?.startsWith('/') && !stateFrom.startsWith('//')
+      ? stateFrom
+      : '/dashboard';
+  const isFounderPlaybookRequest = safeRedirect === '/founder/playbook';
 
   // Check for password recovery parameters in hash - run only once on mount
   useEffect(() => {
@@ -213,10 +220,10 @@ const Auth = () => {
             </p>
             <div className="space-y-2">
               <Button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate(safeRedirect, { replace: true })}
                 className="w-full bg-gradient-to-r from-purple-500 via-blue-500 to-teal-500 hover:from-purple-600 hover:via-blue-600 hover:to-teal-600"
               >
-              Go to Dashboard
+                {isFounderPlaybookRequest ? 'Open Founder Playbook' : 'Continue'}
               </Button>
               <Button
                 onClick={signOut}
@@ -271,10 +278,8 @@ const Auth = () => {
 
   const handleSignInSuccess = () => {
     toast.success('Welcome back!');
-    // Check for redirect parameter first, then use location state, then default to dashboard
-    const redirectTo = searchParams.get('redirect') || from;
-    console.log('Auth page: Sign in successful, redirecting to:', redirectTo);
-    navigate(redirectTo, { replace: true });
+    console.log('Auth page: Sign in successful, redirecting to:', safeRedirect);
+    navigate(safeRedirect, { replace: true });
   };
 
   const handleSignUpSuccess = () => {
@@ -503,7 +508,17 @@ const Auth = () => {
                 MyRhythm
               </h1>
             </div>
-            <CardTitle className="text-xl">Welcome to MyRhythm</CardTitle>
+            <CardTitle className="text-xl">
+              {isFounderPlaybookRequest ? 'Founder Playbook sign in' : 'Welcome to MyRhythm'}
+            </CardTitle>
+            {isFounderPlaybookRequest && (
+              <div className="flex items-start gap-3 rounded-md border border-border bg-muted/40 p-3 text-left">
+                <BookOpen className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+                <p className="text-sm text-muted-foreground">
+                  Sign in with your founder admin account. You will go straight to the MyRhythm Playbook.
+                </p>
+              </div>
+            )}
           </CardHeader>
           <CardContent>
             <AuthTabs 

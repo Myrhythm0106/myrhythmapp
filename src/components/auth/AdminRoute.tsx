@@ -21,7 +21,14 @@ export function AdminRoute({ children }: AdminRouteProps) {
   }
 
   if (!user) {
-    return <Navigate to="/auth" state={{ from: location }} replace />;
+    const requestedPath = `${location.pathname}${location.search}${location.hash}`;
+    return (
+      <Navigate
+        to={`/auth?redirect=${encodeURIComponent(requestedPath)}`}
+        state={{ from: location }}
+        replace
+      />
+    );
   }
 
   if (!isAdmin) {
