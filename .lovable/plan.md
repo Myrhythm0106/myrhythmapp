@@ -1,96 +1,99 @@
-# MyRhythm Launch Plan — Today to Christmas, then Rehab Centres
+# MyRhythm Playbook — MVP → 5 Years
 
-One document you can open every Monday, tick things off, and know exactly where you are. Starts today: **Wednesday 5 August 2026**. Public launch gate: **Friday 11 December 2026**. Rehab-centre outreach opens: **January 2027**.
+One living playbook. The launch plan (today → Christmas → rehab centres) stays exactly as agreed and becomes **Horizon 0**, the primary milestone everything else hangs off. Four further horizons stack behind it. Every horizon is downloadable as a Google Sheet, editable there, and **re-uploadable** so the app stays in sync with whatever you edited on the road.
+
+Anchor: **today, Wed 5 Aug 2026**. Public launch gate: **Fri 11 Dec 2026**. Rehab-centre outreach: **Jan 2027**.
+
+## The five horizons
+
+| # | Horizon | Window | Primary question it answers | Exit gate |
+|---|---|---|---|---|
+| H0 | **Launch Plan (primary)** | Aug – Dec 2026 | Is it real, used, and paid for? | G1 F&F · G2 Public launch · G3 Rehab-ready |
+| H1 | 6 months | Jan – Jun 2027 | Does it retain, and will a centre pilot it? | 1 signed pilot, 30-day retention target held |
+| H2 | 1 year | Jul – Dec 2027 | Does it repeat without me pushing it? | Repeatable acquisition + first renewals |
+| H3 | 18 months | Jan – Jun 2028 | Is it a business or a project? | Break-even path proven, second market/cohort live |
+| H4 | 5 years | 2028 – 2031 | What is the category position and the exit shape? | Category ownership, defensible data + IP |
+
+H0 keeps **all its current contents unchanged** — three gates, MVP "Done" line, 20-week SMART schedule, Friday metrics, weekly ritual, feedback→decision loop, risk register, and the IP/copyright action list.
 
 ## What gets built
 
-### 1. `docs/launch-plan.md` — the master plan (the thing you asked for)
+### 1. `docs/playbook.md` — the master document
 
-Structure:
+Section per horizon. H0 is the full launch plan verbatim. H1–H4 each carry the same five-part shape so the document never sprawls:
 
-**A. The three gates** — nothing is fuzzy; each gate is pass/fail on a fixed date.
+- **Outcome statement** — one sentence, written as a state of the world, not a task.
+- **3 objectives max** — SMART: number, date, owner.
+- **Key results** — the measures that prove each objective, with a baseline column left blank until it's real.
+- **Bets and non-bets** — what we're deliberately *not* doing in that window (this is what stops scope creep).
+- **Exit gate** — pass/fail on a fixed date; failing means the next horizon slips rather than starts half-built.
 
-| Gate | Date | Pass condition |
-|---|---|---|
-| G1 — Friends & Family ready | Fri 21 Aug 2026 | MVP checklist 100% green, 3 outside testers complete the full loop unaided |
-| G2 — Public launch ready | Fri 11 Dec 2026 | 100 paying members OR 60 members + 3 clinician LOIs; zero P0 bugs open for 14 days |
-| G3 — Rehab-centre ready | Fri 30 Jan 2027 | Continuity Report + Discharge Bridge Kit demoed to 5 centres, 1 pilot signed |
-
-**B. MVP definition — the "Done" line.** A hard checklist of what must be true before a single friend gets a link, grouped as: the 4C loop end-to-end, Memory Bridge recording + extraction, Calendar with reminders/invites/recurrence, Support Circle invite accepted by a real person, access codes + Stripe test mode, data export, disclaimers and claims-policy pass, mobile (phone-sized) pass, and error/empty states. Anything not on the list is explicitly out of MVP and named as such, so you stop building sideways.
-
-**C. Week-by-week SMART schedule, 5 Aug → 18 Dec (20 weeks).** Every week has: one theme, max 3 outcomes, a measurable target, and a Friday check figure. Example shape:
+Indicative content (refined during build, all claims-policy compliant):
 
 ```text
-W1  5–9 Aug    Self-test all green            Target: 6/6 sections pass, screenshots stored
-W2 12–16 Aug   Fix P0s + 3 outside testers    Target: 3 testers finish unaided
-W3 19–23 Aug   GATE G1 · F&F invites out      Target: 15 invites sent, 8 accounts created
-...
-W20 15–18 Dec  Launch week + rest             Target: launch post live, inbox triaged
+H1 6mo   Retention + first pilot     KRs: 30-day retention, 1 signed centre pilot,
+                                          Continuity Report used in a real review
+H2 1yr   Repeatable acquisition      KRs: CAC/LTV known, referral loop live, renewals
+H3 18mo  Business, not project       KRs: break-even path, second cohort, team of 2-3
+H4 5yr   Category + defensibility    KRs: Memory-First Design™ recognised, research
+                                          corpus, IP portfolio, partner distribution
 ```
 
-**D. Metrics you check every Friday (one line each).** Paying members, weekly-active completing a full 4C loop, capture→commit conversion, invite acceptance rate, P0 bugs open, clinician conversations booked. Baseline column left blank for you to fill this Friday.
+Also in H4: a short **"what must stay true"** list — the app is never a medical device, no clinical outcome claims, "no one walks alone" stays load-bearing.
 
-**E. The weekly ritual.** 30 minutes, Friday 4pm: fill the metrics row, mark last week red/amber/green, pick next week's 3 outcomes, log one thing to stop doing.
+### 2. `src/founder/playbook.ts` — one typed source of truth
 
-**F. Feedback → decision loop.** How F&F feedback becomes a Keep / Fix / Cut verdict using the evidence system already at `/founder/evidence`, so features change on data not on the loudest voice.
+Everything — horizons, gates, weeks, MVP items, IP actions, objectives, key results, metrics definitions — lives in this one typed file. The document, the in-app page, and the spreadsheet are all generated from it. `src/founder/launchPlan.ts` (H0 data) is imported into it rather than duplicated, so the launch plan has exactly one home.
 
-**G. Risk register.** Five real risks (solo founder capacity, Stripe live-mode switch, clinician gatekeeping, scope creep, testing fatigue) each with a trigger and a pre-agreed response.
+### 3. `/founder/playbook` — the in-app playbook (admin-only)
 
-### 2. `docs/ip-and-protection.md` — copyright, trademark, and protecting the concept
+Same admin gate as `/founder/evidence`. `/playbook` redirects here so your current bookmark keeps working.
 
-Plain-English, action-dated, and explicit that it is a founder's action list, **not legal advice** — a solicitor signs off before anything is filed.
+- **Horizon rail** across the top: H0 … H4, current one highlighted, days-remaining on each gate.
+- **H0 panel (default view)** — the launch-plan tracker as planned: gate countdown strip, current-week card with tickable outcomes, 20-week red/amber/green grid, Friday metrics row.
+- **H1–H4 panels** — objectives with progress, key results with baseline/current/target, bets vs non-bets, exit gate status.
+- **Sheet bar** — Download, Upload, and "last synced" timestamp.
 
-- **What is automatically yours** — copyright in the code, copy, PDFs, and designs exists on creation; what to do to make it provable (dated repo history, a `NOTICE`/copyright header policy, an IP asset inventory).
-- **What copyright does not protect** — the idea, the concept, the workflow. This is the "limitation" piece: ideas are not protectable, so the moat has to come from trademark, trade secrets, execution speed, and data.
-- **Trademark actions** — classes to file "MyRhythm" and "Memory-First Design™" in (UK IPO + USPTO, classes 9/42/44), the ™ vs ® rule for current copy, and a clearance-search step before filing.
-- **Assignment and ownership hygiene** — every contractor, designer, or developer signs an IP assignment; founder IP assigned into the company at incorporation; a template list of what each agreement must contain.
-- **NDAs and disclosure discipline** — a one-page mutual NDA for clinician and investor conversations, plus what you can safely say without one (the problem, the category, the demo) versus what you don't say (roadmap internals, extraction prompts, research schema).
-- **Trade secrets** — naming the parts that are genuinely secret (AI extraction prompts, MYRHYTHM assessment scoring, research pseudonymisation salt handling) and how they're handled.
-- **Rehab-centre specific** — data-processing terms, DPIA prompt, and the claims-policy boundary that must survive contact with a clinical buyer.
-- **Dated action table** — every item with an owner, a cost estimate, and a due date that sits inside the week-by-week schedule above.
+State lives in `founder_playbook_progress` (admin-only RLS): one row per item (`horizon`, `item_key`, `status`, `value`, `note`, `updated_at`), which is generic enough to cover week ticks, MVP ticks, IP actions, and metric entries without new tables later.
 
-### 3. `docs/mvp-gate-checklist.md` — the tick-sheet
+### 4. Download → edit in Google Sheets → upload back
 
-The MVP section of the plan pulled out as a standalone printable checklist with checkboxes, so G1 is a physical act of ticking. Cross-references the existing `docs/v0.1-weekend-self-test.md` rather than duplicating it.
-
-### 4. In-app tracker at `/founder/launch-plan` (admin-only)
-
-So the plan is not a file you forget. A single page, same admin gate as `/founder/evidence`:
-
-- Gate countdown strip — days to G1, G2, G3.
-- Current week card — this week's theme and 3 outcomes, tickable.
-- 20-week grid — each week red/amber/green, click to see its outcomes.
-- Friday metrics row — enter the six numbers, see the trend.
-- Link-outs to the launch plan, IP doc, and MVP checklist.
-
-State persists in a new `founder_launch_progress` table (admin-only RLS, one row per week) so ticks survive refresh and phone/desktop switches.
-
-### 5. Download as a Google Sheet — and keep it maintainable
-
-One **Download for Google Sheets** button on `/founder/launch-plan` produces a multi-tab workbook (`.xlsx`, opens straight in Google Sheets via File → Import, and a `.csv` option for the schedule tab alone):
+**Download** produces one `.xlsx` (opens in Google Sheets via File → Import; a CSV option per tab for quick edits):
 
 | Tab | Contents |
 |---|---|
-| Gates | G1/G2/G3 with dates, pass conditions, current status |
-| 20-Week Plan | Week no., dates, theme, 3 outcomes, target, owner, status, notes |
-| MVP Checklist | Every MVP item, group, done Y/N, date ticked |
-| IP & Legal Actions | Action, why, owner, cost estimate, due date, status |
+| README | How to use, sync rules, do-not-edit warning on the key column |
+| Horizons | H0–H4, window, outcome, exit gate, date, status |
+| Gates | G1/G2/G3 + horizon exit gates, dates, pass conditions, status |
+| 20-Week Plan | Week, dates, theme, 3 outcomes, target, owner, status, notes |
+| MVP Checklist | Item, group, done Y/N, date ticked |
+| IP & Legal | Action, why, owner, cost estimate, due date, status |
+| Objectives & KRs | Horizon, objective, key result, baseline, current, target, due |
 | Metrics | One row per Friday, six metric columns, ready to chart |
 
-**Why it stays maintainable rather than going stale:**
+**Upload** takes the same workbook back. Every row carries a hidden-ish `key` column (first column, locked styling, "do not edit" noted in README). On upload:
 
-- **One source of truth.** The weeks, gates, MVP items and IP actions live in a single typed file (`src/founder/launchPlan.ts`). The markdown docs, the in-app tracker, and the spreadsheet export are all generated from it — change it once, all three update.
-- **Live status baked in.** The export reads your current ticks and metric entries from `founder_launch_progress` at download time, so every download is today's state, not a stale snapshot. Re-download whenever you want a fresh copy to share.
-- **Editable both ways.** The Metrics and Notes columns are free text, so you can work in the Sheet during the week and paste the numbers back into the tracker on Friday — the tracker is the record, the Sheet is the working surface.
-- **Styling matches the existing exporters** (brand orange headers, frozen header row, confidentiality footer line), reusing the `exceljs` pattern already in `src/components/memoryBridge/capture-brief/exporters/xlsx.ts`.
+1. Rows are matched by `key` — never by position, so you can sort, filter and colour freely in Sheets.
+2. Only the editable fields (status, value, notes, baseline/current) are read; structural fields are ignored.
+3. You see a **diff preview** — "18 unchanged, 6 changed, 2 unrecognised keys" — with the changed rows listed, before anything is written.
+4. Confirm writes to `founder_playbook_progress` in one transaction; unrecognised keys are reported, not silently dropped.
+
+That's what makes it maintainable: the Sheet is the working surface, the app is the record, and the `key` column is the contract between them.
+
+### 5. Maintenance ritual (baked into the page)
+
+- **Friday 4pm, 30 min** — fill the metrics row, RAG last week, pick next week's 3 outcomes, log one thing to stop doing.
+- **Last Friday of the month** — review the current horizon's key results only.
+- **Horizon gate day** — pass/fail, then open the next horizon. The page nudges you when a gate date is within 14 days.
 
 ## Technical notes
 
-- New docs are markdown in `docs/`, linked from the existing docs index and from `90-day-sprint.md` so there's one entry point, not two competing plans. The 90-day sprint dates (3 Jul → 1 Oct) are folded into the new 20-week schedule rather than left to drift.
-- `/founder/launch-plan` follows the existing founder-route pattern (admin role check via `has_role`, not client-side).
-- Migration creates `public.founder_launch_progress` with grants to `authenticated` + `service_role`, RLS restricted to admins via `has_role(auth.uid(),'admin')`.
-- All copy passes `docs/claims-policy.md` — no clinical outcome language in the rehab-facing sections.
+- `docs/playbook.md` supersedes and links `docs/90-day-sprint.md` and `docs/5-year-vision.md` so there is one entry point, not three competing plans; the older docs get a pointer header rather than being deleted.
+- Export reuses the `exceljs` pattern in `src/components/memoryBridge/capture-brief/exporters/xlsx.ts` — brand orange headers, frozen header row, confidentiality footer. Import uses the same `exceljs` dependency (already installed), parsed client-side.
+- Route follows the existing founder pattern: `AdminRoute` + server-side `has_role` check, matching `/founder/evidence`.
+- Migration creates `public.founder_playbook_progress` with grants to `authenticated` + `service_role` and RLS restricted to `has_role(auth.uid(),'admin')`.
+- All copy passes `docs/claims-policy.md` — no clinical outcome language anywhere in the rehab or investor-facing sections.
 
 ## Not in this plan
 
-No new member-facing features. No changes to the 4C loop, Memory Bridge, or Calendar. If the MVP checklist turns up a P0, it gets logged and fixed as its own task.
+No member-facing changes. Nothing touches the 4C loop, Memory Bridge, or Calendar. H1–H4 are planning artefacts only — no features are built ahead of their horizon.
