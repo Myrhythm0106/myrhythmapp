@@ -436,6 +436,9 @@ function App() {
                         <Route path="/founder/evidence" element={<AdminRoute><FounderEvidencePage /></AdminRoute>} />
                         {/* Founder-only playbook — admin role required */}
                         <Route path="/founder/playbook" element={<AdminRoute><FounderPlaybookPage /></AdminRoute>} />
+                         {/* Convenience aliases */}
+                         <Route path="/playbook" element={<Navigate to="/founder/playbook" replace />} />
+                         <Route path="/founder-playbook" element={<Navigate to="/founder/playbook" replace />} />
                    </Routes>
                         </Suspense>
                         <AuthenticatedBottomNav />
