@@ -432,8 +432,10 @@ function App() {
                        <Route path="/founder/financials" element={<AdminRoute><FounderFinancialsPage /></AdminRoute>} />
                        {/* Founder-only investor data room — admin role required */}
                        <Route path="/founder/data-room" element={<AdminRoute><FounderDataRoomPage /></AdminRoute>} />
-                       {/* Founder-only evidence dashboard — admin role required */}
-                       <Route path="/founder/evidence" element={<AdminRoute><FounderEvidencePage /></AdminRoute>} />
+                        {/* Founder-only evidence dashboard — admin role required */}
+                        <Route path="/founder/evidence" element={<AdminRoute><FounderEvidencePage /></AdminRoute>} />
+                        {/* Founder-only playbook — admin role required */}
+                        <Route path="/founder/playbook" element={<AdminRoute><FounderPlaybookPage /></AdminRoute>} />
                    </Routes>
                         </Suspense>
                         <AuthenticatedBottomNav />
