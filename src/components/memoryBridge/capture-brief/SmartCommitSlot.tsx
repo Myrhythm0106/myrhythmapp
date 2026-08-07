@@ -39,7 +39,9 @@ import {
   formatDateLabel,
   validatePostpone,
 } from './model/scheduleActions';
-import { commitAction, undoCommit } from './model/commitActions';
+import { commitAction, undoCommit, ADHOC_PREFIX, isAdhocPerson } from './model/commitActions';
+import { LoopInPicker, type AdhocLoopIn } from '@/components/shared/LoopInPicker';
+import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
 import {
   generateMilestones,
   recalculateMilestones,
@@ -86,6 +88,7 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
   const [dueLocked, setDueLocked] = useState<boolean>(action.dueDate?.locked ?? false);
   const [dueDate, setDueDate] = useState<string | undefined>(action.dueDate?.date);
   const [people, setPeople] = useState<PersonPick[]>(action.people || []);
+  const { supportCircle } = useAccountabilitySystem();
   const [committing, setCommitting] = useState(false);
   const [warning, setWarning] = useState<string | null>(null);
 
@@ -134,36 +137,57 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
   }, [manualStartDate, manualStartTime, selected, prefs.smartSchedulingEnabled, dueDate, action.dateMentionedInMeeting, action.dueDate]);
 
   if (isScheduled) {
+    const s = action.scheduled!;
+    const invitedNames = s.invitedNames || [];
+    const watcherNames = s.watcherNames || [];
     return (
-      <div className="mt-3 flex items-center justify-between gap-3 p-3 rounded-xl bg-memory-emerald-50 border border-memory-emerald-200">
-        <div className="flex items-center gap-2 text-sm text-memory-emerald-700">
-          <Check className="h-4 w-4" />
-          <span className="font-semibold">
-            Scheduled {formatDateLabel(action.scheduled!.startDate)} · {action.scheduled!.startTime}
-          </span>
-          {(action.scheduled!.invitedMemberIds.length > 0 || action.scheduled!.watcherMemberIds.length > 0) && (
-            <span className="text-xs text-memory-emerald-600">
-              · {action.scheduled!.invitedMemberIds.length} invited
-              {action.scheduled!.watcherMemberIds.length > 0 && `, ${action.scheduled!.watcherMemberIds.length} watching`}
-            </span>
-          )}
+      <div className="mt-3 p-3 rounded-xl bg-memory-emerald-50 border border-memory-emerald-200 space-y-2">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-2 text-sm text-memory-emerald-800 min-w-0">
+            <Check className="h-4 w-4 mt-0.5 shrink-0" />
+            <div className="min-w-0">
+              <p className="font-semibold">
+                In your diary · {formatDateLabel(s.startDate)} at {s.startTime}
+              </p>
+              <p className="text-xs text-memory-emerald-700 mt-0.5">
+                {s.reminders?.length
+                  ? `${s.reminders.length} reminder${s.reminders.length > 1 ? 's' : ''} set`
+                  : 'No reminders set'}
+                {s.dueDate ? ` · due ${formatDateLabel(s.dueDate)}` : ''}
+              </p>
+              {(invitedNames.length > 0 || watcherNames.length > 0) && (
+                <p className="text-xs text-memory-emerald-700 mt-0.5">
+                  {invitedNames.length > 0 && <>Invited: {invitedNames.join(', ')}</>}
+                  {invitedNames.length > 0 && watcherNames.length > 0 && ' · '}
+                  {watcherNames.length > 0 && <>Watching: {watcherNames.join(', ')}</>}
+                </p>
+              )}
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 text-xs text-memory-emerald-700 hover:text-memory-emerald-900 shrink-0"
+            onClick={async () => {
+              await undoCommit(action);
+              onUpdated({ scheduled: undefined });
+              toast.success('Undone');
+            }}
+          >
+            <Undo2 className="h-3 w-3 mr-1" />
+            Undo
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 text-xs text-memory-emerald-700 hover:text-memory-emerald-900"
-          onClick={async () => {
-            await undoCommit(action);
-            onUpdated({ scheduled: undefined });
-            toast.success('Undone');
-          }}
-        >
-          <Undo2 className="h-3 w-3 mr-1" />
-          Undo
-        </Button>
+        {s.notifyFailures && s.notifyFailures.length > 0 && (
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md p-2">
+            We couldn't email {s.notifyFailures.join(', ')}. The action is still in your diary —
+            let them know another way.
+          </p>
+        )}
       </div>
     );
   }
+
 
   const handleSchedule = async () => {
     if (!start) {
@@ -189,24 +213,75 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
       toast.error(res.error || 'Could not schedule');
       return;
     }
+    const invitedPeople = people.filter(p => p.role === 'invite');
+    const watchingPeople = people.filter(p => p.role === 'watch');
     onUpdated({
       scheduled: {
         startDate: start.date,
         startTime: start.time,
         dueDate,
         reminders,
-        invitedMemberIds: people.filter(p => p.role === 'invite').map(p => p.memberId),
-        watcherMemberIds: people.filter(p => p.role === 'watch').map(p => p.memberId),
+        invitedMemberIds: invitedPeople.map(p => p.memberId),
+        watcherMemberIds: watchingPeople.map(p => p.memberId),
+        invitedNames: invitedPeople.map(p => p.name),
+        watcherNames: watchingPeople.map(p => p.name),
+        notifyFailures: res.notifyFailures || [],
         calendarEventId: res.calendarEventId,
       },
+      people,
       milestones,
     });
-    toast.success('Scheduled', { duration: 4000 });
+    const told = res.notified || 0;
+    toast.success(told > 0 ? `Scheduled · ${told} person${told > 1 ? 's' : ''} told` : 'Scheduled', {
+      duration: 4000,
+    });
   };
 
   const togglePersonRole = (memberId: string, role: PersonPick['role']) => {
     setPeople(prev => prev.map(p => (p.memberId === memberId ? { ...p, role } : p)));
   };
+
+  const circleMemberIds = people.filter(p => !isAdhocPerson(p)).map(p => p.memberId);
+  const adhocLoopIns: AdhocLoopIn[] = people
+    .filter(isAdhocPerson)
+    .map(p => ({ email: p.email || '', name: p.name }));
+
+  const handlePeopleChange = (next: { circleMemberIds: string[]; adhocLoopIns: AdhocLoopIn[] }) => {
+    const kept = people.filter(
+      p =>
+        (!isAdhocPerson(p) && next.circleMemberIds.includes(p.memberId)) ||
+        (isAdhocPerson(p) && next.adhocLoopIns.some(l => l.email === p.email)),
+    );
+    const addedMembers: PersonPick[] = next.circleMemberIds
+      .filter(id => !people.some(p => p.memberId === id))
+      .map(id => {
+        const m = supportCircle.find(x => x.id === id);
+        const canInvite = Boolean(m?.permissions?.calendar) && Boolean(m?.member_email);
+        return {
+          memberId: id,
+          name: m?.member_name || 'Circle member',
+          email: m?.member_email,
+          role: (canInvite ? 'invite' : 'watch') as PersonPick['role'],
+          pre: 'manual' as const,
+          canInvite,
+          canWatch: true,
+        };
+      });
+    const addedGuests: PersonPick[] = next.adhocLoopIns
+      .filter(l => !people.some(p => p.email === l.email))
+      .map(l => ({
+        memberId: `${ADHOC_PREFIX}${l.email}`,
+        name: l.name || l.email,
+        email: l.email,
+        role: 'invite' as PersonPick['role'],
+        pre: 'manual' as const,
+        canInvite: true,
+        // Watching needs Support Circle membership and its permissions
+        canWatch: false,
+      }));
+    setPeople([...kept, ...addedMembers, ...addedGuests]);
+  };
+
 
   const togglePref = (key: 'smartSchedulingEnabled' | 'milestonesEnabled' | 'healthAwareEnabled') => {
     const next = { ...(action.schedulingOverride || {}), [key]: !prefs[key] };
@@ -414,8 +489,8 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
       )}
 
       {/* People row */}
-      {people.length > 0 && (
-        <div className="flex items-center gap-2 flex-wrap pt-1">
+      <div className="pt-1 space-y-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Users className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
           <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
             Who knows?
@@ -423,8 +498,18 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
           {people.map(p => (
             <PersonChip key={p.memberId} person={p} onChange={(r) => togglePersonRole(p.memberId, r)} />
           ))}
+          {people.length === 0 && (
+            <span className="text-xs text-muted-foreground">Just you for now</span>
+          )}
         </div>
-      )}
+        <LoopInPicker
+          circleMemberIds={circleMemberIds}
+          adhocLoopIns={adhocLoopIns}
+          onChange={handlePeopleChange}
+          triggerLabel="Add someone"
+        />
+      </div>
+
 
       {/* CTA */}
       <div className="flex items-center justify-end gap-2 pt-1">

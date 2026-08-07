@@ -1,7 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, FileDown, FileSpreadsheet, FileText, Loader2, Stethoscope } from 'lucide-react';
+import {
+  ArrowLeft,
+  ChevronDown,
+  FileDown,
+  FileSpreadsheet,
+  FileText,
+  Loader2,
+  Share2,
+  Stethoscope,
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { toast } from 'sonner';
 import { buildCaptureBrief } from './model/buildCaptureBrief';
 import { CaptureBriefModel, SectionKey } from './model/types';
@@ -24,6 +44,7 @@ export function CaptureDeliverableView() {
   const [sections, setSections] = useState(DEFAULT_SECTIONS);
   const [includeSchedule, setIncludeSchedule] = useState(true);
   const [exporting, setExporting] = useState<null | 'pdf' | 'docx' | 'xlsx' | 'clinician'>(null);
+  const [togglesOpen, setTogglesOpen] = useState(false);
 
   useEffect(() => {
     if (!meetingId) return;
@@ -111,25 +132,63 @@ export function CaptureDeliverableView() {
     );
   }
 
+  const exportBusy = !!exporting;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/40">
       {/* Top bar */}
       <header className="sticky top-0 z-20 backdrop-blur-md bg-background/80 border-b border-border">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between gap-3">
           <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="min-h-[44px]">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            <ArrowLeft className="h-4 w-4 md:mr-2" />
+            <span className="hidden md:inline">Back</span>
           </Button>
-          <div className="text-xs text-muted-foreground hidden md:block truncate">
+          <div className="text-xs text-muted-foreground hidden lg:block truncate">
             Capture Brief · {model.title}
           </div>
-          <div className="flex items-center gap-2">
+
+          {/* Phone: one Share / Export sheet */}
+          <div className="md:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  size="sm"
+                  className="min-h-[44px] bg-brand-orange-600 hover:bg-brand-orange-700 text-white"
+                  disabled={exportBusy}
+                >
+                  {exportBusy ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Share2 className="h-4 w-4 mr-2" />
+                  )}
+                  Share
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-popover z-50">
+                <DropdownMenuItem className="min-h-[44px]" onClick={() => handleExport('pdf')}>
+                  <FileDown className="h-4 w-4 mr-2" /> PDF
+                </DropdownMenuItem>
+                <DropdownMenuItem className="min-h-[44px]" onClick={() => handleExport('docx')}>
+                  <FileText className="h-4 w-4 mr-2" /> Word / Google Docs
+                </DropdownMenuItem>
+                <DropdownMenuItem className="min-h-[44px]" onClick={() => handleExport('xlsx')}>
+                  <FileSpreadsheet className="h-4 w-4 mr-2" /> Sheet
+                </DropdownMenuItem>
+                <DropdownMenuItem className="min-h-[44px]" onClick={() => handleExport('clinician')}>
+                  <Stethoscope className="h-4 w-4 mr-2" /> Clinician summary
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Tablet and up: explicit buttons */}
+          <div className="hidden md:flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
               className="min-h-[44px]"
               onClick={() => handleExport('xlsx')}
-              disabled={!!exporting}
+              disabled={exportBusy}
             >
               {exporting === 'xlsx' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <FileSpreadsheet className="h-4 w-4 mr-2" />}
               .xlsx
@@ -139,7 +198,7 @@ export function CaptureDeliverableView() {
               size="sm"
               className="min-h-[44px]"
               onClick={() => handleExport('docx')}
-              disabled={!!exporting}
+              disabled={exportBusy}
             >
               {exporting === 'docx' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <FileText className="h-4 w-4 mr-2" />}
               .docx
@@ -149,7 +208,7 @@ export function CaptureDeliverableView() {
               size="sm"
               className="min-h-[44px]"
               onClick={() => handleExport('clinician')}
-              disabled={!!exporting}
+              disabled={exportBusy}
             >
               {exporting === 'clinician' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Stethoscope className="h-4 w-4 mr-2" />}
               Clinician
@@ -158,7 +217,7 @@ export function CaptureDeliverableView() {
               size="sm"
               className="min-h-[44px] bg-brand-orange-600 hover:bg-brand-orange-700 text-white"
               onClick={() => handleExport('pdf')}
-              disabled={!!exporting}
+              disabled={exportBusy}
             >
               {exporting === 'pdf' ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <FileDown className="h-4 w-4 mr-2" />}
               PDF
@@ -168,18 +227,39 @@ export function CaptureDeliverableView() {
       </header>
 
       {/* Body */}
-      <div className="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-5 md:py-8 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6 lg:gap-8">
+        {/* Section toggles: collapsible on phones, sidebar on large screens */}
         <aside className="lg:sticky lg:top-20 lg:self-start">
-          <CaptureBriefToggles
-            sections={sections}
-            onChange={setSections}
-            includeSchedule={includeSchedule}
-            onIncludeScheduleChange={setIncludeSchedule}
-          />
-          <p className="text-[10px] text-muted-foreground mt-4 leading-relaxed px-1">
-            Exports run locally — your transcript never leaves your device for this step. The .docx
-            opens cleanly in Google Docs and the .xlsx in Google Sheets.
-          </p>
+          <div className="lg:hidden">
+            <Collapsible open={togglesOpen} onOpenChange={setTogglesOpen}>
+              <CollapsibleTrigger asChild>
+                <Button variant="outline" className="w-full min-h-[48px] justify-between">
+                  What's included
+                  <ChevronDown className={`h-4 w-4 transition-transform ${togglesOpen ? 'rotate-180' : ''}`} />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent className="pt-3">
+                <CaptureBriefToggles
+                  sections={sections}
+                  onChange={setSections}
+                  includeSchedule={includeSchedule}
+                  onIncludeScheduleChange={setIncludeSchedule}
+                />
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
+          <div className="hidden lg:block">
+            <CaptureBriefToggles
+              sections={sections}
+              onChange={setSections}
+              includeSchedule={includeSchedule}
+              onIncludeScheduleChange={setIncludeSchedule}
+            />
+            <p className="text-[10px] text-muted-foreground mt-4 leading-relaxed px-1">
+              Exports run locally — your transcript never leaves your device for this step. The .docx
+              opens cleanly in Google Docs and the .xlsx in Google Sheets.
+            </p>
+          </div>
         </aside>
 
         <main className="min-w-0">
@@ -189,7 +269,6 @@ export function CaptureDeliverableView() {
             includeSchedule={includeSchedule}
             onActionUpdate={handleActionUpdate}
           />
-
         </main>
       </div>
     </div>
@@ -197,3 +276,4 @@ export function CaptureDeliverableView() {
 }
 
 export default CaptureDeliverableView;
+

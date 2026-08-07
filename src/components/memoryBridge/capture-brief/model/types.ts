@@ -52,6 +52,11 @@ export interface ActionScheduledState {
   invitedMemberIds: string[];
   watcherMemberIds: string[];
   calendarEventId?: string;
+  /** Display names of people invited / watching, for the confirmation strip */
+  invitedNames?: string[];
+  watcherNames?: string[];
+  /** Emails we could not reach */
+  notifyFailures?: string[];
 }
 
 export interface ActionMilestone {
