@@ -467,12 +467,75 @@ const student: AssessmentBank = {
   ],
 };
 
-const banks: Record<PersonaKey, AssessmentBank> = {
-  'brain-injury': brainInjury,
-  caregiver,
-  executive,
-  student,
+/* ------------------------------------------------------------------ */
+/*  Follow-through probe (sits under T — Transform)                    */
+/*  Follow-through is the single strongest signal of whether a plan    */
+/*  survives contact with real life, so every persona is asked.        */
+/* ------------------------------------------------------------------ */
+const FOLLOW_THROUGH: Record<PersonaKey, AssessmentQuestion> = {
+  'brain-injury': {
+    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    brainHealthLens: 'Follow-through — plan to done',
+    title: 'When you plan something, what usually happens?',
+    subtitle: 'This is the honest one. Most people lose things here.',
+    options: [
+      { value: 'forget', label: 'I often forget it entirely', score: 0 },
+      { value: 'remember-not-do', label: 'I remember, but rarely get to it', score: 1 },
+      { value: 'need-nudge', label: 'I do it if something reminds me', score: 2 },
+      { value: 'mostly-follow', label: 'I mostly follow through', score: 3 },
+    ],
+  },
+  caregiver: {
+    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    brainHealthLens: 'Follow-through — plan to done',
+    title: 'When you plan something for yourself, what usually happens?',
+    subtitle: 'Not for them — for you.',
+    options: [
+      { value: 'never-happens', label: "It gets dropped for someone else's need", score: 0 },
+      { value: 'sometimes', label: 'Sometimes, if the day is calm', score: 1 },
+      { value: 'need-nudge', label: 'I do it if something reminds me', score: 2 },
+      { value: 'mostly-follow', label: 'I mostly follow through', score: 3 },
+    ],
+  },
+  executive: {
+    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    brainHealthLens: 'Follow-through — commitment to done',
+    title: 'What happens to the commitments you make in meetings?',
+    options: [
+      { value: 'lost', label: 'They get lost after the call ends', score: 0 },
+      { value: 'late', label: 'They happen, but late and under pressure', score: 1 },
+      { value: 'need-system', label: 'They happen when my system catches them', score: 2 },
+      { value: 'reliable', label: 'I close them out reliably', score: 3 },
+    ],
+  },
+  student: {
+    id: 'followThrough', letter: 'T', word: 'Transform', slot: 'transform',
+    brainHealthLens: 'Follow-through — intention to done',
+    title: 'What happens to the study plan you set for yourself?',
+    options: [
+      { value: 'abandoned', label: 'It falls apart within a day or two', score: 0 },
+      { value: 'cram', label: 'I drift, then cram at the end', score: 1 },
+      { value: 'need-nudge', label: 'I keep it going if I get reminders', score: 2 },
+      { value: 'stick', label: 'I stick to it most weeks', score: 3 },
+    ],
+  },
 };
+
+/** Insert the follow-through probe immediately after the Transform question. */
+function withFollowThrough(bank: AssessmentBank): AssessmentBank {
+  const questions = [...bank.questions];
+  const idx = questions.findIndex((q) => q.id === 'transform');
+  questions.splice(idx >= 0 ? idx + 1 : questions.length, 0, FOLLOW_THROUGH[bank.persona]);
+  return { ...bank, questions };
+}
+
+const banks: Record<PersonaKey, AssessmentBank> = {
+  'brain-injury': withFollowThrough(brainInjury),
+  caregiver: withFollowThrough(caregiver),
+  executive: withFollowThrough(executive),
+  student: withFollowThrough(student),
+};
+
 
 export function getAssessmentBank(persona: string | null | undefined): AssessmentBank | null {
   if (!persona) return null;
