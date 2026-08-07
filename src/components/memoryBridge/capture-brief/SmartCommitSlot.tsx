@@ -136,36 +136,57 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
   }, [manualStartDate, manualStartTime, selected, prefs.smartSchedulingEnabled, dueDate, action.dateMentionedInMeeting, action.dueDate]);
 
   if (isScheduled) {
+    const s = action.scheduled!;
+    const invitedNames = s.invitedNames || [];
+    const watcherNames = s.watcherNames || [];
     return (
-      <div className="mt-3 flex items-center justify-between gap-3 p-3 rounded-xl bg-memory-emerald-50 border border-memory-emerald-200">
-        <div className="flex items-center gap-2 text-sm text-memory-emerald-700">
-          <Check className="h-4 w-4" />
-          <span className="font-semibold">
-            Scheduled {formatDateLabel(action.scheduled!.startDate)} · {action.scheduled!.startTime}
-          </span>
-          {(action.scheduled!.invitedMemberIds.length > 0 || action.scheduled!.watcherMemberIds.length > 0) && (
-            <span className="text-xs text-memory-emerald-600">
-              · {action.scheduled!.invitedMemberIds.length} invited
-              {action.scheduled!.watcherMemberIds.length > 0 && `, ${action.scheduled!.watcherMemberIds.length} watching`}
-            </span>
-          )}
+      <div className="mt-3 p-3 rounded-xl bg-memory-emerald-50 border border-memory-emerald-200 space-y-2">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-2 text-sm text-memory-emerald-800 min-w-0">
+            <Check className="h-4 w-4 mt-0.5 shrink-0" />
+            <div className="min-w-0">
+              <p className="font-semibold">
+                In your diary · {formatDateLabel(s.startDate)} at {s.startTime}
+              </p>
+              <p className="text-xs text-memory-emerald-700 mt-0.5">
+                {s.reminders?.length
+                  ? `${s.reminders.length} reminder${s.reminders.length > 1 ? 's' : ''} set`
+                  : 'No reminders set'}
+                {s.dueDate ? ` · due ${formatDateLabel(s.dueDate)}` : ''}
+              </p>
+              {(invitedNames.length > 0 || watcherNames.length > 0) && (
+                <p className="text-xs text-memory-emerald-700 mt-0.5">
+                  {invitedNames.length > 0 && <>Invited: {invitedNames.join(', ')}</>}
+                  {invitedNames.length > 0 && watcherNames.length > 0 && ' · '}
+                  {watcherNames.length > 0 && <>Watching: {watcherNames.join(', ')}</>}
+                </p>
+              )}
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 text-xs text-memory-emerald-700 hover:text-memory-emerald-900 shrink-0"
+            onClick={async () => {
+              await undoCommit(action);
+              onUpdated({ scheduled: undefined });
+              toast.success('Undone');
+            }}
+          >
+            <Undo2 className="h-3 w-3 mr-1" />
+            Undo
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="h-8 text-xs text-memory-emerald-700 hover:text-memory-emerald-900"
-          onClick={async () => {
-            await undoCommit(action);
-            onUpdated({ scheduled: undefined });
-            toast.success('Undone');
-          }}
-        >
-          <Undo2 className="h-3 w-3 mr-1" />
-          Undo
-        </Button>
+        {s.notifyFailures && s.notifyFailures.length > 0 && (
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-md p-2">
+            We couldn't email {s.notifyFailures.join(', ')}. The action is still in your diary —
+            let them know another way.
+          </p>
+        )}
       </div>
     );
   }
+
 
   const handleSchedule = async () => {
     if (!start) {
