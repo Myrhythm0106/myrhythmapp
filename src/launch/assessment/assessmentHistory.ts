@@ -64,7 +64,7 @@ export async function listAssessmentRuns(limit = 10): Promise<StoredAssessmentRu
   if (error || !data) return [];
 
   return data.map((row) => {
-    const scores = (row.scores ?? null) as BrainHealthScore | null;
+    const scores = (row.scores ?? null) as unknown as BrainHealthScore | null;
     return {
       id: row.id as string,
       createdAt: row.created_at as string,
