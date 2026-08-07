@@ -25,22 +25,33 @@ export function CaptureBriefPreview({ model, sections, includeSchedule = true, o
   const handleAcceptAll = async () => {
     if (pendingRecommended.length === 0) return;
     setBulkRunning(true);
-    const res = await commitAllRecommended(pendingRecommended, (id, calId) => {
+    const res = await commitAllRecommended(pendingRecommended, (id, calId, people, reminders, slot) => {
+      const invited = people.filter(p => p.role === 'invite');
+      const watching = people.filter(p => p.role === 'watch');
       onActionUpdate?.(id, {
+        people,
         scheduled: {
-          startDate: pendingRecommended.find(a => a.id === id)?.suggestions?.[0]?.date || '',
-          startTime: pendingRecommended.find(a => a.id === id)?.suggestions?.[0]?.time || '',
+          startDate: slot.date,
+          startTime: slot.time,
           dueDate: pendingRecommended.find(a => a.id === id)?.dueDate?.date,
-          reminders: [],
-          invitedMemberIds: [],
-          watcherMemberIds: [],
+          reminders,
+          invitedMemberIds: invited.map(p => p.memberId),
+          watcherMemberIds: watching.map(p => p.memberId),
+          invitedNames: invited.map(p => p.name),
+          watcherNames: watching.map(p => p.name),
           calendarEventId: calId,
         },
       });
     });
     setBulkRunning(false);
-    toast.success(`Scheduled ${res.committed} · skipped ${res.skipped}${res.failed ? ` · failed ${res.failed}` : ''}`);
+    toast.success(
+      `Scheduled ${res.committed}${res.notified ? ` · ${res.notified} told` : ''} · skipped ${res.skipped}${res.failed ? ` · failed ${res.failed}` : ''}`,
+    );
+    if (res.notifyFailures.length > 0) {
+      toast.warning(`Couldn't email ${res.notifyFailures.join(', ')}`);
+    }
   };
+
 
 
   return (
