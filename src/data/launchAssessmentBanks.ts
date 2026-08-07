@@ -11,8 +11,10 @@ export type LetterId =
   | 'harnessSupport' // H  — Harness Support
   | 'yourVictories'  // Y  — Your Victories
   | 'transform'      // T  — Transform
+  | 'followThrough'  // T  — Transform (follow-through signal)
   | 'heal'           // H  — Heal
   | 'multiply';      // M  — Multiply / Meaning
+
 
 export interface AssessmentOption {
   value: string;
