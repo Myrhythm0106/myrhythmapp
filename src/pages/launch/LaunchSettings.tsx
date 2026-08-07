@@ -38,6 +38,7 @@ import { EDITION_SHORT, EDITION_VERSION } from '@/config/edition';
 import { BrainHealthySettingsCard } from '@/components/launch/BrainHealthySettingsCard';
 import { TimeBlockingSettingsCard } from '@/components/launch/TimeBlockingSettingsCard';
 import { ResearchConsentCard } from '@/components/launch/ResearchConsentCard';
+import { DeviceRemindersCard } from '@/components/launch/DeviceRemindersCard';
 
 export default function LaunchSettings() {
   const navigate = useNavigate();
@@ -214,6 +215,8 @@ export default function LaunchSettings() {
         </LaunchCard>
 
         {/* Brain-Healthy Scheduling — editable defaults with ranges */}
+        <DeviceRemindersCard />
+
         <BrainHealthySettingsCard />
 
         {/* Time-blocking — opt-in, template-seeded, fully editable */}

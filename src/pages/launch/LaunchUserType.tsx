@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
+import { setResumePoint } from '@/launch/onboarding/resumePoint';
 
 const userTypes = [
   {
@@ -47,6 +48,10 @@ const userTypes = [
 
 export default function LaunchUserType() {
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    setResumePoint('/launch/user-type');
+  }, []);
 
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);

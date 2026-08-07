@@ -11,6 +11,7 @@ import { MyRhythmStrip } from '@/components/launch/assessment/MyRhythmStrip';
 import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfoSheet';
 import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
+import { setResumePoint } from '@/launch/onboarding/resumePoint';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -86,6 +87,10 @@ export default function LaunchAssessment() {
   const [saveWarning, setSaveWarning] = useState<string | null>(null);
   const pendingNav = useRef<string>('/launch/welcome');
 
+
+  useEffect(() => {
+    setResumePoint('/launch/assessment');
+  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem('myrhythm_user_type');

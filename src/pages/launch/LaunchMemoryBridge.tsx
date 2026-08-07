@@ -592,7 +592,15 @@ export default function LaunchMemoryBridge() {
                     </>
                   )}
                 </LaunchButton>
+
+                {(isProcessing || isExtracting) && (
+                  <p className="mt-3 text-sm text-launch-ink/70 max-w-xs mx-auto" role="status" aria-live="polite">
+                    This can take a minute on a phone. Your recording is safe — you can leave this
+                    screen and come back, it'll be waiting in your captures.
+                  </p>
+                )}
               </>
+
             )}
           </div>
         </LaunchCard>

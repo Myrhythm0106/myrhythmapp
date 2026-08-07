@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { friendsFamilyConfig, isFriendsFamilyCode } from '@/config/pricing';
+import { setResumePoint, clearResumePoint } from '@/launch/onboarding/resumePoint';
 
 const STRIPE_MODE = (import.meta.env.VITE_STRIPE_MODE || 'live').toLowerCase();
 const IS_TEST_MODE = STRIPE_MODE === 'test';
@@ -50,9 +51,34 @@ export default function LaunchPayment() {
   const [isLoading, setIsLoading] = useState(false);
   const [code, setCode] = useState('');
   const [isRedeeming, setIsRedeeming] = useState(false);
+  const [needsAuth, setNeedsAuth] = useState(false);
   const isFF = isFriendsFamilyCode(code);
 
+  // Remember the plan they picked so nothing is retyped after a sign-in detour.
+  React.useEffect(() => {
+    const remembered = localStorage.getItem('myrhythm_selected_plan');
+    if (remembered === 'monthly' || remembered === 'yearly') setSelectedPlan(remembered);
+    setResumePoint('/launch/payment');
+  }, []);
 
+  React.useEffect(() => {
+    localStorage.setItem('myrhythm_selected_plan', selectedPlan);
+  }, [selectedPlan]);
+
+  // Waits for auth to settle instead of bouncing on a not-yet-loaded session.
+  const requireSession = async () => {
+    let session = (await supabase.auth.getSession()).data.session;
+    if (!session) {
+      await new Promise((r) => setTimeout(r, 600));
+      session = (await supabase.auth.getSession()).data.session;
+    }
+    if (!session) {
+      setNeedsAuth(true);
+      return null;
+    }
+    setNeedsAuth(false);
+    return session;
+  };
 
   const handleRedeemCode = async () => {
     const trimmed = code.trim();
@@ -62,12 +88,8 @@ export default function LaunchPayment() {
     }
     setIsRedeeming(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error('Please sign in first');
-        navigate('/launch/register');
-        return;
-      }
+      const session = await requireSession();
+      if (!session) return;
       const { data, error } = await supabase.rpc('redeem_access_code', { p_code: trimmed });
       if (error) throw error;
       const result = data as { success: boolean; error?: string };
@@ -76,7 +98,8 @@ export default function LaunchPayment() {
         return;
       }
       toast.success("You're in! Welcome, Founding Member.");
-      navigate('/launch/welcome');
+      clearResumePoint();
+      navigate('/launch/home?welcome=1');
     } catch (err: any) {
       console.error('Redeem error:', err);
       toast.error(err.message || 'Could not redeem that code.');
@@ -88,12 +111,8 @@ export default function LaunchPayment() {
   const handleStartTrial = async () => {
     setIsLoading(true);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        toast.error('Please sign in to continue');
-        navigate('/launch/register');
-        return;
-      }
+      const session = await requireSession();
+      if (!session) return;
       const userType = localStorage.getItem('myrhythm_user_type') || 'wellness';
       const interval = selectedPlan === 'yearly' ? 'year' : 'month';
       const { data, error } = await supabase.functions.invoke('create-checkout', {
@@ -107,11 +126,12 @@ export default function LaunchPayment() {
       }
     } catch (err: any) {
       console.error('Checkout error:', err);
-      toast.error(err.message || 'Failed to start checkout');
+      toast.error("We couldn't start checkout just now. Nothing was charged — try again, or use an access code below.");
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const copyCard = async (num: string) => {
     try {
@@ -134,6 +154,25 @@ export default function LaunchPayment() {
             <ArrowLeft className="h-4 w-4" />
             Back to your results
           </button>
+
+          {needsAuth && (
+            <div
+              className="mb-6 rounded-2xl border-2 border-launch-gold/50 bg-white px-4 py-4"
+              role="alert"
+            >
+              <p className="font-semibold text-launch-ink">Confirm your details to continue</p>
+              <p className="mt-1 text-sm text-launch-ink/70">
+                Your plan is saved. Sign in and you'll come straight back to this page — nothing to retype.
+              </p>
+              <Button
+                className="mt-3 min-h-[56px] w-full"
+                onClick={() => navigate('/launch/register?next=/launch/payment')}
+              >
+                Confirm and continue
+              </Button>
+            </div>
+          )}
+
 
           {IS_TEST_MODE && (
             <motion.div

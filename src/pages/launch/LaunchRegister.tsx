@@ -154,6 +154,11 @@ export default function LaunchRegister() {
   };
 
   const handleContinue = () => {
+    const next = searchParams.get('next');
+    if (next && next.startsWith('/launch/')) {
+      navigate(next);
+      return;
+    }
     if (prefilledUserType) {
       localStorage.setItem('myrhythm_user_type', prefilledUserType);
       navigate('/launch/payment');
@@ -161,6 +166,7 @@ export default function LaunchRegister() {
       navigate('/launch/user-type');
     }
   };
+
 
   // Success state after registration
   if (registrationSuccess) {
