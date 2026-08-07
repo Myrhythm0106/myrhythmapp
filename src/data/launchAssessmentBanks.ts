@@ -28,9 +28,11 @@ export interface AssessmentOption {
 }
 
 export interface AssessmentQuestion {
-  id: LetterId;
+  id: QuestionId;
   letter: 'M' | 'Y' | 'R' | 'H' | 'T';
   word: string;
+  /** Which MYRHYTHM letter slot this question belongs to (defaults to its own id). */
+  slot?: LetterId;
   brainHealthLens: string;
   title: string;
   subtitle?: string;
@@ -41,8 +43,9 @@ export interface AssessmentQuestion {
 export interface AssessmentBank {
   persona: PersonaKey;
   intro: string;
-  questions: AssessmentQuestion[]; // always 8, in MYRHYTHM order
+  questions: AssessmentQuestion[]; // 8 MYRHYTHM letters + follow-through, in order
 }
+
 
 /** Legacy derivation: which harnessSupport values mean "no support". */
 const NO_SUPPORT_VALUES = new Set(['solo', 'on-my-own', 'not-yet', 'just-me']);
