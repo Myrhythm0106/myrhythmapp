@@ -112,6 +112,31 @@ export default function LaunchWelcome() {
         <LaunchPageHeader fallbackPath="/launch/assessment" />
       </div>
 
+      {postCheckout && (
+        <div className="max-w-6xl mx-auto px-4 md:px-8 pt-2">
+          <div
+            className="rounded-2xl border-2 p-5 bg-white"
+            style={{ borderColor: GOLD }}
+            role="status"
+            aria-live="polite"
+          >
+            <p className="text-lg font-bold" style={SORA}>You're in. Your plan is active.</p>
+            <p className="mt-1 text-sm opacity-80">
+              Your 7-day trial has started. Everything below is your snapshot — when you're ready, head to Home.
+            </p>
+            <button
+              onClick={() => navigate('/launch/home?welcome=1')}
+              className="mt-4 w-full md:w-auto min-h-[56px] px-8 rounded-xl font-semibold text-white"
+              style={{ backgroundColor: INK }}
+            >
+              Go to Home
+            </button>
+          </div>
+        </div>
+      )}
+
+
+
       <div className="max-w-6xl mx-auto px-4 md:px-8 pb-16">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
