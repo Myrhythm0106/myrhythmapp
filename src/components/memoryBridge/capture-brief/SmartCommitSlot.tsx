@@ -212,24 +212,75 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
       toast.error(res.error || 'Could not schedule');
       return;
     }
+    const invitedPeople = people.filter(p => p.role === 'invite');
+    const watchingPeople = people.filter(p => p.role === 'watch');
     onUpdated({
       scheduled: {
         startDate: start.date,
         startTime: start.time,
         dueDate,
         reminders,
-        invitedMemberIds: people.filter(p => p.role === 'invite').map(p => p.memberId),
-        watcherMemberIds: people.filter(p => p.role === 'watch').map(p => p.memberId),
+        invitedMemberIds: invitedPeople.map(p => p.memberId),
+        watcherMemberIds: watchingPeople.map(p => p.memberId),
+        invitedNames: invitedPeople.map(p => p.name),
+        watcherNames: watchingPeople.map(p => p.name),
+        notifyFailures: res.notifyFailures || [],
         calendarEventId: res.calendarEventId,
       },
+      people,
       milestones,
     });
-    toast.success('Scheduled', { duration: 4000 });
+    const told = res.notified || 0;
+    toast.success(told > 0 ? `Scheduled · ${told} person${told > 1 ? 's' : ''} told` : 'Scheduled', {
+      duration: 4000,
+    });
   };
 
   const togglePersonRole = (memberId: string, role: PersonPick['role']) => {
     setPeople(prev => prev.map(p => (p.memberId === memberId ? { ...p, role } : p)));
   };
+
+  const circleMemberIds = people.filter(p => !isAdhocPerson(p)).map(p => p.memberId);
+  const adhocLoopIns: AdhocLoopIn[] = people
+    .filter(isAdhocPerson)
+    .map(p => ({ email: p.email || '', name: p.name }));
+
+  const handlePeopleChange = (next: { circleMemberIds: string[]; adhocLoopIns: AdhocLoopIn[] }) => {
+    const kept = people.filter(
+      p =>
+        (!isAdhocPerson(p) && next.circleMemberIds.includes(p.memberId)) ||
+        (isAdhocPerson(p) && next.adhocLoopIns.some(l => l.email === p.email)),
+    );
+    const addedMembers: PersonPick[] = next.circleMemberIds
+      .filter(id => !people.some(p => p.memberId === id))
+      .map(id => {
+        const m = supportCircle.find(x => x.id === id);
+        const canInvite = Boolean(m?.permissions?.calendar) && Boolean(m?.member_email);
+        return {
+          memberId: id,
+          name: m?.member_name || 'Circle member',
+          email: m?.member_email,
+          role: (canInvite ? 'invite' : 'watch') as PersonPick['role'],
+          pre: 'manual' as const,
+          canInvite,
+          canWatch: true,
+        };
+      });
+    const addedGuests: PersonPick[] = next.adhocLoopIns
+      .filter(l => !people.some(p => p.email === l.email))
+      .map(l => ({
+        memberId: `${ADHOC_PREFIX}${l.email}`,
+        name: l.name || l.email,
+        email: l.email,
+        role: 'invite' as PersonPick['role'],
+        pre: 'manual' as const,
+        canInvite: true,
+        // Watching needs Support Circle membership and its permissions
+        canWatch: false,
+      }));
+    setPeople([...kept, ...addedMembers, ...addedGuests]);
+  };
+
 
   const togglePref = (key: 'smartSchedulingEnabled' | 'milestonesEnabled' | 'healthAwareEnabled') => {
     const next = { ...(action.schedulingOverride || {}), [key]: !prefs[key] };
