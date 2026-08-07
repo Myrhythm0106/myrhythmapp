@@ -9,6 +9,8 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { BackButton } from '@/components/ui/BackButton';
+import { supabase } from '@/integrations/supabase/client';
+
 
 // Real Supabase signup is ON. A real session is required for checkout,
 // access-code redemption and saving assessment results, so we no longer
