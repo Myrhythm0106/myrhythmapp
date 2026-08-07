@@ -39,7 +39,9 @@ import {
   formatDateLabel,
   validatePostpone,
 } from './model/scheduleActions';
-import { commitAction, undoCommit } from './model/commitActions';
+import { commitAction, undoCommit, ADHOC_PREFIX, isAdhocPerson } from './model/commitActions';
+import { LoopInPicker, type AdhocLoopIn } from '@/components/shared/LoopInPicker';
+import { useAccountabilitySystem } from '@/hooks/use-accountability-system';
 import {
   generateMilestones,
   recalculateMilestones,
