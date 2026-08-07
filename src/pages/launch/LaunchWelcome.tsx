@@ -94,6 +94,8 @@ export default function LaunchWelcome() {
   }, [bhs]);
 
   const content = getMessage(persona);
+  const postCheckout = new URLSearchParams(window.location.search).get('postCheckout') === '1';
+
 
   const letterScores = bhs ? LETTER_ORDER.map((l) => bhs.letters[l.id] ?? 0) : [];
   const lowestIdx = letterScores.length ? letterScores.indexOf(Math.min(...letterScores)) : -1;
