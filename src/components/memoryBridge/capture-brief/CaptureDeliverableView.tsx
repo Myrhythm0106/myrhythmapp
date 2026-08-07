@@ -44,6 +44,7 @@ export function CaptureDeliverableView() {
   const [sections, setSections] = useState(DEFAULT_SECTIONS);
   const [includeSchedule, setIncludeSchedule] = useState(true);
   const [exporting, setExporting] = useState<null | 'pdf' | 'docx' | 'xlsx' | 'clinician'>(null);
+  const [togglesOpen, setTogglesOpen] = useState(false);
 
   useEffect(() => {
     if (!meetingId) return;
