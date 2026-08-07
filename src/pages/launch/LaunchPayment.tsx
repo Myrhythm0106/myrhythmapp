@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { friendsFamilyConfig, isFriendsFamilyCode } from '@/config/pricing';
+import { setResumePoint, clearResumePoint } from '@/launch/onboarding/resumePoint';
 
 const STRIPE_MODE = (import.meta.env.VITE_STRIPE_MODE || 'live').toLowerCase();
 const IS_TEST_MODE = STRIPE_MODE === 'test';
