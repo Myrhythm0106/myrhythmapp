@@ -368,21 +368,26 @@ export default function LaunchAssessment() {
   return (
     <LaunchLayout>
       <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
-        <p className="text-xs text-launch-ink/50 mb-4 -mt-2">
-          {PERSONA_LABEL[bank.persona]}
-        </p>
+        <div className="flex items-center justify-between gap-2 mb-3 -mt-2">
+          <p className="text-xs text-launch-ink/50">{PERSONA_LABEL[bank.persona]}</p>
+          <FrameworkInfoSheet />
+        </div>
 
-        <div className="mb-6">
+        <div className="mb-4">
           <div className="h-2 bg-launch-ink/10 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-launch-moss to-launch-gold transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-launch-ink/50 mt-2 text-center">
-            Letter {currentQuestion + 1} of {questions.length} · MYRHYTHM
-          </p>
         </div>
+
+        <MyRhythmStrip
+          questions={questions}
+          currentIndex={currentQuestion}
+          answeredIds={new Set(Object.keys(answers).filter((k) => answers[k]?.primary))}
+          onJump={(i) => setCurrentQuestion(i)}
+        />
 
         <div className="flex items-center justify-center gap-3 mb-4">
           <span
@@ -392,9 +397,10 @@ export default function LaunchAssessment() {
             {question.letter}
           </span>
           <span className="text-sm font-semibold tracking-wide uppercase text-launch-ink/80">
-            {question.word}
+            {question.letter} is for {question.word}
           </span>
         </div>
+
 
         <div className="text-center mb-4">
           <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">{question.title}</h2>
