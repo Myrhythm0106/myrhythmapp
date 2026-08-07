@@ -489,8 +489,8 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
       )}
 
       {/* People row */}
-      {people.length > 0 && (
-        <div className="flex items-center gap-2 flex-wrap pt-1">
+      <div className="pt-1 space-y-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Users className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
           <span className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
             Who knows?
@@ -498,8 +498,18 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
           {people.map(p => (
             <PersonChip key={p.memberId} person={p} onChange={(r) => togglePersonRole(p.memberId, r)} />
           ))}
+          {people.length === 0 && (
+            <span className="text-xs text-muted-foreground">Just you for now</span>
+          )}
         </div>
-      )}
+        <LoopInPicker
+          circleMemberIds={circleMemberIds}
+          adhocLoopIns={adhocLoopIns}
+          onChange={handlePeopleChange}
+          triggerLabel="Add someone"
+        />
+      </div>
+
 
       {/* CTA */}
       <div className="flex items-center justify-end gap-2 pt-1">
