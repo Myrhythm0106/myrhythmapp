@@ -142,7 +142,7 @@ serve(async (req) => {
         trial_period_days: 7,
       },
       payment_method_collection: 'always',
-      success_url: `${origin}/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=1`,
+      success_url: `${origin}/launch/welcome?postCheckout=1&session_id={CHECKOUT_SESSION_ID}&fm=${isFoundingActive ? '1' : '0'}&trial=1`,
       cancel_url: `${origin}/subscribe/cancel`,
       metadata: metadata
     });
