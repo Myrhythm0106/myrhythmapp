@@ -12,6 +12,7 @@ import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfo
 import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
 import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import {
+import { setResumePoint } from '@/launch/onboarding/resumePoint';
   getAssessmentBank,
   resolveHasSupport,
   computeBrainHealthScore,

@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
+import { setResumePoint } from '@/launch/onboarding/resumePoint';
 
 const userTypes = [
   {
