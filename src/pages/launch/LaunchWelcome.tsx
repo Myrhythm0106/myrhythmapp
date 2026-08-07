@@ -398,7 +398,10 @@ export default function LaunchWelcome() {
         </motion.div>
       </div>
 
+      <AssessmentRetakeCard />
+
       <LaunchQuickActions />
+
     </div>
   );
 }
