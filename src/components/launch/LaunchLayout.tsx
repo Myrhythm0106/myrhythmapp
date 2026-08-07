@@ -15,16 +15,20 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAuth } from '@/hooks/useAuth';
-import { useMembershipStatus } from '@/hooks/useMembershipStatus';
+import { useAppReady } from '@/hooks/useAppReady';
 
 
-const PRE_ACCOUNT_PATHS = new Set([
+// Onboarding steps — the dial stays hidden until the user reaches Home.
+const ONBOARDING_PATHS = new Set([
   '/launch/welcome',
   '/launch/signin',
   '/launch/signup',
+  '/launch/register',
   '/launch/user-type',
   '/launch/assessment',
+  '/launch/payment',
 ]);
+
 
 interface LaunchLayoutProps {
   children: ReactNode;
