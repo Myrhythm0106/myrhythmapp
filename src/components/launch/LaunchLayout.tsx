@@ -27,7 +27,9 @@ const ONBOARDING_PATHS = new Set([
   '/launch/user-type',
   '/launch/assessment',
   '/launch/payment',
+  '/launch/welcome',
 ]);
+
 
 
 interface LaunchLayoutProps {
