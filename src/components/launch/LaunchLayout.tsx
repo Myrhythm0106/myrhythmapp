@@ -60,13 +60,14 @@ export function LaunchLayout({
   return (
     <SubjectProvider>
       <div className={cn(
-        "launch-theme min-h-screen flex flex-col",
+        "launch-theme min-h-[100svh] flex flex-col pb-safe px-safe",
         isWelcomePage ? "bg-[hsl(var(--launch-cream))]" : "bg-[hsl(var(--launch-cream-light))]"
       )}>
 
         {/* Top Header Bar */}
         {showHeader && (
-          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3">
+          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3 pt-safe">
+
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 shrink-0">
                 <div className="w-8 h-8 bg-[hsl(var(--launch-ink))] rounded-lg flex items-center justify-center ring-1 ring-[hsl(var(--launch-gold)/0.55)]">
