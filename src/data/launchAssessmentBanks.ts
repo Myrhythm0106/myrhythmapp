@@ -561,7 +561,7 @@ export const PERSONA_LABEL: Record<PersonaKey, string> = {
 /*  Scoring                                                           */
 /* ------------------------------------------------------------------ */
 
-export type LetterScores = Record<LetterId, number>;
+export type LetterScores = Record<LetterId, number> & Partial<Record<QuestionId, number>>;
 
 export interface AssessmentAnswer {
   primary: string;
