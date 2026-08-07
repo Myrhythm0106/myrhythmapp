@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Check, Plus, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -7,6 +7,10 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
+import { MyRhythmStrip } from '@/components/launch/assessment/MyRhythmStrip';
+import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfoSheet';
+import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
+import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -22,6 +26,7 @@ type FreeformMap = Record<string, string>;
 
 const PROGRESS_KEY = 'myrhythm_assessment_progress';
 const NONE_FITS_VALUE = '__none_fits__';
+
 
 type RecencyValue = 'na' | '0-3m' | '3-12m' | '1-3y' | '3-10y' | '10y+';
 
