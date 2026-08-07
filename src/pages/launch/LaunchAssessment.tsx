@@ -117,7 +117,27 @@ export default function LaunchAssessment() {
     } catch {/* noop */}
   }, [persona, currentQuestion, answers, freeform, eventRecency, phase]);
 
+  const handleProcessingDone = useCallback(() => {
+    navigate(pendingNav.current, { replace: true });
+  }, [navigate]);
+
   if (!bank) return null;
+
+  /* ------------------- Processing phase ------------------- */
+  if (processing) {
+    return (
+      <LaunchLayout showHeader={false}>
+        <AssessmentProcessing onDone={handleProcessingDone} />
+        {saveWarning && (
+          <p className="text-xs text-launch-ink/60 text-center px-8 pb-8 max-w-sm mx-auto">
+            {saveWarning}
+          </p>
+        )}
+      </LaunchLayout>
+    );
+  }
+
+
 
   /* ------------------- Recency phase ------------------- */
   if (phase === 'recency') {
