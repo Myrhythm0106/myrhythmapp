@@ -2,6 +2,9 @@ import { supabase } from '@/integrations/supabase/client';
 import type { BriefAction, ActionReminder, PersonPick } from './types';
 import { defaultReminders } from './scheduleActions';
 
+export const ADHOC_PREFIX = 'adhoc:';
+
+export const isAdhocPerson = (p: PersonPick) => p.memberId.startsWith(ADHOC_PREFIX);
 
 export interface CommitInput {
   startDate: string;
@@ -15,6 +18,10 @@ export interface CommitResult {
   ok: boolean;
   calendarEventId?: string;
   error?: string;
+  /** People who were emailed successfully */
+  notified?: number;
+  /** Emails that could not be reached */
+  notifyFailures?: string[];
 }
 
 function reminderLabel(min: number): string {
@@ -30,6 +37,8 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
 
   const invited = input.people.filter(p => p.role === 'invite' && p.canInvite);
   const watchers = input.people.filter(p => p.role === 'watch' && p.canWatch);
+  // Only real Support Circle members can be stored as watchers (uuid columns)
+  const circleWatcherIds = watchers.filter(p => !isAdhocPerson(p)).map(w => w.memberId);
 
   // 1. Calendar event
   const { data: event, error: evErr } = await supabase
@@ -43,7 +52,7 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
       type: 'action',
       category: action.category || 'commitment',
       is_system_generated: true,
-      watchers: watchers.map(w => w.memberId),
+      watchers: circleWatcherIds,
     })
     .select('id')
     .single();
@@ -88,13 +97,42 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
       scheduled_time: input.startTime,
       end_date: input.dueDate || null,
       calendar_event_id: event.id,
-      assigned_watchers: watchers.map(w => w.memberId),
+      assigned_watchers: circleWatcherIds,
       status: 'scheduled',
       support_circle_notified: watchers.length > 0,
     })
     .eq('id', action.id);
 
-  return { ok: true, calendarEventId: event.id };
+  // 5. Tell people — invitees get a calendar invite, watchers get a light notice
+  let notified = 0;
+  let notifyFailures: string[] = [];
+  const invitePeople = invited.filter(p => p.email).map(p => ({ email: p.email!, name: p.name }));
+  const watchPeople = watchers.filter(p => p.email).map(p => ({ email: p.email!, name: p.name }));
+
+  if (invitePeople.length > 0 || watchPeople.length > 0) {
+    try {
+      const { data, error } = await supabase.functions.invoke('send-event-invitation', {
+        body: {
+          eventId: event.id,
+          actionText: action.text,
+          startDate: input.startDate,
+          startTime: input.startTime,
+          dueDate: input.dueDate,
+          context: action.context || action.sourceQuote || undefined,
+          invites: invitePeople,
+          watchers: watchPeople,
+        },
+      });
+      if (error) throw error;
+      notified = data?.sent ?? 0;
+      notifyFailures = (data?.failures || []).map((f: any) => f.email);
+    } catch (e: any) {
+      notifyFailures = [...invitePeople, ...watchPeople].map(p => p.email);
+      console.error('send-event-invitation failed', e);
+    }
+  }
+
+  return { ok: true, calendarEventId: event.id, notified, notifyFailures };
 }
 
 export async function undoCommit(action: BriefAction): Promise<void> {
@@ -117,31 +155,37 @@ export interface BulkResult {
   committed: number;
   skipped: number;
   failed: number;
+  notified: number;
+  notifyFailures: string[];
 }
 
 export async function commitAllRecommended(
   actions: BriefAction[],
-  onCommitted: (id: string, calendarEventId: string) => void,
+  onCommitted: (id: string, calendarEventId: string, people: PersonPick[], reminders: ActionReminder[], slot: { date: string; time: string }) => void,
 ): Promise<BulkResult> {
-  let committed = 0, skipped = 0, failed = 0;
+  let committed = 0, skipped = 0, failed = 0, notified = 0;
+  const notifyFailures: string[] = [];
   for (const a of actions) {
     if (a.scheduled?.calendarEventId) { skipped++; continue; }
     const top = a.suggestions?.find(s => s.isRecommended) || a.suggestions?.[0];
     if (!top) { skipped++; continue; }
     const reminders = defaultReminders(a.priority, a.dueDate?.date, top.date);
+    const people = a.people || [];
     const res = await commitAction(a, {
       startDate: top.date,
       startTime: top.time,
       dueDate: a.dueDate?.date,
       reminders,
-      people: a.people || [],
+      people,
     });
     if (res.ok && res.calendarEventId) {
       committed++;
-      onCommitted(a.id, res.calendarEventId);
+      notified += res.notified || 0;
+      notifyFailures.push(...(res.notifyFailures || []));
+      onCommitted(a.id, res.calendarEventId, people, reminders, { date: top.date, time: top.time });
     } else {
       failed++;
     }
   }
-  return { committed, skipped, failed };
+  return { committed, skipped, failed, notified, notifyFailures };
 }
