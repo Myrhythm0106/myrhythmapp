@@ -1,7 +1,27 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, FileDown, FileSpreadsheet, FileText, Loader2, Stethoscope } from 'lucide-react';
+import {
+  ArrowLeft,
+  ChevronDown,
+  FileDown,
+  FileSpreadsheet,
+  FileText,
+  Loader2,
+  Share2,
+  Stethoscope,
+} from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible';
 import { toast } from 'sonner';
 import { buildCaptureBrief } from './model/buildCaptureBrief';
 import { CaptureBriefModel, SectionKey } from './model/types';
