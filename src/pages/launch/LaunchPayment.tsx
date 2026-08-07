@@ -155,6 +155,25 @@ export default function LaunchPayment() {
             Back to your results
           </button>
 
+          {needsAuth && (
+            <div
+              className="mb-6 rounded-2xl border-2 border-launch-gold/50 bg-white px-4 py-4"
+              role="alert"
+            >
+              <p className="font-semibold text-launch-ink">Confirm your details to continue</p>
+              <p className="mt-1 text-sm text-launch-ink/70">
+                Your plan is saved. Sign in and you'll come straight back to this page — nothing to retype.
+              </p>
+              <Button
+                className="mt-3 min-h-[56px] w-full"
+                onClick={() => navigate('/launch/register?next=/launch/payment')}
+              >
+                Confirm and continue
+              </Button>
+            </div>
+          )}
+
+
           {IS_TEST_MODE && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
