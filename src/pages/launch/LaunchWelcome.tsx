@@ -7,6 +7,8 @@ import { MemoryFirstChip } from '@/components/launch/MemoryFirstChip';
 import { MEMORY_FIRST_DESIGN_TAGLINE } from '@/config/appDescription';
 import { LaunchPageHeader } from '@/components/launch/LaunchPageHeader';
 import { LaunchQuickActions } from '@/components/launch/LaunchQuickActions';
+import { AssessmentRetakeCard } from '@/components/launch/assessment/AssessmentRetakeCard';
+
 import { MyRhythmLetterBar } from '@/components/launch/MyRhythmLetterBar';
 import { foundingMemberConfig, isFoundingMemberActive } from '@/config/pricing';
 import type { LetterId } from '@/data/launchAssessmentBanks';
