@@ -88,6 +88,7 @@ export function SmartCommitSlot({ action, onUpdated }: Props) {
   const [dueLocked, setDueLocked] = useState<boolean>(action.dueDate?.locked ?? false);
   const [dueDate, setDueDate] = useState<string | undefined>(action.dueDate?.date);
   const [people, setPeople] = useState<PersonPick[]>(action.people || []);
+  const { supportCircle } = useAccountabilitySystem();
   const [committing, setCommitting] = useState(false);
   const [warning, setWarning] = useState<string | null>(null);
 
