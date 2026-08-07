@@ -49,6 +49,10 @@ const userTypes = [
 export default function LaunchUserType() {
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    setResumePoint('/launch/user-type');
+  }, []);
+
   const handleSelect = (userTypeId: string) => {
     localStorage.setItem('myrhythm_user_type', userTypeId);
     navigate('/launch/assessment');

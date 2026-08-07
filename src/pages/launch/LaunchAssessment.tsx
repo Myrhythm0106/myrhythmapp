@@ -89,6 +89,10 @@ export default function LaunchAssessment() {
 
 
   useEffect(() => {
+    setResumePoint('/launch/assessment');
+  }, []);
+
+  useEffect(() => {
     const stored = localStorage.getItem('myrhythm_user_type');
     const bank = getAssessmentBank(stored);
     if (!bank) {

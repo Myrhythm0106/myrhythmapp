@@ -4,6 +4,7 @@ import { DemoModeProvider } from '@/contexts/DemoModeContext';
 import { QuietHome } from '@/components/launch/quiet/QuietHome';
 import { FirstRunOverlay } from '@/components/launch/FirstRunOverlay';
 import { markAppReady } from '@/hooks/useAppReady';
+import { clearResumePoint } from '@/launch/onboarding/resumePoint';
 import LaunchDashboardLegacy from './LaunchDashboardLegacy';
 
 export default function LaunchDashboard() {
@@ -14,6 +15,7 @@ export default function LaunchDashboard() {
   // Reaching Home means onboarding is done — unlock the wayfinder dial.
   useEffect(() => {
     markAppReady();
+    clearResumePoint();
   }, []);
 
   if (useLegacy) {
