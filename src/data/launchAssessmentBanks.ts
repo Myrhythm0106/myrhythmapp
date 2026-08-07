@@ -11,9 +11,12 @@ export type LetterId =
   | 'harnessSupport' // H  — Harness Support
   | 'yourVictories'  // Y  — Your Victories
   | 'transform'      // T  — Transform
-  | 'followThrough'  // T  — Transform (follow-through signal)
   | 'heal'           // H  — Heal
   | 'multiply';      // M  — Multiply / Meaning
+
+/** Question ids: the 8 MYRHYTHM letters plus the follow-through probe (sits under T). */
+export type QuestionId = LetterId | 'followThrough';
+
 
 
 export interface AssessmentOption {
