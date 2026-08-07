@@ -9,15 +9,20 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { z } from 'zod';
 import { BackButton } from '@/components/ui/BackButton';
+import { supabase } from '@/integrations/supabase/client';
 
-// TEMP: open registration. Flip to false to restore real Supabase signup + email verification.
-const BYPASS_REGISTRATION = true;
+
+// Real Supabase signup is ON. A real session is required for checkout,
+// access-code redemption and saving assessment results, so we no longer
+// fake accounts locally.
+const BYPASS_REGISTRATION = false;
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(50),
   email: z.string().email('Please enter a valid email'),
-  password: z.string().min(BYPASS_REGISTRATION ? 1 : 8, 'Password must be at least 8 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
 });
+
 
 export default function LaunchRegister() {
   const navigate = useNavigate();
@@ -63,39 +68,74 @@ export default function LaunchRegister() {
 
     setIsLoading(true);
     try {
-      if (BYPASS_REGISTRATION) {
-        // Open registration: skip Supabase, store locally, continue.
-        localStorage.setItem(
-          'myrhythm_mock_user',
-          JSON.stringify({ name, email, createdAt: new Date().toISOString() })
-        );
-        if (prefilledUserType) {
-          localStorage.setItem('myrhythm_user_type', prefilledUserType);
-        }
-        toast.success("Account ready — let's get you set up.");
-        navigate(prefilledUserType ? '/launch/payment' : '/launch/user-type');
+      if (prefilledUserType) {
+        localStorage.setItem('myrhythm_user_type', prefilledUserType);
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { name },
+          emailRedirectTo: `${window.location.origin}/launch/welcome`,
+        },
+      });
+
+      const alreadyRegistered =
+        !!error &&
+        /already registered|already been registered|user already exists/i.test(error.message || '');
+
+      if (error && !alreadyRegistered) {
+        toast.error(error.message || "We couldn't create your account", {
+          description: 'Check your email and password, then try again. If it keeps failing, sign in instead.',
+        });
         return;
       }
 
-      const { error } = await signUp(email, password, name);
-      if (error) {
-        if (error.message?.includes('already registered')) {
-          toast.error('This email is already registered. Please sign in instead.');
-        } else {
-          toast.error(error.message || 'Registration failed');
+      // Make sure we end up with a real session — checkout and saving your
+      // results both need one.
+      let session = data?.session ?? null;
+      if (!session) {
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        session = signInData?.session ?? null;
+
+        if (!session) {
+          if (alreadyRegistered) {
+            toast.error('That email already has an account', {
+              description: 'Please sign in with your password to continue.',
+            });
+            navigate('/launch/signin');
+            return;
+          }
+          if (/confirm/i.test(signInError?.message || '')) {
+            // Email confirmation is switched on — show the verify screen.
+            setRegistrationSuccess(true);
+            toast.success('Account created! Please check your email to verify.');
+            return;
+          }
+          toast.error("We couldn't sign you in automatically", {
+            description: 'Your account exists — please sign in to carry on.',
+          });
+          navigate('/launch/signin');
+          return;
         }
-        return;
       }
 
-      // Show success state instead of navigating immediately
-      setRegistrationSuccess(true);
-      toast.success('Account created! Please check your email to verify.');
+      toast.success("You're in — let's get you set up.");
+      navigate(prefilledUserType ? '/launch/payment' : '/launch/user-type', { replace: true });
     } catch (err: any) {
-      toast.error(err.message || 'Something went wrong');
+      console.error('[register] unexpected error', err);
+      toast.error(err?.message || 'Something went wrong', {
+        description: 'Nothing was lost. Please try again in a moment.',
+      });
     } finally {
       setIsLoading(false);
     }
   };
+
 
   const handleResendVerification = async () => {
     setIsResending(true);
@@ -125,7 +165,7 @@ export default function LaunchRegister() {
   // Success state after registration
   if (registrationSuccess) {
     return (
-      <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
+      <div className="h-[100svh] min-h-[100svh] bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
         {/* Back Button */}
         <div className="flex-shrink-0 p-4">
           <BackButton onClick={() => navigate('/launch')} />
@@ -220,7 +260,7 @@ export default function LaunchRegister() {
   }
 
   return (
-    <div className="min-h-screen h-screen bg-launch-cream-light flex flex-col overflow-hidden">
+    <div className="h-[100svh] min-h-[100svh] bg-launch-cream-light flex flex-col overflow-hidden pt-safe pb-safe px-safe">
       {/* Back Button */}
       <div className="flex-shrink-0 p-4">
         <BackButton onClick={() => navigate('/launch')} />

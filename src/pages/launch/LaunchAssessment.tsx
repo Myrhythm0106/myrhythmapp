@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowLeft, Check, Plus, HelpCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -7,6 +7,10 @@ import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 import confetti from 'canvas-confetti';
+import { MyRhythmStrip } from '@/components/launch/assessment/MyRhythmStrip';
+import { FrameworkInfoSheet } from '@/components/launch/assessment/FrameworkInfoSheet';
+import { AssessmentProcessing } from '@/components/launch/assessment/AssessmentProcessing';
+import { saveAssessmentRun } from '@/launch/assessment/assessmentHistory';
 import {
   getAssessmentBank,
   resolveHasSupport,
@@ -22,6 +26,7 @@ type FreeformMap = Record<string, string>;
 
 const PROGRESS_KEY = 'myrhythm_assessment_progress';
 const NONE_FITS_VALUE = '__none_fits__';
+
 
 type RecencyValue = 'na' | '0-3m' | '3-12m' | '1-3y' | '3-10y' | '10y+';
 
@@ -77,6 +82,10 @@ export default function LaunchAssessment() {
   const [freeform, setFreeform] = useState<FreeformMap>(initial?.freeform ?? {});
   const [eventRecency, setEventRecency] = useState<RecencyValue | null>(initial?.eventRecency ?? null);
   const [phase, setPhase] = useState<'recency' | 'questions'>(initial?.phase ?? 'recency');
+  const [processing, setProcessing] = useState(false);
+  const [saveWarning, setSaveWarning] = useState<string | null>(null);
+  const pendingNav = useRef<string>('/launch/welcome');
+
 
   useEffect(() => {
     const stored = localStorage.getItem('myrhythm_user_type');
@@ -108,7 +117,27 @@ export default function LaunchAssessment() {
     } catch {/* noop */}
   }, [persona, currentQuestion, answers, freeform, eventRecency, phase]);
 
+  const handleProcessingDone = useCallback(() => {
+    navigate(pendingNav.current, { replace: true });
+  }, [navigate]);
+
   if (!bank) return null;
+
+  /* ------------------- Processing phase ------------------- */
+  if (processing) {
+    return (
+      <LaunchLayout showHeader={false}>
+        <AssessmentProcessing onDone={handleProcessingDone} />
+        {saveWarning && (
+          <p className="text-xs text-launch-ink/60 text-center px-8 pb-8 max-w-sm mx-auto">
+            {saveWarning}
+          </p>
+        )}
+      </LaunchLayout>
+    );
+  }
+
+
 
   /* ------------------- Recency phase ------------------- */
   if (phase === 'recency') {
@@ -249,7 +278,6 @@ export default function LaunchAssessment() {
       setCurrentQuestion((p) => p + 1);
       return;
     }
-    const brainHealthScore = computeBrainHealthScore(bank, answers);
     const combined = (id: string) => {
       const a = answers[id];
       if (!a || a.primary === NONE_FITS_VALUE) return [];
@@ -259,42 +287,78 @@ export default function LaunchAssessment() {
       const p = answers[id]?.primary ?? '';
       return p === NONE_FITS_VALUE ? '' : p;
     };
-    const noneFitsCount = Object.values(answers).filter(a => a.primary === NONE_FITS_VALUE).length;
-    const results = {
-      userType: persona,
-      answers,
-      freeformNotes: freeform,
-      eventRecency,
-      noneFitsCount,
-      mindset: primaryOf('mindset'),
-      yesReality: primaryOf('yesReality'),
-      rhythm: primaryOf('rhythm'),
-      harnessSupport: primaryOf('harnessSupport'),
-      yourVictories: combined('yourVictories'),
-      transform: combined('transform'),
-      heal: primaryOf('heal'),
-      multiply: primaryOf('multiply'),
-      rhythmPreference: primaryOf('rhythm'),
-      keyStruggles: combined('transform'),
-      goals: combined('yourVictories'),
-      hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
-      brainHealthScore,
-    };
-    localStorage.setItem(
-      'myrhythm_launch_mode',
-      JSON.stringify({
-        isLaunchMode: true,
-        assessmentCompleted: true,
-        assessmentResults: results,
+
+    let results: Record<string, unknown>;
+    let brainHealthScore: ReturnType<typeof computeBrainHealthScore>;
+    try {
+      brainHealthScore = computeBrainHealthScore(bank, answers);
+      const noneFitsCount = Object.values(answers).filter(a => a.primary === NONE_FITS_VALUE).length;
+      results = {
+        userType: persona,
+        answers,
+        freeformNotes: freeform,
+        eventRecency,
+        noneFitsCount,
+        mindset: primaryOf('mindset'),
+        yesReality: primaryOf('yesReality'),
+        rhythm: primaryOf('rhythm'),
+        harnessSupport: primaryOf('harnessSupport'),
+        yourVictories: combined('yourVictories'),
+        transform: combined('transform'),
+        followThrough: primaryOf('followThrough'),
+        heal: primaryOf('heal'),
+        multiply: primaryOf('multiply'),
+        rhythmPreference: primaryOf('rhythm'),
+        keyStruggles: combined('transform'),
+        goals: combined('yourVictories'),
+        hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
         brainHealthScore,
-        lastViewedWhatsNew: null,
-        purchasedFeatures: [],
-      })
-    );
-    localStorage.removeItem(PROGRESS_KEY);
+        completedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(
+        'myrhythm_launch_mode',
+        JSON.stringify({
+          isLaunchMode: true,
+          assessmentCompleted: true,
+          assessmentResults: results,
+          brainHealthScore,
+          lastViewedWhatsNew: null,
+          purchasedFeatures: [],
+        })
+      );
+      localStorage.removeItem(PROGRESS_KEY);
+    } catch (err) {
+      console.error('[assessment] could not build results', err);
+      toast.error("We couldn't finish your snapshot", {
+        description: 'Your answers are still saved. Tap Complete again, or go Back one step and retry.',
+        duration: 8000,
+      });
+      return;
+    }
+
+    // Show the processing state immediately, save in the background.
+    pendingNav.current = '/launch/welcome';
+    setSaveWarning(null);
+    setProcessing(true);
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    setTimeout(() => navigate('/launch/welcome'), 500);
+
+    saveAssessmentRun({
+      persona,
+      answers,
+      freeform,
+      eventRecency,
+      results,
+      brainHealthScore,
+    }).then((res) => {
+      if (!res.ok && res.error !== 'not-signed-in') {
+        console.warn('[assessment] save failed:', res.error);
+        setSaveWarning(
+          "Your snapshot is ready, but we couldn't save it to your account yet. It's kept on this device and will sync next time you're online."
+        );
+      }
+    });
   };
+
 
   const handleBack = () => {
     if (currentQuestion > 0) setCurrentQuestion((p) => p - 1);
@@ -304,21 +368,26 @@ export default function LaunchAssessment() {
   return (
     <LaunchLayout>
       <div className="max-w-md mx-auto w-full px-4 md:px-8 py-6 md:py-10 pb-24">
-        <p className="text-xs text-launch-ink/50 mb-4 -mt-2">
-          {PERSONA_LABEL[bank.persona]}
-        </p>
+        <div className="flex items-center justify-between gap-2 mb-3 -mt-2">
+          <p className="text-xs text-launch-ink/50">{PERSONA_LABEL[bank.persona]}</p>
+          <FrameworkInfoSheet />
+        </div>
 
-        <div className="mb-6">
+        <div className="mb-4">
           <div className="h-2 bg-launch-ink/10 rounded-full overflow-hidden">
             <div
               className="h-full bg-gradient-to-r from-launch-moss to-launch-gold transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-xs text-launch-ink/50 mt-2 text-center">
-            Letter {currentQuestion + 1} of {questions.length} · MYRHYTHM
-          </p>
         </div>
+
+        <MyRhythmStrip
+          questions={questions}
+          currentIndex={currentQuestion}
+          answeredIds={new Set(Object.keys(answers).filter((k) => answers[k]?.primary))}
+          onJump={(i) => setCurrentQuestion(i)}
+        />
 
         <div className="flex items-center justify-center gap-3 mb-4">
           <span
@@ -328,9 +397,10 @@ export default function LaunchAssessment() {
             {question.letter}
           </span>
           <span className="text-sm font-semibold tracking-wide uppercase text-launch-ink/80">
-            {question.word}
+            {question.letter} is for {question.word}
           </span>
         </div>
+
 
         <div className="text-center mb-4">
           <h2 className="text-2xl font-bold text-launch-ink mb-2 font-display">{question.title}</h2>

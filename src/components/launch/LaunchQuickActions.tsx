@@ -5,6 +5,7 @@ import {
   Map, HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAppReady } from '@/hooks/useAppReady';
 
 interface QuickAction {
   label: string;
@@ -29,6 +30,7 @@ export function LaunchQuickActions() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const appReady = useAppReady();
 
   // Filter out current page from quick actions (only for path-based actions)
   const availableActions = quickActions.filter(
@@ -46,8 +48,12 @@ export function LaunchQuickActions() {
     }
   };
 
+  // Stay hidden until onboarding is complete — no shortcuts into the app
+  // before the user has landed on Home.
+  if (!appReady) return null;
+
   return (
-    <div className="fixed bottom-24 right-6 md:bottom-20 z-40">
+    <div className="fixed bottom-24 right-6 md:bottom-20 z-40 pb-safe">
       <div className="relative">
         {/* Quick Action Options */}
         {isOpen && (

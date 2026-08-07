@@ -15,16 +15,22 @@ import { usePersona } from '@/launch/persona/usePersona';
 import { SubjectProvider } from '@/launch/persona/SubjectContext';
 import { SubjectSwitch } from '@/launch/persona/SubjectSwitch';
 import { useAuth } from '@/hooks/useAuth';
-import { useMembershipStatus } from '@/hooks/useMembershipStatus';
+import { useAppReady } from '@/hooks/useAppReady';
 
 
-const PRE_ACCOUNT_PATHS = new Set([
+// Onboarding steps — the dial stays hidden until the user reaches Home.
+const ONBOARDING_PATHS = new Set([
   '/launch/welcome',
   '/launch/signin',
   '/launch/signup',
+  '/launch/register',
   '/launch/user-type',
   '/launch/assessment',
+  '/launch/payment',
+  '/launch/welcome',
 ]);
+
+
 
 interface LaunchLayoutProps {
   children: ReactNode;
@@ -43,26 +49,27 @@ export function LaunchLayout({
   const location = useLocation();
   const { isCaregiver } = usePersona();
   const { user } = useAuth();
-  const { hasMembership } = useMembershipStatus();
+  const appReady = useAppReady();
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
-  // Dial is a premium wayfinder — only surface once the user has a real
-  // membership (paid sub, active trial with card on file, or founding code).
-  const showDial =
-    !!user && hasMembership && !PRE_ACCOUNT_PATHS.has(location.pathname);
+  // Dial appears once onboarding is done and the user has landed on Home,
+  // then stays available everywhere inside the app.
+  const showDial = appReady && !ONBOARDING_PATHS.has(location.pathname);
+
   const isWelcomePage = location.pathname === '/launch/welcome';
 
   return (
     <SubjectProvider>
       <div className={cn(
-        "launch-theme min-h-screen flex flex-col",
+        "launch-theme min-h-[100svh] flex flex-col pb-safe px-safe",
         isWelcomePage ? "bg-[hsl(var(--launch-cream))]" : "bg-[hsl(var(--launch-cream-light))]"
       )}>
 
         {/* Top Header Bar */}
         {showHeader && (
-          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3">
+          <header className="sticky top-0 z-40 bg-white/85 backdrop-blur-md border-b border-[hsl(var(--launch-ink)/0.10)] px-4 py-3 pt-safe">
+
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
               <div className="flex items-center gap-2 shrink-0">
                 <div className="w-8 h-8 bg-[hsl(var(--launch-ink))] rounded-lg flex items-center justify-center ring-1 ring-[hsl(var(--launch-gold)/0.55)]">
