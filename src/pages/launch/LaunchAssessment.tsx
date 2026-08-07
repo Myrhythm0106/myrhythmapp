@@ -278,7 +278,6 @@ export default function LaunchAssessment() {
       setCurrentQuestion((p) => p + 1);
       return;
     }
-    const brainHealthScore = computeBrainHealthScore(bank, answers);
     const combined = (id: string) => {
       const a = answers[id];
       if (!a || a.primary === NONE_FITS_VALUE) return [];
@@ -288,42 +287,78 @@ export default function LaunchAssessment() {
       const p = answers[id]?.primary ?? '';
       return p === NONE_FITS_VALUE ? '' : p;
     };
-    const noneFitsCount = Object.values(answers).filter(a => a.primary === NONE_FITS_VALUE).length;
-    const results = {
-      userType: persona,
-      answers,
-      freeformNotes: freeform,
-      eventRecency,
-      noneFitsCount,
-      mindset: primaryOf('mindset'),
-      yesReality: primaryOf('yesReality'),
-      rhythm: primaryOf('rhythm'),
-      harnessSupport: primaryOf('harnessSupport'),
-      yourVictories: combined('yourVictories'),
-      transform: combined('transform'),
-      heal: primaryOf('heal'),
-      multiply: primaryOf('multiply'),
-      rhythmPreference: primaryOf('rhythm'),
-      keyStruggles: combined('transform'),
-      goals: combined('yourVictories'),
-      hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
-      brainHealthScore,
-    };
-    localStorage.setItem(
-      'myrhythm_launch_mode',
-      JSON.stringify({
-        isLaunchMode: true,
-        assessmentCompleted: true,
-        assessmentResults: results,
+
+    let results: Record<string, unknown>;
+    let brainHealthScore: ReturnType<typeof computeBrainHealthScore>;
+    try {
+      brainHealthScore = computeBrainHealthScore(bank, answers);
+      const noneFitsCount = Object.values(answers).filter(a => a.primary === NONE_FITS_VALUE).length;
+      results = {
+        userType: persona,
+        answers,
+        freeformNotes: freeform,
+        eventRecency,
+        noneFitsCount,
+        mindset: primaryOf('mindset'),
+        yesReality: primaryOf('yesReality'),
+        rhythm: primaryOf('rhythm'),
+        harnessSupport: primaryOf('harnessSupport'),
+        yourVictories: combined('yourVictories'),
+        transform: combined('transform'),
+        followThrough: primaryOf('followThrough'),
+        heal: primaryOf('heal'),
+        multiply: primaryOf('multiply'),
+        rhythmPreference: primaryOf('rhythm'),
+        keyStruggles: combined('transform'),
+        goals: combined('yourVictories'),
+        hasSupport: resolveHasSupport(primaryOf('harnessSupport')),
         brainHealthScore,
-        lastViewedWhatsNew: null,
-        purchasedFeatures: [],
-      })
-    );
-    localStorage.removeItem(PROGRESS_KEY);
+        completedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(
+        'myrhythm_launch_mode',
+        JSON.stringify({
+          isLaunchMode: true,
+          assessmentCompleted: true,
+          assessmentResults: results,
+          brainHealthScore,
+          lastViewedWhatsNew: null,
+          purchasedFeatures: [],
+        })
+      );
+      localStorage.removeItem(PROGRESS_KEY);
+    } catch (err) {
+      console.error('[assessment] could not build results', err);
+      toast.error("We couldn't finish your snapshot", {
+        description: 'Your answers are still saved. Tap Complete again, or go Back one step and retry.',
+        duration: 8000,
+      });
+      return;
+    }
+
+    // Show the processing state immediately, save in the background.
+    pendingNav.current = '/launch/welcome';
+    setSaveWarning(null);
+    setProcessing(true);
     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-    setTimeout(() => navigate('/launch/welcome'), 500);
+
+    saveAssessmentRun({
+      persona,
+      answers,
+      freeform,
+      eventRecency,
+      results,
+      brainHealthScore,
+    }).then((res) => {
+      if (!res.ok && res.error !== 'not-signed-in') {
+        console.warn('[assessment] save failed:', res.error);
+        setSaveWarning(
+          "Your snapshot is ready, but we couldn't save it to your account yet. It's kept on this device and will sync next time you're online."
+        );
+      }
+    });
   };
+
 
   const handleBack = () => {
     if (currentQuestion > 0) setCurrentQuestion((p) => p - 1);
