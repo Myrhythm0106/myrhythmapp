@@ -47,14 +47,14 @@ export function LaunchLayout({
   const location = useLocation();
   const { isCaregiver } = usePersona();
   const { user } = useAuth();
-  const { hasMembership } = useMembershipStatus();
+  const appReady = useAppReady();
 
   const showBack =
     location.pathname !== '/launch/home' && location.pathname !== '/launch';
-  // Dial is a premium wayfinder — only surface once the user has a real
-  // membership (paid sub, active trial with card on file, or founding code).
-  const showDial =
-    !!user && hasMembership && !PRE_ACCOUNT_PATHS.has(location.pathname);
+  // Dial appears once onboarding is done and the user has landed on Home,
+  // then stays available everywhere inside the app.
+  const showDial = appReady && !ONBOARDING_PATHS.has(location.pathname);
+
   const isWelcomePage = location.pathname === '/launch/welcome';
 
   return (
