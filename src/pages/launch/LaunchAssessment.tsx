@@ -82,6 +82,10 @@ export default function LaunchAssessment() {
   const [freeform, setFreeform] = useState<FreeformMap>(initial?.freeform ?? {});
   const [eventRecency, setEventRecency] = useState<RecencyValue | null>(initial?.eventRecency ?? null);
   const [phase, setPhase] = useState<'recency' | 'questions'>(initial?.phase ?? 'recency');
+  const [processing, setProcessing] = useState(false);
+  const [saveWarning, setSaveWarning] = useState<string | null>(null);
+  const pendingNav = useRef<string>('/launch/welcome');
+
 
   useEffect(() => {
     const stored = localStorage.getItem('myrhythm_user_type');
