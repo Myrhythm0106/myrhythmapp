@@ -1,8 +1,11 @@
 # Phone-ready testing pass + assessment upgrade
 
-## 1. Remove the dial on "What brings you to MyRhythm?"
+## 1. Dial: off during onboarding, on once they land on Home
 
-`/launch/user-type` renders the floating quick-action button (`LaunchQuickActions`) directly inside the page, so it shows even though the header wayfinder dial is already hidden pre-account. Remove that floating button from this page only — the rest of the app keeps it.
+`/launch/user-type` renders the floating quick-action button (`LaunchQuickActions`) directly inside the page, so it shows even though the header wayfinder dial is already hidden pre-account. Remove that floating button from this page.
+
+New rule for the You-Are-Here dial: it appears once the user has finished onboarding and reaches `/launch/home`, and stays visible everywhere in the app from then on. It is hidden on every onboarding step (welcome, sign in/up, user type, assessment, results, payment). The trigger becomes "onboarding complete" rather than the current membership check, so a tester who has been through the steps gets the dial without needing a paid membership.
+
 
 ## 2. Use it on iPhone and Android — today
 
