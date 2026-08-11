@@ -152,7 +152,7 @@ async function pollForCompletion(
   estimatedTotalTime: number,
   onProgressUpdate?: (progress: ProcessingProgress) => void
 ): Promise<{ success: boolean; actionsCount?: number; hasTranscript?: boolean }> {
-  const maxAttempts = 22; // ~45 seconds max (22 × 2s)
+  const maxAttempts = 450; // ~15 minutes max (450 × 2s) — long recordings keep processing server-side
   let lastStatus: string | undefined;
   let attempts = 0;
   
