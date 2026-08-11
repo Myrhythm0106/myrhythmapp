@@ -255,7 +255,8 @@ serve(async (req) => {
         
         // Poll for completion (optimized for faster processing)
         let attempts = 0;
-        const maxAttempts = 20; // 60 seconds max (3s * 20)
+        const maxAttempts = 400; // up to ~20 minutes (3s * 400) for long recordings
+
         
         console.log('⏳ Polling for transcription completion...');
         while (attempts < maxAttempts) {
