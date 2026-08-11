@@ -406,15 +406,36 @@ serve(async (req) => {
     }
 
     console.log('🎉 Processing completed successfully');
+    } catch (bgError) {
+      console.error('💥 Background processing failed:', bgError);
+      await supabase
+        .from('meeting_recordings')
+        .update({
+          processing_status: 'failed',
+          processing_error: bgError instanceof Error ? bgError.message : 'Unknown error occurred',
+        })
+        .eq('id', meetingId);
+    }
+    };
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      transcriptLength: transcriptText.length,
-      actionsExtracted: extractionData?.actionsCount || 0,
-      meetingId: meetingId
+    // @ts-ignore EdgeRuntime is provided by Supabase edge runtime
+    if (typeof EdgeRuntime !== 'undefined' && typeof EdgeRuntime.waitUntil === 'function') {
+      // @ts-ignore
+      EdgeRuntime.waitUntil(runPipeline());
+    } else {
+      runPipeline();
+    }
+
+    return new Response(JSON.stringify({
+      success: true,
+      accepted: true,
+      status: 'processing',
+      meetingId,
     }), {
+      status: 202,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
+
 
   } catch (error) {
     console.error('💥 CRITICAL ERROR in process-meeting-audio function:', error);
