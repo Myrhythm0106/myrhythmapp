@@ -452,7 +452,7 @@ export function EnhancedActionCard({
       {/* Success Criteria */}
       {action.success_criteria && (
         <div>
-          <h4 className="text-sm font-semibold text-foreground mb-2">Success Criteria</h4>
+          <h4 className="text-sm font-semibold text-foreground mb-2">I'll know I'm done when</h4>
           <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
             {action.success_criteria}
           </p>
