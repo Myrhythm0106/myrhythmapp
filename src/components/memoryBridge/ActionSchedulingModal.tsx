@@ -144,7 +144,7 @@ export function ActionSchedulingModal({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {scheduleMode === 'proposal' ? <Sparkles className="h-5 w-5" /> : <Calendar className="h-5 w-5" />}
-            {scheduleMode === 'proposal' ? 'AI-Proposed Schedule' : 'Schedule Your Actions'}
+            {scheduleMode === 'proposal' ? 'AI-Proposed Schedule' : 'Schedule My Actions'}
           </DialogTitle>
         </DialogHeader>
 

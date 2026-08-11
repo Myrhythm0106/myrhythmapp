@@ -49,9 +49,9 @@ export default function LaunchCalibrate() {
         { label: 'Tier', value: 'Plus +', caption: 'Included with Plus and above' },
       ]}
       related={[
-        { label: 'Analytics', caption: 'Long-form view of your trends', to: '/launch/analytics' },
+        { label: 'Analytics', caption: 'Long-form view of my trends', to: '/launch/analytics' },
         { label: 'Mood tracking', caption: 'Daily ritual surface', to: '/launch/home' },
-        { label: 'Clinical Brief', caption: 'Share signal with your team', to: '/launch/clinical-brief' },
+        { label: 'Clinical Brief', caption: 'Share signal with my team', to: '/launch/clinical-brief' },
       ]}
     />
   );

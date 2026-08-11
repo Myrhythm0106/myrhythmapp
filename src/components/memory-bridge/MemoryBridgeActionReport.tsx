@@ -165,7 +165,7 @@ export function MemoryBridgeActionReport() {
           <div className="flex items-center justify-between">
             <div className="space-y-2">
               <CardTitle className="text-2xl font-bold text-purple-800">
-                Your Memory Bridge Action Report
+                My Memory Bridge Action Report
               </CardTitle>
               <p className="text-purple-600">
                 Every conversation becomes empowering action. Track your journey from words to wins.
@@ -284,7 +284,7 @@ export function MemoryBridgeActionReport() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Heart className="h-5 w-5 text-red-500" />
-            Your Empowerment Journey
+            My Empowerment Journey
           </CardTitle>
         </CardHeader>
         <CardContent>

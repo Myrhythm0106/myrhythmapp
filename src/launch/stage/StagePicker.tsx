@@ -38,7 +38,7 @@ export function StagePicker() {
       </SheetTrigger>
       <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
         <SheetHeader>
-          <SheetTitle>Your rhythm, your pace</SheetTitle>
+          <SheetTitle>My rhythm, my pace</SheetTitle>
           <SheetDescription>
             Move freely between stages. No targets, no countdowns — just a way to say where you are.
           </SheetDescription>

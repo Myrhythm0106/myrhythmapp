@@ -37,7 +37,7 @@ export default function LaunchAnalytics() {
     { 
       icon: Heart, 
       title: 'Mood Trend', 
-      description: 'Your mood improved 15% this week',
+      description: 'My mood improved 15% this week',
       color: 'bg-pink-100 text-pink-600'
     },
     { 

@@ -134,7 +134,7 @@ export function SupportCircleActionView({ actions, onBack }: SupportCircleAction
                 <Users className="h-8 w-8 text-purple-500" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold text-purple-800">Build Your Support Circle</h3>
+                <h3 className="text-xl font-semibold text-purple-800">Build My Support Circle</h3>
                 <p className="text-purple-600 max-w-md mx-auto">
                   Invite family, friends, and caregivers to join your Memory Bridge journey. 
                   Share your progress and get the support you need.
@@ -145,7 +145,7 @@ export function SupportCircleActionView({ actions, onBack }: SupportCircleAction
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
               >
                 <Users className="h-4 w-4 mr-2" />
-                Invite Your Support Circle
+                Invite My Support Circle
               </Button>
             </div>
           </CardContent>
@@ -159,7 +159,7 @@ export function SupportCircleActionView({ actions, onBack }: SupportCircleAction
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-purple-500" />
-                Your Support Circle
+                My Support Circle
               </CardTitle>
             </CardHeader>
             <CardContent>
