@@ -439,9 +439,9 @@ function getMessage(persona: Persona) {
   switch (persona) {
     case 'recovery':
       return {
-        headline: 'Your path forward starts now',
+        headline: 'My path forward starts now',
         subtitle:
-          "We've shaped MyRhythm around Pathfinders — people rebuilding cognitive ground after a neurological event. Your support circle stays close to everything you do.",
+          "We've shaped MyRhythm around Pathfinders — people rebuilding cognitive ground after a neurological event. My support circle stays close to everything I do.",
         highlights: [
           'Support circle, front and centre',
           'Memory Bridge for clinical conversations',
@@ -452,9 +452,9 @@ function getMessage(persona: Persona) {
       return {
         headline: "You're not in this alone",
         subtitle:
-          "We've shaped MyRhythm around Anchors — the people who hold the line for someone else, while protecting their own rhythm too.",
+          "We've shaped MyRhythm around Anchors — the people who hold the line for someone else, while protecting my own rhythm too.",
         highlights: [
-          'Coordinate care without losing your day',
+          'Coordinate care without losing my day',
           'Capture appointments accurately, together',
           'Switch between self and supporting view',
         ],
