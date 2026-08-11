@@ -126,8 +126,13 @@ serve(async (req) => {
       console.log('✅ Using provided userId:', resolvedUserId);
     }
 
+    // Run the heavy pipeline in the background so long recordings never hit the
+    // HTTP timeout. The client polls meeting_recordings for status.
+    const runPipeline = async () => {
+    try {
     let audioBlob;
     let transcriptText = '';
+
 
     // Handle different input types
     if (filePath) {
