@@ -254,7 +254,7 @@ async function pollForCompletion(
   }
   
   toast.error(
-    `Still processing after 45s (status: ${lastStatus ?? 'unknown'}). We'll keep working in the background — check back in a minute.`
+    `Still processing (status: ${lastStatus ?? 'unknown'}). We'll keep working in the background — check back shortly.`
   );
   return { success: false, actionsCount: 0, hasTranscript: false };
 }
