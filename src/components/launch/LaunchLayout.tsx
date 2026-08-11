@@ -6,7 +6,7 @@ import { GrowthFooter } from './GrowthFooter';
 import { AccountDropdown } from './AccountDropdown';
 
 import { WhatsNewBadge } from './WhatsNewBadge';
-import { LaunchQuickActions } from './LaunchQuickActions';
+import { CaptureDock } from './CaptureDock';
 import { EditionBadge } from './EditionBadge';
 import { LaunchPageHeader } from './LaunchPageHeader';
 import { LaunchYouAreHereDial } from './LaunchYouAreHereDial';
@@ -124,8 +124,8 @@ export function LaunchLayout({
         {/* Growth Footer */}
         {showFooter && <GrowthFooter />}
 
-        {/* Global Quick Actions - Always visible */}
-        <LaunchQuickActions />
+        {/* Persistent capture — one tap from anywhere */}
+        <CaptureDock />
 
         {/* Bottom Navigation (Mobile) */}
         {showNav && <LaunchNav />}
