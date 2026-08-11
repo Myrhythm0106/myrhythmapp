@@ -103,7 +103,7 @@ export function QuietHome() {
 
       {/* Footer signature */}
       <p className="text-center text-xs text-launch-ink/50 pt-4 pb-8">
-        Today is yours. #IChoose
+        Today is mine. #IChoose
       </p>
 
 

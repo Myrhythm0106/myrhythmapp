@@ -36,7 +36,7 @@ export interface LaunchRoute {
 
 export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
   // Inner ring — the Core 5 (4C loop + Home)
-  { path: '/launch/home',      label: 'Home',      icon: Home,        ring: 'inner', group: 'core-loop', description: 'Your daily rhythm dashboard' },
+  { path: '/launch/home',      label: 'Home',      icon: Home,        ring: 'inner', group: 'core-loop', description: 'My daily rhythm dashboard' },
   { path: '/launch/capture',   label: 'Capture',   icon: Mic,         ring: 'inner', group: 'core-loop', description: 'Voice-first quick capture' },
   { path: '/launch/commit',    label: 'Commit',    icon: CheckSquare, ring: 'inner', group: 'core-loop', description: 'Energy-matched next steps' },
   { path: '/launch/calibrate', label: 'Calibrate', icon: Activity,    ring: 'inner', group: 'core-loop', description: 'Energy & mood check-in' },
@@ -47,13 +47,13 @@ export const LAUNCH_ROUTES: readonly LaunchRoute[] = [
   { path: '/launch/memory',          label: 'Memory Bridge',  icon: Brain,    ring: 'middle', group: 'key-features', description: 'Record → next steps → share' },
   { path: '/launch/support',         label: 'Support Circle', icon: Users,    ring: 'middle', group: 'key-features', description: 'No one walks alone' },
   { path: '/launch/games',           label: 'Brain Games',    icon: Gamepad2, ring: 'middle', group: 'key-features', description: 'Gentle cognitive practice' },
-  { path: '/launch/vision-statement',label: 'Vision',         icon: Target,   ring: 'middle', group: 'key-features', description: 'Your north-star statement' },
+  { path: '/launch/vision-statement',label: 'Vision',         icon: Target,   ring: 'middle', group: 'key-features', description: 'My north-star statement' },
   { path: '/launch/goals',           label: 'Goals',          icon: Flag,     ring: 'middle', group: 'key-features', description: 'Vision → Goals → Daily' },
 
   // Outer ring — utilities & deep pages
   { path: '/launch/analytics',        label: 'Analytics',        icon: BarChart3, ring: 'outer', group: 'insights',  description: 'Trends & insights' },
   { path: '/launch/store',            label: 'Store',            icon: Store,     ring: 'outer', group: 'insights',  description: 'Add-on features' },
-  { path: '/launch/profile',          label: 'Profile',          icon: User,      ring: 'outer', group: 'account',   description: 'Your profile' },
+  { path: '/launch/profile',          label: 'Profile',          icon: User,      ring: 'outer', group: 'account',   description: 'My profile' },
   { path: '/launch/settings',         label: 'Settings',         icon: Settings,  ring: 'outer', group: 'account',   description: 'App settings' },
   { path: '/launch/roadmap',          label: 'Roadmap',          icon: Map,       ring: 'outer', group: 'about',     description: 'What we\'re building' },
   { path: '/launch/whats-new',        label: "What's New",       icon: Bell,      ring: 'outer', group: 'about',     description: 'Release notes' },

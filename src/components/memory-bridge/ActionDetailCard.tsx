@@ -190,7 +190,7 @@ export function ActionDetailCard({ action, onStatusUpdate, onBack, onSupportCirc
               <CollapsibleTrigger className="w-full flex items-center justify-between p-3 rounded-lg border border-green-200 bg-green-50 hover:bg-green-100 transition-colors group">
                 <span className="flex items-center gap-2 text-sm font-medium text-green-800">
                   <Target className="h-4 w-4" />
-                  You'll know you're done when…
+                  I'll know I'm done when…
                 </span>
                 <ChevronDown className="h-4 w-4 text-green-700 transition-transform group-data-[state=open]:rotate-180" />
               </CollapsibleTrigger>

@@ -274,7 +274,7 @@ export function EnhancedActionCard({ action, onUpdate, onMarkComplete, compact =
                 <div className="flex items-start gap-2">
                   <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold text-sm text-green-900">You'll know you're done when:</p>
+                    <p className="font-semibold text-sm text-green-900">I'll know I'm done when:</p>
                     <p className="text-sm text-green-800 mt-1">
                       {action.completion_criteria_specific || action.success_criteria}
                     </p>

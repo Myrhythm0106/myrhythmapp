@@ -127,7 +127,7 @@ export function PriorityOverview({
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-8"
       >
-        <h1 className="text-2xl font-bold mb-2">Your Next Steps</h1>
+        <h1 className="text-2xl font-bold mb-2">My Next Steps</h1>
         <p className="text-muted-foreground">
           {pendingActions.length} {pendingActions.length === 1 ? 'step' : 'steps'} organized by priority
         </p>
