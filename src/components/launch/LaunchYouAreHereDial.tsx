@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { MapPin, X } from 'lucide-react';
+import { MapPin, X, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   LAUNCH_ROUTES,
@@ -27,10 +27,36 @@ import {
  *
  * Memory: mem://ux/you-are-here-dial
  */
+const RECENTS_KEY = 'myrhythm_dial_recents';
+
+function readRecents(): string[] {
+  try {
+    const raw = localStorage.getItem(RECENTS_KEY);
+    return raw ? (JSON.parse(raw) as string[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function pushRecent(path: string): string[] {
+  const known = LAUNCH_ROUTES.some(r => r.path === path);
+  const list = readRecents();
+  if (!known) return list;
+  const next = [path, ...list.filter(p => p !== path)].slice(0, 6);
+  try {
+    localStorage.setItem(RECENTS_KEY, JSON.stringify(next));
+  } catch {
+    /* storage unavailable — recents are best-effort */
+  }
+  return next;
+}
+
 export function LaunchYouAreHereDial() {
   const location = useLocation();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [recents, setRecents] = useState<string[]>(() => readRecents());
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -40,6 +66,8 @@ export function LaunchYouAreHereDial() {
   // Close on ESC and route change
   useEffect(() => {
     setOpen(false);
+    setQuery('');
+    setRecents(pushRecent(location.pathname));
   }, [location.pathname]);
 
   useEffect(() => {
@@ -67,6 +95,21 @@ export function LaunchYouAreHereDial() {
       window.removeEventListener('mousedown', onClick);
     };
   }, [open]);
+
+  const q = query.trim().toLowerCase();
+  const matches: LaunchRoute[] = q
+    ? LAUNCH_ROUTES.filter(
+        r =>
+          r.label.toLowerCase().includes(q) ||
+          (r.description ?? '').toLowerCase().includes(q)
+      )
+    : [];
+
+  const recentRoutes: LaunchRoute[] = recents
+    .filter(p => p !== location.pathname)
+    .map(p => LAUNCH_ROUTES.find(r => r.path === p))
+    .filter(Boolean)
+    .slice(0, 5) as LaunchRoute[];
 
   const handleJump = (path: string) => {
     if (path !== location.pathname) navigate(path);
@@ -140,6 +183,35 @@ export function LaunchYouAreHereDial() {
               </button>
             </div>
 
+            <div className="relative mb-4">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-brain-health-400" aria-hidden="true" />
+              <input
+                type="search"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search pages…"
+                aria-label="Search pages"
+                className="w-full h-12 pl-10 pr-3 rounded-xl border border-brain-health-200 text-base text-brain-health-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange-500"
+              />
+            </div>
+
+            {query.trim() ? (
+              <RingSection
+                title={matches.length ? 'Results' : 'No matches'}
+                routes={matches}
+                currentPath={location.pathname}
+                onJump={handleJump}
+              />
+            ) : (
+            <>
+            {recentRoutes.length > 0 && (
+              <RingSection
+                title="Recent"
+                routes={recentRoutes}
+                currentPath={location.pathname}
+                onJump={handleJump}
+              />
+            )}
             <RingSection
               title="Core loop"
               routes={ROUTES_BY_RING.inner}
@@ -158,6 +230,8 @@ export function LaunchYouAreHereDial() {
               currentPath={location.pathname}
               onJump={handleJump}
             />
+            </>
+            )}
 
             <p className="text-[11px] text-brain-health-500 mt-4 text-center">
               Tap any tile to jump. Press ESC to close.
