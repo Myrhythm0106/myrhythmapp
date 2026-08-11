@@ -102,7 +102,7 @@ export function DreamCreator({
               <Sparkles className="h-5 w-5 text-white" />
             </div>
             <div>
-              <h2 className="font-semibold text-foreground">Create Your Dream</h2>
+              <h2 className="font-semibold text-foreground">Create My Dream</h2>
               {mode === 'guided' && (
                 <p className="text-xs text-muted-foreground">Step {step + 1} of {totalSteps}</p>
               )}

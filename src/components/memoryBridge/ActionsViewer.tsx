@@ -380,7 +380,7 @@ export function ActionsViewer({
                   <Brain className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <span className="font-bold text-lg">Next Step Summary</span>
+                  <span className="font-bold text-lg">My Next Step Summary</span>
                   <span className="text-sm text-muted-foreground ml-2">• {meetingTitle}</span>
                 </div>
                 <Badge className="bg-gradient-to-r from-brand-orange-100 to-brand-orange-50 text-brand-orange-700 border border-brand-orange-200 shadow-sm">
@@ -447,7 +447,7 @@ export function ActionsViewer({
           {isLoading ? (
             <div className="text-center py-12 text-muted-foreground">
               <Brain className="h-8 w-8 mx-auto mb-4 animate-pulse text-brand-orange-500" />
-              Analyzing your commitments...
+              Analyzing my commitments...
             </div>
           ) : extractedActions.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
@@ -525,7 +525,7 @@ export function ActionsViewer({
                                         <div className="relative z-10">
                                           <div className="flex items-center gap-2 mb-2">
                                             <CheckCircle className="h-4 w-4 text-memory-emerald-600" />
-                                            <span className="font-semibold text-memory-emerald-700 text-sm">YOU'LL KNOW YOU'RE DONE WHEN</span>
+                                            <span className="font-semibold text-memory-emerald-700 text-sm">I'LL KNOW I'M DONE WHEN</span>
                                           </div>
                                           <EditableField
                                             value={action.success_criteria || ''}

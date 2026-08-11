@@ -358,7 +358,7 @@ export default function LaunchAssessment() {
       if (!res.ok && res.error !== 'not-signed-in') {
         console.warn('[assessment] save failed:', res.error);
         setSaveWarning(
-          "Your snapshot is ready, but we couldn't save it to your account yet. It's kept on this device and will sync next time you're online."
+          "My snapshot is ready, but we couldn't save it to my account yet. It's kept on this device and will sync next time I'm online."
         );
       }
     });

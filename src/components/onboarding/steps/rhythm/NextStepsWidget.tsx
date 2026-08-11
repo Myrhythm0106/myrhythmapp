@@ -119,7 +119,7 @@ export function NextStepsWidget({
         <div className="space-y-3">
           <h3 className="mobile-heading-md font-semibold flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary" />
-            Your Next Steps
+            My Next Steps
           </h3>
           <div className="flex flex-wrap gap-2">
             {stepInfo.nextSteps.map((step, index) => (

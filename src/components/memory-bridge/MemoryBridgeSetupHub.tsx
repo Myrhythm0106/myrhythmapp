@@ -305,7 +305,7 @@ export function MemoryBridgeSetupHub({ onComplete }: MemoryBridgeSetupHubProps) 
               </Button>
               <div className="text-center">
                 <CardTitle className="text-xl font-bold text-blue-800">
-                  Customize Your Setup
+                  Customize My Setup
                 </CardTitle>
                 <p className="text-sm text-blue-600">
                   Choose which features to configure (~{totalEstimatedTime} min total)

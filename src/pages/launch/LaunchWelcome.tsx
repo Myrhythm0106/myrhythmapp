@@ -44,7 +44,7 @@ const LETTER_WORDS: Record<LetterId, string> = {
   yesReality: 'Yes to Reality',
   rhythm: 'Rhythm',
   harnessSupport: 'Harness Support',
-  yourVictories: 'Your Victories',
+  yourVictories: 'My Victories',
   transform: 'Transform',
   heal: 'Heal',
   multiply: 'Multiply',
@@ -122,9 +122,9 @@ export default function LaunchWelcome() {
             role="status"
             aria-live="polite"
           >
-            <p className="text-lg font-bold" style={SORA}>You're in. Your plan is active.</p>
+            <p className="text-lg font-bold" style={SORA}>I'm in. My plan is active.</p>
             <p className="mt-1 text-sm opacity-80">
-              Your 7-day trial has started. Everything below is your snapshot — when you're ready, head to Home.
+              My 7-day trial has started. Everything below is my snapshot — when I'm ready, head to Home.
             </p>
             <button
               onClick={() => navigate('/launch/home?welcome=1')}
@@ -175,7 +175,7 @@ export default function LaunchWelcome() {
             <div className="relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-8">
               <div className="md:max-w-xs">
                 <p className="text-[10px] uppercase tracking-[0.3em] font-bold mb-3" style={{ color: GOLD }}>
-                  Your starting MYRHYTHM snapshot
+                  My starting MYRHYTHM snapshot
                 </p>
                 <div className="flex items-baseline gap-2">
                   <span
@@ -194,7 +194,7 @@ export default function LaunchWelcome() {
                   </p>
                 )}
                 <p className="mt-4 text-xs leading-relaxed" style={{ color: `${CREAM}99` }}>
-                  Each letter is a facet of your rhythm.
+                  Each letter is a facet of my rhythm.
                 </p>
               </div>
 
@@ -249,7 +249,7 @@ export default function LaunchWelcome() {
                     >
                       8 facets · tap to explore
                     </span>
-                    <span>Tap a letter for your personal read →</span>
+                    <span>Tap a letter for my personal read →</span>
                   </motion.p>
                 </div>
               )}
@@ -260,7 +260,7 @@ export default function LaunchWelcome() {
               className="relative z-10 mt-10 text-[10px] uppercase tracking-widest pt-6 border-t italic"
               style={{ color: `${CREAM}55`, borderColor: `${CREAM}1a` }}
             >
-              A snapshot only — not a clinical score. We'll track how this shifts as you build your rhythm.
+              A snapshot only — not a clinical score. We'll track how this shifts as I build my rhythm.
             </p>
           </div>
 
@@ -274,10 +274,10 @@ export default function LaunchWelcome() {
                   </span>
                   <div>
                     <p className="text-sm font-semibold leading-snug" style={{ color: INK, ...SORA }}>
-                      {lowestLetter.word} — your softest facet right now.
+                      {lowestLetter.word} — my softest facet right now.
                     </p>
                     <p className="text-xs mt-1 italic" style={{ color: `${INK}99` }}>
-                      Your personalized 3-step raise-it plan is behind the paywall.
+                      My personalized 3-step raise-it plan is behind the paywall.
                     </p>
                   </div>
                 </div>
@@ -327,7 +327,7 @@ export default function LaunchWelcome() {
                   /month
                 </p>
                 <p className="text-sm font-semibold leading-snug" style={{ color: INK, ...SORA }}>
-                  Lock in founding pricing and unlock your full personalized plan.
+                  Lock in founding pricing and unlock my full personalized plan.
                 </p>
                 {isFoundingMemberActive() && (
                   <p className="text-[11px] mt-2 italic" style={{ color: MOSS }}>
@@ -349,7 +349,7 @@ export default function LaunchWelcome() {
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = MOSS)}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = INK)}
                 >
-                  Register &amp; Unlock Your Plan
+                  Register &amp; Unlock My Plan
                   <span aria-hidden="true">→</span>
                 </button>
                 <div className="flex items-center justify-between gap-4 pt-1">
@@ -414,7 +414,7 @@ export default function LaunchWelcome() {
                 style={{ color: `${INK}66` }}
               >
                 MyRhythm does not diagnose, treat, or cure any condition. It is a daily-life support tool that keeps
-                you in control of who can act on your behalf.
+                me in control of who can act on my behalf.
               </p>
               <p
                 className="text-[10px] font-bold uppercase tracking-[0.2em] whitespace-nowrap"
@@ -439,9 +439,9 @@ function getMessage(persona: Persona) {
   switch (persona) {
     case 'recovery':
       return {
-        headline: 'Your path forward starts now',
+        headline: 'My path forward starts now',
         subtitle:
-          "We've shaped MyRhythm around Pathfinders — people rebuilding cognitive ground after a neurological event. Your support circle stays close to everything you do.",
+          "We've shaped MyRhythm around Pathfinders — people rebuilding cognitive ground after a neurological event. My support circle stays close to everything I do.",
         highlights: [
           'Support circle, front and centre',
           'Memory Bridge for clinical conversations',
@@ -452,9 +452,9 @@ function getMessage(persona: Persona) {
       return {
         headline: "You're not in this alone",
         subtitle:
-          "We've shaped MyRhythm around Anchors — the people who hold the line for someone else, while protecting their own rhythm too.",
+          "We've shaped MyRhythm around Anchors — the people who hold the line for someone else, while protecting my own rhythm too.",
         highlights: [
-          'Coordinate care without losing your day',
+          'Coordinate care without losing my day',
           'Capture appointments accurately, together',
           'Switch between self and supporting view',
         ],

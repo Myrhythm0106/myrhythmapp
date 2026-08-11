@@ -62,7 +62,7 @@ export function MotivationalHeader({ actions, recommendedAction }: MotivationalH
             <div>
               <CardTitle className="text-3xl font-bold text-purple-800 flex items-center gap-3">
                 <Target className="h-8 w-8 text-purple-600" />
-                Your Next Steps Hub
+                My Next Steps Hub
               </CardTitle>
               <p className="text-purple-700 text-lg mt-2">
                 {getMotivationalMessage()}

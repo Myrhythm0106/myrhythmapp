@@ -58,10 +58,10 @@ export function VisionStatementComposer({
     <div className="rounded-2xl border border-brain-health-100 bg-white p-5 md:p-6 space-y-4">
       <div>
         <p className="text-[11px] font-semibold tracking-[0.18em] uppercase text-brain-health-500">
-          Your vision, in one paragraph
+          My vision, in one paragraph
         </p>
         <p className="mt-1 text-sm text-brain-health-600">
-          Edit freely. This is yours — change a word, a sentence, or the whole thing.
+          Edit freely. This is mine — change a word, a sentence, or the whole thing.
         </p>
       </div>
 

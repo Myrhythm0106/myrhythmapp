@@ -104,7 +104,7 @@ export function VisionQuadrant({
             <div className="text-center py-4">
               <Sparkles className="h-6 w-6 text-white/60 mx-auto mb-2" />
               <p className="text-sm text-white/80 font-medium">
-                Tap to add your dream
+                Tap to add my dream
               </p>
               <p className="text-xs text-white/60 mt-1">
                 {pillar.question}

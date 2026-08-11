@@ -170,7 +170,7 @@ export default function LaunchCalendar() {
       <LaunchHeroBand
         eyebrow="Commit"
         title="Calendar"
-        subtitle="Your day, week, month and year — planned around your energy, not the clock."
+        subtitle="My day, week, month and year — planned around my energy, not the clock."
       />
 
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-6 md:py-10 pb-24">

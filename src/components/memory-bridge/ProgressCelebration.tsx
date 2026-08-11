@@ -95,7 +95,7 @@ export function ProgressCelebration({ actions, onBack }: ProgressCelebrationProp
               Back to Report
             </Button>
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-purple-800">Your Progress Celebration</h1>
+              <h1 className="text-2xl font-bold text-purple-800">My Progress Celebration</h1>
               <p className="text-sm text-purple-600">Every step forward is a victory worth celebrating</p>
             </div>
             <div></div>

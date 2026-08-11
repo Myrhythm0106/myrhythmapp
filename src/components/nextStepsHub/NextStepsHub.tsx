@@ -187,7 +187,7 @@ export function NextStepsHub() {
                 <Heart className="w-6 h-6 text-primary absolute top-0 right-0 animate-pulse" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl font-semibold">Loading Your Next Steps</h3>
+                <h3 className="text-xl font-semibold">Loading My Next Steps</h3>
                 <p className="text-muted-foreground">Getting everything ready for you...</p>
               </div>
             </div>

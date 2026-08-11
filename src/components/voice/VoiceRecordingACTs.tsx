@@ -247,7 +247,7 @@ export function VoiceRecordingACTs({ acts, onSchedule, onRefresh }: VoiceRecordi
 
                       {act.success_criteria && (
                         <div>
-                          <p className="text-xs font-medium text-muted-foreground mb-1">Done when:</p>
+                          <p className="text-xs font-medium text-muted-foreground mb-1">I'll know I'm done when:</p>
                           <p className="text-sm">{act.success_criteria}</p>
                         </div>
                       )}

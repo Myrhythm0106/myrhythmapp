@@ -135,7 +135,7 @@ export default function LaunchBrainGames() {
       </div>
 
       {/* Stats */}
-      <h2 className="font-semibold text-gray-900 mb-3">Your Progress</h2>
+      <h2 className="font-semibold text-gray-900 mb-3">My Progress</h2>
       <LaunchCard className="mb-24">
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>

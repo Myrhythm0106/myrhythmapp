@@ -162,7 +162,7 @@ export default function LaunchPayment() {
             >
               <p className="font-semibold text-launch-ink">Confirm your details to continue</p>
               <p className="mt-1 text-sm text-launch-ink/70">
-                Your plan is saved. Sign in and you'll come straight back to this page — nothing to retype.
+                My plan is saved. Sign in and I'll come straight back to this page — nothing to retype.
               </p>
               <Button
                 className="mt-3 min-h-[56px] w-full"

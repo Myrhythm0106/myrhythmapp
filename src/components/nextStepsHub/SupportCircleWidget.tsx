@@ -58,7 +58,7 @@ export function SupportCircleWidget({ actions, expanded = false, onActionUpdate 
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-purple-800">
           <Users className="h-5 w-5" />
-          Your Support Circle
+          My Support Circle
           <Badge className="bg-purple-100 text-purple-800">
             {totalWatchers} people
           </Badge>

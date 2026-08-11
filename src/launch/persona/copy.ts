@@ -29,7 +29,7 @@ export const personaCopy: Record<Persona, PersonaCopy> = {
     greeting: { morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening' },
     subgreeting: 'Supporting someone takes a rhythm of its own. Start here.',
     scaffoldsTitle: "Today's anchors",
-    winsTitle: "Today's quiet wins — for both of you",
+    winsTitle: "Today's quiet wins — for both of us",
     ichooseLede: 'A line for the day. Yours first.',
     capabilityLens: {
       capture: 'For you: record appointments accurately so the person you support never has to remember alone.',

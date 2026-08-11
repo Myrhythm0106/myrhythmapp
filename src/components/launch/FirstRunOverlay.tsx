@@ -79,7 +79,7 @@ export function FirstRunOverlay() {
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-2 flex-wrap">
               <p className="text-[10px] tracking-[0.3em] uppercase text-stone-400">
-                Your first 3 minutes
+                My first 3 minutes
               </p>
               <EditionBadge variant="chip" />
             </div>
