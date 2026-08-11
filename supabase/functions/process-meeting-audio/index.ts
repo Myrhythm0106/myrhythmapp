@@ -36,16 +36,17 @@ serve(async (req) => {
       throw new Error('Missing required Supabase environment variables');
     }
     
-    if (!OPENAI_API_KEY) {
-      console.error('❌ OpenAI API key not configured');
+    if (!ASSEMBLYAI_API_KEY && !OPENAI_API_KEY) {
+      console.error('❌ No transcription provider configured');
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'OpenAI API key not configured - Audio processing unavailable'
+        error: 'No transcription provider configured - Audio processing unavailable'
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
 
     console.log('✅ All environment variables validated');
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
