@@ -152,7 +152,7 @@ async function pollForCompletion(
   estimatedTotalTime: number,
   onProgressUpdate?: (progress: ProcessingProgress) => void
 ): Promise<{ success: boolean; actionsCount?: number; hasTranscript?: boolean }> {
-  const maxAttempts = 22; // ~45 seconds max (22 × 2s)
+  const maxAttempts = 450; // ~15 minutes max (450 × 2s) — long recordings keep processing server-side
   let lastStatus: string | undefined;
   let attempts = 0;
   
@@ -215,7 +215,7 @@ async function pollForCompletion(
       return { success: true, actionsCount, hasTranscript };
     }
     
-    if (meeting?.processing_status === 'failed') {
+    if (meeting?.processing_status === 'failed' || meeting?.processing_status === 'error') {
       const hasTranscript = !!meeting.transcript;
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
       
@@ -254,7 +254,7 @@ async function pollForCompletion(
   }
   
   toast.error(
-    `Still processing after 45s (status: ${lastStatus ?? 'unknown'}). We'll keep working in the background — check back in a minute.`
+    `Still processing (status: ${lastStatus ?? 'unknown'}). We'll keep working in the background — check back shortly.`
   );
   return { success: false, actionsCount: 0, hasTranscript: false };
 }

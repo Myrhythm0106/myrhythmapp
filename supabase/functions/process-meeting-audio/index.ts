@@ -36,16 +36,17 @@ serve(async (req) => {
       throw new Error('Missing required Supabase environment variables');
     }
     
-    if (!OPENAI_API_KEY) {
-      console.error('❌ OpenAI API key not configured');
+    if (!ASSEMBLYAI_API_KEY && !OPENAI_API_KEY) {
+      console.error('❌ No transcription provider configured');
       return new Response(JSON.stringify({ 
         success: false, 
-        error: 'OpenAI API key not configured - Audio processing unavailable'
+        error: 'No transcription provider configured - Audio processing unavailable'
       }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
 
     console.log('✅ All environment variables validated');
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
@@ -125,8 +126,13 @@ serve(async (req) => {
       console.log('✅ Using provided userId:', resolvedUserId);
     }
 
+    // Run the heavy pipeline in the background so long recordings never hit the
+    // HTTP timeout. The client polls meeting_recordings for status.
+    const runPipeline = async () => {
+    try {
     let audioBlob;
     let transcriptText = '';
+
 
     // Handle different input types
     if (filePath) {
@@ -249,7 +255,8 @@ serve(async (req) => {
         
         // Poll for completion (optimized for faster processing)
         let attempts = 0;
-        const maxAttempts = 20; // 60 seconds max (3s * 20)
+        const maxAttempts = 400; // up to ~20 minutes (3s * 400) for long recordings
+
         
         console.log('⏳ Polling for transcription completion...');
         while (attempts < maxAttempts) {
@@ -293,10 +300,9 @@ serve(async (req) => {
         }
         
         if (!transcriptText) {
-          console.warn('⚠️ Transcription timeout after 60 seconds, using partial transcript');
-          transcriptText = statusData.text || '';
-          // If still no text, we'll proceed with rule-based extraction
+          throw new Error('Transcription timed out before any text was returned');
         }
+
       } catch (assemblyError) {
         console.error('❌ AssemblyAI processing failed:', assemblyError);
         throw new Error(`AssemblyAI processing failed: ${assemblyError instanceof Error ? assemblyError.message : 'Unknown error'}`);
@@ -400,15 +406,36 @@ serve(async (req) => {
     }
 
     console.log('🎉 Processing completed successfully');
+    } catch (bgError) {
+      console.error('💥 Background processing failed:', bgError);
+      await supabase
+        .from('meeting_recordings')
+        .update({
+          processing_status: 'failed',
+          processing_error: bgError instanceof Error ? bgError.message : 'Unknown error occurred',
+        })
+        .eq('id', meetingId);
+    }
+    };
 
-    return new Response(JSON.stringify({ 
-      success: true, 
-      transcriptLength: transcriptText.length,
-      actionsExtracted: extractionData?.actionsCount || 0,
-      meetingId: meetingId
+    // @ts-ignore EdgeRuntime is provided by Supabase edge runtime
+    if (typeof EdgeRuntime !== 'undefined' && typeof EdgeRuntime.waitUntil === 'function') {
+      // @ts-ignore
+      EdgeRuntime.waitUntil(runPipeline());
+    } else {
+      runPipeline();
+    }
+
+    return new Response(JSON.stringify({
+      success: true,
+      accepted: true,
+      status: 'processing',
+      meetingId,
     }), {
+      status: 202,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
+
 
   } catch (error) {
     console.error('💥 CRITICAL ERROR in process-meeting-audio function:', error);
