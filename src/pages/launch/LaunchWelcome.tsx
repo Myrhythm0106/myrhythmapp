@@ -33,7 +33,7 @@ const LETTER_ORDER: Array<{ id: LetterId; letter: string }> = [
   { id: 'yesReality', letter: 'Y' },
   { id: 'rhythm', letter: 'R' },
   { id: 'harnessSupport', letter: 'H' },
-  { id: 'myVictories', letter: 'Y' },
+  { id: 'yourVictories', letter: 'Y' },
   { id: 'transform', letter: 'T' },
   { id: 'heal', letter: 'H' },
   { id: 'multiply', letter: 'M' },
