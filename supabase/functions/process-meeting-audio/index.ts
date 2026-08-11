@@ -300,10 +300,9 @@ serve(async (req) => {
         }
         
         if (!transcriptText) {
-          console.warn('⚠️ Transcription timeout after 60 seconds, using partial transcript');
-          transcriptText = statusData.text || '';
-          // If still no text, we'll proceed with rule-based extraction
+          throw new Error('Transcription timed out before any text was returned');
         }
+
       } catch (assemblyError) {
         console.error('❌ AssemblyAI processing failed:', assemblyError);
         throw new Error(`AssemblyAI processing failed: ${assemblyError instanceof Error ? assemblyError.message : 'Unknown error'}`);
