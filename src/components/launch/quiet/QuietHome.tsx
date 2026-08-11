@@ -4,6 +4,7 @@ import { Sparkles } from 'lucide-react';
 import { useDemoOrLive } from '@/contexts/DemoModeContext';
 import { IChooseHeart } from './IChooseHeart';
 import { ReEntryCard } from './ReEntryCard';
+import { NextActionStrip } from './NextActionStrip';
 import { Scaffolds } from './Scaffolds';
 import { Composer } from './Composer';
 import { CognitiveLoadMeter } from './CognitiveLoadMeter';
@@ -61,6 +62,9 @@ export function QuietHome() {
         </span>
       </motion.div>
 
+
+      {/* Next action — the one thing that matters right now */}
+      <NextActionStrip />
 
       {/* Weekly planning nudge (only on the user's planning day) */}
       <LaunchWeeklyPlanningCard />

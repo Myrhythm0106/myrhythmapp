@@ -29,7 +29,7 @@ export function Scaffolds() {
   const peopleLabel = supporterCount <= 1 ? 'My Person' : 'My Circle';
 
   const tiles: Tile[] = [
-    { key: 'capture', label: 'Capture', sub: `${fixtures.capturesToday} today`, icon: Mic, to: '/launch/capture', tone: 'from-brand-orange-50 to-brand-orange-100/60 text-brand-orange-700 border-brand-orange-200/60' },
+    { key: 'capture', label: 'Record', sub: `${fixtures.capturesToday} today`, icon: Mic, to: '/launch/memory', tone: 'from-brand-orange-50 to-brand-orange-100/60 text-brand-orange-700 border-brand-orange-200/60' },
     { key: 'today', label: 'Today', sub: 'Your gentle plan', icon: Calendar, to: '/launch/calendar', tone: 'from-clarity-teal-50 to-clarity-teal-100/60 text-clarity-teal-700 border-clarity-teal-200/60' },
     { key: 'wins', label: 'Wins', sub: `${fixtures.wins.length} so far`, icon: Sparkles, to: '/launch/gratitude', tone: 'from-memory-emerald-50 to-memory-emerald-100/60 text-memory-emerald-700 border-memory-emerald-200/60' },
     { key: 'lens', label: 'Lens', sub: 'How your brain feels', icon: Brain, to: '/launch/analytics', tone: 'from-neural-purple-50 to-neural-purple-100/60 text-neural-purple-700 border-neural-purple-200/60' },

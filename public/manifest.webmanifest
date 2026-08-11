@@ -1,5 +1,5 @@
 {
-  "name": "MyRhythm — keep your plan going",
+  "name": "MyRhythm \u2014 keep your plan going",
   "short_name": "MyRhythm",
   "start_url": "/launch/welcome",
   "scope": "/",
@@ -26,6 +26,26 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Capture",
+      "short_name": "Capture",
+      "description": "Record or note something now",
+      "url": "/launch/memory?quick=1"
+    },
+    {
+      "name": "Today",
+      "short_name": "Today",
+      "description": "Your plan for today",
+      "url": "/launch/calendar"
+    },
+    {
+      "name": "Check in",
+      "short_name": "Check in",
+      "description": "10-second energy check",
+      "url": "/launch/calibrate"
     }
   ]
 }
