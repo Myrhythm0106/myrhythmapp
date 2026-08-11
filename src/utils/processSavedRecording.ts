@@ -215,7 +215,7 @@ async function pollForCompletion(
       return { success: true, actionsCount, hasTranscript };
     }
     
-    if (meeting?.processing_status === 'failed') {
+    if (meeting?.processing_status === 'failed' || meeting?.processing_status === 'error') {
       const hasTranscript = !!meeting.transcript;
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
       
