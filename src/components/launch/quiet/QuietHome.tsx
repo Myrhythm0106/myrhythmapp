@@ -44,6 +44,9 @@ export function QuietHome() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+      {/* Warm, once-a-day welcome to the new day */}
+      <DayOpenWelcome name={greetName} />
+
       {/* Greeting strip */}
       <motion.div
         initial={{ opacity: 0 }}
