@@ -18,6 +18,7 @@ import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { LaunchWeeklyPlanningCard } from '@/components/launch/LaunchWeeklyPlanningCard';
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
+import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
