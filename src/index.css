@@ -616,6 +616,20 @@ html, body {
   letter-spacing: -0.01em;
 }
 
+/* Explicit type overrides win inside the launch theme */
+.launch-theme .font-archivo,
+.launch-theme h1.font-archivo,
+.day-open .font-archivo {
+  font-family: 'Archivo Black', Impact, system-ui, sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+.launch-theme .font-hind,
+.day-open .font-hind {
+  font-family: 'Hind', Inter, system-ui, sans-serif;
+}
+
+
 /* Utility helpers scoped to launch */
 .launch-theme .bg-launch-cream       { background-color: hsl(var(--launch-cream)); }
 .launch-theme .bg-launch-cream-light { background-color: hsl(var(--launch-cream-light)); }
