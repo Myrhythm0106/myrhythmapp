@@ -98,9 +98,21 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
             transition={{ delay: 0.15, duration: 0.5 }}
             className="relative w-full max-w-lg text-center"
           >
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full day-open-halo">
-              <Sunrise className="h-8 w-8 day-open-gold" />
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.7, ease: 'easeOut' }}
+              className="relative mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full day-open-halo"
+            >
+              <img
+                src={watercolourBrain}
+                alt=""
+                aria-hidden="true"
+                width={1024}
+                height={1024}
+                className="h-24 w-24 object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+              />
+            </motion.div>
 
             <p className="text-[11px] uppercase tracking-[0.22em] day-open-ivory-60">{today}</p>
 
