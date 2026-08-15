@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sunrise, Compass, ArrowRight } from 'lucide-react';
+import { Compass, ArrowRight } from 'lucide-react';
 import { getDailyStatement } from '@/data/iChooseStatements';
+import watercolourBrain from '@/assets/watercolour-brain.png';
 
 const VISION_KEY = 'myrhythm.visionStatement.v1';
 
