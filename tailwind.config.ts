@@ -23,7 +23,10 @@ const config: Config = {
         'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
         'display': ['Inter', 'SF Pro Display', 'system-ui', 'sans-serif'],
         'serif': ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
+        'archivo': ['Archivo Black', 'Impact', 'system-ui', 'sans-serif'],
+        'hind': ['Hind', 'Inter', 'system-ui', 'sans-serif'],
       },
+
       letterSpacing: {
         'tighter': '-0.02em',
         'tight': '-0.015em',
