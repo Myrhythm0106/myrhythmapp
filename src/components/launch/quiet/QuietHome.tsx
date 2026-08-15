@@ -18,6 +18,7 @@ import { QuietHomePause } from './QuietHomePause';
 import { useDisplayName } from '@/launch/profile/useDisplayName';
 import { LaunchWeeklyPlanningCard } from '@/components/launch/LaunchWeeklyPlanningCard';
 import { MyRhythmGHomeChip } from '@/launch/growth/MyRhythmGHomeChip';
+import { DayOpenWelcome } from '@/launch/daily/DayOpenWelcome';
 
 function timeBucket(): 'morning' | 'afternoon' | 'evening' {
   const h = new Date().getHours();
@@ -43,6 +44,9 @@ export function QuietHome() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+      {/* Warm, once-a-day welcome to the new day */}
+      <DayOpenWelcome name={greetName} />
+
       {/* Greeting strip */}
       <motion.div
         initial={{ opacity: 0 }}
