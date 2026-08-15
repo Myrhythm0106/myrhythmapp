@@ -36,9 +36,12 @@ Make the first screen of the day feel like a considered brand moment (Deloitte r
 - **Confidence line** — Hind, generous leading, muted ivory.
 - **#IChoose statement** — set off by a thin vertical teal rule instead of a coloured card. Teal is the only accent on the screen.
 - **Brain artwork** — moves to the right column, larger, no circular badge or halo. Soft teal glow behind it, subtle slow float. On mobile it sits above the words, smaller.
-- **Progressive reveal** — "My vision" and "Today's shape" become collapsed rows with a hairline divider, opening in place when tapped. Nothing extra is shown until asked for. Vision row only appears when a vision is saved.
+- **Progressive reveal** — "My vision" and "Today's shape" are collapsed rows with a hairline divider, opening in place when tapped. Nothing extra is shown until asked for. The vision row only appears when a vision is saved.
+- **One line of proof, always visible** — the "Today's shape" row carries a short summary in its collapsed state (e.g. "3 commitments · first at 10:00" or "Nothing scheduled — the day is open"). Control is shown, not just asserted, without adding a block of content. Tapping expands the actual list.
 - **One action** — full-width "Start my day" button, teal on ink, 56px min height, arrow on the right.
 - **Motion** — staggered rise: meta → headline → line → statement → rows → button, each ~60ms apart, ease-out. Calm, not bouncy.
+- **Clutter budget** — the default (unexpanded) screen carries exactly six elements: date meta, headline, confidence line, #IChoose, up to two collapsed rows, one button, plus the disclaimer. Nothing else gets added to this screen.
+
 
 ## Home screen behind it
 
