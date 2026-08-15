@@ -54,8 +54,14 @@ export function QuietHome() {
         className="flex items-center justify-between"
       >
         <div>
-          <p className="text-sm text-launch-ink/80">{greeting}, {greetName}.</p>
-          <p className="text-xs text-launch-ink/60 mt-0.5">{copy.subgreeting}</p>
+          <p className="font-hind text-[11px] font-semibold uppercase tracking-[0.28em] text-launch-ink/55">
+            {greeting}
+          </p>
+          <p className="font-archivo mt-1 text-xl uppercase tracking-tight text-launch-ink sm:text-2xl">
+            {greetName}
+          </p>
+          <p className="font-hind text-xs text-launch-ink/60 mt-1">{copy.subgreeting}</p>
+
           <div className="mt-1.5 flex flex-wrap items-center gap-2">
             <StagePicker />
             <MyRhythmGHomeChip />
