@@ -83,13 +83,13 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.35 }}
-          className="fixed inset-0 z-[70] flex items-center justify-center bg-launch-ink px-5 py-safe"
+          className="day-open fixed inset-0 z-[70] flex items-center justify-center px-5 py-10 overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-label="Welcome to a new day"
         >
           {/* Warm sunrise wash */}
-          <div className="pointer-events-none absolute inset-0 opacity-70 bg-[radial-gradient(120%_80%_at_50%_100%,rgba(225,101,27,0.35),transparent_60%),radial-gradient(90%_60%_at_50%_0%,rgba(15,123,123,0.25),transparent_65%)]" />
+          <div className="day-open-wash pointer-events-none absolute inset-0" />
 
           <motion.div
             initial={{ opacity: 0, y: 18 }}
@@ -97,17 +97,17 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
             transition={{ delay: 0.15, duration: 0.5 }}
             className="relative w-full max-w-lg text-center"
           >
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-launch-ivory/10 ring-1 ring-launch-gold/40">
-              <Sunrise className="h-8 w-8 text-launch-gold" />
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full day-open-halo">
+              <Sunrise className="h-8 w-8 day-open-gold" />
             </div>
 
-            <p className="text-[11px] uppercase tracking-[0.22em] text-launch-ivory/60">{today}</p>
+            <p className="text-[11px] uppercase tracking-[0.22em] day-open-ivory-60">{today}</p>
 
-            <h1 className="mt-3 text-3xl sm:text-4xl font-semibold leading-tight text-launch-ivory">
+            <h1 className="mt-3 text-3xl sm:text-4xl font-semibold leading-tight day-open-ivory">
               {opener.hello}{name ? `, ${name}` : ''}.
             </h1>
 
-            <p className="mt-4 text-base sm:text-lg leading-relaxed text-launch-ivory/80">
+            <p className="mt-4 text-base sm:text-lg leading-relaxed day-open-ivory-80">
               {opener.line}
             </p>
 
@@ -115,30 +115,30 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.6 }}
-              className="mt-7 text-lg sm:text-xl font-medium text-launch-gold"
+              className="mt-7 text-lg sm:text-xl font-medium day-open-gold"
             >
               {statement}
             </motion.p>
 
             {vision && (
-              <div className="mt-7 rounded-2xl border border-launch-gold/25 bg-launch-ivory/5 p-4 text-left">
-                <div className="mb-1.5 flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] text-launch-ivory/60">
+              <div className="mt-7 day-open-card rounded-2xl p-4 text-left">
+                <div className="mb-1.5 flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] day-open-ivory-60">
                   <Compass className="h-3.5 w-3.5" />
                   My vision
                 </div>
-                <p className="text-sm leading-relaxed text-launch-ivory/85">{vision}</p>
+                <p className="text-sm leading-relaxed day-open-ivory-80">{vision}</p>
               </div>
             )}
 
             <button
               onClick={dismiss}
-              className="mt-9 inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl bg-launch-ember px-6 text-base font-semibold text-launch-ivory shadow-lg transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-launch-gold"
+              className="mt-9 inline-flex min-h-[56px] w-full items-center justify-center gap-2 day-open-cta rounded-2xl px-6 text-base font-semibold shadow-lg transition"
             >
               Start my day
               <ArrowRight className="h-5 w-5" />
             </button>
 
-            <p className="mt-4 text-xs text-launch-ivory/45">
+            <p className="mt-4 text-xs day-open-ivory-45">
               This is a daily welcome, not medical advice.
             </p>
           </motion.div>
