@@ -636,6 +636,26 @@ html, body {
 .launch-theme .border-launch-ember   { border-color: hsl(var(--launch-ember)); }
 .launch-theme .ring-launch-ember     { --tw-ring-color: hsl(var(--launch-ember) / 0.45); }
 
+/* Day-open welcome overlay — warm sunrise on deep ink */
+.day-open {
+  background-color: hsl(158 84% 13%);
+  color: hsl(45 60% 98%);
+}
+.day-open-wash {
+  background:
+    radial-gradient(120% 80% at 50% 100%, hsl(17 63% 48% / 0.40), transparent 60%),
+    radial-gradient(90% 60% at 50% 0%, hsl(43 55% 54% / 0.22), transparent 65%);
+}
+.day-open-ivory   { color: hsl(45 60% 98%); }
+.day-open-ivory-80 { color: hsl(45 60% 98% / 0.82); }
+.day-open-ivory-60 { color: hsl(45 60% 98% / 0.62); }
+.day-open-ivory-45 { color: hsl(45 60% 98% / 0.45); }
+.day-open-gold    { color: hsl(43 55% 54%); }
+.day-open-halo    { background-color: hsl(45 60% 98% / 0.08); box-shadow: inset 0 0 0 1px hsl(43 55% 54% / 0.40); }
+.day-open-card    { background-color: hsl(45 60% 98% / 0.06); border: 1px solid hsl(43 55% 54% / 0.25); }
+.day-open-cta     { background-color: hsl(17 63% 48%); color: hsl(45 60% 98%); }
+.day-open-cta:hover { filter: brightness(1.1); }
+
 
 /* Focus rings — ember accent on all interactive elements */
 .launch-theme button:focus-visible,
