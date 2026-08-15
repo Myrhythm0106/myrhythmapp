@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown } from 'lucide-react';
 import { getDailyStatement } from '@/data/iChooseStatements';
+import { useLaunchCalendarEvents } from '@/hooks/useLaunchCalendarEvents';
+import { cn } from '@/lib/utils';
 import watercolourBrain from '@/assets/watercolour-brain.png';
 
 const VISION_KEY = 'myrhythm.visionStatement.v1';
@@ -48,8 +50,57 @@ interface DayOpenWelcomeProps {
   name?: string;
 }
 
+/** A quiet, collapsed row that reveals its content in place when tapped. */
+function RevealRow({
+  label,
+  summary,
+  children,
+}: {
+  label: string;
+  summary?: string;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-t day-open-hair">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex min-h-[56px] w-full items-center justify-between gap-4 py-3 text-left"
+      >
+        <span className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
+          <span className="font-hind text-[13px] font-semibold uppercase tracking-[0.18em] day-open-ivory-80">
+            {label}
+          </span>
+          {summary && (
+            <span className="font-hind text-sm day-open-ivory-60">{summary}</span>
+          )}
+        </span>
+        <ChevronDown
+          className={cn('h-5 w-5 shrink-0 transition-transform duration-300 day-open-ivory-60', open && 'rotate-180')}
+        />
+      </button>
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: 'easeOut' }}
+            className="overflow-hidden"
+          >
+            <div className="pb-4">{children}</div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 /**
- * Full-screen, once-a-day warm welcome. Confidence, control, vision — then out of the way.
+ * The first screen of the day. Ink ground, one teal signal, one decision.
+ * Everything beyond the opening beat stays folded away until asked for.
  */
 export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
   const [open, setOpen] = useState(false);
@@ -57,6 +108,8 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
   const key = useMemo(() => todayKey(), []);
   const opener = OPENERS[bucket()];
   const statement = useMemo(() => getDailyStatement(), []);
+  const today = useMemo(() => new Date(), []);
+  const { events } = useLaunchCalendarEvents(today, today);
 
   useEffect(() => {
     try {
@@ -72,8 +125,25 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
     setOpen(false);
   };
 
-  const today = new Date().toLocaleDateString('en-GB', {
-    weekday: 'long', day: 'numeric', month: 'long',
+  const pending = useMemo(
+    () => (events ?? [])
+      .filter((e) => e.status === 'pending')
+      .sort((a, b) => (a.time || '').localeCompare(b.time || '')),
+    [events]
+  );
+
+  const shapeSummary = pending.length
+    ? `${pending.length} ${pending.length === 1 ? 'commitment' : 'commitments'}${pending[0]?.time ? ` · first at ${pending[0].time}` : ''}`
+    : 'Nothing scheduled — the day is open';
+
+  const dateLine = new Date()
+    .toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long' })
+    .toUpperCase();
+
+  const rise = (delay: number) => ({
+    initial: { opacity: 0, y: 14 },
+    animate: { opacity: 1, y: 0 },
+    transition: { delay, duration: 0.55, ease: 'easeOut' as const },
   });
 
   return (
@@ -84,77 +154,104 @@ export function DayOpenWelcome({ name }: DayOpenWelcomeProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.35 }}
-          className="day-open fixed inset-0 z-[70] flex items-center justify-center px-5 py-10 overflow-y-auto"
+          className="day-open fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto px-6 py-12"
           role="dialog"
           aria-modal="true"
           aria-label="Welcome to a new day"
         >
-          {/* Warm sunrise wash */}
           <div className="day-open-wash pointer-events-none absolute inset-0" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15, duration: 0.5 }}
-            className="relative w-full max-w-lg text-center"
-          >
+          <div className="relative grid w-full max-w-5xl grid-cols-1 items-center gap-8 lg:grid-cols-[3fr_2fr] lg:gap-14">
+            {/* Artwork — right on desktop, above the words on mobile */}
             <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.2, duration: 0.7, ease: 'easeOut' }}
-              className="relative mx-auto mb-6 flex h-28 w-28 items-center justify-center rounded-full day-open-halo"
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, duration: 0.9, ease: 'easeOut' }}
+              className="relative order-first mx-auto flex w-full max-w-[220px] items-center justify-center lg:order-last lg:max-w-none"
             >
-              <img
+              <div className="day-open-glow pointer-events-none absolute inset-[-18%]" />
+              <motion.img
                 src={watercolourBrain}
                 alt=""
                 aria-hidden="true"
                 width={1024}
                 height={1024}
-                className="h-24 w-24 object-contain drop-shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+                animate={{ y: [0, -8, 0] }}
+                transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative w-full object-contain"
               />
             </motion.div>
 
-            <p className="text-[11px] uppercase tracking-[0.22em] day-open-ivory-60">{today}</p>
+            {/* Words */}
+            <div className="text-left">
+              <motion.div {...rise(0.1)}>
+                <p className="font-hind text-[11px] font-semibold uppercase tracking-[0.32em] day-open-ivory-60">
+                  {dateLine} · {bucket()}
+                </p>
+                <div className="mt-3 h-px w-full border-t day-open-hair" />
+              </motion.div>
 
-            <h1 className="mt-3 text-3xl sm:text-4xl font-semibold leading-tight day-open-ivory">
-              {opener.hello}{name ? `, ${name}` : ''}.
-            </h1>
+              <motion.h1
+                {...rise(0.16)}
+                className="font-archivo mt-6 text-4xl uppercase leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl day-open-ivory"
+              >
+                {opener.hello}{name ? `, ${name}` : ''}.
+              </motion.h1>
 
-            <p className="mt-4 text-base sm:text-lg leading-relaxed day-open-ivory-80">
-              {opener.line}
-            </p>
+              <motion.p
+                {...rise(0.22)}
+                className="font-hind mt-5 max-w-xl text-base leading-relaxed sm:text-lg day-open-ivory-80"
+              >
+                {opener.line}
+              </motion.p>
 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
-              className="mt-7 text-lg sm:text-xl font-medium day-open-gold"
-            >
-              {statement}
-            </motion.p>
+              <motion.div {...rise(0.28)} className="mt-8 flex gap-4">
+                <span className="day-open-rule w-[3px] shrink-0 rounded-full" aria-hidden="true" />
+                <p className="font-hind text-lg font-medium leading-snug sm:text-xl day-open-ivory">
+                  {statement}
+                </p>
+              </motion.div>
 
-            {vision && (
-              <div className="mt-7 day-open-card rounded-2xl p-4 text-left">
-                <div className="mb-1.5 flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] day-open-ivory-60">
-                  <Compass className="h-3.5 w-3.5" />
-                  My vision
-                </div>
-                <p className="text-sm leading-relaxed day-open-ivory-80">{vision}</p>
-              </div>
-            )}
+              <motion.div {...rise(0.34)} className="mt-9">
+                {vision && (
+                  <RevealRow label="My vision">
+                    <p className="font-hind text-base leading-relaxed day-open-ivory-80">{vision}</p>
+                  </RevealRow>
+                )}
 
-            <button
-              onClick={dismiss}
-              className="mt-9 inline-flex min-h-[56px] w-full items-center justify-center gap-2 day-open-cta rounded-2xl px-6 text-base font-semibold shadow-lg transition"
-            >
-              Start my day
-              <ArrowRight className="h-5 w-5" />
-            </button>
+                <RevealRow label="Today's shape" summary={shapeSummary}>
+                  {pending.length ? (
+                    <ul className="space-y-2">
+                      {pending.slice(0, 6).map((e) => (
+                        <li key={e.id} className="flex items-baseline justify-between gap-4">
+                          <span className="font-hind text-base day-open-ivory-80">{e.title}</span>
+                          <span className="font-hind text-sm tabular-nums day-open-ivory-60">{e.time}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="font-hind text-base day-open-ivory-80">
+                      One small thing is enough. I can plan it after this.
+                    </p>
+                  )}
+                </RevealRow>
+                <div className="border-t day-open-hair" />
+              </motion.div>
 
-            <p className="mt-4 text-xs day-open-ivory-45">
-              This is a daily welcome, not medical advice.
-            </p>
-          </motion.div>
+              <motion.button
+                {...rise(0.4)}
+                onClick={dismiss}
+                className="font-hind day-open-cta mt-8 inline-flex min-h-[56px] w-full items-center justify-center gap-2 rounded-2xl px-6 text-base font-semibold shadow-lg transition"
+              >
+                Start my day
+                <ArrowRight className="h-5 w-5" />
+              </motion.button>
+
+              <motion.p {...rise(0.46)} className="font-hind mt-4 text-xs day-open-ivory-45">
+                This is a daily welcome, not medical advice.
+              </motion.p>
+            </div>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
