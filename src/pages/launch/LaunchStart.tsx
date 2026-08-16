@@ -1,66 +1,142 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LaunchButton } from '@/components/launch/LaunchButton';
-import { Mic, ListChecks, Flag, Users, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Mic, ListChecks, Flag, Users } from 'lucide-react';
 import { EditionBadge } from '@/components/launch/EditionBadge';
+
+const STEPS = [
+  {
+    n: '01',
+    Icon: Mic,
+    title: 'Record or upload',
+    body: 'Speak it, or upload audio you already have. Nothing is lost between the conversation and the plan.',
+  },
+  {
+    n: '02',
+    Icon: ListChecks,
+    title: 'See actions and decisions',
+    body: 'Owners, dates and the exact words they were said in.',
+  },
+  { n: '03', Icon: Flag, title: 'Milestones keep you on track' },
+  { n: '04', Icon: Users, title: 'Loop in your circle' },
+] as const;
+
+const rise = (i: number) => ({
+  initial: { opacity: 0, y: 16 },
+  animate: { opacity: 1, y: 0 },
+  transition: { delay: 0.08 * i, duration: 0.5, ease: 'easeOut' as const },
+});
 
 export default function LaunchStart() {
   const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brain-health-50 via-white to-brand-orange-50">
-      <header className="px-5 pt-8 pb-4 flex items-center justify-between">
-        <div className="text-lg font-bold tracking-tight text-brain-health-900">MyRhythm</div>
-        <EditionBadge />
-      </header>
+    <div className="prestige relative min-h-screen w-full overflow-hidden">
+      <div className="prestige-halo pointer-events-none absolute inset-0" aria-hidden="true" />
+      <div className="prestige-grain pointer-events-none absolute inset-0" aria-hidden="true" />
 
-      <main className="max-w-xl mx-auto px-5 pt-2 pb-24">
-        <h1 className="text-3xl md:text-4xl font-bold text-brain-health-900 leading-tight">
-          Test MyRhythm in 4 minutes.
-        </h1>
-        <p className="mt-3 text-base text-brain-health-700">
-          Capture a meeting. See actions, decisions and milestones. Schedule one — your way.
-        </p>
+      <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col gap-12 px-6 pb-[calc(4rem+env(safe-area-inset-bottom))] pt-[calc(2.5rem+env(safe-area-inset-top))] md:gap-16 md:px-10 md:py-16">
+        {/* Brand */}
+        <motion.header
+          {...rise(0)}
+          className="flex flex-col justify-between gap-6 md:flex-row md:items-end"
+        >
+          <div className="flex flex-col gap-4">
+            <EditionBadge tone="onDark" />
+            <h1 className="font-instrument text-5xl leading-[1.05] prestige-ivory md:text-7xl">
+              MyRhythm
+            </h1>
+          </div>
+          <p className="font-instrument max-w-sm text-xl italic leading-snug prestige-ivory-75 md:text-2xl">
+            Four minutes to see how MyRhythm keeps your plan going after the conversation ends.
+          </p>
+        </motion.header>
 
-        <ol className="mt-8 space-y-3">
-          {[
-            { Icon: Mic, t: 'Record or upload', d: 'One tap from Memory.' },
-            { Icon: ListChecks, t: 'See actions & decisions', d: 'Owners, dates and quotes.' },
-            { Icon: Flag, t: 'Milestones keep you on track', d: 'Auto checkpoints back from the due date.' },
-            { Icon: Users, t: 'Loop in your circle', d: 'Invite or share visibility, with consent.' },
-          ].map(({ Icon, t, d }, i) => (
-            <li key={i} className="flex gap-3 p-3 rounded-xl bg-white/70 border border-brain-health-100 backdrop-blur-sm">
-              <div className="w-10 h-10 rounded-xl bg-brand-orange-100 text-brand-orange-700 flex items-center justify-center shrink-0">
-                <Icon className="h-5 w-5" />
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_auto_1fr] md:items-stretch">
+          {/* Hero tile */}
+          <motion.div
+            {...rise(1)}
+            className="prestige-tile flex flex-col justify-between gap-10 rounded-3xl p-7 md:p-8"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium tracking-widest prestige-gold">{STEPS[0].n}</span>
+              <Mic className="h-5 w-5 prestige-ivory-55" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="font-instrument text-3xl leading-tight prestige-ivory">{STEPS[0].title}</h2>
+              <p className="mt-3 text-base leading-relaxed prestige-ivory-75">{STEPS[0].body}</p>
+            </div>
+          </motion.div>
+
+          {/* Gold hairline: vertical on desktop, horizontal on mobile */}
+          <div
+            aria-hidden="true"
+            className="prestige-rule mx-auto h-px w-2/3 self-center md:h-full md:w-px"
+          />
+
+          {/* Right stack */}
+          <div className="grid grid-cols-1 gap-4">
+            <motion.div
+              {...rise(2)}
+              className="prestige-tile flex flex-col justify-between gap-6 rounded-3xl p-7 md:p-8"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium tracking-widest prestige-gold">{STEPS[1].n}</span>
+                <ListChecks className="h-5 w-5 prestige-ivory-55" aria-hidden="true" />
               </div>
               <div>
-                <div className="font-semibold text-brain-health-900">{i + 1}. {t}</div>
-                <div className="text-sm text-brain-health-600">{d}</div>
+                <h2 className="font-instrument text-2xl leading-tight prestige-ivory md:text-3xl">
+                  {STEPS[1].title}
+                </h2>
+                <p className="mt-2 text-base prestige-ivory-75">{STEPS[1].body}</p>
               </div>
-            </li>
-          ))}
-        </ol>
+            </motion.div>
 
-        <div className="mt-8 flex flex-col gap-3">
-          <LaunchButton
-            className="min-h-[56px] text-base"
-            onClick={() => navigate('/launch/memory?quick=1')}
-          >
-            <Mic className="h-5 w-5 mr-2" />
-            Start a capture now
-          </LaunchButton>
-          <button
-            onClick={() => navigate('/launch/home')}
-            className="text-sm text-brain-health-600 underline-offset-4 hover:underline"
-          >
-            Open MyRhythm Home
-          </button>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {STEPS.slice(2).map((s, i) => (
+                <motion.div
+                  key={s.n}
+                  {...rise(3 + i)}
+                  className="prestige-tile flex flex-col justify-between gap-8 rounded-3xl p-7 md:p-8"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium tracking-widest prestige-gold">{s.n}</span>
+                    <s.Icon className="h-5 w-5 prestige-ivory-55" aria-hidden="true" />
+                  </div>
+                  <h2 className="font-instrument text-2xl leading-tight prestige-ivory">{s.title}</h2>
+                </motion.div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <p className="mt-10 flex items-center gap-2 text-xs text-brain-health-500">
-          <ShieldCheck className="h-3.5 w-3.5" />
-          Private by default · 30-day recording retention · Not a medical device.
-        </p>
-      </main>
+        {/* Actions */}
+        <motion.div {...rise(5)} className="flex flex-col items-center gap-10">
+          <div className="flex w-full max-w-md flex-col items-center gap-6">
+            <button
+              onClick={() => navigate('/launch/memory?quick=1')}
+              className="prestige-cta font-worksans flex h-14 w-full items-center justify-center gap-2 rounded-full text-lg font-semibold shadow-xl md:h-16"
+            >
+              <Mic className="h-5 w-5" aria-hidden="true" />
+              Start a capture now
+            </button>
+            <button
+              onClick={() => navigate('/launch/home')}
+              className="border-b border-transparent pb-1 text-base font-medium prestige-ivory-55 transition-colors hover:border-[#c9a84c] hover:text-[#c9a84c]"
+            >
+              Open MyRhythm Home
+            </button>
+          </div>
+
+          <div className="flex flex-col items-center gap-2 text-center">
+            <p className="text-[11px] uppercase tracking-[0.2em] prestige-ivory-40">Secure by design</p>
+            <p className="max-w-lg text-sm prestige-ivory-55">
+              Private by default · 30-day recording retention · Not a medical device.
+            </p>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 }

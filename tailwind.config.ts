@@ -25,6 +25,9 @@ const config: Config = {
         'serif': ['Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
         'archivo': ['Archivo Black', 'Impact', 'system-ui', 'sans-serif'],
         'hind': ['Hind', 'Inter', 'system-ui', 'sans-serif'],
+        'instrument': ['Instrument Serif', 'Georgia', 'Times New Roman', 'serif'],
+        'worksans': ['Work Sans', 'Inter', 'system-ui', 'sans-serif'],
+
       },
 
       letterSpacing: {
