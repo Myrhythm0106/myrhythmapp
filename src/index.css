@@ -802,7 +802,7 @@ html, body {
   mix-blend-mode: overlay;
 }
 .prestige-halo {
-  background: radial-gradient(60% 50% at 20% 0%, rgba(13, 122, 95, 0.55), transparent 70%),
+  background: radial-gradient(55% 45% at 18% 0%, rgba(13, 122, 95, 0.32), transparent 72%),
               radial-gradient(45% 40% at 95% 100%, rgba(201, 168, 76, 0.14), transparent 70%);
 }
 
