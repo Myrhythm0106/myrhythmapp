@@ -3,13 +3,29 @@ import { Sparkles } from 'lucide-react';
 import { EDITION_SHORT, EDITION_VERSION, EDITION_NAME } from '@/config/edition';
 
 type Variant = 'chip' | 'inline' | 'footer';
+type Tone = 'default' | 'onDark';
 
 interface EditionBadgeProps {
   variant?: Variant;
+  tone?: Tone;
   className?: string;
 }
 
-export function EditionBadge({ variant = 'chip', className = '' }: EditionBadgeProps) {
+export function EditionBadge({ variant = 'chip', tone = 'default', className = '' }: EditionBadgeProps) {
+  if (tone === 'onDark') {
+    return (
+      <span
+        className={`inline-flex w-fit items-center gap-1.5 rounded-full border border-[#c9a84c]/45 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#c9a84c] ${className}`}
+        aria-label={`${EDITION_NAME} ${EDITION_VERSION}`}
+        title={EDITION_NAME}
+      >
+        <Sparkles className="h-3 w-3" aria-hidden="true" />
+        {EDITION_SHORT} · {EDITION_VERSION}
+      </span>
+    );
+  }
+
+
   if (variant === 'footer') {
     return (
       <span
