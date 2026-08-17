@@ -176,7 +176,41 @@ export function ActionsTableView({
                           <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                         </TableCell>
                         <TableCell>
-                          <PriorityIndicator level={action.priority_level || 3} />
+                          {onPriorityChange ? (
+                            <Select
+                              value={priorityValueFor(action.priority_level || 3)}
+                              onValueChange={(v) => onPriorityChange(action.id!, Number(v))}
+                            >
+                              <SelectTrigger
+                                className="h-9 w-full border-0 bg-transparent px-2 text-xs"
+                                aria-label="Change priority"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span
+                                    className={cn(
+                                      'h-2.5 w-2.5 rounded-full',
+                                      priorityOptions.find(
+                                        o => o.value === priorityValueFor(action.priority_level || 3)
+                                      )?.color
+                                    )}
+                                  />
+                                  <SelectValue />
+                                </div>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {priorityOptions.map(opt => (
+                                  <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                                    <span className="flex items-center gap-2">
+                                      <span className={cn('h-2.5 w-2.5 rounded-full', opt.color)} />
+                                      {opt.label}
+                                    </span>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <PriorityIndicator level={action.priority_level || 3} />
+                          )}
                         </TableCell>
                         <TableCell>
                           <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>
