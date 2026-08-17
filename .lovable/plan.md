@@ -23,23 +23,28 @@ This is read-only monitoring on the same mic stream — it does not change what 
 
 Today the length rules are duplicated in two recorder components, only know "free vs everything else", and are absent from the main Memory Bridge page. Proposed ladder, matching the pricing ladder (Free trial → Regular £15 → Founding £10 for life / Friends & Family £7.50):
 
-| Tier | Per recording | Per day | Purpose |
+| Tier | Per recording | Per week | Per month |
 | --- | --- | --- | --- |
-| Free (no subscription / trial expired) | 20 minutes | 20 minutes total | Enough to feel the value on one appointment |
-| Regular (paid £15/mo) | 60 minutes | unlimited sessions | Covers a full consultation or therapy session |
-| Founding Member (£10 for life) and Friends & Family (£7.50) | 4 hours (240 min) | unlimited | Full-day capture — the founding-cohort benefit |
+| Free (no subscription / trial expired) | 20 minutes | 1 hour | 4 hours |
+| Regular (paid £15/mo) | 2 hours (120 min) | 10 hours | 40 hours |
+| Founding Member (£10 for life) and Friends & Family (£7.50) | 4 hours (240 min) | 20 hours | 80 hours |
 
-Active 7-day trial gets the Regular allowance (60 min), so nobody hits a 20-minute wall while evaluating.
+Active 7-day trial gets the Regular allowance, so nobody hits a 20-minute wall while evaluating.
+
+**My view on totals:** yes — every tier should have a pool, and it should be a **monthly** pool with the weekly figure shown as a pacing guide, not a hard gate. A weekly hard cap punishes real life (three appointments land in one week, then nothing for a fortnight). So: the monthly total is the limit; the weekly number is guidance the egg timer can display. That also replaces the current 20-minutes-per-*day* free rule, which is stricter and more confusing than a monthly pool.
+
+The founding tiers keep generous-but-finite numbers so "unlimited" never becomes an uncapped transcription bill — 80 hours a month is far beyond any realistic use, while still being a defined figure.
 
 Work:
 
-- Create a single `recordingLimits` config keyed by tier — free, regular, founding, friends_family — that both recorders and the Memory Bridge page read from, so 20 / 60 / 240 exist in exactly one place.
-- Bring the countdown to **Memory Bridge** (`/launch/memory`), which currently has no cap display at all: a "3:58:12 remaining (this session)" / "12:30 remaining (today)" pill, amber under 5 minutes, red under 1 minute, with the existing threshold chimes, and auto-stop at the cap so a long recording ends cleanly instead of failing.
-- Before you start, a one-line "You can record up to 4 hours in one go" (per tier) so the length is known up front, not discovered at the limit.
-- When a free or Regular user hits their cap, an upgrade line naming the next tier's length rather than a bare "limit reached".
-- Save the ladder to project memory and reflect the recording lengths in the pricing feature lists so marketing and code agree.
+- Create a single `recordingLimits` config keyed by tier — free, regular, founding, friends_family — holding per-recording, weekly and monthly figures, read by both recorders and the Memory Bridge page.
+- Bring the countdown to **Memory Bridge** (`/launch/memory`), which currently has no cap display at all: a "1:58:12 remaining (this recording)" pill, amber under 5 minutes, red under 1 minute, with the existing threshold chimes, and auto-stop at the cap so a long recording ends cleanly instead of failing.
+- Before you start, a one-line "You can record up to 2 hours in one go — 32h left this month" (per tier).
+- When a free or Regular user runs out, an upgrade line naming the next tier's lengths rather than a bare "limit reached".
+- Retire the old 20-min/day free rule in favour of the monthly pool; save the ladder to project memory and reflect it in the pricing feature lists so marketing and code agree.
 
-If the 60-minute middle tier isn't the number you want, say the word and I'll swap it before building.
+If any of these numbers should be different, tell me and I'll set them before building.
+
 
 ## 3. Egg timer — allowance at a glance, weekly or monthly
 
