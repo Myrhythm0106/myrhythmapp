@@ -15,10 +15,19 @@ interface ActionsTableViewProps {
   actions: NextStepsItem[];
   onDragEnd: (result: DropResult) => void;
   onStatusChange: (actionId: string, status: string) => void;
+  onPriorityChange?: (actionId: string, priorityLevel: number) => void;
   onSort: (field: 'priority' | 'status' | 'date') => void;
   sortField: 'priority' | 'status' | 'date';
   sortDirection: 'asc' | 'desc';
 }
+
+const priorityOptions = [
+  { value: '1', label: 'High', color: 'bg-red-500' },
+  { value: '3', label: 'Medium', color: 'bg-brand-orange-500' },
+  { value: '5', label: 'Low', color: 'bg-green-500' }
+];
+
+const priorityValueFor = (level: number) => (level <= 2 ? '1' : level >= 4 ? '5' : '3');
 
 const statusOptions = [
   { value: 'not_started', label: 'Ready to Begin', color: 'bg-muted text-muted-foreground' },
