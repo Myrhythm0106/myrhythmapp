@@ -240,6 +240,25 @@ export default function LaunchMemoryBridge() {
     }
   };
 
+  // Auto-stop cleanly at the per-recording cap for this tier.
+  const autoStoppedRef = useRef(false);
+  useEffect(() => {
+    if (!isRecording) {
+      autoStoppedRef.current = false;
+      return;
+    }
+    if (duration >= sessionCapSeconds && !autoStoppedRef.current) {
+      autoStoppedRef.current = true;
+      toast.info(
+        `Reached the ${formatMinutes(allowance.limits.perRecordingMinutes)} limit for one recording — saving what you've captured.`
+      );
+      handleStopRecording();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration, isRecording, sessionCapSeconds]);
+
+
+
   const handleSave = async () => {
     if (!user) {
       toast.error('Please sign in to save this recording.');
