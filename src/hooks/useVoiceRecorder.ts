@@ -15,6 +15,38 @@ interface VoiceRecording {
   created_at: string;
 }
 
+const MIME_CANDIDATES = [
+  'audio/webm;codecs=opus',
+  'audio/webm',
+  'audio/mp4;codecs=mp4a.40.2',
+  'audio/mp4',
+  'audio/ogg;codecs=opus',
+];
+
+export function pickRecordingMimeType(): string | undefined {
+  if (typeof MediaRecorder === 'undefined') return undefined;
+  return MIME_CANDIDATES.find(type => MediaRecorder.isTypeSupported(type));
+}
+
+export function extensionForMimeType(mimeType?: string): string {
+  const base = (mimeType || '').split(';')[0].trim();
+  switch (base) {
+    case 'audio/mp4':
+      return 'm4a';
+    case 'audio/mpeg':
+      return 'mp3';
+    case 'audio/ogg':
+      return 'ogg';
+    case 'audio/wav':
+    case 'audio/x-wav':
+      return 'wav';
+    case 'audio/webm':
+      return 'webm';
+    default:
+      return 'webm';
+  }
+}
+
 export function useVoiceRecorder() {
   const { user } = useAuth();
   const [isRecording, setIsRecording] = useState(false);
@@ -22,25 +54,50 @@ export function useVoiceRecorder() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [recordings, setRecordings] = useState<VoiceRecording[]>([]);
   const [duration, setDuration] = useState(0);
+  const [recordedBytes, setRecordedBytes] = useState(0);
+  const [recordingMimeType, setRecordingMimeType] = useState<string>('audio/webm');
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const mimeTypeRef = useRef<string>('audio/webm');
 
   const startRecording = useCallback(async (): Promise<boolean> => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : undefined;
-      const mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
-      
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          channelCount: 1,
+          echoCancellation: true,
+          noiseSuppression: true,
+          autoGainControl: true,
+        },
+      });
+      const mimeType = pickRecordingMimeType();
+      const mediaRecorder = mimeType
+        ? new MediaRecorder(stream, { mimeType, audioBitsPerSecond: 64000 })
+        : new MediaRecorder(stream);
+
+      // The recorder is the source of truth for the actual container used
+      // (iOS Safari can't do WebM and silently records MP4).
+      const effectiveMime = mediaRecorder.mimeType || mimeType || 'audio/webm';
+      mimeTypeRef.current = effectiveMime;
+      setRecordingMimeType(effectiveMime);
+
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
       setDuration(0);
+      setRecordedBytes(0);
       
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
           audioChunksRef.current.push(event.data);
+          setRecordedBytes(prev => prev + event.data.size);
         }
+      };
+
+      mediaRecorder.onerror = (event) => {
+        console.error('MediaRecorder error:', event);
+        toast.error('The microphone stopped unexpectedly. Please try recording again.');
       };
 
       mediaRecorder.start(1000); // Collect data every 1000ms
@@ -59,6 +116,7 @@ export function useVoiceRecorder() {
       return false;
     }
   }, []);
+
 
   const pauseRecording = useCallback(() => {
     if (mediaRecorderRef.current && isRecording && !isPaused) {
