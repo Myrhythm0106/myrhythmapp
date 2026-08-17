@@ -255,6 +255,8 @@ function App() {
                      <Route path="/explorer" element={<ProtectedRoute requireAuth={false}><ExplorerPage /></ProtectedRoute>} />
                     
                     <Route path="/memory-bridge" element={<Navigate to="/launch/memory" replace />} />
+                    <Route path="/memorybridge" element={<Navigate to="/launch/memory" replace />} />
+                    <Route path="/memory" element={<Navigate to="/launch/memory" replace />} />
                     <Route path="/memory-bridge/test" element={<ProtectedRoute><TestMemoryBridge /></ProtectedRoute>} />
                     <Route path="/debug-next-steps" element={
                       <ProtectedRoute requireAuth={false}>
