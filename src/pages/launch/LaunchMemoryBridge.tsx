@@ -617,7 +617,7 @@ export default function LaunchMemoryBridge() {
                   <Play className="h-12 w-12 text-launch-moss ml-1" />
                 </div>
                 <p className="text-lg font-semibold text-launch-ink mb-2">Recording Complete!</p>
-                <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(duration)}</Badge>
+                <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(restoredDuration ?? duration)}</Badge>
 
                 <input
                   type="text"
