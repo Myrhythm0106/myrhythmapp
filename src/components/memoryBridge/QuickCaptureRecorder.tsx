@@ -17,6 +17,7 @@ import {
 import { useVoiceRecorder } from '@/hooks/voiceRecording/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
+import { getRecordingLimits, resolveRecordingTier } from '@/config/recordingLimits';
 import { useRealtimeACTs } from '@/hooks/memoryBridge/useRealtimeACTs';
 import { useRecordingCountdownAlerts } from '@/hooks/memoryBridge/useRecordingCountdownAlerts';
 import { useAuth } from '@/hooks/useAuth';
@@ -67,7 +68,8 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
   const { extractACTs } = useRealtimeACTs(currentMeetingId);
 
   // Subscription-based caps: 4 hours premium, 20 min free
-  const maxDurationMinutes = subscription?.plan_type === 'premium' ? 240 : 20;
+  const recordingTier = resolveRecordingTier({ planType: subscription?.plan_type });
+  const maxDurationMinutes = getRecordingLimits(recordingTier).perRecordingMinutes;
   const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
@@ -557,7 +559,7 @@ export function QuickCaptureRecorder({ onComplete, onCancel }: QuickCaptureRecor
 
               {(() => {
                 const remainingSec = Math.max(0, maxDuration - duration);
-                const isPremium = subscription?.plan_type === 'premium';
+                const isPremium = recordingTier !== 'free';
                 const warnSec = isPremium ? 30 * 60 : 5 * 60;
                 const dangerSec = isPremium ? 5 * 60 : 60;
                 const h = Math.floor(remainingSec / 3600);

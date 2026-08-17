@@ -63,9 +63,8 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   const hasReachedDailyLimit = !canRecordToday();
   
   // Dynamic max duration: free = 20 min/day, premium = 4 hours per recording
-  const maxDurationMinutes = tier === 'free'
-    ? Math.min(remainingDailyMinutes === -1 ? 20 : remainingDailyMinutes, 20)
-    : 240;
+  const recordingTier = resolveRecordingTier({ tier, planType: subscription?.plan_type });
+  const maxDurationMinutes = getRecordingLimits(recordingTier).perRecordingMinutes;
 
   const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
