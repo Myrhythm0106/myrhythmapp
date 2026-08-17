@@ -89,6 +89,7 @@ export default function LaunchMemoryBridge() {
     recordings,
     duration,
     recordedBytes,
+    mediaStream,
     startRecording,
     pauseRecording,
     resumeRecording,
@@ -98,6 +99,13 @@ export default function LaunchMemoryBridge() {
     getRecordingUrl,
     formatDuration
   } = useVoiceRecorder();
+
+  const micLevel = useMicLevel(mediaStream, isRecording && !isPaused);
+  const allowance = useRecordingAllowance();
+  const sessionCapSeconds = allowance.limits.perRecordingMinutes * 60;
+  const remainingSessionSeconds = Math.max(0, sessionCapSeconds - duration);
+  const outOfAllowance = allowance.remainingMinutes <= 0;
+  const nextTierKey = NEXT_TIER[allowance.tier];
 
   useEffect(() => {
     fetchRecordings();
