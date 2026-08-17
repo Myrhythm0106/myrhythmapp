@@ -260,8 +260,10 @@ export function useVoiceRecorder() {
       return recording;
     } catch (error) {
       console.error('Error saving recording:', error);
-      toast.error('Failed to save recording');
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      toast.error(`Couldn't save the recording: ${message}`);
       return null;
+
     } finally {
       setIsProcessing(false);
     }
