@@ -16,6 +16,18 @@ Priority and Status already save inline. This makes the rest of the meaningful c
 
 Read-only stays read-only: the row grip (drag to reorder) and the "..." menu.
 
+## Suggested success criteria
+
+Actions often arrive with no "I'll know I'm done when…" line, and writing one from scratch is the hardest part. So when that cell is empty (or being edited) it offers 3-4 ready-made examples, chosen from the wording of the action itself:
+
+- Call/email type → "I'll know I'm done when I've spoken to them and noted what we agreed."
+- Appointment/booking → "I'll know I'm done when the date is confirmed and in my calendar."
+- Prepare/write/create → "I'll know I'm done when the draft is finished and saved."
+- Send/share → "I'll know I'm done when it's sent and I've had a reply."
+- Anything else (fallback) → "I'll know I'm done when I've finished it and ticked it off." / "…when I've told one person it's done."
+
+Tapping an example drops the wording into the box, where it can be edited before saving — nothing is applied automatically, and the examples disappear once a criteria is set (with a small "Suggestions" link to bring them back).
+
 ## Behaviour
 
 - One tap enters edit mode on that cell only; nothing else on the page moves.
@@ -24,6 +36,7 @@ Read-only stays read-only: the row grip (drag to reorder) and the "..." menu.
 - Empty action text is rejected (it's the one required field) — the previous wording is restored.
 - Every edit target is at least 44px tall so it works on a phone.
 - Cards view is unchanged and keeps its own controls.
+
 
 ## Technical notes
 
