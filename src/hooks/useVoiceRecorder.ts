@@ -56,6 +56,7 @@ export function useVoiceRecorder() {
   const [duration, setDuration] = useState(0);
   const [recordedBytes, setRecordedBytes] = useState(0);
   const [recordingMimeType, setRecordingMimeType] = useState<string>('audio/webm');
+  const [mediaStream, setMediaStream] = useState<MediaStream | null>(null);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
@@ -84,6 +85,7 @@ export function useVoiceRecorder() {
       setRecordingMimeType(effectiveMime);
 
       mediaRecorderRef.current = mediaRecorder;
+      setMediaStream(stream);
       audioChunksRef.current = [];
       setDuration(0);
       setRecordedBytes(0);
@@ -165,6 +167,7 @@ export function useVoiceRecorder() {
         
         setIsRecording(false);
         setIsPaused(false);
+        setMediaStream(null);
 
         if (audioBlob.size === 0) {
           console.error('stopRecording: captured 0 bytes of audio');
@@ -351,6 +354,7 @@ export function useVoiceRecorder() {
     duration,
     recordedBytes,
     recordingMimeType,
+    mediaStream,
 
     startRecording,
     pauseRecording,
