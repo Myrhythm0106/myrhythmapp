@@ -558,6 +558,20 @@ export default function LaunchMemoryBridge() {
                 </div>
                 <p className="text-lg font-semibold text-launch-ink mb-1">Tap to Record</p>
                 <p className="text-sm text-launch-ink/70">We'll listen and find the action items</p>
+                <p className="mt-2 text-xs text-launch-ink/60">
+                  {outOfAllowance
+                    ? `You've used your ${allowance.period === 'week' ? 'weekly' : 'monthly'} recording time.`
+                    : `You can record up to ${formatMinutes(allowance.limits.perRecordingMinutes)} in one go — ${formatMinutes(allowance.remainingMinutes)} left this ${allowance.period}.`}
+                </p>
+                {outOfAllowance && nextTierKey && (
+                  <p className="mt-1 text-xs text-launch-ember">
+                    {RECORDING_LIMITS[nextTierKey].label} gives you{' '}
+                    {formatMinutes(RECORDING_LIMITS[nextTierKey].perRecordingMinutes)} per recording and{' '}
+                    {formatMinutes(RECORDING_LIMITS[nextTierKey].monthlyMinutes)} a month.
+                  </p>
+                )}
+
+                <RecordingEggTimer className="mt-5 text-left" />
               </>
             )}
 
