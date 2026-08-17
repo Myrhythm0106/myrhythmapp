@@ -92,15 +92,218 @@ const WatcherAvatars = ({ watchers }: { watchers: string[] | undefined }) => {
   );
 };
 
+interface EditableTextProps {
+  value: string | undefined | null;
+  onSave: (value: string) => void;
+  placeholder?: string;
+  multiline?: boolean;
+  required?: boolean;
+  className?: string;
+  displayClassName?: string;
+  suggestions?: string[];
+  ariaLabel: string;
+}
+
+const EditableText = ({
+  value,
+  onSave,
+  placeholder = 'Tap to add…',
+  multiline = false,
+  required = false,
+  className,
+  displayClassName,
+  suggestions,
+  ariaLabel
+}: EditableTextProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draft, setDraft] = useState(value || '');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const committedRef = useRef(false);
+
+  useEffect(() => {
+    if (!isEditing) setDraft(value || '');
+  }, [value, isEditing]);
+
+  const startEditing = () => {
+    committedRef.current = false;
+    setDraft(value || '');
+    setShowSuggestions(!value && !!suggestions?.length);
+    setIsEditing(true);
+  };
+
+  const commit = () => {
+    if (committedRef.current) return;
+    committedRef.current = true;
+    const next = draft.trim();
+    setIsEditing(false);
+    setShowSuggestions(false);
+    if (next === (value || '').trim()) return;
+    if (required && !next) {
+      setDraft(value || '');
+      return;
+    }
+    onSave(next);
+  };
+
+  const cancel = () => {
+    committedRef.current = true;
+    setDraft(value || '');
+    setIsEditing(false);
+    setShowSuggestions(false);
+  };
+
+  if (!isEditing) {
+    return (
+      <div className={className}>
+        <button
+          type="button"
+          onClick={startEditing}
+          aria-label={ariaLabel}
+          className={cn(
+            'w-full min-h-[44px] text-left rounded-md px-2 py-2 -mx-2 transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-orange-500/40',
+            !value && 'text-muted-foreground italic',
+            displayClassName
+          )}
+        >
+          {value || placeholder}
+        </button>
+      </div>
+    );
+  }
+
+  const inputProps = {
+    value: draft,
+    autoFocus: true,
+    'aria-label': ariaLabel,
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setDraft(e.target.value),
+    onBlur: () => commit(),
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        cancel();
+      }
+      if (e.key === 'Enter' && (!multiline || e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        commit();
+      }
+    }
+  };
+
+  return (
+    <div className={cn('space-y-2', className)}>
+      {multiline ? (
+        <Textarea {...inputProps} rows={2} className="text-sm min-h-[44px]" placeholder={placeholder} />
+      ) : (
+        <Input {...inputProps} className="h-11 text-sm" placeholder={placeholder} />
+      )}
+
+      {suggestions && suggestions.length > 0 && (
+        <div className="space-y-1">
+          {!showSuggestions ? (
+            <button
+              type="button"
+              className="inline-flex items-center gap-1 text-[11px] text-brand-orange-600 hover:underline"
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => setShowSuggestions(true)}
+            >
+              <Lightbulb className="h-3 w-3" /> Suggestions
+            </button>
+          ) : (
+            <div className="flex flex-wrap gap-1">
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => {
+                    setDraft(s);
+                    setShowSuggestions(false);
+                  }}
+                  className="text-[11px] leading-snug text-left rounded-full border border-brand-orange-200 bg-brand-orange-50 px-2.5 py-1.5 text-brand-orange-700 hover:bg-brand-orange-100 transition-colors"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const EditableDueDate = ({
+  value,
+  onSave
+}: {
+  value: string | null | undefined;
+  onSave: (date: string | null) => void;
+}) => {
+  const [open, setOpen] = useState(false);
+  let parsed: Date | undefined;
+  try {
+    parsed = value ? new Date(value) : undefined;
+    if (parsed && isNaN(parsed.getTime())) parsed = undefined;
+  } catch {
+    parsed = undefined;
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          aria-label="Change due date"
+          className={cn('h-11 px-2 justify-start gap-1 text-sm font-normal', !parsed && 'text-muted-foreground')}
+        >
+          <Calendar className="h-3 w-3 text-muted-foreground" />
+          {parsed ? format(parsed, 'MMM d') : '—'}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-auto p-0" align="start">
+        <CalendarPicker
+          mode="single"
+          selected={parsed}
+          onSelect={(d) => {
+            onSave(d ? format(d, 'yyyy-MM-dd') : null);
+            setOpen(false);
+          }}
+          initialFocus
+          className={cn('p-3 pointer-events-auto')}
+        />
+        <div className="border-t p-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full"
+            onClick={() => {
+              onSave(null);
+              setOpen(false);
+            }}
+          >
+            Clear date
+          </Button>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export function ActionsTableView({
   actions,
   onDragEnd,
   onStatusChange,
   onPriorityChange,
+  onTextChange,
+  onSuccessCriteriaChange,
+  onAssignedChange,
+  onDueDateChange,
+  onWatchersChange,
   onSort,
   sortField,
   sortDirection
 }: ActionsTableViewProps) {
+
   const getStatusOption = (status: string) => {
     return statusOptions.find(opt => opt.value === status) || statusOptions[0];
   };
