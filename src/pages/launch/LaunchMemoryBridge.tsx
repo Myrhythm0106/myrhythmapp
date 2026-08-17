@@ -298,6 +298,7 @@ export default function LaunchMemoryBridge() {
 
       audioBlobRef.current = null;
       await clearPendingRecording();
+      allowance.refresh();
 
       // Automatically start extraction
       const result = await processSavedRecording(
