@@ -68,10 +68,7 @@ export interface RecordingAllowance {
 
 export function useRecordingAllowance(): RecordingAllowance {
   const { user } = useAuth();
-  const { tier: contextTier, subscriptionData } = useSubscription() as {
-    tier?: string;
-    subscriptionData?: { subscription_tier?: string; is_trial_active?: boolean };
-  };
+  const { tier: contextTier, subscriptionData } = useSubscription();
 
   const [period, setPeriodState] = useState<AllowancePeriod>(() => readStoredPeriod());
   const [usedMinutes, setUsedMinutes] = useState(0);
