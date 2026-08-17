@@ -503,13 +503,23 @@ export default function LaunchMemoryBridge() {
                 </div>
                 <p className="text-3xl font-bold text-launch-ink mb-1 font-display">{formatDuration(duration)}</p>
                 <Badge className={cn(
-                  "mb-4",
+                  "mb-2",
                   state === 'recording'
                     ? "bg-launch-ember/10 text-launch-ember border-launch-ember/30"
                     : "bg-launch-gold/10 text-launch-gold border-launch-gold/30"
                 )}>
                   {state === 'recording' ? '● Recording...' : '❚❚ Paused'}
                 </Badge>
+
+                <p className={cn(
+                  "text-xs mb-4",
+                  recordedBytes > 0 ? "text-launch-ink/60" : "text-launch-ember"
+                )} role="status" aria-live="polite">
+                  {recordedBytes > 0
+                    ? `Audio captured: ${formatBytes(recordedBytes)}`
+                    : 'No audio captured yet — check your microphone is on'}
+                </p>
+
 
                 <div className="flex items-center justify-center gap-3">
                   {state === 'recording' ? (
