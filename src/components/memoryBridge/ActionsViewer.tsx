@@ -218,6 +218,42 @@ export function ActionsViewer({
     updateAction(actionId, { assigned_watchers: watchers });
   };
 
+  // Generic optimistic inline field save (used by the table view)
+  const handleFieldChange = async (
+    actionId: string,
+    updates: Partial<NextStepsItem>,
+    successMessage = 'Saved'
+  ) => {
+    const previous = extractedActions.find(a => a.id === actionId);
+    if (!previous) return;
+
+    const rollback: Partial<NextStepsItem> = {};
+    (Object.keys(updates) as Array<keyof NextStepsItem>).forEach(key => {
+      (rollback as any)[key] = previous[key];
+    });
+
+    setExtractedActions(actions =>
+      actions.map(a => (a.id === actionId ? { ...a, ...updates } : a))
+    );
+
+    const { error } = await supabase
+      .from('extracted_actions')
+      .update(updates as any)
+      .eq('id', actionId);
+
+    if (error) {
+      console.error('Error saving field:', error);
+      setExtractedActions(actions =>
+        actions.map(a => (a.id === actionId ? { ...a, ...rollback } : a))
+      );
+      toast.error("That didn't save — please try again");
+      return;
+    }
+
+    toast.success(successMessage);
+  };
+
+
   // Bulk actions
   const handleScheduleAll = async () => {
     if (!user) return;
