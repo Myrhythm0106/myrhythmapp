@@ -1,25 +1,37 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar } from 'lucide-react';
+import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { format } from 'date-fns';
+import { ActionWatcherSelector } from './ActionWatcherSelector';
+import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 
 interface ActionsTableViewProps {
   actions: NextStepsItem[];
   onDragEnd: (result: DropResult) => void;
   onStatusChange: (actionId: string, status: string) => void;
   onPriorityChange?: (actionId: string, priorityLevel: number) => void;
+  onTextChange?: (actionId: string, text: string) => void;
+  onSuccessCriteriaChange?: (actionId: string, criteria: string) => void;
+  onAssignedChange?: (actionId: string, assignedTo: string) => void;
+  onDueDateChange?: (actionId: string, date: string | null) => void;
+  onWatchersChange?: (actionId: string, watchers: string[]) => void;
   onSort: (field: 'priority' | 'status' | 'date') => void;
   sortField: 'priority' | 'status' | 'date';
   sortDirection: 'asc' | 'desc';
 }
+
 
 const priorityOptions = [
   { value: '1', label: 'High', color: 'bg-red-500' },
