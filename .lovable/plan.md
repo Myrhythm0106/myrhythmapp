@@ -1,44 +1,27 @@
-# Fix the Memory Bridge screen: visible record button, clearer layout
+# Next Step Summary: table by default, priority editable
 
-## What I found
+## What changes
 
-The page does load — nothing is broken in code — but two things make it read as "black and confusing":
+**1. Table is the default view**
 
-1. **A tall solid dark-green hero band** fills the top third of the screen. On a phone that band is most of what you see on first paint, which looks like a black screen.
-2. **The record button is invisible.** The big circular "Tap to Record" control renders as a white circle on a near-white card, so there is no obvious thing to press.
-3. **The order of the page is upside down.** "Import from a document" (the rare action) sits above recording (the main action), and the egg-timer allowance panel is stacked *inside* the record card, pushing the mic further down and competing with it.
+"My Next Step Summary" currently opens in Cards view, with a Cards/Table toggle in the header. It will open in **Table** view instead — the scannable row-per-action grid (Priority · Action · Assigned · Due · Status · Watchers).
 
-## What I'll change (presentation only)
+- The Cards/Table toggle stays, so cards are one tap away.
+- The chosen view is remembered, so if you switch to Cards it stays on Cards next time you open a summary.
 
-**1. Shrink and lighten the hero**
-- Reduce the dark band to a compact header strip: small "CAPTURE" label, "Memory Bridge" title, one-line subtitle.
-- Keep the deep-green brand colour but cut the vertical height by roughly half so content is visible immediately on a phone.
+**2. Priority becomes changeable**
 
-**2. Make the record button unmistakable**
-- Solid brand-teal circle with a white mic icon, gold ring, and a soft shadow.
-- Clear pressed/recording states: teal when idle, ember/red with a pulse while recording.
-- Minimum 96px touch target, centred, first thing under the header.
+Today the table shows priority as a read-only coloured dot ("High / Medium / Low"). It becomes an inline dropdown, exactly like the Status column already is:
 
-**3. Reorder the page**
-```text
-Header strip (compact)
-────────────────────────
-1. Record  ← primary, big teal mic, one line of helper text
-2. Time left  ← slim single-line strip: "4h left this month · up to 20m in one go"
-                (tap to expand into the Week/Month egg timer)
-3. Recent recordings
-4. Import from a document  ← collapsed row, expands when tapped
-```
-- The egg timer moves out of the record card into its own collapsible strip so the mic is never crowded.
-- Document import becomes a single tappable row that expands, rather than a large always-open panel.
+- Tap the priority cell → choose High / Medium / Low.
+- The colour dot updates instantly and the change saves straight away.
+- A brief confirmation toast, and an error toast with the original value restored if the save fails.
 
-**4. Keep it calm**
-- One primary action visible at a time; everything else is a reveal.
-- No new features, no backend or recording-logic changes — recording, allowance limits, and extraction all keep working exactly as they do now.
+Cards view keeps its existing priority control, so both views can change it.
 
 ## Technical notes
 
-- Edits are confined to `src/pages/launch/LaunchMemoryBridge.tsx` (layout/order and hero sizing) and `src/components/memoryBridge/RecordingEggTimer.tsx` (a `compact` single-line variant plus expand).
-- The record-button styling lives in the same page file; only Tailwind classes and the existing launch design tokens are touched.
-- Hooks `useVoiceRecorder`, `useMicLevel`, and `useRecordingAllowance` are untouched.
-- Verify after the change with a phone-width and desktop-width screenshot of `/launch/memory`.
+- `src/components/memoryBridge/ActionsViewer.tsx`: default `viewMode` to `'table'`, persist the preference in `localStorage`, and pass a new `onPriorityChange` handler that writes `priority_level` to `extracted_actions` with optimistic local state (mirrors the existing `handleStatusChange`).
+- `src/components/memoryBridge/ActionsTableView.tsx`: replace the read-only `PriorityIndicator` cell with a `Select` (High = 1, Medium = 3, Low = 5) that keeps the coloured dot inside the trigger.
+- `src/components/memoryBridge/RecordingDetailsView.tsx` shows the same summary heading — I'll check it uses the same viewer and apply the same default there.
+- No schema, backend, or extraction-logic changes.
