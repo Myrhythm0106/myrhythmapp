@@ -189,6 +189,14 @@ export default function LaunchMemoryBridge() {
   }, []);
 
   const handleStartRecording = async () => {
+    if (outOfAllowance) {
+      toast.error(
+        nextTierKey
+          ? `You've used your recording time for this ${allowance.period}. ${RECORDING_LIMITS[nextTierKey].label} gives you ${formatMinutes(RECORDING_LIMITS[nextTierKey].monthlyMinutes)} a month.`
+          : `You've used your recording time for this ${allowance.period}.`
+      );
+      return;
+    }
     const success = await startRecording();
     if (success) {
       setState('recording');
