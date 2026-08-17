@@ -497,8 +497,30 @@ export function ActionsTableView({
                           </Select>
                         </TableCell>
                         <TableCell>
-                          <WatcherAvatars watchers={action.assigned_watchers} />
+                          {onWatchersChange ? (
+                            <Popover>
+                              <PopoverTrigger asChild>
+                                <button
+                                  type="button"
+                                  aria-label="Change watchers"
+                                  className="min-h-[44px] flex items-center rounded-md px-2 -mx-2 hover:bg-muted/50 transition-colors"
+                                >
+                                  <WatcherAvatars watchers={action.assigned_watchers} />
+                                </button>
+                              </PopoverTrigger>
+                              <PopoverContent className="w-80 p-3" align="end">
+                                <ActionWatcherSelector
+                                  actionId={action.id!}
+                                  assignedWatchers={action.assigned_watchers || []}
+                                  onWatchersChange={(w) => onWatchersChange(action.id!, w)}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          ) : (
+                            <WatcherAvatars watchers={action.assigned_watchers} />
+                          )}
                         </TableCell>
+
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
