@@ -186,6 +186,34 @@ export function ActionsViewer({
     updateAction(actionId, { status: status as any });
   };
 
+  const handlePriorityChange = async (actionId: string, priorityLevel: number) => {
+    const previous = extractedActions.find(a => a.id === actionId)?.priority_level;
+
+    setExtractedActions(actions =>
+      actions.map(action =>
+        action.id === actionId ? { ...action, priority_level: priorityLevel } : action
+      )
+    );
+
+    const { error } = await supabase
+      .from('extracted_actions')
+      .update({ priority_level: priorityLevel })
+      .eq('id', actionId);
+
+    if (error) {
+      console.error('Error updating priority:', error);
+      setExtractedActions(actions =>
+        actions.map(action =>
+          action.id === actionId ? { ...action, priority_level: previous } : action
+        )
+      );
+      toast.error('Could not save that priority — please try again');
+      return;
+    }
+
+    toast.success('Priority updated');
+  };
+
   const handleWatchersChange = (actionId: string, watchers: string[]) => {
     updateAction(actionId, { assigned_watchers: watchers });
   };
