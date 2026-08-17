@@ -608,6 +608,24 @@ export default function LaunchMemoryBridge() {
                   {state === 'recording' ? '● Recording...' : '❚❚ Paused'}
                 </Badge>
 
+                <div className="mb-2 flex justify-center">
+                  <span
+                    className={cn(
+                      'rounded-full px-3 py-1 text-xs font-medium',
+                      remainingSessionSeconds <= 60
+                        ? 'bg-launch-ember/10 text-launch-ember'
+                        : remainingSessionSeconds <= 300
+                        ? 'bg-launch-gold/15 text-launch-gold'
+                        : 'bg-launch-ink/5 text-launch-ink/60'
+                    )}
+                    aria-live="polite"
+                  >
+                    {formatClock(remainingSessionSeconds)} remaining (this recording)
+                  </span>
+                </div>
+
+                <MicLevelMeter state={micLevel} paused={state === 'paused'} className="mb-3" />
+
                 <p className={cn(
                   "text-xs mb-4",
                   recordedBytes > 0 ? "text-launch-ink/60" : "text-launch-ember"
@@ -616,6 +634,7 @@ export default function LaunchMemoryBridge() {
                     ? `Audio captured: ${formatBytes(recordedBytes)}`
                     : 'No audio captured yet — check your microphone is on'}
                 </p>
+
 
 
                 <div className="flex items-center justify-center gap-3">
