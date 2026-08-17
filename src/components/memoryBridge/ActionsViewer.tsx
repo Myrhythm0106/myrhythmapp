@@ -49,7 +49,19 @@ export function ActionsViewer({
   const { user } = useAuth();
   const [extractedActions, setExtractedActions] = useState<NextStepsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  const [viewMode, setViewModeState] = useState<'cards' | 'table'>(() => {
+    if (typeof window === 'undefined') return 'table';
+    return localStorage.getItem('nextStepSummaryView') === 'cards' ? 'cards' : 'table';
+  });
+
+  const setViewMode = (mode: 'cards' | 'table') => {
+    setViewModeState(mode);
+    try {
+      localStorage.setItem('nextStepSummaryView', mode);
+    } catch {
+      /* storage unavailable — view still switches for this session */
+    }
+  };
   const [sortField, setSortField] = useState<'priority' | 'status' | 'date'>('priority');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [isSchedulingAll, setIsSchedulingAll] = useState(false);
