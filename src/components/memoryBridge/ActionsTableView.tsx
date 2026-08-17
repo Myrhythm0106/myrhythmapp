@@ -15,10 +15,19 @@ interface ActionsTableViewProps {
   actions: NextStepsItem[];
   onDragEnd: (result: DropResult) => void;
   onStatusChange: (actionId: string, status: string) => void;
+  onPriorityChange?: (actionId: string, priorityLevel: number) => void;
   onSort: (field: 'priority' | 'status' | 'date') => void;
   sortField: 'priority' | 'status' | 'date';
   sortDirection: 'asc' | 'desc';
 }
+
+const priorityOptions = [
+  { value: '1', label: 'High', color: 'bg-red-500' },
+  { value: '3', label: 'Medium', color: 'bg-brand-orange-500' },
+  { value: '5', label: 'Low', color: 'bg-green-500' }
+];
+
+const priorityValueFor = (level: number) => (level <= 2 ? '1' : level >= 4 ? '5' : '3');
 
 const statusOptions = [
   { value: 'not_started', label: 'Ready to Begin', color: 'bg-muted text-muted-foreground' },
@@ -75,6 +84,7 @@ export function ActionsTableView({
   actions,
   onDragEnd,
   onStatusChange,
+  onPriorityChange,
   onSort,
   sortField,
   sortDirection
@@ -166,7 +176,31 @@ export function ActionsTableView({
                           <GripVertical className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
                         </TableCell>
                         <TableCell>
-                          <PriorityIndicator level={action.priority_level || 3} />
+                          {onPriorityChange ? (
+                            <Select
+                              value={priorityValueFor(action.priority_level || 3)}
+                              onValueChange={(v) => onPriorityChange(action.id!, Number(v))}
+                            >
+                              <SelectTrigger
+                                className="h-9 w-full border-0 bg-transparent px-2 text-xs"
+                                aria-label="Change priority"
+                              >
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {priorityOptions.map(opt => (
+                                  <SelectItem key={opt.value} value={opt.value} className="text-xs">
+                                    <span className="flex items-center gap-2">
+                                      <span className={cn('h-2.5 w-2.5 rounded-full', opt.color)} />
+                                      {opt.label}
+                                    </span>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          ) : (
+                            <PriorityIndicator level={action.priority_level || 3} />
+                          )}
                         </TableCell>
                         <TableCell>
                           <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>

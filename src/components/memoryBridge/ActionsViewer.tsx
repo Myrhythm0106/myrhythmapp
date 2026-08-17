@@ -49,7 +49,19 @@ export function ActionsViewer({
   const { user } = useAuth();
   const [extractedActions, setExtractedActions] = useState<NextStepsItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  const [viewMode, setViewModeState] = useState<'cards' | 'table'>(() => {
+    if (typeof window === 'undefined') return 'table';
+    return localStorage.getItem('nextStepSummaryView') === 'cards' ? 'cards' : 'table';
+  });
+
+  const setViewMode = (mode: 'cards' | 'table') => {
+    setViewModeState(mode);
+    try {
+      localStorage.setItem('nextStepSummaryView', mode);
+    } catch {
+      /* storage unavailable — view still switches for this session */
+    }
+  };
   const [sortField, setSortField] = useState<'priority' | 'status' | 'date'>('priority');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [isSchedulingAll, setIsSchedulingAll] = useState(false);
@@ -172,6 +184,34 @@ export function ActionsViewer({
 
   const handleStatusChange = (actionId: string, status: string) => {
     updateAction(actionId, { status: status as any });
+  };
+
+  const handlePriorityChange = async (actionId: string, priorityLevel: number) => {
+    const previous = extractedActions.find(a => a.id === actionId)?.priority_level;
+
+    setExtractedActions(actions =>
+      actions.map(action =>
+        action.id === actionId ? { ...action, priority_level: priorityLevel } : action
+      )
+    );
+
+    const { error } = await supabase
+      .from('extracted_actions')
+      .update({ priority_level: priorityLevel })
+      .eq('id', actionId);
+
+    if (error) {
+      console.error('Error updating priority:', error);
+      setExtractedActions(actions =>
+        actions.map(action =>
+          action.id === actionId ? { ...action, priority_level: previous } : action
+        )
+      );
+      toast.error('Could not save that priority — please try again');
+      return;
+    }
+
+    toast.success('Priority updated');
   };
 
   const handleWatchersChange = (actionId: string, watchers: string[]) => {
@@ -459,6 +499,7 @@ export function ActionsViewer({
               actions={extractedActions}
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
+              onPriorityChange={handlePriorityChange}
               onSort={handleSort}
               sortField={sortField}
               sortDirection={sortDirection}
