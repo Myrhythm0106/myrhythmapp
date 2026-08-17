@@ -195,17 +195,52 @@ export default function LaunchMemoryBridge() {
 
   const handleStopRecording = async () => {
     const blob = await stopRecording();
-    if (blob) {
-      audioBlobRef.current = blob;
-      setState('reviewing');
+    if (!blob || blob.size === 0) {
+      // stopRecording already explained the empty capture.
+      setState('idle');
+      return;
+    }
+    audioBlobRef.current = blob;
+    setRestoredDuration(null);
+    const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
+    setState('reviewing');
+    // Park it durably so a reload or backgrounded tab can't lose it.
+    try {
+      await savePendingRecording({
+        blob,
+        mimeType: blob.type || 'audio/webm',
+        extension: (blob.type || '').includes('mp4') ? 'm4a' : 'webm',
+        duration,
+        title,
+        savedAt: Date.now(),
+      });
+    } catch (err) {
+      console.warn('handleStopRecording: could not park recording', err);
     }
   };
 
   const handleSave = async () => {
-    if (!audioBlobRef.current || !user) return;
+    if (!user) {
+      toast.error('Please sign in to save this recording.');
+      console.warn('handleSave: blocked — no authenticated user');
+      return;
+    }
+    if (!audioBlobRef.current) {
+      console.warn('handleSave: blocked — no audio in memory');
+      toast.error('That recording is no longer available. Please record again.');
+      setState('idle');
+      return;
+    }
+    if (audioBlobRef.current.size === 0) {
+      console.warn('handleSave: blocked — empty audio blob');
+      toast.error('That recording came through empty — check your microphone and record again.');
+      setState('idle');
+      return;
+    }
 
     setIsExtracting(true);
     const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
+
 
     try {
       const saved = await saveRecording(
