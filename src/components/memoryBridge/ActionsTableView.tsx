@@ -84,6 +84,7 @@ export function ActionsTableView({
   actions,
   onDragEnd,
   onStatusChange,
+  onPriorityChange,
   onSort,
   sortField,
   sortDirection
