@@ -1,37 +1,45 @@
-# Fix: "Save & Extract Actions" does nothing
+# Fix: recording isn't captured, and "Save & Extract Actions" does nothing
 
-You stop a ~5 minute recording, tap **Save & Extract Actions**, and nothing happens — no spinner, no message, no error. Right now the app has no way to tell you why, because that button can fail completely silently.
+You stop a ~5 minute recording, tap **Save & Extract Actions**, and nothing happens — no spinner, no message, no error, and nothing lands in your captures.
 
-## What the code shows (confirmed)
+## Recording quality today (confirmed from the code)
 
-In the Memory Bridge page, the save handler starts with a guard that exits immediately and silently if the recorded audio is no longer held in memory, or if the sign-in session isn't available at that moment. No toast, no spinner, no console message — exactly the "nothing at all" you're seeing.
+The recorder asks the browser for plain microphone access with no quality settings at all, and records to **Opus audio in a WebM container**, letting the browser pick sample rate and bitrate (typically 48 kHz, ~32–64 kbps mono — fine for speech and transcription).
 
-The recorded audio is only kept in a temporary in-memory reference. Anything that remounts the page (tab backgrounded on a phone, auth token refresh, hot reload, navigating away and back) drops that audio while the review screen can still be reachable — and then the button is a dead button.
+Two consequences worth knowing:
 
-The diagnosis of *which* of those two triggered your case is not yet confirmed. Step 1 below makes it self-evident on the next tap.
+- There is no explicit echo cancellation, noise suppression, or bitrate choice — it's whatever the device defaults to.
+- **On iPhone/iPad Safari, WebM isn't supported**, so the recorder falls back to the browser default (MP4/AAC) while the save path still labels and uploads the file as `.webm`. A mislabelled file is a known cause of transcription rejecting the audio.
+
+## What the code shows about the failure (confirmed)
+
+- The save handler exits **silently** if the recorded audio is no longer in memory or the session isn't available — no toast, no spinner. That matches "nothing at all".
+- The audio lives only in a temporary in-memory reference. Any remount (phone backgrounding the tab, auth refresh, navigating away) drops it while the review screen stays reachable — a dead button.
+- There is **no check that the recording actually contains audio**. An empty or zero-byte capture would pass through the same paths without complaint.
+
+Which of these hit your 5-minute attempt isn't confirmed yet. Step 1 makes it visible on the next tap.
 
 ## Fix, in order
 
-1. **No more silent failure.** Replace the silent guard with clear, actionable feedback:
-   - Audio missing: "That recording is no longer in memory — record again" plus a one-tap way back to the recorder.
-   - Not signed in: "Please sign in to save" plus a sign-in action.
-   - Log a diagnostic line in both cases so any repeat is traceable.
+1. **Never fail silently.** Clear messages instead of the silent exit: "recording no longer in memory — record again", "please sign in to save", plus diagnostic logging in both cases.
 
-2. **Make the audio survive.** Persist the recorded blob to browser storage (IndexedDB) the moment recording stops, keyed to the session, and restore it when the review screen loads. Clear it after a successful save. This makes the button work even after a phone backgrounds the tab or the page reloads.
+2. **Prove the audio exists.** Track captured bytes while recording and show a live size indicator; block save with an explicit "that recording came through empty — check your microphone" if the blob is empty or implausibly small for its duration.
 
-3. **Immediate tap feedback.** Show the busy state and status line the instant the button is pressed (before any upload starts), so a slow first step never reads as "nothing happened".
+3. **Record in the right format for the device.** Pick the best supported type (`audio/webm;codecs=opus`, else `audio/mp4`), record mono with echo cancellation and noise suppression on, and carry the real MIME type through to upload so the stored file extension matches the bytes — this is what makes iPhone recordings transcribable.
 
-4. **Guard the long path.** A 5-minute recording is a multi-megabyte upload. Add a visible progress/status line during upload and surface upload errors as toasts instead of only console logs, so a failed upload is never invisible.
+4. **Make the audio survive.** Persist the recorded blob to IndexedDB as it's captured, restore it if the page reloads or the tab is backgrounded, and clear it after a successful save. A 4-hour cap means this must not rely on memory alone.
 
-5. **Recovery net.** If the audio is gone but a recording was already saved, offer "Extract actions" on the most recent saved capture from the Recent Recordings list, so nothing is lost.
+5. **Immediate tap feedback plus visible upload progress.** Busy state the instant the button is pressed, an upload progress/status line, and upload errors surfaced as toasts rather than console-only.
+
+6. **Recovery net.** If audio was saved but extraction didn't run, offer "Extract actions" on the most recent capture in Recent Recordings.
 
 ## Verify
 
-- Record ~1 minute, tap save: spinner appears immediately, upload completes, extraction starts, actions appear.
-- Reload the page mid-review, then tap save: the recording is restored from storage and saves normally.
-- Signed-out state: tapping save shows a sign-in prompt, not silence.
+- Record 1 minute on desktop and on iPhone: byte counter climbs, save shows a spinner, upload completes, actions appear.
+- Reload mid-review: the recording is restored and saves normally.
+- Mic muted/denied: an explicit warning appears during recording, not after.
 
 ## Technical notes
 
-- Files: `src/pages/launch/LaunchMemoryBridge.tsx` (handleSave guards, feedback, restore-on-mount), `src/hooks/useVoiceRecorder.ts` (surface upload errors, expose progress), plus a small IndexedDB helper for the pending blob.
-- No database or edge function changes; the extraction pipeline itself is untouched in this pass. If step 1's diagnostics show the failure is actually inside extraction rather than save, that becomes a follow-up.
+- Files: `src/hooks/useVoiceRecorder.ts` (constraints, MIME detection, byte tracking, correct file extension and `content-type` on upload, error surfacing), `src/pages/launch/LaunchMemoryBridge.tsx` (guards, feedback, restore-on-mount), plus a small IndexedDB helper for the pending blob.
+- No database or edge function changes in this pass; the extraction pipeline is untouched. If the diagnostics show the failure is inside extraction rather than capture/save, that becomes the follow-up.
