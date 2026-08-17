@@ -499,6 +499,7 @@ export function ActionsViewer({
               actions={extractedActions}
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
+              onPriorityChange={handlePriorityChange}
               onSort={handleSort}
               sortField={sortField}
               sortDirection={sortDirection}
