@@ -58,6 +58,8 @@ export default function LaunchMemoryBridge() {
   const [notifySupport, setNotifySupport] = useState(true);
   const [recordingTitle, setRecordingTitle] = useState('');
   const audioBlobRef = useRef<Blob | null>(null);
+  const [restoredDuration, setRestoredDuration] = useState<number | null>(null);
+
   const [loopCircleIds, setLoopCircleIds] = useState<string[]>([]);
   const [loopAdhoc, setLoopAdhoc] = useState<AdhocLoopIn[]>([]);
 
