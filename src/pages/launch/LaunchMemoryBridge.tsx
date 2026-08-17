@@ -21,6 +21,18 @@ import { NextStepsItem } from '@/types/memoryBridge';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
 import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
+import {
+  savePendingRecording,
+  loadPendingRecording,
+  clearPendingRecording,
+} from '@/utils/pendingRecording';
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 
 
 
