@@ -21,6 +21,18 @@ import { NextStepsItem } from '@/types/memoryBridge';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
 import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
+import {
+  savePendingRecording,
+  loadPendingRecording,
+  clearPendingRecording,
+} from '@/utils/pendingRecording';
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 
 
 
@@ -46,6 +58,8 @@ export default function LaunchMemoryBridge() {
   const [notifySupport, setNotifySupport] = useState(true);
   const [recordingTitle, setRecordingTitle] = useState('');
   const audioBlobRef = useRef<Blob | null>(null);
+  const [restoredDuration, setRestoredDuration] = useState<number | null>(null);
+
   const [loopCircleIds, setLoopCircleIds] = useState<string[]>([]);
   const [loopAdhoc, setLoopAdhoc] = useState<AdhocLoopIn[]>([]);
 
@@ -74,6 +88,7 @@ export default function LaunchMemoryBridge() {
     isProcessing,
     recordings,
     duration,
+    recordedBytes,
     startRecording,
     pauseRecording,
     resumeRecording,
@@ -87,6 +102,24 @@ export default function LaunchMemoryBridge() {
   useEffect(() => {
     fetchRecordings();
   }, [fetchRecordings]);
+
+  // Restore a recording that was captured but never saved (page reload,
+  // phone backgrounding the tab, auth refresh).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const pending = await loadPendingRecording();
+      if (cancelled || !pending) return;
+      if (audioBlobRef.current) return;
+      audioBlobRef.current = pending.blob;
+      setRestoredDuration(pending.duration);
+      setRecordingTitle(prev => prev || pending.title);
+      setState(prev => (prev === 'idle' ? 'reviewing' : prev));
+      toast.info('We recovered your last recording — it\'s ready to save.');
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
 
   useEffect(() => {
     if (!user || recordings.length === 0) return;
@@ -162,17 +195,52 @@ export default function LaunchMemoryBridge() {
 
   const handleStopRecording = async () => {
     const blob = await stopRecording();
-    if (blob) {
-      audioBlobRef.current = blob;
-      setState('reviewing');
+    if (!blob || blob.size === 0) {
+      // stopRecording already explained the empty capture.
+      setState('idle');
+      return;
+    }
+    audioBlobRef.current = blob;
+    setRestoredDuration(null);
+    const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
+    setState('reviewing');
+    // Park it durably so a reload or backgrounded tab can't lose it.
+    try {
+      await savePendingRecording({
+        blob,
+        mimeType: blob.type || 'audio/webm',
+        extension: (blob.type || '').includes('mp4') ? 'm4a' : 'webm',
+        duration,
+        title,
+        savedAt: Date.now(),
+      });
+    } catch (err) {
+      console.warn('handleStopRecording: could not park recording', err);
     }
   };
 
   const handleSave = async () => {
-    if (!audioBlobRef.current || !user) return;
+    if (!user) {
+      toast.error('Please sign in to save this recording.');
+      console.warn('handleSave: blocked — no authenticated user');
+      return;
+    }
+    if (!audioBlobRef.current) {
+      console.warn('handleSave: blocked — no audio in memory');
+      toast.error('That recording is no longer available. Please record again.');
+      setState('idle');
+      return;
+    }
+    if (audioBlobRef.current.size === 0) {
+      console.warn('handleSave: blocked — empty audio blob');
+      toast.error('That recording came through empty — check your microphone and record again.');
+      setState('idle');
+      return;
+    }
 
     setIsExtracting(true);
     const title = recordingTitle || `Recording ${new Date().toLocaleTimeString()}`;
+
 
     try {
       const saved = await saveRecording(
@@ -189,13 +257,15 @@ export default function LaunchMemoryBridge() {
       }
 
       audioBlobRef.current = null;
+      await clearPendingRecording();
 
       // Automatically start extraction
       const result = await processSavedRecording(
         saved.id,
         user.id,
-        duration
+        restoredDuration ?? duration
       );
+
 
       if (result.success && result.actionsCount && result.actionsCount > 0) {
         // Apply loop-ins to all newly extracted actions
@@ -503,13 +573,23 @@ export default function LaunchMemoryBridge() {
                 </div>
                 <p className="text-3xl font-bold text-launch-ink mb-1 font-display">{formatDuration(duration)}</p>
                 <Badge className={cn(
-                  "mb-4",
+                  "mb-2",
                   state === 'recording'
                     ? "bg-launch-ember/10 text-launch-ember border-launch-ember/30"
                     : "bg-launch-gold/10 text-launch-gold border-launch-gold/30"
                 )}>
                   {state === 'recording' ? '● Recording...' : '❚❚ Paused'}
                 </Badge>
+
+                <p className={cn(
+                  "text-xs mb-4",
+                  recordedBytes > 0 ? "text-launch-ink/60" : "text-launch-ember"
+                )} role="status" aria-live="polite">
+                  {recordedBytes > 0
+                    ? `Audio captured: ${formatBytes(recordedBytes)}`
+                    : 'No audio captured yet — check your microphone is on'}
+                </p>
+
 
                 <div className="flex items-center justify-center gap-3">
                   {state === 'recording' ? (
@@ -537,7 +617,7 @@ export default function LaunchMemoryBridge() {
                   <Play className="h-12 w-12 text-launch-moss ml-1" />
                 </div>
                 <p className="text-lg font-semibold text-launch-ink mb-2">Recording Complete!</p>
-                <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(duration)}</Badge>
+                <Badge className="mb-4 bg-launch-gold/10 text-launch-gold border-launch-gold/30">{formatDuration(restoredDuration ?? duration)}</Badge>
 
                 <input
                   type="text"
