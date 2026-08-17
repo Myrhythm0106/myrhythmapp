@@ -151,7 +151,7 @@ export function useVoiceRecorder() {
       }
 
       mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioBlob = new Blob(audioChunksRef.current, { type: mimeTypeRef.current });
         
         // Clean up
         mediaRecorderRef.current?.stream.getTracks().forEach(track => track.stop());
@@ -165,6 +165,13 @@ export function useVoiceRecorder() {
         
         setIsRecording(false);
         setIsPaused(false);
+
+        if (audioBlob.size === 0) {
+          console.error('stopRecording: captured 0 bytes of audio');
+          toast.error('That recording came through empty — check your microphone and try again.');
+          resolve(null);
+          return;
+        }
         
         resolve(audioBlob);
       };
@@ -184,16 +191,20 @@ export function useVoiceRecorder() {
 
     try {
       setIsProcessing(true);
-      
-      const fileName = `${user.id}/${Date.now()}.webm`;
+
+      const contentType = audioBlob.type || mimeTypeRef.current || 'audio/webm';
+      const extension = extensionForMimeType(contentType);
+      const fileName = `${user.id}/${Date.now()}.${extension}`;
       const durationMinutes = Math.ceil(duration / 60);
       
-      // Upload to storage
+      // Upload to storage — content type must match the real bytes, otherwise
+      // transcription rejects the file (iOS records MP4, not WebM).
       const { error: uploadError } = await supabase.storage
         .from('voice-recordings')
-        .upload(fileName, audioBlob);
+        .upload(fileName, audioBlob, { contentType, upsert: false });
 
       if (uploadError) throw uploadError;
+
 
       // Create database record
       const { data: recording, error: dbError } = await supabase
