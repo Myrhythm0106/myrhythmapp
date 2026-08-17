@@ -74,6 +74,7 @@ export default function LaunchMemoryBridge() {
     isProcessing,
     recordings,
     duration,
+    recordedBytes,
     startRecording,
     pauseRecording,
     resumeRecording,
@@ -87,6 +88,24 @@ export default function LaunchMemoryBridge() {
   useEffect(() => {
     fetchRecordings();
   }, [fetchRecordings]);
+
+  // Restore a recording that was captured but never saved (page reload,
+  // phone backgrounding the tab, auth refresh).
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const pending = await loadPendingRecording();
+      if (cancelled || !pending) return;
+      if (audioBlobRef.current) return;
+      audioBlobRef.current = pending.blob;
+      setRestoredDuration(pending.duration);
+      setRecordingTitle(prev => prev || pending.title);
+      setState(prev => (prev === 'idle' ? 'reviewing' : prev));
+      toast.info('We recovered your last recording — it\'s ready to save.');
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
 
   useEffect(() => {
     if (!user || recordings.length === 0) return;
