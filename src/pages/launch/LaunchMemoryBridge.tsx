@@ -257,13 +257,15 @@ export default function LaunchMemoryBridge() {
       }
 
       audioBlobRef.current = null;
+      await clearPendingRecording();
 
       // Automatically start extraction
       const result = await processSavedRecording(
         saved.id,
         user.id,
-        duration
+        restoredDuration ?? duration
       );
+
 
       if (result.success && result.actionsCount && result.actionsCount > 0) {
         // Apply loop-ins to all newly extracted actions
