@@ -41,5 +41,7 @@ Tapping an example drops the wording into the box, where it can be edited before
 ## Technical notes
 
 - `src/components/memoryBridge/ActionsTableView.tsx`: add a small local `EditableCell` (text) and a date-picker cell using the existing `Popover` + `Calendar`; wire the watcher cell to open the existing Loop-in picker. New optional props: `onTextChange`, `onSuccessCriteriaChange`, `onAssignedChange`, `onDueDateChange`, `onWatchersChange`.
+- New `src/components/memoryBridge/successCriteriaSuggestions.ts`: pure keyword-match helper returning 3-4 suggested criteria strings for a given action text (no AI call, instant, offline-safe). Rendered as tappable chips under the edit box.
+
 - `src/components/memoryBridge/ActionsViewer.tsx`: reuse the existing optimistic pattern from `handlePriorityChange` — one generic `handleFieldChange(actionId, field, value)` writing to `extracted_actions` with rollback + toast; pass the handlers down. `handleWatchersChange` already exists and gets reused.
 - No schema, backend, or extraction-logic changes.
