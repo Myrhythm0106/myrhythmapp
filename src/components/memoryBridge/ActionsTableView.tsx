@@ -185,17 +185,7 @@ export function ActionsTableView({
                                 className="h-9 w-full border-0 bg-transparent px-2 text-xs"
                                 aria-label="Change priority"
                               >
-                                <div className="flex items-center gap-2">
-                                  <span
-                                    className={cn(
-                                      'h-2.5 w-2.5 rounded-full',
-                                      priorityOptions.find(
-                                        o => o.value === priorityValueFor(action.priority_level || 3)
-                                      )?.color
-                                    )}
-                                  />
-                                  <SelectValue />
-                                </div>
+                                <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
                                 {priorityOptions.map(opt => (
