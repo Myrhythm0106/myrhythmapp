@@ -349,6 +349,9 @@ export function useVoiceRecorder() {
     isProcessing,
     recordings,
     duration,
+    recordedBytes,
+    recordingMimeType,
+
     startRecording,
     pauseRecording,
     resumeRecording,
