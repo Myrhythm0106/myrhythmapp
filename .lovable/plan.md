@@ -19,21 +19,28 @@ Add a live level meter under the timer:
 
 This is read-only monitoring on the same mic stream — it does not change what gets recorded.
 
-## 2. Recording lengths, remembered in one place
+## 2. Recording lengths — three tiers, defined once
 
-Today the length rules are duplicated in two recorder components and absent from the main Memory Bridge page. The rules in force:
+Today the length rules are duplicated in two recorder components, only know "free vs everything else", and are absent from the main Memory Bridge page. Proposed ladder, matching the pricing ladder (Free trial → Regular £15 → Founding £10 for life / Friends & Family £7.50):
 
-| Tier | Per recording | Per day |
-| --- | --- | --- |
-| Free | up to 20 minutes | 20 minutes total |
-| Founding / paid (starter, premium, smart_pro, family_smart) | up to 4 hours (240 min) in one go | unlimited |
+| Tier | Per recording | Per day | Purpose |
+| --- | --- | --- | --- |
+| Free (no subscription / trial expired) | 20 minutes | 20 minutes total | Enough to feel the value on one appointment |
+| Regular (paid £15/mo) | 60 minutes | unlimited sessions | Covers a full consultation or therapy session |
+| Founding Member (£10 for life) and Friends & Family (£7.50) | 4 hours (240 min) | unlimited | Full-day capture — the founding-cohort benefit |
+
+Active 7-day trial gets the Regular allowance (60 min), so nobody hits a 20-minute wall while evaluating.
 
 Work:
 
-- Create a single `recordingLimits` config that both recorders and the Memory Bridge page read from, so the 20-minute and 4-hour numbers exist once.
+- Create a single `recordingLimits` config keyed by tier — free, regular, founding, friends_family — that both recorders and the Memory Bridge page read from, so 20 / 60 / 240 exist in exactly one place.
 - Bring the countdown to **Memory Bridge** (`/launch/memory`), which currently has no cap display at all: a "3:58:12 remaining (this session)" / "12:30 remaining (today)" pill, amber under 5 minutes, red under 1 minute, with the existing threshold chimes, and auto-stop at the cap so a long recording ends cleanly instead of failing.
-- Before you start, a one-line "You can record up to 4 hours in one go" so the available length is known up front, not discovered at the limit.
-- Save these limits to project memory so they stay consistent in future work.
+- Before you start, a one-line "You can record up to 4 hours in one go" (per tier) so the length is known up front, not discovered at the limit.
+- When a free or Regular user hits their cap, an upgrade line naming the next tier's length rather than a bare "limit reached".
+- Save the ladder to project memory and reflect the recording lengths in the pricing feature lists so marketing and code agree.
+
+If the 60-minute middle tier isn't the number you want, say the word and I'll swap it before building.
+
 
 ## Verify
 
