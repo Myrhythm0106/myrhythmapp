@@ -7,7 +7,7 @@ Priority and Status already save inline. This makes the rest of the meaningful c
 | Column | How it edits | Saves to |
 | --- | --- | --- |
 | Action | Tap the text → inline text box, Enter or blur saves, Esc cancels | action text |
-| I'll know I'm done when | Tap the tick line under the action → inline text box | success criteria |
+| I'll know I'm done when | Tap the tick line under the action → inline text box, plus a short list of suggested examples to pick from and then edit | success criteria |
 | Assigned | Tap → inline text box (name or "Me") | assigned to |
 | Due | Tap → date picker, with a "Clear" option | due/completion date |
 | Watchers | Tap the avatars → the existing Loop-in picker to add/remove people | assigned watchers |
