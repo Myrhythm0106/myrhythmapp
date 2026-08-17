@@ -26,6 +26,11 @@ import {
   loadPendingRecording,
   clearPendingRecording,
 } from '@/utils/pendingRecording';
+import { useMicLevel } from '@/hooks/useMicLevel';
+import { MicLevelMeter } from '@/components/memoryBridge/MicLevelMeter';
+import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
+import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
+import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
