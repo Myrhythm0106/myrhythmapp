@@ -218,6 +218,42 @@ export function ActionsViewer({
     updateAction(actionId, { assigned_watchers: watchers });
   };
 
+  // Generic optimistic inline field save (used by the table view)
+  const handleFieldChange = async (
+    actionId: string,
+    updates: Partial<NextStepsItem>,
+    successMessage = 'Saved'
+  ) => {
+    const previous = extractedActions.find(a => a.id === actionId);
+    if (!previous) return;
+
+    const rollback: Partial<NextStepsItem> = {};
+    (Object.keys(updates) as Array<keyof NextStepsItem>).forEach(key => {
+      (rollback as any)[key] = previous[key];
+    });
+
+    setExtractedActions(actions =>
+      actions.map(a => (a.id === actionId ? { ...a, ...updates } : a))
+    );
+
+    const { error } = await supabase
+      .from('extracted_actions')
+      .update(updates as any)
+      .eq('id', actionId);
+
+    if (error) {
+      console.error('Error saving field:', error);
+      setExtractedActions(actions =>
+        actions.map(a => (a.id === actionId ? { ...a, ...rollback } : a))
+      );
+      toast.error("That didn't save — please try again");
+      return;
+    }
+
+    toast.success(successMessage);
+  };
+
+
   // Bulk actions
   const handleScheduleAll = async () => {
     if (!user) return;
@@ -500,6 +536,19 @@ export function ActionsViewer({
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
               onPriorityChange={handlePriorityChange}
+              onTextChange={(id, text) => handleFieldChange(id, { action_text: text }, 'Action updated')}
+              onSuccessCriteriaChange={(id, criteria) =>
+                handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
+              }
+              onAssignedChange={(id, assignedTo) =>
+                handleFieldChange(id, { assigned_to: assignedTo }, 'Owner updated')
+              }
+              onDueDateChange={(id, date) =>
+                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Due date updated' : 'Due date cleared')
+              }
+              onWatchersChange={(id, watchers) =>
+                handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
+              }
               onSort={handleSort}
               sortField={sortField}
               sortDirection={sortDirection}
