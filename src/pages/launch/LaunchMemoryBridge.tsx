@@ -26,6 +26,11 @@ import {
   loadPendingRecording,
   clearPendingRecording,
 } from '@/utils/pendingRecording';
+import { useMicLevel } from '@/hooks/useMicLevel';
+import { MicLevelMeter } from '@/components/memoryBridge/MicLevelMeter';
+import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
+import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
+import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -89,6 +94,7 @@ export default function LaunchMemoryBridge() {
     recordings,
     duration,
     recordedBytes,
+    mediaStream,
     startRecording,
     pauseRecording,
     resumeRecording,
@@ -98,6 +104,13 @@ export default function LaunchMemoryBridge() {
     getRecordingUrl,
     formatDuration
   } = useVoiceRecorder();
+
+  const micLevel = useMicLevel(mediaStream, isRecording && !isPaused);
+  const allowance = useRecordingAllowance();
+  const sessionCapSeconds = allowance.limits.perRecordingMinutes * 60;
+  const remainingSessionSeconds = Math.max(0, sessionCapSeconds - duration);
+  const outOfAllowance = allowance.remainingMinutes <= 0;
+  const nextTierKey = NEXT_TIER[allowance.tier];
 
   useEffect(() => {
     fetchRecordings();
@@ -176,6 +189,14 @@ export default function LaunchMemoryBridge() {
   }, []);
 
   const handleStartRecording = async () => {
+    if (outOfAllowance) {
+      toast.error(
+        nextTierKey
+          ? `You've used your recording time for this ${allowance.period}. ${RECORDING_LIMITS[nextTierKey].label} gives you ${formatMinutes(RECORDING_LIMITS[nextTierKey].monthlyMinutes)} a month.`
+          : `You've used your recording time for this ${allowance.period}.`
+      );
+      return;
+    }
     const success = await startRecording();
     if (success) {
       setState('recording');
@@ -219,6 +240,25 @@ export default function LaunchMemoryBridge() {
     }
   };
 
+  // Auto-stop cleanly at the per-recording cap for this tier.
+  const autoStoppedRef = useRef(false);
+  useEffect(() => {
+    if (!isRecording) {
+      autoStoppedRef.current = false;
+      return;
+    }
+    if (duration >= sessionCapSeconds && !autoStoppedRef.current) {
+      autoStoppedRef.current = true;
+      toast.info(
+        `Reached the ${formatMinutes(allowance.limits.perRecordingMinutes)} limit for one recording — saving what you've captured.`
+      );
+      handleStopRecording();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [duration, isRecording, sessionCapSeconds]);
+
+
+
   const handleSave = async () => {
     if (!user) {
       toast.error('Please sign in to save this recording.');
@@ -258,6 +298,7 @@ export default function LaunchMemoryBridge() {
 
       audioBlobRef.current = null;
       await clearPendingRecording();
+      allowance.refresh();
 
       // Automatically start extraction
       const result = await processSavedRecording(
@@ -545,6 +586,20 @@ export default function LaunchMemoryBridge() {
                 </div>
                 <p className="text-lg font-semibold text-launch-ink mb-1">Tap to Record</p>
                 <p className="text-sm text-launch-ink/70">We'll listen and find the action items</p>
+                <p className="mt-2 text-xs text-launch-ink/60">
+                  {outOfAllowance
+                    ? `You've used your ${allowance.period === 'week' ? 'weekly' : 'monthly'} recording time.`
+                    : `You can record up to ${formatMinutes(allowance.limits.perRecordingMinutes)} in one go — ${formatMinutes(allowance.remainingMinutes)} left this ${allowance.period}.`}
+                </p>
+                {outOfAllowance && nextTierKey && (
+                  <p className="mt-1 text-xs text-launch-ember">
+                    {RECORDING_LIMITS[nextTierKey].label} gives you{' '}
+                    {formatMinutes(RECORDING_LIMITS[nextTierKey].perRecordingMinutes)} per recording and{' '}
+                    {formatMinutes(RECORDING_LIMITS[nextTierKey].monthlyMinutes)} a month.
+                  </p>
+                )}
+
+                <RecordingEggTimer className="mt-5 text-left" />
               </>
             )}
 
@@ -581,6 +636,24 @@ export default function LaunchMemoryBridge() {
                   {state === 'recording' ? '● Recording...' : '❚❚ Paused'}
                 </Badge>
 
+                <div className="mb-2 flex justify-center">
+                  <span
+                    className={cn(
+                      'rounded-full px-3 py-1 text-xs font-medium',
+                      remainingSessionSeconds <= 60
+                        ? 'bg-launch-ember/10 text-launch-ember'
+                        : remainingSessionSeconds <= 300
+                        ? 'bg-launch-gold/15 text-launch-gold'
+                        : 'bg-launch-ink/5 text-launch-ink/60'
+                    )}
+                    aria-live="polite"
+                  >
+                    {formatClock(remainingSessionSeconds)} remaining (this recording)
+                  </span>
+                </div>
+
+                <MicLevelMeter state={micLevel} paused={state === 'paused'} className="mb-3" />
+
                 <p className={cn(
                   "text-xs mb-4",
                   recordedBytes > 0 ? "text-launch-ink/60" : "text-launch-ember"
@@ -589,6 +662,7 @@ export default function LaunchMemoryBridge() {
                     ? `Audio captured: ${formatBytes(recordedBytes)}`
                     : 'No audio captured yet — check your microphone is on'}
                 </p>
+
 
 
                 <div className="flex items-center justify-center gap-3">

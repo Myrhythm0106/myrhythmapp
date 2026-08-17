@@ -8,6 +8,7 @@ import { Mic, Square, Pause, Play, Clock, Users, AlertTriangle, Brain, Sparkles,
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useMemoryBridge } from '@/hooks/memoryBridge/useMemoryBridge';
 import { useSubscription } from '@/hooks/useSubscription';
+import { getRecordingLimits, resolveRecordingTier } from '@/config/recordingLimits';
 import { useRecordingLimits } from '@/hooks/memoryBridge/useRecordingLimits';
 import { useRecordingCountdownAlerts } from '@/hooks/memoryBridge/useRecordingCountdownAlerts';
 import { useRealtimeTranscription } from '@/hooks/memoryBridge/useRealtimeTranscription';
@@ -63,16 +64,15 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
   const hasReachedDailyLimit = !canRecordToday();
   
   // Dynamic max duration: free = 20 min/day, premium = 4 hours per recording
-  const maxDurationMinutes = tier === 'free'
-    ? Math.min(remainingDailyMinutes === -1 ? 20 : remainingDailyMinutes, 20)
-    : 240;
+  const recordingTier = resolveRecordingTier({ tier, planType: subscription?.plan_type });
+  const maxDurationMinutes = getRecordingLimits(recordingTier).perRecordingMinutes;
 
   const maxDuration = maxDurationMinutes * 60;
   const isNearLimit = duration > maxDuration * 0.8;
   const isOverLimit = duration >= maxDuration;
 
   // Live remaining seconds — mirrors the countdown pill logic below.
-  const isFreeTier = tier === 'free' && dailyLimit !== -1;
+  const isFreeTier = false; // monthly pool replaces the old daily cap
   const liveRemainingSec = isFreeTier
     ? Math.max(0, remainingDailyMinutes * 60 - duration)
     : Math.max(0, maxDuration - duration);
@@ -464,7 +464,7 @@ const MemoryBridgeRecorder = ({ open, onClose, meetingData, onComplete }: Memory
 
             {/* Live Countdown — free (daily) or premium (per-session) */}
             {(() => {
-              const isFree = tier === 'free' && dailyLimit !== -1;
+              const isFree = false; // monthly pool replaces the old daily cap
               const remainingSec = isFree
                 ? Math.max(0, remainingDailyMinutes * 60 - duration)
                 : Math.max(0, maxDuration - duration);
