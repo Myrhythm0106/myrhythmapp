@@ -41,16 +41,31 @@ Work:
 
 If the 60-minute middle tier isn't the number you want, say the word and I'll swap it before building.
 
+## 3. Egg timer — allowance at a glance, weekly or monthly
+
+An hourglass-style dial on Memory Bridge (and in the capture sheet) showing how much recording allowance is left, in the period you choose.
+
+- **Egg timer visual**: an hourglass whose sand level drops as allowance is used — full and calm when plenty remains, amber past 75% used, red past 90%. Centre reads plain time, e.g. "6h 20m left".
+- **You pick the period**: a small Week / Month toggle above the timer. Your choice is remembered, so it opens on the view you think in.
+- **Under the dial**: "of 10h this week · resets Monday" (or "resets 1 September"), so the number always has context.
+- **Unlimited tiers** don't get a scary countdown — the hourglass shows a steady full state with "Unlimited — 3h 40m recorded this month", turning the same widget into a usage view rather than a limit.
+- Tap the timer to expand a short breakdown: recordings made this period and total minutes, plus an upgrade line for free users.
+- Accessible: time and period are text, `aria-live="polite"` on the remaining figure; the hourglass is decorative.
+
+The weekly/monthly totals are aggregated from your existing recording usage records; no new tracking is introduced.
 
 ## Verify
 
 - Start a recording with the mic muted: meter stays flat, "No sound reaching the mic" within ~3s, warning banner by ~8s.
 - Speak normally: meter moves, status reads "Picking you up clearly".
 - Recorder shows the correct remaining time for your tier and counts down; the pill turns amber then red near the cap.
+- Egg timer: switch Week/Month, values change and the choice survives a reload; sand level drops after a recording completes.
 
 ## Technical notes
 
 - New `src/hooks/useMicLevel.ts`: `AudioContext` + `AnalyserNode` on the existing `MediaStream`, RMS + peak per animation frame, throttled state updates, torn down with the stream. `useVoiceRecorder` exposes the active stream so the meter can tap it.
 - New `src/components/memoryBridge/MicLevelMeter.tsx` for the bar + status line.
-- New `src/config/recordingLimits.ts` holding per-tier session and daily caps; `MemoryBridgeRecorder.tsx`, `QuickCaptureRecorder.tsx` and `LaunchMemoryBridge.tsx` all read it. Existing `useRecordingLimits` daily-usage logic stays as is.
+- New `src/config/recordingLimits.ts` holding per-tier session, daily, weekly and monthly caps; `MemoryBridgeRecorder.tsx`, `QuickCaptureRecorder.tsx` and `LaunchMemoryBridge.tsx` all read it.
+- New `src/components/memoryBridge/RecordingEggTimer.tsx` (SVG hourglass with animated fill) plus a `useRecordingAllowance(period)` hook that sums `voice_recordings.duration_seconds` for the current week/month; period preference in `localStorage`. Existing `useRecordingLimits` daily logic stays as is.
 - No database or edge function changes.
+
