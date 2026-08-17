@@ -418,22 +418,64 @@ export function ActionsTableView({
                           )}
                         </TableCell>
                         <TableCell>
-                          <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>
-                          {action.success_criteria && (
+                          {onTextChange ? (
+                            <EditableText
+                              value={action.action_text}
+                              onSave={(v) => onTextChange(action.id!, v)}
+                              multiline
+                              required
+                              ariaLabel="Edit action"
+                              placeholder="Describe this action…"
+                              displayClassName="font-medium text-sm"
+                            />
+                          ) : (
+                            <p className="font-medium text-sm line-clamp-2">{action.action_text}</p>
+                          )}
+
+                          {onSuccessCriteriaChange ? (
+                            <EditableText
+                              value={action.success_criteria}
+                              onSave={(v) => onSuccessCriteriaChange(action.id!, v)}
+                              multiline
+                              ariaLabel="Edit how I'll know I'm done"
+                              placeholder="I'll know I'm done when…"
+                              suggestions={getSuccessCriteriaSuggestions(action.action_text)}
+                              className="mt-1"
+                              displayClassName="text-xs text-muted-foreground"
+                            />
+                          ) : action.success_criteria ? (
                             <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
                               ✓ {action.success_criteria}
                             </p>
+                          ) : null}
+                        </TableCell>
+                        <TableCell>
+                          {onAssignedChange ? (
+                            <EditableText
+                              value={action.assigned_to}
+                              onSave={(v) => onAssignedChange(action.id!, v)}
+                              ariaLabel="Edit who this is assigned to"
+                              placeholder="Me"
+                              displayClassName="text-sm"
+                            />
+                          ) : (
+                            <span className="text-sm">{action.assigned_to || 'You'}</span>
                           )}
                         </TableCell>
                         <TableCell>
-                          <span className="text-sm">{action.assigned_to || 'You'}</span>
+                          {onDueDateChange ? (
+                            <EditableDueDate
+                              value={action.completion_date || action.end_date}
+                              onSave={(d) => onDueDateChange(action.id!, d)}
+                            />
+                          ) : (
+                            <div className="flex items-center gap-1 text-sm">
+                              <Calendar className="h-3 w-3 text-muted-foreground" />
+                              {formatDate(action.completion_date || action.end_date)}
+                            </div>
+                          )}
                         </TableCell>
-                        <TableCell>
-                          <div className="flex items-center gap-1 text-sm">
-                            <Calendar className="h-3 w-3 text-muted-foreground" />
-                            {formatDate(action.completion_date || action.end_date)}
-                          </div>
-                        </TableCell>
+
                         <TableCell>
                           <Select 
                             value={action.status} 
