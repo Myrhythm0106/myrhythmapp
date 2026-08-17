@@ -79,7 +79,7 @@ export function useRecordingAllowance(): RecordingAllowance {
   const tier = resolveRecordingTier({
     tier: contextTier,
     planType: subscriptionData?.subscription_tier,
-    isTrialing: subscriptionData?.is_trial_active,
+    isTrialing: subscriptionData?.trial_active,
   });
   const limits = getRecordingLimits(tier);
 
