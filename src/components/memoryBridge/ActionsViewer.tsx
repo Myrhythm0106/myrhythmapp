@@ -536,6 +536,19 @@ export function ActionsViewer({
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
               onPriorityChange={handlePriorityChange}
+              onTextChange={(id, text) => handleFieldChange(id, { action_text: text }, 'Action updated')}
+              onSuccessCriteriaChange={(id, criteria) =>
+                handleFieldChange(id, { success_criteria: criteria }, "Saved — I'll know I'm done when…")
+              }
+              onAssignedChange={(id, assignedTo) =>
+                handleFieldChange(id, { assigned_to: assignedTo }, 'Owner updated')
+              }
+              onDueDateChange={(id, date) =>
+                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Due date updated' : 'Due date cleared')
+              }
+              onWatchersChange={(id, watchers) =>
+                handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
+              }
               onSort={handleSort}
               sortField={sortField}
               sortDirection={sortDirection}
