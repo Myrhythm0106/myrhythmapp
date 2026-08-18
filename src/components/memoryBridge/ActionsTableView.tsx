@@ -233,12 +233,14 @@ const EditableText = ({
   );
 };
 
-const EditableDueDate = ({
+const EditableDate = ({
   value,
-  onSave
+  onSave,
+  ariaLabel
 }: {
   value: string | null | undefined;
   onSave: (date: string | null) => void;
+  ariaLabel: string;
 }) => {
   const [open, setOpen] = useState(false);
   let parsed: Date | undefined;
@@ -254,7 +256,7 @@ const EditableDueDate = ({
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          aria-label="Change due date"
+          aria-label={ariaLabel}
           className={cn('h-11 px-2 justify-start gap-1 text-sm font-normal', !parsed && 'text-muted-foreground')}
         >
           <Calendar className="h-3 w-3 text-muted-foreground" />
