@@ -292,6 +292,125 @@ const EditableDate = ({
   );
 };
 
+const dueInLabel = (finishDate: string | null | undefined, status: string): { text: string; tone: 'neutral' | 'amber' | 'red' | 'green' } => {
+  if (!finishDate) return { text: '—', tone: 'neutral' };
+  if (status === 'done' || status === 'completed') return { text: 'Done', tone: 'green' };
+
+  const finish = new Date(finishDate);
+  const days = differenceInCalendarDays(finish, new Date());
+
+  if (days === 0) return { text: 'Today', tone: 'amber' };
+  if (days === 1) return { text: 'Tomorrow', tone: 'amber' };
+  if (days > 1 && days < 14) return { text: `in ${days} days`, tone: 'neutral' };
+  if (days >= 14) return { text: `in ${Math.round(days / 7)} weeks`, tone: 'neutral' };
+  if (days === -1) return { text: 'Yesterday', tone: 'red' };
+  return { text: `${Math.abs(days)} days ago`, tone: 'red' };
+};
+
+const QUICK_DUE_IN_DAYS = [
+  { label: 'Today', days: 0 },
+  { label: 'Tomorrow', days: 1 },
+  { label: 'In 3 days', days: 3 },
+  { label: 'Next week', days: 7 }
+];
+
+const EditableDueIn = ({
+  value,
+  onSave,
+  status
+}: {
+  value: string | null | undefined;
+  onSave: (date: string | null) => void;
+  status: string;
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftDays, setDraftDays] = useState<string>('');
+  const label = dueInLabel(value, status);
+
+  const commit = (days: number | null) => {
+    setIsEditing(false);
+    setDraftDays('');
+    if (days === null) {
+      onSave(null);
+      return;
+    }
+    const date = addDays(new Date(), days);
+    onSave(format(date, 'yyyy-MM-dd'));
+  };
+
+  if (!isEditing) {
+    return (
+      <button
+        type="button"
+        aria-label="Edit due in"
+        onClick={() => setIsEditing(true)}
+        className={cn(
+          'min-h-[44px] w-full text-left rounded-md px-2 py-2 -mx-2 text-sm font-medium transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-orange-500/40',
+          label.tone === 'amber' && 'text-amber-600',
+          label.tone === 'red' && 'text-red-600',
+          label.tone === 'green' && 'text-green-600',
+          label.tone === 'neutral' && 'text-muted-foreground'
+        )}
+      >
+        {label.text}
+      </button>
+    );
+  }
+
+  return (
+    <div className="space-y-2" onBlur={(e) => {
+      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+        const parsed = parseInt(draftDays, 10);
+        commit(Number.isNaN(parsed) ? null : parsed);
+      }
+    }}>
+      <div className="flex items-center gap-2">
+        <Input
+          type="number"
+          min={0}
+          max={365}
+          value={draftDays}
+          autoFocus
+          aria-label="Days from today"
+          placeholder="Days"
+          className="h-9 w-20 text-sm"
+          onChange={(e) => setDraftDays(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              const parsed = parseInt(draftDays, 10);
+              commit(Number.isNaN(parsed) ? null : parsed);
+            }
+            if (e.key === 'Escape') {
+              setIsEditing(false);
+              setDraftDays('');
+            }
+          }}
+        />
+        <span className="text-xs text-muted-foreground">days from today</span>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {QUICK_DUE_IN_DAYS.map((q) => (
+          <button
+            key={q.label}
+            type="button"
+            onClick={() => commit(q.days)}
+            className="text-[11px] rounded-full border border-brand-orange-200 bg-brand-orange-50 px-2.5 py-1 text-brand-orange-700 hover:bg-brand-orange-100 transition-colors"
+          >
+            {q.label}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={() => commit(null)}
+          className="text-[11px] rounded-full border border-muted bg-muted px-2.5 py-1 text-muted-foreground hover:bg-muted/80 transition-colors"
+        >
+          Clear
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export function ActionsTableView({
   actions,
   onDragEnd,
