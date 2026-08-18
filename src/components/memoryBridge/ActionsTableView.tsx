@@ -300,6 +300,7 @@ export function ActionsTableView({
   onTextChange,
   onSuccessCriteriaChange,
   onAssignedChange,
+  onStartDateChange,
   onDueDateChange,
   onWatchersChange,
   onSort,
