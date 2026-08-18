@@ -599,17 +599,39 @@ export function ActionsTableView({
                           )}
                         </TableCell>
                         <TableCell>
-                          {onDueDateChange ? (
-                            <EditableDueDate
-                              value={action.completion_date || action.end_date}
-                              onSave={(d) => onDueDateChange(action.id!, d)}
+                          {onStartDateChange ? (
+                            <EditableDate
+                              value={action.start_date}
+                              onSave={(d) => onStartDateChange(action.id!, d)}
+                              ariaLabel="Edit start date"
                             />
                           ) : (
-                            <div className="flex items-center gap-1 text-sm">
-                              <Calendar className="h-3 w-3 text-muted-foreground" />
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Calendar className="h-3 w-3" />
+                              {formatDate(action.start_date)}
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {onDueDateChange ? (
+                            <EditableDate
+                              value={action.completion_date || action.end_date}
+                              onSave={(d) => onDueDateChange(action.id!, d)}
+                              ariaLabel="Edit finish date"
+                            />
+                          ) : (
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Calendar className="h-3 w-3" />
                               {formatDate(action.completion_date || action.end_date)}
                             </div>
                           )}
+                        </TableCell>
+                        <TableCell>
+                          <EditableDueIn
+                            value={action.completion_date || action.end_date}
+                            onSave={(d) => onDueDateChange && onDueDateChange(action.id!, d)}
+                            status={action.status}
+                          />
                         </TableCell>
 
                         <TableCell>
