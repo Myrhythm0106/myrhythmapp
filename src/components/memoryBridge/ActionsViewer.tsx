@@ -81,6 +81,32 @@ export function ActionsViewer({
     { value: 'low', label: 'Low Priority' }
   ];
 
+  const sortedActions = React.useMemo(() => {
+    const list = [...extractedActions];
+    const dir = sortDirection === 'asc' ? 1 : -1;
+    const parseDate = (d?: string | null) => {
+      if (!d) return 0;
+      const t = new Date(d).getTime();
+      return Number.isNaN(t) ? 0 : t;
+    };
+    list.sort((a, b) => {
+      if (sortField === 'priority') {
+        return ((a.priority_level || 0) - (b.priority_level || 0)) * dir;
+      }
+      if (sortField === 'status') {
+        return a.status.localeCompare(b.status) * dir;
+      }
+      if (sortField === 'start') {
+        return (parseDate(a.start_date) - parseDate(b.start_date)) * dir;
+      }
+      if (sortField === 'finish') {
+        return (parseDate(a.completion_date || a.end_date) - parseDate(b.completion_date || b.end_date)) * dir;
+      }
+      return 0;
+    });
+    return list;
+  }, [extractedActions, sortField, sortDirection]);
+
   useEffect(() => {
     if (!isOpen || !recordingId) return;
 
