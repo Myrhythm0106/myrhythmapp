@@ -173,7 +173,7 @@ export function ActionsViewer({
     }
   };
 
-  const handleSort = (field: 'priority' | 'status' | 'date') => {
+  const handleSort = (field: 'priority' | 'status' | 'start' | 'finish') => {
     if (sortField === field) {
       setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
     } else {
