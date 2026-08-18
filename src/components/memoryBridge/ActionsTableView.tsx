@@ -25,10 +25,11 @@ interface ActionsTableViewProps {
   onTextChange?: (actionId: string, text: string) => void;
   onSuccessCriteriaChange?: (actionId: string, criteria: string) => void;
   onAssignedChange?: (actionId: string, assignedTo: string) => void;
+  onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
-  onSort: (field: 'priority' | 'status' | 'date') => void;
-  sortField: 'priority' | 'status' | 'date';
+  onSort: (field: 'priority' | 'status' | 'start' | 'finish') => void;
+  sortField: 'priority' | 'status' | 'start' | 'finish';
   sortDirection: 'asc' | 'desc';
 }
 
