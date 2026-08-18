@@ -62,7 +62,7 @@ export function ActionsViewer({
       /* storage unavailable — view still switches for this session */
     }
   };
-  const [sortField, setSortField] = useState<'priority' | 'status' | 'date'>('priority');
+  const [sortField, setSortField] = useState<'priority' | 'status' | 'start' | 'finish'>('priority');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [isSchedulingAll, setIsSchedulingAll] = useState(false);
   const [showBulkWatcherDialog, setShowBulkWatcherDialog] = useState(false);
