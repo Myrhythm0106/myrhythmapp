@@ -62,7 +62,7 @@ export function ActionsViewer({
       /* storage unavailable — view still switches for this session */
     }
   };
-  const [sortField, setSortField] = useState<'priority' | 'status' | 'date'>('priority');
+  const [sortField, setSortField] = useState<'priority' | 'status' | 'start' | 'finish'>('priority');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [isSchedulingAll, setIsSchedulingAll] = useState(false);
   const [showBulkWatcherDialog, setShowBulkWatcherDialog] = useState(false);
@@ -80,6 +80,32 @@ export function ActionsViewer({
     { value: 'medium', label: 'Medium Priority' },
     { value: 'low', label: 'Low Priority' }
   ];
+
+  const sortedActions = React.useMemo(() => {
+    const list = [...extractedActions];
+    const dir = sortDirection === 'asc' ? 1 : -1;
+    const parseDate = (d?: string | null) => {
+      if (!d) return 0;
+      const t = new Date(d).getTime();
+      return Number.isNaN(t) ? 0 : t;
+    };
+    list.sort((a, b) => {
+      if (sortField === 'priority') {
+        return ((a.priority_level || 0) - (b.priority_level || 0)) * dir;
+      }
+      if (sortField === 'status') {
+        return a.status.localeCompare(b.status) * dir;
+      }
+      if (sortField === 'start') {
+        return (parseDate(a.start_date) - parseDate(b.start_date)) * dir;
+      }
+      if (sortField === 'finish') {
+        return (parseDate(a.completion_date || a.end_date) - parseDate(b.completion_date || b.end_date)) * dir;
+      }
+      return 0;
+    });
+    return list;
+  }, [extractedActions, sortField, sortDirection]);
 
   useEffect(() => {
     if (!isOpen || !recordingId) return;
@@ -173,7 +199,7 @@ export function ActionsViewer({
     }
   };
 
-  const handleSort = (field: 'priority' | 'status' | 'date') => {
+  const handleSort = (field: 'priority' | 'status' | 'start' | 'finish') => {
     if (sortField === field) {
       setSortDirection(prev => prev === 'asc' ? 'desc' : 'asc');
     } else {
@@ -532,7 +558,7 @@ export function ActionsViewer({
             </div>
           ) : viewMode === 'table' ? (
             <ActionsTableView
-              actions={extractedActions}
+              actions={sortedActions}
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
               onPriorityChange={handlePriorityChange}
@@ -543,8 +569,11 @@ export function ActionsViewer({
               onAssignedChange={(id, assignedTo) =>
                 handleFieldChange(id, { assigned_to: assignedTo }, 'Owner updated')
               }
+              onStartDateChange={(id, date) =>
+                handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
+              }
               onDueDateChange={(id, date) =>
-                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Due date updated' : 'Due date cleared')
+                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared')
               }
               onWatchersChange={(id, watchers) =>
                 handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')

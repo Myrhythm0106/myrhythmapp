@@ -10,10 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb } from 'lucide-react';
+import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
-import { format } from 'date-fns';
+import { format, differenceInCalendarDays, addDays, isToday, isTomorrow } from 'date-fns';
 import { ActionWatcherSelector } from './ActionWatcherSelector';
 import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 
@@ -25,10 +25,11 @@ interface ActionsTableViewProps {
   onTextChange?: (actionId: string, text: string) => void;
   onSuccessCriteriaChange?: (actionId: string, criteria: string) => void;
   onAssignedChange?: (actionId: string, assignedTo: string) => void;
+  onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
-  onSort: (field: 'priority' | 'status' | 'date') => void;
-  sortField: 'priority' | 'status' | 'date';
+  onSort: (field: 'priority' | 'status' | 'start' | 'finish') => void;
+  sortField: 'priority' | 'status' | 'start' | 'finish';
   sortDirection: 'asc' | 'desc';
 }
 
@@ -232,12 +233,14 @@ const EditableText = ({
   );
 };
 
-const EditableDueDate = ({
+const EditableDate = ({
   value,
-  onSave
+  onSave,
+  ariaLabel
 }: {
   value: string | null | undefined;
   onSave: (date: string | null) => void;
+  ariaLabel: string;
 }) => {
   const [open, setOpen] = useState(false);
   let parsed: Date | undefined;
@@ -253,7 +256,7 @@ const EditableDueDate = ({
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          aria-label="Change due date"
+          aria-label={ariaLabel}
           className={cn('h-11 px-2 justify-start gap-1 text-sm font-normal', !parsed && 'text-muted-foreground')}
         >
           <Calendar className="h-3 w-3 text-muted-foreground" />
@@ -289,6 +292,125 @@ const EditableDueDate = ({
   );
 };
 
+const dueInLabel = (finishDate: string | null | undefined, status: string): { text: string; tone: 'neutral' | 'amber' | 'red' | 'green' } => {
+  if (!finishDate) return { text: '—', tone: 'neutral' };
+  if (status === 'done' || status === 'completed') return { text: 'Done', tone: 'green' };
+
+  const finish = new Date(finishDate);
+  const days = differenceInCalendarDays(finish, new Date());
+
+  if (days === 0) return { text: 'Today', tone: 'amber' };
+  if (days === 1) return { text: 'Tomorrow', tone: 'amber' };
+  if (days > 1 && days < 14) return { text: `in ${days} days`, tone: 'neutral' };
+  if (days >= 14) return { text: `in ${Math.round(days / 7)} weeks`, tone: 'neutral' };
+  if (days === -1) return { text: 'Yesterday', tone: 'red' };
+  return { text: `${Math.abs(days)} days ago`, tone: 'red' };
+};
+
+const QUICK_DUE_IN_DAYS = [
+  { label: 'Today', days: 0 },
+  { label: 'Tomorrow', days: 1 },
+  { label: 'In 3 days', days: 3 },
+  { label: 'Next week', days: 7 }
+];
+
+const EditableDueIn = ({
+  value,
+  onSave,
+  status
+}: {
+  value: string | null | undefined;
+  onSave: (date: string | null) => void;
+  status: string;
+}) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftDays, setDraftDays] = useState<string>('');
+  const label = dueInLabel(value, status);
+
+  const commit = (days: number | null) => {
+    setIsEditing(false);
+    setDraftDays('');
+    if (days === null) {
+      onSave(null);
+      return;
+    }
+    const date = addDays(new Date(), days);
+    onSave(format(date, 'yyyy-MM-dd'));
+  };
+
+  if (!isEditing) {
+    return (
+      <button
+        type="button"
+        aria-label="Edit due in"
+        onClick={() => setIsEditing(true)}
+        className={cn(
+          'min-h-[44px] w-full text-left rounded-md px-2 py-2 -mx-2 text-sm font-medium transition-colors hover:bg-muted/50 focus:outline-none focus:ring-2 focus:ring-brand-orange-500/40',
+          label.tone === 'amber' && 'text-amber-600',
+          label.tone === 'red' && 'text-red-600',
+          label.tone === 'green' && 'text-green-600',
+          label.tone === 'neutral' && 'text-muted-foreground'
+        )}
+      >
+        {label.text}
+      </button>
+    );
+  }
+
+  return (
+    <div className="space-y-2" onBlur={(e) => {
+      if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+        const parsed = parseInt(draftDays, 10);
+        commit(Number.isNaN(parsed) ? null : parsed);
+      }
+    }}>
+      <div className="flex items-center gap-2">
+        <Input
+          type="number"
+          min={0}
+          max={365}
+          value={draftDays}
+          autoFocus
+          aria-label="Days from today"
+          placeholder="Days"
+          className="h-9 w-20 text-sm"
+          onChange={(e) => setDraftDays(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              const parsed = parseInt(draftDays, 10);
+              commit(Number.isNaN(parsed) ? null : parsed);
+            }
+            if (e.key === 'Escape') {
+              setIsEditing(false);
+              setDraftDays('');
+            }
+          }}
+        />
+        <span className="text-xs text-muted-foreground">days from today</span>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {QUICK_DUE_IN_DAYS.map((q) => (
+          <button
+            key={q.label}
+            type="button"
+            onClick={() => commit(q.days)}
+            className="text-[11px] rounded-full border border-brand-orange-200 bg-brand-orange-50 px-2.5 py-1 text-brand-orange-700 hover:bg-brand-orange-100 transition-colors"
+          >
+            {q.label}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={() => commit(null)}
+          className="text-[11px] rounded-full border border-muted bg-muted px-2.5 py-1 text-muted-foreground hover:bg-muted/80 transition-colors"
+        >
+          Clear
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export function ActionsTableView({
   actions,
   onDragEnd,
@@ -297,6 +419,7 @@ export function ActionsTableView({
   onTextChange,
   onSuccessCriteriaChange,
   onAssignedChange,
+  onStartDateChange,
   onDueDateChange,
   onWatchersChange,
   onSort,
@@ -341,19 +464,32 @@ export function ActionsTableView({
               </TableHead>
               <TableHead className="min-w-[200px]">Action</TableHead>
               <TableHead className="w-32">Assigned</TableHead>
-              <TableHead 
+              <TableHead
                 className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
-                onClick={() => onSort('date')}
+                onClick={() => onSort('start')}
               >
                 <div className="flex items-center gap-1">
-                  Due
+                  Start
                   <ArrowUpDown className={cn(
                     "h-3 w-3 transition-colors",
-                    sortField === 'date' ? "text-brand-orange-500" : "text-muted-foreground"
+                    sortField === 'start' ? "text-brand-orange-500" : "text-muted-foreground"
                   )} />
                 </div>
               </TableHead>
-              <TableHead 
+              <TableHead
+                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
+                onClick={() => onSort('finish')}
+              >
+                <div className="flex items-center gap-1">
+                  Finish
+                  <ArrowUpDown className={cn(
+                    "h-3 w-3 transition-colors",
+                    sortField === 'finish' ? "text-brand-orange-500" : "text-muted-foreground"
+                  )} />
+                </div>
+              </TableHead>
+              <TableHead className="w-28">Due in</TableHead>
+              <TableHead
                 className="cursor-pointer hover:bg-muted/50 transition-colors w-36"
                 onClick={() => onSort('status')}
               >
@@ -463,17 +599,39 @@ export function ActionsTableView({
                           )}
                         </TableCell>
                         <TableCell>
-                          {onDueDateChange ? (
-                            <EditableDueDate
-                              value={action.completion_date || action.end_date}
-                              onSave={(d) => onDueDateChange(action.id!, d)}
+                          {onStartDateChange ? (
+                            <EditableDate
+                              value={action.start_date}
+                              onSave={(d) => onStartDateChange(action.id!, d)}
+                              ariaLabel="Edit start date"
                             />
                           ) : (
-                            <div className="flex items-center gap-1 text-sm">
-                              <Calendar className="h-3 w-3 text-muted-foreground" />
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Calendar className="h-3 w-3" />
+                              {formatDate(action.start_date)}
+                            </div>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {onDueDateChange ? (
+                            <EditableDate
+                              value={action.completion_date || action.end_date}
+                              onSave={(d) => onDueDateChange(action.id!, d)}
+                              ariaLabel="Edit finish date"
+                            />
+                          ) : (
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Calendar className="h-3 w-3" />
                               {formatDate(action.completion_date || action.end_date)}
                             </div>
                           )}
+                        </TableCell>
+                        <TableCell>
+                          <EditableDueIn
+                            value={action.completion_date || action.end_date}
+                            onSave={(d) => onDueDateChange && onDueDateChange(action.id!, d)}
+                            status={action.status}
+                          />
                         </TableCell>
 
                         <TableCell>
