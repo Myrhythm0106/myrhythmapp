@@ -558,7 +558,7 @@ export function ActionsViewer({
             </div>
           ) : viewMode === 'table' ? (
             <ActionsTableView
-              actions={extractedActions}
+              actions={sortedActions}
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
               onPriorityChange={handlePriorityChange}
@@ -569,8 +569,11 @@ export function ActionsViewer({
               onAssignedChange={(id, assignedTo) =>
                 handleFieldChange(id, { assigned_to: assignedTo }, 'Owner updated')
               }
+              onStartDateChange={(id, date) =>
+                handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
+              }
               onDueDateChange={(id, date) =>
-                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Due date updated' : 'Due date cleared')
+                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared')
               }
               onWatchersChange={(id, watchers) =>
                 handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
