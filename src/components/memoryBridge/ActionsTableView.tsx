@@ -344,19 +344,32 @@ export function ActionsTableView({
               </TableHead>
               <TableHead className="min-w-[200px]">Action</TableHead>
               <TableHead className="w-32">Assigned</TableHead>
-              <TableHead 
+              <TableHead
                 className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
-                onClick={() => onSort('date')}
+                onClick={() => onSort('start')}
               >
                 <div className="flex items-center gap-1">
-                  Due
+                  Start
                   <ArrowUpDown className={cn(
                     "h-3 w-3 transition-colors",
-                    sortField === 'date' ? "text-brand-orange-500" : "text-muted-foreground"
+                    sortField === 'start' ? "text-brand-orange-500" : "text-muted-foreground"
                   )} />
                 </div>
               </TableHead>
-              <TableHead 
+              <TableHead
+                className="cursor-pointer hover:bg-muted/50 transition-colors w-24"
+                onClick={() => onSort('finish')}
+              >
+                <div className="flex items-center gap-1">
+                  Finish
+                  <ArrowUpDown className={cn(
+                    "h-3 w-3 transition-colors",
+                    sortField === 'finish' ? "text-brand-orange-500" : "text-muted-foreground"
+                  )} />
+                </div>
+              </TableHead>
+              <TableHead className="w-28">Due in</TableHead>
+              <TableHead
                 className="cursor-pointer hover:bg-muted/50 transition-colors w-36"
                 onClick={() => onSort('status')}
               >
