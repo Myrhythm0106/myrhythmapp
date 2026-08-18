@@ -13,7 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
-import { format } from 'date-fns';
+import { format, differenceInCalendarDays, addDays, isToday, isTomorrow } from 'date-fns';
 import { ActionWatcherSelector } from './ActionWatcherSelector';
 import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 
