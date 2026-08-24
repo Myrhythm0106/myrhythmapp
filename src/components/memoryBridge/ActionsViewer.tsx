@@ -96,6 +96,8 @@ export function ActionsViewer({
   const [archiveFilter, setArchiveFilter] = useState<'open' | 'archived' | 'all'>('open');
   const [notesTarget, setNotesTarget] = useState<NextStepsItem | null>(null);
   const [remindersTarget, setRemindersTarget] = useState<NextStepsItem | null>(null);
+  const [reminderDirty, setReminderDirty] = useState(false);
+  const [showUnsavedGuard, setShowUnsavedGuard] = useState(false);
   const [showCaptureNotes, setShowCaptureNotes] = useState(false);
   const [ladders, setLadders] = useState<Record<string, number[]>>({});
 
