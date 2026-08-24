@@ -286,11 +286,11 @@ export function ActionsViewer({
 
 
   // Bulk actions
-  const handleScheduleAll = async () => {
+  const handleScheduleAll = async (actionIds?: string[], overrides?: Map<string, ActionOverride>) => {
     if (!user || !meetingId) return;
     setIsSchedulingAll(true);
     try {
-      const summary = await scheduleExtractedActions(meetingId, user.id);
+      const summary = await scheduleExtractedActions(meetingId, user.id, actionIds, overrides);
       if (summary.scheduled === 0) {
         toast.error('Nothing could be added to my diary — please try again.');
       } else {
