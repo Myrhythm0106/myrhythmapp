@@ -61,6 +61,8 @@ interface VoiceRecording {
 
 export default function LaunchMemoryBridge() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [state, setState] = useState<RecordingState>('idle');
   const [showCelebration, setShowCelebration] = useState(false);
   const [notifySupport, setNotifySupport] = useState(true);
