@@ -684,10 +684,17 @@ export function ActionsViewer({
               onStartDateChange={(id, date) =>
                 handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
               }
-              onDueDateChange={(id, date) => {
+              onDueDateChange={async (id, date) => {
                 handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared');
-                rescheduleActionReminders(id, date);
+                if (!date) {
+                  await clearActionReminders(id);
+                } else if (user) {
+                  const target = extractedActions.find(a => a.id === id);
+                  await ensureDefaultLadder(id, user.id, date, target?.priority_level);
+                }
+                refreshLadders();
               }}
+
               onWatchersChange={(id, watchers) =>
                 handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
               }
