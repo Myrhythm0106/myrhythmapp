@@ -193,6 +193,47 @@ export type Database = {
           },
         ]
       }
+      action_reminders: {
+        Row: {
+          action_id: string
+          created_at: string
+          due_at: string | null
+          id: string
+          offset_days: number
+          sent_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_id: string
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          offset_days: number
+          sent_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_id?: string
+          created_at?: string
+          due_at?: string | null
+          id?: string
+          offset_days?: number
+          sent_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "action_reminders_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "extracted_actions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -1091,6 +1132,7 @@ export type Database = {
           action_type: string
           adhoc_loop_ins: Json
           alternative_phrasings: Json | null
+          archived_at: string | null
           assigned_to: string | null
           assigned_watchers: string[] | null
           best_time: string | null
@@ -1147,6 +1189,7 @@ export type Database = {
           action_type?: string
           adhoc_loop_ins?: Json
           alternative_phrasings?: Json | null
+          archived_at?: string | null
           assigned_to?: string | null
           assigned_watchers?: string[] | null
           best_time?: string | null
@@ -1203,6 +1246,7 @@ export type Database = {
           action_type?: string
           adhoc_loop_ins?: Json
           alternative_phrasings?: Json | null
+          archived_at?: string | null
           assigned_to?: string | null
           assigned_watchers?: string[] | null
           best_time?: string | null
@@ -1453,6 +1497,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      item_notes: {
+        Row: {
+          author_name: string | null
+          author_user_id: string
+          body: string
+          created_at: string
+          id: string
+          kind: string
+          owner_user_id: string
+          read_at: string | null
+          target_id: string
+          target_type: string
+          updated_at: string
+        }
+        Insert: {
+          author_name?: string | null
+          author_user_id: string
+          body: string
+          created_at?: string
+          id?: string
+          kind?: string
+          owner_user_id: string
+          read_at?: string | null
+          target_id: string
+          target_type: string
+          updated_at?: string
+        }
+        Update: {
+          author_name?: string | null
+          author_user_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          owner_user_id?: string
+          read_at?: string | null
+          target_id?: string
+          target_type?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       meeting_recordings: {
         Row: {
@@ -3217,6 +3303,7 @@ export type Database = {
         Row: {
           access_level: string
           ai_summary: string | null
+          audio_deleted_at: string | null
           category: string
           created_at: string
           description: string | null
@@ -3241,6 +3328,7 @@ export type Database = {
         Insert: {
           access_level?: string
           ai_summary?: string | null
+          audio_deleted_at?: string | null
           category?: string
           created_at?: string
           description?: string | null
@@ -3265,6 +3353,7 @@ export type Database = {
         Update: {
           access_level?: string
           ai_summary?: string | null
+          audio_deleted_at?: string | null
           category?: string
           created_at?: string
           description?: string | null
@@ -3391,6 +3480,10 @@ export type Database = {
       accept_invitation: {
         Args: { p_token: string; p_user_email: string }
         Returns: Json
+      }
+      can_access_item_thread: {
+        Args: { _target_id: string; _target_type: string }
+        Returns: boolean
       }
       check_user_status: { Args: { p_email: string }; Returns: Json }
       clean_expired_oauth_states: { Args: never; Returns: undefined }

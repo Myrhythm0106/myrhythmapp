@@ -70,7 +70,9 @@ export interface NextStepsItem {
   alternative_phrasings?: any; // Json type from database - array of { text: string; confidence: number }
   completion_criteria_specific?: string;
   verb_category?: string;
+  archived_at?: string | null;
 }
+
 
 // Maintain backward compatibility
 export interface ExtractedAction extends NextStepsItem {}

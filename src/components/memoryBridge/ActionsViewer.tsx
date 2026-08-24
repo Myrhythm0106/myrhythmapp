@@ -19,7 +19,9 @@ import {
   TableIcon,
   Users,
   Loader2,
-  CalendarPlus
+  CalendarPlus,
+  MessageCircle
+
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
@@ -34,6 +36,10 @@ import { scheduleExtractedActions, MeetingScheduleSummary, ActionOverride } from
 import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
 import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { BulkWatcherDialog } from './BulkWatcherDialog';
+import { ItemNotesThread } from '@/components/notes/ItemNotesThread';
+import { ReminderLadderPicker } from './ReminderLadderPicker';
+import { rescheduleActionReminders } from '@/utils/reminderLadder';
+
 
 interface ActionsViewerProps {
   recordingId: string;
@@ -71,6 +77,13 @@ export function ActionsViewer({
   const [commitSummary, setCommitSummary] = useState<MeetingScheduleSummary | null>(null);
   const [showBulkWatcherDialog, setShowBulkWatcherDialog] = useState(false);
   const [showReview, setShowReview] = useState(false);
+  const [archiveFilter, setArchiveFilter] = useState<'open' | 'archived' | 'all'>('open');
+  const [notesTarget, setNotesTarget] = useState<NextStepsItem | null>(null);
+  const [remindersTarget, setRemindersTarget] = useState<NextStepsItem | null>(null);
+  const [showCaptureNotes, setShowCaptureNotes] = useState(false);
+
+
+
 
   const statusOptions = [
     { value: 'not_started', label: 'Ready to Begin' },
@@ -111,6 +124,17 @@ export function ActionsViewer({
     });
     return list;
   }, [extractedActions, sortField, sortDirection]);
+
+  const openCount = extractedActions.filter(a => !a.archived_at).length;
+  const archivedCount = extractedActions.length - openCount;
+
+  const visibleActions = React.useMemo(() => {
+    if (archiveFilter === 'all') return sortedActions;
+    if (archiveFilter === 'archived') return sortedActions.filter(a => !!a.archived_at);
+    return sortedActions.filter(a => !a.archived_at);
+  }, [sortedActions, archiveFilter]);
+
+
 
   useEffect(() => {
     if (!isOpen || !recordingId) return;
@@ -214,9 +238,55 @@ export function ActionsViewer({
     }
   };
 
-  const handleStatusChange = (actionId: string, status: string) => {
-    updateAction(actionId, { status: status as any });
+  const setArchived = async (actionId: string, archivedAt: string | null, message: string) => {
+    setExtractedActions(actions =>
+      actions.map(a => (a.id === actionId ? { ...a, archived_at: archivedAt } : a))
+    );
+
+    const { error } = await supabase
+      .from('extracted_actions')
+      .update({ archived_at: archivedAt } as any)
+      .eq('id', actionId);
+
+    if (error) {
+      console.error('Error archiving action:', error);
+      setExtractedActions(actions =>
+        actions.map(a => (a.id === actionId ? { ...a, archived_at: archivedAt ? null : new Date().toISOString() } : a))
+      );
+      toast.error("That didn't save — please try again");
+      return;
+    }
+
+    toast.success(message, {
+      action: archivedAt
+        ? { label: 'Undo', onClick: () => setArchived(actionId, null, 'Back on my open list') }
+        : undefined
+    });
   };
+
+  const handleArchive = (actionId: string) => {
+    setArchived(actionId, new Date().toISOString(), 'Closed and archived');
+  };
+
+  const handleRestore = (actionId: string) => {
+    setArchived(actionId, null, 'Back on my open list');
+  };
+
+  const handleStatusChange = async (actionId: string, status: string) => {
+    await updateAction(actionId, { status: status as any });
+
+    // Completed or closed items leave the working list; anything else stays open.
+    const shouldArchive = status === 'done' || status === 'completed' || status === 'cancelled';
+    const current = extractedActions.find(a => a.id === actionId);
+
+    if (shouldArchive && !current?.archived_at) {
+      await setArchived(actionId, new Date().toISOString(), status === 'cancelled' ? 'Closed and archived' : 'Accomplished — archived');
+    } else if (!shouldArchive && current?.archived_at) {
+      await setArchived(actionId, null, 'Back on my open list');
+    }
+  };
+
+
 
   const handlePriorityChange = async (actionId: string, priorityLevel: number) => {
     const previous = extractedActions.find(a => a.id === actionId)?.priority_level;
@@ -487,6 +557,16 @@ export function ActionsViewer({
               >
                 <Users className="h-4 w-4 mr-1" /> Add Watchers to All
               </Button>
+
+              <Button
+                onClick={() => setShowCaptureNotes(true)}
+                variant="outline"
+                size="sm"
+                disabled={!meetingId}
+              >
+                <MessageCircle className="h-4 w-4 mr-1" /> Capture notes
+              </Button>
+
               
               {/* View toggle */}
               <div className="flex gap-1 p-1 bg-muted/50 rounded-lg backdrop-blur-sm ml-auto">
@@ -514,10 +594,34 @@ export function ActionsViewer({
                 </Button>
               </div>
             </div>
+
+            {/* Open / Archived filter */}
+            <div className="flex gap-1 p-1 bg-muted/50 rounded-lg w-fit">
+              {([
+                { key: 'open' as const, label: `Open (${openCount})` },
+                { key: 'archived' as const, label: `Archived (${archivedCount})` },
+                { key: 'all' as const, label: 'All' }
+              ]).map(tab => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setArchiveFilter(tab.key)}
+                  className={cn(
+                    'text-xs rounded-md px-3 py-2 min-h-[36px] transition-colors',
+                    archiveFilter === tab.key
+                      ? 'bg-white shadow-sm font-medium'
+                      : 'text-muted-foreground hover:bg-white/60'
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </DialogTitle>
           <p className="text-sm text-muted-foreground mt-1">
             Drag to reorder • <strong>W</strong>hat • <strong>W</strong>ho • <strong>W</strong>hen — Brain-friendly and empowering
           </p>
+
         </DialogHeader>
 
         <ScrollArea className="flex-1 pr-4 max-h-[calc(95vh-140px)]">
@@ -533,7 +637,7 @@ export function ActionsViewer({
             </div>
           ) : viewMode === 'table' ? (
             <ActionsTableView
-              actions={sortedActions}
+              actions={visibleActions}
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
               onPriorityChange={handlePriorityChange}
@@ -547,16 +651,22 @@ export function ActionsViewer({
               onStartDateChange={(id, date) =>
                 handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
               }
-              onDueDateChange={(id, date) =>
-                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared')
-              }
+              onDueDateChange={(id, date) => {
+                handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared');
+                rescheduleActionReminders(id, date);
+              }}
               onWatchersChange={(id, watchers) =>
                 handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
               }
+              onOpenNotes={(action) => setNotesTarget(action)}
+              onOpenReminders={(action) => setRemindersTarget(action)}
+              onArchive={handleArchive}
+              onRestore={handleRestore}
               onSort={handleSort}
               sortField={sortField}
               sortDirection={sortDirection}
             />
+
           ) : (
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="actions-list">
@@ -808,6 +918,60 @@ export function ActionsViewer({
         meetingTitle={meetingTitle}
         onCommit={(ids, overrides) => handleScheduleAll(ids, overrides)}
       />
+
+      {/* Notes & encouragement on a single next step */}
+      <Dialog open={!!notesTarget} onOpenChange={(open) => !open && setNotesTarget(null)}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base">{notesTarget?.action_text}</DialogTitle>
+          </DialogHeader>
+          {notesTarget?.id && (
+            <ItemNotesThread
+              targetType="action"
+              targetId={notesTarget.id}
+              ownerUserId={notesTarget.user_id}
+            />
+          )}
+          <p className="text-xs text-muted-foreground">
+            Only people you've looped in on this step can see or add to this thread.
+          </p>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reminder ladder */}
+      <Dialog open={!!remindersTarget} onOpenChange={(open) => !open && setRemindersTarget(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="text-base">{remindersTarget?.action_text}</DialogTitle>
+          </DialogHeader>
+          {remindersTarget?.id && (
+            <ReminderLadderPicker
+              actionId={remindersTarget.id}
+              dueDate={remindersTarget.completion_date || remindersTarget.end_date}
+              priorityLevel={remindersTarget.priority_level}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Notes on the whole capture */}
+      <Dialog open={showCaptureNotes} onOpenChange={setShowCaptureNotes}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-base">{meetingTitle}</DialogTitle>
+          </DialogHeader>
+          {meetingId && (
+            <ItemNotesThread
+              targetType="recording"
+              targetId={meetingId}
+              ownerUserId={user?.id}
+              title="Notes on this capture"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </Dialog>
+
+
   );
 }
