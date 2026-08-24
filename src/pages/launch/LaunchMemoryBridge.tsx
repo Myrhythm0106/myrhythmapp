@@ -378,12 +378,21 @@ export default function LaunchMemoryBridge() {
       setRecordingTitle('');
     } catch (err) {
       console.error('handleSave: unexpected error', err);
-      toast.error(
-        `Could not save recording: ${err instanceof Error ? err.message : 'Unknown error'}`
-      );
+      const stillSignedIn = await ensureSession();
+      if (!stillSignedIn) {
+        toast.error('Your session expired during extraction.', {
+          description: 'Sign in again, then tap "Extract actions" on this recording in Recent Recordings.',
+          duration: 12000,
+        });
+      } else {
+        toast.error(
+          `Could not save recording: ${err instanceof Error ? err.message : 'Unknown error'}`
+        );
+      }
     } finally {
       setIsExtracting(false);
     }
+
   };
 
 
