@@ -139,6 +139,23 @@ export default function LaunchMemoryBridge() {
     return () => { cancelled = true; };
   }, []);
 
+  // Keep the session alive: a capture can run for hours, and a backgrounded
+  // tab must not come back with an expired token.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void touchSession();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    void touchSession();
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, []);
+
+  useEffect(() => {
+    if (!isRecording) return;
+    const id = window.setInterval(() => { void touchSession(); }, 10 * 60 * 1000);
+    return () => window.clearInterval(id);
+  }, [isRecording]);
+
 
   useEffect(() => {
     if (!user || recordings.length === 0) return;
