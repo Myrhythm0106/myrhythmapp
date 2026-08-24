@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { smartScheduler } from '@/utils/smartScheduler';
 import type {
+import { parseDateOnly, addDaysToDateOnly, parseDateOnly as _p } from '@/utils/dateOnly';
   ActionDueDate,
   ActionReminder,
   BriefAction,
@@ -61,7 +62,7 @@ export function defaultReminders(
 ): ActionReminder[] {
   const urgent = priority >= 4;
   const dueSoon = due && start
-    ? (new Date(due).getTime() - new Date(start).getTime()) / 86400000 <= 2
+    ? ((parseDateOnly(due)?.getTime() ?? 0) - (parseDateOnly(start)?.getTime() ?? 0)) / 86400000 <= 2
     : false;
 
   if (urgent || dueSoon) {
@@ -92,9 +93,7 @@ export function resolveDueDate(
   }
   if (!topSuggestion) return undefined;
   // AI: start + 2 day buffer
-  const d = new Date(topSuggestion.date);
-  d.setDate(d.getDate() + 2);
-  const iso = d.toISOString().slice(0, 10);
+  const iso = addDaysToDateOnly(topSuggestion.date, 2);
   return {
     date: iso,
     source: 'ai',
