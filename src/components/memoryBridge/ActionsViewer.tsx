@@ -87,6 +87,18 @@ export function ActionsViewer({
   const [notesTarget, setNotesTarget] = useState<NextStepsItem | null>(null);
   const [remindersTarget, setRemindersTarget] = useState<NextStepsItem | null>(null);
   const [showCaptureNotes, setShowCaptureNotes] = useState(false);
+  const [ladders, setLadders] = useState<Record<string, number[]>>({});
+
+  const refreshLadders = React.useCallback(async () => {
+    const ids = extractedActions.map(a => a.id).filter((id): id is string => !!id);
+    setLadders(await loadLaddersForActions(ids));
+  }, [extractedActions]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    refreshLadders();
+  }, [isOpen, refreshLadders]);
+
 
 
 
