@@ -45,6 +45,7 @@ export async function scheduleExtractedActions(
   meetingId: string,
   userId: string,
   actionIds?: string[],
+  overrides?: Map<string, ActionOverride>,
 ): Promise<MeetingScheduleSummary> {
   let query = supabase
     .from('extracted_actions')
