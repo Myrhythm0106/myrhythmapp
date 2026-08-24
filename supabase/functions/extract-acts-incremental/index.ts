@@ -386,26 +386,26 @@ Be encouraging and supportive - remember these users may have memory challenges.
     // Import validation module
     const { validateExtractedAction } = await import('./validators.ts');
 
-    // Validate and filter actions
+    // Score actions — never silently drop them. Low scores are kept and flagged
+    // for review so the person always sees something they can edit or schedule.
     const validatedActions = [];
     for (const action of extractedActions) {
-      const validation = validateExtractedAction(action);
-      
-      if (validation.isValid) {
-        validatedActions.push({
-          ...action,
-          extraction_method: extractionMethod,
-          validation_score: validation.score,
-          validation_issues: JSON.stringify(validation.issues),
-          requires_review: validation.score < 90
-        });
-        console.log(`✅ Action passed validation (score: ${validation.score}): "${action.action_text}"`);
-      } else {
-        console.log(`❌ Action rejected (score: ${validation.score}): "${action.action_text}" - ${validation.issues.join(', ')}`);
+      if (!action?.action_text || String(action.action_text).trim().length < 3) {
+        console.log('❌ Skipping action with no text');
+        continue;
       }
+      const validation = validateExtractedAction(action);
+      validatedActions.push({
+        ...action,
+        extraction_method: extractionMethod,
+        validation_score: validation.score,
+        validation_issues: JSON.stringify(validation.issues),
+        requires_review: validation.score < 90
+      });
+      console.log(`✅ Action kept (score: ${validation.score}): "${action.action_text}"`);
     }
 
-    console.log(`✅ Post-validation: ${validatedActions.length}/${extractedActions.length} actions passed quality check`);
+    console.log(`✅ Post-validation: ${validatedActions.length}/${extractedActions.length} actions kept`);
 
     // Store the validated actions
     const actionsToInsert = validatedActions.map((action: any) => ({
