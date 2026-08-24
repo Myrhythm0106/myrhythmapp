@@ -5,6 +5,15 @@ import { ADHOC_PREFIX } from './commitActions';
 import type { BriefAction, PersonPick } from './types';
 import { smartScheduler } from '@/utils/smartScheduler';
 
+/** Edits agreed by me in the review step, applied instead of the stored values. */
+export interface ActionOverride {
+  text?: string;
+  date?: string;      // YYYY-MM-DD
+  time?: string;      // HH:mm
+  dueDate?: string;
+  priority?: number;
+}
+
 export interface MeetingScheduleSummary {
   scheduled: number;
   total: number;
