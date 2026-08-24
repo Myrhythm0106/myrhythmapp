@@ -261,11 +261,6 @@ export default function LaunchMemoryBridge() {
 
 
   const handleSave = async () => {
-    if (!user) {
-      toast.error('Please sign in to save this recording.');
-      console.warn('handleSave: blocked — no authenticated user');
-      return;
-    }
     if (!audioBlobRef.current) {
       console.warn('handleSave: blocked — no audio in memory');
       toast.error('That recording is no longer available. Please record again.');
@@ -276,6 +271,21 @@ export default function LaunchMemoryBridge() {
       console.warn('handleSave: blocked — empty audio blob');
       toast.error('That recording came through empty — check your microphone and record again.');
       setState('idle');
+      return;
+    }
+
+    // Never trust stale React auth state — ask Supabase and refresh if needed.
+    const userId = await ensureSession();
+    if (!userId) {
+      console.warn('handleSave: blocked — session expired and could not be refreshed');
+      toast.error('Your session timed out — your recording is safe.', {
+        description: 'Sign in and it will pick up right where it left off.',
+        action: {
+          label: 'Sign in',
+          onClick: () => navigate(`/auth?redirect=${encodeURIComponent('/launch/memory')}`),
+        },
+        duration: 12000,
+      });
       return;
     }
 
@@ -304,9 +314,10 @@ export default function LaunchMemoryBridge() {
       // Automatically start extraction
       const result = await processSavedRecording(
         saved.id,
-        user.id,
+        userId,
         restoredDuration ?? duration
       );
+
 
 
       if (result.success && result.actionsCount && result.actionsCount > 0) {
