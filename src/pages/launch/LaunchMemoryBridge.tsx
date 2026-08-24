@@ -393,7 +393,6 @@ export default function LaunchMemoryBridge() {
         }
       }
       setShowPostExtractionDialog(false);
-      setShowCelebration(true);
 
     } catch (error) {
       console.error('Error scheduling all actions:', error);
