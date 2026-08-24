@@ -34,7 +34,8 @@ import { useLaunchCalendarEvents, LaunchCalendarEvent } from '@/hooks/useLaunchC
 import { LaunchAiPlanAssist } from '@/components/launch/calendar/LaunchAiPlanAssist';
 import { usePlanningDay, usePlanningScope, periodStartFor } from '@/hooks/usePlanningScope';
 import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
-import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDialog';
+import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
+import { scheduleExtractedActions } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { supabase } from '@/integrations/supabase/client';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { toast } from 'sonner';
