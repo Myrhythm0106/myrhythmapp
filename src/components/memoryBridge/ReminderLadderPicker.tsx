@@ -21,13 +21,18 @@ interface ReminderLadderPickerProps {
   dueDate?: string | null;
   priorityLevel?: number;
   onSaved?: (offsets: number[]) => void;
+  onClose?: () => void;
 }
 
 const PRESET_ORDER: ReminderPreset[] = ['off', 'gentle', 'steady', 'strong'];
 
-export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved }: ReminderLadderPickerProps) {
+const sameOffsets = (a: number[], b: number[]) =>
+  a.length === b.length && [...a].sort((x, y) => x - y).every((v, i) => v === [...b].sort((x, y) => x - y)[i]);
+
+export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved, onClose }: ReminderLadderPickerProps) {
   const { user } = useAuth();
   const [offsets, setOffsets] = useState<number[]>([]);
+  const [initialOffsets, setInitialOffsets] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -37,7 +42,9 @@ export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved
       setIsLoading(true);
       const existing = await loadActionReminders(actionId);
       if (cancelled) return;
-      setOffsets(existing.length ? existing : REMINDER_PRESETS[presetForPriority(priorityLevel)]);
+      const start = existing.length ? existing : REMINDER_PRESETS[presetForPriority(priorityLevel)];
+      setOffsets(start);
+      setInitialOffsets(existing);
       setIsLoading(false);
     })();
     return () => {
@@ -45,18 +52,22 @@ export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved
     };
   }, [actionId, priorityLevel]);
 
-  const persist = async (next: number[]) => {
+  const isDirty = !sameOffsets(offsets, initialOffsets);
+
+  const handleSave = async () => {
     if (!user) return;
-    setOffsets(next);
     setIsSaving(true);
+    const next = [...offsets].sort((a, b) => a - b);
     const ok = await saveActionReminders(actionId, user.id, next, dueDate);
     setIsSaving(false);
     if (!ok) {
       toast.error("Those reminders didn't save — please try again");
       return;
     }
+    setInitialOffsets(next);
     onSaved?.(next);
     toast.success(next.length ? `${next.length} reminder${next.length > 1 ? 's' : ''} set` : 'Reminders off');
+    onClose?.();
   };
 
   const activePreset = matchPreset(offsets);
@@ -68,6 +79,7 @@ export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved
       </div>
     );
   }
+
 
   return (
     <div className="space-y-3">
