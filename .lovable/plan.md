@@ -1,5 +1,11 @@
 # Reminder editor unsaved-changes guard
 
+## UX rationale
+
+Yes — asking "are you sure you want to discard unsaved changes?" is standard, familiar practice. It is the same pattern used by Google Docs, Notion, iOS Settings, and browser forms. For people with memory, stress, or brain-injury challenges it is especially important because it prevents accidental loss of work without blame. The guard is kept **low-friction**: it only appears when something has actually changed, the wording is reassuring rather than alarming, and the safe choice ("Keep editing") is the primary button so the user can recover from a mistake with one tap.
+
+
+
 ## What
 
 The new Save/Cancel reminder editor can be closed by tapping **Cancel**, the **X**, or the backdrop. If the user has already changed presets or ticked rungs, that currently discards the draft without warning. This plan adds a confirmation prompt that only appears when there are unsaved changes.
