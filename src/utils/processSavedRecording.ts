@@ -174,7 +174,7 @@ async function runProcessing(
     console.log('processSavedRecording: Processing initiated successfully');
     
     // Poll for completion with progress updates
-    const result = await pollForCompletion(meetingRecord.id, startTime, estimatedTotalTime, onProgressUpdate);
+    const result = await pollForCompletion(meetingRecord.id, recordingId, startTime, estimatedTotalTime, onProgressUpdate);
     
     console.log('processSavedRecording: Final result:', result);
     
