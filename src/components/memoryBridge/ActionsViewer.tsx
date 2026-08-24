@@ -30,8 +30,9 @@ import { ActionCommentsSection } from './ActionCommentsSection';
 import { ActionsTableView } from './ActionsTableView';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
-import { scheduleExtractedActions, MeetingScheduleSummary } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { scheduleExtractedActions, MeetingScheduleSummary, ActionOverride } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
+import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { BulkWatcherDialog } from './BulkWatcherDialog';
 
 interface ActionsViewerProps {
