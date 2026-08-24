@@ -24,6 +24,7 @@ import { ExtractedAction } from '@/types/memoryBridge';
 import { analyzeSMART, getSMARTColor, getSMARTLabel } from '@/utils/smartValidation';
 import { celebrateActionComplete, celebrateBigWin } from '@/utils/celebration';
 import { toast } from 'sonner';
+import { formatDateOnly } from '@/utils/dateOnly';
 
 interface EnhancedActionCardProps {
   action: ExtractedAction;
@@ -207,7 +208,7 @@ export function EnhancedActionCard({ action, onUpdate, onMarkComplete, compact =
           {action.completion_date && (
             <Badge variant="outline" className="gap-1">
               <Calendar className="w-3 h-3" />
-              {new Date(action.completion_date).toLocaleDateString()}
+              {formatDateOnly(action.completion_date, 'PP')}
             </Badge>
           )}
           {action.priority_level && (
@@ -251,7 +252,7 @@ export function EnhancedActionCard({ action, onUpdate, onMarkComplete, compact =
             <span className="font-semibold text-green-800">Completed!</span>
             {action.completion_date && (
               <span className="text-sm text-green-600">
-                on {new Date(action.completion_date).toLocaleDateString()}
+                on {formatDateOnly(action.completion_date, 'PP')}
               </span>
             )}
           </div>

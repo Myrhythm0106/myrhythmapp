@@ -1,5 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 import { smartScheduler } from '@/utils/smartScheduler';
+import { parseDateOnly, addDaysToDateOnly, toDateOnly } from '@/utils/dateOnly';
 import type {
   ActionDueDate,
   ActionReminder,
@@ -61,7 +62,7 @@ export function defaultReminders(
 ): ActionReminder[] {
   const urgent = priority >= 4;
   const dueSoon = due && start
-    ? (new Date(due).getTime() - new Date(start).getTime()) / 86400000 <= 2
+    ? ((parseDateOnly(due)?.getTime() ?? 0) - (parseDateOnly(start)?.getTime() ?? 0)) / 86400000 <= 2
     : false;
 
   if (urgent || dueSoon) {
@@ -92,9 +93,7 @@ export function resolveDueDate(
   }
   if (!topSuggestion) return undefined;
   // AI: start + 2 day buffer
-  const d = new Date(topSuggestion.date);
-  d.setDate(d.getDate() + 2);
-  const iso = d.toISOString().slice(0, 10);
+  const iso = addDaysToDateOnly(topSuggestion.date, 2);
   return {
     date: iso,
     source: 'ai',
@@ -197,7 +196,7 @@ function shortReason(r: string): string {
 }
 
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return toDateOnly(new Date())!;
 }
 
 export function formatDateLabel(iso: string): string {
@@ -214,7 +213,7 @@ export function formatDateLabel(iso: string): string {
 
 export function validatePostpone(newStartISO: string, dueISO?: string): { ok: boolean; warning?: string } {
   if (!dueISO) return { ok: true };
-  if (new Date(newStartISO) > new Date(dueISO)) {
+  if ((parseDateOnly(newStartISO)?.getTime() ?? 0) > (parseDateOnly(dueISO)?.getTime() ?? 0)) {
     return {
       ok: false,
       warning: 'This pushes past your deadline — extend Due or pick a sooner Start.',

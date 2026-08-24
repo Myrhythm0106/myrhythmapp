@@ -14,6 +14,7 @@ import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { format, differenceInCalendarDays, addDays, isToday, isTomorrow } from 'date-fns';
+import { parseDateOnly, formatDateOnly } from '@/utils/dateOnly';
 import { ActionWatcherSelector } from './ActionWatcherSelector';
 import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
 
@@ -243,13 +244,7 @@ const EditableDate = ({
   ariaLabel: string;
 }) => {
   const [open, setOpen] = useState(false);
-  let parsed: Date | undefined;
-  try {
-    parsed = value ? new Date(value) : undefined;
-    if (parsed && isNaN(parsed.getTime())) parsed = undefined;
-  } catch {
-    parsed = undefined;
-  }
+  const parsed = parseDateOnly(value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -296,7 +291,8 @@ const dueInLabel = (finishDate: string | null | undefined, status: string): { te
   if (!finishDate) return { text: '—', tone: 'neutral' };
   if (status === 'done' || status === 'completed') return { text: 'Done', tone: 'green' };
 
-  const finish = new Date(finishDate);
+  const finish = parseDateOnly(finishDate);
+  if (!finish) return { text: '—', tone: 'neutral' };
   const days = differenceInCalendarDays(finish, new Date());
 
   if (days === 0) return { text: 'Today', tone: 'amber' };
@@ -431,14 +427,8 @@ export function ActionsTableView({
     return statusOptions.find(opt => opt.value === status) || statusOptions[0];
   };
 
-  const formatDate = (dateStr: string | null | undefined) => {
-    if (!dateStr) return '—';
-    try {
-      return format(new Date(dateStr), 'MMM d');
-    } catch {
-      return '—';
-    }
-  };
+  const formatDate = (dateStr: string | null | undefined) => formatDateOnly(dateStr, 'MMM d');
+
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl shadow-xl border border-white/40">
