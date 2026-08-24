@@ -13,6 +13,7 @@ import { useActsScheduling } from '@/hooks/memoryBridge/useActsScheduling';
 import { useAssessmentResults } from '@/hooks/useAssessmentResults';
 import { AssessmentConfidenceBadge } from '@/components/nextStepsHub/AssessmentConfidenceBadge';
 import { SmartScheduleSuggestion } from '@/utils/smartScheduler';
+import { parseDateOnly } from '@/utils/dateOnly';
 
 interface ActionSchedulingModalProps {
   isOpen: boolean;
@@ -191,7 +192,7 @@ export function ActionSchedulingModal({
                                 <div className="flex items-center gap-2 text-sm">
                                   <Calendar className="h-4 w-4 text-primary" />
                                   <span className="font-medium">
-                                    {new Date(bestSuggestion.date).toLocaleDateString('en-US', { 
+                                    {(parseDateOnly(bestSuggestion.date) ?? new Date()).toLocaleDateString('en-US', { 
                                       weekday: 'short', 
                                       month: 'short', 
                                       day: 'numeric' 
@@ -243,7 +244,7 @@ export function ActionSchedulingModal({
                                     <div className="flex items-center gap-2">
                                       <Clock className="h-3 w-3" />
                                       <span className="font-medium">
-                                        {new Date(alt.date).toLocaleDateString('en-US', { 
+                                        {(parseDateOnly(alt.date) ?? new Date()).toLocaleDateString('en-US', { 
                                           weekday: 'short', 
                                           month: 'short', 
                                           day: 'numeric' 

@@ -213,7 +213,7 @@ export function formatDateLabel(iso: string): string {
 
 export function validatePostpone(newStartISO: string, dueISO?: string): { ok: boolean; warning?: string } {
   if (!dueISO) return { ok: true };
-  if (new Date(newStartISO) > new Date(dueISO)) {
+  if ((parseDateOnly(newStartISO)?.getTime() ?? 0) > (parseDateOnly(dueISO)?.getTime() ?? 0)) {
     return {
       ok: false,
       warning: 'This pushes past your deadline — extend Due or pick a sooner Start.',
