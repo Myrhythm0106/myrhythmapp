@@ -12,11 +12,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
-import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDialog';
+import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { scheduleExtractedActions, MeetingScheduleSummary } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { scheduleExtractedActions, MeetingScheduleSummary, ActionOverride } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
@@ -355,8 +355,8 @@ export default function LaunchMemoryBridge() {
 
 
   const handleAcceptAndScheduleAll = async (
-    notifyCircle: boolean,
     actionIds?: string[],
+    overrides?: Map<string, ActionOverride>,
   ) => {
     if (!lastExtractionResult || !user) return;
 
@@ -365,6 +365,7 @@ export default function LaunchMemoryBridge() {
         lastExtractionResult.meetingId,
         user.id,
         actionIds,
+        overrides,
       );
 
       if (summary.scheduled === 0) {
@@ -887,17 +888,15 @@ export default function LaunchMemoryBridge() {
         </div>
       </div>
 
-      {/* Post-Extraction Dialog - Accept All or Review */}
-      <PostExtractionDialog
+      {/* Review & edit everything before it reaches my diary */}
+      <ReviewStep
         isOpen={showPostExtractionDialog}
         onClose={() => setShowPostExtractionDialog(false)}
-        actionsCount={lastExtractionResult?.actionsCount || 0}
-        meetingTitle={lastExtractionResult?.title || ''}
         meetingId={lastExtractionResult?.meetingId}
+        meetingTitle={lastExtractionResult?.title || ''}
         sourceFilePath={lastExtractionResult?.sourceFilePath}
         sourceFileName={lastExtractionResult?.sourceFileName}
-        onAcceptAndScheduleAll={handleAcceptAndScheduleAll}
-        onReviewIndividually={handleReviewIndividually}
+        onCommit={(actionIds, overrides) => handleAcceptAndScheduleAll(actionIds, overrides)}
       />
 
       {/* Celebration Modal */}

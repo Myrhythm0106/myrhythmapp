@@ -34,7 +34,8 @@ import { useLaunchCalendarEvents, LaunchCalendarEvent } from '@/hooks/useLaunchC
 import { LaunchAiPlanAssist } from '@/components/launch/calendar/LaunchAiPlanAssist';
 import { usePlanningDay, usePlanningScope, periodStartFor } from '@/hooks/usePlanningScope';
 import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
-import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDialog';
+import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
+import { scheduleExtractedActions } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { supabase } from '@/integrations/supabase/client';
 import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
 import { toast } from 'sonner';
@@ -319,59 +320,35 @@ export default function LaunchCalendar() {
       />
 
       {importResult && (
-        <PostExtractionDialog
+        <ReviewStep
           isOpen={showImportDialog}
           onClose={() => setShowImportDialog(false)}
-          actionsCount={importResult.actionsCount}
-          meetingTitle={importResult.title}
           meetingId={importResult.meetingId}
+          meetingTitle={importResult.title}
           sourceFilePath={importResult.filePath}
           sourceFileName={importResult.fileName}
-          onAcceptAndScheduleAll={async (_notify, actionIds) => {
+          onCommit={async (actionIds, overrides) => {
             if (!user) return;
-            let query = supabase
-              .from('extracted_actions')
-              .select('*')
-              .eq('meeting_recording_id', importResult.meetingId);
-            if (actionIds?.length) query = query.in('id', actionIds);
-            const { data: actions, error } = await query;
-            if (error) {
-              toast.error('Could not load extracted actions.');
-              return;
-            }
-            let scheduled = 0;
-            for (const action of actions || []) {
-              try {
-                const eventId = await convertActionToCalendarEvent(
-                  action as any,
-                  user.id,
-                  [],
-                  (action as any).proposed_date,
-                  (action as any).proposed_time,
+            try {
+              const summary = await scheduleExtractedActions(
+                importResult.meetingId,
+                user.id,
+                actionIds,
+                overrides,
+              );
+              if (summary.scheduled > 0) {
+                toast.success(
+                  `${summary.scheduled} now in my diary${summary.notified > 0 ? ` · ${summary.notified} told` : ''}`,
                 );
-                if (eventId) {
-                  await supabase
-                    .from('extracted_actions')
-                    .update({ status: 'scheduled', calendar_event_id: eventId })
-                    .eq('id', (action as any).id);
-                  scheduled++;
-                }
-              } catch (err) {
-                console.error('Schedule action failed', err);
+              } else {
+                toast.info('Nothing was added to my diary.');
               }
-            }
-            if (scheduled > 0) {
-              toast.success(`Added ${scheduled} action${scheduled === 1 ? '' : 's'} to your calendar.`);
-            } else {
-              toast.info('No actions were scheduled.');
+            } catch (err) {
+              console.error('Schedule from import failed', err);
+              toast.error('Could not add these to my diary.');
             }
             setShowImportDialog(false);
             setImportResult(null);
-          }}
-          onReviewIndividually={() => {
-            setShowImportDialog(false);
-            // Send user to Memory Bridge to review individually
-            window.location.href = '/launch/memory';
           }}
         />
       )}

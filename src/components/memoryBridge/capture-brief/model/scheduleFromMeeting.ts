@@ -5,6 +5,15 @@ import { ADHOC_PREFIX } from './commitActions';
 import type { BriefAction, PersonPick } from './types';
 import { smartScheduler } from '@/utils/smartScheduler';
 
+/** Edits agreed by me in the review step, applied instead of the stored values. */
+export interface ActionOverride {
+  text?: string;
+  date?: string;      // YYYY-MM-DD
+  time?: string;      // HH:mm
+  dueDate?: string;
+  priority?: number;
+}
+
 export interface MeetingScheduleSummary {
   scheduled: number;
   total: number;
@@ -36,6 +45,7 @@ export async function scheduleExtractedActions(
   meetingId: string,
   userId: string,
   actionIds?: string[],
+  overrides?: Map<string, ActionOverride>,
 ): Promise<MeetingScheduleSummary> {
   let query = supabase
     .from('extracted_actions')
@@ -66,12 +76,14 @@ export async function scheduleExtractedActions(
       continue;
     }
 
+    const ov = overrides?.get(row.id);
+
     const brief: BriefAction = {
       id: row.id,
-      text: row.action_text,
+      text: ov?.text || row.action_text,
       owner: row.owner || row.assigned_to || 'Me',
       due: row.due_context || undefined,
-      priority: row.priority_level ?? 3,
+      priority: ov?.priority ?? row.priority_level ?? 3,
       priorityLabel: 'Medium',
       confidence: row.confidence_score ?? 0.7,
       category: row.category,
@@ -79,9 +91,9 @@ export async function scheduleExtractedActions(
       context: row.intent_behind || row.relationship_impact || undefined,
     } as BriefAction;
 
-    // Slot: explicit schedule > proposed > AI suggestion > tomorrow 09:00
-    let date: string = row.scheduled_date || row.proposed_date || '';
-    let time: string = row.scheduled_time || row.proposed_time || '';
+    // Slot: what I agreed in review > explicit schedule > proposed > AI suggestion > tomorrow 09:00
+    let date: string = ov?.date || row.scheduled_date || row.proposed_date || '';
+    let time: string = ov?.time || row.scheduled_time || row.proposed_time || '';
     if (!date) {
       try {
         const suggestions = await smartScheduler.generateSmartSuggestions(
@@ -129,11 +141,12 @@ export async function scheduleExtractedActions(
       } as PersonPick);
     }
 
+    const dueDate = ov?.dueDate ?? (row.end_date || undefined);
     const res = await commitAction(brief, {
       startDate: date,
       startTime: time,
-      dueDate: row.end_date || undefined,
-      reminders: defaultReminders(row.priority_level ?? 3, row.end_date || undefined, date),
+      dueDate,
+      reminders: defaultReminders(ov?.priority ?? row.priority_level ?? 3, dueDate, date),
       people,
     });
 
@@ -141,7 +154,7 @@ export async function scheduleExtractedActions(
       summary.scheduled++;
       summary.notified += res.notified || 0;
       summary.notifyFailures.push(...(res.notifyFailures || []));
-      summary.entries.push({ text: row.action_text, date, time, eventId: res.calendarEventId!, actionId: row.id });
+      summary.entries.push({ text: brief.text, date, time, eventId: res.calendarEventId!, actionId: row.id });
       for (const p of people) if (!summary.people.includes(p.name)) summary.people.push(p.name);
     } else {
       summary.failed++;

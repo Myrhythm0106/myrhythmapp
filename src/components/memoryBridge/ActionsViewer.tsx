@@ -30,8 +30,9 @@ import { ActionCommentsSection } from './ActionCommentsSection';
 import { ActionsTableView } from './ActionsTableView';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
-import { scheduleExtractedActions, MeetingScheduleSummary } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { scheduleExtractedActions, MeetingScheduleSummary, ActionOverride } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
+import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { BulkWatcherDialog } from './BulkWatcherDialog';
 
 interface ActionsViewerProps {
@@ -69,6 +70,7 @@ export function ActionsViewer({
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [commitSummary, setCommitSummary] = useState<MeetingScheduleSummary | null>(null);
   const [showBulkWatcherDialog, setShowBulkWatcherDialog] = useState(false);
+  const [showReview, setShowReview] = useState(false);
 
   const statusOptions = [
     { value: 'not_started', label: 'Ready to Begin' },
@@ -285,11 +287,11 @@ export function ActionsViewer({
 
 
   // Bulk actions
-  const handleScheduleAll = async () => {
+  const handleScheduleAll = async (actionIds?: string[], overrides?: Map<string, ActionOverride>) => {
     if (!user || !meetingId) return;
     setIsSchedulingAll(true);
     try {
-      const summary = await scheduleExtractedActions(meetingId, user.id);
+      const summary = await scheduleExtractedActions(meetingId, user.id, actionIds, overrides);
       if (summary.scheduled === 0) {
         toast.error('Nothing could be added to my diary — please try again.');
       } else {
@@ -467,15 +469,15 @@ export function ActionsViewer({
             {/* Bulk actions bar */}
             <div className="flex items-center gap-2 flex-wrap">
               <Button
-                onClick={handleScheduleAll}
-                disabled={isSchedulingAll || extractedActions.length === 0}
+                onClick={() => setShowReview(true)}
+                disabled={isSchedulingAll || extractedActions.length === 0 || !meetingId}
                 size="sm"
                 className="bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 text-white shadow-md"
               >
                 {isSchedulingAll ? (
                   <><Loader2 className="h-4 w-4 animate-spin mr-1" /> Scheduling...</>
                 ) : (
-                  <><CalendarPlus className="h-4 w-4 mr-1" /> Accept & Schedule All</>
+                  <><CalendarPlus className="h-4 w-4 mr-1" /> Review &amp; schedule</>
                 )}
               </Button>
               <Button
@@ -798,6 +800,14 @@ export function ActionsViewer({
       />
 
       <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
+
+      <ReviewStep
+        isOpen={showReview}
+        onClose={() => setShowReview(false)}
+        meetingId={meetingId || undefined}
+        meetingTitle={meetingTitle}
+        onCommit={(ids, overrides) => handleScheduleAll(ids, overrides)}
+      />
     </Dialog>
   );
 }
