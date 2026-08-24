@@ -355,8 +355,8 @@ export default function LaunchMemoryBridge() {
 
 
   const handleAcceptAndScheduleAll = async (
-    notifyCircle: boolean,
     actionIds?: string[],
+    overrides?: Map<string, ActionOverride>,
   ) => {
     if (!lastExtractionResult || !user) return;
 
@@ -365,6 +365,7 @@ export default function LaunchMemoryBridge() {
         lastExtractionResult.meetingId,
         user.id,
         actionIds,
+        overrides,
       );
 
       if (summary.scheduled === 0) {
