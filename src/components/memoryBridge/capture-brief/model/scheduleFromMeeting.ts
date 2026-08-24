@@ -76,12 +76,14 @@ export async function scheduleExtractedActions(
       continue;
     }
 
+    const ov = overrides?.get(row.id);
+
     const brief: BriefAction = {
       id: row.id,
-      text: row.action_text,
+      text: ov?.text || row.action_text,
       owner: row.owner || row.assigned_to || 'Me',
       due: row.due_context || undefined,
-      priority: row.priority_level ?? 3,
+      priority: ov?.priority ?? row.priority_level ?? 3,
       priorityLabel: 'Medium',
       confidence: row.confidence_score ?? 0.7,
       category: row.category,
@@ -89,9 +91,9 @@ export async function scheduleExtractedActions(
       context: row.intent_behind || row.relationship_impact || undefined,
     } as BriefAction;
 
-    // Slot: explicit schedule > proposed > AI suggestion > tomorrow 09:00
-    let date: string = row.scheduled_date || row.proposed_date || '';
-    let time: string = row.scheduled_time || row.proposed_time || '';
+    // Slot: what I agreed in review > explicit schedule > proposed > AI suggestion > tomorrow 09:00
+    let date: string = ov?.date || row.scheduled_date || row.proposed_date || '';
+    let time: string = ov?.time || row.scheduled_time || row.proposed_time || '';
     if (!date) {
       try {
         const suggestions = await smartScheduler.generateSmartSuggestions(
