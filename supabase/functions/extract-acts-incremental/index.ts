@@ -407,16 +407,32 @@ Be encouraging and supportive - remember these users may have memory challenges.
 
     console.log(`✅ Post-validation: ${validatedActions.length}/${extractedActions.length} actions kept`);
 
+    // Normalise values the database constrains, so one odd value from the model
+    // can never wipe out the whole batch.
+    const ALLOWED_CATEGORIES = ['action', 'watch_out', 'depends_on', 'note'];
+    const ALLOWED_METHODS = ['openai', 'rule-based', 'manual', 'gemini-2.5-flash', 'lovable-ai', 'assemblyai'];
+    const ALLOWED_DETAIL = ['minimal', 'standard', 'complete'];
+    const normCategory = (c: any) => {
+      const v = String(c || '').toLowerCase().replace(/[\s-]+/g, '_');
+      return ALLOWED_CATEGORIES.includes(v) ? v : 'action';
+    };
+    const clamp = (n: any, min: number, max: number, fallback: number) => {
+      const v = Number(n);
+      return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
+    };
+
     // Store the validated actions
     const actionsToInsert = validatedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
       action_text: action.action_text || action.action || 'DEFINE next step needed',
-      extraction_method: action.extraction_method || extractionMethod,
-      validation_score: action.validation_score || 0,
+      extraction_method: ALLOWED_METHODS.includes(action.extraction_method || extractionMethod)
+        ? (action.extraction_method || extractionMethod)
+        : 'lovable-ai',
+      validation_score: Math.round(clamp(action.validation_score, 0, 100, 0)),
       validation_issues: action.validation_issues || '[]',
       requires_review: action.requires_review || false,
-      category: action.category || 'action',
+      category: normCategory(action.category),
       success_criteria: action.success_criteria || null,
       motivation_statement: action.motivation_statement || null,
       what_outcome: action.what_outcome || null,
