@@ -445,11 +445,18 @@ Be encouraging and supportive - remember these users may have memory challenges.
       start_date: action.start_date || null,
       end_date: action.end_date || null,
       completion_date: action.completion_date || null,
-      priority_level: action.priority_level || (action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5),
+      priority_level: Math.round(
+        clamp(
+          action.priority_level ?? (action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5),
+          1,
+          5,
+          3,
+        ),
+      ),
       relationship_impact: action.relationship_impact || null,
       emotional_stakes: action.emotional_stakes || null,
       intent_behind: action.intent_behind || null,
-      confidence_score: action.confidence_score || action.confidence || 0.5,
+      confidence_score: clamp(action.confidence_score ?? action.confidence, 0, 1, 0.5),
       user_notes: action.reasoning || '',
       status: 'not_started',
       calendar_checked: false,
@@ -462,22 +469,34 @@ Be encouraging and supportive - remember these users may have memory challenges.
       if_stuck: action.if_stuck || null,
       best_time: action.best_time || null,
       next_natural_steps: action.next_natural_steps || [],
-      detail_level: action.detail_level || 'standard',
+      detail_level: ALLOWED_DETAIL.includes(action.detail_level) ? action.detail_level : 'standard',
       alternative_phrasings: action.alternative_phrasings || [],
       completion_criteria_specific: action.completion_criteria_specific || null,
       verb_category: action.verb_category || null
     }));
 
+    let insertedCount = 0;
     if (actionsToInsert.length > 0) {
       const { error: insertError } = await supabase
         .from('extracted_actions')
         .insert(actionsToInsert);
 
       if (insertError) {
-        console.error('Error inserting actions:', insertError);
-        throw insertError;
+        console.error('Batch insert failed, retrying row by row:', insertError);
+        for (const row of actionsToInsert) {
+          const { error: rowError } = await supabase.from('extracted_actions').insert(row);
+          if (rowError) {
+            console.error('Row insert failed:', rowError, JSON.stringify(row).slice(0, 500));
+          } else {
+            insertedCount++;
+          }
+        }
+        if (insertedCount === 0) throw insertError;
+      } else {
+        insertedCount = actionsToInsert.length;
       }
     }
+    console.log(`💾 Inserted ${insertedCount}/${actionsToInsert.length} actions`);
 
     // Calculate confidence score based on processing method and results
     let confidenceScore = 50; // Base score
