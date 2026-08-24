@@ -671,6 +671,8 @@ export function ActionsViewer({
           ) : viewMode === 'table' ? (
             <ActionsTableView
               actions={visibleActions}
+              ladders={ladders}
+
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
               onPriorityChange={handlePriorityChange}
