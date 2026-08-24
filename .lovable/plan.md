@@ -11,10 +11,12 @@ Each note records who wrote it, whether it's a **note** or an **encouragement**,
 
 Who can do what:
 
-- Anyone in my Support Circle with **active** status can read the thread and add notes on my items.
-- A member can delete **only their own** note.
-- I keep full control of everything on my own items — read, add, delete any note.
+- Access is **per item, granted by me**. Being in my Support Circle is not enough — a member sees a thread only on the specific next step or capture I've given them access to (they're a watcher / looped in on it) and their circle status is **active**.
+- Granting is one tap from the row: "Loop someone in" picks from my circle, and I can revoke that access at any time, which immediately hides the thread from them.
+- A permitted member can read the thread and add notes or encouragement on that item only, and can delete **only their own** note.
+- I keep full control of everything on my own items — read, add, delete any note, and see who has access.
 - "Send encouragement" quick-tap offers a few kind one-liners so a family member doesn't have to compose anything.
+
 
 ## 2. Next steps: archive only when completed
 
@@ -49,7 +51,7 @@ after due:    1 day late · 3 days late · 5 days late · 7 days late
 
 ## Technical notes
 
-- **Migration** (single): create `public.item_notes` (`owner_user_id`, `target_type` = `action` | `recording`, `target_id`, `author_user_id`, `author_name`, `body`, `kind` = `note` | `encouragement`, `read_at`, timestamps) with grants for `authenticated`/`service_role`, RLS (owner full access; active circle members read all and insert/delete only their own via `get_current_user_email()`), an index on (`target_type`, `target_id`, `created_at desc`), and the standard `updated_at` trigger.
+- **Migration** (single): create `public.item_notes` (`owner_user_id`, `target_type` = `action` | `recording`, `target_id`, `author_user_id`, `author_name`, `body`, `kind` = `note` | `encouragement`, `read_at`, timestamps) with grants for `authenticated`/`service_role`, RLS (owner full access; a circle member may read/insert **only** when a security-definer check confirms they are active in the owner's circle **and** explicitly permitted on that exact item — `assigned_watchers`/`adhoc_loop_ins` on `extracted_actions`, or `memory_watchers` for a recording — and may delete only rows they authored), an index on (`target_type`, `target_id`, `created_at desc`), and the standard `updated_at` trigger.
 - Same migration adds `archived_at` to `extracted_actions` (+ index on `user_id, archived_at`), `audio_deleted_at` to `voice_recordings`, and re-points `meeting_recordings.recording_id` to `ON DELETE SET NULL`. `cleanup_expired_voice_recordings` is rewritten to delete only the audio row so the cascade can no longer reach the text.
 - Reminders: new `action_reminders` rows (`action_id`, `offset_days` signed — negative before due, positive after, `0` = due now, `sent_at`) generated from the chosen preset against `end_date`/`scheduled_date`; a scheduled function sweeps due rungs, writes an in-app notification and pushes where a token exists, and skips any action whose status is completed/closed.
 - UI: shared `ItemNotesThread` (used by a drawer from `ActionsTableView` rows and from each recording row), a `ReminderLadderPicker` in the row's edit surface, and an Open/Archived/All segmented filter above the table; list queries default to `archived_at is null`.
