@@ -283,12 +283,17 @@ export default function LaunchMemoryBridge() {
 
 
   const handleSave = async () => {
+    if (isExtracting) {
+      console.log('handleSave: ignored — a save is already running');
+      return;
+    }
     if (!audioBlobRef.current) {
       console.warn('handleSave: blocked — no audio in memory');
       toast.error('That recording is no longer available. Please record again.');
       setState('idle');
       return;
     }
+
     if (audioBlobRef.current.size === 0) {
       console.warn('handleSave: blocked — empty audio blob');
       toast.error('That recording came through empty — check your microphone and record again.');
@@ -316,6 +321,10 @@ export default function LaunchMemoryBridge() {
 
 
     try {
+      console.log('handleSave: stage 1 — uploading audio', {
+        bytes: audioBlobRef.current.size,
+        type: audioBlobRef.current.type,
+      });
       const saved = await saveRecording(
         audioBlobRef.current,
         title,
@@ -326,19 +335,23 @@ export default function LaunchMemoryBridge() {
 
       if (!saved) {
         // saveRecording already surfaced a toast
+        console.warn('handleSave: stage 1 failed — upload/insert returned nothing');
         return;
       }
+      console.log('handleSave: stage 2 — recording row saved', saved.id);
 
       audioBlobRef.current = null;
       await clearPendingRecording();
       allowance.refresh();
 
       // Automatically start extraction
+      console.log('handleSave: stage 3 — starting extraction');
       const result = await processSavedRecording(
         saved.id,
         userId,
         restoredDuration ?? duration
       );
+      console.log('handleSave: stage 4 — extraction finished', result);
 
 
 
@@ -367,11 +380,19 @@ export default function LaunchMemoryBridge() {
         setLoopCircleIds([]);
         setLoopAdhoc([]);
       } else if (result.success) {
-        // Success but no actions
-        setShowCelebration(true);
-        toast.info('Recording saved! No actionable items found.');
+        // Saved and transcribed, but nothing actionable was found. Never dead-end
+        // on a "0 actions" toast — open the review surface with the transcript so
+        // I can extract again or add my own next step.
+        setProcessedRecordings(prev => new Set([...prev, saved.id]));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: 0 }));
+        setViewingActions({ recordingId: saved.id, title });
+        toast.info('Recording saved — no next steps found yet.', {
+          description: 'Open the transcript to extract again or add your own step.',
+          duration: 8000,
+        });
       }
       // On failure, processSavedRecording already shows a toast — nothing else to do.
+
 
       fetchRecordings();
       setState('idle');
