@@ -16,7 +16,7 @@ import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { scheduleExtractedActions, MeetingScheduleSummary } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { scheduleExtractedActions, MeetingScheduleSummary, ActionOverride } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
 import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
