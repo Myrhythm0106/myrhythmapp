@@ -30,12 +30,16 @@ const PRESET_ORDER: ReminderPreset[] = ['off', 'gentle', 'steady', 'strong'];
 const sameOffsets = (a: number[], b: number[]) =>
   a.length === b.length && [...a].sort((x, y) => x - y).every((v, i) => v === [...b].sort((x, y) => x - y)[i]);
 
-export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved, onClose }: ReminderLadderPickerProps) {
+export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved, onClose, onDirtyChange }: ReminderLadderPickerProps) {
   const { user } = useAuth();
   const [offsets, setOffsets] = useState<number[]>([]);
   const [initialOffsets, setInitialOffsets] = useState<number[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    onDirtyChange?.(!sameOffsets(offsets, initialOffsets));
+  }, [offsets, initialOffsets, onDirtyChange]);
 
   useEffect(() => {
     let cancelled = false;
