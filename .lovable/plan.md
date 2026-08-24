@@ -27,30 +27,32 @@ Behaviour:
 - I can delete anything on my own items; a member can delete only their own note.
 - A "Send encouragement" quick-tap with a few kind one-liners, so a family member doesn't have to compose a message.
 
-## 3. Keeping a recording: download + a clear warning
+## 3. The original rule stands: audio is permanently deleted at day 30
 
-- Every recording row gets a **Download** action (saves the audio file to the phone or laptop) alongside Play.
-- Each capture shows its own countdown in plain words: "Audio is removed on 23 Sept (30 days)". In the last 7 days it turns into an amber line with a one-tap Download.
-- A short, dismissible explainer the first time: audio is deleted after the retention window; the transcript and next steps are kept; download now if you want your own copy.
-- Downloading or not downloading changes nothing else — the transcript, next steps, dates, notes and schedule are unaffected either way. Downloading is purely a personal copy.
+This is the promise already written in Settings and the docs, and the plan keeps it exactly:
 
-## 4. Storage and the 30-day deletion — important
+- **Audio is destroyed 30 days after capture.** Permanent — no archive, no recycle bin, no way for me or anyone else to get it back.
+- **Download is the only way to keep it.** Every recording row gets a **Download** action next to Play, so I can save my own copy to the phone or laptop before the deadline.
+- **Two warnings, deliberately close to the deadline** so they land as urgent, not as background noise:
+  - **Day 25** — "This recording is deleted in 5 days" with a one-tap Download.
+  - **Day 29** — final amber notice, "Deleted tomorrow", again with Download.
+- Each capture also carries a quiet countdown line ("Audio deleted on 23 Sept") so the date is never a surprise, plus a one-time explainer the first time I record.
+- **Whether I download or not, nothing else changes.** Downloading is purely a personal copy — it does not extend the audio's life, and skipping it does not touch anything else.
 
-Right now the automatic clean-up deletes voice recordings after their retention window, and the database is wired so that **deleting a recording also deletes its capture, its extracted next steps, and any comments attached to them.** So today, notes would disappear along with the audio at day 30.
+## 4. What survives the deletion — and what doesn't
 
-Proposed rule, which matches how the retention promise is meant to work:
+- **Deleted for good at day 30:** the audio file itself.
+- **Kept:** the transcript, my next steps, their dates, and the notes thread. These are what my plan actually runs on, so losing them would break the schedule rather than protect my privacy.
+- A capture whose audio has gone shows "Audio deleted after 30 days" where the player was, with the transcript and thread intact.
+- Deleting a capture myself still removes everything belonging to it, immediately.
 
-- **Audio expires** on schedule (that's the privacy promise, and audio is what takes real space).
-- **Text survives by default**: transcript, next steps, and all notes/encouragement stay. A capture whose audio has expired shows "Audio removed after 30 days" where the player was, with the transcript and thread intact.
-- Notes are plain text — a thousand of them is a rounding error next to a single hour of audio, so there is no cost pressure to expire them.
-- Deleting a capture yourself still removes everything belonging to it, as now.
-
-**Optional tidy-up after the audio goes.** When a capture's audio has been deleted (because it wasn't downloaded in time), I'm offered a choice on that capture — never automatic, never silent:
+**Optional tidy-up after the audio goes.** Once a capture's audio is deleted, I'm offered a choice on that capture — never automatic, never silent:
 
 - **Export first**: download its next steps as Excel (.xlsx), a Google-Sheets-ready file, or a PDF summary. Same export engine already used for the Capture Brief.
 - **Then, if I want, clear the next steps** for that capture — a single confirm, with the export offered in the same dialog so nothing is lost by accident.
-- If I don't act, nothing happens: next steps stay exactly as they are.
-- Anything already scheduled in my calendar stays scheduled regardless.
+- If I don't act, nothing happens: next steps stay exactly as they are, and anything already in my calendar stays scheduled.
+
+
 
 
 ## 5. Closed actions are archived, not gone
