@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -86,6 +96,8 @@ export function ActionsViewer({
   const [archiveFilter, setArchiveFilter] = useState<'open' | 'archived' | 'all'>('open');
   const [notesTarget, setNotesTarget] = useState<NextStepsItem | null>(null);
   const [remindersTarget, setRemindersTarget] = useState<NextStepsItem | null>(null);
+  const [reminderDirty, setReminderDirty] = useState(false);
+  const [showUnsavedGuard, setShowUnsavedGuard] = useState(false);
   const [showCaptureNotes, setShowCaptureNotes] = useState(false);
   const [ladders, setLadders] = useState<Record<string, number[]>>({});
 
@@ -981,7 +993,18 @@ export function ActionsViewer({
       </Dialog>
 
       {/* Reminder ladder */}
-      <Dialog open={!!remindersTarget} onOpenChange={(open) => !open && setRemindersTarget(null)}>
+      <Dialog
+        open={!!remindersTarget && !showUnsavedGuard}
+        onOpenChange={(open) => {
+          if (!open) {
+            if (reminderDirty) {
+              setShowUnsavedGuard(true);
+            } else {
+              setRemindersTarget(null);
+            }
+          }
+        }}
+      >
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle className="text-base">{remindersTarget?.action_text}</DialogTitle>
@@ -992,13 +1015,45 @@ export function ActionsViewer({
               dueDate={remindersTarget.completion_date || remindersTarget.end_date}
               priorityLevel={remindersTarget.priority_level}
               onSaved={() => refreshLadders()}
-              onClose={() => setRemindersTarget(null)}
+              onClose={() => {
+                if (reminderDirty) {
+                  setShowUnsavedGuard(true);
+                } else {
+                  setRemindersTarget(null);
+                }
+              }}
+              onDirtyChange={setReminderDirty}
             />
-
-
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Unsaved reminder changes guard */}
+      <AlertDialog open={showUnsavedGuard} onOpenChange={setShowUnsavedGuard}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard unsaved reminder changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You've changed your reminder settings. If you close now, those changes won't be saved.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowUnsavedGuard(false)} className="min-h-[56px]">
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setShowUnsavedGuard(false);
+                setReminderDirty(false);
+                setRemindersTarget(null);
+              }}
+              className="min-h-[56px]"
+            >
+              Discard changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Notes on the whole capture */}
       <Dialog open={showCaptureNotes} onOpenChange={setShowCaptureNotes}>
