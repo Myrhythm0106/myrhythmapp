@@ -95,7 +95,7 @@ export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved
           <button
             key={preset}
             type="button"
-            onClick={() => persist(REMINDER_PRESETS[preset])}
+            onClick={() => setOffsets(REMINDER_PRESETS[preset])}
             className={cn(
               'text-xs rounded-full border px-3 py-2 transition-colors min-h-[36px]',
               activePreset === preset
