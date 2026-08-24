@@ -42,6 +42,8 @@ interface LaunchDayViewProps {
 export function LaunchDayView({ 
   date, 
   events, 
+  reminders = [],
+  onReminderSelect,
   className = '',
   inheritedVision,
   inheritedMonthFocus,
@@ -51,6 +53,8 @@ export function LaunchDayView({
   onEventReschedule
 }: LaunchDayViewProps) {
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
+  const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
+
 
   const getTypeColor = (type: string) => {
     const colors: Record<string, string> = {
