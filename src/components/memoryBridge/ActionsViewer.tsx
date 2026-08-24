@@ -796,6 +796,8 @@ export function ActionsViewer({
         onApply={handleBulkAddWatchers}
         actionsCount={extractedActions.length}
       />
+
+      <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
     </Dialog>
   );
 }
