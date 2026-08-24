@@ -41,9 +41,17 @@ Right now the automatic clean-up deletes voice recordings after their retention 
 Proposed rule, which matches how the retention promise is meant to work:
 
 - **Audio expires** on schedule (that's the privacy promise, and audio is what takes real space).
-- **Text survives**: transcript, next steps, and all notes/encouragement stay. A capture whose audio has expired shows "Audio removed after 30 days" where the player was, with the transcript and thread intact.
+- **Text survives by default**: transcript, next steps, and all notes/encouragement stay. A capture whose audio has expired shows "Audio removed after 30 days" where the player was, with the transcript and thread intact.
 - Notes are plain text — a thousand of them is a rounding error next to a single hour of audio, so there is no cost pressure to expire them.
 - Deleting a capture yourself still removes everything belonging to it, as now.
+
+**Optional tidy-up after the audio goes.** When a capture's audio has been deleted (because it wasn't downloaded in time), I'm offered a choice on that capture — never automatic, never silent:
+
+- **Export first**: download its next steps as Excel (.xlsx), a Google-Sheets-ready file, or a PDF summary. Same export engine already used for the Capture Brief.
+- **Then, if I want, clear the next steps** for that capture — a single confirm, with the export offered in the same dialog so nothing is lost by accident.
+- If I don't act, nothing happens: next steps stay exactly as they are.
+- Anything already scheduled in my calendar stays scheduled regardless.
+
 
 ## 5. Closed actions are archived, not gone
 
@@ -59,4 +67,6 @@ Proposed rule, which matches how the retention promise is meant to work:
 - Notes: one new `item_notes` table keyed by (`target_type` = action | recording, `target_id`), with `owner_user_id`, `author_user_id`, `author_member_id`, `body`, `kind` (note | encouragement), and read tracking. RLS: owner full access; circle members with active status and view access to the target may read all and insert/delete their own. Grants for `authenticated` and `service_role`. Existing `memory_bridge_comments` and `support_member_action_notes` rows get read into the new thread view rather than being abandoned.
 - Retention: drop the cascade from `voice_recordings` to `meeting_recordings` (set null on the audio link instead), so the clean-up job removes only the audio row and storage object; add an `audio_expired_at` marker the UI reads.
 - Archive: add `archived_at` (and reuse existing status) on `extracted_actions`; list queries filter `archived_at is null` by default; archiving is a status/timestamp update, never a delete.
+- Next-step export: reuse `exportCaptureBriefXlsx` (ExcelJS) for .xlsx / Sheets-ready output and the existing brief PDF exporter for the PDF; both scoped to one capture's next steps. The post-expiry "clear next steps" action is an explicit, confirmed delete only.
+
 
