@@ -153,10 +153,7 @@ export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved
           variant="outline"
           className="flex-1 min-h-[56px]"
           disabled={isSaving}
-          onClick={() => {
-            setOffsets(initialOffsets);
-            onClose?.();
-          }}
+          onClick={() => onClose?.()}
         >
           Cancel
         </Button>
