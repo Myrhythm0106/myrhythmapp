@@ -9,6 +9,9 @@ import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volu
 import { cn } from '@/lib/utils';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { ensureSession, touchSession } from '@/utils/ensureSession';
+
 import { formatDistanceToNow } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
@@ -58,6 +61,8 @@ interface VoiceRecording {
 
 export default function LaunchMemoryBridge() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
   const [state, setState] = useState<RecordingState>('idle');
   const [showCelebration, setShowCelebration] = useState(false);
   const [notifySupport, setNotifySupport] = useState(true);
@@ -133,6 +138,23 @@ export default function LaunchMemoryBridge() {
     })();
     return () => { cancelled = true; };
   }, []);
+
+  // Keep the session alive: a capture can run for hours, and a backgrounded
+  // tab must not come back with an expired token.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void touchSession();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    void touchSession();
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, []);
+
+  useEffect(() => {
+    if (!isRecording) return;
+    const id = window.setInterval(() => { void touchSession(); }, 10 * 60 * 1000);
+    return () => window.clearInterval(id);
+  }, [isRecording]);
 
 
   useEffect(() => {
@@ -261,11 +283,6 @@ export default function LaunchMemoryBridge() {
 
 
   const handleSave = async () => {
-    if (!user) {
-      toast.error('Please sign in to save this recording.');
-      console.warn('handleSave: blocked — no authenticated user');
-      return;
-    }
     if (!audioBlobRef.current) {
       console.warn('handleSave: blocked — no audio in memory');
       toast.error('That recording is no longer available. Please record again.');
@@ -276,6 +293,21 @@ export default function LaunchMemoryBridge() {
       console.warn('handleSave: blocked — empty audio blob');
       toast.error('That recording came through empty — check your microphone and record again.');
       setState('idle');
+      return;
+    }
+
+    // Never trust stale React auth state — ask Supabase and refresh if needed.
+    const userId = await ensureSession();
+    if (!userId) {
+      console.warn('handleSave: blocked — session expired and could not be refreshed');
+      toast.error('Your session timed out — your recording is safe.', {
+        description: 'Sign in and it will pick up right where it left off.',
+        action: {
+          label: 'Sign in',
+          onClick: () => navigate(`/auth?redirect=${encodeURIComponent('/launch/memory')}`),
+        },
+        duration: 12000,
+      });
       return;
     }
 
@@ -304,9 +336,10 @@ export default function LaunchMemoryBridge() {
       // Automatically start extraction
       const result = await processSavedRecording(
         saved.id,
-        user.id,
+        userId,
         restoredDuration ?? duration
       );
+
 
 
       if (result.success && result.actionsCount && result.actionsCount > 0) {
@@ -345,12 +378,21 @@ export default function LaunchMemoryBridge() {
       setRecordingTitle('');
     } catch (err) {
       console.error('handleSave: unexpected error', err);
-      toast.error(
-        `Could not save recording: ${err instanceof Error ? err.message : 'Unknown error'}`
-      );
+      const stillSignedIn = await ensureSession();
+      if (!stillSignedIn) {
+        toast.error('Your session expired during extraction.', {
+          description: 'Sign in again, then tap "Extract actions" on this recording in Recent Recordings.',
+          duration: 12000,
+        });
+      } else {
+        toast.error(
+          `Could not save recording: ${err instanceof Error ? err.message : 'Unknown error'}`
+        );
+      }
     } finally {
       setIsExtracting(false);
     }
+
   };
 
 
@@ -358,15 +400,29 @@ export default function LaunchMemoryBridge() {
     actionIds?: string[],
     overrides?: Map<string, ActionOverride>,
   ) => {
-    if (!lastExtractionResult || !user) return;
+    if (!lastExtractionResult) return;
+
+    const userId = await ensureSession();
+    if (!userId) {
+      toast.error('Your session timed out — nothing was lost.', {
+        description: 'Sign in again and schedule these steps from Recent Recordings.',
+        action: {
+          label: 'Sign in',
+          onClick: () => navigate(`/auth?redirect=${encodeURIComponent('/launch/memory')}`),
+        },
+        duration: 12000,
+      });
+      return;
+    }
 
     try {
       const summary = await scheduleExtractedActions(
         lastExtractionResult.meetingId,
-        user.id,
+        userId,
         actionIds,
         overrides,
       );
+
 
       if (summary.scheduled === 0) {
         toast.error(
