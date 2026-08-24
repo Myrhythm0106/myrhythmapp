@@ -16,8 +16,8 @@ import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDi
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
-import { NextStepsItem } from '@/types/memoryBridge';
+import { scheduleExtractedActions, MeetingScheduleSummary } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
 import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
@@ -86,6 +86,7 @@ export default function LaunchMemoryBridge() {
     sourceFileName?: string;
   } | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
+  const [commitSummary, setCommitSummary] = useState<MeetingScheduleSummary | null>(null);
 
   const {
     isRecording,
@@ -912,6 +913,8 @@ export default function LaunchMemoryBridge() {
         onNotifySupport={notifySupport ? () => console.log('Notifying support') : undefined}
         streakCount={3}
       />
+
+      <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
 
       {/* Actions Viewer */}
       {viewingActions && (
