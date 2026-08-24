@@ -992,7 +992,9 @@ export function ActionsViewer({
               dueDate={remindersTarget.completion_date || remindersTarget.end_date}
               priorityLevel={remindersTarget.priority_level}
               onSaved={() => refreshLadders()}
+              onClose={() => setRemindersTarget(null)}
             />
+
 
           )}
         </DialogContent>
