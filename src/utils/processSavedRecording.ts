@@ -194,7 +194,8 @@ async function runProcessing(
 
 // Poll for processing completion
 async function pollForCompletion(
-  meetingId: string, 
+  meetingId: string,
+  recordingId: string,
   startTime: number, 
   estimatedTotalTime: number,
   onProgressUpdate?: (progress: ProcessingProgress) => void
@@ -221,11 +222,18 @@ async function pollForCompletion(
       message: 'Transcribing your audio...'
     });
     
-    // Check if actions have been extracted
+    // Count actions for the *recording*, not just this meeting row, so a stray
+    // duplicate meeting can never make a successful extraction look like zero.
+    const { data: siblingMeetings } = await supabase
+      .from('meeting_recordings')
+      .select('id')
+      .eq('recording_id', recordingId);
+    const meetingIds = (siblingMeetings?.map(m => m.id) ?? [meetingId]);
     const { data: actions } = await supabase
       .from('extracted_actions')
       .select('id')
-      .eq('meeting_recording_id', meetingId);
+      .in('meeting_recording_id', meetingIds.length > 0 ? meetingIds : [meetingId]);
+
 
     // Check meeting status
     const { data: meeting } = await supabase
