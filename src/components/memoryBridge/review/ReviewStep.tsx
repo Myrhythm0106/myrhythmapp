@@ -350,19 +350,19 @@ export function ReviewStep({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-5xl w-[calc(100vw-1rem)] h-[92vh] p-0 gap-0 flex flex-col bg-launch-ivory"
+        className="max-w-5xl w-[calc(100vw-1rem)] h-[92vh] p-0 gap-0 flex flex-col bg-background"
         aria-describedby={undefined}
       >
         {/* Header */}
-        <div className="shrink-0 border-b border-launch-gold/30 px-4 md:px-6 py-4">
-          <h2 className="text-xl md:text-2xl font-semibold text-launch-ink">
+        <div className="shrink-0 border-b border-border px-4 md:px-6 py-4">
+          <h2 className="text-xl md:text-2xl font-semibold text-foreground">
             Review before it reaches my diary
           </h2>
-          <p className="text-sm md:text-base text-launch-ink/70 mt-1">
+          <p className="text-sm md:text-base text-muted-foreground mt-1">
             From “{meetingTitle}”. Change anything here — nothing is scheduled until I say so.
           </p>
           {sourceFilePath && (
-            <p className="text-xs text-launch-moss mt-2">
+            <p className="text-xs text-primary mt-2">
               Your document is held until you confirm, then deleted.
             </p>
           )}
@@ -371,12 +371,12 @@ export function ReviewStep({
         {/* Body */}
         <div className="flex-1 overflow-y-auto px-4 md:px-6 py-4">
           {loading ? (
-            <div className="py-16 text-center text-launch-ink/60">
+            <div className="py-16 text-center text-muted-foreground">
               <Loader2 className="h-5 w-5 animate-spin mx-auto mb-2" />
               Gathering my next steps…
             </div>
           ) : rows.length === 0 ? (
-            <div className="py-16 text-center text-launch-ink/60 text-base">
+            <div className="py-16 text-center text-muted-foreground text-base">
               Nothing left to review — everything from this capture is already in my diary.
             </div>
           ) : (
@@ -385,7 +385,7 @@ export function ReviewStep({
               <div className="hidden lg:block">
                 <table className="w-full text-left">
                   <thead>
-                    <tr className="text-xs uppercase tracking-wide text-launch-ink/50">
+                    <tr className="text-xs uppercase tracking-wide text-muted-foreground">
                       <th className="w-10 py-2" />
                       <th className="py-2">My next step</th>
                       <th className="py-2 w-32">Owner</th>
@@ -401,7 +401,7 @@ export function ReviewStep({
                       <tr
                         key={r.id}
                         className={cn(
-                          'border-t border-launch-gold/20 align-top',
+                          'border-t border-border align-top',
                           !r.include && 'opacity-45',
                         )}
                       >
@@ -421,7 +421,7 @@ export function ReviewStep({
                           />
                           <div className="mt-1 flex flex-wrap items-center gap-2">
                             {r.needsCheck && (
-                              <Badge variant="outline" className="text-[11px] border-launch-ember/50 text-launch-ember">
+                              <Badge variant="outline" className="text-[11px] border-primary/50 text-primary">
                                 suggested — check this
                               </Badge>
                             )}
@@ -429,14 +429,14 @@ export function ReviewStep({
                               <button
                                 type="button"
                                 onClick={() => toggleExpanded(r.id)}
-                                className="text-[11px] text-launch-moss hover:underline"
+                                className="text-[11px] text-primary hover:underline"
                               >
                                 {expanded.has(r.id) ? 'Hide what I said' : 'What I said'}
                               </button>
                             )}
                           </div>
                           {expanded.has(r.id) && r.sourceQuote && (
-                            <blockquote className="mt-1 border-l-2 border-launch-gold/50 pl-2 text-xs italic text-launch-ink/70">
+                            <blockquote className="mt-1 border-l-2 border-border pl-2 text-xs italic text-muted-foreground">
                               “{r.sourceQuote}”
                             </blockquote>
                           )}
@@ -458,7 +458,7 @@ export function ReviewStep({
                             />
                             <TimeField value={r.time} onChange={v => patch(r.id, { time: v, slotIsSuggestion: false })} />
                             {r.slotIsSuggestion && (
-                              <span className="text-[11px] text-launch-ink/50">suggested slot</span>
+                              <span className="text-[11px] text-muted-foreground">suggested slot</span>
                             )}
                           </div>
                         </td>
@@ -489,7 +489,7 @@ export function ReviewStep({
                             variant="ghost"
                             size="icon"
                             aria-label="Remove this step"
-                            className="h-11 w-11 text-launch-ink/50 hover:text-destructive"
+                            className="h-11 w-11 text-muted-foreground hover:text-destructive"
                             onClick={() => handleRemove(r.id)}
                           >
                             <Trash2 className="h-4 w-4" />
@@ -509,7 +509,7 @@ export function ReviewStep({
                     <div
                       key={r.id}
                       className={cn(
-                        'rounded-xl border border-launch-gold/30 bg-white/70 p-3',
+                        'rounded-xl border border-border bg-card p-3',
                         !r.include && 'opacity-50',
                       )}
                     >
@@ -528,7 +528,7 @@ export function ReviewStep({
                             aria-label="Step description"
                           />
                           {r.needsCheck && (
-                            <Badge variant="outline" className="mt-2 text-[11px] border-launch-ember/50 text-launch-ember">
+                            <Badge variant="outline" className="mt-2 text-[11px] border-primary/50 text-primary">
                               suggested — check this
                             </Badge>
                           )}
@@ -541,13 +541,13 @@ export function ReviewStep({
                             <TimeField value={r.time} onChange={v => patch(r.id, { time: v, slotIsSuggestion: false })} />
                           </div>
                           {r.slotIsSuggestion && (
-                            <p className="mt-1 text-[11px] text-launch-ink/50">Suggested slot — tap to change.</p>
+                            <p className="mt-1 text-[11px] text-muted-foreground">Suggested slot — tap to change.</p>
                           )}
 
                           <button
                             type="button"
                             onClick={() => toggleExpanded(r.id)}
-                            className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm text-launch-moss"
+                            className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm text-primary"
                           >
                             {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                             {open ? 'Less' : 'More'}
@@ -556,7 +556,7 @@ export function ReviewStep({
                           {open && (
                             <div className="mt-2 space-y-3">
                               <div>
-                                <label className="text-xs text-launch-ink/60">Owner</label>
+                                <label className="text-xs text-muted-foreground">Owner</label>
                                 <Input
                                   value={r.owner}
                                   onChange={e => patch(r.id, { owner: e.target.value })}
@@ -564,7 +564,7 @@ export function ReviewStep({
                                 />
                               </div>
                               <div>
-                                <label className="text-xs text-launch-ink/60">Due</label>
+                                <label className="text-xs text-muted-foreground">Due</label>
                                 <DateField
                                   value={r.dueDate}
                                   onChange={v => patch(r.id, { dueDate: v })}
@@ -573,7 +573,7 @@ export function ReviewStep({
                                 />
                               </div>
                               <div>
-                                <label className="text-xs text-launch-ink/60">Priority</label>
+                                <label className="text-xs text-muted-foreground">Priority</label>
                                 <Select
                                   value={priorityValue(r.priority)}
                                   onValueChange={v => patch(r.id, { priority: Number(v) })}
@@ -588,7 +588,7 @@ export function ReviewStep({
                               </div>
                               {renderPeople(r)}
                               {r.sourceQuote && (
-                                <blockquote className="border-l-2 border-launch-gold/50 pl-2 text-xs italic text-launch-ink/70">
+                                <blockquote className="border-l-2 border-border pl-2 text-xs italic text-muted-foreground">
                                   “{r.sourceQuote}”
                                 </blockquote>
                               )}
@@ -640,9 +640,9 @@ export function ReviewStep({
         </div>
 
         {/* Sticky footer */}
-        <div className="shrink-0 border-t border-launch-gold/30 bg-launch-cream px-4 md:px-6 py-3 space-y-3">
+        <div className="shrink-0 border-t border-border bg-muted/40 px-4 md:px-6 py-3 space-y-3">
           {sourceFilePath && (
-            <label className="flex items-start gap-2 text-sm text-launch-ink cursor-pointer">
+            <label className="flex items-start gap-2 text-sm text-foreground cursor-pointer">
               <Checkbox
                 checked={confirmedAccurate}
                 onCheckedChange={v => setConfirmedAccurate(Boolean(v))}
@@ -654,7 +654,7 @@ export function ReviewStep({
             </label>
           )}
           <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-2">
-            <span className="text-sm text-launch-ink/70">
+            <span className="text-sm text-muted-foreground">
               {included.length} of {rows.length} will go in my diary
             </span>
             <div className="flex gap-2">
@@ -662,7 +662,7 @@ export function ReviewStep({
                 Not yet
               </Button>
               <Button
-                className="min-h-11 flex-1 sm:flex-none bg-launch-ember hover:bg-launch-ember/90 text-launch-cream"
+                className="min-h-11 flex-1 sm:flex-none bg-primary hover:bg-primary/90 text-primary-foreground"
                 onClick={handleCommit}
                 disabled={saving || included.length === 0 || (!!sourceFilePath && !confirmedAccurate)}
               >
