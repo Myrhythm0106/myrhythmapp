@@ -16,8 +16,8 @@ import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDi
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
-import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
-import { NextStepsItem } from '@/types/memoryBridge';
+import { scheduleExtractedActions, MeetingScheduleSummary } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
 import { OutputActions } from '@/components/shared/OutputActions';
 import { LoopInPicker, AdhocLoopIn } from '@/components/shared/LoopInPicker';
 import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
@@ -86,6 +86,7 @@ export default function LaunchMemoryBridge() {
     sourceFileName?: string;
   } | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
+  const [commitSummary, setCommitSummary] = useState<MeetingScheduleSummary | null>(null);
 
   const {
     isRecording,
@@ -360,67 +361,45 @@ export default function LaunchMemoryBridge() {
     if (!lastExtractionResult || !user) return;
 
     try {
-      // Fetch actions for this meeting, filtered to the user's selection if provided
-      let query = supabase
-        .from('extracted_actions')
-        .select('*')
-        .eq('meeting_recording_id', lastExtractionResult.meetingId);
-      if (actionIds && actionIds.length > 0) {
-        query = query.in('id', actionIds);
-      }
-      const { data: actions, error } = await query;
+      const summary = await scheduleExtractedActions(
+        lastExtractionResult.meetingId,
+        user.id,
+        actionIds,
+      );
 
-      if (error) throw error;
-
-      let scheduled = 0;
-      for (const action of actions || []) {
-        try {
-          const eventId = await convertActionToCalendarEvent(
-            action as unknown as NextStepsItem,
-            user.id,
-            [],
-            action.proposed_date,
-            action.proposed_time
+      if (summary.scheduled === 0) {
+        toast.error(
+          summary.total === 0
+            ? 'There are no next steps to schedule yet.'
+            : 'Nothing could be added to my diary — please try again.',
+        );
+      } else {
+        recordAction(SURFACES.commit, 'scheduled', {
+          value: summary.scheduled,
+          data: { scheduled: summary.scheduled, total: summary.total },
+        });
+        setCommitSummary(summary);
+        const peopleNote =
+          summary.notified > 0
+            ? ` · ${summary.notified} ${summary.notified === 1 ? 'person' : 'people'} told`
+            : '';
+        toast.success(
+          `${summary.scheduled} of ${summary.total} in my diary${peopleNote}`,
+        );
+        if (summary.notifyFailures.length > 0) {
+          toast.warning(
+            `Couldn't reach: ${summary.notifyFailures.join(', ')}`,
           );
-
-          if (eventId) {
-            await supabase
-              .from('extracted_actions')
-              .update({
-                status: 'scheduled',
-                calendar_event_id: eventId,
-                support_circle_notified: notifyCircle
-              })
-              .eq('id', action.id);
-            scheduled++;
-          }
-        } catch (err) {
-          console.error('Failed to schedule action:', err);
         }
       }
-
-      if (scheduled === 0) {
-        toast.info('No actions were scheduled.');
-      } else {
-        const total = actionIds?.length ?? (actions?.length || 0);
-        recordAction(SURFACES.commit, 'scheduled', {
-          value: scheduled,
-          data: { scheduled, total },
-        });
-        toast.success(
-          scheduled === total
-            ? `Scheduled ${scheduled} ${scheduled === 1 ? 'action' : 'actions'} to your calendar!`
-            : `Scheduled ${scheduled} of ${total} selected actions.`,
-        );
-      }
       setShowPostExtractionDialog(false);
-      setShowCelebration(true);
 
     } catch (error) {
       console.error('Error scheduling all actions:', error);
       toast.error('Failed to schedule actions');
     }
   };
+
 
   const handleReviewIndividually = () => {
     if (lastExtractionResult) {
@@ -933,6 +912,8 @@ export default function LaunchMemoryBridge() {
         onNotifySupport={notifySupport ? () => console.log('Notifying support') : undefined}
         streakCount={3}
       />
+
+      <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
 
       {/* Actions Viewer */}
       {viewingActions && (
