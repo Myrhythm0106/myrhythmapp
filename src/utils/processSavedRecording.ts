@@ -2,7 +2,28 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { ProcessingProgress } from '@/types/processing';
 
+/** Guards against two parallel runs for the same recording (double tap, remount). */
+const inFlight = new Map<string, Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }>>();
+
 export async function processSavedRecording(
+  recordingId: string,
+  userId: string,
+  audioDuration: number = 0,
+  onProgressUpdate?: (progress: ProcessingProgress) => void
+): Promise<{ success: boolean; actionsCount?: number; meetingId?: string; hasTranscript?: boolean }> {
+  const existing = inFlight.get(recordingId);
+  if (existing) {
+    console.log('processSavedRecording: already running for', recordingId, '— reusing in-flight run');
+    return existing;
+  }
+  const run = runProcessing(recordingId, userId, audioDuration, onProgressUpdate).finally(() => {
+    inFlight.delete(recordingId);
+  });
+  inFlight.set(recordingId, run);
+  return run;
+}
+
+async function runProcessing(
   recordingId: string,
   userId: string,
   audioDuration: number = 0,
@@ -43,30 +64,56 @@ export async function processSavedRecording(
       throw new Error('Recording not found');
     }
 
-    // Create meeting recording record
-    console.log('processSavedRecording: Creating meeting record...');
-    const { data: meetingRecord, error: meetingError } = await supabase
+    // One recording => one meeting. Reuse an existing meeting row if we already made one.
+    const { data: existingMeeting } = await supabase
       .from('meeting_recordings')
-      .insert({
-        user_id: userId,
-        recording_id: recordingId,
-        meeting_title: recording.title,
-        meeting_type: 'informal',
-        participants: [],
-        is_active: false,
-        started_at: recording.created_at,
-        ended_at: new Date().toISOString(),
-        processing_status: 'pending'
-      })
-      .select()
-      .single();
-      
-    console.log('processSavedRecording: Meeting record result:', { meetingRecord, error: meetingError });
+      .select('*')
+      .eq('recording_id', recordingId)
+      .eq('user_id', userId)
+      .maybeSingle();
 
-    if (meetingError) {
-      console.error('processSavedRecording: Error creating meeting record:', meetingError);
-      throw meetingError;
+    let meetingRecord = existingMeeting;
+
+    if (meetingRecord) {
+      console.log('processSavedRecording: Reusing existing meeting record', meetingRecord.id);
+    } else {
+      console.log('processSavedRecording: Creating meeting record...');
+      const { data: created, error: meetingError } = await supabase
+        .from('meeting_recordings')
+        .insert({
+          user_id: userId,
+          recording_id: recordingId,
+          meeting_title: recording.title,
+          meeting_type: 'informal',
+          participants: [],
+          is_active: false,
+          started_at: recording.created_at,
+          ended_at: new Date().toISOString(),
+          processing_status: 'pending'
+        })
+        .select()
+        .single();
+
+      console.log('processSavedRecording: Meeting record result:', { created, error: meetingError });
+
+      if (meetingError) {
+        // Unique index race: another run just created it — pick that one up.
+        const { data: raced } = await supabase
+          .from('meeting_recordings')
+          .select('*')
+          .eq('recording_id', recordingId)
+          .eq('user_id', userId)
+          .maybeSingle();
+        if (!raced) {
+          console.error('processSavedRecording: Error creating meeting record:', meetingError);
+          throw meetingError;
+        }
+        meetingRecord = raced;
+      } else {
+        meetingRecord = created;
+      }
     }
+
 
     // Stage 2: Transcribing (10% - will update during polling)
     const elapsed = Math.floor((Date.now() - startTime) / 1000);
