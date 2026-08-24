@@ -415,6 +415,40 @@ const EditableDueIn = ({
   );
 };
 
+/** Shows which reminder ladder is in force and when the next nudge lands. */
+const ReminderBadge: React.FC<{
+  offsets: number[];
+  dueDate?: string | null;
+  onClick: () => void;
+}> = ({ offsets, dueDate, onClick }) => {
+  const preset = offsets.length ? matchPreset(offsets) : 'off';
+  const next = offsets.length ? nextReminderDate(offsets, dueDate) : null;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Change reminders"
+      className={cn(
+        'min-h-[44px] w-full flex flex-col items-start justify-center rounded-md px-2 -mx-2 text-left hover:bg-muted/50 transition-colors',
+        offsets.length === 0 && 'text-muted-foreground'
+      )}
+    >
+      <span className="flex items-center gap-1 text-xs font-medium">
+        <Bell className={cn('h-3.5 w-3.5', offsets.length ? 'text-brand-orange-500' : 'text-muted-foreground')} />
+        {offsets.length === 0 ? 'Off' : preset ? presetLabel[preset] : `${offsets.length} set`}
+      </span>
+      {next && (
+        <span className="text-[11px] text-muted-foreground">
+          Next {format(next, 'MMM d')}
+        </span>
+      )}
+    </button>
+  );
+};
+
+
+
 export function ActionsTableView({
   actions,
   onDragEnd,
