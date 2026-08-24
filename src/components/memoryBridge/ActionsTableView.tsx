@@ -33,6 +33,9 @@ interface ActionsTableViewProps {
   onOpenReminders?: (action: NextStepsItem) => void;
   onArchive?: (actionId: string) => void;
   onRestore?: (actionId: string) => void;
+  /** actionId -> reminder offsets, for the at-a-glance ladder badge. */
+  ladders?: Record<string, number[]>;
+
   onSort: (field: 'priority' | 'status' | 'start' | 'finish') => void;
   sortField: 'priority' | 'status' | 'start' | 'finish';
   sortDirection: 'asc' | 'desc';
