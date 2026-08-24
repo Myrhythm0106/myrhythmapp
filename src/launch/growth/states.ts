@@ -1,5 +1,10 @@
 // MyRHYTHM-G — the daily growth-mindset lens over MYRHYTHM.
 // 8 states, 1:1 with the MYRHYTHM letters. See mem://brand/myrhythm-g.
+// Canonical letters/words live in src/launch/framework/myrhythm.ts — each state below
+// carries the framework `word` so the two can never drift apart.
+
+import { wordForGrowthKey } from '@/launch/framework/myrhythm';
+
 
 export const MYRHYTHM_G_BRAND = 'MyRHYTHM-G' as const;
 
@@ -14,11 +19,13 @@ export interface GrowthState {
   name: string;
   /** One-line first-person prompt */
   prompt: string;
+  /** Canonical MYRHYTHM word this state sits under (derived, never hand-written) */
+  word: string;
   /** Tailwind color token from the MYRHYTHM palette */
   tone: 'memory' | 'clarity' | 'brain-health' | 'sunrise-amber' | 'beacon';
 }
 
-export const GROWTH_STATES: readonly GrowthState[] = [
+const RAW_STATES: Omit<GrowthState, 'word'>[] = [
   { key: 'M1', letter: 'M', name: 'Mindset set',            prompt: "I've decided this matters.",              tone: 'memory' },
   { key: 'Y1', letter: 'Y', name: 'Yes, begun',             prompt: "I've said yes and started.",              tone: 'sunrise-amber' },
   { key: 'R',  letter: 'R', name: 'Rhythm wobble',          prompt: "My rhythm's off — I'm rethinking.",       tone: 'clarity' },
@@ -27,7 +34,13 @@ export const GROWTH_STATES: readonly GrowthState[] = [
   { key: 'T',  letter: 'T', name: 'Transforming',           prompt: "Turning what happened into what's next.", tone: 'beacon' },
   { key: 'H2', letter: 'H', name: 'Healing through habit',  prompt: "Practising — repetition is doing the work.", tone: 'brain-health' },
   { key: 'M2', letter: 'M', name: 'Mastered & multiplying', prompt: "I've got this — ready to pass it on.",    tone: 'memory' },
-] as const;
+];
+
+export const GROWTH_STATES: readonly GrowthState[] = RAW_STATES.map((s) => ({
+  ...s,
+  word: wordForGrowthKey(s.key),
+}));
+
 
 export const GROWTH_STATE_BY_KEY: Record<GrowthLetter, GrowthState> =
   GROWTH_STATES.reduce((acc, s) => { acc[s.key] = s; return acc; },

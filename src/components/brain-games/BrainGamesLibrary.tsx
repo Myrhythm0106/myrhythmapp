@@ -17,7 +17,7 @@ import { DailyRecommendation } from "./components/DailyRecommendation";
 import { gameTypes } from "./data/gamesData";
 import { ActiveGameProps } from "./types/gameTypes";
 
-// Dr. Amen's Brain Health Categories
+// Established brain health categories (no named individual in-app — see docs/framework-evidence.md)
 const brainCategories = {
   prefrontalCortex: {
     name: "Prefrontal Cortex (Executive Function)",
@@ -142,7 +142,7 @@ export function BrainGamesLibrary() {
             Brain Games Library
           </h2>
           <p className="text-muted-foreground mt-1">
-            Games organized by Dr. Amen's brain health categories for targeted cognitive training
+            Games organised by established brain health categories for focused practice
           </p>
         </div>
         
