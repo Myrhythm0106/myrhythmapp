@@ -120,7 +120,7 @@ export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved
                   const next = value
                     ? [...offsets, rung.offset]
                     : offsets.filter(o => o !== rung.offset);
-                  persist(next.sort((a, b) => a - b));
+                  setOffsets(next.sort((a, b) => a - b));
                 }}
               />
               <label
