@@ -69,6 +69,7 @@ export function ActionsViewer({
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [commitSummary, setCommitSummary] = useState<MeetingScheduleSummary | null>(null);
   const [showBulkWatcherDialog, setShowBulkWatcherDialog] = useState(false);
+  const [showReview, setShowReview] = useState(false);
 
   const statusOptions = [
     { value: 'not_started', label: 'Ready to Begin' },
