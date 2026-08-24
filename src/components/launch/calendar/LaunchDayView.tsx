@@ -1,9 +1,10 @@
 import React from 'react';
-import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles } from 'lucide-react';
+import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell } from 'lucide-react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { LaunchDailyBrief } from './LaunchDailyBrief';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import { LaunchActionReminder, reminderOffsetLabel } from '@/hooks/useLaunchActionReminders';
 
 interface Event {
   id?: string;
@@ -25,6 +27,8 @@ interface Event {
 interface LaunchDayViewProps {
   date: Date;
   events: Event[];
+  reminders?: LaunchActionReminder[];
+  onReminderSelect?: (reminder: LaunchActionReminder) => void;
   className?: string;
   inheritedVision?: string;
   inheritedMonthFocus?: string;
@@ -33,6 +37,7 @@ interface LaunchDayViewProps {
   onEventCarryOver?: (eventIndex: number) => void;
   onEventReschedule?: (eventIndex: number) => void;
 }
+
 
 export function LaunchDayView({ 
   date, 
