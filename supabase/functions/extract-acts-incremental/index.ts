@@ -217,6 +217,10 @@ THEN: Extract VERB-FIRST action items.
 3. DEPENDS ON 🔗 - "Depends on doctor approval"
 4. NOTES 📝 - "Important contact info"
 
+⚠️ NEVER RETURN AN EMPTY LIST.
+Many recordings are talks, sermons, lectures, appointments or family conversations with no explicit promises. In that case, derive 2-4 practical next steps the listener could take from what was said (reflection, a person to contact, something to read, a habit to try) and give them confidence_score 0.4-0.6 so the person knows they are suggestions rather than promises they made. Use category 'note' for pure information worth keeping.
+
+
 📋 KEY RULES:
 - Start with VERB (CALL, EMAIL, SCHEDULE, BOOK, CREATE, COMPLETE, etc.)
 - Include WHO + WHAT + WHY
