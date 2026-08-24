@@ -22,6 +22,7 @@ interface ReminderLadderPickerProps {
   priorityLevel?: number;
   onSaved?: (offsets: number[]) => void;
   onClose?: () => void;
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 const PRESET_ORDER: ReminderPreset[] = ['off', 'gentle', 'steady', 'strong'];
