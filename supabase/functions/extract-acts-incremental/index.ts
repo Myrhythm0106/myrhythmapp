@@ -537,7 +537,7 @@ Be encouraging and supportive - remember these users may have memory challenges.
 
     return new Response(JSON.stringify({ 
       success: true, 
-      actionsCount: extractedActions.length,
+      actionsCount: insertedCount,
       actions: extractedActions,
       conversationSummary: conversationSummary ? JSON.parse(conversationSummary) : null,
       confidenceScore,
