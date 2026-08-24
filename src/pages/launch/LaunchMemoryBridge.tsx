@@ -887,17 +887,15 @@ export default function LaunchMemoryBridge() {
         </div>
       </div>
 
-      {/* Post-Extraction Dialog - Accept All or Review */}
-      <PostExtractionDialog
+      {/* Review & edit everything before it reaches my diary */}
+      <ReviewStep
         isOpen={showPostExtractionDialog}
         onClose={() => setShowPostExtractionDialog(false)}
-        actionsCount={lastExtractionResult?.actionsCount || 0}
-        meetingTitle={lastExtractionResult?.title || ''}
         meetingId={lastExtractionResult?.meetingId}
+        meetingTitle={lastExtractionResult?.title || ''}
         sourceFilePath={lastExtractionResult?.sourceFilePath}
         sourceFileName={lastExtractionResult?.sourceFileName}
-        onAcceptAndScheduleAll={handleAcceptAndScheduleAll}
-        onReviewIndividually={handleReviewIndividually}
+        onCommit={(actionIds, overrides) => handleAcceptAndScheduleAll(actionIds, overrides)}
       />
 
       {/* Celebration Modal */}
