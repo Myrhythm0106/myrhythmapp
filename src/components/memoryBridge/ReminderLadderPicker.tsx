@@ -141,7 +141,31 @@ export function ReminderLadderPicker({ actionId, dueDate, priorityLevel, onSaved
       <p className="text-xs text-muted-foreground">
         Reminders stop as soon as this is done or closed.
       </p>
-      {isSaving && <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />}
+
+      <div className="flex gap-2 pt-1">
+        <Button
+          type="button"
+          variant="outline"
+          className="flex-1 min-h-[56px]"
+          disabled={isSaving}
+          onClick={() => {
+            setOffsets(initialOffsets);
+            onClose?.();
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          className="flex-1 min-h-[56px]"
+          disabled={isSaving || !isDirty}
+          onClick={handleSave}
+        >
+          {isSaving && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+          Save reminders
+        </Button>
+      </div>
     </div>
+
   );
 }
