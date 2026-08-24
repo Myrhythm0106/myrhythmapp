@@ -800,6 +800,14 @@ export function ActionsViewer({
       />
 
       <CommitSummarySheet summary={commitSummary} onClose={() => setCommitSummary(null)} />
+
+      <ReviewStep
+        isOpen={showReview}
+        onClose={() => setShowReview(false)}
+        meetingId={meetingId || undefined}
+        meetingTitle={meetingTitle}
+        onCommit={(ids, overrides) => handleScheduleAll(ids, overrides)}
+      />
     </Dialog>
   );
 }
