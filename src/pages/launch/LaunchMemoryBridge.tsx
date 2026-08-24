@@ -360,58 +360,36 @@ export default function LaunchMemoryBridge() {
     if (!lastExtractionResult || !user) return;
 
     try {
-      // Fetch actions for this meeting, filtered to the user's selection if provided
-      let query = supabase
-        .from('extracted_actions')
-        .select('*')
-        .eq('meeting_recording_id', lastExtractionResult.meetingId);
-      if (actionIds && actionIds.length > 0) {
-        query = query.in('id', actionIds);
-      }
-      const { data: actions, error } = await query;
+      const summary = await scheduleExtractedActions(
+        lastExtractionResult.meetingId,
+        user.id,
+        actionIds,
+      );
 
-      if (error) throw error;
-
-      let scheduled = 0;
-      for (const action of actions || []) {
-        try {
-          const eventId = await convertActionToCalendarEvent(
-            action as unknown as NextStepsItem,
-            user.id,
-            [],
-            action.proposed_date,
-            action.proposed_time
-          );
-
-          if (eventId) {
-            await supabase
-              .from('extracted_actions')
-              .update({
-                status: 'scheduled',
-                calendar_event_id: eventId,
-                support_circle_notified: notifyCircle
-              })
-              .eq('id', action.id);
-            scheduled++;
-          }
-        } catch (err) {
-          console.error('Failed to schedule action:', err);
-        }
-      }
-
-      if (scheduled === 0) {
-        toast.info('No actions were scheduled.');
-      } else {
-        const total = actionIds?.length ?? (actions?.length || 0);
-        recordAction(SURFACES.commit, 'scheduled', {
-          value: scheduled,
-          data: { scheduled, total },
-        });
-        toast.success(
-          scheduled === total
-            ? `Scheduled ${scheduled} ${scheduled === 1 ? 'action' : 'actions'} to your calendar!`
-            : `Scheduled ${scheduled} of ${total} selected actions.`,
+      if (summary.scheduled === 0) {
+        toast.error(
+          summary.total === 0
+            ? 'There are no next steps to schedule yet.'
+            : 'Nothing could be added to my diary — please try again.',
         );
+      } else {
+        recordAction(SURFACES.commit, 'scheduled', {
+          value: summary.scheduled,
+          data: { scheduled: summary.scheduled, total: summary.total },
+        });
+        setCommitSummary(summary);
+        const peopleNote =
+          summary.notified > 0
+            ? ` · ${summary.notified} ${summary.notified === 1 ? 'person' : 'people'} told`
+            : '';
+        toast.success(
+          `${summary.scheduled} of ${summary.total} in my diary${peopleNote}`,
+        );
+        if (summary.notifyFailures.length > 0) {
+          toast.warning(
+            `Couldn't reach: ${summary.notifyFailures.join(', ')}`,
+          );
+        }
       }
       setShowPostExtractionDialog(false);
       setShowCelebration(true);
@@ -421,6 +399,7 @@ export default function LaunchMemoryBridge() {
       toast.error('Failed to schedule actions');
     }
   };
+
 
   const handleReviewIndividually = () => {
     if (lastExtractionResult) {
