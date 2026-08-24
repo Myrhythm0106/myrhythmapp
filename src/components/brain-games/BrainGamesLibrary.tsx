@@ -17,7 +17,7 @@ import { DailyRecommendation } from "./components/DailyRecommendation";
 import { gameTypes } from "./data/gamesData";
 import { ActiveGameProps } from "./types/gameTypes";
 
-// Dr. Amen's Brain Health Categories
+// Established brain health categories (no named individual in-app — see docs/framework-evidence.md)
 const brainCategories = {
   prefrontalCortex: {
     name: "Prefrontal Cortex (Executive Function)",
