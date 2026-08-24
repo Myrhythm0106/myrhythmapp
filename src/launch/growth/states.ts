@@ -1,5 +1,10 @@
 // MyRHYTHM-G — the daily growth-mindset lens over MYRHYTHM.
 // 8 states, 1:1 with the MYRHYTHM letters. See mem://brand/myrhythm-g.
+// Canonical letters/words live in src/launch/framework/myrhythm.ts — each state below
+// carries the framework `word` so the two can never drift apart.
+
+import { wordForGrowthKey } from '@/launch/framework/myrhythm';
+
 
 export const MYRHYTHM_G_BRAND = 'MyRHYTHM-G' as const;
 
