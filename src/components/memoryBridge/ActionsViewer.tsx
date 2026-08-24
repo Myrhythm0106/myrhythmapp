@@ -993,7 +993,18 @@ export function ActionsViewer({
       </Dialog>
 
       {/* Reminder ladder */}
-      <Dialog open={!!remindersTarget} onOpenChange={(open) => !open && setRemindersTarget(null)}>
+      <Dialog
+        open={!!remindersTarget && !showUnsavedGuard}
+        onOpenChange={(open) => {
+          if (!open) {
+            if (reminderDirty) {
+              setShowUnsavedGuard(true);
+            } else {
+              setRemindersTarget(null);
+            }
+          }
+        }}
+      >
         <DialogContent className="max-w-sm">
           <DialogHeader>
             <DialogTitle className="text-base">{remindersTarget?.action_text}</DialogTitle>
@@ -1005,12 +1016,38 @@ export function ActionsViewer({
               priorityLevel={remindersTarget.priority_level}
               onSaved={() => refreshLadders()}
               onClose={() => setRemindersTarget(null)}
+              onDirtyChange={setReminderDirty}
             />
-
-
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Unsaved reminder changes guard */}
+      <AlertDialog open={showUnsavedGuard} onOpenChange={setShowUnsavedGuard}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Discard unsaved reminder changes?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You've changed your reminder settings. If you close now, those changes won't be saved.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowUnsavedGuard(false)} className="min-h-[56px]">
+              Keep editing
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                setShowUnsavedGuard(false);
+                setReminderDirty(false);
+                setRemindersTarget(null);
+              }}
+              className="min-h-[56px]"
+            >
+              Discard changes
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Notes on the whole capture */}
       <Dialog open={showCaptureNotes} onOpenChange={setShowCaptureNotes}>
