@@ -142,7 +142,7 @@ export function BrainGamesLibrary() {
             Brain Games Library
           </h2>
           <p className="text-muted-foreground mt-1">
-            Games organized by Dr. Amen's brain health categories for targeted cognitive training
+            Games organised by established brain health categories for focused practice
           </p>
         </div>
         
