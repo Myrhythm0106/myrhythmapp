@@ -925,7 +925,11 @@ export default function LaunchMemoryBridge() {
       <CompletionCelebration
         isOpen={showCelebration}
         onClose={handleCelebrationClose}
-        actionTitle={lastExtractionResult ? `${lastExtractionResult.actionsCount} actions scheduled` : "Memory Bridge recording"}
+        actionTitle={
+          lastExtractionResult?.actionsCount
+            ? `${lastExtractionResult.actionsCount} ${lastExtractionResult.actionsCount === 1 ? 'action' : 'actions'} scheduled`
+            : "Recording saved — my transcript and summary are ready"
+        }
         onNotifySupport={notifySupport ? () => console.log('Notifying support') : undefined}
         streakCount={3}
       />
