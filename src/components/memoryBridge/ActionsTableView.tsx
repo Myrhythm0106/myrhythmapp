@@ -17,6 +17,8 @@ import { format, differenceInCalendarDays, addDays, isToday, isTomorrow } from '
 import { parseDateOnly, formatDateOnly } from '@/utils/dateOnly';
 import { ActionWatcherSelector } from './ActionWatcherSelector';
 import { getSuccessCriteriaSuggestions } from './successCriteriaSuggestions';
+import { matchPreset, nextReminderDate, presetLabel } from '@/utils/reminderLadder';
+
 
 interface ActionsTableViewProps {
   actions: NextStepsItem[];
@@ -33,6 +35,9 @@ interface ActionsTableViewProps {
   onOpenReminders?: (action: NextStepsItem) => void;
   onArchive?: (actionId: string) => void;
   onRestore?: (actionId: string) => void;
+  /** actionId -> reminder offsets, for the at-a-glance ladder badge. */
+  ladders?: Record<string, number[]>;
+
   onSort: (field: 'priority' | 'status' | 'start' | 'finish') => void;
   sortField: 'priority' | 'status' | 'start' | 'finish';
   sortDirection: 'asc' | 'desc';
@@ -412,6 +417,40 @@ const EditableDueIn = ({
   );
 };
 
+/** Shows which reminder ladder is in force and when the next nudge lands. */
+const ReminderBadge: React.FC<{
+  offsets: number[];
+  dueDate?: string | null;
+  onClick: () => void;
+}> = ({ offsets, dueDate, onClick }) => {
+  const preset = offsets.length ? matchPreset(offsets) : 'off';
+  const next = offsets.length ? nextReminderDate(offsets, dueDate) : null;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="Change reminders"
+      className={cn(
+        'min-h-[44px] w-full flex flex-col items-start justify-center rounded-md px-2 -mx-2 text-left hover:bg-muted/50 transition-colors',
+        offsets.length === 0 && 'text-muted-foreground'
+      )}
+    >
+      <span className="flex items-center gap-1 text-xs font-medium">
+        <Bell className={cn('h-3.5 w-3.5', offsets.length ? 'text-brand-orange-500' : 'text-muted-foreground')} />
+        {offsets.length === 0 ? 'Off' : preset ? presetLabel[preset] : `${offsets.length} set`}
+      </span>
+      {next && (
+        <span className="text-[11px] text-muted-foreground">
+          Next {format(next, 'MMM d')}
+        </span>
+      )}
+    </button>
+  );
+};
+
+
+
 export function ActionsTableView({
   actions,
   onDragEnd,
@@ -427,6 +466,8 @@ export function ActionsTableView({
   onOpenReminders,
   onArchive,
   onRestore,
+  ladders,
+
 
   onSort,
   sortField,
@@ -502,7 +543,9 @@ export function ActionsTableView({
                 </div>
               </TableHead>
               <TableHead className="w-20">Watchers</TableHead>
+              <TableHead className="w-28">Reminders</TableHead>
               <TableHead className="w-10"></TableHead>
+
             </TableRow>
           </TableHeader>
           
@@ -678,6 +721,16 @@ export function ActionsTableView({
                             <WatcherAvatars watchers={action.assigned_watchers} />
                           )}
                         </TableCell>
+
+                        <TableCell>
+                          <ReminderBadge
+                            offsets={ladders?.[action.id!] || []}
+                            dueDate={action.completion_date || action.end_date}
+                            onClick={() => onOpenReminders?.(action)}
+                          />
+                        </TableCell>
+
+
 
                         <TableCell>
                           <DropdownMenu>

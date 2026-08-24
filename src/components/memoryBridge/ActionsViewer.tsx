@@ -38,7 +38,13 @@ import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { BulkWatcherDialog } from './BulkWatcherDialog';
 import { ItemNotesThread } from '@/components/notes/ItemNotesThread';
 import { ReminderLadderPicker } from './ReminderLadderPicker';
-import { rescheduleActionReminders } from '@/utils/reminderLadder';
+import {
+  clearActionReminders,
+  ensureDefaultLadder,
+  loadLaddersForActions
+} from '@/utils/reminderLadder';
+
+
 
 
 interface ActionsViewerProps {
@@ -81,6 +87,18 @@ export function ActionsViewer({
   const [notesTarget, setNotesTarget] = useState<NextStepsItem | null>(null);
   const [remindersTarget, setRemindersTarget] = useState<NextStepsItem | null>(null);
   const [showCaptureNotes, setShowCaptureNotes] = useState(false);
+  const [ladders, setLadders] = useState<Record<string, number[]>>({});
+
+  const refreshLadders = React.useCallback(async () => {
+    const ids = extractedActions.map(a => a.id).filter((id): id is string => !!id);
+    setLadders(await loadLaddersForActions(ids));
+  }, [extractedActions]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    refreshLadders();
+  }, [isOpen, refreshLadders]);
+
 
 
 
@@ -257,6 +275,20 @@ export function ActionsViewer({
       return;
     }
 
+    // Closed work stops nagging; reopened work gets its ladder back.
+    const action = extractedActions.find(a => a.id === actionId);
+    if (archivedAt) {
+      await clearActionReminders(actionId);
+    } else if (user && action) {
+      await ensureDefaultLadder(
+        actionId,
+        user.id,
+        action.completion_date || action.end_date,
+        action.priority_level
+      );
+    }
+    refreshLadders();
+
     toast.success(message, {
       action: archivedAt
         ? { label: 'Undo', onClick: () => setArchived(actionId, null, 'Back on my open list') }
@@ -271,6 +303,7 @@ export function ActionsViewer({
   const handleRestore = (actionId: string) => {
     setArchived(actionId, null, 'Back on my open list');
   };
+
 
   const handleStatusChange = async (actionId: string, status: string) => {
     await updateAction(actionId, { status: status as any });
@@ -638,6 +671,8 @@ export function ActionsViewer({
           ) : viewMode === 'table' ? (
             <ActionsTableView
               actions={visibleActions}
+              ladders={ladders}
+
               onDragEnd={handleDragEnd}
               onStatusChange={handleStatusChange}
               onPriorityChange={handlePriorityChange}
@@ -651,10 +686,17 @@ export function ActionsViewer({
               onStartDateChange={(id, date) =>
                 handleFieldChange(id, { start_date: date } as Partial<NextStepsItem>, date ? 'Start date updated' : 'Start date cleared')
               }
-              onDueDateChange={(id, date) => {
+              onDueDateChange={async (id, date) => {
                 handleFieldChange(id, { completion_date: date } as Partial<NextStepsItem>, date ? 'Finish date updated' : 'Finish date cleared');
-                rescheduleActionReminders(id, date);
+                if (!date) {
+                  await clearActionReminders(id);
+                } else if (user) {
+                  const target = extractedActions.find(a => a.id === id);
+                  await ensureDefaultLadder(id, user.id, date, target?.priority_level);
+                }
+                refreshLadders();
               }}
+
               onWatchersChange={(id, watchers) =>
                 handleFieldChange(id, { assigned_watchers: watchers }, 'Watchers updated')
               }
@@ -949,7 +991,9 @@ export function ActionsViewer({
               actionId={remindersTarget.id}
               dueDate={remindersTarget.completion_date || remindersTarget.end_date}
               priorityLevel={remindersTarget.priority_level}
+              onSaved={() => refreshLadders()}
             />
+
           )}
         </DialogContent>
       </Dialog>

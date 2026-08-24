@@ -117,3 +117,71 @@ export async function rescheduleActionReminders(actionId: string, dueDate: strin
     )
   );
 }
+
+/** Remove every reminder for an action — used when it's done, cancelled or archived. */
+export async function clearActionReminders(actionId: string) {
+  const { error } = await supabase
+    .from('action_reminders')
+    .delete()
+    .eq('action_id', actionId);
+
+  if (error) console.error('[reminders] clear failed', error);
+}
+
+/**
+ * Silently give a dated action its default ladder if it has none yet.
+ * No due date means nothing to count down to, so nothing is created.
+ */
+export async function ensureDefaultLadder(
+  actionId: string,
+  userId: string,
+  dueDate: string | null | undefined,
+  priorityLevel?: number
+) {
+  if (!dueDate) return;
+
+  const existing = await loadActionReminders(actionId);
+  if (existing.length > 0) {
+    await rescheduleActionReminders(actionId, dueDate);
+    return;
+  }
+
+  const preset = presetForPriority(priorityLevel);
+  await saveActionReminders(actionId, userId, REMINDER_PRESETS[preset], dueDate);
+}
+
+/** Ladder summary for a batch of actions: actionId -> sorted offsets. */
+export async function loadLaddersForActions(actionIds: string[]): Promise<Record<string, number[]>> {
+  if (actionIds.length === 0) return {};
+
+  const { data, error } = await supabase
+    .from('action_reminders')
+    .select('action_id, offset_days, due_at')
+    .in('action_id', actionIds);
+
+  if (error) {
+    console.error('[reminders] batch load failed', error);
+    return {};
+  }
+
+  const map: Record<string, number[]> = {};
+  for (const row of data || []) {
+    (map[row.action_id] ||= []).push(row.offset_days);
+  }
+  for (const key of Object.keys(map)) map[key].sort((a, b) => a - b);
+  return map;
+}
+
+/** Next reminder date for an action's ladder, or null when they're all in the past. */
+export function nextReminderDate(offsets: number[], dueDate: string | null | undefined): Date | null {
+  const now = Date.now();
+  const upcoming = offsets
+    .map(offset => dueAtFor(dueDate, offset))
+    .filter((iso): iso is string => !!iso)
+    .map(iso => new Date(iso))
+    .filter(d => d.getTime() >= now)
+    .sort((a, b) => a.getTime() - b.getTime());
+
+  return upcoming[0] || null;
+}
+

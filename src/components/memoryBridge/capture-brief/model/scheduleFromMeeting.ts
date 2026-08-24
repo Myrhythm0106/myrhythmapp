@@ -1,6 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
 import { commitAction } from './commitActions';
 import { defaultReminders, loadSupportMembers } from './scheduleActions';
+import { ensureDefaultLadder } from '@/utils/reminderLadder';
+
 import { ADHOC_PREFIX } from './commitActions';
 import type { BriefAction, PersonPick } from './types';
 import { smartScheduler } from '@/utils/smartScheduler';
@@ -156,7 +158,11 @@ export async function scheduleExtractedActions(
       summary.notifyFailures.push(...(res.notifyFailures || []));
       summary.entries.push({ text: brief.text, date, time, eventId: res.calendarEventId!, actionId: row.id });
       for (const p of people) if (!summary.people.includes(p.name)) summary.people.push(p.name);
+
+      // Follow-through ladder: days-around nudges on top of the on-the-day calendar reminders.
+      await ensureDefaultLadder(row.id, userId, dueDate || date, ov?.priority ?? row.priority_level);
     } else {
+
       summary.failed++;
       console.error('scheduleExtractedActions: commit failed', res.error, row.id);
     }
