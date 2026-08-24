@@ -467,15 +467,15 @@ export function ActionsViewer({
             {/* Bulk actions bar */}
             <div className="flex items-center gap-2 flex-wrap">
               <Button
-                onClick={handleScheduleAll}
-                disabled={isSchedulingAll || extractedActions.length === 0}
+                onClick={() => setShowReview(true)}
+                disabled={isSchedulingAll || extractedActions.length === 0 || !meetingId}
                 size="sm"
                 className="bg-gradient-to-r from-brand-orange-500 to-brand-orange-600 hover:from-brand-orange-600 hover:to-brand-orange-700 text-white shadow-md"
               >
                 {isSchedulingAll ? (
                   <><Loader2 className="h-4 w-4 animate-spin mr-1" /> Scheduling...</>
                 ) : (
-                  <><CalendarPlus className="h-4 w-4 mr-1" /> Accept & Schedule All</>
+                  <><CalendarPlus className="h-4 w-4 mr-1" /> Review &amp; schedule</>
                 )}
               </Button>
               <Button
