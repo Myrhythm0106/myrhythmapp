@@ -11,10 +11,12 @@ Each note records who wrote it, whether it's a **note** or an **encouragement**,
 
 Who can do what:
 
-- Anyone in my Support Circle with **active** status can read the thread and add notes on my items.
-- A member can delete **only their own** note.
-- I keep full control of everything on my own items — read, add, delete any note.
+- Access is **per item, granted by me**. Being in my Support Circle is not enough — a member sees a thread only on the specific next step or capture I've given them access to (they're a watcher / looped in on it) and their circle status is **active**.
+- Granting is one tap from the row: "Loop someone in" picks from my circle, and I can revoke that access at any time, which immediately hides the thread from them.
+- A permitted member can read the thread and add notes or encouragement on that item only, and can delete **only their own** note.
+- I keep full control of everything on my own items — read, add, delete any note, and see who has access.
 - "Send encouragement" quick-tap offers a few kind one-liners so a family member doesn't have to compose anything.
+
 
 ## 2. Next steps: archive only when completed
 
