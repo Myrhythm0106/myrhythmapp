@@ -400,15 +400,29 @@ export default function LaunchMemoryBridge() {
     actionIds?: string[],
     overrides?: Map<string, ActionOverride>,
   ) => {
-    if (!lastExtractionResult || !user) return;
+    if (!lastExtractionResult) return;
+
+    const userId = await ensureSession();
+    if (!userId) {
+      toast.error('Your session timed out — nothing was lost.', {
+        description: 'Sign in again and schedule these steps from Recent Recordings.',
+        action: {
+          label: 'Sign in',
+          onClick: () => navigate(`/auth?redirect=${encodeURIComponent('/launch/memory')}`),
+        },
+        duration: 12000,
+      });
+      return;
+    }
 
     try {
       const summary = await scheduleExtractedActions(
         lastExtractionResult.meetingId,
-        user.id,
+        userId,
         actionIds,
         overrides,
       );
+
 
       if (summary.scheduled === 0) {
         toast.error(
