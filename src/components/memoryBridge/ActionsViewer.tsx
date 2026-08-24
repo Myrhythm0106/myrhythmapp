@@ -30,7 +30,8 @@ import { ActionCommentsSection } from './ActionCommentsSection';
 import { ActionsTableView } from './ActionsTableView';
 import { toast } from 'sonner';
 import { useAuth } from '@/hooks/useAuth';
-import { convertActionToCalendarEvent } from '@/utils/calendarIntegration';
+import { scheduleExtractedActions, MeetingScheduleSummary } from '@/components/memoryBridge/capture-brief/model/scheduleFromMeeting';
+import { CommitSummarySheet } from '@/components/memoryBridge/CommitSummarySheet';
 import { BulkWatcherDialog } from './BulkWatcherDialog';
 
 interface ActionsViewerProps {
@@ -120,6 +121,7 @@ export function ActionsViewer({
           .single();
 
         if (meetingRecording) {
+          setMeetingId(meetingRecording.id);
           const { data: actions } = await supabase
             .from('extracted_actions')
             .select('*')
@@ -282,44 +284,23 @@ export function ActionsViewer({
 
   // Bulk actions
   const handleScheduleAll = async () => {
-    if (!user) return;
+    if (!user || !meetingId) return;
     setIsSchedulingAll(true);
-    
     try {
-      let scheduled = 0;
-      for (const action of extractedActions) {
-        if (action.status === 'scheduled') continue; // Skip already scheduled
-        
-        try {
-          const eventId = await convertActionToCalendarEvent(
-            action,
-            user.id,
-            [],
-            action.proposed_date || undefined,
-            action.proposed_time || undefined
-          );
-          
-          if (eventId) {
-            await supabase
-              .from('extracted_actions')
-              .update({ 
-                status: 'scheduled',
-                calendar_event_id: eventId
-              })
-              .eq('id', action.id);
-            
-            // Update local state
-            setExtractedActions(prev => 
-              prev.map(a => a.id === action.id ? { ...a, status: 'scheduled' as const, calendar_event_id: eventId } : a)
-            );
-            scheduled++;
-          }
-        } catch (err) {
-          console.error('Failed to schedule action:', err);
-        }
+      const summary = await scheduleExtractedActions(meetingId, user.id);
+      if (summary.scheduled === 0) {
+        toast.error('Nothing could be added to my diary — please try again.');
+      } else {
+        setCommitSummary(summary);
+        setExtractedActions(prev =>
+          prev.map(a => {
+            const hit = summary.entries.find(e => e.actionId === a.id);
+            return hit
+              ? { ...a, status: 'scheduled' as const, calendar_event_id: hit.eventId, scheduled_date: hit.date, scheduled_time: hit.time }
+              : a;
+          }),
+        );
       }
-      
-      toast.success(`Scheduled ${scheduled} actions to your calendar!`);
     } catch (error) {
       console.error('Error scheduling all actions:', error);
       toast.error('Failed to schedule actions');
@@ -358,32 +339,22 @@ export function ActionsViewer({
   };
 
   const handleScheduleIndividual = async (action: NextStepsItem) => {
-    if (!user) return;
-    
+    if (!user || !meetingId || !action.id) return;
     try {
-      const eventId = await convertActionToCalendarEvent(
-        action,
-        user.id,
-        [],
-        action.proposed_date || undefined,
-        action.proposed_time || undefined
-      );
-      
-      if (eventId) {
-        await supabase
-          .from('extracted_actions')
-          .update({ 
-            status: 'scheduled',
-            calendar_event_id: eventId
-          })
-          .eq('id', action.id);
-        
-        setExtractedActions(prev => 
-          prev.map(a => a.id === action.id ? { ...a, status: 'scheduled' as const, calendar_event_id: eventId } : a)
-        );
-        
-        toast.success('Added to your calendar!');
+      const summary = await scheduleExtractedActions(meetingId, user.id, [action.id]);
+      const hit = summary.entries[0];
+      if (!hit) {
+        toast.error("That couldn't be added to my diary — please try again.");
+        return;
       }
+      setExtractedActions(prev =>
+        prev.map(a =>
+          a.id === action.id
+            ? { ...a, status: 'scheduled' as const, calendar_event_id: hit.eventId, scheduled_date: hit.date, scheduled_time: hit.time }
+            : a,
+        ),
+      );
+      setCommitSummary(summary);
     } catch (error) {
       console.error('Failed to schedule action:', error);
       toast.error('Failed to schedule action');
