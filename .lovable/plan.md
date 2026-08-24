@@ -67,4 +67,6 @@ Proposed rule, which matches how the retention promise is meant to work:
 - Notes: one new `item_notes` table keyed by (`target_type` = action | recording, `target_id`), with `owner_user_id`, `author_user_id`, `author_member_id`, `body`, `kind` (note | encouragement), and read tracking. RLS: owner full access; circle members with active status and view access to the target may read all and insert/delete their own. Grants for `authenticated` and `service_role`. Existing `memory_bridge_comments` and `support_member_action_notes` rows get read into the new thread view rather than being abandoned.
 - Retention: drop the cascade from `voice_recordings` to `meeting_recordings` (set null on the audio link instead), so the clean-up job removes only the audio row and storage object; add an `audio_expired_at` marker the UI reads.
 - Archive: add `archived_at` (and reuse existing status) on `extracted_actions`; list queries filter `archived_at is null` by default; archiving is a status/timestamp update, never a delete.
+- Next-step export: reuse `exportCaptureBriefXlsx` (ExcelJS) for .xlsx / Sheets-ready output and the existing brief PDF exporter for the PDF; both scoped to one capture's next steps. The post-expiry "clear next steps" action is an explicit, confirmed delete only.
+
 
