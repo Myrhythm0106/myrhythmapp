@@ -386,37 +386,53 @@ Be encouraging and supportive - remember these users may have memory challenges.
     // Import validation module
     const { validateExtractedAction } = await import('./validators.ts');
 
-    // Validate and filter actions
+    // Score actions — never silently drop them. Low scores are kept and flagged
+    // for review so the person always sees something they can edit or schedule.
     const validatedActions = [];
     for (const action of extractedActions) {
-      const validation = validateExtractedAction(action);
-      
-      if (validation.isValid) {
-        validatedActions.push({
-          ...action,
-          extraction_method: extractionMethod,
-          validation_score: validation.score,
-          validation_issues: JSON.stringify(validation.issues),
-          requires_review: validation.score < 90
-        });
-        console.log(`✅ Action passed validation (score: ${validation.score}): "${action.action_text}"`);
-      } else {
-        console.log(`❌ Action rejected (score: ${validation.score}): "${action.action_text}" - ${validation.issues.join(', ')}`);
+      if (!action?.action_text || String(action.action_text).trim().length < 3) {
+        console.log('❌ Skipping action with no text');
+        continue;
       }
+      const validation = validateExtractedAction(action);
+      validatedActions.push({
+        ...action,
+        extraction_method: extractionMethod,
+        validation_score: validation.score,
+        validation_issues: JSON.stringify(validation.issues),
+        requires_review: validation.score < 90
+      });
+      console.log(`✅ Action kept (score: ${validation.score}): "${action.action_text}"`);
     }
 
-    console.log(`✅ Post-validation: ${validatedActions.length}/${extractedActions.length} actions passed quality check`);
+    console.log(`✅ Post-validation: ${validatedActions.length}/${extractedActions.length} actions kept`);
+
+    // Normalise values the database constrains, so one odd value from the model
+    // can never wipe out the whole batch.
+    const ALLOWED_CATEGORIES = ['action', 'watch_out', 'depends_on', 'note'];
+    const ALLOWED_METHODS = ['openai', 'rule-based', 'manual', 'gemini-2.5-flash', 'lovable-ai', 'assemblyai'];
+    const ALLOWED_DETAIL = ['minimal', 'standard', 'complete'];
+    const normCategory = (c: any) => {
+      const v = String(c || '').toLowerCase().replace(/[\s-]+/g, '_');
+      return ALLOWED_CATEGORIES.includes(v) ? v : 'action';
+    };
+    const clamp = (n: any, min: number, max: number, fallback: number) => {
+      const v = Number(n);
+      return Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
+    };
 
     // Store the validated actions
     const actionsToInsert = validatedActions.map((action: any) => ({
       meeting_recording_id: meetingId,
       user_id: userId,
       action_text: action.action_text || action.action || 'DEFINE next step needed',
-      extraction_method: action.extraction_method || extractionMethod,
-      validation_score: action.validation_score || 0,
+      extraction_method: ALLOWED_METHODS.includes(action.extraction_method || extractionMethod)
+        ? (action.extraction_method || extractionMethod)
+        : 'lovable-ai',
+      validation_score: Math.round(clamp(action.validation_score, 0, 100, 0)),
       validation_issues: action.validation_issues || '[]',
       requires_review: action.requires_review || false,
-      category: action.category || 'action',
+      category: normCategory(action.category),
       success_criteria: action.success_criteria || null,
       motivation_statement: action.motivation_statement || null,
       what_outcome: action.what_outcome || null,
@@ -429,11 +445,18 @@ Be encouraging and supportive - remember these users may have memory challenges.
       start_date: action.start_date || null,
       end_date: action.end_date || null,
       completion_date: action.completion_date || null,
-      priority_level: action.priority_level || (action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5),
+      priority_level: Math.round(
+        clamp(
+          action.priority_level ?? (action.priority === 'high' ? 1 : action.priority === 'medium' ? 3 : 5),
+          1,
+          5,
+          3,
+        ),
+      ),
       relationship_impact: action.relationship_impact || null,
       emotional_stakes: action.emotional_stakes || null,
       intent_behind: action.intent_behind || null,
-      confidence_score: action.confidence_score || action.confidence || 0.5,
+      confidence_score: clamp(action.confidence_score ?? action.confidence, 0, 1, 0.5),
       user_notes: action.reasoning || '',
       status: 'not_started',
       calendar_checked: false,
@@ -446,22 +469,34 @@ Be encouraging and supportive - remember these users may have memory challenges.
       if_stuck: action.if_stuck || null,
       best_time: action.best_time || null,
       next_natural_steps: action.next_natural_steps || [],
-      detail_level: action.detail_level || 'standard',
+      detail_level: ALLOWED_DETAIL.includes(action.detail_level) ? action.detail_level : 'standard',
       alternative_phrasings: action.alternative_phrasings || [],
       completion_criteria_specific: action.completion_criteria_specific || null,
       verb_category: action.verb_category || null
     }));
 
+    let insertedCount = 0;
     if (actionsToInsert.length > 0) {
       const { error: insertError } = await supabase
         .from('extracted_actions')
         .insert(actionsToInsert);
 
       if (insertError) {
-        console.error('Error inserting actions:', insertError);
-        throw insertError;
+        console.error('Batch insert failed, retrying row by row:', insertError);
+        for (const row of actionsToInsert) {
+          const { error: rowError } = await supabase.from('extracted_actions').insert(row);
+          if (rowError) {
+            console.error('Row insert failed:', rowError, JSON.stringify(row).slice(0, 500));
+          } else {
+            insertedCount++;
+          }
+        }
+        if (insertedCount === 0) throw insertError;
+      } else {
+        insertedCount = actionsToInsert.length;
       }
     }
+    console.log(`💾 Inserted ${insertedCount}/${actionsToInsert.length} actions`);
 
     // Calculate confidence score based on processing method and results
     let confidenceScore = 50; // Base score
@@ -502,7 +537,7 @@ Be encouraging and supportive - remember these users may have memory challenges.
 
     return new Response(JSON.stringify({ 
       success: true, 
-      actionsCount: extractedActions.length,
+      actionsCount: insertedCount,
       actions: extractedActions,
       conversationSummary: conversationSummary ? JSON.parse(conversationSummary) : null,
       confidenceScore,
