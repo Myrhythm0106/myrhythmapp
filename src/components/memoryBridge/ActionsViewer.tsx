@@ -38,7 +38,13 @@ import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { BulkWatcherDialog } from './BulkWatcherDialog';
 import { ItemNotesThread } from '@/components/notes/ItemNotesThread';
 import { ReminderLadderPicker } from './ReminderLadderPicker';
-import { rescheduleActionReminders } from '@/utils/reminderLadder';
+import {
+  rescheduleActionReminders,
+  clearActionReminders,
+  ensureDefaultLadder,
+  loadLaddersForActions
+} from '@/utils/reminderLadder';
+
 
 
 interface ActionsViewerProps {
