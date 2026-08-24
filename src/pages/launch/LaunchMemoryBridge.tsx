@@ -9,6 +9,9 @@ import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volu
 import { cn } from '@/lib/utils';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { ensureSession, touchSession } from '@/utils/ensureSession';
+
 import { formatDistanceToNow } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
