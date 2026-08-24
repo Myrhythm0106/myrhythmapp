@@ -502,7 +502,9 @@ export function ActionsTableView({
                 </div>
               </TableHead>
               <TableHead className="w-20">Watchers</TableHead>
+              <TableHead className="w-28">Reminders</TableHead>
               <TableHead className="w-10"></TableHead>
+
             </TableRow>
           </TableHeader>
           
