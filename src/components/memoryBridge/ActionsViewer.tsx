@@ -257,6 +257,20 @@ export function ActionsViewer({
       return;
     }
 
+    // Closed work stops nagging; reopened work gets its ladder back.
+    const action = extractedActions.find(a => a.id === actionId);
+    if (archivedAt) {
+      await clearActionReminders(actionId);
+    } else if (user && action) {
+      await ensureDefaultLadder(
+        actionId,
+        user.id,
+        action.completion_date || action.end_date,
+        action.priority_level
+      );
+    }
+    refreshLadders();
+
     toast.success(message, {
       action: archivedAt
         ? { label: 'Undo', onClick: () => setArchived(actionId, null, 'Back on my open list') }
@@ -271,6 +285,7 @@ export function ActionsViewer({
   const handleRestore = (actionId: string) => {
     setArchived(actionId, null, 'Back on my open list');
   };
+
 
   const handleStatusChange = async (actionId: string, status: string) => {
     await updateAction(actionId, { status: status as any });
