@@ -12,7 +12,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { processSavedRecording } from '@/utils/processSavedRecording';
 import { ActionsViewer } from '@/components/memoryBridge/ActionsViewer';
-import { PostExtractionDialog } from '@/components/memoryBridge/PostExtractionDialog';
+import { ReviewStep } from '@/components/memoryBridge/review/ReviewStep';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
