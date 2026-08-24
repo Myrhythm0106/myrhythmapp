@@ -682,6 +682,16 @@ export function ActionsTableView({
                         </TableCell>
 
                         <TableCell>
+                          <ReminderBadge
+                            offsets={ladders?.[action.id!] || []}
+                            dueDate={action.completion_date || action.end_date}
+                            onClick={() => onOpenReminders?.(action)}
+                          />
+                        </TableCell>
+
+
+
+                        <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More options">
