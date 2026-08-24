@@ -1,7 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { smartScheduler } from '@/utils/smartScheduler';
+import { parseDateOnly, addDaysToDateOnly, toDateOnly } from '@/utils/dateOnly';
 import type {
-import { parseDateOnly, addDaysToDateOnly, parseDateOnly as _p } from '@/utils/dateOnly';
   ActionDueDate,
   ActionReminder,
   BriefAction,
@@ -196,7 +196,7 @@ function shortReason(r: string): string {
 }
 
 function todayISO(): string {
-  return new Date().toISOString().slice(0, 10);
+  return toDateOnly(new Date())!;
 }
 
 export function formatDateLabel(iso: string): string {
