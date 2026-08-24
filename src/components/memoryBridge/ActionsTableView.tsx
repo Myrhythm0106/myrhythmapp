@@ -427,6 +427,8 @@ export function ActionsTableView({
   onOpenReminders,
   onArchive,
   onRestore,
+  ladders,
+
 
   onSort,
   sortField,
