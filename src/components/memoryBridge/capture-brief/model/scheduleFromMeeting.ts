@@ -1,6 +1,8 @@
 import { supabase } from '@/integrations/supabase/client';
 import { commitAction } from './commitActions';
 import { defaultReminders, loadSupportMembers } from './scheduleActions';
+import { ensureDefaultLadder } from '@/utils/reminderLadder';
+
 import { ADHOC_PREFIX } from './commitActions';
 import type { BriefAction, PersonPick } from './types';
 import { smartScheduler } from '@/utils/smartScheduler';
