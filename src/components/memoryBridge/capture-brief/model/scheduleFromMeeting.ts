@@ -12,7 +12,7 @@ export interface MeetingScheduleSummary {
   notified: number;
   notifyFailures: string[];
   /** Human-readable lines: "Wed 26 Aug, 09:00 — Call the clinic" */
-  entries: { text: string; date: string; time: string }[];
+  entries: { text: string; date: string; time: string; eventId: string; actionId: string }[];
   people: string[];
 }
 
@@ -141,7 +141,7 @@ export async function scheduleExtractedActions(
       summary.scheduled++;
       summary.notified += res.notified || 0;
       summary.notifyFailures.push(...(res.notifyFailures || []));
-      summary.entries.push({ text: row.action_text, date, time });
+      summary.entries.push({ text: row.action_text, date, time, eventId: res.calendarEventId!, actionId: row.id });
       for (const p of people) if (!summary.people.includes(p.name)) summary.people.push(p.name);
     } else {
       summary.failed++;
