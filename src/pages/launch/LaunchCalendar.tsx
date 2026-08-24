@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
-import { Share2, ChevronLeft, ChevronRight, FileUp } from 'lucide-react';
+import { Share2, ChevronLeft, ChevronRight, FileUp, Bell, BellOff } from 'lucide-react';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -31,6 +31,8 @@ import {
   endOfWeek,
 } from 'date-fns';
 import { useLaunchCalendarEvents, LaunchCalendarEvent } from '@/hooks/useLaunchCalendarEvents';
+import { useLaunchActionReminders, LaunchActionReminder } from '@/hooks/useLaunchActionReminders';
+import { LaunchReminderSheet } from '@/components/launch/calendar/LaunchReminderSheet';
 import { LaunchAiPlanAssist } from '@/components/launch/calendar/LaunchAiPlanAssist';
 import { usePlanningDay, usePlanningScope, periodStartFor } from '@/hooks/usePlanningScope';
 import { DocumentImportCard, DocumentImportResult } from '@/components/memoryBridge/DocumentImportCard';
@@ -54,6 +56,20 @@ export default function LaunchCalendar() {
   const [importResult, setImportResult] = useState<DocumentImportResult | null>(null);
   const [showImportDialog, setShowImportDialog] = useState(false);
   const { user } = useAuth();
+  const [showReminders, setShowReminders] = useState(() => {
+    try {
+      return localStorage.getItem('launch.calendar.showReminders') !== '0';
+    } catch {
+      return true;
+    }
+  });
+  const [selectedReminder, setSelectedReminder] = useState<LaunchActionReminder | null>(null);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('launch.calendar.showReminders', showReminders ? '1' : '0');
+    } catch { /* storage unavailable */ }
+  }, [showReminders]);
 
 
   const { dayOfWeek } = usePlanningDay();
@@ -91,6 +107,16 @@ export default function LaunchCalendar() {
   const { events, addEvent, updateStatus, carryOver, reschedule } = useLaunchCalendarEvents(
     rangeStart,
     rangeEnd
+  );
+
+  const { reminders, refresh: refreshReminders } = useLaunchActionReminders(
+    rangeStart,
+    rangeEnd,
+    showReminders
+  );
+
+  const dayReminders = reminders.filter(
+    (r) => format(r.dueAt, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
   );
 
   const filteredDayEvents = events.filter(
@@ -197,6 +223,15 @@ export default function LaunchCalendar() {
             </div>
             <div className="flex items-center gap-2">
               <button
+                onClick={() => setShowReminders((s) => !s)}
+                className="text-sm text-launch-ink/80 font-medium hover:text-launch-ink inline-flex items-center gap-1"
+                title={showReminders ? 'Hide reminder nudges' : 'Show reminder nudges'}
+                aria-pressed={showReminders}
+              >
+                {showReminders ? <Bell className="h-4 w-4" /> : <BellOff className="h-4 w-4" />}
+                <span className="hidden sm:inline">Reminders</span>
+              </button>
+              <button
                 onClick={() => setShowImportCard((s) => !s)}
                 className="text-sm text-launch-ink/80 font-medium hover:text-launch-ink inline-flex items-center gap-1"
                 title="Import schedule from a document"
@@ -239,6 +274,8 @@ export default function LaunchCalendar() {
           <LaunchDayView
             date={selectedDate}
             events={sortedDayEvents()}
+            reminders={dayReminders}
+            onReminderSelect={setSelectedReminder}
             inheritedVision={yearVision}
             inheritedMonthFocus={monthFocus}
             inheritedWeekFocus={weekFocus}
@@ -251,6 +288,7 @@ export default function LaunchCalendar() {
           <LaunchWeekView
             date={selectedDate}
             events={events}
+            reminders={reminders}
             onDaySelect={handleDaySelect}
             inheritedVision={yearVision}
             inheritedMonthFocus={monthFocus}
@@ -260,6 +298,7 @@ export default function LaunchCalendar() {
           <LaunchMonthView
             date={selectedDate}
             events={events}
+            reminders={reminders}
             onDaySelect={handleDaySelect}
             inheritedVision={yearVision}
           />
@@ -274,6 +313,12 @@ export default function LaunchCalendar() {
         )}
       </LaunchCard>
       </div>
+
+      <LaunchReminderSheet
+        reminder={selectedReminder}
+        onClose={() => setSelectedReminder(null)}
+        onChanged={refreshReminders}
+      />
 
       <LaunchAddEventModal
 

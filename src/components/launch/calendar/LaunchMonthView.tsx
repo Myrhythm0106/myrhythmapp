@@ -12,6 +12,8 @@ import {
   isSameDay, 
   format 
 } from 'date-fns';
+import { Bell } from 'lucide-react';
+import { LaunchActionReminder } from '@/hooks/useLaunchActionReminders';
 
 interface Event {
   time: string;
@@ -23,6 +25,7 @@ interface Event {
 interface LaunchMonthViewProps {
   date: Date;
   events: Event[];
+  reminders?: LaunchActionReminder[];
   onDaySelect: (date: Date) => void;
   className?: string;
   inheritedVision?: string;
@@ -31,6 +34,7 @@ interface LaunchMonthViewProps {
 export function LaunchMonthView({ 
   date, 
   events, 
+  reminders = [],
   onDaySelect, 
   className = '',
   inheritedVision
@@ -52,6 +56,9 @@ export function LaunchMonthView({
   const hasEventsOnDay = (checkDay: Date) => {
     return events.some(e => e.date && isSameDay(e.date, checkDay));
   };
+
+  const hasRemindersOnDay = (checkDay: Date) =>
+    reminders.some(r => isSameDay(r.dueAt, checkDay));
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -84,6 +91,7 @@ export function LaunchMonthView({
             const isCurrentMonth = isSameMonth(calDay, date);
             const isToday = isSameDay(calDay, today);
             const hasEvents = hasEventsOnDay(calDay);
+            const hasReminders = hasRemindersOnDay(calDay);
             
             return (
               <button
@@ -99,6 +107,12 @@ export function LaunchMonthView({
                 {format(calDay, 'd')}
                 {hasEvents && !isToday && (
                   <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-brand-emerald-500 rounded-full" />
+                )}
+                {hasReminders && (
+                  <Bell className={cn(
+                    "absolute top-1 right-1 h-2.5 w-2.5",
+                    isToday ? "text-white/90" : "text-launch-ember"
+                  )} />
                 )}
               </button>
             );

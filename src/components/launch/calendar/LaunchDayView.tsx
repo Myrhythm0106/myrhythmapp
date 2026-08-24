@@ -1,9 +1,10 @@
 import React from 'react';
-import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles } from 'lucide-react';
+import { MoreVertical, Check, X, ArrowRight, Calendar, Sparkles, Bell } from 'lucide-react';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { LaunchDailyBrief } from './LaunchDailyBrief';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import { LaunchActionReminder, reminderOffsetLabel } from '@/hooks/useLaunchActionReminders';
 
 interface Event {
   id?: string;
@@ -25,6 +27,8 @@ interface Event {
 interface LaunchDayViewProps {
   date: Date;
   events: Event[];
+  reminders?: LaunchActionReminder[];
+  onReminderSelect?: (reminder: LaunchActionReminder) => void;
   className?: string;
   inheritedVision?: string;
   inheritedMonthFocus?: string;
@@ -34,9 +38,12 @@ interface LaunchDayViewProps {
   onEventReschedule?: (eventIndex: number) => void;
 }
 
+
 export function LaunchDayView({ 
   date, 
   events, 
+  reminders = [],
+  onReminderSelect,
   className = '',
   inheritedVision,
   inheritedMonthFocus,
@@ -46,6 +53,8 @@ export function LaunchDayView({
   onEventReschedule
 }: LaunchDayViewProps) {
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
+  const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
+
 
   const getTypeColor = (type: string) => {
     const colors: Record<string, string> = {
@@ -135,12 +144,42 @@ export function LaunchDayView({
         inheritedFocus={inheritedWeekFocus || inheritedMonthFocus}
       />
 
+      {sortedReminders.length > 0 && (
+        <div className="space-y-2">
+          {sortedReminders.map((r) => (
+            <button
+              key={r.id}
+              onClick={() => onReminderSelect?.(r)}
+              className={cn(
+                'w-full text-left flex items-center gap-3 rounded-xl border border-dashed border-launch-gold/50 bg-launch-gold/5 px-4 py-3 min-h-[56px] transition-colors hover:bg-launch-gold/10',
+                r.sent && 'opacity-60'
+              )}
+            >
+              <span className="text-xs font-semibold text-launch-ink/60 min-w-[42px]">
+                {format(r.dueAt, 'HH:mm')}
+              </span>
+              <Bell className="h-4 w-4 text-launch-ember shrink-0" />
+              <span className="flex-1 text-sm text-launch-ink">
+                <span className="font-medium">Nudge · </span>
+                {r.actionText}
+              </span>
+              <span className="text-xs text-launch-ink/60 whitespace-nowrap">
+                {reminderOffsetLabel(r.offsetDays)}
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+
       {sortedEvents.length === 0 ? (
-        <LaunchCard className="p-8 text-center">
-          <p className="text-gray-500">No events scheduled for today</p>
-          <p className="text-sm text-brand-teal-600 mt-2">Tap "+ Add" to create one</p>
-        </LaunchCard>
+        sortedReminders.length === 0 ? (
+          <LaunchCard className="p-8 text-center">
+            <p className="text-gray-500">No events scheduled for today</p>
+            <p className="text-sm text-brand-teal-600 mt-2">Tap "+ Add" to create one</p>
+          </LaunchCard>
+        ) : null
       ) : (
+
         <div className="space-y-3">
           {sortedEvents.map((event, i) => (
             <LaunchCard 

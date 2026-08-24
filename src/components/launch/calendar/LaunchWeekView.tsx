@@ -3,6 +3,8 @@ import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchCommitmentBanner } from './LaunchCommitmentBanner';
 import { cn } from '@/lib/utils';
 import { addDays, startOfWeek, isSameDay, format } from 'date-fns';
+import { Bell } from 'lucide-react';
+import { LaunchActionReminder } from '@/hooks/useLaunchActionReminders';
 
 interface Event {
   time: string;
@@ -14,6 +16,7 @@ interface Event {
 interface LaunchWeekViewProps {
   date: Date;
   events: Event[];
+  reminders?: LaunchActionReminder[];
   onDaySelect: (date: Date) => void;
   className?: string;
   inheritedVision?: string;
@@ -23,6 +26,7 @@ interface LaunchWeekViewProps {
 export function LaunchWeekView({ 
   date, 
   events, 
+  reminders = [],
   onDaySelect, 
   className = '',
   inheritedVision,
@@ -35,6 +39,9 @@ export function LaunchWeekView({
   const getEventsForDay = (day: Date) => {
     return events.filter(e => e.date && isSameDay(e.date, day));
   };
+
+  const getRemindersForDay = (day: Date) =>
+    reminders.filter(r => isSameDay(r.dueAt, day));
 
   // Build breadcrumb
   const breadcrumbParts = [];
@@ -69,6 +76,7 @@ export function LaunchWeekView({
       <div className="grid grid-cols-7 gap-2">
         {weekDays.map((day) => {
           const dayEvents = getEventsForDay(day);
+          const dayReminders = getRemindersForDay(day);
           const isToday = isSameDay(day, today);
           
           return (
@@ -94,14 +102,25 @@ export function LaunchWeekView({
               )}>
                 {format(day, 'd')}
               </span>
-              {dayEvents.length > 0 && (
-                <div className={cn(
-                  "mt-auto pt-2 text-xs font-medium",
-                  isToday ? "text-white/90" : "text-brand-emerald-600"
-                )}>
-                  {dayEvents.length} event{dayEvents.length !== 1 && 's'}
-                </div>
-              )}
+              <div className="mt-auto pt-2 space-y-1">
+                {dayEvents.length > 0 && (
+                  <div className={cn(
+                    "text-xs font-medium",
+                    isToday ? "text-white/90" : "text-brand-emerald-600"
+                  )}>
+                    {dayEvents.length} event{dayEvents.length !== 1 && 's'}
+                  </div>
+                )}
+                {dayReminders.length > 0 && (
+                  <div className={cn(
+                    "text-xs font-medium inline-flex items-center gap-1",
+                    isToday ? "text-white/90" : "text-launch-ember"
+                  )}>
+                    <Bell className="h-3 w-3" />
+                    {dayReminders.length > 1 && dayReminders.length}
+                  </div>
+                )}
+              </div>
             </button>
           );
         })}
