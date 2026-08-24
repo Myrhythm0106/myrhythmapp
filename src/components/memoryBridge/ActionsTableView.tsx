@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar as CalendarPicker } from '@/components/ui/calendar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check } from 'lucide-react';
+import { GripVertical, ArrowUpDown, MoreHorizontal, Eye, MessageCircle, Calendar, Lightbulb, Check, Bell, Archive, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { NextStepsItem } from '@/types/memoryBridge';
 import { format, differenceInCalendarDays, addDays, isToday, isTomorrow } from 'date-fns';
@@ -29,9 +29,14 @@ interface ActionsTableViewProps {
   onStartDateChange?: (actionId: string, date: string | null) => void;
   onDueDateChange?: (actionId: string, date: string | null) => void;
   onWatchersChange?: (actionId: string, watchers: string[]) => void;
+  onOpenNotes?: (action: NextStepsItem) => void;
+  onOpenReminders?: (action: NextStepsItem) => void;
+  onArchive?: (actionId: string) => void;
+  onRestore?: (actionId: string) => void;
   onSort: (field: 'priority' | 'status' | 'start' | 'finish') => void;
   sortField: 'priority' | 'status' | 'start' | 'finish';
   sortDirection: 'asc' | 'desc';
+
 }
 
 
@@ -418,6 +423,11 @@ export function ActionsTableView({
   onStartDateChange,
   onDueDateChange,
   onWatchersChange,
+  onOpenNotes,
+  onOpenReminders,
+  onArchive,
+  onRestore,
+
   onSort,
   sortField,
   sortDirection
@@ -672,26 +682,34 @@ export function ActionsTableView({
                         <TableCell>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="More options">
                                 <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <Eye className="h-4 w-4 mr-2" />
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
+                              <DropdownMenuItem onSelect={() => onOpenNotes?.(action)}>
                                 <MessageCircle className="h-4 w-4 mr-2" />
-                                Add Comment
+                                Notes &amp; encouragement
                               </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Calendar className="h-4 w-4 mr-2" />
-                                Add to Calendar
+                              <DropdownMenuItem onSelect={() => onOpenReminders?.(action)}>
+                                <Bell className="h-4 w-4 mr-2" />
+                                Reminders
                               </DropdownMenuItem>
+                              {action.archived_at ? (
+                                <DropdownMenuItem onSelect={() => onRestore?.(action.id!)}>
+                                  <RotateCcw className="h-4 w-4 mr-2" />
+                                  Restore to open
+                                </DropdownMenuItem>
+                              ) : (
+                                <DropdownMenuItem onSelect={() => onArchive?.(action.id!)}>
+                                  <Archive className="h-4 w-4 mr-2" />
+                                  Close &amp; archive
+                                </DropdownMenuItem>
+                              )}
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </TableCell>
+
                       </TableRow>
                     )}
                   </Draggable>
