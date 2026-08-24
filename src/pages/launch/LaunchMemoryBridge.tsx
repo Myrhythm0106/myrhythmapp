@@ -283,12 +283,17 @@ export default function LaunchMemoryBridge() {
 
 
   const handleSave = async () => {
+    if (isExtracting) {
+      console.log('handleSave: ignored — a save is already running');
+      return;
+    }
     if (!audioBlobRef.current) {
       console.warn('handleSave: blocked — no audio in memory');
       toast.error('That recording is no longer available. Please record again.');
       setState('idle');
       return;
     }
+
     if (audioBlobRef.current.size === 0) {
       console.warn('handleSave: blocked — empty audio blob');
       toast.error('That recording came through empty — check your microphone and record again.');
