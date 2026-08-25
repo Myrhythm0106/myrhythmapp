@@ -1,32 +1,46 @@
-# Keep the write-up, retire the audio
+# Keep a small record, retire the bulk at 30 days
 
-The link from a calendar entry back to its source only holds value if the source survives. So: the **write-up of a conversation is kept for as long as you keep your account**, and **only the audio expires** at 30 days — unless you have downloaded it first.
+Short answer first: a file saved to your own computer is **not** reachable by the app. Once it leaves for your hard drive it is yours alone — the app can never read it back unless you upload it again. So "download it and we delete ours" is safe for your privacy and storage, but it means anything we delete is gone from the app forever.
 
-## What needs fixing
+That drives the model below.
 
-Today the 30-day clean-up deletes the whole recording record, which takes the transcript and summary with it. That breaks the link from an action back to where it came from. The clean-up must remove the audio file only and leave the write-up intact.
+## The model: three tiers, only one of them permanent
 
-## What you will see
+**Tier 1 — Source card (permanent, tiny)**
+A few hundred bytes per conversation, kept for as long as you keep the account:
+- Title, date, length, participants
+- A short summary (max ~400 characters)
+- Per action: the one-line quote it came from
 
-**On each recording in Memory Bridge**
-- A quiet line: "Audio available for another 12 days" — turning amber inside the last 5 days.
-- A **Download audio** button while the file still exists, so you can keep your own copy.
-- After expiry the tile stays, marked "Audio retired — write-up kept", with the transcript, summary and actions all still there.
+This is what the calendar's "From Memory Bridge" chip opens. It never expires, and it costs almost nothing to keep — thousands of conversations would still be a few megabytes of text.
 
-**The write-up itself**
-- Title, date, length, participants, transcript, summary and extracted actions — kept indefinitely.
-- **Save write-up** action to download it as a text file, alongside the existing copy/email options.
+**Tier 2 — Full transcript (30 days, then purged)**
+The long text. Kept 30 days, then deleted unless you have downloaded it.
 
-**From the calendar**
-- The "From Memory Bridge" chip keeps working forever, because the conversation record is never removed. If the audio has gone, the source view simply shows the written record.
+**Tier 3 — Audio (30 days, then purged)**
+By far the heaviest. Kept 30 days, then the file is removed from storage.
 
-**In Settings**
-- The retention control is relabelled so it clearly governs *audio only*, with a line stating write-ups are never auto-deleted.
+Result: storage stops growing. The only thing that accumulates is Tier 1 text, which is negligible.
+
+## Because deletion is permanent, the download has to be obvious
+
+- Each conversation shows: "Full transcript and audio available for another 12 days" — amber inside the last 5 days.
+- One **Download everything** button producing a single file with the transcript, summary, participants and actions, plus a separate audio download.
+- A once-a-week gentle prompt on Home when something is inside its final 5 days: "2 conversations expire this week — download them?"
+- Confirmation before manual delete, unchanged.
+
+## After expiry
+
+The conversation tile stays, marked "Archived — summary kept". The summary, the actions and the calendar link all still work. Playback and full transcript show a short line explaining they were retired at 30 days.
+
+## Settings
+
+One control: how long full transcripts and audio are kept — 7, 30 or 90 days (30 default), with a line stating the summary card is always kept and never expires.
 
 ## Technical notes
 
-- Rewrite `cleanup_expired_voice_recordings()`: stop the `DELETE`; instead set `audio_deleted_at = now()` and null the `file_path` for expired rows where `legal_retention_required = false`. Storage objects for those paths are removed by a small scheduled edge function (`purge-expired-audio`) that reads due rows, deletes from the `voice-recordings` bucket, then marks them — service-role only.
-- Guard the write-up: never delete `voice_recordings` or `meeting_recordings` rows on expiry; only the audio artefact goes.
-- UI: expiry countdown derived from `expires_at`; download uses the existing `getRecordingSignedUrl`; audio-retired state keyed off `audio_deleted_at`.
-- Playback and re-transcription controls hide once `audio_deleted_at` is set, with a short explanatory line rather than a dead button.
-- Manual delete of a recording continues to remove everything, as now.
+- Add `summary_card` (jsonb, ~small) to `meeting_recordings`; populate at extraction time from the AI output. This is the permanent record.
+- Rewrite `cleanup_expired_voice_recordings()`: no row deletes. Set `audio_deleted_at`, null `file_path`, and null the long `transcription` / `transcript` fields for expired rows where `legal_retention_required = false`.
+- A scheduled edge function `purge-expired-media` removes the storage objects for those paths (service-role, bounded batch per run, marks rows as it goes).
+- Per-action `transcript_excerpt` already exists on `extracted_actions` and is retained — that is what preserves the action-to-source link after purge.
+- UI: countdown from `expires_at`; archived state keyed off `audio_deleted_at`; download bundles the transcript client-side before it expires.
