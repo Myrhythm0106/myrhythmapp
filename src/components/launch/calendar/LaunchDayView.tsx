@@ -22,6 +22,7 @@ interface Event {
   status?: 'pending' | 'done' | 'cancelled' | 'carried';
   carriedFrom?: Date | null;
   source?: string;
+  extractedActionId?: string | null;
 }
 
 interface LaunchDayViewProps {
@@ -36,7 +37,9 @@ interface LaunchDayViewProps {
   onEventStatusChange?: (eventIndex: number, status: Event['status']) => void;
   onEventCarryOver?: (eventIndex: number) => void;
   onEventReschedule?: (eventIndex: number) => void;
+  onEventOpenSource?: (event: Event) => void;
 }
+
 
 
 export function LaunchDayView({ 
