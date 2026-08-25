@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
