@@ -53,13 +53,28 @@ What it buys you: after the transcript and audio are gone from the app, the arch
 The conversation tile stays, marked "Archived — summary kept", and keeps its reference. The summary, the actions and the calendar link all still work. Playback and full transcript show a short line explaining they were retired at 30 days, alongside the reference to look up in your own download.
 
 
-## Settings
+## Settings — one choice, three privacy modes
 
-One control: how long full transcripts and audio are kept — 7, 30 or 90 days (30 default), with a line stating the summary card is always kept and never expires.
+Being straight with you first: GDPR compliance is not something a user can switch off. You are the controller, so the obligations sit with you regardless of what any individual chooses. What *can* be a user choice is **how much is kept and for how long** — and that choice is itself the compliance story (data minimisation, Article 5(1)(c)).
 
-## GDPR — yes, squarely, and it shapes the build
+So instead of "not / partly / fully compliant", the setting is a single **Privacy mode** picker. Every mode is fully compliant; they differ only in how much the app holds on your behalf.
+
+| Mode | Audio | Transcript | Summary card + reference | Best for |
+|---|---|---|---|---|
+| **Light touch** | Deleted as soon as the actions are extracted | Not stored — shown once, download or lose it | Kept | Anyone uneasy about recordings sitting anywhere |
+| **Balanced** (default) | 30 days | 30 days | Kept | Most people — time to revisit, nothing lingering |
+| **Full record** | 90 days | 90 days | Kept | Clinic-heavy months, or where a longer paper trail matters |
+
+Three options, plain words, no legal vocabulary. The reference code and the action-to-source link work identically in all three, so nothing in the daily experience changes with the choice.
+
+**Where it is asked**: one screen in onboarding, after the first capture is explained — three cards, one tap, "You can change this any time in Settings." Not a wall of consent text. The Article 9 explicit-consent tick sits on that same screen, worded in one sentence.
+
+**What does not change**: recording is still one tap; extraction, editing, scheduling and calendar behaviour are identical in every mode. The only visible difference is how long the "available for another N days" countdown runs — and in Light touch, a prompt to download at the end of the session.
+
+## GDPR — the obligations behind the modes
 
 Recordings of conversations about someone's recovery are **special category data** (health) under UK GDPR Article 9, and they capture third parties too — the clinician, the family member in the room. That raises the bar, and the design above already leans the right way (data minimisation, storage limitation). What the build must add:
+
 
 **Lawful basis and consent**
 - Article 9 requires **explicit consent** for health data. A one-time, clearly worded consent at first capture — separate from the terms tick — recording what is stored, for how long, and that they can withdraw. Versioned, with the timestamp stored, so consent is provable.
@@ -95,5 +110,7 @@ This is a build-and-document plan, not legal advice; before taking paying users 
 - UI: countdown from `expires_at`; archived state keyed off `audio_deleted_at`; download bundles the transcript client-side before it expires.
 - GDPR: `capture_consent` record (version, timestamp, scope) written at first capture; account-deletion routine as a service-role edge function that removes rows and storage objects across all user-owned tables; `docs/dpia.md`, `docs/retention-schedule.md` and an updated privacy notice.
 - Traceability: add `ref_code` (text, unique) to `meeting_recordings`, generated on insert from the capture date plus a short random suffix; add `ref_code` to `extracted_actions` as `<meeting ref>-<zero-padded sequence>`, assigned at extraction time. Calendar entries read the action's `ref_code` through the existing `extracted_action_id` link, so no third column is needed. Reference search resolves either shape with a prefix match.
+- Privacy mode: `privacy_mode` (text: `light` | `balanced` | `full`, default `balanced`) on `profiles`; `expires_at` on new recordings is set from it (0 / 30 / 90 days). Light touch marks the row for immediate purge once extraction completes, and never writes the long transcript field. Changing the mode later applies to new captures only and re-dates existing ones to the shorter of the two — never extends them.
+
 
 
