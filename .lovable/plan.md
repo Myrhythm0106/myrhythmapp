@@ -140,6 +140,10 @@ This is a build-and-document plan, not legal advice; before taking paying users 
 - GDPR: `capture_consent` record (version, timestamp, scope) written at first capture; account-deletion routine as a service-role edge function that removes rows and storage objects across all user-owned tables; `docs/dpia.md`, `docs/retention-schedule.md` and an updated privacy notice.
 - Traceability: add `ref_code` (text, unique) to `meeting_recordings`, generated on insert from the capture date plus a short random suffix; add `ref_code` to `extracted_actions` as `<meeting ref>-<zero-padded sequence>`, assigned at extraction time. Calendar entries read the action's `ref_code` through the existing `extracted_action_id` link, so no third column is needed. Reference search resolves either shape with a prefix match.
 - Privacy mode: `privacy_mode` (text: `light` | `balanced` | `full`, default `balanced`) on `profiles`; `expires_at` on new recordings is set from it (0 / 30 / 90 days). Light touch marks the row for immediate purge once extraction completes, and never writes the long transcript field. Changing the mode later applies to new captures only and re-dates existing ones to the shorter of the two — never extends them.
+- Calendar reference line: one shared `<SourceRefLine>` component used by the calendar event row, the Next Step table row and the conversation tile. It takes the action's `ref_code` plus the parent recording's `audio_deleted_at` and `downloaded_at`, and derives the three states. Calendar reads them through the existing `extracted_action_id` join, so the event query gains one nested select and no new column.
+- Add `downloaded_at` (timestamptz, nullable) to `meeting_recordings`, stamped when the user takes a download bundle — this is what switches the state line to "downloaded".
+- Tapping the reference opens a `SourceSheet` dialog: summary card, per-action quote from `transcript_excerpt`, participants, date, and — only while still held — transcript and playback rows. Purged sources render the retirement sentence with the retirement date from `audio_deleted_at`.
+
 
 
 
