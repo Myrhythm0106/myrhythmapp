@@ -22,6 +22,7 @@ interface Event {
   status?: 'pending' | 'done' | 'cancelled' | 'carried';
   carriedFrom?: Date | null;
   source?: string;
+  extractedActionId?: string | null;
 }
 
 interface LaunchDayViewProps {
@@ -36,7 +37,9 @@ interface LaunchDayViewProps {
   onEventStatusChange?: (eventIndex: number, status: Event['status']) => void;
   onEventCarryOver?: (eventIndex: number) => void;
   onEventReschedule?: (eventIndex: number) => void;
+  onEventOpenSource?: (event: Event) => void;
 }
+
 
 
 export function LaunchDayView({ 
@@ -50,7 +53,9 @@ export function LaunchDayView({
   inheritedWeekFocus,
   onEventStatusChange,
   onEventCarryOver,
-  onEventReschedule
+  onEventReschedule,
+  onEventOpenSource
+
 }: LaunchDayViewProps) {
   const sortedEvents = [...events].sort((a, b) => a.time.localeCompare(b.time));
   const sortedReminders = [...reminders].sort((a, b) => a.dueAt.getTime() - b.dueAt.getTime());
@@ -213,11 +218,16 @@ export function LaunchDayView({
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-xs text-gray-500 capitalize">{event.type}</p>
                     {event.source === 'memory_bridge' && (
-                      <span className="text-xs bg-brand-teal-100 text-brand-teal-700 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => onEventOpenSource?.(event)}
+                        className="text-xs bg-brand-teal-100 text-brand-teal-700 px-2 py-0.5 rounded-full inline-flex items-center gap-1 hover:bg-brand-teal-200 transition-colors"
+                      >
                         <Sparkles className="h-3 w-3" />
                         From Memory Bridge
-                      </span>
+                      </button>
                     )}
+
                     {event.carriedFrom && (
                       <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full">
                         Carried over

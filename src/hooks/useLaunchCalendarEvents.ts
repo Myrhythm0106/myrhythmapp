@@ -15,6 +15,8 @@ export interface LaunchCalendarEvent {
   source: 'manual' | 'memory_bridge' | string;
   carriedFrom?: Date | null;
   description?: string | null;
+  /** Set when the event came from a next step captured in Memory Bridge */
+  extractedActionId?: string | null;
 }
 
 type Row = {
@@ -28,6 +30,7 @@ type Row = {
   source: string;
   carried_from: string | null;
   description: string | null;
+  extracted_action_id: string | null;
 };
 
 function rowToEvent(r: Row): LaunchCalendarEvent {
@@ -43,8 +46,10 @@ function rowToEvent(r: Row): LaunchCalendarEvent {
     source: r.source || 'manual',
     carriedFrom: r.carried_from ? new Date(`${r.carried_from}T00:00:00`) : null,
     description: r.description,
+    extractedActionId: r.extracted_action_id,
   };
 }
+
 
 export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
   const { user } = useAuth();
@@ -59,7 +64,7 @@ export function useLaunchCalendarEvents(rangeStart: Date, rangeEnd: Date) {
     setLoading(true);
     const { data, error } = await supabase
       .from('calendar_events')
-      .select('id, title, time, end_time, type, date, status, source, carried_from, description')
+      .select('id, title, time, end_time, type, date, status, source, carried_from, description, extracted_action_id')
       .eq('user_id', user.id)
       .gte('date', startStr)
       .lte('date', endStr)

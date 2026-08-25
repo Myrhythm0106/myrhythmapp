@@ -5,7 +5,7 @@ import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
 import { LaunchButton } from '@/components/launch/LaunchButton';
 import { CompletionCelebration } from '@/components/launch/CompletionCelebration';
-import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle } from 'lucide-react';
+import { Mic, Square, Play, Pause, Save, Users, Clock, Loader2, Brain, Eye, Volume2, VolumeX, CheckCircle, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { useAuth } from '@/hooks/useAuth';
@@ -34,6 +34,7 @@ import { MicLevelMeter } from '@/components/memoryBridge/MicLevelMeter';
 import { RecordingEggTimer } from '@/components/memoryBridge/RecordingEggTimer';
 import { useRecordingAllowance } from '@/hooks/useRecordingAllowance';
 import { NEXT_TIER, RECORDING_LIMITS, formatClock, formatMinutes } from '@/config/recordingLimits';
+import { uploadRecordingFile, isSupportedRecordingFile } from '@/utils/uploadRecordingFile';
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -91,6 +92,8 @@ export default function LaunchMemoryBridge() {
     sourceFileName?: string;
   } | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const uploadInputRef = useRef<HTMLInputElement | null>(null);
   const [commitSummary, setCommitSummary] = useState<MeetingScheduleSummary | null>(null);
 
   const {
@@ -416,6 +419,84 @@ export default function LaunchMemoryBridge() {
 
   };
 
+  /** Upload an existing audio/video file and run the same extraction path. */
+  const handleUploadSelected = async (file: File | null | undefined) => {
+    if (!file) return;
+    if (!isSupportedRecordingFile(file)) {
+      toast.error('That file type is not supported.', {
+        description: 'Choose an audio or video recording (m4a, mp3, wav, webm, mp4).',
+      });
+      return;
+    }
+
+    const userId = await ensureSession();
+    if (!userId) {
+      toast.error('Your session timed out.', {
+        description: 'Sign in and upload again.',
+        action: {
+          label: 'Sign in',
+          onClick: () => navigate(`/auth?redirect=${encodeURIComponent('/launch/memory')}`),
+        },
+        duration: 12000,
+      });
+      return;
+    }
+
+    const title = recordingTitle || file.name.replace(/\.[^.]+$/, '');
+    setIsUploading(true);
+    setIsExtracting(true);
+    try {
+      toast.info('Uploading your recording…');
+      const saved = await uploadRecordingFile(file, userId, title);
+      allowance.refresh();
+
+      const result = await processSavedRecording(saved.id, userId, saved.durationSeconds);
+
+      if (result.success && result.actionsCount && result.actionsCount > 0) {
+        if (result.meetingId && (loopCircleIds.length > 0 || loopAdhoc.length > 0)) {
+          await supabase
+            .from('extracted_actions')
+            .update({
+              assigned_watchers: loopCircleIds,
+              adhoc_loop_ins: loopAdhoc as any,
+            })
+            .eq('meeting_recording_id', result.meetingId);
+        }
+        setLastExtractionResult({
+          meetingId: result.meetingId!,
+          recordingId: saved.id,
+          actionsCount: result.actionsCount,
+          title,
+        });
+        setShowPostExtractionDialog(true);
+        setProcessedRecordings(prev => new Set([...prev, saved.id]));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: result.actionsCount! }));
+        setLoopCircleIds([]);
+        setLoopAdhoc([]);
+      } else if (result.success) {
+        setProcessedRecordings(prev => new Set([...prev, saved.id]));
+        setActionsCountMap(prev => ({ ...prev, [saved.id]: 0 }));
+        setViewingActions({ recordingId: saved.id, title });
+        toast.info('Upload saved — no next steps found yet.', {
+          description: 'Open the transcript to extract again or add your own step.',
+          duration: 8000,
+        });
+      }
+
+      fetchRecordings();
+      setRecordingTitle('');
+    } catch (err) {
+      console.error('handleUploadSelected failed', err);
+      toast.error(
+        `Could not upload that recording: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      );
+    } finally {
+      setIsUploading(false);
+      setIsExtracting(false);
+      if (uploadInputRef.current) uploadInputRef.current.value = '';
+    }
+  };
+
 
   const handleAcceptAndScheduleAll = async (
     actionIds?: string[],
@@ -656,7 +737,40 @@ export default function LaunchMemoryBridge() {
                   </p>
                 )}
 
+                {/* Already have a recording? Upload it and get the same next steps. */}
+                <div className="mt-5">
+                  <input
+                    ref={uploadInputRef}
+                    type="file"
+                    accept="audio/*,video/*,.m4a,.mp3,.wav,.webm,.mp4,.mov"
+                    className="hidden"
+                    onChange={(e) => handleUploadSelected(e.target.files?.[0])}
+                  />
+                  <button
+                    type="button"
+                    disabled={isUploading || isExtracting}
+                    onClick={() => uploadInputRef.current?.click()}
+                    className="inline-flex items-center justify-center gap-2 min-h-[56px] w-full rounded-xl border border-launch-gold/40 bg-white/60 px-4 text-sm font-medium text-launch-ink hover:bg-launch-gold/10 transition-colors disabled:opacity-60"
+                  >
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Uploading and finding next steps…
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4" />
+                        Upload a recording instead
+                      </>
+                    )}
+                  </button>
+                  <p className="mt-2 text-xs text-launch-ink/60">
+                    Audio or video from your phone, a voice memo or a call recording.
+                  </p>
+                </div>
+
                 <RecordingEggTimer className="mt-5 text-left" />
+
               </>
             )}
 

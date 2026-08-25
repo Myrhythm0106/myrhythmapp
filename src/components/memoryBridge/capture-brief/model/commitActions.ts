@@ -30,6 +30,15 @@ function reminderLabel(min: number): string {
   return `${Math.round(min / 1440)}_days`;
 }
 
+/** Default 30-minute slot so the event has a real end time in the calendar. */
+function addMinutes(time: string, minutes: number): string {
+  const [h, m] = (time || '09:00').split(':').map(Number);
+  const total = (h || 0) * 60 + (m || 0) + minutes;
+  const hh = Math.floor((total % 1440) / 60).toString().padStart(2, '0');
+  const mm = (total % 60).toString().padStart(2, '0');
+  return `${hh}:${mm}`;
+}
+
 export async function commitAction(action: BriefAction, input: CommitInput): Promise<CommitResult> {
   const { data: userData } = await supabase.auth.getUser();
   const userId = userData?.user?.id;
@@ -49,13 +58,17 @@ export async function commitAction(action: BriefAction, input: CommitInput): Pro
       description: action.context || action.sourceQuote || null,
       date: input.startDate,
       time: input.startTime,
+      end_time: addMinutes(input.startTime, 30),
       type: 'action',
       category: action.category || 'commitment',
       is_system_generated: true,
+      source: 'memory_bridge',
+      extracted_action_id: action.id,
       watchers: circleWatcherIds,
-    })
+    } as any)
     .select('id')
     .single();
+
 
   if (evErr || !event) {
     return { ok: false, error: evErr?.message || 'Failed to create calendar event' };

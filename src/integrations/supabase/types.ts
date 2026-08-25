@@ -365,6 +365,7 @@ export type Database = {
           date: string
           description: string | null
           end_time: string | null
+          extracted_action_id: string | null
           google_event_id: string | null
           id: string
           is_system_generated: boolean
@@ -393,6 +394,7 @@ export type Database = {
           date: string
           description?: string | null
           end_time?: string | null
+          extracted_action_id?: string | null
           google_event_id?: string | null
           id?: string
           is_system_generated?: boolean
@@ -421,6 +423,7 @@ export type Database = {
           date?: string
           description?: string | null
           end_time?: string | null
+          extracted_action_id?: string | null
           google_event_id?: string | null
           id?: string
           is_system_generated?: boolean
@@ -442,7 +445,15 @@ export type Database = {
           user_id?: string
           watchers?: string[] | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "calendar_events_extracted_action_id_fkey"
+            columns: ["extracted_action_id"]
+            isOneToOne: false
+            referencedRelation: "extracted_actions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       calendar_integrations: {
         Row: {

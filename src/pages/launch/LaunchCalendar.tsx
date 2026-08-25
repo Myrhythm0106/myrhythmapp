@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { LaunchLayout } from '@/components/launch/LaunchLayout';
 import { LaunchHeroBand } from '@/components/launch/LaunchHeroBand';
 import { LaunchCard } from '@/components/launch/LaunchCard';
@@ -44,6 +44,7 @@ import { toast } from 'sonner';
 
 export default function LaunchCalendar() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const initialView = (searchParams.get('view') as CalendarView) || 'day';
   const [currentView, setCurrentView] = useState<CalendarView>(
     (['day', 'week', 'month', 'year'] as CalendarView[]).includes(initialView) ? initialView : 'day'
@@ -151,6 +152,9 @@ export default function LaunchCalendar() {
 
   const sortedDayEvents = () =>
     [...filteredDayEvents].sort((a, b) => a.time.localeCompare(b.time));
+
+  const handleOpenEventSource = () => navigate('/launch/memory');
+
 
   const handleNavigate = (direction: 'prev' | 'next') => {
     switch (currentView) {
@@ -282,6 +286,7 @@ export default function LaunchCalendar() {
             onEventStatusChange={handleEventStatusChange}
             onEventCarryOver={handleEventCarryOver}
             onEventReschedule={handleEventReschedule}
+            onEventOpenSource={handleOpenEventSource}
           />
         )}
         {currentView === 'week' && (
